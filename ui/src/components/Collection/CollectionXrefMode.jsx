@@ -1,14 +1,17 @@
 import React from 'react';
+import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
 import { ButtonGroup, AnchorButton, Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
+import queryString from 'query-string';
+import c from 'classnames';
 
-import { SectionLoading, ErrorSection, DualPane, Entity, Date, Country, Collection } from 'src/components/common';
+import { SectionLoading, ErrorSection, Entity, Collection } from 'src/components/common';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import SearchFacets from 'src/components/Facet/SearchFacets';
+import Property from 'src/components/Property';
 import { queryCollectionXrefFacets } from 'src/queries';
 import { selectSession, selectCollectionXrefResult } from 'src/selectors';
 import { queryCollectionXref } from 'src/actions';
@@ -65,46 +68,93 @@ export class CollectionXrefMode extends React.Component {
     }
   }
 
-  static renderRow(xref) {
-    if (!xref.entity || !xref.match) {
-      return null;
-    }
-    return (
-      <tr key={xref.id}>
-        <td className="numeric narrow">
-          <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
-        </td>
-        <td className="entity">
-          <Entity.Link entity={xref.entity} preview icon />
-          {/* {'('}
-          <Date.Earliest values={xref.entity.getTypeValues('date')} />
-          <Country.List codes={xref.entity.getTypeValues('country')} short />
-          {')'} */}
-        </td>
-        <td className="entity">
-          <Entity.Link entity={xref.match} preview icon />
-          {/* {'('}
-          <Date.Earliest values={xref.match.getTypeValues('date')} />
-          <Country.List codes={xref.match.getTypeValues('country')} short />
-          {')'} */}
-        </td>
-        <td className="collection">
-          <Collection.Link preview collection={xref.match_collection} icon />
-        </td>
-      </tr>
-    );
+  toggleExpand(xref) {
+    const { expandedId, parsedHash, history, location } = this.props;
+    parsedHash.expand = expandedId === xref.id ? undefined : xref.id;
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
   }
 
   toggleXref() {
     this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
   }
 
+  renderRow(xref) {
+    if (!xref.entity || !xref.match) {
+      return null;
+    }
+    const { expandedId } = this.props;
+    const isExpanded = xref.id === expandedId;
+    const mainRow = (
+      <tr key={xref.id} className={c({ prefix: isExpanded })}>
+        <td className="expand">
+          <Button
+            onClick={() => this.toggleExpand(xref)}
+            small
+            minimal
+            icon={isExpanded ? 'chevron-up' : 'chevron-down'}
+          />
+        </td>
+        <td className="numeric narrow">
+          <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
+        </td>
+        <td className="entity">
+          <Entity.Link entity={xref.entity} preview icon />
+        </td>
+        <td className="entity">
+          <Entity.Link entity={xref.match} preview icon />
+        </td>
+        <td className="collection">
+          <Collection.Link preview collection={xref.match_collection} icon />
+        </td>
+      </tr>
+    );
+    if (!isExpanded) {
+      return mainRow;
+    }
+    const properties = [...xref.entity.schema.getFeaturedProperties()];
+    xref.match.schema.getFeaturedProperties().forEach((prop) => {
+      if (properties.indexOf(prop) === -1) {
+        properties.push(prop);
+      }
+    });
+    return [
+      mainRow,
+      ...properties.map((prop) => (
+        <tr key={`${xref.id}-prop-${prop.name}`} className="prefix">
+          <td colSpan={2} />
+          <td>
+            <Property.Values prop={prop} values={xref.entity.getProperty(prop)} />
+          </td>
+          <td>
+            <Property.Values prop={prop} values={xref.match.getProperty(prop)} />
+          </td>
+          <td>
+            <strong>
+              {'('}<Property.Name prop={prop} />{')'} 
+            </strong>
+          </td>
+        </tr>
+      )),
+      <tr key={`${xref.id}-expanded-2`}>
+        <td colSpan={5} />
+      </tr>,
+    ];
+  }
+
   renderTable() {
     const { result } = this.props;
+    if (!result.total) {
+      return null;
+    }
     return (
       <table className="data-table">
         <thead>
           <tr>
+            <th className="expand" />
             <th className="numeric narrow">
               <span className="value">
                 <FormattedMessage
@@ -125,7 +175,7 @@ export class CollectionXrefMode extends React.Component {
               <span className="value">
                 <FormattedMessage
                   id="xref.match"
-                  defaultMessage="Match"
+                  defaultMessage="Possible match"
                 />
               </span>
             </th>
@@ -140,7 +190,7 @@ export class CollectionXrefMode extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {result.results.map(xref => CollectionXrefMode.renderRow(xref))}
+          {result.results.map(xref => this.renderRow(xref))}
         </tbody>
       </table>
     );
@@ -205,11 +255,14 @@ export class CollectionXrefMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
+  const parsedHash = queryString.parse(location.hash);
   const query = queryCollectionXrefFacets(location, collection.id);
   return {
     query,
-    result: selectCollectionXrefResult(state, query),
+    parsedHash,
+    expandedId: parsedHash.expand,
     session: selectSession(state),
+    result: selectCollectionXrefResult(state, query),
   };
 };
 

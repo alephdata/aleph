@@ -12,6 +12,10 @@
         th.numeric.narrow, td.numeric.narrow { 
             width: 4em;
         }
+
+        th.expand, td.expand {
+            width: 2em;
+        }
         
         td.entity, td.collection {
             .EntityLink, .CollectionLink {
