@@ -116,6 +116,8 @@ export class CollectionIndex extends Component {
   renderResults() {
     const { result } = this.props;
 
+    const skeletonItems = [...Array(5).keys()];
+
     return (
       <>
         <ul className="results">
@@ -129,10 +131,11 @@ export class CollectionIndex extends Component {
           scrollableAncestor={window}
         />
         {result.isLoading && (
-          <Skeleton.Layout
-            type="table"
-            rowCount={10}
-          />
+          <>
+            {skeletonItems.map(
+              item => <CollectionIndexItem key={item} isLoading />,
+            )}
+          </>
         )}
       </>
     );

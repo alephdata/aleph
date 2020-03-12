@@ -36,16 +36,12 @@ export class CollectionDiagramsIndexMode extends Component {
         <div style={{ marginBottom: '10px' }}>
           <DiagramCreateMenu collection={collection} />
         </div>
-        { result.isLoading && !result.results?.length && (
-          <SectionLoading />
-        )}
-        { result.results && (
-          <DiagramList
-            items={result.results}
-            getMoreItems={this.getMoreResults}
-            showCollection={false}
-          />
-        )}
+        <DiagramList
+          isLoading={result.isLoading && !result.results?.length}
+          items={result.results}
+          getMoreItems={this.getMoreResults}
+          showCollection={false}
+        />
       </div>
     );
   }

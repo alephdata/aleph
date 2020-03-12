@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Icon, H4 } from '@blueprintjs/core';
+import { Classes, Icon, H4 } from '@blueprintjs/core';
+import c from 'classnames';
 import Count from 'src/components/common/Count';
 import {
   Date, Role, Category, Country, Collection, Summary,
@@ -11,10 +12,18 @@ import './CollectionIndexItem.scss';
 
 class CollectionIndexItem extends PureComponent {
   render() {
-    const { collection, preview = true } = this.props;
+    const { collection, isLoading, preview = true } = this.props;
+
+    if (isLoading) {
+      return (
+        <li className={c('CollectionIndexItem', Classes.SKELETON)} />
+      )
+    }
+
     if (!collection.id) {
       return null;
     }
+
     return (
       <li className="CollectionIndexItem" key={collection.id}>
         <H4>

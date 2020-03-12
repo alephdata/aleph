@@ -8,12 +8,9 @@ class DiagramList extends Component {
   render() {
     const { getMoreItems, isLoading, items, showCollection } = this.props;
 
-    const skeletonItems = [...Array(10).keys()];
-
-
-    console.log('items', items);
-
     if (isLoading) {
+      const skeletonItems = [...Array(10).keys()];
+
       return (
         <div className="DiagramList">
           <div className="DiagramList__items">
@@ -28,7 +25,6 @@ class DiagramList extends Component {
     return (
       <div className="DiagramList">
         <div className="DiagramList__items">
-          {}
           {items.map(diagram => (
             <DiagramListItem key={diagram.id} diagram={diagram} showCollection={showCollection} />
           ))}
