@@ -5,6 +5,7 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { SortableTH, ErrorSection } from 'src/components/common';
+import { Classes } from '@blueprintjs/core';
 import EntityTableRow from './EntityTableRow';
 
 import './EntityTable.scss';
@@ -57,15 +58,19 @@ class EntityTable extends Component {
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
 
+    const skeletonItems = [...Array(5).keys()];
+
+    console.log('in EntityTable');
+
     if (result.isError) {
       return <ErrorSection error={result.error} />;
     }
 
-    if (result.total === 0 && result.page === 1) {
+    if (!result.isLoading && result.total === 0 && result.page === 1) {
       return null;
     }
 
-    const results = result.results.filter((e) => e.id !== undefined);
+    const results = result.results ? result.results.filter((e) => e.id !== undefined) : [];
     const TH = ({
       sortable, field, className, ...otherProps
     }) => {
@@ -111,6 +116,15 @@ class EntityTable extends Component {
               documentMode={documentMode}
               updateSelection={updateSelection}
               selection={selection}
+            />
+          ))}
+          {result.isLoading && skeletonItems.map(item => (
+            <EntityTableRow
+              key={item}
+              hideCollection={hideCollection}
+              documentMode={documentMode}
+              updateSelection={updateSelection}
+              isLoading
             />
           ))}
         </tbody>

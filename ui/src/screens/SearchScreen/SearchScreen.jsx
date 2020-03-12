@@ -266,10 +266,6 @@ export class SearchScreen extends React.Component {
               bottomOffset="-400px"
               scrollableAncestor={window}
             />
-
-            {result.isLoading && (
-              <SectionLoading />
-            )}
           </DualPane.ContentPane>
         </DualPane>
       </Screen>

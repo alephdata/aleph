@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import queryString from 'query-string';
-import { Checkbox } from '@blueprintjs/core';
+import { Checkbox, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import {
@@ -10,12 +10,60 @@ import {
 /* eslint-disable */
 
 class EntityTableRow extends Component {
-  render() {
-    const { entity, location } = this.props;
-    const { hideCollection, documentMode, showPreview } = this.props;
+  renderSkeleton() {
+    const { hideCollection, documentMode, updateSelection } = this.props;
 
-    const { updateSelection, selection } = this.props;
-    const selectedIds = _.map(selection || [], 'id');
+    console.log('in document mode', documentMode, hideCollection)
+    return (
+      <tr className={c('EntityTableRow', 'nowrap')}>
+        {updateSelection && (
+          <td className="select">
+            <span className={Classes.SKELETON}>p</span>
+          </td>
+        )}
+        <td className="entity">
+          <span className={Classes.SKELETON}>placeholder</span>
+        </td>
+        {!hideCollection && (
+          <td className="collection">
+            <span className={Classes.SKELETON}>placeholder</span>
+          </td>
+        )}
+        {!documentMode && (
+          <td className="country">
+            <span className={Classes.SKELETON}>placeholder</span>
+          </td>
+        )}
+        <td className="date">
+          <span className={Classes.SKELETON}>placeholder</span>
+        </td>
+        {documentMode && (
+          <td className="file-size">
+            <span className={Classes.SKELETON}>placeholder</span>
+          </td>
+        )}
+      </tr>
+    );
+  }
+
+  render() {
+    const {
+      entity,
+      isLoading,
+      location,
+      hideCollection,
+      documentMode,
+      showPreview,
+      updateSelection,
+      selection
+    } = this.props;
+
+    if (isLoading) {
+      return this.renderSkeleton();
+    }
+
+    const selectedIds = _.map(selection || [],
+      'id');
     const isSelected = selectedIds.indexOf(entity.id) > -1;
     const parsedHash = queryString.parse(location.hash);
     const highlights = !entity.highlight ? [] : entity.highlight;
