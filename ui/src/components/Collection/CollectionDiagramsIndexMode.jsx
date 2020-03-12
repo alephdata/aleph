@@ -54,11 +54,9 @@ export class CollectionDiagramsIndexMode extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const query = queryCollectionDiagrams(location, collection.id);
-  const result = selectDiagramsResult(state, query);
-  
   return {
     query,
-    result,
+    result: selectDiagramsResult(state, query),
   };
 };
 
