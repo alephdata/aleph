@@ -1,5 +1,4 @@
 import logging
-import yaml
 from banal import first
 from followthemoney import model
 
@@ -15,8 +14,8 @@ from aleph.logic.notifications import publish
 log = logging.getLogger(__name__)
 
 
-def make_mapper(collection, mapping):
-    table = get_entity(mapping.table_id)
+def get_table_csv_link(table_id):
+    table = get_entity(table_id)
     properties = table.get('properties', {})
     csv_hash = first(properties.get('csvHash'))
     if csv_hash is None:
@@ -28,6 +27,11 @@ def make_mapper(collection, mapping):
             url = local_path.as_posix()
     if url is None:
         raise RuntimeError("Could not generate CSV URL for the table")
+    return url
+
+
+def make_mapper(collection, mapping):
+    url = get_table_csv_link(mapping.table_id)
     data = {'csv_url': url, 'entities': mapping.query}
     return model.make_mapping(data, key_prefix=collection.foreign_id)
 
@@ -85,29 +89,3 @@ def flush_mapping(stage, collection, mapping_id, sync=False):
     collection.touch()
     db.session.commit()
     update_collection(collection)
-
-
-def export_mapping(collection, mapping):
-    table = get_entity(mapping.table_id)
-    properties = table.get('properties', {})
-    csv_hash = first(properties.get('csvHash'))
-    if csv_hash is None:
-        raise RuntimeError("Source table doesn't have a CSV version")
-    url = archive.generate_url(csv_hash)
-    if not url:
-        local_path = archive.load_file(csv_hash)
-        if local_path is not None:
-            url = local_path.as_posix()
-    if url is None:
-        raise RuntimeError("Could not generate CSV URL for the table")
-    query = {'csv_url': url, 'entities': mapping.query}
-    mapping = {
-        'queries': [query]
-    }
-    if collection.label:
-        mapping['label'] = collection.label
-    if collection.summary:
-        mapping['summary'] = collection.summary
-    return yaml.dump({
-        collection.foreign_id: mapping
-    })

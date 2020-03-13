@@ -7,6 +7,7 @@ from followthemoney.proxy import EntityProxy
 
 from aleph.core import archive
 from aleph.index.entities import index_proxy
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
 log = logging.getLogger(__name__)
@@ -65,12 +66,14 @@ class MappingAPITest(TestCase):
         url = '/api/2/collections/%s/mappings' % self.col.id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
         res = self.client.get(url, headers=self.headers_x)
         assert res.status_code == 403, res
 
         url = '/api/2/collections/%s/mappings?filter:table=%s' % (self.col.id, self.ent.id)  # noqa
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
 
         data = {
             'table_id': self.ent.id,
@@ -96,6 +99,7 @@ class MappingAPITest(TestCase):
         assert res.status_code == 403, res
         res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'Mapping')
         mapping_id = res.json.get('id')
 
         url = "/api/2/entities?filter:collection_id=%s&filter:schema=LegalEntity" % self.col.id  # noqa
@@ -112,6 +116,7 @@ class MappingAPITest(TestCase):
         url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'Mapping')
         assert res.json['last_run_status'] == 'success', res.json
         assert 'last_run_err_msg' not in res.json, res.json
 
@@ -178,16 +183,6 @@ class MappingAPITest(TestCase):
         url = "/api/2/entities?filter:collection_id=%s&filter:schemata=LegalEntity" % self.col.id  # noqa
         res = self.client.get(url, headers=self.headers)
         assert res.json['total'] == 15, res.json
-
-        url = "/api/2/collections/%s/mappings/%s/export" % (self.col.id, mapping_id)  # noqa
-        res = self.client.get(url, headers=self.headers)
-        assert res.status_code == 200, res
-        mapping_yaml = "entities:\n      person:\n        keys:\n        "
-        "- name\n        - nationality\n        properties:\n          "
-        "gender:\n            column: gender\n          name:\n            "
-        "column: name\n          nationality:\n            "
-        "column: nationality\n        schema: Person\n"
-        assert mapping_yaml in res.json['yaml'], res.json
 
         url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)  # noqa
         res = self.client.delete(url, headers=self.headers_x)
