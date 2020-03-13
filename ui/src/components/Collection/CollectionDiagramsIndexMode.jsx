@@ -37,8 +37,7 @@ export class CollectionDiagramsIndexMode extends Component {
           <DiagramCreateMenu collection={collection} />
         </div>
         <DiagramList
-          isLoading={result.isLoading && !result.results?.length}
-          items={result.results}
+          result={result}
           getMoreItems={this.getMoreResults}
           showCollection={false}
         />

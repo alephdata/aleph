@@ -58,9 +58,7 @@ class EntityTable extends Component {
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
 
-    const skeletonItems = [...Array(5).keys()];
-
-    console.log('in EntityTable');
+    const skeletonItems = [...Array(15).keys()];
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;

@@ -14,7 +14,10 @@ class TextSkeleton extends PureComponent {
         return (
           <h1 className={c(Classes.SKELETON, className)}>{placeholder}</h1>
         );
-
+      case 'h4':
+        return (
+          <h4 className={c(Classes.SKELETON, className)}>{placeholder}</h4>
+        );
       case 'h6':
         return (
           <h6 className={c(Classes.SKELETON, className)}>{placeholder}</h6>

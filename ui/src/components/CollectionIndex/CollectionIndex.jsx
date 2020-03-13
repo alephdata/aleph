@@ -116,7 +116,7 @@ export class CollectionIndex extends Component {
   renderResults() {
     const { result } = this.props;
 
-    const skeletonItems = [...Array(5).keys()];
+    const skeletonItems = [...Array(10).keys()];
 
     return (
       <>

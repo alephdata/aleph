@@ -26,12 +26,12 @@ class EntityTableRow extends Component {
         </td>
         {!hideCollection && (
           <td className="collection">
-            <Skeleton.Text type="span" length={20} />
+            <Skeleton.Text type="span" length={15} />
           </td>
         )}
         {!documentMode && (
           <td className="country">
-            <Skeleton.Text type="span" length={20} />
+            <Skeleton.Text type="span" length={15} />
           </td>
         )}
         <td className="date">

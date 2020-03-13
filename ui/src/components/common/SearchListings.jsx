@@ -30,7 +30,7 @@ export class SearchListings extends PureComponent {
   renderSkeleton() {
     const { listType } = this.props;
 
-    const skeletonItems = [...Array(5).keys()];
+    const skeletonItems = [...Array(15).keys()];
 
     return (
       <table className="SearchListings settings-table">
