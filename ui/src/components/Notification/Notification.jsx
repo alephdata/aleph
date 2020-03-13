@@ -2,16 +2,25 @@ import React, { PureComponent } from 'react';
 import { selectUnit } from '@formatjs/intl-utils';
 import { FormattedRelativeTime } from 'react-intl';
 
-import Role from 'src/components/common/Role';
-import Collection from 'src/components/common/Collection';
-import QueryText from 'src/components/common/QueryText';
-import Entity from 'src/components/common/Entity';
-import Diagram from 'src/components/common/Diagram';
+import {
+  Collection, Diagram, Entity, QueryText, Role, Skeleton,
+} from 'src/components/common';
 
 import './Notification.scss';
 
 
 class Notification extends PureComponent {
+  renderSkeleton = () => {
+    return (
+      <li className="Notification">
+        <div className="timestamp">
+          <Skeleton.Text type="span" length={15} />
+        </div>
+        <Skeleton.Text type="span" length={50} />
+      </li>
+    );
+  }
+
   getParam(name) {
     const { event, params } = this.props.notification;
     const object = params[name];
@@ -43,7 +52,13 @@ class Notification extends PureComponent {
   }
 
   render() {
-    const { event, id, created_at: createdAt } = this.props.notification;
+    const { isLoading, notification } = this.props;
+
+    if (isLoading) {
+      return this.renderSkeleton();
+    }
+
+    const { event, id, created_at: createdAt } = notification;
     const parts = event.template.split(/({{|}})/);
     const message = [];
 

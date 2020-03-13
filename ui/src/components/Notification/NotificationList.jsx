@@ -49,20 +49,27 @@ class NotificationList extends Component {
 
   render() {
     const { result, intl } = this.props;
+    const skeletonItems = [...Array(15).keys()];
+
+    if (result.total === 0) {
+      return (
+        <ErrorSection
+          icon="notifications"
+          title={intl.formatMessage(messages.no_notifications)}
+        />
+      );
+    }
 
     return (
       <>
-        {result.total === 0 && (
-          <ErrorSection
-            icon="notifications"
-            title={intl.formatMessage(messages.no_notifications)}
-          />
-        )}
-        {result.total !== 0 && (
-          <ul className="NotificationList">
-            {result.results.map(notif => <Notification key={notif.id} notification={notif} />)}
-          </ul>
-        )}
+        <ul className="NotificationList">
+          {result.results && result.results.map(
+            notif => <Notification key={notif.id} notification={notif} />,
+          )}
+          {skeletonItems.map(
+            item => <Notification key={item} isLoading />,
+          )}
+        </ul>
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-300px"
