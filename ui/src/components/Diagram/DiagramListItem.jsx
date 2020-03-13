@@ -6,7 +6,7 @@ import getDiagramLink from 'src/util/getDiagramLink';
 import c from 'classnames';
 
 import {
-  Collection, Date, Diagram, Summary,
+  Collection, Date, Diagram, Skeleton, Summary,
 } from 'src/components/common';
 
 import './DiagramListItem.scss';
@@ -15,10 +15,23 @@ const DiagramListItem = ({ diagram, isLoading, showCollection }) => {
   if (isLoading) {
     return (
       <div className="DiagramListItem">
-        <Card elevation={1} className={c('DiagramListItem__content', Classes.SKELETON)} />
+        <Card elevation={1} className="DiagramListItem__content">
+          {showCollection && (
+            <div className="DiagramListItem__collection">
+              <Skeleton.Text type="span" length={15} />
+            </div>
+          )}
+          <Icon className={c('DiagramListItem__icon', Classes.SKELETON)} icon="graph" iconSize={42} />
+          <Skeleton.Text type="h4" length={15} className="DiagramLabel" />
+          <Skeleton.Text className="summary" type="p" length={30} />
+          <p className="details">
+            <Skeleton.Text className="details-item" type="span" length={20} />
+          </p>
+        </Card>
       </div>
     );
   }
+
   return (
     <div className="DiagramListItem" key={diagram.id}>
       <Link className="DiagramListItem__link" to={getDiagramLink(diagram)}>

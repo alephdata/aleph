@@ -6,27 +6,19 @@ import './DiagramList.scss';
 
 class DiagramList extends Component {
   render() {
-    const { getMoreItems, isLoading, items, showCollection } = this.props;
+    const { getMoreItems, result, showCollection } = this.props;
 
-    if (isLoading) {
-      const skeletonItems = [...Array(10).keys()];
-
-      return (
-        <div className="DiagramList">
-          <div className="DiagramList__items">
-            {skeletonItems.map(item => (
-              <DiagramListItem key={item} isLoading />
-            ))}
-          </div>
-        </div>
-      );
-    }
+    const isLoading = result.isLoading || result.shouldLoad;
+    const skeletonItems = [...Array(9).keys()];
 
     return (
       <div className="DiagramList">
         <div className="DiagramList__items">
-          {items.map(diagram => (
+          {result.results && result.results.map(diagram => (
             <DiagramListItem key={diagram.id} diagram={diagram} showCollection={showCollection} />
+          ))}
+          {isLoading && skeletonItems.map(item => (
+            <DiagramListItem key={item} showCollection={showCollection} isLoading />
           ))}
         </div>
         <Waypoint

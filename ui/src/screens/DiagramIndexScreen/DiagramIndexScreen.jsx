@@ -100,8 +100,7 @@ export class DiagramIndexScreen extends Component {
             </div>
           </div>
           <DiagramList
-            isLoading={result.isLoading && !result.results?.length}
-            items={result.results}
+            result={result}
             getMoreItems={this.getMoreResults}
             showCollection
           />
