@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
-import { SectionLoading, Skeleton, ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
 import Notification from 'src/components/Notification/Notification';
@@ -18,7 +18,6 @@ const messages = defineMessages({
     defaultMessage: 'You have no unseen notifications',
   },
 });
-
 
 class NotificationList extends Component {
   constructor(props) {
@@ -53,13 +52,13 @@ class NotificationList extends Component {
 
     return (
       <>
-        { result.total === 0 && (
+        {result.total === 0 && (
           <ErrorSection
             icon="notifications"
             title={intl.formatMessage(messages.no_notifications)}
           />
         )}
-        { result.total !== 0 && (
+        {result.total !== 0 && (
           <ul className="NotificationList">
             {result.results.map(notif => <Notification key={notif.id} notification={notif} />)}
           </ul>
@@ -69,12 +68,6 @@ class NotificationList extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        { result.isLoading && (
-          <Skeleton.Layout
-            type="table"
-            count={10}
-          />
-        )}
       </>
     );
   }

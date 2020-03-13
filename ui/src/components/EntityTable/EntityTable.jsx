@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
-
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { SortableTH, ErrorSection } from 'src/components/common';
-import { Classes } from '@blueprintjs/core';
 import EntityTableRow from './EntityTableRow';
 
 import './EntityTable.scss';

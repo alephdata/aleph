@@ -10,7 +10,7 @@ import c from 'classnames';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
-import { Skeleton, ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 
 import './EntitySearch.scss';
 

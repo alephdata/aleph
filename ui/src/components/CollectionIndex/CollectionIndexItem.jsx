@@ -11,24 +11,20 @@ import './CollectionIndexItem.scss';
 
 
 class CollectionIndexItem extends PureComponent {
-  renderSkeleton() {
-    const { preview = true } = this.props;
-
-    return (
-      <li className="CollectionIndexItem">
-        <H4>
-          <Count className={c(Classes.SKELETON, "bp3-intent-primary")} full isLoading />
-          <Skeleton.Text type="span" length={20} />
-        </H4>
-        <Skeleton.Text className="summary" type="p" length={200} />
-        <p className="details">
-          <Skeleton.Text className="details-item" type="span" length={20} />
-          <Skeleton.Text className="details-item" type="span" length={20} />
-          <Skeleton.Text className="details-item" type="span" length={20} />
-        </p>
-      </li>
-    );
-  }
+  renderSkeleton = () => (
+    <li className="CollectionIndexItem">
+      <H4>
+        <Count className={c(Classes.SKELETON, 'bp3-intent-primary')} full isLoading />
+        <Skeleton.Text type="span" length={20} />
+      </H4>
+      <Skeleton.Text className="summary" type="p" length={200} />
+      <p className="details">
+        <Skeleton.Text className="details-item" type="span" length={20} />
+        <Skeleton.Text className="details-item" type="span" length={20} />
+        <Skeleton.Text className="details-item" type="span" length={20} />
+      </p>
+    </li>
+  )
 
   render() {
     const { collection, isLoading, preview = true } = this.props;

@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import Query from 'src/app/Query';
-import { SectionLoading } from 'src/components/common';
 import { queryDiagrams } from 'src/actions';
 import { selectDiagramsResult } from 'src/selectors';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';

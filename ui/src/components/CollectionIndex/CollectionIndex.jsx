@@ -8,7 +8,7 @@ import { Waypoint } from 'react-waypoint';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
-  ErrorSection, SectionLoading, SortingBar,
+  ErrorSection, SortingBar,
 } from 'src/components/common';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import CollectionIndexItem from './CollectionIndexItem';
@@ -115,7 +115,6 @@ export class CollectionIndex extends Component {
 
   renderResults() {
     const { result } = this.props;
-
     const skeletonItems = [...Array(10).keys()];
 
     return (
@@ -125,7 +124,7 @@ export class CollectionIndex extends Component {
             res => <CollectionIndexItem key={res.id} collection={res} />,
           )}
           {result.isLoading && skeletonItems.map(
-            item => <CollectionIndexItem key={item} isLoading />
+            item => <CollectionIndexItem key={item} isLoading />,
           )}
         </ul>
         <Waypoint
@@ -133,7 +132,6 @@ export class CollectionIndex extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-
       </>
     );
   }

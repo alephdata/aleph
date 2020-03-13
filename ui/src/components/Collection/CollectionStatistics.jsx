@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { Country, Facet, Numeric, Schema } from 'src/components/common';
 import Statistics from 'src/components/StatisticsGroup/Statistics';
-import c from 'classnames';
 
 import './CollectionStatistics.scss';
 
@@ -43,7 +42,7 @@ class CollectionStatistics extends PureComponent {
 
     return (
       <div className="CollectionStatistics bp3-card bp3-elevation-1">
-        <div className={c("CollectionStatistics__heading", {'bp3-skeleton': !total})}>
+        <div className="CollectionStatistics__heading">
           <h5 className="CollectionStatistics__heading__total">
             <Numeric num={total} abbr={3} />
           </h5>

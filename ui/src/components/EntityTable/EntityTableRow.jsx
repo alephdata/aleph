@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import queryString from 'query-string';
-import { Checkbox, Classes } from '@blueprintjs/core';
+import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
 import {

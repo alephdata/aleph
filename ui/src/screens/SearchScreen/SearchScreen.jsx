@@ -12,7 +12,7 @@ import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  Collection, DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
+  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
 } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';

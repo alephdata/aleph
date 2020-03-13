@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
-import { SectionLoading, Skeleton, Summary } from 'src/components/common';
+import { Skeleton, Summary } from 'src/components/common';
 import CollectionInfo from 'src/components/Collection/CollectionInfo';
 import CollectionStatistics from './CollectionStatistics';
 import CollectionReference from './CollectionReference';
@@ -54,7 +54,7 @@ class CollectionOverviewMode extends React.Component {
     const { collection, statistics } = this.props;
 
     if (statistics.isLoading || statistics.shouldLoad) {
-      return <Skeleton.Layout type="multi-column" colCount={4} />
+      return <Skeleton.Layout type="multi-column" colCount={4} />;
     }
 
     const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))

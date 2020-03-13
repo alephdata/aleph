@@ -130,7 +130,7 @@ class Dashboard extends React.Component {
             {(groupsLoading || groups.total > 0) && (
               <>
                 <MenuDivider />
-                <li className={c('bp3-menu-header', {[Classes.SKELETON]: groupsLoading })}>
+                <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsLoading })}>
                   <h6 className="bp3-heading">
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>

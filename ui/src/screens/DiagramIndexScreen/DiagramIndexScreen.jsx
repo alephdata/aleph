@@ -8,9 +8,7 @@ import { selectDiagramsResult } from 'src/selectors';
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-import {
-  Breadcrumbs, SectionLoading,
-} from 'src/components/common';
+import { Breadcrumbs } from 'src/components/common';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';

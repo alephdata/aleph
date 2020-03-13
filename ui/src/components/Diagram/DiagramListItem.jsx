@@ -64,6 +64,6 @@ const DiagramListItem = ({ diagram, isLoading, showCollection }) => {
       </Link>
     </div>
   );
-}
+};
 
 export default DiagramListItem;

@@ -7,7 +7,7 @@ import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import Query from 'src/app/Query';
-import { Count, TextLoading } from 'src/components/common';
+import { Count } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';

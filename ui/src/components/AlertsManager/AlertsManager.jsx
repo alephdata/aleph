@@ -82,8 +82,6 @@ class AlertsDialog extends Component {
     const { alerts, intl } = this.props;
     const { newAlert } = this.state;
 
-    console.log(alerts)
-
     return (
       <div className="AlertsManager">
         <form onSubmit={this.onAddAlert} className="add-form">

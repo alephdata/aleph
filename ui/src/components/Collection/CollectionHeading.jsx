@@ -1,20 +1,16 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Category, Collection, Skeleton } from 'src/components/common';
-import c from 'classnames';
 
 import './CollectionHeading.scss';
 
-
 class CollectionHeading extends PureComponent {
-  renderSkeleton() {
-    return (
-      <div className="CollectionHeading">
-        <Skeleton.Text type="span" length={20} className="bp3-text-muted" />
-        <Skeleton.Text type="h1" length={20} className="CollectionHeading__title" />
-      </div>
-    );
-  }
+  renderSkeleton = () => (
+    <div className="CollectionHeading">
+      <Skeleton.Text type="span" length={20} className="bp3-text-muted" />
+      <Skeleton.Text type="h1" length={20} className="CollectionHeading__title" />
+    </div>
+  )
 
   render() {
     const { collection } = this.props;

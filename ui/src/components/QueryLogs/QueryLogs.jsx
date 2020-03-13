@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
-import { Skeleton, SearchListings } from 'src/components/common';
+import { SearchListings } from 'src/components/common';
 import { selectQueryLog } from 'src/selectors';
 import Query from 'src/app/Query';
 
