@@ -22,9 +22,9 @@ SCORE_CUTOFF = 0.3
 INCLUDES = ['schema', 'properties', 'collection_id']
 
 
-def _query_item(entity):
+def _query_item(collection, entity):
     """Cross-reference an entity or document, given as an indexed document."""
-    query = match_query(entity)
+    query = match_query(entity, source_collection_id=collection.id)
     if query == none_query():
         return
 
@@ -52,7 +52,7 @@ def _query_matches(collection, entity_ids):
     """Generate matches for indexing."""
     for data in entities_by_ids(entity_ids, includes=INCLUDES):
         entity = model.get_proxy(data)
-        yield from _query_item(entity)
+        yield from _query_item(collection, entity)
 
 
 def xref_item(stage, collection, entity_id=None, batch=50):
