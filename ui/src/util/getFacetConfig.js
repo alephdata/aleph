@@ -49,7 +49,7 @@ const messages = defineMessages({
   },
 });
 
-const propLabels = {
+const propConfigs = {
   addresses: {
     field: 'addresses',
     label: messages.facet_addresses,
@@ -59,6 +59,7 @@ const propLabels = {
     field: 'category',
     label: messages.facet_category,
     icon: 'list',
+    defaultSize: 1000,
   },
   collection_id: {
     field: 'collection_id',
@@ -69,12 +70,13 @@ const propLabels = {
     field: 'match_collection_id',
     label: messages.facet_collection_id,
     icon: 'database',
+    defaultSize: 3,
   },
   countries: {
     field: 'countries',
     label: messages.facet_countries,
     icon: 'globe',
-    defaultSize: 300,
+    defaultSize: 1000,
   },
   emails: {
     field: 'emails',
@@ -110,11 +112,12 @@ const propLabels = {
     field: 'schema',
     label: messages.facet_schema,
     icon: 'list-columns',
+    defaultSize: 1000,
   },
 };
 
-const getFacetLabel = (key) => (
-  propLabels[key]
+const getFacetConfig = (key) => (
+  propConfigs[key]
 );
 
-export default getFacetLabel;
+export default getFacetConfig;
