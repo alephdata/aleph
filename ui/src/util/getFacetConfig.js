@@ -70,7 +70,7 @@ const propConfigs = {
     field: 'match_collection_id',
     label: messages.facet_collection_id,
     icon: 'database',
-    defaultSize: 3,
+    defaultSize: 10,
   },
   countries: {
     field: 'countries',
