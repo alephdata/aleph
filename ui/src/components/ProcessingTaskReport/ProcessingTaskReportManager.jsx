@@ -1,11 +1,9 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
-import { Callout, Button } from '@blueprintjs/core';
+import { Callout } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
-import { Count, ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 import QueryTags from 'src/components/QueryTags/QueryTags';
-import ProcessingTasksReprocessingDialog from 'src/dialogs/ProcessingTasksReprocessDialog/ProcessingTasksReprocessDialog';
 import ProcessingTaskReportSearch from './ProcessingTaskReportSearch';
 
 import './ProcessingTaskReportManager.scss';
@@ -27,41 +25,8 @@ const messages = defineMessages({
 
 
 export class ProcessingTaskReportManager extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selection: [],
-      reprocessingIsOpen: false,
-    };
-    this.updateSelection = this.updateSelection.bind(this);
-    this.toggleSelectAll = this.toggleSelectAll.bind(this);
-    this.toggleReprocessingDialog = this.toggleReprocessingDialog.bind(this);
-  }
-
-  updateSelection(report) {
-    const { selection } = this.state;
-    this.setState({
-      selection: _.xorBy(selection, [report], 'id'),
-    });
-  }
-
-  toggleSelectAll(selection) {
-    const { allSelected } = this.state;
-    if (allSelected) {
-      this.setState({ allSelected: false, selection: [] });
-    } else {
-      this.setState({ allSelected: true, selection });
-    }
-  }
-
-  toggleReprocessingDialog() {
-    const { reprocessingIsOpen } = this.state;
-    this.setState({ reprocessingIsOpen: !reprocessingIsOpen });
-  }
-
   render() {
     const { query, result, hasPending, intl } = this.props;
-    const { selection } = this.state;
 
     const emptyComponent = (
       <div className="ProcessingTaskReportManager__content__empty">
@@ -75,16 +40,6 @@ export class ProcessingTaskReportManager extends Component {
     return (
       <div className="ProcessingTaskReportManager">
         <div className="ProcessingTaskReportManager__header">
-          <div className="bp3-button-group">
-            <Button icon="automatic-updates" onClick={this.toggleReprocessingDialog} disabled={!selection.length}>
-              <FormattedMessage id="report.manager.reprocess" defaultMessage="Re-process" />
-              {selection.length > 0 && <Count count={selection.length} />}
-            </Button>
-            <Button icon="automatic-updates" onClick={this.toggleReprocessingDialog} disabled={!result.total}>
-              <FormattedMessage id="report.manager.reprocess" defaultMessage="Re-process all" />
-              {result.total > 0 && <Count count={result.total} />}
-            </Button>
-          </div>
           <QueryTags query={query} updateQuery={this.props.updateQuery} />
         </div>
         { hasPending && (
@@ -99,19 +54,10 @@ export class ProcessingTaskReportManager extends Component {
           <ProcessingTaskReportSearch
             query={query}
             result={result}
-            selection={selection}
-            updateSelection={this.updateSelection}
             updateQuery={this.props.updateQuery}
             emptyComponent={emptyComponent}
-            toggleSelectAll={this.toggleSelectAll}
-            allSelected={this.state.allSelected}
           />
         </div>
-        <ProcessingTasksReprocessingDialog
-          tasks={selection}
-          isOpen={this.state.reprocessingIsOpen}
-          toggleDialog={this.toggleReprocessingDialog}
-        />
       </div>
     );
   }

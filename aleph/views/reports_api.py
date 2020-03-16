@@ -1,9 +1,7 @@
 import logging
-from datetime import datetime
 from flask import Blueprint, request
 
 from aleph.index.reports import get_collection_processing_report, get_document_processing_report, delete_job_report
-from aleph.logic.reports import queue_task_from_report
 from aleph.search import ProcessingReportQuery, SearchQueryParser
 from aleph.views.context import tag_request
 from aleph.views.serializers import (
@@ -102,39 +100,6 @@ def document_report(document_id):
     document = get_index_entity(document_id)
     data = get_document_processing_report(document)
     return DocumentProcessingReportSerializer.jsonify(data)
-
-
-@blueprint.route('/api/2/reports/reprocess', methods=['POST', 'PUT'])
-def reprocess():
-    # TODO doc
-    """
-    ---
-    get:
-      summary: Get a documents processing report
-      description: Return the document processing report with id `document_id`
-      parameters:
-      - description: The document ID.
-        in: path
-        name: document_id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Document'
-      tags:
-      - Document
-      - Report
-    """
-    task_reports = request.json['tasks']
-    job_id = 'reprocess-%s' % datetime.utcnow().timestamp()
-    for report in task_reports:
-        queue_task_from_report(report, job_id=job_id)
-    return ('', 204)
 
 
 @blueprint.route('/api/2/reports/delete/<job_id>', methods=['DELETE'])

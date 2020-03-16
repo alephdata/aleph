@@ -19,10 +19,8 @@ class ProcessingJobReport extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      analyzeIsOpen: false,
       deleteIsOpen: false,
     };
-    this.toggleAnalyze = this.toggleAnalyze.bind(this);
     this.toggleDelete = this.toggleDelete.bind(this);
     this.getJumpToContext = this.getJumpToContext.bind(this);
     this.viewDetails = this.viewDetails.bind(this);
@@ -32,10 +30,6 @@ class ProcessingJobReport extends PureComponent {
     const { query, history, location } = this.props;
     const context = { job: this.props.job.job_id };
     return { query, history, location, context };
-  }
-
-  toggleAnalyze() {
-    this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
   }
 
   toggleDelete() {
@@ -51,12 +45,14 @@ class ProcessingJobReport extends PureComponent {
     return (
       <>
         <Button icon="info-sign" text="Details" onClick={this.viewDetails} />
-        <Button
-          icon={finished ? 'automatic-updates' : 'cross'}
-          text={finished ? 'Re-run' : 'Stop'}
-          intent={finished ? null : 'danger'}
-          onClick={finished ? this.toggleAnalyze : null}
-        />
+        {!finished && (
+          <Button
+            icon='cross'
+            text='Stop'
+            intent='danger'
+            onClick={null}
+          />
+        )}
         <Button
           icon="delete"
           text="Delete this report"

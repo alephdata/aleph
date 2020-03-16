@@ -62,10 +62,6 @@ export class ProcessingTaskReportSearch extends Component {
       model,
       intl,
       className,
-      updateSelection,
-      allSelected,
-      toggleSelectAll,
-      selection,
       emptyComponent,
     } = this.props;
     const isEmpty = !query.hasQuery();
@@ -90,10 +86,6 @@ export class ProcessingTaskReportSearch extends Component {
           result={result}
           model={model}
           updateQuery={this.updateQuery}
-          updateSelection={updateSelection}
-          toggleSelectAll={toggleSelectAll}
-          allSelected={allSelected}
-          selection={selection}
         />
         <Waypoint
           onEnter={this.getMoreResults}

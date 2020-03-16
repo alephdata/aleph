@@ -1,6 +1,4 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
-import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { Date, Entity } from 'src/components/common';
@@ -37,21 +35,10 @@ class ProcessingTaskReportTableRow extends Component {
     } catch {
       entityDisplay = entity.id;
     }
-    const { updateSelection, selection } = this.props;
-    const selectedIds = _.map(selection || [], 'id');
-    const isSelected = selectedIds.indexOf(report.id) > -1;
     const rowClass = c('ProcessingTaskReportTableRow', 'nowrap', { error: hasError });
     return (
       <>
         <tr key={report.id} className={rowClass}>
-          {updateSelection && (
-            <td className="select">
-              <Checkbox
-                checked={isSelected}
-                onChange={() => updateSelection(report)}
-              />
-            </td>
-          )}
           <td className="status">
             <Status status={status} />
           </td>
