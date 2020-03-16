@@ -7,6 +7,7 @@ from followthemoney.proxy import EntityProxy
 
 from aleph.core import archive
 from aleph.index.entities import index_proxy
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
 log = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ class MappingAPITest(TestCase):
 
     def setUp(self):
         super(MappingAPITest, self).setUp()
-        self.col = self.create_collection(data={'foreign_id': 'map1'})
+        self.col = self.create_collection(foreign_id='map1')
         _, self.headers = self.login(is_admin=True)
         self.rolex = self.create_user(foreign_id='user_3')
         _, self.headers_x = self.login(foreign_id='user_3')
@@ -65,12 +66,14 @@ class MappingAPITest(TestCase):
         url = '/api/2/collections/%s/mappings' % self.col.id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
         res = self.client.get(url, headers=self.headers_x)
         assert res.status_code == 403, res
 
         url = '/api/2/collections/%s/mappings?filter:table=%s' % (self.col.id, self.ent.id)  # noqa
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
 
         data = {
             'table_id': self.ent.id,
@@ -96,6 +99,7 @@ class MappingAPITest(TestCase):
         assert res.status_code == 403, res
         res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'Mapping')
         mapping_id = res.json.get('id')
 
         url = "/api/2/entities?filter:collection_id=%s&filter:schema=LegalEntity" % self.col.id  # noqa
@@ -112,6 +116,7 @@ class MappingAPITest(TestCase):
         url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
+        validate(res.json, 'Mapping')
         assert res.json['last_run_status'] == 'success', res.json
         assert 'last_run_err_msg' not in res.json, res.json
 

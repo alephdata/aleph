@@ -11,6 +11,7 @@ from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
 from aleph.model import Alert, Diagram
 from aleph.logic import resolver
+from aleph.logic.mapping import get_table_csv_link
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
 
@@ -349,4 +350,11 @@ class NotificationSerializer(Serializer):
 
 
 class MappingSerializer(Serializer):
-    pass
+    def _serialize(self, obj):
+        links = {
+            # Link gets invalidated after a certain period (~ 24 hours right
+            # now) and does not expose user's api key
+            'table_csv': get_table_csv_link(obj['table_id'])
+        }
+        obj['links'] = links
+        return obj
