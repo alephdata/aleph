@@ -1,5 +1,6 @@
 import logging
 from followthemoney import model
+from servicelayer.reporting import Reporter
 from servicelayer.worker import Worker
 
 from ingestors.analysis import Analyzer
@@ -28,13 +29,13 @@ class IngestWorker(Worker):
         context['pipeline'] = pipeline
         log.info('Sending %s entities to: %s', len(entity_ids), next_stage)
         stage.queue({'entity_ids': entity_ids}, task.context)
-        reporter = self.get_task_reporter(task)
+        reporter = Reporter(task=task)
         for entity_id in entity_ids:
             reporter.end(entity={'id': entity_id})  # mark current as end
             reporter.start(operation=next_stage, entity={'id': entity_id})  # start next task reporting
 
     def _ingest(self, task):
-        reporter = self.get_task_reporter(task)
+        reporter = Reporter(task=task)
         manager = Manager(task.stage, task.context, reporter=reporter)
         entity = model.get_proxy(task.payload)
         log.debug('Ingest: %r', entity)
@@ -45,7 +46,7 @@ class IngestWorker(Worker):
         return manager.emitted
 
     def _analyze(self, task):
-        reporter = self.get_task_reporter(task)
+        reporter = Reporter(task=task)
         entity_ids = task.payload.get('entity_ids')
         dataset = Manager.get_dataset(task.stage, task.context)
         analyzer = None

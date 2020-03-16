@@ -143,4 +143,4 @@ ENV ARCHIVE_TYPE=file \
     INGESTORS_CONVERT_DOCUMENT_URL=http://convert-document:3000/convert
 
 # USER app
-CMD ingestors process
+#CMD ingestors process

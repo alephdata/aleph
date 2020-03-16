@@ -10,7 +10,6 @@ from aleph.model import Permission, Events
 from aleph.index import collections as index
 from aleph.index.reports import delete_collection_report
 from aleph.logic.notifications import publish, flush_notifications
-from aleph.logic.reports import get_reporter
 from aleph.logic.aggregator import get_aggregator, drop_aggregator
 
 log = logging.getLogger(__name__)
@@ -70,18 +69,9 @@ def process_collection(stage, collection, ingest=True, sync=False):
 
     aggregator = get_aggregator(collection)
 
-    reporter = get_reporter(
-        job=stage.job.id,
-        stage=stage.stage,
-        dataset=collection.foreign_id,
-        ns=collection.ns
-    )
-
     for proxy in _proxies(collection):
         if ingest and proxy.schema.is_a(Document.SCHEMA):
-            ingest_entity(collection, proxy,
-                          job_id=stage.job.id,
-                          sync=sync, reporter=reporter)
+            ingest_entity(collection, proxy, job_id=stage.job.id, sync=sync)
         else:
             aggregator.put(proxy, fragment='db')
             queue_task(collection, OP_INDEX,

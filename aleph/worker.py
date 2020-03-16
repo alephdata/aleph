@@ -1,4 +1,6 @@
 import logging
+
+from servicelayer.reporting import Reporter
 from servicelayer.worker import Worker
 
 from aleph.core import kv, db
@@ -14,7 +16,7 @@ from aleph.logic.collections import index_collections, refresh_collection
 from aleph.logic.collections import reset_collection, process_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.mapping import load_mapping, flush_mapping
-from aleph.logic.reports import index_reports, get_reporter
+from aleph.logic.reports import index_reports
 from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
 from aleph.logic.processing import index_aggregate
@@ -23,8 +25,6 @@ log = logging.getLogger(__name__)
 
 
 class AlephWorker(Worker):
-    reporter = get_reporter()
-
     def boot(self):
         self.hourly = get_rate_limit('hourly', unit=3600, interval=1, limit=1)
         self.daily = get_rate_limit('daily', unit=3600, interval=24, limit=1)
@@ -54,7 +54,7 @@ class AlephWorker(Worker):
         sync = task.context.get('sync', False)
 
         if stage.stage == OP_INDEX:
-            reporter = self.get_task_reporter(task)
+            reporter = Reporter(task=task)
             index_aggregate(stage, collection, sync=sync, reporter=reporter, **payload)
         if stage.stage == OP_LOAD_MAPPING:
             load_mapping(stage, collection, **payload)

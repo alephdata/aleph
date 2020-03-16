@@ -23,8 +23,8 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
             'file_path': str(file_path),
             'operation': self.OP_CONVERT
         }
-        reporter = self.manager.reporter.copy(**report_data)
-        reporter.start()
+        reporter = self.manager.reporter
+        reporter.start(**report_data)
 
         key = self.cache_key('pdf', entity.first('contentHash'))
         pdf_hash = self.get_cache_value(key)
@@ -35,18 +35,18 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                 log.info("Using PDF cache: %s", file_name)
                 entity.set('pdfHash', pdf_hash)
                 if reporter:
-                    reporter.end(from_pdf_cache=True)
+                    reporter.end(from_pdf_cache=True, **report_data)
                 return path
 
-        pdf_file = self._document_to_pdf(file_path, entity, reporter)
+        pdf_file = self._document_to_pdf(file_path, entity, reporter, report_data)
         if pdf_file is not None:
             content_hash = self.manager.store(pdf_file)
             entity.set('pdfHash', content_hash)
             self.set_cache_value(key, content_hash)
-            reporter.end()
+            reporter.end(**report_data)
         return pdf_file
 
-    def _document_to_pdf(self, file_path, entity, reporter):
+    def _document_to_pdf(self, file_path, entity, reporter, report_data):
         """Converts an office document to PDF."""
         # Attempt to guess an appropriate time for processing
         # Guessed: 15s per MB of data, max.
@@ -80,10 +80,10 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                         fh.write(chunk)
                     if bytes_written > 50:
                         return out_path
-                reporter.error(exception=failed)
+                reporter.error(exception=failed, **report_data)
                 raise failed
             except RequestException as exc:
-                reporter.error(exception=exc)
+                reporter.error(exception=exc, **report_data)
                 if isinstance(exc, HTTPError) and \
                         exc.response.status_code == 400:
                     raise ProcessingException(res.text)

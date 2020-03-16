@@ -1,7 +1,6 @@
 import logging
 
 from servicelayer.jobs import Job, Task
-from servicelayer.reporting import TaskReporter
 
 from aleph.core import kv
 from aleph.index.reports import index_bulk
@@ -31,7 +30,3 @@ def queue_task_from_report(report, job_id=None):
     # dataset = report['dataset']
     # if stage == OP_INDEX:
     #     queue_task(dataset, stage, job_id)
-
-
-def get_reporter(**defaults):
-    return TaskReporter(conn=kv, **defaults)
