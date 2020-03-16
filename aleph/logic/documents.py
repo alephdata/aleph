@@ -25,7 +25,7 @@ def crawl_directory(collection, path, parent=None, job=None, reporter=None):
     start_at = datetime.utcnow()
 
     def start_report(entity):
-        reporter.start(entity=entity.to_dict(), start_at=start_at, collection_id=collection.id)
+        reporter.start(entity=entity.to_dict(), start_at=start_at)
 
     try:
         content_hash = None
