@@ -162,7 +162,7 @@ def configure_reports():
         "properties": {
             "job": KEYWORD,
             "start_at": {"type": "date"},
-            "end_at": {"type": "date"},
+            "success_at": {"type": "date"},
             "error_at": {"type": "date"},
             "updated_at": {"type": "date"},
             "operation": KEYWORD,

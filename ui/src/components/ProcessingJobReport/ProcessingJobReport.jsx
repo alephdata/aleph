@@ -97,7 +97,7 @@ class ProcessingJobReport extends PureComponent {
             </span>
             <span className="ProcessingJobReport__heading__date">
               {job.finished ? 'Finished at:' : 'Last activity:'}
-              {renderDate(job.end_at)}
+              {renderDate(job.updated_at)}
             </span>
           </span>
           <div className="ProcessingJobReport__heading__control">

@@ -77,7 +77,6 @@ def get_collection_processing_report(collection_id):
     query = {'query': {'term': {'collection_id': collection_id}}, 'size': 0}
     time_range_agg = {
         'start_at': {'min': {'field': 'start_at'}},
-        'end_at': {'max': {'field': 'end_at'}},
         'updated_at': {'max': {'field': 'updated_at'}}
     }
     status_agg = {**{'status': {'terms': {'field': 'status'}}}, **time_range_agg}

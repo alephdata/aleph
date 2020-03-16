@@ -440,12 +440,12 @@ class _BucketSerializer(ReportSerializer):
                 'count': count
             }
             for k, v in bucket.items():
-                if k in ('start_at', 'end_at', 'error_at', 'updated_at'):
+                if k in ('start_at', 'success_at', 'error_at', 'updated_at'):
                     _data[k] = v.get('value_as_string')
                 if k == 'status':
                     _data['status'] = _BucketSerializer().serialize(v['buckets'])
                     _data['has_errors'] = any(s['name'] == 'error' for s in _data['status'])
-                    _data['finished'] = all(s['name'] in ('end', 'error') for s in _data['status'])
+                    _data['finished'] = all(s['name'] in ('success', 'error') for s in _data['status'])
             data.append(_data)
         return data
 
@@ -456,7 +456,6 @@ class JobReportSerializer(ReportSerializer):
         data = {
             'job_id': obj['key'],
             'start_at': obj['start_at'].get('value_as_string', ''),
-            'end_at': obj['end_at'].get('value_as_string', ''),
             'updated_at': obj['updated_at'].get('value_as_string', ''),
             'operations': serialize(obj['operations']['buckets']),
             'errors': serialize(obj['errors']['buckets']),

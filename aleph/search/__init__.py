@@ -77,7 +77,7 @@ class ProcessingReportQuery(Query):
     TEXT_FIELDS = ['error_msg']
     SORT_FIELDS = {
         'start': 'start_at',
-        'end': 'end_at'
+        'updated': 'updated_at'
     }
     SORT_DEFAULT = ['start_at']
 

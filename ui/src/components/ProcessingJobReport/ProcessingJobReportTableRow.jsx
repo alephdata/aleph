@@ -63,7 +63,7 @@ class ProcessingJobReportTableRow extends Component {
           </Button>
         </td>
         {renderStatus('start')}
-        {renderStatus('end')}
+        {renderStatus('success')}
         {renderStatus('error')}
         <td className="date">
           <Date value={updatedAt} showTime />

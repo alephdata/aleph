@@ -19,9 +19,9 @@ const messages = defineMessages({
     id: 'report.job.column.start',
     defaultMessage: 'Running',
   },
-  column_end: {
-    id: 'report.job.column.end',
-    defaultMessage: 'Finished',
+  column_success: {
+    id: 'report.job.column.success',
+    defaultMessage: 'Success',
   },
   column_error: {
     id: 'report.job.column.error',
@@ -50,7 +50,7 @@ class ProcessingJobReportTable extends Component {
             <TH className="header" field="operation" />
             <TH className="header" field="total" />
             <TH className="header-light" field="start" />
-            <TH className="header-light" field="end" />
+            <TH className="header-light" field="success" />
             <TH className="header-light" field="error" />
             <TH className="header" field="updated_at" />
           </tr>
