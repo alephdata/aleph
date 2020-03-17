@@ -23,7 +23,7 @@ const messages = defineMessages({
 const itemRenderer = (item, { handleClick }) => (
   <MenuItem
     key={item.label}
-    text={<Schema.Smart.Label schema={item} icon />}
+    text={<Schema.Label schema={item} icon />}
     onClick={handleClick}
   />
 );

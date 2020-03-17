@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { selectModel } from 'src/selectors';
 import { Icon } from '@blueprintjs/core';
 
+
 class SchemaIcon extends PureComponent {
   render() {
     const { schema, ...rest } = this.props;

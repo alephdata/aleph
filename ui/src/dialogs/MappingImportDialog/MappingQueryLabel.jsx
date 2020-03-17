@@ -17,7 +17,7 @@ const MappingQueryLabel = ({ query }) => {
       <p className="MappingQueryLabel__entityList">
         {Object.entries(entities).map(([key, { schema }]) => (
           <span className="MappingQueryLabel__entity" key={key}>
-            <Schema.Smart.Icon schema={schema} className="left-icon" />
+            <Schema.Icon schema={schema} className="left-icon" />
             {key}
           </span>
         ))}

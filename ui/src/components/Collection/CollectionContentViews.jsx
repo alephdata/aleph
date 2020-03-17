@@ -96,7 +96,7 @@ class CollectionViews extends React.Component {
             className="CollectionContentViews__tab"
             title={
               <>
-                <Schema.Smart.Label schema={ref.schema} plural icon />
+                <Schema.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
             panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} />}
