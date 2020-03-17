@@ -65,6 +65,7 @@ const mapStateToProps = state => ({
 
 class Schema extends Component {
   static Smart = {
+    Icon: connect(mapStateToProps)(SmartSchemaHOC(SchemaIcon)),
     Label: connect(mapStateToProps)(SmartSchemaHOC(SchemaLabel)),
     Link: connect(mapStateToProps)(SmartSchemaHOC(SchemaLink)),
   };

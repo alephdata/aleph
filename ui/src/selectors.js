@@ -225,6 +225,10 @@ export function selectCollectionMappings(state, collectionId) {
   return selectObject(state, state.collectionMappings, collectionId);
 }
 
+export function selectEntityMapping(state, entityId) {
+  return selectObject(state, state.entityMappings, entityId);
+}
+
 export function selectCollectionXref(state, xrefId) {
   return selectObject(state, state.collectionXref, xrefId);
 }

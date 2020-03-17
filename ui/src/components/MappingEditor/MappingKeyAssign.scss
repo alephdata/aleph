@@ -32,6 +32,10 @@
       &__value {
         width: 75%;
         padding-left: 15px;
+
+        .bp3-button {
+          padding-left: $aleph-grid-size*1.5;
+        }
       }
 
       &__label {
@@ -42,6 +46,21 @@
 
     .bp3-form-helper-text {
       color: white !important;
+    }
+
+    &__keyHelp {
+      &__main {
+        margin-bottom: $aleph-grid-size/2;
+      }
+      &__toggle {
+        font-weight: bold;
+        margin-top: 0 !important;
+        margin-left: -$aleph-grid-size/2;
+
+        .bp3-icon {
+          color: white !important;
+        }
+      }
     }
   }
 
