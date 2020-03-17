@@ -98,7 +98,7 @@ class MappingVerifyItem extends Component {
           entity={fullMappingsList.getMappingAsEntity(id)}
           property={schema.getProperty(propertyName)}
           onSubmit={entity => {
-            onPropertyAdd(mapping.id, propertyName, { literal: entity.getProperty(propertyName) })
+            onPropertyAdd(mapping.id, propertyName, { literal: entity.getProperty(propertyName) });
             if (currEditingLiteral === propertyName) {
               this.setState({ currEditingLiteral: null });
             }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Intent, Position, Tooltip } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import MappingImportDialog from 'src/dialogs/MappingImportDialog/MappingImportDialog';
 
 

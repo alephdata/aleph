@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent, Radio, RadioGroup, Spinner } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import { Dialog, Button, Intent, Radio, RadioGroup } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import YAML from 'yaml'
+import YAML from 'yaml';
 
-import Query from 'src/app/Query';
 import MappingQueryLabel from 'src/dialogs/MappingImportDialog/MappingQueryLabel';
-import { Collection, FileImport } from 'src/components/common';
-import { createDiagram } from 'src/actions';
-import { showSuccessToast, showWarningToast } from 'src/app/toast';
-import getDiagramLink from 'src/util/getDiagramLink';
-import { processApiEntity } from 'src/components/Diagram/util';
+import { FileImport } from 'src/components/common';
+import { showSuccessToast } from 'src/app/toast';
 
 import './MappingImportDialog.scss';
 
@@ -42,7 +38,6 @@ const messages = defineMessages({
 class MappingImportDialog extends Component {
   constructor(props) {
     super(props);
-    const { diagram } = this.props;
 
     this.state = {
       importedFileName: null,
@@ -66,13 +61,13 @@ class MappingImportDialog extends Component {
     this.setState({ selectedQueryIndex: e.target.value });
   }
 
-  onImport({ fileName, label, data }) {
+  onImport({ fileName, data }) {
     const parsedData = YAML.parse(data);
     const firstEntry = Object.values(parsedData)[0];
 
     const mappingQueries = firstEntry.query ? [firstEntry.query] : firstEntry.queries;
-    const selectedQueryIndex = mappingQueries.length === 1 ? "0" : null;
-    this.setState({ label, mappingQueries, importedFileName: fileName, selectedQueryIndex });
+    const selectedQueryIndex = mappingQueries.length === 1 ? '0' : null;
+    this.setState({ mappingQueries, importedFileName: fileName, selectedQueryIndex });
   }
 
   onSubmit() {
@@ -143,10 +138,7 @@ class MappingImportDialog extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
-
-MappingImportDialog = injectIntl(MappingImportDialog);
-MappingImportDialog = withRouter(MappingImportDialog);
-export default connect(mapStateToProps, {
-  createDiagram,
-})(MappingImportDialog);
+export default compose(
+  injectIntl,
+  withRouter,
+)(MappingImportDialog);

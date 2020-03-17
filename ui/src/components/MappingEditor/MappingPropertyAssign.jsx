@@ -87,7 +87,7 @@ export class MappingPropertyAssign extends Component {
   propertyListRenderer({ id, schema }, renderItem, showHeader) {
     const { mappings } = this.props;
     const { featuredProps, otherProps } = this.getAssignableProps(schema);
-    const color = mappings.getMapping(id).color;
+    const { color } = mappings.getMapping(id);
 
     return (
       <>
@@ -226,7 +226,6 @@ export class MappingPropertyAssign extends Component {
             const style = {
               color: 'black',
               backgroundColor: 'white',
-              // height: '100px',
             };
 
             if (colError) {

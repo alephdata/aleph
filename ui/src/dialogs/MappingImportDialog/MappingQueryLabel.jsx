@@ -6,6 +6,7 @@ import './MappingQueryLabel.scss';
 
 
 const MappingQueryLabel = ({ query }) => {
+  /* eslint-disable camelcase */
   const { csv_url, csv_urls, entities } = query;
 
   const displayUrl = csv_urls ? `${csv_urls[0]}, ...` : csv_url;
@@ -15,7 +16,7 @@ const MappingQueryLabel = ({ query }) => {
       <p className="MappingQueryLabel__url">{displayUrl}</p>
       <p className="MappingQueryLabel__entityList">
         {Object.entries(entities).map(([key, { schema }]) => (
-          <span className="MappingQueryLabel__entity" key={key} >
+          <span className="MappingQueryLabel__entity" key={key}>
             <Schema.Smart.Icon schema={schema} className="left-icon" />
             {key}
           </span>

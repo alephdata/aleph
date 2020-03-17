@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import YAML from 'yaml';
-import { saveAs } from 'file-saver';
 
 import { showErrorToast, showInfoToast } from 'src/app/toast';
 import { createEntityMapping, flushEntityMapping, deleteEntityMapping, updateEntityMapping } from 'src/actions';
@@ -13,6 +12,8 @@ import MappingFlushDialog from 'src/dialogs/MappingFlushDialog/MappingFlushDialo
 import MappingSaveDialog from 'src/dialogs/MappingSaveDialog/MappingSaveDialog';
 import MappingDeleteDialog from 'src/dialogs/MappingDeleteDialog/MappingDeleteDialog';
 import { selectSession } from 'src/selectors';
+
+const fileDownload = require('js-file-download');
 
 const messages = defineMessages({
   create: {
@@ -153,37 +154,51 @@ class MappingManageMenu extends Component {
   }
 
   exportMappingData() {
-    const { mappings } = this.props;
+    const { entity, mappings, existingMappingMetadata } = this.props;
 
-    console.log('mappings', mappings)
-
-    // const yamlData = YAML.stringify()
-    // saveAs(yamlData, `${entity.getCaption()}.yaml`);
+    try {
+      const fileData = { [entity.id]:
+        {
+          label: entity.getCaption(),
+          info_url: entity.links.self,
+          query: {
+            csv_url: existingMappingMetadata.links.table_csv,
+            entities: mappings.toApiFormat(),
+          },
+        },
+      };
+      const yamlData = YAML.stringify(fileData);
+      fileDownload(yamlData, `${entity.getCaption()}.yml`);
+    } catch (e) {
+      showErrorToast(e);
+    }
   }
 
   render() {
-    const { mappingDataId } = this.props;
+    const { existingMappingMetadata } = this.props;
     const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
+
+    const hasExisting = existingMappingMetadata !== undefined;
 
     return (
       <>
         <ButtonGroup>
-          {mappingDataId && (
+          {hasExisting && (
             <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
               <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
             </Button>
           )}
-          {!mappingDataId && (
+          {!hasExisting && (
             <Button icon="add" intent={Intent.PRIMARY} onClick={this.toggleCreate}>
               <FormattedMessage id="mapping.actions.create" defaultMessage="Generate entities" />
             </Button>
           )}
-          {mappingDataId && (
+          {hasExisting && (
             <Button icon="export" onClick={this.exportMappingData}>
               <FormattedMessage id="mapping.actions.export" defaultMessage="Export mapping" />
             </Button>
           )}
-          {mappingDataId && (
+          {hasExisting && (
             <Button icon="delete" onClick={this.toggleFlush}>
               <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />
             </Button>

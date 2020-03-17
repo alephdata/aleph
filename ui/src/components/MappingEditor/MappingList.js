@@ -23,7 +23,7 @@ class MappingList {
     }
   }
 
-  assignColor(i) {
+  assignColor() {
     const colorIndex = this.getValues()
       .map(mapping => colorOptions.indexOf(mapping.color))
       .sort()
@@ -62,8 +62,9 @@ class MappingList {
 
     // convert properties to Entity > properties format
     Object.entries(properties)
-      .filter(([key, value]) => value.literal)
-      .forEach(([key, value]) => { formattedProps[key] = value.literal });
+      /* eslint-disable no-unused-vars */
+      .filter(([_, value]) => value.literal)
+      .forEach(([key, value]) => { formattedProps[key] = value.literal; });
 
     return new Entity(this.model, { id, schema, properties: formattedProps });
   }
@@ -100,9 +101,9 @@ class MappingList {
           if (propValue?.entity && propValue?.entity === idToRemove) {
             this.removeProperty(mapping.id, propName);
           }
-        })
+        });
       }
-    })
+    });
 
     return this;
   }

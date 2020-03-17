@@ -54,11 +54,6 @@
       }
     }
 
-    &__button.bp3-button {
-      // display: block !important;
-      // min-width: 160px;
-    }
-
     &__propListHeading {
       padding: $aleph-grid-size !important;
       margin: 0 !important;
@@ -68,8 +63,6 @@
       }
     }
   }
-
-
 
   &__error {
     line-height: 1.4;

@@ -34,6 +34,12 @@ export class EntityMappingMode extends Component {
     }
   }
 
+  onImport(mappingData) {
+    const processedData = this.processImportedMappings(mappingData);
+
+    this.setState({ importedMappingData: processedData });
+  }
+
   processCsvResults(results, parser) {
     if (results?.data) {
       this.setState({
@@ -48,7 +54,7 @@ export class EntityMappingMode extends Component {
     const { csvHeader } = this.state;
 
     const processed = {};
-    Object.entries(mappingData).forEach(([id, { schema, keys, properties }], i) => {
+    Object.entries(mappingData).forEach(([id, { schema, keys, properties }]) => {
       const processedKeys = keys.filter(key => csvHeader.indexOf(key) > -1);
       const processedProps = {};
 
@@ -75,19 +81,16 @@ export class EntityMappingMode extends Component {
     return processed;
   }
 
-  onImport(mappingData) {
-    const processedData = this.processImportedMappings(mappingData);
-
-    this.setState({ importedMappingData: processedData });
-  }
-
   render() {
     const { entity, existingMapping } = this.props;
     const { csvData, csvHeader, importedMappingData } = this.state;
 
-    if (!csvData || !csvHeader || existingMapping.isLoading) {
+    const isLoading = existingMapping.isLoading || existingMapping.shouldLoad;
+    if (!csvData || !csvHeader || isLoading) {
       return <SectionLoading />;
     }
+
+    const showImport = !importedMappingData || isLoading || !existingMapping.id;
 
     return (
       <div className="EntityMappingMode">
@@ -117,7 +120,7 @@ export class EntityMappingMode extends Component {
           </p>
         </div>
 
-        {!importedMappingData && !existingMapping.shouldLoad && !existingMapping.isLoading && !existingMapping.id && (
+        {showImport && (
           <MappingImportButton onImport={this.onImport} />
         )}
 
@@ -131,7 +134,7 @@ export class EntityMappingMode extends Component {
           csvData={csvData}
           csvHeader={csvHeader}
           mappingData={importedMappingData || existingMapping?.query}
-          existingMappingId={existingMapping?.id}
+          existingMappingMetadata={existingMapping}
         />
       </div>
     );

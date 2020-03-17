@@ -35,7 +35,7 @@ const messages = defineMessages({
   lessToggleText: {
     id: 'mapping.keyAssign.additionalHelpToggle.less',
     defaultMessage: 'Less',
-  }
+  },
 });
 
 const keySelectItemRenderer = (item, { handleClick }) => (
@@ -69,7 +69,9 @@ export class MappingKeyAssignItem extends Component {
   }
 
   toggleKeyExplanation() {
-    this.setState(({ keyExplanationVisible }) => ({ keyExplanationVisible: !keyExplanationVisible }))
+    this.setState(({ keyExplanationVisible }) => (
+      { keyExplanationVisible: !keyExplanationVisible }
+    ));
   }
 
   renderKeySelect({ id, keys }) {
@@ -93,7 +95,8 @@ export class MappingKeyAssignItem extends Component {
             <Collapse isOpen={keyExplanationVisible} className="MappingKeyAssign__item__keyHelp__additional">
               <FormattedMessage
                 id="mapping.keyAssign.additionalHelpText"
-                defaultMessage={`The best keys are columns from your data that contain id numbers, phone numbers, email addresses,
+                defaultMessage={
+                  `The best keys are columns from your data that contain id numbers, phone numbers, email addresses,
                   or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow
                   Aleph to generate unique entities correctly from your data.`
                 }
@@ -102,7 +105,11 @@ export class MappingKeyAssignItem extends Component {
             <Button
               small
               minimal
-              text={keyExplanationVisible ? intl.formatMessage(messages.lessToggleText) : intl.formatMessage(messages.moreToggleText)}
+              text={
+                keyExplanationVisible
+                  ? intl.formatMessage(messages.lessToggleText)
+                  : intl.formatMessage(messages.moreToggleText)
+              }
               className="bp3-form-helper-text MappingKeyAssign__item__keyHelp__toggle"
               rightIcon={keyExplanationVisible ? 'caret-up' : 'caret-down'}
               onClick={this.toggleKeyExplanation}

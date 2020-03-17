@@ -97,7 +97,7 @@ export class MappingEditor extends Component {
   }
 
   render() {
-    const { entity, existingMappingId, csvData, csvHeader, intl, model } = this.props;
+    const { entity, existingMappingMetadata, csvData, csvHeader, intl, model } = this.props;
     const { mappings, previewIsOpen } = this.state;
 
     return (
@@ -170,7 +170,7 @@ export class MappingEditor extends Component {
                 <MappingManageMenu
                   mappings={mappings}
                   entity={entity}
-                  mappingDataId={existingMappingId}
+                  existingMappingMetadata={existingMappingMetadata}
                 />
               </div>
             </>

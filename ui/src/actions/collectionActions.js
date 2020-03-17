@@ -1,6 +1,6 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint, MAX_RESULTS } from './util';
+import { queryEndpoint } from './util';
 
 export const queryCollections = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_COLLECTIONS' });
 
