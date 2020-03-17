@@ -56,8 +56,9 @@ def index_matches(collection, matches, sync=False):
                 'created_at': datetime.utcnow(),
             }
         })
-    log.info("Indexing %d xref matches...", len(actions))
+
     if len(actions):
+        log.info("Indexing %d xref matches...", len(actions))
         bulk_actions(actions, sync=sync)
 
 
