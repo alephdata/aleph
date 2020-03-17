@@ -68,9 +68,11 @@ export class CollectionXrefMode extends React.Component {
   }
 
   toggleExpand(xref) {
-    const { expandedId, parsedHash, history } = this.props;
+    const { expandedId, parsedHash, history, location } = this.props;
     parsedHash.expand = expandedId === xref.id ? undefined : xref.id;
     history.replace({
+      pathname: location.pathname,
+      search: location.search,
       hash: queryString.stringify(parsedHash),
     });
   }
