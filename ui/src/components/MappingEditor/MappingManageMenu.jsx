@@ -26,7 +26,7 @@ const messages = defineMessages({
   },
   delete: {
     id: 'mapping.actions.delete.toast',
-    defaultMessage: 'Deleting mapping and generated entities...',
+    defaultMessage: 'Deleting mapping and any generated entities...',
   },
   flush: {
     id: 'mapping.actions.flush.toast',
@@ -65,10 +65,10 @@ class MappingManageMenu extends Component {
   }
 
   onSave() {
-    const { entity, mappingDataId, intl } = this.props;
+    const { entity, existingMappingMetadata, intl } = this.props;
     if (this.validateMappings()) {
       try {
-        this.props.updateEntityMapping(entity, mappingDataId, this.formatMappings());
+        this.props.updateEntityMapping(entity, existingMappingMetadata.id, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.save));
       } catch (e) {
         showErrorToast(e);
@@ -91,10 +91,10 @@ class MappingManageMenu extends Component {
   }
 
   onDelete() {
-    const { entity, mappingDataId, intl } = this.props;
+    const { entity, existingMappingMetadata, intl } = this.props;
 
     try {
-      this.props.deleteEntityMapping(entity, mappingDataId);
+      this.props.deleteEntityMapping(entity, existingMappingMetadata.id);
       showInfoToast(intl.formatMessage(messages.delete));
     } catch (e) {
       showErrorToast(e);
@@ -103,10 +103,10 @@ class MappingManageMenu extends Component {
   }
 
   onFlush() {
-    const { entity, mappingDataId, intl } = this.props;
+    const { entity, existingMappingMetadata, intl } = this.props;
 
     try {
-      this.props.flushEntityMapping(entity, mappingDataId);
+      this.props.flushEntityMapping(entity, existingMappingMetadata.id);
       showInfoToast(intl.formatMessage(messages.flush));
     } catch (e) {
       showErrorToast(e);
@@ -178,34 +178,32 @@ class MappingManageMenu extends Component {
     const { existingMappingMetadata } = this.props;
     const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
 
-    const hasExisting = existingMappingMetadata !== undefined;
+    const hasExisting = existingMappingMetadata?.id !== undefined;
 
     return (
       <>
         <ButtonGroup>
-          {hasExisting && (
-            <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
-              <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
-            </Button>
-          )}
           {!hasExisting && (
             <Button icon="add" intent={Intent.PRIMARY} onClick={this.toggleCreate}>
               <FormattedMessage id="mapping.actions.create" defaultMessage="Generate entities" />
             </Button>
           )}
           {hasExisting && (
-            <Button icon="export" onClick={this.exportMappingData}>
-              <FormattedMessage id="mapping.actions.export" defaultMessage="Export mapping" />
-            </Button>
+            <>
+              <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
+                <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
+              </Button>
+              <Button icon="export" onClick={this.exportMappingData}>
+                <FormattedMessage id="mapping.actions.export" defaultMessage="Export mapping" />
+              </Button>
+              <Button icon="delete" onClick={this.toggleFlush}>
+                <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />
+              </Button>
+              <Button icon="trash" onClick={this.toggleDelete}>
+                <FormattedMessage id="mapping.actions.delete" defaultMessage="Delete" />
+              </Button>
+            </>
           )}
-          {hasExisting && (
-            <Button icon="delete" onClick={this.toggleFlush}>
-              <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />
-            </Button>
-          )}
-          <Button icon="trash" onClick={this.toggleDelete}>
-            <FormattedMessage id="mapping.actions.delete" defaultMessage="Delete" />
-          </Button>
         </ButtonGroup>
         <MappingCreateDialog
           isOpen={createIsOpen}

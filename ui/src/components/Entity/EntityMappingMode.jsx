@@ -90,7 +90,7 @@ export class EntityMappingMode extends Component {
       return <SectionLoading />;
     }
 
-    const showImport = !importedMappingData || isLoading || !existingMapping.id;
+    const showImport = !isLoading && !importedMappingData && !existingMapping.id;
 
     return (
       <div className="EntityMappingMode">
