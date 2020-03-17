@@ -6,7 +6,7 @@ import { Button, Card, HTMLTable, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { PropertyEditor, PropertyValues } from '@alephdata/vislib';
 import { selectLocale } from 'src/selectors';
-import { mappingItemLabel } from './util';
+import { MappingLabel } from './util';
 
 
 import './MappingVerify.scss';
@@ -126,7 +126,7 @@ class MappingVerifyItem extends Component {
       if (referredEntity) {
         return (
           <td className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
-            {mappingItemLabel(referredEntity)}
+            <MappingLabel mapping={referredEntity} />
           </td>
         );
       }
@@ -142,7 +142,7 @@ class MappingVerifyItem extends Component {
     return (
       <Card className="MappingVerify__item" key={id} style={{ borderColor: color }}>
         <h6 className="MappingVerify__title bp3-heading" style={{ color }}>
-          {mappingItemLabel({ id, schema })}
+          <MappingLabel mapping={{ id, schema }} />
         </h6>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">

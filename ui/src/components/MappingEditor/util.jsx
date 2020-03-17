@@ -1,7 +1,7 @@
 import React from 'react';
 import { Schema } from 'src/components/common';
 
-export const mappingItemLabel = (mapping) => {
+export const MappingLabel = (mapping) => {
   if (!mapping || !mapping.schema || !mapping.id) return null;
 
   return (

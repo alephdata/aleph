@@ -35,11 +35,13 @@ export class EntityMappingMode extends Component {
   }
 
   processCsvResults(results, parser) {
-    this.setState({
-      csvHeader: results.data[0],
-      csvData: results.data.slice(1, 15),
-    });
-    parser.abort();
+    if (results?.data) {
+      this.setState({
+        csvHeader: results.data[0],
+        csvData: results.data.slice(1, 15),
+      });
+      parser.abort();
+    }
   }
 
   processImportedMappings(mappingData) {
@@ -74,8 +76,6 @@ export class EntityMappingMode extends Component {
   }
 
   onImport(mappingData) {
-    console.log('in EntityMappingMode, mappingData is', mappingData);
-
     const processedData = this.processImportedMappings(mappingData);
 
     this.setState({ importedMappingData: processedData });

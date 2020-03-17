@@ -6,7 +6,7 @@ import { Select } from '@blueprintjs/select';
 import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
-import { mappingItemLabel } from './util';
+import { MappingLabel } from './util';
 
 import './MappingPropertyAssign.scss';
 
@@ -72,7 +72,7 @@ export class MappingPropertyAssign extends Component {
         {items.map(({ color, id, schema }) => (
           <MenuItem
             key={id}
-            text={mappingItemLabel({ id, schema })}
+            text={<MappingLabel mapping={{ id, schema }} />}
             popoverProps={{ interactionKind: PopoverInteractionKind.CLICK }}
             style={{ color }}
             className="MappingPropertyAssign__headerSelect__item"
@@ -93,7 +93,7 @@ export class MappingPropertyAssign extends Component {
       <>
         {showHeader && (
           <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading" style={{ color }}>
-            <h6 className="bp3-heading">{mappingItemLabel({ id, schema })}</h6>
+            <h6 className="bp3-heading"><MappingLabel mapping={{ id, schema }} /></h6>
           </li>
         )}
         {
@@ -136,7 +136,7 @@ export class MappingPropertyAssign extends Component {
             {colValue && (
               <>
                 <div className="MappingPropertyAssign__headerSelect__label">
-                  {mappingItemLabel(colValue)}
+                  <MappingLabel mapping={colValue} />
                 </div>
                 <Select
                   id="property-select"

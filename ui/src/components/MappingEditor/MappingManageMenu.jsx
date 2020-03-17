@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import YAML from 'yaml';
+import { saveAs } from 'file-saver';
+
 import { showErrorToast, showInfoToast } from 'src/app/toast';
 import { createEntityMapping, flushEntityMapping, deleteEntityMapping, updateEntityMapping } from 'src/actions';
 
@@ -57,6 +60,7 @@ class MappingManageMenu extends Component {
     this.onDelete = this.onDelete.bind(this);
     this.onFlush = this.onFlush.bind(this);
     this.onSave = this.onSave.bind(this);
+    this.exportMappingData = this.exportMappingData.bind(this);
   }
 
   onSave() {
@@ -148,6 +152,15 @@ class MappingManageMenu extends Component {
     return true;
   }
 
+  exportMappingData() {
+    const { mappings } = this.props;
+
+    console.log('mappings', mappings)
+
+    // const yamlData = YAML.stringify()
+    // saveAs(yamlData, `${entity.getCaption()}.yaml`);
+  }
+
   render() {
     const { mappingDataId } = this.props;
     const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
@@ -165,7 +178,11 @@ class MappingManageMenu extends Component {
               <FormattedMessage id="mapping.actions.create" defaultMessage="Generate entities" />
             </Button>
           )}
-
+          {mappingDataId && (
+            <Button icon="export" onClick={this.exportMappingData}>
+              <FormattedMessage id="mapping.actions.export" defaultMessage="Export mapping" />
+            </Button>
+          )}
           {mappingDataId && (
             <Button icon="delete" onClick={this.toggleFlush}>
               <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />

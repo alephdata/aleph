@@ -54,8 +54,6 @@ export class MappingEditor extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props.mappingData, prevProps.mappingData);
-
     if (this.props.mappingData !== prevProps.mappingData) {
       this.loadFromMappingData();
     }
