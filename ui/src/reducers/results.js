@@ -9,6 +9,7 @@ import {
   queryDiagrams,
   queryEntities,
   queryNotifications,
+  queryCollectionXref,
 } from 'src/actions';
 
 const initialState = {};
@@ -39,6 +40,14 @@ export default createReducer({
   [queryDiagrams.START]: (state, { query }) => resultLoadStart(state, query),
 
   [queryDiagrams.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+
+  [queryCollectionXref.COMPLETE]: updateResults,
+
+  [queryCollectionXref.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryCollectionXref.ERROR]: (state, {
     error, args: { query },
   }) => resultLoadError(state, query, error),
 

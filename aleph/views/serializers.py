@@ -11,6 +11,7 @@ from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
 from aleph.model import Alert, Diagram
 from aleph.logic import resolver
+from aleph.logic.mapping import get_table_csv_link
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
 
@@ -256,26 +257,22 @@ class EntitySerializer(Serializer):
         return obj
 
 
-class MatchCollectionsSerializer(Serializer):
-
-    def _serialize(self, obj):
-        serializer = CollectionSerializer(reference=True)
-        obj['collection'] = serializer.serialize(obj.get('collection'))
-        return obj
-
-
-class MatchSerializer(Serializer):
+class XrefSerializer(Serializer):
 
     def _collect(self, obj):
         matchable = tuple([s.matchable for s in model])
         self.queue(Entity, obj.get('entity_id'), matchable)
         self.queue(Entity, obj.get('match_id'), matchable)
+        self.queue(Collection, obj.get('match_collection_id'))
 
     def _serialize(self, obj):
         entity_id = obj.pop('entity_id', None)
         obj['entity'] = self.resolve(Entity, entity_id, EntitySerializer)
         match_id = obj.pop('match_id', None)
         obj['match'] = self.resolve(Entity, match_id, EntitySerializer)
+        match_collection_id = obj.pop('match_collection_id', None)
+        obj['match_collection'] = self.resolve(Collection, match_collection_id,
+                                               CollectionSerializer)
         if obj['entity'] and obj['match']:
             return obj
 
@@ -353,4 +350,11 @@ class NotificationSerializer(Serializer):
 
 
 class MappingSerializer(Serializer):
-    pass
+    def _serialize(self, obj):
+        links = {
+            # Link gets invalidated after a certain period (~ 24 hours right
+            # now) and does not expose user's api key
+            'table_csv': get_table_csv_link(obj['table_id'])
+        }
+        obj['links'] = links
+        return obj

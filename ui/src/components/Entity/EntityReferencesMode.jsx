@@ -152,7 +152,7 @@ class EntityReferencesMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, mode, location } = ownProps;
-  const parsedHash = queryString.parse(ownProps.location.hash);
+  const parsedHash = queryString.parse(location.hash);
   const reference = selectEntityReference(state, entity.id, mode);
   if (!reference) {
     return {};

@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 import jwtDecode from 'jwt-decode';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 import { loginWithToken, logout } from 'src/actions/sessionActions';
 import { fetchRole, updateRole } from 'src/actions';

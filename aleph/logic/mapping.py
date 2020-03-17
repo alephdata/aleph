@@ -14,8 +14,8 @@ from aleph.logic.notifications import publish
 log = logging.getLogger(__name__)
 
 
-def make_mapper(collection, mapping):
-    table = get_entity(mapping.table_id)
+def get_table_csv_link(table_id):
+    table = get_entity(table_id)
     properties = table.get('properties', {})
     csv_hash = first(properties.get('csvHash'))
     if csv_hash is None:
@@ -27,6 +27,11 @@ def make_mapper(collection, mapping):
             url = local_path.as_posix()
     if url is None:
         raise RuntimeError("Could not generate CSV URL for the table")
+    return url
+
+
+def make_mapper(collection, mapping):
+    url = get_table_csv_link(mapping.table_id)
     data = {'csv_url': url, 'entities': mapping.query}
     return model.make_mapping(data, key_prefix=collection.foreign_id)
 

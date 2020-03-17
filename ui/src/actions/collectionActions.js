@@ -50,22 +50,12 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
-export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async () => {
-  const config = { params: { limit: MAX_RESULTS } };
-  const response = await endpoint.get(`collections/${id}/xref`, config);
-  return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION_XREF_INDEX' });
+export const queryCollectionXref = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_XREF' });
 
-export const queryXrefMatches = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_XREF_MATCHES' });
-
-export const tiggerXrefMatches = asyncActionCreator((id, againstCollectionIds) => async () => {
-  let data = null;
-  if (againstCollectionIds && againstCollectionIds.length > 0) {
-    data = { against_collection_ids: againstCollectionIds };
-  }
-  const response = await endpoint.post(`collections/${id}/xref`, data);
+export const triggerCollectionXref = asyncActionCreator((id) => async () => {
+  const response = await endpoint.post(`collections/${id}/xref`, {});
   return { data: response.data };
-}, { name: 'TRIGGER_XREF_MATCHES' });
+}, { name: 'TRIGGER_XREF' });
 
 export const triggerCollectionAnalyze = asyncActionCreator((id, reset) => async () => {
   const config = { params: { reset } };

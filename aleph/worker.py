@@ -60,7 +60,7 @@ class AlephWorker(Worker):
                 reset_collection(collection, sync=True)
             process_collection(stage, collection, sync=sync, **payload)
         if stage.stage == OP_XREF:
-            xref_collection(stage, collection, **payload)
+            xref_collection(stage, collection)
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)

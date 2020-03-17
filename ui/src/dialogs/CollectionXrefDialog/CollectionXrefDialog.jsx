@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import {
-  RadioGroup, Radio, Callout, Dialog,
-} from '@blueprintjs/core';
+import { Dialog, Button, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { tiggerXrefMatches, queryCollections } from 'src/actions';
-import { showSuccessToast } from 'src/app/toast';
 
-import CollectionXrefDialogActions from './CollectionXrefDialogActions';
-import CollectionXrefSelect from './CollectionXrefSelect';
-
-import './CollectionXrefDialog.scss';
+import { triggerCollectionXref } from 'src/actions';
+import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 
 const messages = defineMessages({
@@ -23,13 +17,13 @@ const messages = defineMessages({
     id: 'collection.xref.processing',
     defaultMessage: 'Cross-referencing started.',
   },
-  xrefAll: {
-    id: 'collection.xref.xrefAll',
-    defaultMessage: 'Cross-reference all datasets',
+  cancel_button: {
+    id: 'collection.xref.cancel',
+    defaultMessage: 'Cancel',
   },
-  xrefSpecific: {
-    id: 'collection.xref.xrefSpecific',
-    defaultMessage: 'Cross-reference specific datasets (faster)',
+  confirm_button: {
+    id: 'collection.xref.confirm',
+    defaultMessage: 'Confirm',
   },
 });
 
@@ -37,74 +31,33 @@ const messages = defineMessages({
 class CollectionXrefDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      xrefAgainst: 'all',
-      selectedCollections: [],
-    };
-  }
-
-  onXrefAgainstChange(event) {
-    this.setState({ xrefAgainst: event.target.value });
+    this.state = { blocking: false };
+    this.onCancel = this.onCancel.bind(this);
+    this.onConfirm = this.onConfirm.bind(this);
   }
 
   onCancel() {
-    const { toggleDialog } = this.props;
-    toggleDialog();
+    this.props.toggleDialog();
   }
 
   async onConfirm() {
-    const { xrefAgainst, selectedCollections } = this.state;
-    const {
-      collection, intl, toggleDialog,
-    } = this.props;
-    let againstCollectionIds = null;
-    if (xrefAgainst === 'specific') {
-      againstCollectionIds = selectedCollections.map(c => c.id);
+    const { collection, intl } = this.props;
+    const { blocking } = this.state;
+    if (blocking) return;
+    this.setState({ blocking: true });
+    try {
+      await this.props.triggerCollectionXref(collection.id);
+      showSuccessToast(intl.formatMessage(messages.processing));
+      this.setState({ blocking: false });
+      this.props.toggleDialog();
+    } catch (e) {
+      this.setState({ blocking: false });
+      showWarningToast(e.message);
     }
-    await this.props.tiggerXrefMatches(collection.id, againstCollectionIds);
-    toggleDialog();
-    showSuccessToast(intl.formatMessage(messages.processing));
-  }
-
-  onCollectionSelect(collection) {
-    const { selectedCollections } = this.state;
-    const existing = selectedCollections.find(c => c.id === collection.id);
-    if (existing) {
-      this.setState({
-        selectedCollections: selectedCollections.filter(c => c !== existing),
-      });
-    } else {
-      this.setState({
-        selectedCollections: [...[collection], ...selectedCollections],
-      });
-    }
-  }
-
-  renderXrefAllWarning = () => (
-    <Callout intent="warning">
-      <FormattedMessage
-        id="collection.xref.alert.text"
-        defaultMessage="Cross-referencing against all other data may take a lot of time. Start this process once and then wait for it to complete."
-      />
-    </Callout>
-  )
-
-  renderXrefSelection() {
-    const { selectedCollections } = this.state;
-    return (
-      <section>
-        <CollectionXrefSelect
-          selectedCollections={selectedCollections}
-          collectionSelectFn={c => this.onCollectionSelect(c)}
-        />
-      </section>
-    );
   }
 
   render() {
     const { intl } = this.props;
-    const { xrefAgainst, selectedCollections } = this.state;
-
     return (
       <Dialog
         icon="comparison"
@@ -114,27 +67,32 @@ class CollectionXrefDialog extends Component {
         title={intl.formatMessage(messages.title)}
       >
         <div className="bp3-dialog-body">
-          <RadioGroup
-            onChange={event => this.onXrefAgainstChange(event)}
-            selectedValue={xrefAgainst}
-          >
-            <Radio label={intl.formatMessage(messages.xrefAll)} value="all" />
-            <Radio label={intl.formatMessage(messages.xrefSpecific)} value="specific" />
-          </RadioGroup>
-          {xrefAgainst === 'all' ? this.renderXrefAllWarning() : this.renderXrefSelection()}
+          <FormattedMessage
+            id="collection.xref.text"
+            defaultMessage="You will now cross-reference this dataset against all other sources. Start this process once and then wait for it to complete."
+          />
         </div>
-        <CollectionXrefDialogActions
-          confirmFn={() => this.onConfirm()}
-          cancelFn={() => this.onCancel()}
-          confirmDisabled={xrefAgainst === 'specific' && selectedCollections.length <= 0}
-        />
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
+            <Button
+              onClick={this.onCancel}
+              disabled={this.state.blocking}
+              text={intl.formatMessage(messages.cancel_button)}
+            />
+            <Button
+              intent={Intent.PRIMARY}
+              onClick={this.onConfirm}
+              disabled={this.state.blocking}
+              text={intl.formatMessage(messages.confirm_button)}
+            />
+          </div>
+        </div>
       </Dialog>
     );
   }
 }
 
-const mapDispatchToProps = { tiggerXrefMatches, queryCollections };
 export default compose(
-  connect(null, mapDispatchToProps),
+  connect(null, { triggerCollectionXref }),
   injectIntl,
 )(CollectionXrefDialog);
