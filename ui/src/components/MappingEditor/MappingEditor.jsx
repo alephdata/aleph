@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
 import { selectModel } from 'src/selectors';
-import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import MappingList from 'src/components/MappingEditor/MappingList';
 import MappingKeyAssign from 'src/components/MappingEditor/MappingKeyAssign';
 import MappingManageMenu from 'src/components/MappingEditor/MappingManageMenu';
@@ -37,7 +35,6 @@ export class MappingEditor extends Component {
 
     this.state = {
       mappings: new MappingList(props.model),
-      previewIsOpen: false,
     };
 
     this.onMappingAdd = this.onMappingAdd.bind(this);
@@ -46,7 +43,6 @@ export class MappingEditor extends Component {
     this.onKeyRemove = this.onKeyRemove.bind(this);
     this.onPropertyAdd = this.onPropertyAdd.bind(this);
     this.onPropertyRemove = this.onPropertyRemove.bind(this);
-    this.togglePreview = this.togglePreview.bind(this);
   }
 
   componentDidMount() {
@@ -83,10 +79,6 @@ export class MappingEditor extends Component {
     this.setState(({ mappings }) => ({ mappings: mappings.removeProperty(id, propName) }));
   }
 
-  togglePreview = () => this.setState(({ previewIsOpen }) => (
-    { previewIsOpen: !previewIsOpen }
-  ));
-
   loadFromMappingData() {
     const { mappingData, model } = this.props;
 
@@ -98,7 +90,7 @@ export class MappingEditor extends Component {
 
   render() {
     const { entity, existingMappingMetadata, csvData, csvHeader, intl, model } = this.props;
-    const { mappings, previewIsOpen } = this.state;
+    const { mappings } = this.state;
 
     return (
       <div className="MappingEditor">
@@ -160,11 +152,6 @@ export class MappingEditor extends Component {
                     />
                   ))}
                 />
-                <ButtonGroup className="MappingEditor__preview">
-                  <Button icon="eye-open" onClick={this.togglePreview}>
-                    <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
-                  </Button>
-                </ButtonGroup>
               </div>
               <div className="MappingEditor__section">
                 <MappingManageMenu
@@ -176,11 +163,6 @@ export class MappingEditor extends Component {
             </>
           )}
         </div>
-        <MappingPreviewDialog
-          isOpen={previewIsOpen}
-          mappings={mappings}
-          toggleDialog={this.togglePreview}
-        />
       </div>
     );
   }
