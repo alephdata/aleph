@@ -1,0 +1,19 @@
+@import "src/app/variables.scss";
+@import "src/app/mixins.scss";
+
+
+.MappingQueryLabel {
+  &__url {
+    @include breakText;
+  }
+
+  &__entityList {
+    margin-top: $aleph-grid-size;
+  }
+
+  &__entity {
+    margin-right: $aleph-grid-size;
+    // color: $blue1;
+    // font-weight: bold;
+  }
+}

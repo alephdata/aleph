@@ -29,3 +29,8 @@ Mapping:
       nullable: true
     query:
       type: object
+    links:
+      type: object
+      properties:
+        table_csv:
+          type: string

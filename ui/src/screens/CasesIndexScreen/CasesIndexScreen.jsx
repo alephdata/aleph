@@ -77,7 +77,6 @@ export class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const context = {
-    facet: ['countries', 'team.name'],
     'filter:kind': 'casefile',
   };
   let query = Query.fromLocation('collections', location, context, 'collections')

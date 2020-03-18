@@ -2,22 +2,22 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Query from 'src/app/Query';
 import {
   fetchCollection,
   fetchCollectionStatus,
-  fetchCollectionXrefIndex,
   fetchCollectionProcessingReport,
+  queryCollectionXref,
   queryDiagrams,
   mutate,
 } from 'src/actions';
 import {
   selectCollection,
   selectCollectionStatus,
-  selectCollectionXrefIndex,
   selectDiagramsResult,
+  selectCollectionXrefResult,
   selectCollectionProcessingReport,
 } from 'src/selectors';
+import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
 
 class CollectionContextLoader extends PureComponent {
   constructor(props) {
@@ -48,14 +48,7 @@ class CollectionContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const {
-      collectionId,
-      collection,
-      status,
-      diagramsQuery,
-      diagramsResult,
-      processingReport,
-    } = this.props;
+    const { processingReport, collectionId, collection, status } = this.props;
 
     if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
@@ -65,11 +58,12 @@ class CollectionContextLoader extends PureComponent {
       this.fetchStatus();
     }
 
-    const { xrefIndex } = this.props;
-    if (xrefIndex.shouldLoad) {
-      this.props.fetchCollectionXrefIndex({ id: collectionId });
+    const { xrefResult, xrefQuery } = this.props;
+    if (xrefResult.shouldLoad) {
+      this.props.queryCollectionXref({ query: xrefQuery });
     }
 
+    const { diagramsQuery, diagramsResult } = this.props;
     if (diagramsResult.shouldLoad) {
       this.props.queryDiagrams({ query: diagramsQuery });
     }
@@ -96,20 +90,14 @@ class CollectionContextLoader extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps;
-
-  const context = {
-    'filter:collection_id': collectionId,
-  };
-  const diagramsQuery = new Query('diagrams', {}, context, 'diagrams').sortBy(
-    'updated_at',
-    'desc',
-  );
-
+  const { collectionId, location } = ownProps;
+  const diagramsQuery = queryCollectionDiagrams(location, collectionId);
+  const xrefQuery = queryCollectionXrefFacets(location, collectionId);
   return {
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
-    xrefIndex: selectCollectionXrefIndex(state, collectionId),
+    xrefQuery,
+    xrefResult: selectCollectionXrefResult(state, xrefQuery),
     diagramsQuery,
     diagramsResult: selectDiagramsResult(state, diagramsQuery),
     processingReport: selectCollectionProcessingReport(state, collectionId),
@@ -120,7 +108,7 @@ const mapDispatchToProps = {
   mutate,
   fetchCollection,
   fetchCollectionStatus,
-  fetchCollectionXrefIndex,
+  queryCollectionXref,
   queryDiagrams,
   fetchCollectionProcessingReport,
 };

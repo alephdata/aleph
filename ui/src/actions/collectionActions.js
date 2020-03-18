@@ -1,6 +1,6 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint, MAX_RESULTS } from './util';
+import { queryEndpoint } from './util';
 
 export const queryCollections = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_COLLECTIONS' });
 
@@ -50,22 +50,17 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
-export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async () => {
-  const config = { params: { limit: MAX_RESULTS } };
-  const response = await endpoint.get(`collections/${id}/xref`, config);
+export const fetchCollectionProcessingReport = asyncActionCreator(({ id }) => async () => {
+  const response = await endpoint.get(`reports/${id}`);
   return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION_XREF_INDEX' });
+}, { name: 'FETCH_COLLECTION_PROCESSING_REPORT' });
 
-export const queryXrefMatches = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_XREF_MATCHES' });
+export const queryCollectionXref = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_XREF' });
 
-export const tiggerXrefMatches = asyncActionCreator((id, againstCollectionIds) => async () => {
-  let data = null;
-  if (againstCollectionIds && againstCollectionIds.length > 0) {
-    data = { against_collection_ids: againstCollectionIds };
-  }
-  const response = await endpoint.post(`collections/${id}/xref`, data);
+export const triggerCollectionXref = asyncActionCreator((id) => async () => {
+  const response = await endpoint.post(`collections/${id}/xref`, {});
   return { data: response.data };
-}, { name: 'TRIGGER_XREF_MATCHES' });
+}, { name: 'TRIGGER_XREF' });
 
 export const triggerCollectionAnalyze = asyncActionCreator((id, reset) => async () => {
   const config = { params: { reset } };
@@ -77,49 +72,3 @@ export const triggerCollectionCancel = asyncActionCreator(id => async () => {
   const response = await endpoint.delete(`collections/${id}/status`);
   return { id, data: response.data };
 }, { name: 'TRIGGER_COLLECTION_CANCEL' });
-
-const executeTrigger = async (collectionId, mappingId) => (
-  endpoint.put(`collections/${collectionId}/mappings/${mappingId}/trigger`)
-);
-
-const executeFlush = async (collectionId, mappingId) => (
-  endpoint.put(`collections/${collectionId}/mappings/${mappingId}/flush`)
-);
-
-export const flushCollectionMapping = asyncActionCreator((collectionId, mappingId) => async () => {
-  executeFlush(collectionId, mappingId);
-  return { collectionId, mappingId };
-}, { name: 'FLUSH_COLLECTION_MAPPING' });
-
-export const createCollectionMapping = asyncActionCreator((collectionId, mapping) => async () => {
-  const response = await endpoint.post(`collections/${collectionId}/mappings`, mapping);
-  if (response && response.data && response.data.id) {
-    executeTrigger(collectionId, response.data.id);
-  }
-  return { collectionId, mappingId: response.data.id };
-}, { name: 'CREATE_COLLECTION_MAPPING' });
-
-export const updateCollectionMapping = (
-  asyncActionCreator((collectionId, mappingId, mapping) => async () => {
-    const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}`, mapping);
-    executeTrigger(collectionId, mappingId);
-    return { collectionId, mappingId: response.data.id };
-  }, { name: 'UPDATE_COLLECTION_MAPPING' })
-);
-
-export const deleteCollectionMapping = asyncActionCreator((collectionId, mappingId) => async () => {
-  executeFlush(collectionId, mappingId);
-  endpoint.delete(`collections/${collectionId}/mappings/${mappingId}`);
-  return { collectionId, mappingId };
-}, { name: 'DELETE_COLLECTION_MAPPING' });
-
-export const fetchCollectionMappings = asyncActionCreator((collectionId) => async () => {
-  const config = { params: { limit: MAX_RESULTS } };
-  const response = await endpoint.get(`collections/${collectionId}/mappings`, config);
-  return { collectionId, data: response.data };
-}, { name: 'FETCH_COLLECTION_MAPPINGS' });
-
-export const fetchCollectionProcessingReport = asyncActionCreator(({ id }) => async () => {
-  const response = await endpoint.get(`reports/${id}`);
-  return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION_PROCESSING_REPORT' });

@@ -6,26 +6,24 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import Query from 'src/app/Query';
-
 import { Count, TextLoading } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
-import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
+import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionProcessingReportViews from 'src/components/Collection/CollectionProcessingReportViews';
 import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 
 import {
-  selectCollectionXrefIndex,
+  selectCollectionXrefResult,
   selectModel,
   selectDiagramsResult,
   selectSessionIsTester,
   selectCollectionProcessingReport,
 } from 'src/selectors';
+import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
 
 import './CollectionViews.scss';
 
-/* eslint-disable */
 
 const viewIds = {
   OVERVIEW: 'overview',
@@ -52,7 +50,7 @@ class CollectionViews extends React.Component {
   getEntitySchemata() {
     const { collection, model } = this.props;
     const matching = [];
-    for (const key in collection.schemata) {
+    for (const key in collection.schemata) {  // eslint-disable-line
       if (!model.getSchema(key).isDocument()) {
         matching.push({
           schema: key,
@@ -66,7 +64,7 @@ class CollectionViews extends React.Component {
   countDocuments() {
     const { collection, model } = this.props;
     let totalCount = 0;
-    for (const key in collection.schemata) {
+    for (const key in collection.schemata) {  // eslint-disable-line
       if (model.getSchema(key).isDocument()) {
         totalCount += collection.schemata[key];
       }
@@ -77,7 +75,7 @@ class CollectionViews extends React.Component {
   countProcessingJobs() {
     const { processingReport } = this.props;
     const { jobs } = processingReport;
-    return !!jobs ? jobs.length : 0;
+    return jobs ? jobs.length : 0;
   }
 
   handleTabChange(mode) {
@@ -101,7 +99,7 @@ class CollectionViews extends React.Component {
       diagrams,
       showDiagramsTab,
       processingReport,
-      xrefIndex,
+      xref,
     } = this.props;
     // const numOfDocs = this.countDocuments();
     // const entitySchemata = this.getEntitySchemata();
@@ -118,7 +116,7 @@ class CollectionViews extends React.Component {
         <Tab
           id={viewIds.OVERVIEW}
           className="CollectionViews__tab"
-          title={
+          title={(
             <>
               <Icon icon="grouped-bar-chart" className="left-icon" />
               <FormattedMessage
@@ -126,13 +124,13 @@ class CollectionViews extends React.Component {
                 defaultMessage="Overview"
               />
             </>
-          }
+          )}
           panel={<CollectionOverviewMode collection={collection} />}
         />
         <Tab
           id={viewIds.BROWSE}
           className="CollectionViews__tab"
-          title={
+          title={(
             <>
               <Icon icon="inbox-search" className="left-icon" />
               <FormattedMessage
@@ -140,35 +138,32 @@ class CollectionViews extends React.Component {
                 defaultMessage="Browse"
               />
             </>
-          }
-          panel={
+          )}
+          panel={(
             <CollectionContentViews
               collection={collection}
               activeMode={activeMode}
               onChange={this.handleTabChange}
             />
-          }
+          )}
         />
         <Tab
           id={viewIds.XREF}
           className="CollectionViews__tab"
-          title={
-            <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
+          title={(
+            <TextLoading loading={xref.shouldLoad || xref.isLoading}>
               <Icon className="left-icon" icon="comparison" />
-              <FormattedMessage
-                id="entity.info.xref"
-                defaultMessage="Cross-reference"
-              />
-              <Count count={xrefIndex.total} />
+              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
+              <Count count={xref.total} />
             </TextLoading>
-          }
-          panel={<CollectionXrefIndexMode collection={collection} />}
+          )}
+          panel={<CollectionXrefMode collection={collection} />}
         />
         {showDiagramsTab && (
           <Tab
             id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
-            title={
+            title={(
               <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>
                 <Icon className="left-icon" icon="graph" />
                 <FormattedMessage
@@ -177,14 +172,14 @@ class CollectionViews extends React.Component {
                 />
                 <Count count={diagrams.total} />
               </TextLoading>
-            }
+            )}
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />
         )}
         <Tab
           id={viewIds.PROCESSING}
           className="CollectionViews__tab"
-          title={
+          title={(
             <TextLoading loading={processingReport.shouldLoad || processingReport.isLoading}>
               <Icon icon="dashboard" className="left-icon" />
               <FormattedMessage
@@ -193,7 +188,7 @@ class CollectionViews extends React.Component {
               />
               <Count count={numOfProcessingJobs} />
             </TextLoading>
-          }
+          )}
           panel={<CollectionProcessingReportViews collection={collection} />}
         />
       </Tabs>
@@ -202,19 +197,13 @@ class CollectionViews extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection } = ownProps;
-
-  const context = {
-    'filter:collection_id': collection.id,
-  };
-  const diagramsQuery = new Query('diagrams', {}, context, 'diagrams').sortBy(
-    'updated_at',
-    'desc',
-  );
+  const { collection, location } = ownProps;
+  const diagramsQuery = queryCollectionDiagrams(location, collection.id);
+  const xrefQuery = queryCollectionXrefFacets(location, collection.id);
 
   return {
     model: selectModel(state),
-    xrefIndex: selectCollectionXrefIndex(state, collection.id),
+    xref: selectCollectionXrefResult(state, xrefQuery),
     diagrams: selectDiagramsResult(state, diagramsQuery),
     processingReport: selectCollectionProcessingReport(state, collection.id),
     showDiagramsTab: collection.casefile && selectSessionIsTester(state),

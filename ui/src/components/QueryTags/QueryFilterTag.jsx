@@ -24,7 +24,7 @@ class QueryFilterTag extends PureComponent {
     switch (filter) {
       case 'schema':
         return (
-          <Schema.Smart.Label schema={value} icon plural />
+          <Schema.Label schema={value} icon plural />
         );
       case 'countries':
         return (

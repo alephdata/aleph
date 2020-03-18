@@ -1,53 +1,31 @@
 @import "src/app/variables.scss";
-
-$dual-pane-padding: $aleph-content-padding;
-$dual-pane-mobile-padding: $aleph-mobile-content-padding;
+@import "src/app/layouts.scss";
 
 
 .DualPane {
-  flex-grow: 1;
-  display: flex;
-  flex-flow: row nowrap;
-  align-content: stretch;
-  align-items: stretch;
-  padding: $dual-pane-padding;
+  @extend .pane-layout;
+
+  padding: $aleph-content-padding;
   @media screen and (max-width: $aleph-screen-sm-max-width) {
-    flex-flow: column;
-    padding: $dual-pane-mobile-padding;
+    padding: $aleph-mobile-content-padding;
   }
 }
 
 .DualPane .ContentPane {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 0 0 0 $dual-pane-padding;
-  overflow: hidden;
-
-  .info-tabs-padding {
-    padding: 0;
-  }
+  @extend .pane-layout-main;
+  padding: 0 0 0 $aleph-content-padding;
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     order: 2;
-    padding: 0;
   }
 }
 
 .DualPane .SidePane {
-  flex: none;
-  width: $aleph-sidebar-width;
+  @extend .pane-layout-side;
   border-right: 1px solid $aleph-border-color;
-  padding-right: $dual-pane-padding;
-  min-height: 100%;
-  overflow: visible;
-
-  @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
-    width: 40%;
-  }
+  padding-right: $aleph-content-padding;
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
-    width: 100% !important;
     margin-bottom: 1em;
     border-right: none;
     border-bottom: 1px solid $aleph-border-color;

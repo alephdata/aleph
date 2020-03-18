@@ -43,7 +43,7 @@ class StatisticsGroup extends PureComponent {
             <Link to={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
               <div className="inner-container">
                 <span className="label">
-                  <Schema.Smart.Label schema={props.name} plural icon {...props} />
+                  <Schema.Label schema={props.name} plural icon {...props} />
                 </span>
                 <span className="value">
                   <Numeric num={props.count} />

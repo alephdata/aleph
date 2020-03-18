@@ -237,20 +237,22 @@ export function selectCollectionMappings(state, collectionId) {
   return selectObject(state, state.collectionMappings, collectionId);
 }
 
-export function selectCollectionXrefIndex(state, collectionId) {
-  return selectObject(state, state.collectionXrefIndex, collectionId);
+export function selectEntityMapping(state, entityId) {
+  return selectObject(state, state.entityMappings, entityId);
 }
 
-export function selectCollectionXrefMatches(state, query) {
+export function selectCollectionXref(state, xrefId) {
+  return selectObject(state, state.collectionXref, xrefId);
+}
+
+export function selectCollectionXrefResult(state, query) {
   const model = selectModel(state);
-  const matches = selectObject(state, state.collectionXrefMatches, query.toKey());
-  if (matches.results !== undefined) {
-    matches.results.forEach((result) => {
-      result.match = model.getEntity(result.match);
-      result.entity = model.getEntity(result.entity);
-    });
-  }
-  return matches;
+  const result = selectResult(state, query, (stateInner, id) => stateInner.collectionXref[id]);
+  result.results.forEach((xref) => {
+    xref.match = model.getEntity(xref.match);
+    xref.entity = model.getEntity(xref.entity);
+  });
+  return result;
 }
 
 export function selectQueryLog(state) {

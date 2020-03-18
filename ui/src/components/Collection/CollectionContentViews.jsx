@@ -9,7 +9,7 @@ import queryString from 'query-string';
 import { Count, Schema } from 'src/components/common';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
-import { selectCollectionXrefIndex, selectModel } from 'src/selectors';
+import { selectModel } from 'src/selectors';
 
 import './CollectionContentViews.scss';
 
@@ -58,7 +58,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeType, xrefIndex, onChange,
+      collection, activeType, xref, onChange,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
@@ -96,7 +96,7 @@ class CollectionViews extends React.Component {
             className="CollectionContentViews__tab"
             title={
               <>
-                <Schema.Smart.Label schema={ref.schema} plural icon />
+                <Schema.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
             panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} />}
@@ -109,13 +109,10 @@ class CollectionViews extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection } = ownProps;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
-
   return {
     model: selectModel(state),
-    xrefIndex: selectCollectionXrefIndex(state, collection.id),
     activeType: hashQuery.type,
   };
 };

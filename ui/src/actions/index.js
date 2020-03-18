@@ -15,24 +15,18 @@ export {
 } from './documentActions';
 export {
   createCollection,
-  createCollectionMapping,
   deleteCollection,
-  deleteCollectionMapping,
   fetchCollection,
   fetchCollectionStatistics,
   fetchCollectionStatus,
   fetchCollectionProcessingReport,
   fetchCollectionPermissions,
-  fetchCollectionMappings,
-  fetchCollectionXrefIndex,
-  flushCollectionMapping,
   queryCollections,
-  queryXrefMatches,
-  tiggerXrefMatches,
+  queryCollectionXref,
+  triggerCollectionXref,
   triggerCollectionAnalyze,
   triggerCollectionCancel,
   updateCollection,
-  updateCollectionMapping,
   updateCollectionPermissions,
 } from './collectionActions';
 export {
@@ -44,12 +38,17 @@ export {
 } from './diagramActions';
 export {
   createEntity,
+  createEntityMapping,
   deleteEntity,
+  deleteEntityMapping,
   fetchEntity,
+  fetchEntityMapping,
   fetchEntityReferences,
   fetchEntityTags,
+  flushEntityMapping,
   queryEntities,
   updateEntity,
+  updateEntityMapping,
 } from './entityActions';
 export {
   fetchMetadata,

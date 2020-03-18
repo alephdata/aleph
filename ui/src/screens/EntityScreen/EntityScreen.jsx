@@ -115,9 +115,9 @@ class EntityScreen extends Component {
     }
 
     let currEntity = entity;
-    while (currEntity) {
+    while (currEntity && EntityObject.isEntity(currEntity)) {
       const entityScope = this.getEntitySearchScope(currEntity);
-      if (entityScope) {
+      if (entityScope !== null) {
         scopes.push(entityScope);
       }
       currEntity = currEntity.getFirst('parent');
