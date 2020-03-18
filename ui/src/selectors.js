@@ -108,7 +108,7 @@ export function selectEntity(state, entityId) {
   const model = selectModel(state);
   const hasModel = entity.schema !== undefined && model !== undefined;
   const result = hasModel ? model.getEntity(entity) : {};
-  result.isLoading = !!entity.isLoading;
+  result.isPending = !!entity.isLoading || !!entity.shouldLoad;
   result.isError = !!entity.isError;
   result.shouldLoad = !!entity.shouldLoad;
   result.error = entity.error;
