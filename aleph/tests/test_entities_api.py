@@ -1,5 +1,6 @@
 import json
 import datetime
+from pprint import pformat
 
 from aleph.core import db
 from aleph.index.entities import index_entity
@@ -613,5 +614,18 @@ class EntitiesApiTestCase(TestCase):
         assert stats.json['total'] == 3, stats.json
         results = stats.json['results']
         for result in results:
+            validate(result, 'EntityExpandStats')
             assert result['count'] == 1, results
             assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
+
+        url = '/api/2/entities/%s/expand' % person1.json['id']
+        stats = self.client.get(url, headers=headers)
+        assert stats.status_code == 200, (stats.status_code, stats.json)
+        validate(stats.json, 'QueryResponse')
+        assert stats.json['total'] == 3, stats.json
+        results = stats.json['results']
+        for result in results:
+            validate(result, 'EntityExpandResult')
+            assert result['count'] == 1, results
+            assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
+            assert len(result['entities']) == 1, pformat(results)

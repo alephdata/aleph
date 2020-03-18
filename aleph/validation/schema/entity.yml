@@ -143,7 +143,17 @@ EntityExpandStats:
   properties:
     property:
       type: object
-      example: director
     count:
       type: integer
-      example: 1
+
+EntityExpandResult:
+  type: object
+  properties:
+    property:
+      type: object
+    count:
+      type: integer
+    entities:
+      type: array
+      items:
+        $ref: '#/components/schemas/Entity'

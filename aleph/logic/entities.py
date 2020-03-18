@@ -9,10 +9,14 @@ from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
 from aleph.index.indexes import entities_read_index
 from aleph.index import xref as xref_index
+from aleph.index.util import unpack_result
+from aleph.index.entities import get_entity
 from aleph.logic.aggregator import delete_aggregator_entity
 from aleph.index.util import authz_query, field_filter_query
 
 log = logging.getLogger(__name__)
+
+MAX_EXPAND_NODES_PER_PROPERTY = 20
 
 
 def upsert_entity(data, collection, validate=True, sync=False):
@@ -85,7 +89,8 @@ def entity_references(entity, authz=None):
         facets.append((index, prop.qname, registry.entity.group, field, value))
 
     res = _filters_faceted_query(facets, authz=authz)
-    for (qname, total) in res.items():
+    for (qname, result) in res.items():
+        total = result['count']
         if total > 0:
             yield (model.get_qname(qname), total)
 
@@ -113,20 +118,21 @@ def entity_tags(entity, authz=None):
 
     res = _filters_faceted_query(facets, authz=authz)
     for (_, alias, field, _, value) in facets:
-        total = res.get(alias, 0)
+        total = res.get(alias, {}).get('count', 0)
         if total > 1:
             yield (field, value, total)
 
 
-def entity_expand_stats(entity, authz=None):
-    """Given a particular entity, find all the entities adjacent to it,
-    grouped by the property where they are used."""
+def entity_expand_nodes(entity, properties=[], include_entities=False, authz=None):  # noqa
     proxy = model.get_proxy(entity)
     schema = proxy.schema
     facets = []
     reversed_properties = []
     literal_value_properties = []
     for prop in model.properties:
+        # Check if we're expanding all properties or a limited list of props
+        if properties and prop.qname not in properties:
+            continue
         value = None
         if schema.is_a(prop.schema):
             if prop.stub is True:
@@ -140,11 +146,16 @@ def entity_expand_stats(entity, authz=None):
             else:
                 # direct property
                 if prop.type == registry.entity:
-                    total = len(proxy.get(prop.name))
+                    values = proxy.get(prop.name)
+                    total = len(values)
                     if total > 0:
-                        yield (prop, total)
+                        if include_entities:
+                            entities = [get_entity(val) for val in values]
+                            yield (prop, total, entities)
+                        else:
+                            yield (prop, total)
                 elif prop.matchable:
-                    #  ToDo: what to do with literal value matches?
+                    # literal value matches
                     values = proxy.get(prop.name)
                     index = entities_read_index(prop.schema)
                     field = 'properties.%s' % prop.name
@@ -152,21 +163,27 @@ def entity_expand_stats(entity, authz=None):
                     for val in values:
                         facets.append((index, prop.qname, prop.type.group, field, val))  # noqa
 
-    res = _filters_faceted_query(facets, authz=authz)
-    for (qname, total) in res.items():
+    res = _filters_faceted_query(facets, authz=authz, include_entities=include_entities)  # noqa
+    for (qname, result) in res.items():
+        total = result.get('count', 0)
+        entities = result.get('entities', [])
         if total > 0:
             prop = model.get_qname(qname)
             if qname in reversed_properties:
                 prop = prop.reverse
             if qname in literal_value_properties:
-                # the entity we are exapnding on does not count
+                # the entity we are exapnding on should be removed from matches  # noqa
                 total = total - 1
                 if total == 0:
                     continue
-            yield (prop, total)
+                entities = [ent for ent in entities if ent['id'] != proxy.id]
+            if include_entities:
+                yield (prop, total, entities)
+            else:
+                yield (prop, total)
 
 
-def _filters_faceted_query(facets, authz=None):
+def _filters_faceted_query(facets, authz=None, include_entities=False):
     filters = {}
     indexed = {}
     for (idx, alias, group, field, value) in facets:
@@ -191,12 +208,14 @@ def _filters_faceted_query(facets, authz=None):
                 'minimum_should_match': 1
             }
         }
-        queries.append({'index': idx})
-        queries.append({
-            'size': 0,
-            'query': query,
-            'aggs': {'counters': {'filters': {'filters': facets}}}
-        })
+        for (k, v) in facets.items():
+            queries.append({'index': idx})
+            aggs = {'counters': {'filters': {'filters': {k: v}}}}
+            queries.append({
+                'size': MAX_EXPAND_NODES_PER_PROPERTY if include_entities else 0,  # noqa
+                'query': query,
+                'aggs': aggs
+            })
 
     results = {}
     if not len(queries):
@@ -206,5 +225,16 @@ def _filters_faceted_query(facets, authz=None):
     for resp in res.get('responses', []):
         aggs = resp.get('aggregations', {}).get('counters', {})
         for alias, value in aggs.get('buckets', {}).items():
-            results[alias] = value.get('doc_count', results.get(alias, 0))
+            count = value.get('doc_count', results.get(alias, 0))
+            results[alias] = {
+                'count': count,
+            }
+            if include_entities:
+                entities = []
+                hits = resp.get('hits', {}).get('hits', [])
+                for doc in hits:
+                    entity = unpack_result(doc)
+                    if entity is not None:
+                        entities.append(entity)
+                results[alias]['entities'] = entities
     return results

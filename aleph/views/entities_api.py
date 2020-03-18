@@ -5,13 +5,14 @@ from followthemoney import model
 from followthemoney.types import registry
 from urllib.parse import quote
 from urlnormalizer import query_string
+from banal import ensure_list
 
 from aleph.core import db, url_for
 from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import (
-    entity_references, entity_tags, entity_expand_stats
+    entity_references, entity_tags, entity_expand_nodes
 )
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
@@ -20,6 +21,7 @@ from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
 from aleph.views.util import require, get_nested_collection
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
+from aleph.search import QueryParser
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
@@ -595,11 +597,71 @@ def expand_stats(entity_id):
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get('collection_id'))
     results = []
-    proxy = model.get_proxy(entity)
-    for prop, total in entity_expand_stats(proxy, request.authz):
+    for prop, total in entity_expand_nodes(
+      entity, include_entities=False, authz=request.authz):
         results.append({
             'count': total,
             'property': prop,
+        })
+    return jsonify({
+        'status': 'ok',
+        'total': sum(result['count'] for result in results),
+        'results': results
+    })
+
+
+@blueprint.route('/api/2/entities/<entity_id>/expand', methods=['GET'])
+def expand(entity_id):
+    """Returns a list of diagrams for the role
+    ---
+    get:
+      summary: Expand an entity to get its adjacent entities
+      description: >-
+        Get the property-wise list of entities adjacent to the entity
+        with id `entity_id`.
+      parameters:
+      - in: path
+        name: entity_id
+        required: true
+        schema:
+          type: string
+      - description: properties to filter on
+        in: query
+        name: 'filter:property'
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityExpandResult'
+          description: OK
+      tags:
+        - Entity
+    """
+    enable_cache()
+    entity = get_index_entity(entity_id, request.authz.READ)
+    tag_request(collection_id=entity.get('collection_id'))
+    parser = QueryParser(request.args, request.authz)
+    properties = ensure_list(parser.filters.get('property'))
+    results = []
+    for prop, total, entities in entity_expand_nodes(
+        entity, properties=properties, include_entities=True,
+        authz=request.authz
+    ):
+        results.append({
+            'count': total,
+            'property': prop,
+            'entities': entities
+
         })
     return jsonify({
         'status': 'ok',
