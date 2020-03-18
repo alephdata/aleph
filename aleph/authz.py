@@ -38,7 +38,8 @@ class Authz(object):
         if collections:
             collections = json.loads(collections)
             self._collections[action] = collections
-            log.debug("[C] Authz: %s (%s): %s", self, action, collections)
+            log.debug("[C] Authz: %s (%s): %d collections",
+                      self, action, len(collections))
             return collections
 
         if self.is_admin:
@@ -54,7 +55,8 @@ class Authz(object):
             q = q.distinct()
             # log.info("Query: %s - roles: %s", q, self.roles)
         collections = [c for (c,) in q.all()]
-        log.debug("Authz: %s (%s): %s", self, action, collections)
+        log.debug("Authz: %s (%s): %d collections",
+                  self, action, len(collections))
         cache.kv.hset(self.PREFIX, key, json.dumps(collections))
         self._collections[action] = collections
         return collections
@@ -158,3 +160,8 @@ class Authz(object):
     @classmethod
     def flush(cls):
         cache.kv.delete(cls.PREFIX)
+
+    @classmethod
+    def flush_role(cls, role_id):
+        keys = [cache.key(a, role_id) for a in (cls.READ, cls.WRITE)]
+        cache.kv.hdel(cls.PREFIX, *keys)

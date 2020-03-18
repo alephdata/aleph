@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 from flask_babel import gettext
-from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 from followthemoney import model
 from followthemoney.types import registry
@@ -9,7 +8,6 @@ from followthemoney.exc import InvalidData
 
 from aleph.core import db
 from aleph.model.collection import Collection
-from aleph.model.match import Match
 from aleph.model.common import SoftDeleteModel
 from aleph.model.common import make_textid, ENTITY_ID_LEN
 
@@ -31,20 +29,6 @@ class Entity(db.Model, SoftDeleteModel):
     @property
     def model(self):
         return model.get(self.schema)
-
-    def delete_matches(self):
-        pq = db.session.query(Match)
-        pq = pq.filter(or_(
-            Match.entity_id == self.id,
-            Match.match_id == self.id
-        ))
-        pq.delete(synchronize_session=False)
-        db.session.refresh(self)
-
-    def delete(self, deleted_at=None):
-        self.delete_matches()
-        deleted_at = deleted_at or datetime.utcnow()
-        super(Entity, self).delete(deleted_at=deleted_at)
 
     def undelete(self):
         self.deleted_at = None
@@ -108,19 +92,6 @@ class Entity(db.Model, SoftDeleteModel):
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at=None):
         deleted_at = deleted_at or datetime.utcnow()
-
-        entities = db.session.query(cls.id)
-        entities = entities.filter(cls.collection_id == collection_id)
-        entities = entities.subquery()
-
-        pq = db.session.query(Match)
-        pq = pq.filter(Match.entity_id.in_(entities))
-        pq.delete(synchronize_session=False)
-
-        pq = db.session.query(Match)
-        pq = pq.filter(Match.match_id.in_(entities))
-        pq.delete(synchronize_session=False)
-
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa

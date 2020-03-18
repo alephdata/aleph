@@ -6,14 +6,14 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import Query from 'src/app/Query';
 import { Count } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
-import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
+import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 
-import { selectCollectionXrefIndex, selectModel, selectDiagramsResult, selectSessionIsTester } from 'src/selectors';
+import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
+import { selectModel, selectDiagramsResult, selectCollectionXrefResult, selectSessionIsTester } from 'src/selectors';
 
 import './CollectionViews.scss';
 
@@ -80,7 +80,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, showDiagramsTab, xrefIndex,
+      collection, activeMode, diagrams, showDiagramsTab, xref,
     } = this.props;
     // const numOfDocs = this.countDocuments();
     // const entitySchemata = this.getEntitySchemata();
@@ -119,9 +119,9 @@ class CollectionViews extends React.Component {
             <>
               <Icon className="left-icon" icon="comparison" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
-              <Count count={xrefIndex.total} />
+              <Count count={xref.total} />
             </>}
-          panel={<CollectionXrefIndexMode collection={collection} />}
+          panel={<CollectionXrefMode collection={collection} />}
         />
         {showDiagramsTab && (
           <Tab
@@ -144,17 +144,13 @@ class CollectionViews extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection } = ownProps;
-
-  const context = {
-    'filter:collection_id': collection.id,
-  };
-  const diagramsQuery = new Query('diagrams', {}, context, 'diagrams')
-    .sortBy('updated_at', 'desc');
+  const { collection, location } = ownProps;
+  const diagramsQuery = queryCollectionDiagrams(location, collection.id);
+  const xrefQuery = queryCollectionXrefFacets(location, collection.id);
 
   return {
     model: selectModel(state),
-    xrefIndex: selectCollectionXrefIndex(state, collection.id),
+    xref: selectCollectionXrefResult(state, xrefQuery),
     diagrams: selectDiagramsResult(state, diagramsQuery),
     showDiagramsTab: collection.casefile && selectSessionIsTester(state),
   };

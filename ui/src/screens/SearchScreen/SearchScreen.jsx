@@ -49,8 +49,6 @@ const facetKeys = [
 export class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
-
-
     this.state = {
       facets: facetKeys,
       hideFacets: false,

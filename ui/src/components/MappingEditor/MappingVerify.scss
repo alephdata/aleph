@@ -1,0 +1,51 @@
+@import "src/app/variables.scss";
+
+.MappingVerify {
+  &__item {
+    border: 1px solid;
+    box-shadow: none !important;
+    margin: $aleph-grid-size 0;
+  }
+
+  &__section {
+    margin: 15px 0;
+    &__title {
+      font-weight: 500;
+    }
+
+    &__value {
+      margin-top: 10px;
+    }
+  }
+
+  &__list.bp3-html-table {
+    width: 100%;
+    margin-top: $aleph-grid-size;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+
+    td {
+      box-shadow: none !important;
+      vertical-align: middle !important;
+      padding: $aleph-grid-size !important;
+      border: 1px solid $aleph-border-color;
+
+      &.MappingVerify__listItem__value {
+        width: 60%;
+
+        .bp3-form-group {
+          margin: 0;
+        }
+      }
+
+      &.MappingVerify__listItem__close {
+        width: 10px !important;
+        padding: 0 !important;
+      }
+    }
+  }
+
+  &__literalEdit {
+    margin: 0 -$aleph-grid-size/2 !important;
+  }
+}

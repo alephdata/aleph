@@ -71,15 +71,12 @@ def update_role(role):
 
 def refresh_role(role, sync=False):
     cache.kv.delete(cache.object_key(Role, role.id),
-                    cache.object_key(Role, role.id, 'channels'),
-                    cache.key(Authz.PREFIX, Authz.READ, role.id),
-                    cache.key(Authz.PREFIX, Authz.WRITE, role.id))
+                    cache.object_key(Role, role.id, 'channels'))
+    Authz.flush_role(role.id)
 
 
 def update_roles():
-    # Flush authz for anonymous users:
-    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ),
-                    cache.key(Authz.PREFIX, Authz.WRITE))
+    Authz.flush()
     for role in Role.all():
         update_role(role)
 

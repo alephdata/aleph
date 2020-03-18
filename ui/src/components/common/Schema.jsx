@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { selectModel } from 'src/selectors';
 import { Icon } from '@blueprintjs/core';
 
+
 class SchemaIcon extends PureComponent {
   render() {
     const { schema, ...rest } = this.props;
@@ -46,34 +47,17 @@ function SchemaLink(props) {
   );
 }
 
-function SmartSchemaHOC(InnerComponent) {
-  return function SmartSchemaComponent(props) {
-    const {
-      model, schema: schemaName,
-      /* omit */ dispatch,
-      ...rest
-    } = props;
-    const schema = model.getSchema(schemaName);
-    return (<InnerComponent schema={schema} {...rest} />
-    );
-  };
-}
-
-const mapStateToProps = state => ({
-  model: selectModel(state),
-});
+const mapStateToProps = (state, ownProps) => {
+  const { schema } = ownProps;
+  return { schema: selectModel(state).getSchema(schema) };
+};
 
 class Schema extends Component {
-  static Smart = {
-    Label: connect(mapStateToProps)(SmartSchemaHOC(SchemaLabel)),
-    Link: connect(mapStateToProps)(SmartSchemaHOC(SchemaLink)),
-  };
+  static Label = connect(mapStateToProps)(SchemaLabel);
 
-  static Label = SchemaLabel;
+  static Icon = connect(mapStateToProps)(SchemaIcon);
 
-  static Icon = SchemaIcon;
-
-  static Link = SchemaLink;
+  static Link = connect(mapStateToProps)(SchemaLink);
 }
 
 export default Schema;

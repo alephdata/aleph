@@ -10,17 +10,18 @@ import {
 } from '@blueprintjs/core';
 import c from 'classnames';
 
+import getFacetConfig from 'src/util/getFacetConfig';
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.scss';
 
 const defaultFacet = {};
 
+
 class SearchFacet extends Component {
   constructor(props) {
     super(props);
     this.state = { facet: defaultFacet, isExpanding: false };
-    this.FACET_INCREMENT = 10;
     this.onToggleOpen = this.onToggleOpen.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onClear = this.onClear.bind(this);
@@ -40,8 +41,8 @@ class SearchFacet extends Component {
   }
 
   onToggleOpen() {
-    const { isOpen, facetSize } = this.props;
-    const newSize = isOpen ? undefined : (facetSize || this.FACET_INCREMENT);
+    const { isOpen, defaultSize } = this.props;
+    const newSize = isOpen ? undefined : defaultSize;
     this.updateFacetSize(newSize);
   }
 
@@ -73,7 +74,8 @@ class SearchFacet extends Component {
 
   showMore(event) {
     event.preventDefault();
-    this.updateFacetSize(this.props.facetSize + this.FACET_INCREMENT);
+    const { facetSize, defaultSize } = this.props;
+    this.updateFacetSize(facetSize + defaultSize);
   }
 
   render() {
@@ -162,15 +164,9 @@ class SearchFacet extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query, field } = ownProps;
-  let defaultSize;
-  if (field === 'category') {
-    defaultSize = 20;
-  } else if (field === 'countries') {
-    defaultSize = 300;
-  } else if (field === 'schema') {
-    defaultSize = 30;
-  }
-  const facetSize = query.getInt(`facet_size:${field}`, defaultSize);
+  const facetConfig = getFacetConfig(field);
+  const defaultSize = facetConfig.defaultSize || 10;
+  const facetSize = query.getInt(`facet_size:${field}`, 0);
   const isOpen = query.hasFacet(field) && facetSize > 0;
   return {
     facetSize,

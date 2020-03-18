@@ -65,7 +65,7 @@ class CollectionInfo extends PureComponent {
             </div>
           </div>
         )}
-        { (collection.team && collection.team.length > 1) && (
+        { (collection.team && collection.team.length > 0) && (
           <div className="CollectionInfo__item">
             <div className="key text-muted">
               <FormattedMessage id="collection.team" defaultMessage="Accessible to" />

@@ -25,6 +25,7 @@ class Query(object):
     TEXT_FIELDS = ['text']
     PREFIX_FIELD = 'name'
     SKIP_FILTERS = []
+    AUTHZ_FIELD = 'collection_id'
     SORT_FIELDS = {
         'label': 'label.kw',
         'name': 'name.kw',
@@ -65,7 +66,8 @@ class Query(object):
         # a particular query by comparing the collections a user is
         # authorized for with the one on the document.
         if self.parser.authz and not self.parser.authz.is_admin:
-            filters.append(authz_query(self.parser.authz))
+            authz = authz_query(self.parser.authz, field=self.AUTHZ_FIELD)
+            filters.append(authz)
 
         for field, values in self.parser.filters.items():
             if field in self.SKIP_FILTERS:

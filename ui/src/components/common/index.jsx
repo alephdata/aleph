@@ -10,6 +10,7 @@ import Diagram from './Diagram';
 import DualPane from './DualPane';
 import Entity from './Entity';
 import Facet from './Facet';
+import FileImport from './FileImport';
 import FileSize from './FileSize';
 import Language from './Language';
 import Role from './Role';
@@ -44,6 +45,7 @@ export {
   DualPane,
   Entity,
   Facet,
+  FileImport,
   FileSize,
   Language,
   Role,

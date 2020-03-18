@@ -20,7 +20,7 @@ class CollectionStatistics extends PureComponent {
     let label = name;
 
     if (field === 'schema') {
-      label = <Schema.Smart.Label schema={name} plural icon />;
+      label = <Schema.Label schema={name} plural icon />;
     } else if (field === 'countries') {
       label = <Country.Name code={name} />;
     }

@@ -47,16 +47,21 @@ def _make_queries(prop, value, specificity):
         }
 
 
-def match_query(proxy, collection_ids=None, query=None):
+def match_query(proxy, source_collection_id=None, collection_ids=None,
+                query=None):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
     if query is None:
         query = bool_query()
 
-    # Don't match the query entity:
+    # Don't match the query entity and source collection_id:
+    must_not = []
     if proxy.id is not None:
-        sq = {"ids": {"values": [proxy.id]}}
-        query['bool']['must_not'].append(sq)
+        must_not.append({"ids": {"values": [proxy.id]}})
+    if source_collection_id is not None:
+        must_not.append({'term': {'collection_id': source_collection_id}})
+    if len(must_not):
+        query['bool']['must_not'].extend(must_not)
 
     collection_ids = ensure_list(collection_ids)
     if len(collection_ids):
@@ -89,7 +94,7 @@ def match_query(proxy, collection_ids=None, query=None):
     # make it mandatory to have at least one match
     query['bool']['must'].append({
         'bool': {
-            'should': [required],
+            'should': required,
             'minimum_should_match': 1
         }
     })

@@ -4,6 +4,7 @@ from werkzeug.exceptions import BadRequest
 
 from aleph.index.indexes import entities_read_index
 from aleph.index.collections import collections_index
+from aleph.index.xref import xref_index
 from aleph.index.entities import EXCLUDE_DEFAULT
 from aleph.logic.matching import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
@@ -71,3 +72,23 @@ class MatchQuery(EntitiesQuery):
         return match_query(self.entity,
                            collection_ids=self.collection_ids,
                            query=query)
+
+
+class XrefQuery(Query):
+    TEXT_FIELDS = ['text']
+    SORT_DEFAULT = [{'score': 'desc'}]
+    AUTHZ_FIELD = 'match_collection_id'
+
+    def __init__(self, parser, collection_id=None):
+        self.collection_id = collection_id
+        parser.highlight = False
+        # parser.sorts = []
+        super(XrefQuery, self).__init__(parser)
+
+    def get_filters(self):
+        filters = super(XrefQuery, self).get_filters()
+        filters.append({'term': {'collection_id': self.collection_id}})
+        return filters
+
+    def get_index(self):
+        return xref_index()

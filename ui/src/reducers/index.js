@@ -13,10 +13,9 @@ import documentContent from './documentContent';
 import collections from './collections';
 import collectionStatistics from './collectionStatistics';
 import collectionStatus from './collectionStatus';
-import collectionMappings from './collectionMappings';
+import entityMappings from './entityMappings';
 import collectionPermissions from './collectionPermissions';
-import collectionXrefIndex from './collectionXrefIndex';
-import collectionXrefMatches from './collectionXrefMatches';
+import collectionXref from './collectionXref';
 import results from './results';
 import alerts from './alerts';
 import diagrams from './diagrams';
@@ -45,11 +44,10 @@ const rootReducer = combineReducers({
   collections,
   collectionStatistics,
   collectionStatus,
-  collectionMappings,
   collectionPermissions,
-  collectionXrefIndex,
-  collectionXrefMatches,
+  collectionXref,
   diagrams,
+  entityMappings,
   queryLogs,
   results,
   systemStatus,
