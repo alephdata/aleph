@@ -1,5 +1,7 @@
 import click
 import logging
+import balkhash
+from pprint import pprint
 from servicelayer.cache import get_redis, get_fakeredis
 from servicelayer.logs import configure_logging
 from servicelayer.jobs import Job, Dataset
@@ -88,9 +90,13 @@ def ingest(path, dataset, languages=None):
 def debug(path, dataset, languages=None):
     """Debug the ingest for the given path."""
     conn = get_fakeredis()
+    db = balkhash.init(dataset)
+    db.delete()
     _ingest_path(conn, dataset, path, languages=languages)
     worker = IngestWorker(conn=conn, stages=STAGES)
     worker.sync()
+    for entity in db.iterate():
+        pprint(entity.to_dict())
 
 
 if __name__ == "__main__":
