@@ -20,7 +20,7 @@
     .summary {
         font-size: $pt-font-size;
         margin-bottom: $aleph-grid-size;
-        max-width: 750px;
+        max-width: $aleph-content-width-limit;
     }
 
     .details {
