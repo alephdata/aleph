@@ -7,7 +7,6 @@ from ingestors.support.encoding import EncodingSupport
 
 class CellebriteIngestor(Ingestor, EncodingSupport, CellebriteSupport):
     "Ingestor for Cellebrite XML reports"
-
     MIME_TYPES = ['text/xml']
     EXTENSIONS = ['xml']
     SCORE = 0.5
@@ -15,11 +14,12 @@ class CellebriteIngestor(Ingestor, EncodingSupport, CellebriteSupport):
     def ingest(self, file_path, entity):
         """Ingestor implementation."""
         entity.schema = model.get('Document')
-
         doc = self.parse_xml_path(file_path)
+        ns = self.NSMAP
         root = doc.getroot()
-        ns = {"ns": root.nsmap[None]}
-        self.ns = ns
+
+        project_id = root.get('id')
+        print(project_id)
 
         self.device_owner = self.manager.make_entity('LegalEntity')
         self.device_id = root.xpath('./ns:metadata/ns:item[@name="DeviceInfoUniqueID"][1]/text()', namespaces=ns)[0]  # noqa
@@ -42,6 +42,11 @@ class CellebriteIngestor(Ingestor, EncodingSupport, CellebriteSupport):
     @classmethod
     def match(cls, file_path, entity):
         score = super(CellebriteIngestor, cls).match(file_path, entity)
-        if score > 0 and cls.inspect_metadata(file_path):
-            score = cls.SCORE * 20
-        return score
+        if score <= 0:
+            return score
+        with open(file_path, 'r') as fp:
+            data = fp.read(1024 * 16)
+            namespace = 'xmlns="%s"' % cls.NS
+            if namespace in data:
+                return cls.SCORE * 30
+        return -1

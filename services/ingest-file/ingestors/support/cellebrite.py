@@ -8,6 +8,9 @@ OUTGOING = 'Outgoing'
 
 
 class CellebriteSupport(TimestampSupport, XMLSupport):
+    NS = "http://pa.cellebrite.com/report/2.0"
+    NSMAP = {"ns": NS}
+
     def get_seconds(self, time_str):
         """Get Seconds from time"""
         h, m, s = time_str.split(':')
@@ -15,7 +18,7 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
 
     def parse_parties(self, parties):
         party_entities = []
-        ns = self.ns
+        ns = self.NSMAP
         for party in parties:
             name = party.xpath('./ns:field[@name="Name"]/ns:value/text()', namespaces=ns)  # noqa
             number = party.xpath('./ns:field[@name="Identifier"]/ns:value/text()', namespaces=ns)  # noqa
@@ -27,10 +30,9 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
                 party_entities.append(entity)
         return party_entities
 
-    # Call Parsing
-
     def parse_call_parties(self, call, call_entity, call_types):
-        ns = self.ns
+        """Call Parsing"""
+        ns = self.NSMAP
         parties = call.xpath('./ns:multiModelField[@name="Parties"]/ns:model', namespaces=ns)  # noqa
         for party in self.parse_parties(parties):
             if call_types and call_types[0] == OUTGOING:
@@ -58,7 +60,7 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
             timestamp = [self.parse_timestamp(ts) for ts in timestamp]
             entity.add('date', timestamp)
 
-            duration = call.xpath('./ns:field[@name="Duration"]/ns:value/text()', namespaces=ns) # noqa
+            duration = call.xpath('./ns:field[@name="Duration"]/ns:value/text()', namespaces=ns)  # noqa
             duration = [self.get_seconds(ts) for ts in duration]
             entity.add('duration', duration)
 
@@ -76,7 +78,7 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
     # Message Parsing
 
     def parse_messages(self, root):
-        ns = self.ns
+        ns = self.NSMAP
         threads = root.xpath("/ns:project/ns:decodedData/ns:modelType[@type='Chat']/ns:model", namespaces=ns)  # noqa
         for thread in threads:
             thread_id = thread.get('id')
@@ -132,7 +134,7 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
                 self.manager.emit_entity(entity)
 
     def parse_contacts(self, root):
-        ns = self.ns
+        ns = self.NSMAP
         contacts = root.xpath("/ns:project/ns:decodedData/ns:modelType[@type='Contact']/ns:model", namespaces=ns)  # noqa
         for contact in contacts:
             name = contact.xpath('./ns:field[@name="Name"]/ns:value/text()', namespaces=ns)  # noqa
@@ -153,7 +155,7 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
                 self.manager.emit_entity(entity)
 
     def parse_notes(self, root):
-        ns = self.ns
+        ns = self.NSMAP
         notes = root.xpath("/ns:project/ns:decodedData/ns:modelType[@type='Note']/ns:model", namespaces=ns)  # noqa
         for note in notes:
             note_id = note.get('id')
@@ -171,13 +173,13 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
             self.manager.emit_entity(entity)
 
     def parse_sms(self, root):
-        ns = self.ns
+        ns = self.NSMAP
         smses = root.xpath("/ns:project/ns:decodedData/ns:modelType[@type='SMS']/ns:model", namespaces=ns)  # noqa
         for sms in smses:
             sms_id = sms.get('id')
             body = sms.xpath("./ns:field[@name='Body']/ns:value/text()", namespaces=ns)  # noqa
             timestamp = sms.xpath("./ns:field[@name='TimeStamp']/ns:value/text()", namespaces=ns)  # noqa
-            parties = sms.xpath("./ns:multiModelField[@name='Parties']/ns:model", namespaces=ns) # noqa
+            parties = sms.xpath("./ns:multiModelField[@name='Parties']/ns:model", namespaces=ns)  # noqa
 
             sms_ent = self.manager.make_entity('Message')
             sms_ent.make_id(self.device_id, sms_id)
@@ -200,13 +202,3 @@ class CellebriteSupport(TimestampSupport, XMLSupport):
                     elif party_role and party_role[0] == 'To':
                         sms_ent.add('recipients', entity)
             self.manager.emit_entity(sms_ent)
-
-    @classmethod
-    def inspect_metadata(cls, file_path):
-        namespace = 'xmlns="http://pa.cellebrite.com/report/2.0"'
-        with open(file_path, 'r') as fp:
-            for i, line in enumerate(fp):
-                if i == 1 and namespace in line:
-                    return True
-                elif i > 1:
-                    return False
