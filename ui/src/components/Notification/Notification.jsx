@@ -10,17 +10,6 @@ import './Notification.scss';
 
 
 class Notification extends PureComponent {
-  renderSkeleton = () => {
-    return (
-      <li className="Notification">
-        <div className="timestamp">
-          <Skeleton.Text type="span" length={15} />
-        </div>
-        <Skeleton.Text type="span" length={50} />
-      </li>
-    );
-  }
-
   getParam(name) {
     const { event, params } = this.props.notification;
     const object = params[name];
@@ -42,6 +31,15 @@ class Notification extends PureComponent {
     }
     return undefined;
   }
+
+  renderSkeleton = () => (
+    <li className="Notification">
+      <div className="timestamp">
+        <Skeleton.Text type="span" length={15} />
+      </div>
+      <Skeleton.Text type="span" length={50} />
+    </li>
+  )
 
   convertUTCDateToLocalDate = (date) => {
     const newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
