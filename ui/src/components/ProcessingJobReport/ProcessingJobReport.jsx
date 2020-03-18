@@ -46,12 +46,7 @@ class ProcessingJobReport extends PureComponent {
       <>
         <Button icon="info-sign" text="Details" onClick={this.viewDetails} />
         {!finished && (
-          <Button
-            icon='cross'
-            text='Stop'
-            intent='danger'
-            onClick={null}
-          />
+          <Button icon="cross" text="Stop" intent="danger" onClick={null} />
         )}
         <Button
           icon="delete"
