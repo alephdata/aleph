@@ -43,7 +43,7 @@ class EntitiesApiTestCase(TestCase):
             }
         }
         self.ent2 = self.create_entity(self.data2, self.col)
-        self.id2 = self.col.ns.sign(self.ent.id)
+        self.id2 = self.col.ns.sign(self.ent2.id)
         db.session.commit()
         self.col_id = str(self.col.id)
         index_entity(self.book)
@@ -529,3 +529,89 @@ class EntitiesApiTestCase(TestCase):
         assert res.json['results'][0]['id'] == self.ent2.id, res.json
         assert res.json['results'][1]['id'] == self.ent.id, res.json
         assert res.json['results'][2]['id'] == self.book.id, res.json
+
+    def test_expand(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        data = {
+            'schema': 'Passport',
+            'collection_id': self.col_id,
+            'properties': {
+                'passportNumber': 'A1B2C3'
+            }
+        }
+        passport1 = self.client.post(url,
+                                     data=json.dumps(data),
+                                     headers=headers,
+                                     content_type='application/json')
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Osama bin Laden",
+                'email': "osama@al-qaeda.org",
+                'status': 'dead',
+                'passport': passport1.json['id']
+            }
+        }
+        person1 = self.client.post(url,
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Undercover Osama",
+                'email': 'osama@al-qaeda.org',
+            }
+        }
+        person2 = self.client.post(url,  # noqa
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Dead Guy 1",
+                'status': 'dead',
+            }
+        }
+        person3 = self.client.post(url,  # noqa
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+        data = {
+            'schema': 'Company',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Al-Qaeda",
+            }
+        }
+        company1 = self.client.post(url,
+                                    data=json.dumps(data),
+                                    headers=headers,
+                                    content_type='application/json')
+        data = {
+            'schema': 'Ownership',
+            'collection_id': self.col_id,
+            'properties': {
+                'owner': person1.json['id'],
+                'asset': company1.json['id'],
+            }
+        }
+        ownership1 = self.client.post(url,  # noqa
+                                      data=json.dumps(data),
+                                      headers=headers,
+                                      content_type='application/json')
+
+        url = '/api/2/entities/%s/expand/stats' % person1.json['id']
+        stats = self.client.get(url, headers=headers)
+        assert stats.status_code == 200, (stats.status_code, stats.json)
+        validate(stats.json, 'QueryResponse')
+        assert stats.json['total'] == 3, stats.json
+        results = stats.json['results']
+        for result in results:
+            assert result['count'] == 1, results
+            assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa

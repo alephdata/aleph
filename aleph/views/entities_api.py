@@ -10,7 +10,9 @@ from aleph.core import db, url_for
 from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
-from aleph.logic.entities import entity_references, entity_tags
+from aleph.logic.entities import (
+    entity_references, entity_tags, entity_expand_stats
+)
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
@@ -555,3 +557,52 @@ def delete(entity_id):
     delete_entity(collection, entity, sync=get_flag('sync', True))
     db.session.commit()
     return ('', 204)
+
+
+@blueprint.route('/api/2/entities/<entity_id>/expand/stats', methods=['GET'])
+def expand_stats(entity_id):
+    """
+    ---
+    get:
+      summary: Get property-wise counts for adjacent entities.
+      description: >-
+        Get the property-wise aggregation of entities adjacent to the entity
+        with id `entity_id`.
+      parameters:
+      - in: path
+        name: entity_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityExpandStats'
+      tags:
+      - Entity
+    """
+    enable_cache()
+    entity = get_index_entity(entity_id, request.authz.READ)
+    tag_request(collection_id=entity.get('collection_id'))
+    results = []
+    proxy = model.get_proxy(entity)
+    for prop, total in entity_expand_stats(proxy, request.authz):
+        results.append({
+            'count': total,
+            'property': prop,
+        })
+    return jsonify({
+        'status': 'ok',
+        'total': sum(result['count'] for result in results),
+        'results': results
+    })

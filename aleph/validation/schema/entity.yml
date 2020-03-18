@@ -137,3 +137,13 @@ EntityTag:
     count:
       type: integer
       example: 1
+
+EntityExpandStats:
+  type: object
+  properties:
+    property:
+      type: object
+      example: director
+    count:
+      type: integer
+      example: 1

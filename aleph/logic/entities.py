@@ -118,6 +118,54 @@ def entity_tags(entity, authz=None):
             yield (field, value, total)
 
 
+def entity_expand_stats(entity, authz=None):
+    """Given a particular entity, find all the entities adjacent to it,
+    grouped by the property where they are used."""
+    proxy = model.get_proxy(entity)
+    schema = proxy.schema
+    facets = []
+    reversed_properties = []
+    literal_value_properties = []
+    for prop in model.properties:
+        value = None
+        if schema.is_a(prop.schema):
+            if prop.stub is True:
+                # generated stub reverse property
+                prop = prop.reverse
+                value = proxy.id
+                index = entities_read_index(prop.schema)
+                field = 'properties.%s' % prop.name
+                facets.append((index, prop.qname, registry.entity.group, field, value))  # noqa
+                reversed_properties.append(prop.qname)
+            else:
+                # direct property
+                if prop.type == registry.entity:
+                    total = len(proxy.get(prop.name))
+                    if total > 0:
+                        yield (prop, total)
+                elif prop.matchable:
+                    #  ToDo: what to do with literal value matches?
+                    values = proxy.get(prop.name)
+                    index = entities_read_index(prop.schema)
+                    field = 'properties.%s' % prop.name
+                    literal_value_properties.append(prop.qname)
+                    for val in values:
+                        facets.append((index, prop.qname, prop.type.group, field, val))  # noqa
+
+    res = _filters_faceted_query(facets, authz=authz)
+    for (qname, total) in res.items():
+        if total > 0:
+            prop = model.get_qname(qname)
+            if qname in reversed_properties:
+                prop = prop.reverse
+            if qname in literal_value_properties:
+                # the entity we are exapnding on does not count
+                total = total - 1
+                if total == 0:
+                    continue
+            yield (prop, total)
+
+
 def _filters_faceted_query(facets, authz=None):
     filters = {}
     indexed = {}
