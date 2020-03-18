@@ -13,7 +13,7 @@ const messages = defineMessages({
   },
   facet_ibans: {
     id: 'facet.ibans',
-    defaultMessage: '{count, plural, one {Iban number} other {Iban numbers}}',
+    defaultMessage: '{count, plural, one {IBAN} other {IBANs}}',
   },
   facet_languages: {
     id: 'facet.languages',
