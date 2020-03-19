@@ -282,10 +282,8 @@ const mapStateToProps = (state, ownProps) => {
   return { query, result };
 };
 
-const mapDispatchToProps = { queryEntities };
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
   injectIntl,
 )(SearchScreen);

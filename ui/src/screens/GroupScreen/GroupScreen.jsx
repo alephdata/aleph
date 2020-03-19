@@ -48,7 +48,7 @@ export class GroupScreen extends Component {
 
   render() {
     const { group, query, intl } = this.props;
-    if (!group || !group.id) {
+    if (group.isPending) {
       return <LoadingScreen />;
     }
     return (

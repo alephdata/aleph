@@ -65,8 +65,7 @@ class Dashboard extends React.Component {
   }
 
   navigate(path) {
-    const { history } = this.props;
-    history.push(path);
+    this.props.history.push(path);
   }
 
   render() {

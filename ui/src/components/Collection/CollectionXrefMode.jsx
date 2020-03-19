@@ -143,8 +143,16 @@ export class CollectionXrefMode extends React.Component {
   }
 
   renderTable() {
-    const { result } = this.props;
-    if (!result.total || !result.results) {
+    const { result, intl } = this.props;
+    if (result.total === 0) {
+      return (
+        <ErrorSection
+          icon="comparison"
+          title={intl.formatMessage(messages.empty)}
+        />
+      );
+    }
+    if (result.isPending) {
       return null;
     }
     return (
@@ -194,7 +202,7 @@ export class CollectionXrefMode extends React.Component {
   }
 
   render() {
-    const { session, collection, query, result, intl } = this.props;
+    const { session, collection, query, result } = this.props;
     return (
       <section className="CollectionXrefMode">
         <div className="pane-layout">
@@ -207,19 +215,13 @@ export class CollectionXrefMode extends React.Component {
                     defaultMessage="Compute"
                   />
                 </Button>
-                <AnchorButton icon="download" href={collection.links.xref_export} download disabled={!result.total}>
+                <AnchorButton icon="download" href={collection.links && collection.links.xref_export} download disabled={!result.total}>
                   <FormattedMessage
                     id="xref.download"
                     defaultMessage="Download Excel"
                   />
                 </AnchorButton>
               </ButtonGroup>
-            )}
-            {result.total === 0 && (
-              <ErrorSection
-                icon="comparison"
-                title={intl.formatMessage(messages.empty)}
-              />
             )}
             {this.renderTable()}
             {result.isPending && (

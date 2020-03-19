@@ -149,10 +149,7 @@ export class PdfViewer extends Component {
     const {
       document, activeMode, baseQuery, page, queryText, numPages,
     } = this.props;
-    if (!document.id || !document.links) {
-      return null;
-    }
-    if (numPages === undefined || numPages === null) {
+    if (document.isPending || numPages === undefined || numPages === null) {
       return <SectionLoading />;
     }
     return (
@@ -198,11 +195,10 @@ const mapStateToProps = (state, ownProps) => {
     .offset(0)
     .limit(0);
   const countResult = selectEntitiesResult(state, countQuery);
-  const numPages = countResult.total;
   return {
     page,
     rotate,
-    numPages,
+    numPages: countResult.total,
     baseQuery,
     countQuery,
     countResult,

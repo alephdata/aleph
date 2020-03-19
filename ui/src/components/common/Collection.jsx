@@ -81,13 +81,7 @@ class CollectionUpdateStatus extends PureComponent {
   render() {
     const { collection, showPopover, status } = this.props;
     const updating = !status.shouldLoad && (status.pending || status.running);
-
-    const collectionLink = (
-      <CollectionLink
-        updating={updating}
-        {...this.props}
-      />
-    );
+    const collectionLink = <CollectionLink updating={updating} {...this.props} />;
 
     if (showPopover && updating) {
       return (
@@ -102,7 +96,6 @@ class CollectionUpdateStatus extends PureComponent {
         />
       );
     }
-
     return collectionLink;
   }
 }
