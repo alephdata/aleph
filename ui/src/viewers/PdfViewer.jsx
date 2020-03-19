@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { PagingButtons } from 'src/components/Toolbar';
-import { SectionLoading } from 'src/components/common';
+import { SectionLoading, Skeleton } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import PdfViewerSearch from 'src/viewers/PdfViewerSearch';
@@ -110,6 +110,7 @@ export class PdfViewer extends Component {
     } = this.props;
     const { width } = this.state;
     const { Document, Page } = this.state.components;
+    const loading = <Skeleton.Text type="div" length={4000} />;
     return (
       <>
         {numPages !== null && numPages > 0 && (
@@ -124,7 +125,7 @@ export class PdfViewer extends Component {
           <Document
             renderAnnotations
             file={document.links.pdf || document.links.file}
-            loading={<SectionLoading />}
+            loading={loading}
             onLoadSuccess={this.onDocumentLoad}
           >
             {/*
@@ -137,6 +138,7 @@ export class PdfViewer extends Component {
               className="page"
               width={width}
               rotate={rotate}
+              loading={loading}
             />
             )}
           </Document>
