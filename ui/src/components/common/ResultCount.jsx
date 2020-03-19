@@ -5,7 +5,7 @@ import { FormattedNumber, FormattedMessage } from 'react-intl';
 class ResultCount extends PureComponent {
   render() {
     const { result } = this.props;
-    if ((!result) || result.shouldLoad || result.isLoading) {
+    if (!result || result.isPending) {
       return <FormattedMessage id="result.searching" defaultMessage="Searching..." />;
     }
     if (result.isError) {

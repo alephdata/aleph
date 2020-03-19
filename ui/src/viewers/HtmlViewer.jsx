@@ -10,7 +10,7 @@ import './HtmlViewer.scss';
 class HtmlViewer extends Component {
   render() {
     const { content } = this.props;
-    if (content.shouldLoad || content.isLoading) {
+    if (content.isPending) {
       return <SectionLoading />;
     }
     return (

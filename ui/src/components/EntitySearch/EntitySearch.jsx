@@ -47,7 +47,7 @@ export class EntitySearch extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && result.next && !result.isLoading && !result.isError) {
+    if (result && result.next && !result.isPending && !result.isError) {
       this.props.queryEntities({ query, next: result.next });
     }
   }
@@ -75,7 +75,7 @@ export class EntitySearch extends Component {
   generateFoundText() {
     const { result, foundTextGenerator } = this.props;
 
-    if (!foundTextGenerator || result.isLoading || result.total === 0
+    if (!foundTextGenerator || result.isPending || result.total === 0
       || !result.facets || !result.facets.collection_id) {
       return null;
     }

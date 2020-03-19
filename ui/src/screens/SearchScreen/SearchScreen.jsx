@@ -74,7 +74,7 @@ export class SearchScreen extends React.Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (!result.isLoading && result.next) {
+    if (!result.isPending && result.next) {
       this.props.queryEntities({ query, next: result.next });
     }
   }

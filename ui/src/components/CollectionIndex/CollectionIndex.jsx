@@ -64,7 +64,7 @@ export class CollectionIndex extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryCollections({ query, result, next: result.next });
     }
   }
@@ -123,8 +123,8 @@ export class CollectionIndex extends Component {
           {result.results !== undefined && result.results.map(
             res => <CollectionIndexItem key={res.id} collection={res} />,
           )}
-          {result.isLoading && skeletonItems.map(
-            item => <CollectionIndexItem key={item} isLoading />,
+          {result.isPending && skeletonItems.map(
+            item => <CollectionIndexItem key={item} isPending />,
           )}
         </ul>
         <Waypoint

@@ -18,7 +18,7 @@ export class CollectionDiagramsIndexMode extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryDiagrams({ query, next: result.next });
     }
   }

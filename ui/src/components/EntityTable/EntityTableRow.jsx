@@ -13,7 +13,6 @@ class EntityTableRow extends Component {
   renderSkeleton() {
     const { hideCollection, documentMode, updateSelection } = this.props;
 
-    console.log('in document mode', documentMode, hideCollection)
     return (
       <tr className={c('EntityTableRow', 'nowrap')}>
         {updateSelection && (
@@ -49,7 +48,7 @@ class EntityTableRow extends Component {
   render() {
     const {
       entity,
-      isLoading,
+      isPending,
       location,
       hideCollection,
       documentMode,
@@ -58,7 +57,7 @@ class EntityTableRow extends Component {
       selection
     } = this.props;
 
-    if (isLoading) {
+    if (isPending) {
       return this.renderSkeleton();
     }
 

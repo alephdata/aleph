@@ -57,7 +57,7 @@ class CollectionStatistics extends PureComponent {
             />
           )}
           statistic={values}
-          isLoading={!values}
+          isPending={!values}
           ItemContentContainer={this.renderItem}
           styleType="dark"
         />

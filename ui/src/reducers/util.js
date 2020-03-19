@@ -20,7 +20,7 @@ export function timestamp() {
 export function loadComplete(data) {
   return {
     ...data,
-    isLoading: false,
+    isPending: false,
     isError: false,
     shouldLoad: false,
     loadedAt: timestamp(),
@@ -40,14 +40,14 @@ export function updateResults(state, { query, result }) {
 
 export function loadState(data) {
   const state = data || {};
-  return { ...state, isLoading: false, shouldLoad: true, isError: false };
+  return { ...state, isPending: true, shouldLoad: true, isError: false };
 }
 
 export function loadStart(state) {
   const prevState = state || {};
   return {
     ...prevState,
-    isLoading: true,
+    isPending: true,
     shouldLoad: false,
     isError: false,
     loadedAt: undefined,
@@ -67,7 +67,7 @@ export function loadError(state, error) {
   const prevState = state || {};
   return {
     ...prevState,
-    isLoading: false,
+    isPending: false,
     shouldLoad: false,
     isError: true,
     loadedAt: undefined,
@@ -84,7 +84,7 @@ export function resultLoadError(state, query, error) {
 }
 
 export function objectReload(state, id) {
-  const object = { isLoading: false, shouldLoad: true };
+  const object = { isPending: true, shouldLoad: true };
   return { ...state, [id]: _.assign({}, state[id], object) };
 }
 

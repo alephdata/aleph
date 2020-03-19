@@ -11,8 +11,8 @@ import {
 
 import './DiagramListItem.scss';
 
-const DiagramListItem = ({ diagram, isLoading, showCollection }) => {
-  if (isLoading) {
+const DiagramListItem = ({ diagram, isPending, showCollection }) => {
+  if (isPending) {
     return (
       <div className="DiagramListItem">
         <Card elevation={1} className="DiagramListItem__content">

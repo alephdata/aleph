@@ -107,7 +107,7 @@ export class DocumentViewMode extends React.Component {
 
   render() {
     const { document } = this.props;
-    if (document.isLoading || document.shouldLoad) {
+    if (document.isPending) {
       return null;
     }
 
