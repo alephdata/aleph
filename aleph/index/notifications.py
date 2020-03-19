@@ -1,7 +1,7 @@
 import logging
 from pprint import pprint  # noqa
+from banal import hash_data
 from datetime import datetime
-from servicelayer.cache import make_key
 from followthemoney.util import get_entity_id
 
 from aleph.core import settings
@@ -49,13 +49,15 @@ def index_notification(event, actor_id, params, channels, sync=False):
         'created_at': datetime.utcnow(),
     }
     index = notifications_index()
-    keys = [':'.join(i) for i in params.items()]
-    id_ = make_key(actor_id, event.name, *channels, *keys)
+    id_ = hash_data((actor_id, event.name, channels, params))
     return index_safe(index, id_, data, refresh=refresh_sync(sync))
 
 
 def delete_notifications(channel, sync=False):
     """Delete entities from a collection."""
-    filters = [{'term': {'channels': channel}}]
-    query = {'bool': {'filter': filters}}
+    query = {
+        'bool': {
+            'filter': [{'term': {'channels': channel}}]
+        }
+    }
     query_delete(notifications_index(), query, sync=sync)

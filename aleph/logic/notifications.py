@@ -10,7 +10,8 @@ from aleph.mail import email_role
 from aleph.model import Collection, Entity, Role, Alert, Diagram
 from aleph.model import Event, Events
 from aleph.logic.util import collection_url, entity_url, ui_url, diagram_url
-from aleph.index import notifications as index
+from aleph.index.notifications import index_notification, delete_notifications
+from aleph.index.notifications import notifications_index
 from aleph.index.util import unpack_result
 from aleph.util import html_link
 
@@ -33,12 +34,12 @@ def publish(event, actor_id=None, params=None, channels=None):
     the parameters and initiating actor for the event. """
     assert isinstance(event, Event), event
     channels = [channel_tag(c) for c in ensure_list(channels)]
-    index.index_notification(event, actor_id, params, channels)
+    index_notification(event, actor_id, params, channels)
 
 
-def flush_notifications(obj, clazz=None):
+def flush_notifications(obj, clazz=None, sync=False):
     """Delete all notifications in a given channel."""
-    index.delete_notifications(channel_tag(obj, clazz=clazz))
+    delete_notifications(channel_tag(obj, clazz=clazz), sync=sync)
 
 
 def get_role_channels(role):
@@ -74,7 +75,7 @@ def get_notifications(role, since=None, parser=None):
     if parser is not None:
         query['size'] = parser.limit
         query['from'] = parser.offset
-    return es.search(index=index.notifications_index(), body=query)
+    return es.search(index=notifications_index(), body=query)
 
 
 def _iter_params(data, event):

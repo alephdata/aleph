@@ -44,13 +44,16 @@ def check_alert(alert_id):
         entity = unpack_result(result)
         if entity is None:
             continue
-        log.info('Alert [%s]: %s', alert.query, entity.get('name'))
+        log.info('Alert [%s]: %s', alert.query, entity.get('id'))
         params = {
             'alert': alert,
             'role': alert.role,
-            'entity': entity.get('id')
+            'entity': entity.get('id'),
+            'collection': entity.get('collection_id')
         }
-        publish(Events.MATCH_ALERT, params=params, channels=[alert.role])
+        channels = [alert.role]
+        # channels.append(channel_tag(collection_id, Collection))
+        publish(Events.MATCH_ALERT, params=params, channels=channels)
 
     alert.update()
     db.session.commit()
@@ -77,7 +80,7 @@ def alert_query(alert, authz):
         filters.append({'range': {'updated_at': {'gt': notified_at}}})
     return {
         'size': 50,
-        '_source': {'includes': ['name']},
+        '_source': {'includes': ['collection_id']},
         'query': {
             'bool': {
                 'should': queries,
