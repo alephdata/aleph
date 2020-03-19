@@ -15,47 +15,45 @@ const messages = defineMessages({
 
 
 class XrefTable extends Component {
-  renderHeader() {
-    return (
-      <thead>
-        <tr>
-          <th className="expand" />
-          <th className="entity bordered">
-            <span className="value">
-              <FormattedMessage
-                id="xref.entity"
-                defaultMessage="Reference"
-              />
-            </span>
-          </th>
-          <th className="entity">
-            <span className="value">
-              <FormattedMessage
-                id="xref.match"
-                defaultMessage="Possible match"
-              />
-            </span>
-          </th>
-          <th className="numeric narrow">
-            <span className="value">
-              <FormattedMessage
-                id="xref.score"
-                defaultMessage="Score"
-              />
-            </span>
-          </th>
-          <th className="collection">
-            <span className="value">
-              <FormattedMessage
-                id="xref.match_collection"
-                defaultMessage="Dataset"
-              />
-            </span>
-          </th>
-        </tr>
-      </thead>
-    );
-  }
+  renderHeader = () => (
+    <thead>
+      <tr>
+        <th className="expand" />
+        <th className="entity bordered">
+          <span className="value">
+            <FormattedMessage
+              id="xref.entity"
+              defaultMessage="Reference"
+            />
+          </span>
+        </th>
+        <th className="entity">
+          <span className="value">
+            <FormattedMessage
+              id="xref.match"
+              defaultMessage="Possible match"
+            />
+          </span>
+        </th>
+        <th className="numeric narrow">
+          <span className="value">
+            <FormattedMessage
+              id="xref.score"
+              defaultMessage="Score"
+            />
+          </span>
+        </th>
+        <th className="collection">
+          <span className="value">
+            <FormattedMessage
+              id="xref.match_collection"
+              defaultMessage="Dataset"
+            />
+          </span>
+        </th>
+      </tr>
+    </thead>
+  )
 
   render() {
     const { expandedId, intl, result, toggleExpand } = this.props;
@@ -66,10 +64,12 @@ class XrefTable extends Component {
       return <ErrorSection error={result.error} />;
     }
     if (result.total === 0) {
-      return <ErrorSection
-        icon="comparison"
-        title={intl.formatMessage(messages.empty)}
-      />;
+      return (
+        <ErrorSection
+          icon="comparison"
+          title={intl.formatMessage(messages.empty)}
+        />
+      );
     }
 
     return (
@@ -77,7 +77,12 @@ class XrefTable extends Component {
         {this.renderHeader()}
         <tbody>
           {result.results.map(xref => (
-            <XrefTableRow key={xref.id} xref={xref} isExpanded={xref.id === expandedId} toggleExpand={toggleExpand} />
+            <XrefTableRow
+              key={xref.id}
+              xref={xref}
+              isExpanded={xref.id === expandedId}
+              toggleExpand={toggleExpand}
+            />
           ))}
           {result.isLoading && skeletonItems.map(item => (
             <XrefTableRow key={item} isLoading />

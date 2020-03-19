@@ -1,35 +1,30 @@
 import React from 'react';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { ButtonGroup, AnchorButton, Button } from '@blueprintjs/core';
+import { injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { SectionLoading, ErrorSection } from 'src/components/common';
-import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import SearchFacets from 'src/components/Facet/SearchFacets';
+import CollectionXrefManageMenu from 'src/components/Collection/CollectionXrefManageMenu';
 import XrefTable from 'src/components/XrefTable/XrefTable';
 import { queryCollectionXrefFacets } from 'src/queries';
-import { selectSession, selectCollectionXrefResult } from 'src/selectors';
+import { selectCollectionXrefResult } from 'src/selectors';
 import { queryCollectionXref } from 'src/actions';
 
 import './CollectionXrefMode.scss';
 
-const messages = defineMessages({
-  empty: {
-    id: 'collection.xref.empty',
-    defaultMessage: 'There are no cross-referencing results.',
-  },
-});
-
+// const messages = defineMessages({
+//   empty: {
+//     id: 'collection.xref.empty',
+//     defaultMessage: 'There are no cross-referencing results.',
+//   },
+// });
 
 export class CollectionXrefMode extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { xrefIsOpen: false };
-    this.toggleXrefDialog = this.toggleXrefDialog.bind(this);
     this.toggleExpand = this.toggleExpand.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -66,10 +61,6 @@ export class CollectionXrefMode extends React.Component {
     }
   }
 
-  toggleXrefDialog() {
-    this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
-  }
-
   toggleExpand(xref) {
     const { expandedId, parsedHash, history, location } = this.props;
     parsedHash.expand = expandedId === xref.id ? undefined : xref.id;
@@ -81,7 +72,7 @@ export class CollectionXrefMode extends React.Component {
   }
 
   render() {
-    const { expandedId, session, collection, query, result, intl } = this.props;
+    const { expandedId, collection, query, result } = this.props;
     return (
       <section className="CollectionXrefMode">
         <div className="pane-layout">
@@ -94,22 +85,9 @@ export class CollectionXrefMode extends React.Component {
             />
           </div>
           <div className="pane-layout-main">
-            { session.loggedIn && (
-              <ButtonGroup>
-                <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXrefDialog}>
-                  <FormattedMessage
-                    id="xref.compute"
-                    defaultMessage="Compute"
-                  />
-                </Button>
-                <AnchorButton icon="download" href={collection.links?.xref_export} download disabled={!result.total}>
-                  <FormattedMessage
-                    id="xref.download"
-                    defaultMessage="Download Excel"
-                  />
-                </AnchorButton>
-              </ButtonGroup>
-            )}
+            <CollectionXrefManageMenu
+              collection={collection}
+            />
             <XrefTable
               expandedId={expandedId}
               result={result}
@@ -122,11 +100,6 @@ export class CollectionXrefMode extends React.Component {
             />
           </div>
         </div>
-        <CollectionXrefDialog
-          collection={collection}
-          isOpen={this.state.xrefIsOpen}
-          toggleDialog={this.toggleXrefDialog}
-        />
       </section>
     );
   }
@@ -141,7 +114,6 @@ const mapStateToProps = (state, ownProps) => {
     query,
     parsedHash,
     expandedId: parsedHash.expand,
-    session: selectSession(state),
     result: selectCollectionXrefResult(state, query),
   };
 };

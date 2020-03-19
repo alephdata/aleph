@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedNumber } from 'react-intl';
-import { withRouter } from 'react-router';
-import queryString from 'query-string';
 import Property from 'src/components/Property';
 import { Button, Callout } from '@blueprintjs/core';
 import c from 'classnames';
