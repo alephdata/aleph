@@ -12,6 +12,7 @@
 
   &__content.bp3-card {
     height: 100%;
+    min-height: 200px;
     padding: 35px $aleph-content-padding;
     position: relative;
     cursor: pointer;

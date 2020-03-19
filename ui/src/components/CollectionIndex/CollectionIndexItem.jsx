@@ -1,20 +1,42 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Icon, H4 } from '@blueprintjs/core';
+import { Classes, Icon, H4 } from '@blueprintjs/core';
+import c from 'classnames';
 import Count from 'src/components/common/Count';
 import {
-  Date, Role, Category, Country, Collection, Summary,
+  Date, Role, Category, Country, Collection, Summary, Skeleton,
 } from 'src/components/common';
 
 import './CollectionIndexItem.scss';
 
 
 class CollectionIndexItem extends PureComponent {
+  renderSkeleton = () => (
+    <li className="CollectionIndexItem">
+      <H4>
+        <Count className={c(Classes.SKELETON, 'bp3-intent-primary')} full isLoading />
+        <Skeleton.Text type="span" length={20} />
+      </H4>
+      <Skeleton.Text className="summary" type="p" length={200} />
+      <p className="details">
+        <Skeleton.Text className="details-item" type="span" length={20} />
+        <Skeleton.Text className="details-item" type="span" length={20} />
+        <Skeleton.Text className="details-item" type="span" length={20} />
+      </p>
+    </li>
+  )
+
   render() {
-    const { collection, preview = true } = this.props;
+    const { collection, isLoading, preview = true } = this.props;
+
+    if (isLoading) {
+      return this.renderSkeleton();
+    }
+
     if (!collection.id) {
       return null;
     }
+
     return (
       <li className="CollectionIndexItem" key={collection.id}>
         <H4>

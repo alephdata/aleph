@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
-
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { SortableTH, ErrorSection } from 'src/components/common';
@@ -57,15 +56,17 @@ class EntityTable extends Component {
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
 
+    const skeletonItems = [...Array(15).keys()];
+
     if (result.isError) {
       return <ErrorSection error={result.error} />;
     }
 
-    if (result.total === 0 && result.page === 1) {
+    if (!result.isLoading && result.total === 0 && result.page === 1) {
       return null;
     }
 
-    const results = result.results.filter((e) => e.id !== undefined);
+    const results = result.results ? result.results.filter((e) => e.id !== undefined) : [];
     const TH = ({
       sortable, field, className, ...otherProps
     }) => {
@@ -111,6 +112,15 @@ class EntityTable extends Component {
               documentMode={documentMode}
               updateSelection={updateSelection}
               selection={selection}
+            />
+          ))}
+          {result.isLoading && skeletonItems.map(item => (
+            <EntityTableRow
+              key={item}
+              hideCollection={hideCollection}
+              documentMode={documentMode}
+              updateSelection={updateSelection}
+              isLoading
             />
           ))}
         </tbody>

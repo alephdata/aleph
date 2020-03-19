@@ -10,7 +10,7 @@ import c from 'classnames';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 
 import './EntitySearch.scss';
 
@@ -128,9 +128,6 @@ export class EntitySearch extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        {result.total === undefined && (
-          <SectionLoading />
-        )}
       </div>
     );
   }

@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import { Count, TextLoading } from 'src/components/common';
+import { Count } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
@@ -116,11 +116,11 @@ class CollectionViews extends React.Component {
           id={viewIds.XREF}
           className="CollectionViews__tab"
           title={
-            <TextLoading loading={xref.shouldLoad || xref.isLoading}>
+            <>
               <Icon className="left-icon" icon="comparison" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xref.total} />
-            </TextLoading>}
+            </>}
           panel={<CollectionXrefMode collection={collection} />}
         />
         {showDiagramsTab && (
@@ -128,10 +128,11 @@ class CollectionViews extends React.Component {
             id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
             title={
-              <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>                <Icon className="left-icon" icon="graph" />
+              <>
+                <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
                 <Count count={diagrams.total} />
-              </TextLoading>
+              </>
             }
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />

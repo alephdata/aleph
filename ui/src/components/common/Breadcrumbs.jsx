@@ -1,14 +1,36 @@
 import React, { PureComponent, Component } from 'react';
 import { Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
 import c from 'classnames';
-import { Category, Collection, Entity } from 'src/components/common';
+import { Category, Collection, Entity, Skeleton } from 'src/components/common';
 
 import './Breadcrumbs.scss';
 
 
 class CollectionBreadcrumb extends PureComponent {
+  renderSkeleton() {
+    const { showCategory } = this.props;
+
+    return (
+      <>
+        {showCategory && (
+          <li>
+            <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
+          </li>
+        )}
+        <li>
+          <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
+        </li>
+      </>
+    );
+  }
+
   render() {
     const { collection, active, showCategory } = this.props;
+
+    const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.label;
+    if (isLoading) {
+      return this.renderSkeleton();
+    }
 
     return (
       <>
