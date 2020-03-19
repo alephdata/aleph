@@ -37,7 +37,6 @@ class AlephGraph(Graph):
 
 
 def expand_entity_graph(entity, properties=None, authz=None):
-    from pprint import pformat
     edge_types = [registry.name.name, registry.email.name,
                   registry.identifier.name, registry.iban.name,
                   registry.phone.name, registry.address.name,
@@ -50,7 +49,6 @@ def expand_entity_graph(entity, properties=None, authz=None):
     ):
         for ent in entities:
             proxy = model.get_proxy(ent)
-            log.info(pformat(ent))
             graph.add(proxy)
     graph.resolve()
     return graph
