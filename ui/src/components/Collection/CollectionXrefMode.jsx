@@ -198,6 +198,14 @@ export class CollectionXrefMode extends React.Component {
     return (
       <section className="CollectionXrefMode">
         <div className="pane-layout">
+          <div className="pane-layout-side">
+            <SearchFacets
+              facets={['match_collection_id', 'schema', 'countries']}
+              query={query}
+              result={result}
+              updateQuery={this.updateQuery}
+            />
+          </div>
           <div className="pane-layout-main">
             { session.loggedIn && (
               <ButtonGroup>
@@ -229,14 +237,6 @@ export class CollectionXrefMode extends React.Component {
               onEnter={this.getMoreResults}
               bottomOffset="-300px"
               scrollableAncestor={window}
-            />
-          </div>
-          <div className="pane-layout-side">
-            <SearchFacets
-              facets={['match_collection_id', 'schema', 'countries']}
-              query={query}
-              result={result}
-              updateQuery={this.updateQuery}
             />
           </div>
         </div>
