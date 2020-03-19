@@ -85,12 +85,11 @@ export class EntityMappingMode extends Component {
     const { entity, existingMapping } = this.props;
     const { csvData, csvHeader, importedMappingData } = this.state;
 
-    const isPending = existingMapping.isPending;
-    if (!csvData || !csvHeader || isPending) {
+    if (!csvData || !csvHeader || existingMapping.isPending) {
       return <SectionLoading />;
     }
 
-    const showImport = !isPending && !importedMappingData && !existingMapping.id;
+    const showImport = !existingMapping.isPending && !importedMappingData && !existingMapping.id;
 
     return (
       <div className="EntityMappingMode">

@@ -133,7 +133,6 @@ export class SystemStatusScreen extends React.Component {
       return <ErrorScreen error={result.error} />;
     }
     const results = result.results || [];
-    const isPending = result.isPending;
     const skeletonItems = [...Array(15).keys()];
 
     return (
@@ -178,8 +177,8 @@ export class SystemStatusScreen extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {!isPending && results.map(this.renderRow)}
-                  {isPending && skeletonItems.map(this.renderRowSkeleton)}
+                  {!result.isPending && results.map(this.renderRow)}
+                  {result.isPending && skeletonItems.map(this.renderRowSkeleton)}
                 </tbody>
               </table>
             )}
