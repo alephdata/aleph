@@ -87,6 +87,7 @@ export class CollectionXrefMode extends React.Component {
           <div className="pane-layout-main">
             <CollectionXrefManageMenu
               collection={collection}
+              result={result}
             />
             <XrefTable
               expandedId={expandedId}

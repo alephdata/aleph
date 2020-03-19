@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedNumber } from 'react-intl';
 import Property from 'src/components/Property';
-import { Button, Callout } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import c from 'classnames';
 import {
   Collection, Entity, Skeleton,
@@ -12,9 +12,7 @@ class XrefTableRow extends Component {
   renderSkeleton() {
     return (
       <tr>
-        <td className="expand">
-          <Skeleton.Text type="span" length={1} />
-        </td>
+        <td className="expand" />
         <td className="entity bordered">
           <Skeleton.Text type="span" length={15} />
         </td>
@@ -31,6 +29,38 @@ class XrefTableRow extends Component {
     );
   }
 
+  getCommonProperties() {
+    const { xref } = this.props;
+    const properties = [...xref.entity.schema.getFeaturedProperties()];
+
+    xref.match.schema.getFeaturedProperties().forEach((prop) => {
+      if (properties.indexOf(prop) === -1) {
+        properties.push(prop);
+      }
+    });
+
+    return properties;
+  }
+
+  renderProperties(entity) {
+    const properties = this.getCommonProperties();
+
+    return (
+      <div className="XrefTableRow__properties">
+        {properties.map((prop) => (
+          <div className="XrefTableRow__property">
+            <span className="XrefTableRow__property__name text-muted">
+              <Property.Name prop={prop} />
+            </span>
+            <span className="XrefTableRow__property__value">
+              <Property.Values prop={prop} values={entity.getProperty(prop)} />
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   render() {
     const { isExpanded, isLoading, xref } = this.props;
 
@@ -42,16 +72,18 @@ class XrefTableRow extends Component {
       return null;
     }
     const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
-    const mainRow = (
-      <tr className={c({ prefix: isExpanded })}>
+    return (
+      <tr className="XrefTableRow">
         <td className="expand">
           <Button onClick={() => this.props.toggleExpand(xref)} small minimal icon={expandIcon} />
         </td>
         <td className="entity bordered">
           <Entity.Link entity={xref.entity} preview icon />
+          {isExpanded && this.renderProperties(xref.entity)}
         </td>
         <td className="entity">
           <Entity.Link entity={xref.match} preview icon />
+          {isExpanded && this.renderProperties(xref.match)}
         </td>
         <td className="numeric narrow">
           <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
@@ -61,54 +93,6 @@ class XrefTableRow extends Component {
         </td>
       </tr>
     );
-    if (!isExpanded) {
-      return mainRow;
-    }
-    const properties = [...xref.entity.schema.getFeaturedProperties()];
-    xref.match.schema.getFeaturedProperties().forEach((prop) => {
-      if (properties.indexOf(prop) === -1) {
-        properties.push(prop);
-      }
-    });
-    return [
-      mainRow,
-      <tr>
-        <td />
-        <td className="bordered">
-          <Callout>
-            {properties.map((prop) => (
-              <div>
-                <div>
-                  <Property.Name prop={prop} />
-                </div>
-                <div>
-                  <strong>
-                    <Property.Values prop={prop} values={xref.entity.getProperty(prop)} />
-                  </strong>
-                </div>
-              </div>
-            ))}
-          </Callout>
-        </td>
-        <td>
-          <Callout>
-            {properties.map((prop) => (
-              <div>
-                <div>
-                  <Property.Name prop={prop} />
-                </div>
-                <div>
-                  <strong>
-                    <Property.Values prop={prop} values={xref.match.getProperty(prop)} />
-                  </strong>
-                </div>
-              </div>
-            ))}
-          </Callout>
-        </td>
-        <td colSpan={2} />
-      </tr>
-    ];
   }
 }
 

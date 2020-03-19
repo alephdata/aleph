@@ -1,6 +1,11 @@
 @import "src/app/variables.scss";
 
 .CollectionXrefMode {
+    .CollectionXrefManageMenu {
+      margin-bottom: $aleph-content-padding;
+      float: right;
+    }
+
     .pane-layout-side {
         margin-right: $aleph-content-padding;
         width: $aleph-sidebar-width * 0.8;

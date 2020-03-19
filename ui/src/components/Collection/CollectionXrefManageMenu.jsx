@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { AnchorButton, Button, ButtonGroup } from '@blueprintjs/core';
 
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectSession } from 'src/selectors';
 
+const messages = defineMessages({
+  compute: {
+    id: 'xref.compute',
+    defaultMessage: 'Compute',
+  },
+  recompute: {
+    id: 'xref.recompute',
+    defaultMessage: 'Re-compute',
+  },
+});
 
 class CollectionXrefManageMenu extends Component {
   constructor(props) {
@@ -20,7 +30,7 @@ class CollectionXrefManageMenu extends Component {
   toggleXref = () => this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
 
   render() {
-    const { collection, session } = this.props;
+    const { collection, intl, result, session } = this.props;
 
     if (!session.loggedIn) {
       return null;
@@ -28,29 +38,30 @@ class CollectionXrefManageMenu extends Component {
 
     /* eslint-disable camelcase */
     const downloadLink = collection.links?.xref_export;
-    // const downloadDisabled = !result.total
-    const downloadDisabled = false;
+    const showDownload = downloadLink && result.total > 0;
+    const xrefButtonText = result.total > 0
+      ? intl.formatMessage(messages.recompute)
+      : intl.formatMessage(messages.compute);
 
     return (
       <>
-        <ButtonGroup>
-          <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXrefDialog}>
-            <FormattedMessage
-              id="xref.compute"
-              defaultMessage="Compute"
-            />
+        <ButtonGroup className="CollectionXrefManageMenu">
+          <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXref}>
+            {xrefButtonText}
           </Button>
-          <AnchorButton icon="download" href={downloadLink} download disabled={downloadDisabled}>
-            <FormattedMessage
-              id="xref.download"
-              defaultMessage="Download Excel"
-            />
-          </AnchorButton>
+          {showDownload && (
+            <AnchorButton icon="download" href={downloadLink} download>
+              <FormattedMessage
+                id="xref.download"
+                defaultMessage="Download Excel"
+              />
+            </AnchorButton>
+          )}
         </ButtonGroup>
         <CollectionXrefDialog
           collection={collection}
           isOpen={this.state.xrefIsOpen}
-          toggleDialog={this.toggleXrefDialog}
+          toggleDialog={this.toggleXref}
         />
       </>
     );
