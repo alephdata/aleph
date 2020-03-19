@@ -67,7 +67,7 @@ class NotificationList extends Component {
             notif => <Notification key={notif.id} notification={notif} />,
           )}
           {skeletonItems.map(
-            item => <Notification key={item} isLoading />,
+            item => <Notification key={item} isPending />,
           )}
         </ul>
         <Waypoint

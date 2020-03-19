@@ -120,7 +120,7 @@ class EntityTable extends Component {
               hideCollection={hideCollection}
               documentMode={documentMode}
               updateSelection={updateSelection}
-              isLoading
+              isPending
             />
           ))}
         </tbody>

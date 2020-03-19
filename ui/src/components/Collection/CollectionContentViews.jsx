@@ -66,7 +66,7 @@ class CollectionViews extends React.Component {
     const hasBrowse = (numOfDocs > 0 || collection.writeable);
 
     const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0]?.schema);
-    const isLoading = collection.isPending && !collection.id;
+    const isPending = collection.isPending && !collection.id;
 
     return (
       <Tabs
@@ -78,12 +78,12 @@ class CollectionViews extends React.Component {
         animate={false}
         vertical
       >
-        {(isLoading || hasBrowse) && (
+        {(isPending || hasBrowse) && (
           <Tab
             id="Document"
             className={'CollectionContentViews__tab'}
             title={
-              <span className={c({ [Classes.SKELETON]: isLoading })}>
+              <span className={c({ [Classes.SKELETON]: isPending })}>
                 <Icon icon="folder" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />

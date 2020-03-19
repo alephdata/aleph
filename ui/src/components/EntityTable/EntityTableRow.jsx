@@ -48,7 +48,7 @@ class EntityTableRow extends Component {
   render() {
     const {
       entity,
-      isLoading,
+      isPending,
       location,
       hideCollection,
       documentMode,
@@ -57,7 +57,7 @@ class EntityTableRow extends Component {
       selection
     } = this.props;
 
-    if (isLoading) {
+    if (isPending) {
       return this.renderSkeleton();
     }
 

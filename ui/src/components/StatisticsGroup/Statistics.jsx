@@ -41,9 +41,9 @@ class Statistics extends PureComponent {
   }
 
   getItemsList() {
-    const { hasFilter, isLoading, statistic } = this.props;
+    const { hasFilter, isPending, statistic } = this.props;
     const { filterVal } = this.state;
-    if (isLoading) {
+    if (isPending) {
       return Array.from({ length: 40 }, (i, ii) => ([ii]));
     }
     const list = Object.entries(statistic);
@@ -63,9 +63,9 @@ class Statistics extends PureComponent {
       filterPlaceholder,
       hasFilter,
       headline,
-      isLoading,
+      isPending,
       styleType,
-      children = isLoading ? Statistics.Noop : Statistics.Item,
+      children = isPending ? Statistics.Noop : Statistics.Item,
       ItemContentContainer = Statistics.ItemContentContainer,
     } = this.props;
     const {
@@ -77,7 +77,7 @@ class Statistics extends PureComponent {
     const rest = list.length - listLen;
     return (
       <div className={c('Statistics bp3-callout', styleType)}>
-        <h5 className={c('bp3-heading', 'Statistics__headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
+        <h5 className={c('bp3-heading', 'Statistics__headline', { 'bp3-skeleton': isPending })}>{headline}</h5>
         {hasFilter && (
           <InputGroup
             className="Statistics__filter"
@@ -89,13 +89,13 @@ class Statistics extends PureComponent {
         )}
         <ul className="Statistics__list">
           {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({
-            className: c('Statistics__list-item', { 'bp3-skeleton': isLoading }),
+            className: c('Statistics__list-item', { 'bp3-skeleton': isPending }),
             key: item[0],
             item,
             ItemContentContainer,
           }))}
-          {rest > 0 && !isLoading && (
-            <li className={c('Statistics__list-item', { 'bp3-skeleton': isLoading })}>
+          {rest > 0 && !isPending && (
+            <li className={c('Statistics__list-item', { 'bp3-skeleton': isPending })}>
               <Button
                 onClick={this.onExpand}
                 text={seeMoreButtonText(rest)}

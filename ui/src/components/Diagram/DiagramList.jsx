@@ -8,7 +8,7 @@ class DiagramList extends Component {
   render() {
     const { getMoreItems, result, showCollection } = this.props;
 
-    const isLoading = result.isPending && !result.total;
+    const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(4).keys()];
 
     return (
@@ -17,8 +17,8 @@ class DiagramList extends Component {
           {result.results && result.results.map(diagram => (
             <DiagramListItem key={diagram.id} diagram={diagram} showCollection={showCollection} />
           ))}
-          {isLoading && skeletonItems.map(item => (
-            <DiagramListItem key={item} showCollection={showCollection} isLoading />
+          {isPending && skeletonItems.map(item => (
+            <DiagramListItem key={item} showCollection={showCollection} isPending />
           ))}
         </div>
         <Waypoint

@@ -124,7 +124,7 @@ export class CollectionIndex extends Component {
             res => <CollectionIndexItem key={res.id} collection={res} />,
           )}
           {result.isPending && skeletonItems.map(
-            item => <CollectionIndexItem key={item} isLoading />,
+            item => <CollectionIndexItem key={item} isPending />,
           )}
         </ul>
         <Waypoint

@@ -14,9 +14,9 @@ class CollectionHeading extends PureComponent {
 
   render() {
     const { collection } = this.props;
-    const isLoading = collection.isPending && !collection.label;
+    const isPending = collection.isPending && !collection.label;
 
-    if (isLoading) {
+    if (isPending) {
       return this.renderSkeleton();
     }
 

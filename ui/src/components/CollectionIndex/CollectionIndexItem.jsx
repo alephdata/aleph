@@ -14,7 +14,7 @@ class CollectionIndexItem extends PureComponent {
   renderSkeleton = () => (
     <li className="CollectionIndexItem">
       <H4>
-        <Count className={c(Classes.SKELETON, 'bp3-intent-primary')} full isLoading />
+        <Count className={c(Classes.SKELETON, 'bp3-intent-primary')} full isPending />
         <Skeleton.Text type="span" length={20} />
       </H4>
       <Skeleton.Text className="summary" type="p" length={200} />
@@ -27,9 +27,9 @@ class CollectionIndexItem extends PureComponent {
   )
 
   render() {
-    const { collection, isLoading, preview = true } = this.props;
+    const { collection, isPending, preview = true } = this.props;
 
-    if (isLoading) {
+    if (isPending) {
       return this.renderSkeleton();
     }
 
