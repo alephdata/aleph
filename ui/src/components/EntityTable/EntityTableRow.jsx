@@ -5,17 +5,64 @@ import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
 import {
-  Country, Collection, Entity, FileSize, Date,
+  Country, Collection, Entity, FileSize, Date, Skeleton,
 } from 'src/components/common';
 /* eslint-disable */
 
 class EntityTableRow extends Component {
-  render() {
-    const { entity, location } = this.props;
-    const { hideCollection, documentMode, showPreview } = this.props;
+  renderSkeleton() {
+    const { hideCollection, documentMode, updateSelection } = this.props;
 
-    const { updateSelection, selection } = this.props;
-    const selectedIds = _.map(selection || [], 'id');
+    return (
+      <tr className={c('EntityTableRow', 'nowrap')}>
+        {updateSelection && (
+          <td className="select">
+            <Skeleton.Text type="span" length={2} />
+          </td>
+        )}
+        <td className="entity">
+          <Skeleton.Text type="span" length={30} />
+        </td>
+        {!hideCollection && (
+          <td className="collection">
+            <Skeleton.Text type="span" length={15} />
+          </td>
+        )}
+        {!documentMode && (
+          <td className="country">
+            <Skeleton.Text type="span" length={15} />
+          </td>
+        )}
+        <td className="date">
+          <Skeleton.Text type="span" length={10} />
+        </td>
+        {documentMode && (
+          <td className="file-size">
+            <Skeleton.Text type="span" length={20} />
+          </td>
+        )}
+      </tr>
+    );
+  }
+
+  render() {
+    const {
+      entity,
+      isPending,
+      location,
+      hideCollection,
+      documentMode,
+      showPreview,
+      updateSelection,
+      selection
+    } = this.props;
+
+    if (isPending) {
+      return this.renderSkeleton();
+    }
+
+    const selectedIds = _.map(selection || [],
+      'id');
     const isSelected = selectedIds.indexOf(entity.id) > -1;
     const parsedHash = queryString.parse(location.hash);
     const highlights = !entity.highlight ? [] : entity.highlight;

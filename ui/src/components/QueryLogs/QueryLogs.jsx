@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
-import { SectionLoading, SearchListings } from 'src/components/common';
+import { SearchListings } from 'src/components/common';
 import { selectQueryLog } from 'src/selectors';
 import Query from 'src/app/Query';
 
@@ -37,14 +37,14 @@ export class QueryLogs extends PureComponent {
 
   getMoreResults = () => {
     const { query, result } = this.props;
-    if (!result.isLoading && result.next) {
+    if (!result.isPending && result.next) {
       this.props.fetchQueryLogs({ query, next: result.next });
     }
   };
 
   fetchIfNeeded() {
     const { result, query } = this.props;
-    if (!result.isLoading && result.shouldLoad) {
+    if (result.shouldLoad) {
       this.props.fetchQueryLogs({ query });
     }
   }
@@ -54,20 +54,17 @@ export class QueryLogs extends PureComponent {
 
     return (
       <div className="QueryLogs">
-        { result.page !== undefined && result.results.length > 0 && (
-          <SearchListings
-            listType="search history"
-            items={result.results}
-            onDelete={item => this.props.deleteQueryLog(item)}
-            onSearch={item => this.onSearch(item.query)}
-          />
-        )}
+        <SearchListings
+          listType="search history"
+          result={result}
+          onDelete={item => this.props.deleteQueryLog(item)}
+          onSearch={item => this.onSearch(item.query)}
+        />
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-30px"
           scrollableAncestor={window}
         />
-        {result.isLoading && <SectionLoading />}
       </div>
     );
   }

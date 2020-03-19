@@ -109,14 +109,12 @@ class AlertsDialog extends Component {
             title={intl.formatMessage(messages.no_alerts)}
           />
         )}
-        { alerts.page !== undefined && alerts.results.length > 0 && (
-          <SearchListings
-            listType="alerts"
-            items={alerts.results}
-            onDelete={item => this.onDeleteAlert(item.id)}
-            onSearch={item => this.onSearch(item.query)}
-          />
-        )}
+        <SearchListings
+          listType="alerts"
+          result={alerts}
+          onDelete={item => this.onDeleteAlert(item.id)}
+          onSearch={item => this.onSearch(item.query)}
+        />
       </div>
     );
   }

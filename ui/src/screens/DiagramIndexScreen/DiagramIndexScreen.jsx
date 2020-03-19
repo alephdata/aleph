@@ -8,9 +8,7 @@ import { selectDiagramsResult } from 'src/selectors';
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-import {
-  Breadcrumbs, SectionLoading,
-} from 'src/components/common';
+import { Breadcrumbs } from 'src/components/common';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
@@ -39,24 +37,20 @@ export class DiagramIndexScreen extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
-    const { result } = this.props;
-
-    if (result.shouldLoad && !prevProps.result.shouldLoad) {
-      this.fetchIfNeeded();
-    }
+  componentDidUpdate() {
+    this.fetchIfNeeded();
   }
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryDiagrams({ query, next: result.next });
     }
   }
 
   fetchIfNeeded() {
     const { result, query } = this.props;
-    if (!result.isLoading) {
+    if (result.shouldLoad) {
       this.props.queryDiagrams({ query });
     }
   }
@@ -99,16 +93,11 @@ export class DiagramIndexScreen extends Component {
               <DiagramCreateMenu />
             </div>
           </div>
-          { result.isLoading && !result.results?.length && (
-            <SectionLoading />
-          )}
-          { result.results && (
-            <DiagramList
-              items={result.results}
-              getMoreItems={this.getMoreResults}
-              showCollection
-            />
-          )}
+          <DiagramList
+            result={result}
+            getMoreItems={this.getMoreResults}
+            showCollection
+          />
         </Dashboard>
       </Screen>
     );

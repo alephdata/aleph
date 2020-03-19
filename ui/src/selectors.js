@@ -12,7 +12,7 @@ function selectObject(state, objects, id) {
     return loadState();
   }
   const obj = objects[id];
-  if (!obj.isError && !obj.isLoading) {
+  if (!obj.isError && !obj.isPending) {
     const outdated = obj.loadedAt && obj.loadedAt < selectTimestamp(state);
     obj.shouldLoad = obj.shouldLoad || outdated;
   }
@@ -108,7 +108,7 @@ export function selectEntity(state, entityId) {
   const model = selectModel(state);
   const hasModel = entity.schema !== undefined && model !== undefined;
   const result = hasModel ? model.getEntity(entity) : {};
-  result.isLoading = !!entity.isLoading;
+  result.isPending = !!entity.isPending;
   result.isError = !!entity.isError;
   result.shouldLoad = !!entity.shouldLoad;
   result.error = entity.error;
@@ -223,6 +223,10 @@ export function selectCollectionPermissions(state, collectionId) {
 
 export function selectCollectionMappings(state, collectionId) {
   return selectObject(state, state.collectionMappings, collectionId);
+}
+
+export function selectEntityMapping(state, entityId) {
+  return selectObject(state, state.entityMappings, entityId);
 }
 
 export function selectCollectionXref(state, xrefId) {

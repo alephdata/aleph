@@ -54,7 +54,7 @@ class EntityReferencesMode extends React.Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryEntities({ query, next: result.next });
     }
   }
@@ -142,7 +142,7 @@ class EntityReferencesMode extends React.Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        { result.isLoading && (
+        { result.isPending && (
           <SectionLoading />
         )}
       </section>

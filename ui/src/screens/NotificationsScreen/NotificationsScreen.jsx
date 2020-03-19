@@ -3,14 +3,13 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import Query from 'src/app/Query';
 import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-
-
-import { selectNotificationsResult } from 'src/selectors';
+import { selectNotificationsResult, selectSession } from 'src/selectors';
 
 import './NotificationsScreen.scss';
 
@@ -59,18 +58,17 @@ export class NotificationsScreen extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
+  const session = selectSession(state);
   const query = Query.fromLocation('notifications', location, {}, 'notifications').limit(40);
-  const result = selectNotificationsResult(state, query);
-
   return {
     query,
-    result,
-    role: state.session ? state.session.role : null,
+    result: selectNotificationsResult(state, query),
+    role: session ? session.role : null,
   };
 };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, {}),
+  connect(mapStateToProps),
   injectIntl,
 )(NotificationsScreen);

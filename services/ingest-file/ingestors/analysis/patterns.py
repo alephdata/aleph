@@ -23,9 +23,9 @@ def extract_patterns(entity, text):
         prop = entity.schema.get(prop_name)
         for match in pattern.finditer(text):
             match_text = match.group(0)
-            cleaned_text = prop.type.clean(match_text, countries=countries)
-            if cleaned_text is not None:
-                yield (prop_name, cleaned_text)
-            hints = prop.type.country_hint(cleaned_text)
-            for country in ensure_list(hints):
+            value = prop.type.clean(match_text, countries=countries)
+            if not prop.type.validate(value, countries=countries):
+                continue
+            yield (prop_name, value)
+            for country in ensure_list(prop.type.country_hint(value)):
                 yield (TAG_COUNTRY, country)

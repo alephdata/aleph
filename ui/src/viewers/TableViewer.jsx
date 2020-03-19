@@ -1,70 +1,70 @@
-import React, { Component } from 'react';
+import React from 'react';
+import fetchCsvData from 'src/util/fetchCsvData';
 import {
-  Cell, Column, Table, TableLoadingOption, TruncatedFormat,
+  Cell, Column, Table, TruncatedFormat,
 } from '@blueprintjs/table';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { queryEntities } from 'src/actions';
-import Query from 'src/app/Query';
-import { selectEntitiesResult } from 'src/selectors';
+
 import './TableViewer.scss';
 
 
-export class TableViewer extends Component {
+class TableViewer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { requestedRow: 0 };
+    this.state = {
+      requestedRow: 400,
+      rows: [],
+      parser: null,
+    };
     this.renderCell = this.renderCell.bind(this);
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { result } = nextProps;
-    return {
-      requestedRow: Math.max(prevState.requestedRow, result.results.length),
-    };
+    this.processCsvResults = this.processCsvResults.bind(this);
   }
 
   componentDidMount() {
-    this.fetchRecords();
+    const { document } = this.props;
+    const url = document.links.csv;
+    fetchCsvData(url, this.processCsvResults);
   }
 
   componentDidUpdate() {
-    this.fetchRecords();
-  }
-
-  onVisibleCellsChange(row) {
-    const { result } = this.props;
-    const maxResult = this.state.requestedRow;
-    if (result.limit !== undefined && row.rowIndexEnd >= (maxResult - 10)) {
-      const nextResult = result.offset + (result.limit * 2);
-      this.setState({ requestedRow: nextResult });
+    const { rows, requestedRow, parser } = this.state;
+    if (rows.length < requestedRow && parser !== null) {
+      parser.resume();
     }
   }
 
-  fetchRecords() {
-    const { result, query } = this.props;
-    if (query.path && result.shouldLoad) {
-      this.props.queryEntities({ query });
-    } else if (this.state.requestedRow > result.results.length) {
-      if (!result.isLoading && result.next) {
-        this.props.queryEntities({ query, next: result.next });
+  onVisibleCellsChange(row) {
+    const { requestedRow } = this.state;
+    // If we are scrolling to the end. Time to load more rows.
+    if ((row.rowIndexEnd + 50) > requestedRow) {
+      const { document } = this.props;
+      const rowCount = parseInt(document.getFirst('rowCount'), 10);
+      // Max row count should not exceed the number of rows in the csv file
+      const nextRow = Math.min(rowCount, requestedRow + 100);
+      if (nextRow > requestedRow) {
+        this.setState((previousState) => ({
+          requestedRow: Math.min(rowCount, previousState.requestedRow + 100),
+        }));
       }
     }
   }
 
-  renderCell(rowIndex, colIndex) {
-    const { result } = this.props;
-    const cell = result.results[rowIndex];
-    const loading = !cell;
-    let value;
-    if (cell) {
-      value = JSON.parse(cell.getProperty('cells'))[colIndex];
-    }
+  processCsvResults(results, parser) {
+    this.setState((previousState) => {
+      const rows = previousState.rows.concat(results.data);
+      const rowIndex = rows.length;
+      if (rowIndex > previousState.requestedRow) {
+        parser.pause();
+      }
+      return { rows, parser };
+    });
+  }
 
+  renderCell(rowIndex, colIndex) {
+    const row = this.state.rows[rowIndex];
+    const value = row ? row[colIndex] : undefined;
     return (
-      <Cell loading={loading}>
+      <Cell loading={value === undefined}>
         <TruncatedFormat detectTruncation>
           {value || ''}
         </TruncatedFormat>
@@ -73,24 +73,24 @@ export class TableViewer extends Component {
   }
 
   render() {
-    const { document, result } = this.props;
-    const loadingOptions = [];
+    const { document } = this.props;
+    const { rows } = this.state;
     if (document.id === undefined) {
       return null;
     }
-    if (result.total === undefined) {
-      loadingOptions.push(TableLoadingOption.CELLS);
-    }
-    const columnsJson = document.getProperty('columns').toString();
-    const columns = columnsJson ? JSON.parse(columnsJson) : [];
-
+    const numRows = parseInt(document.getFirst('rowCount'), 10);
+    const columnsJson = document.getFirst('columns');
+    const columnsFtm = columnsJson ? JSON.parse(columnsJson) : [];
+    // HACK: Use the first row of the data as headers if nothing is in the
+    // FtM metadata.
+    const columnsHeader = rows.length > 0 ? rows[0] : [];
+    const columns = columnsFtm.length ? columnsFtm : columnsHeader;
     return (
       <div className="TableViewer">
         <Table
-          numRows={result.total}
+          numRows={numRows}
           enableGhostCells
           enableRowHeader
-          loadingOptions={loadingOptions}
           onVisibleCellsChange={this.onVisibleCellsChange}
         >
           {columns.map((column, i) => (
@@ -107,24 +107,4 @@ export class TableViewer extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText } = ownProps;
-  let query = Query.fromLocation('entities', location, {}, 'document')
-    .sortBy('properties.index', 'asc')
-    .setFilter('properties.table', document.id)
-    .setFilter('schema', 'Record');
-
-  if (queryText) {
-    query = query.setString('q', queryText);
-  }
-
-  return {
-    query,
-    result: selectEntitiesResult(state, query),
-  };
-};
-const mapDispatchToProps = { queryEntities };
-export default compose(
-  withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
-)(TableViewer);
+export default TableViewer;

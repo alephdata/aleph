@@ -3,8 +3,8 @@
   "version": "3.6.0",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "1.27.3",
-    "@alephdata/vislib": "^1.5.0",
+    "@alephdata/followthemoney": "1.27.5",
+    "@alephdata/vislib": "^1.5.9",
     "@blueprintjs/core": "^3.18.1",
     "@blueprintjs/datetime": "^3.15.1",
     "@blueprintjs/icons": "3.14.0",
@@ -38,7 +38,8 @@
     "redux-act": "^1.7.4",
     "redux-thunk": "^2.3.0",
     "truncate": "^2.0.1",
-    "uuid": "^7.0.2"
+    "uuid": "^7.0.2",
+    "yaml": "^1.7.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.6.0",

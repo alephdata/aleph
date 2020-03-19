@@ -10,6 +10,7 @@ import Diagram from './Diagram';
 import DualPane from './DualPane';
 import Entity from './Entity';
 import Facet from './Facet';
+import FileImport from './FileImport';
 import FileSize from './FileSize';
 import Language from './Language';
 import Role from './Role';
@@ -25,6 +26,7 @@ import Tag from './Tag';
 import URL from './URL';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
+import Skeleton from './Skeleton';
 import SortingBar from './SortingBar';
 import Summary from './Summary';
 import QueryText from './QueryText';
@@ -43,6 +45,7 @@ export {
   DualPane,
   Entity,
   Facet,
+  FileImport,
   FileSize,
   Language,
   Role,
@@ -59,6 +62,7 @@ export {
   URL,
   SearchBox,
   SearchListings,
+  Skeleton,
   SortingBar,
   QueryText,
   ResultCount,

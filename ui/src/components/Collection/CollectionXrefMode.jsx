@@ -46,7 +46,7 @@ export class CollectionXrefMode extends React.Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryCollectionXref({ query, result, next: result.next });
     }
   }
@@ -68,9 +68,11 @@ export class CollectionXrefMode extends React.Component {
   }
 
   toggleExpand(xref) {
-    const { expandedId, parsedHash, history } = this.props;
+    const { expandedId, parsedHash, history, location } = this.props;
     parsedHash.expand = expandedId === xref.id ? undefined : xref.id;
     history.replace({
+      pathname: location.pathname,
+      search: location.search,
       hash: queryString.stringify(parsedHash),
     });
   }
@@ -141,8 +143,16 @@ export class CollectionXrefMode extends React.Component {
   }
 
   renderTable() {
-    const { result } = this.props;
-    if (!result.total || !result.results) {
+    const { result, intl } = this.props;
+    if (result.total === 0) {
+      return (
+        <ErrorSection
+          icon="comparison"
+          title={intl.formatMessage(messages.empty)}
+        />
+      );
+    }
+    if (result.isPending) {
       return null;
     }
     return (
@@ -192,7 +202,7 @@ export class CollectionXrefMode extends React.Component {
   }
 
   render() {
-    const { session, collection, query, result, intl } = this.props;
+    const { session, collection, query, result } = this.props;
     return (
       <section className="CollectionXrefMode">
         <div className="pane-layout">
@@ -205,7 +215,7 @@ export class CollectionXrefMode extends React.Component {
                     defaultMessage="Compute"
                   />
                 </Button>
-                <AnchorButton icon="download" href={collection.links.xref_export} download disabled={!result.total}>
+                <AnchorButton icon="download" href={collection.links && collection.links.xref_export} download disabled={!result.total}>
                   <FormattedMessage
                     id="xref.download"
                     defaultMessage="Download Excel"
@@ -213,14 +223,8 @@ export class CollectionXrefMode extends React.Component {
                 </AnchorButton>
               </ButtonGroup>
             )}
-            {result.total === 0 && (
-              <ErrorSection
-                icon="comparison"
-                title={intl.formatMessage(messages.empty)}
-              />
-            )}
             {this.renderTable()}
-            {result.isLoading && (
+            {result.isPending && (
               <SectionLoading />
             )}
             <Waypoint
