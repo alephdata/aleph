@@ -8,7 +8,7 @@ class DiagramList extends Component {
   render() {
     const { getMoreItems, result, showCollection } = this.props;
 
-    const isLoading = (result.isLoading || result.shouldLoad) && !result.total;
+    const isLoading = result.isPending && !result.total;
     const skeletonItems = [...Array(4).keys()];
 
     return (

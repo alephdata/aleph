@@ -13,7 +13,6 @@ class EntityTableRow extends Component {
   renderSkeleton() {
     const { hideCollection, documentMode, updateSelection } = this.props;
 
-    console.log('in document mode', documentMode, hideCollection)
     return (
       <tr className={c('EntityTableRow', 'nowrap')}>
         {updateSelection && (

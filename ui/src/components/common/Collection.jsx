@@ -125,7 +125,7 @@ class CollectionLoad extends Component {
 
   render() {
     const { collection, children, renderWhenLoading } = this.props;
-    if (collection.isLoading && renderWhenLoading !== undefined) {
+    if (collection.isPending && renderWhenLoading !== undefined) {
       return renderWhenLoading;
     }
     return children(collection);

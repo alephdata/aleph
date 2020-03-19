@@ -72,8 +72,7 @@ class Dashboard extends React.Component {
   render() {
     const { alerts, intl, location, groups, showDiagrams } = this.props;
     const current = location.pathname;
-
-    const groupsLoading = groups.isLoading || groups.shouldLoad;
+    const groupsLoading = groups.isPending;
 
     return (
       <div className="Dashboard">

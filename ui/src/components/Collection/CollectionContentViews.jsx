@@ -66,7 +66,7 @@ class CollectionViews extends React.Component {
     const hasBrowse = (numOfDocs > 0 || collection.writeable);
 
     const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0]?.schema);
-    const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.id;
+    const isLoading = collection.isPending && !collection.id;
 
     return (
       <Tabs

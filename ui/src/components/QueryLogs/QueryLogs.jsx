@@ -37,14 +37,14 @@ export class QueryLogs extends PureComponent {
 
   getMoreResults = () => {
     const { query, result } = this.props;
-    if (!result.isLoading && result.next) {
+    if (!result.isPending && result.next) {
       this.props.fetchQueryLogs({ query, next: result.next });
     }
   };
 
   fetchIfNeeded() {
     const { result, query } = this.props;
-    if (!result.isLoading && result.shouldLoad) {
+    if (result.shouldLoad) {
       this.props.fetchQueryLogs({ query });
     }
   }

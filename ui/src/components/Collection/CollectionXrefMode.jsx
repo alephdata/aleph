@@ -46,7 +46,7 @@ export class CollectionXrefMode extends React.Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryCollectionXref({ query, result, next: result.next });
     }
   }
@@ -222,7 +222,7 @@ export class CollectionXrefMode extends React.Component {
               />
             )}
             {this.renderTable()}
-            {result.isLoading && (
+            {result.isPending && (
               <SectionLoading />
             )}
             <Waypoint

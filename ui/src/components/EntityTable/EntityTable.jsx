@@ -62,7 +62,7 @@ class EntityTable extends Component {
       return <ErrorSection error={result.error} />;
     }
 
-    if (!result.isLoading && result.total === 0 && result.page === 1) {
+    if (!result.isPending && result.total === 0 && result.page === 1) {
       return null;
     }
 
@@ -101,7 +101,7 @@ class EntityTable extends Component {
             )}
           </tr>
         </thead>
-        <tbody className={c({ updating: result.isLoading })}>
+        <tbody className={c({ updating: result.isPending })}>
           {results.map(entity => (
             <EntityTableRow
               key={entity.id}
@@ -114,7 +114,7 @@ class EntityTable extends Component {
               selection={selection}
             />
           ))}
-          {result.isLoading && skeletonItems.map(item => (
+          {result.isPending && skeletonItems.map(item => (
             <EntityTableRow
               key={item}
               hideCollection={hideCollection}

@@ -133,7 +133,7 @@ export class SystemStatusScreen extends React.Component {
       return <ErrorScreen error={result.error} />;
     }
     const results = result.results || [];
-    const isLoading = !result.results && result.isLoading;
+    const isLoading = result.isPending;
     const skeletonItems = [...Array(15).keys()];
 
     return (

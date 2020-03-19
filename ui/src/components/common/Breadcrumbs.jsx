@@ -27,7 +27,7 @@ class CollectionBreadcrumb extends PureComponent {
   render() {
     const { collection, active, showCategory } = this.props;
 
-    const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.label;
+    const isLoading = collection.isPending && !collection.label;
     if (isLoading) {
       return this.renderSkeleton();
     }
