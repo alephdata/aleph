@@ -110,20 +110,11 @@ export class CollectionXrefMode extends React.Component {
                 </AnchorButton>
               </ButtonGroup>
             )}
-            {result.total === 0 && (
-              <ErrorSection
-                icon="comparison"
-                title={intl.formatMessage(messages.empty)}
-              />
-            )}
             <XrefTable
               expandedId={expandedId}
               result={result}
               toggleExpand={this.toggleExpand}
             />
-            {result.isLoading && (
-              <SectionLoading />
-            )}
             <Waypoint
               onEnter={this.getMoreResults}
               bottomOffset="-300px"
@@ -146,7 +137,6 @@ const mapStateToProps = (state, ownProps) => {
   const parsedHash = queryString.parse(location.hash);
   const query = queryCollectionXrefFacets(location, collection.id);
 
-  console.log('in map state to props', collection);
   return {
     query,
     parsedHash,

@@ -5,7 +5,6 @@ import queryString from 'query-string';
 import Property from 'src/components/Property';
 import { Button, Callout } from '@blueprintjs/core';
 import c from 'classnames';
-
 import {
   Collection, Entity, Skeleton,
 } from 'src/components/common';
@@ -14,21 +13,39 @@ import {
 class XrefTableRow extends Component {
   renderSkeleton() {
     return (
-      <tr className={c('XrefTableRow', 'nowrap')}>
-        <Skeleton.Text type="span" length={15} />
+      <tr>
+        <td className="expand">
+          <Skeleton.Text type="span" length={1} />
+        </td>
+        <td className="entity bordered">
+          <Skeleton.Text type="span" length={15} />
+        </td>
+        <td className="entity">
+          <Skeleton.Text type="span" length={15} />
+        </td>
+        <td className="numeric narrow">
+          <Skeleton.Text type="span" length={2} />
+        </td>
+        <td className="collection">
+          <Skeleton.Text type="span" length={15} />
+        </td>
       </tr>
     );
   }
 
   render() {
-    const { expandedId, xref } = this.props;
+    const { isExpanded, isLoading, xref } = this.props;
+
+    if (isLoading) {
+      return this.renderSkeleton();
+    }
+
     if (!xref.entity || !xref.match) {
       return null;
     }
-    const isExpanded = xref.id === expandedId;
     const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
     const mainRow = (
-      <tr key={xref.id} className={c({ prefix: isExpanded })}>
+      <tr className={c({ prefix: isExpanded })}>
         <td className="expand">
           <Button onClick={() => this.props.toggleExpand(xref)} small minimal icon={expandIcon} />
         </td>

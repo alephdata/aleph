@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { ErrorSection } from 'src/components/common';
 import XrefTableRow from './XrefTableRow';
 
 import './XrefTable.scss';
+
+const messages = defineMessages({
+  empty: {
+    id: 'collection.xref.empty',
+    defaultMessage: 'There are no cross-referencing results.',
+  },
+});
+
 
 class XrefTable extends Component {
   renderHeader() {
@@ -50,23 +58,29 @@ class XrefTable extends Component {
   }
 
   render() {
-    const { expandedId, result, toggleExpand } = this.props;
+    const { expandedId, intl, result, toggleExpand } = this.props;
 
     const skeletonItems = [...Array(15).keys()];
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
     }
-    // if (!result.total || !result.results) {
-    //   return null;
-    // }
+    if (result.total === 0) {
+      return <ErrorSection
+        icon="comparison"
+        title={intl.formatMessage(messages.empty)}
+      />;
+    }
 
     return (
       <table className="data-table">
         {this.renderHeader()}
         <tbody>
           {result.results.map(xref => (
-            <XrefTableRow xref={xref} expandedId={expandedId} toggleExpand={toggleExpand} />
+            <XrefTableRow key={xref.id} xref={xref} isExpanded={xref.id === expandedId} toggleExpand={toggleExpand} />
+          ))}
+          {result.isLoading && skeletonItems.map(item => (
+            <XrefTableRow key={item} isLoading />
           ))}
         </tbody>
       </table>
