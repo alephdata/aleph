@@ -12,15 +12,16 @@ from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import (
-    entity_references, entity_tags, entity_expand_nodes
+    entity_references, entity_tags, entity_expand_nodes,
 )
+from aleph.logic.graph import expand_entity_graph
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
 from aleph.views.util import require, get_nested_collection
 from aleph.views.context import enable_cache, tag_request
-from aleph.views.serializers import EntitySerializer
+from aleph.views.serializers import EntitySerializer, EntityGraphSerializer
 from aleph.search import QueryParser
 
 log = logging.getLogger(__name__)
@@ -637,12 +638,7 @@ def expand(entity_id):
               schema:
                 type: object
                 allOf:
-                - $ref: '#/components/schemas/QueryResponse'
-                properties:
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/EntityExpandResult'
+                - $ref: '#/components/schemas/EntityGraph'
           description: OK
       tags:
         - Entity
@@ -652,19 +648,5 @@ def expand(entity_id):
     tag_request(collection_id=entity.get('collection_id'))
     parser = QueryParser(request.args, request.authz)
     properties = ensure_list(parser.filters.get('property'))
-    results = []
-    for prop, total, entities in entity_expand_nodes(
-        entity, properties=properties, include_entities=True,
-        authz=request.authz
-    ):
-        results.append({
-            'count': total,
-            'property': prop,
-            'entities': entities
-
-        })
-    return jsonify({
-        'status': 'ok',
-        'total': sum(result['count'] for result in results),
-        'results': results
-    })
+    graph = expand_entity_graph(entity, properties=properties, authz=request.authz)  # noqa
+    return EntityGraphSerializer.jsonify(graph)

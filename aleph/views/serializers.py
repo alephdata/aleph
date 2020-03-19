@@ -358,3 +358,31 @@ class MappingSerializer(Serializer):
         }
         obj['links'] = links
         return obj
+
+
+class EntityGraphSerializer(Serializer):
+    def _serialize(self, obj):
+        nodes = []
+        for node in obj['nodes']:
+            nodes.append({
+                'id': node.id,
+                'value': node.value,
+                'caption': node.caption,
+                'type': node.type.name,
+                'schema': node.schema.name if node.schema else None,
+                'proxy': node.proxy.to_dict() if node.proxy else None
+            })
+        obj['nodes'] = nodes
+        edges = []
+        for edge in obj['edges']:
+            edges.append({
+                'id': edge.id,
+                'weight': edge.weight,
+                'prop_qname': edge.prop.qname if edge.prop else None,
+                'type': edge.type_name,
+                'source_id': edge.source_id,
+                'target_id': edge.target_id,
+                'proxy': edge.proxy.to_dict() if edge.proxy else None
+            })
+        obj['edges'] = edges
+        return obj

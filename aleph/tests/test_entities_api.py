@@ -619,13 +619,12 @@ class EntitiesApiTestCase(TestCase):
             assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
 
         url = '/api/2/entities/%s/expand' % person1.json['id']
-        stats = self.client.get(url, headers=headers)
-        assert stats.status_code == 200, (stats.status_code, stats.json)
-        validate(stats.json, 'QueryResponse')
-        assert stats.json['total'] == 3, stats.json
-        results = stats.json['results']
-        for result in results:
-            validate(result, 'EntityExpandResult')
-            assert result['count'] == 1, results
-            assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
-            assert len(result['entities']) == 1, pformat(results)
+        graph = self.client.get(url, headers=headers)
+        assert graph.status_code == 200, (graph.status_code, graph.json)
+        validate(graph.json, 'EntityGraph')
+        assert len(graph.json['nodes']) == 8, pformat(graph.json)
+        assert len(graph.json['edges']) == 7, pformat(graph.json)
+        for node in graph.json['nodes']:
+            validate(node, 'EntityGraphNode')
+        for edge in graph.json['edges']:
+            validate(node, 'EntityGraphEdge')

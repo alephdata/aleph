@@ -146,14 +146,49 @@ EntityExpandStats:
     count:
       type: integer
 
-EntityExpandResult:
+EntityGraph:
   type: object
   properties:
-    property:
-      type: object
-    count:
-      type: integer
-    entities:
+    nodes:
       type: array
       items:
-        $ref: '#/components/schemas/Entity'
+        $ref: '#/components/schemas/EntityGraphNode'
+    edges:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntityGraphEdge'
+
+EntityGraphNode:
+  type: object
+  properties:
+    id:
+      type: string
+    value:
+      type: string
+    caption:
+      type: string
+    type:
+      type: string
+    schema:
+      type: string
+      format: schema
+    proxy:
+      $ref: '#/components/schemas/Entity'
+
+EntityGraphEdge:
+  type: object
+  properties:
+    id:
+      type: string
+    weight:
+      type: number
+    prop_qname:
+      type: string
+    type:
+      type: string
+    source_id:
+      type: string
+    target_id:
+      type: string
+    proxy:
+      $ref: '#/components/schemas/Entity'
