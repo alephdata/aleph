@@ -11,33 +11,44 @@ class CellebriteIngestor(Ingestor, EncodingSupport, CellebriteSupport):
     EXTENSIONS = ['xml']
     SCORE = 0.5
 
+    def _item(self, meta, name):
+        query = './ns:item[@name="%s"]/text()' % name
+        return meta.xpath(query, namespaces=self.NSMAP)
+
     def ingest(self, file_path, entity):
         """Ingestor implementation."""
         entity.schema = model.get('Document')
         doc = self.parse_xml_path(file_path)
-        ns = self.NSMAP
         root = doc.getroot()
-
         project_id = root.get('id')
         entity.add('messageId', project_id)
         owner = None
 
-        for meta in root.xpath('./ns:metadata', namespaces=ns):
+        for meta in root.xpath('./ns:metadata', namespaces=self.NSMAP):
             owner = self.manager.make_entity('LegalEntity')
             owner.add('proof', entity)
             identities = set()
-            identities.update(meta.xpath('./ns:item[@name="DeviceInfoUniqueID"]/text()', namespaces=ns))  # noqa
-            identities.update(meta.xpath('./ns:item[@name="IMEI"]/text()', namespaces=ns))  # noqa
+            identities.update(self._item(meta, 'DeviceInfoUniqueID'))
+            identities.update(self._item(meta, 'IMEI'))
+            identities.update(self._item(meta, 'DeviceInfoUnitIdentifier'))
             if len(identities) and not owner.id:
                 owner.make_id(project_id, *sorted(identities))
-            owner.add('email', meta.xpath('./ns:item[@name="DeviceInfoAppleID"]/text()', namespaces=ns))  # noqa
-            owner.add('name', meta.xpath('./ns:item[@name="DeviceInfoOwnerName"]/text()', namespaces=ns))  # noqa
-            owner.add('phone', meta.xpath('./ns:item[@name="MSISDN"]/text()', namespaces=ns))  # noqa
+            owner.add('name', self._item(meta, 'DeviceInfoOwnerName'))
+            owner.add('email', self._item(meta, 'DeviceInfoAppleID'))
+            owner.add('phone', self._item(meta, 'MSISDN'))
+            if not owner.has('name'):
+                owner.add('name', self._item(meta, 'DeviceInfoDetectedModel'))
+            if not owner.has('name'):
+                man = self._item(meta, 'DeviceInfoSelectedManufacturer')
+                name = self._item(meta, 'DeviceInfoSelectedDeviceName')
+                if name is not None and man is not None:
+                    owner.add('name', '%s (%s)' % (name, man))
 
         if owner.id is not None:
             self.manager.emit_entity(owner)
 
-        for decoded in root.xpath('/ns:project/ns:decodedData', namespaces=ns):
+        query = '/ns:project/ns:decodedData'
+        for decoded in root.xpath(query, namespaces=self.NSMAP):
             self.parse_calls(entity, project_id, decoded, owner)
             self.parse_messages(entity, project_id, decoded, owner)
             self.parse_notes(entity, project_id, decoded)
