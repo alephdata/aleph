@@ -38,7 +38,7 @@ class StatisticsGroup extends PureComponent {
             />
           )}
           statistic={statistics.schemata}
-          isPending={!statistics.schemata}
+          isPending={statistics.isPending}
           ItemContentContainer={props => (
             <Link to={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
               <div className="inner-container">
@@ -73,7 +73,7 @@ class StatisticsGroup extends PureComponent {
             />
           )}
           statistic={statistics.categories}
-          isPending={!statistics.categories}
+          isPending={statistics.isPending}
           ItemContentContainer={props => (
             <Link
               to={`/datasets?collectionsfilter:category=${props.name}`}
@@ -110,7 +110,7 @@ class StatisticsGroup extends PureComponent {
             />
           )}
           statistic={statistics.countries}
-          isPending={!statistics.countries}
+          isPending={statistics.isPending}
           ItemContentContainer={props => (
             <Link to={`/datasets?collectionsfilter:countries=${props.name}`}>
               <div className="inner-container">

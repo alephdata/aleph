@@ -7,14 +7,8 @@ import { Icon } from '@blueprintjs/core';
 
 class SchemaIcon extends PureComponent {
   render() {
-    const { schema, ...rest } = this.props;
-    return (
-      <Icon
-        iconSize="16px"
-        {...rest}
-        icon={schema.name.toLowerCase()}
-      />
-    );
+    const { name } = this.props.schema;
+    return <Icon iconSize="16px" icon={name.toLowerCase()} />;
   }
 }
 
@@ -24,10 +18,10 @@ class SchemaLabel extends Component {
     const label = plural ? schema.plural : schema.label;
     if (icon) {
       return (
-        <span>
+        <>
           <Schema.Icon schema={schema} className="left-icon" />
           {label}
-        </span>
+        </>
       );
     }
     return label;
@@ -37,13 +31,11 @@ class SchemaLabel extends Component {
 function SchemaLink(props) {
   const { schema, plural, url, children } = props;
   return (
-    <>
-      <Link to={url}>
-        <Schema.Icon schema={schema} className="left-icon" />
-        <Schema.Label schema={schema} icon={false} plural={plural} />
-        {children}
-      </Link>
-    </>
+    <Link to={url}>
+      <Schema.Icon schema={schema} className="left-icon" />
+      <Schema.Label schema={schema} icon={false} plural={plural} />
+      {children}
+    </Link>
   );
 }
 
