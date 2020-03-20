@@ -7,7 +7,7 @@
   }
 
   &__property {
-    margin-bottom: $aleph-grid-size;
+    margin-bottom: $aleph-grid-size*1.5;
     &__name, &__value {
       display: block;
     }

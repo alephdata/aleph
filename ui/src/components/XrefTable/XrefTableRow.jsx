@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { injectIntl, FormattedNumber } from 'react-intl';
 import Property from 'src/components/Property';
 import { Button } from '@blueprintjs/core';
-import c from 'classnames';
 import {
   Collection, Entity, Skeleton,
 } from 'src/components/common';
@@ -48,7 +47,7 @@ class XrefTableRow extends Component {
     return (
       <div className="XrefTableRow__properties">
         {properties.map((prop) => (
-          <div className="XrefTableRow__property">
+          <div className="XrefTableRow__property" key={prop.name}>
             <span className="XrefTableRow__property__name text-muted">
               <Property.Name prop={prop} />
             </span>

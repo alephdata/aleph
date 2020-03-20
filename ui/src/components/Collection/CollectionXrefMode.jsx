@@ -55,8 +55,8 @@ export class CollectionXrefMode extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
+    const { collection, query, result } = this.props;
+    if (result.shouldLoad && collection.id) {
       this.props.queryCollectionXref({ query });
     }
   }

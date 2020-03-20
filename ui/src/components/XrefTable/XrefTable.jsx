@@ -84,7 +84,7 @@ class XrefTable extends Component {
               toggleExpand={toggleExpand}
             />
           ))}
-          {result.isLoading && skeletonItems.map(item => (
+          {(result.isLoading || result.shouldLoad) && skeletonItems.map(item => (
             <XrefTableRow key={item} isLoading />
           ))}
         </tbody>

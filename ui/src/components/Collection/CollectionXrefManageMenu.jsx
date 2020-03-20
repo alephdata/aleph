@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { AnchorButton, Button, ButtonGroup } from '@blueprintjs/core';
+import { AnchorButton, Button, ButtonGroup, Classes } from '@blueprintjs/core';
+import c from 'classnames';
 
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectSession } from 'src/selectors';
@@ -38,7 +39,7 @@ class CollectionXrefManageMenu extends Component {
 
     /* eslint-disable camelcase */
     const downloadLink = collection.links?.xref_export;
-    const showDownload = downloadLink && result.total > 0;
+    const showDownload = !result.isLoading && downloadLink && result.total > 0;
     const xrefButtonText = result.total > 0
       ? intl.formatMessage(messages.recompute)
       : intl.formatMessage(messages.compute);
@@ -46,7 +47,12 @@ class CollectionXrefManageMenu extends Component {
     return (
       <>
         <ButtonGroup className="CollectionXrefManageMenu">
-          <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXref}>
+          <Button
+            icon="play"
+            disabled={!collection.writeable}
+            onClick={this.toggleXref}
+            className={c({ [Classes.SKELETON]: (result.isLoading || result.shouldLoad) })}
+          >
             {xrefButtonText}
           </Button>
           {showDownload && (
