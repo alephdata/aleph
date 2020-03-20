@@ -18,17 +18,19 @@ class AlephGraph(Graph):
             self.proxies[id_] = proxy
 
     def resolve(self):
+        entities_to_fetch = []
         for id_, proxy in self.proxies.items():
             if proxy is None:
-                entity = index.get_entity(id_)
-                proxy = model.get_proxy(entity)
-            if proxy is not None:
-                node_id = registry.entity.node_id_safe(id_)
-                node = self.nodes.get(node_id)
-                if node is not None:
-                    node.proxy = proxy
-                    if node.schema is None:
-                        node.schema = proxy.schema
+                entities_to_fetch.append(id_)
+        for entity in index.entities_by_ids(entities_to_fetch, cached=True):
+            self.proxies[entity.get('id')] = model.get_proxy(entity)
+        for id_, proxy in self.proxies.items():
+            node_id = registry.entity.node_id_safe(id_)
+            node = self.nodes.get(node_id)
+            if node is not None:
+                node.proxy = proxy
+                if node.schema is None:
+                    node.schema = proxy.schema
 
     def get_adjacent_entities(self, proxy):
         source_node_id = registry.entity.node_id_safe(proxy.id)
