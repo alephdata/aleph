@@ -2,6 +2,8 @@ import json
 import datetime
 from pprint import pformat
 
+from followthemoney.types import registry
+
 from aleph.core import db
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
@@ -607,7 +609,14 @@ class EntitiesApiTestCase(TestCase):
                                       headers=headers,
                                       content_type='application/json')
 
-        url = '/api/2/entities/%s/expand/stats' % person1.json['id']
+        edge_types = [registry.name.name, registry.email.name,
+                      registry.identifier.name, registry.iban.name,
+                      registry.phone.name, registry.address.name,
+                      registry.url.name, registry.checksum.name,
+                      registry.entity.name]
+        query_string = '&'.join('edge_types=' + t for t in edge_types)
+
+        url = '/api/2/entities/%s/expand/stats?%s' % (person1.json['id'], query_string)  # noqa
         stats = self.client.get(url, headers=headers)
         assert stats.status_code == 200, (stats.status_code, stats.json)
         validate(stats.json, 'QueryResponse')
@@ -618,7 +627,7 @@ class EntitiesApiTestCase(TestCase):
             assert result['count'] == 1, results
             assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
 
-        url = '/api/2/entities/%s/expand' % person1.json['id']
+        url = '/api/2/entities/%s/expand?%s' % (person1.json['id'], query_string)  # noqa
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, 'EntityExpand')
@@ -637,7 +646,7 @@ class EntitiesApiTestCase(TestCase):
             if prop == 'passport':
                 assert res['count'] == 1
                 assert res['entities'][0]['name'] == 'A1B2C3'
-        url = '/api/2/entities/%s/expand' % company1.json['id']
+        url = '/api/2/entities/%s/expand?%s' % (company1.json['id'], query_string)  # noqa
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, 'EntityExpand')

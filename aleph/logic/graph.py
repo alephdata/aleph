@@ -58,17 +58,13 @@ class AlephGraph(Graph):
         }
 
 
-def expand_entity_graph(entity, properties=None, authz=None):
-    edge_types = [registry.name.name, registry.email.name,
-                  registry.identifier.name, registry.iban.name,
-                  registry.phone.name, registry.address.name,
-                  registry.url.name, registry.checksum.name,
-                  registry.entity.name]
+def expand_entity_graph(entity, edge_types, properties=None, authz=None):
     graph = AlephGraph(edge_types=edge_types)
     source_proxy = model.get_proxy(entity)
     graph.add(source_proxy)
     for prop, total, entities in entity_expand_nodes(
-        entity, properties=properties, include_entities=True, authz=authz
+        entity, edge_types, properties=properties,
+        include_entities=True, authz=authz
     ):
         for ent in entities:
             proxy = model.get_proxy(ent)

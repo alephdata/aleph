@@ -123,16 +123,13 @@ def entity_tags(entity, authz=None):
             yield (field, value, total)
 
 
-def entity_expand_nodes(entity, properties=None, include_entities=False, authz=None):  # noqa
+def entity_expand_nodes(entity, edge_types, properties=None, include_entities=False, authz=None):  # noqa
     proxy = model.get_proxy(entity)
     schema = proxy.schema
     facets = []
     reversed_properties = []
     literal_value_properties = []
-    matchable_prop_types = [
-        registry.name, registry.email, registry.identifier, registry.iban,
-        registry.phone, registry.address, registry.url, registry.checksum,
-    ]
+    matchable_prop_types = [t for t in registry.get_types(edge_types) if t.matchable]  # noqa
     for prop in model.properties:
         # Check if we're expanding all properties or a limited list of props
         if properties and prop.qname not in properties:

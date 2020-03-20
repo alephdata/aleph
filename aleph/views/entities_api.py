@@ -577,6 +577,12 @@ def expand_stats(entity_id):
         required: true
         schema:
           type: string
+      - in: path
+        name: edge_types
+        description: types of edges to expand. Must is a matchable FtM type
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: OK
@@ -596,10 +602,11 @@ def expand_stats(entity_id):
     """
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
+    edge_types = request.args.getlist('edge_types')
     tag_request(collection_id=entity.get('collection_id'))
     results = []
     for prop, total in entity_expand_nodes(
-      entity, include_entities=False, authz=request.authz):
+      entity, edge_types, include_entities=False, authz=request.authz):
         results.append({
             'count': total,
             'property': prop,
@@ -623,6 +630,12 @@ def expand(entity_id):
       parameters:
       - in: path
         name: entity_id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: edge_types
+        description: types of edges to expand. Must is a matchable FtM type
         required: true
         schema:
           type: string
@@ -650,11 +663,12 @@ def expand(entity_id):
     """
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
+    edge_types = request.args.getlist('edge_types')
     tag_request(collection_id=entity.get('collection_id'))
     parser = QueryParser(request.args, request.authz)
     properties = ensure_list(parser.filters.get('property'))
     expanded_entities = expand_entity_graph(
-      entity, properties=properties, authz=request.authz
+      entity, edge_types, properties=properties, authz=request.authz
     )
     results = []
     for prop, proxies in expanded_entities.items():
