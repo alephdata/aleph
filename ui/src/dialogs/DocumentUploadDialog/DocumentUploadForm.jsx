@@ -27,7 +27,7 @@ export class DocumentUploadForm extends PureComponent {
             />
             <span className="bp3-file-upload-input">
               <FormattedMessage
-                id="document.upload.folder"
+                id="document.upload.files"
                 defaultMessage="Choose files to upload..."
               />
             </span>

@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-24 10:44+0100\n"
+"POT-Creation-Date: 2020-03-20 15:49+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.7.0\n"
+"Generated-By: Babel 2.8.0\n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -34,7 +34,7 @@ msgstr "GazProm"
 msgid "Vladimir Putin"
 msgstr "Gerhard Schröder"
 
-#: aleph/logic/roles.py:41
+#: aleph/logic/roles.py:42
 msgid "Registration"
 msgstr "Anmeldung"
 
@@ -114,27 +114,36 @@ msgstr "Persönliche Datensätze"
 msgid "Other material"
 msgstr "Anderes Material"
 
-#: aleph/model/entity.py:85
+#: aleph/model/entity.py:74
 msgid "Invalid entity ID"
 msgstr "Ungültige Entity-ID"
 
-#: aleph/model/event.py:48
+#: aleph/model/event.py:49
 msgid "{{actor}} created {{collection}}"
 msgstr "{{actor}} legte {{collection}} an"
 
-#: aleph/model/event.py:55
+#: aleph/model/event.py:56
 msgid "{{actor}} changed the settings of {{collection}}"
 msgstr "{{actor}} änderte die Einstellungen von {{collection}}"
 
-#: aleph/model/event.py:62
+#: aleph/model/event.py:63
 msgid "{{actor}} added {{document}} to {{collection}}"
 msgstr "{{actor}} fügte {{document}} zu {{collection}} hinzu"
 
-#: aleph/model/event.py:72
+#: aleph/model/event.py:73
+msgid "{{actor}} generated entities from {{table}} in {{collection}}"
+msgstr ""
+"{{actor}} hat aus {{table}} Objekte im Datensatz {{collection}} generiert"
+
+#: aleph/model/event.py:83
+msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
+msgstr "{{actor}} skizzierte das Netzwerk {{diagram}} in {{collection}}"
+
+#: aleph/model/event.py:93
 msgid "{{entity}} matches your alert for {{alert}}"
 msgstr "{{entity}} erwähnt ihr Abo-Schlagwort {{alert}}"
 
-#: aleph/model/event.py:83
+#: aleph/model/event.py:104
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr "{{actor}} hat {{role}} Zugriff zu {{collection}} erteilt"
 
@@ -146,7 +155,7 @@ msgstr "Erfolgreich"
 msgid "failed"
 msgstr "Fehlgeschlagen"
 
-#: aleph/search/__init__.py:47
+#: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
 msgstr "Diese Anfrage muss ein 'schema' enthalten."
 
