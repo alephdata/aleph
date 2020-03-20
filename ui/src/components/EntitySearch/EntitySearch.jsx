@@ -68,6 +68,7 @@ export class EntitySearch extends Component {
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
+      hash: location.hash,
     });
     return undefined;
   }
