@@ -33,15 +33,6 @@ class TableViewer extends React.Component {
     this.fetchIfNeeded();
   }
 
-  fetchIfNeeded() {
-    const { document } = this.props;
-    const url = document.links?.csv || document.links?.file;
-    if (this.state.url !== url) {
-      fetchCsvData(url, this.processCsvResults);
-      this.setState({ url });
-    }
-  }
-
   onVisibleCellsChange(row) {
     const { requestedRow } = this.state;
     // If we are scrolling to the end. Time to load more rows.
@@ -55,6 +46,15 @@ class TableViewer extends React.Component {
           requestedRow: Math.min(rowCount, previousState.requestedRow + 100),
         }));
       }
+    }
+  }
+
+  fetchIfNeeded() {
+    const { document } = this.props;
+    const url = document.links?.csv || document.links?.file;
+    if (this.state.url !== url) {
+      fetchCsvData(url, this.processCsvResults);
+      this.setState({ url });
     }
   }
 
