@@ -57,7 +57,6 @@ class XrefTable extends Component {
 
   render() {
     const { expandedId, intl, result, toggleExpand } = this.props;
-
     const skeletonItems = [...Array(15).keys()];
 
     if (result.isError) {
@@ -78,9 +77,9 @@ class XrefTable extends Component {
         <tbody>
           {result.results.map(xref => (
             <XrefTableRow
-              key={xref.id}
+              key={xref?.id}
               xref={xref}
-              isExpanded={xref.id === expandedId}
+              isExpanded={xref?.id === expandedId}
               toggleExpand={toggleExpand}
             />
           ))}
