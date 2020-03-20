@@ -81,10 +81,6 @@ table {
     max-width: unset;
   }
 
-  th.bordered, td.bordered {
-    border-right: 1px solid $aleph-table-border-color;
-  }
-
   td.entity {
     font-weight: bold;
     max-width: unset;

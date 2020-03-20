@@ -73,7 +73,7 @@ class XrefTable extends Component {
     }
 
     return (
-      <table className="data-table">
+      <table className="XrefTable data-table">
         {this.renderHeader()}
         <tbody>
           {result.results.map(xref => (
