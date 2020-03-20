@@ -15,13 +15,6 @@ import { queryCollectionXref } from 'src/actions';
 
 import './CollectionXrefMode.scss';
 
-// const messages = defineMessages({
-//   empty: {
-//     id: 'collection.xref.empty',
-//     defaultMessage: 'There are no cross-referencing results.',
-//   },
-// });
-
 export class CollectionXrefMode extends React.Component {
   constructor(props) {
     super(props);
@@ -40,7 +33,7 @@ export class CollectionXrefMode extends React.Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryCollectionXref({ query, result, next: result.next });
     }
   }

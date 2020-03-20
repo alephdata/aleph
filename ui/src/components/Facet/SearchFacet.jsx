@@ -30,7 +30,7 @@ class SearchFacet extends Component {
 
   static getDerivedStateFromProps(nextProps) {
     const { field, result } = nextProps;
-    if (result.total !== undefined && !result.isLoading) {
+    if (result.total !== undefined && !result.isPending) {
       const facets = result.facets || {};
       return {
         facet: facets[field] || defaultFacet,

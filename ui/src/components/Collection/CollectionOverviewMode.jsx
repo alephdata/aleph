@@ -30,7 +30,7 @@ class CollectionOverviewMode extends React.Component {
 
   fetchIfNeeded() {
     const { collection, statistics } = this.props;
-    if (!statistics.isLoading && statistics.shouldLoad && collection.id !== undefined) {
+    if (statistics.shouldLoad && collection.id !== undefined) {
       this.props.fetchCollectionStatistics(collection);
     }
   }
@@ -53,7 +53,7 @@ class CollectionOverviewMode extends React.Component {
   render() {
     const { collection, statistics } = this.props;
 
-    if (statistics.isLoading || statistics.shouldLoad) {
+    if (statistics.isPending) {
       return <Skeleton.Layout type="multi-column" colCount={4} />;
     }
 

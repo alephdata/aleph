@@ -26,7 +26,7 @@ class TextViewer extends React.Component {
 
   render() {
     const { content, noStyle } = this.props;
-    if (content.shouldLoad || content.isLoading) {
+    if (content.isPending) {
       return <SectionLoading />;
     }
     const text = <Pre>{content.text}</Pre>;

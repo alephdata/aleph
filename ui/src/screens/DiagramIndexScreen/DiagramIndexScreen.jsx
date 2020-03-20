@@ -37,24 +37,20 @@ export class DiagramIndexScreen extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
-    const { result } = this.props;
-
-    if (result.shouldLoad && !prevProps.result.shouldLoad) {
-      this.fetchIfNeeded();
-    }
+  componentDidUpdate() {
+    this.fetchIfNeeded();
   }
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryDiagrams({ query, next: result.next });
     }
   }
 
   fetchIfNeeded() {
     const { result, query } = this.props;
-    if (!result.isLoading) {
+    if (result.shouldLoad) {
       this.props.queryDiagrams({ query });
     }
   }

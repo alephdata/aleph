@@ -50,9 +50,9 @@ class Notification extends PureComponent {
   }
 
   render() {
-    const { isLoading, notification } = this.props;
+    const { isPending, notification } = this.props;
 
-    if (isLoading) {
+    if (isPending) {
       return this.renderSkeleton();
     }
 

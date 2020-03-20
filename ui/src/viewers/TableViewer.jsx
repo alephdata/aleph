@@ -48,7 +48,7 @@ export class TableViewer extends Component {
     if (query.path && result.shouldLoad) {
       this.props.queryEntities({ query });
     } else if (this.state.requestedRow > result.results.length) {
-      if (!result.isLoading && result.next) {
+      if (!result.isPending && result.next) {
         this.props.queryEntities({ query, next: result.next });
       }
     }

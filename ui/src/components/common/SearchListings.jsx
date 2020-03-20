@@ -63,7 +63,7 @@ export class SearchListings extends PureComponent {
 
   render() {
     const { listType, result, onDelete, onSearch, intl } = this.props;
-    if (!result.results && (result.isLoading || result.shouldLoad)) {
+    if (!result.results && result.isPending) {
       return this.renderSkeleton();
     }
     const items = result.results;

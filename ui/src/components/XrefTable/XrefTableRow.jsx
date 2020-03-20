@@ -61,9 +61,9 @@ class XrefTableRow extends Component {
   }
 
   render() {
-    const { isExpanded, isLoading, xref } = this.props;
+    const { isExpanded, isPending, xref } = this.props;
 
-    if (isLoading) {
+    if (isPending) {
       return this.renderSkeleton();
     }
 

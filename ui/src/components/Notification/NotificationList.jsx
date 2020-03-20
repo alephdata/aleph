@@ -35,7 +35,7 @@ class NotificationList extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryNotifications({ query, next: result.next });
     }
   }
@@ -67,7 +67,7 @@ class NotificationList extends Component {
             notif => <Notification key={notif.id} notification={notif} />,
           )}
           {skeletonItems.map(
-            item => <Notification key={item} isLoading />,
+            item => <Notification key={item} isPending />,
           )}
         </ul>
         <Waypoint

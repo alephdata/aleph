@@ -39,7 +39,7 @@ class CollectionXrefManageMenu extends Component {
 
     /* eslint-disable camelcase */
     const downloadLink = collection.links?.xref_export;
-    const showDownload = !result.isLoading && downloadLink && result.total > 0;
+    const showDownload = !result.isPending && downloadLink && result.total > 0;
     const xrefButtonText = result.total > 0
       ? intl.formatMessage(messages.recompute)
       : intl.formatMessage(messages.compute);
@@ -51,7 +51,7 @@ class CollectionXrefManageMenu extends Component {
             icon="play"
             disabled={!collection.writeable}
             onClick={this.toggleXref}
-            className={c({ [Classes.SKELETON]: (result.isLoading || result.shouldLoad) })}
+            className={c({ [Classes.SKELETON]: result.isPending })}
           >
             {xrefButtonText}
           </Button>
