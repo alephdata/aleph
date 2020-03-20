@@ -1,0 +1,29 @@
+@import "src/app/variables.scss";
+
+.XrefTable {
+  th.bordered, td.bordered {
+    border-right: 1px solid $aleph-table-border-color;
+  }
+}
+
+.XrefTableRow {
+  &__properties {
+    margin: $aleph-grid-size*1.5 0 0 $aleph-grid-size*2.5;
+    background: none !important;
+  }
+
+  &__property {
+    margin-bottom: $aleph-grid-size*1.5;
+    &__name, &__value {
+      display: block;
+    }
+
+    &__name {
+      font-weight: normal;
+    }
+
+    &__value {
+      font-weight: normal;
+    }
+  }
+}
