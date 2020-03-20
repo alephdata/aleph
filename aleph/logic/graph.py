@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 from followthemoney import model
 from followthemoney.graph import Graph
@@ -29,6 +30,25 @@ class AlephGraph(Graph):
                     if node.schema is None:
                         node.schema = proxy.schema
 
+    def get_adjacent_entities(self, proxy):
+        source_node_id = registry.entity.node_id_safe(proxy.id)
+        adjacents = defaultdict(list)
+        exapnded_prop_nodes = []
+        for edge in self.edges.values():
+            if edge.source_id == source_node_id:
+                if edge.target.is_entity:
+                    adjacents[edge.type_name].append(edge.target.proxy)
+                else:
+                    exapnded_prop_nodes.append(edge.target_id)
+            if edge.target_id == source_node_id:
+                if edge.source.is_entity:
+                    adjacents[edge.type_name].append(edge.source.proxy)
+        for edge in self.edges.values():
+            if (edge.target_id in exapnded_prop_nodes
+                    and edge.source_id != source_node_id):
+                adjacents[edge.type_name].append(edge.source.proxy)
+        return adjacents
+
     def to_dict(self):
         return {
             'nodes': self.nodes.values(),
@@ -43,7 +63,8 @@ def expand_entity_graph(entity, properties=None, authz=None):
                   registry.url.name, registry.checksum.name,
                   registry.entity.name]
     graph = AlephGraph(edge_types=edge_types)
-    graph.add(model.get_proxy(entity))
+    source_proxy = model.get_proxy(entity)
+    graph.add(source_proxy)
     for prop, total, entities in entity_expand_nodes(
         entity, properties=properties, include_entities=True, authz=authz
     ):
@@ -51,4 +72,4 @@ def expand_entity_graph(entity, properties=None, authz=None):
             proxy = model.get_proxy(ent)
             graph.add(proxy)
     graph.resolve()
-    return graph
+    return graph.get_adjacent_entities(source_proxy)

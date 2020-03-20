@@ -619,12 +619,33 @@ class EntitiesApiTestCase(TestCase):
             assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
 
         url = '/api/2/entities/%s/expand' % person1.json['id']
-        graph = self.client.get(url, headers=headers)
-        assert graph.status_code == 200, (graph.status_code, graph.json)
-        validate(graph.json, 'EntityGraph')
-        assert len(graph.json['nodes']) == 8, pformat(graph.json)
-        assert len(graph.json['edges']) == 7, pformat(graph.json)
-        for node in graph.json['nodes']:
-            validate(node, 'EntityGraphNode')
-        for edge in graph.json['edges']:
-            validate(node, 'EntityGraphEdge')
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, (res.status_code, res.json)
+        validate(res.json, 'EntityExpand')
+        assert res.json['total'] == 3, pformat(res.json)
+        results = res.json['results']
+        assert len(results) == 3, pformat(results)
+        for res in results:
+            prop = res['property']
+            assert prop in ('email', 'passport', 'Ownership')
+            if prop == 'email':
+                assert res['count'] == 1
+                assert res['entities'][0]['name'] == 'Undercover Osama'
+            if prop == 'Ownership':
+                assert res['count'] == 1
+                assert res['entities'][0]['name'] == 'Al-Qaeda'
+            if prop == 'passport':
+                assert res['count'] == 1
+                assert res['entities'][0]['name'] == 'A1B2C3'
+        url = '/api/2/entities/%s/expand' % company1.json['id']
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, (res.status_code, res.json)
+        validate(res.json, 'EntityExpand')
+        assert res.json['total'] == 1, pformat(res.json)
+        results = res.json['results']
+        assert len(results) == 1, pformat(results)
+        for res in results:
+            prop = res['property']
+            assert prop == 'Ownership'
+            assert res['count'] == 1
+            assert res['entities'][0]['name'] == 'Osama bin Laden'
