@@ -177,8 +177,8 @@ export class SystemStatusScreen extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {!result.isPending && results.map(this.renderRow)}
-                  {result.isPending && skeletonItems.map(this.renderRowSkeleton)}
+                  {results.map(this.renderRow)}
+                  {result.isPending && !results.length && skeletonItems.map(this.renderRowSkeleton)}
                 </tbody>
               </table>
             )}
