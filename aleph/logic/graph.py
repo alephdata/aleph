@@ -14,20 +14,20 @@ log = logging.getLogger(__name__)
 class AlephGraph(Graph):
     def queue(self, id_, proxy=None):
         if id_ not in self.proxies:
+            self.proxies[id_] = proxy
+
+    def resolve(self):
+        for id_, proxy in self.proxies.items():
             if proxy is None:
                 entity = index.get_entity(id_)
                 proxy = model.get_proxy(entity)
             if proxy is not None:
-                self.proxies[id_] = proxy
-
-    def resolve(self):
-        for id_, proxy in self.proxies.items():
-            node_id = registry.entity.node_id_safe(id_)
-            node = self.nodes.get(node_id)
-            if node is not None:
-                node.proxy = proxy
-                if node.schema is None:
-                    node.schema = proxy.schema
+                node_id = registry.entity.node_id_safe(id_)
+                node = self.nodes.get(node_id)
+                if node is not None:
+                    node.proxy = proxy
+                    if node.schema is None:
+                        node.schema = proxy.schema
 
     def to_dict(self):
         return {
