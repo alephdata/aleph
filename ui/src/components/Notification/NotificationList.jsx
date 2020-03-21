@@ -66,7 +66,7 @@ class NotificationList extends Component {
           {result.results && result.results.map(
             notif => <Notification key={notif.id} notification={notif} />,
           )}
-          {skeletonItems.map(
+          {result.isPending && skeletonItems.map(
             item => <Notification key={item} isPending />,
           )}
         </ul>

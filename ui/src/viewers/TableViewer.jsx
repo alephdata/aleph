@@ -11,6 +11,7 @@ class TableViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      url: null,
       requestedRow: 400,
       rows: [],
       parser: null,
@@ -21,9 +22,7 @@ class TableViewer extends React.Component {
   }
 
   componentDidMount() {
-    const { document } = this.props;
-    const url = document.links.csv;
-    fetchCsvData(url, this.processCsvResults);
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate() {
@@ -31,6 +30,7 @@ class TableViewer extends React.Component {
     if (rows.length < requestedRow && parser !== null) {
       parser.resume();
     }
+    this.fetchIfNeeded();
   }
 
   onVisibleCellsChange(row) {
@@ -46,6 +46,15 @@ class TableViewer extends React.Component {
           requestedRow: Math.min(rowCount, previousState.requestedRow + 100),
         }));
       }
+    }
+  }
+
+  fetchIfNeeded() {
+    const { document } = this.props;
+    const url = document.links?.csv || document.links?.file;
+    if (this.state.url !== url) {
+      fetchCsvData(url, this.processCsvResults);
+      this.setState({ url });
     }
   }
 

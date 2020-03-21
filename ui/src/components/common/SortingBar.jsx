@@ -21,7 +21,7 @@ class SortingBar extends PureComponent {
         <div className="SortingBar__item">
           <span className="SortingBar__label">
             <FormattedMessage
-              id="collection.index.sort.label"
+              id="sorting.bar.label"
               defaultMessage="Sort by:"
             />
           </span>
@@ -56,7 +56,7 @@ class SortingBar extends PureComponent {
         <div className="SortingBar__item">
           <span className="SortingBar__label">
             <FormattedMessage
-              id="collection.index.sort.label"
+              id="sorting.bar.direction"
               defaultMessage="Direction:"
             />
           </span>
