@@ -128,16 +128,15 @@ services:
       - api
     command: npm run start
     ports:
-      - "127.0.0.1:8080:3000"
+      - "127.0.0.1:8080:8080"
     volumes:
       - "./ui/src:/alephui/src"
       - "./ui/public:/alephui/public"
-      - "./ui/scripts:/alephui/scripts"
-      - "./ui/config:/alephui/config"
-      - "./ui/.tx:/alephui/.tx"
+      # - "./ui/scripts:/alephui/scripts"
+      # - "./ui/config:/alephui/config"
       - "./ui/package.json:/alephui/package.json"
     environment:
-      REACT_APP_API_ENDPOINT: '/api/2'
+      PORT: '8080'
     env_file:
       - aleph.env
 
