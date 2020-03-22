@@ -95,7 +95,7 @@ def handle_keycloak_oauth(sender, provider=None, oauth_token=None):
     from aleph.model import Role
     superuser_role = 'superuser'
 
-    if 'secure.occrp.org' not in provider.api_base_url:
+    if settings.OAUTH_BASE_URL not in provider.api_base_url:
         return
 
     access_token = oauth_token.get('access_token')
