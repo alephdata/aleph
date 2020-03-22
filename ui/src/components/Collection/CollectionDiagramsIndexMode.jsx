@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { SectionLoading } from 'src/components/common';
 import { queryDiagrams } from 'src/actions';
 import { queryCollectionDiagrams } from 'src/queries';
 import { selectDiagramsResult } from 'src/selectors';
@@ -19,7 +18,7 @@ export class CollectionDiagramsIndexMode extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryDiagrams({ query, next: result.next });
     }
   }
@@ -36,16 +35,11 @@ export class CollectionDiagramsIndexMode extends Component {
         <div style={{ marginBottom: '10px' }}>
           <DiagramCreateMenu collection={collection} />
         </div>
-        { result.isLoading && !result.results?.length && (
-          <SectionLoading />
-        )}
-        { result.results && (
-          <DiagramList
-            items={result.results}
-            getMoreItems={this.getMoreResults}
-            showCollection={false}
-          />
-        )}
+        <DiagramList
+          result={result}
+          getMoreItems={this.getMoreResults}
+          showCollection={false}
+        />
       </div>
     );
   }

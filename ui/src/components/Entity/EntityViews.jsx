@@ -16,7 +16,7 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import EntityMappingMode from 'src/components/EntityMapping/EntityMappingMode';
+import EntityMappingMode from 'src/components/Entity/EntityMappingMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import Schema from 'src/components/common/Schema';
 import Property from 'src/components/Property';
@@ -47,7 +47,7 @@ class EntityViews extends React.Component {
     const {
       isPreview, activeMode, entity, references, tags, similar, children,
     } = this.props;
-    if (references.shouldLoad || references.isLoading) {
+    if (references.isPending) {
       return <SectionLoading />;
     }
     const isMatchable = entity && entity.schema && entity.schema.matchable;
@@ -112,7 +112,7 @@ class EntityViews extends React.Component {
             id="browse"
             disabled={children.total < 1}
             title={(
-              <TextLoading loading={children.isLoading}>
+              <TextLoading loading={children.isPending}>
                 <Icon icon="folder" className="left-icon" />
                 { entity.schema.isA('Email') && (
                   <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
@@ -149,7 +149,7 @@ class EntityViews extends React.Component {
             id="tags"
             disabled={tags.total < 1}
             title={(
-              <TextLoading loading={tags.shouldLoad || tags.isLoading}>
+              <TextLoading loading={tags.isPending}>
                 <Icon icon="tags" className="left-icon" />
                 <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
                 <Count count={tags.total} />
@@ -162,7 +162,7 @@ class EntityViews extends React.Component {
           <Tab
             id="similar"
             title={(
-              <TextLoading loading={similar.shouldLoad || similar.isLoading}>
+              <TextLoading loading={similar.isPending}>
                 <Icon icon="similar" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
                 <Count count={similar.total} />

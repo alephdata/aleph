@@ -1,16 +1,28 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Category, Collection } from 'src/components/common';
+import { Category, Collection, Skeleton } from 'src/components/common';
 
 import './CollectionHeading.scss';
 
-
 class CollectionHeading extends PureComponent {
+  renderSkeleton = () => (
+    <div className="CollectionHeading">
+      <Skeleton.Text type="span" length={20} className="bp3-text-muted" />
+      <Skeleton.Text type="h1" length={20} className="CollectionHeading__title" />
+    </div>
+  )
+
   render() {
     const { collection } = this.props;
+    const isPending = collection.isPending && !collection.label;
+
+    if (isPending) {
+      return this.renderSkeleton();
+    }
+
     return (
       <div className="CollectionHeading">
-        <span className="bp3-text-muted ">
+        <span className="bp3-text-muted">
           <Collection.Label collection={collection} label={false} />
           { collection.casefile && (
             <FormattedMessage id="collection.info.case" defaultMessage="Personal dataset" />

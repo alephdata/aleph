@@ -4,16 +4,11 @@ import { Link } from 'react-router-dom';
 import { selectModel } from 'src/selectors';
 import { Icon } from '@blueprintjs/core';
 
+
 class SchemaIcon extends PureComponent {
   render() {
-    const { schema, ...rest } = this.props;
-    return (
-      <Icon
-        iconSize="16px"
-        {...rest}
-        icon={schema.name.toLowerCase()}
-      />
-    );
+    const { name } = this.props.schema;
+    return <Icon iconSize="16px" icon={name.toLowerCase()} />;
   }
 }
 
@@ -23,10 +18,10 @@ class SchemaLabel extends Component {
     const label = plural ? schema.plural : schema.label;
     if (icon) {
       return (
-        <span>
+        <>
           <Schema.Icon schema={schema} className="left-icon" />
           {label}
-        </span>
+        </>
       );
     }
     return label;
@@ -36,44 +31,25 @@ class SchemaLabel extends Component {
 function SchemaLink(props) {
   const { schema, plural, url, children } = props;
   return (
-    <>
-      <Link to={url}>
-        <Schema.Icon schema={schema} className="left-icon" />
-        <Schema.Label schema={schema} icon={false} plural={plural} />
-        {children}
-      </Link>
-    </>
+    <Link to={url}>
+      <Schema.Icon schema={schema} className="left-icon" />
+      <Schema.Label schema={schema} icon={false} plural={plural} />
+      {children}
+    </Link>
   );
 }
 
-function SmartSchemaHOC(InnerComponent) {
-  return function SmartSchemaComponent(props) {
-    const {
-      model, schema: schemaName,
-      /* omit */ dispatch,
-      ...rest
-    } = props;
-    const schema = model.getSchema(schemaName);
-    return (<InnerComponent schema={schema} {...rest} />
-    );
-  };
-}
-
-const mapStateToProps = state => ({
-  model: selectModel(state),
-});
+const mapStateToProps = (state, ownProps) => {
+  const { schema } = ownProps;
+  return { schema: selectModel(state).getSchema(schema) };
+};
 
 class Schema extends Component {
-  static Smart = {
-    Label: connect(mapStateToProps)(SmartSchemaHOC(SchemaLabel)),
-    Link: connect(mapStateToProps)(SmartSchemaHOC(SchemaLink)),
-  };
+  static Label = connect(mapStateToProps)(SchemaLabel);
 
-  static Label = SchemaLabel;
+  static Icon = connect(mapStateToProps)(SchemaIcon);
 
-  static Icon = SchemaIcon;
-
-  static Link = SchemaLink;
+  static Link = connect(mapStateToProps)(SchemaLink);
 }
 
 export default Schema;

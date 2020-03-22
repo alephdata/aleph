@@ -86,6 +86,7 @@ def reset_collection(collection, sync=False):
     """Reset the collection by deleting any derived data."""
     drop_aggregator(collection)
     cancel_queue(collection)
+    flush_notifications(collection, sync=sync)
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)
     refresh_collection(collection.id, sync=sync)
@@ -99,7 +100,6 @@ def index_collections(sync=False):
 
 def delete_collection(collection, keep_metadata=False, sync=False):
     reset_collection(collection, sync=False)
-    flush_notifications(collection)
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
     Mapping.delete_by_collection(collection.id, deleted_at=deleted_at)

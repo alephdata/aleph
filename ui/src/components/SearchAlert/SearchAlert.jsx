@@ -37,7 +37,7 @@ class SearchAlert extends Component {
 
   componentDidMount() {
     const { session, alerts } = this.props;
-    if (session.loggedIn && !alerts.isLoading && (!alerts || !alerts.results)) {
+    if (session.loggedIn && alerts.shouldLoad && (!alerts || !alerts.results)) {
       this.props.fetchAlerts();
     }
   }

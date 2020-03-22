@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, Tooltip, ProgressBar, Intent } from '@blueprintjs/core';
 
-import { Collection, SectionLoading, ErrorSection, Numeric } from 'src/components/common';
+import { Collection, ErrorSection, Numeric, Skeleton } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -68,6 +68,29 @@ export class SystemStatusScreen extends React.Component {
     this.fetchStatus();
   }
 
+  renderRowSkeleton = (item) => (
+    <tr key={item}>
+      <td className="entity">
+        <Skeleton.Text type="span" length={30} />
+      </td>
+      <td className="numeric narrow">
+        <Skeleton.Text type="span" length={1} />
+      </td>
+      <td>
+        <Skeleton.Text type="span" length={15} />
+      </td>
+      <td className="numeric narrow">
+        <Skeleton.Text type="span" length={1} />
+      </td>
+      <td className="numeric narrow">
+        <Skeleton.Text type="span" length={1} />
+      </td>
+      <td className="numeric narrow">
+        <Skeleton.Text type="span" length={10} />
+      </td>
+    </tr>
+  )
+
   renderRow(res) {
     const { intl } = this.props;
     const { collection } = res;
@@ -110,6 +133,7 @@ export class SystemStatusScreen extends React.Component {
       return <ErrorScreen error={result.error} />;
     }
     const results = result.results || [];
+    const skeletonItems = [...Array(15).keys()];
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
@@ -130,7 +154,7 @@ export class SystemStatusScreen extends React.Component {
                 title={intl.formatMessage(messages.no_active)}
               />
             )}
-            {result.total > 0 && (
+            {result.total !== 0 && (
               <table className="StatusTable">
                 <thead>
                   <tr>
@@ -154,11 +178,9 @@ export class SystemStatusScreen extends React.Component {
                 </thead>
                 <tbody>
                   {results.map(this.renderRow)}
+                  {result.isPending && !results.length && skeletonItems.map(this.renderRowSkeleton)}
                 </tbody>
               </table>
-            )}
-            {!result.results && result.isLoading && (
-              <SectionLoading />
             )}
           </>
         </Dashboard>

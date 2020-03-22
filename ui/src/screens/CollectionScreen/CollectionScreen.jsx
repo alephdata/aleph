@@ -9,7 +9,6 @@ import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionViews from 'src/components/Collection/CollectionViews';
-import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DocumentDropzone from 'src/components/Document/DocumentDropzone';
 import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
@@ -58,14 +57,6 @@ export class CollectionScreen extends Component {
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
-    }
-
-    if (collection.id === undefined) {
-      return (
-        <CollectionContextLoader collectionId={collectionId}>
-          <LoadingScreen />
-        </CollectionContextLoader>
-      );
     }
 
     const searchScope = {

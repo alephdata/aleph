@@ -3,8 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
+import { Classes, MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import { Count, Schema } from 'src/components/common';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
@@ -64,7 +65,9 @@ class CollectionViews extends React.Component {
     const entitySchemata = this.getEntitySchemata();
     const hasBrowse = (numOfDocs > 0 || collection.writeable);
 
-    const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0].schema)
+    const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0]?.schema);
+    const isPending = collection.isPending && !collection.id;
+
     return (
       <Tabs
         id="CollectionContentTabs"
@@ -75,16 +78,16 @@ class CollectionViews extends React.Component {
         animate={false}
         vertical
       >
-        {hasBrowse && (
+        {(isPending || hasBrowse) && (
           <Tab
             id="Document"
-            className="CollectionContentViews__tab"
+            className={'CollectionContentViews__tab'}
             title={
-              <>
+              <span className={c({ [Classes.SKELETON]: isPending })}>
                 <Icon icon="folder" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
-              </>}
+              </span>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
@@ -96,7 +99,7 @@ class CollectionViews extends React.Component {
             className="CollectionContentViews__tab"
             title={
               <>
-                <Schema.Smart.Label schema={ref.schema} plural icon />
+                <Schema.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
             panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} />}

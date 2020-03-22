@@ -10,7 +10,7 @@ import c from 'classnames';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 
 import './EntitySearch.scss';
 
@@ -47,7 +47,7 @@ export class EntitySearch extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && result.next && !result.isLoading && !result.isError) {
+    if (result && result.next && !result.isPending && !result.isError) {
       this.props.queryEntities({ query, next: result.next });
     }
   }
@@ -68,6 +68,7 @@ export class EntitySearch extends Component {
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
+      hash: location.hash,
     });
     return undefined;
   }
@@ -75,7 +76,7 @@ export class EntitySearch extends Component {
   generateFoundText() {
     const { result, foundTextGenerator } = this.props;
 
-    if (!foundTextGenerator || result.isLoading || result.total === 0
+    if (!foundTextGenerator || result.isPending || result.total === 0
       || !result.facets || !result.facets.collection_id) {
       return null;
     }
@@ -128,9 +129,6 @@ export class EntitySearch extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        {result.total === undefined && (
-          <SectionLoading />
-        )}
       </div>
     );
   }

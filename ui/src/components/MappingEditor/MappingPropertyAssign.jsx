@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { Button, Menu, MenuDivider, MenuItem, PopoverInteractionKind } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { Schema } from 'src/components/common';
 import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
+import { MappingLabel } from './util';
 
 import './MappingPropertyAssign.scss';
 
@@ -43,6 +43,16 @@ export class MappingPropertyAssign extends Component {
 
     this.renderCell = this.renderCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
+    this.onItemSelect = this.onItemSelect.bind(this);
+  }
+
+  onItemSelect({ id, property }, colLabel, colValue) {
+    const { onPropertyAdd, onPropertyRemove } = this.props;
+
+    onPropertyAdd(id, property.name, { column: colLabel });
+    if (colValue) {
+      onPropertyRemove(colValue.id, colValue.property.name);
+    }
   }
 
   getAssignableProps = (schema) => {
@@ -56,45 +66,44 @@ export class MappingPropertyAssign extends Component {
     return { featuredProps, otherProps };
   }
 
-  getColumnAssignments() {
-    const { mappings } = this.props;
-    const columnAssignments = new Map();
-
-    mappings.forEach(({ id, schema, properties }) => {
-      Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
-        if (propValue && propValue.column) {
-          columnAssignments.set(propValue.column, {
-            mappingId: id, property: schema.getProperty(propKey),
-          });
-        }
-      });
-    });
-
-    return columnAssignments;
-  }
-
-  itemListRenderer({ items, itemsParentRef, renderItem }) {
-    const { intl } = this.props;
+  mappingListRenderer({ items, itemsParentRef, renderItem }) {
     return (
       <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
-        {items.map(({ schema }) => {
-          const { featuredProps, otherProps } = this.getAssignableProps(schema);
-
-          return (
-            <MenuItem key={schema.name} text={<Schema.Smart.Label schema={schema} icon />}>
-              {
-                featuredProps.map(prop => renderItem({ schema: schema.name, property: prop }))
-              }
-              {featuredProps.length > 0 && otherProps.length > 0 && <MenuDivider />}
-              <MenuItem text={intl.formatMessage(messages.other)}>
-                {
-                  otherProps.map(prop => renderItem({ schema: schema.name, property: prop }))
-                }
-              </MenuItem>
-            </MenuItem>
-          );
-        })}
+        {items.map(({ color, id, schema }) => (
+          <MenuItem
+            key={id}
+            text={<MappingLabel mapping={{ id, schema }} />}
+            popoverProps={{ interactionKind: PopoverInteractionKind.CLICK }}
+            style={{ color }}
+            className="MappingPropertyAssign__headerSelect__item"
+          >
+            {this.propertyListRenderer({ id, schema }, renderItem, false)}
+          </MenuItem>
+        ))}
       </Menu>
+    );
+  }
+
+  propertyListRenderer({ id, schema }, renderItem, showHeader) {
+    const { mappings } = this.props;
+    const { featuredProps, otherProps } = this.getAssignableProps(schema);
+    const { color } = mappings.getMapping(id);
+
+    return (
+      <>
+        {showHeader && (
+          <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading" style={{ color }}>
+            <h6 className="bp3-heading"><MappingLabel mapping={{ id, schema }} /></h6>
+          </li>
+        )}
+        {
+          featuredProps.map(prop => renderItem({ id, property: prop }))
+        }
+        {featuredProps.length > 0 && otherProps.length > 0 && <MenuDivider />}
+        {
+          otherProps.map(prop => renderItem({ id, property: prop }))
+        }
+      </>
     );
   }
 
@@ -112,7 +121,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   renderHeaderCell(colLabel, colValue, style, colError) {
-    const { intl, onPropertyAdd, onPropertyRemove, mappings } = this.props;
+    const { intl, mappings, onPropertyRemove } = this.props;
 
     return (
       <ColumnHeaderCell
@@ -125,30 +134,57 @@ export class MappingPropertyAssign extends Component {
         {!colError && (
           <div className="MappingPropertyAssign__headerSelect">
             {colValue && (
-              <div className="MappingPropertyAssign__headerSelect__label">
-                <Schema.Smart.Label schema={colValue.mappingId} icon />
-              </div>
+              <>
+                <div className="MappingPropertyAssign__headerSelect__label">
+                  <MappingLabel mapping={colValue} />
+                </div>
+                <Select
+                  id="property-select"
+                  items={[]}
+                  itemListRenderer={({ itemsParentRef, renderItem }) => (
+                    <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
+                      {this.propertyListRenderer(colValue, renderItem, true)}
+                    </Menu>
+                  )}
+                  itemRenderer={itemRenderer}
+                  popoverProps={{ minimal: true }}
+                  filterable={false}
+                  onItemSelect={(item) => this.onItemSelect(item, colLabel, colValue)}
+                >
+                  <Button
+                    text={colValue.property.label}
+                    rightIcon="caret-down"
+                    className="MappingPropertyAssign__headerSelect__button"
+                  />
+                </Select>
+                <div className="MappingPropertyAssign__headerSelect__remove">
+                  <Button
+                    icon="cross"
+                    minimal
+                    small
+                    onClick={() => onPropertyRemove(colValue.id, colValue.property.name)}
+                  />
+                </div>
+              </>
             )}
-            <Select
-              id="entity-type"
-              items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
-              itemListRenderer={listProps => this.itemListRenderer(listProps)}
-              itemRenderer={itemRenderer}
-              popoverProps={{ minimal: true }}
-              filterable={false}
-              onItemSelect={({ schema, property }) => {
-                onPropertyAdd(schema, property.name, { column: colLabel });
-                if (colValue) {
-                  onPropertyRemove(colValue.mappingId, colValue.property.name);
-                }
-              }}
-            >
-              <Button
-                text={colValue ? `${colValue.property.label}` : intl.formatMessage(messages.placeholder)}
-                rightIcon="caret-down"
-                className="MappingPropertyAssign__headerSelect__button"
-              />
-            </Select>
+            {!colValue && (
+              <Select
+                id="mapping-select"
+                fill
+                items={mappings.getValues().sort((a, b) => (a.id > b.id ? 1 : -1))}
+                itemListRenderer={listProps => this.mappingListRenderer(listProps)}
+                itemRenderer={itemRenderer}
+                popoverProps={{ minimal: true }}
+                filterable={false}
+                onItemSelect={(item) => this.onItemSelect(item, colLabel, colValue)}
+              >
+                <Button
+                  fill
+                  text={intl.formatMessage(messages.placeholder)}
+                  className="MappingPropertyAssign__headerSelect__button"
+                />
+              </Select>
+            )}
           </div>
         )}
       </ColumnHeaderCell>
@@ -158,10 +194,9 @@ export class MappingPropertyAssign extends Component {
   renderCell(rowIndex, colIndex, style) {
     const { csvData } = this.props;
     const value = csvData[rowIndex][colIndex];
-    const loading = false;
 
     return (
-      <Cell loading={loading} style={style}>
+      <Cell style={style}>
         <TruncatedFormat detectTruncation>
           {value || ''}
         </TruncatedFormat>
@@ -171,18 +206,19 @@ export class MappingPropertyAssign extends Component {
 
   render() {
     const { columnLabels, mappings } = this.props;
-    const columnAssignments = this.getColumnAssignments();
+    const columnAssignments = mappings.getColumnAssignments();
 
     return (
       <div className="MappingPropertyAssign TableViewer">
         <Table
           numRows={10}
           enableGhostCells
-          enableRowHeader
+          enableRowHeader={false}
           enableRowResizing={false}
           enableColumnResizing={false}
           selectionModes="NONE"
           defaultColumnWidth={180}
+          renderMode="none"
         >
           {columnLabels.map((colLabel, i) => {
             const colValue = columnAssignments.get(colLabel);
@@ -198,7 +234,7 @@ export class MappingPropertyAssign extends Component {
               style.cursor = 'not-allowed';
             } else if (colValue) {
               style.color = 'white';
-              style.backgroundColor = mappings.get(colValue.mappingId).color;
+              style.backgroundColor = mappings.getMapping(colValue.id).color;
             }
 
             return (

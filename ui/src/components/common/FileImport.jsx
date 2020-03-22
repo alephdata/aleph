@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Dropzone from 'react-dropzone';
 import { showWarningToast } from 'src/app/toast';
 
-import './DiagramImport.scss';
+import './FileImport.scss';
 
 const messages = defineMessages({
   import_error: {
-    id: 'diagram.import_error',
+    id: 'file_import.error',
     defaultMessage: 'Error importing file',
   },
 });
 
-class DiagramImport extends Component {
+class FileImport extends Component {
   onDrop = (acceptedFiles) => {
     if (!acceptedFiles || !acceptedFiles.length) {
       return;
@@ -27,7 +27,7 @@ class DiagramImport extends Component {
 
     reader.onload = async (e) => {
       const data = (e.target.result);
-      this.props.onImport({ fileName, label, layout: JSON.parse(data).layout });
+      this.props.onImport({ fileName, label, data });
     };
     reader.onerror = async () => {
       showWarningToast(intl.formatMessage(messages.import_error));
@@ -36,11 +36,11 @@ class DiagramImport extends Component {
   }
 
   render() {
-    const { importedFile } = this.props;
+    const { accept, importedFile, placeholder } = this.props;
 
     return (
       <Dropzone
-        accept=".vis"
+        accept={accept}
         onDrop={this.onDrop}
         noDragEventsBubbling
       >
@@ -51,7 +51,7 @@ class DiagramImport extends Component {
             />
             {importedFile && (
               <Button
-                className="DiagramImport__file-name"
+                className="FileImport__file-name"
                 icon="document-open"
                 text={importedFile}
                 intent={Intent.PRIMARY}
@@ -59,11 +59,8 @@ class DiagramImport extends Component {
               />
             )}
             {!importedFile && (
-              <div className="DiagramImport__placeholder">
-                <FormattedMessage
-                  id="diagramImport.placeholderText"
-                  defaultMessage="Drop a .vis file here or click to import an existing diagram layout"
-                />
+              <div className="FileImport__placeholder">
+                {placeholder}
               </div>
             )}
           </div>
@@ -73,4 +70,4 @@ class DiagramImport extends Component {
   }
 }
 
-export default injectIntl(DiagramImport);
+export default injectIntl(FileImport);

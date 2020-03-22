@@ -38,9 +38,9 @@ class AlertsTestCase(TestCase):
         check_alerts()
         res = get_notifications(self.role_email)
         notcount = res.get('hits').get('total').get('value')
-        assert notcount == 1, notcount
+        assert notcount == 1, res.get('hits')
 
         check_alerts()
         res = get_notifications(self.role_email)
         notcount = res.get('hits').get('total').get('value')
-        assert notcount == 1, notcount
+        assert notcount == 1, res.get('hits')

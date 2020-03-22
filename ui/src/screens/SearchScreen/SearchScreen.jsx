@@ -12,7 +12,7 @@ import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  Collection, DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
+  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
 } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
@@ -74,7 +74,7 @@ export class SearchScreen extends React.Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (!result.isLoading && result.next) {
+    if (!result.isPending && result.next) {
       this.props.queryEntities({ query, next: result.next });
     }
   }
@@ -264,10 +264,6 @@ export class SearchScreen extends React.Component {
               bottomOffset="-400px"
               scrollableAncestor={window}
             />
-
-            {result.isLoading && (
-              <SectionLoading />
-            )}
           </DualPane.ContentPane>
         </DualPane>
       </Screen>
@@ -286,10 +282,8 @@ const mapStateToProps = (state, ownProps) => {
   return { query, result };
 };
 
-const mapDispatchToProps = { queryEntities };
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
   injectIntl,
 )(SearchScreen);

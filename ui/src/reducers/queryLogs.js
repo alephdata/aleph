@@ -4,7 +4,7 @@ import { queryEntities } from 'src/actions/entityActions';
 import { mergeResults } from './util';
 
 const initialState = {
-  isLoading: false,
+  isPending: true,
   shouldLoad: true,
   isError: false,
   limit: 0,
@@ -17,7 +17,7 @@ export default createReducer({
       return state;
     }
     return {
-      isLoading: false,
+      isPending: true,
       shouldLoad: true,
       isError: false,
       result: state.result,
@@ -26,13 +26,13 @@ export default createReducer({
 
   [fetchQueryLogs.START]: state => ({
     ...state,
-    isLoading: true,
+    isPending: true,
     shouldLoad: false,
     isError: false,
   }),
 
   [fetchQueryLogs.ERROR]: (state, { error }) => ({
-    isLoading: false,
+    isPending: false,
     shouldLoad: false,
     isError: true,
     result: state.result,
@@ -44,7 +44,7 @@ export default createReducer({
   }) => mergeResults(state, queryLogs),
 
   [deleteQueryLog.COMPLETE]: state => ({
-    isLoading: false,
+    isPending: true,
     shouldLoad: true,
     isError: false,
     result: state.result,

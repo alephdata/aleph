@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import DefaultViewer from 'src/viewers/DefaultViewer';
-import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import TableViewer from 'src/viewers/TableViewer';
 import TextViewer from 'src/viewers/TextViewer';
 import HtmlViewer from 'src/viewers/HtmlViewer';
@@ -39,10 +38,7 @@ export class DocumentViewMode extends React.Component {
     if (document.schema.isA('Image')) {
       if (activeMode === 'text') {
         return (
-          <TextViewer
-            document={document}
-            queryText={queryText}
-          />
+          <TextViewer document={document} queryText={queryText} />
         );
       }
       return (
@@ -54,35 +50,18 @@ export class DocumentViewMode extends React.Component {
       );
     }
     if (document.schema.isA('Table')) {
-      if (!document.links || !document.links.csv) {
-        return (
-          <TableViewer
-            document={document}
-            queryText={queryText}
-          />
-        );
-      }
       return (
-        <CSVStreamViewer
-          document={document}
-          queryText={queryText}
-        />
+        <TableViewer document={document} queryText={queryText} />
       );
     }
     if (document.schema.isA('PlainText')) {
       return (
-        <TextViewer
-          document={document}
-          queryText={queryText}
-        />
+        <TextViewer document={document} queryText={queryText} />
       );
     }
     if (document.schema.isA('HyperText')) {
       return (
-        <HtmlViewer
-          document={document}
-          queryText={queryText}
-        />
+        <HtmlViewer document={document} queryText={queryText} />
       );
     }
     if (document.schema.isA('Pages')) {
@@ -96,10 +75,7 @@ export class DocumentViewMode extends React.Component {
     }
     if (document.schema.isA('Folder')) {
       return (
-        <FolderViewer
-          document={document}
-          queryText={queryText}
-        />
+        <FolderViewer document={document} queryText={queryText} />
       );
     }
     return <DefaultViewer document={document} queryText={queryText} />;
@@ -107,7 +83,7 @@ export class DocumentViewMode extends React.Component {
 
   render() {
     const { document } = this.props;
-    if (document.isLoading || document.shouldLoad) {
+    if (document.isPending) {
       return null;
     }
 

@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
 import Notification from 'src/components/Notification/Notification';
@@ -18,7 +18,6 @@ const messages = defineMessages({
     defaultMessage: 'You have no unseen notifications',
   },
 });
-
 
 class NotificationList extends Component {
   constructor(props) {
@@ -36,7 +35,7 @@ class NotificationList extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
+    if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryNotifications({ query, next: result.next });
     }
   }
@@ -50,28 +49,32 @@ class NotificationList extends Component {
 
   render() {
     const { result, intl } = this.props;
+    const skeletonItems = [...Array(15).keys()];
+
+    if (result.total === 0) {
+      return (
+        <ErrorSection
+          icon="notifications"
+          title={intl.formatMessage(messages.no_notifications)}
+        />
+      );
+    }
 
     return (
       <>
-        { result.total === 0 && (
-          <ErrorSection
-            icon="notifications"
-            title={intl.formatMessage(messages.no_notifications)}
-          />
-        )}
-        { result.total !== 0 && (
-          <ul className="NotificationList">
-            {result.results.map(notif => <Notification key={notif.id} notification={notif} />)}
-          </ul>
-        )}
+        <ul className="NotificationList">
+          {result.results && result.results.map(
+            notif => <Notification key={notif.id} notification={notif} />,
+          )}
+          {result.isPending && skeletonItems.map(
+            item => <Notification key={item} isPending />,
+          )}
+        </ul>
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        { result.isLoading && (
-          <SectionLoading />
-        )}
       </>
     );
   }

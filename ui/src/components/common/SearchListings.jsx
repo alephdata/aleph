@@ -3,7 +3,7 @@ import { Button, Icon, Tooltip } from '@blueprintjs/core';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 // import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Date, QueryText } from 'src/components/common';
+import { Date, QueryText, Skeleton } from 'src/components/common';
 
 import './SearchListings.scss';
 
@@ -27,8 +27,46 @@ const messages = defineMessages({
 });
 
 export class SearchListings extends PureComponent {
+  renderSkeleton() {
+    const { listType } = this.props;
+
+    const skeletonItems = [...Array(15).keys()];
+
+    return (
+      <table className="SearchListings settings-table">
+        <tbody>
+          {skeletonItems.map(item => (
+            <tr key={item} className="SearchListings__row">
+              <td className="SearchListings__button narrow">
+                <Skeleton.Text type="span" length={1} />
+              </td>
+              <td className="SearchListings__text text-main">
+                <Skeleton.Text type="span" length={40} />
+              </td>
+              <td className="SearchListings__text text-date">
+                <Skeleton.Text type="span" length={15} />
+              </td>
+              {listType === 'search history' && (
+                <td className="SearchListings__button narrow">
+                  <Skeleton.Text type="span" length={1} />
+                </td>
+              )}
+              <td className="SearchListings__button narrow">
+                <Skeleton.Text type="span" length={1} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
   render() {
-    const { listType, items, onDelete, onSearch, intl } = this.props;
+    const { listType, result, onDelete, onSearch, intl } = this.props;
+    if (!result.results && result.isPending) {
+      return this.renderSkeleton();
+    }
+    const items = result.results;
 
     return (
       <table className="SearchListings settings-table">
