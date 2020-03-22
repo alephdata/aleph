@@ -79,6 +79,7 @@ OAUTH_TOKEN_METHOD = env.get('ALEPH_OAUTH_TOKEN_METHOD', 'POST')
 OAUTH_TOKEN_URL = env.get('ALEPH_OAUTH_TOKEN_URL')
 OAUTH_AUTHORIZE_URL = env.get('ALEPH_OAUTH_AUTHORIZE_URL')
 OAUTH_UI_CALLBACK = env.get('ALEPH_OAUTH_UI_CALLBACK', '/oauth')
+OAUTH_KEYCLOAK = env.to_bool('ALEPH_OAUTH_KEYCLOAK', False)
 
 # Disable password-based authentication for SSO settings:
 PASSWORD_LOGIN = env.to_bool('ALEPH_PASSWORD_LOGIN', not OAUTH)
