@@ -79,18 +79,6 @@ def handle_google_oauth(sender, provider=None, oauth_token=None):
 
 
 @signals.handle_oauth_session.connect
-def handle_facebook_oauth(sender, provider=None, oauth_token=None):
-    from aleph.model import Role
-    if 'facebook.com' not in provider.api_base_url:
-        return
-
-    data = provider.get('me?fields=id,name,email', token=oauth_token).json()
-    user_id = 'facebook:%s' % data.get('id')
-    return Role.load_or_create(user_id, Role.USER, data.get('name'),
-                               email=data.get('email'))
-
-
-@signals.handle_oauth_session.connect
 def handle_keycloak_oauth(sender, provider=None, oauth_token=None):
     from aleph.model import Role
     superuser_role = 'superuser'
