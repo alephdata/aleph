@@ -5,8 +5,10 @@ from followthemoney import model
 from followthemoney.graph import Graph
 from followthemoney.types import registry
 
-from aleph.index import entities as index
+# from aleph.index import entities as index
 from aleph.logic.entities import entity_expand_nodes
+from aleph.model import Entity
+from aleph.logic import resolver
 
 
 log = logging.getLogger(__name__)
@@ -16,15 +18,14 @@ class AlephGraph(Graph):
     def queue(self, id_, proxy=None):
         if id_ not in self.proxies:
             self.proxies[id_] = proxy
+            resolver.queue(self, Entity, id_)
 
     def resolve(self):
-        entities_to_fetch = []
+        resolver.resolve(self)
         for id_, proxy in self.proxies.items():
             if proxy is None:
-                entities_to_fetch.append(id_)
-        for entity in index.entities_by_ids(entities_to_fetch, cached=True):
-            self.proxies[entity.get('id')] = model.get_proxy(entity)
-        for id_, proxy in self.proxies.items():
+                entity = resolver.get(self, Entity, id_)
+                proxy = model.get_proxy(entity)
             node_id = registry.entity.node_id_safe(id_)
             node = self.nodes.get(node_id)
             if node is not None:
