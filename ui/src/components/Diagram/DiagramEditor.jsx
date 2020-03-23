@@ -1,8 +1,12 @@
 import React from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 import { createEntity, deleteEntity, updateDiagram, updateEntity } from 'src/actions';
 import { processApiEntity } from 'src/components/Diagram/util';
+import { queryEntities } from 'src/actions';
+import { queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel } from 'src/selectors';
 import updateStates from './diagramUpdateStates';
 
@@ -21,6 +25,7 @@ class DiagramEditor extends React.Component {
       createEntity: this.createEntity.bind(this),
       updateEntity: this.updateEntity.bind(this),
       deleteEntity: this.deleteEntity.bind(this),
+      getEntitySuggestions: this.getEntitySuggestions.bind(this),
     });
 
     let initialLayout;
@@ -132,6 +137,16 @@ class DiagramEditor extends React.Component {
     }
   }
 
+  async getEntitySuggestions(queryText, schema) {
+    const { diagram, location } = this.props;
+    const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
+
+    // try {
+    //   await this.props.deleteEntity(entityId);
+    // } catch {
+    // }
+  }
+
   updateViewport(viewport) {
     this.setState({ viewport });
   }
@@ -157,6 +172,8 @@ class DiagramEditor extends React.Component {
     const { diagram, filterText, locale } = this.props;
     const { layout, viewport } = this.state;
 
+    this.getEntitySuggestions('Don', 'Person');
+
     return (
       <div className="DiagramEditor">
         <VisGraph
@@ -176,14 +193,23 @@ class DiagramEditor extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  model: selectModel(state),
-  locale: selectLocale(state),
-});
+const mapStateToProps = (state) => {
+  console.log('state', state);
+  return {
+    model: selectModel(state),
+    locale: selectLocale(state),
+  }
+};
 
-export default connect(mapStateToProps, {
+const mapDispatchToProps = {
   createEntity,
   deleteEntity,
+  queryEntities,
   updateDiagram,
   updateEntity,
-})(DiagramEditor);
+};
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(DiagramEditor);

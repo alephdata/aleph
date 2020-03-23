@@ -61,3 +61,13 @@ export function queryEntitySimilar(location, entityId) {
   return Query.fromLocation(path, location, {}, 'similar')
     .defaultFacet('collection_id', true);
 }
+
+export function queryEntitySuggest(location, collection, schemaName, queryText) {
+  const context = {
+    'filter:schema': schemaName,
+    'filter:collection_id': collection.id,
+    prefix: queryText,
+  };
+
+  return Query.fromLocation('entities', location, context, 'entities').limit(30);
+}
