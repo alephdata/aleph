@@ -13,7 +13,7 @@ grpcio==1.27.2
 google-cloud-vision==1.0.0
 google-cloud-storage==1.26.0
 
-tesserocr==2.5.0
+tesserocr==2.5.1
 spacy==2.2.4
 fingerprints==0.6.6
 fasttext==0.9.1
