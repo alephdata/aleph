@@ -1,7 +1,7 @@
 """Add linkage model to the DB.
 
 Revision ID: aac638b04072
-Revises: b3ff632002d9
+Revises: a8849e4e6784
 Create Date: 2019-12-21 19:47:17.878084
 
 """
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'aac638b04072'
-down_revision = 'b3ff632002d9'
+down_revision = 'a8849e4e6784'
 
 
 def upgrade():
@@ -21,7 +21,6 @@ def upgrade():
         sa.Column('profile_id', sa.String(length=128), nullable=True),
         sa.Column('entity_id', sa.String(length=128), nullable=True),
         sa.Column('collection_id', sa.Integer(), nullable=True),
-        sa.Column('score', sa.Float(), nullable=True),
         sa.Column('decision', sa.Boolean(), nullable=True),
         sa.Column('decider_id', sa.Integer(), nullable=True),
         sa.Column('context_id', sa.Integer(), nullable=True),
