@@ -18,14 +18,13 @@ class Linkage(db.Model, DatedModel):
     profile_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
     entity_id = db.Column(db.String(ENTITY_ID_LEN))
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
-    score = db.Column(db.Float(), nullable=True)
     decision = db.Column(db.Boolean, default=None, nullable=True)
     decider_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
     context_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
 
     @classmethod
     def save(cls, profile_id, entity_id, collection_id, context_id,
-             score=None, decision=None, decider_id=None):
+             decision=None, decider_id=None):
         q = cls.by_profile(profile_id)
         q = q.filter(cls.entity_id == entity_id)
         q = q.filter(cls.collection_id == collection_id)
@@ -40,8 +39,6 @@ class Linkage(db.Model, DatedModel):
         obj.decision = decision
         if decider_id is not None:
             obj.decider_id = decider_id
-        if score is not None:
-            obj.score = score
         obj.updated_at = datetime.utcnow()
         db.session.add(obj)
         db.session.flush()
