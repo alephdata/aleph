@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from normality import stringify
 
 from aleph.core import db
 from aleph.model.common import DatedModel
@@ -19,8 +20,21 @@ class Linkage(db.Model, DatedModel):
     entity_id = db.Column(db.String(ENTITY_ID_LEN))
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     decision = db.Column(db.Boolean, default=None, nullable=True)
-    decider_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
-    context_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
+    decider_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    context_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+
+    def to_dict(self):
+        data = self.to_dict_dates()
+        data.update({
+            'id': stringify(self.id),
+            'profile_id': self.profile_id,
+            'entity_id': self.entity_id,
+            'collection_id': self.collection_id,
+            'decision': self.decision,
+            'decider_id': stringify(self.decider_id),
+            'context_id': stringify(self.context_id),
+        })
+        return data
 
     @classmethod
     def save(cls, profile_id, entity_id, collection_id, context_id,
@@ -36,16 +50,22 @@ class Linkage(db.Model, DatedModel):
             obj.entity_id = entity_id
             obj.collection_id = collection_id
             obj.context_id = context_id
+            obj.created_at = datetime.utcnow()
         obj.decision = decision
         if decider_id is not None:
             obj.decider_id = decider_id
         obj.updated_at = datetime.utcnow()
         db.session.add(obj)
-        db.session.flush()
         return obj
 
     @classmethod
     def by_profile(cls, profile_id):
         q = cls.all()
         q = q.filter(cls.profile_id == profile_id)
+        return q
+
+    @classmethod
+    def by_authz(cls, authz):
+        q = cls.all()
+        q = q.filter(cls.context_id.in_(authz.private_roles))
         return q
