@@ -1,0 +1,74 @@
+@import "src/app/variables.scss";
+
+.MappingPropertyAssign {
+  &.TableViewer {
+    height: auto;
+
+    .bp3-table-column-name {
+      text-align: center;
+      font-weight: 500;
+      border-bottom: 1px solid $aleph-border-color;
+    }
+
+    .bp3-table-header-content {
+      padding: 0 3px 5px;
+      text-align: center;
+      height: 90px;
+      position: relative;
+    }
+
+    .bp3-button-text {
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 115px;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .bp3-submenu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  &__headerSelect {
+    position: relative;
+    padding: $aleph-grid-size;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &__label {
+      white-space: nowrap;
+      margin-bottom: 3px;
+    }
+
+    &__item {
+      font-weight: bold;
+    }
+
+    &__remove {
+      position: absolute;
+      top: 0;
+      right: 0;
+      .bp3-icon {
+        color: white !important;
+      }
+    }
+
+    &__propListHeading {
+      padding: $aleph-grid-size !important;
+      margin: 0 !important;
+
+      .bp3-heading {
+        color: inherit;
+      }
+    }
+  }
+
+  &__error {
+    line-height: 1.4;
+    font-style: italic;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

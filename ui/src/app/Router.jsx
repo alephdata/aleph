@@ -24,7 +24,6 @@ import CollectionIndexScreen from 'src/screens/CollectionIndexScreen/CollectionI
 import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
 import DiagramScreen from 'src/screens/DiagramScreen/DiagramScreen';
 import DiagramIndexScreen from 'src/screens/DiagramIndexScreen/DiagramIndexScreen';
-import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
 
 
@@ -65,8 +64,8 @@ class Router extends Component {
           <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
           <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
           <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
-          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId/xref/:otherId" />
-          <Route path="/datasets/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
+          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId?filter:match_collection_id=:otherId#mode=xref" />
+          <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId?filter:match_collection_id=:otherId#mode=xref" />
           <Route path="/diagrams/:diagramId" exact component={DiagramScreen} />
           <Route path="/diagrams" exact component={DiagramIndexScreen} />
           <Route path="/search" exact component={SearchScreen} />

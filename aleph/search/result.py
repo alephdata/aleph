@@ -66,6 +66,7 @@ class DatabaseQueryResult(QueryResult):
 class SearchQueryResult(QueryResult):
     FACETS = {
         'collection_id': CollectionFacet,
+        'match_collection_id': CollectionFacet,
         'languages': LanguageFacet,
         'countries': CountryFacet,
         'category': CategoryFacet,

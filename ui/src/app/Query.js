@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import queryString from 'query-string';
 import ensureArray from 'src/util/ensureArray';
+import getFacetConfig from 'src/util/getFacetConfig';
 
 class Query {
   // State of a particular API query. This doesn't need to be specific to any one
@@ -11,7 +12,6 @@ class Query {
     this.state = state;
     this.context = context;
     this.queryName = queryName;
-
     this.setPlain('limit', Query.LIMIT);
   }
 
@@ -179,12 +179,22 @@ class Query {
     return this.set('offset', `${count}`);
   }
 
-  addFacet(value) {
-    return this.add('facet', value);
+  addFacet(field, total = false) {
+    const config = getFacetConfig(field);
+    return this.add('facet', field)
+      .set(`facet_size:${field}`, config.defaultSize)
+      .set(`facet_total:${field}`, total);
   }
 
-  hasFacet(value) {
-    return this.getList('facet').indexOf(value) !== -1;
+  hasFacet(field) {
+    return this.getList('facet').indexOf(field) !== -1;
+  }
+
+  defaultFacet(field, total = false) {
+    if (!this.hasFacet(field)) {
+      return this.addFacet(field, total);
+    }
+    return this;
   }
 
   clearFacets() {

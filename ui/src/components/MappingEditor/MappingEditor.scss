@@ -1,0 +1,19 @@
+@import "src/app/variables.scss";
+$vertical-spacing: 50px;
+
+.MappingEditor {
+  &__section {
+    margin: $vertical-spacing 0;
+    padding-top: $vertical-spacing;
+    border-top: 1px solid $aleph-border-color;
+
+    &__title.bp3-heading {
+      margin-bottom: 25px;
+      font-size: 18px;
+    }
+  }
+
+  &__preview {
+    margin-top: $aleph-grid-size*2;
+  }
+}
