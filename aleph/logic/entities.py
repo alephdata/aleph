@@ -123,7 +123,7 @@ def entity_tags(entity, authz=None):
             yield (field, value, total)
 
 
-def entity_expand_nodes(entity, edge_types, properties=None, include_entities=False, authz=None):  # noqa
+def entity_expand_nodes(entity, collection_ids, edge_types, properties=None, include_entities=False, authz=None):  # noqa
     proxy = model.get_proxy(entity)
     schema = proxy.schema
     facets = []
@@ -164,7 +164,10 @@ def entity_expand_nodes(entity, edge_types, properties=None, include_entities=Fa
                     for val in values:
                         facets.append((index, prop.qname, prop.type.group, field, val))  # noqa
 
-    res = _filters_faceted_query(facets, authz=authz, include_entities=include_entities)  # noqa
+    res = _filters_faceted_query(
+        facets, collection_ids=collection_ids, authz=authz,
+        include_entities=include_entities
+    )
     for (qname, result) in res.items():
         total = result.get('count', 0)
         entities = result.get('entities', [])
@@ -184,7 +187,7 @@ def entity_expand_nodes(entity, edge_types, properties=None, include_entities=Fa
                 yield (prop, total)
 
 
-def _filters_faceted_query(facets, authz=None, include_entities=False):
+def _filters_faceted_query(facets, collection_ids=None, authz=None, include_entities=False):  # noqa
     filters = {}
     indexed = {}
     for (idx, alias, group, field, value) in facets:
@@ -202,6 +205,8 @@ def _filters_faceted_query(facets, authz=None, include_entities=False):
         query = []
         if authz is not None:
             query.append(authz_query(authz))
+        if collection_ids:
+            query.append(field_filter_query('collection_id', collection_ids))
         query = {
             'bool': {
                 'should': shoulds,

@@ -603,10 +603,12 @@ def expand_stats(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     edge_types = request.args.getlist('edge_types')
-    tag_request(collection_id=entity.get('collection_id'))
+    collection_id = entity.get('collection_id')
+    tag_request(collection_id=collection_id)
     results = []
     for prop, total in entity_expand_nodes(
-      entity, edge_types, include_entities=False, authz=request.authz):
+        entity, collection_ids=[collection_id], edge_types=edge_types,
+            include_entities=False, authz=request.authz):
         results.append({
             'count': total,
             'property': prop,
@@ -664,11 +666,13 @@ def expand(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     edge_types = request.args.getlist('edge_types')
-    tag_request(collection_id=entity.get('collection_id'))
+    collection_id = entity.get('collection_id')
+    tag_request(collection_id=collection_id)
     parser = QueryParser(request.args, request.authz)
     properties = ensure_list(parser.filters.get('property'))
     expanded_entities = expand_entity_graph(
-      entity, edge_types, properties=properties, authz=request.authz
+        entity, collection_ids=[collection_id],
+        edge_types=edge_types, properties=properties, authz=request.authz
     )
     results = []
     for prop, proxies in expanded_entities.items():

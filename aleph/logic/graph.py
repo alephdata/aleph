@@ -59,12 +59,12 @@ class AlephGraph(Graph):
         }
 
 
-def expand_entity_graph(entity, edge_types, properties=None, authz=None):
+def expand_entity_graph(entity, collection_ids, edge_types, properties=None, authz=None):  # noqa
     graph = AlephGraph(edge_types=edge_types)
     source_proxy = model.get_proxy(entity)
     graph.add(source_proxy)
     for prop, total, entities in entity_expand_nodes(
-        entity, edge_types, properties=properties,
+        entity, collection_ids, edge_types, properties=properties,
         include_entities=True, authz=authz
     ):
         for ent in entities:

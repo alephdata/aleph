@@ -561,6 +561,22 @@ class EntitiesApiTestCase(TestCase):
                                    data=json.dumps(data),
                                    headers=headers,
                                    content_type='application/json')
+
+        col2 = self.create_collection()
+        data = {
+            'schema': 'Person',
+            'collection_id': str(col2.id),
+            'properties': {
+                'name': "John Doe",
+                'email': "osama@al-qaeda.org",
+            }
+        }
+        person1_in_other_collection = self.client.post(  # noqa
+                                        url,
+                                        data=json.dumps(data),
+                                        headers=headers,
+                                        content_type='application/json')
+
         data = {
             'schema': 'Person',
             'collection_id': self.col_id,
