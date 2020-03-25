@@ -1,10 +1,15 @@
+from flask_babel import gettext
 from flask import Blueprint, request, send_file
+from werkzeug.exceptions import BadRequest
 
 from aleph.search import XrefQuery
+from aleph.index.xref import get_xref
 from aleph.logic.xref import export_matches
+from aleph.logic.linkages import decide_xref
 from aleph.views.serializers import XrefSerializer
 from aleph.queues import queue_task, OP_XREF
-from aleph.views.util import get_db_collection, get_index_collection, jsonify
+from aleph.views.util import get_db_collection, get_index_collection
+from aleph.views.util import parse_request, require, jsonify, obj_or_404
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'  # noqa
 blueprint = Blueprint('xref_api', __name__)
@@ -62,11 +67,6 @@ def generate(collection_id):
         required: true
         schema:
           type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/XrefGenerate'
       responses:
         '202':
           content:
@@ -87,7 +87,63 @@ def generate(collection_id):
     return jsonify({'status': 'accepted'}, status=202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/xref/export')
+@blueprint.route('/api/2/collections/<int:collection_id>/xref/<xref_id>', methods=['POST'])  # noqa
+def decide(collection_id, xref_id):
+    """
+    ---
+    post:
+      summary: Give feedback about the veracity of an xref match.
+      description: >
+        This lets a user decide if they think a given xref match is a true or
+        false match, and what group of users (context) should be privy to this
+        insight.
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
+      - in: path
+        name: xref_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/XrefDecide'
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    description: accepted
+                    type: string
+                type: object
+          description: Accepted
+      tags:
+      - Xref
+      - Linkage
+    """
+    require(request.authz.logged_in)
+    data = parse_request('XrefDecide')
+    xref = obj_or_404(get_xref(xref_id, collection_id=collection_id))
+    try:
+        context_id = int(data.get('context_id', request.authz.id))
+    except (ValueError, TypeError):
+        raise BadRequest(gettext("Invalid context."))
+    require(context_id in request.authz.private_roles)
+    decide_xref(xref,
+                decision=data.get('decision'),
+                context_id=context_id,
+                decider_id=request.authz.id)
+    return jsonify({'status': 'ok'}, status=204)
+
+
+@blueprint.route('/api/2/collections/<int:collection_id>/xref/_export')
 def export(collection_id):
     """
     ---
