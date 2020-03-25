@@ -71,6 +71,18 @@ def iter_matches(collection, authz):
         yield unpack_result(res)
 
 
+def get_xref(xref_id, collection_id=None):
+    """Get an xref match combo by its ID."""
+    query = {'ids': {'values': [xref_id]}}
+    if collection_id is not None:
+        filters = [query, {'term': {'collection_id': collection_id}}]
+        query = {'query': {'bool': {'filter': filters}}}
+    query = {'query': query, 'size': 1}
+    result = es.search(index=xref_index, body=query)
+    for doc in result.get('hits', {}).get('hits', []):
+        return unpack_result(doc)
+
+
 def delete_xref(collection, entity_id=None, sync=False):
     """Delete xref matches of an entity or a collection."""
     shoulds = [

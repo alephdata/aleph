@@ -51,17 +51,28 @@ class Linkage(db.Model, DatedModel):
             obj.collection_id = collection_id
             obj.context_id = context_id
             obj.created_at = datetime.utcnow()
-        obj.decision = decision
-        if decider_id is not None:
             obj.decider_id = decider_id
-        obj.updated_at = datetime.utcnow()
+        if decision != obj.decision:
+            obj.decision = decision
+            obj.decider_id = decider_id
+            obj.updated_at = datetime.utcnow()
         db.session.add(obj)
         return obj
 
+    # @classmethod
+    # def by_profile(cls, profile_id):
+    #     q = cls.all()
+    #     q = q.filter(cls.profile_id == profile_id)
+    #     return q
+
     @classmethod
-    def by_profile(cls, profile_id):
+    def by_entity(cls, entity_id, collection_id=None, context_id=None):
         q = cls.all()
-        q = q.filter(cls.profile_id == profile_id)
+        q = q.filter(cls.entity_id == entity_id)
+        if collection_id is not None:
+            q = q.filter(cls.collection_id == collection_id)
+        if context_id is not None:
+            q = q.filter(cls.context_id == context_id)
         return q
 
     @classmethod
