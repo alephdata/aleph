@@ -1,6 +1,5 @@
 build
 ui
-aleph-ui
 services
 aleph.env
 aleph.egg-info
