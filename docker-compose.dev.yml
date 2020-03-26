@@ -137,6 +137,7 @@ services:
       - "./ui/package.json:/alephui/package.json"
     environment:
       PORT: '8080'
+      CI: 'true'
     env_file:
       - aleph.env
 
