@@ -7,8 +7,5 @@ from blinker import signal
 # Register additional API endpoints.
 register_blueprints = signal('register_blueprints')
 
-# Handle OAuth return values.
-handle_oauth_session = signal('handle_oauth_session')
-
 # Handle request logging.
 handle_request_log = signal('handle_request_log')
