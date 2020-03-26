@@ -6,7 +6,7 @@ from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
 from aleph.queues import queue_task, OP_INDEX
 from aleph.model import Collection, Entity, Document, Diagram, Mapping
-from aleph.model import Permission, Events
+from aleph.model import Permission, Events, Linkage
 from aleph.index import collections as index
 from aleph.index import xref as xref_index
 from aleph.logic.notifications import publish, flush_notifications
@@ -105,6 +105,7 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     Mapping.delete_by_collection(collection.id, deleted_at=deleted_at)
     Diagram.delete_by_collection(collection.id, deleted_at=deleted_at)
     Document.delete_by_collection(collection.id)
+    Linkage.delete_by_collection(collection.id)
     if not keep_metadata:
         Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
         collection.delete(deleted_at=deleted_at)

@@ -31,6 +31,7 @@ def upgrade():
     )
     op.create_index(op.f('ix_linkage_collection_id'), 'linkage', ['collection_id'], unique=False)  # noqa
     op.create_index(op.f('ix_linkage_profile_id'), 'linkage', ['profile_id'], unique=False)  # noqa
+    op.create_index(op.f('ix_linkage_entity_id'), 'linkage', ['entity_id'], unique=False)  # noqa
 
 
 def downgrade():

@@ -96,7 +96,7 @@ class XrefApiTestCase(TestCase):
 
     def test_export(self):
         xref.xref_collection(self.stage, self.residents)
-        url = '/api/2/collections/%s/xref/export' % self.obsidian.id
+        url = '/api/2/collections/%s/xref.xlsx' % self.obsidian.id
         res = self.client.get(url)
         assert res.status_code == 403, res
 

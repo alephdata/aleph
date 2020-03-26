@@ -1,4 +1,5 @@
 import logging
+from itertools import chain
 from datetime import datetime
 from normality import stringify
 
@@ -17,7 +18,7 @@ class Linkage(db.Model, DatedModel):
     """
     id = db.Column(db.BigInteger, primary_key=True)
     profile_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
-    entity_id = db.Column(db.String(ENTITY_ID_LEN))
+    entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     decision = db.Column(db.Boolean, default=None, nullable=True)
     decider_id = db.Column(db.Integer, db.ForeignKey('role.id'))
@@ -59,16 +60,57 @@ class Linkage(db.Model, DatedModel):
         db.session.add(obj)
         return obj
 
-    # @classmethod
-    # def by_profile(cls, profile_id):
-    #     q = cls.all()
-    #     q = q.filter(cls.profile_id == profile_id)
-    #     return q
+    @classmethod
+    def merge(cls, target_id, source_id):
+        """Merge two profiles into one. This is irreversible, i.e. after
+        merging the profiles there is no way of knowing which of the two
+        original profiles an entity had been assigned to."""
+        keyed = {}
+        ids = (target_id, source_id)
+        target_id, source_id = max(ids), min(ids)
+        linkages = chain(cls.by_profile(target_id), cls.by_profile(source_id))
+        for linkage in linkages:
+            if linkage.decision is None:
+                db.session.delete(linkage)
+                continue
+            existing = keyed.get(linkage.entity_id)
+            if existing is not None:
+                if existing.decision is True:
+                    db.session.delete(linkage)
+                    linkage = existing
+                else:
+                    db.session.delete(existing)
+            if linkage.profile_id != target_id:
+                linkage.profile_id = target_id
+                linkage.updated_at = datetime.utcnow()
+                db.session.add(linkage)
+            keyed[linkage.entity_id] = linkage
 
     @classmethod
-    def by_entity(cls, entity_id, collection_id=None, context_id=None):
+    def delete_by_collection(cls, collection_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq.delete(synchronize_session=False)
+
+    @classmethod
+    def delete_by_entity(cls, entity_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.entity_id == entity_id)
+        pq.delete(synchronize_session=False)
+
+    @classmethod
+    def by_profile(cls, profile_id):
+        q = cls.all()
+        q = q.filter(cls.profile_id == profile_id)
+        return q
+
+    @classmethod
+    def by_entity(cls, entity_id, decision=None, collection_id=None,
+                  context_id=None):
         q = cls.all()
         q = q.filter(cls.entity_id == entity_id)
+        if decision is not None:
+            q = q.filter(cls.decision == decision)
         if collection_id is not None:
             q = q.filter(cls.collection_id == collection_id)
         if context_id is not None:
@@ -80,3 +122,7 @@ class Linkage(db.Model, DatedModel):
         q = cls.all()
         q = q.filter(cls.context_id.in_(authz.private_roles))
         return q
+
+    # def __repr__(self):
+    #     return '<Linkage(%r, %r, %s)>' % \
+    #         (self.profile_id, self.entity_id, self.decision)

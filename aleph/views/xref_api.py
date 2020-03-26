@@ -87,6 +87,39 @@ def generate(collection_id):
     return jsonify({'status': 'accepted'}, status=202)
 
 
+@blueprint.route('/api/2/collections/<int:collection_id>/xref.xlsx')
+def export(collection_id):
+    """
+    ---
+    get:
+      summary: Download cross-reference results
+      description: Download results of cross-referencing as an Excel file
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: object
+      tags:
+      - Xref
+      - Collection
+    """
+    collection = get_db_collection(collection_id, request.authz.READ)
+    buffer = export_matches(collection, request.authz)
+    file_name = '%s - Crossreference.xlsx' % collection.label
+    return send_file(buffer,
+                     mimetype=XLSX_MIME,
+                     as_attachment=True,
+                     attachment_filename=file_name)
+
+
 @blueprint.route('/api/2/collections/<int:collection_id>/xref/<xref_id>', methods=['POST'])  # noqa
 def decide(collection_id, xref_id):
     """
@@ -141,36 +174,3 @@ def decide(collection_id, xref_id):
                 context_id=context_id,
                 decider_id=request.authz.id)
     return jsonify({'status': 'ok'}, status=204)
-
-
-@blueprint.route('/api/2/collections/<int:collection_id>/xref/_export')
-def export(collection_id):
-    """
-    ---
-    get:
-      summary: Download cross-reference results
-      description: Download results of cross-referencing as an Excel file
-      parameters:
-      - in: path
-        name: collection_id
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          content:
-            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
-              schema:
-                type: object
-      tags:
-      - Xref
-      - Collection
-    """
-    collection = get_db_collection(collection_id, request.authz.READ)
-    buffer = export_matches(collection, request.authz)
-    file_name = '%s - Crossreference.xlsx' % collection.label
-    return send_file(buffer,
-                     mimetype=XLSX_MIME,
-                     as_attachment=True,
-                     attachment_filename=file_name)
