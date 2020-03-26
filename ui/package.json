@@ -60,7 +60,7 @@
     "json2pot": "react-intl-po json2pot 'i18n/messages.json' -o 'i18n/messages.pot'",
     "po2json": "react-intl-po po2json 'i18n/translations/*.po' -m 'i18n/messages.json' -o src/content/translations.json"
   },
-  "proxy": "http://localhost:5000/",
+  "proxy": "http://api:5000/",
   "eslintConfig": {
     "extends": "react-app"
   },
