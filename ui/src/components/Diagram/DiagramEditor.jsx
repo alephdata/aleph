@@ -3,11 +3,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
-import { createEntity, deleteEntity, updateDiagram, updateEntity } from 'src/actions';
+import { createEntity, deleteEntity, queryEntities, updateDiagram, updateEntity } from 'src/actions';
 import { processApiEntity } from 'src/components/Diagram/util';
-import { queryEntities } from 'src/actions';
 import { queryEntitySuggest } from 'src/queries';
-import { selectLocale, selectModel } from 'src/selectors';
+import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
 import updateStates from './diagramUpdateStates';
 
 import './DiagramEditor.scss';
@@ -65,32 +64,18 @@ class DiagramEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { state } = this.props;
     if (this.props.downloadTriggered && !prevProps.downloadTriggered) {
       this.downloadDiagram();
     }
-  }
 
-  updateLayout(layout, options) {
-    const { diagram, onStatusChange } = this.props;
-    this.setState({ layout });
-
-    if (options?.propagate) {
-      onStatusChange(updateStates.IN_PROGRESS);
-      const { entities, selection, ...layoutData } = layout.toJSON();
-
-      const updatedDiagram = {
-        ...diagram,
-        layout: layoutData,
-        entities: entities ? entities.map(entity => entity.id) : [],
-      };
-
-      this.props.updateDiagram(updatedDiagram.id, updatedDiagram)
-        .then(() => {
-          onStatusChange(updateStates.SUCCESS);
-        })
-        .catch(() => {
-          onStatusChange(updateStates.ERROR);
-        });
+    if (this.entitySuggestPromise && state.results !== prevProps.state.results) {
+      const { query, promiseResolve } = this.entitySuggestPromise;
+      const result = selectEntitiesResult(state, query);
+      if (!result.isPending && result.results) {
+        promiseResolve(result.results);
+        this.entitySuggestPromise = null;
+      }
     }
   }
 
@@ -137,14 +122,38 @@ class DiagramEditor extends React.Component {
     }
   }
 
-  async getEntitySuggestions(queryText, schema) {
+  getEntitySuggestions(queryText, schema) {
     const { diagram, location } = this.props;
     const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
+    this.props.queryEntities({ query });
 
-    // try {
-    //   await this.props.deleteEntity(entityId);
-    // } catch {
-    // }
+    return new Promise((resolve, reject) => {
+      this.entitySuggestPromise = { query, promiseResolve: resolve };
+    });
+  }
+
+  updateLayout(layout, options) {
+    const { diagram, onStatusChange } = this.props;
+    this.setState({ layout });
+
+    if (options?.propagate) {
+      onStatusChange(updateStates.IN_PROGRESS);
+      const { entities, selection, ...layoutData } = layout.toJSON();
+
+      const updatedDiagram = {
+        ...diagram,
+        layout: layoutData,
+        entities: entities ? entities.map(entity => entity.id) : [],
+      };
+
+      this.props.updateDiagram(updatedDiagram.id, updatedDiagram)
+        .then(() => {
+          onStatusChange(updateStates.SUCCESS);
+        })
+        .catch(() => {
+          onStatusChange(updateStates.ERROR);
+        });
+    }
   }
 
   updateViewport(viewport) {
@@ -172,7 +181,7 @@ class DiagramEditor extends React.Component {
     const { diagram, filterText, locale } = this.props;
     const { layout, viewport } = this.state;
 
-    this.getEntitySuggestions('Don', 'Person');
+    console.log(diagram);
 
     return (
       <div className="DiagramEditor">
@@ -194,10 +203,10 @@ class DiagramEditor extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('state', state);
   return {
     model: selectModel(state),
     locale: selectLocale(state),
+    state,
   }
 };
 
