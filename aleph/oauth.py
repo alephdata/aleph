@@ -6,8 +6,9 @@ from urllib.request import urlopen
 from authlib.integrations.flask_client import OAuth
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
+from servicelayer.extensions import get_entry_point
 
-from aleph import signals, settings
+from aleph import settings
 
 oauth = OAuth()
 log = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ log = logging.getLogger(__name__)
 def configure_oauth(app, cache):
     if settings.OAUTH:
         oauth.provider = oauth.register(
-            name=settings.OAUTH_NAME,
+            name=settings.OAUTH_HANDLER,
             client_id=settings.OAUTH_KEY,
             client_secret=settings.OAUTH_SECRET,
             client_kwargs={'scope': settings.OAUTH_SCOPE},
@@ -30,12 +31,14 @@ def configure_oauth(app, cache):
     return oauth
 
 
-@signals.handle_oauth_session.connect
-def handle_azure_oauth(sender, provider=None, oauth_token=None):
-    from aleph.model import Role
-    if 'login.microsoftonline.com' not in provider.api_base_url:
-        return
+def handle_oauth(provider, oauth_token):
+    handler = get_entry_point('aleph.oauth', settings.OAUTH_HANDLER)
+    if handler is not None:
+        return handler(provider, oauth_token)
 
+
+def handle_azure_oauth(provider, oauth_token):
+    from aleph.model import Role
     # Get incoming token, extract header for use with certificate verification
     id_token = oauth_token.get('id_token')
     headerbit = id_token.split('.')[0]
@@ -67,37 +70,17 @@ def handle_azure_oauth(sender, provider=None, oauth_token=None):
                                email=token_data['upn'])
 
 
-@signals.handle_oauth_session.connect
-def handle_google_oauth(sender, provider=None, oauth_token=None):
+def handle_google_oauth(provider, oauth_token):
     from aleph.model import Role
-    if 'googleapis.com' not in provider.api_base_url:
-        return
     data = provider.get('userinfo', token=oauth_token).json()
     user_id = 'google:%s' % data.get('id')
     return Role.load_or_create(user_id, Role.USER, data.get('name'),
                                email=data.get('email'))
 
 
-@signals.handle_oauth_session.connect
-def handle_facebook_oauth(sender, provider=None, oauth_token=None):
-    from aleph.model import Role
-    if 'facebook.com' not in provider.api_base_url:
-        return
-
-    data = provider.get('me?fields=id,name,email', token=oauth_token).json()
-    user_id = 'facebook:%s' % data.get('id')
-    return Role.load_or_create(user_id, Role.USER, data.get('name'),
-                               email=data.get('email'))
-
-
-@signals.handle_oauth_session.connect
-def handle_keycloak_oauth(sender, provider=None, oauth_token=None):
+def handle_keycloak_oauth(provider, oauth_token):
     from aleph.model import Role
     superuser_role = 'superuser'
-
-    if 'secure.occrp.org' not in provider.api_base_url:
-        return
-
     access_token = oauth_token.get('access_token')
     token_data = jwt.decode(access_token, verify=False)
     clients = token_data.get('resource_access', {})
