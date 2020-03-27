@@ -138,7 +138,9 @@ class Linkage(db.Model, DatedModel):
                              match.entity_id, match.decision)
         q = q.filter(entity.profile_id == match.profile_id)
         q = q.filter(entity.context_id == context_id)
+        q = q.filter(entity.decision != None)  # noqa
         q = q.filter(match.context_id == context_id)
+        q = q.filter(match.decision != None)  # noqa
         options = []
         for (entity_id, match_id) in pairs:
             if entity_id is None or match_id is None:

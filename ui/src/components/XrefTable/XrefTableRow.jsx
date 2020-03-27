@@ -5,6 +5,8 @@ import { Button } from '@blueprintjs/core';
 import {
   Collection, Entity, Skeleton,
 } from 'src/components/common';
+import XrefDecisionButtons from 'src/components/XrefTable/XrefDecisionButtons';
+
 
 class XrefTableRow extends Component {
   renderSkeleton() {
@@ -88,6 +90,7 @@ class XrefTableRow extends Component {
         </td>
         <td className="collection">
           <Collection.Link preview collection={xref.match_collection} icon />
+          {isExpanded && <XrefDecisionButtons xref={xref} />}
         </td>
       </tr>
     );
