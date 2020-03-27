@@ -12,9 +12,8 @@ from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import (
-    entity_references, entity_tags, entity_expand_nodes,
+    entity_references, entity_tags, entity_expand_nodes, expand_entity_graph
 )
-from aleph.logic.graph import expand_entity_graph
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection

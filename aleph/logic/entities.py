@@ -1,22 +1,23 @@
 import logging
+from pprint import pformat  # noqa
+
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.core import es, db, cache
+from aleph.core import db, cache
 from aleph.model import Entity, Document
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
 from aleph.index.indexes import entities_read_index
 from aleph.index import xref as xref_index
-from aleph.index.util import unpack_result
 from aleph.index.entities import get_entity
 from aleph.logic.aggregator import delete_aggregator_entity
-from aleph.index.util import authz_query, field_filter_query
+from aleph.logic.graph import (
+    AlephGraph, GraphSegmentQuery, GraphSegmentResponse
+)
 
 log = logging.getLogger(__name__)
-
-MAX_EXPAND_NODES_PER_PROPERTY = 20
 
 
 def upsert_entity(data, collection, validate=True, sync=False):
@@ -76,7 +77,7 @@ def entity_references(entity, authz=None):
     """Given a particular entity, find all the references to it from other
     entities, grouped by the property where they are used."""
     schema = model.get(entity.get('schema'))
-    facets = []
+    query = GraphSegmentQuery()
     for prop in model.properties:
         if prop.type != registry.entity:
             continue
@@ -86,13 +87,12 @@ def entity_references(entity, authz=None):
         index = entities_read_index(prop.schema)
         field = 'properties.%s' % prop.name
         value = entity.get('id')
-        facets.append((index, prop.qname, registry.entity.group, field, value))
+        query.add_facet(
+            (index, prop.qname, registry.entity.group, field, value)
+        )
 
-    res = _filters_faceted_query(facets, authz=authz)
-    for (qname, result) in res.items():
-        total = result['count']
-        if total > 0:
-            yield (model.get_qname(qname), total)
+    res = query.query(authz=authz, include_entities=False)
+    return res.iter_prop_counts()
 
 
 def entity_tags(entity, authz=None):
@@ -101,7 +101,7 @@ def entity_tags(entity, authz=None):
     Thing = model.get(Entity.THING)
     types = [registry.name, registry.email, registry.identifier,
              registry.iban, registry.phone, registry.address]
-    facets = []
+    query = GraphSegmentQuery()
     # Go through all the tags which apply to this entity, and find how
     # often they've been mentioned in other entities.
     for type_ in types:
@@ -114,11 +114,11 @@ def entity_tags(entity, authz=None):
             schemata = [s for s in schemata if s.is_a(Thing)]
             index = entities_read_index(schemata)
             alias = '%s_%s' % (type_.name, fidx)
-            facets.append((index, alias, type_.group, type_.group, value))
+            query.add_facet((index, alias, type_.group, type_.group, value))
 
-    res = _filters_faceted_query(facets, authz=authz)
-    for (_, alias, field, _, value) in facets:
-        total = res.get(alias, {}).get('count', 0)
+    res = query.query(authz=authz, include_entities=False)
+    for (_, alias, field, _, value) in query.facets:
+        total = res.get_count(alias)
         if total > 1:
             yield (field, value, total)
 
@@ -126,10 +126,11 @@ def entity_tags(entity, authz=None):
 def entity_expand_nodes(entity, collection_ids, edge_types, properties=None, include_entities=False, authz=None):  # noqa
     proxy = model.get_proxy(entity)
     schema = proxy.schema
-    facets = []
     reversed_properties = []
     literal_value_properties = []
     matchable_prop_types = [t for t in registry.get_types(edge_types) if t.matchable]  # noqa
+    graph_response = GraphSegmentResponse()
+    query = GraphSegmentQuery(response=graph_response)
     for prop in model.properties:
         # Check if we're expanding all properties or a limited list of props
         if properties and prop.qname not in properties:
@@ -142,7 +143,7 @@ def entity_expand_nodes(entity, collection_ids, edge_types, properties=None, inc
                 value = proxy.id
                 index = entities_read_index(prop.schema)
                 field = 'properties.%s' % prop.name
-                facets.append((index, prop.qname, registry.entity.group, field, value))  # noqa
+                query.add_facet((index, prop.qname, registry.entity.group, field, value))  # noqa
                 reversed_properties.append(prop.qname)
             else:
                 # direct property
@@ -152,9 +153,8 @@ def entity_expand_nodes(entity, collection_ids, edge_types, properties=None, inc
                     if total > 0:
                         if include_entities:
                             entities = [get_entity(val) for val in values]
-                            yield (prop, total, entities)
-                        else:
-                            yield (prop, total)
+                            graph_response.set_entities(prop.qname, entities)
+                        graph_response.set_count(prop.qname, total)
                 elif prop.type in matchable_prop_types:
                     # literal value matches
                     values = proxy.get(prop.name)
@@ -162,85 +162,28 @@ def entity_expand_nodes(entity, collection_ids, edge_types, properties=None, inc
                     field = 'properties.%s' % prop.name
                     literal_value_properties.append(prop.qname)
                     for val in values:
-                        facets.append((index, prop.qname, prop.type.group, field, val))  # noqa
+                        query.add_facet((index, prop.qname, prop.type.group, field, val))  # noqa
 
-    res = _filters_faceted_query(
-        facets, collection_ids=collection_ids, authz=authz,
+    res = query.query(
+        collection_ids=collection_ids, authz=authz,
         include_entities=include_entities
     )
-    for (qname, result) in res.items():
-        total = result.get('count', 0)
-        entities = result.get('entities', [])
-        if total > 0:
-            prop = model.get_qname(qname)
-            if qname in reversed_properties:
-                prop = prop.reverse
-            if qname in literal_value_properties:
-                # the entity we are exapnding on should be removed from matches  # noqa
-                total = total - 1
-                if total == 0:
-                    continue
-                entities = [ent for ent in entities if ent['id'] != proxy.id]
-            if include_entities:
-                yield (prop, total, entities)
-            else:
-                yield (prop, total)
+    res.reverse_property(reversed_properties)
+    res.ignore_source(literal_value_properties, proxy.id)
+
+    return res.iter_props(include_entities=include_entities)
 
 
-def _filters_faceted_query(facets, collection_ids=None, authz=None, include_entities=False):  # noqa
-    filters = {}
-    indexed = {}
-    for (idx, alias, group, field, value) in facets:
-        indexed[idx] = indexed.get(idx, {})
-        indexed[idx][alias] = field_filter_query(field, value)
-        filters[idx] = filters.get(idx, {})
-        filters[idx][group] = filters[idx].get(group, [])
-        filters[idx][group].append(value)
-
-    queries = []
-    for (idx, facets) in indexed.items():
-        shoulds = []
-        for field, values in filters[idx].items():
-            shoulds.append(field_filter_query(field, values))
-        query = []
-        if authz is not None:
-            query.append(authz_query(authz))
-        if collection_ids:
-            query.append(field_filter_query('collection_id', collection_ids))
-        query = {
-            'bool': {
-                'should': shoulds,
-                'filter': query,
-                'minimum_should_match': 1
-            }
-        }
-        for (k, v) in facets.items():
-            queries.append({'index': idx})
-            aggs = {'counters': {'filters': {'filters': {k: v}}}}
-            queries.append({
-                'size': MAX_EXPAND_NODES_PER_PROPERTY if include_entities else 0,  # noqa
-                'query': query,
-                'aggs': aggs
-            })
-
-    results = {}
-    if not len(queries):
-        return results
-
-    res = es.msearch(body=queries)
-    for resp in res.get('responses', []):
-        aggs = resp.get('aggregations', {}).get('counters', {})
-        for alias, value in aggs.get('buckets', {}).items():
-            count = value.get('doc_count', results.get(alias, 0))
-            results[alias] = {
-                'count': count,
-            }
-            if include_entities:
-                entities = []
-                hits = resp.get('hits', {}).get('hits', [])
-                for doc in hits:
-                    entity = unpack_result(doc)
-                    if entity is not None:
-                        entities.append(entity)
-                results[alias]['entities'] = entities
-    return results
+def expand_entity_graph(entity, collection_ids, edge_types, properties=None, authz=None):  # noqa
+    graph = AlephGraph(edge_types=edge_types)
+    source_proxy = model.get_proxy(entity)
+    graph.add(source_proxy)
+    for prop, total, entities in entity_expand_nodes(
+        entity, collection_ids, edge_types, properties=properties,
+        include_entities=True, authz=authz
+    ):
+        for ent in entities:
+            proxy = model.get_proxy(ent)
+            graph.add(proxy)
+    graph.resolve()
+    return graph.get_adjacent_entities(source_proxy)
