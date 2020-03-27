@@ -83,6 +83,7 @@ class Notification extends PureComponent {
           <FormattedRelativeTime
             value={value}
             unit={unit}
+            // eslint-disable-next-line
             style="long"
             numeric="auto"
           />

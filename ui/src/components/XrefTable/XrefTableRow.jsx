@@ -5,7 +5,6 @@ import { Button } from '@blueprintjs/core';
 import {
   Collection, Entity, Skeleton,
 } from 'src/components/common';
-/* eslint-disable */
 
 class XrefTableRow extends Component {
   renderSkeleton() {
