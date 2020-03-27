@@ -2,6 +2,8 @@ import logging
 from itertools import chain
 from datetime import datetime
 from normality import stringify
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import aliased
 
 from aleph.core import db
 from aleph.model.common import DatedModel
@@ -122,6 +124,35 @@ class Linkage(db.Model, DatedModel):
         q = cls.all()
         q = q.filter(cls.context_id.in_(authz.private_roles))
         return q
+
+    @classmethod
+    def decisions(cls, pairs, context_id):
+        """For a given set of entity_id pairs, try to determine if they
+        are decided to be the same or not the same."""
+        decisions = {}
+        if not len(pairs) or context_id is None:
+            return decisions
+        entity = aliased(cls)
+        match = aliased(cls)
+        q = db.session.query(entity.entity_id, entity.decision,
+                             match.entity_id, match.decision)
+        q = q.filter(entity.profile_id == match.profile_id)
+        q = q.filter(entity.context_id == context_id)
+        q = q.filter(match.context_id == context_id)
+        options = []
+        for (entity_id, match_id) in pairs:
+            if entity_id is None or match_id is None:
+                continue
+            options.append(and_(entity.entity_id == entity_id,
+                                match.entity_id == match_id))
+        q = q.filter(or_(*options))
+        for (entity_id, dec1, match_id, dec2) in q.all():
+            decs = sorted((dec1, dec2))
+            if decs == [True, True]:
+                decisions[(entity_id, match_id)] = True
+            if decs == [False, True]:
+                decisions[(entity_id, match_id)] = False
+        return decisions
 
     # def __repr__(self):
     #     return '<Linkage(%r, %r, %s)>' % \

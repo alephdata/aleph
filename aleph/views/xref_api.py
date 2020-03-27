@@ -1,7 +1,9 @@
+import logging
 from flask_babel import gettext
 from flask import Blueprint, request, send_file
 from werkzeug.exceptions import BadRequest
 
+from aleph.model import Linkage
 from aleph.search import XrefQuery
 from aleph.index.xref import get_xref
 from aleph.logic.xref import export_matches
@@ -13,6 +15,7 @@ from aleph.views.util import parse_request, require, jsonify, obj_or_404
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'  # noqa
 blueprint = Blueprint('xref_api', __name__)
+log = logging.getLogger(__name__)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/xref', methods=['GET'])  # noqa
@@ -50,6 +53,12 @@ def index(collection_id):
     """
     get_index_collection(collection_id)
     result = XrefQuery.handle(request, collection_id=collection_id)
+    context_id = result.parser.getint('context_id', request.authz.id)
+    pairs = [(x.get('entity_id'), x.get('match_id')) for x in result.results]
+    decisions = Linkage.decisions(pairs, context_id)
+    for xref in result.results:
+        key = (xref.get('entity_id'), xref.get('match_id'))
+        xref['decision'] = decisions.get(key)
     return XrefSerializer.jsonify_result(result)
 
 

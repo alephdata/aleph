@@ -1,7 +1,7 @@
 import logging
 from pprint import pprint  # noqa
+from banal import hash_data
 from datetime import datetime
-from servicelayer.cache import make_key
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
@@ -42,8 +42,9 @@ def index_matches(collection, matches, sync=False):
     """Index cross-referencing matches."""
     actions = []
     for (score, entity, match_collection_id, match) in matches:
+        xref_id = hash_data((entity.id, collection.id, match.id))
         actions.append({
-            '_id': make_key(entity.id, collection.id, match.id),
+            '_id': xref_id,
             '_index': xref_index(),
             '_source': {
                 'score': score,
@@ -73,12 +74,11 @@ def iter_matches(collection, authz):
 
 def get_xref(xref_id, collection_id=None):
     """Get an xref match combo by its ID."""
-    query = {'ids': {'values': [xref_id]}}
+    filters = [{'ids': {'values': [xref_id]}}]
     if collection_id is not None:
-        filters = [query, {'term': {'collection_id': collection_id}}]
-        query = {'query': {'bool': {'filter': filters}}}
-    query = {'query': query, 'size': 1}
-    result = es.search(index=xref_index, body=query)
+        filters.append({'term': {'collection_id': collection_id}})
+    query = {'query': {'bool': {'filter': filters}}, 'size': 1}
+    result = es.search(index=xref_index(), body=query)
     for doc in result.get('hits', {}).get('hits', []):
         return unpack_result(doc)
 

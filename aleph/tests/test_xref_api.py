@@ -1,3 +1,5 @@
+import json
+
 from aleph.core import db
 from aleph.queues import get_stage, OP_XREF
 from aleph.index.entities import index_entity
@@ -165,3 +167,37 @@ class XrefApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
+
+    def test_decide(self):
+        _, headers = self.login('creator')
+        url = '/api/2/collections/%s/xref' % self.residents.id
+        res = self.client.post(url, headers=headers)
+        assert res.status_code == 202, res
+
+        res = self.client.get(url, headers=headers)
+        assert res.json['total'] == 2, res.json
+        xref = res.json['results'][0]
+        assert xref.get('decision') is None, xref
+
+        xref_url = '%s/%s' % (url, xref['id'])
+        res = self.client.post(xref_url,
+                               headers=headers,
+                               data=json.dumps({'decision': True}),
+                               content_type='application/json')
+        assert res.status_code == 204, res.json
+
+        res = self.client.get(url, headers=headers)
+        assert res.json['total'] == 2, res.json
+        xref0 = res.json['results'][0]
+        assert xref0['id'] == xref['id'], (xref0, xref)
+        assert xref0.get('decision') is True, xref0
+
+        res = self.client.post(xref_url,
+                               headers=headers,
+                               data=json.dumps({'decision': False}),
+                               content_type='application/json')
+        assert res.status_code == 204, res.json
+
+        res = self.client.get(url, headers=headers)
+        xref0 = res.json['results'][0]
+        assert xref0.get('decision') is False, xref0
