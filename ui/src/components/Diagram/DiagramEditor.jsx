@@ -64,17 +64,18 @@ class DiagramEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { state } = this.props;
+    const { selectQueryResults } = this.props;
     if (this.props.downloadTriggered && !prevProps.downloadTriggered) {
       this.downloadDiagram();
     }
 
-    if (this.entitySuggestPromise && state.results !== prevProps.state.results) {
+    // if there is an unresolved query promise, check if results have returned and resolve
+    if (this.entitySuggestPromise) {
       const { query, promiseResolve } = this.entitySuggestPromise;
-      const result = selectEntitiesResult(state, query);
-      if (!result.isPending && result.results) {
-        promiseResolve(result.results);
+      const results = selectQueryResults(query);
+      if (results) {
         this.entitySuggestPromise = null;
+        promiseResolve(results);
       }
     }
   }
@@ -123,11 +124,18 @@ class DiagramEditor extends React.Component {
   }
 
   getEntitySuggestions(queryText, schema) {
-    const { diagram, location } = this.props;
+    const { diagram, location, selectQueryResults } = this.props;
     const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
+
+    const results = selectQueryResults(query);
+    if (results) {
+      this.entitySuggestPromise = null;
+      return results;
+    }
+
     this.props.queryEntities({ query });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.entitySuggestPromise = { query, promiseResolve: resolve };
     });
   }
@@ -206,7 +214,12 @@ const mapStateToProps = (state) => {
   return {
     model: selectModel(state),
     locale: selectLocale(state),
-    state,
+    selectQueryResults: (query) => {
+      const result = selectEntitiesResult(state, query);
+      if (!result.isPending && result.results) {
+        return result.results;
+      }
+    }
   }
 };
 
