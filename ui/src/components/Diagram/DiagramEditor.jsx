@@ -80,6 +80,23 @@ class DiagramEditor extends React.Component {
     }
   }
 
+  getEntitySuggestions(queryText, schema) {
+    const { diagram, location, selectQueryResults } = this.props;
+    const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
+
+    const results = selectQueryResults(query);
+    if (results) {
+      this.entitySuggestPromise = null;
+      return results;
+    }
+
+    this.props.queryEntities({ query });
+
+    return new Promise((resolve) => {
+      this.entitySuggestPromise = { query, promiseResolve: resolve };
+    });
+  }
+
   async createEntity({ schema, properties }) {
     const { diagram, onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
@@ -121,23 +138,6 @@ class DiagramEditor extends React.Component {
     } catch {
       onStatusChange(updateStates.ERROR);
     }
-  }
-
-  getEntitySuggestions(queryText, schema) {
-    const { diagram, location, selectQueryResults } = this.props;
-    const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
-
-    const results = selectQueryResults(query);
-    if (results) {
-      this.entitySuggestPromise = null;
-      return results;
-    }
-
-    this.props.queryEntities({ query });
-
-    return new Promise((resolve) => {
-      this.entitySuggestPromise = { query, promiseResolve: resolve };
-    });
   }
 
   updateLayout(layout, options) {
@@ -189,8 +189,6 @@ class DiagramEditor extends React.Component {
     const { diagram, filterText, locale } = this.props;
     const { layout, viewport } = this.state;
 
-    console.log(diagram);
-
     return (
       <div className="DiagramEditor">
         <VisGraph
@@ -210,18 +208,17 @@ class DiagramEditor extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    model: selectModel(state),
-    locale: selectLocale(state),
-    selectQueryResults: (query) => {
-      const result = selectEntitiesResult(state, query);
-      if (!result.isPending && result.results) {
-        return result.results;
-      }
+const mapStateToProps = state => ({
+  model: selectModel(state),
+  locale: selectLocale(state),
+  selectQueryResults: (query) => {
+    const result = selectEntitiesResult(state, query);
+    if (!result.isPending && result.results) {
+      return result.results;
     }
-  }
-};
+    return null;
+  },
+});
 
 const mapDispatchToProps = {
   createEntity,
