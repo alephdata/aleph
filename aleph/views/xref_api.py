@@ -53,7 +53,8 @@ def index(collection_id):
     """
     get_index_collection(collection_id)
     result = XrefQuery.handle(request, collection_id=collection_id)
-    context_id = result.parser.getint('context_id', request.authz.id)
+    context_id = result.parser.getint('context_id')
+    context_id = context_id or request.authz.id
     require(request.authz.can_read_role(context_id))
     pairs = [(x.get('entity_id'), x.get('match_id')) for x in result.results]
     decisions = Linkage.decisions(pairs, context_id)
