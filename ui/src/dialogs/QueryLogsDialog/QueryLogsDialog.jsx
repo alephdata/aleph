@@ -3,7 +3,6 @@ import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { fetchRole, updateRole } from 'src/actions';
 import { selectSession } from 'src/selectors';
 import QueryLogs from 'src/components/QueryLogs/QueryLogs';
 
@@ -39,9 +38,7 @@ const mapStateToProps = state => ({
   role: state.session.role,
 });
 
-const mapDispatchToProps = { fetchRole, updateRole };
-
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps),
   injectIntl,
 )(QueryLogsDialog);

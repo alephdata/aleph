@@ -42,7 +42,7 @@ export class GroupScreen extends Component {
   fetchIfNeeded() {
     const { group, groupId } = this.props;
     if (group.shouldLoad) {
-      this.props.fetchRole(groupId);
+      this.props.fetchRole({ id: groupId });
     }
   }
 
@@ -80,14 +80,12 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'filter:team_id': groupId,
   };
-
   let query = Query.fromLocation('collections', location, context, 'collections')
     .limit(20);
 
   if (!query.hasSort()) {
     query = query.sortBy('created_at', 'desc');
   }
-
   return {
     query,
     groupId,
