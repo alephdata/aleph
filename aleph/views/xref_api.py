@@ -1,7 +1,5 @@
 import logging
-from flask_babel import gettext
 from flask import Blueprint, request, send_file
-from werkzeug.exceptions import BadRequest
 
 from aleph.model import Linkage
 from aleph.search import XrefQuery
@@ -174,14 +172,10 @@ def decide(collection_id, xref_id):
       - Xref
       - Linkage
     """
-    require(request.authz.logged_in)
     data = parse_request('XrefDecide')
     xref = obj_or_404(get_xref(xref_id, collection_id=collection_id))
-    try:
-        context_id = int(data.get('context_id', request.authz.id))
-    except (ValueError, TypeError):
-        raise BadRequest(gettext("Invalid context."))
-    require(context_id in request.authz.private_roles)
+    context_id = int(data.get('context_id', request.authz.id))
+    require(request.authz.can_write_role(context_id))
     decide_xref(xref,
                 decision=data.get('decision'),
                 context_id=context_id,

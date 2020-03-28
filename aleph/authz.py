@@ -91,9 +91,12 @@ class Authz(object):
     def can_write_role(self, role_id):
         if not self.session_write or role_id is None:
             return False
-        # if self.is_admin:
-        #     return True
-        return self.id == int(role_id)
+        if self.is_admin:
+            return True
+        try:
+            return int(role_id) in self.private_roles
+        except (ValueError, TypeError):
+            return False
 
     def can_read_role(self, role_id):
         if self.is_admin:
