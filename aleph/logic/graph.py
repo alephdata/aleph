@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict
+from pprint import pformat  # noqa
 
 from banal import ensure_list
 from followthemoney import model
@@ -110,7 +111,7 @@ class EntityGraphResponse(object):
         This method replaces property keys with their reverse properties.
         """
         qnames = qnames or list(self.counts.keys())
-        for qname in qnames:
+        for qname in set(qnames):
             prop = model.get_qname(qname)
             reversed_prop = prop.reverse
             entities = self.entities.pop(qname, None)
@@ -130,7 +131,7 @@ class EntityGraphResponse(object):
         (CompanyA in this case) from the query result.
         """
         qnames = qnames or list(self.counts.keys())
-        for qname in qnames:
+        for qname in set(qnames):
             count = self.counts.get(qname, None)
             if count:
                 # Reduce count by 1
@@ -294,21 +295,24 @@ class EntityGraph(object):
         indexed = {}
         for (idx, alias, group, field, value) in facets:
             indexed[idx] = indexed.get(idx, {})
-            indexed[idx][alias] = field_filter_query(field, value)
+            indexed[idx][alias] = indexed[idx].get(alias, {})
+            indexed[idx][alias]['field'] = field
+            indexed[idx][alias]['values'] = indexed[idx][alias].get('values', [])
+            indexed[idx][alias]['values'].append(value)
             filters[idx] = filters.get(idx, {})
             filters[idx][group] = filters[idx].get(group, [])
             filters[idx][group].append(value)
 
         queries = []
         for (idx, facets) in indexed.items():
-            shoulds = []
-            for field, values in filters[idx].items():
-                shoulds.append(field_filter_query(field, values))
             query = []
             if self.authz is not None:
                 query.append(authz_query(self.authz))
             if self.collection_ids:
                 query.append(field_filter_query('collection_id', self.collection_ids))  # noqa
+            shoulds = []
+            for field, values in filters[idx].items():
+                shoulds.append(field_filter_query(field, values))
             query = {
                 'bool': {
                     'should': shoulds,
@@ -316,9 +320,15 @@ class EntityGraph(object):
                     'minimum_should_match': 1
                 }
             }
-            for (k, v) in facets.items():
+            for (alias, data) in facets.items():
+                field = data['field']
+                values = data['values']
                 queries.append({'index': idx})
-                aggs = {'counters': {'filters': {'filters': {k: v}}}}
+                aggs = {'counters': {
+                    'filters': {'filters': {
+                        alias: field_filter_query(field, values)
+                    }}
+                }}
                 queries.append({
                     'size': MAX_EXPAND_NODES_PER_PROPERTY if self.include_entities else 0,  # noqa
                     'query': query,

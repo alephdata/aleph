@@ -315,7 +315,7 @@ class EntitiesApiTestCase(TestCase):
             'collection_id': self.col_id,
             'properties': {
                 'name': "Blaaaa blubb",
-                'phone': '+491769817271'
+                'phone': ['+491769817271', '+491769817999']
             }
         }
         resa = self.client.post(url, data=json.dumps(data),
@@ -326,7 +326,7 @@ class EntitiesApiTestCase(TestCase):
             'collection_id': self.col_id,
             'properties': {
                 'name': "Nobody Man",
-                'phone': '+491769817271'
+                'phone': ['+491769817271', '+491769817777']
             }
         }
         resa = self.client.post(url, data=json.dumps(data),
@@ -552,7 +552,7 @@ class EntitiesApiTestCase(TestCase):
             'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
-                'email': "osama@al-qaeda.org",
+                'email': ["osama@al-qaeda.org", "o@laden.me"],
                 'status': 'dead',
                 'passport': passport1.json['id'],
                 'nationality': 'sa'
@@ -596,7 +596,7 @@ class EntitiesApiTestCase(TestCase):
             'collection_id': self.col_id,
             'properties': {
                 'name': "John Doe",
-                'email': 'osama@al-qaeda.org',
+                'email': ['osama@al-qaeda.org', 'john@doe.me'],
                 'nationality': 'sa',
             }
         }
