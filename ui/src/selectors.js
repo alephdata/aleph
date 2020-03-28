@@ -69,6 +69,11 @@ export function selectSession(state) {
   return selectObject(state, state, 'session');
 }
 
+export function selectCurrentRole(state) {
+  const session = selectObject(state, state, 'session');
+  return selectRole(state, session.id);
+}
+
 export function selectSessionIsTester(state) {
   const session = selectSession(state);
   /* eslint-disable camelcase */

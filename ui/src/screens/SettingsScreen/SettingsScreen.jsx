@@ -10,7 +10,7 @@ import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import ClipboardInput from 'src/components/common/ClipboardInput';
 import { updateRole, fetchRole } from 'src/actions';
-import { selectSession, selectMetadata, selectLocale } from 'src/selectors';
+import { selectMetadata, selectLocale, selectCurrentRole } from 'src/selectors';
 
 import './SettingsScreen.scss';
 
@@ -103,13 +103,6 @@ export class SettingsScreen extends React.Component {
 
   static getDerivedStateFromProps(props) {
     return { role: props.role };
-  }
-
-  componentDidUpdate(prevProps) {
-    const { role, isOpen } = this.props;
-    if (!prevProps.isOpen && isOpen) {
-      this.props.fetchRole(role.id);
-    }
   }
 
   async onSave() {
@@ -347,10 +340,9 @@ export class SettingsScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  session: selectSession(state),
   metadata: selectMetadata(state),
   role: {
-    ...state.session.role,
+    ...selectCurrentRole(state),
     locale: selectLocale(state),
   },
 });

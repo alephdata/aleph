@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
-import { selectSession, selectSessionIsTester } from 'src/selectors';
+import { selectSession } from 'src/selectors';
 import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
 import c from 'classnames';
 
@@ -45,7 +45,7 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, session, searchScopes, navbarRef, role, query, isHomepage,
+      metadata, searchScopes, navbarRef, query, isHomepage,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
@@ -92,13 +92,7 @@ export class Navbar extends React.Component {
             )}
             <Bp3Navbar.Divider className={c({ 'mobile-hidden': mobileSearchOpen })} />
             <div className={c({ 'mobile-hidden': mobileSearchOpen })}>
-              <AuthButtons
-                session={session}
-                auth={metadata.auth}
-                isTester={this.props.isTester}
-                role={role}
-                className={c({ hide: mobileSearchOpen })}
-              />
+              <AuthButtons className={c({ hide: mobileSearchOpen })} />
             </div>
           </Bp3Navbar.Group>
         </Bp3Navbar>
@@ -107,9 +101,7 @@ export class Navbar extends React.Component {
   }
 }
 const mapStateToProps = (state) => ({
-  session: selectSession(state),
-  isTester: selectSessionIsTester(state),
-  role: selectSession(state).role,
+  session: selectSession(state)
 });
 
 export default compose(
