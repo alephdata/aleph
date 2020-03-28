@@ -9,7 +9,7 @@ import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-import { selectNotificationsResult, selectSession } from 'src/selectors';
+import { selectNotificationsResult, selectSession, selectCurrentRole } from 'src/selectors';
 
 import './NotificationsScreen.scss';
 
@@ -39,7 +39,7 @@ export class NotificationsScreen extends React.Component {
         <Dashboard>
           <div className="Dashboard__title-container">
             <h5 className="Dashboard__title">
-              {intl.formatMessage(messages.greeting, { role: role ? role.name : '' })}
+              {intl.formatMessage(messages.greeting, { role: role.name || '' })}
             </h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
@@ -58,12 +58,11 @@ export class NotificationsScreen extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const session = selectSession(state);
   const query = Query.fromLocation('notifications', location, {}, 'notifications').limit(40);
   return {
     query,
     result: selectNotificationsResult(state, query),
-    role: session ? session.role : null,
+    role: selectCurrentRole(state),
   };
 };
 

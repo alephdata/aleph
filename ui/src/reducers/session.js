@@ -14,7 +14,7 @@ const handleLogin = (state, token) => {
   return {
     token,
     isAdmin: data.a,
-    role: data.role,
+    id: data.role.id,
     roles: data.r,
     loggedIn: true,
     sessionID: state.sessionID || uuidv4(),
