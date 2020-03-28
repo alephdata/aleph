@@ -21,12 +21,13 @@ export function queryCollectionDiagrams(location, collectionId) {
   return Query.fromLocation('diagrams', location, context, 'diagrams');
 }
 
-export function queryCollectionXrefFacets(location, collectionId) {
+export function queryCollectionXrefFacets(location, collectionId, contextId) {
   const path = `collections/${collectionId}/xref`;
   return Query.fromLocation(path, location, {}, 'xref')
     .defaultFacet('match_collection_id', true)
     .defaultFacet('countries', false)
-    .defaultFacet('schema', false);
+    .defaultFacet('schema', false)
+    .set('context_id', contextId);
 }
 
 export function queryFolderDocuments(location, documentId, queryText) {

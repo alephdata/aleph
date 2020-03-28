@@ -11,7 +11,10 @@ import CollectionXrefManageMenu from 'src/components/Collection/CollectionXrefMa
 import XrefTable from 'src/components/XrefTable/XrefTable';
 import { queryCollectionXrefFacets } from 'src/queries';
 import { selectCollectionXrefResult } from 'src/selectors';
-import { queryCollectionXref } from 'src/actions';
+import { queryCollectionXref, queryRoles } from 'src/actions';
+import { queryGroups } from 'src/queries';
+import { selectRolesResult } from 'src/selectors';
+
 
 import './CollectionXrefMode.scss';
 
@@ -20,6 +23,7 @@ export class CollectionXrefMode extends React.Component {
     super(props);
     this.toggleExpand = this.toggleExpand.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
+    this.updateContext = this.updateContext.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
@@ -47,10 +51,25 @@ export class CollectionXrefMode extends React.Component {
     });
   }
 
+  updateContext(contextId) {
+    const { history, location, parsedHash } = this.props;
+    parsedHash.context = contextId;
+    history.push({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
   fetchIfNeeded() {
     const { collection, query, result } = this.props;
     if (result.shouldLoad && collection.id) {
       this.props.queryCollectionXref({ query });
+    }
+
+    const { groupsResult, groupsQuery } = this.props;
+    if (groupsResult.shouldLoad) {
+      this.props.queryRoles({query: groupsQuery});
     }
   }
 
@@ -65,7 +84,7 @@ export class CollectionXrefMode extends React.Component {
   }
 
   render() {
-    const { expandedId, collection, query, result } = this.props;
+    const { expandedId, contextId, collection, query, result } = this.props;
     return (
       <section className="CollectionXrefMode">
         <div className="pane-layout">
@@ -80,10 +99,13 @@ export class CollectionXrefMode extends React.Component {
           <div className="pane-layout-main">
             <CollectionXrefManageMenu
               collection={collection}
+              contextId={contextId}
+              updateContext={this.updateContext}
               result={result}
             />
             <XrefTable
               expandedId={expandedId}
+              contextId={contextId}
               result={result}
               toggleExpand={this.toggleExpand}
             />
@@ -102,18 +124,22 @@ export class CollectionXrefMode extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const parsedHash = queryString.parse(location.hash);
-  const query = queryCollectionXrefFacets(location, collection.id);
-
+  const contextId = parsedHash.context;
+  const query = queryCollectionXrefFacets(location, collection.id, contextId);
+  const groupsQuery = queryGroups(location);
   return {
     query,
     parsedHash,
+    contextId,
     expandedId: parsedHash.expand,
+    groupsQuery,
+    groupsResult: selectRolesResult(state, groupsQuery),
     result: selectCollectionXrefResult(state, query),
   };
 };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryCollectionXref }),
+  connect(mapStateToProps, { queryCollectionXref, queryRoles }),
   injectIntl,
 )(CollectionXrefMode);
