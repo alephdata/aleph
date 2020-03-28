@@ -1,6 +1,10 @@
 import Query from 'src/app/Query';
 
 
+export function queryGroups(location) {
+  return Query.fromLocation('groups', location, {}, 'groups');
+}
+
 export function queryCollectionDocuments(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,

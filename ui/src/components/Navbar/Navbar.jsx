@@ -6,8 +6,9 @@ import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
-import { selectSession } from 'src/selectors';
+import { selectSession, selectSessionIsTester } from 'src/selectors';
 import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
 import c from 'classnames';
 
@@ -94,6 +95,7 @@ export class Navbar extends React.Component {
               <AuthButtons
                 session={session}
                 auth={metadata.auth}
+                isTester={this.props.isTester}
                 role={role}
                 className={c({ hide: mobileSearchOpen })}
               />
@@ -106,7 +108,8 @@ export class Navbar extends React.Component {
 }
 const mapStateToProps = (state) => ({
   session: selectSession(state),
-  role: state.session.role,
+  isTester: selectSessionIsTester(state),
+  role: selectSession(state).role,
 });
 
 export default compose(
