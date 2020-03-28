@@ -66,7 +66,7 @@ export class AuthButtons extends Component {
 
   fetchIfNeeded() {
     const { role, session } = this.props;
-    if (role.shouldLoad) {
+    if (role.shouldLoad && session.loggedIn) {
       this.props.fetchRole({ id: session.id });
     }
   }
