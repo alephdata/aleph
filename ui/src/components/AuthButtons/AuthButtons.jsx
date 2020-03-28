@@ -62,7 +62,7 @@ export class AuthButtons extends Component {
   }
 
   render() {
-    const { session, role, auth, intl } = this.props;
+    const { session, role, isTester, auth, intl } = this.props;
 
     if (session.loggedIn) {
       return (
@@ -97,7 +97,7 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.casefiles)}
                   </div>
                 </Link>
-                {role.is_tester && (
+                {isTester && (
                   <Link to="/diagrams" className="bp3-menu-item">
                     <Icon icon="graph" />
                     <div className="bp3-text-overflow-ellipsis bp3-fill">

@@ -79,10 +79,6 @@ export function selectAlerts(state) {
   return selectObject(state, state, 'alerts');
 }
 
-export function selectGroups(state) {
-  return selectObject(state, state, 'groups');
-}
-
 export function selectStatistics(state) {
   return selectObject(state, state, 'statistics');
 }
@@ -128,6 +124,10 @@ export function selectDocumentContent(state, documentId) {
 
 export function selectCollectionsResult(state, query) {
   return selectResult(state, query, selectCollection);
+}
+
+export function selectRolesResult(state, query) {
+  return selectResult(state, query, selectRole);
 }
 
 export function selectEntitiesResult(state, query) {
