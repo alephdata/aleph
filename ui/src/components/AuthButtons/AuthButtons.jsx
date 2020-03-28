@@ -9,7 +9,6 @@ import {
 import { fetchRole } from 'src/actions';
 import { selectCurrentRole, selectSession, selectSessionIsTester, selectMetadata } from 'src/selectors';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
-import QueryLogsDialog from 'src/dialogs/QueryLogsDialog/QueryLogsDialog';
 
 import './AuthButtons.scss';
 
