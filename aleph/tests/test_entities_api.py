@@ -554,7 +554,8 @@ class EntitiesApiTestCase(TestCase):
                 'name': "Osama bin Laden",
                 'email': "osama@al-qaeda.org",
                 'status': 'dead',
-                'passport': passport1.json['id']
+                'passport': passport1.json['id'],
+                'nationality': 'sa'
             }
         }
         person1 = self.client.post(url,
@@ -586,6 +587,20 @@ class EntitiesApiTestCase(TestCase):
             }
         }
         person2 = self.client.post(url,  # noqa
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "John Doe",
+                'email': 'osama@al-qaeda.org',
+                'nationality': 'sa',
+            }
+        }
+        person3 = self.client.post(url,  # noqa
                                    data=json.dumps(data),
                                    headers=headers,
                                    content_type='application/json')
@@ -636,26 +651,31 @@ class EntitiesApiTestCase(TestCase):
         stats = self.client.get(url, headers=headers)
         assert stats.status_code == 200, (stats.status_code, stats.json)
         validate(stats.json, 'QueryResponse')
-        assert stats.json['total'] == 3, stats.json
+        assert stats.json['total'] == 4, stats.json
         results = stats.json['results']
         for result in results:
             validate(result, 'EntityExpandStats')
-            assert result['count'] == 1, results
             assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
+            if result['property']['name'] == 'email':
+                assert result['count'] == 2, results
+            else:
+                assert result['count'] == 1, results
+
 
         url = '/api/2/entities/%s/expand?%s' % (person1.json['id'], query_string)  # noqa
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, 'EntityExpand')
-        assert res.json['total'] == 3, pformat(res.json)
+        assert res.json['total'] == 4, pformat(res.json)
         results = res.json['results']
         assert len(results) == 3, pformat(results)
         for res in results:
             prop = res['property']
             assert prop in ('email', 'passport', 'Ownership')
             if prop == 'email':
-                assert res['count'] == 1
-                assert res['entities'][0]['name'] == 'Undercover Osama'
+                assert res['count'] == 2
+                for ent in res['entities']:
+                    assert ent['name'] in ('Undercover Osama', 'John Doe')
             if prop == 'Ownership':
                 assert res['count'] == 1
                 assert res['entities'][0]['name'] == 'Al-Qaeda'
