@@ -12,7 +12,8 @@ from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import (
-    entity_references, entity_tags, entity_expand_nodes, expand_entity_graph
+    entity_references, entity_tags, entity_expand_adjacents,
+    enitiy_expand_graph_nodes
 )
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
@@ -605,7 +606,7 @@ def expand_stats(entity_id):
     collection_id = entity.get('collection_id')
     tag_request(collection_id=collection_id)
     results = []
-    for prop, total in entity_expand_nodes(
+    for prop, total in entity_expand_adjacents(
         entity, collection_ids=[collection_id], edge_types=edge_types,
             include_entities=False, authz=request.authz):
         results.append({
@@ -669,7 +670,7 @@ def expand(entity_id):
     tag_request(collection_id=collection_id)
     parser = QueryParser(request.args, request.authz)
     properties = ensure_list(parser.filters.get('property'))
-    expanded_entities = expand_entity_graph(
+    expanded_entities = enitiy_expand_graph_nodes(
         entity, collection_ids=[collection_id],
         edge_types=edge_types, properties=properties, authz=request.authz
     )

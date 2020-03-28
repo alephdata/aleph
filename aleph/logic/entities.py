@@ -88,23 +88,34 @@ def entity_tags(entity, authz=None):
     return graph.get_tags()
 
 
-def entity_expand_nodes(entity, collection_ids, edge_types, properties=None,
-                        include_entities=False, authz=None):
+def entity_expand_adjacents(entity, collection_ids, edge_types,
+                            properties=None, include_entities=False,
+                            authz=None):
+    """Get the adjacent entities of an entity grouped by property
+
+    collection_ids: list of collection_ids to search
+    edge_types: list of FtM Types to expand as edges
+    properties: list of FtM Properties to expand as edges.
+    include_entities: If False, only counts are returned
+    """
     proxy = model.get_proxy(entity)
     graph = EntityGraph(
         proxy, edge_types=edge_types, included_properties=properties,
         authz=authz, collection_ids=collection_ids,
         include_entities=include_entities
     )
-    res = graph.expand_entity()
-    return res.iter_props(include_entities=include_entities)
+    return graph.expand_entity()
 
 
-def expand_entity_graph(entity, collection_ids, edge_types, properties=None, authz=None):  # noqa
+def enitiy_expand_graph_nodes(entity, collection_ids, edge_types,
+                              properties=None, authz=None):
+    """Expand an entity's graph to find adjacent entities that are connected
+    by a literal value, a property or an Entity type edge. (eg: Person
+    connected to Company through Directorship)"""
     graph = AlephGraph(edge_types=edge_types)
     source_proxy = model.get_proxy(entity)
     graph.add(source_proxy)
-    for prop, total, entities in entity_expand_nodes(
+    for prop, total, entities in entity_expand_adjacents(
         entity, collection_ids, edge_types, properties=properties,
         include_entities=True, authz=authz
     ):

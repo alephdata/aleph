@@ -98,7 +98,7 @@ class EntityGraphResponse(object):
                 else:
                     yield (model.get_qname(qname), count)
 
-    def reverse_properties(self):
+    def reverse_properties(self, qnames=None):
         """Use the reverse property names.
 
         While querying for references, property names in the query result
@@ -109,7 +109,8 @@ class EntityGraphResponse(object):
 
         This method replaces property keys with their reverse properties.
         """
-        for qname in self.counts:
+        qnames = qnames or list(self.counts.keys())
+        for qname in qnames:
             prop = model.get_qname(qname)
             reversed_prop = prop.reverse
             entities = self.entities.pop(qname, None)
@@ -119,7 +120,7 @@ class EntityGraphResponse(object):
             if count is not None:
                 self.set_count(reversed_prop.qname, count)
 
-    def ignore_source(self):
+    def ignore_source(self, qnames=None):
         """Ignore counting the source entity itself (useful when querying
         for tags.)
 
@@ -128,15 +129,16 @@ class EntityGraphResponse(object):
         reduce all counts by 1 and remove the expansion source entity
         (CompanyA in this case) from the query result.
         """
-        # make a copy to avoid changing the dict during iteration
-        counts = list(self.counts.items())
-        for qname, count in counts:
-            # Reduce count by 1
-            count = count - 1
-            if count == 0:
-                self.counts.pop(qname, None)
-            else:
-                self.set_count(qname, count)
+        qnames = qnames or list(self.counts.keys())
+        for qname in qnames:
+            count = self.counts.get(qname, None)
+            if count:
+                # Reduce count by 1
+                count = count - 1
+                if count == 0:
+                    self.counts.pop(qname, None)
+                else:
+                    self.set_count(qname, count)
             # Remove source entity from matched entities
             entities = self.entities.pop(qname, None)
             if entities:
@@ -146,7 +148,7 @@ class EntityGraphResponse(object):
                 else:
                     self.entities.pop(qname, None)
 
-    def __add__(self, resp):
+    def merge(self, resp):
         if self.source != resp.source:
             raise ValueError("Responses don't have the same source entity")
         self.entities.update(resp.entities)
@@ -180,20 +182,24 @@ class EntityGraph(object):
         """
         # Get references
         reference_facets = self._get_reference_facets()
-        references = self._get_graph_response(reference_facets)
-        # Reverse the property direction for all properties
-        # eg: from Ownership:owner to LegalEntity:ownershipOwner
-        references.reverse_properties()
+        reference_props = [facet[1] for facet in reference_facets]
         # get tags
-        # Group tagged results by property name - 2 email matches, 1 website
-        # match etc
+        # Group tagged results by property name - (eg: 2 email matches,
+        # 1 website match etc)
         tags_facets = self._get_tag_facets_grouped_by_prop_name()
-        tags = self._get_graph_response(tags_facets)
-        # Remove the source entity from result
-        tags.ignore_source()
+        tags_props = [facet[1] for facet in tags_facets]
+        facets = reference_facets + tags_facets
+        expanded_entities = self._get_graph_response(facets)
+        # Remove the entity we are exapnding from tag results
+        expanded_entities.ignore_source(qnames=tags_props)
+        # Reverse the property direction for all reference properties
+        # eg: from Ownership:owner to LegalEntity:ownershipOwner
+        expanded_entities.reverse_properties(qnames=reference_props)
         # get direct links
         direct_links = self.get_direct_links()
-        return references + tags + direct_links
+        # adjacent entities = tags + references + direct links
+        expanded_entities = expanded_entities.merge(direct_links)
+        return expanded_entities.iter_props(include_entities=self.include_entities)  # noqa
 
     def get_references(self):
         facets = self._get_reference_facets()
