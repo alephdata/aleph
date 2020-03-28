@@ -11,12 +11,10 @@ export const fetchEntity = asyncActionCreator(({ id }) => async () => {
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY' });
 
-
 export const fetchEntityReferences = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`entities/${id}/references`);
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY_REFERENCES' });
-
 
 export const fetchEntityTags = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`entities/${id}/tags`);

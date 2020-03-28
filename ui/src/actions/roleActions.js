@@ -10,7 +10,7 @@ export const suggestRoles = asyncActionCreator((prefix, exclude) => async () => 
   return response.data;
 }, { name: 'SUGGEST_ROLES' });
 
-export const fetchRole = asyncActionCreator((id) => async () => {
+export const fetchRole = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`roles/${id}`);
   return { id, data: response.data };
 }, { name: 'FETCH_ROLE' });
