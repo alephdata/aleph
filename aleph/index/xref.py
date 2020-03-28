@@ -1,6 +1,6 @@
 import logging
 from pprint import pprint  # noqa
-from banal import hash_data
+from banal import hash_data, ensure_list
 from datetime import datetime
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
@@ -43,6 +43,8 @@ def index_matches(collection, matches, sync=False):
     actions = []
     for (score, entity, match_collection_id, match) in matches:
         xref_id = hash_data((entity.id, collection.id, match.id))
+        text = ensure_list(entity.get_type_values(registry.name))
+        text.extend(match.get_type_values(registry.name))
         actions.append({
             '_id': xref_id,
             '_index': xref_index(),
@@ -54,6 +56,7 @@ def index_matches(collection, matches, sync=False):
                 'match_collection_id': match_collection_id,
                 'countries': match.get_type_values(registry.country),
                 'schema': match.schema.name,
+                'text': text,
                 'created_at': datetime.utcnow(),
             }
         })

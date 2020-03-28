@@ -24,7 +24,7 @@ INCLUDES = ['schema', 'properties', 'collection_id']
 
 def _query_item(collection, entity):
     """Cross-reference an entity or document, given as an indexed document."""
-    query = match_query(entity, source_collection_id=collection.id)
+    query = match_query(entity)
     if query == none_query():
         return
 

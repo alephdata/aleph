@@ -82,8 +82,8 @@ class Query(object):
         for field, _ in self.parser.empties.items():
             filters.append({'exists': {'field': field}})
 
-        if len(self.parser.exclude):
-            filters.append({'ids': {'values': self.parser.exclude}})
+        for field, values in self.parser.excludes.items():
+            filters.append(field_filter_query(field, values))
         return filters
 
     def get_post_filters(self, exclude=None):

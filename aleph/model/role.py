@@ -214,6 +214,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def all_groups(cls, authz):
         q = cls.all()
         q = q.filter(Role.type == Role.GROUP)
+        q = q.order_by(Role.name.asc())
+        q = q.order_by(Role.foreign_id.asc())
         if not authz.is_admin:
             q = q.filter(Role.id.in_(authz.roles))
         return q

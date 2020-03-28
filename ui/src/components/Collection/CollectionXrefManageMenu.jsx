@@ -45,6 +45,7 @@ class CollectionXrefManageMenu extends Component {
     /* eslint-disable camelcase */
     const downloadLink = collection.links?.xref_export;
     const showDownload = !result.isPending && downloadLink && result.total > 0;
+    const showContext = result.total > 0 && !contextId;
     const xrefButtonText = result.total > 0
       ? intl.formatMessage(messages.recompute)
       : intl.formatMessage(messages.compute);
@@ -68,7 +69,7 @@ class CollectionXrefManageMenu extends Component {
               />
             </AnchorButton>
           )}
-          {!contextId && (
+          {showContext && (
             <Button
               icon="flow-review"
               onClick={this.toggleContext}

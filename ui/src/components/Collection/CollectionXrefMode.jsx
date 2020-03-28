@@ -54,6 +54,7 @@ export class CollectionXrefMode extends React.Component {
   updateContext(contextId) {
     const { history, location, parsedHash } = this.props;
     parsedHash.context = contextId;
+    parsedHash.expand = undefined;
     history.push({
       pathname: location.pathname,
       search: location.search,
@@ -125,8 +126,8 @@ const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const parsedHash = queryString.parse(location.hash);
   const contextId = parsedHash.context;
-  const query = queryCollectionXrefFacets(location, collection.id, contextId);
   const groupsQuery = queryGroups(location);
+  const query = queryCollectionXrefFacets(location, collection.id, contextId);
   return {
     query,
     parsedHash,

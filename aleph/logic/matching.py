@@ -47,8 +47,7 @@ def _make_queries(prop, value, specificity):
         }
 
 
-def match_query(proxy, source_collection_id=None, collection_ids=None,
-                query=None):
+def match_query(proxy, collection_ids=None, query=None):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
     if query is None:
@@ -58,8 +57,8 @@ def match_query(proxy, source_collection_id=None, collection_ids=None,
     must_not = []
     if proxy.id is not None:
         must_not.append({"ids": {"values": [proxy.id]}})
-    if source_collection_id is not None:
-        must_not.append({'term': {'collection_id': source_collection_id}})
+    # if source_collection_id is not None:
+    #     must_not.append({'term': {'collection_id': source_collection_id}})
     if len(must_not):
         query['bool']['must_not'].extend(must_not)
 
