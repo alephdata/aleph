@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { injectIntl, FormattedNumber } from 'react-intl';
 import Property from 'src/components/Property';
 import { Button } from '@blueprintjs/core';
+import c from 'classnames';
+
 import {
   Collection, Entity, Skeleton,
 } from 'src/components/common';
@@ -75,11 +77,14 @@ class XrefTableRow extends Component {
     const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
     return (
       <tr className="XrefTableRow">
-        { !contextId && (
-          <td className="expand">
+        <td className={c({'expand': !contextId, 'numeric narrow': contextId})}>
+          {!contextId && (
             <Button onClick={() => this.props.toggleExpand(xref)} small minimal icon={expandIcon} />
-          </td>
-        )}
+          )}
+          {contextId && (
+            <XrefDecisionButtons xref={xref} contextId={contextId} />
+          )}
+        </td>
         <td className="entity bordered">
           <Entity.Link entity={xref.entity} preview icon />
           {showDetail && this.renderProperties(xref.entity)}
@@ -93,7 +98,7 @@ class XrefTableRow extends Component {
         </td>
         <td className="collection">
           <Collection.Link preview collection={xref.match_collection} icon />
-          <XrefDecisionButtons xref={xref} contextId={contextId} />
+          
         </td>
       </tr>
     );

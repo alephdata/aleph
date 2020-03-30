@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
+import c from 'classnames';
+
 import { ErrorSection } from 'src/components/common';
 import XrefTableRow from './XrefTableRow';
 
@@ -18,9 +20,7 @@ class XrefTable extends Component {
   renderHeader = (contextId) => (
     <thead>
       <tr>
-        { !contextId && (
-          <th className="expand" />
-        )}
+        <th className={c({'expand': !contextId, 'numeric narrow': contextId})} />
         <th className="entity bordered">
           <span className="value">
             <FormattedMessage

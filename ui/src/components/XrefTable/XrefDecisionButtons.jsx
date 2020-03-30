@@ -33,7 +33,7 @@ class XrefDecisionButtons extends Component {
       return null;
     }
     return (
-      <ButtonGroup className="XrefDecisionButtons">
+      <ButtonGroup className="XrefDecisionButtons" vertical>
         <Button icon="tick"
                 disabled={blocking}
                 intent={xref.decision === true ? Intent.SUCCESS : Intent.NONE}
