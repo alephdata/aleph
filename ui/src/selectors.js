@@ -69,6 +69,11 @@ export function selectSession(state) {
   return selectObject(state, state, 'session');
 }
 
+export function selectCurrentRole(state) {
+  const session = selectObject(state, state, 'session');
+  return selectRole(state, session.id);
+}
+
 export function selectSessionIsTester(state) {
   const session = selectSession(state);
   /* eslint-disable camelcase */
@@ -77,10 +82,6 @@ export function selectSessionIsTester(state) {
 
 export function selectAlerts(state) {
   return selectObject(state, state, 'alerts');
-}
-
-export function selectGroups(state) {
-  return selectObject(state, state, 'groups');
 }
 
 export function selectStatistics(state) {
@@ -128,6 +129,10 @@ export function selectDocumentContent(state, documentId) {
 
 export function selectCollectionsResult(state, query) {
   return selectResult(state, query, selectCollection);
+}
+
+export function selectRolesResult(state, query) {
+  return selectResult(state, query, selectRole);
 }
 
 export function selectEntitiesResult(state, query) {
