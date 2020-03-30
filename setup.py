@@ -23,6 +23,11 @@ setup(
     test_suite='nose.collector',
     entry_points={
         'aleph.init': [],
+        'aleph.oauth': [
+            'azure = aleph.oauth:handle_azure_oauth',
+            'google = aleph.oauth:handle_google_oauth',
+            'keycloak = aleph.oauth:handle_keycloak_oauth',
+        ],
         'console_scripts': [
             'aleph = aleph.manage:cli',
         ]
