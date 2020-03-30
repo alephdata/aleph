@@ -74,10 +74,10 @@ export function selectCurrentRole(state) {
   return selectRole(state, session.id);
 }
 
-export function selectSessionIsTester(state) {
-  const session = selectSession(state);
+export function selectTester(state) {
+  const role = selectCurrentRole(state);
   /* eslint-disable camelcase */
-  return session?.role?.is_tester || false;
+  return role.is_tester || false;
 }
 
 export function selectAlerts(state) {
