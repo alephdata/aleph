@@ -6,8 +6,9 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Count, Skeleton } from 'src/components/common';
 import c from 'classnames';
 
-import { fetchGroups } from 'src/actions';
-import { selectAlerts, selectGroups, selectSessionIsTester } from 'src/selectors';
+import { queryRoles } from 'src/actions';
+import { queryGroups } from 'src/queries';
+import { selectAlerts, selectTester, selectRolesResult } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -58,9 +59,9 @@ class Dashboard extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { groups } = this.props;
-    if (groups.shouldLoad) {
-      this.props.fetchGroups();
+    const { groupsQuery, groupsResult } = this.props;
+    if (groupsResult.shouldLoad) {
+      this.props.queryRoles({query: groupsQuery});
     }
   }
 
@@ -69,9 +70,8 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, intl, location, groups, showDiagrams } = this.props;
+    const { alerts, intl, location, groupsResult, showDiagrams } = this.props;
     const current = location.pathname;
-    const groupsLoading = groups.isPending;
 
     return (
       <div className="Dashboard">
@@ -125,15 +125,15 @@ class Dashboard extends React.Component {
                 active={current === '/diagrams'}
               />
             )}
-            {(groupsLoading || groups.total > 0) && (
+            {(groupsResult.isPending || groupsResult.total > 0) && (
               <>
                 <MenuDivider />
-                <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsLoading })}>
+                <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
                   <h6 className="bp3-heading">
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>
                 </li>
-                {!groupsLoading && groups.results.map(group => (
+                {!groupsResult.isPending && groupsResult.results.map(group => (
                   <MenuItem
                     key={group.id}
                     icon="shield"
@@ -142,7 +142,7 @@ class Dashboard extends React.Component {
                     active={current === `/groups/${group.id}`}
                   />
                 ))}
-                {groupsLoading && (
+                {groupsResult.isPending && (
                   <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
                 )}
               </>
@@ -170,15 +170,17 @@ class Dashboard extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const alerts = selectAlerts(state);
-  const groups = selectGroups(state);
-  const showDiagrams = selectSessionIsTester(state);
-
-  return { alerts, groups, showDiagrams };
+const mapStateToProps = (state, ownProps) => {
+  const groupsQuery = queryGroups(ownProps.location);
+  return {
+    groupsQuery,
+    groupsResult: selectRolesResult(state, groupsQuery),
+    alerts: selectAlerts(state),
+    showDiagrams: selectTester(state),
+  };
 };
 
 Dashboard = injectIntl(Dashboard);
+Dashboard = connect(mapStateToProps, { queryRoles })(Dashboard);
 Dashboard = withRouter(Dashboard);
-Dashboard = connect(mapStateToProps, { fetchGroups })(Dashboard);
 export default Dashboard;

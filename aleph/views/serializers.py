@@ -356,3 +356,8 @@ class MappingSerializer(Serializer):
         }
         obj['links'] = links
         return obj
+
+
+class LinkageSerializer(Serializer):
+    # TODO: do we want the collection and entity expanded.
+    pass

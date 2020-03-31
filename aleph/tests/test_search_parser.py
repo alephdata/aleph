@@ -48,7 +48,7 @@ class QueryParserTestCase(TestCase):
         parser_dict = args.to_dict()
         self.assertEqual(set(parser_dict.keys()), set([
             'text', 'prefix', 'offset', 'limit', 'filters',
-            'sorts', 'empties', 'exclude'
+            'sorts', 'empties', 'excludes'
         ]))
         self.assertEqual(parser_dict['text'], None)
         self.assertEqual(parser_dict['prefix'], None)

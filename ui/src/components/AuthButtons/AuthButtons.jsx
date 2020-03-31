@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import {
   Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position,
 } from '@blueprintjs/core';
 
+import { fetchRole } from 'src/actions';
+import { selectCurrentRole, selectSession, selectTester, selectMetadata } from 'src/selectors';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
-import QueryLogsDialog from 'src/dialogs/QueryLogsDialog/QueryLogsDialog';
 
 import './AuthButtons.scss';
 
@@ -49,20 +51,32 @@ export class AuthButtons extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      queryLogsIsOpen: false,
       isSignupOpen: false,
     };
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
-  toggleQueryLogs = () => this.setState(state => ({ queryLogsIsOpen: !state.queryLogsIsOpen }));
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { role, session } = this.props;
+    if (role.shouldLoad && session.loggedIn) {
+      this.props.fetchRole({ id: session.id });
+    }
+  }
 
   toggleAuthentication() {
     this.setState(({ isSignupOpen }) => ({ isSignupOpen: !isSignupOpen }));
   }
 
   render() {
-    const { session, role, auth, intl } = this.props;
+    const { session, role, isTester, metadata, intl } = this.props;
 
     if (session.loggedIn) {
       return (
@@ -97,7 +111,7 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.casefiles)}
                   </div>
                 </Link>
-                {role.is_tester && (
+                {isTester && (
                   <Link to="/diagrams" className="bp3-menu-item">
                     <Icon icon="graph" />
                     <div className="bp3-text-overflow-ellipsis bp3-fill">
@@ -122,19 +136,15 @@ export class AuthButtons extends Component {
           >
             <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
           </Popover>
-          <QueryLogsDialog
-            isOpen={this.state.queryLogsIsOpen}
-            toggleDialog={this.toggleQueryLogs}
-          />
         </span>
       );
     }
 
-    if (auth.password_login_uri || auth.oauth_uri) {
+    if (metadata.auth.password_login_uri || metadata.auth.oauth_uri) {
       return (
         <span className="AuthButtons">
           <AuthenticationDialog
-            auth={auth}
+            auth={metadata.auth}
             isOpen={this.state.isSignupOpen}
             toggleDialog={this.toggleAuthentication}
           />
@@ -148,4 +158,13 @@ export class AuthButtons extends Component {
     return null;
   }
 }
+
+const mapStateToProps = (state) => ({
+  isTester: selectTester(state),
+  role: selectCurrentRole(state),
+  session: selectSession(state),
+  metadata: selectMetadata(state),
+});
+
+AuthButtons = connect(mapStateToProps, { fetchRole })(AuthButtons);
 export default injectIntl(AuthButtons);

@@ -19,7 +19,6 @@ import collectionXref from './collectionXref';
 import results from './results';
 import alerts from './alerts';
 import diagrams from './diagrams';
-import groups from './groups';
 import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
@@ -38,7 +37,6 @@ const rootReducer = combineReducers({
   values,
   documentContent,
   alerts,
-  groups,
   roles,
   notifications,
   collections,
