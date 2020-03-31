@@ -90,7 +90,7 @@ class DiagramEditor extends React.Component {
       return results;
     }
 
-    console.log('entitySuggestTimeout', this.entitySuggestTimeout);
+    // throttle entities query request
     clearTimeout(this.entitySuggestTimeout);
     this.entitySuggestTimeout = setTimeout(() => {
       this.props.queryEntities({ query });
