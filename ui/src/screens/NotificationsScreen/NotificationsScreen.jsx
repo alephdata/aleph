@@ -9,7 +9,7 @@ import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-import { selectNotificationsResult, selectSession, selectCurrentRole } from 'src/selectors';
+import { selectNotificationsResult, selectCurrentRole } from 'src/selectors';
 
 import './NotificationsScreen.scss';
 

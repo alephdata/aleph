@@ -76,8 +76,13 @@ class Select extends Component {
     this.onSelectRole = this.onSelectRole.bind(this);
   }
 
+  static getDerivedStateFromProps(props) {
+    return { isFixed: !!props.roles };
+  }
+
   async onSuggest(query) {
-    if (query.length <= 3) {
+    const { isFixed } = this.state;
+    if (isFixed || query.length <= 3) {
       return;
     }
     const { exclude = [] } = this.props;
@@ -95,6 +100,7 @@ class Select extends Component {
   renderRole = (role, { handleClick, modifiers }) => (
     <MenuItem
       className={modifiers.active ? Classes.ACTIVE : ''}
+      icon={role.type === 'user' ? 'user' : 'shield'}
       key={role.id}
       onClick={handleClick}
       text={role.label}
@@ -102,13 +108,14 @@ class Select extends Component {
   )
 
   render() {
-    const { intl, role } = this.props;
-    const { suggested } = this.state;
+    const { intl, role, roles } = this.props;
+    const { isFixed, suggested } = this.state;
+    const items = roles || suggested;
     const label = role ? role.label : intl.formatMessage(messages.label);
     return (
       <BlueprintSelect
         itemRenderer={this.renderRole}
-        items={suggested}
+        items={items}
         onItemSelect={this.onSelectRole}
         onQueryChange={this.onSuggest}
         popoverProps={{
@@ -119,7 +126,8 @@ class Select extends Component {
         inputProps={{
           fill: true,
         }}
-        filterable
+        activeItem={role}
+        filterable={!isFixed}
         resetOnQuery
         resetOnClose
         resetOnSelect

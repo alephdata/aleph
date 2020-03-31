@@ -8,7 +8,7 @@ import c from 'classnames';
 
 import { queryRoles } from 'src/actions';
 import { queryGroups } from 'src/queries';
-import { selectAlerts, selectSessionIsTester, selectRolesResult } from 'src/selectors';
+import { selectAlerts, selectTester, selectRolesResult } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -176,7 +176,7 @@ const mapStateToProps = (state, ownProps) => {
     groupsQuery,
     groupsResult: selectRolesResult(state, groupsQuery),
     alerts: selectAlerts(state),
-    showDiagrams: selectSessionIsTester(state),
+    showDiagrams: selectTester(state),
   };
 };
 

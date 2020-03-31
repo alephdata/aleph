@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 
 import { fetchRole } from 'src/actions';
-import { selectCurrentRole, selectSession, selectSessionIsTester, selectMetadata } from 'src/selectors';
+import { selectCurrentRole, selectSession, selectTester, selectMetadata } from 'src/selectors';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './AuthButtons.scss';
@@ -66,7 +66,7 @@ export class AuthButtons extends Component {
 
   fetchIfNeeded() {
     const { role, session } = this.props;
-    if (role.shouldLoad) {
+    if (role.shouldLoad && session.loggedIn) {
       this.props.fetchRole({ id: session.id });
     }
   }
@@ -160,7 +160,7 @@ export class AuthButtons extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isTester: selectSessionIsTester(state),
+  isTester: selectTester(state),
   role: selectCurrentRole(state),
   session: selectSession(state),
   metadata: selectMetadata(state),

@@ -6,7 +6,9 @@ import { AnchorButton, Button, ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
-import { selectSession } from 'src/selectors';
+import XrefContextDialog from 'src/dialogs/XrefContextDialog/XrefContextDialog';
+import { selectSession, selectTester } from 'src/selectors';
+
 
 const messages = defineMessages({
   compute: {
@@ -24,15 +26,18 @@ class CollectionXrefManageMenu extends Component {
     super(props);
     this.state = {
       xrefIsOpen: false,
+      contextIsOpen: false,
     };
     this.toggleXref = this.toggleXref.bind(this);
+    this.toggleContext = this.toggleContext.bind(this);
   }
 
   toggleXref = () => this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
 
-  render() {
-    const { collection, intl, result, session } = this.props;
+  toggleContext = () => this.setState(({ contextIsOpen }) => ({ contextIsOpen: !contextIsOpen }));
 
+  render() {
+    const { collection, intl, result, session, contextId, isTester } = this.props;
     if (!session.loggedIn) {
       return null;
     }
@@ -40,6 +45,7 @@ class CollectionXrefManageMenu extends Component {
     /* eslint-disable camelcase */
     const downloadLink = collection.links?.xref_export;
     const showDownload = !result.isPending && downloadLink && result.total > 0;
+    const showContext = isTester && result.total > 0;
     const xrefButtonText = result.total > 0
       ? intl.formatMessage(messages.recompute)
       : intl.formatMessage(messages.compute);
@@ -63,18 +69,40 @@ class CollectionXrefManageMenu extends Component {
               />
             </AnchorButton>
           )}
+          {showContext && (
+            <Button
+              icon="flow-review"
+              onClick={this.toggleContext}
+              disabled={!!contextId}
+              className={c({ [Classes.SKELETON]: result.isPending })}
+            >
+              <FormattedMessage
+                id="xref.context.select"
+                defaultMessage="Review matches..."
+              />
+            </Button>
+          )}
         </ButtonGroup>
         <CollectionXrefDialog
           collection={collection}
           isOpen={this.state.xrefIsOpen}
           toggleDialog={this.toggleXref}
         />
+        <XrefContextDialog
+          isOpen={this.state.contextIsOpen}
+          toggleDialog={this.toggleContext}
+          contextId={contextId}
+          updateContext={this.props.updateContext}
+        />
       </>
     );
   }
 }
 
-const mapStateToProps = state => ({ session: selectSession(state) });
+const mapStateToProps = (state, ownProps) => ({
+  session: selectSession(state),
+  isTester: selectTester(state),
+});
 
 export default compose(
   connect(mapStateToProps),

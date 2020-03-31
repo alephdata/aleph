@@ -14,6 +14,7 @@ export {
   queryCollections,
   queryCollectionXref,
   triggerCollectionXref,
+  decideCollectionXref,
   triggerCollectionAnalyze,
   triggerCollectionCancel,
   updateCollection,
