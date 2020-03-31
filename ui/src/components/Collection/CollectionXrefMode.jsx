@@ -1,22 +1,24 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
+import { Callout, Intent, Button, Classes } from '@blueprintjs/core';
+import c from 'classnames';
 
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import CollectionXrefManageMenu from 'src/components/Collection/CollectionXrefManageMenu';
 import XrefTable from 'src/components/XrefTable/XrefTable';
 import { queryCollectionXrefFacets } from 'src/queries';
-import { selectCollectionXrefResult } from 'src/selectors';
+import { selectCollectionXrefResult, selectCurrentRole } from 'src/selectors';
 import { queryCollectionXref, queryRoles } from 'src/actions';
 import { queryGroups } from 'src/queries';
-import { selectRolesResult } from 'src/selectors';
-
+import { selectRolesResult, selectRole } from 'src/selectors';
 
 import './CollectionXrefMode.scss';
+import { Role } from '../common';
 
 export class CollectionXrefMode extends React.Component {
   constructor(props) {
@@ -84,6 +86,41 @@ export class CollectionXrefMode extends React.Component {
     });
   }
 
+  renderContextInfo() {
+    const { contextId, contextRole, currentRole } = this.props;
+    if (!contextId) {
+      return null;
+    }
+    return (
+      <Callout intent={Intent.PRIMARY} icon="flow-review" className="CollectionXrefContextInfo">
+        <p>
+          <FormattedMessage
+            id="xref.context.info.general"
+            defaultMessage="You are in <strong>review mode</strong>. In this mode, you can record judgements about what cross-reference matches are good or bad results."
+            values={{
+              strong: (...chunks) => <strong>{chunks}</strong>,
+            }}
+          />
+        </p>
+        {currentRole.id !== contextRole.id && (
+          <p className={c({ [Classes.SKELETON]: contextRole.isPending })}>
+            <FormattedMessage
+              id="xref.context.info.context"
+              defaultMessage="Your decisions will be shared with the members of <strong>{context}</strong>."
+              values={{
+                strong: (...chunks) => <strong>{chunks}</strong>,
+                context: <Role.Label role={contextRole} />
+              }}
+            />
+          </p>
+        )}
+        <Button onClick={(e) => this.updateContext(undefined)}>
+          <FormattedMessage id="xref.context.stop" defaultMessage="Stop review" />
+        </Button>
+      </Callout>
+    );
+  }
+
   render() {
     const { expandedId, contextId, collection, query, result } = this.props;
     return (
@@ -104,6 +141,7 @@ export class CollectionXrefMode extends React.Component {
               updateContext={this.updateContext}
               result={result}
             />
+            {this.renderContextInfo()}
             <XrefTable
               expandedId={expandedId}
               contextId={contextId}
@@ -132,6 +170,8 @@ const mapStateToProps = (state, ownProps) => {
     query,
     parsedHash,
     contextId,
+    contextRole: selectRole(state, contextId),
+    currentRole: selectCurrentRole(state),
     expandedId: parsedHash.expand,
     groupsQuery,
     groupsResult: selectRolesResult(state, groupsQuery),

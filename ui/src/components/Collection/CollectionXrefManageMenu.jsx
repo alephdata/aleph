@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { AnchorButton, Button, ButtonGroup, Classes, Intent } from '@blueprintjs/core';
+import { AnchorButton, Button, ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import XrefContextDialog from 'src/dialogs/XrefContextDialog/XrefContextDialog';
-import { selectSession, selectRole, selectTester } from 'src/selectors';
+import { selectSession, selectTester } from 'src/selectors';
 
 
 const messages = defineMessages({
@@ -37,7 +37,7 @@ class CollectionXrefManageMenu extends Component {
   toggleContext = () => this.setState(({ contextIsOpen }) => ({ contextIsOpen: !contextIsOpen }));
 
   render() {
-    const { collection, intl, result, session, contextId, context, isTester } = this.props;
+    const { collection, intl, result, session, contextId, isTester } = this.props;
     if (!session.loggedIn) {
       return null;
     }
@@ -45,7 +45,7 @@ class CollectionXrefManageMenu extends Component {
     /* eslint-disable camelcase */
     const downloadLink = collection.links?.xref_export;
     const showDownload = !result.isPending && downloadLink && result.total > 0;
-    const showContext = isTester && (result.total > 0 && !contextId);
+    const showContext = isTester && result.total > 0;
     const xrefButtonText = result.total > 0
       ? intl.formatMessage(messages.recompute)
       : intl.formatMessage(messages.compute);
@@ -73,27 +73,12 @@ class CollectionXrefManageMenu extends Component {
             <Button
               icon="flow-review"
               onClick={this.toggleContext}
+              disabled={!!contextId}
               className={c({ [Classes.SKELETON]: result.isPending })}
             >
               <FormattedMessage
                 id="xref.context.select"
                 defaultMessage="Review matches..."
-              />
-            </Button>
-          )}
-          {contextId && (
-            <Button
-              icon="flow-review"
-              intent={Intent.DANGER}
-              onClick={(e) => this.props.updateContext(undefined)}
-              className={c({ [Classes.SKELETON]: result.isPending })}
-            >
-              <FormattedMessage
-                id="xref.context.stop"
-                defaultMessage="Stop review: {context}"
-                values={{
-                  context: context.label
-                }}
               />
             </Button>
           )}
@@ -116,7 +101,6 @@ class CollectionXrefManageMenu extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   session: selectSession(state),
-  context: selectRole(state, ownProps.contextId),
   isTester: selectTester(state),
 });
 
