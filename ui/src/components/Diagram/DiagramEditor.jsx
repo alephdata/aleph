@@ -83,13 +83,18 @@ class DiagramEditor extends React.Component {
     const { diagram, location, selectQueryResults } = this.props;
     const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
 
+    // check if query results are in results cache
     const results = selectQueryResults(query);
     if (results) {
       this.entitySuggestPromise = null;
       return results;
     }
 
-    this.props.queryEntities({ query });
+    console.log('entitySuggestTimeout', this.entitySuggestTimeout);
+    clearTimeout(this.entitySuggestTimeout);
+    this.entitySuggestTimeout = setTimeout(() => {
+      this.props.queryEntities({ query });
+    }, 150);
 
     return new Promise((resolve) => {
       this.entitySuggestPromise = { query, promiseResolve: resolve };
