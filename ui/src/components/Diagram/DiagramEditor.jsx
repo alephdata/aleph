@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
-import { createEntity, deleteEntity, queryEntities, updateDiagram, updateEntity } from 'src/actions';
+import { createEntity, queryEntities, updateDiagram, updateEntity } from 'src/actions';
 import { processApiEntity } from 'src/components/Diagram/util';
 import { queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
@@ -23,7 +23,6 @@ class DiagramEditor extends React.Component {
       model: props.model,
       createEntity: this.createEntity.bind(this),
       updateEntity: this.updateEntity.bind(this),
-      deleteEntity: this.deleteEntity.bind(this),
       getEntitySuggestions: this.getEntitySuggestions.bind(this),
     });
 
@@ -128,18 +127,6 @@ class DiagramEditor extends React.Component {
     }
   }
 
-  async deleteEntity(entityId) {
-    const { onStatusChange } = this.props;
-
-    onStatusChange(updateStates.IN_PROGRESS);
-    try {
-      await this.props.deleteEntity(entityId);
-      onStatusChange(updateStates.SUCCESS);
-    } catch {
-      onStatusChange(updateStates.ERROR);
-    }
-  }
-
   updateLayout(layout, options) {
     const { diagram, onStatusChange } = this.props;
     this.setState({ layout });
@@ -222,7 +209,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   createEntity,
-  deleteEntity,
   queryEntities,
   updateDiagram,
   updateEntity,
