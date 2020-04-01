@@ -26,14 +26,11 @@ export default function ClipboardInput(props) {
       rightElement={(
         <Tooltip content={titles[title]}>
           <Button
-            onClick={useCallback(
-              () => {
+            onClick={() => {
                 inputRef.current.select();
                 document.execCommand('copy');
                 setTitle(1);
-              },
-              [titles],
-            )}
+            }}
             icon="clipboard"
             minimal
           />
