@@ -38,13 +38,18 @@ class XrefContextDialog extends Component {
     this.onChangeContext = this.onChangeContext.bind(this);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.isOpen !== nextProps.isOpen
+      || this.state.contextId !== nextState.contextId;
+  }
+
   async onSubmit(event) {
-    const { contextId, role } = this.state;
+    const { contextId } = this.state;
     event.preventDefault();
     try {
       this.props.updateContext(contextId);
-      this.setState({ contextId: role.id });
       this.props.toggleDialog();
+      this.setState({ contextId: undefined });
     } catch (e) {
       showWarningToast(e.message);
     }

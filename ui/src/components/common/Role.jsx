@@ -131,7 +131,6 @@ class Select extends Component {
         resetOnQuery={!isFixed}
         resetOnClose={!isFixed}
         resetOnSelect={!isFixed}
-        scrollToActiveItem
       >
         <Button
           fill
