@@ -78,7 +78,7 @@ export class CollectionXrefMode extends React.Component {
 
   toggleExpand(xref) {
     const { expandedId, parsedHash, history, location } = this.props;
-    parsedHash.expand = expandedId === xref.id ? undefined : xref.id;
+    parsedHash.expand_xref = expandedId === xref.id ? undefined : xref.id;
     history.replace({
       pathname: location.pathname,
       search: location.search,
@@ -172,7 +172,7 @@ const mapStateToProps = (state, ownProps) => {
     contextId,
     contextRole: selectRole(state, contextId),
     currentRole: selectCurrentRole(state),
-    expandedId: parsedHash.expand,
+    expandedId: parsedHash.expand_xref,
     groupsQuery,
     groupsResult: selectRolesResult(state, groupsQuery),
     result: selectCollectionXrefResult(state, query),
