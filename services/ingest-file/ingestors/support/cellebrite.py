@@ -90,9 +90,17 @@ class CellebriteSupport(TimestampSupport):
         return project_id, owner
 
     def parse_content(self, entity, file_path, owner, project_id):
+        # We're using iterparse instead of xpaths to reduce memory usage.
+        # iterparse parses the file top to bottom and emits `start` and `end`
+        # events when it encounters the start or end of a tag. We want to clear
+        # a tag and its children once we are done processing the tag but not
+        # before that.
         context = ET.iterparse(str(file_path), events=('start', 'end'),
                                recover=True)
+        # stores children tags to be cleared after the parent we are interested
+        # in is processed
         elements_to_clear = []
+        # id of the element being processed currently
         element_being_processed = None
         for event, el in context:
             parent = el.getparent()
@@ -100,6 +108,7 @@ class CellebriteSupport(TimestampSupport):
                 type_ = el.get('type')
                 if type_ in ('Call', 'Chat', 'Note', 'SMS', 'Contact'):
                     if event == 'start':
+                        # Set the element being processed
                         element_being_processed = el.get('id')
                         continue
                     else:
@@ -113,13 +122,19 @@ class CellebriteSupport(TimestampSupport):
                             self.parse_sms(el, entity, project_id)
                         elif type_ == 'Contact':
                             self.parse_contacts(el, entity, project_id)
+                        # We're done with processing an element. Clear it and
+                        # its children elements
                         while elements_to_clear:
                             el = elements_to_clear.pop(0)
                             el.clear()
             if event == 'end':
                 if element_being_processed is not None:
+                    # we are yet to process the parent element; don't clear
+                    # the child element yet.
                     elements_to_clear.append(el)
                 else:
+                    # No element is being processed right now; it's safe to
+                    # clear the element
                     el.clear()
         del context
 
