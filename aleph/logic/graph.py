@@ -18,8 +18,6 @@ from aleph.index import entities as index
 
 log = logging.getLogger(__name__)
 
-MAX_EXPAND_NODES_PER_PROPERTY = 20
-
 
 class AlephGraph(Graph):
     def queue(self, id_, proxy=None):
@@ -57,7 +55,8 @@ class AlephGraph(Graph):
             if (edge.target_id in exapnded_prop_nodes
                     and edge.source_id != source_node_id):
                 adjacents[edge.type_name].append(edge.source.proxy)
-        return adjacents
+        for prop, proxies in adjacents.items():
+            yield (prop, len(proxies), proxies)
 
     def to_dict(self):
         return {
@@ -89,15 +88,17 @@ class EntityGraphResponse(object):
         return sum(self.count(qname) for qname in self.entities)
 
     def iter_prop_counts(self):
-        return self.iter_props(include_entities=False)
-
-    def iter_props(self, include_entities=True):
         for qname, count in self.counts.items():
             if count > 0:
-                if include_entities:
-                    yield (model.get_qname(qname), count, self.entities.get(qname, []))  # noqa
-                else:
-                    yield (model.get_qname(qname), count)
+                yield (model.get_qname(qname), count)
+
+    def iter_props(self):
+        for qname, count in self.counts.items():
+            if count > 0:
+                prop = model.get_qname(qname)
+                # Match the  type_name in FtM Edge class
+                edge_name = prop.name if not prop.stub else prop.range.name
+                yield (edge_name, count, self.entities.get(qname, []))
 
     def reverse_properties(self, qnames=None):
         """Use the reverse property names.
@@ -159,7 +160,7 @@ class EntityGraphResponse(object):
 
 class EntityGraph(object):
     def __init__(self, proxy, edge_types=None, included_properties=None,
-                 collection_ids=None, authz=None, include_entities=False):
+                 collection_ids=None, authz=None, limit=None):
         self.proxy = proxy
         self.collection_ids = collection_ids
         self.authz = authz
@@ -168,7 +169,7 @@ class EntityGraph(object):
         # Property Types to consider when expanding the entity
         edge_types = edge_types or []
         self.edge_types = [t for t in registry.get_types(edge_types) if t.matchable]  # noqa
-        self.include_entities = include_entities
+        self.limit = limit
 
     def expand_entity(self):
         """Expand adjacent entities of the source entity
@@ -200,7 +201,7 @@ class EntityGraph(object):
         direct_links = self.get_direct_links()
         # adjacent entities = tags + references + direct links
         expanded_entities = expanded_entities.merge(direct_links)
-        return expanded_entities.iter_props(include_entities=self.include_entities)  # noqa
+        return expanded_entities.iter_props()
 
     def get_references(self):
         facets = self._get_reference_facets()
@@ -284,7 +285,7 @@ class EntityGraph(object):
             values = self.proxy.get(prop.name)
             total = len(values)
             if total > 0:
-                if self.include_entities:
+                if self.limit > 0:
                     entities = [index.get_entity(val) for val in values]
                     graph_resp.set_entities(prop.qname, entities)
                 graph_resp.set_count(prop.qname, total)
@@ -297,7 +298,7 @@ class EntityGraph(object):
             indexed[idx] = indexed.get(idx, {})
             indexed[idx][alias] = indexed[idx].get(alias, {})
             indexed[idx][alias]['field'] = field
-            indexed[idx][alias]['values'] = indexed[idx][alias].get('values', [])
+            indexed[idx][alias]['values'] = indexed[idx][alias].get('values', [])  # noqa
             indexed[idx][alias]['values'].append(value)
             filters[idx] = filters.get(idx, {})
             filters[idx][group] = filters[idx].get(group, [])
@@ -330,7 +331,7 @@ class EntityGraph(object):
                     }}
                 }}
                 queries.append({
-                    'size': MAX_EXPAND_NODES_PER_PROPERTY if self.include_entities else 0,  # noqa
+                    'size': self.limit or 0,
                     'query': query,
                     'aggs': aggs
                 })
@@ -346,12 +347,11 @@ class EntityGraph(object):
                 count = value.get('doc_count', graph_response.get_count(alias))
                 if count > 0:
                     graph_response.set_count(alias, count)
-                    if self.include_entities:
-                        entities = []
-                        hits = resp.get('hits', {}).get('hits', [])
-                        for doc in hits:
-                            entity = unpack_result(doc)
-                            if entity is not None:
-                                entities.append(entity)
-                        graph_response.set_entities(alias, entities)
+                    entities = []
+                    hits = resp.get('hits', {}).get('hits', [])
+                    for doc in hits:
+                        entity = unpack_result(doc)
+                        if entity is not None:
+                            entities.append(entity)
+                    graph_response.set_entities(alias, entities)
         return graph_response

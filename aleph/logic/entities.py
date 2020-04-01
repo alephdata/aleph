@@ -88,40 +88,34 @@ def entity_tags(entity, authz=None):
     return graph.get_tags()
 
 
-def entity_expand_properties(entity, collection_ids, edge_types,
-                             properties=None, include_entities=False,
-                             authz=None):
-    """Get the adjacent entities of an entity linked directly by a property
-    or common property value (eg: having the same email or phone number)
+def enitiy_expand_adjacent_nodes(entity, collection_ids, edge_types, limit,
+                                 properties=None, authz=None):
+    """Expand an entity's graph to find adjacent entities that are connected
+    by a common property value(eg: having the same email or phone number), a
+    property (eg: Passport entity linked to a Person) or an Entity type edge.
+    (eg: Person connected to Company through Directorship)
 
     collection_ids: list of collection_ids to search
     edge_types: list of FtM Types to expand as edges
     properties: list of FtM Properties to expand as edges.
-    include_entities: If False, only counts are returned
+    limit: max number of entities to return
     """
     proxy = model.get_proxy(entity)
     graph = EntityGraph(
         proxy, edge_types=edge_types, included_properties=properties,
         authz=authz, collection_ids=collection_ids,
-        include_entities=include_entities
+        limit=limit
     )
-    return graph.expand_entity()
-
-
-def enitiy_expand_adjacent_nodes(entity, collection_ids, edge_types,
-                                 properties=None, authz=None):
-    """Expand an entity's graph to find adjacent entities that are connected
-    by a common property value, a property or an Entity type edge. (eg: Person
-    connected to Company through Directorship)"""
-    graph = AlephGraph(edge_types=edge_types)
-    source_proxy = model.get_proxy(entity)
-    graph.add(source_proxy)
-    for prop, total, entities in entity_expand_properties(
-        entity, collection_ids, edge_types, properties=properties,
-        include_entities=True, authz=authz
-    ):
-        for ent in entities:
-            proxy = model.get_proxy(ent)
-            graph.add(proxy)
-    graph.resolve()
-    return graph.get_adjacent_entities(source_proxy)
+    expanded_entities = graph.expand_entity()
+    if limit > 0:
+        graph = AlephGraph(edge_types=edge_types)
+        source_proxy = model.get_proxy(entity)
+        graph.add(source_proxy)
+        for prop, total, entities in expanded_entities:
+            for ent in entities:
+                proxy = model.get_proxy(ent)
+                graph.add(proxy)
+        graph.resolve()
+        return graph.get_adjacent_entities(source_proxy)
+    else:
+        return expanded_entities

@@ -138,19 +138,14 @@ EntityTag:
       type: integer
       example: 1
 
-EntityExpandStats:
+EntityExpand:
   type: object
   properties:
     property:
-      type: object
+      type: string
     count:
       type: integer
-
-EntityExpand:
-  allOf:
-    - $ref: '#/components/schemas/EntityExpandStats'
-  properties:
     entities:
-      type: array
-      items:
-        $ref: '#/components/schemas/Entity'
+        type: array
+        items:
+          $ref: '#/components/schemas/Entity'

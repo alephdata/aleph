@@ -1,5 +1,6 @@
 import json
 import datetime
+import logging
 from pprint import pformat
 
 from followthemoney.types import registry
@@ -8,6 +9,8 @@ from aleph.core import db
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
+
+log = logging.getLogger(__name__)
 
 
 class EntitiesApiTestCase(TestCase):
@@ -647,16 +650,16 @@ class EntitiesApiTestCase(TestCase):
                       registry.entity.name]
         query_string = '&'.join('edge_types=' + t for t in edge_types)
 
-        url = '/api/2/entities/%s/expand/stats?%s' % (person1.json['id'], query_string)  # noqa
+        url = '/api/2/entities/%s/expand?%s&limit=0' % (person1.json['id'], query_string)  # noqa
         stats = self.client.get(url, headers=headers)
         assert stats.status_code == 200, (stats.status_code, stats.json)
         validate(stats.json, 'QueryResponse')
         assert stats.json['total'] == 4, stats.json
         results = stats.json['results']
         for result in results:
-            validate(result, 'EntityExpandStats')
-            assert result['property']['name'] in ('passport', 'ownershipOwner', 'email')  # noqa
-            if result['property']['name'] == 'email':
+            validate(result, 'EntityExpand')
+            assert result['property'] in ('passport', 'Ownership', 'email')  # noqa
+            if result['property'] == 'email':
                 assert result['count'] == 2, results
             else:
                 assert result['count'] == 1, results
