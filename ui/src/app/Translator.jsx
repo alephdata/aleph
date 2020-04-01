@@ -19,11 +19,7 @@ class Translator extends React.PureComponent {
   render() {
     const { locale, children } = this.props;
     return (
-      <IntlProvider
-        locale={locale}
-        key={locale}
-        messages={translations[locale]}
-      >
+      <IntlProvider key={locale} locale={locale} messages={translations[locale]}>
         {children}
       </IntlProvider>
     );

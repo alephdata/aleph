@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, InputGroup, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
+
 
 export default function ClipboardInput(props) {
   const inputRef = useRef(null);

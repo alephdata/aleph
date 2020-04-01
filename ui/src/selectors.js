@@ -35,17 +35,15 @@ export function selectLocale(state) {
   // either saved in localStorage or extracted from metadata. The initial
   // request to metadata will be sent with unmodified Accept-Language headers
   // allowing the backend to perform language negotiation.
-  const { config, session, metadata } = state;
-  if (config && config.locale) {
-    return config.locale;
+  const role = selectCurrentRole(state);
+  if (role.locale) {
+    return role.locale;
   }
-  if (session && session.role && session.role.locale) {
-    return session.role.locale;
-  }
+  const { metadata } = state;
   if (metadata && metadata.app) {
     return metadata.app.locale;
   }
-  return undefined;
+  return 'en';
 }
 
 export function selectMetadata(state) {
