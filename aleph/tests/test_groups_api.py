@@ -1,5 +1,4 @@
 from aleph.core import db
-from aleph.model import Role
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
@@ -9,10 +8,8 @@ class GroupsApiTestCase(TestCase):
     def setUp(self):
         super(GroupsApiTestCase, self).setUp()
         self.role = self.create_user(foreign_id='user_1')
-        group = Role.load_or_create('group_1', Role.GROUP, 'group 1')
-        self.role.add_role(group)
-        group = Role.load_or_create('group_2', Role.GROUP, 'group 2')
-        self.role.add_role(group)
+        self.create_group('group_1', self.role)
+        self.create_group('group_2', self.role)
         self.other = self.create_user(foreign_id='other')
         db.session.commit()
 

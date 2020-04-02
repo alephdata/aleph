@@ -2,7 +2,7 @@ import logging
 from flask import Blueprint, request
 
 from aleph.model import Linkage
-from aleph.search import DatabaseQueryResult
+from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import LinkageSerializer
 from aleph.views.util import require
 
@@ -34,6 +34,10 @@ def index():
         - Linkage
     """
     require(request.authz.logged_in)
-    q = Linkage.by_authz(request.authz)
-    result = DatabaseQueryResult(request, q)
+    parser = QueryParser(request.args, request.authz)
+    context_ids = parser.getintlist('filter:context_id')
+    roles = request.authz.private_roles
+    context_ids = roles.intersection(context_ids) or roles
+    q = Linkage.by_contexts(context_ids)
+    result = DatabaseQueryResult(request, q, parser=parser)
     return LinkageSerializer.jsonify_result(result)

@@ -120,9 +120,9 @@ class Linkage(db.Model, DatedModel):
         return q
 
     @classmethod
-    def by_authz(cls, authz):
+    def by_contexts(cls, context_ids):
         q = cls.all()
-        q = q.filter(cls.context_id.in_(authz.private_roles))
+        q = q.filter(cls.context_id.in_(context_ids))
         return q
 
     @classmethod
