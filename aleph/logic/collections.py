@@ -105,8 +105,10 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     Mapping.delete_by_collection(collection.id, deleted_at=deleted_at)
     Diagram.delete_by_collection(collection.id, deleted_at=deleted_at)
     Document.delete_by_collection(collection.id)
-    Linkage.delete_by_collection(collection.id)
     if not keep_metadata:
+        # Considering this metadata for now, might be wrong:
+        Linkage.delete_by_collection(collection.id)
+
         Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
         collection.delete(deleted_at=deleted_at)
     db.session.commit()
