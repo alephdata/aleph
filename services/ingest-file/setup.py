@@ -51,7 +51,8 @@ setup(
             'tiff = ingestors.media.tiff:TIFFIngestor',
             'svg = ingestors.media.svg:SVGIngestor',
             'audio = ingestors.media.audio:AudioIngestor',
-            'video = ingestors.media.video:VideoIngestor'
+            'video = ingestors.media.video:VideoIngestor',
+            'cellebrite = ingestors.documents.cellebrite:CellebriteIngestor'
         ],
         'console_scripts': [
             'ingestors = ingestors.cli:cli'

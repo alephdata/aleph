@@ -1,6 +1,8 @@
 import click
 import logging
-from servicelayer.cache import get_redis
+import balkhash
+from pprint import pprint
+from servicelayer.cache import get_redis, get_fakeredis
 from servicelayer.logs import configure_logging
 from servicelayer.jobs import Job, Dataset
 from servicelayer.archive.util import ensure_path
@@ -10,6 +12,7 @@ from ingestors.directory import DirectoryIngestor
 from ingestors.worker import IngestWorker, OP_ANALYZE, OP_INGEST
 
 log = logging.getLogger(__name__)
+STAGES = [OP_ANALYZE, OP_INGEST]
 
 
 @click.group()
@@ -21,7 +24,7 @@ def cli():
 @click.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
 def process(sync):
     """Start the queue and process tasks as they come. Blocks while waiting"""
-    worker = IngestWorker(stages=[OP_ANALYZE, OP_INGEST])
+    worker = IngestWorker(stages=STAGES)
     if sync:
         worker.sync()
     else:
@@ -43,18 +46,8 @@ def killthekitten():
     conn.flushall()
 
 
-@cli.command()
-@click.option('--languages',
-              multiple=True,
-              help="language hint: 2-letter language code (ISO 639)")
-@click.option('--dataset',
-              required=True,
-              help="Name of the dataset")
-@click.argument('path', type=click.Path(exists=True))
-def ingest(path, dataset, languages=None):
-    """Queue a set of files for ingest."""
+def _ingest_path(conn, dataset, path, languages=[]):
     context = {'languages': languages}
-    conn = get_redis()
     job = Job.create(conn, dataset)
     stage = job.get_stage(OP_INGEST)
     manager = Manager(stage, context)
@@ -70,6 +63,40 @@ def ingest(path, dataset, languages=None):
         if path.is_dir():
             DirectoryIngestor.crawl(manager, path)
     manager.close()
+
+
+@cli.command()
+@click.option('--languages',
+              multiple=True,
+              help="3-letter language code (ISO 639)")
+@click.option('--dataset',
+              required=True,
+              help="Name of the dataset")
+@click.argument('path', type=click.Path(exists=True))
+def ingest(path, dataset, languages=None):
+    """Queue a set of files for ingest."""
+    conn = get_redis()
+    _ingest_path(conn, dataset, path, languages=languages)
+
+
+@cli.command()
+@click.option('--languages',
+              multiple=True,
+              help="3-letter language code (ISO 639)")
+@click.option('--dataset',
+              default='test',
+              help="Name of the dataset")
+@click.argument('path', type=click.Path(exists=True))
+def debug(path, dataset, languages=None):
+    """Debug the ingest for the given path."""
+    conn = get_fakeredis()
+    db = balkhash.init(dataset)
+    db.delete()
+    _ingest_path(conn, dataset, path, languages=languages)
+    worker = IngestWorker(conn=conn, stages=STAGES)
+    worker.sync()
+    for entity in db.iterate():
+        pprint(entity.to_dict())
 
 
 if __name__ == "__main__":

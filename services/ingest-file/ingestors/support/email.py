@@ -133,7 +133,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
         in_reply_to = self.parse_message_ids(in_reply_to)
         if len(in_reply_to):
             return in_reply_to[0]
-        
+
     def resolve_message_ids(self, entity):
         # https://cr.yp.to/immhf/thread.html
         ctx = self.manager.stage.job.dataset.name
