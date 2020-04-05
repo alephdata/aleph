@@ -16,6 +16,13 @@ def index():
     ---
     get:
       summary: List linkages
+      parameters:
+      - description: >-
+          Choose to filter for a specific role context.
+        in: query
+        name: "filter:context_id"
+        schema:
+          type: string
       responses:
         '200':
           description: OK
@@ -36,8 +43,6 @@ def index():
     require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz)
     context_ids = parser.getintlist('filter:context_id')
-    roles = request.authz.private_roles
-    context_ids = roles.intersection(context_ids) or roles
-    q = Linkage.by_contexts(context_ids)
+    q = Linkage.by_authz(request.authz, context_ids=context_ids)
     result = DatabaseQueryResult(request, q, parser=parser)
     return LinkageSerializer.jsonify_result(result)

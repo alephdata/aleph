@@ -1,6 +1,7 @@
 import logging
 from itertools import chain
 from datetime import datetime
+from banal import ensure_list
 from normality import stringify
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import aliased
@@ -120,9 +121,15 @@ class Linkage(db.Model, DatedModel):
         return q
 
     @classmethod
-    def by_contexts(cls, context_ids):
+    def by_authz(cls, authz, context_ids=None):
         q = cls.all()
-        q = q.filter(cls.context_id.in_(context_ids))
+        if not authz.is_admin:
+            coll_ids = authz.collections(authz.READ)
+            q = q.filter(cls.collection_id.in_(coll_ids))
+        roles = authz.private_roles
+        if len(ensure_list(context_ids)):
+            roles = roles.intersection(context_ids)
+        q = q.filter(cls.context_id.in_(roles))
         return q
 
     @classmethod

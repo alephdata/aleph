@@ -20,6 +20,7 @@ class LinkagesApiTestCase(TestCase):
         other, _ = self.login(foreign_id='other')
         profile_id = make_textid()
         coll = self.create_collection()
+        self.grant_publish(coll)
         Linkage.save(profile_id, make_textid(), coll.id, role.id,
                      decision=True, decider_id=role.id)
         Linkage.save(profile_id, make_textid(), coll.id, self.group.id,
