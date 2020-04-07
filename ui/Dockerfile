@@ -4,8 +4,7 @@ RUN mkdir /alephui
 WORKDIR /alephui
 
 COPY .npmrc /alephui/.npmrc
-COPY scripts /alephui/scripts
-COPY config /alephui/config
+COPY tsconfig.json /alephui/tsconfig.json
 COPY package.json /alephui
 
 RUN npm install --verbose

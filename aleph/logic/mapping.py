@@ -62,19 +62,31 @@ def load_mapping(stage, collection, mapping_id):
                 fragment = '%s-%s' % (mapping.id, idx)
                 writer.put(entity, fragment=fragment)
 
-            if idx > 0 and idx % 1000 == 0:
-                stage.report_finished(1000)
+            if idx > 0 and idx % 500 == 0:
+                payload = {
+                    'entity_ids': entity_ids,
+                    'mapping_id': mapping.id
+                }
+                queue_task(collection, OP_INDEX,
+                           job_id=stage.job.id,
+                           payload=payload)
+                entity_ids = set()
+                stage.report_finished(500)
                 log.info("[%s] Loaded %s records, %s entities...",
                          collection.foreign_id,
                          idx, entities_count)
 
         writer.flush()
+        payload = {
+            'entity_ids': entity_ids,
+            'mapping_id': mapping.id
+        }
+        queue_task(collection, OP_INDEX,
+                   job_id=stage.job.id,
+                   payload=payload)
+        mapping.set_status(status=Mapping.SUCCESS)
         log.info("[%s] Mapping done (%s entities)",
                  mapping.id, entities_count)
-
-        payload = {'entity_ids': entity_ids, 'mapping_id': mapping.id}
-        queue_task(collection, OP_INDEX, job_id=stage.job.id, payload=payload)
-        mapping.set_status(status=Mapping.SUCCESS)
     except Exception as exc:
         mapping.set_status(status=Mapping.FAILED, error=str(exc))
     finally:

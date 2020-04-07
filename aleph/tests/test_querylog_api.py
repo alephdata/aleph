@@ -1,8 +1,6 @@
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
-HDR = 'X-Aleph-Session'
-
 
 class QueryLogApiTestCase(TestCase):
 

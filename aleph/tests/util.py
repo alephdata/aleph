@@ -99,6 +99,13 @@ class TestCase(unittest.TestCase):
         db.session.commit()
         return role
 
+    def create_group(self, foreign_id='group', *members):
+        group = Role.load_or_create(foreign_id, Role.GROUP, foreign_id)
+        for member in members:
+            member.add_role(group)
+        db.session.commit()
+        return group
+
     def login(self, foreign_id='tester', name=None, email=None,
               is_admin=False):
         role = self.create_user(foreign_id=foreign_id,

@@ -82,7 +82,6 @@ class XrefQuery(Query):
     def __init__(self, parser, collection_id=None):
         self.collection_id = collection_id
         parser.highlight = False
-        # parser.sorts = []
         super(XrefQuery, self).__init__(parser)
 
     def get_filters(self):

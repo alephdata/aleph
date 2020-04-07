@@ -51,7 +51,7 @@ def index():
     collection_ids = ensure_list(parser.filters.get('collection_id'))
     if len(collection_ids):
         q = q.filter(Diagram.collection_id.in_(collection_ids))
-    result = DatabaseQueryResult(request, q)
+    result = DatabaseQueryResult(request, q, parser=parser)
     return DiagramIndexSerializer.jsonify_result(result)
 
 

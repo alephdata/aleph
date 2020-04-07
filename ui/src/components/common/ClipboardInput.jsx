@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, InputGroup, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
+
 
 export default function ClipboardInput(props) {
   const inputRef = useRef(null);
@@ -26,14 +27,11 @@ export default function ClipboardInput(props) {
       rightElement={(
         <Tooltip content={titles[title]}>
           <Button
-            onClick={useCallback(
-              () => {
+            onClick={() => {
                 inputRef.current.select();
                 document.execCommand('copy');
                 setTitle(1);
-              },
-              [titles],
-            )}
+            }}
             icon="clipboard"
             minimal
           />

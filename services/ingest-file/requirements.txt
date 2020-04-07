@@ -1,21 +1,21 @@
 banal==0.4.2
 normality==2.0.0
 pantomime==0.4.0
-servicelayer[google,amazon]==1.10.0
+servicelayer[google,amazon]==1.10.1
 balkhash[leveldb,sql]==1.2.1
-followthemoney==1.27.6
+followthemoney==1.27.7
 languagecodes==1.0.5
 countrytagger==0.1.2
-psycopg2-binary==2.8.4
-pyicu==2.4.2
+psycopg2-binary==2.8.5
+pyicu==2.4.3
 
-grpcio==1.27.2
+grpcio==1.28.1
 google-cloud-vision==1.0.0
-google-cloud-storage==1.26.0
+google-cloud-storage==1.27.0
 
-tesserocr==2.5.0
+tesserocr==2.5.1
 spacy==2.2.4
-fingerprints==0.6.6
+fingerprints==1.0.1
 fasttext==0.9.1
 
 # Development
@@ -32,12 +32,12 @@ rarfile==3.1
 xlrd==1.2.0
 openpyxl==3.0.3
 odfpy==1.4.1
-cchardet==2.1.5
+cchardet==2.1.6
 lxml==4.5.0
 olefile==0.46
-pillow==7.0.0
+pillow==7.1.1
 vobject==0.9.6.1
 msglite==0.27.0
 
-cryptography==2.8
+cryptography==2.9
 requests[security]==2.23.0

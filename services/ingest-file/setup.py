@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ingest',
-    version='3.6.2',
+    version='3.6.4',
     author="Organized Crime and Corruption Reporting Project",
     packages=find_packages(exclude=['tests']),
     package_dir={'ingestors': 'ingestors'},
@@ -51,7 +51,8 @@ setup(
             'tiff = ingestors.media.tiff:TIFFIngestor',
             'svg = ingestors.media.svg:SVGIngestor',
             'audio = ingestors.media.audio:AudioIngestor',
-            'video = ingestors.media.video:VideoIngestor'
+            'video = ingestors.media.video:VideoIngestor',
+            'cellebrite = ingestors.documents.cellebrite:CellebriteIngestor'
         ],
         'console_scripts': [
             'ingestors = ingestors.cli:cli'

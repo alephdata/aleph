@@ -13,7 +13,7 @@ import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDia
 import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 
 import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
-import { selectModel, selectDiagramsResult, selectCollectionXrefResult, selectSessionIsTester } from 'src/selectors';
+import { selectModel, selectDiagramsResult, selectCollectionXrefResult, selectTester } from 'src/selectors';
 
 import './CollectionViews.scss';
 
@@ -152,7 +152,7 @@ const mapStateToProps = (state, ownProps) => {
     model: selectModel(state),
     xref: selectCollectionXrefResult(state, xrefQuery),
     diagrams: selectDiagramsResult(state, diagramsQuery),
-    showDiagramsTab: collection.casefile && selectSessionIsTester(state),
+    showDiagramsTab: collection.casefile && selectTester(state),
   };
 };
 

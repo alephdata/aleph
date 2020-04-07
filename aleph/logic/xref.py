@@ -24,7 +24,7 @@ INCLUDES = ['schema', 'properties', 'collection_id']
 
 def _query_item(collection, entity):
     """Cross-reference an entity or document, given as an indexed document."""
-    query = match_query(entity, source_collection_id=collection.id)
+    query = match_query(entity)
     if query == none_query():
         return
 
@@ -70,7 +70,7 @@ def xref_item(stage, collection, entity_id=None, batch=50):
 
 def xref_collection(stage, collection):
     """Cross-reference all the entities and documents in a collection."""
-    index.delete_xref(collection)
+    index.delete_xref(collection, sync=True)
     matchable = [s.name for s in model if s.matchable]
     entities = iter_entities(collection_id=collection.id, schemata=matchable)
     for entity in entities:

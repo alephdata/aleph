@@ -1,7 +1,9 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import c from 'classnames';
-import { HotkeysTarget, Hotkeys, Hotkey } from '@blueprintjs/core';
+import { Hotkeys, Hotkey } from '@blueprintjs/core';
+// See @alxmiron at https://github.com/palantir/blueprint/issues/3604
+import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/hotkeysTarget.js';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

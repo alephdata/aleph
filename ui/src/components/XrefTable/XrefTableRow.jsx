@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import { injectIntl, FormattedNumber } from 'react-intl';
 import Property from 'src/components/Property';
 import { Button } from '@blueprintjs/core';
+import c from 'classnames';
+
 import {
   Collection, Entity, Skeleton,
 } from 'src/components/common';
-/* eslint-disable */
+import XrefDecisionButtons from 'src/components/XrefTable/XrefDecisionButtons';
+
 
 class XrefTableRow extends Component {
   renderSkeleton() {
@@ -61,7 +64,7 @@ class XrefTableRow extends Component {
   }
 
   render() {
-    const { isExpanded, isPending, xref } = this.props;
+    const { isExpanded, isPending, contextId, xref } = this.props;
 
     if (isPending) {
       return this.renderSkeleton();
@@ -70,25 +73,32 @@ class XrefTableRow extends Component {
     if (!xref.entity || !xref.match) {
       return null;
     }
+    const showDetail = isExpanded || contextId;
     const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
     return (
       <tr className="XrefTableRow">
-        <td className="expand">
-          <Button onClick={() => this.props.toggleExpand(xref)} small minimal icon={expandIcon} />
+        <td className={c({'expand': !contextId, 'numeric narrow': contextId})}>
+          {!contextId && (
+            <Button onClick={() => this.props.toggleExpand(xref)} small minimal icon={expandIcon} />
+          )}
+          {contextId && (
+            <XrefDecisionButtons xref={xref} contextId={contextId} />
+          )}
         </td>
         <td className="entity bordered">
           <Entity.Link entity={xref.entity} preview icon />
-          {isExpanded && this.renderProperties(xref.entity)}
+          {showDetail && this.renderProperties(xref.entity)}
         </td>
         <td className="entity">
           <Entity.Link entity={xref.match} preview icon />
-          {isExpanded && this.renderProperties(xref.match)}
+          {showDetail && this.renderProperties(xref.match)}
         </td>
         <td className="numeric narrow">
           <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
         </td>
         <td className="collection">
           <Collection.Link preview collection={xref.match_collection} icon />
+          
         </td>
       </tr>
     );

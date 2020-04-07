@@ -35,17 +35,15 @@ export function selectLocale(state) {
   // either saved in localStorage or extracted from metadata. The initial
   // request to metadata will be sent with unmodified Accept-Language headers
   // allowing the backend to perform language negotiation.
-  const { config, session, metadata } = state;
-  if (config && config.locale) {
-    return config.locale;
+  const role = selectCurrentRole(state);
+  if (role.locale) {
+    return role.locale;
   }
-  if (session && session.role && session.role.locale) {
-    return session.role.locale;
-  }
+  const { metadata } = state;
   if (metadata && metadata.app) {
     return metadata.app.locale;
   }
-  return undefined;
+  return 'en';
 }
 
 export function selectMetadata(state) {
@@ -69,18 +67,19 @@ export function selectSession(state) {
   return selectObject(state, state, 'session');
 }
 
-export function selectSessionIsTester(state) {
-  const session = selectSession(state);
+export function selectCurrentRole(state) {
+  const session = selectObject(state, state, 'session');
+  return selectRole(state, session.id);
+}
+
+export function selectTester(state) {
+  const role = selectCurrentRole(state);
   /* eslint-disable camelcase */
-  return session?.role?.is_tester || false;
+  return role.is_tester || false;
 }
 
 export function selectAlerts(state) {
   return selectObject(state, state, 'alerts');
-}
-
-export function selectGroups(state) {
-  return selectObject(state, state, 'groups');
 }
 
 export function selectStatistics(state) {
@@ -128,6 +127,10 @@ export function selectDocumentContent(state, documentId) {
 
 export function selectCollectionsResult(state, query) {
   return selectResult(state, query, selectCollection);
+}
+
+export function selectRolesResult(state, query) {
+  return selectResult(state, query, selectRole);
 }
 
 export function selectEntitiesResult(state, query) {

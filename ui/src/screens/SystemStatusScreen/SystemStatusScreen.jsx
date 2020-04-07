@@ -52,13 +52,22 @@ export class SystemStatusScreen extends React.Component {
     }
   }
 
-  componentWillUnmount() {
+  cancelAll() {
+    if (this.loadPromise?.cancel) {
+      this.loadPromise.cancel();
+      this.loadPromise = undefined;
+    }
     clearTimeout(this.timeout);
   }
 
+  componentWillUnmount() {
+    this.cancelAll();
+  }
+
   fetchStatus() {
-    clearTimeout(this.timeout);
-    this.props.fetchSystemStatus().finally(() => {
+    this.cancelAll();
+    this.loadPromise = this.props.fetchSystemStatus()
+    this.loadPromise.finally(() => {
       this.timeout = setTimeout(this.fetchStatus, 3000);
     });
   }
