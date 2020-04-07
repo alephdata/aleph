@@ -4,7 +4,7 @@ from pprint import pformat  # noqa
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.core import es, db, cache
+from aleph.core import db, cache
 from aleph.model import Entity, Document, Linkage
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications

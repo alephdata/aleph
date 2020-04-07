@@ -41,18 +41,18 @@ class AlephGraph(Graph):
     def get_adjacent_entities(self, proxy):
         source_node_id = registry.entity.node_id_safe(proxy.id)
         adjacents = defaultdict(list)
-        exapnded_prop_nodes = []
+        expanded_prop_nodes = []
         for edge in self.edges.values():
             if edge.source_id == source_node_id:
                 if edge.target.is_entity:
                     adjacents[edge.type_name].append(edge.target.proxy)
                 else:
-                    exapnded_prop_nodes.append(edge.target_id)
+                    expanded_prop_nodes.append(edge.target_id)
             if edge.target_id == source_node_id:
                 if edge.source.is_entity:
                     adjacents[edge.type_name].append(edge.source.proxy)
         for edge in self.edges.values():
-            if (edge.target_id in exapnded_prop_nodes
+            if (edge.target_id in expanded_prop_nodes
                     and edge.source_id != source_node_id):
                 adjacents[edge.type_name].append(edge.source.proxy)
         for prop, proxies in adjacents.items():
@@ -68,6 +68,7 @@ class AlephGraph(Graph):
 class EntityGraphResponse(object):
     """ES graph query results as property wise adjacent entities and
     counts"""
+
     def __init__(self, proxy):
         self.entities = dict()
         self.counts = dict()
@@ -159,6 +160,7 @@ class EntityGraphResponse(object):
 
 
 class EntityGraph(object):
+
     def __init__(self, proxy, edge_types=None, included_properties=None,
                  collection_ids=None, authz=None, limit=None):
         self.proxy = proxy
@@ -212,6 +214,7 @@ class EntityGraph(object):
         facets = []
         schema = self.proxy.schema
         for prop in model.properties:
+            # TODO: do we want a model.get_prop_by_range(schema) method?
             if self.included_properties and prop.qname not in self.included_properties:  # noqa
                 continue
             if prop.type != registry.entity:

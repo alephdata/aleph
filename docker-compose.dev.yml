@@ -16,8 +16,6 @@ services:
   elasticsearch:
     build:
       context: services/elasticsearch
-      cache_from:
-        - alephdata/aleph-elasticsearch:latest
     image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
     hostname: elasticsearch
     environment:
@@ -45,8 +43,6 @@ services:
   ingest-file:
     build:
       context: services/ingest-file
-      cache_from:
-        - alephdata/ingest-file:latest
     image: alephdata/ingest-file:${ALEPH_TAG:-latest}
     hostname: ingest
     tmpfs: /tmp
