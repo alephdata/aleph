@@ -38,12 +38,18 @@ class XrefContextDialog extends Component {
     this.onChangeContext = this.onChangeContext.bind(this);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.isOpen !== nextProps.isOpen
+      || this.state.contextId !== nextState.contextId;
+  }
+
   async onSubmit(event) {
     const { contextId } = this.state;
     event.preventDefault();
     try {
       this.props.updateContext(contextId);
       this.props.toggleDialog();
+      this.setState({ contextId: undefined });
     } catch (e) {
       showWarningToast(e.message);
     }
@@ -54,13 +60,13 @@ class XrefContextDialog extends Component {
   }
 
   render() {
-    const { intl, isOpen, role, groupsResult } = this.props;
+    const { intl, isOpen, role, groups } = this.props;
     const { contextId } = this.state;
     const keepPrivate = {
       ...role,
       label: intl.formatMessage(messages.private)
-    }
-    const roles = [keepPrivate, ...groupsResult.results];
+    };
+    const roles = [keepPrivate, ...groups.results];
     const active = roles.find((r) => r.id === contextId) || keepPrivate;
     return (
       <Dialog
@@ -105,8 +111,7 @@ class XrefContextDialog extends Component {
 const mapStateToProps = (state, ownProps) => {
   const groupsQuery = queryGroups(ownProps.location);
   return {
-    groupsQuery,
-    groupsResult: selectRolesResult(state, groupsQuery),
+    groups: selectRolesResult(state, groupsQuery),
     role: selectCurrentRole(state),
   };
 };

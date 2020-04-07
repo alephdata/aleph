@@ -359,5 +359,11 @@ class MappingSerializer(Serializer):
 
 
 class LinkageSerializer(Serializer):
-    # TODO: do we want the collection and entity expanded.
-    pass
+
+    def _collect(self, obj):
+        self.queue(Entity, obj.get('entity_id'))
+
+    def _serialize(self, obj):
+        entity_id = obj.get('entity_id')
+        obj['entity'] = self.resolve(Entity, entity_id, EntitySerializer)
+        return obj

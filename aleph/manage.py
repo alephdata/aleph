@@ -25,7 +25,7 @@ from aleph.index.entities import iter_proxies
 from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
-from aleph.logic.collections import index_collections, process_collection
+from aleph.logic.collections import upgrade_collections, process_collection
 from aleph.logic.processing import index_aggregate
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
@@ -142,7 +142,7 @@ def flushdeleted():
 def update():
     """Re-index all collections and clear some caches."""
     update_roles()
-    index_collections(sync=True)
+    upgrade_collections()
 
 
 @cli.command('namefreq')
@@ -250,7 +250,7 @@ def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_system()
     update_roles()
-    index_collections(sync=True)
+    upgrade_collections()
 
 
 @cli.command()

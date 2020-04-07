@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
-import { createEntity, deleteEntity, queryEntities, updateDiagram, updateEntity } from 'src/actions';
+import { createEntity, queryEntities, updateDiagram, updateEntity } from 'src/actions';
 import { processApiEntity } from 'src/components/Diagram/util';
 import { queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
@@ -23,7 +23,6 @@ class DiagramEditor extends React.Component {
       model: props.model,
       createEntity: this.createEntity.bind(this),
       updateEntity: this.updateEntity.bind(this),
-      deleteEntity: this.deleteEntity.bind(this),
       getEntitySuggestions: this.getEntitySuggestions.bind(this),
     });
 
@@ -84,13 +83,18 @@ class DiagramEditor extends React.Component {
     const { diagram, location, selectQueryResults } = this.props;
     const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
 
+    // check if query results are in results cache
     const results = selectQueryResults(query);
     if (results) {
       this.entitySuggestPromise = null;
       return results;
     }
 
-    this.props.queryEntities({ query });
+    // throttle entities query request
+    clearTimeout(this.entitySuggestTimeout);
+    this.entitySuggestTimeout = setTimeout(() => {
+      this.props.queryEntities({ query });
+    }, 150);
 
     return new Promise((resolve) => {
       this.entitySuggestPromise = { query, promiseResolve: resolve };
@@ -122,18 +126,6 @@ class DiagramEditor extends React.Component {
 
     try {
       await this.props.updateEntity({ entity, collectionId: diagram.collection.id });
-      onStatusChange(updateStates.SUCCESS);
-    } catch {
-      onStatusChange(updateStates.ERROR);
-    }
-  }
-
-  async deleteEntity(entityId) {
-    const { onStatusChange } = this.props;
-
-    onStatusChange(updateStates.IN_PROGRESS);
-    try {
-      await this.props.deleteEntity(entityId);
       onStatusChange(updateStates.SUCCESS);
     } catch {
       onStatusChange(updateStates.ERROR);
@@ -222,7 +214,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   createEntity,
-  deleteEntity,
   queryEntities,
   updateDiagram,
   updateEntity,

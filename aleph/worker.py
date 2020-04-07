@@ -10,7 +10,7 @@ from aleph.queues import (
 )
 from aleph.queues import OPERATIONS
 from aleph.logic.alerts import check_alerts
-from aleph.logic.collections import index_collections, refresh_collection
+from aleph.logic.collections import compute_collections, refresh_collection
 from aleph.logic.collections import reset_collection, process_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.mapping import load_mapping, flush_mapping
@@ -32,7 +32,7 @@ class AlephWorker(Worker):
         if self.hourly.check():
             self.hourly.update()
             log.info("Running hourly tasks...")
-            index_collections()
+            compute_collections()
             check_alerts()
 
         if self.daily.check():

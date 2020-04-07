@@ -9,7 +9,7 @@ class DiagramList extends Component {
     const { getMoreItems, result, showCollection } = this.props;
 
     const isPending = result.isPending && !result.total;
-    const skeletonItems = [...Array(4).keys()];
+    const skeletonItems = [...Array(8).keys()];
 
     return (
       <div className="DiagramList">

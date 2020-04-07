@@ -128,9 +128,9 @@ class Select extends Component {
         }}
         activeItem={role}
         filterable={!isFixed}
-        resetOnQuery
-        resetOnClose
-        resetOnSelect
+        resetOnQuery={!isFixed}
+        resetOnClose={!isFixed}
+        resetOnSelect={!isFixed}
       >
         <Button
           fill

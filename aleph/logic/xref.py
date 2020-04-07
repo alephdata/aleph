@@ -70,7 +70,7 @@ def xref_item(stage, collection, entity_id=None, batch=50):
 
 def xref_collection(stage, collection):
     """Cross-reference all the entities and documents in a collection."""
-    index.delete_xref(collection)
+    index.delete_xref(collection, sync=True)
     matchable = [s.name for s in model if s.matchable]
     entities = iter_entities(collection_id=collection.id, schemata=matchable)
     for entity in entities:
