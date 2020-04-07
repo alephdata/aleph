@@ -165,3 +165,9 @@ class SearchQueryParser(QueryParser):
         parser = super(SearchQueryParser, self).to_dict()
         parser['facet_filters'] = list(self.facet_filters)
         return parser
+
+
+class EntityExpandQueryParser(QueryParser):
+    def __init__(self, args, authz, limit=None):
+        super(EntityExpandQueryParser, self).__init__(args, authz, limit=limit)
+        self.limit = self.getint('limit')

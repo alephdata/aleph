@@ -1,10 +1,16 @@
 import json
 import datetime
+import logging
+from pprint import pformat
+
+from followthemoney.types import registry
 
 from aleph.core import db
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
+
+log = logging.getLogger(__name__)
 
 
 class EntitiesApiTestCase(TestCase):
@@ -43,7 +49,7 @@ class EntitiesApiTestCase(TestCase):
             }
         }
         self.ent2 = self.create_entity(self.data2, self.col)
-        self.id2 = self.col.ns.sign(self.ent.id)
+        self.id2 = self.col.ns.sign(self.ent2.id)
         db.session.commit()
         self.col_id = str(self.col.id)
         index_entity(self.book)
@@ -312,7 +318,7 @@ class EntitiesApiTestCase(TestCase):
             'collection_id': self.col_id,
             'properties': {
                 'name': "Blaaaa blubb",
-                'phone': '+491769817271'
+                'phone': ['+491769817271', '+491769817999']
             }
         }
         resa = self.client.post(url, data=json.dumps(data),
@@ -323,7 +329,7 @@ class EntitiesApiTestCase(TestCase):
             'collection_id': self.col_id,
             'properties': {
                 'name': "Nobody Man",
-                'phone': '+491769817271'
+                'phone': ['+491769817271', '+491769817777']
             }
         }
         resa = self.client.post(url, data=json.dumps(data),
@@ -529,3 +535,165 @@ class EntitiesApiTestCase(TestCase):
         assert res.json['results'][0]['id'] == self.ent2.id, res.json
         assert res.json['results'][1]['id'] == self.ent.id, res.json
         assert res.json['results'][2]['id'] == self.book.id, res.json
+
+    def test_expand(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        data = {
+            'schema': 'Passport',
+            'collection_id': self.col_id,
+            'properties': {
+                'passportNumber': 'A1B2C3'
+            }
+        }
+        passport1 = self.client.post(url,
+                                     data=json.dumps(data),
+                                     headers=headers,
+                                     content_type='application/json')
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Osama bin Laden",
+                'email': ["osama@al-qaeda.org", "o@laden.me"],
+                'status': 'dead',
+                'passport': passport1.json['id'],
+                'nationality': 'sa'
+            }
+        }
+        person1 = self.client.post(url,
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+
+        col2 = self.create_collection()
+        data = {
+            'schema': 'Person',
+            'collection_id': str(col2.id),
+            'properties': {
+                'name': "John Doe",
+                'email': "osama@al-qaeda.org",
+            }
+        }
+        person1_in_other_collection = self.client.post(  # noqa
+                                        url,
+                                        data=json.dumps(data),
+                                        headers=headers,
+                                        content_type='application/json')
+
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Undercover Osama",
+                'email': 'osama@al-qaeda.org',
+            }
+        }
+        person2 = self.client.post(url,  # noqa
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "John Doe",
+                'email': ['osama@al-qaeda.org', 'john@doe.me'],
+                'nationality': 'sa',
+            }
+        }
+        person3 = self.client.post(url,  # noqa
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Dead Guy 1",
+                'status': 'dead',
+            }
+        }
+        person3 = self.client.post(url,  # noqa
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+        data = {
+            'schema': 'Company',
+            'collection_id': self.col_id,
+            'properties': {
+                'name': "Al-Qaeda",
+            }
+        }
+        company1 = self.client.post(url,
+                                    data=json.dumps(data),
+                                    headers=headers,
+                                    content_type='application/json')
+        data = {
+            'schema': 'Ownership',
+            'collection_id': self.col_id,
+            'properties': {
+                'owner': person1.json['id'],
+                'asset': company1.json['id'],
+            }
+        }
+        ownership1 = self.client.post(url,  # noqa
+                                      data=json.dumps(data),
+                                      headers=headers,
+                                      content_type='application/json')
+
+        edge_types = [registry.name.name, registry.email.name,
+                      registry.identifier.name, registry.iban.name,
+                      registry.phone.name, registry.address.name,
+                      registry.url.name, registry.checksum.name,
+                      registry.entity.name]
+        query_string = '&'.join('edge_types=' + t for t in edge_types)
+
+        url = '/api/2/entities/%s/expand?%s&limit=0' % (person1.json['id'], query_string)  # noqa
+        stats = self.client.get(url, headers=headers)
+        assert stats.status_code == 200, (stats.status_code, stats.json)
+        validate(stats.json, 'QueryResponse')
+        assert stats.json['total'] == 4, stats.json
+        results = stats.json['results']
+        for result in results:
+            validate(result, 'EntityExpand')
+            assert result['property'] in ('passport', 'Ownership', 'email')  # noqa
+            if result['property'] == 'email':
+                assert result['count'] == 2, results
+            else:
+                assert result['count'] == 1, results
+
+
+        url = '/api/2/entities/%s/expand?%s' % (person1.json['id'], query_string)  # noqa
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, (res.status_code, res.json)
+        validate(res.json, 'EntityExpand')
+        assert res.json['total'] == 4, pformat(res.json)
+        results = res.json['results']
+        assert len(results) == 3, pformat(results)
+        for res in results:
+            prop = res['property']
+            assert prop in ('email', 'passport', 'Ownership')
+            if prop == 'email':
+                assert res['count'] == 2
+                for ent in res['entities']:
+                    assert ent['name'] in ('Undercover Osama', 'John Doe')
+            if prop == 'Ownership':
+                assert res['count'] == 1
+                assert res['entities'][0]['name'] == 'Al-Qaeda'
+            if prop == 'passport':
+                assert res['count'] == 1
+                assert res['entities'][0]['name'] == 'A1B2C3'
+        url = '/api/2/entities/%s/expand?%s' % (company1.json['id'], query_string)  # noqa
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, (res.status_code, res.json)
+        validate(res.json, 'EntityExpand')
+        assert res.json['total'] == 1, pformat(res.json)
+        results = res.json['results']
+        assert len(results) == 1, pformat(results)
+        for res in results:
+            prop = res['property']
+            assert prop == 'Ownership'
+            assert res['count'] == 1
+            assert res['entities'][0]['name'] == 'Osama bin Laden'

@@ -102,6 +102,9 @@ RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)
 # Minimum update date for sitemap.xml
 SITEMAP_FLOOR = '2019-06-22'
 
+# Maximum number of entities to return per property when expanding entities
+MAX_EXPAND_ENTITIES = env.to_int('ALEPH_MAX_EXPAND_ENTITIES', 200)
+
 
 ##############################################################################
 # E-mail settings
