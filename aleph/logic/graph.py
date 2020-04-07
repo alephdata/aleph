@@ -20,23 +20,17 @@ log = logging.getLogger(__name__)
 
 
 class AlephGraph(Graph):
-    def queue(self, id_, proxy=None):
-        if id_ not in self.proxies:
-            self.proxies[id_] = proxy
-            resolver.queue(self, Entity, id_)
 
     def resolve(self):
-        resolver.resolve(self)
         for id_, proxy in self.proxies.items():
             if proxy is None:
-                entity = resolver.get(self, Entity, id_)
-                proxy = model.get_proxy(entity)
-            node_id = registry.entity.node_id_safe(id_)
-            node = self.nodes.get(node_id)
-            if node is not None:
-                node.proxy = proxy
-                if node.schema is None:
-                    node.schema = proxy.schema
+                resolver.queue(self, Entity, id_)
+        resolver.resolve(self)
+        for id_, proxy in list(self.proxies.items()):
+            if proxy is not None:
+                continue
+            entity = resolver.get(self, Entity, id_)
+            self.add(model.get_proxy(entity))
 
     def get_adjacent_entities(self, proxy):
         source_node_id = registry.entity.node_id_safe(proxy.id)
@@ -57,12 +51,6 @@ class AlephGraph(Graph):
                 adjacents[edge.type_name].append(edge.source.proxy)
         for prop, proxies in adjacents.items():
             yield (prop, len(proxies), proxies)
-
-    def to_dict(self):
-        return {
-            'nodes': self.nodes.values(),
-            'edges': self.edges.values()
-        }
 
 
 class EntityGraphResponse(object):
