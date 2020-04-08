@@ -18,14 +18,6 @@ jobs:
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph-ui-production:${GITHUB_SHA}
-    # - name: Push docker release image (tag / latest)
-    #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-    #   run: |
-    #     docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-    #     docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:${GITHUB_REF/refs\/tags\//}
-    #     docker push alephdata/aleph-ui-production:${GITHUB_REF/refs\/tags\//}
-    #     docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:latest
-    #     docker push alephdata/aleph-ui-production:latest
   docker-elasticsearch:
     runs-on: ubuntu-latest
     steps:
@@ -69,6 +61,7 @@ jobs:
     - docker-aleph
     - docker-elasticsearch
     - docker-ingest-file
+    - docker-ui
     steps:
     - uses: actions/checkout@v1
     - name: Set up
@@ -87,21 +80,13 @@ jobs:
       run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
     - name: Run aleph tests
       run: make ALEPH_TAG=${GITHUB_SHA} test
-    - name: Tag local docker images
-      run: |
-        export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
-        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-        docker pull alephdata/aleph-ui-production:${GITHUB_SHA}
-        for IMAGE in aleph-ui-production aleph aleph-elasticsearch ingest-file; do
-          docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:latest;
-        done;
     - name: Push docker images for tags
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
       run: |
         export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker pull alephdata/aleph-ui-production:${GITHUB_SHA}
-        for IMAGE in aleph-ui-production aleph aleph-elasticsearch ingest-file; do
+        for IMAGE in aleph aleph-ui-production aleph-elasticsearch ingest-file; do
           docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:${ALEPH_TAG};
           docker push alephdata/${IMAGE}:${ALEPH_TAG};
           docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:latest;
