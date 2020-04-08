@@ -93,7 +93,6 @@ jobs:
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker pull alephdata/aleph-ui-production:${GITHUB_SHA}
         for IMAGE in "aleph-ui-production aleph-ui aleph aleph-elasticsearch ingest-file"; do
-          docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:${ALEPH_TAG};
           docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:latest;
         done;
     - name: Push docker images for tags
