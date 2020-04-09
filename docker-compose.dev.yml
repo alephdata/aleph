@@ -64,8 +64,6 @@ services:
   app:
     build:
       context: .
-      cache_from:
-        - alephdata/aleph:latest
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     hostname: aleph
     command: /bin/bash
@@ -92,8 +90,6 @@ services:
   api:
     build:
       context: .
-      cache_from:
-        - alephdata/aleph:latest
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
@@ -117,8 +113,6 @@ services:
   ui:
     build:
       context: ui
-      cache_from:
-        - alephdata/aleph-ui:latest
     image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
     links:
       - api
