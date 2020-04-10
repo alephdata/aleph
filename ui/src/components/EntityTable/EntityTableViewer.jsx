@@ -37,7 +37,7 @@ const messages = defineMessages({
 
 class EntityTableViewer extends Component {
   render() {
-    const { entities, intl, isPending, location, sort } = this.props;
+    const { entities, intl, isPending, location, sortColumn, sort } = this.props;
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
     const { field: sortedField, direction } = sort;
@@ -52,7 +52,7 @@ class EntityTableViewer extends Component {
           sortable={sortable}
           className={className}
           sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
-          onClick={() => this.sortColumn(field)}
+          onClick={() => sortColumn(field)}
           {...otherProps}
         >
           {intl.formatMessage(messages[`column_${field}`])}

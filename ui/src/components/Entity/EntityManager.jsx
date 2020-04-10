@@ -35,11 +35,8 @@ export class EntityManager extends Component {
     this.toggleEditMode = this.toggleEditMode.bind(this);
   }
 
-  updateSelection(document) {
-    const { selection } = this.state;
-    this.setState({
-      selection: _.xorBy(selection, [document], 'id'),
-    });
+  updateSelection(selection) {
+    this.setState({ selection });
   }
 
   toggleDeleteSelection() {

@@ -40,6 +40,7 @@ class EntityTable extends Component {
         entities={results}
         sort={sort}
         isPending={result.isPending}
+        sortColumn={this.sortColumn}
         {...rest}
       />
     )
