@@ -1,16 +1,27 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { Callout, Button } from '@blueprintjs/core';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { Count, ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 
+const messages = defineMessages({
+  edit: {
+    id: 'entity.viewer.edit',
+    defaultMessage: 'Edit',
+  },
+  leave_edit: {
+    id: 'entity.viewer.leaveEdit',
+    defaultMessage: 'Leave edit mode',
+  },
+});
 
 export class EntityManager extends Component {
   constructor(props) {
@@ -21,6 +32,7 @@ export class EntityManager extends Component {
     };
     this.updateSelection = this.updateSelection.bind(this);
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
+    this.toggleEditMode = this.toggleEditMode.bind(this);
   }
 
   updateSelection(document) {
@@ -38,6 +50,22 @@ export class EntityManager extends Component {
     this.setState(({ deleteIsOpen: !deleteIsOpen }));
   }
 
+  toggleEditMode() {
+    const { editMode, history, location, query } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    if (editMode) {
+      delete parsedHash.editMode;
+    } else {
+      parsedHash.editMode = true;
+    }
+
+    history.push({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
   render() {
     const {
       collection, document, editMode, query, hasPending, intl,
@@ -49,9 +77,14 @@ export class EntityManager extends Component {
       <div className="EntityManager">
         { writeable && (
           <div className="bp3-button-group">
+            <Button icon={editMode ? 'log-out' : 'edit'} onClick={this.toggleEditMode}>
+              <span className="align-middle">
+                {intl.formatMessage(editMode ? messages.leave_edit : messages.edit)}
+              </span>
+            </Button>
             <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
               <span className="align-middle">
-                <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
+                <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
               </span>
               <Count count={selection.length} />
             </Button>
