@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 
-.EntityTable {
+.EntityTableViewer {
   border-color: $aleph-border-color;
   .schema {
     max-width: 8em;
@@ -22,7 +22,7 @@
   }
 }
 
-.EntityTableRow {
+.EntityTableViewerRow {
   &.active {
     em {
       background: inherit;
@@ -41,7 +41,7 @@
 
 //medium and small screen
 @media screen and (max-width: $aleph-screen-md-max-width) {
-  .EntityTable {
+  .EntityTableViewer {
     .header-country, .header-dates, .header-size {
       display: none;
     }

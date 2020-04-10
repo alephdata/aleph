@@ -8,12 +8,16 @@ import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 class CollectionEntitiesMode extends React.PureComponent {
   render() {
-    const { query } = this.props;
+    const { collection, editMode, query } = this.props;
+    const mutableCollection = collection?.writeable ? true : false;
+
     return (
       <EntitySearch
         query={query}
+        writeable={mutableCollection}
         hideCollection
         showPreview={false}
+        editMode={editMode}
       />
     );
   }

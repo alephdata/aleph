@@ -59,7 +59,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeType, xref, onChange,
+      collection, activeType, editMode, xref, onChange,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
@@ -88,7 +88,7 @@ class CollectionViews extends React.Component {
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
               </span>}
-            panel={<CollectionDocumentsMode collection={collection} />}
+            panel={<CollectionDocumentsMode collection={collection} editMode={editMode} />}
           />
         )}
         {hasBrowse && <MenuDivider />}
@@ -102,7 +102,7 @@ class CollectionViews extends React.Component {
                 <Schema.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
-            panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} />}
+            panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} editMode={editMode} />}
           />
         ))}
       </Tabs>
@@ -117,6 +117,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     model: selectModel(state),
     activeType: hashQuery.type,
+    editMode: hashQuery.editMode,
   };
 };
 

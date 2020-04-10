@@ -8,11 +8,12 @@ import { queryCollectionDocuments } from 'src/queries';
 
 class CollectionDocumentsMode extends React.Component {
   render() {
-    const { collection, query } = this.props;
+    const { collection, editMode, query } = this.props;
     return (
       <DocumentManager
         query={query}
         collection={collection}
+        editMode={editMode}
       />
     );
   }
