@@ -54,7 +54,6 @@ class DiagramEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { selectQueryResults } = this.props;
     if (this.props.downloadTriggered && !prevProps.downloadTriggered) {
       this.downloadDiagram();
     }

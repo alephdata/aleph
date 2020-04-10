@@ -20,8 +20,12 @@ class EntityTable extends Component {
     return undefined;
   }
 
+  onStatusChange() {
+    console.log('on status change');
+  }
+
   render() {
-    const { isEditing, query, result, ...rest } = this.props;
+    const { collection, isEditing, query, result, ...rest } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -37,6 +41,8 @@ class EntityTable extends Component {
 
     return (
       <TableComponent
+        collection={collection}
+        onStatusChange={this.onStatusChange}
         entities={results}
         sort={sort}
         isPending={result.isPending}

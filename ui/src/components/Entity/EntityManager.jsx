@@ -1,15 +1,13 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
-import { Callout, Button } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
-import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { Count, ErrorSection } from 'src/components/common';
+import { Count } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 
 const messages = defineMessages({
@@ -48,7 +46,7 @@ export class EntityManager extends Component {
   }
 
   toggleEditMode() {
-    const { editMode, history, location, query } = this.props;
+    const { editMode, history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     if (editMode) {
       delete parsedHash.editMode;
@@ -65,7 +63,7 @@ export class EntityManager extends Component {
 
   render() {
     const {
-      collection, document, editMode, query, hasPending, intl,
+      collection, editMode, query, intl,
     } = this.props;
     const { selection } = this.state;
     const writeable = collection !== undefined && collection.writeable;
@@ -89,6 +87,7 @@ export class EntityManager extends Component {
         )}
         <div className="EntityManager__content">
           <EntitySearch
+            collection={collection}
             query={query}
             hideCollection
             documentMode
