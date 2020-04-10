@@ -171,10 +171,11 @@ export class DiagramScreen extends Component {
         >
           {breadcrumbs}
           <DiagramEditor
+            collection={diagram.collection}
+            onStatusChange={this.onStatusChange}
             diagram={diagram}
             downloadTriggered={downloadTriggered}
             filterText={filterText}
-            onStatusChange={this.onStatusChange}
             onDownloadComplete={this.onDownloadComplete}
           />
         </Screen>
