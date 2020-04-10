@@ -3,20 +3,17 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import EntitySearch from 'src/components/EntitySearch/EntitySearch';
+import EntityManager from 'src/components/Entity/EntityManager';
 
 
 class CollectionEntitiesMode extends React.PureComponent {
   render() {
     const { collection, editMode, query } = this.props;
-    const mutableCollection = collection?.writeable ? true : false;
 
     return (
-      <EntitySearch
+      <EntityManager
         query={query}
-        writeable={mutableCollection}
-        hideCollection
-        showPreview={false}
+        collection={collection}
         editMode={editMode}
       />
     );
