@@ -23,3 +23,6 @@ ANALYZE_ENTITIES = env.to_bool('INGESTORS_ANALYZE_ENTITIES', True)
 # List available NER models
 NER_MODELS = set(env.to_list('INGESTORS_NER_MODELS', ['eng']))
 NER_DEFAULT_MODEL = 'xx'
+
+# Use the environment variable set in aleph.env
+BALKHASH_DATABASE_URI = env.get('ALEPH_DATABASE_URI')
