@@ -1,4 +1,4 @@
-from banal import hash_data
+# from banal import hash_data
 from pprint import pprint  # noqa
 from followthemoney import model
 from followthemoney.types import registry
@@ -40,23 +40,59 @@ class GraphQuery(object):
         self.clauses.append(clause)
         return clause
 
+    def compile(self):
+        grouped = {}
+        for clause in self.clauses:
+            query_id = clause.query_id
+            grouped.setdefault(query_id, [])
+            grouped[query_id].append(clause)
+
+        queries = []
+        for query_id, clauses in grouped.items():
+            index = clauses[0].index
+            query = {'filter': []}
+            if self.filter:
+                query['filter'].append(self.filter)
+            if len(clauses) == 1:
+                query['filter'].append(clauses[0].filter)
+            else:
+                query['minimum_should_match'] = 1
+                query['should'] = []
+                for clause in clauses:
+                    query['should'].append(clause.filter)
+
+            query = {
+                'size': clauses[0].limit,
+                'query': {
+                    'bool': query
+                }
+            }
+            counters = [c.counter for c in clauses if c.counter is not None]
+            if len(counters):
+                query['aggs'] = {
+                    'counters': {'filters': {'filters': counters}}
+                }
+            queries.append((clauses, index, query))
+        return queries
+
     def execute(self):
         pass
 
     def debug(self):
+        queries = self.compile()
         pprint({
+            'queries': queries,
             # 'graph': self.graph.to_dict(),
-            'clauses': [c.to_dict() for c in self.clauses]
+            # 'clauses': [c.to_dict() for c in self.clauses]
         })
 
 
 class QueryClause(object):
 
-    def __init__(self, query, node, prop=None, limit=0, count=None):
+    def __init__(self, query, node, limit=0, count=None):
         self.query = query
         self.node = node
-        self.prop = prop
-        self.limit = limit
+        self.limit = limit or 0
         self.count = count
         query.graph.add(node.proxy)
 
@@ -66,12 +102,14 @@ class QueryClause(object):
         return entities_read_index(self.schemata)
 
     @property
-    def counters(self):
+    def counter(self):
         if self.count:
             return self.filter
 
     def query_id(self):
-        return hash_data((self.index, self.filter))
+        if self.limit > 0:
+            return (self.index, self.id)
+        return self.index
 
     def to_dict(self):
         return {
@@ -98,7 +136,6 @@ class EdgeQueryClause(QueryClause):
 
     def __init__(self, query, node, prop, limit=0, count=False):
         super(EdgeQueryClause, self).__init__(query, node,
-                                              prop=prop,
                                               limit=limit,
                                               count=count)
         self.schemata = prop.schema
@@ -117,9 +154,10 @@ def demo():
             'email': ['john@the-does.com']
         }
     })
+    graph = Graph(edge_types=registry.matchable)
 
     # UC 1: Tags query
-    query = GraphQuery(Graph(edge_types=registry.matchable))
+    query = GraphQuery(graph)
     for prop, value in proxy.itervalues():
         if prop.type.group is None:
             continue
@@ -129,7 +167,7 @@ def demo():
     query.debug()
 
     # UC 2: References query
-    query = GraphQuery(Graph(edge_types=registry.matchable))
+    query = GraphQuery(graph)
     for prop in proxy.schema.properties.values():
         if not prop.stub:
             continue
@@ -138,13 +176,12 @@ def demo():
     query.debug()
 
     # UC 3: Expand query
-    graph = Graph(edge_types=registry.matchable)
     query = GraphQuery(graph)
     for prop in proxy.schema.properties.values():
         if not prop.stub:
             continue
         node = Node(registry.entity, proxy.id, proxy=proxy)
-        query.edge(node, prop.reverse, limit=200, count=True)
+        query.edge(node, prop.reverse, limit=200, count=False)
     query.debug()
 
 
