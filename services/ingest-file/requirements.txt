@@ -1,7 +1,7 @@
 banal==0.4.2
 normality==2.0.0
 pantomime==0.4.0
-servicelayer[google,amazon]==1.10.1
+servicelayer[google,amazon]==1.10.2
 balkhash[leveldb,sql]==1.2.1
 followthemoney==1.29.1
 languagecodes==1.0.5
