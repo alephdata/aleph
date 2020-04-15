@@ -1,21 +1,19 @@
+import logging
 # from banal import hash_data
 from pprint import pprint  # noqa
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.graph import Graph, Node
 
+from aleph.core import es
+from aleph.index.entities import _source_spec, PROXY_INCLUDES
 from aleph.index.indexes import entities_read_index
-from aleph.index.util import field_filter_query, authz_query
+from aleph.index.util import field_filter_query, authz_query, unpack_result
 
+log = logging.getLogger(__name__)
 
-# Some inspiration:
-#
 # https://github.com/nchah/freebase-mql#mql-and-graphql
 # https://rdflib.readthedocs.io/en/stable/intro_to_graphs.html#basic-triple-matching
-
-# Queries:
-# * Node inbound degree query
-# * Entity inbound (degree) query
 
 
 class GraphQuery(object):
@@ -30,26 +28,29 @@ class GraphQuery(object):
         if self.authz:
             return authz_query(self.authz)
 
-    def node(self, node, limit=0, count=None):
-        clause = NodeQueryClause(self, node, limit, count)
+    def node(self, node, limit=0, count=False):
+        clause = QueryClause(self, node, None, limit, count)
         self.clauses.append(clause)
-        return clause
 
-    def edge(self, node, prop, limit=0, count=None):
-        clause = EdgeQueryClause(self, node, prop, limit, count)
+    def edge(self, node, prop, limit=0, count=False):
+        clause = QueryClause(self, node, prop, limit, count)
         self.clauses.append(clause)
-        return clause
 
-    def compile(self):
+    def _group_clauses(self):
+        "Group clauses into buckets representing one ES query each."
         grouped = {}
         for clause in self.clauses:
-            query_id = clause.query_id
-            grouped.setdefault(query_id, [])
-            grouped[query_id].append(clause)
+            group = clause.index
+            if clause.limit > 0:
+                group = (clause.index, clause.id)
+            grouped.setdefault(group, [])
+            grouped[group].append(clause)
+        return grouped.values()
 
+    def compile(self):
+        "Generate a sequence of ES queries representing the clauses."
         queries = []
-        for query_id, clauses in grouped.items():
-            index = clauses[0].index
+        for clauses in self._group_clauses():
             query = {'filter': []}
             if self.filter:
                 query['filter'].append(self.filter)
@@ -63,85 +64,70 @@ class GraphQuery(object):
 
             query = {
                 'size': clauses[0].limit,
-                'query': {
-                    'bool': query
-                }
+                'query': {'bool': query},
+                '_source': _source_spec(PROXY_INCLUDES, None)
             }
-            counters = [c.counter for c in clauses if c.counter is not None]
+            counters = {}
+            for clause in clauses:
+                if clause.count:
+                    counters[clause.id] = clause.filter
             if len(counters):
                 query['aggs'] = {
                     'counters': {'filters': {'filters': counters}}
                 }
+            index = clauses[0].index
             queries.append((clauses, index, query))
         return queries
 
     def execute(self):
-        pass
-
-    def debug(self):
+        "Run queries and dingle apart the returned responses."
         queries = self.compile()
-        pprint({
-            'queries': queries,
-            # 'graph': self.graph.to_dict(),
-            # 'clauses': [c.to_dict() for c in self.clauses]
-        })
+        if not len(queries):
+            return []
+        body = []
+        for (_, index, query) in queries:
+            body.append({'index': index})
+            body.append(query)
+        results = es.msearch(body=body)
+        responses = results.get('responses', [])
+        for ((clauses, _, _), result) in zip(queries, responses):
+            hits = result.get('hits', {}).get('hits', [])
+            results = [unpack_result(r) for r in hits]
+            aggs = result.get('aggregations', {}).get('counters', {})
+            counters = aggs.get('buckets', {})
+            for clause in clauses:
+                count = counters.get(clause.id, {}).get('doc_count')
+                clause.apply(count, results)
+        return self.clauses
 
 
 class QueryClause(object):
 
-    def __init__(self, query, node, limit=0, count=None):
-        self.query = query
+    def __init__(self, query, node, prop=None, limit=0, count=False):
+        self.graph = query.graph
+        self.graph.add(node.proxy)
         self.node = node
+        self.id = node.id
         self.limit = limit or 0
         self.count = count
-        query.graph.add(node.proxy)
+        self.entities = []
+        self.prop = prop
+        if prop is not None:
+            self.index = entities_read_index(prop.schema)
+            field = 'properties.%s' % prop.name
+            self.filter = field_filter_query(field, node.value)
+            self.id = prop.qname
+        else:
+            schemata = model.get_type_schemata(self.node.type)
+            self.index = entities_read_index(schemata)
+            self.filter = field_filter_query(node.type.group, node.value)
 
-    @property
-    def index(self):
-        """The index affected by this query."""
-        return entities_read_index(self.schemata)
-
-    @property
-    def counter(self):
-        if self.count:
-            return self.filter
-
-    def query_id(self):
-        if self.limit > 0:
-            return (self.index, self.id)
-        return self.index
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            # 'node': self.node.to_dict() if self.node else None,
-            # 'prop': self.prop.qname if self.prop else None,
-            'filter': self.filter,
-            'index': self.index
-        }
-
-
-class NodeQueryClause(QueryClause):
-
-    def __init__(self, query, node, limit=0, count=False):
-        super(NodeQueryClause, self).__init__(query, node,
-                                              limit=limit,
-                                              count=count)
-        self.schemata = model.get_type_schemata(self.node.type)
-        self.filter = field_filter_query(node.type.group, node.value)
-        self.id = node.id
-
-
-class EdgeQueryClause(QueryClause):
-
-    def __init__(self, query, node, prop, limit=0, count=False):
-        super(EdgeQueryClause, self).__init__(query, node,
-                                              limit=limit,
-                                              count=count)
-        self.schemata = prop.schema
-        field = 'properties.%s' % prop.name
-        self.filter = field_filter_query(field, node.value)
-        self.id = prop.qname
+    def apply(self, count, results):
+        self.count = count
+        for result in results:
+            proxy = model.get_proxy(result)
+            self.entities.append(proxy)
+            self.graph.add(proxy)
 
 
 def demo():
@@ -149,7 +135,7 @@ def demo():
         'id': 'banana',
         'schema': 'Person',
         'properties': {
-            'name': ['John Doe'],
+            'name': ['John Doe', 'Donna Harding'],
             'phone': ['+4923239271777'],
             'email': ['john@the-does.com']
         }
@@ -164,7 +150,8 @@ def demo():
         node = Node(prop.type, value)
         # TODO: consider specificity?
         query.node(node, count=True)
-    query.debug()
+    for res in query.execute():
+        print(res.node.value, res.count)
 
     # UC 2: References query
     query = GraphQuery(graph)
@@ -173,7 +160,8 @@ def demo():
             continue
         node = Node(registry.entity, proxy.id, proxy=proxy)
         query.edge(node, prop.reverse, count=True)
-    query.debug()
+    for res in query.execute():
+        print(res.prop, res.prop.schema, res.count)
 
     # UC 3: Expand query
     query = GraphQuery(graph)
@@ -182,7 +170,8 @@ def demo():
             continue
         node = Node(registry.entity, proxy.id, proxy=proxy)
         query.edge(node, prop.reverse, limit=200, count=False)
-    query.debug()
+    query.execute()
+    graph.resolve()
 
 
 if __name__ == '__main__':

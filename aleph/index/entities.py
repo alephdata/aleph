@@ -15,6 +15,7 @@ from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 
 
 log = logging.getLogger(__name__)
+PROXY_INCLUDES = ['schema', 'properties']
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
                    'identifiers', 'addresses', 'properties.bodyText',
                    'properties.bodyHtml', 'properties.headers', 'numeric.*']
@@ -72,8 +73,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
 
 
 def iter_proxies(**kw):
-    includes = ['schema', 'properties']
-    for data in iter_entities(includes=includes, **kw):
+    for data in iter_entities(includes=PROXY_INCLUDES, **kw):
         schema = model.get(data.get('schema'))
         if schema is None:
             continue
