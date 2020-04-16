@@ -540,24 +540,12 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
-            'schema': 'Passport',
-            'collection_id': self.col_id,
-            'properties': {
-                'passportNumber': 'A1B2C3'
-            }
-        }
-        passport1 = self.client.post(url,
-                                     data=json.dumps(data),
-                                     headers=headers,
-                                     content_type='application/json')
-        data = {
             'schema': 'Person',
             'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
                 'email': ["osama@al-qaeda.org", "o@laden.me"],
                 'status': 'dead',
-                'passport': passport1.json['id'],
                 'nationality': 'sa'
             }
         }
@@ -565,6 +553,18 @@ class EntitiesApiTestCase(TestCase):
                                    data=json.dumps(data),
                                    headers=headers,
                                    content_type='application/json')
+        data = {
+            'schema': 'Passport',
+            'collection_id': self.col_id,
+            'properties': {
+                'passportNumber': 'A1B2C3',
+                'holder': person1.json['id'],
+            }
+        }
+        self.client.post(url,
+                         data=json.dumps(data),
+                         headers=headers,
+                         content_type='application/json')
 
         col2 = self.create_collection()
         data = {
@@ -658,12 +658,11 @@ class EntitiesApiTestCase(TestCase):
         results = stats.json['results']
         for result in results:
             validate(result, 'EntityExpand')
-            assert result['property'] in ('passport', 'Ownership', 'email')  # noqa
+            assert result['property'] in ('holder', 'Ownership', 'email'), stats.json  # noqa
             if result['property'] == 'email':
                 assert result['count'] == 2, results
             else:
                 assert result['count'] == 1, results
-
 
         url = '/api/2/entities/%s/expand?%s' % (person1.json['id'], query_string)  # noqa
         res = self.client.get(url, headers=headers)
@@ -674,7 +673,7 @@ class EntitiesApiTestCase(TestCase):
         assert len(results) == 3, pformat(results)
         for res in results:
             prop = res['property']
-            assert prop in ('email', 'passport', 'Ownership')
+            assert prop in ('email', 'holder', 'Ownership'), results
             if prop == 'email':
                 assert res['count'] == 2
                 for ent in res['entities']:
@@ -682,7 +681,7 @@ class EntitiesApiTestCase(TestCase):
             if prop == 'Ownership':
                 assert res['count'] == 1
                 assert res['entities'][0]['name'] == 'Al-Qaeda'
-            if prop == 'passport':
+            if prop == 'holder':
                 assert res['count'] == 1
                 assert res['entities'][0]['name'] == 'A1B2C3'
         url = '/api/2/entities/%s/expand?%s' % (company1.json['id'], query_string)  # noqa
