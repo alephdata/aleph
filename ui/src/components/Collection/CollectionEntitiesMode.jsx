@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import EntityManager from 'src/components/Entity/EntityManager';
+import EntityListManager from 'src/components/Entity/EntityListManager';
 
 
 class CollectionEntitiesMode extends React.PureComponent {
@@ -11,7 +11,7 @@ class CollectionEntitiesMode extends React.PureComponent {
     const { collection, editMode, query } = this.props;
 
     return (
-      <EntityManager
+      <EntityListManager
         query={query}
         collection={collection}
         editMode={editMode}

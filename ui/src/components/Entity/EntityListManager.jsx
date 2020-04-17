@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '@blueprintjs/core';
+import _ from 'lodash';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -21,7 +22,7 @@ const messages = defineMessages({
   },
 });
 
-export class EntityManager extends Component {
+export class EntityListManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,7 +73,7 @@ export class EntityManager extends Component {
     const writeable = collection !== undefined && collection.writeable;
 
     return (
-      <div className="EntityManager">
+      <div className="EntityListManager">
         { writeable && (
           <div className="bp3-button-group">
             <Button icon={editMode ? 'log-out' : 'edit'} onClick={this.toggleEditMode}>
@@ -88,7 +89,7 @@ export class EntityManager extends Component {
             </Button>
           </div>
         )}
-        <div className="EntityManager__content">
+        <div className="EntityListManager__content">
           <EntitySearch
             collection={collection}
             query={query}
@@ -127,4 +128,4 @@ export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities }),
   injectIntl,
-)(EntityManager);
+)(EntityListManager);
