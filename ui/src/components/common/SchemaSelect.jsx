@@ -3,22 +3,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { defineMessages, injectIntl } from 'react-intl';
 import { selectModel } from 'src/selectors';
 import { Schema } from 'src/components/common';
 
-import './MappingSchemaSelect.scss';
-
-const messages = defineMessages({
-  thing: {
-    id: 'mapping.schemaSelect.button.thing',
-    defaultMessage: 'Add a new object',
-  },
-  relationship: {
-    id: 'mapping.schemaSelect.button.relationship',
-    defaultMessage: 'Add a new relationship',
-  },
-});
+import './SchemaSelect.scss';
 
 const itemRenderer = (item, { handleClick }) => (
   <MenuItem
@@ -28,21 +16,16 @@ const itemRenderer = (item, { handleClick }) => (
   />
 );
 
-export class MappingSchemaSelect extends Component {
-  applyTypeFilter(schema) {
-    const { type } = this.props;
-    return type === 'thing' ? schema.isThing() : !schema.isThing();
-  }
-
+export class SchemaSelect extends Component {
   render() {
-    const { intl, model, onSelect, type } = this.props;
+    const { model, onSelect, optionsFilter, placeholder } = this.props;
 
     const schemaSelectOptions = model.getSchemata()
-      .filter(schema => !schema.generated && !schema.abstract && this.applyTypeFilter(schema))
+      .filter(schema => !schema.generated && !schema.abstract && optionsFilter(schema))
       .sort((a, b) => a.label.localeCompare(b.label));
 
     return (
-      <div className="MappingSchemaSelect">
+      <div className="SchemaSelect">
         <Select
           id="entity-type"
           items={schemaSelectOptions}
@@ -53,7 +36,7 @@ export class MappingSchemaSelect extends Component {
         >
           <Button
             icon="plus"
-            text={intl.formatMessage(messages[type])}
+            text={placeholder}
           />
         </Select>
       </div>
@@ -67,5 +50,4 @@ const mapStateToProps = (state) => ({
 
 export default compose(
   connect(mapStateToProps),
-  injectIntl,
-)(MappingSchemaSelect);
+)(SchemaSelect);

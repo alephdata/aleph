@@ -27,6 +27,7 @@ class EntityTableEditor extends Component {
         sortColumn={sortColumn}
         selection={selection}
         updateSelection={updateSelection}
+        writeable={true}
       />
     );
   }

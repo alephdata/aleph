@@ -1,28 +1,50 @@
 import _ from 'lodash';
 import React from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Classes, MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import { Count, Schema } from 'src/components/common';
+import { Count, Schema, SchemaSelect } from 'src/components/common';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import { selectModel } from 'src/selectors';
 
 import './CollectionContentViews.scss';
 
+const messages = defineMessages({
+  addSchemaPlaceholder: {
+    id: 'collection.addSchema.placeholder',
+    defaultMessage: 'Add new entity type',
+  },
+});
+
 /* eslint-disable */
-class CollectionViews extends React.Component {
+class CollectionContentViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
+
+    this.state = {
+      addedSchemata: []
+    }
+
+    this.onSchemaAdd = this.onSchemaAdd.bind(this);
+  }
+
+  onSchemaAdd(schema) {
+    const schemaName = schema.name;
+    this.setState(({ addedSchemata }) => ({ addedSchemata: [...addedSchemata, schemaName] }));
+    this.handleTabChange(schema);
   }
 
   getEntitySchemata() {
     const { collection, model } = this.props;
+    const { addedSchemata } = this.state;
+
     const matching = [];
     for (const key in collection.schemata) {
       if (!model.getSchema(key).isDocument()) {
@@ -32,7 +54,10 @@ class CollectionViews extends React.Component {
         });
       }
     }
-    return _.reverse(_.sortBy(matching, ['count']));
+    const existingSchemata = _.reverse(_.sortBy(matching, ['count']));
+    const newSchemata = addedSchemata.map(schema => ({ schema, count: 0 }));
+
+    return [...existingSchemata, ...newSchemata];
   }
 
   countDocuments() {
@@ -59,7 +84,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeType, editMode, xref, onChange,
+      collection, activeType, editMode, intl, xref, onChange,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
@@ -105,6 +130,22 @@ class CollectionViews extends React.Component {
             panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} editMode={editMode} />}
           />
         ))}
+        {collection.writeable && <MenuDivider />}
+        {collection.writeable && (
+          <Tab
+            id="new"
+            key="new"
+            disabled
+            className="CollectionContentViews__tab schema-add-tab"
+            title={
+              <SchemaSelect
+                placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
+                onSelect={this.onSchemaAdd}
+                optionsFilter={schema => !collection.schemata.hasOwnProperty(schema.name)}
+              />
+            }
+          />
+        )}
       </Tabs>
     );
   }
@@ -121,7 +162,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-CollectionViews = connect(mapStateToProps, {})(CollectionViews);
-CollectionViews = injectIntl(CollectionViews);
-CollectionViews = withRouter(CollectionViews);
-export default CollectionViews;
+export default compose(
+  withRouter,
+  connect(mapStateToProps, {}),
+  injectIntl,
+)(CollectionContentViews);

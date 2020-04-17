@@ -95,22 +95,14 @@
           background: white;
           height: 20px;
           width: 100%;
-          // padding: 20px 0 !important;
-          // border-bottom: 1px solid $aleph-border-color;
-
         }
 
       }
+      &.schema-add-tab {
+        cursor: auto;
+        background-color: white !important;
+        padding: 0 !important;
+      }
     }
   }
-  // &__tab.bp3-tab {
-  //   border: 1px solid $aleph-border-color;
-  //   border-radius: 15px !important;
-  //   padding: 0 10px;
-  //   box-shadow: none !important;
-  //
-  //   &[aria-selected="true"] {
-  //     border: 1px solid $blue2;
-  //   }
-  // }
 }
