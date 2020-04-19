@@ -561,10 +561,10 @@ class EntitiesApiTestCase(TestCase):
                 'holder': person1.json['id'],
             }
         }
-        self.client.post(url,
-                         data=json.dumps(data),
-                         headers=headers,
-                         content_type='application/json')
+        passport = self.client.post(url,
+                                    data=json.dumps(data),
+                                    headers=headers,
+                                    content_type='application/json')
 
         col2 = self.create_collection()
         data = {
@@ -694,3 +694,17 @@ class EntitiesApiTestCase(TestCase):
             assert prop == 'ownershipAsset', prop
             assert res['count'] == 1
             # assert res['entities'][0]['name'] == 'Osama bin Laden'
+
+        url = '/api/2/entities/%s/expand?edge_types=entity'
+        url = url % passport.json['id']
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, (res.status_code, res.json)
+        validate(res.json, 'EntityExpand')
+        assert res.json['total'] == 1, pformat(res.json)
+        results = res.json['results']
+        assert len(results) == 1, pformat(results)
+        for res in results:
+            prop = res['property']
+            assert prop == 'holder', prop
+            assert res['count'] == 1, pformat(res)
+            assert len(res['entities']) == 1, pformat(res)

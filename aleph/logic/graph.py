@@ -28,14 +28,10 @@ class Graph(FtMGraph):
             schema = None if node is None else node.schema
             resolver.queue(self, Entity, id_, schema=schema)
         resolver.resolve(self)
-        for id_, proxy in list(self.proxies.items()):
-            if proxy is not None:
-                continue
+        for id_ in self.queued:
             entity = resolver.get(self, Entity, id_)
             if entity is not None:
-                proxy = model.get_proxy(entity)
-                proxy.context = {}
-                self.add(proxy)
+                self.add(model.get_proxy(entity))
 
     def query(self, authz=None, collection_ids=None):
         return GraphQuery(self, authz=authz, collection_ids=collection_ids)
@@ -104,6 +100,8 @@ class GraphQuery(object):
                 }
             index = patterns[0].index
             queries.append((patterns, index, query))
+        log.info("GraphQuery has %d patterns, %s queries...",
+                 len(self.patterns), len(queries))
         return queries
 
     def execute(self):

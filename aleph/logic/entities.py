@@ -119,20 +119,26 @@ def entity_expand(entity, collection_ids, edge_types, limit,
     proxy = model.get_proxy(entity)
     node = Node.from_proxy(proxy)
     graph = Graph(edge_types=edge_types)
+    graph.add(proxy)
     query = graph.query(authz=authz, collection_ids=collection_ids)
+
     # Get relevant property set
     props = set(proxy.schema.properties.values())
     props = [p for p in props if p.type in graph.edge_types]
     properties = ensure_list(properties)
     if len(properties):
         props = [p for p in props if p.name in properties]
+
     # Query for reverse properties
     for prop in props:
         if prop.stub:
             query.edge(node, prop.reverse, limit=limit, count=True)
     query.execute()
-    # Fill in missing counter-objects
-    graph.resolve()
+
+    # Fill in missing graph entities:
+    if limit > 0:
+        graph.resolve()
+
     for prop in props:
         count = len(proxy.get(prop))
         if prop.stub:
