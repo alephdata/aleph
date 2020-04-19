@@ -681,7 +681,8 @@ class EntitiesApiTestCase(TestCase):
             if prop == 'passport':
                 assert res['count'] == 1
                 assert res['entities'][0]['schema'] == 'Passport', res
-        url = '/api/2/entities/%s/expand?%s' % (company1.json['id'], query_string)  # noqa
+
+        url = '/api/2/entities/%s/expand?edge_types=entity' % (company1.json['id'])  # noqa
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, 'EntityExpand')
@@ -690,6 +691,6 @@ class EntitiesApiTestCase(TestCase):
         assert len(results) == 1, pformat(results)
         for res in results:
             prop = res['property']
-            assert prop in ('Ownership', 'name'), prop
+            assert prop == 'ownershipAsset', prop
             assert res['count'] == 1
             # assert res['entities'][0]['name'] == 'Osama bin Laden'

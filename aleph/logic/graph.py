@@ -1,6 +1,7 @@
 import logging
 from pprint import pprint  # noqa
 from followthemoney import model
+from followthemoney.types import registry
 from followthemoney.graph import Graph as FtMGraph
 
 from aleph.core import es
@@ -23,15 +24,19 @@ class Graph(FtMGraph):
     def resolve(self):
         for id_, proxy in self.proxies.items():
             if proxy is None:
-                # TODO can we include schema hints here?
-                resolver.queue(self, Entity, id_)
+                node_id = registry.entity.node_id_safe(id_)
+                node = self.nodes.get(node_id)
+                schema = None if node is None else node.schema
+                resolver.queue(self, Entity, id_, schema=schema)
         resolver.resolve(self)
         for id_, proxy in list(self.proxies.items()):
             if proxy is not None:
                 continue
             entity = resolver.get(self, Entity, id_)
             if entity is not None:
-                self.add(model.get_proxy(entity))
+                proxy = model.get_proxy(entity)
+                proxy.context = {}
+                self.add(proxy)
 
     def query(self, authz=None, collection_ids=None):
         return GraphQuery(self, authz=authz, collection_ids=collection_ids)
