@@ -27,6 +27,7 @@ class Authz(object):
         self.roles = set(ensure_list(roles))
         self.is_admin = is_admin
         self.in_maintenance = settings.MAINTENANCE
+        self.in_sngle_user_mode = settings.SINGLE_USER_MODE
         self.session_write = not self.in_maintenance and self.logged_in
         self._collections = {}
 
