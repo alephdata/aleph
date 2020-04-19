@@ -3,9 +3,12 @@ import logging
 from pprint import pprint  # noqa
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.graph import Graph, Node
+from followthemoney.graph import Graph as FtMGraph
+from followthemoney.graph import Node
 
 from aleph.core import es
+from aleph.model import Entity
+from aleph.logic import resolver
 from aleph.index.entities import _source_spec, PROXY_INCLUDES
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import field_filter_query, authz_query, unpack_result
@@ -16,19 +19,41 @@ log = logging.getLogger(__name__)
 # https://rdflib.readthedocs.io/en/stable/intro_to_graphs.html#basic-triple-matching
 
 
-class GraphQuery(object):
+class Graph(FtMGraph):
+    """A subclass of `followthemoney.graph:Graph` that can resolve
+    entities against the aleph search index and entity cache."""
 
-    def __init__(self, graph, authz=None):
+    def resolve(self):
+        for id_, proxy in self.proxies.items():
+            if proxy is None:
+                # TODO can we include schema hints here?
+                resolver.queue(self, Entity, id_)
+        resolver.resolve(self)
+        for id_, proxy in list(self.proxies.items()):
+            if proxy is not None:
+                continue
+            entity = resolver.get(self, Entity, id_)
+            self.add(model.get_proxy(entity))
+
+    def query(self, authz=None, collection_ids=None):
+        return GraphQuery(self, authz=authz, collection_ids=collection_ids)
+
+
+class GraphQuery(object):
+    """A graph query bundles smaller query fragments (`QueryPattern`) into
+    a larger request, groups them into an ES query and assigns the results
+    to each pattern."""
+
+    def __init__(self, graph, authz=None, collection_ids=None):
         self.graph = graph
         self.authz = authz
         self.patterns = []
-
-    @property
-    def filters(self):
-        filters = []
-        if self.authz:
-            filters.append(authz_query(self.authz))
-        return filters
+        self.filters = []
+        if authz is not None:
+            self.filters.append(authz_query(authz))
+        if collection_ids is not None:
+            filter_ = field_filter_query('collection_id', collection_ids)
+            self.filters.append(filter_)
 
     def node(self, node, limit=0, count=False):
         pattern = QueryPattern(self, node, None, limit, count)
@@ -53,7 +78,7 @@ class GraphQuery(object):
         "Generate a sequence of ES queries representing the patterns."
         queries = []
         for patterns in self._group_patterns():
-            query = {'filter': self.filters}
+            query = {'filter': list(self.filters)}
             if len(patterns) == 1:
                 query['filter'].append(patterns[0].filter)
             else:
@@ -102,6 +127,8 @@ class GraphQuery(object):
 
 
 class QueryPattern(object):
+    """A fragment of a query that can either find a set of adjacent
+    nodes or adjacent edges for the given core node."""
 
     def __init__(self, query, node, prop=None, limit=0, count=False):
         self.graph = query.graph
@@ -143,28 +170,8 @@ def demo():
     graph = Graph(edge_types=registry.matchable)
     proxy_node = Node.from_proxy(proxy)
 
-    # UC 1: Tags query
-    query = GraphQuery(graph)
-    for prop, value in proxy.itervalues():
-        if prop.type.group is None:
-            continue
-        node = Node(prop.type, value)
-        # TODO: consider specificity?
-        query.node(node, count=True)
-    for res in query.execute():
-        print(res.node.value, res.count)
-
-    # UC 2: References query
-    query = GraphQuery(graph)
-    for prop in proxy.schema.properties.values():
-        if not prop.stub:
-            continue
-        query.edge(proxy_node, prop.reverse, count=True)
-    for res in query.execute():
-        print(res.prop, res.prop.schema, res.count)
-
     # UC 3: Expand query
-    query = GraphQuery(graph)
+    query = graph.query()
     for prop in proxy.schema.properties.values():
         if not prop.stub:
             continue
