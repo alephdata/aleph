@@ -1,7 +1,8 @@
 import logging
+from banal import ensure_list
 from pprint import pformat  # noqa
-
 from followthemoney import model
+from followthemoney.graph import Node
 from followthemoney.types import registry
 
 from aleph.core import db, cache
@@ -11,9 +12,7 @@ from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
 from aleph.index import xref as xref_index
 from aleph.logic.aggregator import delete_aggregator_entity
-from aleph.logic.graph import (
-    AlephGraph, EntityGraph
-)
+from aleph.logic.gql import Graph
 
 log = logging.getLogger(__name__)
 
@@ -76,21 +75,37 @@ def entity_references(entity, authz=None):
     """Given a particular entity, find all the references to it from other
     entities, grouped by the property where they are used."""
     proxy = model.get_proxy(entity)
-    graph = EntityGraph(proxy, authz=authz)
-    return graph.get_references()
+    node = Node.from_proxy(proxy)
+    graph = Graph()
+    query = graph.query(authz=authz)
+    for prop in proxy.schema.properties.values():
+        if not prop.stub:
+            continue
+        query.edge(node, prop.reverse, count=True)
+    for res in query.execute():
+        if res.count > 0:
+            yield (res.prop, res.count)
 
 
-def entity_tags(entity, authz=None):
+def entity_tags(entity, authz=None, edge_types=registry.pivots):
     """Do a search on tags of an entity."""
     proxy = model.get_proxy(entity)
-    edge_types = [registry.name, registry.email, registry.identifier,
-                  registry.iban, registry.phone, registry.address]
-    graph = EntityGraph(proxy, edge_types=edge_types, authz=authz)
-    return graph.get_tags()
+    graph = Graph(edge_types=edge_types)
+    query = graph.query(authz=authz)
+    for prop, value in proxy.itervalues():
+        if prop.type not in graph.edge_types:
+            continue
+        if prop.specificity(value) < 0.1:
+            continue
+        query.node(Node(prop.type, value), count=True)
+    for res in query.execute():
+        field = res.node.type.group
+        if res.count > 1:
+            yield (field, res.node.value, res.count)
 
 
-def enitiy_expand_adjacent_nodes(entity, collection_ids, edge_types, limit,
-                                 properties=None, authz=None):
+def entity_expand(entity, collection_ids, edge_types, limit,
+                  properties=None, authz=None):
     """Expand an entity's graph to find adjacent entities that are connected
     by a common property value(eg: having the same email or phone number), a
     property (eg: Passport entity linked to a Person) or an Entity type edge.
@@ -102,21 +117,31 @@ def enitiy_expand_adjacent_nodes(entity, collection_ids, edge_types, limit,
     limit: max number of entities to return
     """
     proxy = model.get_proxy(entity)
-    graph = EntityGraph(
-        proxy, edge_types=edge_types, included_properties=properties,
-        authz=authz, collection_ids=collection_ids,
-        limit=limit
-    )
-    expanded_entities = graph.expand_entity()
-    if limit > 0:
-        graph = AlephGraph(edge_types=edge_types)
-        source_proxy = model.get_proxy(entity)
-        graph.add(source_proxy)
-        for prop, total, entities in expanded_entities:
-            for ent in entities:
-                proxy = model.get_proxy(ent)
-                graph.add(proxy)
-        graph.resolve()
-        return graph.get_adjacent_entities(source_proxy)
-    else:
-        return expanded_entities
+    node = Node.from_proxy(proxy)
+    graph = Graph(edge_types=edge_types)
+    query = graph.query(authz=authz, collection_ids=collection_ids)
+    # Get relevant property set
+    props = proxy.schema.properties.values()
+    properties = ensure_list(properties)
+    if len(properties):
+        props = [p for p in props if p.name in properties]
+    # Query for reverse properties
+    for prop in props:
+        if prop.stub:
+            query.edge(node, prop.reverse, limit=limit, count=True)
+    results = query.execute()
+    # Fill in missing counter-objects
+    graph.resolve()
+    for prop in props:
+        count = len(proxy.get(prop))
+        if prop.stub:
+            for res in results:
+                if res.prop == prop:
+                    count = res.count
+        proxies = set()
+        # Too much effort to do this right. This works, too:
+        for edge in graph.get_adjacent(node, prop=prop):
+            for rel in (edge.proxy, edge.source.proxy, edge.target.proxy):
+                if rel not in (None, proxy):
+                    proxies.add(rel)
+            yield (prop, count, proxies)

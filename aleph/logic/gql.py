@@ -33,7 +33,8 @@ class Graph(FtMGraph):
             if proxy is not None:
                 continue
             entity = resolver.get(self, Entity, id_)
-            self.add(model.get_proxy(entity))
+            if entity is not None:
+                self.add(model.get_proxy(entity))
 
     def query(self, authz=None, collection_ids=None):
         return GraphQuery(self, authz=authz, collection_ids=collection_ids)
