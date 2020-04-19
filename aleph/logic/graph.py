@@ -22,12 +22,11 @@ class Graph(FtMGraph):
     entities against the aleph search index and entity cache."""
 
     def resolve(self):
-        for id_, proxy in self.proxies.items():
-            if proxy is None:
-                node_id = registry.entity.node_id_safe(id_)
-                node = self.nodes.get(node_id)
-                schema = None if node is None else node.schema
-                resolver.queue(self, Entity, id_, schema=schema)
+        for id_ in self.queued:
+            node_id = registry.entity.node_id_safe(id_)
+            node = self.nodes.get(node_id)
+            schema = None if node is None else node.schema
+            resolver.queue(self, Entity, id_, schema=schema)
         resolver.resolve(self)
         for id_, proxy in list(self.proxies.items()):
             if proxy is not None:
