@@ -59,7 +59,7 @@ SECRET_KEY = env.get('ALEPH_SECRET_KEY')
 PROCESS_ID = uuid.uuid4().hex
 
 # Single-user mode switched off authentication. Everyone is admin.
-# This should be true from developer mode and when the webserver binds to localhost
+# This should be true from developer_mode and when the webserver binds to localhost
 SINGLE_USER_MODE = env.to_bool('SINGLE_USER_MODE')
 
 # Designate users with the given email as admins automatically:
