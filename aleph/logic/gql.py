@@ -21,62 +21,62 @@ class GraphQuery(object):
     def __init__(self, graph, authz=None):
         self.graph = graph
         self.authz = authz
-        self.clauses = []
+        self.patterns = []
 
     @property
-    def filter(self):
+    def filters(self):
+        filters = []
         if self.authz:
-            return authz_query(self.authz)
+            filters.append(authz_query(self.authz))
+        return filters
 
     def node(self, node, limit=0, count=False):
-        clause = QueryClause(self, node, None, limit, count)
-        self.clauses.append(clause)
+        pattern = QueryPattern(self, node, None, limit, count)
+        self.patterns.append(pattern)
 
     def edge(self, node, prop, limit=0, count=False):
-        clause = QueryClause(self, node, prop, limit, count)
-        self.clauses.append(clause)
+        pattern = QueryPattern(self, node, prop, limit, count)
+        self.patterns.append(pattern)
 
-    def _group_clauses(self):
-        "Group clauses into buckets representing one ES query each."
+    def _group_patterns(self):
+        "Group patterns into buckets representing one ES query each."
         grouped = {}
-        for clause in self.clauses:
-            group = clause.index
-            if clause.limit > 0:
-                group = (clause.index, clause.id)
+        for pattern in self.patterns:
+            group = pattern.index
+            if pattern.limit > 0:
+                group = (pattern.index, pattern.id)
             grouped.setdefault(group, [])
-            grouped[group].append(clause)
+            grouped[group].append(pattern)
         return grouped.values()
 
     def compile(self):
-        "Generate a sequence of ES queries representing the clauses."
+        "Generate a sequence of ES queries representing the patterns."
         queries = []
-        for clauses in self._group_clauses():
-            query = {'filter': []}
-            if self.filter:
-                query['filter'].append(self.filter)
-            if len(clauses) == 1:
-                query['filter'].append(clauses[0].filter)
+        for patterns in self._group_patterns():
+            query = {'filter': self.filters}
+            if len(patterns) == 1:
+                query['filter'].append(patterns[0].filter)
             else:
                 query['minimum_should_match'] = 1
                 query['should'] = []
-                for clause in clauses:
-                    query['should'].append(clause.filter)
+                for pattern in patterns:
+                    query['should'].append(pattern.filter)
 
             query = {
-                'size': clauses[0].limit,
+                'size': patterns[0].limit,
                 'query': {'bool': query},
                 '_source': _source_spec(PROXY_INCLUDES, None)
             }
             counters = {}
-            for clause in clauses:
-                if clause.count:
-                    counters[clause.id] = clause.filter
+            for pattern in patterns:
+                if pattern.count:
+                    counters[pattern.id] = pattern.filter
             if len(counters):
                 query['aggs'] = {
                     'counters': {'filters': {'filters': counters}}
                 }
-            index = clauses[0].index
-            queries.append((clauses, index, query))
+            index = patterns[0].index
+            queries.append((patterns, index, query))
         return queries
 
     def execute(self):
@@ -90,18 +90,18 @@ class GraphQuery(object):
             body.append(query)
         results = es.msearch(body=body)
         responses = results.get('responses', [])
-        for ((clauses, _, _), result) in zip(queries, responses):
+        for ((patterns, _, _), result) in zip(queries, responses):
             hits = result.get('hits', {}).get('hits', [])
             results = [unpack_result(r) for r in hits]
             aggs = result.get('aggregations', {}).get('counters', {})
             counters = aggs.get('buckets', {})
-            for clause in clauses:
-                count = counters.get(clause.id, {}).get('doc_count')
-                clause.apply(count, results)
-        return self.clauses
+            for pattern in patterns:
+                count = counters.get(pattern.id, {}).get('doc_count')
+                pattern.apply(count, results)
+        return self.patterns
 
 
-class QueryClause(object):
+class QueryPattern(object):
 
     def __init__(self, query, node, prop=None, limit=0, count=False):
         self.graph = query.graph
@@ -141,6 +141,7 @@ def demo():
         }
     })
     graph = Graph(edge_types=registry.matchable)
+    proxy_node = Node.from_proxy(proxy)
 
     # UC 1: Tags query
     query = GraphQuery(graph)
@@ -158,8 +159,7 @@ def demo():
     for prop in proxy.schema.properties.values():
         if not prop.stub:
             continue
-        node = Node(registry.entity, proxy.id, proxy=proxy)
-        query.edge(node, prop.reverse, count=True)
+        query.edge(proxy_node, prop.reverse, count=True)
     for res in query.execute():
         print(res.prop, res.prop.schema, res.count)
 
@@ -168,8 +168,7 @@ def demo():
     for prop in proxy.schema.properties.values():
         if not prop.stub:
             continue
-        node = Node(registry.entity, proxy.id, proxy=proxy)
-        query.edge(node, prop.reverse, limit=200, count=False)
+        query.edge(proxy_node, prop.reverse, limit=200, count=True)
     query.execute()
     graph.resolve()
 
