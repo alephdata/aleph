@@ -5,7 +5,6 @@ from followthemoney import model
 from followthemoney.types import registry
 from urllib.parse import quote
 from urlnormalizer import query_string
-from banal import ensure_list
 
 from aleph.core import db, url_for
 from aleph.model import QueryLog
@@ -624,7 +623,7 @@ def expand(entity_id):
     ):
         results.append({
             'count': total,
-            'property': prop,
+            'property': prop.name,
             'entities': [proxy.to_dict() for proxy in proxies]
         })
     return jsonify({

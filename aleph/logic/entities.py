@@ -12,7 +12,7 @@ from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
 from aleph.index import xref as xref_index
 from aleph.logic.aggregator import delete_aggregator_entity
-from aleph.logic.gql import Graph
+from aleph.logic.graph import Graph
 
 log = logging.getLogger(__name__)
 
@@ -121,7 +121,8 @@ def entity_expand(entity, collection_ids, edge_types, limit,
     graph = Graph(edge_types=edge_types)
     query = graph.query(authz=authz, collection_ids=collection_ids)
     # Get relevant property set
-    props = proxy.schema.properties.values()
+    props = set(proxy.schema.properties.values())
+    props = [p for p in props if p.type in graph.edge_types]
     properties = ensure_list(properties)
     if len(properties):
         props = [p for p in props if p.name in properties]
@@ -129,19 +130,20 @@ def entity_expand(entity, collection_ids, edge_types, limit,
     for prop in props:
         if prop.stub:
             query.edge(node, prop.reverse, limit=limit, count=True)
-    results = query.execute()
+    query.execute()
     # Fill in missing counter-objects
     graph.resolve()
     for prop in props:
         count = len(proxy.get(prop))
         if prop.stub:
-            for res in results:
-                if res.prop == prop:
+            for res in query.patterns:
+                if res.prop == prop.reverse:
                     count = res.count
         proxies = set()
         # Too much effort to do this right. This works, too:
         for edge in graph.get_adjacent(node, prop=prop):
-            for rel in (edge.proxy, edge.source.proxy, edge.target.proxy):
-                if rel not in (None, proxy):
-                    proxies.add(rel)
+            for part in (edge.proxy, edge.source.proxy, edge.target.proxy):
+                if part is not None and part != proxy:
+                    proxies.add(part)
+        if count > 0:
             yield (prop, count, proxies)
