@@ -26,12 +26,20 @@ const messages = defineMessages({
 class CollectionContentViews extends React.Component {
   constructor(props) {
     super(props);
-    this.handleTabChange = this.handleTabChange.bind(this);
+    const { activeType, collection } = props;
 
-    this.state = {
-      addedSchemata: []
+    let addedSchemata = [];
+    if (activeType) {
+      if (!collection?.schemata?.hasOwnProperty(activeType)) {
+        addedSchemata = [activeType];
+      }
     }
 
+    this.state = {
+      addedSchemata,
+    }
+
+    this.handleTabChange = this.handleTabChange.bind(this);
     this.onSchemaAdd = this.onSchemaAdd.bind(this);
   }
 
