@@ -47,7 +47,6 @@ def create_app(config={}):
         'FLASK_SKIP_DOTENV': True,
         'FLASK_DEBUG': settings.DEBUG,
         'BABEL_DOMAIN': 'aleph',
-        'SINGLE_USER_MODE': is_single_user_mode(),
     })
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
@@ -87,9 +86,6 @@ def create_app(config={}):
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
 
-    #if app.config.SINGLE_USER_MODE:
-    #   ### login as admin
-    #   auto_login(Role.SYSTEM_USER))
     return app
 
 
@@ -186,21 +182,3 @@ def url_external(path, query, relative=False):
         return urljoin(api_url, path)
     except RuntimeError:
         return None
-
-def is_single_user_mode():
-    """Determine user mode. Return True if api is either listening on localhost or app is running in developer mode"""
-    ### TODO: decide if we really need these ery/excpets
-    try:
-        if settings.env.environ['ALEPH_SECRET_KEY']:  
-            return True
-    except KeyError:
-        pass
-    try:
-        ### TODO, can this also be 127.0.0.1?
-        ### is there a simpler way of checking for the bind addr?
-        if settings.env.environ['ALEPH_UI_URL'].startswith('http://localhost:')\
-        or settings.env.environ['ALEPH_UI_URL'].startswith('https://localhost:'):
-            return True
-    except KeyError:
-        pass
-    return False

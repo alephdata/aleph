@@ -19,6 +19,7 @@ blueprint = Blueprint('sessions_api', __name__)
 
 
 def _get_credential_authz(credential):
+
     if credential is None or not len(credential):
         return
     if ' ' in credential:
@@ -74,6 +75,21 @@ def password_login():
       tags:
       - Role
     """
+    ##### TEST #####
+    from aleph import settings
+    if settings.env.environ['SINGLE_USER']:
+        data = parse_request('Login')
+        role = Role.by_id(3) ## TODO: dynamically get right id
+        db.session.commit()
+        update_role(role)
+        authz = Authz.from_role(role)
+        request.authz = authz
+        return jsonify({
+            'status': 'ok',
+            'token': authz.to_token(role=role)
+        })
+    #### END ####
+
     require(settings.PASSWORD_LOGIN)
     data = parse_request('Login')
     role = Role.by_email(data.get('email'))
