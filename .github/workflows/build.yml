@@ -74,12 +74,16 @@ jobs:
         docker --version
         docker-compose --version
         docker volume prune -f
+        df -h
+        docker system df
     - name: Docker pull and start
       run: |
         echo "${GITHUB_REF}"
         ALEPH_TAG=${GITHUB_SHA} docker-compose pull --quiet --parallel elasticsearch convert-document ingest-file worker
         make ALEPH_TAG=${GITHUB_SHA} services
         sleep 10
+        df -h
+        docker system df
     - name: Run ingest tests
       run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
     - name: Run aleph tests
