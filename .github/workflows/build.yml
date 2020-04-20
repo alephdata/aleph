@@ -73,9 +73,11 @@ jobs:
         sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
         docker --version
         docker-compose --version
+        docker system prune -af
         docker volume prune -f
         df -h
         docker system df
+        docker images
     - name: Docker pull and start
       run: |
         echo "${GITHUB_REF}"
@@ -106,6 +108,7 @@ jobs:
         # deleting 15GB
         rm -rf /usr/share/dotnet/
         df -h
+        docker images
     - name: Run ingest tests
       run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
     - name: Run aleph tests
