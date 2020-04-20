@@ -18,10 +18,6 @@ jobs:
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph-ui-production:${GITHUB_SHA}
-    - name: Cleanup build image
-      run: |
-        docker rmi alephdata/aleph-ui:${GITHUB_SHA}
-        docker rmi alephdata/aleph-ui:latest
   docker-elasticsearch:
     runs-on: ubuntu-latest
     steps:
