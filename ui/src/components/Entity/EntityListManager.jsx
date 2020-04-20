@@ -54,10 +54,11 @@ export class EntityListManager extends Component {
   toggleEditMode() {
     const { editMode, history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
+    console.log('parsedHash', parsedHash)
     if (editMode) {
-      delete parsedHash.editMode;
+      delete parsedHash.editing;
     } else {
-      parsedHash.editMode = true;
+      parsedHash.editing = true;
     }
 
     history.push({

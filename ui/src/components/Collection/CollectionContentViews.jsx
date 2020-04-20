@@ -29,7 +29,7 @@ class CollectionContentViews extends React.Component {
     const { activeType, collection } = props;
 
     let addedSchemata = [];
-    if (activeType) {
+    if (activeType && activeType !== 'Document') {
       if (!collection?.schemata?.hasOwnProperty(activeType)) {
         addedSchemata = [activeType];
       }
@@ -83,6 +83,10 @@ class CollectionContentViews extends React.Component {
     const { history, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
+    if (type === 'Document') {
+      delete parsedHash.editing;
+    }
+
     history.push({
       pathname: location.pathname,
       search: location.search,
@@ -167,7 +171,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     model: selectModel(state),
     activeType: hashQuery.type,
-    editMode: hashQuery.editMode,
+    editMode: hashQuery.editing,
   };
 };
 

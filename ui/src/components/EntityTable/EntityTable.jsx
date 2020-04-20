@@ -31,7 +31,7 @@ class EntityTable extends Component {
       return <ErrorSection error={result.error} />;
     }
 
-    if (!result.isPending && result.total === 0 && result.page === 1) {
+    if (!result.isPending && result.total === 0 && result.page === 1 && !isEditing) {
       return null;
     }
 
