@@ -142,7 +142,7 @@ class CollectionContentViews extends React.Component {
               <SchemaSelect
                 placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
                 onSelect={this.onSchemaAdd}
-                optionsFilter={schema => !collection?.schemata?.hasOwnProperty(schema.name)}
+                optionsFilter={schema => !entitySchemata.find(item => (item.schema === schema.name))}
               />
             }
           />
