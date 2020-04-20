@@ -37,6 +37,8 @@
     width: 100%;
 
     &.bp3-tab-panel {
+      width: 100%;
+      overflow: hidden;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
         padding-left: 0 !important;
       }

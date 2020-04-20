@@ -63,9 +63,12 @@ class CollectionContentViews extends React.Component {
       }
     }
     const existingSchemata = _.reverse(_.sortBy(matching, ['count']));
-    const newSchemata = addedSchemata.map(schema => ({ schema, count: 0 }));
+    const newSchemata =
+      addedSchemata
+        .filter(schema => !collection?.schemata?.hasOwnProperty(schema))
+        .map(schema => ({ schema, count: 0 }));
 
-    return [...existingSchemata, ...newSchemata];
+    return ([...existingSchemata, ...newSchemata]);
   }
 
   countDocuments() {
