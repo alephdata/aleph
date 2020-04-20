@@ -1,4 +1,4 @@
-FROM node:13
+FROM node:13-slim
 
 RUN mkdir /alephui
 WORKDIR /alephui
@@ -7,7 +7,7 @@ COPY .npmrc /alephui/.npmrc
 COPY tsconfig.json /alephui/tsconfig.json
 COPY package.json /alephui
 
-RUN npm install --verbose
+RUN npm install
 
 COPY i18n /alephui/i18n
 COPY public /alephui/public

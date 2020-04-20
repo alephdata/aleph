@@ -137,3 +137,15 @@ EntityTag:
     count:
       type: integer
       example: 1
+
+EntityExpand:
+  type: object
+  properties:
+    property:
+      type: string
+    count:
+      type: integer
+    entities:
+        type: array
+        items:
+          $ref: '#/components/schemas/Entity'

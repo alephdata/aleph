@@ -8,9 +8,10 @@ from urlnormalizer import query_string
 
 from aleph.core import db, url_for
 from aleph.model import QueryLog
-from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
+from aleph.search import EntitiesQuery, MatchQuery
+from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
-from aleph.logic.entities import entity_references, entity_tags
+from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
@@ -18,6 +19,7 @@ from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
 from aleph.views.util import require, get_nested_collection
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
+from aleph.settings import MAX_EXPAND_ENTITIES
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
@@ -555,3 +557,77 @@ def delete(entity_id):
     delete_entity(collection, entity, sync=get_flag('sync', True))
     db.session.commit()
     return ('', 204)
+
+
+@blueprint.route('/api/2/entities/<entity_id>/expand', methods=['GET'])
+def expand(entity_id):
+    """Returns a list of diagrams for the role
+    ---
+    get:
+      summary: Expand an entity to get its adjacent entities
+      description: >-
+        Get the property-wise list of entities adjacent to the entity
+        with id `entity_id`.
+      parameters:
+      - in: path
+        name: entity_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: edge_types
+        description: types of edges to expand. Must is a matchable FtM type
+        required: true
+        schema:
+          type: string
+      - description: properties to filter on
+        in: query
+        name: 'filter:property'
+        schema:
+          type: string
+      - in: query
+        description: number of entities to return per property
+        name: limit
+        schema:
+          type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityExpand'
+      tags:
+      - Entity
+    """
+    enable_cache()
+    entity = get_index_entity(entity_id, request.authz.READ)
+    edge_types = request.args.getlist('edge_types')
+    collection_id = entity.get('collection_id')
+    tag_request(collection_id=collection_id)
+    parser = QueryParser(request.args, request.authz,
+                         max_limit=MAX_EXPAND_ENTITIES)
+    properties = parser.filters.get('property')
+    results = []
+    for (prop, total, proxies) in entity_expand(
+        entity, collection_ids=[collection_id],
+        edge_types=edge_types, properties=properties, authz=request.authz,
+        limit=parser.limit
+    ):
+        results.append({
+            'count': total,
+            'property': prop.name,
+            'entities': [proxy.to_dict() for proxy in proxies]
+        })
+    return jsonify({
+        'status': 'ok',
+        'total': sum(result['count'] for result in results),
+        'results': results
+    })

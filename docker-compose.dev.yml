@@ -16,8 +16,6 @@ services:
   elasticsearch:
     build:
       context: services/elasticsearch
-      cache_from:
-        - alephdata/aleph-elasticsearch:latest
     image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
     hostname: elasticsearch
     environment:
@@ -45,8 +43,6 @@ services:
   ingest-file:
     build:
       context: services/ingest-file
-      cache_from:
-        - alephdata/ingest-file:latest
     image: alephdata/ingest-file:${ALEPH_TAG:-latest}
     hostname: ingest
     tmpfs: /tmp
@@ -68,8 +64,6 @@ services:
   app:
     build:
       context: .
-      cache_from:
-        - alephdata/aleph:latest
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     hostname: aleph
     command: /bin/bash
@@ -96,8 +90,6 @@ services:
   api:
     build:
       context: .
-      cache_from:
-        - alephdata/aleph:latest
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
@@ -121,8 +113,6 @@ services:
   ui:
     build:
       context: ui
-      cache_from:
-        - alephdata/aleph-ui:latest
     image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
     links:
       - api

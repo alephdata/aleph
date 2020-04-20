@@ -147,6 +147,8 @@ def query_delete(index, query, sync=False, **kwargs):
                                **kwargs)
             return
         except TransportError as exc:
+            if int(exc.status_code) in (400, 403):
+                raise
             log.warning("Query delete failed: %s", exc)
             backoff(failures=attempt)
 
@@ -180,6 +182,8 @@ def index_safe(index, id, body, **kwargs):
             body.pop('text', None)
             return body
         except TransportError as exc:
+            if int(exc.status_code) in (400, 403):
+                raise
             log.warning("Index error [%s:%s]: %s", index, id, exc)
             backoff(failures=attempt)
 

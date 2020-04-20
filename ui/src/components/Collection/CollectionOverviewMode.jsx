@@ -53,7 +53,7 @@ class CollectionOverviewMode extends React.Component {
   render() {
     const { collection, statistics } = this.props;
 
-    if (statistics.isPending) {
+    if (!collection.id || !statistics.names) {
       return <Skeleton.Layout type="multi-column" colCount={4} />;
     }
 

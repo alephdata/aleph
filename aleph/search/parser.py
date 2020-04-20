@@ -16,14 +16,14 @@ class QueryParser(object):
     SORT_DEFAULT = SORT_ASC
     SORTS = [SORT_ASC, SORT_DESC]
 
-    def __init__(self, args, authz, limit=None):
+    def __init__(self, args, authz, limit=None, max_limit=MAX_PAGE):
         if not isinstance(args, MultiDict):
             args = OrderedMultiDict(args)
         self.args = args
         self.authz = authz
         self.offset = max(0, self.getint('offset', 0))
         if limit is None:
-            limit = min(MAX_PAGE, max(0, self.getint('limit', 20)))
+            limit = min(max_limit, max(0, self.getint('limit', 20)))
         self.limit = limit
         self.text = stringify(self.get('q'))
         self.prefix = stringify(self.get('prefix'))

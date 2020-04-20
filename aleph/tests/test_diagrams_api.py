@@ -25,14 +25,13 @@ def _normalize_data(data):
         if schema is None:
             raise InvalidData("Invalid schema %s" % obj.get('schema'))
         properties = obj.get('properties', {})
-        for prop in schema.properties.values():
+        for name, values in list(properties.items()):
+            prop = schema.get(name)
             if prop.type == registry.entity:
-                values = ensure_list(properties.get(prop.name))
-                if values:
-                    properties[prop.name] = []
-                    for value in values:
-                        entity_id = get_entity_id(value)
-                        properties[prop.name].append(entity_id)
+                properties[prop.name] = []
+                for value in ensure_list(values):
+                    entity_id = get_entity_id(value)
+                    properties[prop.name].append(entity_id)
     return data
 
 

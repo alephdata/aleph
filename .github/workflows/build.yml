@@ -18,14 +18,6 @@ jobs:
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph-ui-production:${GITHUB_SHA}
-    # - name: Push docker release image (tag / latest)
-    #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-    #   run: |
-    #     docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-    #     docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:${GITHUB_REF/refs\/tags\//}
-    #     docker push alephdata/aleph-ui-production:${GITHUB_REF/refs\/tags\//}
-    #     docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:latest
-    #     docker push alephdata/aleph-ui-production:latest
   docker-elasticsearch:
     runs-on: ubuntu-latest
     steps:
@@ -56,7 +48,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build docker image
       run: |
-        docker pull alephdata/aleph:latest
         docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:${GITHUB_SHA} .
         docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
     - name: Push docker image (hash)
@@ -69,6 +60,7 @@ jobs:
     - docker-aleph
     - docker-elasticsearch
     - docker-ingest-file
+    - docker-ui
     steps:
     - uses: actions/checkout@v1
     - name: Set up
@@ -80,9 +72,17 @@ jobs:
     - name: Docker pull and start
       run: |
         echo "${GITHUB_REF}"
-        ALEPH_TAG=${GITHUB_SHA} docker-compose pull elasticsearch convert-document ingest-file worker
+        ALEPH_TAG=${GITHUB_SHA} docker-compose pull --quiet --parallel elasticsearch convert-document ingest-file worker
         make ALEPH_TAG=${GITHUB_SHA} services
         sleep 10
+    - name: Free up some space
+      run: |
+        sudo apt-get remove -y 'php.*'
+        sudo apt-get remove -y '^dotnet-.*'
+        sudo apt-get remove -y azure-cli google-cloud-sdk hhvm google-chrome-stable firefox powershell mono-devel
+        sudo apt-get autoremove -y
+        sudo apt-get clean
+        rm -rf /usr/share/dotnet/
     - name: Run ingest tests
       run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
     - name: Run aleph tests
@@ -90,6 +90,12 @@ jobs:
     - name: Push docker images for tags
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
       run: |
+        export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-        make ALEPH_TAG=${GITHUB_REF/refs\/tags\//} build-full docker-push
-        make ALEPH_TAG=latest build-full docker-push
+        docker pull alephdata/aleph-ui-production:${GITHUB_SHA}
+        for IMAGE in aleph aleph-ui-production aleph-elasticsearch ingest-file; do
+          docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:${ALEPH_TAG};
+          docker push alephdata/${IMAGE}:${ALEPH_TAG};
+          docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:latest;
+          docker push alephdata/${IMAGE}:latest;
+        done;

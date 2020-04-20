@@ -1,16 +1,18 @@
 import logging
+from banal import ensure_list
+from pprint import pformat  # noqa
 from followthemoney import model
+from followthemoney.graph import Node
 from followthemoney.types import registry
 
-from aleph.core import es, db, cache
+from aleph.core import db, cache
 from aleph.model import Entity, Document, Linkage
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
-from aleph.index.indexes import entities_read_index
 from aleph.index import xref as xref_index
 from aleph.logic.aggregator import delete_aggregator_entity
-from aleph.index.util import authz_query, field_filter_query
+from aleph.logic.graph import Graph
 
 log = logging.getLogger(__name__)
 
@@ -72,92 +74,82 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
 def entity_references(entity, authz=None):
     """Given a particular entity, find all the references to it from other
     entities, grouped by the property where they are used."""
-    schema = model.get(entity.get('schema'))
-    facets = []
-    for prop in model.properties:
-        if prop.type != registry.entity:
+    proxy = model.get_proxy(entity)
+    node = Node.from_proxy(proxy)
+    graph = Graph()
+    query = graph.query(authz=authz)
+    for prop in proxy.schema.properties.values():
+        if not prop.stub:
             continue
-        if not schema.is_a(prop.range):
-            continue
-
-        index = entities_read_index(prop.schema)
-        field = 'properties.%s' % prop.name
-        value = entity.get('id')
-        facets.append((index, prop.qname, registry.entity.group, field, value))
-
-    res = _filters_faceted_query(facets, authz=authz)
-    for (qname, total) in res.items():
-        if total > 0:
-            yield (model.get_qname(qname), total)
+        query.edge(node, prop.reverse, count=True)
+    for res in query.execute():
+        if res.count > 0:
+            yield (res.prop, res.count)
 
 
-def entity_tags(entity, authz=None):
+def entity_tags(entity, authz=None, edge_types=registry.pivots):
     """Do a search on tags of an entity."""
     proxy = model.get_proxy(entity)
-    Thing = model.get(Entity.THING)
-    types = [registry.name, registry.email, registry.identifier,
-             registry.iban, registry.phone, registry.address]
-    facets = []
-    # Go through all the tags which apply to this entity, and find how
-    # often they've been mentioned in other entities.
-    for type_ in types:
-        if type_.group is None:
+    graph = Graph(edge_types=edge_types)
+    query = graph.query(authz=authz)
+    for prop, value in proxy.itervalues():
+        if prop.type not in graph.edge_types:
             continue
-        for fidx, value in enumerate(proxy.get_type_values(type_)):
-            if type_.specificity(value) < 0.1:
-                continue
-            schemata = model.get_type_schemata(type_)
-            schemata = [s for s in schemata if s.is_a(Thing)]
-            index = entities_read_index(schemata)
-            alias = '%s_%s' % (type_.name, fidx)
-            facets.append((index, alias, type_.group, type_.group, value))
-
-    res = _filters_faceted_query(facets, authz=authz)
-    for (_, alias, field, _, value) in facets:
-        total = res.get(alias, 0)
-        if total > 1:
-            yield (field, value, total)
+        if prop.specificity(value) < 0.1:
+            continue
+        query.node(Node(prop.type, value), count=True)
+    for res in query.execute():
+        field = res.node.type.group
+        if res.count > 1:
+            yield (field, res.node.value, res.count)
 
 
-def _filters_faceted_query(facets, authz=None):
-    filters = {}
-    indexed = {}
-    for (idx, alias, group, field, value) in facets:
-        indexed[idx] = indexed.get(idx, {})
-        indexed[idx][alias] = field_filter_query(field, value)
-        filters[idx] = filters.get(idx, {})
-        filters[idx][group] = filters[idx].get(group, [])
-        filters[idx][group].append(value)
+def entity_expand(entity, collection_ids, edge_types, limit,
+                  properties=None, authz=None):
+    """Expand an entity's graph to find adjacent entities that are connected
+    by a common property value(eg: having the same email or phone number), a
+    property (eg: Passport entity linked to a Person) or an Entity type edge.
+    (eg: Person connected to Company through Directorship)
 
-    queries = []
-    for (idx, facets) in indexed.items():
-        shoulds = []
-        for field, values in filters[idx].items():
-            shoulds.append(field_filter_query(field, values))
-        query = []
-        if authz is not None:
-            query.append(authz_query(authz))
-        query = {
-            'bool': {
-                'should': shoulds,
-                'filter': query,
-                'minimum_should_match': 1
-            }
-        }
-        queries.append({'index': idx})
-        queries.append({
-            'size': 0,
-            'query': query,
-            'aggs': {'counters': {'filters': {'filters': facets}}}
-        })
+    collection_ids: list of collection_ids to search
+    edge_types: list of FtM Types to expand as edges
+    properties: list of FtM Properties to expand as edges.
+    limit: max number of entities to return
+    """
+    proxy = model.get_proxy(entity)
+    node = Node.from_proxy(proxy)
+    graph = Graph(edge_types=edge_types)
+    graph.add(proxy)
+    query = graph.query(authz=authz, collection_ids=collection_ids)
 
-    results = {}
-    if not len(queries):
-        return results
+    # Get relevant property set
+    props = set(proxy.schema.properties.values())
+    props = [p for p in props if p.type in graph.edge_types]
+    properties = ensure_list(properties)
+    if len(properties):
+        props = [p for p in props if p.name in properties]
 
-    res = es.msearch(body=queries)
-    for resp in res.get('responses', []):
-        aggs = resp.get('aggregations', {}).get('counters', {})
-        for alias, value in aggs.get('buckets', {}).items():
-            results[alias] = value.get('doc_count', results.get(alias, 0))
-    return results
+    # Query for reverse properties
+    for prop in props:
+        if prop.stub:
+            query.edge(node, prop.reverse, limit=limit, count=True)
+    query.execute()
+
+    # Fill in missing graph entities:
+    if limit > 0:
+        graph.resolve()
+
+    for prop in props:
+        count = len(proxy.get(prop))
+        if prop.stub:
+            for res in query.patterns:
+                if res.prop == prop.reverse:
+                    count = res.count
+        proxies = set()
+        # Too much effort to do this right. This works, too:
+        for edge in graph.get_adjacent(node, prop=prop):
+            for part in (edge.proxy, edge.source.proxy, edge.target.proxy):
+                if part is not None and part != proxy:
+                    proxies.add(part)
+        if count > 0:
+            yield (prop, count, proxies)
