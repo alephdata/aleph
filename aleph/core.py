@@ -89,7 +89,7 @@ def create_app(config={}):
 
     #if app.config.SINGLE_USER_MODE:
     #   ### login as admin
-    #   login(Role.SYSTEM_USER))
+    #   auto_login(Role.SYSTEM_USER))
     return app
 
 
