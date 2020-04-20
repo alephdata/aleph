@@ -21,7 +21,7 @@ PyYAML==5.3.1
 pyjwt==1.7.1
 rdflib==4.2.2
 requests[security]==2.23.0
-urllib3==1.25.8
+urllib3==1.25.9
 redis==3.4.1
 fakeredis==1.4.0
 networkx==2.4
