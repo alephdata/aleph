@@ -55,6 +55,9 @@ jobs:
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph:${GITHUB_SHA}
   test-aleph:
+    continue-on-error: true
+    strategy:
+      fail-fast: false
     runs-on: ubuntu-latest
     needs:
     - docker-aleph
