@@ -81,9 +81,6 @@ jobs:
         sleep 10
     - name: Run ingest tests
       run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
-    - name: Check disk usage
-      run: |
-        df -h
     - name: Run aleph tests
       run: make ALEPH_TAG=${GITHUB_SHA} test
     - name: Push docker images for tags
