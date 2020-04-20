@@ -73,6 +73,7 @@ jobs:
         sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
         docker --version
         docker-compose --version
+        docker volume prune -f
     - name: Docker pull and start
       run: |
         echo "${GITHUB_REF}"
