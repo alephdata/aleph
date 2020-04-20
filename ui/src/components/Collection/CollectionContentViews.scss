@@ -102,6 +102,12 @@
         cursor: auto;
         background-color: white !important;
         padding: 0 !important;
+
+        .SchemaSelect {
+          .bp3-popover-wrapper, .bp3-popover-target, .bp3-button {
+            width: 100%;
+          }
+        }
       }
     }
   }

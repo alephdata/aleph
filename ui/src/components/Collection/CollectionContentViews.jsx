@@ -92,6 +92,7 @@ class CollectionContentViews extends React.Component {
 
     const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0]?.schema);
     const isPending = collection.isPending && !collection.id;
+    const showSchemaSelect = !isPending && collection.writeable;
 
     return (
       <Tabs
@@ -116,7 +117,7 @@ class CollectionContentViews extends React.Component {
             panel={<CollectionDocumentsMode collection={collection} editMode={editMode} />}
           />
         )}
-        {hasBrowse && <MenuDivider />}
+        {hasBrowse && entitySchemata.length > 0 && <MenuDivider />}
         {entitySchemata.map(ref => (
           <Tab
             id={ref.schema}
@@ -130,8 +131,8 @@ class CollectionContentViews extends React.Component {
             panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} editMode={editMode} />}
           />
         ))}
-        {collection.writeable && <MenuDivider />}
-        {collection.writeable && (
+        {showSchemaSelect && <MenuDivider />}
+        {showSchemaSelect && (
           <Tab
             id="new"
             key="new"
@@ -141,7 +142,7 @@ class CollectionContentViews extends React.Component {
               <SchemaSelect
                 placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
                 onSelect={this.onSchemaAdd}
-                optionsFilter={schema => !collection.schemata.hasOwnProperty(schema.name)}
+                optionsFilter={schema => !collection?.schemata?.hasOwnProperty(schema.name)}
               />
             }
           />

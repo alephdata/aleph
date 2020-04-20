@@ -11,6 +11,8 @@ import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { Count } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 
+import './EntityListManager.scss';
+
 const messages = defineMessages({
   edit: {
     id: 'entity.viewer.edit',
