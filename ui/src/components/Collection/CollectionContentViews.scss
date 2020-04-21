@@ -24,6 +24,9 @@
       &:last-child {
         display: none;
       }
+      &:first-child {
+        display: none;
+      }
     }
 
     &.bp3-tabs.bp3-vertical {

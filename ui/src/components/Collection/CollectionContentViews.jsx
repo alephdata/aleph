@@ -90,8 +90,6 @@ class CollectionContentViews extends React.Component {
       delete parsedHash.editing;
     }
 
-    console.log('location search is', location.search)
-
     history.push({
       pathname: location.pathname,
       search: "",
@@ -134,7 +132,7 @@ class CollectionContentViews extends React.Component {
             panel={<CollectionDocumentsMode collection={collection} editMode={editMode} />}
           />
         )}
-        {hasBrowse && entitySchemata.length > 0 && <MenuDivider />}
+        {(isPending || (hasBrowse && entitySchemata.length > 0)) && <MenuDivider />}
         {entitySchemata.map(ref => (
           <Tab
             id={ref.schema}
