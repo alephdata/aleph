@@ -12,16 +12,19 @@ import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 class EntityTableEditor extends Component {
   render() {
     const { entities, entityManager, isPending, sort, sortColumn, schema, selection, updateSelection } = this.props;
-    // const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
 
-    // const skeletonItems = [...Array(15).keys()];
+    const trimmedSort = sort?.field
+      ? {
+        field: sort.field.replace('properties.', ''),
+        direction: sort.direction,
+      } : sort;
 
     return (
       <TableEditor
         entities={entities}
         schema={schema}
         entityManager={entityManager}
-        sort={sort}
+        sort={trimmedSort}
         sortColumn={newField => sortColumn(`properties.${newField}`)}
         selection={selection}
         updateSelection={updateSelection}
