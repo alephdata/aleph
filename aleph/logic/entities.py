@@ -100,7 +100,7 @@ def entity_tags(entity, authz=None, edge_types=registry.pivots):
         query.node(Node(prop.type, value), count=True)
     for res in query.execute():
         field = res.node.type.group
-        if res.count > 1:
+        if res.count is not None and res.count > 1:
             yield (field, res.node.value, res.count)
 
 
