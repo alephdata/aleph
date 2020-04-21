@@ -90,9 +90,11 @@ class CollectionContentViews extends React.Component {
       delete parsedHash.editing;
     }
 
+    console.log('location search is', location.search)
+
     history.push({
       pathname: location.pathname,
-      search: location.search,
+      search: "",
       hash: queryString.stringify(parsedHash),
     });
   }
