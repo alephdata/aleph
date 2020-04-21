@@ -9,7 +9,6 @@ class EntityTable extends Component {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
 
-    console.log('new field is', newField);
     // Toggle through sorting states: ascending, descending, or unsorted.
     if (currentField !== newField) {
       return updateQuery(query.sortBy(newField, 'asc'));

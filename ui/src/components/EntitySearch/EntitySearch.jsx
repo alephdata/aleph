@@ -100,8 +100,6 @@ export class EntitySearch extends Component {
     const foundText = this.generateFoundText();
     const isEditing = writeable && editMode;
 
-    console.log('in EntitySearch', isEmpty, result, result.total, emptyComponent)
-
     return (
       <div className={c('EntitySearch', className)}>
         {result.total === 0 && (

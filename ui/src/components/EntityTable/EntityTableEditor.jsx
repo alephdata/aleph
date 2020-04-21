@@ -16,18 +16,17 @@ class EntityTableEditor extends Component {
 
     // const skeletonItems = [...Array(15).keys()];
 
-    console.log('rendering editor', isPending);
-
     return (
       <TableEditor
         entities={entities}
         schema={schema}
         entityManager={entityManager}
         sort={sort}
-        sortColumn={sortColumn}
+        sortColumn={newField => sortColumn(`properties.${newField}`)}
         selection={selection}
         updateSelection={updateSelection}
         writeable={true}
+        isPending={isPending}
       />
     );
   }
