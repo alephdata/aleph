@@ -250,7 +250,8 @@ def create():
     data = parse_request('EntityCreate')
     collection = get_nested_collection(data, request.authz.WRITE)
     data.pop('id', None)
-    entity_id = upsert_entity(data, collection, sync=True)
+    validate = get_flag('validate', default=False)
+    entity_id = upsert_entity(data, collection, sync=True, validate=validate)
     tag_request(entity_id=entity_id, collection_id=str(collection.id))
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
@@ -525,7 +526,11 @@ def update(entity_id):
         collection = get_nested_collection(data, request.authz.WRITE)
     tag_request(collection_id=collection.id)
     data['id'] = entity_id
-    entity_id = upsert_entity(data, collection, sync=get_flag('sync', True))
+    sync = get_flag('sync', default=True)
+    validate = get_flag('validate', default=False)
+    entity_id = upsert_entity(data, collection,
+                              validate=validate,
+                              sync=sync)
     db.session.commit()
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)

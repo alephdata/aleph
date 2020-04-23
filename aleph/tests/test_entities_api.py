@@ -117,7 +117,7 @@ class EntitiesApiTestCase(TestCase):
         assert 'little' in res.json['name'], res.json
 
         data['properties'].pop('name', None)
-        res = self.client.post(url,
+        res = self.client.post(url + '?validate=true',
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
@@ -208,7 +208,7 @@ class EntitiesApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
-        assert 1 == len(res.json['properties'].get('alias', [])), res.json
+        assert 1 == len(res.json['properties'].get('alias')), res.json
 
     def test_delete_entity(self):
         _, headers = self.login(is_admin=True)
