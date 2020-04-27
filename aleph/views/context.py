@@ -102,14 +102,23 @@ def finalize_response(resp):
     return resp
 
 
+def get_remote_ip():
+    if request.headers.getlist("X-Forwarded-For"):
+        return request.headers.getlist("X-Forwarded-For")[0]
+    else:
+        return request.remote_addr
+
+
 def generate_request_log(resp):
     """Collect data about the request for analytical purposes."""
+    log.info("HEADERS: %s", list(request.headers.items()))
+    log.info("REMOTE: %s", get_remote_ip())
     payload = {
         'v': __version__,
         'method': request.method,
         'endpoint': request.endpoint,
         'referrer': request.referrer,
-        'ip': request.remote_addr,
+        'ip': get_remote_ip(),
         'ua': str(request.user_agent),
         'time': datetime.utcnow().isoformat(),
         'url': request.url,
