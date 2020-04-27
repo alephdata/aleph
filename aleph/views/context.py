@@ -111,7 +111,9 @@ def get_remote_ip():
 
 def generate_request_log(resp):
     """Collect data about the request for analytical purposes."""
-    log.info("HEADERS: %s", list(request.headers.items()))
+    headers = list(request.headers.items())
+    headers = [(h, v) for h, v in headers if h not in ['Authorization']]
+    log.info("HEADERS: %s", headers)
     log.info("REMOTE: %s", get_remote_ip())
     payload = {
         'v': __version__,
