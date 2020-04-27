@@ -5,7 +5,7 @@ import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib'
 import { processApiEntity } from 'src/components/Diagram/util';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import { updateDiagram } from 'src/actions';
-import updateStates from './diagramUpdateStates';
+import updateStates from 'src/util/updateStates';
 
 import './DiagramEditor.scss';
 

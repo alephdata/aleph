@@ -7,7 +7,7 @@ import { processApiEntity } from 'src/components/Diagram/util';
 import { queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
 import { createEntity, queryEntities, updateEntity } from 'src/actions';
-import updateStates from 'src/components/Diagram/diagramUpdateStates';
+import updateStates from 'src/util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
   const WrappedComponent = (

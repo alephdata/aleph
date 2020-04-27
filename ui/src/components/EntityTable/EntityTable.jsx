@@ -3,8 +3,25 @@ import { withRouter } from 'react-router';
 import { ErrorSection } from 'src/components/common';
 import EntityTableEditor from './EntityTableEditor';
 import EntityTableViewer from './EntityTableViewer';
+import updateStates from 'src/util/updateStates';
 
 class EntityTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      placeholderResult: null,
+    };
+
+    this.onStatusChange = this.onStatusChange.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.result.isPending && !this.props.result.isPending) {
+      this.setState({ placeholderResult: null });
+    }
+  }
+
   sortColumn(newField) {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
@@ -21,12 +38,16 @@ class EntityTable extends Component {
     return undefined;
   }
 
-  onStatusChange() {
-    console.log('on status change');
+  onStatusChange(status) {
+    // to avoid loading jump, stores previous query result as placeholder during pending update
+    if (status === updateStates.IN_PROGRESS) {
+      this.setState({ placeholderResult: this.props.result });
+    }
   }
 
   render() {
     const { collection, isEditing, query, result, ...rest } = this.props;
+    const { placeholderResult } = this.state;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -44,9 +65,9 @@ class EntityTable extends Component {
       <TableComponent
         collection={collection}
         onStatusChange={this.onStatusChange}
-        entities={results}
+        entities={placeholderResult?.results || results}
         sort={sort}
-        isPending={result.isPending}
+        isPending={placeholderResult ? placeholderResult.isPending : result.isPending}
         sortColumn={this.sortColumn.bind(this)}
         {...rest}
       />
