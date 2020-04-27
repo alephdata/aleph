@@ -51,8 +51,8 @@ endpoint.interceptors.response.use(
   response => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-   //   store.dispatch(logout());
-   //   window.location.reload();
+      store.dispatch(logout());
+      window.location.reload();
     }
     return Promise.reject(error);
   },

@@ -11,9 +11,7 @@ const initialState = {
 };
 
 const handleLogin = (state, token) => {
-	console.log(token);
   const data = jwtDecode(token);
-	console.log(data)
   return {
     token,
     isAdmin: data.a,
