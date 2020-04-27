@@ -28,7 +28,7 @@
     "query-string": "^6.8.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-dropzone": "^10.2.0",
+    "react-dropzone": "^11.0.1",
     "react-helmet": "^6.0.0-beta",
     "react-intl": "^4.2.2",
     "react-intl-po": "^2.2.2",
