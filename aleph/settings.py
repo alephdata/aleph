@@ -105,6 +105,10 @@ SITEMAP_FLOOR = '2019-06-22'
 # Maximum number of entities to return per property when expanding entities
 MAX_EXPAND_ENTITIES = env.to_int('ALEPH_MAX_EXPAND_ENTITIES', 200)
 
+# API rate limiting (req/min for anonymous users)
+API_RATE_LIMIT = env.to_int('ALEPH_API_RATE_LIMIT', 20)
+API_RATE_WINDOW = 15  # minutes
+
 
 ##############################################################################
 # E-mail settings

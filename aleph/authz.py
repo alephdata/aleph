@@ -21,13 +21,15 @@ class Authz(object):
     WRITE = 'write'
     PREFIX = 'aauthz'
 
-    def __init__(self, role_id, roles, is_admin=False):
+    def __init__(self, role_id, roles, is_admin=False, is_blocked=False):
         self.id = role_id
         self.logged_in = role_id is not None
         self.roles = set(ensure_list(roles))
         self.is_admin = is_admin
+        self.is_blocked = is_blocked
         self.in_maintenance = settings.MAINTENANCE
         self.session_write = not self.in_maintenance and self.logged_in
+        self.session_write = not is_blocked and self.session_write
         self._collections = {}
 
     def collections(self, action):
@@ -127,6 +129,7 @@ class Authz(object):
             'exp': exp,
             'r': list(self.roles),
             'a': self.is_admin,
+            'b': self.is_blocked,
         }
         if scope is not None:
             payload['s'] = scope
@@ -150,7 +153,9 @@ class Authz(object):
         if not role.is_blocked:
             roles.add(Role.load_id(Role.SYSTEM_USER))
             roles.update([g.id for g in role.roles])
-        return cls(role.id, roles, is_admin=role.is_admin)
+        return cls(role.id, roles,
+                   is_admin=role.is_admin,
+                   is_blocked=role.is_blocked)
 
     @classmethod
     def from_token(cls, token, scope=None):
@@ -162,7 +167,8 @@ class Authz(object):
                 raise Unauthorized()
             return cls(data.get('u'),
                        data.get('r'),
-                       data.get('a', False))
+                       data.get('a', False),
+                       data.get('b', False))
         except (jwt.DecodeError, TypeError):
             return
 

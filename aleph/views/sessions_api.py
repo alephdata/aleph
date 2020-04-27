@@ -18,35 +18,6 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)
 
 
-def _get_credential_authz(credential):
-    if credential is None or not len(credential):
-        return
-    if ' ' in credential:
-        _, credential = credential.split(' ', 1)
-    authz = Authz.from_token(credential, scope=request.path)
-    if authz is not None:
-        return authz
-
-    role = Role.by_api_key(credential)
-    if role is not None:
-        return Authz.from_role(role=role)
-
-
-@blueprint.before_app_request
-def decode_authz():
-    authz = None
-
-    if 'Authorization' in request.headers:
-        credential = request.headers.get('Authorization')
-        authz = _get_credential_authz(credential)
-
-    if authz is None and 'api_key' in request.args:
-        authz = _get_credential_authz(request.args.get('api_key'))
-
-    authz = authz or Authz.from_role(role=None)
-    request.authz = authz
-
-
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
 def password_login():
     """Provides email and password authentication.
