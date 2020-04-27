@@ -6,11 +6,11 @@ from banal import hash_data
 from datetime import datetime
 from flask_babel import get_locale
 from flask import request, Response, Blueprint
-from servicelayer.rate_limit import RateLimit
 from werkzeug.exceptions import TooManyRequests
 
 from aleph import signals, __version__
-from aleph.core import settings, kv
+from aleph.queues import get_rate_limit
+from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Role
 
@@ -87,12 +87,13 @@ def enable_authz(request):
 
 
 def enable_rate_limit(request):
-    interval = settings.API_RATE_WINDOW * 60
-    limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
     if request.authz.logged_in and not request.authz.is_blocked:
         return
-    request.rate_limit = RateLimit(kv, request.remote_ip + 'y',
-                                   limit=limit, interval=interval)
+    limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
+    request.rate_limit = get_rate_limit(request.remote_ip,
+                                        limit=limit,
+                                        interval=settings.API_RATE_WINDOW,
+                                        unit=60)
     if not request.rate_limit.check():
         raise TooManyRequests("Rate limit exceeded.")
 
@@ -127,10 +128,9 @@ def finalize_response(resp):
 
     # Finalize reporting of the rate limiter:
     if hasattr(request, 'rate_limit') and request.rate_limit is not None:
-        window = settings.API_RATE_WINDOW
         usage = request.rate_limit.update(amount=math.ceil(took))
-        resp.headers['X-Rate-Limit-Limit'] = request.rate_limit.limit / window
-        resp.headers['X-Rate-Limit-Usage'] = usage / window
+        resp.headers['X-Rate-Limit'] = request.rate_limit.limit
+        resp.headers['X-Rate-Usage'] = usage
 
     generate_request_log(resp, took)
     if resp.is_streamed:
