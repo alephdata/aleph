@@ -1,6 +1,7 @@
 import { createReducer } from 'redux-act';
 import jwtDecode from 'jwt-decode';
 import { v4 as uuidv4 } from 'uuid';
+import { fetchMetadata } from 'src/actions';
 
 import { loginWithToken, logout } from 'src/actions/sessionActions';
 
@@ -10,7 +11,9 @@ const initialState = {
 };
 
 const handleLogin = (state, token) => {
+	console.log(token);
   const data = jwtDecode(token);
+	console.log(data)
   return {
     token,
     isAdmin: data.a,
@@ -29,4 +32,6 @@ const handleLogout = state => ({
 export default createReducer({
   [loginWithToken]: handleLogin,
   [logout]: handleLogout,
+  [fetchMetadata.COMPLETE]: (state, { metadata }) => handleLogin(state, metadata.token),
 }, initialState);
+

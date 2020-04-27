@@ -1,5 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { createReducer } from 'redux-act';
+import { fetchMetadata } from 'src/actions';
 
 import { loginWithToken } from 'src/actions/sessionActions';
 import { queryRoles, fetchRole, updateRole } from 'src/actions';
@@ -22,6 +23,8 @@ export default createReducer({
   [fetchRole.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
   [updateRole.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
+
+  [fetchMetadata.COMPLETE]: (state, { metadata }) => handleLogin(state, metadata.token),
 
   [loginWithToken]: handleLogin,
 }, initialState);

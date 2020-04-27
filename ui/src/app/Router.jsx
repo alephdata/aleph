@@ -32,11 +32,13 @@ class Router extends Component {
     const { metadata, fetchMetadata } = this.props;
     if (!metadata.app) {
       fetchMetadata();
+			console.log(metadata);
     }
   }
 
   render() {
     const { metadata, session } = this.props;
+		console.log(metadata, session);
     const isLoaded = metadata && metadata.app && session;
 
     const Loading = (
