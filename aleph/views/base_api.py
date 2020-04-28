@@ -52,10 +52,9 @@ def metadata():
 
     locales = settings.UI_LANGUAGES
     locales = {l: Locale(l).get_language_name(l) for l in locales}
-    blob = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1IjozLCJleHAiOjE1ODc3NTg2NzMsInIiOlsxLDIsM10sImEiOnRydWUsInJvbGUiOnsiaWQiOiIzIiwidHlwZSI6InVzZXIiLCJuYW1lIjoiZm9vIiwibGFiZWwiOiJmb28gPGYqKkBmb28uZm9vPiIsImVtYWlsIjoiZm9vQGZvby5mb28iLCJsb2NhbGUiOm51bGwsImFwaV9rZXkiOiI5NjNkY2M0MzZiOGQ0NDM1YmEyY2E2MWY5MjNiNzZkNSIsImlzX2FkbWluIjp0cnVlLCJpc19tdXRlZCI6ZmFsc2UsImlzX3Rlc3RlciI6ZmFsc2UsImhhc19wYXNzd29yZCI6dHJ1ZX19.H7QF5vW1oQLAlbMw5ghtjZ9nQ4-vwHLcngKwJHoWj0Y"
 
     data = {
-        'token' : blob,
+        #'token' : sut,
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
         'app': {
@@ -74,6 +73,16 @@ def metadata():
         'model': model,
         'auth': auth
     }
+    #### TODO: fix sql and notificiation error
+    if settings.SINGLE_USER:
+        from aleph.authz import Authz
+        from aleph.model import Role
+        role = Role.load_cli_user()
+        authz = Authz.from_role(role)
+        single_user_token = authz.to_token(role=role)
+        print("AAuthz__ " * 15, single_user_token)
+        data.update({'token':single_user_token})
+
     cache.set_complex(key, data, expires=120)
     return jsonify(data)
 
