@@ -73,7 +73,6 @@ def metadata():
         'model': model,
         'auth': auth
     }
-    #### TODO: fix sql and notificiation error
     if settings.SINGLE_USER:
         from aleph.authz import Authz
         from aleph.model import Role

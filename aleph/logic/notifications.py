@@ -45,6 +45,10 @@ def flush_notifications(obj, clazz=None, sync=False):
 def get_role_channels(role):
     """Generate the set of notification channels that the current
     user should listen to."""
+    # role is None in singel user mode
+    # TODO: is this the best way to solve this?
+    if role is None:
+        return [GLOBAL]
     key = cache.object_key(Role, role.id, 'channels')
     channels = cache.get_list(key)
     if len(channels):
@@ -66,7 +70,12 @@ def get_notifications(role, since=None, parser=None):
     filters = [{'terms': {'channels': channels}}]
     if since is not None:
         filters.append({'range': {'created_at': {'gt': since}}})
-    must_not = [{'term': {'actor_id': role.id}}]
+    ### TODO: this is a workaround for the notifictations http/500 on in single user mode.
+    ### Is this to ugly to exist?
+    if role is None:
+        must_not = []
+    else:
+        must_not = [{'term': {'actor_id': role.id}}]
     query = {
         'size': 30,
         'query': {'bool': {'filter': filters, 'must_not': must_not}},
