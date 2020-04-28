@@ -11,6 +11,7 @@ const initialState = {
 };
 
 const handleLogin = (state, token) => {
+	//// 
   const data = jwtDecode(token);
   return {
     token,
@@ -30,6 +31,9 @@ const handleLogout = state => ({
 export default createReducer({
   [loginWithToken]: handleLogin,
   [logout]: handleLogout,
-  [fetchMetadata.COMPLETE]: (state, { metadata }) => handleLogin(state, metadata.token),
+  [fetchMetadata.COMPLETE]: (state, {metadata}) => {
+    if (!metadata?.token) {return state}
+    else { return handleLogin(state, metadata.token)}
+  },
 }, initialState);
 

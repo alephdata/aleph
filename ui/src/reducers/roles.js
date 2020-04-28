@@ -24,7 +24,7 @@ export default createReducer({
 
   [updateRole.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
-  [fetchMetadata.COMPLETE]: (state, { metadata }) => handleLogin(state, metadata.token),
+  [fetchMetadata.COMPLETE]: (state, { metadata }) => {  if (!metadata?.token) { return state } else { return handleLogin(state, metadata.token);}},
 
   [loginWithToken]: handleLogin,
 }, initialState);

@@ -10,7 +10,8 @@ from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
 from aleph.core import cache, settings, url_for
-from aleph.model import Collection
+from aleph.authz import Authz
+from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
@@ -54,7 +55,6 @@ def metadata():
     locales = {l: Locale(l).get_language_name(l) for l in locales}
 
     data = {
-        #'token' : sut,
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
         'app': {
@@ -73,13 +73,11 @@ def metadata():
         'model': model,
         'auth': auth
     }
+
     if settings.SINGLE_USER:
-        from aleph.authz import Authz
-        from aleph.model import Role
         role = Role.load_cli_user()
         authz = Authz.from_role(role)
         single_user_token = authz.to_token(role=role)
-        print("AAuthz__ " * 15, single_user_token)
         data.update({'token':single_user_token})
 
     cache.set_complex(key, data, expires=120)
