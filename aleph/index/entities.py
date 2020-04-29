@@ -17,8 +17,7 @@ from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 log = logging.getLogger(__name__)
 PROXY_INCLUDES = ['schema', 'properties']
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
-                   'identifiers', 'addresses', 'properties.bodyText',
-                   'properties.bodyHtml', 'properties.headers', 'numeric.*']
+                   'identifiers', 'addresses', 'numeric.*']
 
 
 def _source_spec(includes, excludes):
@@ -64,7 +63,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
-    for res in scan(es, index=index, query=query, scroll='1410m', raise_on_error=False):  # noqa
+    for res in scan(es, index=index, query=query, scroll='1410m'):
         entity = unpack_result(res)
         if entity is not None:
             if cached:
