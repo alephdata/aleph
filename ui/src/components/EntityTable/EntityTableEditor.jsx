@@ -12,6 +12,10 @@ class EntityTableEditor extends Component {
   render() {
     const { entities, entityManager, isPending, sort, sortColumn, schema, selection, updateSelection } = this.props;
 
+    if (!schema) {
+      return null;
+    }
+
     const trimmedSort = sort?.field
       ? {
         field: sort.field.replace('properties.', ''),
@@ -38,7 +42,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const model = selectModel(state);
-  const schema = model.getSchema(hashQuery.type);
+  const schema = hashQuery.type ? model.getSchema(hashQuery.type) : null;
 
   return { schema };
 };
