@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

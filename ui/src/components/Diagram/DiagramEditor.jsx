@@ -137,5 +137,3 @@ export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   entityEditorWrapper
 )(DiagramEditor);
-
- // entityEditorWrapper(DiagramEditor);

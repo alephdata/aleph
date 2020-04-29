@@ -28,30 +28,30 @@ class CollectionContentViews extends React.Component {
     super(props);
     const { activeType, collection } = props;
 
-    let addedSchemata = [];
+    let addedSchemaViews = [];
     if (activeType && activeType !== 'Document') {
       if (!collection?.schemata?.hasOwnProperty(activeType)) {
-        addedSchemata = [activeType];
+        addedSchemaViews = [activeType];
       }
     }
 
     this.state = {
-      addedSchemata,
+      addedSchemaViews,
     }
 
     this.handleTabChange = this.handleTabChange.bind(this);
-    this.onSchemaAdd = this.onSchemaAdd.bind(this);
+    this.onSchemaViewAdd = this.onSchemaViewAdd.bind(this);
   }
 
-  onSchemaAdd(schema) {
+  onSchemaViewAdd(schema) {
     const schemaName = schema.name;
-    this.setState(({ addedSchemata }) => ({ addedSchemata: [...addedSchemata, schemaName] }));
+    this.setState(({ addedSchemaViews }) => ({ addedSchemaViews: [...addedSchemaViews, schemaName] }));
     this.handleTabChange(schema);
   }
 
-  getEntitySchemata() {
+  schemaViews() {
     const { collection, model } = this.props;
-    const { addedSchemata } = this.state;
+    const { addedSchemaViews } = this.state;
 
     const matching = [];
     for (const key in collection.schemata) {
@@ -64,7 +64,7 @@ class CollectionContentViews extends React.Component {
     }
     const existingSchemata = _.reverse(_.sortBy(matching, ['count']));
     const newSchemata =
-      addedSchemata
+      addedSchemaViews
         .filter(schema => !collection?.schemata?.hasOwnProperty(schema))
         .map(schema => ({ schema, count: 0 }));
 
@@ -86,6 +86,7 @@ class CollectionContentViews extends React.Component {
     const { history, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
+    // leave edit mode if changing to Documents tab
     if (type === 'Document') {
       delete parsedHash.editing;
     }
@@ -102,10 +103,10 @@ class CollectionContentViews extends React.Component {
       collection, activeType, editMode, intl, xref, onChange,
     } = this.props;
     const numOfDocs = this.countDocuments();
-    const entitySchemata = this.getEntitySchemata();
+    const schemaViews = this.schemaViews();
     const hasBrowse = (numOfDocs > 0 || collection.writeable);
 
-    const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0]?.schema);
+    const selectedTab = activeType || (hasBrowse ? 'Document' : schemaViews[0]?.schema);
     const isPending = collection.isPending && !collection.id;
     const showSchemaSelect = !isPending && collection.writeable;
 
@@ -132,8 +133,8 @@ class CollectionContentViews extends React.Component {
             panel={<CollectionDocumentsMode collection={collection} editMode={editMode} />}
           />
         )}
-        {(isPending || (hasBrowse && entitySchemata.length > 0)) && <MenuDivider />}
-        {entitySchemata.map(ref => (
+        {(isPending || (hasBrowse && schemaViews.length > 0)) && <MenuDivider />}
+        {schemaViews.map(ref => (
           <Tab
             id={ref.schema}
             key={ref.schema}
@@ -156,8 +157,8 @@ class CollectionContentViews extends React.Component {
             title={
               <SchemaSelect
                 placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
-                onSelect={this.onSchemaAdd}
-                optionsFilter={schema => !entitySchemata.find(item => (item.schema === schema.name))}
+                onSelect={this.onSchemaViewAdd}
+                optionsFilter={schema => !schemaViews.find(item => (item.schema === schema.name))}
               />
             }
           />
