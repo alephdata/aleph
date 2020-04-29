@@ -7,9 +7,9 @@ import { Icon } from '@blueprintjs/core';
 
 class SchemaIcon extends PureComponent {
   render() {
-    const { schema, ...rest } = this.props;
+    const { schema, className } = this.props;
 
-    return <Icon iconSize="16px" icon={schema.name.toLowerCase()} {...rest} />;
+    return <Icon iconSize="16px" icon={schema.name.toLowerCase()} className={className} />;
   }
 }
 
