@@ -29,6 +29,7 @@ def status():
       - System
     """
     require(request.authz.logged_in)
+    request.rate_limit = None
     status = get_active_collection_status()
     active_collections = status.pop('datasets', [])
     active_foreign_ids = set(active_collections.keys())

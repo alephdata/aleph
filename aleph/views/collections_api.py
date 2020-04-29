@@ -349,6 +349,7 @@ def status(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.READ)
+    request.rate_limit = None
     return jsonify(get_status(collection))
 
 
