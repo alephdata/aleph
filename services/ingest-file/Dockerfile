@@ -2,8 +2,7 @@ FROM ubuntu:19.10
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
-    && apt-get -q -y upgrade \
-    && apt-get -q -y install \
+    && apt-get -qq -y install \
         tesseract-ocr-eng \
         tesseract-ocr-swa \
         tesseract-ocr-swe \
@@ -75,7 +74,7 @@ RUN apt-get -qq -y update \
 # Enable non-free archive for `unrar`.
 # RUN echo "deb http://http.us.debian.org/debian stretch non-free" >/etc/apt/sources.list.d/nonfree.list
 RUN apt-get -qq -y update \
-    && apt-get -q -y install build-essential locales ca-certificates \
+    && apt-get -qq -y install build-essential locales ca-certificates \
         # python deps (mostly to install their dependencies)
         python3-pip python3-dev python3-pil \
         # tesseract
@@ -95,15 +94,11 @@ RUN apt-get -qq -y update \
         poppler-utils poppler-data pst-utils \
     && apt-get -qq -y autoremove \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
 # Set up the locale and make sure the system uses unicode for the file system.
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
-    && dpkg-reconfigure --frontend=noninteractive locales \
-    && update-locale LANG=en_US.UTF-8
 ENV LANG='en_US.UTF-8' \
-    LC_ALL='en_US.UTF-8' \
-    LC_CTYPE='en_US.UTF-8' \
     TZ='UTC' \
     OMP_THREAD_LIMIT='1'
 
@@ -112,7 +107,7 @@ RUN groupadd -g 1000 -r app \
 
 RUN pip3 install --no-cache-dir -q -U pip setuptools six wheel nose coverage
 COPY requirements.txt /tmp/
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -q -r /tmp/requirements.txt
 
 # Install spaCy and link models to three-letter language codes
 RUN python3 -m spacy download xx_ent_wiki_sm \

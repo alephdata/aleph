@@ -5,16 +5,13 @@ from followthemoney import model
 from followthemoney.types import registry
 from urllib.parse import quote
 from urlnormalizer import query_string
-from banal import ensure_list
 
 from aleph.core import db, url_for
 from aleph.model import QueryLog
-from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
-from aleph.search.parser import EntityExpandQueryParser
+from aleph.search import EntitiesQuery, MatchQuery
+from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
-from aleph.logic.entities import (
-    entity_references, entity_tags, enitiy_expand_adjacent_nodes
-)
+from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
@@ -253,7 +250,8 @@ def create():
     data = parse_request('EntityCreate')
     collection = get_nested_collection(data, request.authz.WRITE)
     data.pop('id', None)
-    entity_id = upsert_entity(data, collection, sync=True)
+    validate = get_flag('validate', default=False)
+    entity_id = upsert_entity(data, collection, sync=True, validate=validate)
     tag_request(entity_id=entity_id, collection_id=str(collection.id))
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
@@ -528,7 +526,11 @@ def update(entity_id):
         collection = get_nested_collection(data, request.authz.WRITE)
     tag_request(collection_id=collection.id)
     data['id'] = entity_id
-    entity_id = upsert_entity(data, collection, sync=get_flag('sync', True))
+    sync = get_flag('sync', default=True)
+    validate = get_flag('validate', default=False)
+    entity_id = upsert_entity(data, collection,
+                              validate=validate,
+                              sync=sync)
     db.session.commit()
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
@@ -615,18 +617,18 @@ def expand(entity_id):
     edge_types = request.args.getlist('edge_types')
     collection_id = entity.get('collection_id')
     tag_request(collection_id=collection_id)
-    parser = EntityExpandQueryParser(request.args, request.authz)
-    limit = min((parser.limit or MAX_EXPAND_ENTITIES), MAX_EXPAND_ENTITIES)
-    properties = ensure_list(parser.filters.get('property'))
+    parser = QueryParser(request.args, request.authz,
+                         max_limit=MAX_EXPAND_ENTITIES)
+    properties = parser.filters.get('property')
     results = []
-    for (prop, total, proxies) in enitiy_expand_adjacent_nodes(
+    for (prop, total, proxies) in entity_expand(
         entity, collection_ids=[collection_id],
         edge_types=edge_types, properties=properties, authz=request.authz,
-        limit=limit
+        limit=parser.limit
     ):
         results.append({
             'count': total,
-            'property': prop,
+            'property': prop.name,
             'entities': [proxy.to_dict() for proxy in proxies]
         })
     return jsonify({

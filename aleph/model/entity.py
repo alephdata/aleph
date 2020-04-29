@@ -46,7 +46,7 @@ class Entity(db.Model, SoftDeleteModel):
         self.id = collection.ns.sign(self.id)
         self.schema = proxy.schema.name
         previous = self.to_proxy()
-        for prop in proxy.iterprops():
+        for prop in proxy.schema.properties.values():
             # Do not allow the user to overwrite hashes because this could
             # lead to a user accessing random objects.
             if prop.type == registry.checksum:

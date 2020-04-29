@@ -168,7 +168,7 @@ export class MappingKeyAssignItem extends Component {
               id="entity-select"
               items={items}
               itemRenderer={entityItemRenderer}
-              onItemSelect={entity => onPropertyAdd(id, property.name, { entity: entity.id })}
+              onItemSelect={entity => onPropertyAdd(id, property.name, { entity: entity.id, required: true })}
               filterable={false}
               popoverProps={{ minimal: true }}
               activeItem={currValue}

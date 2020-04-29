@@ -117,7 +117,7 @@ class EntitiesApiTestCase(TestCase):
         assert 'little' in res.json['name'], res.json
 
         data['properties'].pop('name', None)
-        res = self.client.post(url,
+        res = self.client.post(url + '?validate=true',
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
@@ -208,7 +208,7 @@ class EntitiesApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
-        assert 1 == len(res.json['properties'].get('alias', [])), res.json
+        assert 1 == len(res.json['properties'].get('alias')), res.json
 
     def test_delete_entity(self):
         _, headers = self.login(is_admin=True)
@@ -540,24 +540,12 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
-            'schema': 'Passport',
-            'collection_id': self.col_id,
-            'properties': {
-                'passportNumber': 'A1B2C3'
-            }
-        }
-        passport1 = self.client.post(url,
-                                     data=json.dumps(data),
-                                     headers=headers,
-                                     content_type='application/json')
-        data = {
             'schema': 'Person',
             'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
                 'email': ["osama@al-qaeda.org", "o@laden.me"],
                 'status': 'dead',
-                'passport': passport1.json['id'],
                 'nationality': 'sa'
             }
         }
@@ -565,6 +553,18 @@ class EntitiesApiTestCase(TestCase):
                                    data=json.dumps(data),
                                    headers=headers,
                                    content_type='application/json')
+        data = {
+            'schema': 'Passport',
+            'collection_id': self.col_id,
+            'properties': {
+                'passportNumber': 'A1B2C3',
+                'holder': person1.json['id'],
+            }
+        }
+        passport = self.client.post(url,
+                                    data=json.dumps(data),
+                                    headers=headers,
+                                    content_type='application/json')
 
         col2 = self.create_collection()
         data = {
@@ -643,49 +643,46 @@ class EntitiesApiTestCase(TestCase):
                                       headers=headers,
                                       content_type='application/json')
 
-        edge_types = [registry.name.name, registry.email.name,
-                      registry.identifier.name, registry.iban.name,
-                      registry.phone.name, registry.address.name,
-                      registry.url.name, registry.checksum.name,
-                      registry.entity.name]
-        query_string = '&'.join('edge_types=' + t for t in edge_types)
+        query_string = '&'.join('edge_types=' + t.name for t in registry.pivots)  # noqa
 
         url = '/api/2/entities/%s/expand?%s&limit=0' % (person1.json['id'], query_string)  # noqa
         stats = self.client.get(url, headers=headers)
         assert stats.status_code == 200, (stats.status_code, stats.json)
         validate(stats.json, 'QueryResponse')
-        assert stats.json['total'] == 4, stats.json
+        assert stats.json['total'] == 5, stats.json
         results = stats.json['results']
         for result in results:
             validate(result, 'EntityExpand')
-            assert result['property'] in ('passport', 'Ownership', 'email')  # noqa
+            assert result['property'] in ('passport', 'name', 'ownershipOwner', 'email'), stats.json  # noqa
             if result['property'] == 'email':
                 assert result['count'] == 2, results
             else:
                 assert result['count'] == 1, results
 
-
         url = '/api/2/entities/%s/expand?%s' % (person1.json['id'], query_string)  # noqa
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, 'EntityExpand')
-        assert res.json['total'] == 4, pformat(res.json)
+        assert res.json['total'] == 5, pformat(res.json)
         results = res.json['results']
-        assert len(results) == 3, pformat(results)
+        assert len(results) == 4, pformat(results)
         for res in results:
             prop = res['property']
-            assert prop in ('email', 'passport', 'Ownership')
+            assert prop in ('passport', 'name', 'ownershipOwner', 'email'), results  # noqa
             if prop == 'email':
                 assert res['count'] == 2
                 for ent in res['entities']:
                     assert ent['name'] in ('Undercover Osama', 'John Doe')
-            if prop == 'Ownership':
+            if prop == 'ownershipOwner':
                 assert res['count'] == 1
-                assert res['entities'][0]['name'] == 'Al-Qaeda'
+                assert len(res['entities']) == 2
+                for nested in res['entities']:
+                    assert nested['schema'] in ('Ownership', 'Company'), nested
             if prop == 'passport':
                 assert res['count'] == 1
-                assert res['entities'][0]['name'] == 'A1B2C3'
-        url = '/api/2/entities/%s/expand?%s' % (company1.json['id'], query_string)  # noqa
+                assert res['entities'][0]['schema'] == 'Passport', res
+
+        url = '/api/2/entities/%s/expand?edge_types=entity' % (company1.json['id'])  # noqa
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, 'EntityExpand')
@@ -694,6 +691,20 @@ class EntitiesApiTestCase(TestCase):
         assert len(results) == 1, pformat(results)
         for res in results:
             prop = res['property']
-            assert prop == 'Ownership'
+            assert prop == 'ownershipAsset', prop
             assert res['count'] == 1
-            assert res['entities'][0]['name'] == 'Osama bin Laden'
+            # assert res['entities'][0]['name'] == 'Osama bin Laden'
+
+        url = '/api/2/entities/%s/expand?edge_types=entity'
+        url = url % passport.json['id']
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, (res.status_code, res.json)
+        validate(res.json, 'EntityExpand')
+        assert res.json['total'] == 1, pformat(res.json)
+        results = res.json['results']
+        assert len(results) == 1, pformat(results)
+        for res in results:
+            prop = res['property']
+            assert prop == 'holder', prop
+            assert res['count'] == 1, pformat(res)
+            assert len(res['entities']) == 1, pformat(res)

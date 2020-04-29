@@ -198,11 +198,11 @@ class EntitySerializer(Serializer):
         if schema is None:
             return
         properties = obj.get('properties', {})
-        for prop in schema.properties.values():
+        for name, values in properties.items():
+            prop = schema.get(name)
             if prop.type != registry.entity:
                 continue
-            values = ensure_list(properties.get(prop.name))
-            for value in values:
+            for value in ensure_list(values):
                 self.queue(Entity, value, prop.range)
 
     def _serialize(self, obj):
