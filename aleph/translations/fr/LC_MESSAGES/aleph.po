@@ -3,144 +3,160 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 # 
+# Translators:
+# Mathieu Morey <mathieu@datactivi.st>, 2020
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-13 16:34+0100\n"
+"POT-Creation-Date: 2020-04-29 22:37+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
+"Last-Translator: Mathieu Morey <mathieu@datactivi.st>, 2020\n"
 "Language-Team: French (https://www.transifex.com/aleph/teams/76591/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.7.0\n"
+"Generated-By: Babel 2.8.0\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: aleph/settings.py:25
 msgid "Aleph"
-msgstr ""
+msgstr "Aleph"
 
 #: aleph/settings.py:36
 msgid "TeliaSonera"
-msgstr ""
+msgstr "TeliaSonera"
 
 #: aleph/settings.py:36
 msgid "Vladimir Putin"
-msgstr ""
+msgstr "Vladimir Poutine"
 
-#: aleph/logic/roles.py:41
+#: aleph/logic/roles.py:42
 msgid "Registration"
-msgstr ""
+msgstr "Enregistrement"
 
 #: aleph/model/collection.py:27
 msgid "News archives"
-msgstr ""
+msgstr "Archives journalistiques"
 
 #: aleph/model/collection.py:28
 msgid "Leaks"
-msgstr ""
+msgstr "Fuites"
 
 #: aleph/model/collection.py:29
 msgid "Land registry"
-msgstr ""
+msgstr "Registre foncier"
 
 #: aleph/model/collection.py:30
 msgid "Gazettes"
-msgstr ""
+msgstr "Journaux officiels"
 
 #: aleph/model/collection.py:31
 msgid "Court archives"
-msgstr ""
+msgstr "Archives des tribunaux"
 
 #: aleph/model/collection.py:32
 msgid "Company registries"
-msgstr ""
+msgstr "Registres des sociétés"
 
 #: aleph/model/collection.py:33
 msgid "Sanctions lists"
-msgstr ""
+msgstr "Listes de sanctions"
 
 #: aleph/model/collection.py:34
 msgid "Procurement"
-msgstr ""
+msgstr "Marchés publics"
 
 #: aleph/model/collection.py:35
 msgid "Financial records"
-msgstr ""
+msgstr "Registres financiers"
 
 #: aleph/model/collection.py:36
 msgid "Grey literature"
-msgstr ""
+msgstr "Littérature grise"
 
 #: aleph/model/collection.py:37
 msgid "Document libraries"
-msgstr ""
+msgstr "Bibliothèques de documents"
 
 #: aleph/model/collection.py:38
 msgid "Licenses and concessions"
-msgstr ""
+msgstr "Autorisations et concessions"
 
 #: aleph/model/collection.py:39
 msgid "Regulatory filings"
-msgstr ""
+msgstr "Déclarations réglementaires"
 
 #: aleph/model/collection.py:40
 msgid "Persons of interest"
-msgstr ""
+msgstr "Personnes d'intérêt"
 
 #: aleph/model/collection.py:41
 msgid "Customs declarations"
-msgstr ""
+msgstr "Déclarations en douane"
 
 #: aleph/model/collection.py:42
 msgid "Population census"
-msgstr ""
+msgstr "Recensement de la population"
 
 #: aleph/model/collection.py:43
 msgid "Air and maritime registers"
-msgstr ""
+msgstr "Registres d'immatriculation des navires et aéronefs"
 
 #: aleph/model/collection.py:44
 msgid "Personal datasets"
-msgstr ""
+msgstr "Jeux de données personnels"
 
 #: aleph/model/collection.py:45
 msgid "Other material"
+msgstr "Autres matériaux"
+
+#: aleph/model/entity.py:74
+msgid "Invalid entity ID"
 msgstr ""
 
-#: aleph/model/event.py:48
+#: aleph/model/event.py:49
 msgid "{{actor}} created {{collection}}"
-msgstr ""
+msgstr "{{acteur}} a créé {{collection}}"
 
-#: aleph/model/event.py:55
+#: aleph/model/event.py:56
 msgid "{{actor}} changed the settings of {{collection}}"
-msgstr ""
+msgstr "{{acteur}} a changé les réglages de {{collection}}"
 
-#: aleph/model/event.py:62
+#: aleph/model/event.py:63
 msgid "{{actor}} added {{document}} to {{collection}}"
-msgstr ""
+msgstr "{{acteur}} a ajouté {{document}} à {{collection}}"
 
-#: aleph/model/event.py:72
-msgid "{{entity}} matches your alert for {{alert}}"
+#: aleph/model/event.py:73
+msgid "{{actor}} generated entities from {{table}} in {{collection}}"
 msgstr ""
 
 #: aleph/model/event.py:83
-msgid "{{actor}} gave {{role}} access to {{collection}}"
+msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
 msgstr ""
+
+#: aleph/model/event.py:93
+msgid "{{entity}} matches your alert for {{alert}}"
+msgstr "{{entite}} correspond à votre alerte pour {{alerte}}"
+
+#: aleph/model/event.py:104
+msgid "{{actor}} gave {{role}} access to {{collection}}"
+msgstr "{{acteur}} a donné l'accès {{role}} à {{collection}}"
 
 #: aleph/model/mapping.py:22
 msgid "success"
-msgstr ""
+msgstr "succès"
 
 #: aleph/model/mapping.py:23
 msgid "failed"
-msgstr ""
+msgstr "échoué"
 
-#: aleph/search/__init__.py:39
+#: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
-msgstr ""
+msgstr "Aucun schéma n'est spécifié pour la requête."
 
 #: aleph/templates/email/layout.html:45
 #, python-format
@@ -149,6 +165,9 @@ msgid ""
 "        Dear %(name)s,\n"
 "      "
 msgstr ""
+"\n"
+"  Cher %(name)s,\n"
+" "
 
 #: aleph/templates/email/layout.html:53
 #, python-format
@@ -157,6 +176,9 @@ msgid ""
 "          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>\n"
 "        "
 msgstr ""
+"\n"
+"  Ce courriel a été envoyé par <a href=\"%(ui_url)s\">%(app_title)s</a>\n"
+" "
 
 #: aleph/templates/email/notifications.html:5
 #, python-format
@@ -166,6 +188,10 @@ msgid ""
 "      updates you may be interested in:\n"
 "    "
 msgstr ""
+"\n"
+"  Vous avez %(total_count)s notifications en attente. Voici les dernières\n"
+"  mises à jour qui pourraient vous intéresser:\n"
+" "
 
 #: aleph/templates/email/notifications.html:16
 msgid ""
@@ -173,6 +199,9 @@ msgid ""
 "      Browse and manage all of your notifications here:\n"
 "    "
 msgstr ""
+"\n"
+"  Parcourez et gérez toutes vos notifications ici:\n"
+" "
 
 #: aleph/templates/email/registration_code.html:5
 #, python-format
@@ -181,90 +210,98 @@ msgid ""
 "      To complete your registration, please visit <a href=\"%(url)s\">our signup page</a>.\n"
 "    "
 msgstr ""
+"\n"
+"  Pour terminer votre enregistrement, veuillez visiter <a href=\"%(url)s\">notre page d'inscription</a>.\n"
+" "
 
-#: aleph/validation/formats.py:19 aleph/views/forms.py:67
+#: aleph/validation/formats.py:20
 msgid "Invalid user locale."
-msgstr ""
+msgstr "Locale utilisateur invalide."
 
-#: aleph/validation/formats.py:27 aleph/views/forms.py:78
+#: aleph/validation/formats.py:28
 #, python-format
 msgid "Invalid country code: %s"
+msgstr "Code pays invalide: %s"
+
+#: aleph/validation/formats.py:37
+#, python-format
+msgid "Invalid entity ID: %s"
 msgstr ""
 
-#: aleph/validation/formats.py:35 aleph/views/forms.py:35
+#: aleph/validation/formats.py:45
 msgid "Invalid category."
-msgstr ""
+msgstr "Catégorie invalide."
 
-#: aleph/validation/formats.py:43 aleph/views/forms.py:45
+#: aleph/validation/formats.py:53
 msgid "Invalid URL."
-msgstr ""
+msgstr "URL invalide."
 
-#: aleph/validation/formats.py:51 aleph/views/forms.py:56
+#: aleph/validation/formats.py:61
 msgid "Invalid language code."
-msgstr ""
+msgstr "Code de langue invalide."
 
-#: aleph/validation/formats.py:59 aleph/views/forms.py:95
+#: aleph/validation/formats.py:69
 #, python-format
 msgid "Invalid schema name: %s"
-msgstr ""
+msgstr "Nom de schéma invalide: %s"
 
-#: aleph/validation/formats.py:67 aleph/views/forms.py:87
+#: aleph/validation/formats.py:77
 #, python-format
 msgid "Invalid date: %s"
-msgstr ""
+msgstr "Date invalide: %s"
 
-#: aleph/views/base_api.py:175
+#: aleph/views/base_api.py:173
 msgid "/api/1/ is deprecated, please use /api/2/."
-msgstr ""
+msgstr "/api/1/ est obsolète, veuillez utiliser /api/2/."
 
-#: aleph/views/base_api.py:198
+#: aleph/views/base_api.py:196
 msgid "You are not authorized to do this."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à faire ceci."
 
-#: aleph/views/base_api.py:207
+#: aleph/views/base_api.py:205
 msgid "This path does not exist."
-msgstr ""
+msgstr "Ce chemin n'existe pas."
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:214
 msgid "Internal server error."
-msgstr ""
+msgstr "Erreur interne du serveur."
 
-#: aleph/views/base_api.py:234
+#: aleph/views/base_api.py:232
 msgid "Access token is invalid."
-msgstr ""
+msgstr "Le jeton d'accès est invalide."
 
-#: aleph/views/roles_api.py:59
+#: aleph/views/roles_api.py:60
 msgid "prefix filter is too short"
-msgstr ""
+msgstr "le filtre de préfixe est trop court"
 
-#: aleph/views/roles_api.py:104
+#: aleph/views/roles_api.py:106
 msgid "To proceed, please check your email."
-msgstr ""
+msgstr "Pour continuer, veuillez vérifier votre boîte mail."
 
-#: aleph/views/roles_api.py:140
+#: aleph/views/roles_api.py:142
 msgid "Invalid code"
-msgstr ""
+msgstr "Code invalide"
 
-#: aleph/views/roles_api.py:147
+#: aleph/views/roles_api.py:149
 msgid "Email is already registered"
-msgstr ""
+msgstr "L'adresse mail est déjà enregistrée"
 
-#: aleph/views/roles_api.py:230
+#: aleph/views/roles_api.py:232
 msgid "Incorrect password."
-msgstr ""
+msgstr "Mot de passe incorrect."
 
-#: aleph/views/sessions_api.py:81 aleph/views/sessions_api.py:84
+#: aleph/views/sessions_api.py:52 aleph/views/sessions_api.py:55
 msgid "Invalid user or password."
-msgstr ""
+msgstr "Nom d'utilisateur ou mot de passe invalide."
 
-#: aleph/views/sessions_api.py:121 aleph/views/sessions_api.py:140
+#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
 msgid "Authentication has failed."
-msgstr ""
+msgstr "L'authentification a échoué."
 
 #: aleph/views/util.py:77
 msgid "Error during data validation"
-msgstr ""
+msgstr "Erreur pendant la validation des données"
 
 #: aleph/views/util.py:147
 msgid "[HTML removed: could not be sanitized]"
-msgstr ""
+msgstr "[HTML retiré: n'a pas pu être assaini]"
