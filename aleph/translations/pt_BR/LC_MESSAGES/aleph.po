@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-13 16:34+0100\n"
+"POT-Creation-Date: 2020-04-29 22:37+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Laura M <kokoroko2@protonmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/aleph/teams/76591/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.7.0\n"
+"Generated-By: Babel 2.8.0\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
@@ -34,7 +34,7 @@ msgstr "TeliaSonera"
 msgid "Vladimir Putin"
 msgstr "Vladimir Putin"
 
-#: aleph/logic/roles.py:41
+#: aleph/logic/roles.py:42
 msgid "Registration"
 msgstr "Cadastro"
 
@@ -114,23 +114,35 @@ msgstr "Conjuntos de dados pessoais"
 msgid "Other material"
 msgstr "Outros materiais"
 
-#: aleph/model/event.py:48
+#: aleph/model/entity.py:74
+msgid "Invalid entity ID"
+msgstr ""
+
+#: aleph/model/event.py:49
 msgid "{{actor}} created {{collection}}"
 msgstr "{{actor}} criou {{collection}}"
 
-#: aleph/model/event.py:55
+#: aleph/model/event.py:56
 msgid "{{actor}} changed the settings of {{collection}}"
 msgstr "{{actor}} alterou as configurações de {{collection}}"
 
-#: aleph/model/event.py:62
+#: aleph/model/event.py:63
 msgid "{{actor}} added {{document}} to {{collection}}"
 msgstr "{{actor}} adicionou {{document}} em {{collection}}"
 
-#: aleph/model/event.py:72
+#: aleph/model/event.py:73
+msgid "{{actor}} generated entities from {{table}} in {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:83
+msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:93
 msgid "{{entity}} matches your alert for {{alert}}"
 msgstr "{{entity}} atende seu alerta para {{alert}}"
 
-#: aleph/model/event.py:83
+#: aleph/model/event.py:104
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr "{{actor}} deu permissão de {{role}} em {{collection}}"
 
@@ -142,7 +154,7 @@ msgstr ""
 msgid "failed"
 msgstr ""
 
-#: aleph/search/__init__.py:39
+#: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
 msgstr "Nenhum schema especificado para a consulta."
 
@@ -202,82 +214,87 @@ msgstr ""
 "      Para completar seu cadastro, por favor visite <a href=\"%(url)s\">nossa página de cadastro</a>.\n"
 "    "
 
-#: aleph/validation/formats.py:19 aleph/views/forms.py:67
+#: aleph/validation/formats.py:20
 msgid "Invalid user locale."
 msgstr "Localidade de usuário inválida. "
 
-#: aleph/validation/formats.py:27 aleph/views/forms.py:78
+#: aleph/validation/formats.py:28
 #, python-format
 msgid "Invalid country code: %s"
 msgstr "Código de país inválido: %s"
 
-#: aleph/validation/formats.py:35 aleph/views/forms.py:35
+#: aleph/validation/formats.py:37
+#, python-format
+msgid "Invalid entity ID: %s"
+msgstr ""
+
+#: aleph/validation/formats.py:45
 msgid "Invalid category."
 msgstr "Categoria inválida."
 
-#: aleph/validation/formats.py:43 aleph/views/forms.py:45
+#: aleph/validation/formats.py:53
 msgid "Invalid URL."
 msgstr "URL inválida."
 
-#: aleph/validation/formats.py:51 aleph/views/forms.py:56
+#: aleph/validation/formats.py:61
 msgid "Invalid language code."
 msgstr "Código de língua inválido."
 
-#: aleph/validation/formats.py:59 aleph/views/forms.py:95
+#: aleph/validation/formats.py:69
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "Nome de schema inválido: %s"
 
-#: aleph/validation/formats.py:67 aleph/views/forms.py:87
+#: aleph/validation/formats.py:77
 #, python-format
 msgid "Invalid date: %s"
 msgstr "Data inválida: %s"
 
-#: aleph/views/base_api.py:175
+#: aleph/views/base_api.py:173
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ está em desuso, por favor use /api/2/."
 
-#: aleph/views/base_api.py:198
+#: aleph/views/base_api.py:196
 msgid "You are not authorized to do this."
 msgstr "Você não tem permissão para isso."
 
-#: aleph/views/base_api.py:207
+#: aleph/views/base_api.py:205
 msgid "This path does not exist."
 msgstr "Esse caminho não existe."
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:214
 msgid "Internal server error."
 msgstr "Erro interno no servidor."
 
-#: aleph/views/base_api.py:234
+#: aleph/views/base_api.py:232
 msgid "Access token is invalid."
 msgstr "Token de acesso inválido."
 
-#: aleph/views/roles_api.py:59
+#: aleph/views/roles_api.py:60
 msgid "prefix filter is too short"
 msgstr "filtro de prefixo muito curto"
 
-#: aleph/views/roles_api.py:104
+#: aleph/views/roles_api.py:106
 msgid "To proceed, please check your email."
 msgstr "Para continuar, por favor verifque seu email."
 
-#: aleph/views/roles_api.py:140
+#: aleph/views/roles_api.py:142
 msgid "Invalid code"
 msgstr "Código inválido"
 
-#: aleph/views/roles_api.py:147
+#: aleph/views/roles_api.py:149
 msgid "Email is already registered"
 msgstr "Email já cadastrado"
 
-#: aleph/views/roles_api.py:230
+#: aleph/views/roles_api.py:232
 msgid "Incorrect password."
 msgstr "Senha incorreta."
 
-#: aleph/views/sessions_api.py:81 aleph/views/sessions_api.py:84
+#: aleph/views/sessions_api.py:52 aleph/views/sessions_api.py:55
 msgid "Invalid user or password."
 msgstr "Usuário ou senha inválida."
 
-#: aleph/views/sessions_api.py:121 aleph/views/sessions_api.py:140
+#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
 msgid "Authentication has failed."
 msgstr "Autenticação falhou."
 

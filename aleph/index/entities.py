@@ -12,13 +12,13 @@ from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
+from aleph.index.util import MAX_REQUEST_TIMEOUT, MAX_TIMEOUT
 
 
 log = logging.getLogger(__name__)
 PROXY_INCLUDES = ['schema', 'properties']
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
-                   'identifiers', 'addresses', 'properties.bodyText',
-                   'properties.bodyHtml', 'properties.headers', 'numeric.*']
+                   'identifiers', 'addresses', 'numeric.*']
 
 
 def _source_spec(includes, excludes):
@@ -64,7 +64,9 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
-    for res in scan(es, index=index, query=query, scroll='1410m', raise_on_error=False):  # noqa
+    for res in scan(es, index=index, query=query,
+                    timeout=MAX_TIMEOUT,
+                    request_timeout=MAX_REQUEST_TIMEOUT):
         entity = unpack_result(res)
         if entity is not None:
             if cached:
@@ -96,9 +98,8 @@ def entities_by_ids(ids, schemata=None, cached=False,
     if not len(ids):
         return
     index = entities_read_index(schema=schemata)
-    query = {'ids': {'values': ids}}
     query = {
-        'query': query,
+        'query': {'ids': {'values': ids}},
         '_source': _source_spec(includes, excludes),
         'size': MAX_PAGE
     }
