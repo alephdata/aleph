@@ -2,6 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Entity } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/vislib';
 import { processApiEntity } from 'src/components/Diagram/util';
 import { queryEntitySuggest } from 'src/queries';
@@ -60,7 +61,7 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async createEntity({ schema, properties }) {
-        const { collection, onStatusChange } = this.props;
+        const { collection, model, onStatusChange } = this.props;
         onStatusChange(updateStates.IN_PROGRESS);
 
         try {
@@ -71,7 +72,8 @@ const entityEditorWrapper = (EditorComponent) => {
           });
           onStatusChange(updateStates.SUCCESS);
 
-          return processApiEntity(entityData);
+          const processedData = processApiEntity(entityData);
+          return new Entity(model, processedData);
         } catch {
           onStatusChange(updateStates.ERROR);
         }
