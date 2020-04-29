@@ -18,6 +18,7 @@ eu_ted:
     - guest
   queries:
     - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2018.csv
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2017.csv
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
