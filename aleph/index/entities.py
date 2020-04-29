@@ -63,7 +63,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
-    for res in scan(es, index=index, query=query, scroll='1410m'):
+    for res in scan(es, index=index, query=query):
         entity = unpack_result(res)
         if entity is not None:
             if cached:
