@@ -11,14 +11,18 @@ const initialState = {
 };
 
 const handleLogin = (state, token) => {
-  const data = jwtDecode(token);
-  return {
-    token,
-    isAdmin: data.a,
-    id: data.role.id,
-    roles: data.r,
-    loggedIn: true,
-    sessionID: state.sessionID || uuidv4(),
+  if (!token) {
+    return state;
+  } else {
+    const data = jwtDecode(token);
+    return {
+      token,
+      isAdmin: data.a,
+      id: data.role.id,
+      roles: data.r,
+      loggedIn: true,
+      sessionID: state.sessionID || uuidv4(),
+    };
   };
 };
 
@@ -30,9 +34,6 @@ const handleLogout = state => ({
 export default createReducer({
   [loginWithToken]: handleLogin,
   [logout]: handleLogout,
-  [fetchMetadata.COMPLETE]: (state, {metadata}) => {
-    if (!metadata?.token) {return state}
-    else { return handleLogin(state, metadata.token)}
-  },
+  [fetchMetadata.COMPLETE]: (state, {metadata}) => handleLogin(state, metadata?.token),
 }, initialState);
 
