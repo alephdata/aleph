@@ -54,7 +54,19 @@ This script creates the following within Keycloak:
   * `aleph` - Regular user
   * `alephadmin` - User with the `superuser` client role
 
- 
+## Keycloak User Information
 
+After initializing Keycloak, the following users are created within Keycloak:
 
- 
+| User Name | Password | Realm | Description |
+| --- | --- | --- | --- |
+| admin | Pa55w0rd | master | Keycloak administrator user. |
+| aleph | aleph | aleph-users | Regular aleph user. |
+| alephadmin | aleph | aleph-users | Aleph user with the `superuser` client role. |
+
+## Useful URLs
+
+| URL | Description |
+| --- | --- |
+| [uma2-configuration](http://localhost:1580/auth/realms/aleph-users/.well-known/uma2-configuration) |  Lists the Keycloak `aleph-users` client configuration, including endpoint URIs. |
+| [End Keycloak user session](http://localhost:1580/auth/realms/aleph-users/protocol/openid-connect/logout) | Signing out of Aleph does not end the user's session in Keycloak, but going to this URL will. |
