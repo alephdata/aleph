@@ -1,4 +1,4 @@
-import { Count } from '@alephdata/vislib'
+import { Count, FileSize } from '@alephdata/vislib'
 
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
@@ -13,7 +13,6 @@ import DualPane from './DualPane';
 import Entity from './Entity';
 import Facet from './Facet';
 import FileImport from './FileImport';
-import FileSize from './FileSize';
 import Language from './Language';
 import Role from './Role';
 import Schema from './Schema';
