@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='aleph',
-    version='3.7.0',
+    version='3.7.1',
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
