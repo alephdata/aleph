@@ -9,7 +9,7 @@ from aleph.core import settings, es
 from aleph.index.util import index_name, index_settings, configure_index
 from aleph.index.util import query_delete, bulk_actions, unpack_result
 from aleph.index.util import authz_query
-from aleph.index.util import KEYWORD, SHARDS_HEAVY, MAX_TIMEOUT
+from aleph.index.util import KEYWORD, SHARDS_HEAVY
 
 log = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ def iter_matches(collection, authz):
     filters = [{'term': {'collection_id': collection.id}},
                authz_query(authz, field='match_collection_id')]
     query = {'query': {'bool': {'filter': filters}}}
-    for res in scan(es, index=xref_index(), query=query, scroll=MAX_TIMEOUT):
+    for res in scan(es, index=xref_index(), query=query):
         yield unpack_result(res)
 
 

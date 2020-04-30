@@ -162,6 +162,7 @@ def healthz():
       tags:
       - System
     """
+    request.rate_limit = None
     return jsonify({'status': 'ok'})
 
 

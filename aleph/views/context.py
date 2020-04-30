@@ -1,3 +1,4 @@
+import math
 import time
 import logging
 from pprint import pformat  # noqa
@@ -5,12 +6,16 @@ from banal import hash_data
 from datetime import datetime
 from flask_babel import get_locale
 from flask import request, Response, Blueprint
+from werkzeug.exceptions import TooManyRequests
 
 from aleph import signals, __version__
+from aleph.queues import get_rate_limit
 from aleph.core import settings
+from aleph.authz import Authz
+from aleph.model import Role
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('cache', __name__)
+blueprint = Blueprint('context', __name__)
 
 
 class NotModified(Exception):
@@ -20,6 +25,13 @@ class NotModified(Exception):
 
 def handle_not_modified(exc):
     return Response(status=304)
+
+
+def tag_request(**kwargs):
+    """Store metadata for structured log output."""
+    for tag, value in kwargs.items():
+        if value is not None:
+            request._log_tags[tag] = value
 
 
 def enable_cache(vary_user=True, vary=None):
@@ -46,17 +58,55 @@ def enable_cache(vary_user=True, vary=None):
         raise NotModified()
 
 
-def tag_request(**kwargs):
-    """Store metadata for structured log output."""
-    for tag, value in kwargs.items():
-        if value is not None:
-            request._log_tags[tag] = value
+def _get_credential_authz(credential):
+    if credential is None or not len(credential):
+        return
+    if ' ' in credential:
+        _, credential = credential.split(' ', 1)
+    authz = Authz.from_token(credential, scope=request.path)
+    if authz is not None:
+        return authz
+
+    role = Role.by_api_key(credential)
+    if role is not None:
+        return Authz.from_role(role=role)
+
+
+def enable_authz(request):
+    authz = None
+
+    if 'Authorization' in request.headers:
+        credential = request.headers.get('Authorization')
+        authz = _get_credential_authz(credential)
+
+    if authz is None and 'api_key' in request.args:
+        authz = _get_credential_authz(request.args.get('api_key'))
+
+    authz = authz or Authz.from_role(role=None)
+    request.authz = authz
+
+
+def enable_rate_limit(request):
+    if request.authz.logged_in and not request.authz.is_blocked:
+        return
+    limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
+    request.rate_limit = get_rate_limit(request.remote_ip,
+                                        limit=limit,
+                                        interval=settings.API_RATE_WINDOW,
+                                        unit=60)
+    if not request.rate_limit.check():
+        raise TooManyRequests("Rate limit exceeded.")
 
 
 @blueprint.before_app_request
 def setup_request():
     """Set some request attributes at the beginning of the request.
     By default, caching will be disabled."""
+    forwarded_for = request.headers.getlist('X-Forwarded-For')
+    if len(forwarded_for):
+        request.remote_ip = forwarded_for[0]
+    else:
+        request.remote_ip = request.remote_addr
     request._begin_time = time.time()
     request._app_locale = str(get_locale())
     request._session_id = request.headers.get('X-Aleph-Session')
@@ -66,11 +116,23 @@ def setup_request():
     request._http_etag = None
     request._log_tags = {}
 
+    enable_authz(request)
+    enable_rate_limit(request)
+
 
 @blueprint.after_app_request
 def finalize_response(resp):
     """Post-request processing to set cache parameters."""
-    generate_request_log(resp)
+    # Compute overall request duration:
+    took = time.time() - request._begin_time
+
+    # Finalize reporting of the rate limiter:
+    if hasattr(request, 'rate_limit') and request.rate_limit is not None:
+        usage = request.rate_limit.update(amount=math.ceil(took))
+        resp.headers['X-Rate-Limit'] = request.rate_limit.limit
+        resp.headers['X-Rate-Usage'] = usage
+
+    generate_request_log(resp, took)
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
@@ -102,16 +164,17 @@ def finalize_response(resp):
     return resp
 
 
-def generate_request_log(resp):
+def generate_request_log(resp, took):
     """Collect data about the request for analytical purposes."""
     payload = {
         'v': __version__,
         'method': request.method,
         'endpoint': request.endpoint,
         'referrer': request.referrer,
-        'ip': request.remote_addr,
+        'ip': request.remote_ip,
         'ua': str(request.user_agent),
         'time': datetime.utcnow().isoformat(),
+        'tool': took,
         'url': request.url,
         'path': request.full_path,
         'status': resp.status_code
@@ -120,9 +183,6 @@ def generate_request_log(resp):
         payload['session_id'] = request._session_id
     if hasattr(request, 'authz'):
         payload['role_id'] = request.authz.id
-    if hasattr(request, '_begin_time'):
-        took = time.time() - request._begin_time
-        payload['took'] = int(took * 1000)
     if hasattr(request, '_app_locale'):
         payload['locale'] = request._app_locale
     tags = dict(request.view_args or ())

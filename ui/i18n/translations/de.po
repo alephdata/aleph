@@ -1,9 +1,10 @@
+# 
 # Translators:
 # pudo <friedrich@pudo.org>, 2020
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-03-20T14:41:24.039Z\n"
+"POT-Creation-Date: 2020-04-29T20:37:45.233Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -613,6 +614,13 @@ msgstr ""
 msgid "Cross-reference"
 msgstr "Rasterfahndung"
 
+#. [xref.context.title]
+#. defaultMessage is:
+#. Cross-reference match review
+#: i18n/messages.json
+msgid "Cross-reference match review"
+msgstr ""
+
 #. [collection.xref.processing]
 #. defaultMessage is:
 #. Cross-referencing started.
@@ -1123,6 +1131,13 @@ msgstr "Nach meiner Kenntnis tritt das sofort, unverzüglich in Kraft."
 #: i18n/messages.json
 msgid "Jobs"
 msgstr "Prozesse"
+
+#. [xref.context.private]
+#. defaultMessage is:
+#. Keep private (no sharing)
+#: i18n/messages.json
+msgid "Keep private (no sharing)"
+msgstr ""
 
 #. [queryLogs.add_placeholder]
 #. defaultMessage is:
@@ -1778,6 +1793,18 @@ msgstr "Diese Eigenschaft aus dem Mapping entfernen"
 msgid "Removing generated entities..."
 msgstr "Entferne erzeugte Entitäten..."
 
+#. [xref.context.explain1]
+#. defaultMessage is:
+#. Reviewing cross-reference matches helps you to flag and share leads. Your
+#. judgements are sensitive information, so please select what group of users
+#. can view your decisions.
+#: i18n/messages.json
+msgid ""
+"Reviewing cross-reference matches helps you to flag and share leads. Your "
+"judgements are sensitive information, so please select what group of users "
+"can view your decisions."
+msgstr ""
+
 #. [case.save]
 #. defaultMessage is:
 #. Save
@@ -1870,13 +1897,10 @@ msgstr "Suche nach {query}"
 #. [dashboard.history]
 #. defaultMessage is:
 #. Search history
-#. [queryLogs.title]
-#. defaultMessage is:
-#. Search history
 #. [history.title]
 #. defaultMessage is:
 #. Search history
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Search history"
 msgstr "Suchhistorie"
 
@@ -1994,6 +2018,13 @@ msgstr "Teilen"
 msgid "Share with"
 msgstr "Teilen mit"
 
+#. [xref.context.select]
+#. defaultMessage is:
+#. Share with:
+#: i18n/messages.json
+msgid "Share with:"
+msgstr ""
+
 #. [collection.statistics.showmore]
 #. defaultMessage is:
 #. Show more
@@ -2109,12 +2140,26 @@ msgstr "Schreibvarianten"
 msgid "Start processing"
 msgstr "Verarbeitung starten"
 
+#. [xref.context.submit]
+#. defaultMessage is:
+#. Start review
+#: i18n/messages.json
+msgid "Start review"
+msgstr ""
+
 #. [mapping.status.status]
 #. defaultMessage is:
 #. Status:
 #: i18n/messages.json
 msgid "Status:"
 msgstr "Status: "
+
+#. [xref.context.stop]
+#. defaultMessage is:
+#. Stop review
+#: i18n/messages.json
+msgid "Stop review"
+msgstr ""
 
 #. [email.subject]
 #. defaultMessage is:
@@ -2636,6 +2681,16 @@ msgstr "Was läuft, {role}?"
 msgid "Workspace"
 msgstr "Arbeitsplatz"
 
+#. [xref.context.info.general]
+#. defaultMessage is:
+#. You are in <strong>review mode</strong>. In this mode, you can record
+#. judgements about what cross-reference matches are good or bad results.
+#: i18n/messages.json
+msgid ""
+"You are in <strong>review mode</strong>. In this mode, you can record "
+"judgements about what cross-reference matches are good or bad results."
+msgstr ""
+
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You are not tracking any searches
@@ -2749,6 +2804,16 @@ msgstr "Ihr Name"
 #: i18n/messages.json
 msgid "Your changes are saved."
 msgstr "Ich gebe ihnen mein Ehrenwort!"
+
+#. [xref.context.info.context]
+#. defaultMessage is:
+#. Your decisions will be shared with the members of
+#. <strong>{context}</strong>.
+#: i18n/messages.json
+msgid ""
+"Your decisions will be shared with the members of "
+"<strong>{context}</strong>."
+msgstr ""
 
 #. [diagram.create.success]
 #. defaultMessage is:

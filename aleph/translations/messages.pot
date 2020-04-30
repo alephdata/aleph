@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-03-20 15:49+0100\n"
+"POT-Creation-Date: 2020-04-29 22:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -232,51 +232,51 @@ msgstr ""
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:172
+#: aleph/views/base_api.py:173
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:195
+#: aleph/views/base_api.py:196
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:204
+#: aleph/views/base_api.py:205
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:213
+#: aleph/views/base_api.py:214
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:231
+#: aleph/views/base_api.py:232
 msgid "Access token is invalid."
 msgstr ""
 
-#: aleph/views/roles_api.py:59
+#: aleph/views/roles_api.py:60
 msgid "prefix filter is too short"
 msgstr ""
 
-#: aleph/views/roles_api.py:104
+#: aleph/views/roles_api.py:106
 msgid "To proceed, please check your email."
 msgstr ""
 
-#: aleph/views/roles_api.py:140
+#: aleph/views/roles_api.py:142
 msgid "Invalid code"
 msgstr ""
 
-#: aleph/views/roles_api.py:147
+#: aleph/views/roles_api.py:149
 msgid "Email is already registered"
 msgstr ""
 
-#: aleph/views/roles_api.py:230
+#: aleph/views/roles_api.py:232
 msgid "Incorrect password."
 msgstr ""
 
-#: aleph/views/sessions_api.py:81 aleph/views/sessions_api.py:84
+#: aleph/views/sessions_api.py:52 aleph/views/sessions_api.py:55
 msgid "Invalid user or password."
 msgstr ""
 
-#: aleph/views/sessions_api.py:121 aleph/views/sessions_api.py:140
+#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
 msgid "Authentication has failed."
 msgstr ""
 

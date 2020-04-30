@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-03-20 15:49+0100\n"
+"POT-Creation-Date: 2020-04-29 22:37+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -251,51 +251,51 @@ msgstr "Ungültige Schemakennung: %s"
 msgid "Invalid date: %s"
 msgstr "Ungültiges Datum: %s"
 
-#: aleph/views/base_api.py:172
+#: aleph/views/base_api.py:173
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ is deprecated, please use /api/2/."
 
-#: aleph/views/base_api.py:195
+#: aleph/views/base_api.py:196
 msgid "You are not authorized to do this."
 msgstr "Ihnen fehlt das Recht, dies zu tun."
 
-#: aleph/views/base_api.py:204
+#: aleph/views/base_api.py:205
 msgid "This path does not exist."
 msgstr "Dieser Pfad existiert nicht."
 
-#: aleph/views/base_api.py:213
+#: aleph/views/base_api.py:214
 msgid "Internal server error."
 msgstr "Interner Server-Fehler"
 
-#: aleph/views/base_api.py:231
+#: aleph/views/base_api.py:232
 msgid "Access token is invalid."
 msgstr "Ungültiger Zugriffstoken"
 
-#: aleph/views/roles_api.py:59
+#: aleph/views/roles_api.py:60
 msgid "prefix filter is too short"
 msgstr "prefix-Filter ist zu kurz"
 
-#: aleph/views/roles_api.py:104
+#: aleph/views/roles_api.py:106
 msgid "To proceed, please check your email."
 msgstr "Um fortzufahren reagieren sie bitte auf eine E-Mail."
 
-#: aleph/views/roles_api.py:140
+#: aleph/views/roles_api.py:142
 msgid "Invalid code"
 msgstr "Ungültiger Code"
 
-#: aleph/views/roles_api.py:147
+#: aleph/views/roles_api.py:149
 msgid "Email is already registered"
 msgstr "Diese E-Mail ist bereits angemeldet"
 
-#: aleph/views/roles_api.py:230
+#: aleph/views/roles_api.py:232
 msgid "Incorrect password."
 msgstr "Falsches Passwort."
 
-#: aleph/views/sessions_api.py:81 aleph/views/sessions_api.py:84
+#: aleph/views/sessions_api.py:52 aleph/views/sessions_api.py:55
 msgid "Invalid user or password."
 msgstr "Der Nutzername oder das Passwort ist falsch."
 
-#: aleph/views/sessions_api.py:121 aleph/views/sessions_api.py:140
+#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
 msgid "Authentication has failed."
 msgstr "Die Anmeldung ist fehlgeschlagen."
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-03-20 15:49+0100\n"
+"POT-Creation-Date: 2020-04-29 22:37+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -120,23 +120,23 @@ msgstr "Неверный ID сущности"
 
 #: aleph/model/event.py:49
 msgid "{{actor}} created {{collection}}"
-msgstr "{{actor}} создал(а) {{collection}}"
+msgstr "{{actor}} создали {{collection}}"
 
 #: aleph/model/event.py:56
 msgid "{{actor}} changed the settings of {{collection}}"
-msgstr "{{actor}} изменил(а) настройки для {{collection}}"
+msgstr "{{actor}} изменили настройки для {{collection}}"
 
 #: aleph/model/event.py:63
 msgid "{{actor}} added {{document}} to {{collection}}"
-msgstr "{{actor}} добавил(а) {{document}} в {{collection}}"
+msgstr "{{actor}} добавили {{document}} в {{collection}}"
 
 #: aleph/model/event.py:73
 msgid "{{actor}} generated entities from {{table}} in {{collection}}"
-msgstr ""
+msgstr "{{actor}} создали сущности из {{table}} в {{collection}}"
 
 #: aleph/model/event.py:83
 msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
-msgstr ""
+msgstr "{{actor}} начали создавать {{diagram}} в {{collection}}"
 
 #: aleph/model/event.py:93
 msgid "{{entity}} matches your alert for {{alert}}"
@@ -145,7 +145,7 @@ msgstr "{{entity}} соответствует параметрам вашего 
 #: aleph/model/event.py:104
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr ""
-"{{actor}} предоставил(а) вам права {{role}} для доступа к {{collection}}"
+"{{actor}} предоставили вам права {{role}} для доступа к {{collection}}"
 
 #: aleph/model/mapping.py:22
 msgid "success"
@@ -245,51 +245,51 @@ msgstr "Некорректное имя схемы: %s"
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"
 
-#: aleph/views/base_api.py:172
+#: aleph/views/base_api.py:173
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
 
-#: aleph/views/base_api.py:195
+#: aleph/views/base_api.py:196
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:204
+#: aleph/views/base_api.py:205
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:213
+#: aleph/views/base_api.py:214
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:231
+#: aleph/views/base_api.py:232
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 
-#: aleph/views/roles_api.py:59
+#: aleph/views/roles_api.py:60
 msgid "prefix filter is too short"
 msgstr "Префикс слишком короткий"
 
-#: aleph/views/roles_api.py:104
+#: aleph/views/roles_api.py:106
 msgid "To proceed, please check your email."
 msgstr "Пожалуйста, проверьте почту"
 
-#: aleph/views/roles_api.py:140
+#: aleph/views/roles_api.py:142
 msgid "Invalid code"
 msgstr "Неверный код"
 
-#: aleph/views/roles_api.py:147
+#: aleph/views/roles_api.py:149
 msgid "Email is already registered"
 msgstr "Этот электронный адрес уже зарегистрирован"
 
-#: aleph/views/roles_api.py:230
+#: aleph/views/roles_api.py:232
 msgid "Incorrect password."
 msgstr "Неверный пароль."
 
-#: aleph/views/sessions_api.py:81 aleph/views/sessions_api.py:84
+#: aleph/views/sessions_api.py:52 aleph/views/sessions_api.py:55
 msgid "Invalid user or password."
 msgstr "Неверное имя пользователя или пароль."
 
-#: aleph/views/sessions_api.py:121 aleph/views/sessions_api.py:140
+#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
 msgid "Authentication has failed."
 msgstr "Ошибка авторизации."
 
