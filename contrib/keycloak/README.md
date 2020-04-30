@@ -68,5 +68,5 @@ After initializing Keycloak, the following users are created within Keycloak:
 
 | URL | Description |
 | --- | --- |
-| [uma2-configuration](http://localhost:1580/auth/realms/aleph-users/.well-known/uma2-configuration) |  Lists the Keycloak `aleph-users` client configuration, including endpoint URIs. |
+| [OpenID config](http://localhost:1580/auth/realms/aleph-users/.well-known/openid-configuration) |  Lists the Keycloak `aleph-users` OpenID client configuration, including endpoint URIs. |
 | [End Keycloak user session](http://localhost:1580/auth/realms/aleph-users/protocol/openid-connect/logout) | Signing out of Aleph does not end the user's session in Keycloak, but going to this URL will. |
