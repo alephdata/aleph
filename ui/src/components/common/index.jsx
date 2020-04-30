@@ -1,3 +1,5 @@
+import { Count } from '@alephdata/vislib'
+
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import Category from './Category';
