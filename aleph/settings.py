@@ -82,7 +82,7 @@ OAUTH_AUTHORIZE_URL = env.get('ALEPH_OAUTH_AUTHORIZE_URL')
 OAUTH_UI_CALLBACK = env.get('ALEPH_OAUTH_UI_CALLBACK', '/oauth')
 
 # No authentication. Everyone is admin.
-SINGLE_USER = env.to_bool('SINGLE_USER')
+SINGLE_USER = env.to_bool('ALEPH_SINGLE_USER')
 
 # Disable password-based authentication for SSO settings:
 PASSWORD_LOGIN = env.to_bool('ALEPH_PASSWORD_LOGIN', not OAUTH)
