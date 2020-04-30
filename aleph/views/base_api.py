@@ -9,8 +9,9 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
-from aleph.core import cache, settings, url_for
-from aleph.model import Collection
+from aleph.core import cache, db, settings, url_for
+from aleph.authz import Authz
+from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
@@ -72,6 +73,14 @@ def metadata():
         'model': model,
         'auth': auth
     }
+
+    if settings.SINGLE_USER:
+        role = Role.load_cli_user()
+        authz = Authz.from_role(role)
+        single_user_token = authz.to_token(role=role)
+        data.update({'token':single_user_token})
+        db.session.commit()
+
     cache.set_complex(key, data, expires=120)
     return jsonify(data)
 
