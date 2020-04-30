@@ -24,7 +24,6 @@ import TextLoading from './TextLoading';
 import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
-import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
 import SearchBox from './SearchBox';
