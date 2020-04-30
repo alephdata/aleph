@@ -1,25 +1,11 @@
-import React, { PureComponent } from 'react';
-import numeral from 'numeral';
-import { FormattedNumber } from 'react-intl';
+import React from 'react';
+import { Numeric } from '@alephdata/vislib';
+import { connect } from 'react-redux';
 
-import './Numeric.scss';
+import { selectLocale } from 'src/selectors';
 
-class Numeric extends PureComponent {
-  render() {
-    const { num, abbr = false } = this.props;
+const mapStateToProps = state => ({
+  locale: selectLocale(state),
+});
 
-    if (num === undefined) {
-      return null;
-    }
-    if (!Number.isFinite(1 * num)) {
-      return <span className="Numeric">{num}</span>;
-    }
-    return (
-      <span className="Numeric">
-        {abbr ? numeral(num).format('0a') : <FormattedNumber value={num} />}
-      </span>
-    );
-  }
-}
-
-export default Numeric;
+export default connect(mapStateToProps)(Numeric);
