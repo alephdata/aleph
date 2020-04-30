@@ -1,4 +1,4 @@
-import { Count, FileSize } from '@alephdata/vislib'
+import { Count, FileSize, URL } from '@alephdata/vislib'
 
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
@@ -24,7 +24,6 @@ import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
 import Tag from './Tag';
-import URL from './URL';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
