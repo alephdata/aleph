@@ -1,5 +1,5 @@
-import { createReducer } from 'redux-act';
 import jwtDecode from 'jwt-decode';
+import { createReducer } from 'redux-act';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchMetadata } from 'src/actions';
 
@@ -11,7 +11,6 @@ const initialState = {
 };
 
 const handleLogin = (state, token) => {
-	//// 
   const data = jwtDecode(token);
   return {
     token,
