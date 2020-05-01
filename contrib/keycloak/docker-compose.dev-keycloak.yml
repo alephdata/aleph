@@ -1,0 +1,183 @@
+version: "3.2"
+
+services:
+  postgres:
+    image: postgres:10.0
+    hostname: postgres
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: aleph
+      POSTGRES_PASSWORD: aleph
+      POSTGRES_DATABASE: aleph
+
+  elasticsearch:
+    build:
+      context: services/elasticsearch
+    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
+    hostname: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "127.0.0.1:19200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+  redis:
+      image: redis:alpine
+      command: ["redis-server", "--appendonly", "yes"]
+      volumes:
+        - redis-data:/data
+
+  convert-document:
+    image: alephdata/convert-document:39e678f717b1504984f52a116a9e4fe2af206d31
+    restart: on-failure
+    tmpfs:
+      - /tmp
+      - /root/.config
+      - /home/app/.config
+
+  ingest-file:
+    build:
+      context: services/ingest-file
+    image: alephdata/ingest-file:${ALEPH_TAG:-latest}
+    hostname: ingest
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+      - "./services/ingest-file/ingestors:/ingestors/ingestors"
+      - "./services/ingest-file/tests:/ingestors/tests"
+      - "./services/ingest-file/data:/ingestors/data"
+      - "./services/ingest-file/requirements.txt:/ingestors/requirements.txt"
+      - "/:/host"
+    links:
+      - postgres
+      - redis
+      - convert-document
+    restart: on-failure
+    env_file:
+      - aleph.env
+
+  app:
+    build:
+      context: .
+    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    hostname: aleph
+    command: /bin/bash
+    links:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+      #- keycloak-postgres
+      #- keycloak
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+      - "./aleph:/aleph/aleph"
+      - "./contrib:/aleph/contrib"
+      - "./mappings:/aleph/mappings"
+      - "/:/host"
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      ALEPH_DEBUG: 'true'
+      ALEPH_SECRET_KEY: 'development'
+    env_file:
+      - aleph.env
+
+  api:
+    build:
+      context: .
+    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
+    ports:
+      - "127.0.0.1:5000:5000"
+    restart: on-failure
+    links:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+      - keycloak-postgres
+      - keycloak
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+      - "./aleph:/aleph/aleph"
+    environment:
+      ALEPH_DEBUG: 'true'
+      ALEPH_SECRET_KEY: 'development'
+      ALEPH_PASSWORD_LOGIN: 'false'
+      ALEPH_OAUTH: 'true'
+      ALEPH_OAUTH_HANDLER: 'keycloak'
+      ALEPH_OAUTH_KEY: 'aleph-ui'
+      ALEPH_OAUTH_BASE_URL: 'http://keycloak:8080/'
+      ALEPH_OAUTH_AUTHORIZE_URL: 'http://localhost:1580/auth/realms/aleph-users/protocol/openid-connect/auth'
+      ALEPH_OAUTH_TOKEN_URL: 'http://keycloak:8080/auth/realms/aleph-users/protocol/openid-connect/token'
+      ALEPH_OAUTH_SCOPE: 'read'
+      ALEPH_OAUTH_TOKEN_METHOD: 'POST'
+    env_file:
+      - aleph.env
+
+  ui:
+    build:
+      context: ui
+    image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
+    links:
+      - api
+    command: npm run start
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - "./ui/src:/alephui/src"
+      - "./ui/public:/alephui/public"
+      - "./ui/package.json:/alephui/package.json"
+    environment:
+      PORT: '8080'
+      CI: 'true'
+    env_file:
+      - aleph.env
+
+  keycloak-postgres:
+    image: postgres
+    hostname: keycloak-postgres
+    ports:
+      - "127.0.0.1:25432:5432"
+    volumes:
+      - keycloak-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    hostname: keycloak
+    links:
+      - keycloak-postgres
+    volumes:
+      - "./contrib/keycloak/keycloak-create-realm.sh:/usr/local/bin/keycloak-create-realm.sh"
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keycloak-postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+      JDBC_PARAMS: "ssl=false"
+    ports:
+      - "127.0.0.1:1580:8080"
+
+volumes:
+  archive-data: {}
+  elasticsearch-data: {}
+  postgres-data: {}
+  redis-data: {}
+  keycloak-postgres-data: {}

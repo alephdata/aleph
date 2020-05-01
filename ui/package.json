@@ -18,6 +18,7 @@
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
     "filesize": "^6.1.0",
+    "http-proxy-middleware": "^1.0.3",
     "intl-pluralrules": "^1.1.1",
     "js-file-download": "^0.4.9",
     "jwt-decode": "^2.2.0",
