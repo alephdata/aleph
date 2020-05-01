@@ -11,6 +11,7 @@ import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DocumentDropzone from 'src/components/Document/DocumentDropzone';
+import collectionViewIds from 'src/components/Collection/collectionViewIds';
 import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionStatus } from 'src/selectors';
 
@@ -39,7 +40,7 @@ export class CollectionScreen extends Component {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
-    parsedHash.mode = 'browse';
+    parsedHash.mode = collectionViewIds.DOCUMENTS;
     delete parsedHash.type;
 
     history.push({
@@ -115,7 +116,7 @@ const mapStateToProps = (state, ownProps) => {
     collectionId,
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
-    activeMode: hashQuery.mode || 'overview',
+    activeMode: hashQuery.mode || collectionViewIds.OVERVIEW,
   };
 };
 

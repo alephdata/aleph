@@ -8,21 +8,15 @@ import queryString from 'query-string';
 
 import { Count } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
+import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
+import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
-import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
-
+import collectionViewIds from 'src/components/Collection/collectionViewIds';
 import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
 import { selectModel, selectDiagramsResult, selectCollectionXrefResult, selectTester } from 'src/selectors';
 
 import './CollectionViews.scss';
-
-const viewIds = {
-  OVERVIEW: 'overview',
-  BROWSE: 'browse',
-  XREF: 'xref',
-  DIAGRAMS: 'diagrams',
-};
 
 /* eslint-disable */
 class CollectionViews extends React.Component {
@@ -34,23 +28,9 @@ class CollectionViews extends React.Component {
   componentDidUpdate() {
     const { activeMode } = this.props;
 
-    if (Object.values(viewIds).indexOf(activeMode) < 0) {
-      this.handleTabChange(viewIds.OVERVIEW);
+    if (Object.values(collectionViewIds).indexOf(activeMode) < 0) {
+      this.handleTabChange(collectionViewIds.OVERVIEW);
     }
-  }
-
-  getEntitySchemata() {
-    const { collection, model } = this.props;
-    const matching = [];
-    for (const key in collection.schemata) {
-      if (!model.getSchema(key).isDocument()) {
-        matching.push({
-          schema: key,
-          count: collection.schemata[key],
-        });
-      }
-    }
-    return _.reverse(_.sortBy(matching, ['count']));
   }
 
   countDocuments() {
@@ -70,6 +50,7 @@ class CollectionViews extends React.Component {
 
     parsedHash.mode = mode;
     delete parsedHash.type;
+    delete parsedHash.editing;
 
     history.push({
       pathname: location.pathname,
@@ -82,8 +63,12 @@ class CollectionViews extends React.Component {
     const {
       collection, activeMode, diagrams, showDiagramsTab, xref,
     } = this.props;
-    // const numOfDocs = this.countDocuments();
-    // const entitySchemata = this.getEntitySchemata();
+    const docCount = this.countDocuments();
+    const entityCount = collection?.count ? collection.count - docCount : null;
+
+    const hasDocMode = (docCount > 0 || collection.writeable);
+    const hasEntityMode = (entityCount > 0 || collection.writeable);
+
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -93,7 +78,7 @@ class CollectionViews extends React.Component {
         renderActiveTabPanelOnly
       >
         <Tab
-          id={viewIds.OVERVIEW}
+          id={collectionViewIds.OVERVIEW}
           className="CollectionViews__tab"
           title={
             <>
@@ -102,18 +87,34 @@ class CollectionViews extends React.Component {
             </>}
           panel={<CollectionOverviewMode collection={collection} />}
         />
+        {hasDocMode && (
+          <Tab
+            id={collectionViewIds.DOCUMENTS}
+            className="CollectionViews__tab"
+            title={
+              <>
+                <Icon icon="document" className="left-icon" />
+                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                <Count count={docCount} />
+              </>}
+            panel={<CollectionDocumentsMode collection={collection} />}
+          />
+        )}
+        {hasEntityMode && (
+          <Tab
+            id={collectionViewIds.ENTITIES}
+            className="CollectionViews__tab"
+            title={
+              <>
+                <Icon icon="list-columns" className="left-icon" />
+                <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
+                <Count count={entityCount} />
+              </>}
+            panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
+          />
+        )}
         <Tab
-          id={viewIds.BROWSE}
-          className="CollectionViews__tab"
-          title={
-            <>
-              <Icon icon="inbox-search" className="left-icon" />
-              <FormattedMessage id="entity.info.contents" defaultMessage="Browse" />
-            </>}
-          panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
-        />
-        <Tab
-          id={viewIds.XREF}
+          id={collectionViewIds.XREF}
           className="CollectionViews__tab"
           title={
             <>
@@ -125,7 +126,7 @@ class CollectionViews extends React.Component {
         />
         {showDiagramsTab && (
           <Tab
-            id={viewIds.DIAGRAMS}
+            id={collectionViewIds.DIAGRAMS}
             className="CollectionViews__tab"
             title={
               <>

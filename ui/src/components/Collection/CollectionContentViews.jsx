@@ -9,7 +9,6 @@ import queryString from 'query-string';
 import c from 'classnames';
 
 import { Count, Schema, SchemaSelect } from 'src/components/common';
-import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import { selectModel } from 'src/selectors';
 
@@ -29,10 +28,8 @@ class CollectionContentViews extends React.Component {
     const { activeType, collection } = props;
 
     let addedSchemaViews = [];
-    if (activeType && activeType !== 'Document') {
-      if (!collection?.schemata?.hasOwnProperty(activeType)) {
-        addedSchemaViews = [activeType];
-      }
+    if (activeType && !collection?.schemata?.hasOwnProperty(activeType)) {
+      addedSchemaViews = [activeType];
     }
 
     this.state = {
@@ -71,25 +68,10 @@ class CollectionContentViews extends React.Component {
     return ([...existingSchemata, ...newSchemata]);
   }
 
-  countDocuments() {
-    const { collection, model } = this.props;
-    let totalCount = 0;
-    for (const key in collection.schemata) {
-      if (model.getSchema(key).isDocument()) {
-        totalCount += collection.schemata[key];
-      }
-    }
-    return totalCount;
-  }
-
   handleTabChange(type) {
     const { history, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
-    // leave edit mode if changing to Documents tab
-    if (type === 'Document') {
-      delete parsedHash.editing;
-    }
 
     history.push({
       pathname: location.pathname,
@@ -102,11 +84,9 @@ class CollectionContentViews extends React.Component {
     const {
       collection, activeType, editMode, intl, xref, onChange,
     } = this.props;
-    const numOfDocs = this.countDocuments();
     const schemaViews = this.schemaViews();
-    const hasBrowse = (numOfDocs > 0 || collection.writeable);
 
-    const selectedTab = activeType || (hasBrowse ? 'Document' : schemaViews[0]?.schema);
+    const selectedTab = activeType || schemaViews[0]?.schema;
     const isPending = collection.isPending && !collection.id;
     const showSchemaSelect = !isPending && collection.writeable;
 
@@ -117,23 +97,8 @@ class CollectionContentViews extends React.Component {
         onChange={this.handleTabChange}
         selectedTabId={selectedTab}
         renderActiveTabPanelOnly
-        animate={false}
         vertical
       >
-        {(isPending || hasBrowse) && (
-          <Tab
-            id="Document"
-            className={'CollectionContentViews__tab'}
-            title={
-              <span className={c({ [Classes.SKELETON]: isPending })}>
-                <Icon icon="folder" className="left-icon" />
-                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                <Count count={numOfDocs} />
-              </span>}
-            panel={<CollectionDocumentsMode collection={collection} editMode={editMode} />}
-          />
-        )}
-        {(isPending || (hasBrowse && schemaViews.length > 0)) && <MenuDivider />}
         {schemaViews.map(ref => (
           <Tab
             id={ref.schema}
