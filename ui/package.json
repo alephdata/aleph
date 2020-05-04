@@ -48,7 +48,7 @@
     "redux-thunk": "^2.3.0",
     "truncate": "^2.0.1",
     "typescript": "^3.8.3",
-    "uuid": "^7.0.2",
+    "uuid": "^8.0.0",
     "yaml": "^1.8.3"
   },
   "scripts": {
