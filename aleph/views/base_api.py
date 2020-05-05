@@ -71,15 +71,15 @@ def metadata():
         },
         'categories': Collection.CATEGORIES,
         'model': model,
+        'token': None,
         'auth': auth
     }
 
     if settings.SINGLE_USER:
         role = Role.load_cli_user()
-        authz = Authz.from_role(role)
-        single_user_token = authz.to_token(role=role)
-        data.update({'token':single_user_token})
         db.session.commit()
+        authz = Authz.from_role(role)
+        data['token'] = authz.to_token(role=role)
 
     cache.set_complex(key, data, expires=120)
     return jsonify(data)
