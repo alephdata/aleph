@@ -22,8 +22,6 @@ pyjwt==1.7.1
 rdflib==5.0.0
 requests[security]==2.23.0
 urllib3==1.25.9
-redis==3.4.1
-fakeredis==1.4.0
 networkx==2.4
 zipstream==1.1.4
 tabulate==0.8.7
