@@ -1,4 +1,4 @@
-banal==0.4.2
+banal==1.0.1
 normality==2.0.0
 pantomime==0.4.0
 servicelayer[google,amazon]==1.10.4
