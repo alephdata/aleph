@@ -25,7 +25,7 @@ click==7.1.2
 # File format support
 dbf==0.98.3
 pdflib==0.2.1
-pymediainfo==4.1
+pymediainfo==4.2.1
 python-magic==0.4.15
 pypdf2==1.26.0
 rarfile==3.1
