@@ -1,3 +1,14 @@
+# Dependencies maintained by OCCRP
+banal==1.0.1
+urlnormalizer==1.2.5
+followthemoney==1.30.1
+fingerprints==1.0.1
+servicelayer[google,amazon]==1.10.4
+normality==2.0.0
+pantomime==0.4.0
+balkhash[leveldb,sql]==1.2.1
+
+# Flask ecosystem
 Flask==1.1.2
 Flask-SQLAlchemy==2.4.1
 Flask-Mail==0.9.1
@@ -19,6 +30,7 @@ blinker==1.4
 Babel==2.8.0
 PyYAML==5.3.1
 pyjwt==1.7.1
+cryptography==2.9.2
 rdflib==5.0.0
 requests[security]==2.23.0
 urllib3==1.25.9
