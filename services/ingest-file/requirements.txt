@@ -11,7 +11,7 @@ pyicu==2.4.3
 
 grpcio==1.28.1
 google-cloud-vision==1.0.0
-google-cloud-storage==1.27.0
+google-cloud-storage==1.28.1
 
 tesserocr==2.5.1
 spacy==2.2.4
