@@ -35,7 +35,7 @@ odfpy==1.4.1
 cchardet==2.1.6
 lxml==4.5.0
 olefile==0.46
-pillow==7.1.1
+pillow==7.1.2
 vobject==0.9.6.1
 msglite==0.27.0
 
