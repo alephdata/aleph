@@ -38,7 +38,8 @@ class CollectionContextLoader extends PureComponent {
   fetchIfNeeded() {
     const { collectionId, collection, status } = this.props;
 
-    if (collection.shouldLoad) {
+    const loadDeep = collection.shallow && !collection.isPending;
+    if (collection.shouldLoad || loadDeep) {
       this.props.fetchCollection({ id: collectionId });
     }
 
@@ -96,6 +97,7 @@ const mapDispatchToProps = {
   queryCollectionXref,
   queryDiagrams,
 };
+
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),

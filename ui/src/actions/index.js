@@ -8,7 +8,6 @@ export {
   createCollection,
   deleteCollection,
   fetchCollection,
-  fetchCollectionStatistics,
   fetchCollectionStatus,
   fetchCollectionPermissions,
   queryCollections,

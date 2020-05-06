@@ -14,7 +14,7 @@ import { selectModel } from 'src/selectors';
 
 import './CollectionContentViews.scss';
 
-/* eslint-disable */
+
 class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
@@ -23,12 +23,13 @@ class CollectionViews extends React.Component {
 
   getEntitySchemata() {
     const { collection, model } = this.props;
+    const schemata = collection?.statistics?.schemata || [];
     const matching = [];
-    for (const key in collection.schemata) {
+    for (const key in schemata) {
       if (!model.getSchema(key).isDocument()) {
         matching.push({
           schema: key,
-          count: collection.schemata[key],
+          count: schemata[key],
         });
       }
     }
@@ -37,17 +38,18 @@ class CollectionViews extends React.Component {
 
   countDocuments() {
     const { collection, model } = this.props;
+    const schemata = collection?.statistics?.schemata || [];
     let totalCount = 0;
-    for (const key in collection.schemata) {
+    for (const key in schemata) {
       if (model.getSchema(key).isDocument()) {
-        totalCount += collection.schemata[key];
+        totalCount += schemata[key];
       }
     }
     return totalCount;
   }
 
   handleTabChange(type) {
-    const { history, location, isPreview } = this.props;
+    const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
     history.push({
@@ -58,9 +60,7 @@ class CollectionViews extends React.Component {
   }
 
   render() {
-    const {
-      collection, activeType, xref, onChange,
-    } = this.props;
+    const { collection, activeType } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
     const hasBrowse = (numOfDocs > 0 || collection.writeable);
