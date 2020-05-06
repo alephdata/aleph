@@ -42,28 +42,6 @@ Collection:
     writeable:
       type: boolean
 
-CollectionFull:
-  type: object
-  allOf:
-  - $ref: '#/components/schemas/Collection'
-  properties:
-    schema:
-      type: object
-    names:
-      type: object
-    addresses:
-      type: object
-    countries:
-      type: object
-    languages:
-      type: object
-    phones:
-      type: object
-    emails:
-      type: object
-    ibans:
-      type: object
-
 CollectionCreate:
   type: object
   properties:
@@ -152,6 +130,33 @@ CollectionStatus:
                   type: string
                 stage:
                   type: string
+
+CollectionFull:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/Collection'
+  properties:
+    status:
+      $ref: '#/components/schemas/CollectionStatus'
+    statistics:
+      type: object
+      properties:
+        schema:
+          type: object
+        names:
+          type: object
+        addresses:
+          type: object
+        countries:
+          type: object
+        languages:
+          type: object
+        phones:
+          type: object
+        emails:
+          type: object
+        ibans:
+          type: object
 
 CollectionsResponse:
   allOf:
