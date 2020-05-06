@@ -58,7 +58,7 @@ class CollectionOverviewMode extends React.Component {
             )}
             <CollectionInfo collection={collection} />
             <div className="CollectionOverviewMode__item__text-content__divider" />
-            <CollectionStatus collection={collection} showCancel />
+            <CollectionStatus collection={collection} showCancel={collection.writeable} />
           </div>
         </div>
         {statsToRender.map((stat) => this.renderStatisticsItem(stat))}

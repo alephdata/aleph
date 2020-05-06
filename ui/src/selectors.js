@@ -213,7 +213,12 @@ export function selectEntityView(state, entityId, mode, isPreview) {
 }
 
 export function selectCollectionStatus(state, collectionId) {
-  return selectObject(state, state.collectionStatus, collectionId);
+  const status = selectObject(state, state.collectionStatus, collectionId);
+  if (status.isError || status.isPending) {
+    return status;
+  }
+  status.active = status.pending || status.running;
+  return status;
 }
 
 export function selectCollectionPermissions(state, collectionId) {
