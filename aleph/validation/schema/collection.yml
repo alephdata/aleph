@@ -37,12 +37,32 @@ Collection:
         xref_export:
           type: string
       type: object
-    schemata:
-      type: object
     secret:
       type: boolean
     writeable:
       type: boolean
+
+CollectionFull:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/Collection'
+  properties:
+    schema:
+      type: object
+    names:
+      type: object
+    addresses:
+      type: object
+    countries:
+      type: object
+    languages:
+      type: object
+    phones:
+      type: object
+    emails:
+      type: object
+    ibans:
+      type: object
 
 CollectionCreate:
   type: object

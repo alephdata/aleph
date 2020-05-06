@@ -166,6 +166,7 @@ class CollectionSerializer(Serializer):
                                  _authorize=obj.get('secret')),
             'ui': collection_url(pk)
         }
+        obj['shallow'] = obj.get('shallow', True)
         obj['writeable'] = request.authz.can(pk, request.authz.WRITE)
         creator_id = obj.pop('creator_id', None)
         obj['creator'] = self.resolve(Role, creator_id, RoleSerializer)

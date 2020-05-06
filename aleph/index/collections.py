@@ -115,7 +115,6 @@ def get_collection(collection_id):
     schemata = get_facet_values(collection.id, 'schema')
     schemata = schemata.get('values', {})
     data['count'] = sum(schemata.values())
-    data['schemata'] = schemata
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
