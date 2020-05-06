@@ -212,20 +212,12 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   return undefined;
 }
 
-export function selectCollectionStatistics(state, collectionId) {
-  return selectObject(state, state.collectionStatistics, collectionId);
-}
-
 export function selectCollectionStatus(state, collectionId) {
   return selectObject(state, state.collectionStatus, collectionId);
 }
 
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state, state.collectionPermissions, collectionId);
-}
-
-export function selectCollectionMappings(state, collectionId) {
-  return selectObject(state, state.collectionMappings, collectionId);
 }
 
 export function selectEntityMapping(state, entityId) {
