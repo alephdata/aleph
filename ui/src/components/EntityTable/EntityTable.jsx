@@ -40,7 +40,7 @@ class EntityTable extends Component {
     return (
       <TableComponent
         collection={collection}
-        onStatusChange={this.onStatusChange}
+        onStatusChange={() => null}
         entities={results}
         sort={sort}
         isPending={result.isPending}
