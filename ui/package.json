@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alephdata/followthemoney": "1.30.0",
-    "@alephdata/vislib": "1.7.0-alpha.2",
+    "@alephdata/vislib": "1.7.0-alpha.4",
     "@blueprintjs/core": "3.18.1",
     "@blueprintjs/datetime": "^3.15.1",
     "@blueprintjs/icons": "3.15.1",

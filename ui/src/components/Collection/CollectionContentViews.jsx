@@ -39,6 +39,16 @@ class CollectionContentViews extends React.Component {
     this.onSchemaViewAdd = this.onSchemaViewAdd.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    const { activeType, collection } = this.props;
+    if (!activeType && collection?.schemata) {
+      const schemaViews = this.schemaViews();
+      if (schemaViews.length) {
+        this.handleTabChange(schemaViews[0]?.schema);
+      }
+    }
+  }
+
   onSchemaViewAdd(schema) {
     const schemaName = schema.name;
     this.setState(({ addedSchemaViews }) => ({ addedSchemaViews: [...addedSchemaViews, schemaName] }));
@@ -111,7 +121,7 @@ class CollectionContentViews extends React.Component {
             panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} editMode={editMode} />}
           />
         ))}
-        {showSchemaSelect && <MenuDivider />}
+        {schemaViews.length > 0 && showSchemaSelect && <MenuDivider />}
         {showSchemaSelect && (
           <Tab
             id="new"
@@ -136,6 +146,7 @@ class CollectionContentViews extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+
   return {
     model: selectModel(state),
     activeType: hashQuery.type,

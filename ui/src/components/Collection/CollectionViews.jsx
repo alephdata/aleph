@@ -95,7 +95,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="document" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                <Count count={docCount} />
+                {docCount > 0 && <Count count={docCount} />}
               </>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
@@ -108,7 +108,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="list-columns" className="left-icon" />
                 <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
-                <Count count={entityCount} />
+                {entityCount > 0 && <Count count={entityCount} />}
               </>}
             panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
           />
