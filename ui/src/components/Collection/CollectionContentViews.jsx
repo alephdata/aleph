@@ -3,10 +3,9 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Classes, MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { MenuDivider, Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
-import c from 'classnames';
 
 import { Count, Schema, SchemaSelect } from 'src/components/common';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
