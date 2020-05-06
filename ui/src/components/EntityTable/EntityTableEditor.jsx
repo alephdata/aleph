@@ -7,6 +7,7 @@ import { selectModel } from 'src/selectors';
 import queryString from 'query-string';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 
+import './EntityTableEditor.scss';
 
 class EntityTableEditor extends Component {
   render() {
