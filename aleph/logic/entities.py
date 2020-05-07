@@ -90,6 +90,8 @@ def entity_references(entity, authz=None):
 def entity_tags(entity, authz=None, edge_types=registry.pivots):
     """Do a search on tags of an entity."""
     proxy = model.get_proxy(entity)
+    edge_types = registry.get_types(edge_types)
+    edge_types = [t for t in edge_types if t != registry.entity]
     graph = Graph(edge_types=edge_types)
     query = graph.query(authz=authz)
     for prop, value in proxy.itervalues():
