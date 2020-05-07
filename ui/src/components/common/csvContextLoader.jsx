@@ -33,7 +33,7 @@ const csvContextLoader = (Viewer) => (
       const { document } = this.props;
       const url = document.links?.csv || document.links?.file;
       if (url && this.state.url !== url) {
-        fetchCsvData('https://aleph.occrp.org/api/2/archive?api_key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1Ijo0NzM5LCJleHAiOjE1ODg5MjMzMjYsInIiOlsxLDIsNDczOSwxNzYyLDUsNDA3MSw3MDIxLDcwMzMsNzA3MCwzODM5XSwiYSI6ZmFsc2UsImIiOmZhbHNlLCJzIjoiL2FwaS8yL2FyY2hpdmUifQ.ji7zM31kZLAlVIzjNPt-w2qOeLrjDkBmeR63BwmveRk&claim=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyIjo0NzM5LCJoIjoiNzNmNmQ0MDc4Yzg5ZGM2ZmU1ZjFjZjA3N2EyMzlhMDQyZGNlYmFlZCIsImYiOiJTU19MZXR0ZXJzX29mX0NyZWRpdC5jc3YiLCJ0IjoidGV4dC9wbGFpbiJ9.iud7m5UXS6CuppvvRuBFxF7WF8-TlfO6fV4iSoYTSjI', this.processCsvResults);
+        fetchCsvData(url, this.processCsvResults);
         this.setState({ url });
       }
     }
