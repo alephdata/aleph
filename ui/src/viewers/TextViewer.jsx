@@ -8,9 +8,10 @@ import './TextViewer.scss';
 class TextViewer extends React.Component {
   render() {
     const { document, noStyle } = this.props;
+    const bodyText = document.text || document.getFirst('bodyText');
     const text = document.isPending
       ? <Skeleton.Text type="pre" length={4000} />
-      : <Pre>{document.text}</Pre>;
+      : <Pre>{bodyText}</Pre>;
     return noStyle ? text : (
       <div className="outer">
         <div className="inner TextViewer">
