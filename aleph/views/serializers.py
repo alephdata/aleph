@@ -230,7 +230,6 @@ class EntitySerializer(Serializer):
             'ui': entity_url(pk)
         }
         if proxy.schema.is_a(Document.SCHEMA):
-            links['content'] = url_for('entities_api.content', entity_id=pk)
             content_hash = first(properties.get('contentHash'))
             if content_hash:
                 name = entity_filename(proxy)
@@ -253,6 +252,7 @@ class EntitySerializer(Serializer):
         obj['links'] = links
         write = request.authz.WRITE
         obj['writeable'] = request.authz.can(collection_id, write)
+        obj['shallow'] = obj.get('shallow', True)
         return obj
 
 

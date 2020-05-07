@@ -1,10 +1,9 @@
 import logging
+from urllib.parse import quote
+from urlnormalizer import query_string
 from flask import Blueprint, request, Response
 from werkzeug.exceptions import NotFound
 from followthemoney import model
-from followthemoney.types import registry
-from urllib.parse import quote
-from urlnormalizer import query_string
 
 from aleph.core import db, url_for
 from aleph.model import QueryLog
@@ -282,60 +281,17 @@ def view(entity_id):
       - Entity
     """
     enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ)
-    tag_request(collection_id=entity.get('collection_id'))
-    return EntitySerializer.jsonify(entity)
-
-
-@blueprint.route('/api/2/entities/<entity_id>/content', methods=['GET'])
-def content(entity_id):
-    """
-    ---
-    get:
-      summary: Get the content of an entity
-      description: >
-        Return the text and/or html content of the entity with id `entity_id`
-      parameters:
-      - in: path
-        name: entity_id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  headers:
-                    type: object
-                  html:
-                    type: string
-                  text:
-                    type: string
-                type: object
-          description: OK
-        '404':
-          description: Not Found
-      tags:
-      - Entity
-    """
-    enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ,
-                              excludes=['text'])
+                              excludes=['text', 'numeric.*'])
     tag_request(collection_id=entity.get('collection_id'))
     proxy = model.get_proxy(entity)
     html = proxy.first('bodyHtml', quiet=True)
     source_url = proxy.first('sourceUrl', quiet=True)
     encoding = proxy.first('encoding', quiet=True)
-    html = sanitize_html(html, source_url, encoding=encoding)
-    headers = proxy.first('headers', quiet=True)
-    headers = registry.json.unpack(headers)
-    return jsonify({
-        'headers': headers,
-        'text': proxy.first('bodyText', quiet=True),
-        'html': html
-    })
+    entity['html'] = sanitize_html(html, source_url, encoding=encoding)
+    entity['text'] = proxy.first('bodyText', quiet=True)
+    entity['shallow'] = False
+    return EntitySerializer.jsonify(entity)
 
 
 @blueprint.route('/api/2/entities/<entity_id>/similar', methods=['GET'])
