@@ -13,6 +13,7 @@ from aleph.core import cache, db, settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic import resolver
+from aleph.index.collections import get_facet_values
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
@@ -134,7 +135,8 @@ def statistics():
         if data is None or data.get('casefile'):
             continue
         categories[data.get('category')] += 1
-        for schema, count in data.get('schemata', {}).items():
+        facet = get_facet_values(collection_id, 'schema')
+        for schema, count in facet.get('values').items():
             schemata[schema] += count
         for country in data.get('countries', []):
             countries[country] += 1

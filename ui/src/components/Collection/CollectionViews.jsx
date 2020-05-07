@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -24,7 +23,6 @@ const viewIds = {
   DIAGRAMS: 'diagrams',
 };
 
-/* eslint-disable */
 class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
@@ -39,38 +37,12 @@ class CollectionViews extends React.Component {
     }
   }
 
-  getEntitySchemata() {
-    const { collection, model } = this.props;
-    const matching = [];
-    for (const key in collection.schemata) {
-      if (!model.getSchema(key).isDocument()) {
-        matching.push({
-          schema: key,
-          count: collection.schemata[key],
-        });
-      }
-    }
-    return _.reverse(_.sortBy(matching, ['count']));
-  }
-
-  countDocuments() {
-    const { collection, model } = this.props;
-    let totalCount = 0;
-    for (const key in collection.schemata) {
-      if (model.getSchema(key).isDocument()) {
-        totalCount += collection.schemata[key];
-      }
-    }
-    return totalCount;
-  }
-
   handleTabChange(mode) {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     parsedHash.mode = mode;
     delete parsedHash.type;
-
     history.push({
       pathname: location.pathname,
       search: location.search,
@@ -82,8 +54,6 @@ class CollectionViews extends React.Component {
     const {
       collection, activeMode, diagrams, showDiagramsTab, xref,
     } = this.props;
-    // const numOfDocs = this.countDocuments();
-    // const entitySchemata = this.getEntitySchemata();
     return (
       <Tabs
         id="CollectionInfoTabs"

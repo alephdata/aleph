@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import timestamp from 'src/util/timestamp';
+
 
 export function mergeResults(previous, current) {
   if (previous === undefined || previous.results === undefined || current.offset === 0) {
@@ -11,10 +13,6 @@ export function mergeResults(previous, current) {
   }
   if (Number.isNaN(expectedOffset)) return current;
   return previous;
-}
-
-export function timestamp() {
-  return new Date().toISOString();
 }
 
 export function loadComplete(data) {

@@ -6,7 +6,6 @@ from followthemoney.graph import Graph as FtMGraph
 
 from aleph.core import es
 from aleph.model import Entity
-from aleph.logic import resolver
 from aleph.index.entities import _source_spec, PROXY_INCLUDES
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import field_filter_query, authz_query, unpack_result
@@ -22,6 +21,7 @@ class Graph(FtMGraph):
     entities against the aleph search index and entity cache."""
 
     def resolve(self):
+        from aleph.logic import resolver
         for id_ in self.queued:
             node_id = registry.entity.node_id_safe(id_)
             node = self.nodes.get(node_id)

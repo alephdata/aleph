@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { timestamp } from 'src/reducers/util';
+import timestamp from 'src/util/timestamp';
 
 import {
   mutate,
