@@ -39,6 +39,7 @@ const csvContextLoader = (Viewer) => (
     }
 
     processCsvResults(results, parser) {
+      if (!results?.data) return;
       this.setState((previousState) => {
         const rows = previousState.rows.concat(results.data);
         const rowIndex = rows.length;
