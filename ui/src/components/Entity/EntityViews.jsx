@@ -180,7 +180,7 @@ class EntityViews extends React.Component {
                 <FormattedMessage id="entity.mapping.view" defaultMessage="Generate entities" />
               </>
             )}
-            panel={<EntityMappingMode entity={entity} />}
+            panel={<EntityMappingMode document={entity} />}
           />
         )}
       </Tabs>
