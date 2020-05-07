@@ -20,17 +20,14 @@ RUN groupadd -g 1000 -r app \
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -q -U pip setuptools six
 
-COPY requirements-generic.txt /tmp/
-RUN pip3 install --no-cache-dir -q -r /tmp/requirements-generic.txt
-COPY requirements-toolkit.txt /tmp/
-RUN pip3 install --no-cache-dir -q -r /tmp/requirements-toolkit.txt
+COPY requirements.txt /tmp/
+RUN pip3 install --no-cache-dir -q -r /tmp/requirements.txt
 
 # Install aleph
 COPY . /aleph
 WORKDIR /aleph
 ENV PYTHONPATH /aleph
 RUN pip install -q -e /aleph
-# RUN cd /usr/local/lib/python3.6/dist-packages && python3 /aleph/setup.py develop
 
 # Configure some docker defaults:
 ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
