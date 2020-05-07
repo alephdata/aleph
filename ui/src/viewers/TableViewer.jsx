@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Cell, Column, Table, TruncatedFormat,
 } from '@blueprintjs/table';
-import csvContextLoader from 'src/components/common/csvContextLoader';
+import { csvContextLoader } from 'src/components/common';
 
 import './TableViewer.scss';
 
