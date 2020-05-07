@@ -3,13 +3,8 @@
   "version": "3.7.1",
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
-    "@alephdata/followthemoney": "1.30.0",
-    "@alephdata/vislib": "1.7.0-alpha.6",
-=======
     "@alephdata/followthemoney": "1.30.1",
-    "@alephdata/vislib": "1.6.5",
->>>>>>> 7e60122e9fd1cfc3546ef9acaa7ad995971c2d86
+    "@alephdata/vislib": "1.7.0-alpha.6",
     "@blueprintjs/core": "3.18.1",
     "@blueprintjs/datetime": "^3.15.1",
     "@blueprintjs/icons": "3.16.0",
