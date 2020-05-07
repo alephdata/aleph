@@ -89,7 +89,7 @@ export class MappingEditor extends Component {
   }
 
   render() {
-    const { entity, existingMappingMetadata, csvData, csvHeader, intl, model } = this.props;
+    const { document, existingMappingMetadata, csvData, csvHeader, intl } = this.props;
     const { mappings } = this.state;
 
     return (
@@ -143,8 +143,6 @@ export class MappingEditor extends Component {
                   mappings={mappings}
                   sectionContentsRenderer={(subitems => (
                     <MappingVerify
-                      entity={entity}
-                      model={model}
                       items={subitems}
                       fullMappingsList={mappings}
                       onPropertyRemove={this.onPropertyRemove}
@@ -156,7 +154,7 @@ export class MappingEditor extends Component {
               <div className="MappingEditor__section">
                 <MappingManageMenu
                   mappings={mappings}
-                  entity={entity}
+                  document={document}
                   existingMappingMetadata={existingMappingMetadata}
                 />
               </div>

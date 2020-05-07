@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import fetchCsvData from 'src/util/fetchCsvData';
 import { SectionLoading } from 'src/components/common';
+import csvContextLoader from 'src/components/common/csvContextLoader';
 import { fetchEntityMapping } from 'src/actions';
 import { selectEntityMapping } from 'src/selectors';
 import { MappingEditor, MappingImportButton, MappingStatus } from 'src/components/MappingEditor/.';
@@ -15,22 +15,17 @@ export class EntityMappingMode extends Component {
     super(props);
 
     this.state = {
-      csvHeader: null,
-      csvData: null,
       importedMappingData: null,
     };
 
-    this.processCsvResults = this.processCsvResults.bind(this);
     this.onImport = this.onImport.bind(this);
   }
 
   componentDidMount() {
-    const { entity, existingMapping } = this.props;
+    const { document, existingMapping } = this.props;
 
-    fetchCsvData(entity.links.csv, this.processCsvResults);
-
-    if (entity.id && existingMapping.shouldLoad) {
-      this.props.fetchEntityMapping(entity);
+    if (document.id && existingMapping.shouldLoad) {
+      this.props.fetchEntityMapping(document);
     }
   }
 
@@ -40,27 +35,17 @@ export class EntityMappingMode extends Component {
     this.setState({ importedMappingData: processedData });
   }
 
-  processCsvResults(results, parser) {
-    if (results?.data) {
-      this.setState({
-        csvHeader: results.data[0],
-        csvData: results.data.slice(1, 15),
-      });
-      parser.abort();
-    }
-  }
-
   processImportedMappings(mappingData) {
-    const { csvHeader } = this.state;
+    const { columns } = this.props;
 
     const processed = {};
     Object.entries(mappingData).forEach(([id, { schema, keys, properties }]) => {
-      const processedKeys = keys.filter(key => csvHeader.indexOf(key) > -1);
+      const processedKeys = keys.filter(key => columns.indexOf(key) > -1);
       const processedProps = {};
 
       if (properties) {
         Object.entries(properties).forEach(([propName, propVal]) => {
-          if (propVal.columns || (propVal.column && csvHeader.indexOf(propVal.column) === -1)) {
+          if (propVal.columns || (propVal.column && columns.indexOf(propVal.column) === -1)) {
             return;
           }
           if (propVal.literal && typeof propVal.literal === 'string') {
@@ -82,13 +67,14 @@ export class EntityMappingMode extends Component {
   }
 
   render() {
-    const { entity, existingMapping } = this.props;
-    const { csvData, csvHeader, importedMappingData } = this.state;
+    const { columns, document, existingMapping, rows } = this.props;
+    const { importedMappingData } = this.state;
 
-    if (!csvData || !csvHeader || existingMapping.isPending) {
+    if (!rows || !columns || existingMapping.isPending) {
       return <SectionLoading />;
     }
 
+    const useFirstRowAsHeader = rows.length > 0 && columns[0] === 'Column 1';
     const showImport = !existingMapping.isPending && !importedMappingData && !existingMapping.id;
 
     return (
@@ -129,9 +115,9 @@ export class EntityMappingMode extends Component {
           />
         )}
         <MappingEditor
-          entity={entity}
-          csvData={csvData}
-          csvHeader={csvHeader}
+          document={document}
+          csvData={useFirstRowAsHeader ? rows.slice(1) : rows}
+          csvHeader={useFirstRowAsHeader ? rows[0] : columns}
           mappingData={importedMappingData || existingMapping?.query}
           existingMappingMetadata={existingMapping}
         />
@@ -143,14 +129,15 @@ export class EntityMappingMode extends Component {
 const mapDispatchToProps = { fetchEntityMapping };
 
 const mapStateToProps = (state, ownProps) => {
-  const { entity } = ownProps;
+  const { document } = ownProps;
 
   return {
-    existingMapping: selectEntityMapping(state, entity.id),
+    existingMapping: selectEntityMapping(state, document.id),
   };
 };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
+  csvContextLoader,
 )(EntityMappingMode);

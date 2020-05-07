@@ -65,10 +65,10 @@ class MappingManageMenu extends Component {
   }
 
   onSave() {
-    const { entity, existingMappingMetadata, intl } = this.props;
+    const { document, existingMappingMetadata, intl } = this.props;
     if (this.validateMappings()) {
       try {
-        this.props.updateEntityMapping(entity, existingMappingMetadata.id, this.formatMappings());
+        this.props.updateEntityMapping(document, existingMappingMetadata.id, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.save));
       } catch (e) {
         showErrorToast(e);
@@ -78,10 +78,10 @@ class MappingManageMenu extends Component {
   }
 
   onCreate() {
-    const { entity, intl } = this.props;
+    const { document, intl } = this.props;
     if (this.validateMappings()) {
       try {
-        this.props.createEntityMapping(entity, this.formatMappings());
+        this.props.createEntityMapping(document, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.create));
       } catch (e) {
         showErrorToast(e);
@@ -91,10 +91,10 @@ class MappingManageMenu extends Component {
   }
 
   onDelete() {
-    const { entity, existingMappingMetadata, intl } = this.props;
+    const { document, existingMappingMetadata, intl } = this.props;
 
     try {
-      this.props.deleteEntityMapping(entity, existingMappingMetadata.id);
+      this.props.deleteEntityMapping(document, existingMappingMetadata.id);
       showInfoToast(intl.formatMessage(messages.delete));
     } catch (e) {
       showErrorToast(e);
@@ -103,10 +103,10 @@ class MappingManageMenu extends Component {
   }
 
   onFlush() {
-    const { entity, existingMappingMetadata, intl } = this.props;
+    const { document, existingMappingMetadata, intl } = this.props;
 
     try {
-      this.props.flushEntityMapping(entity, existingMappingMetadata.id);
+      this.props.flushEntityMapping(document, existingMappingMetadata.id);
       showInfoToast(intl.formatMessage(messages.flush));
     } catch (e) {
       showErrorToast(e);
@@ -129,10 +129,10 @@ class MappingManageMenu extends Component {
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   formatMappings() {
-    const { entity, mappings } = this.props;
+    const { document, mappings } = this.props;
 
     return {
-      table_id: entity.id,
+      table_id: document.id,
       mapping_query: mappings.toApiFormat(),
     };
   }
@@ -154,13 +154,13 @@ class MappingManageMenu extends Component {
   }
 
   exportMappingData() {
-    const { entity, mappings, existingMappingMetadata } = this.props;
+    const { document, mappings, existingMappingMetadata } = this.props;
 
     try {
-      const fileData = { [entity.id]:
+      const fileData = { [document.id]:
         {
-          label: entity.getCaption(),
-          info_url: entity.links.self,
+          label: document.getCaption(),
+          info_url: document.links.self,
           query: {
             csv_url: existingMappingMetadata.links.table_csv,
             entities: mappings.toApiFormat(),
@@ -168,7 +168,7 @@ class MappingManageMenu extends Component {
         },
       };
       const yamlData = YAML.stringify(fileData);
-      fileDownload(yamlData, `${entity.getCaption()}.yml`);
+      fileDownload(yamlData, `${document.getCaption()}.yml`);
     } catch (e) {
       showErrorToast(e);
     }
