@@ -8,12 +8,14 @@ import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, s
 
 
 class CollectionContextLoader extends PureComponent {
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
 
   componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
     const { status } = this.props;
     const prevStatus = prevProps.status;
-    this.fetchIfNeeded();
-
     const wasUpdating = prevStatus.pending > 0 || prevStatus.running > 0;
     const isUpdating = status.pending > 0 || status.running > 0;
 
@@ -25,7 +27,7 @@ class CollectionContextLoader extends PureComponent {
   fetchIfNeeded() {
     const { collectionId, collection } = this.props;
 
-    const loadDeep = collection.shallow && !collection.isPending;
+    const loadDeep = (collection.shallow && !collection.isPending);
     if (collection.shouldLoad || loadDeep) {
       this.props.fetchCollection({ id: collectionId });
     }

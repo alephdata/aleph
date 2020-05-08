@@ -8,7 +8,7 @@ from followthemoney.types import registry
 from aleph.core import db
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
-from aleph.tests.util import TestCase
+from aleph.tests.util import TestCase, get_caption
 
 log = logging.getLogger(__name__)
 
@@ -97,7 +97,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert 'LegalEntity' in res.json['schema'], res.json
-        assert 'Winnie' in res.json['name'], res.json
+        assert 'Winnie' in get_caption(res.json), res.json
         validate(res.json, 'Entity')
 
     def test_update(self):
@@ -114,7 +114,7 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         validate(res.json, 'Entity')
-        assert 'little' in res.json['name'], res.json
+        assert 'little' in get_caption(res.json), res.json
 
         data['properties'].pop('name', None)
         res = self.client.post(url + '?validate=true',
@@ -265,7 +265,7 @@ class EntitiesApiTestCase(TestCase):
         assert obj.json['id'] not in text, obj.id
         data = similar.json
         assert len(data['results']) == 1, data
-        assert 'Laden' in data['results'][0]['name'], data
+        assert 'Laden' in get_caption(data['results'][0]), data
         assert b'Pooh' not in res.data, res.data
         validate(data['results'][0], 'Entity')
 
@@ -295,7 +295,7 @@ class EntitiesApiTestCase(TestCase):
         assert matches.status_code == 200, (matches.status_code, matches.json)
         data = matches.json
         assert len(data['results']) == 1, data
-        assert 'Laden' in data['results'][0]['name'], data
+        assert 'Laden' in get_caption(data['results'][0]), data
         assert b'Pooh' not in res.data, res.data
         validate(data['results'][0], 'Entity')
 
