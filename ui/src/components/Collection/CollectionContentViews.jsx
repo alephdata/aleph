@@ -59,26 +59,26 @@ class CollectionContentViews extends React.Component {
     const { collection, model } = this.props;
     const { addedSchemaViews } = this.state;
 
+    const schemata = collection?.statistics?.schemata || [];
     const matching = [];
-    for (const key in collection.schemata) {
+    for (const key in schemata) {
       if (!model.getSchema(key).isDocument()) {
         matching.push({
           schema: key,
-          count: collection.schemata[key],
+          count: schemata[key],
         });
       }
     }
     const existingSchemata = _.reverse(_.sortBy(matching, ['count']));
-    const newSchemata =
-      addedSchemaViews
-        .filter(schema => !collection?.schemata?.hasOwnProperty(schema))
-        .map(schema => ({ schema, count: 0 }));
+    const newSchemata = addedSchemaViews
+      .filter(schema => schemata.hasOwnProperty(schema))
+      .map(schema => ({ schema, count: 0 }));
 
-    return ([...existingSchemata, ...newSchemata]);
+    return [...existingSchemata, ...newSchemata];
   }
 
   handleTabChange(type) {
-    const { history, location, isPreview } = this.props;
+    const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
 
@@ -91,10 +91,9 @@ class CollectionContentViews extends React.Component {
 
   render() {
     const {
-      collection, activeType, editMode, intl, xref, onChange,
+      collection, activeType, editMode, intl,
     } = this.props;
     const schemaViews = this.schemaViews();
-
     const selectedTab = activeType || schemaViews[0]?.schema;
     const isPending = collection.isPending && !collection.id;
     const showSchemaSelect = !isPending && collection.writeable;

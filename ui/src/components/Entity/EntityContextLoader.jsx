@@ -3,11 +3,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  fetchEntity, fetchDocumentContent, fetchEntityTags, fetchEntityReferences, queryEntities,
+  fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
 } from 'src/actions';
 import {
-  selectEntity, selectEntityTags, selectEntityReferences,
-  selectEntitiesResult, selectDocumentContent,
+  selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult, 
 } from 'src/selectors';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 
@@ -23,7 +22,9 @@ class EntityContextLoader extends PureComponent {
 
   fetchIfNeeded() {
     const { entityId, entity, tagsResult, referencesResult } = this.props;
-    if (entity.shouldLoad) {
+
+    const loadDeep = entity.shallow && !entity.isPending;
+    if (entity.shouldLoad || loadDeep) {
       this.props.fetchEntity({ id: entityId });
     }
 
@@ -35,24 +36,13 @@ class EntityContextLoader extends PureComponent {
       this.props.fetchEntityReferences({ id: entityId });
     }
 
-    if (entity && entity.schema && entity.schema.name) {
-      this.fetchWithSchema(entityId, entity.schema);
-    }
-  }
-
-  fetchWithSchema(entityId, schema) {
-    const { content } = this.props;
-    if (schema.isDocument() && content.shouldLoad) {
-      this.props.fetchDocumentContent({ id: entityId });
-    }
-
     const { similarQuery, similarResult } = this.props;
-    if (schema.matchable && similarResult.shouldLoad) {
+    if (entity?.schema?.matchable && similarResult.shouldLoad) {
       this.props.queryEntities({ query: similarQuery });
     }
 
     const { childrenResult, childrenQuery } = this.props;
-    if (schema.isA('Folder') && childrenResult.shouldLoad) {
+    if (entity?.schema?.isA('Folder') && childrenResult.shouldLoad) {
       this.props.queryEntities({ query: childrenQuery });
     }
   }
@@ -69,7 +59,6 @@ const mapStateToProps = (state, ownProps) => {
   const childrenQuery = queryFolderDocuments(location, entityId, undefined);
   return {
     entity: selectEntity(state, entityId),
-    content: selectDocumentContent(state, entityId),
     tagsResult: selectEntityTags(state, entityId),
     referencesResult: selectEntityReferences(state, entityId),
     similarQuery,
@@ -84,7 +73,6 @@ const mapDispatchToProps = {
   fetchEntity,
   fetchEntityTags,
   fetchEntityReferences,
-  fetchDocumentContent,
 };
 
 export default compose(

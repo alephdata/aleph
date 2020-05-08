@@ -16,16 +16,12 @@ from aleph.index.util import MAX_REQUEST_TIMEOUT, MAX_TIMEOUT
 
 
 log = logging.getLogger(__name__)
-PROXY_INCLUDES = ['schema', 'properties']
-EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
-                   'identifiers', 'addresses', 'numeric.*']
+PROXY_INCLUDES = ['schema', 'properties', 'collection_id']
 
 
 def _source_spec(includes, excludes):
     includes = ensure_list(includes)
     excludes = ensure_list(excludes)
-    if not len(excludes):
-        excludes = EXCLUDE_DEFAULT
     return {'includes': includes, 'excludes': excludes}
 
 
@@ -57,7 +53,8 @@ def get_field_type(field):
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
-                  includes=None, excludes=None, filters=None, cached=False):
+                  includes=PROXY_INCLUDES, excludes=None, filters=None,
+                  cached=False):
     """Scan all entities matching the given criteria."""
     query = {
         'query': _entities_query(filters, authz, collection_id, schemata),
@@ -75,7 +72,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
 
 
 def iter_proxies(**kw):
-    for data in iter_entities(includes=PROXY_INCLUDES, **kw):
+    for data in iter_entities(**kw):
         schema = model.get(data.get('schema'))
         if schema is None:
             continue
@@ -91,7 +88,7 @@ def iter_adjacent(entity):
 
 
 def entities_by_ids(ids, schemata=None, cached=False,
-                    includes=None, excludes=None):
+                    includes=PROXY_INCLUDES, excludes=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     ids = ensure_list(ids)
@@ -159,6 +156,7 @@ def format_proxy(proxy, collection, extra):
     updated_at = proxy.pop('indexUpdatedAt', quiet=True)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
+    data['schemata'] = list(proxy.schema.names)
 
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])

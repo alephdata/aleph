@@ -3,26 +3,19 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
-import { fetchCollection, fetchCollectionStatus, queryCollectionXref, queryDiagrams, mutate } from 'src/actions';
+import { fetchCollection, queryCollectionXref, queryDiagrams, mutate } from 'src/actions';
 import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectDiagramsResult } from 'src/selectors';
 
 
 class CollectionContextLoader extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.fetchStatus = this.fetchStatus.bind(this);
-  }
-
   componentDidMount() {
-    this.fetchStatus();
     this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
     const { status } = this.props;
     const prevStatus = prevProps.status;
-    this.fetchIfNeeded();
-
     const wasUpdating = prevStatus.pending > 0 || prevStatus.running > 0;
     const isUpdating = status.pending > 0 || status.running > 0;
 
@@ -31,19 +24,12 @@ class CollectionContextLoader extends PureComponent {
     }
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
-  }
-
   fetchIfNeeded() {
-    const { collectionId, collection, status } = this.props;
+    const { collectionId, collection } = this.props;
 
-    if (collection.shouldLoad) {
+    const loadDeep = (collection.shallow && !collection.isPending);
+    if (collection.shouldLoad || loadDeep) {
       this.props.fetchCollection({ id: collectionId });
-    }
-
-    if (status.shouldLoad) {
-      this.fetchStatus();
     }
 
     const { xrefResult, xrefQuery } = this.props;
@@ -55,18 +41,6 @@ class CollectionContextLoader extends PureComponent {
     if (diagramsResult.shouldLoad) {
       this.props.queryDiagrams({ query: diagramsQuery });
     }
-  }
-
-  fetchStatus() {
-    const { collectionId } = this.props;
-    clearTimeout(this.timeout);
-    this.props.fetchCollectionStatus({ id: collectionId })
-      .finally(() => {
-        const { status } = this.props;
-        const duration = status.pending === 0 ? 6000 : 2000;
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(this.fetchStatus, duration);
-      });
   }
 
   render() {
@@ -92,10 +66,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   mutate,
   fetchCollection,
-  fetchCollectionStatus,
   queryCollectionXref,
   queryDiagrams,
 };
+
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),

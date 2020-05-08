@@ -166,6 +166,7 @@ class CollectionSerializer(Serializer):
                                  _authorize=obj.get('secret')),
             'ui': collection_url(pk)
         }
+        obj['shallow'] = obj.get('shallow', True)
         obj['writeable'] = request.authz.can(pk, request.authz.WRITE)
         creator_id = obj.pop('creator_id', None)
         obj['creator'] = self.resolve(Role, creator_id, RoleSerializer)
@@ -211,7 +212,6 @@ class EntitySerializer(Serializer):
         obj['collection'] = self.resolve(Collection, collection_id,
                                          CollectionSerializer)
         proxy = model.get_proxy(obj)
-        obj['schemata'] = proxy.schema.names
         properties = obj.get('properties', {})
         for prop in proxy.iterprops():
             if prop.type != registry.entity:
@@ -229,7 +229,6 @@ class EntitySerializer(Serializer):
             'ui': entity_url(pk)
         }
         if proxy.schema.is_a(Document.SCHEMA):
-            links['content'] = url_for('entities_api.content', entity_id=pk)
             content_hash = first(properties.get('contentHash'))
             if content_hash:
                 name = entity_filename(proxy)
@@ -252,6 +251,7 @@ class EntitySerializer(Serializer):
         obj['links'] = links
         write = request.authz.WRITE
         obj['writeable'] = request.authz.can(collection_id, write)
+        obj['shallow'] = obj.get('shallow', True)
         return obj
 
 

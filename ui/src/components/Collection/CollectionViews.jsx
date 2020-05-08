@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -18,7 +17,6 @@ import { selectModel, selectDiagramsResult, selectCollectionXrefResult, selectTe
 
 import './CollectionViews.scss';
 
-/* eslint-disable */
 class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
@@ -28,17 +26,18 @@ class CollectionViews extends React.Component {
   componentDidUpdate() {
     const { activeMode } = this.props;
 
-    if (Object.values(collectionViewIds).indexOf(activeMode) < 0) {
-      this.handleTabChange(collectionViewIds.OVERVIEW);
+    if (Object.values(viewIds).indexOf(activeMode) < 0) {
+      this.handleTabChange(viewIds.OVERVIEW);
     }
   }
 
   countDocuments() {
     const { collection, model } = this.props;
+    const schemata = collection?.statistics?.schemata || [];
     let totalCount = 0;
-    for (const key in collection.schemata) {
+    for (const key in schemata) {
       if (model.getSchema(key).isDocument()) {
-        totalCount += collection.schemata[key];
+        totalCount += schemata[key];
       }
     }
     return totalCount;

@@ -5,8 +5,9 @@ import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { Numeric } from 'src/components/common';
-import { triggerCollectionCancel } from 'src/actions';
+import { triggerCollectionCancel, fetchCollectionStatus } from 'src/actions';
 import { selectCollectionStatus } from 'src/selectors';
+import timestamp from 'src/util/timestamp';
 
 import './CollectionStatus.scss';
 
@@ -21,6 +22,25 @@ class CollectionStatus extends Component {
   constructor(props) {
     super(props);
     this.onCancel = this.onCancel.bind(this);
+    this.fetchStatus = this.fetchStatus.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchStatus();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  fetchStatus() {
+    const { collection, status } = this.props;
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(this.fetchStatus, 1000);
+    const staleDuration = status.active ? 2000 : 20000;
+    if (timestamp() - status.loadedAt > staleDuration) {
+      this.props.fetchCollectionStatus(collection);
+    }
   }
 
   onCancel() {
@@ -35,7 +55,7 @@ class CollectionStatus extends Component {
     const finished = status.finished || 0;
     const active = pending + running;
     const total = active + finished;
-    if (!collection || status.shouldLoad || !active) {
+    if (!collection || !active) {
       return null;
     }
     const progress = finished / total;
@@ -70,7 +90,9 @@ const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
   return { status: selectCollectionStatus(state, collection.id) };
 };
-const mapDispatchToProps = { triggerCollectionCancel };
+
+const mapDispatchToProps = { triggerCollectionCancel, fetchCollectionStatus };
+
 CollectionStatus = connect(mapStateToProps, mapDispatchToProps)(CollectionStatus);
 CollectionStatus = injectIntl(CollectionStatus);
 export default CollectionStatus;

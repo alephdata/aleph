@@ -163,15 +163,12 @@ class CollectionsApiTestCase(TestCase):
         self.load_fixtures()
         compute_collection(self.private_coll, sync=True)
         _, headers = self.login(is_admin=True)
-        url = '/api/2/collections/%s/statistics' % self.private_coll.id
-        res = self.client.get(url)
-        assert res.status_code == 403, res
-
+        url = '/api/2/collections/%s' % self.private_coll.id
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
-        assert 'Folder' in res.json['schema']['values'], res.json
-        assert 'vladimir_l@example.com' in res.json['emails']['values'], \
-            res.json
+        stats = res.json['statistics']
+        assert 'Folder' in stats['schema']['values'], stats
+        assert 'vladimir_l@example.com' in stats['emails']['values'], stats
 
     def test_status(self):
         _, headers = self.login(is_admin=True)
