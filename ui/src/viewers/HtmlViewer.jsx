@@ -9,7 +9,7 @@ class HtmlViewer extends Component {
     const { document } = this.props;
     const body = document.isPending
       ? <Skeleton.Text type="p" length={4000} />
-      : <span dangerouslySetInnerHTML={{ __html: document.html }} />;
+      : <span dangerouslySetInnerHTML={{ __html: document.safeHtml }} />;
     return (
       <div className="outer">
         <div className="inner HtmlViewer">

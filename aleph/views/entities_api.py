@@ -288,8 +288,7 @@ def view(entity_id):
     html = proxy.first('bodyHtml', quiet=True)
     source_url = proxy.first('sourceUrl', quiet=True)
     encoding = proxy.first('encoding', quiet=True)
-    entity['html'] = sanitize_html(html, source_url, encoding=encoding)
-    entity['text'] = proxy.first('bodyText', quiet=True)
+    entity['safeHtml'] = sanitize_html(html, source_url, encoding=encoding)
     entity['shallow'] = False
     return EntitySerializer.jsonify(entity)
 

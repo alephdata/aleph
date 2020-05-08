@@ -113,8 +113,7 @@ export function selectEntity(state, entityId) {
   result.shallow = !!entity.shallow;
   result.error = entity.error;
   result.links = entity.links;
-  result.html = entity.html;
-  result.text = entity.text;
+  result.safeHtml = entity.safeHtml;
   result.collection = entity.collection;
   result.highlight = entity.highlight;
   return result;

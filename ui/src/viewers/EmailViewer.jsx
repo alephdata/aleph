@@ -59,11 +59,12 @@ class EmailViewer extends React.Component {
 
   renderBody() {
     const { document } = this.props;
-    if (document.html && document.html.length) {
-      return <span dangerouslySetInnerHTML={{ __html: document.html }} />;
+    if (document.safeHtml && document.safeHtml.length) {
+      return <span dangerouslySetInnerHTML={{ __html: document.safeHtml }} />;
     }
-    if (document.text && document.text.length > 0) {
-      return <Pre>{document.text}</Pre>;
+    const bodyText = document.getFirst('bodyText');
+    if (bodyText && bodyText.length > 0) {
+      return <Pre>{bodyText}</Pre>;
     }
     return (
       <p className="bp3-text-muted">

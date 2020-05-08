@@ -10,6 +10,7 @@ from aleph.model import Entity
 from aleph.search import SearchQueryParser
 from aleph.search import EntitiesQuery, MatchQuery
 from aleph.views.util import jsonify, get_index_collection
+from aleph.index.collections import get_facet_values
 from aleph.logic.util import entity_url
 from aleph.index.util import unpack_result
 from aleph.views.context import tag_request
@@ -59,7 +60,8 @@ def reconcile_index(collection=None):
     if collection is not None:
         label = '%s (%s)' % (collection.get('label'), label)
         suggest_query.append(('filter:collection_id', collection.get('id')))
-        schemata = [model.get(s) for s in collection.get('schemata').keys()]
+        schemata = get_facet_values(collection.get('id'), 'schema')
+        schemata = [model.get(s) for s in schemata.get('values').keys()]
     return jsonify({
         'name': label,
         'identifierSpace': 'http://rdf.freebase.com/ns/type.object.id',
