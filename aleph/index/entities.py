@@ -159,6 +159,7 @@ def format_proxy(proxy, collection, extra):
     updated_at = proxy.pop('indexUpdatedAt', quiet=True)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
+    data['schemata'] = list(proxy.schema.names)
 
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
