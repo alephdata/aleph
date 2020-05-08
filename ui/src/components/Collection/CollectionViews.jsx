@@ -112,17 +112,6 @@ class CollectionViews extends React.Component {
             panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
           />
         )}
-        <Tab
-          id={collectionViewIds.XREF}
-          className="CollectionViews__tab"
-          title={
-            <>
-              <Icon className="left-icon" icon="comparison" />
-              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
-              <Count count={xref.total} />
-            </>}
-          panel={<CollectionXrefMode collection={collection} />}
-        />
         {showDiagramsTab && (
           <Tab
             id={collectionViewIds.DIAGRAMS}
@@ -137,6 +126,17 @@ class CollectionViews extends React.Component {
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />
         )}
+        <Tab
+          id={collectionViewIds.XREF}
+          className="CollectionViews__tab"
+          title={
+            <>
+              <Icon className="left-icon" icon="comparison" />
+              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
+              <Count count={xref.total} />
+            </>}
+          panel={<CollectionXrefMode collection={collection} />}
+        />
       </Tabs>
     );
   }
