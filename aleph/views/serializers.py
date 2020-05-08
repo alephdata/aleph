@@ -212,7 +212,6 @@ class EntitySerializer(Serializer):
         obj['collection'] = self.resolve(Collection, collection_id,
                                          CollectionSerializer)
         proxy = model.get_proxy(obj)
-        obj['schemata'] = proxy.schema.names
         properties = obj.get('properties', {})
         for prop in proxy.iterprops():
             if prop.type != registry.entity:
