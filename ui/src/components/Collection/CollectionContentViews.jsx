@@ -90,9 +90,7 @@ class CollectionContentViews extends React.Component {
   }
 
   render() {
-    const {
-      collection, activeType, editMode, intl,
-    } = this.props;
+    const { collection, activeType, intl } = this.props;
     const schemaViews = this.schemaViews();
     const selectedTab = activeType || schemaViews[0]?.schema;
     const isPending = collection.isPending && !collection.id;
@@ -117,7 +115,7 @@ class CollectionContentViews extends React.Component {
                 <Schema.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
-            panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} editMode={editMode} />}
+            panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} />}
           />
         ))}
         {schemaViews.length > 0 && showSchemaSelect && <MenuDivider />}
@@ -149,7 +147,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     model: selectModel(state),
     activeType: hashQuery.type,
-    editMode: hashQuery.editing,
   };
 };
 

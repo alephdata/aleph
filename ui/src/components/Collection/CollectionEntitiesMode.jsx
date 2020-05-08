@@ -8,13 +8,12 @@ import EntityListManager from 'src/components/Entity/EntityListManager';
 
 class CollectionEntitiesMode extends React.PureComponent {
   render() {
-    const { collection, editMode, query } = this.props;
+    const { collection, query } = this.props;
 
     return (
       <EntityListManager
         query={query}
         collection={collection}
-        editMode={editMode}
       />
     );
   }

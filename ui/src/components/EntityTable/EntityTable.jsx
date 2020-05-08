@@ -22,8 +22,7 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { collection, isEditing, query, result, ...rest } = this.props;
-
+    const { collection, showTableEditor, query, result, ...rest } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -35,7 +34,7 @@ class EntityTable extends Component {
 
     const results = result.results ? result.results.filter((e) => e.id !== undefined) : [];
     const sort = query.getSort();
-    const TableComponent = isEditing ? EntityTableEditor : EntityTableViewer;
+    const TableComponent = showTableEditor ? EntityTableEditor : EntityTableViewer;
 
     return (
       <TableComponent

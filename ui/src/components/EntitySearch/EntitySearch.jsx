@@ -94,11 +94,10 @@ export class EntitySearch extends Component {
       query, result, intl, className,
       documentMode, hideCollection,
       showPreview, updateSelection, selection,
-      emptyComponent, writeable, editMode, collection,
+      emptyComponent, writeable, showTableEditor, collection,
     } = this.props;
     const isEmpty = !query.hasQuery();
     const foundText = this.generateFoundText();
-    const isEditing = writeable && editMode;
 
     return (
       <div className={c('EntitySearch', className)}>
@@ -124,8 +123,8 @@ export class EntitySearch extends Component {
           updateQuery={this.updateQuery}
           updateSelection={updateSelection}
           selection={selection}
-          isEditing={isEditing}
           collection={collection}
+          showTableEditor={showTableEditor || false}
         />
         <Waypoint
           onEnter={this.getMoreResults}
