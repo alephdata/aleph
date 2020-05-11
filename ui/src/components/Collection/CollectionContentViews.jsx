@@ -20,45 +20,15 @@ const messages = defineMessages({
   },
 });
 
-/* eslint-disable */
 class CollectionContentViews extends React.Component {
   constructor(props) {
     super(props);
-    const { activeType, collection } = props;
-
-    let addedSchemaViews = [];
-    if (activeType && !collection?.statistics?.schema?.values?.hasOwnProperty(activeType)) {
-      addedSchemaViews = [activeType];
-    }
-
-    this.state = {
-      addedSchemaViews,
-    }
 
     this.handleTabChange = this.handleTabChange.bind(this);
-    this.onSchemaViewAdd = this.onSchemaViewAdd.bind(this);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { activeType, collection } = this.props;
-    if (!activeType && collection?.statistics?.schema?.values) {
-
-      const schemaViews = this.schemaViews();
-      if (schemaViews.length) {
-        this.handleTabChange(schemaViews[0]?.schema);
-      }
-    }
-  }
-
-  onSchemaViewAdd(schema) {
-    const schemaName = schema.name;
-    this.setState(({ addedSchemaViews }) => ({ addedSchemaViews: [...addedSchemaViews, schemaName] }));
-    this.handleTabChange(schema);
   }
 
   schemaViews() {
-    const { collection, model } = this.props;
-    const { addedSchemaViews } = this.state;
+    const { activeType, collection, model } = this.props;
 
     const schemata = collection?.statistics?.schema?.values || [];
     const matching = [];
@@ -71,12 +41,11 @@ class CollectionContentViews extends React.Component {
       }
     }
     const existingSchemata = _.reverse(_.sortBy(matching, ['count']));
-    const newSchemata = addedSchemaViews
-      .filter(schema => schemata.hasOwnProperty(schema))
-      .map(schema => ({ schema, count: 0 }));
 
-
-    return [...existingSchemata, ...newSchemata];
+    if (activeType && !schemata.hasOwnProperty(activeType)) {
+      return [...existingSchemata, { schema: activeType, count: 0 }]
+    }
+    return existingSchemata
   }
 
   handleTabChange(type) {
@@ -130,7 +99,7 @@ class CollectionContentViews extends React.Component {
             title={
               <SchemaSelect
                 placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
-                onSelect={this.onSchemaViewAdd}
+                onSelect={this.handleTabChange}
                 optionsFilter={schema => !schemaViews.find(item => (item.schema === schema.name))}
               />
             }
