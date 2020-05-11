@@ -20,7 +20,7 @@ class EntityTableEditor extends Component {
   }
 
   render() {
-    const { collection, entities, entityManager, isPending, sort, sortColumn, schema, selection, updateSelection } = this.props;
+    const { collection, entities, entityManager, isPending, model, sort, sortColumn, schema, selection, updateSelection } = this.props;
 
     if (!schema) {
       return null;
@@ -32,10 +32,12 @@ class EntityTableEditor extends Component {
         direction: sort.direction,
       } : sort;
 
+    console.log(schema);
+
     return (
       <TableEditor
         entities={entities}
-        schema={schema}
+        schema={model.getSchema(schema)}
         entityManager={entityManager}
         sort={trimmedSort}
         sortColumn={newField => sortColumn(`properties.${newField}`)}
