@@ -6,10 +6,19 @@ import { TableEditor } from '@alephdata/vislib';
 import { selectModel } from 'src/selectors';
 import queryString from 'query-string';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
+import getEntityLink from 'src/util/getEntityLink';
 
 import './EntityTableEditor.scss';
 
 class EntityTableEditor extends Component {
+  onEntityClick = (entity) => {
+    if (entity) {
+      const { history } = this.props;
+      const pathname = getEntityLink(entity);
+      history.push({ pathname });
+    }
+  }
+
   render() {
     const { entities, entityManager, isPending, sort, sortColumn, schema, selection, updateSelection } = this.props;
 
@@ -34,22 +43,13 @@ class EntityTableEditor extends Component {
         updateSelection={updateSelection}
         writeable={true}
         isPending={isPending}
+        visitEntity={this.onEntityClick}
       />
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  const model = selectModel(state);
-  const schema = hashQuery.type ? model.getSchema(hashQuery.type) : null;
-
-  return { schema };
-};
-
 export default compose(
   withRouter,
-  connect(mapStateToProps),
   entityEditorWrapper,
 )(EntityTableEditor);

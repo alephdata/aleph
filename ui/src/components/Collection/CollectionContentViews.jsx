@@ -41,7 +41,8 @@ class CollectionContentViews extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { activeType, collection } = this.props;
-    if (!activeType && collection?.schemata) {
+    if (!activeType && collection?.statistics?.schema?.values) {
+
       const schemaViews = this.schemaViews();
       if (schemaViews.length) {
         this.handleTabChange(schemaViews[0]?.schema);
@@ -59,7 +60,7 @@ class CollectionContentViews extends React.Component {
     const { collection, model } = this.props;
     const { addedSchemaViews } = this.state;
 
-    const schemata = collection?.statistics?.schemata || [];
+    const schemata = collection?.statistics?.schema?.values || [];
     const matching = [];
     for (const key in schemata) {
       if (!model.getSchema(key).isDocument()) {
@@ -73,6 +74,7 @@ class CollectionContentViews extends React.Component {
     const newSchemata = addedSchemaViews
       .filter(schema => schemata.hasOwnProperty(schema))
       .map(schema => ({ schema, count: 0 }));
+
 
     return [...existingSchemata, ...newSchemata];
   }

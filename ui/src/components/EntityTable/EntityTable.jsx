@@ -28,12 +28,14 @@ class EntityTable extends Component {
       return <ErrorSection error={result.error} />;
     }
 
-    if (!result.isPending && result.total === 0 && result.page === 1 && !isEditing) {
+    if (!result.isPending && result.total === 0 && result.page === 1 && !showTableEditor) {
       return null;
     }
 
     const results = result.results ? result.results.filter((e) => e.id !== undefined) : [];
     const sort = query.getSort();
+    const schema = query.hasFilter('schema') ? query.getFilter('schema')[0] : null;
+
     const TableComponent = showTableEditor ? EntityTableEditor : EntityTableViewer;
 
     return (
@@ -44,6 +46,7 @@ class EntityTable extends Component {
         sort={sort}
         isPending={result.isPending}
         sortColumn={this.sortColumn.bind(this)}
+        schema={schema}
         {...rest}
       />
     )

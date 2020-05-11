@@ -26,8 +26,8 @@ class CollectionViews extends React.Component {
   componentDidUpdate() {
     const { activeMode } = this.props;
 
-    if (Object.values(viewIds).indexOf(activeMode) < 0) {
-      this.handleTabChange(viewIds.OVERVIEW);
+    if (Object.values(collectionViewIds).indexOf(activeMode) < 0) {
+      this.handleTabChange(collectionViewIds.OVERVIEW);
     }
   }
 
@@ -49,7 +49,6 @@ class CollectionViews extends React.Component {
 
     parsedHash.mode = mode;
     delete parsedHash.type;
-    delete parsedHash.editing;
 
     history.push({
       pathname: location.pathname,
