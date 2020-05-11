@@ -100,7 +100,7 @@ class CollectionContentViews extends React.Component {
               <SchemaSelect
                 placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
                 onSelect={this.handleTabChange}
-                optionsFilter={schema => !schemaViews.find(item => (item.schema === schema.name))}
+                optionsFilter={schema => schema.isThing() && !schemaViews.find(item => (item.schema === schema.name))}
               />
             }
           />
