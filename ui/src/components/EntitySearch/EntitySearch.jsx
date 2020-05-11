@@ -54,7 +54,7 @@ export class EntitySearch extends Component {
 
   fetchIfNeeded() {
     const { query, result } = this.props;
-    if (result.shouldLoad) {
+    if (result.shouldLoad && !result.results?.length) {
       this.props.queryEntities({ query });
     }
   }
