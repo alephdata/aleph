@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ErrorSection } from 'src/components/common';
 import EntityTableEditor from './EntityTableEditor';
@@ -6,23 +8,22 @@ import EntityTableViewer from './EntityTableViewer';
 
 class EntityTable extends Component {
   sortColumn(newField) {
-    const { query, updateQuery } = this.props;
-    const { field: currentField, direction } = query.getSort();
+    const { query, sort, updateQuery } = this.props;
+    const { field: currentField, direction } = sort;
+
+    if (currentField !== newField) {
+      return updateQuery(query.sortBy(`properties.${newField}`, 'asc'));
+    }
 
     // Toggle through sorting states: ascending, descending, or unsorted.
-    if (currentField !== newField) {
-      return updateQuery(query.sortBy(newField, 'asc'));
-    }
-    if (direction === 'asc') {
-      updateQuery(query.sortBy(currentField, 'desc'));
-    } else {
-      updateQuery(query.sortBy(currentField, undefined));
-    }
-    return undefined;
+    updateQuery(query.sortBy(
+      `properties.${currentField}`,
+      direction === 'asc' ? 'desc' : undefined
+    ));
   }
 
   render() {
-    const { collection, showTableEditor, query, result, ...rest } = this.props;
+    const { collection, schema, showTableEditor, sort, result, ...rest } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -32,17 +33,13 @@ class EntityTable extends Component {
       return null;
     }
 
-    const results = result.results ? result.results.filter((e) => e.id !== undefined) : [];
-    const sort = query.getSort();
-    const schema = query.hasFilter('schema') ? query.getFilter('schema')[0] : null;
-
     const TableComponent = showTableEditor ? EntityTableEditor : EntityTableViewer;
 
     return (
       <TableComponent
         collection={collection}
-        onStatusChange={() => null}
-        entities={results}
+        onStatusChange={() => {}}
+        entities={result.results || []}
         sort={sort}
         isPending={result.isPending}
         sortColumn={this.sortColumn.bind(this)}
@@ -53,4 +50,21 @@ class EntityTable extends Component {
   }
 }
 
-export default withRouter(EntityTable);
+const mapStateToProps = (state, ownProps) => {
+  const { query } = ownProps;
+  const sort = query.getSort();
+  const schema = query.hasFilter('schema') ? query.getFilter('schema')[0] : null;
+
+  return {
+    sort: sort ? {
+      field: sort.field.replace('properties.', ''),
+      direction: sort.direction
+    } : undefined,
+    schema
+  };
+};
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(EntityTable);

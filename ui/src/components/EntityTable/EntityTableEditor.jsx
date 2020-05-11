@@ -26,21 +26,13 @@ class EntityTableEditor extends Component {
       return null;
     }
 
-    const trimmedSort = sort?.field
-      ? {
-        field: sort.field.replace('properties.', ''),
-        direction: sort.direction,
-      } : sort;
-
-    console.log(schema);
-
     return (
       <TableEditor
         entities={entities}
         schema={model.getSchema(schema)}
         entityManager={entityManager}
-        sort={trimmedSort}
-        sortColumn={newField => sortColumn(`properties.${newField}`)}
+        sort={sort}
+        sortColumn={sortColumn}
         selection={selection}
         updateSelection={updateSelection}
         writeable={collection?.writeable}
