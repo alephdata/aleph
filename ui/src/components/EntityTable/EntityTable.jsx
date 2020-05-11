@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -56,10 +57,10 @@ const mapStateToProps = (state, ownProps) => {
   const schema = query.hasFilter('schema') ? query.getFilter('schema')[0] : null;
 
   return {
-    sort: sort ? {
+    sort: !_.isEmpty(sort) ? {
       field: sort.field.replace('properties.', ''),
       direction: sort.direction
-    } : undefined,
+    } : {},
     schema
   };
 };
