@@ -1,9 +1,11 @@
 import logging
 from pprint import pprint  # noqa
 from normality import normalize
+from followthemoney import model
+from followthemoney.types import registry
 
 from aleph.core import es, cache, settings
-from aleph.model import Entity, Collection
+from aleph.model import Collection, Entity
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import index_name, index_settings, configure_index
 from aleph.index.util import query_delete, index_safe, refresh_sync
@@ -112,24 +114,23 @@ def get_collection(collection_id):
         return
 
     data = collection.to_dict()
-    schemata = get_facet_values(collection.id, 'schema')
-    schemata = schemata.get('values', {})
-    data['count'] = sum(schemata.values())
+    things = get_collection_things(collection.id)
+    data['count'] = sum(things.values())
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
 
 def get_collection_stats(collection_id, refresh=False):
     """Retrieve statistics on the content of a collection."""
-    return {f: get_facet_values(collection_id, f) for f in STATS_FACETS}
+    return {f: get_collection_facet(collection_id, f) for f in STATS_FACETS}
 
 
 def update_collection_stats(collection_id):
     for facet in STATS_FACETS:
-        get_facet_values(collection_id, facet, refresh=True)
+        get_collection_facet(collection_id, facet, refresh=True)
 
 
-def get_facet_values(collection_id, facet, refresh=False):
+def get_collection_facet(collection_id, facet, refresh=False):
     """Compute some statistics on the content of a collection."""
     key = cache.object_key(Collection, collection_id, facet)
     data = cache.get_complex(key)
@@ -145,8 +146,11 @@ def get_facet_values(collection_id, facet, refresh=False):
             'total': {'cardinality': {'field': facet}}
         }
     }
-    index = entities_read_index(schema=Entity.THING)
-    result = es.search(index=index,
+    schemata = set()
+    facet_type = registry.groups.get(facet)
+    if facet_type is not None:
+        schemata = model.get_type_schemata(facet_type)
+    result = es.search(index=entities_read_index(schema=schemata),
                        body=query,
                        request_timeout=3600,
                        timeout='20m')
@@ -160,6 +164,18 @@ def get_facet_values(collection_id, facet, refresh=False):
     }
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
+
+
+def get_collection_things(collection_id):
+    """Showing the number of things in a collection is more indicative
+    of its size than the overall collection entity count."""
+    schemata = get_collection_facet(collection_id, 'schema')
+    things = {}
+    for schema, count in schemata.get('values', {}).items():
+        schema = model.get(schema)
+        if schema.is_a(Entity.THING):
+            things[schema.name] = count
+    return things
 
 
 def delete_collection(collection_id, sync=False):

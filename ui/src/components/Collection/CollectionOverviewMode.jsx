@@ -20,7 +20,6 @@ class CollectionOverviewMode extends React.Component {
 
   renderStatisticsItem({ key, total, values }) {
     const { collection } = this.props;
-
     return (
       <div className="CollectionOverviewMode__item" key={key}>
         <CollectionStatistics
@@ -37,7 +36,7 @@ class CollectionOverviewMode extends React.Component {
     const { collection } = this.props;
     const { statistics = {} } = collection;
 
-    if (!collection.id || !statistics.names) {
+    if (!collection.id || statistics.schema === undefined) {
       return <Skeleton.Layout type="multi-column" colCount={4} />;
     }
 
