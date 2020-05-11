@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Button } from '@blueprintjs/core';
 import _ from 'lodash';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { Count } from 'src/components/common';

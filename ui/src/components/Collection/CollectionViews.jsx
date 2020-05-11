@@ -33,7 +33,7 @@ class CollectionViews extends React.Component {
 
   countDocuments() {
     const { collection, model } = this.props;
-    const schemata = collection?.statistics?.schemata || [];
+    const schemata = collection?.statistics?.schema?.values || [];
     let totalCount = 0;
     for (const key in schemata) {
       if (model.getSchema(key).isDocument()) {

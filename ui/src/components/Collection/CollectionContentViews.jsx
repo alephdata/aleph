@@ -27,7 +27,7 @@ class CollectionContentViews extends React.Component {
     const { activeType, collection } = props;
 
     let addedSchemaViews = [];
-    if (activeType && !collection?.schemata?.hasOwnProperty(activeType)) {
+    if (activeType && !collection?.statistics?.schema?.values?.hasOwnProperty(activeType)) {
       addedSchemaViews = [activeType];
     }
 
