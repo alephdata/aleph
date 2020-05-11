@@ -94,7 +94,7 @@ export class EntitySearch extends Component {
       query, result, intl, className,
       documentMode, hideCollection,
       showPreview, updateSelection, selection,
-      emptyComponent, writeable, showTableEditor, collection,
+      emptyComponent, showTableEditor, collection,
     } = this.props;
     const isEmpty = !query.hasQuery();
     const foundText = this.generateFoundText();

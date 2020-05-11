@@ -20,7 +20,7 @@ class EntityTableEditor extends Component {
   }
 
   render() {
-    const { entities, entityManager, isPending, sort, sortColumn, schema, selection, updateSelection } = this.props;
+    const { collection, entities, entityManager, isPending, sort, sortColumn, schema, selection, updateSelection } = this.props;
 
     if (!schema) {
       return null;
@@ -41,7 +41,7 @@ class EntityTableEditor extends Component {
         sortColumn={newField => sortColumn(`properties.${newField}`)}
         selection={selection}
         updateSelection={updateSelection}
-        writeable={true}
+        writeable={collection?.writeable}
         isPending={isPending}
         visitEntity={this.onEntityClick}
       />

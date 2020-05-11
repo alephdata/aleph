@@ -64,7 +64,6 @@ export class EntityListManager extends Component {
             documentMode
             showPreview={false}
             selection={selection}
-            writeable={writeable}
             updateSelection={this.updateSelection}
             showTableEditor
           />
