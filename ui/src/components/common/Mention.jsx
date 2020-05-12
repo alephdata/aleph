@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import { Tag as Bp3Tag, Tooltip } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { Count, Tag } from 'src/components/common';
-import { Value } from 'src/components/Property/Value';
+import { Count, Property, Tag } from 'src/components/common';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
 import getValueLink from 'src/util/getValueLink';
@@ -19,10 +18,10 @@ const messages = defineMessages({
 });
 
 
-class ValueLink extends Component {
+class MentionLink extends Component {
   render() {
     const { intl, value, prop, count, metadata } = this.props;
-    const content = <Value {...this.props} />;
+    const content = <Property.Value {...this.props} />;
     if (count === null || count === 0) {
       return content;
     }
@@ -34,7 +33,7 @@ class ValueLink extends Component {
         transitionDuration={0}
         hoverOpenDelay={100}
       >
-        <Link to={href} className="ValueLink">
+        <Link to={href} className="Mention">
           <Bp3Tag minimal interactive multiline>
             <Tag.Icon field={prop.type.group} />
             <span>{content}</span>
@@ -55,16 +54,14 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-ValueLink = connect(mapStateToProps)(ValueLink);
-ValueLink = injectIntl(ValueLink);
-export { ValueLink };
+MentionLink = connect(mapStateToProps)(MentionLink);
+MentionLink = injectIntl(MentionLink);
 
-
-export class ValueLinks extends Component {
+class MentionList extends Component {
   render() {
     const { prop, values, separator = ' · ', missing = '—' } = this.props;
     const vals = ensureArray(values).map(value => (
-      <ValueLink key={value.id || value} prop={prop} value={value} {...this.props} />
+      <MentionLink key={value.id || value} prop={prop} value={value} {...this.props} />
     ));
     if (!vals.length) {
       return (<span className="no-value">{missing}</span>);
@@ -72,3 +69,10 @@ export class ValueLinks extends Component {
     return (<span>{ wordList(vals, separator) }</span>);
   }
 }
+
+class Mention extends Component {
+  static Link = MentionLink;
+  static List = MentionList;
+}
+
+export default Mention;

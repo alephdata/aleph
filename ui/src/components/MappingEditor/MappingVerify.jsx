@@ -5,7 +5,8 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, HTMLTable, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { PropertyEditor } from '@alephdata/vislib';
-import Property from 'src/components/Property';
+import { Property } from 'src/components/common';
+
 import { selectLocale } from 'src/selectors';
 import { MappingLabel } from './util';
 

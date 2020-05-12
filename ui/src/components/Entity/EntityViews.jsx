@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Count, SectionLoading, TextLoading,
+  Count, Property, Schema, SectionLoading, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 import {
@@ -18,8 +18,6 @@ import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityMappingMode from 'src/components/Entity/EntityMappingMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
-import Schema from 'src/components/common/Schema';
-import Property from 'src/components/Property';
 
 
 class EntityViews extends React.Component {

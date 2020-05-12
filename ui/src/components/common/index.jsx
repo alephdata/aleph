@@ -16,6 +16,8 @@ import Entity from './Entity';
 import Facet from './Facet';
 import FileImport from './FileImport';
 import Language from './Language';
+import Mention from './Mention';
+import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
 import SchemaSelect from './SchemaSelect';
@@ -51,6 +53,8 @@ export {
   FileImport,
   FileSize,
   Language,
+  Mention,
+  Property,
   Role,
   Schema,
   SchemaSelect,
