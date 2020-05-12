@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { TableEditor } from '@alephdata/vislib';
-import { selectModel } from 'src/selectors';
-import queryString from 'query-string';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import getEntityLink from 'src/util/getEntityLink';
 
