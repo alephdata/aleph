@@ -104,6 +104,7 @@ export class EntityListManager extends Component {
   render() {
     const { collection, schema, entityManager, result, sort } = this.props;
     const { selection } = this.state;
+    const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
 
     return (
       <div className="EntityListManager">
@@ -128,7 +129,7 @@ export class EntityListManager extends Component {
             updateSelection={this.updateSelection}
             writeable={collection.writeable}
             isPending={result.isPending}
-            visitEntity={this.onEntityClick}
+            visitEntity={visitEntity}
           />
           <Waypoint
             onEnter={this.getMoreResults}
