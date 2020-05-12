@@ -88,7 +88,7 @@ class EntityViews extends React.Component {
             id="view"
             title={(
               <>
-                <Icon icon="showdocuments" className="left-icon" />
+                <Icon icon="documentation" className="left-icon" />
                 <FormattedMessage id="entity.info.view" defaultMessage="View" />
               </>
             )}
@@ -150,7 +150,7 @@ class EntityViews extends React.Component {
             disabled={tags.total < 1}
             title={(
               <TextLoading loading={tags.isPending}>
-                <Icon icon="tags" className="left-icon" />
+                <Icon icon="assessment" className="left-icon" />
                 <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
                 <Count count={tags.total} />
               </TextLoading>
