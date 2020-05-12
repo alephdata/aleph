@@ -30,7 +30,7 @@ class CategoryLabel extends Component {
     const label = categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
     return (
       <span className="CategoryLabel" title={label}>
-        { icon && (<Icon icon="list" />)}
+        { icon && (<Icon icon="list" className="left-icon" />)}
         <span>{ label }</span>
       </span>
     );

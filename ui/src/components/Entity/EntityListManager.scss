@@ -1,0 +1,19 @@
+@import "src/app/variables.scss";
+
+.EntityListManager {
+  .bp3-button-group {
+    margin-bottom: $aleph-content-padding;
+  }
+
+  .align-middle {
+    vertical-align: middle;
+  }
+
+  .Count {
+    margin-left: 5px;
+  }
+
+  .data-grid-container {
+    min-height: 300px;
+  }  
+}

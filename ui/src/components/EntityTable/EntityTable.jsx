@@ -3,8 +3,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { SortableTH, ErrorSection } from 'src/components/common';
-import EntityTableRow from './EntityTableRow';
+
+import { SortableTH } from 'src/components/common';
+import EntityTableViewerRow from './EntityTableViewerRow';
+import { ErrorSection } from 'src/components/common';
 
 import './EntityTable.scss';
 
@@ -35,28 +37,28 @@ const messages = defineMessages({
   },
 });
 
+
 class EntityTable extends Component {
   sortColumn(newField) {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
-    // Toggle through sorting states: ascending, descending, or unsorted.
+
     if (currentField !== newField) {
       return updateQuery(query.sortBy(newField, 'asc'));
     }
-    if (direction === 'asc') {
-      updateQuery(query.sortBy(currentField, 'desc'));
-    } else {
-      updateQuery(query.sortBy(currentField, undefined));
-    }
-    return undefined;
+
+    // Toggle through sorting states: ascending, descending, or unsorted.
+    updateQuery(query.sortBy(
+      currentField,
+      direction === 'asc' ? 'desc' : undefined
+    ));
   }
 
   render() {
-    const { query, intl, location, result } = this.props;
+    const { result, intl, location, query } = this.props;
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
-
-    const skeletonItems = [...Array(15).keys()];
+    const { field: sortedField, direction } = query.getSort();
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -66,11 +68,11 @@ class EntityTable extends Component {
       return null;
     }
 
-    const results = result.results ? result.results.filter((e) => e.id !== undefined) : [];
+    const skeletonItems = [...Array(15).keys()];
+
     const TH = ({
       sortable, field, className, ...otherProps
     }) => {
-      const { field: sortedField, direction } = query.getSort();
       return (
         <SortableTH
           sortable={sortable}
@@ -102,8 +104,8 @@ class EntityTable extends Component {
           </tr>
         </thead>
         <tbody className={c({ updating: result.isPending })}>
-          {results.map(entity => (
-            <EntityTableRow
+          {result.results.map(entity => (
+            <EntityTableViewerRow
               key={entity.id}
               entity={entity}
               location={location}
@@ -115,7 +117,7 @@ class EntityTable extends Component {
             />
           ))}
           {result.isPending && skeletonItems.map(item => (
-            <EntityTableRow
+            <EntityTableViewerRow
               key={item}
               hideCollection={hideCollection}
               documentMode={documentMode}

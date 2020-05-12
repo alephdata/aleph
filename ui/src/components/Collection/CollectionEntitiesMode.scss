@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 
-.CollectionContentViews {
+.CollectionEntitiesMode {
   &__tabs {
     .bp3-tab-list {
       // margin-right: $aleph-content-padding;
@@ -24,6 +24,9 @@
       &:last-child {
         display: none;
       }
+      &:first-child {
+        display: none;
+      }
     }
 
     &.bp3-tabs.bp3-vertical {
@@ -37,6 +40,8 @@
     width: 100%;
 
     &.bp3-tab-panel {
+      width: 100%;
+      overflow: hidden;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
         padding-left: 0 !important;
       }
@@ -63,7 +68,7 @@
       }
 
       .bp3-icon {
-        margin: 0 10px 0 5px !important;
+        margin: 0 5px !important;
       }
 
       .Count {
@@ -95,22 +100,20 @@
           background: white;
           height: 20px;
           width: 100%;
-          // padding: 20px 0 !important;
-          // border-bottom: 1px solid $aleph-border-color;
-
         }
 
       }
+      &.schema-add-tab {
+        cursor: auto;
+        background-color: white !important;
+        padding: 0 !important;
+
+        .SchemaSelect {
+          .bp3-popover-wrapper, .bp3-popover-target, .bp3-button {
+            width: 100%;
+          }
+        }
+      }
     }
   }
-  // &__tab.bp3-tab {
-  //   border: 1px solid $aleph-border-color;
-  //   border-radius: 15px !important;
-  //   padding: 0 10px;
-  //   box-shadow: none !important;
-  //
-  //   &[aria-selected="true"] {
-  //     border: 1px solid $blue2;
-  //   }
-  // }
 }

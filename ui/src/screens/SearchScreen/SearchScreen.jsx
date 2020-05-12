@@ -14,7 +14,7 @@ import { selectEntitiesResult } from 'src/selectors';
 import {
   Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
 } from 'src/components/common';
-import EntityTable from 'src/components/EntityTable/EntityTable';
+import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import SuggestAlert from 'src/components/SuggestAlert/SuggestAlert';
@@ -55,28 +55,11 @@ export class SearchScreen extends React.Component {
     };
 
     this.updateQuery = this.updateQuery.bind(this);
-    this.getMoreResults = this.getMoreResults.bind(this);
-    this.toggleFacets = this.toggleFacets.bind(this);
-    this.fetchIfNeeded = this.fetchIfNeeded.bind(this);
+    this.toggleFacets = this.toggleFacets.bind(this);    
     this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);
     this.showPreview = this.showPreview.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (!result.isPending && result.next) {
-      this.props.queryEntities({ query, next: result.next });
-    }
   }
 
   getCurrentPreviewIndex() {
@@ -114,13 +97,6 @@ export class SearchScreen extends React.Component {
       });
     }
     return collectionScopeList;
-  }
-
-  fetchIfNeeded() {
-    const { result, query } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryEntities({ query });
-    }
   }
 
   updateQuery(newQuery) {
@@ -194,6 +170,14 @@ export class SearchScreen extends React.Component {
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
+    const empty = (
+      <ErrorSection
+        icon="search"
+        title={intl.formatMessage(messages.no_results_title)}
+        resolver={<SuggestAlert queryText={query.state.q} />}
+        description={intl.formatMessage(messages.no_results_description)}
+      />
+    );
 
     const searchScopes = this.getSearchScopes();
 
@@ -246,23 +230,11 @@ export class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery} />
-            <EntityTable
+            <EntitySearch
               query={query}
               updateQuery={this.updateQuery}
               result={result}
-            />
-            {result.total === 0 && (
-              <ErrorSection
-                icon="search"
-                title={intl.formatMessage(messages.no_results_title)}
-                resolver={<SuggestAlert queryText={query.state.q} />}
-                description={intl.formatMessage(messages.no_results_description)}
-              />
-            )}
-            <Waypoint
-              onEnter={this.getMoreResults}
-              bottomOffset="-400px"
-              scrollableAncestor={window}
+              emptyComponent={empty}
             />
           </DualPane.ContentPane>
         </DualPane>
@@ -284,6 +256,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryEntities }),
+  connect(mapStateToProps),
   injectIntl,
 )(SearchScreen);

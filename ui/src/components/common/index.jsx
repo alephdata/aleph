@@ -16,6 +16,7 @@ import FileSize from './FileSize';
 import Language from './Language';
 import Role from './Role';
 import Schema from './Schema';
+import SchemaSelect from './SchemaSelect';
 import Suggest from './Suggest';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
@@ -52,6 +53,7 @@ export {
   Language,
   Role,
   Schema,
+  SchemaSelect,
   Suggest,
   SectionLoading,
   TextLoading,

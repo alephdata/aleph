@@ -7,7 +7,7 @@ import MappingList from 'src/components/MappingEditor/MappingList';
 import MappingKeyAssign from 'src/components/MappingEditor/MappingKeyAssign';
 import MappingManageMenu from 'src/components/MappingEditor/MappingManageMenu';
 import MappingPropertyAssign from 'src/components/MappingEditor/MappingPropertyAssign';
-import MappingSchemaSelect from 'src/components/MappingEditor/MappingSchemaSelect';
+import SchemaSelect from 'src/components/common/SchemaSelect';
 import MappingSplitSection from 'src/components/MappingEditor/MappingSplitSection';
 import MappingVerify from 'src/components/MappingEditor/MappingVerify';
 
@@ -26,6 +26,14 @@ const messages = defineMessages({
   section3Title: {
     id: 'mapping.section3.title',
     defaultMessage: '3. Verify',
+  },
+  thing_new: {
+    id: 'schemaSelect.button.thing',
+    defaultMessage: 'Add a new object',
+  },
+  relationship_new: {
+    id: 'schemaSelect.button.relationship',
+    defaultMessage: 'Add a new relationship',
   },
 });
 
@@ -103,8 +111,9 @@ export class MappingEditor extends Component {
               mappings={mappings}
               sectionContentsRenderer={((subitems, type) => (
                 <>
-                  <MappingSchemaSelect
-                    type={type}
+                  <SchemaSelect
+                    placeholder={intl.formatMessage(messages[`${type}_new`])}
+                    optionsFilter={schema => (type === 'thing' ? schema.isThing() : !schema.isThing())}
                     onSelect={this.onMappingAdd}
                   />
                   <MappingKeyAssign
