@@ -6,49 +6,44 @@ import { TableEditor } from '@alephdata/vislib';
 import { selectModel } from 'src/selectors';
 import queryString from 'query-string';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
+import getEntityLink from 'src/util/getEntityLink';
 
+import './EntityTableEditor.scss';
 
 class EntityTableEditor extends Component {
+  onEntityClick = (entity) => {
+    if (entity) {
+      const { history } = this.props;
+      const pathname = getEntityLink(entity);
+      history.push({ pathname });
+    }
+  }
+
   render() {
-    const { entities, entityManager, isPending, sort, sortColumn, schema, selection, updateSelection } = this.props;
+    const { collection, entities, entityManager, isPending, model, sort, sortColumn, schema, selection, updateSelection } = this.props;
 
     if (!schema) {
       return null;
     }
 
-    const trimmedSort = sort?.field
-      ? {
-        field: sort.field.replace('properties.', ''),
-        direction: sort.direction,
-      } : sort;
-
     return (
       <TableEditor
         entities={entities}
-        schema={schema}
+        schema={model.getSchema(schema)}
         entityManager={entityManager}
-        sort={trimmedSort}
-        sortColumn={newField => sortColumn(`properties.${newField}`)}
+        sort={sort}
+        sortColumn={sortColumn}
         selection={selection}
         updateSelection={updateSelection}
-        writeable={true}
+        writeable={collection?.writeable}
         isPending={isPending}
+        visitEntity={this.onEntityClick}
       />
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  const model = selectModel(state);
-  const schema = hashQuery.type ? model.getSchema(hashQuery.type) : null;
-
-  return { schema };
-};
-
 export default compose(
   withRouter,
-  connect(mapStateToProps),
   entityEditorWrapper,
 )(EntityTableEditor);

@@ -1,8 +1,13 @@
+import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
+
 import { Country, Facet, Numeric, Schema } from 'src/components/common';
 import Statistics from 'src/components/StatisticsGroup/Statistics';
+import { selectModel } from 'src/selectors';
 
 import './CollectionStatistics.scss';
 
@@ -10,7 +15,17 @@ import './CollectionStatistics.scss';
 class CollectionStatistics extends PureComponent {
   constructor(props) {
     super(props);
+    this.filterValues = this.filterValues.bind(this);
     this.renderItem = this.renderItem.bind(this);
+  }
+
+  filterValues(count, value) {
+    const { field, model } = this.props;
+    if (field === 'schema') {
+      const schema = model.getSchema(value);
+      return schema.isThing();
+    }
+    return true;
   }
 
   renderItem({ name, count }) {
@@ -38,7 +53,7 @@ class CollectionStatistics extends PureComponent {
 
   render() {
     const { field, total, values } = this.props;
-
+    const filteredValues = _.pickBy(values, this.filterValues);
     return (
       <div className="CollectionStatistics bp3-card bp3-elevation-1">
         <div className="CollectionStatistics__heading">
@@ -56,7 +71,7 @@ class CollectionStatistics extends PureComponent {
               defaultMessage="Show more"
             />
           )}
-          statistic={values}
+          statistic={filteredValues}
           isPending={!values}
           ItemContentContainer={this.renderItem}
           styleType="dark"
@@ -66,4 +81,11 @@ class CollectionStatistics extends PureComponent {
   }
 }
 
-export default injectIntl(CollectionStatistics);
+const mapStateToProps = (state, ownProps) => {
+  return { model: selectModel(state) };
+};
+
+export default compose(
+  injectIntl,
+  connect(mapStateToProps),
+)(CollectionStatistics);

@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { timestamp } from 'src/reducers/util';
+import timestamp from 'src/util/timestamp';
 
 import {
   mutate,
@@ -13,7 +13,6 @@ import {
   updateEntityMapping,
   deleteEntityMapping,
   createEntity,
-  updateEntity,
   triggerCollectionCancel,
   // triggerCollectionAnalyze,
   updateCollectionPermissions,
@@ -44,7 +43,6 @@ export default createReducer({
   [triggerCollectionCancel.COMPLETE]: update,
   [updateCollectionPermissions.COMPLETE]: update,
   [createEntity.COMPLETE]: update,
-  [updateEntity.COMPLETE]: update,
   [deleteEntity.COMPLETE]: update,
   [ingestDocument.COMPLETE]: update,
   [deleteQueryLog.COMPLETE]: update,

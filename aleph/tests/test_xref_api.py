@@ -4,7 +4,7 @@ from aleph.core import db
 from aleph.queues import get_stage, OP_XREF
 from aleph.index.entities import index_entity
 from aleph.logic import xref
-from aleph.tests.util import TestCase
+from aleph.tests.util import TestCase, get_caption
 
 
 class XrefApiTestCase(TestCase):
@@ -117,10 +117,11 @@ class XrefApiTestCase(TestCase):
         res = self.client.get(url)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
-        assert 'Leeta' in res.json['results'][0]['entity']['name']
-        assert 'Garak' not in res.json['results'][0]['entity']['name']
-        assert 'Tain' not in res.json['results'][0]['match']['name']
-        assert 'MPella' not in res.json['results'][0]['match']['name']
+        res0 = res.json['results'][0]
+        assert 'Leeta' in get_caption(res0['entity'])
+        assert 'Garak' not in get_caption(res0['entity'])
+        assert 'Tain' not in get_caption(res0['match'])
+        assert 'MPella' not in get_caption(res0['match'])
 
         # Logged in as outsider (restricted)
         _, headers = self.login('outsider')
@@ -129,10 +130,10 @@ class XrefApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         res0 = res.json['results'][0]
-        assert 'Leeta' in res0['entity']['name']
-        assert 'Garak' not in res0['entity']['name']
-        assert 'Tain' not in res0['match']['name']
-        assert 'MPella' not in res0['match']['name']
+        assert 'Leeta' in get_caption(res0['entity'])
+        assert 'Garak' not in get_caption(res0['entity'])
+        assert 'Tain' not in get_caption(res0['match'])
+        assert 'MPella' not in get_caption(res0['match'])
 
         # Logged in as creator (all access)
         _, headers = self.login('creator')
@@ -141,15 +142,15 @@ class XrefApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
         res0 = res.json['results'][0]
-        assert 'Garak' in res0['entity']['name']
-        assert 'Leeta' not in res0['entity']['name']  # noqa
-        assert 'Tain' not in res0['match']['name']
-        assert 'MPella' not in res0['match']['name']  # noqa
+        assert 'Garak' in get_caption(res0['entity'])
+        assert 'Leeta' not in get_caption(res0['entity'])
+        assert 'Tain' not in get_caption(res0['match'])
+        assert 'MPella' not in get_caption(res0['match'])
         res1 = res.json['results'][1]
-        assert 'Leeta' in res1['entity']['name']
-        assert 'Garak' not in res1['entity']['name']
-        assert 'Tain' not in res1['match']['name']
-        assert 'MPella' not in res1['match']['name']
+        assert 'Leeta' in get_caption(res1['entity'])
+        assert 'Garak' not in get_caption(res1['entity'])
+        assert 'Tain' not in get_caption(res1['match'])
+        assert 'MPella' not in get_caption(res1['match'])
 
     def test_create_matches(self):
         url = '/api/2/collections/%s/xref' % self.residents.id

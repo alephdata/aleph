@@ -6,6 +6,7 @@ import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Country from './Country';
+import csvContextLoader from './csvContextLoader';
 import Numeric from './Numeric';
 import Date from './Date';
 import Diagram from './Diagram';
@@ -36,6 +37,7 @@ export {
   Breadcrumbs,
   SignInCallout,
   Category,
+  csvContextLoader,
   CheckboxList,
   Collection,
   Country,

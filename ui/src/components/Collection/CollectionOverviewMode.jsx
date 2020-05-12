@@ -1,10 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
-import { fetchCollectionStatistics } from 'src/actions';
-import { selectCollectionStatistics } from 'src/selectors';
 import { Skeleton, Summary } from 'src/components/common';
 import CollectionInfo from 'src/components/Collection/CollectionInfo';
 import CollectionStatistics from './CollectionStatistics';
@@ -20,24 +17,9 @@ const statFields = [
 
 
 class CollectionOverviewMode extends React.Component {
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { collection, statistics } = this.props;
-    if (statistics.shouldLoad && collection.id !== undefined) {
-      this.props.fetchCollectionStatistics(collection);
-    }
-  }
 
   renderStatisticsItem({ key, total, values }) {
     const { collection } = this.props;
-
     return (
       <div className="CollectionOverviewMode__item" key={key}>
         <CollectionStatistics
@@ -51,9 +33,10 @@ class CollectionOverviewMode extends React.Component {
   }
 
   render() {
-    const { collection, statistics } = this.props;
+    const { collection } = this.props;
+    const { statistics = {} } = collection;
 
-    if (!collection.id || !statistics.names) {
+    if (!collection.id || statistics.schema === undefined) {
       return <Skeleton.Layout type="multi-column" colCount={4} />;
     }
 
@@ -74,7 +57,7 @@ class CollectionOverviewMode extends React.Component {
             )}
             <CollectionInfo collection={collection} />
             <div className="CollectionOverviewMode__item__text-content__divider" />
-            <CollectionStatus collection={collection} showCancel />
+            <CollectionStatus collection={collection} showCancel={collection.writeable} />
           </div>
         </div>
         {statsToRender.map((stat) => this.renderStatisticsItem(stat))}
@@ -88,17 +71,8 @@ class CollectionOverviewMode extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { collection } = ownProps;
-  return {
-    statistics: selectCollectionStatistics(state, collection.id),
-  };
-};
-
-const mapDispatchToProps = { fetchCollectionStatistics };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
 )(CollectionOverviewMode);

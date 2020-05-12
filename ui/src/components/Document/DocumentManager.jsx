@@ -84,7 +84,7 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, editMode, query, hasPending, intl,
+      collection, document, query, hasPending, intl,
     } = this.props;
     const { selection } = this.state;
     const mutableCollection = collection !== undefined && collection.writeable;
@@ -143,7 +143,6 @@ export class DocumentManager extends Component {
             writeable={showActions}
             updateSelection={this.updateSelection}
             emptyComponent={emptyComponent}
-            editMode={editMode}
           />
         </div>
         <EntityDeleteDialog

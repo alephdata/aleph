@@ -39,11 +39,6 @@ export const fetchCollectionStatus = asyncActionCreator(({ id }) => async () => 
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_STATUS' });
 
-export const fetchCollectionStatistics = asyncActionCreator(({ id }) => async () => {
-  const response = await endpoint.get(`collections/${id}/statistics`);
-  return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION_STATISTICS' });
-
 export const updateCollectionPermissions = asyncActionCreator((id, permissions) => async () => {
   const config = { params: { sync: true } };
   const response = await endpoint.post(`collections/${id}/permissions`, permissions, config);

@@ -3,13 +3,11 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Classes, MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { MenuDivider, Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
-import c from 'classnames';
 
 import { Count, Schema, SchemaSelect } from 'src/components/common';
-import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import { selectModel } from 'src/selectors';
 
@@ -22,74 +20,38 @@ const messages = defineMessages({
   },
 });
 
-/* eslint-disable */
 class CollectionContentViews extends React.Component {
   constructor(props) {
     super(props);
-    const { activeType, collection } = props;
-
-    let addedSchemaViews = [];
-    if (activeType && activeType !== 'Document') {
-      if (!collection?.schemata?.hasOwnProperty(activeType)) {
-        addedSchemaViews = [activeType];
-      }
-    }
-
-    this.state = {
-      addedSchemaViews,
-    }
 
     this.handleTabChange = this.handleTabChange.bind(this);
-    this.onSchemaViewAdd = this.onSchemaViewAdd.bind(this);
-  }
-
-  onSchemaViewAdd(schema) {
-    const schemaName = schema.name;
-    this.setState(({ addedSchemaViews }) => ({ addedSchemaViews: [...addedSchemaViews, schemaName] }));
-    this.handleTabChange(schema);
   }
 
   schemaViews() {
-    const { collection, model } = this.props;
-    const { addedSchemaViews } = this.state;
+    const { activeType, collection, model } = this.props;
 
+    const schemata = collection?.statistics?.schema?.values || [];
     const matching = [];
-    for (const key in collection.schemata) {
+    for (const key in schemata) {
       if (!model.getSchema(key).isDocument()) {
         matching.push({
           schema: key,
-          count: collection.schemata[key],
+          count: schemata[key],
         });
       }
     }
     const existingSchemata = _.reverse(_.sortBy(matching, ['count']));
-    const newSchemata =
-      addedSchemaViews
-        .filter(schema => !collection?.schemata?.hasOwnProperty(schema))
-        .map(schema => ({ schema, count: 0 }));
 
-    return ([...existingSchemata, ...newSchemata]);
-  }
-
-  countDocuments() {
-    const { collection, model } = this.props;
-    let totalCount = 0;
-    for (const key in collection.schemata) {
-      if (model.getSchema(key).isDocument()) {
-        totalCount += collection.schemata[key];
-      }
+    if (activeType && !schemata.hasOwnProperty(activeType)) {
+      return [...existingSchemata, { schema: activeType, count: 0 }]
     }
-    return totalCount;
+    return existingSchemata
   }
 
   handleTabChange(type) {
-    const { history, location, isPreview } = this.props;
+    const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
-    // leave edit mode if changing to Documents tab
-    if (type === 'Document') {
-      delete parsedHash.editing;
-    }
 
     history.push({
       pathname: location.pathname,
@@ -99,14 +61,9 @@ class CollectionContentViews extends React.Component {
   }
 
   render() {
-    const {
-      collection, activeType, editMode, intl, xref, onChange,
-    } = this.props;
-    const numOfDocs = this.countDocuments();
+    const { collection, activeType, intl } = this.props;
     const schemaViews = this.schemaViews();
-    const hasBrowse = (numOfDocs > 0 || collection.writeable);
-
-    const selectedTab = activeType || (hasBrowse ? 'Document' : schemaViews[0]?.schema);
+    const selectedTab = activeType || schemaViews[0]?.schema;
     const isPending = collection.isPending && !collection.id;
     const showSchemaSelect = !isPending && collection.writeable;
 
@@ -117,23 +74,8 @@ class CollectionContentViews extends React.Component {
         onChange={this.handleTabChange}
         selectedTabId={selectedTab}
         renderActiveTabPanelOnly
-        animate={false}
         vertical
       >
-        {(isPending || hasBrowse) && (
-          <Tab
-            id="Document"
-            className={'CollectionContentViews__tab'}
-            title={
-              <span className={c({ [Classes.SKELETON]: isPending })}>
-                <Icon icon="folder" className="left-icon" />
-                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                <Count count={numOfDocs} />
-              </span>}
-            panel={<CollectionDocumentsMode collection={collection} editMode={editMode} />}
-          />
-        )}
-        {(isPending || (hasBrowse && schemaViews.length > 0)) && <MenuDivider />}
         {schemaViews.map(ref => (
           <Tab
             id={ref.schema}
@@ -144,10 +86,10 @@ class CollectionContentViews extends React.Component {
                 <Schema.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
-            panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} editMode={editMode} />}
+            panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} />}
           />
         ))}
-        {showSchemaSelect && <MenuDivider />}
+        {schemaViews.length > 0 && showSchemaSelect && <MenuDivider />}
         {showSchemaSelect && (
           <Tab
             id="new"
@@ -157,8 +99,8 @@ class CollectionContentViews extends React.Component {
             title={
               <SchemaSelect
                 placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
-                onSelect={this.onSchemaViewAdd}
-                optionsFilter={schema => !schemaViews.find(item => (item.schema === schema.name))}
+                onSelect={this.handleTabChange}
+                optionsFilter={schema => schema.isThing() && !schemaViews.find(item => (item.schema === schema.name))}
               />
             }
           />
@@ -172,10 +114,10 @@ class CollectionContentViews extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+
   return {
     model: selectModel(state),
     activeType: hashQuery.type,
-    editMode: hashQuery.editing,
   };
 };
 

@@ -75,7 +75,7 @@ export function queryEntitySimilar(location, entityId) {
 
 export function queryEntitySuggest(location, collection, schemaName, queryText) {
   const context = {
-    'filter:schema': schemaName,
+    'filter:schemata': schemaName,
     'filter:collection_id': collection.id,
     prefix: queryText,
   };
