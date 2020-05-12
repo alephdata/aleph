@@ -12,7 +12,6 @@ const mapStateToProps = state => ({
 });
 
 class Property extends VLProperty {
-
   static Reverse = connect(mapStateToProps)(super.Reverse);
 
   static Link = ValueLink;
