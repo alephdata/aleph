@@ -1,4 +1,3 @@
-import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Property as VLProperty } from '@alephdata/vislib';
 

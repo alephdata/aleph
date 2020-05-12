@@ -1,4 +1,3 @@
-import React from 'react';
 import { Numeric } from '@alephdata/vislib';
 import { connect } from 'react-redux';
 
