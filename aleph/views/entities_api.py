@@ -487,8 +487,7 @@ def update(entity_id):
                               validate=validate,
                               sync=sync)
     db.session.commit()
-    entity = get_index_entity(entity_id, request.authz.READ)
-    return EntitySerializer.jsonify(entity)
+    return view(entity_id)
 
 
 @blueprint.route('/api/2/entities/<entity_id>', methods=['DELETE'])

@@ -104,13 +104,10 @@ export class EntityListManager extends Component {
   render() {
     const { collection, schema, entityManager, result, sort } = this.props;
     const { selection } = this.state;
-    const writeable = !!collection?.writeable;
-    const entities = result.results;
-    const isPending = collection.isPending;
 
     return (
       <div className="EntityListManager">
-        { writeable && (
+        { collection.writeable && (
           <div className="bp3-button-group">
             <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
               <span className="align-middle">
@@ -122,15 +119,15 @@ export class EntityListManager extends Component {
         )}
         <div className="EntityListManager__content">
           <TableEditor
-            entities={entities}
+            entities={result.results}
             schema={schema}
             entityManager={entityManager}
             sort={sort}
             sortColumn={this.onSortColumn}
             selection={selection}
             updateSelection={this.updateSelection}
-            writeable={writeable}
-            isPending={isPending}
+            writeable={collection.writeable}
+            isPending={result.isPending}
             visitEntity={this.onEntityClick}
           />
           <Waypoint

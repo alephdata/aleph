@@ -85,7 +85,8 @@ const entityEditorWrapper = (EditorComponent) => {
         onStatusChange(updateStates.IN_PROGRESS);
 
         try {
-          await this.props.updateEntity({ entity, collectionId: collection.id });
+          entity.collection = collection;
+          await this.props.updateEntity(entity);
           onStatusChange(updateStates.SUCCESS);
         } catch {
           onStatusChange(updateStates.ERROR);

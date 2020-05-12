@@ -42,7 +42,11 @@ class CollectionEntitiesMode extends React.PureComponent {
 
   renderTable() {
     const { collection, activeSchema } = this.props;
-    return <EntityListManager collection={collection} schema={activeSchema} />;
+    return <EntityListManager
+      collection={collection}
+      schema={activeSchema}
+      onStatusChange={() => {}}
+    />;
   }
 
   render() {
