@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
-import { Entity as EntityLabel } from '@alephdata/vislib';
+import { Entity as VLEntity } from '@alephdata/vislib';
 
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
@@ -28,7 +28,7 @@ class EntityLink extends PureComponent {
 
   render() {
     const { entity, className, children, preview } = this.props;
-    const content = children || <Entity.Label {...this.props} />;
+    const content = children || <VLEntity.Label {...this.props} />;
     const link = getEntityLink(entity);
     if (!link) {
       return content;
@@ -72,7 +72,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 class Entity {
-  static Label = EntityLabel;
+  static Label = VLEntity.Label;
 
   static Link = withRouter(EntityLink);
 
