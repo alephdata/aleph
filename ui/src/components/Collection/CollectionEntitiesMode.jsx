@@ -41,8 +41,8 @@ class CollectionEntitiesMode extends React.PureComponent {
   }
 
   renderTable() {
-    const { collection, query } = this.props;
-    return <EntityListManager query={query} collection={collection} />;
+    const { collection, activeSchema } = this.props;
+    return <EntityListManager collection={collection} schema={activeSchema} />;
   }
 
   render() {
@@ -124,6 +124,7 @@ const mapStateToProps = (state, ownProps) => {
     .filter((s) => !schemaViews.find((v) => v.schema === s));
   return {
     activeType: activeType,
+    activeSchema: model.getSchema(activeType),
     schemaViews: schemaViews,
     selectableSchemata: selectableSchemata,
     query: queryCollectionEntities(location, collection.id, activeType)

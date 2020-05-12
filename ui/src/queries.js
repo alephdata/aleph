@@ -18,7 +18,6 @@ export function queryCollectionEntities(location, collectionId, schema) {
   const context = {
     'filter:collection_id': collectionId,
     'filter:schema': schema,
-    'empty:properties.parent': true,
   };
   return Query.fromLocation('entities', location, context, 'entities');
 }
