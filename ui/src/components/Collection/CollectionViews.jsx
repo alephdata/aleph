@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import { Count } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
-import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
+import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import collectionViewIds from 'src/components/Collection/collectionViewIds';
@@ -108,7 +108,7 @@ class CollectionViews extends React.Component {
                 <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
                 {entityCount > 0 && <Count count={entityCount} />}
               </>}
-            panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
+            panel={<CollectionEntitiesMode collection={collection} />}
           />
         )}
         {showDiagramsTab && (
