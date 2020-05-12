@@ -1,10 +1,11 @@
-import { Count, FileSize, URL } from '@alephdata/vislib'
+import { FileSize, URL } from '@alephdata/vislib'
 
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
+import Count from './Count';
 import Country from './Country';
 import csvContextLoader from './csvContextLoader';
 import Numeric from './Numeric';
