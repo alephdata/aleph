@@ -1,13 +1,11 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
-import { createEntity, queryEntities, updateDiagram, updateEntity } from 'src/actions';
+import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 import { processApiEntity } from 'src/components/Diagram/util';
-import { queryEntitySuggest } from 'src/queries';
-import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
-import updateStates from './diagramUpdateStates';
+import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
+import { updateDiagram } from 'src/actions';
+import updateStates from 'src/util/updateStates';
 
 import './DiagramEditor.scss';
 
@@ -19,13 +17,6 @@ class DiagramEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    this.entityManager = new EntityManager({
-      model: props.model,
-      createEntity: this.createEntity.bind(this),
-      updateEntity: this.updateEntity.bind(this),
-      getEntitySuggestions: this.getEntitySuggestions.bind(this),
-    });
-
     let initialLayout;
 
     if (props.diagram?.entities && props.diagram?.layout) {
@@ -35,11 +26,11 @@ class DiagramEditor extends React.Component {
 
       initialLayout = GraphLayout.fromJSON(
         config,
-        this.entityManager,
+        props.entityManager,
         { ...layout, entities: processedEntities, selection: [] },
       );
     } else {
-      initialLayout = new GraphLayout(config, this.entityManager);
+      initialLayout = new GraphLayout(config, props.entityManager);
     }
 
     this.state = {
@@ -63,72 +54,8 @@ class DiagramEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { selectQueryResults } = this.props;
     if (this.props.downloadTriggered && !prevProps.downloadTriggered) {
       this.downloadDiagram();
-    }
-
-    // if there is an unresolved query promise, check if results have returned and resolve
-    if (this.entitySuggestPromise) {
-      const { query, promiseResolve } = this.entitySuggestPromise;
-      const results = selectQueryResults(query);
-      if (results) {
-        this.entitySuggestPromise = null;
-        promiseResolve(results);
-      }
-    }
-  }
-
-  getEntitySuggestions(queryText, schema) {
-    const { diagram, location, selectQueryResults } = this.props;
-    const query = queryEntitySuggest(location, diagram.collection, schema, queryText);
-
-    // check if query results are in results cache
-    const results = selectQueryResults(query);
-    if (results) {
-      this.entitySuggestPromise = null;
-      return results;
-    }
-
-    // throttle entities query request
-    clearTimeout(this.entitySuggestTimeout);
-    this.entitySuggestTimeout = setTimeout(() => {
-      this.props.queryEntities({ query });
-    }, 150);
-
-    return new Promise((resolve) => {
-      this.entitySuggestPromise = { query, promiseResolve: resolve };
-    });
-  }
-
-  async createEntity({ schema, properties }) {
-    const { diagram, onStatusChange } = this.props;
-    onStatusChange(updateStates.IN_PROGRESS);
-
-    try {
-      const entityData = await this.props.createEntity({
-        schema: schema.name,
-        properties: properties || {},
-        collection: diagram.collection,
-      });
-      onStatusChange(updateStates.SUCCESS);
-
-      return processApiEntity(entityData);
-    } catch {
-      onStatusChange(updateStates.ERROR);
-    }
-    return null;
-  }
-
-  async updateEntity(entity) {
-    const { diagram, onStatusChange } = this.props;
-    onStatusChange(updateStates.IN_PROGRESS);
-
-    try {
-      await this.props.updateEntity({ entity, collectionId: diagram.collection.id });
-      onStatusChange(updateStates.SUCCESS);
-    } catch {
-      onStatusChange(updateStates.ERROR);
     }
   }
 
@@ -178,14 +105,14 @@ class DiagramEditor extends React.Component {
   }
 
   render() {
-    const { diagram, filterText, locale } = this.props;
+    const { diagram, entityManager, filterText, locale } = this.props;
     const { layout, viewport } = this.state;
 
     return (
       <div className="DiagramEditor">
         <VisGraph
           config={config}
-          entityManager={this.entityManager}
+          entityManager={entityManager}
           layout={layout}
           viewport={viewport}
           updateLayout={this.updateLayout}
@@ -200,26 +127,13 @@ class DiagramEditor extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  model: selectModel(state),
-  locale: selectLocale(state),
-  selectQueryResults: (query) => {
-    const result = selectEntitiesResult(state, query);
-    if (!result.isPending && result.results) {
-      return result.results;
-    }
-    return null;
-  },
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {
-  createEntity,
-  queryEntities,
   updateDiagram,
-  updateEntity,
 };
 
 export default compose(
-  withRouter,
   connect(mapStateToProps, mapDispatchToProps),
+  entityEditorWrapper
 )(DiagramEditor);

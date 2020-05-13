@@ -9,9 +9,11 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
-from aleph.core import cache, settings, url_for
-from aleph.model import Collection
+from aleph.core import cache, db, settings, url_for
+from aleph.authz import Authz
+from aleph.model import Collection, Role
 from aleph.logic import resolver
+from aleph.index.collections import get_collection_things
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
@@ -70,8 +72,16 @@ def metadata():
         },
         'categories': Collection.CATEGORIES,
         'model': model,
+        'token': None,
         'auth': auth
     }
+
+    if settings.SINGLE_USER:
+        role = Role.load_cli_user()
+        db.session.commit()
+        authz = Authz.from_role(role)
+        data['token'] = authz.to_token(role=role)
+
     cache.set_complex(key, data, expires=120)
     return jsonify(data)
 
@@ -125,7 +135,8 @@ def statistics():
         if data is None or data.get('casefile'):
             continue
         categories[data.get('category')] += 1
-        for schema, count in data.get('schemata', {}).items():
+        things = get_collection_things(collection_id)
+        for schema, count in things.items():
             schemata[schema] += count
         for country in data.get('countries', []):
             countries[country] += 1

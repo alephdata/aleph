@@ -4,6 +4,7 @@ import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Country from './Country';
+import csvContextLoader from './csvContextLoader';
 import Numeric from './Numeric';
 import Date from './Date';
 import Diagram from './Diagram';
@@ -15,6 +16,7 @@ import FileSize from './FileSize';
 import Language from './Language';
 import Role from './Role';
 import Schema from './Schema';
+import SchemaSelect from './SchemaSelect';
 import Suggest from './Suggest';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
@@ -36,6 +38,7 @@ export {
   Breadcrumbs,
   SignInCallout,
   Category,
+  csvContextLoader,
   CheckboxList,
   Collection,
   Country,
@@ -50,6 +53,7 @@ export {
   Language,
   Role,
   Schema,
+  SchemaSelect,
   Suggest,
   SectionLoading,
   TextLoading,

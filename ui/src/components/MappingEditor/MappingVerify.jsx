@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, HTMLTable, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { PropertyEditor, PropertyValues } from '@alephdata/vislib';
+import { PropertyEditor, Property } from '@alephdata/vislib';
 import { selectLocale } from 'src/selectors';
 import { MappingLabel } from './util';
 
@@ -86,7 +86,7 @@ class MappingVerifyItem extends Component {
             minimal
             small
           >
-            <PropertyValues prop={schema.getProperty(propertyName)} values={value} />
+            <Property.Values prop={schema.getProperty(propertyName)} values={value} />
           </Button>
         </div>
       );

@@ -14,7 +14,7 @@ import DiagramEditor from 'src/components/Diagram/DiagramEditor';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Breadcrumbs, Collection, Diagram } from 'src/components/common';
-import diagramUpdateStates from 'src/components/Diagram/diagramUpdateStates';
+import updateStates from 'src/util/updateStates';
 
 const messages = defineMessages({
   status_success: {
@@ -120,9 +120,9 @@ export class DiagramScreen extends Component {
     const { updateStatus } = this.state;
 
     switch (updateStatus) {
-      case diagramUpdateStates.IN_PROGRESS:
+      case updateStates.IN_PROGRESS:
         return { text: intl.formatMessage(messages.status_in_progress), intent: Intent.PRIMARY };
-      case diagramUpdateStates.ERROR:
+      case updateStates.ERROR:
         return { text: intl.formatMessage(messages.status_error), intent: Intent.DANGER };
       default:
         return { text: intl.formatMessage(messages.status_success), intent: Intent.SUCCESS };
@@ -157,11 +157,11 @@ export class DiagramScreen extends Component {
     return (
       <>
         <Prompt
-          when={updateStatus === diagramUpdateStates.IN_PROGRESS}
+          when={updateStatus === updateStates.IN_PROGRESS}
           message={intl.formatMessage(messages.in_progress_warning)}
         />
         <Prompt
-          when={updateStatus === diagramUpdateStates.ERROR}
+          when={updateStatus === updateStates.ERROR}
           message={intl.formatMessage(messages.error_warning)}
         />
         <Screen
@@ -171,10 +171,11 @@ export class DiagramScreen extends Component {
         >
           {breadcrumbs}
           <DiagramEditor
+            collection={diagram.collection}
+            onStatusChange={this.onStatusChange}
             diagram={diagram}
             downloadTriggered={downloadTriggered}
             filterText={filterText}
-            onStatusChange={this.onStatusChange}
             onDownloadComplete={this.onDownloadComplete}
           />
         </Screen>

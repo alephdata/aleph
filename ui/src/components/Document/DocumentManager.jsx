@@ -90,7 +90,6 @@ export class DocumentManager extends Component {
     const mutableCollection = collection !== undefined && collection.writeable;
     const mutableDocument = document === undefined || (document.schema && document.schema.name === 'Folder');
     const showActions = mutableCollection && mutableDocument;
-    const updateSelection = showActions ? this.updateSelection : undefined;
     const canUpload = this.canUpload();
 
     const emptyComponent = (
@@ -141,7 +140,8 @@ export class DocumentManager extends Component {
             documentMode
             showPreview={false}
             selection={selection}
-            updateSelection={updateSelection}
+            writeable={showActions}
+            updateSelection={this.updateSelection}
             emptyComponent={emptyComponent}
           />
         </div>

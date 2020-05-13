@@ -132,12 +132,18 @@ def view(collection_id):
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Collection'
+                $ref: '#/components/schemas/CollectionFull'
       tags:
       - Collection
     """
-    collection = get_index_collection(collection_id)
-    return CollectionSerializer.jsonify(collection)
+    data = get_index_collection(collection_id)
+    cobj = get_db_collection(collection_id)
+    data.update({
+      'statistics': get_collection_stats(cobj.id),
+      'status': get_status(cobj),
+      'shallow': False
+    })
+    return CollectionSerializer.jsonify(data)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>', methods=['POST', 'PUT'])  # noqa
@@ -178,55 +184,6 @@ def update(collection_id):
     db.session.commit()
     data = update_collection(collection, sync=sync)
     return CollectionSerializer.jsonify(data)
-
-
-@blueprint.route('/api/2/collections/<int:collection_id>/statistics', methods=['GET'])  # noqa
-def statistics(collection_id):
-    """
-    ---
-    get:
-      summary: Get a summary of collection contents
-      description: >
-        Get a listing of the most common entity types and attributes in the
-        given collection. The result is cached and can be somewhat out of
-        sync with the real numbers.
-      parameters:
-      - description: The collection ID.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  schema:
-                    type: object
-                  names:
-                    type: object
-                  addresses:
-                    type: object
-                  countries:
-                    type: object
-                  languages:
-                    type: object
-                  phones:
-                    type: object
-                  emails:
-                    type: object
-                  ibans:
-                    type: object
-      tags:
-      - Collection
-    """
-    collection = get_db_collection(collection_id, request.authz.READ)
-    return jsonify(get_collection_stats(collection.id))
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/process', methods=['POST', 'PUT'])  # noqa

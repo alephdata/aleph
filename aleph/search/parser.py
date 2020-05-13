@@ -1,6 +1,6 @@
 import logging
 from banal import as_bool
-from normality import stringify
+from followthemoney.util import sanitize_text
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
 from aleph.core import settings
@@ -25,8 +25,8 @@ class QueryParser(object):
         if limit is None:
             limit = min(max_limit, max(0, self.getint('limit', 20)))
         self.limit = limit
-        self.text = stringify(self.get('q'))
-        self.prefix = stringify(self.get('prefix'))
+        self.text = sanitize_text(self.get('q'))
+        self.prefix = sanitize_text(self.get('prefix'))
 
         # Disable or enable query caching
         self.cache = self.getbool('cache', settings.CACHE)
@@ -74,14 +74,14 @@ class QueryParser(object):
         for (key, value) in self.args.items(multi=True):
             if key == 'offset':
                 continue
-            value = stringify(value, encoding='utf-8')
+            value = sanitize_text(value, encoding='utf-8')
             if value is not None:
                 yield key, value
 
     def getlist(self, name, default=None):
         values = []
         for value in self.args.getlist(name):
-            value = stringify(value, encoding='utf-8')
+            value = sanitize_text(value, encoding='utf-8')
             if value is not None:
                 values.append(value)
         return values or (default or [])

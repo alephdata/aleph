@@ -2,12 +2,6 @@ import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 
 
-export const fetchDocumentContent = asyncActionCreator(({ id }) => async () => {
-  const response = await endpoint.get(`entities/${id}/content`);
-  return { id, data: response.data };
-}, { name: 'FETCH_DOCUMENT_CONTENT' });
-
-
 export const ingestDocument = asyncActionCreator(
   (collectionId, metadata, file, onUploadProgress) => async () => {
     const formData = new FormData();

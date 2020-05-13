@@ -14,6 +14,14 @@ export function queryCollectionDocuments(location, collectionId) {
   return Query.fromLocation('entities', location, context, 'document');
 }
 
+export function queryCollectionEntities(location, collectionId, schema) {
+  const context = {
+    'filter:collection_id': collectionId,
+    'filter:schema': schema,
+  };
+  return Query.fromLocation('entities', location, context, 'entities');
+}
+
 export function queryCollectionDiagrams(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
@@ -75,7 +83,7 @@ export function queryEntitySimilar(location, entityId) {
 
 export function queryEntitySuggest(location, collection, schemaName, queryText) {
   const context = {
-    'filter:schema': schemaName,
+    'filter:schemata': schemaName,
     'filter:collection_id': collection.id,
     prefix: queryText,
   };

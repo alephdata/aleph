@@ -110,8 +110,10 @@ export function selectEntity(state, entityId) {
   result.isPending = !!entity.isPending;
   result.isError = !!entity.isError;
   result.shouldLoad = !!entity.shouldLoad;
+  result.shallow = !!entity.shallow;
   result.error = entity.error;
   result.links = entity.links;
+  result.safeHtml = entity.safeHtml;
   result.collection = entity.collection;
   result.highlight = entity.highlight;
   return result;
@@ -212,20 +214,17 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   return undefined;
 }
 
-export function selectCollectionStatistics(state, collectionId) {
-  return selectObject(state, state.collectionStatistics, collectionId);
-}
-
 export function selectCollectionStatus(state, collectionId) {
-  return selectObject(state, state.collectionStatus, collectionId);
+  const status = selectObject(state, state.collectionStatus, collectionId);
+  if (status.isError || status.isPending) {
+    return status;
+  }
+  status.active = status.pending || status.running;
+  return status;
 }
 
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state, state.collectionPermissions, collectionId);
-}
-
-export function selectCollectionMappings(state, collectionId) {
-  return selectObject(state, state.collectionMappings, collectionId);
 }
 
 export function selectEntityMapping(state, entityId) {

@@ -157,6 +157,7 @@ class CollectionAccessDialog extends Component {
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
         title={intl.formatMessage(messages.title)}
+        enforceFocus={false}
       >
         <div className="bp3-dialog-body">
           <div className="CollectionPermissions">

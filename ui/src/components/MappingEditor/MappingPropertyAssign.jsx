@@ -193,7 +193,8 @@ export class MappingPropertyAssign extends Component {
 
   renderCell(rowIndex, colIndex, style) {
     const { csvData } = this.props;
-    const value = csvData[rowIndex][colIndex];
+    const row = csvData[rowIndex] || [];
+    const value = row.length >= colIndex ? row[colIndex] : null;
 
     return (
       <Cell style={style}>

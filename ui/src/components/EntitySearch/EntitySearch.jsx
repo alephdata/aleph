@@ -94,7 +94,7 @@ export class EntitySearch extends Component {
       query, result, intl, className,
       documentMode, hideCollection,
       showPreview, updateSelection, selection,
-      emptyComponent,
+      emptyComponent, collection,
     } = this.props;
     const isEmpty = !query.hasQuery();
     const foundText = this.generateFoundText();
@@ -123,6 +123,7 @@ export class EntitySearch extends Component {
           updateQuery={this.updateQuery}
           updateSelection={updateSelection}
           selection={selection}
+          collection={collection}
         />
         <Waypoint
           onEnter={this.getMoreResults}

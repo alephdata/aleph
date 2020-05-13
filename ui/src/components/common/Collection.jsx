@@ -75,12 +75,15 @@ class CollectionLink extends PureComponent {
 
 class CollectionUpdateStatus extends PureComponent {
   componentDidMount() {
-    this.props.fetchCollectionStatus(this.props.collection);
+    const { collection, status } = this.props;
+    if (status.shouldLoad) {
+      this.props.fetchCollectionStatus(collection);
+    }
   }
 
   render() {
     const { collection, showPopover, status } = this.props;
-    const updating = !status.shouldLoad && (status.pending || status.running);
+    const updating = !status.shouldLoad && status.active;
     const collectionLink = <CollectionLink updating={updating} {...this.props} />;
 
     if (showPopover && updating) {

@@ -5,7 +5,7 @@ from werkzeug.exceptions import BadRequest
 from aleph.index.indexes import entities_read_index
 from aleph.index.collections import collections_index
 from aleph.index.xref import xref_index
-from aleph.index.entities import EXCLUDE_DEFAULT
+from aleph.index.entities import PROXY_INCLUDES
 from aleph.logic.matching import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
@@ -36,7 +36,7 @@ class EntitiesQuery(Query):
     TEXT_FIELDS = ['fingerprints.text^3', 'text']
     PREFIX_FIELD = 'names.text'
     SKIP_FILTERS = ['schema', 'schemata']
-    EXCLUDE_FIELDS = EXCLUDE_DEFAULT
+    INCLUDE_FIELDS = PROXY_INCLUDES
     SORT_DEFAULT = []
 
     def get_index(self):
