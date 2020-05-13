@@ -3,13 +3,11 @@ import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
-import { Waypoint } from 'react-waypoint';
 import { Icon, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import {
   Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
