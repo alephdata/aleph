@@ -24,7 +24,7 @@ const entityEditorWrapper = (EditorComponent) => {
         });
       }
 
-      componentDidUpdate(prevProps) {
+      componentDidUpdate() {
         const { selectQueryResults } = this.props;
 
         // if there is an unresolved query promise, check if results have returned and resolve
@@ -65,14 +65,14 @@ const entityEditorWrapper = (EditorComponent) => {
         onStatusChange(updateStates.IN_PROGRESS);
 
         try {
-          const entityData = await this.props.createEntity({
+          const resp = await this.props.createEntity({
             schema: schema.name,
             properties: properties || {},
             collection,
           });
           onStatusChange(updateStates.SUCCESS);
 
-          const processedData = processApiEntity(entityData);
+          const processedData = processApiEntity(resp.data);
           return new Entity(model, processedData);
         } catch {
           onStatusChange(updateStates.ERROR);
@@ -85,7 +85,8 @@ const entityEditorWrapper = (EditorComponent) => {
         onStatusChange(updateStates.IN_PROGRESS);
 
         try {
-          await this.props.updateEntity({ entity, collectionId: collection.id });
+          entity.collection = collection;
+          await this.props.updateEntity(entity);
           onStatusChange(updateStates.SUCCESS);
         } catch {
           onStatusChange(updateStates.ERROR);

@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import { Count } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
-import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
+import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import collectionViewIds from 'src/components/Collection/collectionViewIds';
@@ -25,22 +25,9 @@ class CollectionViews extends React.Component {
 
   componentDidUpdate() {
     const { activeMode } = this.props;
-
     if (Object.values(collectionViewIds).indexOf(activeMode) < 0) {
       this.handleTabChange(collectionViewIds.OVERVIEW);
     }
-  }
-
-  countDocuments() {
-    const { collection, model } = this.props;
-    const schemata = collection?.statistics?.schema?.values || [];
-    let totalCount = 0;
-    for (const key in schemata) {
-      if (model.getSchema(key).isDocument()) {
-        totalCount += schemata[key];
-      }
-    }
-    return totalCount;
   }
 
   handleTabChange(mode) {
@@ -59,14 +46,10 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, showDiagramsTab, xref,
+      collection, activeMode, diagrams, xref,
+      showDiagramsTab, showEntitiesTab, showDocumentsTab,
+      documentTabCount, entitiesTabCount
     } = this.props;
-    const docCount = this.countDocuments();
-    const entityCount = collection?.count ? collection.count - docCount : null;
-
-    const hasDocMode = (docCount > 0 || collection.writeable);
-    const hasEntityMode = (entityCount > 0 || collection.writeable);
-
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -85,7 +68,7 @@ class CollectionViews extends React.Component {
             </>}
           panel={<CollectionOverviewMode collection={collection} />}
         />
-        {hasDocMode && (
+        {showDocumentsTab && (
           <Tab
             id={collectionViewIds.DOCUMENTS}
             className="CollectionViews__tab"
@@ -93,12 +76,12 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="document" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                {docCount > 0 && <Count count={docCount} />}
+                {documentTabCount > 0 && <Count count={documentTabCount} />}
               </>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
-        {hasEntityMode && (
+        {showEntitiesTab && (
           <Tab
             id={collectionViewIds.ENTITIES}
             className="CollectionViews__tab"
@@ -106,9 +89,9 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="list-columns" className="left-icon" />
                 <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
-                {entityCount > 0 && <Count count={entityCount} />}
+                {entitiesTabCount > 0 && <Count count={entitiesTabCount} />}
               </>}
-            panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
+            panel={<CollectionEntitiesMode collection={collection} />}
           />
         )}
         {showDiagramsTab && (
@@ -144,14 +127,29 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
+  const model = selectModel(state);
   const diagramsQuery = queryCollectionDiagrams(location, collection.id);
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
+  const schemata = collection?.statistics?.schema?.values || [];
+  let documentTabCount = 0, entitiesTabCount = 0;
+  for (const key in schemata) {
+    const schema = model.getSchema(key);
+    if (schema.isDocument()) {
+      documentTabCount += schemata[key];
+    }
+    if (!(schema.isDocument() || schema.isA('Record'))) {
+      entitiesTabCount += schemata[key];
+    }
+  }
 
   return {
-    model: selectModel(state),
+    entitiesTabCount: entitiesTabCount,
+    documentTabCount: documentTabCount,
+    showDiagramsTab: collection.casefile && selectTester(state),
+    showEntitiesTab: collection.casefile,
+    showDocumentsTab: (documentTabCount > 0 || collection.writeable),
     xref: selectCollectionXrefResult(state, xrefQuery),
     diagrams: selectDiagramsResult(state, diagramsQuery),
-    showDiagramsTab: collection.casefile && selectTester(state),
   };
 };
 

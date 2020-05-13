@@ -23,14 +23,13 @@ export const fetchEntityTags = asyncActionCreator(({ id }) => async () => {
 
 export const createEntity = asyncActionCreator(entity => async () => {
   const response = await endpoint.post('entities', entity, {});
-  return response.data;
+  return { id: response.data.id, data: response.data };
 }, { name: 'CREATE_ENTITY' });
 
-export const updateEntity = asyncActionCreator(({ entity, collectionId }) => async () => {
+export const updateEntity = asyncActionCreator(entity => async () => {
   const payload = entity.toJSON();
-  payload.collection_id = collectionId;
   const response = await endpoint.put(`entities/${entity.id}`, payload, {});
-  return response.data;
+  return { id: response.data.id, data: response.data };
 }, { name: 'UPDATE_ENTITY' });
 
 export const deleteEntity = asyncActionCreator(entityId => async () => {
