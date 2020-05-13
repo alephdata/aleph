@@ -1,138 +1,20 @@
-import React, { PureComponent, Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import wordList from 'src/util/wordList';
-import { selectModel } from 'src/selectors';
-import { Classes, MenuItem, Position } from '@blueprintjs/core';
-import { MultiSelect as BlueprintMultiSelect } from '@blueprintjs/select';
-
-
-class Name extends PureComponent {
-  render() {
-    const { code, languages } = this.props;
-    const codeLabel = code ? code.toUpperCase() : <FormattedMessage id="language.unknown" defaultMessage="Unknown" />;
-    const label = languages.get(code) || codeLabel;
-    if (!code) return null;
-    return label;
-  }
-}
-
-class List extends Component {
-  render() {
-    const { codes, languages } = this.props;
-    if (!codes || codes.length === 0) {
-      return null;
-    }
-    const names = codes.map(code => <Name languages={languages} code={code} key={code} />);
-    return wordList(names, ', ');
-  }
-}
-
-class MultiSelect extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-
-    this.itemRenderer = this.itemRenderer.bind(this);
-    this.itemFilter = this.itemFilter.bind(this);
-    this.onItemSelect = this.onItemSelect.bind(this);
-    this.onRemoveTag = this.onRemoveTag.bind(this);
-    this.tagRenderer = this.tagRenderer.bind(this);
-  }
-
-  static getDerivedStateFromProps(nextProps) {
-    return { codes: nextProps.codes || [] };
-  }
-
-  onRemoveTag(event, index) {
-    const { codes } = this.state;
-    codes.splice(index, 1);
-    this.setState({ codes });
-    this.props.onChange(codes);
-  }
-
-  onItemSelect(item, event) {
-    event.stopPropagation();
-    const { codes } = this.state;
-    codes.push(item);
-    this.setState({ codes });
-    this.props.onChange(codes);
-  }
-
-  tagRenderer(item) {
-    return <Name code={item} languages={this.props.languages} />;
-  }
-
-  itemFilter(query, item) {
-    if (!query.length || this.state.codes.indexOf(item) !== -1) {
-      return false;
-    }
-    const label = this.props.languages.get(item).toLowerCase();
-    return label.includes(query.toLowerCase());
-  }
-
-  itemRenderer(item, { modifiers, handleClick }) {
-    if (modifiers.matchesPredicate) {
-      return (
-        <MenuItem
-          key={item}
-          className={modifiers.active ? Classes.ACTIVE : ''}
-          onClick={handleClick}
-          text={this.props.languages.get(item)}
-        />
-      );
-    }
-    return undefined;
-  }
-
-  render() {
-    const { codes } = this.state;
-    const { languages } = this.props;
-    const items = [...languages.keys()];
-
-    return (
-      <BlueprintMultiSelect
-        initialContent={
-          <MenuItem disabled text={<FormattedMessage id="language.multiselect.select" defaultMessage="Select" />} />
-        }
-        itemPredicate={this.itemFilter}
-        noResults={
-          <MenuItem disabled text={<FormattedMessage id="language.multiselect.no.result" defaultMessage="No Result" />} />
-        }
-        items={items}
-        itemRenderer={this.itemRenderer}
-        tagRenderer={this.tagRenderer}
-        onItemSelect={this.onItemSelect}
-        intent={false}
-        tagInputProps={{
-          onRemove: this.onRemoveTag,
-        }}
-        popoverProps={{
-          position: Position.BOTTOM_LEFT,
-          className: 'CountryMultiSelect',
-          usePortal: false,
-        }}
-        resetOnSelect
-        openOnKeyDown
-        selectedItems={codes}
-      />
-    );
-  }
-}
-
+import { Language as VLLanguage, LanguageEdit } from '@alephdata/vislib';
+import { selectLocale, selectModel } from 'src/selectors';
 
 const mapStateToProps = (state) => {
   const model = selectModel(state);
-  return { languages: model.types.language.values };
+  const locale = selectLocale(state);
+  return { fullList: model.types.language.values, locale };
 };
 
 class Language extends Component {
-  static Name = connect(mapStateToProps)(Name);
+  static Name = connect(mapStateToProps)(VLLanguage.Label);
 
-  static MultiSelect = connect(mapStateToProps)(MultiSelect)
+  static List = connect(mapStateToProps)(VLLanguage.List);
 
-  static List = connect(mapStateToProps)(List);
+  static MultiSelect = connect(mapStateToProps)(LanguageEdit));
 }
 
 export default Language;

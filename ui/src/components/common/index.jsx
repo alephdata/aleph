@@ -1,4 +1,4 @@
-import { FileSize, URL } from '@alephdata/vislib'
+import { Date, FileSize, URL } from '@alephdata/vislib'
 
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
@@ -9,7 +9,6 @@ import Count from './Count';
 import Country from './Country';
 import csvContextLoader from './csvContextLoader';
 import Numeric from './Numeric';
-import Date from './Date';
 import Diagram from './Diagram';
 import DualPane from './DualPane';
 import Entity from './Entity';
@@ -33,6 +32,7 @@ import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
 import SortingBar from './SortingBar';
 import Summary from './Summary';
+import Topic from './Topic';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
 
@@ -67,6 +67,7 @@ export {
   Summary,
   Count,
   Tag,
+  Topic,
   URL,
   SearchBox,
   SearchListings,
