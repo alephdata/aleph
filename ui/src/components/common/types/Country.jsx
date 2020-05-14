@@ -6,6 +6,7 @@ import { selectLocale, selectModel } from 'src/selectors';
 const mapStateToProps = (state) => {
   const model = selectModel(state);
   const locale = selectLocale(state);
+
   return { fullList: model.types.country.values, locale };
 };
 

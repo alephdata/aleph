@@ -130,6 +130,7 @@ class CreateCaseDialog extends Component {
         isOpen={isOpen}
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
+        enforceFocus={false}
       >
         <form onSubmit={this.onAddCase}>
           <div className="bp3-dialog-body">
@@ -171,8 +172,8 @@ class CreateCaseDialog extends Component {
                 <FormattedMessage id="case.chose.languages" defaultMessage="Languages" />
               </label>
               <Language.MultiSelect
-                onChange={this.onSelectLanguages}
-                codes={collection.languages}
+                onSubmit={this.onSelectLanguages}
+                values={collection.languages || []}
               />
               <div className="bp3-form-helper-text">
                 <FormattedMessage
