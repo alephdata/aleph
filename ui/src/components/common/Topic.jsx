@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Topic as VLTopic, TopicEdit } from '@alephdata/vislib';
+import { Topic as VLTopic, TopicSelect } from '@alephdata/vislib';
 import { selectLocale, selectModel } from 'src/selectors';
 
 const mapStateToProps = (state) => {
@@ -14,7 +14,7 @@ class Topic extends Component {
 
   static List = connect(mapStateToProps)(VLTopic.List);
 
-  static MultiSelect = connect(mapStateToProps)(TopicEdit));
+  static MultiSelect = connect(mapStateToProps)(TopicSelect);
 }
 
 export default Topic;

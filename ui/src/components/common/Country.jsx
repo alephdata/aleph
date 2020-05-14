@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Country as VLCountry, CountryEdit } from '@alephdata/vislib';
+import { Country as VLCountry, CountrySelect } from '@alephdata/vislib';
 import { selectLocale, selectModel } from 'src/selectors';
 
 const mapStateToProps = (state) => {
@@ -14,7 +14,7 @@ class Country extends Component {
 
   static List = connect(mapStateToProps)(VLCountry.List);
 
-  static MultiSelect = connect(mapStateToProps)(CountryEdit));
+  static MultiSelect = connect(mapStateToProps)(CountrySelect);
 }
 
 export default Country;

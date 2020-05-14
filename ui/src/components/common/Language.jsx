@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Language as VLLanguage, LanguageEdit } from '@alephdata/vislib';
+import { Language as VLLanguage, LanguageSelect } from '@alephdata/vislib';
 import { selectLocale, selectModel } from 'src/selectors';
 
 const mapStateToProps = (state) => {
@@ -14,7 +14,7 @@ class Language extends Component {
 
   static List = connect(mapStateToProps)(VLLanguage.List);
 
-  static MultiSelect = connect(mapStateToProps)(LanguageEdit));
+  static MultiSelect = connect(mapStateToProps)(LanguageSelect);
 }
 
 export default Language;
