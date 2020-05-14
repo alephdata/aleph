@@ -10,6 +10,8 @@ import ensureArray from 'src/util/ensureArray';
 import getValueLink from 'src/util/getValueLink';
 import { selectValueCount, selectMetadata } from 'src/selectors';
 
+import './Mention.scss';
+
 const messages = defineMessages({
   tooltip: {
     id: 'valuelink.tooltip',

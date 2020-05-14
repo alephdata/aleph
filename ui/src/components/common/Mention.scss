@@ -1,0 +1,20 @@
+@import "src/app/variables.scss";
+
+.Mention {
+  text-decoration: none !important;
+
+  .bp3-tag {
+    background-color: $aleph-breadcrumbs-background !important;
+    margin: 2px 0;
+
+    &:hover {
+      background-color: $light-gray2 !important;
+    }
+
+    .Count {
+      padding: 0 5px 0 8px;
+      border: none;
+      background-color: none !important;
+    }
+  }
+}
