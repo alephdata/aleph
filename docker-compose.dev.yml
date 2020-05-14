@@ -33,7 +33,7 @@ services:
         - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:39e678f717b1504984f52a116a9e4fe2af206d31
+    image: alephdata/convert-document:010399046b06f07e8586fc5f2f432881ad1cddcb
     restart: on-failure
     tmpfs:
       - /tmp
