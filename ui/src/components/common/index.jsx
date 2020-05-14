@@ -1,25 +1,19 @@
-import { Date, FileSize, URL } from '@alephdata/vislib'
-
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Count from './Count';
-import Country from './Country';
 import csvContextLoader from './csvContextLoader';
-import Numeric from './Numeric';
 import Diagram from './Diagram';
 import DualPane from './DualPane';
 import Entity from './Entity';
 import Facet from './Facet';
 import FileImport from './FileImport';
-import Language from './Language';
 import Mention from './Mention';
 import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
-import SchemaSelect from './SchemaSelect';
 import Suggest from './Suggest';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
@@ -32,7 +26,6 @@ import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
 import SortingBar from './SortingBar';
 import Summary from './Summary';
-import Topic from './Topic';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
 
@@ -43,21 +36,15 @@ export {
   csvContextLoader,
   CheckboxList,
   Collection,
-  Country,
-  Numeric,
-  Date,
   Diagram,
   DualPane,
   Entity,
   Facet,
   FileImport,
-  FileSize,
-  Language,
   Mention,
   Property,
   Role,
   Schema,
-  SchemaSelect,
   Suggest,
   SectionLoading,
   TextLoading,
@@ -67,8 +54,6 @@ export {
   Summary,
   Count,
   Tag,
-  Topic,
-  URL,
   SearchBox,
   SearchListings,
   Skeleton,
@@ -76,3 +61,5 @@ export {
   QueryText,
   ResultCount,
 };
+
+export * from './types';
