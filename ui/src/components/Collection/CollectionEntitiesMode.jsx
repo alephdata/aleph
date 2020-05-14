@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import React from 'react';
-import { MenuDivider, Tabs, Tab } from '@blueprintjs/core';
+import { Button, MenuDivider, Tabs, Tab } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { Count, Schema, SchemaSelect } from 'src/components/common';
+import { Count, Schema } from 'src/components/common';
 import EntityListManager from 'src/components/Entity/EntityListManager';
 import { queryCollectionEntities } from 'src/queries';
 import { selectModel } from 'src/selectors';
@@ -83,11 +83,15 @@ class CollectionEntitiesMode extends React.PureComponent {
             disabled
             className="CollectionEntitiesMode__tab schema-add-tab"
             title={
-              <SchemaSelect
-                placeholder={intl.formatMessage(messages.addSchemaPlaceholder)}
+              <Schema.Select
                 onSelect={this.handleTabChange}
                 optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
-              />
+              >
+                <Button
+                  icon="plus"
+                  text={intl.formatMessage(messages.addSchemaPlaceholder)}
+                />
+              </Schema.Select>
             }
           />
         )}
