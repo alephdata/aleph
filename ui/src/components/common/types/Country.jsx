@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Country as VLCountry, CountrySelect } from '@alephdata/vislib';
 import { selectLocale, selectModel } from 'src/selectors';
