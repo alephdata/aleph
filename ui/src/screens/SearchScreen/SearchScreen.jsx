@@ -53,7 +53,7 @@ export class SearchScreen extends React.Component {
     };
 
     this.updateQuery = this.updateQuery.bind(this);
-    this.toggleFacets = this.toggleFacets.bind(this);    
+    this.toggleFacets = this.toggleFacets.bind(this);
     this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);

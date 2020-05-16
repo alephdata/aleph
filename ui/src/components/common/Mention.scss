@@ -1,10 +1,6 @@
 @import "src/app/variables.scss";
 
-span.no-value {
-  color: $aleph-greyed-text;
-}
-
-.ValueLink {
+.Mention {
   text-decoration: none !important;
 
   .bp3-tag {
@@ -18,6 +14,7 @@ span.no-value {
     .Count {
       padding: 0 5px 0 8px;
       border: none;
+      background-color: none !important;
     }
   }
 }

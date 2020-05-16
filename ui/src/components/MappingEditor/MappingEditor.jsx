@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import { Button } from '@blueprintjs/core';
+
 import { selectModel } from 'src/selectors';
+import { Schema } from 'src/components/common';
 import MappingList from 'src/components/MappingEditor/MappingList';
 import MappingKeyAssign from 'src/components/MappingEditor/MappingKeyAssign';
 import MappingManageMenu from 'src/components/MappingEditor/MappingManageMenu';
 import MappingPropertyAssign from 'src/components/MappingEditor/MappingPropertyAssign';
-import SchemaSelect from 'src/components/common/SchemaSelect';
 import MappingSplitSection from 'src/components/MappingEditor/MappingSplitSection';
 import MappingVerify from 'src/components/MappingEditor/MappingVerify';
 
@@ -111,11 +113,15 @@ export class MappingEditor extends Component {
               mappings={mappings}
               sectionContentsRenderer={((subitems, type) => (
                 <>
-                  <SchemaSelect
-                    placeholder={intl.formatMessage(messages[`${type}_new`])}
+                  <Schema.Select
                     optionsFilter={schema => (type === 'thing' ? schema.isThing() : !schema.isThing())}
                     onSelect={this.onMappingAdd}
-                  />
+                  >
+                    <Button
+                      icon="plus"
+                      text={intl.formatMessage(messages[`${type}_new`])}
+                    />
+                  </Schema.Select>
                   <MappingKeyAssign
                     columnLabels={csvHeader}
                     items={subitems}

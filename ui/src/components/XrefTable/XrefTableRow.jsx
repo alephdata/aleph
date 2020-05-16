@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedNumber } from 'react-intl';
-import Property from 'src/components/Property';
 import { Button } from '@blueprintjs/core';
 import c from 'classnames';
 
 import {
-  Collection, Entity, Skeleton,
+  Collection, Entity, Property, Skeleton,
 } from 'src/components/common';
 import XrefDecisionButtons from 'src/components/XrefTable/XrefDecisionButtons';
 
@@ -98,7 +97,7 @@ class XrefTableRow extends Component {
         </td>
         <td className="collection">
           <Collection.Link preview collection={xref.match_collection} icon />
-          
+
         </td>
       </tr>
     );
