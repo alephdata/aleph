@@ -75,14 +75,6 @@ jobs:
         ALEPH_TAG=${GITHUB_SHA} docker-compose pull --quiet --parallel elasticsearch convert-document ingest-file worker
         make ALEPH_TAG=${GITHUB_SHA} services
         sleep 10
-    - name: Free up some space
-      run: |
-        sudo apt-get remove -y 'php.*'
-        sudo apt-get remove -y '^dotnet-.*'
-        sudo apt-get remove -y azure-cli google-cloud-sdk hhvm google-chrome-stable firefox powershell mono-devel
-        sudo apt-get autoremove -y
-        sudo apt-get clean
-        rm -rf /usr/share/dotnet/
     - name: Run ingest tests
       run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
     - name: Run aleph tests
