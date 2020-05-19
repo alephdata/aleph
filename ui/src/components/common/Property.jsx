@@ -1,3 +1,4 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import { Property as VLProperty } from '@alephdata/vislib';
 import { Entity } from 'src/components/common';
