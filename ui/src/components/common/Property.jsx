@@ -1,16 +1,25 @@
 import { connect } from 'react-redux';
 import { Property as VLProperty } from '@alephdata/vislib';
+import { Entity } from 'src/components/common';
 
 import { selectLocale } from 'src/selectors';
 
 import './Property.scss';
 
+const getEntityLink = entity => <Entity.Link entity={entity} icon />;
+
 const mapStateToProps = state => ({
   locale: selectLocale(state),
 });
 
-class Property extends VLProperty {
-  static Reverse = connect(mapStateToProps)(super.Reverse);
+class Property {
+  static Name = VLProperty.Name;
+
+  static Reverse = connect(mapStateToProps)(VLProperty.Reverse);
+
+  static Value = (props) => <VLProperty.Value {...props} getEntityLink={getEntityLink} />
+
+  static Values = (props) => <VLProperty.Values {...props} getEntityLink={getEntityLink} />
 }
 
 export default Property;
