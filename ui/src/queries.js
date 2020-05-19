@@ -19,7 +19,7 @@ export function queryCollectionEntities(location, collectionId, schema) {
     'filter:collection_id': collectionId,
     'filter:schema': schema,
   };
-  return Query.fromLocation('entities', location, context, 'entities');
+  return Query.fromLocation('entities', location, context, 'entities').limit(200);;
 }
 
 export function queryCollectionDiagrams(location, collectionId) {
