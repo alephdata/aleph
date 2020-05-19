@@ -173,7 +173,7 @@ def get_collection_things(collection_id):
     things = {}
     for schema, count in schemata.get('values', {}).items():
         schema = model.get(schema)
-        if schema.is_a(Entity.THING):
+        if schema is not None and schema.is_a(Entity.THING):
             things[schema.name] = count
     return things
 
