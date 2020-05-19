@@ -135,7 +135,7 @@ const mapStateToProps = (state, ownProps) => {
     activeSchema: model.getSchema(activeType),
     schemaViews: schemaViews,
     selectableSchemata: selectableSchemata,
-    query: queryCollectionEntities(location, collection.id, activeType)
+    query: queryCollectionEntities(location, collection.id, activeType),
   };
 };
 
