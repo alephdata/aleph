@@ -106,7 +106,7 @@ const mapStateToProps = (state, ownProps) => {
   const hashType = hashQuery.type;
   const model = selectModel(state);
   const schemata = model.getSchemata()
-    .filter((schema) => !schema.isDocument() && !schema.isA('Record'))
+    .filter((schema) => !schema.isDocument() && !schema.isA('Page'))
     .map((schema) => schema.name);
   const schemaCounts = collection?.statistics?.schema?.values || [];
   const matching = [];
