@@ -15,6 +15,7 @@ const csvContextLoader = (Viewer) => (
 
       this.processCsvResults = this.processCsvResults.bind(this);
       this.fetchMoreRows = this.fetchMoreRows.bind(this);
+      this.getRowCount = this.getRowCount.bind(this);
     }
 
     componentDidMount() {
@@ -53,7 +54,7 @@ const csvContextLoader = (Viewer) => (
     fetchMoreRows() {
       const { document } = this.props;
       const { requestedRow } = this.state;
-      const rowCount = parseInt(document.getFirst('rowCount'), 10);
+      const rowCount = this.getRowCount();
 
       // Max row count should not exceed the number of rows in the csv file
       const nextRow = Math.min(rowCount, requestedRow + 100);
@@ -62,6 +63,14 @@ const csvContextLoader = (Viewer) => (
           requestedRow: Math.min(rowCount, previousState.requestedRow + 100),
         }));
       }
+    }
+
+    getRowCount() {
+      const { document } = this.props;
+      const { requestedRow, rows } = this.state;
+
+      const rowCountRaw = document.getFirst('rowCount');
+      return rowCountRaw ? parseInt(rowCountRaw, 10) : rows.length;
     }
 
     render() {
@@ -83,7 +92,7 @@ const csvContextLoader = (Viewer) => (
           rows={rows}
           columns={columns}
           requestedRow={requestedRow}
-          totalRowCount={parseInt(document.getFirst('rowCount'), 10)}
+          totalRowCount={this.getRowCount}
           fetchMoreRows={this.fetchMoreRows}
           {...this.props}
         />
