@@ -92,7 +92,7 @@ const csvContextLoader = (Viewer) => (
           rows={rows}
           columns={columns}
           requestedRow={requestedRow}
-          totalRowCount={this.getRowCount}
+          totalRowCount={this.getRowCount()}
           fetchMoreRows={this.fetchMoreRows}
           {...this.props}
         />
