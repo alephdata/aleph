@@ -1,5 +1,5 @@
 from servicelayer import env
-from balkhash import settings as bls
+from ftmstore import settings as sts
 
 TESTING = False
 
@@ -26,4 +26,4 @@ NER_MODELS = set(env.to_list('INGESTORS_NER_MODELS', ['eng']))
 NER_DEFAULT_MODEL = 'xx'
 
 # Use the environment variable set in aleph.env
-bls.DATABASE_URI = env.get('ALEPH_DATABASE_URI', bls.DATABASE_URI)
+sts.DATABASE_URI = env.get('ALEPH_DATABASE_URI', sts.DATABASE_URI)
