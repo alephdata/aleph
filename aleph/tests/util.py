@@ -6,6 +6,7 @@ from flask import json
 from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
+from ftmstore import settings as ftms
 from servicelayer import settings as sls
 from followthemoney import model
 from followthemoney.cli.util import read_entity
@@ -76,6 +77,7 @@ class TestCase(unittest.TestCase):
         # have actually been evaluated.
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
+        ftms.DATABASE_URI = 'sqlite://'
         settings.APP_NAME = APP_NAME
         settings.TESTING = True
         settings.DEBUG = True

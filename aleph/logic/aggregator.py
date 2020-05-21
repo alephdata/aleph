@@ -1,6 +1,6 @@
 import logging
-import balkhash
 from followthemoney.namespace import Namespace
+from ftmstore import Dataset
 
 log = logging.getLogger(__name__)
 
@@ -9,9 +9,9 @@ def get_aggregator_name(collection):
     return 'collection_%s' % collection.id
 
 
-def get_aggregator(collection):
-    """Connect to a balkhash dataset."""
-    return balkhash.init(get_aggregator_name(collection))
+def get_aggregator(collection, origin='aleph'):
+    """Connect to a followthemoney dataset."""
+    return Dataset(get_aggregator_name(collection), origin=origin)
 
 
 def delete_aggregator_entity(collection, entity_id):
@@ -25,10 +25,10 @@ def delete_aggregator_entity(collection, entity_id):
         aggregator.close()
 
 
-def drop_aggregator(collection):
-    """Clear all the documents from the balkhash dataset."""
+def drop_aggregator(collection, origin=None):
+    """Clear all the documents from the dataset."""
     aggregator = get_aggregator(collection)
     try:
-        aggregator.delete()
+        aggregator.delete(origin=origin)
     finally:
         aggregator.close()

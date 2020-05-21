@@ -59,7 +59,7 @@ def ingest_entity(collection, proxy, job_id=None, sync=False):
     from aleph.logic.aggregator import get_aggregator_name
     context = {
         'languages': collection.languages,
-        'balkhash_name': get_aggregator_name(collection),
+        'ftmstore_name': get_aggregator_name(collection),
         'pipeline': [OP_ANALYZE, OP_INDEX],
         'sync': sync
     }
