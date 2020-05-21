@@ -137,7 +137,7 @@ const mapStateToProps = (state, ownProps) => {
     if (schema.isDocument()) {
       documentTabCount += schemata[key];
     }
-    if (!(schema.isDocument() || schema.isA('Record'))) {
+    if (!(schema.isDocument() || schema.isA('Page'))) {
       entitiesTabCount += schemata[key];
     }
   }

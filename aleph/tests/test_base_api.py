@@ -39,4 +39,4 @@ class BaseApiTestCase(TestCase):
         res = self.client.get('/api/2/statistics', headers=headers)
         assert res.status_code == 200, res
         assert res.json['collections'] == 2, res.json
-        assert res.json['things'] == 10, res.json
+        assert res.json['things'] == 21, res.json
