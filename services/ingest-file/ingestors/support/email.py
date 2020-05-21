@@ -3,7 +3,7 @@ import types
 import logging
 from banal import ensure_list
 from normality import stringify
-from balkhash.utils import safe_fragment
+from ftmstore.utils import safe_fragment
 from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename, ascii_text
 from followthemoney.types import registry
