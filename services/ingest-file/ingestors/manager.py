@@ -1,13 +1,12 @@
 import magic
 import logging
-import balkhash
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
 from followthemoney import model
 from banal import ensure_list
 from normality import stringify
 from pantomime import normalize_mimetype
-from balkhash.utils import safe_fragment
+from ftmstore.utils import safe_fragment
 from servicelayer.archive import init_archive
 from servicelayer.archive.util import ensure_path
 from servicelayer.extensions import get_extensions
@@ -32,7 +31,8 @@ class Manager(object):
 
     MAGIC = magic.Magic(mime=True)
 
-    def __init__(self, stage, context):
+    def __init__(self, dataset, stage, context):
+        self.dataset = dataset
         self.stage = stage
         self.context = context
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
@@ -45,18 +45,6 @@ class Manager(object):
         if not hasattr(settings, '_archive'):
             settings._archive = init_archive()
         return settings._archive
-
-    @property
-    def dataset(self):
-        if self._dataset is None:
-            self._dataset = self.get_dataset(self.stage, self.context)
-        return self._dataset
-
-    @classmethod
-    def get_dataset(cls, stage, context):
-        dataset = stage.job.dataset.name
-        name = context.get('balkhash_name', dataset)
-        return balkhash.init(name)
 
     @property
     def writer(self):
