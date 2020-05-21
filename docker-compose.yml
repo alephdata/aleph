@@ -26,12 +26,11 @@ services:
     - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:010399046b06f07e8586fc5f2f432881ad1cddcb
+    image: alephdata/convert-document:4d34ee4e580435ff39257b151233046994d4182b
     restart: on-failure
+    user: app
     tmpfs:
     - /tmp:mode=777
-    - /root/.config
-    - /home/app:uid=1000,gid=1000
 
   ingest-file:
     image: alephdata/ingest-file:${ALEPH_TAG:-3.7.3}
