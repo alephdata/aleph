@@ -265,15 +265,14 @@ def bulk(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
-    job_id = get_session_id()
-
     # This will disable checksum security measures in order to allow bulk
     # loading of document data.
     unsafe = get_flag('unsafe', default=False)
     unsafe = unsafe and request.authz.is_admin
 
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, job_id=job_id, unsafe=unsafe)
+    bulk_write(collection, entities, unsafe=unsafe,
+               role_id=request.authz.id)
     collection.touch()
     db.session.commit()
     return ('', 204)

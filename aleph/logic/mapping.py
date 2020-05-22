@@ -60,6 +60,7 @@ def load_mapping(stage, collection, mapping_id):
         for idx, record in enumerate(mapper.source.records, 1):
             for entity in mapper.map(record).values():
                 entity.context = mapping.get_proxy_context()
+                entity.context['mutable'] = collection.casefile
                 if entity.schema.is_a('Thing'):
                     entity.add('proof', mapping.table_id)
                 entity = collection.ns.apply(entity)

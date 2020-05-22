@@ -184,9 +184,9 @@ def load_entities(foreign_id, infile, unsafe=False):
                          foreign_id, idx, infile.name)
             yield json.loads(line)
 
-    job_id = Job.random_id()
-    log.info("Loading [%s]: %s", job_id, foreign_id)
-    bulk_write(collection, read_entities(), job_id=job_id, unsafe=unsafe)
+    log.info("Loading: %s", foreign_id)
+    role = Role.load_cli_user()
+    bulk_write(collection, read_entities(), unsafe=unsafe, role_id=role.id)
     update_collection(collection)
 
 
@@ -198,7 +198,6 @@ def dump_entities(foreign_id, outfile):
     collection = get_collection(foreign_id)
     for entity in iter_proxies(collection_id=collection.id,
                                excludes=['text']):
-        entity.context = {}
         write_object(outfile, entity)
 
 

@@ -40,7 +40,6 @@ class Mapping(db.Model, SoftDeleteModel):
     def get_proxy_context(self):
         """Metadata to be added to each generated entity."""
         return {
-            'mapping_id': self.id,
             'created_at': iso_text(self.created_at),
             'updated_at': iso_text(self.updated_at),
             'role_id': self.role_id,

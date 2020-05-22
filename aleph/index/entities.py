@@ -1,13 +1,15 @@
 import logging
 import fingerprints
+from datetime import datetime
 from pprint import pprint, pformat  # noqa
-from banal import ensure_list
+from banal import ensure_list, first
 from followthemoney import model
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es, cache
 from aleph.model import Entity
+from aleph.model.common import iso_text
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, bulk_actions
@@ -133,12 +135,12 @@ def index_entity(entity, sync=False):
 
 def index_proxy(collection, proxy, sync=False):
     delete_entity(proxy.id, exclude=proxy.schema, sync=False)
-    return index_bulk(collection, [proxy], {}, sync=sync)
+    return index_bulk(collection, [proxy], sync=sync)
 
 
-def index_bulk(collection, entities, extra, sync=False):
+def index_bulk(collection, entities, sync=False):
     """Index a set of entities."""
-    entities = (format_proxy(p, collection, extra) for p in entities)
+    entities = (format_proxy(p, collection) for p in entities)
     bulk_actions(entities, sync=sync)
 
 
@@ -147,15 +149,10 @@ def _numeric_values(type_, values):
     return [v for v in values if v is not None]
 
 
-def format_proxy(proxy, collection, extra):
+def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
-    proxy.context = {}
     proxy = collection.ns.apply(proxy)
-    # Pull `indexUpdatedAt` before constructing `data`, so that it doesn't
-    # creep into `data['dates']` and mess up date sorting afterwards
-    updated_at = proxy.pop('indexUpdatedAt', quiet=True)
     data = proxy.to_full_dict()
-    data['collection_id'] = collection.id
     data['schemata'] = list(proxy.schema.names)
 
     names = ensure_list(data.get('names'))
@@ -170,10 +167,6 @@ def format_proxy(proxy, collection, extra):
     text.extend(fps)
     data['text'] = text
 
-    data['updated_at'] = collection.updated_at
-    for value in updated_at:
-        data['updated_at'] = value
-
     # integer casting
     numeric = {}
     for prop, values in properties.items():
@@ -184,9 +177,15 @@ def format_proxy(proxy, collection, extra):
     numeric['dates'] = _numeric_values(registry.date, data.get('dates'))
     data['numeric'] = numeric
 
-    # add possible overrides
-    data.update(extra)
-
+    # Context data - from aleph system, not followthemoney.
+    now = iso_text(datetime.utcnow())
+    data['created_at'] = min(ensure_list(data.get('created_at')), default=now)
+    data['updated_at'] = min(ensure_list(data.get('updated_at')), default=now)
+    # FIXME: Can there ever really be multiple role_ids?
+    data['role_id'] = first(data.get('role_id'))
+    data['mutable'] = max(ensure_list(data.get('mutable')), default=False)
+    data['origin'] = ensure_list(data.get('origin'))
+    data['collection_id'] = collection.id
     # log.info("%s", pformat(data))
     entity_id = data.pop('id')
     return {

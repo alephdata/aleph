@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from banal import is_mapping, ensure_list
 from followthemoney import model
 from followthemoney.helpers import name_entity
@@ -9,6 +10,7 @@ from aleph.index.entities import index_bulk
 from aleph.logic.entities import refresh_entity
 from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
+from aleph.model.common import iso_text
 
 log = logging.getLogger(__name__)
 
@@ -42,14 +44,15 @@ def _fetch_entities(stage, collection, entity_ids, sync, batch=100):
 def index_aggregate(stage, collection, sync=False, entity_ids=None):
     """Project the contents of the collections aggregator into the index."""
     entities = _fetch_entities(stage, collection, entity_ids, sync)
-    extra = {'job_id': stage.job.id}
-    index_bulk(collection, entities, extra, sync=sync)
+    index_bulk(collection, entities, sync=sync)
     refresh_collection(collection.id, sync=sync)
 
 
-def bulk_write(collection, entities, job_id=None, unsafe=False):
+def bulk_write(collection, entities, unsafe=False, role_id=None):
     """Write a set of entities - given as dicts - to the index."""
     # This is called mainly by the /api/2/collections/X/_bulk API.
+    now = iso_text(datetime.utcnow())
+
     def _generate():
         for data in entities:
             if not is_mapping(data):
@@ -59,7 +62,13 @@ def bulk_write(collection, entities, job_id=None, unsafe=False):
                 raise InvalidData("No ID for entity", errors=entity.to_dict())
             if not unsafe:
                 entity = remove_checksums(entity)
+            entity.context = {
+                'role_id': role_id,
+                'origin': 'bulk',
+                'created_at': now,
+                'updated_at': now
+            }
             yield _process_entity(entity)
 
-    index_bulk(collection, _generate(), {'job_id': job_id})
+    index_bulk(collection, _generate())
     refresh_collection(collection.id)
