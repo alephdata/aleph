@@ -170,9 +170,10 @@ class Document(db.Model, DatedModel):
             'mutable': True
         })
         meta = dict(self.meta)
-        headers = meta.pop('headers', {})
+        headers = meta.pop('headers', None)
         if is_mapping(headers):
             headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+            proxy.set('headers', registry.json.pack(headers), quiet=True)
         else:
             headers = {}
         proxy.set('contentHash', self.content_hash)
@@ -193,7 +194,6 @@ class Document(db.Model, DatedModel):
         proxy.set('language', meta.get('languages'))
         proxy.set('country', meta.get('countries'))
         proxy.set('keywords', meta.get('keywords'))
-        proxy.set('headers', registry.json.pack(headers), quiet=True)
         proxy.set('authoredAt', meta.get('authored_at'))
         proxy.set('modifiedAt', meta.get('modified_at'))
         proxy.set('publishedAt', meta.get('published_at'))
