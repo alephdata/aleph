@@ -186,10 +186,10 @@ def delete_collection(collection_id, sync=False):
               ignore=[404])
 
 
-def delete_entities(collection_id, mapping_id=None, schema=None, sync=False):
+def delete_entities(collection_id, origin=None, schema=None, sync=False):
     """Delete entities from a collection."""
     filters = [{'term': {'collection_id': collection_id}}]
-    if mapping_id is not None:
-        filters.append({'term': {'mapping_id': mapping_id}})
+    if origin is not None:
+        filters.append({'term': {'origin': origin}})
     query = {'bool': {'filter': filters}}
     query_delete(entities_read_index(schema), query, sync=sync)

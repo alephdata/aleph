@@ -22,7 +22,7 @@ def _process_entity(entity, sync=False):
     return entity
 
 
-def _fetch_entities(stage, collection, entity_ids=None, batch=100):
+def _fetch_entities(stage, collection, entity_ids, sync, batch=100):
     aggregator = get_aggregator(collection)
     if entity_ids is not None:
         entity_ids = ensure_list(entity_ids)
@@ -34,16 +34,15 @@ def _fetch_entities(stage, collection, entity_ids=None, batch=100):
         # FIXME: this doesn't retain mapping_id properly.
         stage.mark_done(len(tasks))
 
-    yield from aggregator.iterate(entity_id=entity_ids)
+    for entity in aggregator.iterate(entity_id=entity_ids):
+        yield _process_entity(entity, sync=sync)
     aggregator.close()
 
 
-def index_aggregate(stage, collection, sync=False, entity_ids=None,
-                    mapping_id=None):
+def index_aggregate(stage, collection, sync=False, entity_ids=None):
     """Project the contents of the collections aggregator into the index."""
-    entities = _fetch_entities(stage, collection, entity_ids=entity_ids)
-    entities = (_process_entity(e, sync=sync) for e in entities)
-    extra = {'job_id': stage.job.id, 'mapping_id': mapping_id}
+    entities = _fetch_entities(stage, collection, entity_ids, sync)
+    extra = {'job_id': stage.job.id}
     index_bulk(collection, entities, extra, sync=sync)
     refresh_collection(collection.id, sync=sync)
 

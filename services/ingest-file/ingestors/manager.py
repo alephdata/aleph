@@ -66,9 +66,12 @@ class Manager(object):
             child.add('parent', parent.id)
             child.add('ancestors', parent.get('ancestors'))
             child.add('ancestors', parent.id)
-            # Avoid re-ingest re-notification:
-            prop = 'indexUpdatedAt'
-            child.add(prop, parent.get(prop), quiet=True)
+            # Aleph-specific context data:
+            child.context = {
+                'created_at': parent.context.get('created_at'),
+                'updated_at': parent.context.get('updated_at'),
+                'role_id': parent.context.get('role_id'),
+            }
 
     def emit_entity(self, entity, fragment=None):
         # pprint(entity.to_dict())

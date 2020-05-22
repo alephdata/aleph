@@ -11,7 +11,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db, cache
 from aleph.model.collection import Collection
-from aleph.model.common import DatedModel
+from aleph.model.common import DatedModel, iso_text
 
 log = logging.getLogger(__name__)
 
@@ -163,7 +163,11 @@ class Document(db.Model, DatedModel):
         proxy = model.get_proxy({
             'id': str(self.id),
             'schema': self.model,
-            'properties': {}
+            'properties': {},
+            'created_at': iso_text(self.created_at),
+            'updated_at': iso_text(self.updated_at),
+            'role_id': self.uploader_id,
+            'mutable': True
         })
         meta = dict(self.meta)
         headers = meta.pop('headers', {})
@@ -194,7 +198,6 @@ class Document(db.Model, DatedModel):
         proxy.set('modifiedAt', meta.get('modified_at'))
         proxy.set('publishedAt', meta.get('published_at'))
         proxy.set('retrievedAt', meta.get('retrieved_at'))
-        proxy.set('indexUpdatedAt', self.created_at)
         proxy.set('sourceUrl', meta.get('source_url'))
         return proxy
 

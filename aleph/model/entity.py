@@ -9,7 +9,7 @@ from followthemoney.exc import InvalidData
 from aleph.core import db
 from aleph.model.collection import Collection
 from aleph.model.common import SoftDeleteModel
-from aleph.model.common import make_textid, ENTITY_ID_LEN
+from aleph.model.common import iso_text, make_textid, ENTITY_ID_LEN
 
 log = logging.getLogger(__name__)
 
@@ -58,13 +58,15 @@ class Entity(db.Model, SoftDeleteModel):
         db.session.add(self)
 
     def to_proxy(self):
-        proxy = model.get_proxy({
+        return model.get_proxy({
             'id': self.id,
             'schema': self.schema,
-            'properties': self.data
+            'properties': self.data,
+            'created_at': iso_text(self.created_at),
+            'updated_at': iso_text(self.updated_at),
+            # 'role_id': self.uploader_id,
+            'mutable': True
         })
-        proxy.set('indexUpdatedAt', self.updated_at, quiet=True)
-        return proxy
 
     @classmethod
     def create(cls, data, collection, validate=True):
