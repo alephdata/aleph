@@ -34,25 +34,18 @@ class Manager(object):
 
     def __init__(self, dataset, stage, context):
         self.dataset = dataset
+        self.writer = dataset.bulk()
         self.stage = stage
         self.context = context
         self.ns = Namespace(self.context.get('namespace'))
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self.emitted = set()
-        self._writer = None
-        self._dataset = None
 
     @property
     def archive(self):
         if not hasattr(settings, '_archive'):
             settings._archive = init_archive()
         return settings._archive
-
-    @property
-    def writer(self):
-        if self._writer is None:
-            self._writer = self.dataset.bulk()
-        return self._writer
 
     def make_entity(self, schema, parent=None):
         schema = model.get(schema)
@@ -161,5 +154,4 @@ class Manager(object):
 
     def close(self):
         self.writer.flush()
-        self.dataset.close()
         remove_directory(self.work_path)

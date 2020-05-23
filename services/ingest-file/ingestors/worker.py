@@ -54,11 +54,12 @@ class IngestWorker(Worker):
     def handle(self, task):
         name = task.context.get('ftmstore', task.job.dataset.name)
         dataset = get_dataset(name, task.stage.stage)
-        if task.stage.stage == OP_INGEST:
-            entity_ids = self._ingest(dataset, task)
-            self.dispatch_next(task, entity_ids)
-        elif task.stage.stage == OP_ANALYZE:
-            entity_ids = self._analyze(dataset, task)
-            self.dispatch_next(task, entity_ids)
-        else:
-            log.error('Unknown task: %r', task)
+        try:
+            if task.stage.stage == OP_INGEST:
+                entity_ids = self._ingest(dataset, task)
+                self.dispatch_next(task, entity_ids)
+            elif task.stage.stage == OP_ANALYZE:
+                entity_ids = self._analyze(dataset, task)
+                self.dispatch_next(task, entity_ids)
+        finally:
+            dataset.close()
