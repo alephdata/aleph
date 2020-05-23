@@ -1,5 +1,6 @@
 import logging
 import fingerprints
+from datetime import datetime
 from pprint import pprint, pformat  # noqa
 from banal import ensure_list, first
 from followthemoney import model
@@ -8,6 +9,7 @@ from elasticsearch.helpers import scan
 
 from aleph.core import es, cache
 from aleph.model import Entity
+from aleph.model.common import iso_text
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, bulk_actions
@@ -176,8 +178,9 @@ def format_proxy(proxy, collection):
     data['numeric'] = numeric
 
     # Context data - from aleph system, not followthemoney.
-    data['created_at'] = min(ensure_list(data.get('created_at')))
-    data['updated_at'] = min(ensure_list(data.get('updated_at')))
+    now = iso_text(datetime.utcnow())
+    data['created_at'] = min(ensure_list(data.get('created_at')), default=now)
+    data['updated_at'] = min(ensure_list(data.get('updated_at')), default=now)
     # FIXME: Can there ever really be multiple role_ids?
     data['role_id'] = first(data.get('role_id'))
     data['mutable'] = max(ensure_list(data.get('mutable')), default=False)
