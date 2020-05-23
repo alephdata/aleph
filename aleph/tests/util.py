@@ -33,13 +33,16 @@ DB_URI = settings.DATABASE_URI + '_test'
 
 
 def read_entities(file_name):
-    now = datetime.utcnow()
+    now = datetime.utcnow().isoformat()
     with open(file_name) as fh:
         while True:
             entity = read_entity(fh)
             if entity is None:
                 break
-            entity.set('indexUpdatedAt', now, quiet=True)
+            entity.context = {
+                'created_at': now,
+                'updated_at': now
+            }
             yield entity
 
 
