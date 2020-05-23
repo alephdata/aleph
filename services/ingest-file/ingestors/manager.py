@@ -11,6 +11,7 @@ from servicelayer.archive import init_archive
 from servicelayer.archive.util import ensure_path
 from servicelayer.extensions import get_extensions
 from followthemoney.helpers import entity_filename
+from followthemoney.namespace import Namespace
 
 from ingestors.directory import DirectoryIngestor
 from ingestors.exc import ProcessingException
@@ -35,6 +36,7 @@ class Manager(object):
         self.dataset = dataset
         self.stage = stage
         self.context = context
+        self.ns = Namespace(self.context.get('namespace'))
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self.emitted = set()
         self._writer = None
@@ -74,6 +76,7 @@ class Manager(object):
             }
 
     def emit_entity(self, entity, fragment=None):
+        entity = self.ns.apply(entity)
         # pprint(entity.to_dict())
         self.writer.put(entity.to_dict(), fragment)
         self.emitted.add(entity.id)

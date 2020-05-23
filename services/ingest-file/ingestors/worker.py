@@ -52,7 +52,7 @@ class IngestWorker(Worker):
         return entity_ids
 
     def handle(self, task):
-        name = task.context.get('ftmstore_name', task.job.dataset.name)
+        name = task.context.get('ftmstore', task.job.dataset.name)
         dataset = get_dataset(name, task.stage.stage)
         if task.stage.stage == OP_INGEST:
             entity_ids = self._ingest(dataset, task)
