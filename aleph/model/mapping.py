@@ -96,6 +96,12 @@ class Mapping(db.Model, SoftDeleteModel):
                   synchronize_session=False)
 
     @classmethod
+    def delete_by_table(cls, entity_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.table_id == entity_id)
+        pq.delete(synchronize_session=False)
+
+    @classmethod
     def create(cls, query, table_id, collection, role_id):
         mapping = cls()
         mapping.role_id = role_id
