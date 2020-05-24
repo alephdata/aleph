@@ -17,15 +17,13 @@ from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
-from aleph.queues import get_active_collection_status, get_stage
-from aleph.queues import OP_PROCESS, OP_XREF
+from aleph.queues import get_active_collection_status, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
 from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
-from aleph.logic.collections import reset_collection, delete_collection
-from aleph.logic.collections import upgrade_collections, process_collection
-from aleph.logic.collections import reindex_collection
+from aleph.logic.collections import delete_collection, reindex_collection
+from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import create_user, update_roles
@@ -104,29 +102,20 @@ def delete(foreign_id, keep_metadata=False):
 
 @cli.command()
 @click.argument('foreign_id')
-@click.option('--sync', is_flag=True, default=False)
-def reset(foreign_id, sync=False):
-    """Clear the search index and entity cache or a collection."""
-    collection = get_collection(foreign_id)
-    reset_collection(collection, sync=False)
-
-
-@cli.command()
-@click.argument('foreign_id')
-def reindex(foreign_id):
+@click.option('--flush', is_flag=True, default=False)
+def reindex(foreign_id, flush=False):
     """Index all the aggregator contents for a collection."""
     collection = get_collection(foreign_id)
-    reindex_collection(collection)
+    reindex_collection(collection, flush=flush)
 
 
 @cli.command()
 @click.argument('foreign_id')
-@click.option('--sync', is_flag=True, default=False)
-def process(foreign_id, sync=False):
+@click.option('--index', is_flag=True, default=False)
+def reingest(foreign_id, index=False):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
-    stage = get_stage(collection, OP_PROCESS)
-    process_collection(stage, collection, sync=sync)
+    reingest_collection(collection, index=index)
 
 
 @cli.command()

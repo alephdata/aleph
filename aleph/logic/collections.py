@@ -1,10 +1,11 @@
 import logging
 from datetime import datetime
+from servicelayer.jobs import Job
 
 from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
-from aleph.queues import queue_task, OP_INDEX, OP_ANALYZE, OP_INGEST
+from aleph.queues import OP_ANALYZE, OP_INGEST
 from aleph.model import Collection, Entity, Document, Diagram, Mapping
 from aleph.model import Permission, Events, Linkage
 from aleph.index import collections as index
@@ -72,65 +73,48 @@ def aggregate_model(collection, aggregator):
     for document in Document.by_collection(collection.id):
         proxy = document.to_proxy(ns=collection.ns)
         writer.put(proxy, fragment='db', origin=MODEL_ORIGIN)
-        yield proxy
     for entity in Entity.by_collection(collection.id):
         proxy = entity.to_proxy()
         aggregator.delete(entity_id=proxy.id)
         writer.put(proxy, fragment='db', origin=MODEL_ORIGIN)
-        yield proxy
     writer.flush()
 
 
-def aggregate_collection(collection, aggregator):
-    from aleph.logic.mapping import map_to_aggregator
-    for mapping in collection.mappings:
-        try:
-            for proxy in map_to_aggregator(collection, mapping, aggregator):
-                pass
-        except Exception as ex:
-            # More or less ignore broken models.
-            log.warn("Failed mapping [%s]: %s", mapping, ex)
-    for proxy in aggregate_model(collection, aggregator):
-        pass
-
-
-def reingest_collection(stage, collection, index=False):
+def reingest_collection(collection, job_id=None, index=False):
     """Trigger a re-ingest for all documents in the collection."""
+    job_id = job_id or Job.random_id()
     aggregator = get_aggregator(collection)
     aggregator.delete(origin=OP_ANALYZE)
     aggregator.delete(origin=OP_INGEST)
     aggregator.close()
     for document in Document.by_collection(collection.id):
-        proxy = document.to_proxy()
-        ingest_entity(collection, proxy, job_id=stage.job.id, index=index)
+        proxy = document.to_proxy(ns=collection.ns)
+        ingest_entity(collection, proxy, job_id=job_id, index=index)
 
 
-def reindex_collection(collection, sync=False, flush=True):
+def reindex_collection(collection, sync=False, flush=False):
     """Re-index all entities from the model, mappings and aggregator cache."""
-    # if flush:
-    #     index.delete_entities(collection.id, sync=True)
+    from aleph.logic.mapping import map_to_aggregator
+    if flush:
+        index.delete_entities(collection.id, sync=True)
     aggregator = get_aggregator(collection)
-    aggregate_collection(collection, aggregator)
+    for mapping in collection.mappings:
+        try:
+            map_to_aggregator(collection, mapping, aggregator)
+        except Exception as ex:
+            # More or less ignore broken models.
+            log.warn("Failed mapping [%s]: %s", mapping, ex)
+    aggregate_model(collection, aggregator)
     entities_index.index_bulk(collection, aggregator, sync=sync)
     aggregator.close()
-    refresh_collection(collection.id, sync=sync)
+    refresh_collection(collection.id, sync=True)
 
 
 def process_collection(stage, collection, ingest=True, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
-    aggregator = get_aggregator(collection)
-    for proxy in aggregate_model(collection, aggregator):
-        if ingest and proxy.schema.is_a(Document.SCHEMA):
-            ingest_entity(collection, proxy,
-                          job_id=stage.job.id,
-                          sync=sync)
-        else:
-            queue_task(collection, OP_INDEX,
-                       job_id=stage.job.id,
-                       payload={'entity_ids': [proxy.id]},
-                       context={'sync': sync})
-    aggregator.close()
+    if ingest:
+        reingest_collection(collection, stage.job.id, index=True)
 
 
 def reset_collection(collection, sync=False):
@@ -169,6 +153,5 @@ def upgrade_collections():
             delete_collection(collection, keep_metadata=True,
                               sync=True, reset_sync=True)
         else:
-            reindex_collection(collection)
-            # refresh_collection(collection.id, sync=True)
+            refresh_collection(collection.id, sync=True)
             compute_collection(collection, sync=True)
