@@ -1,30 +1,17 @@
 import logging
-from datetime import datetime
 from banal import is_mapping, ensure_list
 from followthemoney import model
-from followthemoney.helpers import name_entity
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
 
 from aleph.index.entities import index_bulk
-from aleph.logic.entities import refresh_entity
 from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
-from aleph.model.common import iso_text
 
 log = logging.getLogger(__name__)
 
 
-def _process_entity(entity, sync=False):
-    """Perform pre-index processing on an entity, includes running the
-    NLP pipeline."""
-    name_entity(entity)
-    refresh_entity(entity.id, sync=sync)
-    # log.debug("Index: %r", entity)
-    return entity
-
-
-def _fetch_entities(stage, collection, entity_ids, sync, batch=100):
+def _fetch_entities(stage, collection, entity_ids, batch=100):
     aggregator = get_aggregator(collection)
     if entity_ids is not None:
         entity_ids = ensure_list(entity_ids)
@@ -36,14 +23,13 @@ def _fetch_entities(stage, collection, entity_ids, sync, batch=100):
         # FIXME: this doesn't retain mapping_id properly.
         stage.mark_done(len(tasks))
 
-    for entity in aggregator.iterate(entity_id=entity_ids):
-        yield _process_entity(entity, sync=sync)
+    yield from aggregator.iterate(entity_id=entity_ids)
     aggregator.close()
 
 
 def index_aggregate(stage, collection, sync=False, entity_ids=None):
     """Project the contents of the collections aggregator into the index."""
-    entities = _fetch_entities(stage, collection, entity_ids, sync)
+    entities = _fetch_entities(stage, collection, entity_ids)
     index_bulk(collection, entities, sync=sync)
     refresh_collection(collection.id, sync=sync)
 
@@ -51,8 +37,6 @@ def index_aggregate(stage, collection, sync=False, entity_ids=None):
 def bulk_write(collection, entities, unsafe=False, role_id=None):
     """Write a set of entities - given as dicts - to the index."""
     # This is called mainly by the /api/2/collections/X/_bulk API.
-    now = iso_text(datetime.utcnow())
-
     def _generate():
         for data in entities:
             if not is_mapping(data):
@@ -65,10 +49,8 @@ def bulk_write(collection, entities, unsafe=False, role_id=None):
             entity.context = {
                 'role_id': role_id,
                 'origin': 'bulk',
-                'created_at': now,
-                'updated_at': now
             }
-            yield _process_entity(entity)
+            yield entity
 
     index_bulk(collection, _generate())
     refresh_collection(collection.id)
