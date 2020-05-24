@@ -28,7 +28,6 @@ def upsert_entity(data, collection, validate=True, sync=False):
         entity = Entity.by_id(entity_id,
                               collection=collection,
                               deleted=True)
-    # TODO: migrate softly from index.
     if entity is None:
         entity = Entity.create(data, collection, validate=validate)
     else:

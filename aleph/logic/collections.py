@@ -80,6 +80,19 @@ def aggregate_model(collection, aggregator):
     writer.flush()
 
 
+def index_aggregator(collection, aggregator, entity_ids=None, sync=False):
+    def _generate():
+        entities = aggregator.iterate(entity_id=entity_ids)
+        for idx, proxy in enumerate(entities):
+            if idx > 0 and idx % 1000 == 0:
+                log.debug("Index [%s]: %s...", collection.foreign_id, idx)
+            yield proxy
+
+    entities_index.index_bulk(collection, _generate(), sync=sync)
+    aggregator.close()
+    refresh_collection(collection.id, sync=sync)
+
+
 def reingest_collection(collection, job_id=None, index=False):
     """Trigger a re-ingest for all documents in the collection."""
     job_id = job_id or Job.random_id()
@@ -96,6 +109,7 @@ def reindex_collection(collection, sync=False, flush=False):
     """Re-index all entities from the model, mappings and aggregator cache."""
     from aleph.logic.mapping import map_to_aggregator
     if flush:
+        log.debug("Flushing: %s...", collection.foreign_id)
         index.delete_entities(collection.id, sync=True)
     aggregator = get_aggregator(collection)
     for mapping in collection.mappings:
@@ -104,10 +118,9 @@ def reindex_collection(collection, sync=False, flush=False):
         except Exception as ex:
             # More or less ignore broken models.
             log.warn("Failed mapping [%s]: %s", mapping, ex)
+    log.debug("Generating model aggregates: %s...", collection.foreign_id)
     aggregate_model(collection, aggregator)
-    entities_index.index_bulk(collection, aggregator, sync=sync)
-    aggregator.close()
-    refresh_collection(collection.id, sync=True)
+    index_aggregator(collection, aggregator, sync=sync)
 
 
 def process_collection(stage, collection, ingest=True, sync=False):
