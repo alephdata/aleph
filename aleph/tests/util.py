@@ -1,6 +1,7 @@
 import os
 import gc
 import shutil
+import logging
 import unittest
 from flask import json
 from pathlib import Path
@@ -14,17 +15,16 @@ from faker import Factory
 
 from aleph import settings
 from aleph.authz import Authz
-from aleph.queues import get_stage, OP_PROCESS
 from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
 from aleph.logic.aggregator import drop_aggregator, get_aggregator
-from aleph.logic.collections import update_collection, process_collection
-from aleph.logic.processing import index_aggregate
+from aleph.logic.collections import update_collection, reindex_collection
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
 from aleph.oauth import oauth
 
+log = logging.getLogger(__name__)
 APP_NAME = 'aleph-test'
 UI_URL = 'http://aleph.ui/'
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
@@ -35,8 +35,9 @@ def read_entities(file_name):
     with open(file_name) as fh:
         while True:
             entity = read_entity(fh)
-            if entity is not None:
-                yield entity
+            if entity is None:
+                break
+            yield entity
 
 
 def get_caption(entity):
@@ -73,7 +74,7 @@ class TestCase(unittest.TestCase):
         # have actually been evaluated.
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
-        ftms.DATABASE_URI = 'sqlite://'
+        ftms.DATABASE_URI = 'sqlite:///%s/ftm.store' % self.temp_dir
         settings.APP_NAME = APP_NAME
         settings.TESTING = True
         settings.DEBUG = True
@@ -178,18 +179,17 @@ class TestCase(unittest.TestCase):
         db.session.commit()
 
         drop_aggregator(self.public_coll)
-        stage = get_stage(self.public_coll, OP_PROCESS)
-        process_collection(stage, self.public_coll, ingest=False, sync=True)
+        # stage = get_stage(self.public_coll, OP_PROCESS)
+        reindex_collection(self.public_coll, sync=True)
 
+        drop_aggregator(self.private_coll)
         aggregator = get_aggregator(self.private_coll)
         aggregator.delete()
-        stage = get_stage(self.private_coll, OP_PROCESS)
+        # stage = get_stage(self.private_coll, OP_PROCESS)
         for sample in read_entities(self.get_fixture_path('samples.ijson')):
             aggregator.put(sample, fragment='sample')
-
-        index_aggregate(stage, self.private_coll, sync=True)
         aggregator.close()
-        process_collection(stage, self.private_coll, ingest=False, sync=True)
+        reindex_collection(self.private_coll, sync=True)
 
     def setUp(self):
         if not hasattr(settings, '_global_test_state'):

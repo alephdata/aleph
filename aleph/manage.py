@@ -9,7 +9,6 @@ from banal import ensure_list
 from normality import slugify
 from tabulate import tabulate
 from flask.cli import FlaskGroup
-from servicelayer.jobs import Job
 from followthemoney.cli.util import write_object
 
 from aleph.core import create_app, cache
@@ -26,7 +25,7 @@ from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
 from aleph.logic.collections import upgrade_collections, process_collection
-from aleph.logic.processing import index_aggregate
+from aleph.logic.collections import reindex_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import create_user, update_roles
@@ -117,9 +116,7 @@ def reset(foreign_id, sync=False):
 def reindex(foreign_id):
     """Index all the aggregator contents for a collection."""
     collection = get_collection(foreign_id)
-    stage = get_stage(collection, OP_PROCESS)
-    index_aggregate(stage, collection)
-    update_collection(collection)
+    reindex_collection(collection)
 
 
 @cli.command()

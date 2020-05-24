@@ -52,16 +52,17 @@ def cancel_queue(collection):
     Dataset(kv, collection.foreign_id).cancel()
 
 
-def ingest_entity(collection, proxy, job_id=None, sync=False):
+def ingest_entity(collection, proxy, job_id=None, index=True, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
+    from aleph.logic.aggregator import get_aggregator_name
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     stage = get_stage(collection, OP_INGEST, job_id=job_id)
-    from aleph.logic.aggregator import get_aggregator_name
+    pipeline = [OP_ANALYZE, OP_INDEX] if index else [OP_ANALYZE]
     context = {
         'languages': collection.languages,
         'ftmstore': get_aggregator_name(collection),
         'namespace': collection.foreign_id,
-        'pipeline': [OP_ANALYZE, OP_INDEX],
+        'pipeline': pipeline,
         'sync': sync
     }
     stage.queue(proxy.to_dict(), context)

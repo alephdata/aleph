@@ -4,15 +4,17 @@ from datetime import datetime
 from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
-from aleph.queues import queue_task, OP_INDEX
+from aleph.queues import queue_task, OP_INDEX, OP_ANALYZE, OP_INGEST
 from aleph.model import Collection, Entity, Document, Diagram, Mapping
 from aleph.model import Permission, Events, Linkage
 from aleph.index import collections as index
 from aleph.index import xref as xref_index
+from aleph.index import entities as entities_index
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.aggregator import get_aggregator, drop_aggregator
 
 log = logging.getLogger(__name__)
+MODEL_ORIGIN = 'model'
 
 
 def create_collection(data, authz, sync=False):
@@ -63,23 +65,67 @@ def compute_collection(collection, sync=False):
     index.index_collection(collection, sync=sync)
 
 
+def aggregate_model(collection, aggregator):
+    """Sync up the aggregator from the Aleph domain model."""
+    aggregator.delete(origin=MODEL_ORIGIN)
+    writer = aggregator.bulk()
+    for document in Document.by_collection(collection.id):
+        proxy = document.to_proxy(ns=collection.ns)
+        writer.put(proxy, fragment='db', origin=MODEL_ORIGIN)
+        yield proxy
+    for entity in Entity.by_collection(collection.id):
+        proxy = entity.to_proxy()
+        aggregator.delete(entity_id=proxy.id)
+        writer.put(proxy, fragment='db', origin=MODEL_ORIGIN)
+        yield proxy
+    writer.flush()
+
+
+def aggregate_collection(collection, aggregator):
+    from aleph.logic.mapping import map_to_aggregator
+    for mapping in collection.mappings:
+        try:
+            for proxy in map_to_aggregator(collection, mapping, aggregator):
+                pass
+        except Exception as ex:
+            # More or less ignore broken models.
+            log.warn("Failed mapping [%s]: %s", mapping, ex)
+    for proxy in aggregate_model(collection, aggregator):
+        pass
+
+
+def reingest_collection(stage, collection, index=False):
+    """Trigger a re-ingest for all documents in the collection."""
+    aggregator = get_aggregator(collection)
+    aggregator.delete(origin=OP_ANALYZE)
+    aggregator.delete(origin=OP_INGEST)
+    aggregator.close()
+    for document in Document.by_collection(collection.id):
+        proxy = document.to_proxy()
+        ingest_entity(collection, proxy, job_id=stage.job.id, index=index)
+
+
+def reindex_collection(collection, sync=False, flush=True):
+    """Re-index all entities from the model, mappings and aggregator cache."""
+    # if flush:
+    #     index.delete_entities(collection.id, sync=True)
+    aggregator = get_aggregator(collection)
+    aggregate_collection(collection, aggregator)
+    entities_index.index_bulk(collection, aggregator, sync=sync)
+    aggregator.close()
+    refresh_collection(collection.id, sync=sync)
+
+
 def process_collection(stage, collection, ingest=True, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
-    def _proxies(collection):
-        for entity in Entity.by_collection(collection.id).yield_per(5000):
-            yield entity.to_proxy()
-        for document in Document.by_collection(collection.id).yield_per(5000):
-            yield document.to_proxy()
-
     aggregator = get_aggregator(collection)
-    for proxy in _proxies(collection):
+    for proxy in aggregate_model(collection, aggregator):
         if ingest and proxy.schema.is_a(Document.SCHEMA):
             ingest_entity(collection, proxy,
                           job_id=stage.job.id,
                           sync=sync)
         else:
-            aggregator.put(proxy, fragment='db')
             queue_task(collection, OP_INDEX,
                        job_id=stage.job.id,
                        payload={'entity_ids': [proxy.id]},
@@ -106,9 +152,8 @@ def delete_collection(collection, keep_metadata=False,
     Diagram.delete_by_collection(collection.id, deleted_at=deleted_at)
     Document.delete_by_collection(collection.id)
     if not keep_metadata:
-        # Considering this metadata for now, might be wrong:
+        # Considering linkages metadata for now, might be wrong:
         Linkage.delete_by_collection(collection.id)
-
         Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
         collection.delete(deleted_at=deleted_at)
     db.session.commit()
@@ -124,5 +169,6 @@ def upgrade_collections():
             delete_collection(collection, keep_metadata=True,
                               sync=True, reset_sync=True)
         else:
-            refresh_collection(collection.id, sync=True)
+            reindex_collection(collection)
+            # refresh_collection(collection.id, sync=True)
             compute_collection(collection, sync=True)
