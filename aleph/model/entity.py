@@ -89,7 +89,10 @@ class Entity(db.Model, SoftDeleteModel):
 
     @classmethod
     def by_collection(cls, collection_id):
-        return cls.all().filter(Entity.collection_id == collection_id)
+        q = cls.all()
+        q = q.filter(Entity.collection_id == collection_id)
+        q = q.yield_per(5000)
+        return q
 
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at=None):

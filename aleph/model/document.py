@@ -148,6 +148,7 @@ class Document(db.Model, DatedModel):
     def by_collection(cls, collection_id=None):
         q = cls.all()
         q = q.filter(cls.collection_id == collection_id)
+        q = q.yield_per(5000)
         return q
 
     @classmethod
@@ -159,9 +160,10 @@ class Document(db.Model, DatedModel):
         pq = pq.filter(cls.collection_id.in_(collection_ids))
         pq.delete(synchronize_session=False)
 
-    def to_proxy(self):
+    def to_proxy(self, ns=None):
+        ns = ns or self.collection.ns
         proxy = model.get_proxy({
-            'id': str(self.id),
+            'id': ns.sign(self.id),
             'schema': self.model,
             'properties': {},
             'created_at': iso_text(self.created_at),
@@ -177,8 +179,8 @@ class Document(db.Model, DatedModel):
         else:
             headers = {}
         proxy.set('contentHash', self.content_hash)
-        proxy.set('parent', self.parent_id)
-        proxy.set('ancestors', self.ancestors)
+        proxy.set('parent', ns.sign(self.parent_id))
+        proxy.set('ancestors', [ns.sign(a) for a in self.ancestors])
         proxy.set('crawler', meta.get('crawler'))
         proxy.set('sourceUrl', meta.get('source_url'))
         proxy.set('title', meta.get('title'))
