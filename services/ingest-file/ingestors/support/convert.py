@@ -1,11 +1,12 @@
 import math
 import logging
 import requests
+from itertools import count
 from requests import RequestException, HTTPError
-from servicelayer.util import backoff, service_retries
+from servicelayer.util import backoff
 from followthemoney.helpers import entity_filename
 
-from ingestors.settings import CONVERT_URL
+from ingestors.settings import CONVERT_URL, CONVERT_TIMEOUT
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.exc import ProcessingException
@@ -36,27 +37,18 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
 
     def _document_to_pdf(self, file_path, entity):
         """Converts an office document to PDF."""
-        # Attempt to guess an appropriate time for processing
-        # Guessed: 15s per MB of data, max.
-        file_size = file_path.stat().st_size
-        if file_size < 100:
-            raise ProcessingException("Document too small.")
-        file_size = (file_size / 1024) / 1024  # megabyte
-        timeout = int(min(600, max(20, file_size * 15)))
-
         file_name = entity_filename(entity)
         mime_type = entity.first('mimeType')
-        log.info('Converting [%s] to PDF (%ds timeout)...',
-                 file_name, timeout)
+        log.info('Converting [%s] to PDF...', file_name)
         failed = ProcessingException("Document could not be converted to PDF.")
-        for attempt in service_retries():
+        for attempt in count(1):
             try:
                 with open(file_path, 'rb') as fh:
                     files = {'file': (file_name, fh, mime_type)}
                     res = requests.post(CONVERT_URL,
-                                        params={'timeout': timeout},
+                                        params={'timeout': CONVERT_TIMEOUT},
                                         files=files,
-                                        timeout=timeout + 3,
+                                        timeout=CONVERT_TIMEOUT,
                                         stream=True)
                 res.raise_for_status()
                 out_path = self.make_work_file('out.pdf')
@@ -68,10 +60,11 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                     if bytes_written > 50:
                         return out_path
                 raise failed
-            except RequestException as exc:
-                if isinstance(exc, HTTPError) and \
-                        exc.response.status_code == 400:
+            except HTTPError as exc:
+                if exc.response.status_code == 400:
                     raise ProcessingException(res.text)
-                log.error("Conversion failed: %s", exc)
+                log.info("Converter not accepting new document: %s (attempt: %s)", exc, attempt)
                 backoff(failures=math.sqrt(attempt))
-        raise failed
+            except RequestException as exc:
+                log.error("Connect to converter failed: %s (attempt: %s)", exc, attempt)
+                backoff(failures=math.sqrt(attempt))
