@@ -61,12 +61,16 @@ class Manager(object):
             child.add('parent', parent.id)
             child.add('ancestors', parent.get('ancestors'))
             child.add('ancestors', parent.id)
-            # Aleph-specific context data:
-            child.context = {
-                'created_at': parent.context.get('created_at'),
-                'updated_at': parent.context.get('updated_at'),
-                'role_id': parent.context.get('role_id'),
-            }
+            self.apply_context(child, parent)
+
+    def apply_context(self, entity, source):
+        # Aleph-specific context data:
+        entity.context = {
+            'created_at': source.context.get('created_at'),
+            'updated_at': source.context.get('updated_at'),
+            'role_id': source.context.get('role_id'),
+            'mutable': False,
+        }
 
     def emit_entity(self, entity, fragment=None):
         entity = self.ns.apply(entity)

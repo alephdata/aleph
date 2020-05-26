@@ -41,6 +41,9 @@ class EmailIdentity(object):
             key = self.email.lower().strip()
             fragment = safe_fragment(self.label)
             self.entity = manager.make_entity('Person')
+            self.entity.context = {
+                'mutable': False
+            }
             self.entity.make_id(key)
             self.entity.add('name', self.name)
             self.entity.add('email', self.email)

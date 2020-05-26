@@ -1,5 +1,4 @@
 import logging
-from banal import first
 from followthemoney import model
 from followthemoney.helpers import remove_checksums
 
@@ -15,8 +14,8 @@ log = logging.getLogger(__name__)
 
 
 def _get_table_csv_link(table):
-    properties = table.get('properties', {})
-    csv_hash = first(properties.get('csvHash'))
+    proxy = model.get_proxy(table)
+    csv_hash = proxy.first('csvHash')
     if csv_hash is None:
         raise RuntimeError("Source table doesn't have a CSV version")
     url = archive.generate_url(csv_hash)
