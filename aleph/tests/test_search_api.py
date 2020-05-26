@@ -48,7 +48,7 @@ class SearchApiTestCase(TestCase):
         res = self.client.get(self.url+'&facet=schema', headers=headers)
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 8, len(facet['values'])
+        assert len(facet['values']) == 11, len(facet['values'])
         keys = [val['id'] for val in facet['values']]
         assert 'PlainText' in keys, facet
         assert 'Company' in keys, facet

@@ -2,6 +2,7 @@ import logging
 from banal import ensure_list
 from flask import render_template
 from datetime import datetime, timedelta
+from followthemoney import model
 from followthemoney.util import get_entity_id
 
 from aleph.core import cache, es, settings
@@ -115,7 +116,8 @@ def render_notification(stub, notification):
             title = data.get('label')
             link = collection_url(value)
         elif clazz == Entity:
-            title = data.get('name')
+            proxy = model.get_proxy(data)
+            title = proxy.caption
             link = entity_url(value)
         elif clazz == Diagram:
             title = data.label

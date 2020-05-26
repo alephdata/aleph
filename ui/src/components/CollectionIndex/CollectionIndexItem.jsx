@@ -2,9 +2,8 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Classes, Icon, H4 } from '@blueprintjs/core';
 import c from 'classnames';
-import Count from 'src/components/common/Count';
 import {
-  Date, Role, Category, Country, Collection, Summary, Skeleton,
+  Date, Role, Category, Count, Country, Collection, Summary, Skeleton,
 } from 'src/components/common';
 
 import './CollectionIndexItem.scss';

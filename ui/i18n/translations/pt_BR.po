@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-04-29T20:37:45.233Z\n"
+"POT-Creation-Date: 2020-05-26T15:28:17.769Z\n"
 "Last-Translator: Laura M <kokoroko2@protonmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/aleph/teams/76591/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -13,13 +13,6 @@ msgstr ""
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: react-intl-po\n"
-
-#. [property.inverse]
-#. defaultMessage is:
-#. '{label}' of …
-#: i18n/messages.json
-msgid "'{label}' of …"
-msgstr "'{label}' de …"
 
 #. [settings.confirm]
 #. defaultMessage is:
@@ -167,14 +160,14 @@ msgstr "Ações"
 msgid "Add a fixed value"
 msgstr ""
 
-#. [mapping.schemaSelect.button.thing]
+#. [schemaSelect.button.thing]
 #. defaultMessage is:
 #. Add a new object
 #: i18n/messages.json
 msgid "Add a new object"
 msgstr ""
 
-#. [mapping.schemaSelect.button.relationship]
+#. [schemaSelect.button.relationship]
 #. defaultMessage is:
 #. Add a new relationship
 #: i18n/messages.json
@@ -186,6 +179,13 @@ msgstr ""
 #. Add fixed value text
 #: i18n/messages.json
 msgid "Add fixed value text"
+msgstr ""
+
+#. [collection.addSchema.placeholder]
+#. defaultMessage is:
+#. Add new entity type
+#: i18n/messages.json
+msgid "Add new entity type"
 msgstr ""
 
 #. [mapping.infoLink]
@@ -298,27 +298,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "Attachments"
 msgstr "Anexos"
-
-#. [email.bcc]
-#. defaultMessage is:
-#. BCC
-#: i18n/messages.json
-msgid "BCC"
-msgstr "BCC"
-
-#. [entity.info.contents]
-#. defaultMessage is:
-#. Browse
-#: i18n/messages.json
-msgid "Browse"
-msgstr ""
-
-#. [email.cc]
-#. defaultMessage is:
-#. CC
-#: i18n/messages.json
-msgid "CC"
-msgstr "CC"
 
 #. [collection.analyze.cancel]
 #. defaultMessage is:
@@ -690,10 +669,7 @@ msgstr "Conjuntos de dados"
 #. [entity.column.dates]
 #. defaultMessage is:
 #. Date
-#. [email.date]
-#. defaultMessage is:
-#. Date
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Date"
 msgstr "Data"
 
@@ -704,6 +680,9 @@ msgstr "Data"
 #. defaultMessage is:
 #. Delete
 #. [document.viewer.delete]
+#. defaultMessage is:
+#. Delete
+#. [entity.viewer.delete]
 #. defaultMessage is:
 #. Delete
 #. [mapping.actions.delete]
@@ -729,7 +708,7 @@ msgstr "Data"
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "Excluir"
 
@@ -851,6 +830,13 @@ msgstr "Endereço de e-mail"
 #: i18n/messages.json
 msgid "Enter your current password to set a new one."
 msgstr "Insira sua senha atual para definir a nova."
+
+#. [entity.info.entities]
+#. defaultMessage is:
+#. Entities
+#: i18n/messages.json
+msgid "Entities"
+msgstr ""
 
 #. [result.error]
 #. defaultMessage is:
@@ -995,13 +981,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "Found {total} results"
 msgstr "Encontrado(s) {total} resultados"
-
-#. [email.from]
-#. defaultMessage is:
-#. From
-#: i18n/messages.json
-msgid "From"
-msgstr "De"
 
 #. [mapping.create.confirm]
 #. defaultMessage is:
@@ -1336,13 +1315,6 @@ msgstr "Nova pasta"
 msgid "New password"
 msgstr "Nova senha"
 
-#. [language.multiselect.no.result]
-#. defaultMessage is:
-#. No Result
-#: i18n/messages.json
-msgid "No Result"
-msgstr "Nenhum resultado"
-
 #. [collection.index.empty]
 #. defaultMessage is:
 #. No datasets were found
@@ -1412,13 +1384,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "No results found"
 msgstr "Nenhum resultado encontrado"
-
-#. [country.multiselect.no.results]
-#. defaultMessage is:
-#. No results.
-#: i18n/messages.json
-msgid "No results."
-msgstr "Nenhum resultado."
 
 #. [entity.search.no_results_title]
 #. defaultMessage is:
@@ -1690,13 +1655,6 @@ msgstr "Receber notificações de e-mail diárias"
 msgid "Recent notifications"
 msgstr "Notificações recentes"
 
-#. [email.to]
-#. defaultMessage is:
-#. Recipient
-#: i18n/messages.json
-msgid "Recipient"
-msgstr "Recebedor"
-
 #. [collection.reconcile]
 #. defaultMessage is:
 #. Reconciliation
@@ -1831,13 +1789,6 @@ msgstr "Pontuação"
 msgid "Search"
 msgstr "Pesquisar"
 
-#. [country.multiselect.select]
-#. defaultMessage is:
-#. Search by country name
-#: i18n/messages.json
-msgid "Search by country name"
-msgstr "Pesquisar por nome do país"
-
 #. [search.nolabel_placeholder]
 #. defaultMessage is:
 #. Search companies, people and documents
@@ -1913,13 +1864,6 @@ msgstr "Pesquisar entidades {things}"
 #: i18n/messages.json
 msgid "Searching..."
 msgstr "Pesquisando..."
-
-#. [language.multiselect.select]
-#. defaultMessage is:
-#. Select
-#: i18n/messages.json
-msgid "Select"
-msgstr "Selecionar"
 
 #. [collection.select]
 #. defaultMessage is:
@@ -2135,13 +2079,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "Stop review"
 msgstr ""
-
-#. [email.subject]
-#. defaultMessage is:
-#. Subject
-#: i18n/messages.json
-msgid "Subject"
-msgstr "Assunto"
 
 #. [diagram.update.submit]
 #. defaultMessage is:
@@ -2445,16 +2382,6 @@ msgstr "Tente buscar por: {samples}"
 #: i18n/messages.json
 msgid "Type"
 msgstr "Tipo"
-
-#. [country.unknown]
-#. defaultMessage is:
-#. Unknown
-#. [language.unknown]
-#. defaultMessage is:
-#. Unknown
-#: i18n/messages.json i18n/messages.json
-msgid "Unknown"
-msgstr "Desconhecido"
 
 #. [case.label_placeholder]
 #. defaultMessage is:

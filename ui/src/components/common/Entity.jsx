@@ -2,36 +2,15 @@ import React, { Component, PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import truncateText from 'truncate';
 import c from 'classnames';
-import { Entity as EntityObject } from '@alephdata/followthemoney';
+import { Entity as VLEntity } from '@alephdata/vislib';
 
-import { Schema } from 'src/components/common';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import getEntityLink from 'src/util/getEntityLink';
 
 import './Entity.scss';
-
-
-class EntityLabel extends PureComponent {
-  render() {
-    const { entity, icon = false, truncate } = this.props;
-    if (!entity || !entity.id || !EntityObject.isEntity(entity)) {
-      return null;
-    }
-    const caption = entity.getCaption();
-    const label = truncate ? truncateText(caption, truncate) : caption;
-    return (
-      <span className={c('EntityLabel', { untitled: !label })} title={caption}>
-        {icon && <Schema.Icon schema={entity.schema} className="left-icon" />}
-        {label}
-      </span>
-    );
-  }
-}
-
 
 class EntityLink extends PureComponent {
   constructor(props) {
@@ -49,7 +28,7 @@ class EntityLink extends PureComponent {
 
   render() {
     const { entity, className, children, preview } = this.props;
-    const content = children || <Entity.Label {...this.props} />;
+    const content = children || <VLEntity.Label {...this.props} />;
     const link = getEntityLink(entity);
     if (!link) {
       return content;
@@ -93,7 +72,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 class Entity {
-  static Label = EntityLabel;
+  static Label = VLEntity.Label;
 
   static Link = withRouter(EntityLink);
 

@@ -145,6 +145,7 @@ export class CollectionEditDialog extends Component {
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
         title={intl.formatMessage(messages.title)}
+        enforceFocus={false}
       >
         <div className="bp3-dialog-body">
           <div className="bp3-form-group">
@@ -275,8 +276,8 @@ export class CollectionEditDialog extends Component {
               <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries" />
             </label>
             <Country.MultiSelect
-              onChange={this.onSelectCountries}
-              codes={collection.countries}
+              onSubmit={this.onSelectCountries}
+              values={collection.countries || []}
             />
           </div>
           <div className="bp3-form-group">
@@ -284,8 +285,8 @@ export class CollectionEditDialog extends Component {
               <FormattedMessage id="collection.edit.info.languages" defaultMessage="Languages" />
             </label>
             <Language.MultiSelect
-              onChange={this.onSelectLanguages}
-              codes={collection.languages || []}
+              onSubmit={this.onSelectLanguages}
+              values={collection.languages || []}
             />
             <div className="bp3-form-helper-text">
               <FormattedMessage

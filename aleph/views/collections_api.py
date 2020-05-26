@@ -106,9 +106,9 @@ def create():
     """
     require(request.authz.logged_in)
     data = parse_request('CollectionCreate')
-    sync = get_flag('sync')
+    sync = get_flag('sync', True)
     collection = create_collection(data, request.authz, sync=sync)
-    return CollectionSerializer.jsonify(collection)
+    return view(collection.get('id'))
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>', methods=['GET'])

@@ -1,9 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-
-import Property from 'src/components/Property';
-
+import { Mention, Property } from 'src/components/common';
 
 class EntityProperties extends React.Component {
   render() {
@@ -29,7 +27,7 @@ class EntityProperties extends React.Component {
               <Property.Name prop={prop} />
             </span>
             <span className="value">
-              <Property.Links prop={prop} values={entity.getProperty(prop)} missing={missing} />
+              <Mention.List prop={prop} values={entity.getProperty(prop)} missing={missing} />
             </span>
           </li>
         ))}

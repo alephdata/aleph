@@ -52,8 +52,9 @@ class CollectionStatistics extends PureComponent {
   }
 
   render() {
-    const { field, total, values } = this.props;
+    const { field, values } = this.props;
     const filteredValues = _.pickBy(values, this.filterValues);
+    const total = filteredValues ? Object.keys(filteredValues).length : 0;
     return (
       <div className="CollectionStatistics bp3-card bp3-elevation-1">
         <div className="CollectionStatistics__heading">
