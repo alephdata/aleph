@@ -28,9 +28,7 @@ services:
   convert-document:
     image: alephdata/convert-document:d4a0d9fcff39e20fa029af72d8ab864405b037e4
     restart: on-failure
-    user: app
-    tmpfs:
-    - /tmp:mode=777
+    tmpfs: /tmp
 
   ingest-file:
     image: alephdata/ingest-file:${ALEPH_TAG:-3.7.3}
