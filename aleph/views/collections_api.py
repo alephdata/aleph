@@ -71,6 +71,7 @@ def sitemap():
       - System
     """
     enable_cache(vary_user=False)
+    request.rate_limit = None
     collections = []
     for collection in Collection.all_authz(Authz.from_role(None)):
         updated_at = collection.updated_at.date().isoformat()
