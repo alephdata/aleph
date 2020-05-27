@@ -123,13 +123,6 @@ def reindex_collection(collection, sync=False, flush=False):
     index_aggregator(collection, aggregator, sync=sync)
 
 
-def process_collection(stage, collection, ingest=True, sync=False):
-    """Trigger a full re-parse of all documents and re-build the
-    search index from the aggregator."""
-    if ingest:
-        reingest_collection(collection, stage.job.id, index=True)
-
-
 def reset_collection(collection, sync=False):
     """Reset the collection by deleting any derived data."""
     drop_aggregator(collection)

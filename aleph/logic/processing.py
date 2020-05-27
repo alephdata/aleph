@@ -11,7 +11,7 @@ from aleph.logic.aggregator import get_aggregator
 log = logging.getLogger(__name__)
 
 
-def index_aggregate(stage, collection, sync=False, entity_ids=None, batch=100):
+def index_many(stage, collection, sync=False, entity_ids=None, batch=100):
     """Project the contents of the collections aggregator into the index."""
     if entity_ids is not None:
         entity_ids = ensure_list(entity_ids)
@@ -25,7 +25,7 @@ def index_aggregate(stage, collection, sync=False, entity_ids=None, batch=100):
     index_aggregator(collection, aggregator, entity_ids=entity_ids, sync=sync)
 
 
-def bulk_write(collection, entities, unsafe=False, role_id=None):
+def bulk_write(collection, entities, unsafe=False, role_id=None, index=False):
     """Write a set of entities - given as dicts - to the index."""
     # This is called mainly by the /api/2/collections/X/_bulk API.
     now = datetime.utcnow().isoformat()
@@ -49,4 +49,5 @@ def bulk_write(collection, entities, unsafe=False, role_id=None):
         writer.put(entity, origin='bulk')
         entity_ids.add(entity.id)
     writer.flush()
-    index_aggregator(collection, aggregator, entity_ids=entity_ids)
+    if index:
+        index_aggregator(collection, aggregator, entity_ids=entity_ids)

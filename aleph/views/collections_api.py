@@ -6,10 +6,10 @@ from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_PROCESS
+from aleph.queues import OP_REINGEST, OP_REINDEX
 from aleph.index.collections import get_collection_stats
-from aleph.logic.collections import create_collection, refresh_collection
-from aleph.logic.collections import delete_collection, update_collection
+from aleph.logic.collections import create_collection, update_collection
+from aleph.logic.collections import delete_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
@@ -186,13 +186,15 @@ def update(collection_id):
     return CollectionSerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/process', methods=['POST', 'PUT'])  # noqa
-def process(collection_id):
+@blueprint.route('/api/2/collections/<int:collection_id>/reingest', methods=['POST', 'PUT'])  # noqa
+def reingest(collection_id):
     """
     ---
     post:
-      summary: Process a collection
-      description: Start processing the collection with id `collection_id`
+      summary: Re-ingest a collection
+      description: >
+        Trigger a process to re-parse the content of all documents stored
+        in the collection with id `collection_id`.
       parameters:
       - description: The collection ID.
         in: path
@@ -202,11 +204,7 @@ def process(collection_id):
           minimum: 1
           type: integer
       - in: query
-        name: ingest
-        schema:
-          type: boolean
-      - in: query
-        name: reset
+        name: index
         schema:
           type: boolean
       responses:
@@ -216,12 +214,42 @@ def process(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    # re-process the documents
-    data = {'reset': get_flag('reset', True)}
-    queue_task(collection, OP_PROCESS, job_id=get_session_id(), payload=data)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection_id)
+    job_id = get_session_id()
+    data = {'index': get_flag('index', False)}
+    queue_task(collection, OP_REINGEST, job_id=job_id, payload=data)
+    return ('', 202)
+
+
+@blueprint.route('/api/2/collections/<int:collection_id>/reindex', methods=['POST', 'PUT'])  # noqa
+def reindex(collection_id):
+    """
+    ---
+    post:
+      summary: Re-index a collection
+      description: >
+        Re-index the entities in the collection with id `collection_id`
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      - in: query
+        name: flush
+        schema:
+          type: boolean
+      responses:
+        '202':
+          description: Accepted
+      tags:
+      - Collection
+    """
+    collection = get_db_collection(collection_id, request.authz.WRITE)
+    job_id = get_session_id()
+    data = {'flush': get_flag('flush', False)}
+    queue_task(collection, OP_REINDEX, job_id=job_id, payload=data)
     return ('', 202)
 
 

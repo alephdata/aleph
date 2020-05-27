@@ -138,7 +138,7 @@ def ingest_upload(collection_id):
         proxy = document.to_proxy(ns=collection.ns)
         if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync:
             index_proxy(collection, proxy, sync=sync)
-        ingest_entity(collection, proxy, job_id=job_id, sync=sync)
+        ingest_entity(collection, proxy, job_id=job_id)
         _notify(collection, proxy.id)
         return jsonify({
           'status': 'ok',
