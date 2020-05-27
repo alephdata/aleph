@@ -47,7 +47,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                     res = requests.post(CONVERT_URL,
                                         params={'timeout': CONVERT_TIMEOUT},
                                         files=files,
-                                        timeout=CONVERT_TIMEOUT,
+                                        timeout=CONVERT_TIMEOUT + 10,
                                         stream=True)
                 res.raise_for_status()
                 out_path = self.make_work_file('out.pdf')
