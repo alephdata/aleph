@@ -265,6 +265,7 @@ def bulk(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
+
     # This will disable checksum security measures in order to allow bulk
     # loading of document data.
     unsafe = get_flag('unsafe', default=False)

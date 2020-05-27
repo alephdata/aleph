@@ -48,5 +48,5 @@ def bulk_write(collection, entities, unsafe=False, role_id=None):
         }
         writer.put(entity, origin='bulk')
         entity_ids.add(entity.id)
-
+    writer.flush()
     index_aggregator(collection, aggregator, entity_ids=entity_ids)
