@@ -40,7 +40,6 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         file_name = entity_filename(entity)
         mime_type = entity.first('mimeType')
         log.info('Converting [%s] to PDF...', file_name)
-        failed = ProcessingException("Document could not be converted to PDF.")
         for attempt in count(1):
             try:
                 with open(file_path, 'rb') as fh:
@@ -59,12 +58,14 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                         fh.write(chunk)
                     if bytes_written > 50:
                         return out_path
-                raise failed
+                raise ProcessingException("Could not be converted to PDF.")
             except HTTPError as exc:
                 if exc.response.status_code == 400:
                     raise ProcessingException(res.text)
-                log.info("Converter not accepting new document: %s (attempt: %s)", exc, attempt)
+                msg = "Converter not availble: %s (attempt: %s)"
+                log.info(msg, exc, attempt)
                 backoff(failures=math.sqrt(attempt))
             except RequestException as exc:
-                log.error("Connect to converter failed: %s (attempt: %s)", exc, attempt)
+                msg = "Converter not availble: %s (attempt: %s)"
+                log.error(msg, exc, attempt)
                 backoff(failures=math.sqrt(attempt))
