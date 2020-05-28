@@ -5,9 +5,9 @@ from followthemoney.helpers import remove_checksums
 from aleph.core import db, archive
 from aleph.model import Mapping, Events
 from aleph.index.entities import get_entity
+from aleph.logic.aggregator import get_aggregator
 from aleph.index.collections import delete_entities
 from aleph.logic.collections import update_collection, reindex_collection
-from aleph.logic.aggregator import get_aggregator, drop_aggregator
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -89,8 +89,11 @@ def flush_mapping(stage, collection, mapping_id, sync=True):
     """Delete entities loaded by a mapping"""
     log.debug("Flushing entities for mapping: %s", mapping_id)
     origin = mapping_origin(mapping_id)
+    aggregator = get_aggregator(collection)
+    aggregator.delete(origin=origin)
+    aggregator.close()
     delete_entities(collection.id, origin=origin, sync=sync)
-    drop_aggregator(collection, origin=origin)
     collection.touch()
     db.session.commit()
     update_collection(collection, sync=sync)
+    

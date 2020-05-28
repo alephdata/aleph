@@ -12,7 +12,7 @@ from aleph.index import collections as index
 from aleph.index import xref as xref_index
 from aleph.index import entities as entities_index
 from aleph.logic.notifications import publish, flush_notifications
-from aleph.logic.aggregator import get_aggregator, drop_aggregator
+from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
 MODEL_ORIGIN = 'model'
@@ -22,6 +22,8 @@ def create_collection(data, authz, sync=False):
     now = datetime.utcnow()
     collection = Collection.create(data, authz, created_at=now)
     if collection.created_at == now:
+        key = cache.object_key(Collection, collection.id, 'stats')
+        cache.set(key, 'computed', expires=10)
         publish(Events.CREATE_COLLECTION,
                 params={'collection': collection},
                 channels=[collection, authz.role],
@@ -123,19 +125,16 @@ def reindex_collection(collection, sync=False, flush=False):
     index_aggregator(collection, aggregator, sync=sync)
 
 
-def reset_collection(collection, sync=False):
-    """Reset the collection by deleting any derived data."""
-    drop_aggregator(collection)
+def delete_collection(collection, keep_metadata=False, sync=False):
     cancel_queue(collection)
+    aggregator = get_aggregator(collection)
+    try:
+        aggregator.drop()
+    finally:
+        aggregator.close()
     flush_notifications(collection, sync=sync)
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)
-    refresh_collection(collection.id, sync=sync)
-
-
-def delete_collection(collection, keep_metadata=False,
-                      sync=False, reset_sync=False):
-    reset_collection(collection, sync=reset_sync)
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
     Mapping.delete_by_collection(collection.id, deleted_at=deleted_at)
@@ -148,7 +147,7 @@ def delete_collection(collection, keep_metadata=False,
         collection.delete(deleted_at=deleted_at)
     db.session.commit()
     if not keep_metadata:
-        index.delete_collection(collection.id, sync=sync)
+        index.delete_collection(collection.id, sync=True)
         Authz.flush()
     refresh_collection(collection.id, sync=True)
 
@@ -156,8 +155,7 @@ def delete_collection(collection, keep_metadata=False,
 def upgrade_collections():
     for collection in Collection.all(deleted=True):
         if collection.deleted_at is not None:
-            delete_collection(collection, keep_metadata=True,
-                              sync=True, reset_sync=True)
-        else:
-            refresh_collection(collection.id, sync=True)
-            compute_collection(collection, sync=True)
+            delete_collection(collection, keep_metadata=True, sync=True)
+            return
+        refresh_collection(collection.id, sync=True)
+        compute_collection(collection, sync=True)

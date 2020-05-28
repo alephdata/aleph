@@ -15,16 +15,5 @@ def get_aggregator(collection, origin='aleph'):
 
 def delete_aggregator_entity(collection, entity_id):
     aggregator = get_aggregator(collection)
-    try:
-        aggregator.delete(entity_id=entity_id)
-    finally:
-        aggregator.close()
-
-
-def drop_aggregator(collection, origin=None):
-    """Clear all the documents from the dataset."""
-    aggregator = get_aggregator(collection)
-    try:
-        aggregator.delete(origin=origin)
-    finally:
-        aggregator.close()
+    aggregator.delete(entity_id=entity_id)
+    aggregator.close()
