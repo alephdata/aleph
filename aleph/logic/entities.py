@@ -17,7 +17,7 @@ from aleph.logic.graph import Graph
 log = logging.getLogger(__name__)
 
 
-def upsert_entity(data, collection, validate=True, sync=False):
+def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
     """Create or update an entity in the database. This has a side hustle
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
@@ -29,7 +29,9 @@ def upsert_entity(data, collection, validate=True, sync=False):
                               collection=collection,
                               deleted=True)
     if entity is None:
-        entity = Entity.create(data, collection, validate=validate)
+        entity = Entity.create(data, collection,
+                               role_id=role_id,
+                               validate=validate)
     else:
         entity.update(data, collection, validate=validate)
     collection.touch()

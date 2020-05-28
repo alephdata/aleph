@@ -27,7 +27,7 @@ class Document(db.Model, DatedModel):
     schema = db.Column(db.String(255), nullable=False)
     meta = db.Column(JSONB, default={})
 
-    uploader_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
     parent_id = db.Column(db.BigInteger, nullable=True, index=True)  # noqa
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
@@ -92,7 +92,7 @@ class Document(db.Model, DatedModel):
 
     @classmethod
     def save(cls, collection, parent=None, foreign_id=None,
-             content_hash=None, meta=None, uploader_id=None):
+             content_hash=None, meta=None, role_id=None):
         """Try and find a document by various criteria."""
         foreign_id = sanitize_text(foreign_id)
 
@@ -113,7 +113,7 @@ class Document(db.Model, DatedModel):
             document = cls()
             document.schema = cls.SCHEMA
             document.collection_id = collection.id
-            document.uploader_id = uploader_id
+            document.role_id = role_id
 
         if parent is not None:
             document.parent_id = parent.id
@@ -168,7 +168,7 @@ class Document(db.Model, DatedModel):
             'properties': {},
             'created_at': iso_text(self.created_at),
             'updated_at': iso_text(self.updated_at),
-            'role_id': self.uploader_id,
+            'role_id': self.role_id,
             'mutable': True
         })
         meta = dict(self.meta)

@@ -250,7 +250,8 @@ def create():
     collection = get_nested_collection(data, request.authz.WRITE)
     data.pop('id', None)
     validate = get_flag('validate', default=False)
-    entity_id = upsert_entity(data, collection, sync=True, validate=validate)
+    entity_id = upsert_entity(data, collection, validate=validate,
+                              role_id=request.authz.id, sync=True)
     tag_request(entity_id=entity_id, collection_id=str(collection.id))
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)

@@ -23,6 +23,7 @@ class Entity(db.Model, SoftDeleteModel):
     schema = db.Column(db.String(255), index=True)
     data = db.Column('data', JSONB)
 
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
 
@@ -64,18 +65,19 @@ class Entity(db.Model, SoftDeleteModel):
             'properties': self.data,
             'created_at': iso_text(self.created_at),
             'updated_at': iso_text(self.updated_at),
-            # 'role_id': self.uploader_id,
+            'role_id': self.role_id,
             'mutable': True
         })
 
     @classmethod
-    def create(cls, data, collection, validate=True):
+    def create(cls, data, collection, role_id=None, validate=True):
         entity = cls()
         entity_id = data.get('id') or make_textid()
         if not registry.entity.validate(entity_id):
             raise InvalidData(gettext("Invalid entity ID"))
         entity.id = collection.ns.sign(entity_id)
         entity.collection_id = collection.id
+        entity.role_id = role_id
         entity.update(data, collection, validate=validate)
         return entity
 

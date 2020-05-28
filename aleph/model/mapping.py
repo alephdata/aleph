@@ -34,6 +34,7 @@ class Mapping(db.Model, SoftDeleteModel):
 
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
+    disabled = db.Column(db.Boolean, nullable=True)
     last_run_status = db.Column(db.Unicode, nullable=True)
     last_run_err_msg = db.Column(db.Unicode, nullable=True)
 

@@ -66,14 +66,16 @@ def load_mapping(stage, collection, mapping_id, sync=False):
     mapping = Mapping.by_id(mapping_id)
     if mapping is None:
         return log.error("Could not find mapping: %s", mapping_id)
-    publish(Events.LOAD_MAPPING,
-            params={'collection': collection, 'table': mapping.table_id},
-            channels=[collection, mapping.role],
-            actor_id=mapping.role_id)
     origin = mapping_origin(mapping.id)
     aggregator = get_aggregator(collection)
     aggregator.delete(origin=origin)
     delete_entities(collection.id, origin=origin, sync=True)
+    if mapping.disabled:
+        return log.info("Mapping is disabled: %s", mapping_id)
+    publish(Events.LOAD_MAPPING,
+            params={'collection': collection, 'table': mapping.table_id},
+            channels=[collection, mapping.role],
+            actor_id=mapping.role_id)
     try:
         map_to_aggregator(collection, mapping, aggregator)
         mapping.set_status(status=Mapping.SUCCESS)
@@ -96,4 +98,3 @@ def flush_mapping(stage, collection, mapping_id, sync=True):
     collection.touch()
     db.session.commit()
     update_collection(collection, sync=sync)
-    
