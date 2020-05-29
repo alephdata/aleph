@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -10,9 +10,8 @@ import {
 } from 'src/actions';
 import { showWarningToast } from 'src/app/toast';
 import { Language, Role } from 'src/components/common';
+import FormDialog from 'src/dialogs/common/FormDialog';
 import getCollectionLink from 'src/util/getCollectionLink';
-
-import './CreateCaseDialog.scss';
 
 const messages = defineMessages({
   label_placeholder: {
@@ -21,7 +20,7 @@ const messages = defineMessages({
   },
   language_placeholder: {
     id: 'case.language_placeholder',
-    defaultMessage: 'Select a language',
+    defaultMessage: 'Select languages',
   },
   summary_placeholder: {
     id: 'case.summary',
@@ -128,7 +127,8 @@ class CreateCaseDialog extends Component {
     const disabled = blocking || !this.checkValid();
 
     return (
-      <Dialog
+      <FormDialog
+        processing={blocking}
         icon="briefcase"
         className="CreateCaseDialog"
         isOpen={isOpen}
@@ -233,7 +233,7 @@ class CreateCaseDialog extends Component {
             </div>
           </div>
         </form>
-      </Dialog>
+      </FormDialog>
     );
   }
 }
