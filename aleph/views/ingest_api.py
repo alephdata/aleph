@@ -132,7 +132,7 @@ def ingest_upload(collection_id):
                                  foreign_id=foreign_id,
                                  content_hash=content_hash,
                                  meta=meta,
-                                 uploader_id=request.authz.id)
+                                 role_id=request.authz.id)
         collection.touch()
         db.session.commit()
         proxy = document.to_proxy(ns=collection.ns)
