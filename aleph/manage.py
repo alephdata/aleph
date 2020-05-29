@@ -167,13 +167,13 @@ def load_entities(foreign_id, infile, unsafe=False):
                 return
             if idx % 1000 == 0:
                 log.info("[%s] Loaded %s entities from: %s",
-                         foreign_id, idx, infile.name)
+                         collection, idx, infile.name)
             yield json.loads(line)
 
-    log.info("Loading: %s", foreign_id)
     role = Role.load_cli_user()
-    bulk_write(collection, read_entities(), unsafe=unsafe, role_id=role.id)
-    update_collection(collection)
+    bulk_write(collection, read_entities(), unsafe=unsafe,
+               role_id=role.id, index=False)
+    reindex_collection(collection)
 
 
 @cli.command('dump-entities')

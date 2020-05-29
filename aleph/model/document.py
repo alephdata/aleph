@@ -134,8 +134,7 @@ class Document(db.Model, DatedModel):
     @classmethod
     def by_id(cls, document_id, collection=None):
         try:
-            document_id, _ = Namespace.parse(document_id)
-            document_id = int(document_id)
+            document_id = int(Namespace.strip(document_id))
         except Exception:
             return
         q = cls.all()

@@ -120,12 +120,13 @@ def get_collection(collection_id):
     return data
 
 
-def get_collection_stats(collection_id, refresh=False):
+def get_collection_stats(collection_id):
     """Retrieve statistics on the content of a collection."""
     return {f: get_collection_facet(collection_id, f) for f in STATS_FACETS}
 
 
 def update_collection_stats(collection_id):
+    es.indices.refresh(entities_read_index())
     for facet in STATS_FACETS:
         get_collection_facet(collection_id, facet, refresh=True)
 

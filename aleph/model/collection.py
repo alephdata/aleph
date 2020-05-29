@@ -207,3 +207,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     def __repr__(self):
         fmt = '<Collection(%r, %r, %r)>'
         return fmt % (self.id, self.foreign_id, self.label)
+
+    def __str__(self):
+        return self.foreign_id

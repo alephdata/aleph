@@ -22,8 +22,6 @@ def create_collection(data, authz, sync=False):
     now = datetime.utcnow()
     collection = Collection.create(data, authz, created_at=now)
     if collection.created_at == now:
-        key = cache.object_key(Collection, collection.id, 'stats')
-        cache.set(key, 'computed', expires=10)
         publish(Events.CREATE_COLLECTION,
                 params={'collection': collection},
                 channels=[collection, authz.role],
@@ -62,14 +60,16 @@ def compute_collection(collection, sync=False):
     key = cache.object_key(Collection, collection.id, 'stats')
     if cache.get(key) and not sync:
         return
+    refresh_collection(collection.id, sync=sync)
     cache.set(key, 'computed', expires=cache.EXPIRE - 60)
-    log.info("Collection [%s] changed, computing...", collection.id)
+    log.info("[%s] Collection changed, computing statistics...", collection)
     index.update_collection_stats(collection.id)
     index.index_collection(collection, sync=sync)
 
 
 def aggregate_model(collection, aggregator):
     """Sync up the aggregator from the Aleph domain model."""
+    log.debug("[%s] Aggregating model...", collection)
     aggregator.delete(origin=MODEL_ORIGIN)
     writer = aggregator.bulk()
     for document in Document.by_collection(collection.id):
@@ -84,15 +84,16 @@ def aggregate_model(collection, aggregator):
 
 def index_aggregator(collection, aggregator, entity_ids=None, sync=False):
     def _generate():
+        idx = 0
         entities = aggregator.iterate(entity_id=entity_ids)
         for idx, proxy in enumerate(entities):
             if idx > 0 and idx % 1000 == 0:
-                log.debug("Index [%s]: %s...", collection.foreign_id, idx)
+                log.debug("[%s] Index: %s...", collection, idx)
             yield proxy
+        log.debug("[%s] Indexed %s entities", collection, idx)
 
     entities_index.index_bulk(collection, _generate(), sync=sync)
     aggregator.close()
-    refresh_collection(collection.id, sync=sync)
 
 
 def reingest_collection(collection, job_id=None, index=False):
@@ -111,7 +112,7 @@ def reindex_collection(collection, sync=False, flush=False):
     """Re-index all entities from the model, mappings and aggregator cache."""
     from aleph.logic.mapping import map_to_aggregator
     if flush:
-        log.debug("Flushing: %s...", collection.foreign_id)
+        log.debug("[%s] Flushing...", collection)
         index.delete_entities(collection.id, sync=True)
     aggregator = get_aggregator(collection)
     for mapping in collection.mappings:
@@ -119,10 +120,10 @@ def reindex_collection(collection, sync=False, flush=False):
             map_to_aggregator(collection, mapping, aggregator)
         except Exception as ex:
             # More or less ignore broken models.
-            log.warn("Failed mapping [%s]: %s", mapping, ex)
-    log.debug("Generating model aggregates: %s...", collection.foreign_id)
+            log.warn("Failed mapping [%s]: %s", mapping.id, ex)
     aggregate_model(collection, aggregator)
     index_aggregator(collection, aggregator, sync=sync)
+    compute_collection(collection, sync=True)
 
 
 def delete_collection(collection, keep_metadata=False, sync=False):
@@ -156,6 +157,8 @@ def upgrade_collections():
     for collection in Collection.all(deleted=True):
         if collection.deleted_at is not None:
             delete_collection(collection, keep_metadata=True, sync=True)
-            return
-        refresh_collection(collection.id, sync=True)
-        compute_collection(collection, sync=True)
+            continue
+        if collection.casefile:
+            reindex_collection(collection, flush=True)
+        else:
+            compute_collection(collection, sync=True)

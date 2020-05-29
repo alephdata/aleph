@@ -5,7 +5,7 @@ from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
 
-from aleph.logic.collections import index_aggregator
+from aleph.logic.collections import index_aggregator, refresh_collection
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
@@ -23,6 +23,7 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=100):
         stage.mark_done(len(tasks))
     aggregator = get_aggregator(collection)
     index_aggregator(collection, aggregator, entity_ids=entity_ids, sync=sync)
+    refresh_collection(collection.id, sync=sync)
 
 
 def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):
@@ -51,3 +52,4 @@ def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):
     writer.flush()
     if index:
         index_aggregator(collection, aggregator, entity_ids=entity_ids)
+        refresh_collection(collection.id)
