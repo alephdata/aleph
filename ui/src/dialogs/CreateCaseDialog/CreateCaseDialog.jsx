@@ -19,6 +19,10 @@ const messages = defineMessages({
     id: 'case.label_placeholder',
     defaultMessage: 'Untitled dataset',
   },
+  language_placeholder: {
+    id: 'case.language_placeholder',
+    defaultMessage: 'Select a language',
+  },
   summary_placeholder: {
     id: 'case.summary',
     defaultMessage: 'A brief description of the dataset',
@@ -131,13 +135,14 @@ class CreateCaseDialog extends Component {
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
         enforceFocus={false}
+        autoFocus={false}
       >
         <form onSubmit={this.onAddCase}>
           <div className="bp3-dialog-body">
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="label">
                 <FormattedMessage id="case.choose.name" defaultMessage="Title" />
-                <div className="bp3-input-group bp3-large bp3-fill">
+                <div className="bp3-input-group bp3-fill">
                   <input
                     id="label"
                     type="text"
@@ -174,6 +179,10 @@ class CreateCaseDialog extends Component {
               <Language.MultiSelect
                 onSubmit={this.onSelectLanguages}
                 values={collection.languages || []}
+                inputProps={{
+                  inputRef: null,
+                  placeholder: intl.formatMessage(messages.language_placeholder),
+                }}
               />
               <div className="bp3-form-helper-text">
                 <FormattedMessage
