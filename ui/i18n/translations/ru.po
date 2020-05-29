@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-04-29T20:37:45.233Z\n"
+"POT-Creation-Date: 2020-05-26T15:28:17.769Z\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -13,13 +13,6 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: react-intl-po\n"
-
-#. [property.inverse]
-#. defaultMessage is:
-#. '{label}' of …
-#: i18n/messages.json
-msgid "'{label}' of …"
-msgstr "'{label}' ..."
 
 #. [settings.confirm]
 #. defaultMessage is:
@@ -167,14 +160,14 @@ msgstr "События"
 msgid "Add a fixed value"
 msgstr "Добавить заданное значение"
 
-#. [mapping.schemaSelect.button.thing]
+#. [schemaSelect.button.thing]
 #. defaultMessage is:
 #. Add a new object
 #: i18n/messages.json
 msgid "Add a new object"
 msgstr "Добавить новый объект"
 
-#. [mapping.schemaSelect.button.relationship]
+#. [schemaSelect.button.relationship]
 #. defaultMessage is:
 #. Add a new relationship
 #: i18n/messages.json
@@ -187,6 +180,13 @@ msgstr "Добавить новую связь"
 #: i18n/messages.json
 msgid "Add fixed value text"
 msgstr "Задать значение"
+
+#. [collection.addSchema.placeholder]
+#. defaultMessage is:
+#. Add new entity type
+#: i18n/messages.json
+msgid "Add new entity type"
+msgstr ""
 
 #. [mapping.infoLink]
 #. defaultMessage is:
@@ -298,27 +298,6 @@ msgstr "Назначить свойство"
 #: i18n/messages.json
 msgid "Attachments"
 msgstr "Вложения"
-
-#. [email.bcc]
-#. defaultMessage is:
-#. BCC
-#: i18n/messages.json
-msgid "BCC"
-msgstr "Скрытая копия"
-
-#. [entity.info.contents]
-#. defaultMessage is:
-#. Browse
-#: i18n/messages.json
-msgid "Browse"
-msgstr "Просмотр"
-
-#. [email.cc]
-#. defaultMessage is:
-#. CC
-#: i18n/messages.json
-msgid "CC"
-msgstr "Копия"
 
 #. [collection.analyze.cancel]
 #. defaultMessage is:
@@ -613,7 +592,7 @@ msgstr "Перекрёстное сравнение"
 #. Cross-reference match review
 #: i18n/messages.json
 msgid "Cross-reference match review"
-msgstr ""
+msgstr "Проверка совпадений"
 
 #. [collection.xref.processing]
 #. defaultMessage is:
@@ -689,10 +668,7 @@ msgstr "Наборы данных"
 #. [entity.column.dates]
 #. defaultMessage is:
 #. Date
-#. [email.date]
-#. defaultMessage is:
-#. Date
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Date"
 msgstr "Дата"
 
@@ -703,6 +679,9 @@ msgstr "Дата"
 #. defaultMessage is:
 #. Delete
 #. [document.viewer.delete]
+#. defaultMessage is:
+#. Delete
+#. [entity.viewer.delete]
 #. defaultMessage is:
 #. Delete
 #. [mapping.actions.delete]
@@ -728,7 +707,7 @@ msgstr "Дата"
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "Удалить"
 
@@ -855,6 +834,13 @@ msgstr "Электронный адрес"
 msgid "Enter your current password to set a new one."
 msgstr "Введите текущий пароль для установки нового."
 
+#. [entity.info.entities]
+#. defaultMessage is:
+#. Entities
+#: i18n/messages.json
+msgid "Entities"
+msgstr ""
+
 #. [result.error]
 #. defaultMessage is:
 #. Error
@@ -947,7 +933,7 @@ msgstr "Искать публичные записи и секретные до�
 #. Finished
 #: i18n/messages.json
 msgid "Finished"
-msgstr "Готово"
+msgstr "Выполнено"
 
 #. [document.folder.untitled]
 #. defaultMessage is:
@@ -1005,13 +991,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "Found {total} results"
 msgstr "Результатов поиска: {total}"
-
-#. [email.from]
-#. defaultMessage is:
-#. From
-#: i18n/messages.json
-msgid "From"
-msgstr "От"
 
 #. [mapping.create.confirm]
 #. defaultMessage is:
@@ -1132,7 +1111,7 @@ msgstr "Задачи"
 #. Keep private (no sharing)
 #: i18n/messages.json
 msgid "Keep private (no sharing)"
-msgstr ""
+msgstr "Никому не показывать"
 
 #. [queryLogs.add_placeholder]
 #. defaultMessage is:
@@ -1350,13 +1329,6 @@ msgstr "Новая папка"
 msgid "New password"
 msgstr "Новый пароль"
 
-#. [language.multiselect.no.result]
-#. defaultMessage is:
-#. No Result
-#: i18n/messages.json
-msgid "No Result"
-msgstr "Не найдено"
-
 #. [collection.index.empty]
 #. defaultMessage is:
 #. No datasets were found
@@ -1428,13 +1400,6 @@ msgstr "Результатов нет"
 #: i18n/messages.json
 msgid "No results found"
 msgstr "Ничего не найдено"
-
-#. [country.multiselect.no.results]
-#. defaultMessage is:
-#. No results.
-#: i18n/messages.json
-msgid "No results."
-msgstr "Результатов нет."
 
 #. [entity.search.no_results_title]
 #. defaultMessage is:
@@ -1710,13 +1675,6 @@ msgstr "Получать ежедневные уведомления по эл. 
 msgid "Recent notifications"
 msgstr "Последние уведомления"
 
-#. [email.to]
-#. defaultMessage is:
-#. Recipient
-#: i18n/messages.json
-msgid "Recipient"
-msgstr "Получатель"
-
 #. [collection.reconcile]
 #. defaultMessage is:
 #. Reconciliation
@@ -1800,6 +1758,9 @@ msgid ""
 "judgements are sensitive information, so please select what group of users "
 "can view your decisions."
 msgstr ""
+"Проверяйте результаты и находите новые совпадения и связи. Ваши решения "
+"могут быть ценной информацией, поэтому будьте осторожны в выборе групп "
+"пользователей, которым предоставляете доступ."
 
 #. [case.save]
 #. defaultMessage is:
@@ -1851,13 +1812,6 @@ msgstr "Оценка"
 #: i18n/messages.json i18n/messages.json
 msgid "Search"
 msgstr "Поиск"
-
-#. [country.multiselect.select]
-#. defaultMessage is:
-#. Search by country name
-#: i18n/messages.json
-msgid "Search by country name"
-msgstr "Искать по названию страны"
 
 #. [search.nolabel_placeholder]
 #. defaultMessage is:
@@ -1934,13 +1888,6 @@ msgstr "Всего записей: {things}"
 #: i18n/messages.json
 msgid "Searching..."
 msgstr "Поиск..."
-
-#. [language.multiselect.select]
-#. defaultMessage is:
-#. Select
-#: i18n/messages.json
-msgid "Select"
-msgstr "Выбрать"
 
 #. [collection.select]
 #. defaultMessage is:
@@ -2019,7 +1966,7 @@ msgstr "Предоставить доступ"
 #. Share with:
 #: i18n/messages.json
 msgid "Share with:"
-msgstr ""
+msgstr "Предоставить доступ:"
 
 #. [collection.statistics.showmore]
 #. defaultMessage is:
@@ -2143,7 +2090,7 @@ msgstr "Запустить анализ"
 #. Start review
 #: i18n/messages.json
 msgid "Start review"
-msgstr ""
+msgstr "Начать проверку"
 
 #. [mapping.status.status]
 #. defaultMessage is:
@@ -2157,14 +2104,7 @@ msgstr "Статус:"
 #. Stop review
 #: i18n/messages.json
 msgid "Stop review"
-msgstr ""
-
-#. [email.subject]
-#. defaultMessage is:
-#. Subject
-#: i18n/messages.json
-msgid "Subject"
-msgstr "Тема"
+msgstr "Закончить проверку"
 
 #. [diagram.update.submit]
 #. defaultMessage is:
@@ -2222,7 +2162,7 @@ msgstr "Системный статус"
 #. Tasks
 #: i18n/messages.json
 msgid "Tasks"
-msgstr "Задачи"
+msgstr "Ход выполнения"
 
 #. [settings.email.tester]
 #. defaultMessage is:
@@ -2471,16 +2411,6 @@ msgstr "Например, {samples}"
 msgid "Type"
 msgstr "Тип"
 
-#. [country.unknown]
-#. defaultMessage is:
-#. Unknown
-#. [language.unknown]
-#. defaultMessage is:
-#. Unknown
-#: i18n/messages.json i18n/messages.json
-msgid "Unknown"
-msgstr "Что-то неизвестное"
-
 #. [case.label_placeholder]
 #. defaultMessage is:
 #. Untitled dataset
@@ -2689,6 +2619,8 @@ msgid ""
 "You are in <strong>review mode</strong>. In this mode, you can record "
 "judgements about what cross-reference matches are good or bad results."
 msgstr ""
+"Вы находитесь в <strong>режиме проверки</strong>. Решайте, какие результаты "
+"перекрёстного сравнения хорошие, а какие плохие."
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
@@ -2814,7 +2746,7 @@ msgstr "Изменения сохранены"
 msgid ""
 "Your decisions will be shared with the members of "
 "<strong>{context}</strong>."
-msgstr ""
+msgstr "Ваши решения будут доступны участникам <strong>{context}</strong>."
 
 #. [diagram.create.success]
 #. defaultMessage is:
