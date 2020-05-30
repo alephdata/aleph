@@ -53,7 +53,7 @@ def refresh_collection(collection_id, sync=True):
 
 def compute_collections():
     for collection in Collection.all():
-        compute_collection(collection, sync=False)
+        compute_collection(collection)
 
 
 def compute_collection(collection, sync=False):
@@ -158,7 +158,4 @@ def upgrade_collections():
         if collection.deleted_at is not None:
             delete_collection(collection, keep_metadata=True, sync=True)
             continue
-        if collection.casefile:
-            reindex_collection(collection, flush=True)
-        else:
-            compute_collection(collection, sync=True)
+        compute_collection(collection, sync=True)

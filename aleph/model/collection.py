@@ -185,6 +185,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return cls._apply_authz(q, authz)
 
     @classmethod
+    def all_casefiles(cls):
+        q = super(Collection, cls).all()
+        q = q.filter(Collection.casefile == True)  # noqa
+        return q
+
+    @classmethod
     def all_by_ids(cls, ids, deleted=False, authz=None):
         q = super(Collection, cls).all_by_ids(ids, deleted=deleted)
         return cls._apply_authz(q, authz)

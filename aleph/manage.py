@@ -109,6 +109,15 @@ def reindex(foreign_id, flush=False):
     reindex_collection(collection, flush=flush)
 
 
+@cli.command('reindex-casefiles')
+@click.option('--flush', is_flag=True, default=False)
+def reindex_casefiles(flush=False):
+    """Re-index all the casefile collections."""
+    for collection in Collection.all_casefiles():
+        log.info("[%s] Starting to re-index", collection)
+        reindex_collection(collection, flush=flush)
+
+
 @cli.command()
 @click.argument('foreign_id')
 @click.option('--index', is_flag=True, default=False)
@@ -116,6 +125,15 @@ def reingest(foreign_id, index=False):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
     reingest_collection(collection, index=index)
+
+
+@cli.command('reingest-casefiles')
+@click.option('--index', is_flag=True, default=False)
+def reingest_casefiles(index=False):
+    """Re-ingest all the casefile collections."""
+    for collection in Collection.all_casefiles():
+        log.info("[%s] Starting to re-ingest", collection)
+        reingest_collection(collection, index=index)
 
 
 @cli.command()
