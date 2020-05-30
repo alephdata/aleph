@@ -1,7 +1,7 @@
 # Dependencies maintained by OCCRP
 banal==1.0.1
 urlnormalizer==1.2.5
-followthemoney==1.31.1
+followthemoney==1.31.3
 followthemoney-store[postgresql]==2.1.2
 fingerprints==1.0.1
 servicelayer[google,amazon]==1.11.0

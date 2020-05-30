@@ -1,7 +1,7 @@
 banal==1.0.1
 normality==2.0.0
 pantomime==0.4.0
-followthemoney==1.31.1
+followthemoney==1.31.3
 followthemoney-store[postgresql]==2.1.2
 servicelayer[google,amazon]==1.10.4
 languagecodes==1.0.5
