@@ -151,7 +151,6 @@ def _numeric_values(type_, values):
 
 def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
-    proxy = collection.ns.apply(proxy)
     data = proxy.to_full_dict()
     data['schemata'] = list(proxy.schema.names)
 

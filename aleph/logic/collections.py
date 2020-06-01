@@ -62,7 +62,7 @@ def compute_collection(collection, sync=False):
         return
     refresh_collection(collection.id, sync=sync)
     cache.set(key, 'computed', expires=cache.EXPIRE - 60)
-    log.info("[%s] Collection changed, computing statistics...", collection)
+    log.info("[%s] Changed, computing statistics...", collection)
     index.update_collection_stats(collection.id)
     index.index_collection(collection, sync=sync)
 

@@ -85,7 +85,7 @@ def index_collection(collection, sync=False):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
-    log.info("Index [%s]: %s", collection.id, collection.label)
+    log.info("[%s] Index: %s...", collection, collection.label)
     data = get_collection(collection.id)
     if data is None:
         return

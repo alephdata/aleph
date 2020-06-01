@@ -48,7 +48,7 @@ def map_to_aggregator(collection, mapping, aggregator):
     writer = aggregator.bulk()
     for idx, record in enumerate(mapper.source.records, 1):
         if idx > 0 and idx % 1000 == 0:
-            log.info("[%s] Mapped %s rows ...", mapping, idx)
+            log.info("[%s] Mapped %s rows ...", mapping.id, idx)
         for entity in mapper.map(record).values():
             entity.context = mapping.get_proxy_context()
             entity.context['mutable'] = True
@@ -58,7 +58,7 @@ def map_to_aggregator(collection, mapping, aggregator):
             entity = remove_checksums(entity)
             writer.put(entity, fragment=idx, origin=origin)
     writer.flush()
-    log.info("[%s] Mapping done (%s rows)", mapping, idx)
+    log.info("[%s] Mapping done (%s rows)", mapping.id, idx)
 
 
 def load_mapping(stage, collection, mapping_id, sync=False):
