@@ -131,8 +131,7 @@ RUN chown -R app:app /ingestors
 
 ENV ARCHIVE_TYPE=file \
     ARCHIVE_PATH=/data \
-    BALKHASH_BACKEND=postgresql \
-    BALKHASH_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph \
+    FTM_STORE_URI=postgresql://aleph:aleph@postgres/aleph \
     REDIS_URL=redis://redis:6379/0 \
     INGESTORS_CONVERT_DOCUMENT_URL=http://convert-document:3000/convert
 
