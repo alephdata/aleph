@@ -132,19 +132,17 @@ def ingest_upload(collection_id):
                                  foreign_id=foreign_id,
                                  content_hash=content_hash,
                                  meta=meta,
-                                 uploader_id=request.authz.id)
+                                 role_id=request.authz.id)
         collection.touch()
         db.session.commit()
-        proxy = document.to_proxy()
+        proxy = document.to_proxy(ns=collection.ns)
         if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync:
             index_proxy(collection, proxy, sync=sync)
-        ingest_entity(collection, proxy, job_id=job_id, sync=sync)
-        document_id = collection.ns.sign(document.id)
-        _notify(collection, document_id)
+        ingest_entity(collection, proxy, job_id=job_id)
+        _notify(collection, proxy.id)
+        return jsonify({
+          'status': 'ok',
+          'id': proxy.id
+        }, status=201)
     finally:
         shutil.rmtree(upload_dir)
-
-    return jsonify({
-        'status': 'ok',
-        'id': document_id
-    }, status=201)

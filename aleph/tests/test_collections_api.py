@@ -110,7 +110,7 @@ class CollectionsApiTestCase(TestCase):
 
     def test_bulk_api(self):
         _, headers = self.login(is_admin=True)
-        data = [
+        data = json.dumps([
             {
                 'id': '4345800498380953840',
                 'schema': 'Person',
@@ -125,11 +125,11 @@ class CollectionsApiTestCase(TestCase):
                     'name': "Osama bin Laden",
                 }
             }
-        ]
+        ])
         url = '/api/2/collections/%s/_bulk' % self.col.id
-        res = self.client.post(url, data=json.dumps(data))
+        res = self.client.post(url, data=data)
         assert res.status_code == 403, res
-        res = self.client.post(url, headers=headers, data=json.dumps(data))
+        res = self.client.post(url, headers=headers, data=data)
         assert res.status_code == 204, res
         query = '/api/2/entities?filter:schemata=Thing&filter:collection_id=%s'
         query = query % self.col.id

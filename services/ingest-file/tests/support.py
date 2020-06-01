@@ -9,10 +9,11 @@ from servicelayer.archive import init_archive
 from servicelayer.jobs import Job, Stage
 from servicelayer.archive.util import ensure_path
 from servicelayer import settings as service_settings
-from balkhash import settings as balkhash_settings
+from ftmstore import settings as ftmstore_settings
 from ingestors import settings as ingestors_settings
 from ingestors.manager import Manager
-from ingestors.worker import OP_INGEST, OP_ANALYZE
+from ingestors.store import get_dataset
+from ingestors.worker import OP_INGEST
 
 
 def emit_entity(self, entity, fragment=None):
@@ -32,12 +33,12 @@ class TestCase(unittest.TestCase):
         service_settings.REDIS_URL = None
         service_settings.ARCHIVE_TYPE = 'file'
         service_settings.ARCHIVE_PATH = mkdtemp()
-        balkhash_settings.BACKEND = 'LEVELDB'
-        balkhash_settings.LEVELDB_PATH = mkdtemp()
+        ftmstore_settings.DATABASE_URI = 'sqlite://'
         conn = get_fakeredis()
         job = Job.create(conn, 'test')
         stage = Stage(job, OP_INGEST)
-        self.manager = Manager(stage, {})
+        dataset = get_dataset(job.dataset.name, OP_INGEST)
+        self.manager = Manager(dataset, stage, {})
         self.manager.entities = []
         self.manager.emit_entity = types.MethodType(emit_entity, self.manager)
         self.manager.queue_entity = types.MethodType(queue_entity, self.manager)  # noqa

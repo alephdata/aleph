@@ -9,7 +9,6 @@ from banal import ensure_list
 from normality import slugify
 from tabulate import tabulate
 from flask.cli import FlaskGroup
-from servicelayer.jobs import Job
 from followthemoney.cli.util import write_object
 
 from aleph.core import create_app, cache
@@ -18,15 +17,13 @@ from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
-from aleph.queues import get_active_collection_status, get_stage
-from aleph.queues import OP_PROCESS, OP_XREF
+from aleph.queues import get_active_collection_status, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
 from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
-from aleph.logic.collections import reset_collection, delete_collection
-from aleph.logic.collections import upgrade_collections, process_collection
-from aleph.logic.processing import index_aggregate
+from aleph.logic.collections import delete_collection, reindex_collection
+from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import create_user, update_roles
@@ -105,31 +102,38 @@ def delete(foreign_id, keep_metadata=False):
 
 @cli.command()
 @click.argument('foreign_id')
-@click.option('--sync', is_flag=True, default=False)
-def reset(foreign_id, sync=False):
-    """Clear the search index and entity cache or a collection."""
-    collection = get_collection(foreign_id)
-    reset_collection(collection, sync=False)
-
-
-@cli.command()
-@click.argument('foreign_id')
-def reindex(foreign_id):
+@click.option('--flush', is_flag=True, default=False)
+def reindex(foreign_id, flush=False):
     """Index all the aggregator contents for a collection."""
     collection = get_collection(foreign_id)
-    stage = get_stage(collection, OP_PROCESS)
-    index_aggregate(stage, collection)
-    update_collection(collection)
+    reindex_collection(collection, flush=flush)
+
+
+@cli.command('reindex-casefiles')
+@click.option('--flush', is_flag=True, default=False)
+def reindex_casefiles(flush=False):
+    """Re-index all the casefile collections."""
+    for collection in Collection.all_casefiles():
+        log.info("[%s] Starting to re-index", collection)
+        reindex_collection(collection, flush=flush)
 
 
 @cli.command()
 @click.argument('foreign_id')
-@click.option('--sync', is_flag=True, default=False)
-def process(foreign_id, sync=False):
+@click.option('--index', is_flag=True, default=False)
+def reingest(foreign_id, index=False):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
-    stage = get_stage(collection, OP_PROCESS)
-    process_collection(stage, collection, sync=sync)
+    reingest_collection(collection, index=index)
+
+
+@cli.command('reingest-casefiles')
+@click.option('--index', is_flag=True, default=False)
+def reingest_casefiles(index=False):
+    """Re-ingest all the casefile collections."""
+    for collection in Collection.all_casefiles():
+        log.info("[%s] Starting to re-ingest", collection)
+        reingest_collection(collection, index=index)
 
 
 @cli.command()
@@ -181,13 +185,13 @@ def load_entities(foreign_id, infile, unsafe=False):
                 return
             if idx % 1000 == 0:
                 log.info("[%s] Loaded %s entities from: %s",
-                         foreign_id, idx, infile.name)
+                         collection, idx, infile.name)
             yield json.loads(line)
 
-    job_id = Job.random_id()
-    log.info("Loading [%s]: %s", job_id, foreign_id)
-    bulk_write(collection, read_entities(), job_id=job_id, unsafe=unsafe)
-    update_collection(collection)
+    role = Role.load_cli_user()
+    bulk_write(collection, read_entities(), unsafe=unsafe,
+               role_id=role.id, index=False)
+    reindex_collection(collection)
 
 
 @cli.command('dump-entities')
@@ -198,7 +202,6 @@ def dump_entities(foreign_id, outfile):
     collection = get_collection(foreign_id)
     for entity in iter_proxies(collection_id=collection.id,
                                excludes=['text']):
-        entity.context = {}
         write_object(outfile, entity)
 
 

@@ -8,7 +8,6 @@ import { withRouter } from 'react-router';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import DocumentUploadDialog from 'src/dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
-import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { Count, ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
@@ -33,12 +32,10 @@ export class DocumentManager extends Component {
     this.state = {
       selection: [],
       deleteIsOpen: false,
-      analyzeIsOpen: false,
       uploadIsOpen: false,
     };
     this.updateSelection = this.updateSelection.bind(this);
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
-    this.toggleAnalyze = this.toggleAnalyze.bind(this);
     this.toggleUpload = this.toggleUpload.bind(this);
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
   }
@@ -60,10 +57,6 @@ export class DocumentManager extends Component {
       this.setState({ selection: [] });
     }
     this.setState(({ deleteIsOpen: !deleteIsOpen }));
-  }
-
-  toggleAnalyze() {
-    this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
   }
 
   toggleUpload() {
@@ -118,11 +111,6 @@ export class DocumentManager extends Component {
               </span>
               <Count count={selection.length} />
             </Button>
-            { mutableCollection && !document && (
-              <Button icon="automatic-updates" onClick={this.toggleAnalyze}>
-                <FormattedMessage id="document.manager.analyze" defaultMessage="Re-process" />
-              </Button>
-            )}
           </div>
         )}
         { hasPending && (
@@ -156,11 +144,6 @@ export class DocumentManager extends Component {
           toggleDialog={this.toggleUpload}
           onUploadSuccess={this.onUploadSuccess}
           parent={document}
-        />
-        <CollectionAnalyzeAlert
-          collection={collection}
-          isOpen={this.state.analyzeIsOpen}
-          toggleAlert={this.toggleAnalyze}
         />
       </div>
     );

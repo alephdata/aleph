@@ -1,12 +1,13 @@
 import click
 import logging
-import balkhash
 from pprint import pprint
 from servicelayer.cache import get_redis, get_fakeredis
 from servicelayer.logs import configure_logging
 from servicelayer.jobs import Job, Dataset
 from servicelayer.archive.util import ensure_path
 
+from ingestors import settings
+from ingestors.store import get_dataset
 from ingestors.manager import Manager
 from ingestors.directory import DirectoryIngestor
 from ingestors.worker import IngestWorker, OP_ANALYZE, OP_INGEST
@@ -46,7 +47,7 @@ def killthekitten():
     conn.flushall()
 
 
-def _ingest_path(conn, dataset, path, languages=[]):
+def _ingest_path(db, conn, dataset, path, languages=[]):
     context = {'languages': languages}
     job = Job.create(conn, dataset)
     stage = job.get_stage(OP_INGEST)
@@ -76,7 +77,8 @@ def _ingest_path(conn, dataset, path, languages=[]):
 def ingest(path, dataset, languages=None):
     """Queue a set of files for ingest."""
     conn = get_redis()
-    _ingest_path(conn, dataset, path, languages=languages)
+    db = get_dataset(dataset, OP_INGEST)
+    _ingest_path(db, conn, dataset, path, languages=languages)
 
 
 @cli.command()
@@ -90,9 +92,9 @@ def ingest(path, dataset, languages=None):
 def debug(path, dataset, languages=None):
     """Debug the ingest for the given path."""
     conn = get_fakeredis()
-    db = balkhash.init(dataset)
-    db.delete()
-    _ingest_path(conn, dataset, path, languages=languages)
+    settings.sts.DATABASE_URI = 'sqlite://'
+    db = get_dataset(dataset, OP_INGEST)
+    _ingest_path(db, conn, dataset, path, languages=languages)
     worker = IngestWorker(conn=conn, stages=STAGES)
     worker.sync()
     for entity in db.iterate():

@@ -94,7 +94,7 @@ PASSWORD_LOGIN = env.to_bool('ALEPH_PASSWORD_LOGIN', not OAUTH)
 DEFAULT_LANGUAGE = env.get('ALEPH_DEFAULT_LANGUAGE', 'en')
 
 # User interface
-UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
+UI_LANGUAGES = ['ru', 'es', 'de', 'en', 'ar']
 UI_LANGUAGES = env.to_list('ALEPH_UI_LANGUAGES', UI_LANGUAGES)
 UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
 

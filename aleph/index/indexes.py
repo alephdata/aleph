@@ -94,10 +94,6 @@ def configure_schema(schema, version):
             },
             "schema": KEYWORD,
             "schemata": KEYWORD,
-            "foreign_id": KEYWORD,
-            "collection_id": KEYWORD,
-            "job_id": KEYWORD,
-            "mapping_id": KEYWORD,
             "keywords": KEYWORD,
             registry.entity.group: KEYWORD,
             registry.language.group: KEYWORD,
@@ -141,6 +137,10 @@ def configure_schema(schema, version):
                 "type": "object",
                 "properties": numeric_mapping
             },
+            "role_id": KEYWORD,
+            "collection_id": KEYWORD,
+            "origin": KEYWORD,
+            "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
         }
     }

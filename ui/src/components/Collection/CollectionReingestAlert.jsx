@@ -3,46 +3,46 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Alert, Intent, Checkbox } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { triggerCollectionAnalyze } from 'src/actions';
+import { triggerCollectionReingest } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
 
 
 const messages = defineMessages({
   processing: {
-    id: 'collection.analyze.processing',
-    defaultMessage: 'Re-processing started.',
+    id: 'collection.reingest.processing',
+    defaultMessage: 'Re-ingest started.',
   },
   cancel: {
     id: 'collection.analyze.cancel',
     defaultMessage: 'Cancel',
   },
   confirm: {
-    id: 'collection.analyze.confirm',
+    id: 'collection.reingest.confirm',
     defaultMessage: 'Start processing',
   },
-  reset: {
-    id: 'collection.analyze.reset',
-    defaultMessage: 'Clear index before processing',
+  index: {
+    id: 'collection.reingest.index',
+    defaultMessage: 'Index documents as they are processed.',
   },
 });
 
-class CollectionAnalyzeAlert extends Component {
+class CollectionReingestAlert extends Component {
   constructor(props) {
     super(props);
-    this.state = { reset: true };
-    this.onToggleReset = this.onToggleReset.bind(this);
+    this.state = { index: true };
+    this.onToggleIndex = this.onToggleIndex.bind(this);
     this.onConfirm = this.onConfirm.bind(this);
   }
 
   onConfirm() {
     const { collection, intl } = this.props;
-    this.props.triggerCollectionAnalyze(collection.id, this.state.reset);
+    this.props.triggerCollectionReingest(collection.id, this.state.index);
     showSuccessToast(intl.formatMessage(messages.processing));
     this.props.toggleAlert();
   }
 
-  onToggleReset() {
-    this.setState((state) => ({ reset: !state.reset }));
+  onToggleIndex() {
+    this.setState((state) => ({ index: !state.index }));
   }
 
   render() {
@@ -61,14 +61,14 @@ class CollectionAnalyzeAlert extends Component {
       >
         <p>
           <FormattedMessage
-            id="collection.analyze.alert.text"
-            defaultMessage="Re-processing the dataset will take some time. Start the process only once and allow time for it to complete."
+            id="collection.reingest.text"
+            defaultMessage="You're about to re-process all documents in this dataset. This might take some time."
           />
         </p>
         <Checkbox
-          checked={this.state.reset}
-          label={intl.formatMessage(messages.reset)}
-          onChange={this.onToggleReset}
+          checked={this.state.index}
+          label={intl.formatMessage(messages.index)}
+          onChange={this.onToggleIndex}
         />
       </Alert>
     );
@@ -76,6 +76,6 @@ class CollectionAnalyzeAlert extends Component {
 }
 
 export default compose(
-  connect(null, { triggerCollectionAnalyze }),
+  connect(null, { triggerCollectionReingest }),
   injectIntl,
-)(CollectionAnalyzeAlert);
+)(CollectionReingestAlert);

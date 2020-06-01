@@ -2,6 +2,7 @@ import logging
 from followthemoney import model
 from servicelayer.worker import Worker
 
+from ingestors.store import get_dataset
 from ingestors.manager import Manager
 from ingestors.analysis import Analyzer
 
@@ -24,10 +25,10 @@ class IngestWorker(Worker):
         context = task.context
         context['pipeline'] = pipeline
         log.info('Sending %s entities to: %s', len(entity_ids), next_stage)
-        stage.queue({'entity_ids': entity_ids}, task.context)
+        stage.queue({'entity_ids': entity_ids}, context)
 
-    def _ingest(self, task):
-        manager = Manager(task.stage, task.context)
+    def _ingest(self, dataset, task):
+        manager = Manager(dataset, task.stage, task.context)
         entity = model.get_proxy(task.payload)
         log.debug('Ingest: %r', entity)
         try:
@@ -36,9 +37,8 @@ class IngestWorker(Worker):
             manager.close()
         return manager.emitted
 
-    def _analyze(self, task):
+    def _analyze(self, dataset, task):
         entity_ids = task.payload.get('entity_ids')
-        dataset = Manager.get_dataset(task.stage, task.context)
         analyzer = None
         for entity in dataset.partials(entity_id=entity_ids):
             if analyzer is None or analyzer.entity.id != entity.id:
@@ -52,11 +52,14 @@ class IngestWorker(Worker):
         return entity_ids
 
     def handle(self, task):
-        if task.stage.stage == OP_INGEST:
-            entity_ids = self._ingest(task)
-            self.dispatch_next(task, entity_ids)
-        elif task.stage.stage == OP_ANALYZE:
-            entity_ids = self._analyze(task)
-            self.dispatch_next(task, entity_ids)
-        else:
-            log.error('Unknown task: %r', task)
+        name = task.context.get('ftmstore', task.job.dataset.name)
+        dataset = get_dataset(name, task.stage.stage)
+        try:
+            if task.stage.stage == OP_INGEST:
+                entity_ids = self._ingest(dataset, task)
+                self.dispatch_next(task, entity_ids)
+            elif task.stage.stage == OP_ANALYZE:
+                entity_ids = self._analyze(dataset, task)
+                self.dispatch_next(task, entity_ids)
+        finally:
+            dataset.close()
