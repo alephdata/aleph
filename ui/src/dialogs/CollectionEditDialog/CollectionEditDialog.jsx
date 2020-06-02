@@ -327,7 +327,7 @@ export class CollectionEditDialog extends Component {
             />
           </div>
         </div>
-      </Dialog>
+      </FormDialog>
     );
   }
 }
