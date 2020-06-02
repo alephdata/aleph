@@ -206,6 +206,7 @@ def reingest(collection_id):
           type: integer
       - in: query
         name: index
+        description: Index documents while they're being processed.
         schema:
           type: boolean
       responses:
@@ -238,6 +239,7 @@ def reindex(collection_id):
           minimum: 1
           type: integer
       - in: query
+        description: Delete the index before re-generating it.
         name: flush
         schema:
           type: boolean
@@ -385,6 +387,16 @@ def delete(collection_id):
         schema:
           minimum: 1
           type: integer
+      - in: query
+        description: Wait for delete to finish in backend.
+        name: sync
+        schema:
+          type: boolean
+      - in: query
+        description: Delete only the contents, but not the collection itself.
+        name: keep_metadata
+        schema:
+          type: boolean
       responses:
         '204':
           description: No Content
@@ -392,6 +404,7 @@ def delete(collection_id):
         - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
+    keep_metadata = get_flag('keep_metadata', default=False)
     sync = get_flag('sync', default=True)
-    delete_collection(collection, sync=sync)
+    delete_collection(collection, keep_metadata=keep_metadata, sync=sync)
     return ('', 204)
