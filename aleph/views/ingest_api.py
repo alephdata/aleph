@@ -117,6 +117,7 @@ def ingest_upload(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     job_id = get_session_id()
     sync = get_flag('sync', default=False)
+    index = get_flag('index', default=True)
     meta, foreign_id = _load_metadata()
     parent = _load_parent(collection, meta)
     upload_dir = ensure_path(mkdtemp(prefix='aleph.upload.'))
@@ -136,9 +137,9 @@ def ingest_upload(collection_id):
         collection.touch()
         db.session.commit()
         proxy = document.to_proxy(ns=collection.ns)
-        if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync:
+        if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync and index:
             index_proxy(collection, proxy, sync=sync)
-        ingest_entity(collection, proxy, job_id=job_id)
+        ingest_entity(collection, proxy, job_id=job_id, index=index)
         _notify(collection, proxy.id)
         return jsonify({
           'status': 'ok',
