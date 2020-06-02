@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-05-26T15:28:17.769Z\n"
+"POT-Creation-Date: 2020-06-02T10:34:36.917Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -304,10 +304,13 @@ msgstr "Eigenschaft zuweisen"
 msgid "Attachments"
 msgstr "Anhänge"
 
-#. [collection.analyze.cancel]
+#. [collection.publish.cancel]
 #. defaultMessage is:
 #. Cancel
-#. [collection.publish.cancel]
+#. [collection.reindex.cancel]
+#. defaultMessage is:
+#. Cancel
+#. [collection.analyze.cancel]
 #. defaultMessage is:
 #. Cancel
 #. [collection.edit.cancel_button]
@@ -346,7 +349,7 @@ msgstr "Anhänge"
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -437,12 +440,12 @@ msgstr "Erwähnungen"
 msgid "Clear all"
 msgstr "Alle entfernen"
 
-#. [collection.analyze.reset]
+#. [collection.reindex.flush]
 #. defaultMessage is:
-#. Clear index before processing
+#. Clear index before re-indexing
 #: i18n/messages.json
-msgid "Clear index before processing"
-msgstr "Suchindex vor der Verarbeitung löschen"
+msgid "Clear index before re-indexing"
+msgstr ""
 
 #. [navbar.alert_add]
 #. defaultMessage is:
@@ -513,6 +516,13 @@ msgstr "Kontakt"
 #: i18n/messages.json
 msgid "Continue to frolic about while data is being processed."
 msgstr "Tollen sie herum während die Daten verarbeitet werden."
+
+#. [collection.info.publish]
+#. defaultMessage is:
+#. Convert to evidence
+#: i18n/messages.json
+msgid "Convert to evidence"
+msgstr ""
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -678,9 +688,6 @@ msgstr "Datensätze"
 msgid "Date"
 msgstr "Datum"
 
-#. [collection.info.delete]
-#. defaultMessage is:
-#. Delete
 #. [diagram.info.delete]
 #. defaultMessage is:
 #. Delete
@@ -713,9 +720,16 @@ msgstr "Datum"
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "Löschen"
+
+#. [collection.info.delete]
+#. defaultMessage is:
+#. Delete dataset
+#: i18n/messages.json
+msgid "Delete dataset"
+msgstr ""
 
 #. [mapping.actions.delete.toast]
 #. defaultMessage is:
@@ -1080,6 +1094,20 @@ msgstr "Diagramm importieren"
 #: i18n/messages.json
 msgid "Import existing mapping"
 msgstr "Bestehendes Mapping importieren"
+
+#. [collection.reingest.index]
+#. defaultMessage is:
+#. Index documents as they are processed.
+#: i18n/messages.json
+msgid "Index documents as they are processed."
+msgstr ""
+
+#. [collection.reindex.processing]
+#. defaultMessage is:
+#. Indexing started.
+#: i18n/messages.json
+msgid "Indexing started."
+msgstr ""
 
 #. [entity.info.info]
 #. defaultMessage is:
@@ -1472,13 +1500,6 @@ msgstr ""
 msgid "One result found"
 msgstr "Ein Treffer gefunden"
 
-#. [collection.publish.admin]
-#. defaultMessage is:
-#. Only administrators can publish a dataset.
-#: i18n/messages.json
-msgid "Only administrators can publish a dataset."
-msgstr "Nur Administratoren dürfen einen Datensatz veröffentlichen."
-
 #. [collection.edit.info.placeholder_publisher]
 #. defaultMessage is:
 #. Organisation or person publishing this data
@@ -1594,13 +1615,10 @@ msgstr "Eigenschaften"
 msgid "Proximity searches"
 msgstr "Nachbarschaftssuchen"
 
-#. [collection.info.publish]
-#. defaultMessage is:
-#. Publish
 #. [collection.publish.confirm]
 #. defaultMessage is:
 #. Publish
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Publish"
 msgstr "Veröffentlichen"
 
@@ -1635,35 +1653,33 @@ msgstr ""
 msgid "Re-generating entities..."
 msgstr "Entitäten werden erneut erzeugt..."
 
-#. [document.manager.analyze]
+#. [collection.info.reindex]
 #. defaultMessage is:
-#. Re-process
+#. Re-index all content
+#: i18n/messages.json
+msgid "Re-index all content"
+msgstr ""
+
+#. [collection.info.reingest]
+#. defaultMessage is:
+#. Re-ingest documents
+#: i18n/messages.json
+msgid "Re-ingest documents"
+msgstr ""
+
+#. [collection.reingest.processing]
+#. defaultMessage is:
+#. Re-ingest started.
+#: i18n/messages.json
+msgid "Re-ingest started."
+msgstr ""
+
 #. [collection.edit.info.analyze]
 #. defaultMessage is:
 #. Re-process
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Re-process"
 msgstr "Erneut verarbeiten"
-
-#. [collection.analyze.processing]
-#. defaultMessage is:
-#. Re-processing started.
-#: i18n/messages.json
-msgid "Re-processing started."
-msgstr "Verarbeitung gestartet."
-
-#. [collection.analyze.alert.text]
-#. defaultMessage is:
-#. Re-processing the dataset will take some time. Start the process only once
-#. and allow time for it to complete.
-#: i18n/messages.json
-msgid ""
-"Re-processing the dataset will take some time. Start the process only once "
-"and allow time for it to complete."
-msgstr ""
-"Den Datensatz erneut zu verarbeiten wird einige Zeit dauern. Bitte starten "
-"sie diesen Prozess nur einmal und geben sie ihm Zeit um vollständig "
-"abzuschließen."
 
 #. [settings.email.muted]
 #. defaultMessage is:
@@ -2078,7 +2094,14 @@ msgstr ""
 msgid "Spelling variants"
 msgstr "Schreibvarianten"
 
-#. [collection.analyze.confirm]
+#. [collection.reindex.confirm]
+#. defaultMessage is:
+#. Start indexing
+#: i18n/messages.json
+msgid "Start indexing"
+msgstr ""
+
+#. [collection.reingest.confirm]
 #. defaultMessage is:
 #. Start processing
 #: i18n/messages.json
@@ -2720,6 +2743,26 @@ msgid ""
 msgstr ""
 "Sie erhalten eine Benachrichtigung, sobald ein neues Suchergebnis zu einem "
 "ihrer Themen-Abos bereit steht."
+
+#. [collection.analyze.alert.text]
+#. defaultMessage is:
+#. You're about to re-index the entities in this dataset. This can be helpful
+#. if there are inconsistencies in how the data is presented.
+#: i18n/messages.json
+msgid ""
+"You're about to re-index the entities in this dataset. This can be helpful "
+"if there are inconsistencies in how the data is presented."
+msgstr ""
+
+#. [collection.reingest.text]
+#. defaultMessage is:
+#. You're about to re-process all documents in this dataset. This might take
+#. some time.
+#: i18n/messages.json
+msgid ""
+"You're about to re-process all documents in this dataset. This might take "
+"some time."
+msgstr ""
 
 #. [password_auth.name]
 #. defaultMessage is:
