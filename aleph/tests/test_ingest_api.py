@@ -4,8 +4,8 @@ from pprint import pprint  # noqa
 
 from aleph.model import Document
 from aleph.tests.util import TestCase
-from aleph.queues import get_status, get_stage, OP_INGEST, OP_PROCESS
-from aleph.logic.collections import process_collection
+from aleph.queues import get_status, OP_INGEST
+from aleph.logic.collections import reindex_collection
 
 
 class IngestApiTestCase(TestCase):
@@ -99,8 +99,7 @@ class IngestApiTestCase(TestCase):
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)
         assert res.status_code == 201, res
-        stage = get_stage(self.col, OP_PROCESS)
-        process_collection(stage, self.col, ingest=False)
+        reindex_collection(self.col)
         assert 'id' in res.json, res.json
         url = '/api/2/entities/%s' % res.json['id']
         res = self.client.get(url, headers=headers)

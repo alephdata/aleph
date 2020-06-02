@@ -1,6 +1,6 @@
 import uuid
 import logging
-from datetime import datetime
+from datetime import datetime, date
 
 from aleph.core import db
 
@@ -10,6 +10,12 @@ ENTITY_ID_LEN = 128
 
 def make_textid():
     return uuid.uuid4().hex
+
+
+def iso_text(obj):
+    if isinstance(obj, (date, datetime)):
+        return obj.isoformat()
+    return obj
 
 
 class IdModel(object):

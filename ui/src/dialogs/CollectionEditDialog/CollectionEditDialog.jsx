@@ -3,8 +3,6 @@ import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
-import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import { Role, Country, Language } from 'src/components/common';
 import FormDialog from 'src/dialogs/common/FormDialog';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
@@ -78,8 +76,6 @@ export class CollectionEditDialog extends Component {
     super(props);
     this.state = {
       collection: props.collection,
-      deleteIsOpen: false,
-      analyzeIsOpen: false,
       blocking: false,
     };
 
@@ -88,8 +84,6 @@ export class CollectionEditDialog extends Component {
     this.onSelectLanguages = this.onSelectLanguages.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
-    this.toggleDeleteCollection = this.toggleDeleteCollection.bind(this);
-    this.toggleAnalyzeCollection = this.toggleAnalyzeCollection.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -135,14 +129,6 @@ export class CollectionEditDialog extends Component {
       showWarningToast(e.message);
       this.setState({ blocking: false });
     }
-  }
-
-  toggleDeleteCollection() {
-    this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
-  }
-
-  toggleAnalyzeCollection() {
-    this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
   }
 
   render() {
@@ -334,18 +320,6 @@ export class CollectionEditDialog extends Component {
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
             <Button
-              intent={Intent.DANGER}
-              onClick={this.toggleDeleteCollection}
-              disabled={blocking}
-              text={intl.formatMessage(messages.delete_button)}
-            />
-            <Button
-              icon="automatic-updates"
-              onClick={this.toggleAnalyzeCollection}
-              disabled={blocking}
-              text={intl.formatMessage(messages.analyze_button)}
-            />
-            <Button
               intent={Intent.PRIMARY}
               onClick={this.onSave}
               disabled={blocking}
@@ -353,17 +327,7 @@ export class CollectionEditDialog extends Component {
             />
           </div>
         </div>
-        <CollectionDeleteDialog
-          isOpen={this.state.deleteIsOpen}
-          collection={collection}
-          toggleDialog={this.toggleDeleteCollection}
-        />
-        <CollectionAnalyzeAlert
-          collection={collection}
-          isOpen={this.state.analyzeIsOpen}
-          toggleAlert={this.toggleAnalyzeCollection}
-        />
-      </FormDialog>
+      </Dialog>
     );
   }
 }

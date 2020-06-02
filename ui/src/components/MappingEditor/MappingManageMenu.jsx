@@ -154,17 +154,14 @@ class MappingManageMenu extends Component {
   }
 
   exportMappingData() {
-    const { document, mappings, existingMappingMetadata } = this.props;
+    const { document, mappings } = this.props;
 
     try {
       const fileData = { [document.id]:
         {
           label: document.getCaption(),
-          info_url: document.links.self,
-          query: {
-            csv_url: existingMappingMetadata.links.table_csv,
-            entities: mappings.toApiFormat(),
-          },
+          info_url: document.links.ui,
+          query: { entities: mappings.toApiFormat() },
         },
       };
       const yamlData = YAML.stringify(fileData);

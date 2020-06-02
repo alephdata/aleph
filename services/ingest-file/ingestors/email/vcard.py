@@ -39,6 +39,7 @@ class VCardIngestor(Ingestor, EncodingSupport):
                 person.make_id(key)
             person.add('email', email)
         if person.id:
+            self.manager.apply_context(person, entity)
             self.manager.emit_entity(person)
 
     def ingest(self, file_path, entity):

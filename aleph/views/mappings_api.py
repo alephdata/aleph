@@ -272,11 +272,11 @@ def trigger(collection_id, mapping_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
+    mapping.disabled = False
+    db.session.commit()
     job_id = get_session_id()
     payload = {'mapping_id': mapping.id}
     queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
-    collection.touch()
-    db.session.commit()
     return ('', 202)
 
 
@@ -313,6 +313,8 @@ def flush(collection_id, mapping_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
+    mapping.disabled = True
+    db.session.commit()
     queue_task(collection, OP_FLUSH_MAPPING,
                job_id=get_session_id(),
                payload={'mapping_id': mapping.id})

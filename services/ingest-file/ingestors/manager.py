@@ -1,17 +1,17 @@
 import magic
 import logging
-import balkhash
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
 from followthemoney import model
 from banal import ensure_list
 from normality import stringify
 from pantomime import normalize_mimetype
-from balkhash.utils import safe_fragment
+from ftmstore.utils import safe_fragment
 from servicelayer.archive import init_archive
 from servicelayer.archive.util import ensure_path
 from servicelayer.extensions import get_extensions
 from followthemoney.helpers import entity_filename
+from followthemoney.namespace import Namespace
 
 from ingestors.directory import DirectoryIngestor
 from ingestors.exc import ProcessingException
@@ -32,37 +32,20 @@ class Manager(object):
 
     MAGIC = magic.Magic(mime=True)
 
-    def __init__(self, stage, context):
+    def __init__(self, dataset, stage, context):
+        self.dataset = dataset
+        self.writer = dataset.bulk()
         self.stage = stage
         self.context = context
+        self.ns = Namespace(self.context.get('namespace'))
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self.emitted = set()
-        self._writer = None
-        self._dataset = None
 
     @property
     def archive(self):
         if not hasattr(settings, '_archive'):
             settings._archive = init_archive()
         return settings._archive
-
-    @property
-    def dataset(self):
-        if self._dataset is None:
-            self._dataset = self.get_dataset(self.stage, self.context)
-        return self._dataset
-
-    @classmethod
-    def get_dataset(cls, stage, context):
-        dataset = stage.job.dataset.name
-        name = context.get('balkhash_name', dataset)
-        return balkhash.init(name)
-
-    @property
-    def writer(self):
-        if self._writer is None:
-            self._writer = self.dataset.bulk()
-        return self._writer
 
     def make_entity(self, schema, parent=None):
         schema = model.get(schema)
@@ -78,11 +61,19 @@ class Manager(object):
             child.add('parent', parent.id)
             child.add('ancestors', parent.get('ancestors'))
             child.add('ancestors', parent.id)
-            # Avoid re-ingest re-notification:
-            prop = 'indexUpdatedAt'
-            child.add(prop, parent.get(prop), quiet=True)
+            self.apply_context(child, parent)
+
+    def apply_context(self, entity, source):
+        # Aleph-specific context data:
+        entity.context = {
+            'created_at': source.context.get('created_at'),
+            'updated_at': source.context.get('updated_at'),
+            'role_id': source.context.get('role_id'),
+            'mutable': False,
+        }
 
     def emit_entity(self, entity, fragment=None):
+        entity = self.ns.apply(entity)
         # pprint(entity.to_dict())
         self.writer.put(entity.to_dict(), fragment)
         self.emitted.add(entity.id)
@@ -167,5 +158,4 @@ class Manager(object):
 
     def close(self):
         self.writer.flush()
-        self.dataset.close()
         remove_directory(self.work_path)

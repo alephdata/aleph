@@ -3,7 +3,7 @@ import types
 import logging
 from banal import ensure_list
 from normality import stringify
-from balkhash.utils import safe_fragment
+from ftmstore.utils import safe_fragment
 from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename, ascii_text
 from followthemoney.types import registry
@@ -41,6 +41,9 @@ class EmailIdentity(object):
             key = self.email.lower().strip()
             fragment = safe_fragment(self.label)
             self.entity = manager.make_entity('Person')
+            self.entity.context = {
+                'mutable': False
+            }
             self.entity.make_id(key)
             self.entity.add('name', self.name)
             self.entity.add('email', self.email)

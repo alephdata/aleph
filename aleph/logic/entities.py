@@ -6,7 +6,7 @@ from followthemoney.graph import Node
 from followthemoney.types import registry
 
 from aleph.core import db, cache
-from aleph.model import Entity, Document, Linkage
+from aleph.model import Entity, Document, Linkage, Mapping
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
@@ -17,7 +17,7 @@ from aleph.logic.graph import Graph
 log = logging.getLogger(__name__)
 
 
-def upsert_entity(data, collection, validate=True, sync=False):
+def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
     """Create or update an entity in the database. This has a side hustle
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
@@ -28,9 +28,10 @@ def upsert_entity(data, collection, validate=True, sync=False):
         entity = Entity.by_id(entity_id,
                               collection=collection,
                               deleted=True)
-    # TODO: migrate softly from index.
     if entity is None:
-        entity = Entity.create(data, collection, validate=validate)
+        entity = Entity.create(data, collection,
+                               role_id=role_id,
+                               validate=validate)
     else:
         entity.update(data, collection, validate=validate)
     collection.touch()
@@ -65,6 +66,7 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
         doc.delete(deleted_at=deleted_at)
     index.delete_entity(entity_id, sync=sync)
     Linkage.delete_by_entity(entity_id)
+    Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
     delete_aggregator_entity(collection, entity_id)
     refresh_entity(entity_id, sync=sync)

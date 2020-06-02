@@ -201,7 +201,7 @@ def rewrite_mapping_safe(pending, existing):
     """This re-writes mappings for ElasticSearch in such a way that
     immutable values are kept to their existing setting, while other
     fields are updated."""
-    IMMUTABLE = ('type', 'analyzer', 'normalizer')
+    IMMUTABLE = ('type', 'analyzer', 'normalizer', 'index')
     # This is a pretty bad idea long-term. We need to make it easier
     # to use multiple index generations instead.
     if not isinstance(pending, dict) or not isinstance(existing, dict):
@@ -212,6 +212,9 @@ def rewrite_mapping_safe(pending, existing):
         if key in IMMUTABLE and old_value is not None:
             value = old_value
         pending[key] = value
+    for key, value in existing.items():
+        if key not in pending:
+            pending[key] = value
     return pending
 
 
