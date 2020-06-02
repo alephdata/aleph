@@ -52,7 +52,6 @@ const csvContextLoader = (Viewer) => (
     }
 
     fetchMoreRows() {
-      const { document } = this.props;
       const { requestedRow } = this.state;
       const rowCount = this.getRowCount();
 
@@ -67,7 +66,7 @@ const csvContextLoader = (Viewer) => (
 
     getRowCount() {
       const { document } = this.props;
-      const { requestedRow, rows } = this.state;
+      const { rows } = this.state;
 
       const rowCountRaw = document.getFirst('rowCount');
       return rowCountRaw ? parseInt(rowCountRaw, 10) : rows.length;
