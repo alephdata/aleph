@@ -15,8 +15,6 @@ const entityEditorWrapper = (EditorComponent) => {
       constructor(props) {
         super(props);
 
-        console.log('for id', props.collection);
-
         this.entityManager = new EntityManager({
           model: props.model,
           namespace: new Namespace(props.collection.foreign_id),
