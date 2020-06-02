@@ -253,7 +253,7 @@ def configure_index(index, mapping, settings):
             res = es.indices.put_settings(body=settings, **options)
             if not _check_response(index, res):
                 return False
-            res = es.indices.open(**options)
+        res = es.indices.open(**options)
         return True
     else:
         log.info("Creating index: %s...", index)
