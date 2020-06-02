@@ -1,13 +1,12 @@
 import React, { Component, PureComponent } from 'react';
-import {
-  Button, Checkbox, Dialog, Intent,
-} from '@blueprintjs/core';
+import { Button, Checkbox, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
 import { selectCollectionPermissions } from 'src/selectors';
 import { Role } from 'src/components/common';
+import FormDialog from 'src/dialogs/common/FormDialog';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 import './CollectionAccessDialog.scss';
@@ -151,7 +150,8 @@ class CollectionAccessDialog extends Component {
     const groupRoles = this.filterPermissions('group');
     const userRoles = this.filterPermissions('user');
     return (
-      <Dialog
+      <FormDialog
+        processing={blocking}
         icon="key"
         className="CollectionAccessDialog"
         isOpen={this.props.isOpen}
@@ -248,7 +248,7 @@ class CollectionAccessDialog extends Component {
             />
           </div>
         </div>
-      </Dialog>
+      </FormDialog>
     );
   }
 }

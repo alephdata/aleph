@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import { updateDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
+import FormDialog from 'src/dialogs/common/FormDialog';
 
 const messages = defineMessages({
   label_placeholder: {
@@ -38,6 +39,7 @@ class DiagramEditDialog extends Component {
     this.state = {
       label: diagram.label || '',
       summary: diagram.summary || '',
+      processing: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -54,12 +56,14 @@ class DiagramEditDialog extends Component {
 
   async onSubmit(event) {
     const { diagram, intl } = this.props;
-    const { label, summary } = this.state;
+    const { label, processing, summary } = this.state;
     event.preventDefault();
-    if (!this.checkValid()) return;
+    if (processing || !this.checkValid()) return;
+    this.setState({ processing: true });
 
     try {
       await this.props.updateDiagram(diagram.id, { label, summary });
+      this.setState({ processing: false });
       this.props.toggleDialog();
 
       showSuccessToast(
@@ -67,6 +71,7 @@ class DiagramEditDialog extends Component {
       );
     } catch (e) {
       showWarningToast(e.message);
+      this.setState({ processing: false });
     }
   }
 
@@ -85,70 +90,69 @@ class DiagramEditDialog extends Component {
 
   render() {
     const { intl, isOpen, toggleDialog } = this.props;
-    const { label, summary } = this.state;
+    const { label, processing, summary } = this.state;
     const disabled = !this.checkValid();
 
 
     return (
-      <Dialog
+      <FormDialog
+        processing={processing}
         icon="graph"
         isOpen={isOpen}
         title={intl.formatMessage(messages.title_update)}
         onClose={toggleDialog}
       >
-        <div>
-          <form onSubmit={this.onSubmit}>
-            <div className="bp3-dialog-body">
-              <div className="bp3-form-group">
-                <label className="bp3-label" htmlFor="label">
-                  <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
-                  <div className="bp3-input-group bp3-fill">
-                    <input
-                      id="label"
-                      type="text"
-                      className="bp3-input"
-                      autoComplete="off"
-                      placeholder={intl.formatMessage(messages.label_placeholder)}
-                      onChange={this.onChangeLabel}
-                      value={label}
-                    />
-                  </div>
-                </label>
-              </div>
-              <div className="bp3-form-group">
-                <label className="bp3-label" htmlFor="summary">
-                  <FormattedMessage
-                    id="diagram.choose.summary"
-                    defaultMessage="Summary"
+        <form onSubmit={this.onSubmit}>
+          <div className="bp3-dialog-body">
+            <div className="bp3-form-group">
+              <label className="bp3-label" htmlFor="label">
+                <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
+                <div className="bp3-input-group bp3-fill">
+                  <input
+                    id="label"
+                    type="text"
+                    className="bp3-input"
+                    autoComplete="off"
+                    placeholder={intl.formatMessage(messages.label_placeholder)}
+                    onChange={this.onChangeLabel}
+                    value={label}
                   />
-                  <div className="bp3-input-group bp3-fill">
-                    <textarea
-                      id="summary"
-                      className="bp3-input"
-                      placeholder={intl.formatMessage(messages.summary_placeholder)}
-                      onChange={this.onChangeSummary}
-                      value={summary}
-                      rows={5}
-                    />
-                  </div>
-                </label>
-              </div>
+                </div>
+              </label>
             </div>
-            <div className="bp3-dialog-footer">
-              <div className="bp3-dialog-footer-actions">
-                <Button
-                  type="submit"
-                  intent={Intent.PRIMARY}
-                  disabled={disabled}
-                  text={(
-                    intl.formatMessage(messages.submit_update)
-                  )}
+            <div className="bp3-form-group">
+              <label className="bp3-label" htmlFor="summary">
+                <FormattedMessage
+                  id="diagram.choose.summary"
+                  defaultMessage="Summary"
                 />
-              </div>
+                <div className="bp3-input-group bp3-fill">
+                  <textarea
+                    id="summary"
+                    className="bp3-input"
+                    placeholder={intl.formatMessage(messages.summary_placeholder)}
+                    onChange={this.onChangeSummary}
+                    value={summary}
+                    rows={5}
+                  />
+                </div>
+              </label>
             </div>
-          </form>
-        </div>
-      </Dialog>
+          </div>
+          <div className="bp3-dialog-footer">
+            <div className="bp3-dialog-footer-actions">
+              <Button
+                type="submit"
+                intent={Intent.PRIMARY}
+                disabled={disabled}
+                text={(
+                  intl.formatMessage(messages.submit_update)
+                )}
+              />
+            </div>
+          </div>
+        </form>
+      </FormDialog>
     );
   }
 }

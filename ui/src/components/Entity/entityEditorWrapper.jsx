@@ -2,9 +2,8 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Entity } from '@alephdata/followthemoney';
+import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/vislib';
-import { processApiEntity } from 'src/components/Diagram/util';
 import { queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
 import { createEntity, queryEntities, updateEntity } from 'src/actions';
@@ -18,6 +17,7 @@ const entityEditorWrapper = (EditorComponent) => {
 
         this.entityManager = new EntityManager({
           model: props.model,
+          namespace: new Namespace(props.collection.foreign_id),
           createEntity: this.createEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
@@ -60,20 +60,12 @@ const entityEditorWrapper = (EditorComponent) => {
         });
       }
 
-      async createEntity({ schema, properties }) {
-        const { collection, model, onStatusChange } = this.props;
+      async createEntity(entity) {
+        const { collection, onStatusChange } = this.props;
         onStatusChange(updateStates.IN_PROGRESS);
-
         try {
-          const resp = await this.props.createEntity({
-            schema: schema.name,
-            properties: properties || {},
-            collection,
-          });
+          await this.props.createEntity({ entity, collection_id: collection.id });
           onStatusChange(updateStates.SUCCESS);
-
-          const processedData = processApiEntity(resp.data);
-          return new Entity(model, processedData);
         } catch {
           onStatusChange(updateStates.ERROR);
         }

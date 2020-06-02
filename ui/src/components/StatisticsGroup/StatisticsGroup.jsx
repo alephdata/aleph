@@ -8,6 +8,7 @@ import {
   Category, Country, Schema, Numeric, SinglePane,
 } from 'src/components/common';
 import Statistics from './Statistics';
+import getStatLink from 'src/util/getStatLink';
 
 import './StatisticsGroup.scss';
 
@@ -40,7 +41,7 @@ class StatisticsGroup extends PureComponent {
           statistic={statistics.schemata}
           isPending={statistics.isPending}
           ItemContentContainer={props => (
-            <Link to={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
+            <Link to={getStatLink(null, 'schema', props.name)} schema={props.name} {...props}>
               <div className="inner-container">
                 <span className="label">
                   <Schema.Label schema={props.name} plural icon {...props} />
