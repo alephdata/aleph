@@ -15,7 +15,6 @@ services:
     hostname: elasticsearch
     environment:
     - discovery.type=single-node
-    - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     volumes:
     - elasticsearch-data:/usr/share/elasticsearch/data
 
