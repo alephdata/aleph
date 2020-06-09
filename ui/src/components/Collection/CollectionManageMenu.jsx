@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Popover, Tooltip, Menu, MenuItem } from '@blueprintjs/core';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';

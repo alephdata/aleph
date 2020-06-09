@@ -1,4 +1,5 @@
 import logging
+from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
 
 from aleph.core import kv, db
@@ -34,6 +35,7 @@ class AlephWorker(Worker):
         if self.hourly.check():
             self.hourly.update()
             log.info("Running hourly tasks...")
+            self.cleanup_jobs()
             compute_collections()
             check_alerts()
 
@@ -67,12 +69,20 @@ class AlephWorker(Worker):
             xref_item(stage, collection, **payload)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
-    def after_task(self, task):
-        if task.job.is_done():
-            collection = Collection.by_foreign_id(task.job.dataset.name)
+    def cleanup_job(self, job):
+        if job.is_done():
+            collection = Collection.by_foreign_id(job.dataset.name)
             if collection is not None:
                 refresh_collection(collection.id)
-            task.job.remove()
+            job.remove()
+
+    def cleanup_jobs(self):
+        for dataset in Dataset.get_active_datasets(kv):
+            for job in dataset.get_jobs():
+                self.cleanup_job(job)
+
+    def after_task(self, task):
+        self.cleanup_job(task.job)
 
 
 def get_worker():

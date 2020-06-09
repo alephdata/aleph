@@ -168,9 +168,9 @@ def format_proxy(proxy, collection):
 
     # integer casting
     numeric = {}
-    for prop, values in properties.items():
-        prop = proxy.schema.get(prop)
+    for prop in proxy.iterprops():
         if prop.type in NUMERIC_TYPES:
+            values = proxy.get(prop)
             numeric[prop.name] = _numeric_values(prop.type, values)
     # also cast group field for dates
     numeric['dates'] = _numeric_values(registry.date, data.get('dates'))

@@ -2,12 +2,18 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Entity } from '@alephdata/followthemoney';
+import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/vislib';
+<<<<<<< HEAD
 import { processApiEntity } from 'src/components/Diagram/util';
 import { queryExpand, queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'src/selectors';
 import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'src/actions';
+=======
+import { queryEntitySuggest } from 'src/queries';
+import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
+import { createEntity, queryEntities, updateEntity } from 'src/actions';
+>>>>>>> e3c02f5738a5314754b1545fc6ffe7da53ebe1b7
 import updateStates from 'src/util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
@@ -18,6 +24,7 @@ const entityEditorWrapper = (EditorComponent) => {
 
         this.entityManager = new EntityManager({
           model: props.model,
+          namespace: new Namespace(props.collection.foreign_id),
           createEntity: this.createEntity.bind(this),
           expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
@@ -59,20 +66,12 @@ const entityEditorWrapper = (EditorComponent) => {
         });
       }
 
-      async createEntity({ schema, properties }) {
-        const { collection, model, onStatusChange } = this.props;
+      async createEntity(entity) {
+        const { collection, onStatusChange } = this.props;
         onStatusChange(updateStates.IN_PROGRESS);
-
         try {
-          const resp = await this.props.createEntity({
-            schema: schema.name,
-            properties: properties || {},
-            collection,
-          });
+          await this.props.createEntity({ entity, collection_id: collection.id });
           onStatusChange(updateStates.SUCCESS);
-
-          const processedData = processApiEntity(resp.data);
-          return new Entity(model, processedData);
         } catch {
           onStatusChange(updateStates.ERROR);
         }

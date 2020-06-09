@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent, Spinner } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection, FileImport } from 'src/components/common';
+import FormDialog from 'src/dialogs/common/FormDialog';
 import { createDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
 import { processApiEntity } from 'src/components/Diagram/util';
 
-import './DiagramCreateDialog.scss';
 
 const messages = defineMessages({
   label_placeholder: {
@@ -159,97 +159,92 @@ class DiagramCreateDialog extends Component {
     const showCollectionField = canChangeCollection && showTextFields;
 
     return (
-      <Dialog
+      <FormDialog
+        processing={processing}
         icon="graph"
         className="DiagramCreateDialog"
         isOpen={isOpen}
         title={intl.formatMessage(importEnabled ? messages.title_import : messages.title_create)}
         onClose={toggleDialog}
       >
-        <div className="DiagramCreateDialog__contents">
-          {processing && <div className="DiagramCreateDialog__overlay" />}
-          <form onSubmit={this.onSubmit}>
-            <div className="bp3-dialog-body">
-              {importEnabled && (
-                <FileImport
-                  accept=".vis"
-                  placeholder={intl.formatMessage(messages.placeholder_import)}
-                  onImport={this.onImport}
-                  importedFile={importedFileName}
-                />
-              )}
-              {showTextFields && (
-                <>
-                  <div className="bp3-form-group">
-                    <label className="bp3-label" htmlFor="label">
-                      <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
-                      <div className="bp3-input-group bp3-fill">
-                        <input
-                          id="label"
-                          type="text"
-                          className="bp3-input"
-                          autoComplete="off"
-                          placeholder={intl.formatMessage(messages.label_placeholder)}
-                          onChange={this.onChangeLabel}
-                          value={label}
-                        />
-                      </div>
-                    </label>
-                  </div>
-                  <div className="bp3-form-group">
-                    <label className="bp3-label" htmlFor="summary">
-                      <FormattedMessage
-                        id="diagram.choose.summary"
-                        defaultMessage="Summary"
-                      />
-                      <div className="bp3-input-group bp3-fill">
-                        <textarea
-                          id="summary"
-                          className="bp3-input"
-                          placeholder={intl.formatMessage(messages.summary_placeholder)}
-                          onChange={this.onChangeSummary}
-                          value={summary}
-                          rows={5}
-                        />
-                      </div>
-                    </label>
-                  </div>
-                </>
-              )}
-              {showCollectionField && (
+        <form onSubmit={this.onSubmit}>
+          <div className="bp3-dialog-body">
+            {importEnabled && (
+              <FileImport
+                accept=".vis"
+                placeholder={intl.formatMessage(messages.placeholder_import)}
+                onImport={this.onImport}
+                importedFile={importedFileName}
+              />
+            )}
+            {showTextFields && (
+              <>
                 <div className="bp3-form-group">
-                  <div className="bp3-label">
-                    <FormattedMessage
-                      id="diagram.collectionSelect"
-                      defaultMessage="Select a dataset"
-                    />
-                    <Collection.Select
-                      collection={collection}
-                      onSelect={this.onChangeCollection}
-                      query={this.getCollectionOptionsQuery()}
-                    />
-                  </div>
+                  <label className="bp3-label" htmlFor="label">
+                    <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
+                    <div className="bp3-input-group bp3-fill">
+                      <input
+                        id="label"
+                        type="text"
+                        className="bp3-input"
+                        autoComplete="off"
+                        placeholder={intl.formatMessage(messages.label_placeholder)}
+                        onChange={this.onChangeLabel}
+                        value={label}
+                      />
+                    </div>
+                  </label>
                 </div>
-              )}
-            </div>
-            <div className="bp3-dialog-footer">
-              <div className="bp3-dialog-footer-actions">
-                <Button
-                  type="submit"
-                  intent={Intent.PRIMARY}
-                  disabled={disabled}
-                  text={(
-                    intl.formatMessage(messages.submit_create)
-                  )}
-                />
+                <div className="bp3-form-group">
+                  <label className="bp3-label" htmlFor="summary">
+                    <FormattedMessage
+                      id="diagram.choose.summary"
+                      defaultMessage="Summary"
+                    />
+                    <div className="bp3-input-group bp3-fill">
+                      <textarea
+                        id="summary"
+                        className="bp3-input"
+                        placeholder={intl.formatMessage(messages.summary_placeholder)}
+                        onChange={this.onChangeSummary}
+                        value={summary}
+                        rows={5}
+                      />
+                    </div>
+                  </label>
+                </div>
+              </>
+            )}
+            {showCollectionField && (
+              <div className="bp3-form-group">
+                <div className="bp3-label">
+                  <FormattedMessage
+                    id="diagram.collectionSelect"
+                    defaultMessage="Select a dataset"
+                  />
+                  <Collection.Select
+                    collection={collection}
+                    onSelect={this.onChangeCollection}
+                    query={this.getCollectionOptionsQuery()}
+                  />
+                </div>
               </div>
+            )}
+          </div>
+          <div className="bp3-dialog-footer">
+            <div className="bp3-dialog-footer-actions">
+              <Button
+                type="submit"
+                intent={Intent.PRIMARY}
+                disabled={disabled}
+                text={(
+                  intl.formatMessage(messages.submit_create)
+                )}
+              />
             </div>
-          </form>
-        </div>
-        {processing && (
-          <Spinner className="bp3-large" />
-        )}
-      </Dialog>
+          </div>
+        </form>
+      </FormDialog>
     );
   }
 }

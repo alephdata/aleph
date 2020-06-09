@@ -28,7 +28,7 @@ table {
     width: 1%;
     white-space: nowrap;
     overflow: visible;
-    max-width: unset;
+    max-width: unset !important;
     text-overflow: unset;
   }
 
@@ -98,7 +98,7 @@ table {
     text-align: right;
     white-space: nowrap;
     overflow: visible;
-    max-width: unset;
+    max-width: unset !important;
     text-overflow: unset;
     font-variant-numeric: tabular-nums;
 

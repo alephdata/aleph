@@ -1,4 +1,4 @@
-FROM elasticsearch:7.7.0
+FROM elasticsearch:7.7.1
 
 RUN bin/elasticsearch-plugin install --batch repository-s3 \
     && bin/elasticsearch-plugin install --batch repository-gcs \

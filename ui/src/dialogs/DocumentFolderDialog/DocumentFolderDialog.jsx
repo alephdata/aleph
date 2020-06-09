@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Intent, Dialog, Button } from '@blueprintjs/core';
+import { Intent, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ingestDocument } from 'src/actions';
 import { showErrorToast } from 'src/app/toast';
+import FormDialog from 'src/dialogs/common/FormDialog';
+
 
 const messages = defineMessages({
   title: {
@@ -75,7 +77,8 @@ export class DocumentFolderDialog extends Component {
     const { title, blocking } = this.state;
 
     return (
-      <Dialog
+      <FormDialog
+        processing={blocking}
         icon="folder-new"
         className="DocumentFolderDialog"
         isOpen={isOpen}
@@ -109,7 +112,7 @@ export class DocumentFolderDialog extends Component {
             </div>
           </div>
         </form>
-      </Dialog>
+      </FormDialog>
     );
   }
 }

@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { Country, Facet, Numeric, Schema } from 'src/components/common';
 import Statistics from 'src/components/StatisticsGroup/Statistics';
 import { selectModel } from 'src/selectors';
+import getStatLink from 'src/util/getStatLink';
 
 import './CollectionStatistics.scss';
 
@@ -30,7 +31,7 @@ class CollectionStatistics extends PureComponent {
 
   renderItem({ name, count }) {
     const { collection, field } = this.props;
-    const linkFilterVal = encodeURIComponent(name);
+    const link = getStatLink(collection, field, name);
     let label = name;
 
     if (field === 'schema') {
@@ -40,7 +41,7 @@ class CollectionStatistics extends PureComponent {
     }
 
     return (
-      <Link to={`/search?filter:collection_id=${collection.id}&filter:${field}=${linkFilterVal}`}>
+      <Link to={link}>
         <div className="inner-container">
           <span className="label">{label}</span>
           <span className="value">

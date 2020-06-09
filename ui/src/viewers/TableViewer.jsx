@@ -14,6 +14,15 @@ class TableViewer extends React.Component {
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    // Blueprint Table doesn't consistently re-render on initial data load.
+    //  so force reloads the component to render the table correctly with incoming data
+    const initialDataLoad = prevProps.rows.length === 0 && this.props.rows.length !== 0;
+    if (initialDataLoad) {
+      this.forceUpdate();
+    }
+  }
+
   onVisibleCellsChange(row) {
     const { fetchMoreRows, requestedRow } = this.props;
     // If we are scrolling to the end. Time to load more rows.
