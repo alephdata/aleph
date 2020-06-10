@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-02T10:34:36.917Z\n"
+"POT-Creation-Date: 2020-06-10T14:22:06.940Z\n"
 "Last-Translator: Mathieu Morey <mathieu@datactivi.st>, 2020\n"
 "Language-Team: French (https://www.transifex.com/aleph/teams/76591/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1933,12 +1933,29 @@ msgstr ""
 msgid "Select an object"
 msgstr "Sélectionner un objet"
 
+#. [collection.edit.info.placeholder_country]
+#. defaultMessage is:
+#. Select countries
+#: i18n/messages.json
+msgid "Select countries"
+msgstr ""
+
 #. [mapping.keyAssign.placeholder]
 #. defaultMessage is:
 #. Select keys from available columns
 #: i18n/messages.json
 msgid "Select keys from available columns"
 msgstr "Sélectionner des clés à partir des colonnes disponibles"
+
+#. [collection.edit.info.placeholder_language]
+#. defaultMessage is:
+#. Select languages
+#. [case.language_placeholder]
+#. defaultMessage is:
+#. Select languages
+#: i18n/messages.json i18n/messages.json
+msgid "Select languages"
+msgstr ""
 
 #. [auth.server_error]
 #. defaultMessage is:

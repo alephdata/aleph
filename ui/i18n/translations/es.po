@@ -1,11 +1,12 @@
 # 
 # Translators:
 # John Ospina <jmospina@gmail.com>, 2018
+# Miguel Sojo <miguelsojo@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-02T10:34:36.917Z\n"
-"Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-06-10T14:22:06.940Z\n"
+"Last-Translator: Miguel Sojo <miguelsojo@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1892,11 +1893,28 @@ msgstr ""
 msgid "Select an object"
 msgstr ""
 
+#. [collection.edit.info.placeholder_country]
+#. defaultMessage is:
+#. Select countries
+#: i18n/messages.json
+msgid "Select countries"
+msgstr ""
+
 #. [mapping.keyAssign.placeholder]
 #. defaultMessage is:
 #. Select keys from available columns
 #: i18n/messages.json
 msgid "Select keys from available columns"
+msgstr ""
+
+#. [collection.edit.info.placeholder_language]
+#. defaultMessage is:
+#. Select languages
+#. [case.language_placeholder]
+#. defaultMessage is:
+#. Select languages
+#: i18n/messages.json i18n/messages.json
+msgid "Select languages"
 msgstr ""
 
 #. [auth.server_error]
@@ -1959,7 +1977,7 @@ msgstr ""
 #. Show more…
 #: i18n/messages.json
 msgid "Show more…"
-msgstr "Mostras más..."
+msgstr "Mostrar más..."
 
 #. [password_auth.signin]
 #. defaultMessage is:
@@ -1979,7 +1997,7 @@ msgstr "Iniciar sesión"
 #. Sign in / Register
 #: i18n/messages.json
 msgid "Sign in / Register"
-msgstr "Iniciar sesión / Registrase"
+msgstr "Iniciar sesión / Registrarse"
 
 #. [login.oauth]
 #. defaultMessage is:

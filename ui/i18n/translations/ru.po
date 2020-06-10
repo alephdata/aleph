@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-02T10:34:36.917Z\n"
+"POT-Creation-Date: 2020-06-10T14:22:06.940Z\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -438,7 +438,7 @@ msgstr "Очистить все"
 #. Clear index before re-indexing
 #: i18n/messages.json
 msgid "Clear index before re-indexing"
-msgstr ""
+msgstr "Очистить индекс перед переиндексацией"
 
 #. [navbar.alert_add]
 #. defaultMessage is:
@@ -516,7 +516,7 @@ msgstr "Данные загружаются."
 #. Convert to evidence
 #: i18n/messages.json
 msgid "Convert to evidence"
-msgstr ""
+msgstr "Преобразовать в доказательство"
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -723,7 +723,7 @@ msgstr "Удалить"
 #. Delete dataset
 #: i18n/messages.json
 msgid "Delete dataset"
-msgstr ""
+msgstr "Удалить набор данных"
 
 #. [mapping.actions.delete.toast]
 #. defaultMessage is:
@@ -1094,14 +1094,14 @@ msgstr "Импортировать существующие маппинги"
 #. Index documents as they are processed.
 #: i18n/messages.json
 msgid "Index documents as they are processed."
-msgstr ""
+msgstr "Проиндексировать документы в процессе обработки."
 
 #. [collection.reindex.processing]
 #. defaultMessage is:
 #. Indexing started.
 #: i18n/messages.json
 msgid "Indexing started."
-msgstr ""
+msgstr "Индексирование запущено."
 
 #. [entity.info.info]
 #. defaultMessage is:
@@ -1655,21 +1655,21 @@ msgstr "Пересоздать сущности..."
 #. Re-index all content
 #: i18n/messages.json
 msgid "Re-index all content"
-msgstr ""
+msgstr "Переиндексировать всё содержимое"
 
 #. [collection.info.reingest]
 #. defaultMessage is:
 #. Re-ingest documents
 #: i18n/messages.json
 msgid "Re-ingest documents"
-msgstr ""
+msgstr "Перезагрузить документы"
 
 #. [collection.reingest.processing]
 #. defaultMessage is:
 #. Re-ingest started.
 #: i18n/messages.json
 msgid "Re-ingest started."
-msgstr ""
+msgstr "Перезагрузка документов запущена."
 
 #. [collection.edit.info.analyze]
 #. defaultMessage is:
@@ -1930,12 +1930,29 @@ msgstr "Выберите маппинг-запрос для импорта из 
 msgid "Select an object"
 msgstr "Выбрать объект"
 
+#. [collection.edit.info.placeholder_country]
+#. defaultMessage is:
+#. Select countries
+#: i18n/messages.json
+msgid "Select countries"
+msgstr ""
+
 #. [mapping.keyAssign.placeholder]
 #. defaultMessage is:
 #. Select keys from available columns
 #: i18n/messages.json
 msgid "Select keys from available columns"
 msgstr "Выбрать ключи из доступных колонок"
+
+#. [collection.edit.info.placeholder_language]
+#. defaultMessage is:
+#. Select languages
+#. [case.language_placeholder]
+#. defaultMessage is:
+#. Select languages
+#: i18n/messages.json i18n/messages.json
+msgid "Select languages"
+msgstr ""
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -2100,7 +2117,7 @@ msgstr "Варианты написания"
 #. Start indexing
 #: i18n/messages.json
 msgid "Start indexing"
-msgstr ""
+msgstr "Запустить индексирование"
 
 #. [collection.reingest.confirm]
 #. defaultMessage is:
@@ -2757,6 +2774,8 @@ msgid ""
 "You're about to re-index the entities in this dataset. This can be helpful "
 "if there are inconsistencies in how the data is presented."
 msgstr ""
+"Все сущности в наборе данных будут переиндексированы. Иногда это позволяет "
+"исправить ошибки в представлении данных."
 
 #. [collection.reingest.text]
 #. defaultMessage is:
@@ -2767,6 +2786,8 @@ msgid ""
 "You're about to re-process all documents in this dataset. This might take "
 "some time."
 msgstr ""
+"Все документы в этом наборе данных будут проанализированы повторно. Это "
+"займёт некоторое время."
 
 #. [password_auth.name]
 #. defaultMessage is:
