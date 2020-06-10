@@ -35,7 +35,6 @@ const entityEditorWrapper = (EditorComponent) => {
           this.pendingPromises = this.pendingPromises.filter(({ query, promiseResolve }) => {
             const results = selectQueryResults(query);
             if (results) {
-              console.log('has results', results);
               promiseResolve(results);
               return false;
             }
@@ -72,7 +71,6 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async expandEntity(entityId, properties, limit) {
-        console.log('calling wrapper expand function', entityId, properties);
         const { collection, location, selectQueryResults } = this.props;
         const query = queryExpand(location, entityId, properties, limit);
 

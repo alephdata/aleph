@@ -92,7 +92,6 @@ export function queryEntitySuggest(location, collection, schemaName, queryText) 
 }
 
 export function queryExpand(location, entityId, properties, limit = 200) {
-  console.log('in query expand', entityId, properties)
   const path = `entities/${entityId}/expand`;
   const context = {
     'edge_types': ['entity'],
