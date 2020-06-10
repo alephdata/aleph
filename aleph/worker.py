@@ -1,24 +1,27 @@
 import logging
+from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
 
 from aleph.core import kv, db
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
-from aleph.queues import (
-    OP_INDEX, OP_PROCESS, OP_XREF, OP_XREF_ITEM,
-    OP_LOAD_MAPPING, OP_FLUSH_MAPPING
-)
-from aleph.queues import OPERATIONS
+from aleph.queues import OP_INDEX, OP_REINDEX, OP_REINGEST, OP_XREF
+from aleph.queues import OP_XREF_ITEM, OP_LOAD_MAPPING, OP_FLUSH_MAPPING
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
-from aleph.logic.collections import reset_collection, process_collection
+from aleph.logic.collections import reindex_collection, reingest_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
-from aleph.logic.processing import index_aggregate
+from aleph.logic.processing import index_many
 
 log = logging.getLogger(__name__)
+
+# All stages that aleph should listen for. Does not include ingest,
+# which is received and processed by the ingest-file service.
+OPERATIONS = (OP_INDEX, OP_XREF, OP_REINGEST, OP_REINDEX, OP_XREF_ITEM,
+              OP_LOAD_MAPPING, OP_FLUSH_MAPPING)
 
 
 class AlephWorker(Worker):
@@ -32,6 +35,7 @@ class AlephWorker(Worker):
         if self.hourly.check():
             self.hourly.update()
             log.info("Running hourly tasks...")
+            self.cleanup_jobs()
             compute_collections()
             check_alerts()
 
@@ -50,27 +54,35 @@ class AlephWorker(Worker):
             return
         sync = task.context.get('sync', False)
         if stage.stage == OP_INDEX:
-            index_aggregate(stage, collection, sync=sync, **payload)
+            index_many(stage, collection, sync=sync, **payload)
         if stage.stage == OP_LOAD_MAPPING:
             load_mapping(stage, collection, **payload)
         if stage.stage == OP_FLUSH_MAPPING:
             flush_mapping(stage, collection, sync=sync, **payload)
-        if stage.stage == OP_PROCESS:
-            if payload.pop('reset', False):
-                reset_collection(collection, sync=True)
-            process_collection(stage, collection, sync=sync, **payload)
+        if stage.stage == OP_REINGEST:
+            reingest_collection(collection, job_id=stage.job.id, **payload)
+        if stage.stage == OP_REINDEX:
+            reindex_collection(collection, sync=sync, **payload)
         if stage.stage == OP_XREF:
             xref_collection(stage, collection)
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
-    def after_task(self, task):
-        if task.job.is_done():
-            collection = Collection.by_foreign_id(task.job.dataset.name)
+    def cleanup_job(self, job):
+        if job.is_done():
+            collection = Collection.by_foreign_id(job.dataset.name)
             if collection is not None:
                 refresh_collection(collection.id)
-            task.job.remove()
+            job.remove()
+
+    def cleanup_jobs(self):
+        for dataset in Dataset.get_active_datasets(kv):
+            for job in dataset.get_jobs():
+                self.cleanup_job(job)
+
+    def after_task(self, task):
+        self.cleanup_job(task.job)
 
 
 def get_worker():

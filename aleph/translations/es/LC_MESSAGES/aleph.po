@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-26 17:29+0200\n"
+"POT-Creation-Date: 2020-06-10 16:22+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
@@ -114,7 +114,7 @@ msgstr ""
 msgid "Other material"
 msgstr "Otro material"
 
-#: aleph/model/entity.py:74
+#: aleph/model/entity.py:77
 msgid "Invalid entity ID"
 msgstr ""
 

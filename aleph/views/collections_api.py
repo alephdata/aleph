@@ -6,10 +6,10 @@ from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_PROCESS
+from aleph.queues import OP_REINGEST, OP_REINDEX
 from aleph.index.collections import get_collection_stats
-from aleph.logic.collections import create_collection, refresh_collection
-from aleph.logic.collections import delete_collection, update_collection
+from aleph.logic.collections import create_collection, update_collection
+from aleph.logic.collections import delete_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
@@ -71,6 +71,7 @@ def sitemap():
       - System
     """
     enable_cache(vary_user=False)
+    request.rate_limit = None
     collections = []
     for collection in Collection.all_authz(Authz.from_role(None)):
         updated_at = collection.updated_at.date().isoformat()
@@ -186,13 +187,15 @@ def update(collection_id):
     return CollectionSerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/process', methods=['POST', 'PUT'])  # noqa
-def process(collection_id):
+@blueprint.route('/api/2/collections/<int:collection_id>/reingest', methods=['POST', 'PUT'])  # noqa
+def reingest(collection_id):
     """
     ---
     post:
-      summary: Process a collection
-      description: Start processing the collection with id `collection_id`
+      summary: Re-ingest a collection
+      description: >
+        Trigger a process to re-parse the content of all documents stored
+        in the collection with id `collection_id`.
       parameters:
       - description: The collection ID.
         in: path
@@ -202,11 +205,8 @@ def process(collection_id):
           minimum: 1
           type: integer
       - in: query
-        name: ingest
-        schema:
-          type: boolean
-      - in: query
-        name: reset
+        name: index
+        description: Index documents while they're being processed.
         schema:
           type: boolean
       responses:
@@ -216,12 +216,43 @@ def process(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    # re-process the documents
-    data = {'reset': get_flag('reset', True)}
-    queue_task(collection, OP_PROCESS, job_id=get_session_id(), payload=data)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection_id)
+    job_id = get_session_id()
+    data = {'index': get_flag('index', False)}
+    queue_task(collection, OP_REINGEST, job_id=job_id, payload=data)
+    return ('', 202)
+
+
+@blueprint.route('/api/2/collections/<int:collection_id>/reindex', methods=['POST', 'PUT'])  # noqa
+def reindex(collection_id):
+    """
+    ---
+    post:
+      summary: Re-index a collection
+      description: >
+        Re-index the entities in the collection with id `collection_id`
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      - in: query
+        description: Delete the index before re-generating it.
+        name: flush
+        schema:
+          type: boolean
+      responses:
+        '202':
+          description: Accepted
+      tags:
+      - Collection
+    """
+    collection = get_db_collection(collection_id, request.authz.WRITE)
+    job_id = get_session_id()
+    data = {'flush': get_flag('flush', False)}
+    queue_task(collection, OP_REINDEX, job_id=job_id, payload=data)
     return ('', 202)
 
 
@@ -265,7 +296,6 @@ def bulk(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
-    job_id = get_session_id()
 
     # This will disable checksum security measures in order to allow bulk
     # loading of document data.
@@ -273,7 +303,8 @@ def bulk(collection_id):
     unsafe = unsafe and request.authz.is_admin
 
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, job_id=job_id, unsafe=unsafe)
+    bulk_write(collection, entities, unsafe=unsafe,
+               role_id=request.authz.id)
     collection.touch()
     db.session.commit()
     return ('', 204)
@@ -356,6 +387,16 @@ def delete(collection_id):
         schema:
           minimum: 1
           type: integer
+      - in: query
+        description: Wait for delete to finish in backend.
+        name: sync
+        schema:
+          type: boolean
+      - in: query
+        description: Delete only the contents, but not the collection itself.
+        name: keep_metadata
+        schema:
+          type: boolean
       responses:
         '204':
           description: No Content
@@ -363,6 +404,7 @@ def delete(collection_id):
         - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
+    keep_metadata = get_flag('keep_metadata', default=False)
     sync = get_flag('sync', default=True)
-    delete_collection(collection, sync=sync)
+    delete_collection(collection, keep_metadata=keep_metadata, sync=sync)
     return ('', 204)

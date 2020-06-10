@@ -15,7 +15,6 @@ services:
     hostname: elasticsearch
     environment:
     - discovery.type=single-node
-    - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     volumes:
     - elasticsearch-data:/usr/share/elasticsearch/data
 
@@ -26,12 +25,9 @@ services:
     - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:010399046b06f07e8586fc5f2f432881ad1cddcb
+    image: alephdata/convert-document:51f77fb10d7c4cc7602e9d9ffbe3803313b29c49
     restart: on-failure
-    tmpfs:
-    - /tmp:mode=777
-    - /root/.config
-    - /home/app:uid=1000,gid=1000
+    tmpfs: /tmp
 
   ingest-file:
     image: alephdata/ingest-file:${ALEPH_TAG:-3.7.3}

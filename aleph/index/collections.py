@@ -85,7 +85,7 @@ def index_collection(collection, sync=False):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
-    log.info("Index [%s]: %s", collection.id, collection.label)
+    log.info("[%s] Index: %s...", collection, collection.label)
     data = get_collection(collection.id)
     if data is None:
         return
@@ -120,12 +120,13 @@ def get_collection(collection_id):
     return data
 
 
-def get_collection_stats(collection_id, refresh=False):
+def get_collection_stats(collection_id):
     """Retrieve statistics on the content of a collection."""
     return {f: get_collection_facet(collection_id, f) for f in STATS_FACETS}
 
 
 def update_collection_stats(collection_id):
+    es.indices.refresh(entities_read_index())
     for facet in STATS_FACETS:
         get_collection_facet(collection_id, facet, refresh=True)
 
@@ -186,10 +187,10 @@ def delete_collection(collection_id, sync=False):
               ignore=[404])
 
 
-def delete_entities(collection_id, mapping_id=None, schema=None, sync=False):
+def delete_entities(collection_id, origin=None, schema=None, sync=False):
     """Delete entities from a collection."""
     filters = [{'term': {'collection_id': collection_id}}]
-    if mapping_id is not None:
-        filters.append({'term': {'mapping_id': mapping_id}})
+    if origin is not None:
+        filters.append({'term': {'origin': origin}})
     query = {'bool': {'filter': filters}}
     query_delete(entities_read_index(schema), query, sync=sync)

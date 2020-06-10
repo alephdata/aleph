@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-05-26T15:28:17.769Z\n"
+"POT-Creation-Date: 2020-06-10T14:22:06.940Z\n"
 "Last-Translator: Eman Alqaisi <eman@arij.net>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -183,7 +183,7 @@ msgstr "أضف نصاً ثابتاً"
 #. Add new entity type
 #: i18n/messages.json
 msgid "Add new entity type"
-msgstr ""
+msgstr "أضف نوع كيان جديد"
 
 #. [mapping.infoLink]
 #. defaultMessage is:
@@ -296,10 +296,13 @@ msgstr "تعيين كملكية"
 msgid "Attachments"
 msgstr "مرفقات"
 
-#. [collection.analyze.cancel]
+#. [collection.publish.cancel]
 #. defaultMessage is:
 #. Cancel
-#. [collection.publish.cancel]
+#. [collection.reindex.cancel]
+#. defaultMessage is:
+#. Cancel
+#. [collection.analyze.cancel]
 #. defaultMessage is:
 #. Cancel
 #. [collection.edit.cancel_button]
@@ -338,7 +341,7 @@ msgstr "مرفقات"
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "الغاء"
 
@@ -427,12 +430,12 @@ msgstr "اقتباسات"
 msgid "Clear all"
 msgstr "حذف الكل"
 
-#. [collection.analyze.reset]
+#. [collection.reindex.flush]
 #. defaultMessage is:
-#. Clear index before processing
+#. Clear index before re-indexing
 #: i18n/messages.json
-msgid "Clear index before processing"
-msgstr "مسح المؤشر قبل المعالجة"
+msgid "Clear index before re-indexing"
+msgstr ""
 
 #. [navbar.alert_add]
 #. defaultMessage is:
@@ -503,6 +506,13 @@ msgstr "الاتصال بنا"
 #: i18n/messages.json
 msgid "Continue to frolic about while data is being processed."
 msgstr "استمر في المرح أثناء معالجة البيانات."
+
+#. [collection.info.publish]
+#. defaultMessage is:
+#. Convert to evidence
+#: i18n/messages.json
+msgid "Convert to evidence"
+msgstr ""
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -668,9 +678,6 @@ msgstr "مجموعات البيانات"
 msgid "Date"
 msgstr "التاريخ"
 
-#. [collection.info.delete]
-#. defaultMessage is:
-#. Delete
 #. [diagram.info.delete]
 #. defaultMessage is:
 #. Delete
@@ -703,9 +710,16 @@ msgstr "التاريخ"
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "حذف"
+
+#. [collection.info.delete]
+#. defaultMessage is:
+#. Delete dataset
+#: i18n/messages.json
+msgid "Delete dataset"
+msgstr ""
 
 #. [mapping.actions.delete.toast]
 #. defaultMessage is:
@@ -831,7 +845,7 @@ msgstr "أدخل كلمة المرور الحالية لتعيين كلمة مر
 #. Entities
 #: i18n/messages.json
 msgid "Entities"
-msgstr ""
+msgstr "كيانات"
 
 #. [result.error]
 #. defaultMessage is:
@@ -1063,6 +1077,20 @@ msgstr "استيراد الرسم التخطيطي"
 #: i18n/messages.json
 msgid "Import existing mapping"
 msgstr "استيراد الرسم التخطيطي الموجود"
+
+#. [collection.reingest.index]
+#. defaultMessage is:
+#. Index documents as they are processed.
+#: i18n/messages.json
+msgid "Index documents as they are processed."
+msgstr ""
+
+#. [collection.reindex.processing]
+#. defaultMessage is:
+#. Indexing started.
+#: i18n/messages.json
+msgid "Indexing started."
+msgstr ""
 
 #. [entity.info.info]
 #. defaultMessage is:
@@ -1454,13 +1482,6 @@ msgstr ""
 msgid "One result found"
 msgstr "تم العثور على نتيجة واحدة"
 
-#. [collection.publish.admin]
-#. defaultMessage is:
-#. Only administrators can publish a dataset.
-#: i18n/messages.json
-msgid "Only administrators can publish a dataset."
-msgstr "يمكن للمسؤولين فقط نشر مجموعة البيانات"
-
 #. [collection.edit.info.placeholder_publisher]
 #. defaultMessage is:
 #. Organisation or person publishing this data
@@ -1576,13 +1597,10 @@ msgstr "الخصائص"
 msgid "Proximity searches"
 msgstr "عمليات بحث تقريبية"
 
-#. [collection.info.publish]
-#. defaultMessage is:
-#. Publish
 #. [collection.publish.confirm]
 #. defaultMessage is:
 #. Publish
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Publish"
 msgstr "انشر"
 
@@ -1617,34 +1635,33 @@ msgstr "إعادة الحساب"
 msgid "Re-generating entities..."
 msgstr "إعادة إنشاء الكيانات"
 
-#. [document.manager.analyze]
+#. [collection.info.reindex]
 #. defaultMessage is:
-#. Re-process
+#. Re-index all content
+#: i18n/messages.json
+msgid "Re-index all content"
+msgstr ""
+
+#. [collection.info.reingest]
+#. defaultMessage is:
+#. Re-ingest documents
+#: i18n/messages.json
+msgid "Re-ingest documents"
+msgstr ""
+
+#. [collection.reingest.processing]
+#. defaultMessage is:
+#. Re-ingest started.
+#: i18n/messages.json
+msgid "Re-ingest started."
+msgstr ""
+
 #. [collection.edit.info.analyze]
 #. defaultMessage is:
 #. Re-process
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Re-process"
 msgstr "إعادة المعالجة"
-
-#. [collection.analyze.processing]
-#. defaultMessage is:
-#. Re-processing started.
-#: i18n/messages.json
-msgid "Re-processing started."
-msgstr "بدأت إعادة المعالجة."
-
-#. [collection.analyze.alert.text]
-#. defaultMessage is:
-#. Re-processing the dataset will take some time. Start the process only once
-#. and allow time for it to complete.
-#: i18n/messages.json
-msgid ""
-"Re-processing the dataset will take some time. Start the process only once "
-"and allow time for it to complete."
-msgstr ""
-"ستستغرق إعادة معالجة مجموعة البيانات بعض الوقت. ابدأ العملية مرة واحدة فقط "
-"وانتظر حتى يتم الإنتهاء."
 
 #. [settings.email.muted]
 #. defaultMessage is:
@@ -1897,12 +1914,29 @@ msgstr "حدد استعلام تعيين من هذا الملف للاستيرا
 msgid "Select an object"
 msgstr "حدد موضوع"
 
+#. [collection.edit.info.placeholder_country]
+#. defaultMessage is:
+#. Select countries
+#: i18n/messages.json
+msgid "Select countries"
+msgstr ""
+
 #. [mapping.keyAssign.placeholder]
 #. defaultMessage is:
 #. Select keys from available columns
 #: i18n/messages.json
 msgid "Select keys from available columns"
 msgstr "حدد المفاتيح من الأعمدة المتاحة"
+
+#. [collection.edit.info.placeholder_language]
+#. defaultMessage is:
+#. Select languages
+#. [case.language_placeholder]
+#. defaultMessage is:
+#. Select languages
+#: i18n/messages.json i18n/messages.json
+msgid "Select languages"
+msgstr ""
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -2060,7 +2094,14 @@ msgstr "حدد الأعمدة التي سيتم استخدامها لتحديد 
 msgid "Spelling variants"
 msgstr "تهجئات مختلفة / متغيرات إملائية"
 
-#. [collection.analyze.confirm]
+#. [collection.reindex.confirm]
+#. defaultMessage is:
+#. Start indexing
+#: i18n/messages.json
+msgid "Start indexing"
+msgstr ""
+
+#. [collection.reingest.confirm]
 #. defaultMessage is:
 #. Start processing
 #: i18n/messages.json
@@ -2699,6 +2740,26 @@ msgid ""
 msgstr ""
 "ستتلقى إشعارات عند إضافة نتيجة جديدة تطابق أي من التنبيهات التي أعددتها "
 "أدناه."
+
+#. [collection.analyze.alert.text]
+#. defaultMessage is:
+#. You're about to re-index the entities in this dataset. This can be helpful
+#. if there are inconsistencies in how the data is presented.
+#: i18n/messages.json
+msgid ""
+"You're about to re-index the entities in this dataset. This can be helpful "
+"if there are inconsistencies in how the data is presented."
+msgstr ""
+
+#. [collection.reingest.text]
+#. defaultMessage is:
+#. You're about to re-process all documents in this dataset. This might take
+#. some time.
+#: i18n/messages.json
+msgid ""
+"You're about to re-process all documents in this dataset. This might take "
+"some time."
+msgstr ""
 
 #. [password_auth.name]
 #. defaultMessage is:

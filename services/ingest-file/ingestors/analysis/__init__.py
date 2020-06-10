@@ -13,7 +13,6 @@ log = logging.getLogger(__name__)
 
 
 class Analyzer(object):
-    FRAGMENT = 'analysis'
 
     def __init__(self, dataset, entity):
         self.dataset = dataset
@@ -47,4 +46,4 @@ class Analyzer(object):
         if len(self.aggregator):
             log.debug("Extracted %d tags: %r",
                       len(self.aggregator), self.entity)
-            self.dataset.put(self.entity, self.FRAGMENT)
+            self.dataset.put(self.entity)

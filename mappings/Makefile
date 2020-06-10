@@ -1,7 +1,5 @@
-BALKHASH_BACKEND := leveldb
-export BALKHASH_BACKEND
-BALKHASH_LEVELDB_PATH := /balkhashdb
-export BALKHASH_LEVELDB_PATH
+FTM_STORE_URI := sqlite:////tmp/store.sqlite
+export FTM_STORE_URI
 
 all: peps sanctions samples
 
@@ -23,9 +21,9 @@ md_companies: md_companies.load
 #
 # See also: https://docs.alephdata.org/developers/mappings
 %.load:
-	ftm map $*.yml | balkhash write -d $*
-	balkhash iterate -d $* | aleph load-entities $*
-	balkhash delete -d $*
+	ftm map $*.yml | ftm store write -d $*
+	ftm store iterate -d $* | aleph load-entities $*
+	ftm store delete -d $*
 
 
 # Load data from OpenSanctions.org, i.e. lists of politically exposed persons (PEPs) and

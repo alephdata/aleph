@@ -6,7 +6,7 @@ from flask_babel import lazy_gettext
 
 from aleph.core import db
 from aleph.model import Role, Collection
-from aleph.model.common import SoftDeleteModel, ENTITY_ID_LEN
+from aleph.model.common import iso_text, SoftDeleteModel, ENTITY_ID_LEN
 
 
 log = logging.getLogger(__name__)
@@ -34,8 +34,17 @@ class Mapping(db.Model, SoftDeleteModel):
 
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
+    disabled = db.Column(db.Boolean, nullable=True)
     last_run_status = db.Column(db.Unicode, nullable=True)
     last_run_err_msg = db.Column(db.Unicode, nullable=True)
+
+    def get_proxy_context(self):
+        """Metadata to be added to each generated entity."""
+        return {
+            'created_at': iso_text(self.created_at),
+            'updated_at': iso_text(self.updated_at),
+            'role_id': self.role_id,
+        }
 
     def update(self, query=None, table_id=None):
         self.updated_at = datetime.utcnow()
@@ -86,6 +95,12 @@ class Mapping(db.Model, SoftDeleteModel):
         pq = pq.filter(cls.deleted_at == None)  # noqa
         pq.update({cls.deleted_at: deleted_at},
                   synchronize_session=False)
+
+    @classmethod
+    def delete_by_table(cls, entity_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.table_id == entity_id)
+        pq.delete(synchronize_session=False)
 
     @classmethod
     def create(cls, query, table_id, collection, role_id):

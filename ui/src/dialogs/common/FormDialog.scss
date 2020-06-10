@@ -1,9 +1,19 @@
 @import "src/app/variables.scss";
 
-.DiagramCreateDialog {
+.bp3-dialog {
   position: relative;
+  
+  .bp3-input.bp3-tag-input {
+    border-radius: 3px;
+  }
 
-  &__contents {
+  input {
+    font-size: 14px;
+  }
+}
+
+.FormDialog {
+  &__content {
     position: relative;
   }
 
@@ -18,7 +28,7 @@
     z-index: 2;
   }
 
-  .bp3-spinner {
+  &__spinner.bp3-spinner {
     position: absolute;
     top: 50%;
     left: 50%;

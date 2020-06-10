@@ -60,11 +60,17 @@ export const decideCollectionXref = asyncActionCreator((xref, contextId) => asyn
   return { id, data: xref };
 }, { name: 'DECIDE_XREF' });
 
-export const triggerCollectionAnalyze = asyncActionCreator((id, reset) => async () => {
-  const config = { params: { reset } };
-  const response = await endpoint.post(`collections/${id}/process`, null, config);
+export const triggerCollectionReingest = asyncActionCreator((id, index) => async () => {
+  const config = { params: { index } };
+  const response = await endpoint.post(`collections/${id}/reingest`, null, config);
   return { data: response.data };
-}, { name: 'TRIGGER_COLLECTION_ANALYZE' });
+}, { name: 'TRIGGER_COLLECTION_REINGEST' });
+
+export const triggerCollectionReindex = asyncActionCreator((id, flush) => async () => {
+  const config = { params: { flush } };
+  const response = await endpoint.post(`collections/${id}/reindex`, null, config);
+  return { data: response.data };
+}, { name: 'TRIGGER_COLLECTION_REINDEX' });
 
 export const triggerCollectionCancel = asyncActionCreator(id => async () => {
   const response = await endpoint.delete(`collections/${id}/status`);

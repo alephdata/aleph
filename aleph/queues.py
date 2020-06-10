@@ -11,13 +11,10 @@ OP_ANALYZE = 'analyze'
 OP_INDEX = 'index'
 OP_XREF = 'xref'
 OP_XREF_ITEM = 'xitem'
-OP_PROCESS = 'process'
+OP_REINGEST = 'reingest'
+OP_REINDEX = 'reindex'
 OP_LOAD_MAPPING = 'loadmapping'
 OP_FLUSH_MAPPING = 'flushmapping'
-
-# All stages that aleph should listen for. Does not include ingest,
-# which is received and processed by the ingest-file service.
-OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_XREF_ITEM, OP_LOAD_MAPPING, OP_FLUSH_MAPPING)  # noqa
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
@@ -52,15 +49,16 @@ def cancel_queue(collection):
     Dataset(kv, collection.foreign_id).cancel()
 
 
-def ingest_entity(collection, proxy, job_id=None, sync=False):
+def ingest_entity(collection, proxy, job_id=None, index=True):
     """Send the given FtM entity proxy to the ingest-file service."""
+    from aleph.logic.aggregator import get_aggregator_name
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     stage = get_stage(collection, OP_INGEST, job_id=job_id)
-    from aleph.logic.aggregator import get_aggregator_name
+    pipeline = [OP_ANALYZE, OP_INDEX] if index else [OP_ANALYZE]
     context = {
         'languages': collection.languages,
-        'balkhash_name': get_aggregator_name(collection),
-        'pipeline': [OP_ANALYZE, OP_INDEX],
-        'sync': sync
+        'ftmstore': get_aggregator_name(collection),
+        'namespace': collection.foreign_id,
+        'pipeline': pipeline
     }
     stage.queue(proxy.to_dict(), context)

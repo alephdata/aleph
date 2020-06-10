@@ -11,7 +11,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db, cache
 from aleph.model.collection import Collection
-from aleph.model.common import DatedModel
+from aleph.model.common import DatedModel, iso_text
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class Document(db.Model, DatedModel):
     schema = db.Column(db.String(255), nullable=False)
     meta = db.Column(JSONB, default={})
 
-    uploader_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
     parent_id = db.Column(db.BigInteger, nullable=True, index=True)  # noqa
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
@@ -92,7 +92,7 @@ class Document(db.Model, DatedModel):
 
     @classmethod
     def save(cls, collection, parent=None, foreign_id=None,
-             content_hash=None, meta=None, uploader_id=None):
+             content_hash=None, meta=None, role_id=None):
         """Try and find a document by various criteria."""
         foreign_id = sanitize_text(foreign_id)
 
@@ -113,7 +113,7 @@ class Document(db.Model, DatedModel):
             document = cls()
             document.schema = cls.SCHEMA
             document.collection_id = collection.id
-            document.uploader_id = uploader_id
+            document.role_id = role_id
 
         if parent is not None:
             document.parent_id = parent.id
@@ -134,8 +134,7 @@ class Document(db.Model, DatedModel):
     @classmethod
     def by_id(cls, document_id, collection=None):
         try:
-            document_id, _ = Namespace.parse(document_id)
-            document_id = int(document_id)
+            document_id = int(Namespace.strip(document_id))
         except Exception:
             return
         q = cls.all()
@@ -148,6 +147,7 @@ class Document(db.Model, DatedModel):
     def by_collection(cls, collection_id=None):
         q = cls.all()
         q = q.filter(cls.collection_id == collection_id)
+        q = q.yield_per(5000)
         return q
 
     @classmethod
@@ -159,21 +159,27 @@ class Document(db.Model, DatedModel):
         pq = pq.filter(cls.collection_id.in_(collection_ids))
         pq.delete(synchronize_session=False)
 
-    def to_proxy(self):
+    def to_proxy(self, ns=None):
+        ns = ns or self.collection.ns
         proxy = model.get_proxy({
-            'id': str(self.id),
+            'id': ns.sign(self.id),
             'schema': self.model,
-            'properties': {}
+            'properties': {},
+            'created_at': iso_text(self.created_at),
+            'updated_at': iso_text(self.updated_at),
+            'role_id': self.role_id,
+            'mutable': True
         })
         meta = dict(self.meta)
-        headers = meta.pop('headers', {})
+        headers = meta.pop('headers', None)
         if is_mapping(headers):
             headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+            proxy.set('headers', registry.json.pack(headers), quiet=True)
         else:
             headers = {}
         proxy.set('contentHash', self.content_hash)
-        proxy.set('parent', self.parent_id)
-        proxy.set('ancestors', self.ancestors)
+        proxy.set('parent', ns.sign(self.parent_id))
+        proxy.set('ancestors', [ns.sign(a) for a in self.ancestors])
         proxy.set('crawler', meta.get('crawler'))
         proxy.set('sourceUrl', meta.get('source_url'))
         proxy.set('title', meta.get('title'))
@@ -189,12 +195,10 @@ class Document(db.Model, DatedModel):
         proxy.set('language', meta.get('languages'))
         proxy.set('country', meta.get('countries'))
         proxy.set('keywords', meta.get('keywords'))
-        proxy.set('headers', registry.json.pack(headers), quiet=True)
         proxy.set('authoredAt', meta.get('authored_at'))
         proxy.set('modifiedAt', meta.get('modified_at'))
         proxy.set('publishedAt', meta.get('published_at'))
         proxy.set('retrievedAt', meta.get('retrieved_at'))
-        proxy.set('indexUpdatedAt', self.created_at)
         proxy.set('sourceUrl', meta.get('source_url'))
         return proxy
 
