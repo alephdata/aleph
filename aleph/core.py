@@ -107,10 +107,9 @@ def stackdriver_log(sender, payload={}):
     if settings.GOOGLE_REQUEST_LOGGING is False:
         return
     if not hasattr(local, '_gcp_logger'):
-        from google.cloud import logging
-        client = logging.Client()
+        from google.cloud.logging import Client as LoggingClient
+        client = LoggingClient()
         logger_name = '%s-api' % settings.APP_NAME
-        log.debug("Enabled Stackdriver request logging.")
         local._gcp_logger = client.logger(logger_name)
     local._gcp_logger.log_struct(payload)
 
