@@ -1,6 +1,5 @@
 import logging
 import threading
-import google.auth
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -109,7 +108,6 @@ def stackdriver_log(sender, payload={}):
         return
     if not hasattr(local, '_gcp_logger'):
         from google.cloud import logging
-        google.auth.default()
         client = logging.Client()
         logger_name = '%s-api' % settings.APP_NAME
         log.debug("Enabled Stackdriver request logging.")
