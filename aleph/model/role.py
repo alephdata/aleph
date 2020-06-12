@@ -130,7 +130,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def by_api_key(cls, api_key):
         if api_key is not None:
-            return cls.all().filter_by(api_key=api_key).first()
+            q = cls.all()
+            q = q.filter_by(api_key=api_key)
+            q = q.filter(cls.type == cls.USER)
+            return q.first()
 
     @classmethod
     def load_or_create(cls, foreign_id, type, name, email=None, is_admin=None):
