@@ -9,7 +9,7 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
-from aleph.core import cache, db, settings, url_for
+from aleph.core import settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic import resolver
@@ -39,12 +39,6 @@ def metadata():
       - System
     """
     locale = get_locale()
-    enable_cache(vary_user=False, vary=str(locale))
-    key = cache.key('metadata', settings.PROCESS_ID, locale)
-    data = cache.get_complex(key)
-    if data is not None:
-        return jsonify(data)
-
     auth = {}
     if settings.PASSWORD_LOGIN:
         auth['password_login_uri'] = url_for('sessions_api.password_login')
@@ -78,11 +72,8 @@ def metadata():
 
     if settings.SINGLE_USER:
         role = Role.load_cli_user()
-        db.session.commit()
         authz = Authz.from_role(role)
         data['token'] = authz.to_token(role=role)
-
-    cache.set_complex(key, data, expires=120)
     return jsonify(data)
 
 

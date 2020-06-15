@@ -4,7 +4,7 @@ urlnormalizer==1.2.5
 followthemoney==1.33.0
 followthemoney-store[postgresql]==2.1.7
 fingerprints==1.0.1
-servicelayer[google,amazon]==1.11.0
+servicelayer[google,amazon]==1.11.1
 normality==2.0.0
 pantomime==0.4.0
 
@@ -24,7 +24,7 @@ elasticsearch==7.7.1
 marshmallow==2.19.2
 gunicorn[eventlet]==20.0.4
 jsonschema==3.2.0
-apispec==3.3.0
+apispec==3.3.1
 apispec-webframeworks==0.5.2
 blinker==1.4
 Babel==2.8.0
@@ -39,7 +39,7 @@ zipstream==1.1.4
 tabulate==0.8.7
 
 grpcio==1.29.0
-google-cloud-storage==1.28.1
+google-cloud-storage==1.29.0
 google-cloud-logging==1.15.0
 
 # Testing dependencies
