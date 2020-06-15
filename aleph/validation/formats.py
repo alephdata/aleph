@@ -46,6 +46,13 @@ def check_category(value):
     return True
 
 
+@checker.checks("frequency", raises=ValueError)
+def check_frequency(value):
+    if value not in Collection.FREQUENCIES.keys():
+        raise ValueError(gettext('Invalid frequency.'))
+    return True
+
+
 @checker.checks("url", raises=ValueError)
 def check_url(value):
     value = stringify(value)

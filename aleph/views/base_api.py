@@ -54,6 +54,7 @@ def _metadata_locale(locale):
             'locales': locales
         },
         'categories': Collection.CATEGORIES,
+        'frequencies': Collection.FREQUENCIES,
         'model': model.to_dict(),
         'token': None,
         'auth': auth
