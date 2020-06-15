@@ -1,4 +1,4 @@
-import { Count } from '@alephdata/vislib';
+import { Count } from '@alephdata/react-ftm';
 import { connect } from 'react-redux';
 
 import { selectLocale } from 'src/selectors';

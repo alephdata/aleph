@@ -1,4 +1,4 @@
-import { Date, FileSize, URL } from '@alephdata/vislib'
+import { Date, FileSize, URL } from '@alephdata/react-ftm'
 
 import Country from './Country';
 import Numeric from './Numeric';
