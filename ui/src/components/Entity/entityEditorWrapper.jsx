@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
-import { EntityManager } from '@alephdata/vislib';
+import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'src/selectors';
 import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'src/actions';

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
-import { Entity as VLEntity } from '@alephdata/vislib';
+import { Entity as VLEntity } from '@alephdata/react-ftm';
 
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
