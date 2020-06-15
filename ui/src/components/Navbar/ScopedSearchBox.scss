@@ -1,3 +1,4 @@
+@import "src/app/mixins.scss";
 @import "src/app/variables.scss";
 
 .SearchBox {
@@ -8,7 +9,19 @@
     border-radius: 0 !important;
     box-shadow: none !important;
   }
-
+  .bp3-input-group {
+    #search-box {
+      &.bp3-input {
+        @include rtl(padding-right, 0, 30px!important);
+      }
+    }
+    .bp3-input-action {
+      &:last-child {
+        @include rtl(left, inherit, 0);
+        @include rtl(right, 0, inherit);
+      }
+    }
+  }
   &__icon {
     display: flex;
     align-items: center;

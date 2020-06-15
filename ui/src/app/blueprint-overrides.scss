@@ -1,3 +1,4 @@
+@import "src/app/mixins.scss";
 
 /* Taming Blueprint icons and tags/badges when displayed inside tabs */
 .bp3-tabs .bp3-tab .bp3-tag {
@@ -33,5 +34,71 @@
     display: none;
     width: 0;
     background: transparent;
+  }
+}
+.bp3-button, .bp3-menu-item {
+  @include rtl(text-align, left, right);
+
+  > * {
+    @include rtlSupportInvertedProp(margin, left, inherit, 7px);
+    // @include rtl(margin-right, 7px, inherit);
+  }
+}
+.bp3-menu {
+  @include rtl(text-align, left, right);
+}
+
+table {
+  tr td, tr th {
+    @include rtl(text-align, left, right);
+    &.numeric, &.number {
+      @include rtl(text-align, right, left);
+    }
+    // Float on the right, so that numbers overflow to the left.
+    // (FormattedNumber creates a <span>)
+    & > span {
+      @include rtl(float, right, left);
+    }
+  }
+}
+
+.bp3-control-group {
+  > :last-child {
+    @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
+  }
+  > :first-child {
+    @include rtl(border-radius, 3px 0 0 3px, 0 3px 3px 0);
+  }
+  
+}
+.bp3-input-group {
+  .bp3-input-action{
+    &:last-child{
+      @include rtl(right, 0, inherit);
+      @include rtl(left, inherit, 0);
+    }
+  }
+  .bp3-icon {
+    &:first-child {
+      @include rtl(left, 0, inherit);
+      @include rtl(right, inherit, 0);
+    }
+  }
+  &.bp3-large {
+    .bp3-input:not(:first-child){
+      @include rtlSupportInvertedProp(padding, left, 40px, inherit);
+    }
+  }
+}
+
+.bp3-button-group {
+  &:not(.bp3-minimal) {
+    > .bp3-button:not(:last-child) {
+      @include rtl(border-radius, 3px 0 0 3px, 0 3px 3px 0);
+      @include rtlSupportInvertedProp(margin, right, -1, inherit);
+    }
+    > .bp3-button:not(:first-child) {
+      @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
+    }
   }
 }

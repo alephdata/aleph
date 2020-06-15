@@ -162,7 +162,7 @@ class Dashboard extends React.Component {
             />
           </Menu>
         </div>
-        <div className="dashboard-body">
+        <div className="Dashboard__body">
           {this.props.children}
         </div>
       </div>

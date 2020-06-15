@@ -28,6 +28,8 @@ endpoint.interceptors.request.use((config) => {
   const state = store.getState();
   const { session } = state;
   const locale = selectLocale(state);
+  document.documentElement.lang = locale;
+  document.documentElement.dir  = locale === "ar" ? "rtl" : "ltr";
   if (session.loggedIn) {
     Object.assign(config.headers.common, {
       Authorization: `Bearer ${session.token}`,

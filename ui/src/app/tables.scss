@@ -95,18 +95,11 @@ table {
 
   th.numeric, td.numeric, th.number, td.number {
     width: 1%;
-    text-align: right;
     white-space: nowrap;
     overflow: visible;
     max-width: unset !important;
     text-overflow: unset;
     font-variant-numeric: tabular-nums;
-
-    // Float on the right, so that numbers overflow to the left.
-    // (FormattedNumber creates a <span>)
-    & > span {
-      float: right;
-    }
   }
 }
 
