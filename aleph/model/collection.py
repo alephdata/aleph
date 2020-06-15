@@ -44,12 +44,22 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'casefile': lazy_gettext('Personal datasets'),
         'other': lazy_gettext('Other material')
     }
+    DEFAULT_CATEGORY = 'other'
 
-    DEFAULT = 'other'
+    # How often a collection is updated:
+    FREQUENCIES = {
+        'daily': lazy_gettext('daily'),
+        'weekly': lazy_gettext('weekly'),
+        'monthly': lazy_gettext('monthly'),
+        'annual': lazy_gettext('annual'),
+        'never': lazy_gettext('never'),
+        None: lazy_gettext('undefined'),
+    }
 
     label = db.Column(db.Unicode)
     summary = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
+    frequency = db.Column(db.Unicode, nullable=True)
     countries = db.Column(ARRAY(db.Unicode()), default=[])
     languages = db.Column(ARRAY(db.Unicode()), default=[])
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
@@ -62,6 +72,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     # of an investigation. Unlike normal collections, cases do not serve
     # as source material, but as a mechanism of analysis.
     casefile = db.Column(db.Boolean, default=False)
+
+    # This collection is marked as super-secret:
+    restricted = db.Column(db.Boolean, default=False)
+
+    # Run xref on entity changes:
+    xref = db.Column(db.Boolean, default=False)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
     creator = db.relationship(Role)
@@ -88,6 +104,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.countries = [registry.country.clean(val) for val in self.countries]  # noqa
         self.languages = ensure_list(data.get('languages', self.languages))
         self.languages = [registry.language.clean(val) for val in self.languages]  # noqa
+        self.frequency = data.get('frequency', self.frequency)
+        self.restricted = data.get('restricted', self.restricted)
+        self.xref = data.get('xref', self.xref)
 
         # Some fields are editable only by admins in order to have
         # a strict separation between source evidence and case
@@ -140,7 +159,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     def to_dict(self):
         data = self.to_dict_dates()
-        data['category'] = self.DEFAULT
+        data['category'] = self.DEFAULT_CATEGORY
         if self.category in self.CATEGORIES:
             data['category'] = self.category
         data['kind'] = 'casefile' if self.casefile else 'source'
@@ -157,7 +176,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             'info_url': self.info_url,
             'data_url': self.data_url,
             'casefile': self.casefile,
+            'frequency': self.frequency,
             'secret': self.secret,
+            'xref': self.xref,
+            'restricted': self.restricted,
             'countries': registry.country.normalize_set(self.countries),
             'languages': registry.language.normalize_set(self.languages),
         })
@@ -203,7 +225,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection = cls()
             collection.created_at = created_at
             collection.foreign_id = foreign_id
-            collection.category = cls.DEFAULT
+            collection.category = cls.DEFAULT_CATEGORY
             collection.casefile = True
             collection.creator_id = authz.id
         collection.update(data, authz)
