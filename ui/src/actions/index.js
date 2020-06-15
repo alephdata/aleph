@@ -38,6 +38,7 @@ export {
   fetchEntityTags,
   flushEntityMapping,
   queryEntities,
+  queryEntityExpand,
   updateEntity,
   updateEntityMapping,
 } from './entityActions';

@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/vislib';
-import { queryEntitySuggest } from 'src/queries';
-import { selectLocale, selectModel, selectEntitiesResult } from 'src/selectors';
-import { createEntity, queryEntities, updateEntity } from 'src/actions';
+import { queryExpand, queryEntitySuggest } from 'src/queries';
+import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'src/selectors';
+import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'src/actions';
 import updateStates from 'src/util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
@@ -19,35 +19,33 @@ const entityEditorWrapper = (EditorComponent) => {
           model: props.model,
           namespace: new Namespace(props.collection.foreign_id),
           createEntity: this.createEntity.bind(this),
+          expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
         });
+
+        this.pendingPromises = [];
       }
 
       componentDidUpdate() {
         const { selectQueryResults } = this.props;
 
         // if there is an unresolved query promise, check if results have returned and resolve
-        if (this.entitySuggestPromise) {
-          const { query, promiseResolve } = this.entitySuggestPromise;
-          const results = selectQueryResults(query);
-          if (results) {
-            this.entitySuggestPromise = null;
-            promiseResolve(results);
-          }
+        if (this.pendingPromises.length) {
+          this.pendingPromises = this.pendingPromises.filter(({ query, promiseResolve }) => {
+            const results = selectQueryResults(query);
+            if (results) {
+              promiseResolve(results);
+              return false;
+            }
+            return true;
+          });
         }
       }
 
       getEntitySuggestions(queryText, schema) {
         const { collection, location, selectQueryResults } = this.props;
         const query = queryEntitySuggest(location, collection, schema, queryText);
-
-        // check if query results are in results cache
-        const results = selectQueryResults(query);
-        if (results) {
-          this.entitySuggestPromise = null;
-          return results;
-        }
 
         // throttle entities query request
         clearTimeout(this.entitySuggestTimeout);
@@ -56,7 +54,7 @@ const entityEditorWrapper = (EditorComponent) => {
         }, 150);
 
         return new Promise((resolve) => {
-          this.entitySuggestPromise = { query, promiseResolve: resolve };
+          this.pendingPromises.push({ query, promiseResolve: resolve });
         });
       }
 
@@ -70,6 +68,17 @@ const entityEditorWrapper = (EditorComponent) => {
           onStatusChange(updateStates.ERROR);
         }
         return null;
+      }
+
+      async expandEntity(entityId, properties, limit) {
+        const { collection, location, selectQueryResults } = this.props;
+        const query = queryExpand(location, entityId, properties, limit);
+
+        this.props.queryEntityExpand({ query });
+
+        return new Promise((resolve) => {
+          this.pendingPromises.push({ query, promiseResolve: resolve });
+        });
       }
 
       async updateEntity(entity) {
@@ -106,7 +115,14 @@ const mapStateToProps = state => ({
   model: selectModel(state),
   locale: selectLocale(state),
   selectQueryResults: (query) => {
-    const result = selectEntitiesResult(state, query);
+    let result;
+
+    if (query.queryName === 'expand') {
+      result = selectExpandResult(state, query);
+    } else {
+      result = selectEntitiesResult(state, query);
+    }
+
     if (!result.isPending && result.results) {
       return result.results;
     }
@@ -117,6 +133,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   createEntity,
   queryEntities,
+  queryEntityExpand,
   updateEntity,
 };
 

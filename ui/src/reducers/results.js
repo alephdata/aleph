@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
 import {
-  resultLoadStart, resultLoadError, updateResults,
+  resultLoadStart, resultLoadError, updateResults, updateExpandResults,
 } from 'src/reducers/util';
 
 import {
@@ -9,6 +9,7 @@ import {
   queryDiagrams,
   queryRoles,
   queryEntities,
+  queryEntityExpand,
   queryNotifications,
   queryCollectionXref,
 } from 'src/actions';
@@ -30,6 +31,13 @@ export default createReducer({
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryEntities.COMPLETE]: updateResults,
+
+  [queryEntityExpand.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryEntityExpand.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
+
+  [queryEntityExpand.COMPLETE]: updateExpandResults,
 
   [queryNotifications.START]: (state, { query }) => resultLoadStart(state, query),
 

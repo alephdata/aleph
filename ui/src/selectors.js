@@ -139,6 +139,13 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
+export function selectExpandResult(state, query) {
+  return {
+    results: [],
+    ...selectObject(state, state.results, query.toKey()),
+  };
+}
+
 export function selectNotificationsResult(state, query) {
   const model = selectModel(state);
   const result = selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
