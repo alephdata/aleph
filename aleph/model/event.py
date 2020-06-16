@@ -111,7 +111,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # PUBLISH COLLECTION (collection)
     PUBLISH_COLLECTION = Event(
-        template='{{actor}} published {{collection}}',
+        template=lazy_gettext('{{actor}} published {{collection}}'),
         params={'collection': Collection},
         link_to='collection'
     )
