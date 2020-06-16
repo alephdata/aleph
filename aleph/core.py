@@ -1,5 +1,4 @@
 import logging
-import threading
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -19,13 +18,12 @@ from servicelayer.archive import init_archive
 from servicelayer.logs import configure_logging
 from servicelayer.extensions import get_extensions
 
-from aleph import settings, signals
+from aleph import settings
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
 NONE = '\'none\''
 log = logging.getLogger(__name__)
-local = threading.local()
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -100,18 +98,6 @@ def determine_locale():
         locale = str(babel.default_locale)
     set_model_locale(locale)
     return locale
-
-
-@signals.handle_request_log.connect
-def stackdriver_log(sender, payload={}):
-    if settings.GOOGLE_REQUEST_LOGGING is False:
-        return
-    if not hasattr(local, '_gcp_logger'):
-        from google.cloud.logging import Client as LoggingClient
-        client = LoggingClient()
-        logger_name = '%s-api' % settings.APP_NAME
-        local._gcp_logger = client.logger(logger_name)
-    local._gcp_logger.log_struct(payload)
 
 
 @migrate.configure

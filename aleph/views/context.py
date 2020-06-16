@@ -1,6 +1,7 @@
 import math
 import time
 import logging
+import threading
 from pprint import pformat  # noqa
 from banal import hash_data
 from datetime import datetime
@@ -8,13 +9,14 @@ from flask_babel import get_locale
 from flask import request, Response, Blueprint
 from werkzeug.exceptions import TooManyRequests
 
-from aleph import signals, __version__
+from aleph import __version__
 from aleph.queues import get_rate_limit
 from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Role
 
 log = logging.getLogger(__name__)
+local = threading.local()
 blueprint = Blueprint('context', __name__)
 
 
@@ -58,6 +60,13 @@ def enable_cache(vary_user=True, vary=None):
         raise NotModified()
 
 
+def _get_remote_ip():
+    forwarded_for = request.headers.getlist('X-Forwarded-For')
+    if len(forwarded_for):
+        return forwarded_for[0]
+    return request.remote_addr
+
+
 def _get_credential_authz(credential):
     if credential is None or not len(credential):
         return
@@ -90,7 +99,7 @@ def enable_rate_limit(request):
     if request.authz.logged_in and not request.authz.is_blocked:
         return
     limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
-    request.rate_limit = get_rate_limit(request.remote_ip,
+    request.rate_limit = get_rate_limit(_get_remote_ip(),
                                         limit=limit,
                                         interval=settings.API_RATE_WINDOW,
                                         unit=60)
@@ -102,11 +111,6 @@ def enable_rate_limit(request):
 def setup_request():
     """Set some request attributes at the beginning of the request.
     By default, caching will be disabled."""
-    forwarded_for = request.headers.getlist('X-Forwarded-For')
-    if len(forwarded_for):
-        request.remote_ip = forwarded_for[0]
-    else:
-        request.remote_ip = request.remote_addr
     request._begin_time = time.time()
     request._app_locale = str(get_locale())
     request._session_id = request.headers.get('X-Aleph-Session')
@@ -124,7 +128,8 @@ def setup_request():
 def finalize_response(resp):
     """Post-request processing to set cache parameters."""
     # Compute overall request duration:
-    took = time.time() - request._begin_time
+    now = time.time()
+    took = now - getattr(request, '_begin_time', now),
 
     # Finalize reporting of the rate limiter:
     if hasattr(request, 'rate_limit') and request.rate_limit is not None:
@@ -166,25 +171,27 @@ def finalize_response(resp):
 
 def generate_request_log(resp, took):
     """Collect data about the request for analytical purposes."""
+    # Move this down once we have multiple collectors.
+    if settings.GOOGLE_REQUEST_LOGGING is False:
+        return
+
     payload = {
         'v': __version__,
         'method': request.method,
         'endpoint': request.endpoint,
         'referrer': request.referrer,
-        'ip': request.remote_ip,
+        'ip': _get_remote_ip(),
         'ua': str(request.user_agent),
         'time': datetime.utcnow().isoformat(),
-        'tool': took,
+        'session_id': getattr(request, '_session_id', None),
+        'locale': getattr(request, '_app_locale', None),
+        'took': took,
         'url': request.url,
         'path': request.full_path,
         'status': resp.status_code
     }
-    if hasattr(request, '_session_id'):
-        payload['session_id'] = request._session_id
     if hasattr(request, 'authz'):
         payload['role_id'] = request.authz.id
-    if hasattr(request, '_app_locale'):
-        payload['locale'] = request._app_locale
     tags = dict(request.view_args or ())
     if hasattr(request, '_log_tags'):
         tags.update(request._log_tags)
@@ -193,4 +200,9 @@ def generate_request_log(resp, took):
             payload[tag] = value
 
     # log.info("Log: %s", pformat(payload))
-    signals.handle_request_log.send(payload=payload)
+    if not hasattr(local, '_gcp_logger'):
+        from google.cloud.logging import Client
+        client = Client()
+        logger_name = '%s-api' % settings.APP_NAME
+        local._gcp_logger = client.logger(logger_name)
+    local._gcp_logger.log_struct(payload)
