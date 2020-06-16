@@ -68,8 +68,8 @@ export function selectSession(state) {
 }
 
 export function selectCurrentRole(state) {
-  const session = selectObject(state, state, 'session');
-  return selectRole(state, session.id);
+  const session = selectSession(state);
+  return session.role || {};
 }
 
 export function selectTester(state) {
