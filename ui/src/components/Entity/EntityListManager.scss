@@ -1,8 +1,16 @@
 @import "src/app/variables.scss";
 
 .EntityListManager {
-  .bp3-button-group {
+  &__actions.bp3-control-group {
+    justify-content: space-between;
     margin-bottom: $aleph-content-padding;
+
+    .bp3-input-group {
+      min-width: 250px;
+    }
+    .bp3-input-group, .bp3-button-group {
+      border-radius: 3px;
+    }
   }
 
   .align-middle {
@@ -15,5 +23,5 @@
 
   .data-grid-container {
     min-height: 300px;
-  }  
+  }
 }

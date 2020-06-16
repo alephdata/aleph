@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Button } from '@blueprintjs/core';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { Button, ButtonGroup, ControlGroup, InputGroup } from '@blueprintjs/core';
 import { Waypoint } from 'react-waypoint';
 import _ from 'lodash';
-import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -18,18 +18,29 @@ import getEntityLink from 'src/util/getEntityLink';
 
 import './EntityListManager.scss';
 
+
+const messages = defineMessages({
+  search_placeholder: {
+    id: 'entity.manager.search_placeholder',
+    defaultMessage: 'Search {schema}',
+  },
+});
+
 export class EntityListManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selection: [],
       deleteIsOpen: false,
+      queryText: '',
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
     this.onSortColumn = this.onSortColumn.bind(this);
+    this.onQueryTextChange = this.onQueryTextChange.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +49,15 @@ export class EntityListManager extends Component {
 
   componentDidUpdate() {
     this.fetchIfNeeded();
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const nextQueryText = nextProps.query ? nextProps.query.getString('q') : prevState.queryText;
+    const queryChanged = !prevState?.prevQuery || prevState.prevQuery.getString('q') !== nextQueryText;
+    return {
+      prevQuery: nextProps.query,
+      queryText: queryChanged ? nextQueryText : prevState.queryText,
+    };
   }
 
   getMoreResults() {
@@ -101,23 +121,47 @@ export class EntityListManager extends Component {
     ));
   }
 
+  onQueryTextChange({ target }) {
+    const queryText = target.value;
+    this.setState({ queryText });
+  }
+
+  onSearchSubmit(e) {
+    e.preventDefault();
+    const { history, query, location } = this.props;
+    const { queryText } = this.state;
+    const newQuery = query.set('q', queryText);
+    this.updateQuery(newQuery);
+  }
+
   render() {
-    const { collection, schema, entityManager, result, sort } = this.props;
-    const { selection } = this.state;
+    const { collection, entityManager, intl, result, schema, sort } = this.props;
+    const { queryText, selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
 
     return (
       <div className="EntityListManager">
-        { collection.writeable && (
-          <div className="bp3-button-group">
-            <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-              <span className="align-middle">
-                <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
-              </span>
-              <Count count={selection.length} />
-            </Button>
-          </div>
-        )}
+        <ControlGroup className="EntityListManager__actions">
+          { collection.writeable && (
+            <ButtonGroup>
+              <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
+                <span className="align-middle">
+                  <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
+                </span>
+                <Count count={selection.length} />
+              </Button>
+            </ButtonGroup>
+          )}
+          <form onSubmit={this.onSearchSubmit}>
+            <InputGroup
+              fill
+              leftIcon="search"
+              onChange={this.onQueryTextChange}
+              placeholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural })}
+              value={queryText}
+            />
+          </form>
+        </ControlGroup>
         <div className="EntityListManager__content">
           <TableEditor
             entities={result.results}
@@ -150,9 +194,6 @@ export class EntityListManager extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { location, collection, schema } = ownProps;
   let query = queryCollectionEntities(location, collection.id, schema.name);
-  // if (collection.writeable) {
-  //   query = query.set('cache', 'false');
-  // }
   const sort = query.getSort();
   return {
     query,
