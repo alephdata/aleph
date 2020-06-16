@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Topic as VLTopic, TopicSelect } from '@alephdata/vislib';
+import { Topic as VLTopic, TopicSelect } from '@alephdata/react-ftm';
 import { selectLocale, selectModel } from 'src/selectors';
 
 const mapStateToProps = (state) => {

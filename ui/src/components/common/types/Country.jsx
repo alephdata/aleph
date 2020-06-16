@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Country as VLCountry, CountrySelect } from '@alephdata/vislib';
+import { Country as VLCountry, CountrySelect } from '@alephdata/react-ftm';
 import { selectLocale, selectModel } from 'src/selectors';
 
 const mapStateToProps = (state) => {

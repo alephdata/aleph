@@ -13,7 +13,7 @@ import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import collectionViewIds from 'src/components/Collection/collectionViewIds';
 import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
-import { selectModel, selectDiagramsResult, selectCollectionXrefResult, selectTester } from 'src/selectors';
+import { selectModel, selectDiagramsResult, selectCollectionXrefResult } from 'src/selectors';
 
 import './CollectionViews.scss';
 
@@ -145,7 +145,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     entitiesTabCount: entitiesTabCount,
     documentTabCount: documentTabCount,
-    showDiagramsTab: collection.casefile && selectTester(state),
+    showDiagramsTab: collection.casefile,
     showEntitiesTab: collection.casefile,
     showDocumentsTab: (documentTabCount > 0 || collection.writeable),
     xref: selectCollectionXrefResult(state, xrefQuery),

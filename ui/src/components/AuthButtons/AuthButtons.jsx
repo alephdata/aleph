@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 
 import { fetchRole } from 'src/actions';
-import { selectCurrentRole, selectSession, selectTester, selectMetadata } from 'src/selectors';
+import { selectCurrentRole, selectSession, selectMetadata } from 'src/selectors';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './AuthButtons.scss';
@@ -76,7 +76,7 @@ export class AuthButtons extends Component {
   }
 
   render() {
-    const { session, role, isTester, metadata, intl } = this.props;
+    const { session, role, metadata, intl } = this.props;
 
     if (session.loggedIn) {
       return (
@@ -111,14 +111,12 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.casefiles)}
                   </div>
                 </Link>
-                {isTester && (
-                  <Link to="/diagrams" className="bp3-menu-item">
-                    <Icon icon="graph" />
-                    <div className="bp3-text-overflow-ellipsis bp3-fill">
-                      {intl.formatMessage(messages.diagrams)}
-                    </div>
-                  </Link>
-                )}
+                <Link to="/diagrams" className="bp3-menu-item">
+                  <Icon icon="graph" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.diagrams)}
+                  </div>
+                </Link>
                 <MenuDivider />
                 <Link to="/settings" className="bp3-menu-item">
                   <Icon icon="cog" />
@@ -160,7 +158,6 @@ export class AuthButtons extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isTester: selectTester(state),
   role: selectCurrentRole(state),
   session: selectSession(state),
   metadata: selectMetadata(state),

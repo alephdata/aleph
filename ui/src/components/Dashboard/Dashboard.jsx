@@ -8,7 +8,7 @@ import c from 'classnames';
 
 import { queryRoles } from 'src/actions';
 import { queryGroups } from 'src/queries';
-import { selectAlerts, selectTester, selectRolesResult } from 'src/selectors';
+import { selectAlerts, selectRolesResult } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -70,7 +70,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, intl, location, groupsResult, showDiagrams } = this.props;
+    const { alerts, intl, location, groupsResult } = this.props;
     const current = location.pathname;
 
     return (
@@ -117,14 +117,12 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
             />
-            {showDiagrams && (
-              <MenuItem
-                icon="graph"
-                text={intl.formatMessage(messages.diagrams)}
-                onClick={() => this.navigate('/diagrams')}
-                active={current === '/diagrams'}
-              />
-            )}
+            <MenuItem
+              icon="graph"
+              text={intl.formatMessage(messages.diagrams)}
+              onClick={() => this.navigate('/diagrams')}
+              active={current === '/diagrams'}
+            />
             {(groupsResult.isPending || groupsResult.total > 0) && (
               <>
                 <MenuDivider />
@@ -176,7 +174,6 @@ const mapStateToProps = (state, ownProps) => {
     groupsQuery,
     groupsResult: selectRolesResult(state, groupsQuery),
     alerts: selectAlerts(state),
-    showDiagrams: selectTester(state),
   };
 };
 

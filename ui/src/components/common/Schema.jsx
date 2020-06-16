@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectModel } from 'src/selectors';
-import { Schema as VLSchema, SchemaSelect } from '@alephdata/vislib';
+import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
 
 function SchemaLink(props) {
   const { schema, plural, url, children } = props;

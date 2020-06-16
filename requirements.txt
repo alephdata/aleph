@@ -39,7 +39,7 @@ zipstream==1.1.4
 tabulate==0.8.7
 
 grpcio==1.29.0
-google-cloud-storage==1.28.1
+google-cloud-storage==1.29.0
 google-cloud-logging==1.15.0
 
 # Testing dependencies

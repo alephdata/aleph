@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { TableEditor } from '@alephdata/vislib';
+import { TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';

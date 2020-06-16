@@ -1,4 +1,3 @@
-from aleph import signals
 from aleph.views.context import blueprint as cache
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.sessions_api import blueprint as sessions_api
@@ -42,4 +41,3 @@ def mount_app_blueprints(app):
     app.register_blueprint(mappings_api)
     app.register_blueprint(diagrams_api)
     app.register_blueprint(linkages_api)
-    signals.register_blueprints.send(app=app)
