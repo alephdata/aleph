@@ -14,6 +14,7 @@ from aleph.core import settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic import resolver
+from aleph.logic.pages import load_pages
 from aleph.index.collections import get_collection_things
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
@@ -55,6 +56,7 @@ def _metadata_locale(locale):
         },
         'categories': Collection.CATEGORIES,
         'frequencies': Collection.FREQUENCIES,
+        'pages': load_pages(locale),
         'model': model.to_dict(),
         'token': None,
         'auth': auth
