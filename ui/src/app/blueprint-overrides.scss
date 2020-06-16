@@ -40,8 +40,7 @@
   @include rtl(text-align, left, right);
 
   > * {
-    @include rtlSupportInvertedProp(margin, left, inherit, 7px);
-    // @include rtl(margin-right, 7px, inherit);
+    @include rtlSupportInvertedProp(margin, right, 7px, null);
   }
 }
 .bp3-menu {
@@ -53,11 +52,6 @@ table {
     @include rtl(text-align, left, right);
     &.numeric, &.number {
       @include rtl(text-align, right, left);
-    }
-    // Float on the right, so that numbers overflow to the left.
-    // (FormattedNumber creates a <span>)
-    & > span {
-      @include rtl(float, right, left);
     }
   }
 }
@@ -74,19 +68,19 @@ table {
 .bp3-input-group {
   .bp3-input-action{
     &:last-child{
-      @include rtl(right, 0, inherit);
-      @include rtl(left, inherit, 0);
+      @include rtl(right, 0, initial);
+      @include rtl(left, initial, 0);
     }
   }
   .bp3-icon {
     &:first-child {
-      @include rtl(left, 0, inherit);
-      @include rtl(right, inherit, 0);
+      @include rtl(left, 0, initial);
+      @include rtl(right, initial, 0);
     }
   }
   &.bp3-large {
     .bp3-input:not(:first-child){
-      @include rtlSupportInvertedProp(padding, left, 40px, inherit);
+      @include rtlSupportInvertedProp(padding, left, 40px, null);
     }
   }
 }
@@ -95,10 +89,32 @@ table {
   &:not(.bp3-minimal) {
     > .bp3-button:not(:last-child) {
       @include rtl(border-radius, 3px 0 0 3px, 0 3px 3px 0);
-      @include rtlSupportInvertedProp(margin, right, -1, inherit);
+      @include rtlSupportInvertedProp(margin, right, -1px, null);
     }
     > .bp3-button:not(:first-child) {
       @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
     }
   }
+}
+
+.bp3-control {
+  &.bp3-checkbox {
+    @include rtlSupportInvertedProp(padding, left, 26px, null);
+
+    .bp3-control-indicator {
+      @include rtlSupportInvertedProp(margin, right, 10px, -26px);
+    }
+  }
+  input {
+    @include rtl(right, null, 0);
+
+  }
+}
+.bp3-navbar-group {
+  &.bp3-align-right {
+    @include rtl(float, right, left);
+  }
+  &.bp3-align-left {
+    @include rtl(float, left, right);
+  } 
 }

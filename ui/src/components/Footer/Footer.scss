@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 $breadcrumb-line-height: $pt-icon-size-large - 1px !default;
 
@@ -9,7 +10,9 @@ $breadcrumb-line-height: $pt-icon-size-large - 1px !default;
   bottom: 0;
   z-index: 1;
   font-size: $pt-font-size-large;
-  padding: ($aleph-grid-size / 2) $aleph-content-padding ($aleph-grid-size / 2) $aleph-grid-size;
+  padding: ($aleph-grid-size / 2);
+  @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, $aleph-grid-size);
+
 
   a {
     color: inherit;
@@ -19,7 +22,7 @@ $breadcrumb-line-height: $pt-icon-size-large - 1px !default;
   }
 
   .info {
-    float: right;
+    @include rtl(float, right, left);
     padding: 0;
 
     .bp3-icon {

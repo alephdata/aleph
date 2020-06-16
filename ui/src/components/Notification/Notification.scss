@@ -21,7 +21,7 @@
     }
 
     .bp3-icon, .bp3-icon svg {
-        @include rtlSupportInvertedProp(margin, right, 0, inherit);
-        @include rtlSupportInvertedProp(padding, right, $aleph-grid-size/6, inherit);
+        @include rtlSupportInvertedProp(margin, right, 0, null);
+        @include rtlSupportInvertedProp(padding, right, $aleph-grid-size/6, null);
     }
 }

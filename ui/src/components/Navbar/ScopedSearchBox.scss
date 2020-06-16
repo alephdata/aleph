@@ -17,8 +17,8 @@
     }
     .bp3-input-action {
       &:last-child {
-        @include rtl(left, inherit, 0);
-        @include rtl(right, 0, inherit);
+        @include rtl(left, initial, 0);
+        @include rtl(right, 0, initial);
       }
     }
   }

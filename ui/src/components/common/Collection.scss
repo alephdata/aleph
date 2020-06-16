@@ -3,7 +3,7 @@
 
 .CollectionLabel {
     .bp3-icon, .bp3-spinner {
-        @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, inherit);
+        @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
     }
 
     .bp3-spinner {
