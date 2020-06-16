@@ -129,7 +129,7 @@ def finalize_response(resp):
     """Post-request processing to set cache parameters."""
     # Compute overall request duration:
     now = time.time()
-    took = now - getattr(request, '_begin_time', now),
+    took = now - getattr(request, '_begin_time', now)
 
     # Finalize reporting of the rate limiter:
     if hasattr(request, 'rate_limit') and request.rate_limit is not None:
