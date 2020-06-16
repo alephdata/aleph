@@ -36,6 +36,11 @@ export function updateResults(state, { query, result }) {
   return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
 
+export function updateExpandResults(state, { query, result }) {
+  const key = query.toKey();
+  return objectLoadComplete(state, key, mergeResults(state[key], result));
+}
+
 export function loadState(data) {
   const state = data || {};
   return { ...state, isPending: true, shouldLoad: true, isError: false };

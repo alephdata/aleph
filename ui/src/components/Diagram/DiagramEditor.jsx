@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
+import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
 import { processApiEntity } from 'src/components/Diagram/util';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import { updateDiagram } from 'src/actions';

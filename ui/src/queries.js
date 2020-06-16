@@ -90,3 +90,13 @@ export function queryEntitySuggest(location, collection, schemaName, queryText) 
 
   return Query.fromLocation('entities', location, context, 'entities').limit(30);
 }
+
+export function queryExpand(location, entityId, properties, limit = 200) {
+  const path = `entities/${entityId}/expand`;
+  const context = {
+    'edge_types': ['entity'],
+    'filter:property': properties
+  };
+
+  return Query.fromLocation(path, location, context, 'expand').limit(limit);
+}

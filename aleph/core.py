@@ -1,5 +1,5 @@
 import logging
-import google.auth
+import threading
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -25,6 +25,7 @@ from aleph.oauth import configure_oauth
 
 NONE = '\'none\''
 log = logging.getLogger(__name__)
+local = threading.local()
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -105,15 +106,12 @@ def determine_locale():
 def stackdriver_log(sender, payload={}):
     if settings.GOOGLE_REQUEST_LOGGING is False:
         return
-    if not hasattr(settings, '_gcp_logger'):
-        from google.cloud import logging
-        google.auth.default()
-        client = logging.Client()
+    if not hasattr(local, '_gcp_logger'):
+        from google.cloud.logging import Client as LoggingClient
+        client = LoggingClient()
         logger_name = '%s-api' % settings.APP_NAME
-        log.debug("Enabled Stackdriver request logging.")
-        settings._gcp_logger = client.logger(logger_name)
-    if settings._gcp_logger is not None:
-        settings._gcp_logger.log_struct(payload)
+        local._gcp_logger = client.logger(logger_name)
+    local._gcp_logger.log_struct(payload)
 
 
 @migrate.configure

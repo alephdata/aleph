@@ -1,4 +1,4 @@
-import { Numeric } from '@alephdata/vislib';
+import { Numeric } from '@alephdata/react-ftm';
 import { connect } from 'react-redux';
 
 import { selectLocale } from 'src/selectors';
