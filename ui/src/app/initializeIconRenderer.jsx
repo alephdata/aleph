@@ -14,17 +14,17 @@ const renderSvgPaths = (pathsSize, iconName) => {
 
 // extends blueprint icon renderer to render icons from the ftm iconRegistry
 export default function initializeIconRenderer() {
-  BlueprintIcon.prototype._render = BlueprintIcon.prototype.render;
-  BlueprintIcon.prototype._renderSvgPaths = BlueprintIcon.prototype.renderSvgPaths;
-
+  if (!BlueprintIcon.prototype._render) {
+    BlueprintIcon.prototype._render = BlueprintIcon.prototype.render;
+  }
+  if (!BlueprintIcon.prototype._renderSvgPaths) {
+    BlueprintIcon.prototype._renderSvgPaths = BlueprintIcon.prototype.renderSvgPaths;
+  }
+  
   Object.assign(BlueprintIcon.prototype, {
-    isInternal(iconName) {
-      return !!IconRegistry.getIcon(iconName);
-    },
     render() {
       const props = { ...this.props };
-
-      if (this.isInternal(this.props.icon)) {
+      if (!!IconRegistry.getIcon(this.props.icon)) {
         // for internal icons, viewport needs to be 25 * 25, while svg dimensions
         //  should be set to standard blueprint size
         props.iconSize = props.iconSize || defaultIconSize;
