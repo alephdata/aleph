@@ -2,13 +2,19 @@ import React, { PureComponent } from 'react';
 import { Popover, Position, Tag, Intent, Callout } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
+import { Role } from 'src/components/common';
+
 import './Restricted.scss';
 
 const messages = defineMessages({
   explain: {
     id: 'restricted.explain',
-    defaultMessage: 'Use of this dataset is restricted. Read the description and contact the dataset manager before using this material.',
+    defaultMessage: 'Use of this dataset is restricted. Read the description and contact {creator} before using this material.',
   },
+  no_creator: {
+    id: 'restricted.explain.creator',
+    defaultMessage: 'the dataset owner'
+  }
 });
 
 class Restricted extends PureComponent {
@@ -18,10 +24,13 @@ class Restricted extends PureComponent {
     if (!collection.restricted) {
         return null;
     }
+    const creator = collection.creator && collection.creator.id ? 
+      <Role.Label icon={false} role={collection.creator} /> :
+      intl.formatMessage(messages.no_creator);
 
     const content = (
       <Callout intent={Intent.WARNING} className="Restricted__message">
-        {intl.formatMessage(messages.explain)}
+        {intl.formatMessage(messages.explain, { creator })}
       </Callout>
     )
 
