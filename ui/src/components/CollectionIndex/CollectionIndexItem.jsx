@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Classes, Icon, H4 } from '@blueprintjs/core';
 import c from 'classnames';
 import {
-  Date, Role, Category, Count, Country, Collection, Summary, Skeleton,
+  Date, Role, Category, Count, Country, Collection, Summary, Skeleton, Frequency,
 } from 'src/components/common';
 
 import './CollectionIndexItem.scss';
@@ -46,21 +46,21 @@ class CollectionIndexItem extends PureComponent {
           <Summary text={collection.summary} className="summary" truncate={2} />
         )}
         <p className="details">
-          { !collection.casefile && (
-            <span className="details-item">
-              <Category.Label collection={collection} icon />
-            </span>
-          )}
-
+          <span className="details-item">
+            <Category.Label category={collection.category} icon />
+          </span>
           <span className="details-item">
             <Icon icon="time" />
             <FormattedMessage
               id="collection.last_updated"
-              defaultMessage="Updated {date}"
+              defaultMessage="Last updated {date}"
               values={{
                 date: <Date value={collection.updated_at} />,
               }}
             />
+            {collection.frequency !== 'never' && collection.frequency !== 'unknown' && (
+              <Frequency.Label frequency={collection.frequency} />
+            )}
           </span>
           { collection.countries && collection.countries.length > 0 && (
             <span className="details-item">

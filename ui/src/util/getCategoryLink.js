@@ -1,7 +1,4 @@
 
-export default function getCategoryLink(collection) {
-  if (collection.category) {
-    return `/datasets?collectionsfilter%3Acategory=${collection.category}`;
-  }
-  return null;
+export default function getCategoryLink(category) {
+  return `/datasets?collectionsfilter%3Acategory=${category}`;
 }
