@@ -48,13 +48,14 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     # How often a collection is updated:
     FREQUENCIES = {
+        'unknown': lazy_gettext('not known'),
+        'never': lazy_gettext('not updated'),
         'daily': lazy_gettext('daily'),
         'weekly': lazy_gettext('weekly'),
         'monthly': lazy_gettext('monthly'),
         'annual': lazy_gettext('annual'),
-        'never': lazy_gettext('never'),
-        None: lazy_gettext('undefined'),
     }
+    DEFAULT_FREQUENCY = 'unknown'
 
     label = db.Column(db.Unicode)
     summary = db.Column(db.Unicode, nullable=True)
@@ -162,6 +163,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         data['category'] = self.DEFAULT_CATEGORY
         if self.category in self.CATEGORIES:
             data['category'] = self.category
+        data['frequency'] = self.DEFAULT_FREQUENCY
+        if self.frequency in self.FREQUENCIES:
+            data['frequency'] = self.frequency
         data['kind'] = 'casefile' if self.casefile else 'source'
         data.update({
             'id': stringify(self.id),
@@ -176,7 +180,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             'info_url': self.info_url,
             'data_url': self.data_url,
             'casefile': self.casefile,
-            'frequency': self.frequency,
             'secret': self.secret,
             'xref': self.xref,
             'restricted': self.restricted,
