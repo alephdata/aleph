@@ -8,6 +8,9 @@ Collection:
     category:
       type: string
       format: category
+    frequency:
+      type: string
+      format: frequency
     count:
       type: integer
     countries:
@@ -39,22 +42,33 @@ Collection:
       type: object
     secret:
       type: boolean
+    restricted:
+      type: boolean
+    xref:
+      type: boolean
     writeable:
       type: boolean
 
 CollectionCreate:
   type: object
   properties:
-    casefile:
-      type: boolean
-    category:
+    label:
       type: string
-      format: category
+      minLength: 2
+      maxLength: 500
+    summary:
+      type: string
+      nullable: true
     countries:
       type: array
       items:
         type: string
         format: country
+    languages:
+      type: array
+      items:
+        type: string
+        format: language
     data_url:
       type: string
       format: url
@@ -65,15 +79,6 @@ CollectionCreate:
       type: string
       format: url
       nullable: true
-    label:
-      type: string
-      minLength: 2
-      maxLength: 500
-    languages:
-      type: array
-      items:
-        type: string
-        format: language
     publisher:
       type: string
       nullable: true
@@ -81,9 +86,18 @@ CollectionCreate:
       type: string
       format: url
       nullable: true
-    summary:
+    category:
       type: string
-      nullable: true
+      format: category
+    frequency:
+      type: string
+      format: frequency
+    casefile:
+      type: boolean
+    restricted:
+      type: boolean
+    xref:
+      type: boolean
   required: ["label"]
 
 CollectionUpdate:

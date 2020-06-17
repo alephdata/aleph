@@ -1,7 +1,8 @@
 import React, { PureComponent, Component } from 'react';
 import { Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
 import c from 'classnames';
-import { Category, Collection, Entity, Skeleton } from 'src/components/common';
+
+import { Category, Collection, Entity, Skeleton, Restricted } from 'src/components/common';
 
 import './Breadcrumbs.scss';
 
@@ -36,11 +37,12 @@ class CollectionBreadcrumb extends PureComponent {
       <>
         {showCategory && (
           <li key={collection.category}>
-            <Category.Link collection={collection} className="bp3-breadcrumb" icon />
+            <Category.Link category={collection.category} className="bp3-breadcrumb" icon />
           </li>
         )}
         <li key={collection.id}>
           <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
+          <Restricted collection={collection} />
         </li>
       </>
     );

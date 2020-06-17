@@ -1,5 +1,6 @@
 import logging
 from babel import Locale
+from functools import lru_cache
 from collections import defaultdict
 from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
@@ -22,23 +23,11 @@ blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
 
 
-@blueprint.route('/api/2/metadata')
-def metadata():
-    """Get operational metadata for the frontend.
-    ---
-    get:
-      summary: Retrieve system metadata from the application.
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-      tags:
-      - System
-    """
-    locale = get_locale()
+@lru_cache(maxsize=None)
+def _metadata_locale(locale):
+    # This is cached in part because latency on this endpoint is
+    # particularly relevant to the first render being shown to a
+    # user.
     auth = {}
     if settings.PASSWORD_LOGIN:
         auth['password_login_uri'] = url_for('sessions_api.password_login')
@@ -61,11 +50,12 @@ def metadata():
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,
             'favicon': settings.APP_FAVICON,
-            'locale': str(locale),
+            'locale': locale,
             'locales': locales
         },
         'categories': Collection.CATEGORIES,
-        'model': model,
+        'frequencies': Collection.FREQUENCIES,
+        'model': model.to_dict(),
         'token': None,
         'auth': auth
     }
@@ -75,6 +65,26 @@ def metadata():
         authz = Authz.from_role(role)
         data['token'] = authz.to_token(role=role)
     return jsonify(data)
+
+
+@blueprint.route('/api/2/metadata')
+def metadata():
+    """Get operational metadata for the frontend.
+    ---
+    get:
+      summary: Retrieve system metadata from the application.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - System
+    """
+    locale = str(get_locale())
+    return _metadata_locale(locale)
 
 
 @blueprint.route('/api/openapi.json')
@@ -166,14 +176,6 @@ def healthz():
     """
     request.rate_limit = None
     return jsonify({'status': 'ok'})
-
-
-@blueprint.route('/api/1/<path:path>')
-def api_v1_message(path):
-    return jsonify({
-        'status': 'error',
-        'message': gettext('/api/1/ is deprecated, please use /api/2/.')
-    }, status=410)
 
 
 @blueprint.app_errorhandler(NotModified)

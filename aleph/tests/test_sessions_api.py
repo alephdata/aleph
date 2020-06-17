@@ -2,6 +2,7 @@ import jwt
 from aleph.core import db,  settings
 from aleph.model import Collection
 from aleph.logic.collections import update_collection
+from aleph.views.base_api import _metadata_locale
 from aleph.tests.util import TestCase
 from aleph.tests.factories.models import RoleFactory
 
@@ -26,6 +27,7 @@ class SessionsApiTestCase(TestCase):
         assert res.status_code == 200, res
 
     def test_metadata_get_with_password_registration_enabled(self):
+        _metadata_locale.cache_clear()
         res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
         auth = res.json['auth']
@@ -33,6 +35,7 @@ class SessionsApiTestCase(TestCase):
         assert auth['registration_uri'], res
 
     def test_metadata_get_without_password_login(self):
+        _metadata_locale.cache_clear()
         settings.PASSWORD_LOGIN = False
         res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
