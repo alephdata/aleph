@@ -1,27 +1,42 @@
 @import "src/app/variables.scss";
 @import "src/app/mixins.scss";
 
+$notification-items-padding: $aleph-grid-size/6;
+
 .Notification {
-    padding: $aleph-grid-size;
-    line-height: 1.5em;
-    border-bottom: 1px solid $aleph-border-color;
+  padding: $aleph-grid-size;
+  line-height: 1.5em;
+  border-bottom: 1px solid $aleph-border-color;
+  display: flex;
+  justify-content: space-between;
 
-    .timestamp {
-        @include rtl(float, right, left);
-        color: $aleph-greyed-text;
-        // font-size: $pt-font-size-small;
-    }
-
+  .notification-action {
+    display: flex;
     .param {
-        font-weight: bold;
+      font-weight: bold;
+            
+      .bp3-icon, .bp3-icon svg {
+        @include rtlSupportInvertedProp(margin, right, 1px, null);
+        @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
+      }
+      .Role {
+        span {
+          @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
+        }
+      }
     }
+    .token {
+      @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
+    }
+  }
 
-    .EntityLabel {
-      vertical-align: inherit;
-    }
+  .timestamp {
+    color: $aleph-greyed-text;
+    // font-size: $pt-font-size-small;
+  }
 
-    .bp3-icon, .bp3-icon svg {
-        @include rtlSupportInvertedProp(margin, right, 0, null);
-        @include rtlSupportInvertedProp(padding, right, $aleph-grid-size/6, null);
-    }
+  .EntityLabel {
+    vertical-align: inherit;
+  }
+
 }
