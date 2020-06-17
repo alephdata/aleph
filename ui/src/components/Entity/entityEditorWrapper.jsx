@@ -44,7 +44,7 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       getEntitySuggestions(queryText, schema) {
-        const { collection, location, selectQueryResults } = this.props;
+        const { collection, location } = this.props;
         const query = queryEntitySuggest(location, collection, schema, queryText);
 
         // throttle entities query request
@@ -71,7 +71,7 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async expandEntity(entityId, properties, limit) {
-        const { collection, location, selectQueryResults } = this.props;
+        const { location } = this.props;
         const query = queryExpand(location, entityId, properties, limit);
 
         this.props.queryEntityExpand({ query });
