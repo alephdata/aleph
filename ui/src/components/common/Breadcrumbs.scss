@@ -39,9 +39,6 @@
   .bp3-breadcrumb {
     font-size: $aleph-font-size;
 
-    .bp3-icon {
-      @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
-    }
   }
 
   .bp3-breadcrumb-current {

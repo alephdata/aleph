@@ -21,6 +21,7 @@
 
     & > .caret {
       @include rtlSupportInvertedProp(margin, right, $aleph-grid-size * 0.5, null);
+      @include rtl(transform, rotate(0deg), rotate(180deg));
       transition: transform 100ms;
 
       &.rotate {

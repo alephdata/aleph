@@ -1,4 +1,5 @@
 @import 'src/app/variables.scss';
+@import "src/app/mixins.scss";
 
 .Statistics {
   display: inline-block;
@@ -35,7 +36,7 @@
     a, .bp3-button {
       color: $aleph-content-background !important;
       width: 100%;
-      text-align: left;
+      @include rtl(text-align, left, right);
       padding: 3px;
       transition: background-color .1s ease-out;
 
@@ -77,7 +78,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-right: 5px;
+      @include rtlSupportInvertedProp(margin, right, 5px, null);
     }
 
     .value {
