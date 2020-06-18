@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { FocusStyleManager } from '@blueprintjs/core';
+import { isLangRtl } from '@alephdata/react-ftm';
 import { inRange } from 'lodash';
 import { logout } from 'src/actions/sessionActions';
 import { selectLocale } from 'src/selectors';
@@ -29,7 +30,7 @@ endpoint.interceptors.request.use((config) => {
   const { session } = state;
   const locale = selectLocale(state);
   document.documentElement.lang = locale;
-  document.documentElement.dir  = locale === "ar" ? "rtl" : "ltr";
+  document.documentElement.dir  = isLangRtl(locale) ? "rtl" : "ltr";
   if (session.loggedIn) {
     Object.assign(config.headers.common, {
       Authorization: `Bearer ${session.token}`,
