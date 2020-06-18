@@ -9,8 +9,8 @@ import { withRouter } from 'react-router';
 import { TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
-import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import { Count } from 'src/components/common';
+import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import { queryEntities } from 'src/actions';
 import { queryCollectionEntities } from 'src/queries';
 import { selectEntitiesResult } from 'src/selectors';
@@ -31,15 +31,11 @@ export class EntityListManager extends Component {
     super(props);
     this.state = {
       selection: [],
-      deleteIsOpen: false,
-      queryText: '',
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
-    this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
     this.onSortColumn = this.onSortColumn.bind(this);
-    this.onQueryTextChange = this.onQueryTextChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
@@ -49,15 +45,6 @@ export class EntityListManager extends Component {
 
   componentDidUpdate() {
     this.fetchIfNeeded();
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const nextQueryText = nextProps.query ? nextProps.query.getString('q') : prevState.queryText;
-    const queryChanged = !prevState?.prevQuery || prevState.prevQuery.getString('q') !== nextQueryText;
-    return {
-      prevQuery: nextProps.query,
-      queryText: queryChanged ? nextQueryText : prevState.queryText,
-    };
   }
 
   getMoreResults() {
@@ -90,14 +77,6 @@ export class EntityListManager extends Component {
     });
   }
 
-  toggleDeleteSelection() {
-    const { deleteIsOpen } = this.state;
-    if (deleteIsOpen) {
-      this.setState({ selection: [] });
-    }
-    this.setState(({ deleteIsOpen: !deleteIsOpen }));
-  }
-
   onEntityClick = (entity) => {
     if (entity) {
       const { history } = this.props;
@@ -121,47 +100,27 @@ export class EntityListManager extends Component {
     ));
   }
 
-  onQueryTextChange({ target }) {
-    const queryText = target.value;
-    this.setState({ queryText });
-  }
-
-  onSearchSubmit(e) {
-    e.preventDefault();
-    const { history, query, location } = this.props;
-    const { queryText } = this.state;
+  onSearchSubmit(queryText) {
+    const { query, location } = this.props;
     const newQuery = query.set('q', queryText);
     this.updateQuery(newQuery);
   }
 
   render() {
-    const { collection, entityManager, intl, result, schema, sort } = this.props;
+    const { collection, entityManager, query, intl, result, schema, sort } = this.props;
     const { queryText, selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
 
     return (
       <div className="EntityListManager">
-        <ControlGroup className="EntityListManager__actions">
-          { collection.writeable && (
-            <ButtonGroup>
-              <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-                <span className="align-middle">
-                  <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
-                </span>
-                <Count count={selection.length} />
-              </Button>
-            </ButtonGroup>
-          )}
-          <form onSubmit={this.onSearchSubmit}>
-            <InputGroup
-              fill
-              leftIcon="search"
-              onChange={this.onQueryTextChange}
-              placeholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural })}
-              value={queryText}
-            />
-          </form>
-        </ControlGroup>
+        <EntityActionBar
+          query={query}
+          writeable={collection.writeable}
+          selection={selection}
+          resetSelection={() => this.setState({ selection: []})}
+          onSearchSubmit={this.onSearchSubmit}
+          searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
+        />
         <div className="EntityListManager__content">
           <TableEditor
             entities={result.results}
@@ -181,11 +140,6 @@ export class EntityListManager extends Component {
             scrollableAncestor={window}
           />
         </div>
-        <EntityDeleteDialog
-          entities={selection}
-          isOpen={this.state.deleteIsOpen}
-          toggleDialog={this.toggleDeleteSelection}
-        />
       </div>
     );
   }

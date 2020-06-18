@@ -1,0 +1,22 @@
+@import "src/app/variables.scss";
+
+.EntityActionBar {
+  &.bp3-control-group {
+    justify-content: space-between;
+    margin-bottom: $aleph-content-padding;
+
+    .bp3-input-group {
+      min-width: 250px;
+    }
+    .bp3-input-group, .bp3-button-group {
+      border-radius: 3px;
+    }
+  }
+  .align-middle {
+    vertical-align: middle;
+  }
+
+  .Count {
+    margin-left: 5px;
+  }
+}

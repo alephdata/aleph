@@ -5,11 +5,11 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import DocumentUploadDialog from 'src/dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
+import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { Count, ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 
 import './DocumentManager.scss';
@@ -23,6 +23,10 @@ const messages = defineMessages({
     id: 'entity.document.manager.emptyCanUpload',
     defaultMessage: 'No files or directories. Drop files here or click to upload.',
   },
+  searchPlaceholder: {
+    id: 'entity.document.manager.searchPlaceholder',
+    defaultMessage: 'Search documents',
+  },
 });
 
 
@@ -31,13 +35,13 @@ export class DocumentManager extends Component {
     super(props);
     this.state = {
       selection: [],
-      deleteIsOpen: false,
       uploadIsOpen: false,
     };
     this.updateSelection = this.updateSelection.bind(this);
-    this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
     this.toggleUpload = this.toggleUpload.bind(this);
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
+    this.updateQuery = this.updateQuery.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
   onUploadSuccess() {
@@ -49,14 +53,6 @@ export class DocumentManager extends Component {
     this.setState({
       selection: _.xorBy(selection, [document], 'id'),
     });
-  }
-
-  toggleDeleteSelection() {
-    const { deleteIsOpen } = this.state;
-    if (deleteIsOpen) {
-      this.setState({ selection: [] });
-    }
-    this.setState(({ deleteIsOpen: !deleteIsOpen }));
   }
 
   toggleUpload() {
@@ -73,6 +69,21 @@ export class DocumentManager extends Component {
       return false;
     }
     return true;
+  }
+
+  updateQuery(newQuery) {
+    const { history, location } = this.props;
+    history.push({
+      pathname: location.pathname,
+      search: newQuery.toLocation(),
+      hash: location.hash,
+    });
+  }
+
+  onSearchSubmit(queryText) {
+    const { query } = this.props;
+    const newQuery = query.set('q', queryText);
+    this.updateQuery(newQuery);
   }
 
   render() {
@@ -97,22 +108,25 @@ export class DocumentManager extends Component {
 
     return (
       <div className="DocumentManager">
-        { showActions && (
-          <div className="bp3-button-group">
-            { canUpload && (
-              <Button icon="upload" onClick={this.toggleUpload}>
-                <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
-              </Button>
-            )}
-            <DocumentFolderButton collection={collection} parent={document} />
-            <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-              <span className="align-middle">
-                <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
-              </span>
-              <Count count={selection.length} />
-            </Button>
-          </div>
-        )}
+        <EntityActionBar
+          query={query}
+          writeable={showActions}
+          selection={selection}
+          resetSelection={() => this.setState({ selection: []})}
+          onSearchSubmit={this.onSearchSubmit}
+          searchPlaceholder={intl.formatMessage(messages.searchPlaceholder)}
+        >
+          { showActions && (
+            <>
+              { canUpload && (
+                <Button icon="upload" onClick={this.toggleUpload}>
+                  <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
+                </Button>
+              )}
+              <DocumentFolderButton collection={collection} parent={document} />
+            </>
+          )}
+        </EntityActionBar>
         { hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">
             <FormattedMessage
@@ -133,11 +147,6 @@ export class DocumentManager extends Component {
             emptyComponent={emptyComponent}
           />
         </div>
-        <EntityDeleteDialog
-          entities={selection}
-          isOpen={this.state.deleteIsOpen}
-          toggleDialog={this.toggleDeleteSelection}
-        />
         <DocumentUploadDialog
           collection={collection}
           isOpen={this.state.uploadIsOpen}
