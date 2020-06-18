@@ -59,17 +59,19 @@ export default class EntityActionBar extends Component {
     return (
       <>
         <ControlGroup className="EntityActionBar">
-          <ButtonGroup>
-            {children}
-            {writeable && (
-              <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-                <span className="align-middle">
-                  <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
-                </span>
-                <Count count={selection.length} />
-              </Button>
-            )}
-          </ButtonGroup>
+          {(writeable || children) && (
+            <ButtonGroup>
+              {children}
+              {writeable && (
+                <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
+                  <span className="align-middle">
+                    <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
+                  </span>
+                  <Count count={selection.length} />
+                </Button>
+              )}
+            </ButtonGroup>
+          )}
           <form onSubmit={this.onSearchSubmit}>
             <InputGroup
               fill
@@ -80,11 +82,13 @@ export default class EntityActionBar extends Component {
             />
           </form>
         </ControlGroup>
-        <EntityDeleteDialog
-          entities={selection}
-          isOpen={this.state.deleteIsOpen}
-          toggleDialog={this.toggleDeleteSelection}
-        />
+        {writeable && selection && (
+          <EntityDeleteDialog
+            entities={selection}
+            isOpen={this.state.deleteIsOpen}
+            toggleDialog={this.toggleDeleteSelection}
+          />
+        )}
       </>
     );
   }
