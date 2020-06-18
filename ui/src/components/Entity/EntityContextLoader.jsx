@@ -6,7 +6,7 @@ import {
   fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
 } from 'src/actions';
 import {
-  selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult, 
+  selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
 } from 'src/selectors';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 

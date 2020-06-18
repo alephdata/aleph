@@ -1,15 +1,17 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Callout, Button } from '@blueprintjs/core';
+import { AnchorButton, Button, Callout, Divider, Tooltip } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 import DocumentUploadDialog from 'src/dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'src/components/common';
+import getEntityLink from 'src/util/getEntityLink';
 import { queryEntities } from 'src/actions';
 
 import './DocumentManager.scss';
@@ -23,9 +25,13 @@ const messages = defineMessages({
     id: 'entity.document.manager.emptyCanUpload',
     defaultMessage: 'No files or directories. Drop files here or click to upload.',
   },
-  searchPlaceholder: {
-    id: 'entity.document.manager.searchPlaceholder',
+  search_placeholder: {
+    id: 'entity.document.manager.search_placeholder',
     defaultMessage: 'Search documents',
+  },
+  cannot_map: {
+    id: 'entity.document.manager.cannot_map',
+    defaultMessage: 'Select a table document to generate structured entities from',
   },
 });
 
@@ -40,6 +46,7 @@ export class DocumentManager extends Component {
     this.updateSelection = this.updateSelection.bind(this);
     this.toggleUpload = this.toggleUpload.bind(this);
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
+    this.openMappingEditor = this.openMappingEditor.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
@@ -86,6 +93,13 @@ export class DocumentManager extends Component {
     this.updateQuery(newQuery);
   }
 
+  openMappingEditor() {
+    const { history } = this.props;
+    const { selection } = this.state;
+    const pathname = getEntityLink(selection[0]);
+    history.push({ pathname, hash: queryString.stringify({mode: 'mapping'}) });
+  }
+
   render() {
     const {
       collection, document, query, hasPending, intl,
@@ -95,6 +109,7 @@ export class DocumentManager extends Component {
     const mutableDocument = document === undefined || (document.schema && document.schema.name === 'Folder');
     const showActions = mutableCollection && mutableDocument;
     const canUpload = this.canUpload();
+    const canMap = selection.length === 1 && selection[0].schema.isA('Table');
 
     const emptyComponent = (
       // eslint-disable-next-line
@@ -114,7 +129,7 @@ export class DocumentManager extends Component {
           selection={selection}
           resetSelection={() => this.setState({ selection: []})}
           onSearchSubmit={this.onSearchSubmit}
-          searchPlaceholder={intl.formatMessage(messages.searchPlaceholder)}
+          searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
         >
           { showActions && (
             <>
@@ -124,6 +139,12 @@ export class DocumentManager extends Component {
                 </Button>
               )}
               <DocumentFolderButton collection={collection} parent={document} />
+              <Divider />
+              <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)}>
+                <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
+                  <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
+                </AnchorButton>
+              </Tooltip>
             </>
           )}
         </EntityActionBar>

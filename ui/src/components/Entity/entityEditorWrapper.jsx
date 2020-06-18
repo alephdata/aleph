@@ -59,7 +59,6 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async createEntity(entity) {
-        console.log('in create entity', entity);
         const { collection, onStatusChange } = this.props;
         onStatusChange(updateStates.IN_PROGRESS);
         try {
