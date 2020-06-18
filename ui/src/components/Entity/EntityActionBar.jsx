@@ -59,17 +59,15 @@ export default class EntityActionBar extends Component {
     return (
       <>
         <ControlGroup className="EntityActionBar">
-          {(writeable || children) && (
+          {writeable && (
             <ButtonGroup>
               {children}
-              {writeable && (
-                <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-                  <span className="align-middle">
-                    <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
-                  </span>
-                  <Count count={selection.length} />
-                </Button>
-              )}
+              <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
+                <span className="align-middle">
+                  <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
+                </span>
+                <Count count={selection.length} />
+              </Button>
             </ButtonGroup>
           )}
           <form onSubmit={this.onSearchSubmit}>

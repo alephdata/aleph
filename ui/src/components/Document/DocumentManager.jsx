@@ -131,22 +131,20 @@ export class DocumentManager extends Component {
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
         >
-          { showActions && (
-            <>
-              { canUpload && (
-                <Button icon="upload" onClick={this.toggleUpload}>
-                  <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
-                </Button>
-              )}
-              <DocumentFolderButton collection={collection} parent={document} />
-              <Divider />
-              <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)}>
-                <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
-                  <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
-                </AnchorButton>
-              </Tooltip>
-            </>
-          )}
+          <>
+            { canUpload && (
+              <Button icon="upload" onClick={this.toggleUpload}>
+                <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
+              </Button>
+            )}
+            <DocumentFolderButton collection={collection} parent={document} />
+            <Divider />
+            <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)}>
+              <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
+                <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
+              </AnchorButton>
+            </Tooltip>
+          </>
         </EntityActionBar>
         { hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">
