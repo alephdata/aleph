@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { queryDiagrams } from 'src/actions';
 import { queryCollectionDiagrams } from 'src/queries';
 import { selectDiagramsResult } from 'src/selectors';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import { ErrorSection } from 'src/components/common';
 import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
 
@@ -27,7 +27,7 @@ export class CollectionDiagramsIndexMode extends Component {
     const { collection, result } = this.props;
 
     if (result.isError) {
-      return <ErrorScreen error={result.error} />;
+      return <ErrorSection error={result.error} />;
     }
 
     return (
