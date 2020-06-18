@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Checkbox } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -43,6 +43,10 @@ const messages = defineMessages({
     id: 'collection.edit.info.placeholder_language',
     defaultMessage: 'Select languages',
   },
+  check_restricted: {
+    id: 'collection.edit.info.restricted',
+    defaultMessage: 'This collection is restricted and viewers should be warned.',
+  },
   title: {
     id: 'collection.edit.title',
     defaultMessage: 'Dataset settings',
@@ -80,6 +84,7 @@ export class CollectionEditDialog extends Component {
     };
 
     this.onSave = this.onSave.bind(this);
+    this.onToggleRestricted = this.onToggleRestricted.bind(this);
     this.onSelectCountries = this.onSelectCountries.bind(this);
     this.onSelectLanguages = this.onSelectLanguages.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
@@ -93,6 +98,12 @@ export class CollectionEditDialog extends Component {
   onFieldChange({ target }) {
     const { collection } = this.props;
     collection[target.id] = target.value;
+    this.setState({ collection });
+  }
+
+  onToggleRestricted() {
+    const { collection } = this.props;
+    collection.restricted = !collection.restricted;
     this.setState({ collection });
   }
 
@@ -132,8 +143,9 @@ export class CollectionEditDialog extends Component {
   }
 
   render() {
-    const { intl, categories } = this.props;
+    const { intl, metadata } = this.props;
     const { collection, blocking } = this.state;
+    const { categories, frequencies } = metadata;
     return (
       <FormDialog
         processing={blocking}
@@ -254,6 +266,20 @@ export class CollectionEditDialog extends Component {
                   />
                 </div>
               </div>
+              <div className="bp3-form-group">
+                <label className="bp3-label">
+                  <FormattedMessage id="collection.edit.info.frequency" defaultMessage="Update frequency" />
+                </label>
+                <div className="bp3-select bp3-fill">
+                  <select id="frequency" onChange={this.onFieldChange} value={collection.frequency || ''}>
+                    { Object.keys(frequencies).map(key => (
+                      <option key={key} value={key || ''}>
+                        {frequencies[key]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </>
           )}
           <div className="bp3-form-group">
@@ -300,20 +326,31 @@ export class CollectionEditDialog extends Component {
             </div>
           </div>
           { !collection.casefile && (
-            <div className="bp3-form-group">
-              <label className="bp3-label">
-                <FormattedMessage id="collection.edit.info.foreign_id" defaultMessage="Foreign ID" />
-              </label>
-              <div className="bp3-form-content">
-                <input
-                  className="bp3-input bp3-fill"
-                  type="text"
-                  dir="auto"
-                  disabled
-                  value={collection.foreign_id || ''}
-                />
+            <>
+              <div className="bp3-form-group">
+                <label className="bp3-label">
+                  <FormattedMessage id="collection.edit.info.foreign_id" defaultMessage="Foreign ID" />
+                </label>
+                <div className="bp3-form-content">
+                  <input
+                    className="bp3-input bp3-fill"
+                    type="text"
+                    dir="auto"
+                    disabled
+                    value={collection.foreign_id || ''}
+                  />
+                </div>
               </div>
-            </div>
+              <div className="bp3-form-group">
+                <div className="bp3-fill">
+                  <Checkbox
+                    checked={collection.restricted}
+                    label={intl.formatMessage(messages.check_restricted)}
+                    onChange={this.onToggleRestricted}
+                  />
+                </div>
+              </div>
+            </>
           )}
 
         </div>
@@ -333,7 +370,7 @@ export class CollectionEditDialog extends Component {
 }
 
 const mapStateToProps = state => ({
-  categories: selectMetadata(state).categories,
+  metadata: selectMetadata(state),
 });
 
 const mapDispatchToProps = { updateCollection };

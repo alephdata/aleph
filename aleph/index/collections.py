@@ -46,6 +46,7 @@ def configure_collections():
             "languages": KEYWORD_COPY,
             "countries": KEYWORD_COPY,
             "category": KEYWORD_COPY,
+            "frequency": KEYWORD_COPY,
             "summary": {
                 "type": "text",
                 "copy_to": "text",
@@ -65,7 +66,9 @@ def configure_collections():
                 "store": True
             },
             "casefile": {"type": "boolean"},
+            "restricted": {"type": "boolean"},
             "secret": {"type": "boolean"},
+            "xref": {"type": "boolean"},
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
             "count": {"type": "long"},

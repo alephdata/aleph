@@ -1,6 +1,8 @@
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import Category from './Category';
+import Frequency from './Frequency';
+import Restricted from './Restricted';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Count from './Count';
@@ -33,6 +35,8 @@ export {
   Breadcrumbs,
   SignInCallout,
   Category,
+  Frequency,
+  Restricted,
   csvContextLoader,
   CheckboxList,
   Collection,

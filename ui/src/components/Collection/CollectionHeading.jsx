@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Category, Collection, Skeleton } from 'src/components/common';
 
 import './CollectionHeading.scss';
@@ -24,12 +23,7 @@ class CollectionHeading extends PureComponent {
       <div className="CollectionHeading">
         <span className="bp3-text-muted">
           <Collection.Label collection={collection} label={false} />
-          { collection.casefile && (
-            <FormattedMessage id="collection.info.case" defaultMessage="Personal dataset" />
-          )}
-          { !collection.casefile && (
-            <Category.Label collection={collection} />
-          )}
+          <Category.Label category={collection.category} />
         </span>
         <h1 itemProp="name" className="CollectionHeading__title">
           {collection.label}

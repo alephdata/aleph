@@ -1,5 +1,4 @@
-import React, { Component, PureComponent } from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { PureComponent } from 'react';
 import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -11,23 +10,10 @@ import { selectMetadata } from 'src/selectors';
 import './Category.scss';
 
 
-class CategoryLabel extends Component {
-  shouldComponentUpdate(nextProps) {
-    const {
-      collection = {},
-      category = collection.category,
-    } = this.props;
-    const {
-      category: nextCategory = nextProps.collection.category,
-    } = nextProps;
-    return category !== nextCategory;
-  }
-
+class CategoryLabel extends PureComponent {
   render() {
-    const { collection, categories, category: pureCategory, icon } = this.props;
-
-    const category = collection ? collection.category : pureCategory;
-    const label = categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
+    const { category, categories, icon } = this.props;
+    const label = categories[category];
     return (
       <span className="CategoryLabel" title={label}>
         { icon && (<Icon icon="list" className="left-icon" />)}
@@ -39,12 +25,12 @@ class CategoryLabel extends Component {
 
 class CategoryLink extends PureComponent {
   render() {
-    const { collection, className } = this.props;
-    if (collection === undefined || collection.category === undefined) {
-      return <Category.Label collection={collection} />;
+    const { category, className } = this.props;
+    if (category === undefined) {
+      return <Category.Label category={category} />;
     }
     return (
-      <Link to={getCategoryLink(collection)} className={c('CategoryLink', className)}>
+      <Link to={getCategoryLink(category)} className={c('CategoryLink', className)}>
         <Category.Label {...this.props} />
       </Link>
     );
