@@ -1,5 +1,5 @@
-@import "src/app/mixins.scss";
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 $dashboard-padding: $aleph-grid-size * 2.5;
 
@@ -37,7 +37,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
           }
 
           .Count {
-            float: right;
+            @include rtl(float, right, left);
           }
 
           &.bp3-active .Count {

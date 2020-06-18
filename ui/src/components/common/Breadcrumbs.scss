@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .Breadcrumbs {
   z-index: 1;
@@ -18,7 +19,7 @@
   }
 
   &__status {
-    margin-right: $aleph-grid-size;
+    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
   }
 
   .bp3-breadcrumbs {
@@ -39,7 +40,7 @@
     font-size: $aleph-font-size;
 
     .bp3-icon {
-      margin-right: $aleph-icon-padding;
+      @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
     }
   }
 

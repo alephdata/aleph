@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 @import "src/app/layouts.scss";
-
+@import "src/app/mixins.scss";
 
 .DualPane {
   @extend .pane-layout;
@@ -13,7 +13,8 @@
 
 .DualPane .ContentPane {
   @extend .pane-layout-main;
-  padding: 0 0 0 $aleph-content-padding;
+  padding: 0;
+  @include rtlSupportInvertedProp(padding, left, $aleph-content-padding, null);
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     order: 2;
@@ -22,13 +23,13 @@
 
 .DualPane .SidePane {
   @extend .pane-layout-side;
-  border-right: 1px solid $aleph-border-color;
-  padding-right: $aleph-content-padding;
+  @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
+  @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, null);
   
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     margin-bottom: 1em;
-    border-right: none;
+    @include rtlSupportInvertedProp(border, right, none, null);
+    @include rtlSupportInvertedProp(padding, right, 0, null);
     border-bottom: 1px solid $aleph-border-color;
-    padding-right: 0;
   }
 }
