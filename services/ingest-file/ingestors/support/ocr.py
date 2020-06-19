@@ -27,7 +27,7 @@ class OCRSupport(CacheSupport):
         languages = sorted(set(languages or []))
         data_key = sha1(data).hexdigest()
         key = self.cache_key('ocr', data_key, *languages)
-        text = self.get_tag(key)
+        text = self.tags.get(key)
         if text is not None:
             log.info('OCR: %s chars cached', len(text))
             return stringify(text)
@@ -39,8 +39,8 @@ class OCRSupport(CacheSupport):
                 settings._ocr_service = LocalOCRService()
 
         text = settings._ocr_service.extract_text(data, languages=languages)
-        self.set_tag(key, text)
         if text is not None:
+            self.tags.set(key, text)
             log.info('OCR: %s chars (from %s bytes)',
                      len(text), len(data))
         return stringify(text)

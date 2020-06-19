@@ -16,12 +16,6 @@ class CacheSupport(object):
             CacheSupport._tags = Tags('ingest_cache')
         return CacheSupport._tags
 
-    def get_tag(self, key):
-        self.tags.get(key)
-
-    def set_tag(self, key, value):
-        self.tags.set(key, value)
-
     def cache_key(self, *parts):
         return make_key(*parts)
 
