@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, ControlGroup, InputGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup, ControlGroup, Divider, InputGroup } from '@blueprintjs/core';
 import { Waypoint } from 'react-waypoint';
 import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 import { TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import { Count } from 'src/components/common';
+import DocumentSelectDialog from 'src/dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import { queryEntities } from 'src/actions';
 import { queryCollectionEntities } from 'src/queries';
@@ -31,12 +33,15 @@ export class EntityListManager extends Component {
     super(props);
     this.state = {
       selection: [],
+      docSelectIsOpen: false,
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
     this.onSortColumn = this.onSortColumn.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
+    this.onDocSelected = this.onDocSelected.bind(this);
+    this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
   }
 
   componentDidMount() {
@@ -106,6 +111,19 @@ export class EntityListManager extends Component {
     this.updateQuery(newQuery);
   }
 
+  onDocSelected(table) {
+    if (!table?.id) return;
+    const { history } = this.props;
+    const pathname = getEntityLink(table);
+    history.push({ pathname, hash: queryString.stringify({mode: 'mapping'}) });
+  }
+
+  toggleDocumentSelectDialog() {
+    this.setState(({ docSelectIsOpen }) => ({
+      docSelectIsOpen: !docSelectIsOpen,
+    }));
+  }
+
   render() {
     const { collection, entityManager, query, intl, result, schema, sort } = this.props;
     const { queryText, selection } = this.state;
@@ -120,7 +138,12 @@ export class EntityListManager extends Component {
           resetSelection={() => this.setState({ selection: []})}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
-        />
+        >
+          <Button icon="import" onClick={this.toggleDocumentSelectDialog}>
+            <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
+          </Button>
+          <Divider />
+        </EntityActionBar>
         <div className="EntityListManager__content">
           <TableEditor
             entities={result.results}
@@ -140,6 +163,13 @@ export class EntityListManager extends Component {
             scrollableAncestor={window}
           />
         </div>
+        <DocumentSelectDialog
+          schema={schema}
+          collection={collection}
+          isOpen={this.state.docSelectIsOpen}
+          toggleDialog={this.toggleDocumentSelectDialog}
+          onSelect={this.onDocSelected}
+        />
       </div>
     );
   }
@@ -147,8 +177,9 @@ export class EntityListManager extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location, collection, schema } = ownProps;
-  let query = queryCollectionEntities(location, collection.id, schema.name);
+  const query = queryCollectionEntities(location, collection.id, schema.name);
   const sort = query.getSort();
+
   return {
     query,
     sort: !_.isEmpty(sort) ? {

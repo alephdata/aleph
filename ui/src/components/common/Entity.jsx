@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import c from 'classnames';
 import { Entity as VLEntity } from '@alephdata/react-ftm';
 
+import EntitySelect from 'src/components/common/EntitySelect';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
 import { selectEntity } from 'src/selectors';
@@ -77,6 +78,8 @@ class Entity {
   static Link = withRouter(EntityLink);
 
   static Load = connect(mapStateToProps, { fetchEntity: fetchEntityAction })(EntityLoad);
+
+  static Select = EntitySelect;
 }
 
 export default Entity;
