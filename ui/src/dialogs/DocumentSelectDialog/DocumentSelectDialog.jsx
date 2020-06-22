@@ -15,7 +15,7 @@ import getEntityLink from 'src/util/getEntityLink';
 import getCollectionLink from 'src/util/getCollectionLink';
 
 
-// import './DocumentSelectDialog.scss';
+import './DocumentSelectDialog.scss';
 
 
 const messages = defineMessages({
@@ -31,10 +31,9 @@ class DocumentSelectDialog extends Component {
     super(props);
 
     this.state = {
-
+      query: ''
     };
     this.onQueryChange = this.onQueryChange.bind(this);
-    this.onSelect = this.onSelect.bind(this);
   }
 
   componentDidMount() {
@@ -42,19 +41,11 @@ class DocumentSelectDialog extends Component {
   }
 
   onQueryChange(queryText) {
-    console.log('on query change', queryText);
     const { collection, location } = this.props;
     const query = queryEntitySuggest(location, collection, "Table", queryText);
     this.props.queryEntities({ query });
 
     this.setState({ query });
-  }
-
-  onSelect(entity) {
-    const { history } = this.props;
-
-    const pathname = getEntityLink(entity);
-    history.push({ pathname, hash: queryString.stringify({mode: 'mapping'}) });
   }
 
   render() {
@@ -76,7 +67,7 @@ class DocumentSelectDialog extends Component {
               defaultMessage={
                 `Select a table below from which to import new {schema} entities.`
               }
-              values={{ schema: <Schema.Label schema={schema} icon /> }}
+              values={{ schema: <strong><Schema.Label schema={schema} /></strong> }}
             />
           </p>
           <p>
@@ -91,7 +82,7 @@ class DocumentSelectDialog extends Component {
           <Entity.Select
             query={query}
             onQueryChange={this.onQueryChange}
-            onSelect={this.onSelect}
+            onSelect={onSelect}
           />
           <p>
             <FormattedMessage

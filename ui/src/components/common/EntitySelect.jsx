@@ -24,9 +24,6 @@ class EntitySelect extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
 
-  console.log('query is', query, query.context.prefix);
-  console.log('state is', state);
-
   return {
     result: selectEntitiesResult(state, query),
   };

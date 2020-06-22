@@ -113,9 +113,9 @@ export class EntityListManager extends Component {
 
   onDocSelected(table) {
     if (!table?.id) return;
-    const { history } = this.props;
+    const { history, schema } = this.props;
     const pathname = getEntityLink(table);
-    history.push({ pathname, hash: queryString.stringify({mode: 'mapping'}) });
+    history.push({ pathname, hash: queryString.stringify({mode: 'mapping', schema: schema.name}) });
   }
 
   toggleDocumentSelectDialog() {
