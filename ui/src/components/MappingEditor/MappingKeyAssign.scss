@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .MappingKeyAssign {
   &__item {
@@ -55,7 +56,7 @@
       &__toggle {
         font-weight: bold;
         margin-top: 0 !important;
-        margin-left: -$aleph-grid-size/2;
+        @include rtlSupportInvertedProp(margin, left, -$aleph-grid-size/2, null);
 
         .bp3-icon {
           color: white !important;

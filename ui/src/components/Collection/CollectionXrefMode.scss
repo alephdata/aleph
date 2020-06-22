@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .CollectionXrefMode {
     .CollectionXrefContextInfo {
@@ -7,11 +8,11 @@
 
     .CollectionXrefManageMenu {
       margin-bottom: $aleph-content-padding;
-      float: right;
+      @include rtl(float, right, left);
     }
 
     .pane-layout-side {
-        margin-right: $aleph-content-padding;
+        @include rtlSupportInvertedProp(margin, right, $aleph-content-padding, null);
         width: $aleph-sidebar-width * 0.8;
     }
 

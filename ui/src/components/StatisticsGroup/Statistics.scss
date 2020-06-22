@@ -10,7 +10,7 @@
 
   &__headline {
     color: white !important;
-    text-align: left;
+    @include rtl(text-align, left, right);
     margin-bottom: 15px;
 
     .dark & {
@@ -59,7 +59,7 @@
       background: none !important;
       border-radius: 0;
       min-height: 25px;
-      justify-content: left;
+      @include rtl(justify-content, left, right);
       margin: 10px 0;
     }
 

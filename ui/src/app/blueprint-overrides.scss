@@ -22,7 +22,9 @@
 * for some reason, even though my inspector says '0em'. */
 .bp3-control-group * {
   margin-top: 0;
-  @include rtlSupportInvertedProp(margin, left, 0, 0);
+  // in this case trying to pass margin-left through mixin will force it and break the main search bar. (mixin is using [ltr] specific css rule)
+  // @include rtlSupportInvertedProp(margin, left, 0, null);
+  margin-left: 0; 
 }
 
 .bp3-tab-list {

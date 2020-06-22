@@ -39,7 +39,7 @@
     .icon {
       display: none;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
-        float: right;
+        @include rtl(float, right, left);
         margin-top: 1em;
       }
     }

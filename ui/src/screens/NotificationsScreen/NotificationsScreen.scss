@@ -1,3 +1,5 @@
+@import "src/app/mixins.scss";
+
 .NotificationsScreen {
   flex-grow: 1;
   display: flex;
@@ -11,8 +13,8 @@
   }
 
   .mark-read {
-    float: right;
-    margin-right: 0;
+    @include rtlSupportInvertedProp(margin, right, 0, null);
+    @include rtl(float, right, left);
   }
 
   ul.notifications-list {

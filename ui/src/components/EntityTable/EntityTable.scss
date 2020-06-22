@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .EntityTable {
   border-color: $aleph-border-color;
@@ -18,7 +19,7 @@
   }
 
   .bp3-control-indicator {
-    margin-left: 0px !important;
+    @include rtlSupportInvertedProp(margin, left, 0px !important, null);
   }
 }
 

@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .EntityListManager {
   .bp3-button-group {
@@ -10,7 +11,7 @@
   }
 
   .Count {
-    margin-left: 5px;
+    @include rtlSupportInvertedProp(margin, left, 5px, null);
   }
 
   .data-grid-container {

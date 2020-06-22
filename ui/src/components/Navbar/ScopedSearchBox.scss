@@ -12,7 +12,7 @@
   .bp3-input-group {
     #search-box {
       &.bp3-input {
-        @include rtl(padding-right, 0, 30px!important);
+        @include rtlSupportInvertedProp(padding, right, 0, 30px!important);
       }
     }
     .bp3-input-action {
@@ -25,7 +25,7 @@
   &__icon {
     display: flex;
     align-items: center;
-    margin-right: 15px !important;
+    @include rtlSupportInvertedProp(margin, right, 15px !important, 0);
   }
 
   &__scoped-input {

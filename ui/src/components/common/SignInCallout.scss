@@ -1,7 +1,8 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .SignInCallout.bp3-callout {
-  padding-right: 40px;
+  @include rtlSupportInvertedProp(padding, right, 40px, null);
 
   .bp3-button.sign-in-button {
     min-height: unset;

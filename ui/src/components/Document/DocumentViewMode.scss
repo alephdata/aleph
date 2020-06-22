@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .DocumentViewMode {
   flex: 23;
@@ -11,8 +12,7 @@
       background: white;
       box-shadow: $pt-elevation-shadow-2;
       max-width: $aleph-screen-md-max-width;
-      margin-left: 0;
-      margin-right: auto;
+      @include rtlSupportInvertedProp(margin, right, auto, 0);
     }
   }
 }

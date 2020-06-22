@@ -16,10 +16,10 @@ table {
       width: 2em;
       max-width: 2em;
       overflow: visible;
-      padding-left: 0;
+      @include rtlSupportInvertedProp(padding, left, 0, null);
       padding-top: ($aleph-grid-size / 1.2);
       .bp3-button {
-        margin-left: 0;
+        @include rtlSupportInvertedProp(margin, left, 0, null);
       }
     }
   }
@@ -155,7 +155,7 @@ ul.info-rank {
     }
 
     .key {
-      padding-right: $aleph-grid-size;
+      @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
     }
 
     .value {
@@ -202,6 +202,6 @@ ul.info-rank li {
     white-space: nowrap;
     overflow: visible;
     color: $aleph-greyed-text;
-    margin-left: auto; // = align right
+    @include rtlSupportInvertedProp(margin, left, auto, null); // = align right
   }
 }

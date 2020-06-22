@@ -48,7 +48,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
 
         .bp3-menu-header {
           border: none;
-          margin-left: 0;
+          @include rtlSupportInvertedProp(margin, left, 0, null);
           margin-bottom: $aleph-grid-size;
 
           .bp3-heading {

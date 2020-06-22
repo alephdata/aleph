@@ -1,7 +1,8 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .CategoryLabel {
     .bp3-icon {
-        margin-right: $aleph-icon-padding;
+        @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
     }
 }
