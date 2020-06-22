@@ -27,6 +27,10 @@
     .details {
         margin-bottom: 0;
         color: $aleph-greyed-text;
+
+        .bp3-tag {
+            margin-left: $aleph-grid-size;
+        }
     }
 
     .details-item {

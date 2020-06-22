@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Country, Role, Date, URL,
+  Country, Role, Date, URL, Frequency,
 } from 'src/components/common';
 
 import './CollectionInfo.scss';
@@ -82,6 +82,16 @@ class CollectionInfo extends PureComponent {
             </div>
             <div className="value" itemProp="spatialCoverage">
               <Country.List codes={collection.countries} />
+            </div>
+          </div>
+        )}
+        { !collection.casefile && !!collection.frequency && (
+          <div className="CollectionInfo__item">
+            <div className="key text-muted">
+              <FormattedMessage id="collection.frequency" defaultMessage="Updates" />
+            </div>
+            <div className="value">
+              <Frequency.Label frequency={collection.frequency} />
             </div>
           </div>
         )}
