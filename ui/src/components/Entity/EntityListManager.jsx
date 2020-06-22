@@ -11,6 +11,7 @@ import { TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import { Count } from 'src/components/common';
+import AddToDiagramDialog from 'src/dialogs/AddToDiagramDialog/AddToDiagramDialog';
 import DiagramCreateDialog from 'src/dialogs/DiagramCreateDialog/DiagramCreateDialog';
 import DocumentSelectDialog from 'src/dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'src/components/Entity/EntityActionBar';
@@ -35,6 +36,7 @@ export class EntityListManager extends Component {
     this.state = {
       selection: [],
       docSelectIsOpen: false,
+      addToDiagramIsOpen: false,
       diagramCreateIsOpen: false,
     };
     this.updateQuery = this.updateQuery.bind(this);
@@ -44,6 +46,7 @@ export class EntityListManager extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onDocSelected = this.onDocSelected.bind(this);
     this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
+    this.toggleAddToDiagramDialog = this.toggleAddToDiagramDialog.bind(this);
     this.toggleDiagramCreateDialog = this.toggleDiagramCreateDialog.bind(this);
   }
 
@@ -127,6 +130,12 @@ export class EntityListManager extends Component {
     }));
   }
 
+  toggleAddToDiagramDialog() {
+    this.setState(({ addToDiagramIsOpen }) => ({
+      addToDiagramIsOpen: !addToDiagramIsOpen,
+    }));
+  }
+
   toggleDiagramCreateDialog() {
     this.setState(({ diagramCreateIsOpen }) => ({
       diagramCreateIsOpen: !diagramCreateIsOpen,
@@ -152,9 +161,11 @@ export class EntityListManager extends Component {
             <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
           </Button>
           <Divider />
-          <Button icon="send-to-graph" onClick={this.toggleDiagramCreateDialog} disabled={selection.length < 1}>
-            <FormattedMessage id="entity.viewer.add_to_diagram" defaultMessage="Create diagram" />
-          </Button>
+          {!schema.isEdge && (
+            <Button icon="send-to-graph" onClick={this.toggleAddToDiagramDialog} disabled={selection.length < 1}>
+              <FormattedMessage id="entity.viewer.add_to_diagram" defaultMessage="Add to diagram" />
+            </Button>
+          )}
         </EntityActionBar>
         <div className="EntityListManager__content">
           <TableEditor
@@ -182,12 +193,20 @@ export class EntityListManager extends Component {
           toggleDialog={this.toggleDocumentSelectDialog}
           onSelect={this.onDocSelected}
         />
+        <AddToDiagramDialog
+          collection={collection}
+          entities={selection}
+          isOpen={this.state.addToDiagramIsOpen}
+          openCreateDialog={this.toggleDiagramCreateDialog}
+          toggleDialog={this.toggleAddToDiagramDialog}
+        />
         <DiagramCreateDialog
           schema={schema}
           diagram={{collection, entities: selection}}
           isOpen={this.state.diagramCreateIsOpen}
           toggleDialog={this.toggleDiagramCreateDialog}
         />
+
       </div>
     );
   }
