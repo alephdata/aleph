@@ -11,6 +11,7 @@ import { TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import { Count } from 'src/components/common';
+import DiagramCreateDialog from 'src/dialogs/DiagramCreateDialog/DiagramCreateDialog';
 import DocumentSelectDialog from 'src/dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import { queryEntities } from 'src/actions';
@@ -34,6 +35,7 @@ export class EntityListManager extends Component {
     this.state = {
       selection: [],
       docSelectIsOpen: false,
+      diagramCreateIsOpen: false,
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -42,6 +44,7 @@ export class EntityListManager extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onDocSelected = this.onDocSelected.bind(this);
     this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
+    this.toggleDiagramCreateDialog = this.toggleDiagramCreateDialog.bind(this);
   }
 
   componentDidMount() {
@@ -124,6 +127,12 @@ export class EntityListManager extends Component {
     }));
   }
 
+  toggleDiagramCreateDialog() {
+    this.setState(({ diagramCreateIsOpen }) => ({
+      diagramCreateIsOpen: !diagramCreateIsOpen,
+    }));
+  }
+
   render() {
     const { collection, entityManager, query, intl, result, schema, sort } = this.props;
     const { queryText, selection } = this.state;
@@ -143,6 +152,9 @@ export class EntityListManager extends Component {
             <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
           </Button>
           <Divider />
+          <Button icon="send-to-graph" onClick={this.toggleDiagramCreateDialog} disabled={selection.length < 1}>
+            <FormattedMessage id="entity.viewer.add_to_diagram" defaultMessage="Create diagram" />
+          </Button>
         </EntityActionBar>
         <div className="EntityListManager__content">
           <TableEditor
@@ -169,6 +181,12 @@ export class EntityListManager extends Component {
           isOpen={this.state.docSelectIsOpen}
           toggleDialog={this.toggleDocumentSelectDialog}
           onSelect={this.onDocSelected}
+        />
+        <DiagramCreateDialog
+          schema={schema}
+          diagram={{collection, entities: selection}}
+          isOpen={this.state.diagramCreateIsOpen}
+          toggleDialog={this.toggleDiagramCreateDialog}
         />
       </div>
     );

@@ -82,7 +82,7 @@ class DiagramCreateDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { history, intl } = this.props;
+    const { history, diagram, intl } = this.props;
     const { label, summary, collection, layout, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
@@ -93,6 +93,7 @@ class DiagramCreateDialog extends Component {
         label,
         summary,
         collection_id: collection.id,
+        entities: diagram?.entities || []
       };
 
       if (layout) {
