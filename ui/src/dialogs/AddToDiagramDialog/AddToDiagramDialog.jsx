@@ -73,8 +73,6 @@ class AddToDiagramDialog extends Component {
       const newCount = updatedDiagram?.data?.entities?.length || 0;
       const updatedCount = oldCount ? newCount - oldCount : newCount;
 
-      console.log(oldCount, newCount, updatedCount)
-
       showSuccessToast(
         intl.formatMessage(messages.success_update, {count: updatedCount}),
       );

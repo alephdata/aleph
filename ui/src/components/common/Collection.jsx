@@ -16,13 +16,6 @@ import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 import './Collection.scss';
 
-const messages = defineMessages({
-  label: {
-    id: 'collection.select',
-    defaultMessage: 'Select a dataset',
-  },
-});
-
 class CollectionLabel extends PureComponent {
   render() {
     const {
@@ -152,7 +145,7 @@ class CollectionSelect extends Component {
     <MenuItem
       key={collection.id}
       onClick={handleClick}
-      text={collection.label}
+      text={<CollectionLabel collection={collection} icon label />}
     />
   )
 
@@ -164,8 +157,8 @@ class CollectionSelect extends Component {
   }
 
   render() {
-    const { collection, intl, result } = this.props;
-    const label = collection ? collection.label : intl.formatMessage(messages.label);
+    const { buttonProps, collection, intl, result } = this.props;
+    const label = collection ? <CollectionLabel collection={collection} icon label /> : buttonProps.label;
 
     return (
       <Select
@@ -186,9 +179,6 @@ class CollectionSelect extends Component {
         <Button
           fill
           text={label}
-          icon="user"
-          rightIcon="search"
-          alignText={Alignment.LEFT}
         />
       </Select>
     );

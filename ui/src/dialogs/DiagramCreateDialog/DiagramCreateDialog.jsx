@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, ControlGroup, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection, FileImport } from 'src/components/common';
+import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 import FormDialog from 'src/dialogs/common/FormDialog';
 import { createDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
@@ -46,6 +47,10 @@ const messages = defineMessages({
     id: 'diagram.import.placeholder',
     defaultMessage: 'Drop a .vis file here or click to import an existing diagram layout',
   },
+  collection_select_placeholder: {
+    id: 'diagram.create.collection.existing',
+    defaultMessage: 'Select from existing',
+  },
 });
 
 
@@ -61,6 +66,7 @@ class DiagramCreateDialog extends Component {
       layout: diagram.layout || null,
       importedFileName: null,
       processing: false,
+      collectionCreateIsOpen: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -68,6 +74,7 @@ class DiagramCreateDialog extends Component {
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onChangeCollection = this.onChangeCollection.bind(this);
     this.onImport = this.onImport.bind(this);
+    this.toggleCollectionCreateDialog = this.toggleCollectionCreateDialog.bind(this);
   }
 
   componentWillUnmount() {
@@ -146,6 +153,14 @@ class DiagramCreateDialog extends Component {
       .sortBy('label', 'asc');
   }
 
+  toggleCollectionCreateDialog(createdCollection) {
+    console.log('created collection is', createdCollection);
+    this.setState(({ collection, collectionCreateIsOpen }) => ({
+      collection: createdCollection || collection,
+      collectionCreateIsOpen: !collectionCreateIsOpen,
+    }));
+  }
+
   checkValid() {
     const { label, collection } = this.state;
     return collection && label?.length > 0;
@@ -153,7 +168,7 @@ class DiagramCreateDialog extends Component {
 
   render() {
     const { canChangeCollection, importEnabled, intl, isOpen, toggleDialog } = this.props;
-    const { collection, importedFileName, label, summary, processing, layout } = this.state;
+    const { collection, collectionCreateIsOpen, importedFileName, label, summary, processing, layout } = this.state;
     const disabled = processing || !this.checkValid();
 
     const showTextFields = (!importEnabled || (importEnabled && layout));
@@ -168,84 +183,102 @@ class DiagramCreateDialog extends Component {
         title={intl.formatMessage(importEnabled ? messages.title_import : messages.title_create)}
         onClose={toggleDialog}
       >
-        <form onSubmit={this.onSubmit}>
-          <div className="bp3-dialog-body">
-            {importEnabled && (
-              <FileImport
-                accept=".vis"
-                placeholder={intl.formatMessage(messages.placeholder_import)}
-                onImport={this.onImport}
-                importedFile={importedFileName}
-              />
-            )}
-            {showTextFields && (
-              <>
-                <div className="bp3-form-group">
-                  <label className="bp3-label" htmlFor="label">
-                    <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
-                    <div className="bp3-input-group bp3-fill">
-                      <input
-                        id="label"
-                        type="text"
-                        className="bp3-input"
-                        autoComplete="off"
-                        placeholder={intl.formatMessage(messages.label_placeholder)}
-                        onChange={this.onChangeLabel}
-                        value={label}
-                      />
-                    </div>
-                  </label>
-                </div>
-                <div className="bp3-form-group">
-                  <label className="bp3-label" htmlFor="summary">
-                    <FormattedMessage
-                      id="diagram.choose.summary"
-                      defaultMessage="Summary"
+        <div className="bp3-dialog-body">
+          {importEnabled && (
+            <FileImport
+              accept=".vis"
+              placeholder={intl.formatMessage(messages.placeholder_import)}
+              onImport={this.onImport}
+              importedFile={importedFileName}
+            />
+          )}
+          {showTextFields && (
+            <>
+              <div className="bp3-form-group">
+                <label className="bp3-label" htmlFor="label">
+                  <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
+                  <div className="bp3-input-group bp3-fill">
+                    <input
+                      id="label"
+                      type="text"
+                      className="bp3-input"
+                      autoComplete="off"
+                      placeholder={intl.formatMessage(messages.label_placeholder)}
+                      onChange={this.onChangeLabel}
+                      value={label}
                     />
-                    <div className="bp3-input-group bp3-fill">
-                      <textarea
-                        id="summary"
-                        className="bp3-input"
-                        placeholder={intl.formatMessage(messages.summary_placeholder)}
-                        onChange={this.onChangeSummary}
-                        value={summary}
-                        rows={5}
-                      />
-                    </div>
-                  </label>
-                </div>
-              </>
-            )}
-            {showCollectionField && (
+                  </div>
+                </label>
+              </div>
+              <div className="bp3-form-group">
+                <label className="bp3-label" htmlFor="summary">
+                  <FormattedMessage
+                    id="diagram.choose.summary"
+                    defaultMessage="Summary"
+                  />
+                  <div className="bp3-input-group bp3-fill">
+                    <textarea
+                      id="summary"
+                      className="bp3-input"
+                      placeholder={intl.formatMessage(messages.summary_placeholder)}
+                      onChange={this.onChangeSummary}
+                      value={summary}
+                      rows={5}
+                    />
+                  </div>
+                </label>
+              </div>
+            </>
+          )}
+          {showCollectionField && (
+            <>
               <div className="bp3-form-group">
                 <div className="bp3-label">
                   <FormattedMessage
-                    id="diagram.collectionSelect"
-                    defaultMessage="Select a dataset"
+                    id="diagram.create.collection"
+                    defaultMessage="Dataset"
                   />
-                  <Collection.Select
-                    collection={collection}
-                    onSelect={this.onChangeCollection}
-                    query={this.getCollectionOptionsQuery()}
-                  />
+                  <ControlGroup>
+                    <Collection.Select
+                      collection={collection}
+                      onSelect={this.onChangeCollection}
+                      query={this.getCollectionOptionsQuery()}
+                      buttonProps={{
+                        label: intl.formatMessage(messages.collection_select_placeholder)
+                      }}
+                    />
+                    <Button icon="plus" fill onClick={() => this.toggleCollectionCreateDialog()}>
+                      <FormattedMessage
+                        id="diagram.create.collection.new"
+                        defaultMessage="Create new"
+                      />
+                    </Button>
+                  </ControlGroup>
                 </div>
               </div>
-            )}
-          </div>
-          <div className="bp3-dialog-footer">
-            <div className="bp3-dialog-footer-actions">
-              <Button
-                type="submit"
-                intent={Intent.PRIMARY}
-                disabled={disabled}
-                text={(
-                  intl.formatMessage(messages.submit_create)
-                )}
+              <CreateCaseDialog
+                isOpen={collectionCreateIsOpen}
+                toggleDialog={this.toggleCollectionCreateDialog}
+                preventRedirect
               />
-            </div>
+            </>
+          )}
+        </div>
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
+            <Button
+              type="submit"
+              intent={Intent.PRIMARY}
+              disabled={disabled}
+              onClick={this.onSubmit}
+              text={(
+                intl.formatMessage(messages.submit_create)
+              )}
+            />
           </div>
-        </form>
+        </div>
       </FormDialog>
+
     );
   }
 }
