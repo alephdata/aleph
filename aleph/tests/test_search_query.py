@@ -70,7 +70,8 @@ class QueryTestCase(TestCase):
             ('filter:key1', 'foo'),
             ('filter:key1', 'bar'),
             ('filter:key2', 'blah'),
-            ('filter:key2', 'blahblah')
+            ('filter:key2', 'blahblah'),
+            ('filter:gte:date', '2018'),
         ])
 
         self.assertEqual(q.get_filters(), [
@@ -82,6 +83,13 @@ class QueryTestCase(TestCase):
             {
                 'terms': {
                     'key2': ['blah', 'blahblah']
+                }
+            },
+            {
+                'range': {
+                    'date': {
+                        'gte': '2018'
+                    }
                 }
             }
         ])
