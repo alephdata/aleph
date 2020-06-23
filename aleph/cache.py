@@ -13,7 +13,7 @@ class Cache(object):
 
     def __init__(self, kv, expires=None, prefix=None):
         self.kv = kv
-        self.expires = expires
+        self.expires = expires or settings.REDIS_LONG
         self.prefix = prefix
 
     def key(self, *parts):

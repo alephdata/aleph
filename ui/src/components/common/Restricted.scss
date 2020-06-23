@@ -1,0 +1,9 @@
+@import "src/app/variables.scss";
+
+.Restricted {
+    margin-left: $aleph-grid-size;
+
+    &__message {
+        max-width: 25em;
+    }
+}
