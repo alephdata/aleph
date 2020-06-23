@@ -55,6 +55,14 @@ export function selectMetadata(state) {
   return metadata;
 }
 
+export function selectPages(state) {
+  return selectMetadata(state).pages;
+}
+
+export function selectPage(state, name) {
+  return selectPages(state).find((page) => page.name === name);
+}
+
 export function selectModel(state) {
   return selectMetadata(state).model;
 }

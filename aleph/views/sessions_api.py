@@ -86,7 +86,11 @@ def oauth_init():
 @blueprint.route('/api/2/sessions/callback')
 def oauth_callback():
     require(settings.OAUTH)
-    token = oauth.provider.authorize_access_token()
+    try:
+        token = oauth.provider.authorize_access_token()
+    except AuthlibBaseError as err:
+        log.warning("Failed OAuth: %r", err)
+        raise Unauthorized(gettext("Authentication has failed."))
     if token is None or isinstance(token, AuthlibBaseError):
         log.warning("Failed OAuth: %r", token)
         raise Unauthorized(gettext("Authentication has failed."))

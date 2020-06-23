@@ -51,7 +51,7 @@ def _ingest_path(db, conn, dataset, path, languages=[]):
     context = {'languages': languages}
     job = Job.create(conn, dataset)
     stage = job.get_stage(OP_INGEST)
-    manager = Manager(stage, context)
+    manager = Manager(db, stage, context)
     path = ensure_path(path)
     if path is not None:
         if path.is_file():

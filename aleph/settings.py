@@ -8,6 +8,9 @@ import uuid
 from servicelayer import env
 from flask_babel import lazy_gettext
 
+# The aleph module directory
+APP_DIR = os.path.abspath(os.path.dirname(__file__))
+
 
 # Show error messages to the user.
 DEBUG = env.to_bool('ALEPH_DEBUG', False)
@@ -111,6 +114,10 @@ MAX_EXPAND_ENTITIES = env.to_int('ALEPH_MAX_EXPAND_ENTITIES', 200)
 API_RATE_LIMIT = env.to_int('ALEPH_API_RATE_LIMIT', 30)
 API_RATE_WINDOW = 15  # minutes
 
+# Mini-CMS
+# Pages directory
+PAGES_PATH = os.path.join(APP_DIR, 'pages')
+PAGES_PATH = env.get('ALEPH_PAGES_PATH', PAGES_PATH)
 
 ##############################################################################
 # E-mail settings
@@ -130,8 +137,7 @@ MAIL_DEBUG = env.to_bool('ALEPH_MAIL_DEBUG', DEBUG)
 
 DATABASE_URI = env.get('ALEPH_DATABASE_URI')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-ALEMBIC_DIR = os.path.join(os.path.dirname(__file__), 'migrate')
-ALEMBIC_DIR = os.path.abspath(ALEMBIC_DIR)
+ALEMBIC_DIR = os.path.join(APP_DIR, 'migrate')
 
 ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
 ELASTICSEARCH_TIMEOUT = env.to_int('ELASTICSEARCH_TIMEOUT', 30)

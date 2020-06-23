@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count, Skeleton } from 'src/components/common';
+import { Count, Skeleton, AppItem } from 'src/components/common';
 import c from 'classnames';
 
 import { queryRoles } from 'src/actions';
@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/diagrams')}
               active={current === '/diagrams'}
             />
-            {(groupsResult.isPending || groupsResult.total > 0) && (
+            {(groupsResult.total === undefined || groupsResult.total > 0) && (
               <>
                 <MenuDivider />
                 <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
@@ -131,7 +131,7 @@ class Dashboard extends React.Component {
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>
                 </li>
-                {!groupsResult.isPending && groupsResult.results.map(group => (
+                {groupsResult.results !== undefined && groupsResult.results.map(group => (
                   <MenuItem
                     key={group.id}
                     icon="shield"
@@ -140,7 +140,7 @@ class Dashboard extends React.Component {
                     active={current === `/groups/${group.id}`}
                   />
                 ))}
-                {groupsResult.isPending && (
+                {groupsResult.total === undefined && (
                   <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
                 )}
               </>
@@ -158,9 +158,11 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/settings')}
               active={current === '/settings'}
             />
+            <MenuDivider />
+            <AppItem />
           </Menu>
         </div>
-        <div className="dashboard-body">
+        <div className="Dashboard__body">
           {this.props.children}
         </div>
       </div>
