@@ -49,7 +49,7 @@ const messages = defineMessages({
   },
   collection_select_placeholder: {
     id: 'diagram.create.collection.existing',
-    defaultMessage: 'Select from existing',
+    defaultMessage: 'Select a dataset',
   },
 });
 
@@ -238,22 +238,34 @@ class DiagramCreateDialog extends Component {
                     id="diagram.create.collection"
                     defaultMessage="Dataset"
                   />
-                  <ControlGroup>
-                    <Collection.Select
-                      collection={collection}
-                      onSelect={this.onChangeCollection}
-                      query={this.getCollectionOptionsQuery()}
-                      buttonProps={{
-                        label: intl.formatMessage(messages.collection_select_placeholder)
-                      }}
+                  <Collection.Select
+                    collection={collection}
+                    onSelect={this.onChangeCollection}
+                    query={this.getCollectionOptionsQuery()}
+                    buttonProps={{
+                      label: intl.formatMessage(messages.collection_select_placeholder)
+                    }}
+                  />
+                  <div class="bp3-form-helper-text">
+                    <FormattedMessage
+                      id='diagram.create.collection.new'
+                      defaultMessage={
+                        `Don't see the dataset you're looking for? {link}`
+                      }
+                      values={{
+                         link: (
+                          <a onClick={() => this.toggleCollectionCreateDialog()}>
+                            <FormattedMessage
+                              id='entity.manager.bulk_import.link_text'
+                              defaultMessage={
+                                `Create a new personal dataset`
+                              }
+                            />
+                          </a>
+                         )
+                       }}
                     />
-                    <Button icon="plus" fill onClick={() => this.toggleCollectionCreateDialog()}>
-                      <FormattedMessage
-                        id="diagram.create.collection.new"
-                        defaultMessage="Create new"
-                      />
-                    </Button>
-                  </ControlGroup>
+                  </div>
                 </div>
               </div>
               <CreateCaseDialog

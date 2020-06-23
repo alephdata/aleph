@@ -158,7 +158,7 @@ class CollectionSelect extends Component {
 
   render() {
     const { buttonProps, collection, intl, result } = this.props;
-    const label = collection ? <CollectionLabel collection={collection} icon label /> : buttonProps.label;
+    const label = collection ? <CollectionLabel collection={collection} icon={false} /> : buttonProps.label;
 
     return (
       <Select
@@ -179,6 +179,8 @@ class CollectionSelect extends Component {
         <Button
           fill
           text={label}
+          icon="briefcase"
+          alignText="left"
         />
       </Select>
     );

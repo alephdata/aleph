@@ -164,6 +164,7 @@ export class EntityListManager extends Component {
           {!schema.isEdge && (
             <Button icon="send-to-graph" onClick={this.toggleAddToDiagramDialog} disabled={selection.length < 1}>
               <FormattedMessage id="entity.viewer.add_to_diagram" defaultMessage="Add to diagram" />
+              <Count count={selection.length} />
             </Button>
           )}
         </EntityActionBar>

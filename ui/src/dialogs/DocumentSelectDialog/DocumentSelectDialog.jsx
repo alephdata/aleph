@@ -92,9 +92,9 @@ class DocumentSelectDialog extends Component {
             onQueryChange={this.onQueryChange}
             onSelect={onSelect}
             noResultsText={intl.formatMessage(messages.no_results)}
-            inputProps={{ placeholder: intl.formatMessage(messages.placeholder)}}
+            inputProps={{ icon: "table", placeholder: intl.formatMessage(messages.placeholder)}}
           />
-          <p>
+          <div class="bp3-form-helper-text">
             <FormattedMessage
               id='entity.manager.bulk_import.description.3'
               defaultMessage={
@@ -113,7 +113,7 @@ class DocumentSelectDialog extends Component {
                  )
                }}
             />
-          </p>
+          </div>
         </div>
       </Dialog>
     );

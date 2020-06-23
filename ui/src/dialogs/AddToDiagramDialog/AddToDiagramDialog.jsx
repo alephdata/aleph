@@ -23,11 +23,11 @@ const messages = defineMessages({
   },
   placeholder: {
     id: 'diagram.add_entities.select_placeholder',
-    defaultMessage: 'Select an existing diagram',
+    defaultMessage: 'Add to an existing diagram',
   },
   success_update: {
     id: 'diagram.add_entities.success',
-    defaultMessage: 'Successfully added {count} entities to the diagram',
+    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {diagram}',
   },
 });
 
@@ -40,8 +40,10 @@ class AddToDiagramDialog extends Component {
     this.onSelect = this.onSelect.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchIfNeeded()
+  componentDidUpdate(prevProps) {
+    if (!prevProps.isOpen && this.props.isOpen) {
+      this.fetchIfNeeded()
+    }
   }
 
   fetchIfNeeded() {
@@ -74,7 +76,7 @@ class AddToDiagramDialog extends Component {
       const updatedCount = oldCount ? newCount - oldCount : newCount;
 
       showSuccessToast(
-        intl.formatMessage(messages.success_update, {count: updatedCount}),
+        intl.formatMessage(messages.success_update, {count: updatedCount, diagram: diagram.label}),
       );
       history.push({
         pathname: getDiagramLink(updatedDiagram.data),
@@ -103,12 +105,16 @@ class AddToDiagramDialog extends Component {
             onSelect={this.onSelect}
             items={result.results}
             buttonProps={{
+              icon: "send-to-graph",
               disabled: result.isLoading || result.shouldLoad,
               text: intl.formatMessage(messages.placeholder)
             }}
           />
+          <div className="FormDialog__spacer">
+            <FormattedMessage id="diagram.add.or" defaultMessage="or" />
+          </div>
           <Button icon="graph" onClick={openCreateDialog} fill>
-            <FormattedMessage id="diagram.add.create_new" defaultMessage="Create new diagram" />
+            <FormattedMessage id="diagram.add.create_new" defaultMessage="Create a new diagram" />
           </Button>
         </div>
       </FormDialog>
