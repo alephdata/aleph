@@ -14,6 +14,7 @@ import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
+import PagesScreen from 'src/screens/PagesScreen/PagesScreen';
 import HistoryScreen from 'src/screens/HistoryScreen/HistoryScreen';
 import AlertsScreen from 'src/screens/AlertsScreen/AlertsScreen';
 import SettingsScreen from 'src/screens/SettingsScreen/SettingsScreen';
@@ -53,6 +54,7 @@ class Router extends Component {
         <Switch>
           <Route path="/oauth" exact component={OAuthScreen} />
           <Route path="/logout" exact component={LogoutScreen} />
+          <Route path="/pages/:page" exact component={PagesScreen} />
           <Route path="/activate/:code" exact component={ActivateScreen} />
           <Route path="/entities/:entityId" exact component={EntityScreen} />
           <Redirect from="/text/:documentId" to="/entities/:documentId" />

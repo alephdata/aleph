@@ -1,4 +1,5 @@
 from servicelayer import env
+from servicelayer import settings as sls
 from ftmstore import settings as sts
 
 TESTING = False
@@ -28,3 +29,6 @@ NER_DEFAULT_MODEL = 'xx'
 
 # Use the environment variable set in aleph.env
 sts.DATABASE_URI = env.get('ALEPH_DATABASE_URI', sts.DATABASE_URI)
+
+# Also store cached values in the SQL database
+sls.TAGS_DATABASE_URI = sts.DATABASE_URI
