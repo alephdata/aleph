@@ -5,9 +5,7 @@ import { Boundary, Button, ButtonGroup, ControlGroup, InputGroup, OverflowList, 
 import { Count } from 'src/components/common';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 
-
 import './EntityActionBar.scss';
-
 
 class EntityActionBar extends Component {
   constructor(props) {

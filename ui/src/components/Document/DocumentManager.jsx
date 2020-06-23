@@ -31,7 +31,7 @@ const messages = defineMessages({
   },
   cannot_map: {
     id: 'entity.document.manager.cannot_map',
-    defaultMessage: 'Select a table document to generate structured entities from',
+    defaultMessage: 'Select a table document to generate structured entities',
   },
 });
 

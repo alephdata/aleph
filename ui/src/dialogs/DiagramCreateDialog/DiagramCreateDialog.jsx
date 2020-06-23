@@ -154,7 +154,6 @@ class DiagramCreateDialog extends Component {
   }
 
   toggleCollectionCreateDialog(createdCollection) {
-    console.log('created collection is', createdCollection);
     this.setState(({ collection, collectionCreateIsOpen }) => ({
       collection: createdCollection?.id ? createdCollection : collection,
       collectionCreateIsOpen: !collectionCreateIsOpen,
