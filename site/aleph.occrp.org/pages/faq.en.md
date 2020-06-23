@@ -13,9 +13,9 @@ This varies from dataset to dataset. While some sources are static, we run more 
 
 ### Can I add my own data to OCCRP Aleph?
 
-As a journalist with ‘Friends of OCCRP’ access, you’re invited to use Aleph to upload investigative material, documents, or to make a dataset with your persons of interest. Aleph helps you to systematise your own research, share it with colleagues and cross-reference lists of people with our archive. You can also use Aleph as an OCR tool for scanned documents. 
+As a journalist with ‘Friends of OCCRP’ access, you’re invited to use Aleph to upload documents, or to make a dataset with your persons of interest. Aleph helps you to systematise your own research, share it with colleagues abd cross-reference lists of people with our archive. You can also use Aleph as an OCR tool for scanned documents. 
 
-The data you upload will be visible to some members of OCCRP’s data team, but no other editorial staff. In some cases, we may offer to introduce you to other journalists who are developing related stories.
+The data you upload will be visible to some members of OCCRP’s data team, but no other editorial staff. In some cases, we may offer to introduce you to journalists who are developing related stories.
 
 If you are an open data activist and have collected datasets that should be included in Aleph, please [contact us](mailto:data@occrp.org) so that we can work together to import the data. Contributing your data will put it at the fingertips of hundreds of investigative reporters.
 
