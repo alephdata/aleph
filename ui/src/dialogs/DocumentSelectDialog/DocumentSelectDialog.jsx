@@ -23,6 +23,14 @@ const messages = defineMessages({
     id: 'entity.manager.bulk_import.title',
     defaultMessage: 'Bulk import',
   },
+  no_results: {
+    id: 'entity.manager.bulk_import.no_results',
+    defaultMessage: 'No matching documents found',
+  },
+  placeholder: {
+    id: 'entity.manager.bulk_import.placeholder',
+    defaultMessage: 'Select a document',
+  },
 });
 
 
@@ -83,6 +91,8 @@ class DocumentSelectDialog extends Component {
             query={query}
             onQueryChange={this.onQueryChange}
             onSelect={onSelect}
+            noResultsText={intl.formatMessage(messages.no_results)}
+            inputProps={{ placeholder: intl.formatMessage(messages.placeholder)}}
           />
           <p>
             <FormattedMessage

@@ -6,7 +6,7 @@ import { selectEntitiesResult } from 'src/selectors';
 
 class EntitySelect extends Component {
   render() {
-    const { onQueryChange, onSelect, result } = this.props;
+    const { inputProps, noResultsText, onQueryChange, onSelect, result } = this.props;
 
     return (
       <VLEntitySelect
@@ -16,6 +16,8 @@ class EntitySelect extends Component {
         isFetching={result.shouldLoad || result.isLoading}
         onSubmit={entities => onSelect(entities[0])}
         onQueryChange={onQueryChange}
+        noResultsText={noResultsText}
+        inputProps={inputProps}
       />
     )
   }

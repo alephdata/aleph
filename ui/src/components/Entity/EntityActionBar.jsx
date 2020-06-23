@@ -53,7 +53,7 @@ export default class EntityActionBar extends Component {
   }
 
   overflowListRenderer = (overflowItems) => {
-    const menuContent = overflowItems.map((item, i) => item);
+    const menuContent = overflowItems.map((item, i) => <React.Fragment key={i}>{item}</React.Fragment>);
     return (
       <Popover
         content={<ButtonGroup vertical minimal alignText="left">{menuContent}</ButtonGroup>}
@@ -87,7 +87,7 @@ export default class EntityActionBar extends Component {
             <OverflowList
               items={[...children, deleteButton]}
               collapseFrom={Boundary.END}
-              visibleItemRenderer={item => item}
+              visibleItemRenderer={(item, i) => <React.Fragment key={i}>{item}</React.Fragment>}
               overflowRenderer={this.overflowListRenderer}
               className="bp3-button-group"
               observeParents
