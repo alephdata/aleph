@@ -29,7 +29,7 @@ const messages = defineMessages({
   },
   placeholder: {
     id: 'entity.manager.bulk_import.placeholder',
-    defaultMessage: 'Select a document',
+    defaultMessage: 'Select a table document',
   },
 });
 
@@ -44,8 +44,10 @@ class DocumentSelectDialog extends Component {
     this.onQueryChange = this.onQueryChange.bind(this);
   }
 
-  componentDidMount() {
-    this.onQueryChange();
+  componentDidUpdate(prevProps) {
+    if (!prevProps.isOpen && this.props.isOpen) {
+      this.onQueryChange();
+    }
   }
 
   onQueryChange(queryText) {
@@ -92,7 +94,7 @@ class DocumentSelectDialog extends Component {
             onQueryChange={this.onQueryChange}
             onSelect={onSelect}
             noResultsText={intl.formatMessage(messages.no_results)}
-            inputProps={{ icon: "table", placeholder: intl.formatMessage(messages.placeholder)}}
+            buttonProps={{ placeholder: intl.formatMessage(messages.placeholder)}}
           />
           <div class="bp3-form-helper-text">
             <FormattedMessage
