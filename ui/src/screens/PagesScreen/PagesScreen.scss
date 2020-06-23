@@ -1,13 +1,13 @@
 @import "src/app/variables.scss";
 
-$dashboard-padding: $aleph-grid-size * 2.5;
+$pages-padding: $aleph-grid-size * 2.5;
 
-.Dashboard {
+.Pages {
     display: flex;
     flex-flow: row nowrap;
     align-content: stretch;
     align-items: stretch;
-    padding: $dashboard-padding;
+    padding: $pages-padding;
 
     &__menu {
         flex: flex;
@@ -15,8 +15,8 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         flex-grow: 0;
         width: 20%;
         border-right: 1px solid $aleph-border-color;
-        margin-right: $dashboard-padding;
-        padding-right: $dashboard-padding;
+        margin-right: $pages-padding;
+        padding-right: $pages-padding;
         min-width: 220px;
 
         @media screen and (max-width: $aleph-screen-sm-max-width) {
@@ -33,15 +33,6 @@ $dashboard-padding: $aleph-grid-size * 2.5;
 
           .bp3-icon {
             margin-right: 12px;
-          }
-
-          .Count {
-            float: right;
-          }
-
-          &.bp3-active .Count {
-            color: white;
-            background: none;
           }
         }
 
@@ -62,25 +53,14 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         }
     }
 
-    &__actions {
-      margin-top: $aleph-grid-size*2;
-    }
-
     &__title-container {
-      margin: $dashboard-padding 0;
+      margin: $pages-padding 0;
     }
 
     &__title {
-      font-size: 22px;
+      font-size: $aleph-grid-size * 2.2;
       color: $dark-gray1;
       margin: 0 0 $aleph-grid-size;
-    }
-
-    &__subheading {
-      color: $dark-gray5;
-      line-height: 1.5;
-      clear: both;
-      max-width: 700px;
     }
 
     &__body {
@@ -90,5 +70,18 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         overflow-x: auto;
         padding-left: ($aleph-grid-size / 2);
         padding-right: ($aleph-grid-size / 2);
+    }
+
+    &__content {
+      color: $dark-gray5;
+      line-height: 1.5;
+      clear: both;
+      max-width: 700px;
+      font-size: $aleph-grid-size * 1.7;
+      font-weight: normal;
+
+      a {
+        text-decoration: underline;
+      }
     }
 }

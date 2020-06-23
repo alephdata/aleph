@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/diagrams')}
               active={current === '/diagrams'}
             />
-            {(groupsResult.isPending || groupsResult.total > 0) && (
+            {(groupsResult.total === undefined || groupsResult.total > 0) && (
               <>
                 <MenuDivider />
                 <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
@@ -131,7 +131,7 @@ class Dashboard extends React.Component {
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>
                 </li>
-                {!groupsResult.isPending && groupsResult.results.map(group => (
+                {groupsResult.results !== undefined && groupsResult.results.map(group => (
                   <MenuItem
                     key={group.id}
                     icon="shield"
@@ -140,7 +140,7 @@ class Dashboard extends React.Component {
                     active={current === `/groups/${group.id}`}
                   />
                 ))}
-                {groupsResult.isPending && (
+                {groupsResult.total === undefined && (
                   <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
                 )}
               </>
@@ -160,7 +160,7 @@ class Dashboard extends React.Component {
             />
           </Menu>
         </div>
-        <div className="dashboard-body">
+        <div className="Dashboard__body">
           {this.props.children}
         </div>
       </div>

@@ -1,7 +1,10 @@
+import logging
 import frontmatter
 from pathlib import Path
 
 from aleph import settings
+
+log = logging.getLogger(__name__)
 
 
 def load_pages(locale):
@@ -22,6 +25,7 @@ def load_pages(locale):
         page['lang'] = lang
         page['title'] = page.get('title', name)
         page['short'] = page.get('short', page['title'])
+        page['icon'] = page.get('icon', 'book')
         page['menu'] = page.get('menu', False)
         page['home'] = page.get('home', False)
         candidates.setdefault(name, {})
@@ -33,4 +37,5 @@ def load_pages(locale):
         for lang in [locale, settings.DEFAULT_LANGUAGE]:
             if lang in langs:
                 pages.append(langs.get(lang))
+                break
     return pages
