@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, ControlGroup, InputGroup } from '@blueprintjs/core';
+import { Boundary, Button, ButtonGroup, ControlGroup, InputGroup, Menu, OverflowList, Popover } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { Count } from 'src/components/common';
@@ -52,23 +52,46 @@ export default class EntityActionBar extends Component {
     this.props.onSearchSubmit(queryText);
   }
 
+  overflowListRenderer = (overflowItems) => {
+    const menuContent = overflowItems.map((item, i) => item);
+    return (
+      <Popover
+        content={<ButtonGroup vertical minimal alignText="left">{menuContent}</ButtonGroup>}
+        position="bottom-left"
+        minimal
+        popoverClassName="EntityActionBar__overflow-list"
+        boundary="viewport"
+      >
+        <Button icon="caret-down" />
+      </Popover>
+    );
+  }
+
   render() {
     const { children, searchPlaceholder, selection, writeable } = this.props;
     const { queryText } = this.state;
+
+    const deleteButton = (
+      <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length} className="EntityActionBar__delete">
+        <span className="align-middle">
+          <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
+        </span>
+        <Count count={selection.length} />
+      </Button>
+    );
 
     return (
       <>
         <ControlGroup className="EntityActionBar">
           {writeable && (
-            <ButtonGroup>
-              {children}
-              <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-                <span className="align-middle">
-                  <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
-                </span>
-                <Count count={selection.length} />
-              </Button>
-            </ButtonGroup>
+            <OverflowList
+              items={[...children, deleteButton]}
+              collapseFrom={Boundary.END}
+              visibleItemRenderer={item => item}
+              overflowRenderer={this.overflowListRenderer}
+              className="bp3-button-group"
+              observeParents
+            />
           )}
           <form onSubmit={this.onSearchSubmit}>
             <InputGroup

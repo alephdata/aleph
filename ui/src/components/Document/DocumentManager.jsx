@@ -138,7 +138,7 @@ export class DocumentManager extends Component {
           )}
           <DocumentFolderButton collection={collection} parent={document} />
           <Divider />
-          <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)}>
+          <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)} className="prevent-flex-grow">
             <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
               <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
             </AnchorButton>
