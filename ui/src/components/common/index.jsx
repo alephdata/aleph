@@ -6,6 +6,7 @@ import Restricted from './Restricted';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Count from './Count';
+import AppItem from './AppItem';
 import csvContextLoader from './csvContextLoader';
 import Diagram from './Diagram';
 import DualPane from './DualPane';
@@ -43,6 +44,7 @@ export {
   Diagram,
   DualPane,
   Entity,
+  AppItem,
   Facet,
   FileImport,
   Mention,

@@ -54,7 +54,7 @@ class Router extends Component {
         <Switch>
           <Route path="/oauth" exact component={OAuthScreen} />
           <Route path="/logout" exact component={LogoutScreen} />
-          <Route path="/p/:page" exact component={PagesScreen} />
+          <Route path="/pages/:page" exact component={PagesScreen} />
           <Route path="/activate/:code" exact component={ActivateScreen} />
           <Route path="/entities/:entityId" exact component={EntityScreen} />
           <Redirect from="/text/:documentId" to="/entities/:documentId" />

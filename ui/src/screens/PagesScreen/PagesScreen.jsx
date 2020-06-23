@@ -8,7 +8,8 @@ import { withRouter } from 'react-router';
 
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { selectPages, selectPage, selectMetadata } from 'src/selectors';
+import { AppItem } from 'src/components/common';
+import { selectPages, selectPage } from 'src/selectors';
 
 import './PagesScreen.scss';
 import getPageLink from '../../util/getPageLink';
@@ -47,28 +48,29 @@ export class PagesScreen extends React.Component {
     return (
       <Screen title={page.title}>
         <div className="Pages">
-          <div className="Pages__menu">
-            <Menu>
-              {menuPages.map(menuPage => (
-                <MenuItem
-                  key={menuPage.name}
-                  icon={menuPage.icon}
-                  text={menuPage.short}
-                  onClick={() => this.navigate(getPageLink(menuPage))}
-                  active={menuPage.name === page.name}
-                />
-              ))}
-              <MenuDivider />
-            </Menu>
-          </div>
           <div className="Pages__body">
-            <div className="Pages__title-container">
-              <h5 className="Pages__title">{page.title}</h5>
-            </div>
-            <div className="Pages__content">
-              <ReactMarkdown>
-                {page.content}
-              </ReactMarkdown>
+            <h5 className="Pages__title">{page.title}</h5>
+            <div className="Pages__content-container">
+              <div className="Pages__content">
+                <ReactMarkdown>
+                  {page.content}
+                </ReactMarkdown>
+              </div>
+              <div className="Pages__menu">
+                <Menu>
+                  {menuPages.map(menuPage => (
+                    <MenuItem
+                      key={menuPage.name}
+                      icon={menuPage.icon}
+                      text={menuPage.short}
+                      onClick={() => this.navigate(getPageLink(menuPage))}
+                      active={menuPage.name === page.name}
+                    />
+                  ))}
+                  <MenuDivider />
+                  <AppItem />
+                </Menu>
+              </div>
             </div>
           </div>
         </div>

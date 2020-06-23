@@ -1,4 +1,4 @@
 export default function getPageLink(page) {
-  return `/p/${page.name}`;
+  return `/pages/${page.name}`;
 }
   

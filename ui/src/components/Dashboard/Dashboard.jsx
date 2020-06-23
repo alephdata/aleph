@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count, Skeleton } from 'src/components/common';
+import { Count, Skeleton, AppItem } from 'src/components/common';
 import c from 'classnames';
 
 import { queryRoles } from 'src/actions';
@@ -158,6 +158,8 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/settings')}
               active={current === '/settings'}
             />
+            <MenuDivider />
+            <AppItem />
           </Menu>
         </div>
         <div className="Dashboard__body">
