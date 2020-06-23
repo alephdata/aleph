@@ -1,6 +1,13 @@
 @import "src/app/variables.scss";
 
+$pages-max-width: 1000px;
 $pages-padding: $aleph-grid-size * 2.5;
+
+@mixin large {
+  @media screen and (min-width: $pages-max-width) {
+    @content;
+  }
+}
 
 .Pages {
     display: flex;
@@ -13,14 +20,21 @@ $pages-padding: $aleph-grid-size * 2.5;
         display: flex;
         flex-direction: column;
         flex-grow: 6;
-        max-width: 940px;
+        max-width: $pages-max-width;
         padding-left: ($aleph-grid-size / 2);
         padding-right: ($aleph-grid-size / 2);
     }
 
     &__title {
-      font-size: $aleph-grid-size * 2.2;
+      margin: 0;
+      border-bottom: 1px solid $aleph-border-color;
       color: $dark-gray5;
+      font-size: $aleph-grid-size * 3.5;
+      padding: $pages-padding*1.5 0 $pages-padding*2;
+
+      @include large {
+        padding: $pages-padding*2 $pages-padding $pages-padding*2.5;
+      }
     }
 
     &__content-container {
@@ -28,6 +42,11 @@ $pages-padding: $aleph-grid-size * 2.5;
       flex-flow: row nowrap;
       align-content: stretch;
       align-items: stretch;
+      padding: $pages-padding 0;
+
+      @include large {
+        padding: $pages-padding;
+      }
     }
 
     &__content {
@@ -37,7 +56,7 @@ $pages-padding: $aleph-grid-size * 2.5;
       color: $dark-gray5;
       line-height: 1.5;
       clear: both;
-      
+
       font-size: $aleph-grid-size * 1.7;
       font-weight: normal;
 
@@ -65,6 +84,7 @@ $pages-padding: $aleph-grid-size * 2.5;
 
       .bp3-menu-item {
         padding: 6px 7px;
+        background-color: $light-gray4;
 
         .bp3-icon {
           margin-right: 12px;
