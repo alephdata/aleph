@@ -5,13 +5,10 @@ import { Link } from 'react-router-dom';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 
 import { Entity, Schema } from 'src/components/common';
-import { queryExpand, queryEntitySuggest } from 'src/queries';
+import { queryEntitySuggest } from 'src/queries';
 import { queryEntities } from 'src/actions';
-import { showErrorToast, showSuccessToast } from 'src/app/toast';
-import getEntityLink from 'src/util/getEntityLink';
 import getCollectionLink from 'src/util/getCollectionLink';
 
 

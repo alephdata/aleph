@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from 'react';
-import { Alignment, Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
+import { Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
@@ -157,7 +156,7 @@ class CollectionSelect extends Component {
   }
 
   render() {
-    const { buttonProps, collection, intl, result } = this.props;
+    const { buttonProps, collection, result } = this.props;
     const label = collection ? <CollectionLabel collection={collection} icon={false} /> : buttonProps.label;
 
     return (
@@ -217,7 +216,7 @@ class Collection {
   static Select = connect(
     selectMapStateToProps,
     { queryCollections },
-  )(injectIntl(CollectionSelect));
+  )(CollectionSelect);
 }
 
 export default Collection;

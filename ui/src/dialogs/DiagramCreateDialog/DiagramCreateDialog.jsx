@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, ControlGroup, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -156,7 +156,7 @@ class DiagramCreateDialog extends Component {
   toggleCollectionCreateDialog(createdCollection) {
     console.log('created collection is', createdCollection);
     this.setState(({ collection, collectionCreateIsOpen }) => ({
-      collection: createdCollection || collection,
+      collection: createdCollection?.id ? createdCollection : collection,
       collectionCreateIsOpen: !collectionCreateIsOpen,
     }));
   }
@@ -254,6 +254,7 @@ class DiagramCreateDialog extends Component {
                       }
                       values={{
                          link: (
+                          /* eslint-disable */
                           <a onClick={() => this.toggleCollectionCreateDialog()}>
                             <FormattedMessage
                               id='entity.manager.bulk_import.link_text'

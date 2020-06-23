@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Boundary, Button, ButtonGroup, ControlGroup, InputGroup, Menu, OverflowList, Popover } from '@blueprintjs/core';
-import c from 'classnames';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Boundary, Button, ButtonGroup, ControlGroup, InputGroup, OverflowList, Popover } from '@blueprintjs/core';
 
 import { Count } from 'src/components/common';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
@@ -10,7 +9,7 @@ import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialo
 import './EntityActionBar.scss';
 
 
-export default class EntityActionBar extends Component {
+class EntityActionBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -114,3 +113,5 @@ export default class EntityActionBar extends Component {
     );
   }
 }
+
+export default injectIntl(EntityActionBar);

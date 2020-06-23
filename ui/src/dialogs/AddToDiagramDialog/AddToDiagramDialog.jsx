@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import Query from 'src/app/Query';
 import FormDialog from 'src/dialogs/common/FormDialog';
 import { queryDiagrams, updateDiagram } from 'src/actions';
 import { queryCollectionDiagrams } from 'src/queries';
 import { selectDiagramsResult } from 'src/selectors';
-import { Collection, Diagram, FileImport } from 'src/components/common';
+import { Diagram } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
-import { processApiEntity } from 'src/components/Diagram/util';
 
 
 const messages = defineMessages({

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, ControlGroup, Divider, InputGroup } from '@blueprintjs/core';
+import { Button, Divider } from '@blueprintjs/core';
 import { Waypoint } from 'react-waypoint';
 import _ from 'lodash';
 import { compose } from 'redux';
@@ -112,7 +112,7 @@ export class EntityListManager extends Component {
   }
 
   onSearchSubmit(queryText) {
-    const { query, location } = this.props;
+    const { query } = this.props;
     const newQuery = query.set('q', queryText);
     this.updateQuery(newQuery);
   }
@@ -144,7 +144,7 @@ export class EntityListManager extends Component {
 
   render() {
     const { collection, entityManager, query, intl, result, schema, sort } = this.props;
-    const { queryText, selection } = this.state;
+    const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
 
     return (
