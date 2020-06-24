@@ -6,7 +6,6 @@ $search-bar-width: 250px;
 .EntityActionBar {
   &.bp3-control-group {
     justify-content: space-between;
-    margin-bottom: $aleph-content-padding;
 
     .bp3-input-group {
       min-width: $search-bar-width;

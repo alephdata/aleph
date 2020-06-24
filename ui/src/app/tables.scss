@@ -136,7 +136,7 @@ table.settings-table {
   @extend .data-table;
 
   th {
-    background-color: $aleph-facet-background;
+    background-color: $aleph-facet-background !important;
   }
 }
 
