@@ -50,7 +50,6 @@ class CollectionViews extends React.Component {
       documentTabCount, entitiesTabCount
     } = this.props;
 
-    console.log('doc tab count', documentTabCount, entitiesTabCount);
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -131,15 +130,21 @@ const mapStateToProps = (state, ownProps) => {
   const model = selectModel(state);
   const diagramsQuery = queryCollectionDiagrams(location, collection.id);
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
-  const schemata = collection?.statistics?.schema?.values || [];
-  let documentTabCount = 0, entitiesTabCount = 0;
-  for (const key in schemata) {
-    const schema = model.getSchema(key);
-    if (schema.isDocument()) {
-      documentTabCount += schemata[key];
-    }
-    if (!(schema.isDocument() || schema.isA('Page'))) {
-      entitiesTabCount += schemata[key];
+  const schemata = collection?.statistics?.schema?.values;
+  let documentTabCount, entitiesTabCount;
+
+  if (schemata) {
+    documentTabCount = 0;
+    entitiesTabCount = 0;
+
+    for (const key in schemata) {
+      const schema = model.getSchema(key);
+      if (schema.isDocument()) {
+        documentTabCount += schemata[key];
+      }
+      if (!(schema.isDocument() || schema.isA('Page'))) {
+        entitiesTabCount += schemata[key];
+      }
     }
   }
 
