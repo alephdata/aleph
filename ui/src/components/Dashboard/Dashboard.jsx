@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count, ResultCount, Skeleton, AppItem } from 'src/components/common';
+import { ResultCount, Skeleton, AppItem } from 'src/components/common';
 import c from 'classnames';
 
 import Query from 'src/app/Query';

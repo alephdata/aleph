@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Classes, Icon, H4 } from '@blueprintjs/core';
-import c from 'classnames';
+import { Icon, H4 } from '@blueprintjs/core';
 import {
   Date, Role, Category, Count, Country, Collection, Summary, Skeleton, Frequency,
 } from 'src/components/common';

@@ -49,6 +49,8 @@ class CollectionViews extends React.Component {
       showDiagramsTab, showEntitiesTab, showDocumentsTab,
       documentTabCount, entitiesTabCount
     } = this.props;
+
+    console.log('doc tab count', documentTabCount, entitiesTabCount);
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -75,7 +77,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="document" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                {documentTabCount > 0 && <Count count={documentTabCount} />}
+                <Count count={documentTabCount} />
               </>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
@@ -88,7 +90,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="list-columns" className="left-icon" />
                 <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
-                {entitiesTabCount > 0 && <Count count={entitiesTabCount} />}
+                <Count count={entitiesTabCount} />
               </>}
             panel={<CollectionEntitiesMode collection={collection} />}
           />
