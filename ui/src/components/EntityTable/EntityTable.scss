@@ -17,10 +17,6 @@
   .bp3-control {
     margin-bottom: 0 !important;
   }
-
-  .bp3-control-indicator {
-    @include rtlSupportInvertedProp(margin, left, 0px !important, null);
-  }
 }
 
 .EntityTableViewerRow {
