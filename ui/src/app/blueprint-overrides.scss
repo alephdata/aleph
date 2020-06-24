@@ -18,13 +18,12 @@
   @include rtlSupportInvertedProp(margin, left, 10px, 0);
 }
 
-/* Buttons and Inputs in control groups have margin values they shouldn't
-* for some reason, even though my inspector says '0em'. */
-.bp3-control-group * {
-  margin-top: 0;
-  // in this case trying to pass margin-left through mixin will force it and break the main search bar. (mixin is using [ltr] specific css rule)
-  // @include rtlSupportInvertedProp(margin, left, 0, null);
-  margin-left: 0; 
+.bp3-tabs {
+  &.bp3-vertical {
+    > .bp3-tab-panel{
+      @include rtlSupportInvertedProp(padding, left, 20px, null);
+    }
+  }
 }
 
 .bp3-tab-list {
@@ -179,4 +178,3 @@ table {
     @include rtlSupportInvertedProp(margin, left, 10px, 0px);
   }
 }
-

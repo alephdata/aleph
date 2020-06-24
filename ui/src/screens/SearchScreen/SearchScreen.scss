@@ -4,7 +4,7 @@
 .SearchScreen {
   .total-count-span {
     display: inline-flex;
-    padding-left: 0.5em;
+    @include rtlSupportInvertedProp(padding, left, 0.5em, null);
     font-size: 1.1em;
     font-weight: bold;
   }

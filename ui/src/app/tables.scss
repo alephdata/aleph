@@ -51,7 +51,7 @@ table {
     overflow: visible;
     max-width: unset;
     text-overflow: unset;
-    text-align: right;
+    @include rtl(text-align, right, left);
   }
 
   tr.active {

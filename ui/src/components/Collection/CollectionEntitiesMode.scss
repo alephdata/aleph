@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .CollectionEntitiesMode {
   &__tabs {
@@ -43,7 +44,7 @@
       width: 100%;
       overflow: hidden;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
-        padding-left: 0 !important;
+        @include rtlSupportInvertedProp(padding, left, 0 !important, null);
       }
     }
 
@@ -73,7 +74,8 @@
 
       .Count {
         position: absolute;
-        right: 10px;
+        @include rtl(right, $aleph-grid-size, null);
+        @include rtl(left, null, $aleph-grid-size);
         top: 50%;
         transform: translateY(-50%);
       }
