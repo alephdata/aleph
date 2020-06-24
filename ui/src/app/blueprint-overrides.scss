@@ -172,8 +172,12 @@ table {
     .bp3-icon-large, .bp3-icon {
       @include rtlSupportInvertedProp(margin, right, 10px, 0);
     }
+    .bp3-dialog-close-button {
+      .bp3-icon {
+        margin: 0 -7px;
+      }
+    } 
   }
-  
   .bp3-dialog-footer-actions .bp3-button {
     @include rtlSupportInvertedProp(margin, left, 10px, 0px);
   }
