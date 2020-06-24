@@ -16,7 +16,7 @@ class MappingList {
           color: this.assignColor(i),
           id,
           schema: model.getSchema(schema),
-          keys,
+          keys: keys || [],
           properties: properties || {},
         });
       });

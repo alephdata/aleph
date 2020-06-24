@@ -84,7 +84,7 @@ class CreateCaseDialog extends Component {
 
 
   async onAddCase(event) {
-    const { history, createCollection, updateCollectionPermissions } = this.props;
+    const { history, createCollection, toggleDialog, updateCollectionPermissions, preventRedirect } = this.props;
     const { collection, permissions, blocking } = this.state;
     event.preventDefault();
     if (blocking || !this.checkValid()) return;
@@ -94,9 +94,13 @@ class CreateCaseDialog extends Component {
       const collectionId = response.data.id;
       await updateCollectionPermissions(collectionId, permissions);
       this.setState({ blocking: false });
-      history.push({
-        pathname: getCollectionLink(response.data)
-      });
+      if (preventRedirect) {
+        toggleDialog(response.data);
+      } else {
+        history.push({
+          pathname: getCollectionLink(response.data)
+        });
+      }
     } catch (e) {
       this.setState({ blocking: false });
       showWarningToast(e.message);

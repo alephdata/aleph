@@ -16,18 +16,22 @@ const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left' }
 class DiagramEditor extends React.Component {
   constructor(props) {
     super(props);
-
+    const { diagram } = props;
     let initialLayout;
 
-    if (props.diagram?.entities && props.diagram?.layout) {
-      const { layout, entities } = props.diagram;
-
-      const processedEntities = entities.map(processApiEntity);
+    if (diagram) {
+      let layoutData = { vertices: [], edges: [], entities: [], selection: [] };
+      if (diagram.entities) {
+        layoutData.entities = diagram.entities.map(processApiEntity);
+      }
+      if (diagram.layout) {
+        layoutData = {...layoutData, ...diagram.layout};
+      }
 
       initialLayout = GraphLayout.fromJSON(
         config,
         props.entityManager,
-        { ...layout, entities: processedEntities, selection: [] },
+        layoutData
       );
     } else {
       initialLayout = new GraphLayout(config, props.entityManager);

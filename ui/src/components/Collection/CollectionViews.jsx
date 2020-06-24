@@ -39,7 +39,6 @@ class CollectionViews extends React.Component {
 
     history.push({
       pathname: location.pathname,
-      search: location.search,
       hash: queryString.stringify(parsedHash),
     });
   }
