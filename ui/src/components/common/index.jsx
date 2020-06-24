@@ -31,6 +31,8 @@ import SortingBar from './SortingBar';
 import Summary from './Summary';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
+import ResultText from './ResultText';
+
 
 export {
   Breadcrumbs,
@@ -66,6 +68,7 @@ export {
   SortingBar,
   QueryText,
   ResultCount,
+  ResultText,
 };
 
 export * from './types';

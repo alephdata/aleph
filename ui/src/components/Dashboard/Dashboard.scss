@@ -18,7 +18,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
         @include rtlSupportInvertedProp(margin, right, $dashboard-padding, null);
         @include rtlSupportInvertedProp(padding, right, $dashboard-padding, null);
-        min-width: 220px;
+        min-width: 235px;
 
         @media screen and (max-width: $aleph-screen-sm-max-width) {
           display: none;

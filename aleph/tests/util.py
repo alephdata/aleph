@@ -156,6 +156,21 @@ class TestCase(unittest.TestCase):
             'schema': 'Person',
             'properties': {
                 'name': ['Banana'],
+                'birthDate': '1970-08-21'
+            }
+        }, self.private_coll)
+        self._banana2 = self.create_entity({
+            'schema': 'Person',
+            'properties': {
+                'name': ['Banana'],
+                'birthDate': '1970-03-21'
+            }
+        }, self.private_coll)
+        self._banana3 = self.create_entity({
+            'schema': 'Person',
+            'properties': {
+                'name': ['Banana'],
+                'birthDate': '1970-05-21'
             }
         }, self.private_coll)
         user = Role.by_foreign_id(Role.SYSTEM_USER)
