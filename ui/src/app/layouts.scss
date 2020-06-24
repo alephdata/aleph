@@ -1,3 +1,4 @@
+@import "src/app/mixins.scss";
 
 /* pane-based layout elements. */
 .pane-layout {
@@ -35,9 +36,9 @@
   
     @media screen and (max-width: $aleph-screen-sm-max-width) {
       margin-bottom: 1em;
-      border-right: none;
+      @include rtlSupportInvertedProp(border, right, none, null);
       border-bottom: 1px solid $aleph-border-color;
-      padding-right: 0;
+      @include rtlSupportInvertedProp(padding, right, 0, null);
     }
   }
   

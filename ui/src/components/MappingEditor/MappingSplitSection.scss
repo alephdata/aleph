@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 $split-section-padding: 2*$aleph-grid-size;
 
 .MappingSplitSection {
@@ -10,10 +11,10 @@ $split-section-padding: 2*$aleph-grid-size;
   display: table-cell;
 
   &:first-child {
-    padding-right: $split-section-padding;
+    @include rtlSupportInvertedProp(padding, right, $split-section-padding, null);
   }
   &:last-child {
-    padding-left: $split-section-padding;
+    @include rtlSupportInvertedProp(padding, left, $split-section-padding, null);
   }
 
   @media screen and (max-width: $aleph-screen-md-max-width) {

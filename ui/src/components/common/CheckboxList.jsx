@@ -12,10 +12,12 @@ const CheckboxList = ({
   <ul className="CheckboxList">
     {items && items.length === 0 && (
       <li className="faint">
-        <FormattedMessage
-          id="search.facets.no_items"
-          defaultMessage="No options"
-        />
+        <span>
+          <FormattedMessage
+            id="search.facets.no_items"
+            defaultMessage="No options"
+          />
+        </span>
       </li>
     )}
     {items && items.map((item) => {

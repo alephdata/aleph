@@ -23,6 +23,7 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "./tables.scss";
 @import "./layouts.scss";
 @import "./blueprint-overrides.scss";
+@import "src/app/mixins.scss";
 
 html {
   height: 100%;
@@ -138,7 +139,7 @@ a {
 }
 
 .left-icon {
-  margin-right: $aleph-icon-padding !important;
+  @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding !important, 0);
 }
 
 /* This causes toasts to appear *below* the navbar instead of on top of it */

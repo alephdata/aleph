@@ -1,11 +1,12 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .EntityToolbar {
   font-weight: normal;
 
   .button-close {
     margin: 0;
-    float: right;
+    @include rtl(float, right, left);
   }
 
   .bp3-icon {

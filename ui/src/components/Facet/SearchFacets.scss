@@ -1,9 +1,10 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .SearchFacets {
   display: flex;
   flex-flow: column nowrap;
-  padding-left: 0;
+  @include rtlSupportInvertedProp(padding, left, 0, null);
   margin-top: 0;
   margin-bottom: 0;
   list-style: none;

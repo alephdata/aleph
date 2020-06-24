@@ -1,5 +1,5 @@
 @import "src/app/variables.scss";
-
+@import "src/app/mixins.scss";
 
 .CasesIndexScreen {
   .explainer {
@@ -20,7 +20,7 @@
     }
 
     .bp3-icon {
-      float: right;
+      @include rtl(float, right, left);
     }
     
     p.description-explanation {

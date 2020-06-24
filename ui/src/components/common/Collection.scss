@@ -1,8 +1,9 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .CollectionLabel {
     .bp3-icon, .bp3-spinner {
-        margin-right: $aleph-icon-padding;
+        @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
     }
 
     .bp3-spinner {

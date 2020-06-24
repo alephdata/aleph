@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .SearchFacet {
   margin-bottom: $aleph-grid-size;
@@ -19,7 +20,8 @@
     }
 
     & > .caret {
-      margin-right: $aleph-grid-size * 0.5;
+      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size * 0.5, null);
+      @include rtl(transform, rotate(0deg), rotate(180deg));
       transition: transform 100ms;
 
       &.rotate {
@@ -33,19 +35,20 @@
       font-weight: bold;
 
       .bp3-icon {
-        margin-right: 10px !important;
+        @include rtlSupportInvertedProp(margin, right, 10px !important, null);
       }
     }
 
     .FilterCount {
-      padding-left: $aleph-grid-size;
+      @include rtlSupportInvertedProp(padding, left, $aleph-grid-size, null);
       font-weight: normal;
     }
 
     & > .ClearButton {
       position: absolute;
       top: $aleph-grid-size/2;
-      right: $aleph-grid-size/2;
+      @include rtl(right, $aleph-grid-size/2, null);
+      @include rtl(left, null, $aleph-grid-size/2);
 
       &a:hover {
         // Element is on a background (set by .clickable), so invert its own background.
@@ -55,7 +58,8 @@
 
     .bp3-tag {
       position: absolute;
-      right: $aleph-grid-size;
+      @include rtl(right, $aleph-grid-size, null);
+      @include rtl(left, null, $aleph-grid-size);
       padding-top: 0;
       padding-bottom: 0;
       font-weight: bold;

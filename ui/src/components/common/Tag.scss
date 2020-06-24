@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
-
+@import "src/app/mixins.scss";
 
 .tag-icon{
-  margin-right: $aleph-grid-size * 0.5;
+  @include rtlSupportInvertedProp(margin, right, $aleph-grid-size * 0.5, null);
 }

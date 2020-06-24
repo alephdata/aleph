@@ -1,11 +1,12 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .SortableTH {
   div {
     display: flex;
 
     .caret {
-      margin-left: auto;
+      @include rtlSupportInvertedProp(margin, left, auto, null);
       transition: opacity 0.1s;
 
       &.hidden {

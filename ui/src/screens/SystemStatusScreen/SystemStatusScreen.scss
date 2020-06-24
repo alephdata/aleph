@@ -1,4 +1,5 @@
 @import "~src/app/tables";
+@import "src/app/mixins.scss";
 
 .StatusTable {
   @extend .data-table;
@@ -8,10 +9,10 @@
   }
 
   td.text {
-    padding-left: 0;
+    @include rtlSupportInvertedProp(padding, left, 0, null)
   }
 
   td.narrow {
-    padding-right: 0;
+    @include rtlSupportInvertedProp(padding, right, 0, null)
   }
 }

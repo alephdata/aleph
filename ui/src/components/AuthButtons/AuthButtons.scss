@@ -1,9 +1,10 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .AuthButtons {
   display: inline-flex;
   @media screen and (max-width: $aleph-screen-md-max-width) {
-    margin-left: 0;
+    @include rtlSupportInvertedProp(margin, left, 0, none);
   }
 
   .menu-item-width {
