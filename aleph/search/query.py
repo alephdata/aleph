@@ -3,7 +3,9 @@ from pprint import pprint, pformat  # noqa
 from followthemoney.types import registry
 
 from aleph.core import es
-from aleph.index.util import NUMERIC_TYPES, authz_query, field_filter_query
+from aleph.index.util import (
+    NUMERIC_TYPES, authz_query, field_filter_query, DATE_FORMAT
+)
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.index.entities import get_field_type
@@ -128,6 +130,17 @@ class Query(object):
                 facet_aggregations[agg_name] = {
                     'cardinality': {
                         'field': facet_name
+                    }
+                }
+
+            interval = self.parser.get_facet_interval(facet_name)
+            if interval is not None:
+                agg_name = '%s.intervals' % facet_name
+                facet_aggregations[agg_name] = {
+                    'date_histogram': {
+                        'field': facet_name,
+                        'calendar_interval': interval,
+                        'format': DATE_FORMAT
                     }
                 }
 

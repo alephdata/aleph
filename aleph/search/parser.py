@@ -161,6 +161,14 @@ class SearchQueryParser(QueryParser):
             return False
         return self.getbool('facet_values:%s' % name, True)
 
+    def get_facet_interval(self, name):
+        """Interval to facet on when faceting on date properties
+
+        See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-datehistogram-aggregation.html#calendar_intervals   # noqa
+        for available options for possible values
+        """
+        return self.get('facet_interval:%s' % name)
+
     def to_dict(self):
         parser = super(SearchQueryParser, self).to_dict()
         parser['facet_filters'] = list(self.facet_filters)

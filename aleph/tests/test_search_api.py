@@ -1,4 +1,4 @@
-from pprint import pprint  # noqa
+from pprint import pprint, pformat  # noqa
 
 from aleph.tests.util import TestCase
 
@@ -22,8 +22,8 @@ class SearchApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         res = self.client.get(self.url+'&q=banana', headers=headers)
         assert res.status_code == 200, res
-        assert res.json['total'] == 1, res.json
-        assert len(res.json['results']) == 1, res.json
+        assert res.json['total'] == 3, res.json
+        assert len(res.json['results']) == 3, res.json
         assert b'Banana' in res.data, res.json
 
     def test_facet_attribute(self):
@@ -70,3 +70,29 @@ class SearchApiTestCase(TestCase):
                               headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
+
+    def test_date_filters(self):
+        _, headers = self.login(is_admin=True)
+        res = self.client.get(self.url+'&q=banana&filter:gte:properties.birthDate=1970-08-08',  # noqa
+                              headers=headers)
+        assert res.status_code == 200, res
+        assert res.json['total'] == 1, res.json
+
+        res = self.client.get(self.url+'&filter:gte:properties.birthDate=1970-05-08'  # noqa
+                              '&filter:lt:properties.birthDate=1971-01-01',
+                              headers=headers)
+        assert res.status_code == 200, res
+        assert res.json['total'] == 2, res.json
+
+    def test_facet_interval(self):
+        _, headers = self.login(is_admin=True)
+        res = self.client.get(self.url + '&q=banana&facet=properties.birthDate'
+                              '&facet_interval:properties.birthDate=month'
+                              '&facet_size:properties.birthDate=0',
+                              headers=headers)
+        assert res.status_code == 200, res
+        assert res.json['total'] == 3, res.json
+        facets = res.json['facets']['properties.birthDate']['intervals']
+        assert facets[0]['label'].startswith('1970'), facets
+        assert facets[0]['count'] == 1, facets
+        assert len(facets) == 3, facets

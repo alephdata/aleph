@@ -12,6 +12,7 @@ class Facet(object):
         self.parser = parser
         self.data = self.extract(aggregations, name, 'values')
         self.cardinality = self.extract(aggregations, name, 'cardinality')
+        self.intervals = self.extract(aggregations, name, 'intervals')
 
     def extract(self, aggregations, name, sub):
         if aggregations is None:
@@ -61,6 +62,22 @@ class Facet(object):
             data['values'] = sorted(results,
                                     key=lambda k: k['count'],
                                     reverse=True)
+
+        if self.parser.get_facet_interval(self.name):
+            results = []
+            for bucket in self.intervals.get('buckets', []):
+                key = str(bucket.get('key_as_string'))
+                count = bucket.pop('doc_count', 0)
+                if count > 0:
+                    results.append({
+                        'id': key,
+                        'label': key,
+                        'count': count,
+                        'active': key in active
+                    })
+            data['intervals'] = sorted(results,
+                                       key=lambda k: k['count'],
+                                       reverse=True)
         return data
 
 
