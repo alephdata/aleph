@@ -73,7 +73,7 @@ class EntityActionBar extends Component {
         <span className="align-middle">
           <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
         </span>
-        <Count count={selection.length} />
+        <Count count={selection.length || null} />
       </Button>
     );
 

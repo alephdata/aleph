@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Count, Property, Schema, SectionLoading, TextLoading,
+  Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 import {
@@ -118,7 +118,7 @@ class EntityViews extends React.Component {
                 { !entity.schema.isA('Email') && (
                   <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 )}
-                <Count count={children.total} />
+                <ResultCount result={children} />
               </TextLoading>
               )}
             panel={
@@ -150,7 +150,7 @@ class EntityViews extends React.Component {
               <TextLoading loading={tags.isPending}>
                 <Icon icon="assessment" className="left-icon" />
                 <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
-                <Count count={tags.total} />
+                <ResultCount result={tags} />
               </TextLoading>
             )}
             panel={<EntityTagsMode entity={entity} />}
@@ -163,7 +163,7 @@ class EntityViews extends React.Component {
               <TextLoading loading={similar.isPending}>
                 <Icon icon="similar" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
-                <Count count={similar.total} />
+                <ResultCount result={similar} />
               </TextLoading>
             )}
             panel={<EntitySimilarMode entity={entity} />}

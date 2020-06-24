@@ -10,7 +10,7 @@ import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
-  Breadcrumbs, DualPane, SignInCallout, ResultCount,
+  Breadcrumbs, DualPane, SignInCallout, ResultText,
 } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import Screen from 'src/components/Screen/Screen';
@@ -73,7 +73,7 @@ export class CollectionIndexScreen extends Component {
           />
         </Breadcrumbs.Text>
         <Breadcrumbs.Text active>
-          <ResultCount result={result} />
+          <ResultText result={result} />
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
