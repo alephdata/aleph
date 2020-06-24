@@ -10,7 +10,7 @@ import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
+  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
 } from 'src/components/common';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import SearchFacets from 'src/components/Facet/SearchFacets';
@@ -164,7 +164,7 @@ export class SearchScreen extends React.Component {
           <FormattedMessage id="search.screen.breadcrumb" defaultMessage="Search" />
         </Breadcrumbs.Text>
         <Breadcrumbs.Text active>
-          <ResultCount result={result} />
+          <ResultText result={result} />
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );

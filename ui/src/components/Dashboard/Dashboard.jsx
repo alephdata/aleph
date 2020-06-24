@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count, Skeleton, AppItem } from 'src/components/common';
+import { Count, ResultCount, Skeleton, AppItem } from 'src/components/common';
 import c from 'classnames';
 
 import Query from 'src/app/Query';
@@ -104,7 +104,7 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="feed"
               text={intl.formatMessage(messages.alerts)}
-              label={<Count count={alerts.total} />}
+              label={<ResultCount result={alerts} />}
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
             />
@@ -117,14 +117,14 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="briefcase"
               text={intl.formatMessage(messages.cases)}
-              label={<Count count={casesCountResult.total} />}
+              label={<ResultCount result={casesCountResult} />}
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
             />
             <MenuItem
               icon="graph"
               text={intl.formatMessage(messages.diagrams)}
-              label={<Count count={diagramsCountResult.total} />}
+              label={<ResultCount result={diagramsCountResult} />}
               onClick={() => this.navigate('/diagrams')}
               active={current === '/diagrams'}
             />

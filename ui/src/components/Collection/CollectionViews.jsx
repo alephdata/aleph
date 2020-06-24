@@ -5,7 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import { Count } from 'src/components/common';
+import { Count, ResultCount } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
@@ -102,7 +102,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
-                <Count count={diagrams.total} />
+                <ResultCount result={diagrams} />
               </>
             }
             panel={<CollectionDiagramsIndexMode collection={collection} />}
@@ -115,7 +115,7 @@ class CollectionViews extends React.Component {
             <>
               <Icon className="left-icon" icon="comparison" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
-              <Count count={xref.total} />
+              <ResultCount result={xref} />
             </>}
           panel={<CollectionXrefMode collection={collection} />}
         />
