@@ -75,6 +75,7 @@ services:
     volumes:
     - archive-data:/data
     - "./aleph:/aleph/aleph"
+    - "./site:/aleph/site"
     - "./contrib:/aleph/contrib"
     - "./mappings:/aleph/mappings"
     - "/:/host"
@@ -103,6 +104,7 @@ services:
     volumes:
     - archive-data:/data
     - "./aleph:/aleph/aleph"
+    - "./site:/aleph/site"
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'

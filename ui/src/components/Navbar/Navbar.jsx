@@ -6,13 +6,15 @@ import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-
-import AuthButtons from 'src/components/AuthButtons/AuthButtons';
-import { selectSession } from 'src/selectors';
-import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
 import c from 'classnames';
 
+import AuthButtons from 'src/components/AuthButtons/AuthButtons';
+import { selectSession, selectPages } from 'src/selectors';
+import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
+import getPageLink from 'src/util/getPageLink';
+
 import './Navbar.scss';
+
 
 export class Navbar extends React.Component {
   constructor(props) {
@@ -45,7 +47,7 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, searchScopes, navbarRef, query, isHomepage,
+      metadata, pages, searchScopes, navbarRef, query, isHomepage,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
@@ -54,6 +56,8 @@ export class Navbar extends React.Component {
       onSearch: this.onDefaultSearch,
     };
     const scopes = searchScopes ? [defaultScope, ...searchScopes] : [defaultScope];
+
+    const menuPages = pages.filter((page) => page.menu);
 
     return (
       <div ref={navbarRef}>
@@ -80,6 +84,13 @@ export class Navbar extends React.Component {
                 <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
               </Button>
             </Link>
+            {menuPages.map(page => (
+              <Link to={getPageLink(page)} key={page.name}>
+                <Button icon={page.icon} className="Navbar_collections-button bp3-minimal">
+                  {page.short}
+                </Button>
+              </Link>
+            ))}
             {!isHomepage && (
               <div className="Navbar__mobile-search-toggle">
                 {!mobileSearchOpen && (
@@ -101,7 +112,8 @@ export class Navbar extends React.Component {
   }
 }
 const mapStateToProps = (state) => ({
-  session: selectSession(state)
+  session: selectSession(state),
+  pages: selectPages(state)
 });
 
 export default compose(

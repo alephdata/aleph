@@ -2,11 +2,10 @@
 
 $top-nav-height: 50px;
 $breadcrumb-height: 44px;
-$footer-height: 30px;
 
 .DiagramEditor {
   .VisGraph {
-    height: calc(100vh - #{$top-nav-height + $breadcrumb-height + $footer-height});
+    height: calc(100vh - #{$top-nav-height + $breadcrumb-height});
     background: white;
     overflow: hidden;
   }
