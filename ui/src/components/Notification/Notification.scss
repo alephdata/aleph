@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 @import "src/app/mixins.scss";
 
-$notification-items-padding: $aleph-grid-size/6;
+$notification-items-padding: $aleph-grid-size/3;
 
 .Notification {
   padding: $aleph-grid-size;
@@ -12,31 +12,22 @@ $notification-items-padding: $aleph-grid-size/6;
 
   .notification-action {
     display: flex;
+    & > * {
+      padding: 0 $notification-items-padding;
+    }
+    .bp3-icon {
+      @include rtlSupportInvertedProp(margin, right, $notification-items-padding, null);
+    }
     .param {
       font-weight: bold;
-            
-      .bp3-icon, .bp3-icon svg {
-        @include rtlSupportInvertedProp(margin, right, 1px, null);
-        @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
-      }
-      .Role {
-        span {
-          @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
-        }
-      }
-    }
-    .token {
-      @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
     }
   }
 
   .timestamp {
     color: $aleph-greyed-text;
-    // font-size: $pt-font-size-small;
   }
 
   .EntityLabel {
     vertical-align: inherit;
   }
-
 }
