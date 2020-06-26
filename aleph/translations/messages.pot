@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-24 17:58+0200\n"
+"POT-Creation-Date: 2020-06-26 17:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,12 +169,16 @@ msgstr ""
 msgid "{{actor}} published {{collection}}"
 msgstr ""
 
-#: aleph/model/mapping.py:22
+#: aleph/model/mapping.py:23
 msgid "success"
 msgstr ""
 
-#: aleph/model/mapping.py:23
+#: aleph/model/mapping.py:24
 msgid "failed"
+msgstr ""
+
+#: aleph/model/mapping.py:25
+msgid "pending"
 msgstr ""
 
 #: aleph/search/__init__.py:48
@@ -307,6 +311,10 @@ msgstr ""
 #: aleph/views/sessions_api.py:93 aleph/views/sessions_api.py:96
 #: aleph/views/sessions_api.py:101
 msgid "Authentication has failed."
+msgstr ""
+
+#: aleph/views/sessions_api.py:103
+msgid "Your account is blocked."
 msgstr ""
 
 #: aleph/views/util.py:75

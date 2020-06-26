@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-24T15:58:23.269Z\n"
+"POT-Creation-Date: 2020-06-26T15:56:05.307Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -173,6 +173,13 @@ msgstr "Neues Objekt hinzufügen"
 msgid "Add a new relationship"
 msgstr "Neue Beziehung hinzufügen"
 
+#. [diagram.add_entities.title]
+#. defaultMessage is:
+#. Add entities to a diagram
+#: i18n/messages.json
+msgid "Add entities to a diagram"
+msgstr ""
+
 #. [mapping.propAssign.literalPlaceholder]
 #. defaultMessage is:
 #. Add fixed value text
@@ -187,20 +194,10 @@ msgstr "Fixen Wert hinzufügen"
 msgid "Add new entity type"
 msgstr ""
 
-#. [diagram.add_entities.select_placeholder]
-#. defaultMessage is:
-#. Add to an existing diagram
-#: i18n/messages.json
-msgid "Add to an existing diagram"
-msgstr ""
-
 #. [entity.viewer.add_to_diagram]
 #. defaultMessage is:
 #. Add to diagram
-#. [diagram.add_entities.title]
-#. defaultMessage is:
-#. Add to diagram
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Add to diagram"
 msgstr ""
 
@@ -341,9 +338,6 @@ msgstr ""
 msgid "Bulk import"
 msgstr ""
 
-#. [collection.publish.cancel]
-#. defaultMessage is:
-#. Cancel
 #. [collection.reindex.cancel]
 #. defaultMessage is:
 #. Cancel
@@ -386,7 +380,7 @@ msgstr ""
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -533,26 +527,12 @@ msgstr "Bestätigen"
 msgid "Confirm password"
 msgstr "Passwort bestätigen"
 
-#. [collection.edit.info.contact]
-#. defaultMessage is:
-#. Contact
-#: i18n/messages.json
-msgid "Contact"
-msgstr "Kontakt"
-
 #. [collection.status.message]
 #. defaultMessage is:
 #. Continue to frolic about while data is being processed.
 #: i18n/messages.json
 msgid "Continue to frolic about while data is being processed."
 msgstr "Tollen sie herum während die Daten verarbeitet werden."
-
-#. [collection.info.publish]
-#. defaultMessage is:
-#. Convert to evidence
-#: i18n/messages.json
-msgid "Convert to evidence"
-msgstr ""
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -602,7 +582,7 @@ msgstr "Anlegen"
 msgid "Create a network diagram"
 msgstr "Netzwerkdiagramm anlegen"
 
-#. [diagram.add.create_new]
+#. [diagram.add_entities.create_new]
 #. defaultMessage is:
 #. Create a new diagram
 #: i18n/messages.json
@@ -694,13 +674,6 @@ msgstr "Quelldaten-URL"
 #: i18n/messages.json
 msgid "Dataset"
 msgstr "Datensatz"
-
-#. [collection.publish.succeed]
-#. defaultMessage is:
-#. Dataset is published
-#: i18n/messages.json
-msgid "Dataset is published"
-msgstr "Datensatz wurde veröffentlicht"
 
 #. [collection.edit.title]
 #. defaultMessage is:
@@ -1320,7 +1293,10 @@ msgstr "Verwalten sie sie ihre Themen-Abos"
 #. [collection.creator]
 #. defaultMessage is:
 #. Manager
-#: i18n/messages.json
+#. [collection.edit.info.creator]
+#. defaultMessage is:
+#. Manager
+#: i18n/messages.json i18n/messages.json
 msgid "Manager"
 msgstr "Verwalter"
 
@@ -1438,6 +1414,13 @@ msgstr "Es wurden keine Datensätze gefunden"
 #: i18n/messages.json
 msgid "No datasets were found matching this search"
 msgstr "Es wurden keine Datensätze gefunden, die zu dieser Suche passen"
+
+#. [diagram.add_entities.select_empty]
+#. defaultMessage is:
+#. No existing diagrams
+#: i18n/messages.json
+msgid "No existing diagrams"
+msgstr ""
 
 #. [entity.document.manager.empty]
 #. defaultMessage is:
@@ -1690,13 +1673,6 @@ msgstr "Eigenschaften"
 #: i18n/messages.json
 msgid "Proximity searches"
 msgstr "Nachbarschaftssuchen"
-
-#. [collection.publish.confirm]
-#. defaultMessage is:
-#. Publish
-#: i18n/messages.json
-msgid "Publish"
-msgstr "Veröffentlichen"
 
 #. [collection.publisher]
 #. defaultMessage is:
@@ -2037,6 +2013,13 @@ msgstr ""
 #. Select a table document to generate structured entities
 #: i18n/messages.json
 msgid "Select a table document to generate structured entities"
+msgstr ""
+
+#. [diagram.add_entities.select_placeholder]
+#. defaultMessage is:
+#. Select an existing diagram
+#: i18n/messages.json
+msgid "Select an existing diagram"
 msgstr ""
 
 #. [mapping.entityAssign.placeholder]
@@ -2829,24 +2812,6 @@ msgstr ""
 msgid "You are not tracking any searches"
 msgstr "Sie haben keine Themen-Abos"
 
-#. [collection.publish.alert.text]
-#. defaultMessage is:
-#. You are publishing a dataset. Published datasets are understood as raw
-#. evidence and can be made public for every visitor of the system to see.
-#. Please make sure you do not publish material identifying your sources,
-#. directly or through metadata.
-#: i18n/messages.json
-msgid ""
-"You are publishing a dataset. Published datasets are understood as raw "
-"evidence and can be made public for every visitor of the system to see. "
-"Please make sure you do not publish material identifying your sources, "
-"directly or through metadata."
-msgstr ""
-"Sie veröffentlichen einen Datensatz. Veröffentlichte Datensätze werden als "
-"Beweismaterial verstanden und können der Öffentlichkeit zugänglich gemacht "
-"werden. Bitte stellen sie sicher, dass sie keine Daten veröffentlichen die "
-"ihre Quellen identifizieren."
-
 #. [navbar.alert_remove]
 #. defaultMessage is:
 #. You are receiving alerts about this search.
@@ -2874,6 +2839,16 @@ msgstr "Sie haben noch keine persönlichen Datensätze."
 #: i18n/messages.json
 msgid "You have no unseen notifications"
 msgstr "Sie haben keine ungesehenen Benachrichtigungen"
+
+#. [diagram.add_entities.selected_count]
+#. defaultMessage is:
+#. You have selected {count} {count_simple, plural, one {entity} other
+#. {entities}} to add to a diagram.
+#: i18n/messages.json
+msgid ""
+"You have selected {count} {count_simple, plural, one {entity} other "
+"{entities}} to add to a diagram."
+msgstr ""
 
 #. [mapping.entityAssign.helpText]
 #. defaultMessage is:

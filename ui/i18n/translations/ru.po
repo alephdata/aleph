@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-24T15:58:23.269Z\n"
+"POT-Creation-Date: 2020-06-26T15:56:05.307Z\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -174,6 +174,13 @@ msgstr "Добавить новый объект"
 msgid "Add a new relationship"
 msgstr "Добавить новую связь"
 
+#. [diagram.add_entities.title]
+#. defaultMessage is:
+#. Add entities to a diagram
+#: i18n/messages.json
+msgid "Add entities to a diagram"
+msgstr ""
+
 #. [mapping.propAssign.literalPlaceholder]
 #. defaultMessage is:
 #. Add fixed value text
@@ -188,22 +195,12 @@ msgstr "Задать значение"
 msgid "Add new entity type"
 msgstr "Добавить новый тип сущности"
 
-#. [diagram.add_entities.select_placeholder]
-#. defaultMessage is:
-#. Add to an existing diagram
-#: i18n/messages.json
-msgid "Add to an existing diagram"
-msgstr ""
-
 #. [entity.viewer.add_to_diagram]
 #. defaultMessage is:
 #. Add to diagram
-#. [diagram.add_entities.title]
-#. defaultMessage is:
-#. Add to diagram
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Add to diagram"
-msgstr ""
+msgstr "Добавить к диаграмме"
 
 #. [mapping.infoLink]
 #. defaultMessage is:
@@ -325,6 +322,8 @@ msgid ""
 "Below is a list of your most recent searches. You have the option to delete "
 "specific searches so they do not show up in our records."
 msgstr ""
+"Ниже приведён список ваших недавних поисковых запросов. Вы можете удалить "
+"отдельные запросы из истории поиска."
 
 #. [entity.viewer.bulk_import]
 #. defaultMessage is:
@@ -334,11 +333,8 @@ msgstr ""
 #. Bulk import
 #: i18n/messages.json i18n/messages.json
 msgid "Bulk import"
-msgstr ""
+msgstr "Массовый импорт"
 
-#. [collection.publish.cancel]
-#. defaultMessage is:
-#. Cancel
 #. [collection.reindex.cancel]
 #. defaultMessage is:
 #. Cancel
@@ -381,7 +377,7 @@ msgstr ""
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -527,26 +523,12 @@ msgstr "Подтвердить"
 msgid "Confirm password"
 msgstr "Подтвердить пароль"
 
-#. [collection.edit.info.contact]
-#. defaultMessage is:
-#. Contact
-#: i18n/messages.json
-msgid "Contact"
-msgstr "Контакт"
-
 #. [collection.status.message]
 #. defaultMessage is:
 #. Continue to frolic about while data is being processed.
 #: i18n/messages.json
 msgid "Continue to frolic about while data is being processed."
 msgstr "Данные загружаются."
-
-#. [collection.info.publish]
-#. defaultMessage is:
-#. Convert to evidence
-#: i18n/messages.json
-msgid "Convert to evidence"
-msgstr "Преобразовать в доказательство"
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -596,12 +578,12 @@ msgstr "Создать"
 msgid "Create a network diagram"
 msgstr "Создать диаграмму"
 
-#. [diagram.add.create_new]
+#. [diagram.add_entities.create_new]
 #. defaultMessage is:
 #. Create a new diagram
 #: i18n/messages.json
 msgid "Create a new diagram"
-msgstr ""
+msgstr "Создать диаграмму"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
@@ -688,13 +670,6 @@ msgstr "Ссылка на исходные данные"
 #: i18n/messages.json
 msgid "Dataset"
 msgstr "Набор данных"
-
-#. [collection.publish.succeed]
-#. defaultMessage is:
-#. Dataset is published
-#: i18n/messages.json
-msgid "Dataset is published"
-msgstr "Данные опубликованы"
 
 #. [collection.edit.title]
 #. defaultMessage is:
@@ -824,14 +799,14 @@ msgstr "У вас нет аккакунта? Зарегистрируйтесь!
 #. Don't see the dataset you're looking for? {link}
 #: i18n/messages.json
 msgid "Don't see the dataset you're looking for? {link}"
-msgstr ""
+msgstr "Не видите искомый набор данных? {link}"
 
 #. [entity.manager.bulk_import.description.3]
 #. defaultMessage is:
 #. Don't see the table you're looking for? {link}
 #: i18n/messages.json
 msgid "Don't see the table you're looking for? {link}"
-msgstr ""
+msgstr "Не видите искомую таблицу? {link}"
 
 #. [document.download]
 #. defaultMessage is:
@@ -1128,7 +1103,7 @@ msgstr "Импортировать диаграмму"
 #. Import a new table
 #: i18n/messages.json
 msgid "Import a new table"
-msgstr ""
+msgstr "Импортировать новую таблицу"
 
 #. [diagrams.index.import]
 #. defaultMessage is:
@@ -1253,7 +1228,7 @@ msgstr "Последнее изменение"
 #. Last updated {date}
 #: i18n/messages.json
 msgid "Last updated {date}"
-msgstr ""
+msgstr "Обновлено {date}"
 
 #. [mapping.status.updated]
 #. defaultMessage is:
@@ -1314,7 +1289,10 @@ msgstr "Оповещения о новых результатах поиска"
 #. [collection.creator]
 #. defaultMessage is:
 #. Manager
-#: i18n/messages.json
+#. [collection.edit.info.creator]
+#. defaultMessage is:
+#. Manager
+#: i18n/messages.json i18n/messages.json
 msgid "Manager"
 msgstr "Автор"
 
@@ -1433,6 +1411,13 @@ msgstr "Ничего нет"
 msgid "No datasets were found matching this search"
 msgstr "Наборы данных, соответствующие поиску, не найдены"
 
+#. [diagram.add_entities.select_empty]
+#. defaultMessage is:
+#. No existing diagrams
+#: i18n/messages.json
+msgid "No existing diagrams"
+msgstr ""
+
 #. [entity.document.manager.empty]
 #. defaultMessage is:
 #. No files or directories.
@@ -1454,7 +1439,7 @@ msgstr ""
 #. No matching documents found
 #: i18n/messages.json
 msgid "No matching documents found"
-msgstr ""
+msgstr "Совпадений с другими документами нет"
 
 #. [mapping.entityAssign.noResults]
 #. defaultMessage is:
@@ -1555,6 +1540,8 @@ msgid ""
 "Once selected, you will be prompted to assign columns from that table to "
 "properties of the generated entities."
 msgstr ""
+"Выберите колонки из таблицы и сопоставьте с свойствами сгенерированных "
+"сущностей."
 
 #. [document.upload.notice]
 #. defaultMessage is:
@@ -1601,7 +1588,7 @@ msgstr "Информация"
 #. Page not found
 #: i18n/messages.json
 msgid "Page not found"
-msgstr ""
+msgstr "Страница не найдена"
 
 #. [document.paging]
 #. defaultMessage is:
@@ -1688,13 +1675,6 @@ msgstr "Свойства"
 msgid "Proximity searches"
 msgstr "Поиск с расстоянием"
 
-#. [collection.publish.confirm]
-#. defaultMessage is:
-#. Publish
-#: i18n/messages.json
-msgid "Publish"
-msgstr "Опубликовать"
-
 #. [collection.publisher]
 #. defaultMessage is:
 #. Publisher
@@ -1717,7 +1697,7 @@ msgstr "Ссылка на издателя"
 #. RESTRICTED
 #: i18n/messages.json
 msgid "RESTRICTED"
-msgstr ""
+msgstr "ОГРАНИЧЕНО"
 
 #. [xref.recompute]
 #. defaultMessage is:
@@ -1939,7 +1919,7 @@ msgstr "Поиск наборов данных..."
 #. Search documents
 #: i18n/messages.json
 msgid "Search documents"
-msgstr ""
+msgstr "Поиск по документам"
 
 #. [queryLogs.query.search]
 #. defaultMessage is:
@@ -1987,7 +1967,7 @@ msgstr "Искать пользователей"
 #. Search {schema}
 #: i18n/messages.json
 msgid "Search {schema}"
-msgstr ""
+msgstr "Искать {schema}"
 
 #. [home.statistics.schemata]
 #. defaultMessage is:
@@ -2022,20 +2002,27 @@ msgstr "Выберите маппинг-запрос для импорта из 
 #. Select a table below from which to import new {schema} entities.
 #: i18n/messages.json
 msgid "Select a table below from which to import new {schema} entities."
-msgstr ""
+msgstr "Ниже выберите таблицу для импорта новых сущностей {schema}"
 
 #. [entity.manager.bulk_import.placeholder]
 #. defaultMessage is:
 #. Select a table document
 #: i18n/messages.json
 msgid "Select a table document"
-msgstr ""
+msgstr "Выберите документ, содержащий таблицу"
 
 #. [entity.document.manager.cannot_map]
 #. defaultMessage is:
 #. Select a table document to generate structured entities
 #: i18n/messages.json
 msgid "Select a table document to generate structured entities"
+msgstr "Выберите документ с таблицей для создания сущностей"
+
+#. [diagram.add_entities.select_placeholder]
+#. defaultMessage is:
+#. Select an existing diagram
+#: i18n/messages.json
+msgid "Select an existing diagram"
 msgstr ""
 
 #. [mapping.entityAssign.placeholder]
@@ -2288,6 +2275,8 @@ msgid ""
 "Successfully added {count} {count, plural, one {entity} other {entities}} to"
 " {diagram}"
 msgstr ""
+"{count} {count, plural, one {Cущность} other {Сущности}} добавлены к "
+"{диаграмме}"
 
 #. [entity.delete.success]
 #. defaultMessage is:
@@ -2422,7 +2411,7 @@ msgstr "Результаты перекрёстного сравнения от�
 #. There are no network diagrams.
 #: i18n/messages.json
 msgid "There are no network diagrams."
-msgstr ""
+msgstr "Диаграммы отсутствуют."
 
 #. [collection.status.no_active]
 #. defaultMessage is:
@@ -2486,6 +2475,8 @@ msgstr ""
 #: i18n/messages.json
 msgid "This collection is restricted and viewers should be warned."
 msgstr ""
+"Доступ к этому набору данных ограничен, о чём необходимо предупреждать новых"
+" пользователей."
 
 #. [entity.references.no_relationships]
 #. defaultMessage is:
@@ -2627,7 +2618,7 @@ msgstr "Дата обновления"
 #. Update frequency
 #: i18n/messages.json
 msgid "Update frequency"
-msgstr ""
+msgstr "Частота обновления"
 
 #. [collection.status.title]
 #. defaultMessage is:
@@ -2655,7 +2646,7 @@ msgstr "Обновлено {date}"
 #. Updates
 #: i18n/messages.json
 msgid "Updates"
-msgstr ""
+msgstr "Обновления"
 
 #. [mapping.save.question]
 #. defaultMessage is:
@@ -2745,6 +2736,8 @@ msgid ""
 "Use of this dataset is restricted. Read the description and contact "
 "{creator} before using this material."
 msgstr ""
+"Использование этого набора данных ограничено. Прочтите описание и свяжитесь "
+"с {creator}, прежде чем использовать эти материалы."
 
 #. [profileinfo.api_desc]
 #. defaultMessage is:
@@ -2833,25 +2826,6 @@ msgstr ""
 msgid "You are not tracking any searches"
 msgstr "Вы не подписаны на оповещения"
 
-#. [collection.publish.alert.text]
-#. defaultMessage is:
-#. You are publishing a dataset. Published datasets are understood as raw
-#. evidence and can be made public for every visitor of the system to see.
-#. Please make sure you do not publish material identifying your sources,
-#. directly or through metadata.
-#: i18n/messages.json
-msgid ""
-"You are publishing a dataset. Published datasets are understood as raw "
-"evidence and can be made public for every visitor of the system to see. "
-"Please make sure you do not publish material identifying your sources, "
-"directly or through metadata."
-msgstr ""
-"Вы собираетесь опубликовать набор данных. Наборы данных следует "
-"рассматривать как вещественные доказательства, доступ к которым при "
-"необходимости можно предоставить любому посетителю. Убедитесь, что вы не "
-"публикуете материалов, которые прямо или косвенно, например, через "
-"метаданные, указывают на ваш источник."
-
 #. [navbar.alert_remove]
 #. defaultMessage is:
 #. You are receiving alerts about this search.
@@ -2879,6 +2853,16 @@ msgstr "У вас пока нет персональных наборов дан
 #: i18n/messages.json
 msgid "You have no unseen notifications"
 msgstr "У вас нет непросмотренных уведомлений"
+
+#. [diagram.add_entities.selected_count]
+#. defaultMessage is:
+#. You have selected {count} {count_simple, plural, one {entity} other
+#. {entities}} to add to a diagram.
+#: i18n/messages.json
+msgid ""
+"You have selected {count} {count_simple, plural, one {entity} other "
+"{entities}} to add to a diagram."
+msgstr ""
 
 #. [mapping.entityAssign.helpText]
 #. defaultMessage is:
@@ -3048,14 +3032,14 @@ msgstr "не:"
 #. or
 #: i18n/messages.json
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. [restricted.explain.creator]
 #. defaultMessage is:
 #. the dataset owner
 #: i18n/messages.json
 msgid "the dataset owner"
-msgstr ""
+msgstr "владелец набора данных"
 
 #. [entity.properties.missing]
 #. defaultMessage is:
