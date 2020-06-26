@@ -18,9 +18,11 @@ class Mapping(db.Model, SoftDeleteModel):
 
     FAILED = 'failed'
     SUCCESS = 'success'
+    PENDING = 'pending'
     STATUS = {
         SUCCESS: lazy_gettext('success'),
-        FAILED: lazy_gettext('failed')
+        FAILED: lazy_gettext('failed'),
+        PENDING: lazy_gettext('pending'),
     }
 
     id = db.Column(db.Integer, primary_key=True)
