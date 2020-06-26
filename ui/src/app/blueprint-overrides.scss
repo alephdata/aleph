@@ -106,6 +106,10 @@ table {
     > .bp3-popover-wrapper:not(:first-child) .bp3-button {
       @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
     }
+    > .bp3-popover-wrapper:not(:last-child) .bp3-button{
+      @include rtl(border-radius, 3px 0 0 3px, 0 3px 3px 0);
+      @include rtlSupportInvertedProp(margin, right, -1px, null);
+    }
   }
 }
 
@@ -180,5 +184,15 @@ table {
   }
   .bp3-dialog-footer-actions .bp3-button {
     @include rtlSupportInvertedProp(margin, left, 10px, 0px);
+  }
+}
+.bp3-tag::before, .bp3-tag > * {
+  @include rtlSupportInvertedProp(margin, right, 4px, 0);
+}
+.bp3-button {
+  .bp3-icon{
+    &.bp3-icon-arrow-right, &.bp3-icon-arrow-left {
+      @include rtl(transform, rotate(0deg), rotate(180deg));
+    }
   }
 }

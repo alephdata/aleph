@@ -43,7 +43,8 @@
 
       .bp3-icon {
         color: white !important;
-        margin: 0 $aleph-icon-padding 0 0 !important;
+        margin: 0;
+        @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
       }
     }
 
