@@ -64,7 +64,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def is_alertable(self):
         if self.email is None:
             return False
-        if self.is_muted is True:
+        if self.is_muted or self.is_blocked:
             return False
         # TODO: ignore people that have not logged in for a certain time?
         return True
@@ -135,6 +135,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         q = cls.all()
         q = q.filter_by(api_key=api_key)
         q = q.filter(cls.type == cls.USER)
+        q = q.filter(cls.is_blocked == False)  # noqa
         return q.first()
 
     @classmethod
