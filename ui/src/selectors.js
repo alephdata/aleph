@@ -86,6 +86,10 @@ export function selectTester(state) {
   return role.is_tester || false;
 }
 
+export function selectAdmin(state) {
+  return selectSession(state).isAdmin || false;
+}
+
 export function selectAlerts(state) {
   return selectObject(state, state, 'alerts');
 }

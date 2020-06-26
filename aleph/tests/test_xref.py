@@ -14,9 +14,9 @@ class XrefTestCase(TestCase):
     def setUp(self):
         super(XrefTestCase, self).setUp()
         self.user = self.create_user()
-        self.coll_a = self.create_collection(creator=self.user, casefile=False)
-        self.coll_b = self.create_collection(creator=self.user, casefile=False)
-        self.coll_c = self.create_collection(creator=self.user, casefile=False)
+        self.coll_a = self.create_collection(creator=self.user)
+        self.coll_b = self.create_collection(creator=self.user)
+        self.coll_c = self.create_collection(creator=self.user)
         db.session.commit()
         self.stage = get_stage(self.coll_a, OP_XREF, job_id='unit_test')
         self.authz = Authz.from_role(self.user)
