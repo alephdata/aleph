@@ -120,9 +120,10 @@ class MappingAPITest(TestCase):
         assert res.json['last_run_status'] == 'success', res.json
         assert 'last_run_err_msg' not in res.json, res.json
 
-        url = "/api/2/entities?filter:collection_id=%s&filter:schema=Person" % self.col.id  # noqa
+        origin = 'mapping%%3A%s' % mapping_id
+        url = "/api/2/entities?filter:collection_id=%s&filter:schema=Person&filter:origin=%s" % (self.col.id, origin)  # noqa
         res = self.client.get(url, headers=self.headers)
-        assert res.status_code == 200, res
+        assert res.status_code == 200, res.json
         assert res.json['total'] == 14, res.json
         person = res.json['results'][0]
         assert person['properties'].get('proof')[0].get('id') == self.ent.id, person['properties']  # noqa
