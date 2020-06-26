@@ -12,7 +12,6 @@ import { TableEditor } from '@alephdata/react-ftm';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
 import { Count } from 'src/components/common';
 import AddToDiagramDialog from 'src/dialogs/AddToDiagramDialog/AddToDiagramDialog';
-import DiagramCreateDialog from 'src/dialogs/DiagramCreateDialog/DiagramCreateDialog';
 import DocumentSelectDialog from 'src/dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import { queryEntities } from 'src/actions';
@@ -37,7 +36,6 @@ export class EntityListManager extends Component {
       selection: [],
       docSelectIsOpen: false,
       addToDiagramIsOpen: false,
-      diagramCreateIsOpen: false,
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -47,7 +45,6 @@ export class EntityListManager extends Component {
     this.onDocSelected = this.onDocSelected.bind(this);
     this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
     this.toggleAddToDiagramDialog = this.toggleAddToDiagramDialog.bind(this);
-    this.toggleDiagramCreateDialog = this.toggleDiagramCreateDialog.bind(this);
   }
 
   componentDidMount() {
@@ -136,12 +133,6 @@ export class EntityListManager extends Component {
     }));
   }
 
-  toggleDiagramCreateDialog() {
-    this.setState(({ diagramCreateIsOpen }) => ({
-      diagramCreateIsOpen: !diagramCreateIsOpen,
-    }));
-  }
-
   render() {
     const { collection, entityManager, query, intl, result, schema, sort } = this.props;
     const { selection } = this.state;
@@ -198,16 +189,8 @@ export class EntityListManager extends Component {
           collection={collection}
           entities={selection}
           isOpen={this.state.addToDiagramIsOpen}
-          openCreateDialog={this.toggleDiagramCreateDialog}
           toggleDialog={this.toggleAddToDiagramDialog}
         />
-        <DiagramCreateDialog
-          schema={schema}
-          diagram={{collection, entities: selection}}
-          isOpen={this.state.diagramCreateIsOpen}
-          toggleDialog={this.toggleDiagramCreateDialog}
-        />
-
       </div>
     );
   }

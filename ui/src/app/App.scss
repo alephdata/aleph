@@ -130,6 +130,11 @@ a {
   }
 }
 
+.error-text {
+  font-style: italic;
+  color: $red1;
+}
+
 .clickable {
   cursor: pointer;
 }
