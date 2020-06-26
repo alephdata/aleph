@@ -7,7 +7,7 @@ import { Role, Country, Language } from 'src/components/common';
 import FormDialog from 'src/dialogs/common/FormDialog';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import { updateCollection } from 'src/actions';
-import { selectMetadata } from 'src/selectors';
+import { selectMetadata, selectAdmin } from 'src/selectors';
 
 
 const messages = defineMessages({
@@ -143,9 +143,10 @@ export class CollectionEditDialog extends Component {
   }
 
   render() {
-    const { intl, metadata } = this.props;
+    const { intl, metadata, isAdmin } = this.props;
     const { collection, blocking } = this.state;
     const { categories, frequencies } = metadata;
+    const isCasefile = collection.category === 'casefile';
     return (
       <FormDialog
         processing={blocking}
@@ -171,7 +172,7 @@ export class CollectionEditDialog extends Component {
               />
             </div>
           </div>
-          { !collection.casefile && (
+          { isAdmin && (
             <div className="bp3-form-group">
               <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category" />
@@ -204,7 +205,7 @@ export class CollectionEditDialog extends Component {
               />
             </div>
           </div>
-          { !collection.casefile && (
+          { !isCasefile && (
             <>
               <div className="bp3-form-group">
                 <label className="bp3-label">
@@ -282,17 +283,19 @@ export class CollectionEditDialog extends Component {
               </div>
             </>
           )}
-          <div className="bp3-form-group">
-            <label className="bp3-label">
-              <FormattedMessage id="collection.edit.info.contact" defaultMessage="Contact" />
-            </label>
-            <div className="bp3-form-content">
-              <Role.Select
-                role={collection.creator}
-                onSelect={this.onSelectCreator}
-              />
+          { isAdmin && (
+            <div className="bp3-form-group">
+              <label className="bp3-label">
+                <FormattedMessage id="collection.edit.info.creator" defaultMessage="Manager" />
+              </label>
+              <div className="bp3-form-content">
+                <Role.Select
+                  role={collection.creator}
+                  onSelect={this.onSelectCreator}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div className="bp3-form-group">
             <label className="bp3-label">
               <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries" />
@@ -325,7 +328,7 @@ export class CollectionEditDialog extends Component {
               />
             </div>
           </div>
-          { !collection.casefile && (
+          { !isCasefile && (
             <>
               <div className="bp3-form-group">
                 <label className="bp3-label">
@@ -352,7 +355,6 @@ export class CollectionEditDialog extends Component {
               </div>
             </>
           )}
-
         </div>
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
@@ -371,11 +373,10 @@ export class CollectionEditDialog extends Component {
 
 const mapStateToProps = state => ({
   metadata: selectMetadata(state),
+  isAdmin: selectAdmin(state),
 });
 
-const mapDispatchToProps = { updateCollection };
-
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { updateCollection }),
   injectIntl,
 )(CollectionEditDialog);

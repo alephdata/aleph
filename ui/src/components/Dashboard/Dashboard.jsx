@@ -178,8 +178,9 @@ class Dashboard extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const groupsQuery = queryGroups(location);
+  const caseFilter = {'filter:category': 'casefile',};
   const casesCountQuery = Query
-    .fromLocation('collections', location, {'filter:kind': 'casefile',}, 'collections')
+    .fromLocation('collections', location, caseFilter, 'collections')
     .limit(0);
 
   const diagramsCountQuery = Query
