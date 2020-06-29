@@ -24,7 +24,7 @@ export class HistoryScreen extends React.Component {
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
-                id="dashboard.subheading"
+                id="history.screen.subheading"
                 defaultMessage="Below is a list of your most recent searches. You have the option to delete specific searches so they do not show up in our records."
               />
             </p>

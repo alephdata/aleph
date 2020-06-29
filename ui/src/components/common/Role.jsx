@@ -30,7 +30,9 @@ class RoleLabel extends PureComponent {
     return (
       <span className="Role">
         { icon && <Icon icon={iconName} /> }
-        { long ? role.label : role.name }
+        <span>
+          { long ? role.label : role.name }
+        </span>
       </span>
     );
   }

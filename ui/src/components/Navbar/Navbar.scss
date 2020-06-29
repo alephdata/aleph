@@ -1,3 +1,4 @@
+@import "src/app/mixins.scss";
 @import "src/app/variables.scss";
 
 .Navbar {
@@ -38,7 +39,7 @@
     .icon {
       display: none;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
-        float: right;
+        @include rtl(float, right, left);
         margin-top: 1em;
       }
     }
@@ -51,7 +52,7 @@
   }
 
   &__left-group {
-    padding-right: $aleph-grid-size;
+    @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
 
     @media screen and (max-width: $aleph-screen-sm-max-width) {
       &.hide {

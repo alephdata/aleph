@@ -149,13 +149,27 @@ class TestCase(unittest.TestCase):
             foreign_id='test_private',
             label="Private Collection",
             category='grey',
-            casefile=False,
             creator=self.admin
         )
         self._banana = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': ['Banana'],
+                'birthDate': '1970-08-21'
+            }
+        }, self.private_coll)
+        self._banana2 = self.create_entity({
+            'schema': 'Person',
+            'properties': {
+                'name': ['Banana'],
+                'birthDate': '1970-03-21'
+            }
+        }, self.private_coll)
+        self._banana3 = self.create_entity({
+            'schema': 'Person',
+            'properties': {
+                'name': ['Banana'],
+                'birthDate': '1970-05-21'
             }
         }, self.private_coll)
         user = Role.by_foreign_id(Role.SYSTEM_USER)
@@ -164,7 +178,6 @@ class TestCase(unittest.TestCase):
             foreign_id='test_public',
             label="Public Collection",
             category='news',
-            casefile=False,
             creator=self.admin
         )
         self._kwazulu = self.create_entity({

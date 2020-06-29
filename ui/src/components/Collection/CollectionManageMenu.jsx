@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
-import CollectionPublishAlert from 'src/components/Collection/CollectionPublishAlert';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
-import { selectSession } from 'src/selectors';
 import CollectionReingestAlert from './CollectionReingestAlert';
 import CollectionReindexAlert from './CollectionReindexAlert';
 
@@ -19,21 +16,17 @@ class CollectionManageMenu extends Component {
       editIsOpen: false,
       accessIsOpen: false,
       deleteIsOpen: false,
-      publishIsOpen: false,
       reindexIsOpen: false,
       reingestIsOpen: false,
     };
     this.toggleEdit = this.toggleEdit.bind(this);
     this.toggleAccess = this.toggleAccess.bind(this);
     this.toggleDelete = this.toggleDelete.bind(this);
-    this.togglePublish = this.togglePublish.bind(this);
     this.toggleReindex = this.toggleReindex.bind(this);
     this.toggleReingest = this.toggleReingest.bind(this);
   }
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
-
-  togglePublish = () => this.setState(({ publishIsOpen }) => ({ publishIsOpen: !publishIsOpen }));
 
   toggleAccess = () => this.setState(({ accessIsOpen }) => ({ accessIsOpen: !accessIsOpen }));
 
@@ -44,8 +37,6 @@ class CollectionManageMenu extends Component {
   toggleReingest = () => this.setState(({ reingestIsOpen }) => ({ reingestIsOpen: !reingestIsOpen }));
 
   renderMenu() {
-    const { collection, session } = this.props;
-
     return (
       <Menu>
         <MenuItem icon="automatic-updates" onClick={this.toggleReingest} text={
@@ -54,11 +45,6 @@ class CollectionManageMenu extends Component {
         <MenuItem icon="search-template" onClick={this.toggleReindex} text={
           <FormattedMessage id="collection.info.reindex" defaultMessage="Re-index all content" />
         } />
-        { collection.casefile && session.isAdmin && (
-          <MenuItem icon="document-share" onClick={this.togglePublish} text={
-            <FormattedMessage id="collection.info.publish" defaultMessage="Convert to evidence" />
-          } />
-        )}
         <MenuItem icon="trash" onClick={this.toggleDelete} text={
           <FormattedMessage id="collection.info.delete" defaultMessage="Delete dataset" />
         } />
@@ -94,11 +80,6 @@ class CollectionManageMenu extends Component {
           isOpen={this.state.accessIsOpen}
           toggleDialog={this.toggleAccess}
         />
-        <CollectionPublishAlert
-          collection={collection}
-          isOpen={this.state.publishIsOpen}
-          togglePublish={this.togglePublish}
-        />
         <CollectionDeleteDialog
           isOpen={this.state.deleteIsOpen}
           collection={collection}
@@ -119,8 +100,5 @@ class CollectionManageMenu extends Component {
   }
 }
 
-const mapStateToProps = state => ({ session: selectSession(state) });
-
-CollectionManageMenu = connect(mapStateToProps)(CollectionManageMenu);
 CollectionManageMenu = injectIntl(CollectionManageMenu);
 export default CollectionManageMenu;

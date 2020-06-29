@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-10 16:22+0200\n"
+"POT-Creation-Date: 2020-06-26 17:56+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Pinar Dag <pinar.dag@dagmedya.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
@@ -22,15 +22,15 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: aleph/settings.py:25
+#: aleph/settings.py:28
 msgid "Aleph"
 msgstr "Sesli Sözlük"
 
-#: aleph/settings.py:36
+#: aleph/settings.py:39
 msgid "TeliaSonera"
 msgstr "Telia Sonera"
 
-#: aleph/settings.py:36
+#: aleph/settings.py:39
 msgid "Vladimir Putin"
 msgstr "Vladimir Putin"
 
@@ -114,6 +114,30 @@ msgstr ""
 msgid "Other material"
 msgstr "Diğer materyaller"
 
+#: aleph/model/collection.py:51
+msgid "not known"
+msgstr ""
+
+#: aleph/model/collection.py:52
+msgid "not updated"
+msgstr ""
+
+#: aleph/model/collection.py:53
+msgid "daily"
+msgstr ""
+
+#: aleph/model/collection.py:54
+msgid "weekly"
+msgstr ""
+
+#: aleph/model/collection.py:55
+msgid "monthly"
+msgstr ""
+
+#: aleph/model/collection.py:56
+msgid "annual"
+msgstr ""
+
 #: aleph/model/entity.py:77
 msgid "Invalid entity ID"
 msgstr ""
@@ -146,12 +170,20 @@ msgstr ""
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr ""
 
-#: aleph/model/mapping.py:22
-msgid "success"
+#: aleph/model/event.py:114
+msgid "{{actor}} published {{collection}}"
 msgstr ""
 
 #: aleph/model/mapping.py:23
+msgid "success"
+msgstr ""
+
+#: aleph/model/mapping.py:24
 msgid "failed"
+msgstr ""
+
+#: aleph/model/mapping.py:25
+msgid "pending"
 msgstr ""
 
 #: aleph/search/__init__.py:48
@@ -225,41 +257,41 @@ msgstr ""
 msgid "Invalid category."
 msgstr ""
 
-#: aleph/validation/formats.py:53
+#: aleph/validation/formats.py:52
+msgid "Invalid frequency."
+msgstr ""
+
+#: aleph/validation/formats.py:60
 msgid "Invalid URL."
 msgstr ""
 
-#: aleph/validation/formats.py:61
+#: aleph/validation/formats.py:68
 msgid "Invalid language code."
 msgstr ""
 
-#: aleph/validation/formats.py:69
+#: aleph/validation/formats.py:76
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr ""
 
-#: aleph/validation/formats.py:77
+#: aleph/validation/formats.py:84
 #, python-format
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:184
-msgid "/api/1/ is deprecated, please use /api/2/."
-msgstr "/api/1/ kullanımdan kaldırıldı, lütfen bunu kullanın /api/2/."
-
-#: aleph/views/base_api.py:207
+#: aleph/views/base_api.py:202
 msgid "You are not authorized to do this."
 msgstr "Bunu yapmaya yetkili değilsiniz."
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:211
 msgid "This path does not exist."
 msgstr "Bu yol mevcut değil."
 
-#: aleph/views/base_api.py:225
+#: aleph/views/base_api.py:220
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:238
 msgid "Access token is invalid."
 msgstr ""
 
@@ -287,14 +319,19 @@ msgstr ""
 msgid "Invalid user or password."
 msgstr ""
 
-#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
+#: aleph/views/sessions_api.py:93 aleph/views/sessions_api.py:96
+#: aleph/views/sessions_api.py:101
 msgid "Authentication has failed."
 msgstr ""
 
-#: aleph/views/util.py:77
+#: aleph/views/sessions_api.py:103
+msgid "Your account is blocked."
+msgstr ""
+
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr ""
 
-#: aleph/views/util.py:147
+#: aleph/views/util.py:145
 msgid "[HTML removed: could not be sanitized]"
 msgstr ""

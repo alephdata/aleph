@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .CollectionInfo {
   max-width: 350px;
@@ -15,7 +16,7 @@
     }
 
     .key {
-      margin-right: $aleph-grid-size*2;
+      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*2, null);
       flex-basis: 35%;
       min-width: 90px;
       color: $gray1 !important;
@@ -23,7 +24,7 @@
 
     .value {
       flex-basis: 65%;
-      text-align: right;
+      @include rtl(text-align, right, left);
 
       & > * {
         display: block;

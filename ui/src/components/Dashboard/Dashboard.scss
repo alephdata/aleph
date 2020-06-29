@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 $dashboard-padding: $aleph-grid-size * 2.5;
 
@@ -14,10 +15,10 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         flex-direction: column;
         flex-grow: 0;
         width: 20%;
-        border-right: 1px solid $aleph-border-color;
-        margin-right: $dashboard-padding;
-        padding-right: $dashboard-padding;
-        min-width: 220px;
+        @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
+        @include rtlSupportInvertedProp(margin, right, $dashboard-padding, null);
+        @include rtlSupportInvertedProp(padding, right, $dashboard-padding, null);
+        min-width: 235px;
 
         @media screen and (max-width: $aleph-screen-sm-max-width) {
           display: none;
@@ -32,11 +33,11 @@ $dashboard-padding: $aleph-grid-size * 2.5;
           padding: 6px 7px;
 
           .bp3-icon {
-            margin-right: 12px;
+            @include rtlSupportInvertedProp(margin, right, 12px, 0);
           }
 
           .Count {
-            float: right;
+            @include rtl(float, right, left);
           }
 
           &.bp3-active .Count {
@@ -47,7 +48,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
 
         .bp3-menu-header {
           border: none;
-          margin-left: 0;
+          @include rtlSupportInvertedProp(margin, left, 0, null);
           margin-bottom: $aleph-grid-size;
 
           .bp3-heading {
@@ -59,12 +60,6 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         .bp3-menu-divider {
           margin: $aleph-grid-size * 1.5 0;
           border-color:$aleph-border-color;
-        }
-
-        .bp3-heading {
-          // text-transform: uppercase;
-          // color: $gray1;
-          // font-size: 12px;
         }
     }
 
@@ -89,12 +84,11 @@ $dashboard-padding: $aleph-grid-size * 2.5;
       max-width: 700px;
     }
 
-    .dashboard-body {
+    &__body {
         display: flex;
         flex-direction: column;
         flex-grow: 6;
         overflow-x: auto;
-        padding-left: ($aleph-grid-size / 2);
-        padding-right: ($aleph-grid-size / 2);
+        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size/2, $aleph-grid-size/2);
     }
 }

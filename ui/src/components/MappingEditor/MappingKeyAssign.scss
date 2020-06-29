@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .MappingKeyAssign {
   &__item {
@@ -10,7 +11,8 @@
     &__close {
       position: absolute;
       top: $aleph-grid-size/2;
-      right: $aleph-grid-size/2;
+      @include rtl(right, $aleph-grid-size/2, null);
+      @include rtl(left, null, $aleph-grid-size/2);
 
       svg {
         fill: white !important;
@@ -31,10 +33,10 @@
 
       &__value {
         width: 75%;
-        padding-left: 15px;
+        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
 
         .bp3-button {
-          padding-left: $aleph-grid-size*1.5;
+          @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
         }
       }
 
@@ -55,7 +57,7 @@
       &__toggle {
         font-weight: bold;
         margin-top: 0 !important;
-        margin-left: -$aleph-grid-size/2;
+        @include rtlSupportInvertedProp(margin, left, -$aleph-grid-size/2, null);
 
         .bp3-icon {
           color: white !important;

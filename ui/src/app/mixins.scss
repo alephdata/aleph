@@ -7,3 +7,26 @@
   -webkit-hyphens: auto;
   hyphens: auto;
 }
+
+@mixin rtl($property, $ltr-value, $rtl-value) {
+  [dir=ltr] & {
+    #{$property}: $ltr-value;
+  }
+
+  [dir=rtl] & {
+    #{$property}: $rtl-value;
+  }
+}
+
+@function inverseRightLeftName($direction) {
+  @if $direction==left {
+    @return right
+  } @else {
+    @return left
+  }
+}
+
+@mixin rtlSupportInvertedProp($property, $direction, $ltr-value, $rtl-value) {
+  @include rtl(#{$property}-#{$direction}, $ltr-value, $rtl-value);
+  @include rtl(#{$property}-#{inverseRightLeftName($direction)}, $rtl-value, $ltr-value);
+}

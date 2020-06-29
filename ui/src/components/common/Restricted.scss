@@ -1,7 +1,8 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .Restricted {
-    margin-left: $aleph-grid-size;
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
 
     &__message {
         max-width: 25em;

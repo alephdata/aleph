@@ -55,6 +55,14 @@ export function selectMetadata(state) {
   return metadata;
 }
 
+export function selectPages(state) {
+  return selectMetadata(state).pages;
+}
+
+export function selectPage(state, name) {
+  return selectPages(state).find((page) => page.name === name);
+}
+
 export function selectModel(state) {
   return selectMetadata(state).model;
 }
@@ -76,6 +84,10 @@ export function selectTester(state) {
   const role = selectCurrentRole(state);
   /* eslint-disable camelcase */
   return role.is_tester || false;
+}
+
+export function selectAdmin(state) {
+  return selectSession(state).isAdmin || false;
 }
 
 export function selectAlerts(state) {

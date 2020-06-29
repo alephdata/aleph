@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import { Button } from '@blueprintjs/core';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { Button, Divider } from '@blueprintjs/core';
 import { Waypoint } from 'react-waypoint';
 import _ from 'lodash';
-import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 import { TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
-import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import { Count } from 'src/components/common';
+import AddToDiagramDialog from 'src/dialogs/AddToDiagramDialog/AddToDiagramDialog';
+import DocumentSelectDialog from 'src/dialogs/DocumentSelectDialog/DocumentSelectDialog';
+import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import { queryEntities } from 'src/actions';
 import { queryCollectionEntities } from 'src/queries';
 import { selectEntitiesResult } from 'src/selectors';
@@ -18,18 +21,30 @@ import getEntityLink from 'src/util/getEntityLink';
 
 import './EntityListManager.scss';
 
+
+const messages = defineMessages({
+  search_placeholder: {
+    id: 'entity.manager.search_placeholder',
+    defaultMessage: 'Search {schema}',
+  },
+});
+
 export class EntityListManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selection: [],
-      deleteIsOpen: false,
+      docSelectIsOpen: false,
+      addToDiagramIsOpen: false,
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
-    this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
     this.onSortColumn = this.onSortColumn.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
+    this.onDocSelected = this.onDocSelected.bind(this);
+    this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
+    this.toggleAddToDiagramDialog = this.toggleAddToDiagramDialog.bind(this);
   }
 
   componentDidMount() {
@@ -70,14 +85,6 @@ export class EntityListManager extends Component {
     });
   }
 
-  toggleDeleteSelection() {
-    const { deleteIsOpen } = this.state;
-    if (deleteIsOpen) {
-      this.setState({ selection: [] });
-    }
-    this.setState(({ deleteIsOpen: !deleteIsOpen }));
-  }
-
   onEntityClick = (entity) => {
     if (entity) {
       const { history } = this.props;
@@ -101,23 +108,57 @@ export class EntityListManager extends Component {
     ));
   }
 
+  onSearchSubmit(queryText) {
+    const { query } = this.props;
+    const newQuery = query.set('q', queryText);
+    this.updateQuery(newQuery);
+  }
+
+  onDocSelected(table) {
+    if (!table?.id) return;
+    const { history, schema } = this.props;
+    const pathname = getEntityLink(table);
+    history.push({ pathname, hash: queryString.stringify({mode: 'mapping', schema: schema.name}) });
+  }
+
+  toggleDocumentSelectDialog() {
+    this.setState(({ docSelectIsOpen }) => ({
+      docSelectIsOpen: !docSelectIsOpen,
+    }));
+  }
+
+  toggleAddToDiagramDialog() {
+    this.setState(({ addToDiagramIsOpen }) => ({
+      addToDiagramIsOpen: !addToDiagramIsOpen,
+    }));
+  }
+
   render() {
-    const { collection, schema, entityManager, result, sort } = this.props;
+    const { collection, entityManager, query, intl, result, schema, sort } = this.props;
     const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
 
     return (
       <div className="EntityListManager">
-        { collection.writeable && (
-          <div className="bp3-button-group">
-            <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-              <span className="align-middle">
-                <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
-              </span>
-              <Count count={selection.length} />
+        <EntityActionBar
+          query={query}
+          writeable={collection.writeable}
+          selection={selection}
+          resetSelection={() => this.setState({ selection: []})}
+          onSearchSubmit={this.onSearchSubmit}
+          searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
+        >
+          <Button icon="import" onClick={this.toggleDocumentSelectDialog}>
+            <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
+          </Button>
+          <Divider />
+          {!schema.isEdge && (
+            <Button icon="send-to-graph" onClick={this.toggleAddToDiagramDialog} disabled={selection.length < 1}>
+              <FormattedMessage id="entity.viewer.add_to_diagram" defaultMessage="Add to diagram" />
+              <Count count={selection.length || null} />
             </Button>
-          </div>
-        )}
+          )}
+        </EntityActionBar>
         <div className="EntityListManager__content">
           <TableEditor
             entities={result.results}
@@ -137,10 +178,18 @@ export class EntityListManager extends Component {
             scrollableAncestor={window}
           />
         </div>
-        <EntityDeleteDialog
+        <DocumentSelectDialog
+          schema={schema}
+          collection={collection}
+          isOpen={this.state.docSelectIsOpen}
+          toggleDialog={this.toggleDocumentSelectDialog}
+          onSelect={this.onDocSelected}
+        />
+        <AddToDiagramDialog
+          collection={collection}
           entities={selection}
-          isOpen={this.state.deleteIsOpen}
-          toggleDialog={this.toggleDeleteSelection}
+          isOpen={this.state.addToDiagramIsOpen}
+          toggleDialog={this.toggleAddToDiagramDialog}
         />
       </div>
     );
@@ -149,11 +198,9 @@ export class EntityListManager extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location, collection, schema } = ownProps;
-  let query = queryCollectionEntities(location, collection.id, schema.name);
-  // if (collection.writeable) {
-  //   query = query.set('cache', 'false');
-  // }
+  const query = queryCollectionEntities(location, collection.id, schema.name);
   const sort = query.getSort();
+
   return {
     query,
     sort: !_.isEmpty(sort) ? {

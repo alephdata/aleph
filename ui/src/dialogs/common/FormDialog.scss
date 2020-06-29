@@ -2,7 +2,7 @@
 
 .bp3-dialog {
   position: relative;
-  
+
   .bp3-input.bp3-tag-input {
     border-radius: 3px;
   }
@@ -35,4 +35,10 @@
     transform: translate(-50%, -50%);
     z-index: 3;
   }
+
+  &__spacer {
+    text-align: center;
+    margin: $aleph-grid-size 0;
+  }
+
 }

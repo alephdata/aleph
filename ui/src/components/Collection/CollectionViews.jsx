@@ -5,7 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import { Count } from 'src/components/common';
+import { Count, ResultCount } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
@@ -39,7 +39,6 @@ class CollectionViews extends React.Component {
 
     history.push({
       pathname: location.pathname,
-      search: location.search,
       hash: queryString.stringify(parsedHash),
     });
   }
@@ -50,6 +49,7 @@ class CollectionViews extends React.Component {
       showDiagramsTab, showEntitiesTab, showDocumentsTab,
       documentTabCount, entitiesTabCount
     } = this.props;
+
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -76,7 +76,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="document" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                {documentTabCount > 0 && <Count count={documentTabCount} />}
+                <Count count={documentTabCount} />
               </>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
@@ -89,7 +89,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon icon="list-columns" className="left-icon" />
                 <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
-                {entitiesTabCount > 0 && <Count count={entitiesTabCount} />}
+                <Count count={entitiesTabCount} />
               </>}
             panel={<CollectionEntitiesMode collection={collection} />}
           />
@@ -102,7 +102,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
-                <Count count={diagrams.total} />
+                <ResultCount result={diagrams} />
               </>
             }
             panel={<CollectionDiagramsIndexMode collection={collection} />}
@@ -115,7 +115,7 @@ class CollectionViews extends React.Component {
             <>
               <Icon className="left-icon" icon="comparison" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
-              <Count count={xref.total} />
+              <ResultCount result={xref} />
             </>}
           panel={<CollectionXrefMode collection={collection} />}
         />
@@ -130,15 +130,21 @@ const mapStateToProps = (state, ownProps) => {
   const model = selectModel(state);
   const diagramsQuery = queryCollectionDiagrams(location, collection.id);
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
-  const schemata = collection?.statistics?.schema?.values || [];
-  let documentTabCount = 0, entitiesTabCount = 0;
-  for (const key in schemata) {
-    const schema = model.getSchema(key);
-    if (schema.isDocument()) {
-      documentTabCount += schemata[key];
-    }
-    if (!(schema.isDocument() || schema.isA('Page'))) {
-      entitiesTabCount += schemata[key];
+  const schemata = collection?.statistics?.schema?.values;
+  let documentTabCount, entitiesTabCount;
+
+  if (schemata) {
+    documentTabCount = 0;
+    entitiesTabCount = 0;
+
+    for (const key in schemata) {
+      const schema = model.getSchema(key);
+      if (schema.isDocument()) {
+        documentTabCount += schemata[key];
+      }
+      if (!(schema.isDocument() || schema.isA('Page'))) {
+        entitiesTabCount += schemata[key];
+      }
     }
   }
 

@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count, Skeleton } from 'src/components/common';
+import { ResultCount, Skeleton, AppItem } from 'src/components/common';
 import c from 'classnames';
 
-import { queryRoles } from 'src/actions';
+import Query from 'src/app/Query';
+import { queryCollections, queryDiagrams, queryRoles} from 'src/actions';
 import { queryGroups } from 'src/queries';
-import { selectAlerts, selectRolesResult } from 'src/selectors';
+import { selectAlerts, selectCollectionsResult, selectDiagramsResult, selectRolesResult } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -59,9 +60,15 @@ class Dashboard extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { groupsQuery, groupsResult } = this.props;
+    const { groupsQuery, groupsResult, casesCountQuery, casesCountResult, diagramsCountQuery, diagramsCountResult } = this.props;
     if (groupsResult.shouldLoad) {
       this.props.queryRoles({query: groupsQuery});
+    }
+    if (casesCountResult.shouldLoad) {
+      this.props.queryCollections({query: casesCountQuery});
+    }
+    if (diagramsCountResult.shouldLoad) {
+      this.props.queryDiagrams({query: diagramsCountQuery});
     }
   }
 
@@ -70,7 +77,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, intl, location, groupsResult } = this.props;
+    const { alerts, casesCountResult, diagramsCountResult, intl, location, groupsResult } = this.props;
     const current = location.pathname;
 
     return (
@@ -96,12 +103,8 @@ class Dashboard extends React.Component {
             />
             <MenuItem
               icon="feed"
-              text={(
-                <>
-                  <span>{intl.formatMessage(messages.alerts)}</span>
-                  <Count count={alerts.total} />
-                </>
-              )}
+              text={intl.formatMessage(messages.alerts)}
+              label={<ResultCount result={alerts} />}
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
             />
@@ -114,16 +117,18 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="briefcase"
               text={intl.formatMessage(messages.cases)}
+              label={<ResultCount result={casesCountResult} />}
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
             />
             <MenuItem
               icon="graph"
               text={intl.formatMessage(messages.diagrams)}
+              label={<ResultCount result={diagramsCountResult} />}
               onClick={() => this.navigate('/diagrams')}
               active={current === '/diagrams'}
             />
-            {(groupsResult.isPending || groupsResult.total > 0) && (
+            {(groupsResult.total === undefined || groupsResult.total > 0) && (
               <>
                 <MenuDivider />
                 <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
@@ -131,7 +136,7 @@ class Dashboard extends React.Component {
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>
                 </li>
-                {!groupsResult.isPending && groupsResult.results.map(group => (
+                {groupsResult.results !== undefined && groupsResult.results.map(group => (
                   <MenuItem
                     key={group.id}
                     icon="shield"
@@ -140,7 +145,7 @@ class Dashboard extends React.Component {
                     active={current === `/groups/${group.id}`}
                   />
                 ))}
-                {groupsResult.isPending && (
+                {groupsResult.total === undefined && (
                   <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
                 )}
               </>
@@ -158,9 +163,11 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/settings')}
               active={current === '/settings'}
             />
+            <MenuDivider />
+            <AppItem />
           </Menu>
         </div>
-        <div className="dashboard-body">
+        <div className="Dashboard__body">
           {this.props.children}
         </div>
       </div>
@@ -169,15 +176,29 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const groupsQuery = queryGroups(ownProps.location);
+  const { location } = ownProps;
+  const groupsQuery = queryGroups(location);
+  const caseFilter = {'filter:category': 'casefile'};
+  const casesCountQuery = Query
+    .fromLocation('collections', location, caseFilter, 'collections')
+    .limit(0);
+
+  const diagramsCountQuery = Query
+    .fromLocation('diagrams', location, {}, 'diagrams')
+    .limit(0);
+
   return {
     groupsQuery,
     groupsResult: selectRolesResult(state, groupsQuery),
+    casesCountQuery,
+    casesCountResult: selectCollectionsResult(state, casesCountQuery),
+    diagramsCountQuery,
+    diagramsCountResult: selectDiagramsResult(state, diagramsCountQuery),
     alerts: selectAlerts(state),
   };
 };
 
 Dashboard = injectIntl(Dashboard);
-Dashboard = connect(mapStateToProps, { queryRoles })(Dashboard);
+Dashboard = connect(mapStateToProps, { queryRoles, queryCollections, queryDiagrams })(Dashboard);
 Dashboard = withRouter(Dashboard);
 export default Dashboard;

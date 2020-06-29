@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from 'react';
-import { Alignment, Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
+import { Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
@@ -15,13 +14,6 @@ import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 
 import './Collection.scss';
-
-const messages = defineMessages({
-  label: {
-    id: 'collection.select',
-    defaultMessage: 'Select a dataset',
-  },
-});
 
 class CollectionLabel extends PureComponent {
   render() {
@@ -152,7 +144,7 @@ class CollectionSelect extends Component {
     <MenuItem
       key={collection.id}
       onClick={handleClick}
-      text={collection.label}
+      text={<CollectionLabel collection={collection} icon label />}
     />
   )
 
@@ -164,8 +156,8 @@ class CollectionSelect extends Component {
   }
 
   render() {
-    const { collection, intl, result } = this.props;
-    const label = collection ? collection.label : intl.formatMessage(messages.label);
+    const { buttonProps, collection, result } = this.props;
+    const label = collection ? <CollectionLabel collection={collection} icon={false} /> : buttonProps.label;
 
     return (
       <Select
@@ -186,9 +178,8 @@ class CollectionSelect extends Component {
         <Button
           fill
           text={label}
-          icon="user"
-          rightIcon="search"
-          alignText={Alignment.LEFT}
+          icon="briefcase"
+          alignText="left"
         />
       </Select>
     );
@@ -225,7 +216,7 @@ class Collection {
   static Select = connect(
     selectMapStateToProps,
     { queryCollections },
-  )(injectIntl(CollectionSelect));
+  )(CollectionSelect);
 }
 
 export default Collection;

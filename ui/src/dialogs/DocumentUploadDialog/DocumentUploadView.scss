@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .DocumentUploadView {
   &__content {
@@ -10,8 +11,8 @@
       color: $blue2 !important;
     }
     &__content {
-      padding-left: $aleph-grid-size;
-      border-left: 1px solid $aleph-border-color;
+      @include rtlSupportInvertedProp(padding, left, $aleph-grid-size, null);
+      @include rtlSupportInvertedProp(border, left, 1px solid $aleph-border-color, null);
     }
   }
 }

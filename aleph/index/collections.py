@@ -56,7 +56,6 @@ def configure_collections():
             "publisher_url": KEYWORD_COPY,
             "data_url": KEYWORD_COPY,
             "info_url": KEYWORD_COPY,
-            "kind": KEYWORD,
             "creator_id": KEYWORD,
             "team_id": KEYWORD,
             "text": {

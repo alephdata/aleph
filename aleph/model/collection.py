@@ -3,7 +3,7 @@ from datetime import datetime
 from normality import stringify
 from flask_babel import lazy_gettext
 from sqlalchemy.orm import aliased
-from banal import as_bool, ensure_list, ensure_dict
+from banal import ensure_list, ensure_dict
 from sqlalchemy.dialects.postgresql import ARRAY
 from followthemoney.namespace import Namespace
 from followthemoney.types import registry
@@ -44,7 +44,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'casefile': lazy_gettext('Personal datasets'),
         'other': lazy_gettext('Other material')
     }
-    DEFAULT_CATEGORY = 'other'
+    CASEFILE = 'casefile'
 
     # How often a collection is updated:
     FREQUENCIES = {
@@ -68,11 +68,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     publisher_url = db.Column(db.Unicode, nullable=True)
     info_url = db.Column(db.Unicode, nullable=True)
     data_url = db.Column(db.Unicode, nullable=True)
-
-    # A casefile is a type of collection which is used to manage the state
-    # of an investigation. Unlike normal collections, cases do not serve
-    # as source material, but as a mechanism of analysis.
-    casefile = db.Column(db.Boolean, default=False)
 
     # This collection is marked as super-secret:
     restricted = db.Column(db.Boolean, default=False)
@@ -114,21 +109,14 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         # material.
         if authz.is_admin:
             self.category = data.get('category', self.category)
-            self.casefile = as_bool(data.get('casefile'),
-                                    default=self.casefile)
             creator = ensure_dict(data.get('creator'))
             creator_id = data.get('creator_id', creator.get('id'))
             creator = Role.by_id(creator_id)
             if creator is not None:
                 self.creator = creator
 
-        if self.casefile:
-            self.category = 'casefile'
-
         self.touch()
         db.session.flush()
-        if self.creator is not None:
-            Permission.grant(self, self.creator, True, True)
 
     @property
     def team_id(self):
@@ -153,6 +141,13 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return q.count() < 1
 
     @property
+    def casefile(self):
+        # A casefile is a type of collection which is used to manage the state
+        # of an investigation. Unlike normal collections, cases do not serve
+        # as source material, but as a mechanism of analysis.
+        return self.category == self.CASEFILE
+
+    @property
     def ns(self):
         if not hasattr(self, '_ns'):
             self._ns = Namespace(self.foreign_id)
@@ -160,13 +155,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     def to_dict(self):
         data = self.to_dict_dates()
-        data['category'] = self.DEFAULT_CATEGORY
+        data['category'] = self.CASEFILE
         if self.category in self.CATEGORIES:
             data['category'] = self.category
         data['frequency'] = self.DEFAULT_FREQUENCY
         if self.frequency in self.FREQUENCIES:
             data['frequency'] = self.frequency
-        data['kind'] = 'casefile' if self.casefile else 'source'
         data.update({
             'id': stringify(self.id),
             'collection_id': stringify(self.id),
@@ -212,7 +206,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def all_casefiles(cls):
         q = super(Collection, cls).all()
-        q = q.filter(Collection.casefile == True)  # noqa
+        q = q.filter(Collection.category == cls.CASEFILE)
         return q
 
     @classmethod
@@ -228,11 +222,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection = cls()
             collection.created_at = created_at
             collection.foreign_id = foreign_id
-            collection.category = cls.DEFAULT_CATEGORY
-            collection.casefile = True
-            collection.creator_id = authz.id
+            collection.category = cls.CASEFILE
+            collection.creator = authz.role
         collection.update(data, authz)
         collection.deleted_at = None
+        if collection.creator is not None:
+            Permission.grant(collection, collection.creator, True, True)
         return collection
 
     def __repr__(self):

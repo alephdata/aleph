@@ -1,27 +1,29 @@
+@import "src/app/mixins.scss";
 
 /* Taming Blueprint icons and tags/badges when displayed inside tabs */
 .bp3-tabs .bp3-tab .bp3-tag {
   padding: 0px 10px;
-  margin-left: 5px;
+  @include rtlSupportInvertedProp(margin, left, 5px, 0);
   line-height: 1em;
   // font-size: 0.6em;
 }
 
 .bp3-tabs .bp3-large .bp3-tab .bp3-icon-standard {
   min-width: 20px;
-  margin-right: 10px;
+  @include rtlSupportInvertedProp(margin, right, 10px, 0);
 }
 
 .bp3-tabs .bp3-large .bp3-tab .bp3-tag {
   padding: 0 10px;
-  margin-left: 10px;
+  @include rtlSupportInvertedProp(margin, left, 10px, 0);
 }
 
-/* Buttons and Inputs in control groups have margin values they shouldn't
-* for some reason, even though my inspector says '0em'. */
-.bp3-control-group * {
-  margin-top: 0;
-  margin-left: 0;
+.bp3-tabs {
+  &.bp3-vertical {
+    > .bp3-tab-panel{
+      @include rtlSupportInvertedProp(padding, left, 20px, null);
+    }
+  }
 }
 
 .bp3-tab-list {
@@ -33,5 +35,150 @@
     display: none;
     width: 0;
     background: transparent;
+  }
+}
+
+.bp3-button, .bp3-menu-item {
+  @include rtl(text-align, left, right);
+
+  > * {
+    @include rtlSupportInvertedProp(margin, right, 7px, 0);
+  }
+}
+
+.bp3-button:empty::before, .bp3-button > :last-child {
+  @include rtlSupportInvertedProp(margin, right, 0, null);
+}
+
+.bp3-menu {
+  @include rtl(text-align, left, right);
+}
+
+table {
+  tr td, tr th {
+    @include rtl(text-align, left, right);
+    &.numeric, &.number {
+      @include rtl(text-align, right, left);
+    }
+  }
+}
+
+.bp3-control-group {
+  > :last-child {
+    @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
+  }
+  > :first-child {
+    @include rtl(border-radius, 3px 0 0 3px, 0 3px 3px 0);
+  }
+}
+
+.bp3-input-group {
+  .bp3-input-action{
+    &:last-child{
+      @include rtl(right, 0, initial);
+      @include rtl(left, initial, 0);
+    }
+  }
+
+  .bp3-icon {
+    &:first-child {
+      @include rtl(left, 0, initial);
+      @include rtl(right, initial, 0);
+    }
+  }
+
+  &.bp3-large {
+    .bp3-input:not(:first-child){
+      @include rtlSupportInvertedProp(padding, left, 40px, null);
+    }
+  }
+}
+
+.bp3-button-group {
+  &:not(.bp3-minimal) {
+    > .bp3-button:not(:last-child) {
+      @include rtl(border-radius, 3px 0 0 3px, 0 3px 3px 0);
+      @include rtlSupportInvertedProp(margin, right, -2px, null);
+    }
+    > .bp3-button:not(:first-child) {
+      @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
+    }
+    > .bp3-popover-wrapper:not(:first-child) .bp3-button {
+      @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
+    }
+  }
+}
+
+.bp3-control {
+  &.bp3-checkbox {
+    @include rtlSupportInvertedProp(padding, left, 26px, 0);
+
+    .bp3-control-indicator {
+      @include rtlSupportInvertedProp(margin, right, 10px, -26px);
+    }
+  }
+  input {
+    @include rtl(right, null, 0);
+
+  }
+}
+
+.bp3-navbar-group {
+  &.bp3-align-right {
+    @include rtl(float, right, left);
+  }
+  &.bp3-align-left {
+    @include rtl(float, left, right);
+  } 
+}
+
+.bp3-breadcrumb .bp3-icon {
+  @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, 0);
+}
+
+.bp3-breadcrumbs {
+  > li {
+    &:after {
+      @include rtl(transform, rotate(0deg), rotate(180deg));
+  }}
+}
+
+.bp3-toast {
+  > .bp3-icon {
+    margin: 12px;
+    @include rtlSupportInvertedProp(margin, right, 0, null);
+  }
+  .bp3-button-group{
+    padding: 5px;
+    @include rtlSupportInvertedProp(padding, left, 0, null);
+  }
+}
+
+.bp3-tab-list {
+  > *:not(:last-child) {
+    @include rtlSupportInvertedProp(margin, right, 20px, 0);
+  }
+  .bp3-tab-indicator-wrapper {
+    @include rtlSupportInvertedProp(margin, left, 0, 0);
+  }
+}
+
+.bp3-tag.bp3-large::before, .bp3-tag.bp3-large > *, .bp3-large .bp3-tag::before, .bp3-large .bp3-tag > * {
+  @include rtlSupportInvertedProp(margin, right, 7px, 0);
+}
+.bp3-dialog{
+  .bp3-dialog-header {
+    @include rtlSupportInvertedProp(padding, left, 20px, 5px);
+    .bp3-icon-large, .bp3-icon {
+      @include rtlSupportInvertedProp(margin, right, 10px, 0);
+    }
+    .bp3-dialog-close-button {
+      .bp3-icon {
+        margin: 0 -7px;
+      }
+    } 
+  }
+  .bp3-dialog-footer-actions .bp3-button {
+    @include rtlSupportInvertedProp(margin, left, 10px, 0px);
   }
 }

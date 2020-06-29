@@ -1,8 +1,9 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .XrefTable {
   th.bordered, td.bordered {
-    border-right: 1px solid $aleph-table-border-color;
+    @include rtlSupportInvertedProp(border, right, 1px solid $aleph-table-border-color, null);
   }
 }
 
@@ -29,5 +30,5 @@
 }
 
 .XrefDecisionButtons {
-  margin-left: $aleph-grid-size * -1;
+  @include rtlSupportInvertedProp(margin, left, $aleph-grid-size * -1, null);
 }

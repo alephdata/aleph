@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { withRouter } from 'react-router';
+import queryString from 'query-string';
+
+
 import { csvContextLoader, SectionLoading } from 'src/components/common';
 import { fetchEntityMapping } from 'src/actions';
 import { selectEntityMapping } from 'src/selectors';
@@ -66,7 +70,7 @@ export class EntityMappingMode extends Component {
   }
 
   render() {
-    const { columns, document, existingMapping, rows } = this.props;
+    const { columns, document, existingMapping, prefilledSchemaData, rows } = this.props;
     const { importedMappingData } = this.state;
 
     if (!rows || !columns || existingMapping.isPending) {
@@ -117,7 +121,7 @@ export class EntityMappingMode extends Component {
           document={document}
           csvData={useFirstRowAsHeader ? rows.slice(1) : rows}
           csvHeader={useFirstRowAsHeader ? rows[0] : columns}
-          mappingData={importedMappingData || existingMapping?.query}
+          mappingData={importedMappingData || existingMapping?.query || prefilledSchemaData}
           existingMappingMetadata={existingMapping}
         />
       </div>
@@ -128,14 +132,19 @@ export class EntityMappingMode extends Component {
 const mapDispatchToProps = { fetchEntityMapping };
 
 const mapStateToProps = (state, ownProps) => {
-  const { document } = ownProps;
+  const { document, location } = ownProps;
+
+  const parsedHash = queryString.parse(location.hash);
+  const urlSchema = parsedHash.schema;
 
   return {
     existingMapping: selectEntityMapping(state, document.id),
+    prefilledSchemaData: urlSchema ? {[urlSchema]: {schema: urlSchema}} : null,
   };
 };
 
 export default compose(
+  withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
   csvContextLoader,

@@ -22,9 +22,6 @@ Collection:
       $ref: '#/components/schemas/Role'
     foreign_id:
       type: string
-    kind:
-      type: string
-      enum: ["casefile", "source"]
     label:
       type: string
     links:
@@ -92,8 +89,6 @@ CollectionCreate:
     frequency:
       type: string
       format: frequency
-    casefile:
-      type: boolean
     restricted:
       type: boolean
     xref:

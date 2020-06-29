@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-10 16:22+0200\n"
+"POT-Creation-Date: 2020-06-26 17:56+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -22,15 +22,15 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: aleph/settings.py:25
+#: aleph/settings.py:28
 msgid "Aleph"
 msgstr "Алеф"
 
-#: aleph/settings.py:36
+#: aleph/settings.py:39
 msgid "TeliaSonera"
 msgstr "TeliaSonera"
 
-#: aleph/settings.py:36
+#: aleph/settings.py:39
 msgid "Vladimir Putin"
 msgstr "Владимир Путин"
 
@@ -114,6 +114,30 @@ msgstr "Персональные наборы данных"
 msgid "Other material"
 msgstr "Прочие материалы"
 
+#: aleph/model/collection.py:51
+msgid "not known"
+msgstr "неизвестно"
+
+#: aleph/model/collection.py:52
+msgid "not updated"
+msgstr "не обновляется"
+
+#: aleph/model/collection.py:53
+msgid "daily"
+msgstr "ежедневно"
+
+#: aleph/model/collection.py:54
+msgid "weekly"
+msgstr "еженедельно"
+
+#: aleph/model/collection.py:55
+msgid "monthly"
+msgstr "ежемесячно"
+
+#: aleph/model/collection.py:56
+msgid "annual"
+msgstr "ежегодно"
+
 #: aleph/model/entity.py:77
 msgid "Invalid entity ID"
 msgstr "Неверный ID сущности"
@@ -147,13 +171,21 @@ msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr ""
 "{{actor}} предоставили вам права {{role}} для доступа к {{collection}}"
 
-#: aleph/model/mapping.py:22
+#: aleph/model/event.py:114
+msgid "{{actor}} published {{collection}}"
+msgstr "{{actor}} опубликовали {{collection}}"
+
+#: aleph/model/mapping.py:23
 msgid "success"
 msgstr "успешно"
 
-#: aleph/model/mapping.py:23
+#: aleph/model/mapping.py:24
 msgid "failed"
 msgstr "неудача"
+
+#: aleph/model/mapping.py:25
+msgid "pending"
+msgstr ""
 
 #: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
@@ -227,41 +259,41 @@ msgstr "Неверный ID сущности: %s"
 msgid "Invalid category."
 msgstr "Неверная категория"
 
-#: aleph/validation/formats.py:53
+#: aleph/validation/formats.py:52
+msgid "Invalid frequency."
+msgstr "Некорректная частота"
+
+#: aleph/validation/formats.py:60
 msgid "Invalid URL."
 msgstr "Некорректная ссылка."
 
-#: aleph/validation/formats.py:61
+#: aleph/validation/formats.py:68
 msgid "Invalid language code."
 msgstr "Некорректный языковой код."
 
-#: aleph/validation/formats.py:69
+#: aleph/validation/formats.py:76
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "Некорректное имя схемы: %s"
 
-#: aleph/validation/formats.py:77
+#: aleph/validation/formats.py:84
 #, python-format
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"
 
-#: aleph/views/base_api.py:184
-msgid "/api/1/ is deprecated, please use /api/2/."
-msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
-
-#: aleph/views/base_api.py:207
+#: aleph/views/base_api.py:202
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:211
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:225
+#: aleph/views/base_api.py:220
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:238
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 
@@ -289,14 +321,19 @@ msgstr "Неверный пароль."
 msgid "Invalid user or password."
 msgstr "Неверное имя пользователя или пароль."
 
-#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
+#: aleph/views/sessions_api.py:93 aleph/views/sessions_api.py:96
+#: aleph/views/sessions_api.py:101
 msgid "Authentication has failed."
 msgstr "Ошибка авторизации."
 
-#: aleph/views/util.py:77
+#: aleph/views/sessions_api.py:103
+msgid "Your account is blocked."
+msgstr ""
+
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "Ошибка проверки данных"
 
-#: aleph/views/util.py:147
+#: aleph/views/util.py:145
 msgid "[HTML removed: could not be sanitized]"
 msgstr "[HTML-код удалён как небезопасный]"

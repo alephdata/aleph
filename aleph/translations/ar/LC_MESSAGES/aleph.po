@@ -5,15 +5,16 @@
 # 
 # Translators:
 # Eman Alqaisi <eman@arij.net>, 2020
+# Ido <leptep@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-10 16:22+0200\n"
+"POT-Creation-Date: 2020-06-26 17:56+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
-"Last-Translator: Eman Alqaisi <eman@arij.net>, 2020\n"
+"Last-Translator: Ido <leptep@gmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,15 +23,15 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: aleph/settings.py:25
+#: aleph/settings.py:28
 msgid "Aleph"
 msgstr "ألف"
 
-#: aleph/settings.py:36
+#: aleph/settings.py:39
 msgid "TeliaSonera"
 msgstr "تيلياسونيرا"
 
-#: aleph/settings.py:36
+#: aleph/settings.py:39
 msgid "Vladimir Putin"
 msgstr "فلاديمير بوتين"
 
@@ -114,45 +115,77 @@ msgstr "مجموعات البيانات الشخصية"
 msgid "Other material"
 msgstr "مواد أخرى"
 
+#: aleph/model/collection.py:51
+msgid "not known"
+msgstr ""
+
+#: aleph/model/collection.py:52
+msgid "not updated"
+msgstr ""
+
+#: aleph/model/collection.py:53
+msgid "daily"
+msgstr ""
+
+#: aleph/model/collection.py:54
+msgid "weekly"
+msgstr ""
+
+#: aleph/model/collection.py:55
+msgid "monthly"
+msgstr ""
+
+#: aleph/model/collection.py:56
+msgid "annual"
+msgstr ""
+
 #: aleph/model/entity.py:77
 msgid "Invalid entity ID"
 msgstr "معرف الكيان غير صحيح"
 
 #: aleph/model/event.py:49
 msgid "{{actor}} created {{collection}}"
-msgstr "{{ممثل}} أنشأ {{مجموعة}}"
+msgstr "{{actor}} أنشأ {{collection}}"
 
 #: aleph/model/event.py:56
 msgid "{{actor}} changed the settings of {{collection}}"
-msgstr "قام {{Actor}} بتغيير إعدادات {{collection}}"
+msgstr "{{actor}} غيٌر إعدادات {{collection}}"
 
 #: aleph/model/event.py:63
 msgid "{{actor}} added {{document}} to {{collection}}"
-msgstr "أضاف {{الممثل}} {{مستند}} إلى {{مجموعة}}"
+msgstr "{{actor}} أضاف {{document}} إلى {{collection}}"
 
 #: aleph/model/event.py:73
 msgid "{{actor}} generated entities from {{table}} in {{collection}}"
-msgstr "أنشأ {{الممثل}} كيانات من {{الجدول}} في {{المجموعة}}"
+msgstr "{{actor}} أنشأ كيانات من {{table}} في {{collection}}"
 
 #: aleph/model/event.py:83
 msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
-msgstr "بدأ {{الممثل}} برسم {{المخطط}} في {{المجموعة}}"
+msgstr " {{actor}} بدأ برسم {{diagram}} في {{collection}}"
 
 #: aleph/model/event.py:93
 msgid "{{entity}} matches your alert for {{alert}}"
-msgstr "يطابق {{الكيان}} التنبيه الخاص بك لـ {{alert}}"
+msgstr "{{entity}} يطابق تنبيعك ل {{alert}}"
 
 #: aleph/model/event.py:104
 msgid "{{actor}} gave {{role}} access to {{collection}}"
-msgstr "منح {{الممثل}} {{role}} حق الوصول إلى {{للمجموعة}}"
+msgstr "{{actor}} منح {{role}} الوصول إلى {{collection}}"
 
-#: aleph/model/mapping.py:22
+#: aleph/model/event.py:114
+msgid "{{actor}} published {{collection}}"
+msgstr "{{actor}} نشر {{collection}}"
+
+#: aleph/model/mapping.py:23
 msgid "success"
 msgstr "تم بنجاح"
 
-#: aleph/model/mapping.py:23
+#: aleph/model/mapping.py:24
 msgid "failed"
 msgstr "فشلت العملية"
+
+#: aleph/model/mapping.py:25
+msgid "pending"
+msgstr ""
 
 #: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
@@ -226,41 +259,41 @@ msgstr "معرف الكيان غير صحيح: %s"
 msgid "Invalid category."
 msgstr "الفئة غير متاحة"
 
-#: aleph/validation/formats.py:53
+#: aleph/validation/formats.py:52
+msgid "Invalid frequency."
+msgstr ""
+
+#: aleph/validation/formats.py:60
 msgid "Invalid URL."
 msgstr "عنوان URL غير صحيح"
 
-#: aleph/validation/formats.py:61
+#: aleph/validation/formats.py:68
 msgid "Invalid language code."
 msgstr "رمز اللغة غير صحيح"
 
-#: aleph/validation/formats.py:69
+#: aleph/validation/formats.py:76
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "اسم مخطط غير صحيح : 1%s"
 
-#: aleph/validation/formats.py:77
+#: aleph/validation/formats.py:84
 #, python-format
 msgid "Invalid date: %s"
 msgstr "تاريخ خاطئ 1%s"
 
-#: aleph/views/base_api.py:184
-msgid "/api/1/ is deprecated, please use /api/2/."
-msgstr "/ api / 1 / لا يعمل ، يرجى استخدام / api / 2 /."
-
-#: aleph/views/base_api.py:207
+#: aleph/views/base_api.py:202
 msgid "You are not authorized to do this."
 msgstr "إنت غير مخول للقيام بذلك."
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:211
 msgid "This path does not exist."
 msgstr "هذا المسار غير موجود."
 
-#: aleph/views/base_api.py:225
+#: aleph/views/base_api.py:220
 msgid "Internal server error."
 msgstr "خطأ في الخادم الداخلي."
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:238
 msgid "Access token is invalid."
 msgstr "رمز الدخول غير صحيح"
 
@@ -288,14 +321,19 @@ msgstr "كلمة المرور خاطئة"
 msgid "Invalid user or password."
 msgstr "اسم مستخدم أو كلمة مرور غير صحيحة"
 
-#: aleph/views/sessions_api.py:92 aleph/views/sessions_api.py:97
+#: aleph/views/sessions_api.py:93 aleph/views/sessions_api.py:96
+#: aleph/views/sessions_api.py:101
 msgid "Authentication has failed."
 msgstr "فشلت المصادقة"
 
-#: aleph/views/util.py:77
+#: aleph/views/sessions_api.py:103
+msgid "Your account is blocked."
+msgstr ""
+
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "حدث خطأ أثناء التحقق من صحة البيانات"
 
-#: aleph/views/util.py:147
+#: aleph/views/util.py:145
 msgid "[HTML removed: could not be sanitized]"
 msgstr "[تمت إزالة HTML: تعذر التعقيم]"

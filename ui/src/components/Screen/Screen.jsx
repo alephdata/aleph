@@ -10,7 +10,6 @@ import { withRouter } from 'react-router';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import EntityPreview from 'src/components/Entity/EntityPreview';
 import Navbar from 'src/components/Navbar/Navbar';
-import Footer from 'src/components/Footer/Footer';
 import SearchTips from 'src/components/SearchTips/SearchTips';
 import { selectSession, selectMetadata } from 'src/selectors';
 
@@ -125,7 +124,6 @@ export class Screen extends React.Component {
           onToggle={this.onToggleSearchTips}
           navbarRef={this.navbarRef}
         />
-        <Footer isHomepage={isHomepage} metadata={metadata} />
       </div>
     );
   }

@@ -1,7 +1,8 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .DiagramList {
-  margin-right: 1px;
+  @include rtlSupportInvertedProp(margin, right, 1px, null);
   &__items {
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(260px, 1fr));

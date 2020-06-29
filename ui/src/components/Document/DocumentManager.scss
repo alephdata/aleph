@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .DocumentManager {
   &__content {
@@ -18,7 +19,7 @@
   }
 
   .Count {
-    margin-left: $aleph-grid-size/2 !important;
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2 !important, null);
   }
 
   .align-middle {

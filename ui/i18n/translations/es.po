@@ -5,7 +5,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-10T14:22:06.940Z\n"
+"POT-Creation-Date: 2020-06-26T15:56:05.307Z\n"
 "Last-Translator: Miguel Sojo <miguelsojo@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -27,21 +27,21 @@ msgstr "(confirmar)"
 #. 1. Select entity types to generate
 #: i18n/messages.json
 msgid "1. Select entity types to generate"
-msgstr ""
+msgstr "1. Selecciona los tipos de entidad a generar"
 
 #. [mapping.section2.title]
 #. defaultMessage is:
 #. 2. Map columns to entity properties
 #: i18n/messages.json
 msgid "2. Map columns to entity properties"
-msgstr ""
+msgstr "2. Mapea las columnas con propiedades de entidad"
 
 #. [mapping.section3.title]
 #. defaultMessage is:
 #. 3. Verify
 #: i18n/messages.json
 msgid "3. Verify"
-msgstr ""
+msgstr "3. Verifica"
 
 #. [searchTips.composite.2]
 #. defaultMessage is:
@@ -52,6 +52,8 @@ msgid ""
 "<em>+banana ice cream</em> requires that only results with the term banana "
 "will be returned, while ice and cream are optional"
 msgstr ""
+"<em>+helado de banana</em> significa que solo se devolverán resultados con "
+"el término helado, mientras que \"de\" y \"banana\" serán opcionales"
 
 #. [searchTips.composite.3]
 #. defaultMessage is:
@@ -62,6 +64,8 @@ msgid ""
 "<em>-banana ice cream</em> ensures that no results with the term banana will"
 " be returned"
 msgstr ""
+"<em>-helado de banana</em> garantiza que no se devolverán resultados con el "
+"término helado"
 
 #. [searchTips.composite.4]
 #. defaultMessage is:
@@ -72,6 +76,8 @@ msgid ""
 "<em>banana AND “ice cream”</em> requires that only results with both banana "
 "and ice cream are returned"
 msgstr ""
+"<em>helado AND “de banana”</em> indica que se devolverán solo resultados con"
+" los términos \"helado\" y \"de banana\""
 
 #. [searchTips.composite.5]
 #. defaultMessage is:
@@ -82,48 +88,50 @@ msgid ""
 "<em>banana OR “ice cream”</em> ensures that only results with either banana "
 "or ice cream are returned"
 msgstr ""
+"<em>helado OR “de banana”</em> indica que se devolverán solo resultados con "
+"los términos \"helado\" o \"de banana\""
 
 #. [case.summary]
 #. defaultMessage is:
 #. A brief description of the dataset
 #: i18n/messages.json
 msgid "A brief description of the dataset"
-msgstr ""
+msgstr "Una breve descripción del conjunto de datos"
 
 #. [diagram.create.summary_placeholder]
 #. defaultMessage is:
 #. A brief description of the diagram
 #: i18n/messages.json
 msgid "A brief description of the diagram"
-msgstr ""
+msgstr "Una breve descripción del diagrama"
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
 #. A brief summary
 #: i18n/messages.json
 msgid "A brief summary"
-msgstr ""
+msgstr "Un resumen breve"
 
 #. [collection.edit.info.placeholder_label]
 #. defaultMessage is:
 #. A label
 #: i18n/messages.json
 msgid "A label"
-msgstr ""
+msgstr "Una etiqueta"
 
 #. [settings.api_key]
 #. defaultMessage is:
 #. API Secret Access Key
 #: i18n/messages.json
 msgid "API Secret Access Key"
-msgstr "Clave de Acceso Secreto a la API"
+msgstr "Clave de acceso secreto a la API"
 
 #. [collection.team]
 #. defaultMessage is:
 #. Accessible to
 #: i18n/messages.json
 msgid "Accessible to"
-msgstr ""
+msgstr "Accesible para"
 
 #. [password_auth.activate]
 #. defaultMessage is:
@@ -144,27 +152,34 @@ msgstr "Activar tu cuenta"
 #. Activity
 #: i18n/messages.json
 msgid "Activity"
-msgstr ""
+msgstr "Actividad"
 
 #. [mapping.propAssign.literalButtonText]
 #. defaultMessage is:
 #. Add a fixed value
 #: i18n/messages.json
 msgid "Add a fixed value"
-msgstr ""
+msgstr "Agregar un valor fijo"
 
 #. [schemaSelect.button.thing]
 #. defaultMessage is:
 #. Add a new object
 #: i18n/messages.json
 msgid "Add a new object"
-msgstr ""
+msgstr "Agregar un objeto nuevo"
 
 #. [schemaSelect.button.relationship]
 #. defaultMessage is:
 #. Add a new relationship
 #: i18n/messages.json
 msgid "Add a new relationship"
+msgstr "Agregar un parentesco nuevo"
+
+#. [diagram.add_entities.title]
+#. defaultMessage is:
+#. Add entities to a diagram
+#: i18n/messages.json
+msgid "Add entities to a diagram"
 msgstr ""
 
 #. [mapping.propAssign.literalPlaceholder]
@@ -172,28 +187,35 @@ msgstr ""
 #. Add fixed value text
 #: i18n/messages.json
 msgid "Add fixed value text"
-msgstr ""
+msgstr "Agregar texto de valor fijo"
 
 #. [collection.addSchema.placeholder]
 #. defaultMessage is:
 #. Add new entity type
 #: i18n/messages.json
 msgid "Add new entity type"
-msgstr ""
+msgstr "Agregar nuevo tipo de entidad"
+
+#. [entity.viewer.add_to_diagram]
+#. defaultMessage is:
+#. Add to diagram
+#: i18n/messages.json
+msgid "Add to diagram"
+msgstr "Agregar al diagrama"
 
 #. [mapping.infoLink]
 #. defaultMessage is:
 #. Aleph data mapping documentation
 #: i18n/messages.json
 msgid "Aleph data mapping documentation"
-msgstr ""
+msgstr "Documentación de mapeo de datos de aleph"
 
 #. [footer.aleph]
 #. defaultMessage is:
 #. Aleph {version}
 #: i18n/messages.json
 msgid "Aleph {version}"
-msgstr ""
+msgstr "Aleph {versión}"
 
 #. [nav.alerts]
 #. defaultMessage is:
@@ -203,7 +225,7 @@ msgstr ""
 #. Alerts
 #: i18n/messages.json i18n/messages.json
 msgid "Alerts"
-msgstr ""
+msgstr "Alertas"
 
 #. [signup.login]
 #. defaultMessage is:
@@ -217,7 +239,7 @@ msgstr "¿Ya posees una cuenta? ¡Ingresa!"
 #. An error occured while attempting to delete this entity.
 #: i18n/messages.json
 msgid "An error occured while attempting to delete this entity."
-msgstr ""
+msgstr "Ha ocurrido un error al intentar eliminar esta entidad."
 
 #. [auth.unknown_error]
 #. defaultMessage is:
@@ -231,14 +253,14 @@ msgstr "Ha ocurrido un error inesperado"
 #. Are you sure you are ready to generate entities using this mapping?
 #: i18n/messages.json
 msgid "Are you sure you are ready to generate entities using this mapping?"
-msgstr ""
+msgstr "¿Seguro que deseas generar entidades usando este mapeo?"
 
 #. [entity.delete.question.multiple]
 #. defaultMessage is:
 #. Are you sure you want to delete the following items?
 #: i18n/messages.json
 msgid "Are you sure you want to delete the following items?"
-msgstr ""
+msgstr "¿Seguro que deseas eliminar los siguientes elementos?"
 
 #. [collection.delete.question]
 #. defaultMessage is:
@@ -246,13 +268,15 @@ msgstr ""
 #: i18n/messages.json
 msgid "Are you sure you want to delete this dataset and all contained items?"
 msgstr ""
+"¿Seguro que deseas eliminar este conjunto de datos y todos los elementos en "
+"él?"
 
 #. [diagram.delete.question]
 #. defaultMessage is:
 #. Are you sure you want to delete this diagram?
 #: i18n/messages.json
 msgid "Are you sure you want to delete this diagram?"
-msgstr ""
+msgstr "¿Seguro que deseas eliminar este diagrama?"
 
 #. [mapping.delete.question]
 #. defaultMessage is:
@@ -261,13 +285,14 @@ msgstr ""
 msgid ""
 "Are you sure you want to delete this mapping and all generated entities?"
 msgstr ""
+"¿Seguro que deseas eliminar este mapeo y todas las entidades generadas?"
 
 #. [entity.delete.question.one]
 #. defaultMessage is:
 #. Are you sure you want to delete {entityLabel}?
 #: i18n/messages.json
 msgid "Are you sure you want to delete {entityLabel}?"
-msgstr ""
+msgstr "¿Seguro que deseas eliminar {entityLabel}?"
 
 #. [mapping.flush.question]
 #. defaultMessage is:
@@ -275,24 +300,45 @@ msgstr ""
 #: i18n/messages.json
 msgid "Are you sure you want to remove entities generated using this mapping?"
 msgstr ""
+"¿Seguro que deseas eliminar las entidades generadas usando este mapeo?"
 
 #. [mapping.propAssign.placeholder]
 #. defaultMessage is:
 #. Assign a property
 #: i18n/messages.json
 msgid "Assign a property"
-msgstr ""
+msgstr "Asignar una propiedad"
 
 #. [entity.info.attachments]
 #. defaultMessage is:
 #. Attachments
 #: i18n/messages.json
 msgid "Attachments"
-msgstr ""
+msgstr "Anexos"
 
-#. [collection.publish.cancel]
+#. [history.screen.subheading]
 #. defaultMessage is:
-#. Cancel
+#. Below is a list of your most recent searches. You have the option to delete
+#. specific searches so they do not show up in our records.
+#: i18n/messages.json
+msgid ""
+"Below is a list of your most recent searches. You have the option to delete "
+"specific searches so they do not show up in our records."
+msgstr ""
+"A continuación se muestra una lista de tus búsquedas más recientes. Tienes "
+"la opción de borrar búsquedas específicas para que no aparezcan en nuestros "
+"registros."
+
+#. [entity.viewer.bulk_import]
+#. defaultMessage is:
+#. Bulk import
+#. [entity.manager.bulk_import.title]
+#. defaultMessage is:
+#. Bulk import
+#: i18n/messages.json i18n/messages.json
+msgid "Bulk import"
+msgstr "Importación en bloque"
+
 #. [collection.reindex.cancel]
 #. defaultMessage is:
 #. Cancel
@@ -335,30 +381,30 @@ msgstr ""
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. [collection.status.cancel_button]
 #. defaultMessage is:
 #. Cancel the process
 #: i18n/messages.json
 msgid "Cancel the process"
-msgstr ""
+msgstr "Cancelar el proceso"
 
 #. [search.screen.export_disabled]
 #. defaultMessage is:
 #. Cannot export more than 10,000 results at a time
 #: i18n/messages.json
 msgid "Cannot export more than 10,000 results at a time"
-msgstr ""
+msgstr "No se puede exportar más de 10.000 resultados a la vez"
 
 #. [cases.browser.breadcrumb]
 #. defaultMessage is:
 #. Cases overview
 #: i18n/messages.json
 msgid "Cases overview"
-msgstr ""
+msgstr "Resumen de casos"
 
 #. [collection.edit.info.category]
 #. defaultMessage is:
@@ -372,14 +418,14 @@ msgstr "Categoría"
 #. Change your password
 #: i18n/messages.json
 msgid "Change your password"
-msgstr ""
+msgstr "Cambia tu contraseña"
 
 #. [diagram.in_progress_warning]
 #. defaultMessage is:
 #. Changes are still being saved, are you sure you want to leave?
 #: i18n/messages.json
 msgid "Changes are still being saved, are you sure you want to leave?"
-msgstr ""
+msgstr "Los cambios se están guardando. ¿Seguro que deseas salir?"
 
 #. [dashboard.subheading]
 #. defaultMessage is:
@@ -388,6 +434,7 @@ msgstr ""
 msgid ""
 "Check the progress of ongoing data analysis, upload, and processing tasks."
 msgstr ""
+"Verifica el progreso de análisis, carga y procesamiento de datos actuales."
 
 #. [signup.inbox.title]
 #. defaultMessage is:
@@ -408,28 +455,28 @@ msgstr "Elige un usuario"
 #. Choose files to upload...
 #: i18n/messages.json
 msgid "Choose files to upload..."
-msgstr ""
+msgstr "Elige los archivos a cargar..."
 
 #. [tags.results]
 #. defaultMessage is:
 #. Citations
 #: i18n/messages.json
 msgid "Citations"
-msgstr ""
+msgstr "Citaciones"
 
 #. [queryFilters.clearAll]
 #. defaultMessage is:
 #. Clear all
 #: i18n/messages.json
 msgid "Clear all"
-msgstr ""
+msgstr "Borrar todo"
 
 #. [collection.reindex.flush]
 #. defaultMessage is:
 #. Clear index before re-indexing
 #: i18n/messages.json
 msgid "Clear index before re-indexing"
-msgstr ""
+msgstr "Borrar el índice antes de reindexar"
 
 #. [navbar.alert_add]
 #. defaultMessage is:
@@ -437,48 +484,42 @@ msgstr ""
 #: i18n/messages.json
 msgid "Click to receive alerts about new results for this search."
 msgstr ""
-
-#. [footer.code]
-#. defaultMessage is:
-#. Code
-#: i18n/messages.json
-msgid "Code"
-msgstr "Código"
+"Haz clic para recibir alertas sobre nuevos resultados para esta búsqueda."
 
 #. [mapping.propAssign.errorDuplicate]
 #. defaultMessage is:
 #. Columns with duplicate headers cannot be assigned
 #: i18n/messages.json
 msgid "Columns with duplicate headers cannot be assigned"
-msgstr ""
+msgstr "Las columnas con encabezados duplicados no se pueden asignar"
 
 #. [mapping.propAssign.errorBlank]
 #. defaultMessage is:
 #. Columns with no header cannot be assigned
 #: i18n/messages.json
 msgid "Columns with no header cannot be assigned"
-msgstr ""
+msgstr "Las columnas sin encabezados no se pueden asignar"
 
 #. [searchTips.composite.title]
 #. defaultMessage is:
 #. Composite queries
 #: i18n/messages.json
 msgid "Composite queries"
-msgstr ""
+msgstr "Consultas compuestas"
 
 #. [xref.compute]
 #. defaultMessage is:
 #. Compute
 #: i18n/messages.json
 msgid "Compute"
-msgstr ""
+msgstr "Computar"
 
 #. [collection.xref.confirm]
 #. defaultMessage is:
 #. Confirm
 #: i18n/messages.json
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. [password_auth.confirm]
 #. defaultMessage is:
@@ -487,40 +528,26 @@ msgstr ""
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
 
-#. [collection.edit.info.contact]
-#. defaultMessage is:
-#. Contact
-#: i18n/messages.json
-msgid "Contact"
-msgstr "Contacto"
-
 #. [collection.status.message]
 #. defaultMessage is:
 #. Continue to frolic about while data is being processed.
 #: i18n/messages.json
 msgid "Continue to frolic about while data is being processed."
-msgstr ""
-
-#. [collection.info.publish]
-#. defaultMessage is:
-#. Convert to evidence
-#: i18n/messages.json
-msgid "Convert to evidence"
-msgstr ""
+msgstr "Sigue explorando mientras se procesan los datos."
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
 #. Copied to clipboard!
 #: i18n/messages.json
 msgid "Copied to clipboard!"
-msgstr ""
+msgstr "Copiado al portapapeles"
 
 #. [clipboard.copy.before]
 #. defaultMessage is:
 #. Copy to clipboard
 #: i18n/messages.json
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Copiar al portapapeles"
 
 #. [entity.column.countries]
 #. defaultMessage is:
@@ -547,35 +574,42 @@ msgstr "País"
 #. Create
 #: i18n/messages.json i18n/messages.json
 msgid "Create"
-msgstr ""
+msgstr "Crear"
 
 #. [diagram.create.title]
 #. defaultMessage is:
 #. Create a network diagram
 #: i18n/messages.json
 msgid "Create a network diagram"
-msgstr ""
+msgstr "Crear diagrama de red"
+
+#. [diagram.add_entities.create_new]
+#. defaultMessage is:
+#. Create a new diagram
+#: i18n/messages.json
+msgid "Create a new diagram"
+msgstr "Crear un diagrama nuevo"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
 #. Create a new tracking alert...
 #: i18n/messages.json
 msgid "Create a new tracking alert..."
-msgstr ""
+msgstr "Crear una nueva alerta de seguimiento..."
 
 #. [case.title]
 #. defaultMessage is:
 #. Create a personal dataset
 #: i18n/messages.json
 msgid "Create a personal dataset"
-msgstr ""
+msgstr "Crear un conjunto de datos personal"
 
 #. [collection.index.sort.created_at]
 #. defaultMessage is:
 #. Creation Date
 #: i18n/messages.json
 msgid "Creation Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. [entity.info.xref]
 #. defaultMessage is:
@@ -592,35 +626,35 @@ msgstr "Referencia cruzada"
 #. Cross-reference match review
 #: i18n/messages.json
 msgid "Cross-reference match review"
-msgstr ""
+msgstr "Revisión de coincidencia de referencia cruzada"
 
 #. [collection.xref.processing]
 #. defaultMessage is:
 #. Cross-referencing started.
 #: i18n/messages.json
 msgid "Cross-referencing started."
-msgstr ""
+msgstr "Se inició la referencia cruzada."
 
 #. [settings.current_password]
 #. defaultMessage is:
 #. Current password
 #: i18n/messages.json
 msgid "Current password"
-msgstr ""
+msgstr "Contraseña actual"
 
 #. [collection.data_url]
 #. defaultMessage is:
 #. Data URL
 #: i18n/messages.json
 msgid "Data URL"
-msgstr ""
+msgstr "URL de datos"
 
 #. [collection.edit.info.data_url]
 #. defaultMessage is:
 #. Data source URL
 #: i18n/messages.json
 msgid "Data source URL"
-msgstr ""
+msgstr "URL de fuente de datos"
 
 #. [infoMode.collection]
 #. defaultMessage is:
@@ -631,26 +665,23 @@ msgstr ""
 #. [xref.match_collection]
 #. defaultMessage is:
 #. Dataset
+#. [diagram.create.collection]
+#. defaultMessage is:
+#. Dataset
 #. [collection.status.collection]
 #. defaultMessage is:
 #. Dataset
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-msgid "Dataset"
-msgstr ""
-
-#. [collection.publish.succeed]
-#. defaultMessage is:
-#. Dataset is published
 #: i18n/messages.json
-msgid "Dataset is published"
-msgstr ""
+msgid "Dataset"
+msgstr "Conjunto de datos"
 
 #. [collection.edit.title]
 #. defaultMessage is:
 #. Dataset settings
 #: i18n/messages.json
 msgid "Dataset settings"
-msgstr ""
+msgstr "Configuración de conjunto de datos"
 
 #. [nav.collections]
 #. defaultMessage is:
@@ -663,7 +694,7 @@ msgstr ""
 #. Datasets
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Datasets"
-msgstr ""
+msgstr "Conjuntos de datos"
 
 #. [entity.column.dates]
 #. defaultMessage is:
@@ -673,9 +704,6 @@ msgid "Date"
 msgstr "Fecha"
 
 #. [diagram.info.delete]
-#. defaultMessage is:
-#. Delete
-#. [document.viewer.delete]
 #. defaultMessage is:
 #. Delete
 #. [entity.viewer.delete]
@@ -704,7 +732,7 @@ msgstr "Fecha"
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Delete"
 msgstr "Borrar"
 
@@ -713,42 +741,42 @@ msgstr "Borrar"
 #. Delete dataset
 #: i18n/messages.json
 msgid "Delete dataset"
-msgstr ""
+msgstr "Eliminar conjunto de datos"
 
 #. [mapping.actions.delete.toast]
 #. defaultMessage is:
 #. Deleting mapping and any generated entities...
 #: i18n/messages.json
 msgid "Deleting mapping and any generated entities..."
-msgstr ""
+msgstr "Eliminando mapeo y entidades generadas..."
 
 #. [diagram.update.title]
 #. defaultMessage is:
 #. Diagram settings
 #: i18n/messages.json
 msgid "Diagram settings"
-msgstr ""
+msgstr "Configuración de diagrama"
 
 #. [diagrams.browser.breadcrumb]
 #. defaultMessage is:
 #. Diagrams
 #: i18n/messages.json
 msgid "Diagrams"
-msgstr ""
+msgstr "Diagramas"
 
 #. [sorting.bar.direction]
 #. defaultMessage is:
 #. Direction:
 #: i18n/messages.json
 msgid "Direction:"
-msgstr ""
+msgstr "Dirección:"
 
 #. [entity.info.documents]
 #. defaultMessage is:
 #. Documents
 #: i18n/messages.json
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #. [refresh.callout_message]
 #. defaultMessage is:
@@ -756,13 +784,15 @@ msgstr ""
 #: i18n/messages.json
 msgid "Documents are being processed. Please wait..."
 msgstr ""
+"Los documentos se están procesando.\n"
+"Por favor, espere..."
 
 #. [document.upload.success]
 #. defaultMessage is:
 #. Documents are being processed...
 #: i18n/messages.json
 msgid "Documents are being processed..."
-msgstr ""
+msgstr "Los documentos se están procesando..."
 
 #. [signup.register.question]
 #. defaultMessage is:
@@ -770,6 +800,20 @@ msgstr ""
 #: i18n/messages.json
 msgid "Don't have account? Register!"
 msgstr "¿No posees una cuenta? ¡Regístrate!"
+
+#. [diagram.create.collection.new]
+#. defaultMessage is:
+#. Don't see the dataset you're looking for? {link}
+#: i18n/messages.json
+msgid "Don't see the dataset you're looking for? {link}"
+msgstr "¿No puedes ver el conjunto de datos que estás buscando? {link}"
+
+#. [entity.manager.bulk_import.description.3]
+#. defaultMessage is:
+#. Don't see the table you're looking for? {link}
+#: i18n/messages.json
+msgid "Don't see the table you're looking for? {link}"
+msgstr "¿No puedes ver la tabla que estás buscando? {link}"
 
 #. [document.download]
 #. defaultMessage is:
@@ -783,14 +827,14 @@ msgstr "Descargar"
 #. Download Excel
 #: i18n/messages.json
 msgid "Download Excel"
-msgstr ""
+msgstr "Descargar Excel"
 
 #. [document.download.tooltip]
 #. defaultMessage is:
 #. Download the original document
 #: i18n/messages.json
 msgid "Download the original document"
-msgstr ""
+msgstr "Descargar el documento original"
 
 #. [diagram.import.placeholder]
 #. defaultMessage is:
@@ -798,13 +842,14 @@ msgstr ""
 #: i18n/messages.json
 msgid "Drop a .vis file here or click to import an existing diagram layout"
 msgstr ""
+"Coloca un archivo .vis aquí para importar un diseño de diagrama existente"
 
 #. [mapping.import.placeholder]
 #. defaultMessage is:
 #. Drop a .yml file here or click to import an existing mapping file
 #: i18n/messages.json
 msgid "Drop a .yml file here or click to import an existing mapping file"
-msgstr ""
+msgstr "Coloca un archivo .yml aquí para importar un mapeo existente"
 
 #. [settings.email]
 #. defaultMessage is:
@@ -832,56 +877,56 @@ msgstr "Dirección de correo electrónico"
 #. Enter your current password to set a new one.
 #: i18n/messages.json
 msgid "Enter your current password to set a new one."
-msgstr ""
+msgstr "Introduce tu contraseña actual para crear una nueva."
 
 #. [entity.info.entities]
 #. defaultMessage is:
 #. Entities
 #: i18n/messages.json
 msgid "Entities"
-msgstr ""
+msgstr "Entidades"
 
 #. [result.error]
 #. defaultMessage is:
 #. Error
 #: i18n/messages.json
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. [file_import.error]
 #. defaultMessage is:
 #. Error importing file
 #: i18n/messages.json
 msgid "Error importing file"
-msgstr ""
+msgstr "Error al importar archivo"
 
 #. [diagram.status_error]
 #. defaultMessage is:
 #. Error saving
 #: i18n/messages.json
 msgid "Error saving"
-msgstr ""
+msgstr "Error al guardar"
 
 #. [mapping.status.error]
 #. defaultMessage is:
 #. Error:
 #: i18n/messages.json
 msgid "Error:"
-msgstr ""
+msgstr "Error:"
 
 #. [searchTips.exact.title]
 #. defaultMessage is:
 #. Exact matches
 #: i18n/messages.json
 msgid "Exact matches"
-msgstr ""
+msgstr "Coincidencias exactas"
 
 #. [sidebar.open]
 #. defaultMessage is:
 #. Expand
 #: i18n/messages.json
 msgid "Expand"
-msgstr ""
+msgstr "Expandir"
 
 #. [diagram.info.export]
 #. defaultMessage is:
@@ -891,56 +936,56 @@ msgstr ""
 #. Export
 #: i18n/messages.json i18n/messages.json
 msgid "Export"
-msgstr ""
+msgstr "Exportar"
 
 #. [mapping.actions.export]
 #. defaultMessage is:
 #. Export mapping
 #: i18n/messages.json
 msgid "Export mapping"
-msgstr ""
+msgstr "Exportar mapeo"
 
 #. [tags.title]
 #. defaultMessage is:
 #. Extracted selectors
 #: i18n/messages.json
 msgid "Extracted selectors"
-msgstr ""
+msgstr "Selectores extraídos"
 
 #. [search.filterTag.role]
 #. defaultMessage is:
 #. Filter by access
 #: i18n/messages.json
 msgid "Filter by access"
-msgstr ""
+msgstr "Filtrar por acceso"
 
 #. [search.screen.filters]
 #. defaultMessage is:
 #. Filters
 #: i18n/messages.json
 msgid "Filters"
-msgstr ""
+msgstr "Filtros"
 
 #. [home.title]
 #. defaultMessage is:
 #. Find public records and leaks
 #: i18n/messages.json
 msgid "Find public records and leaks"
-msgstr ""
+msgstr "Buscar registros públicos y filtraciones"
 
 #. [collection.status.finished_tasks]
 #. defaultMessage is:
 #. Finished
 #: i18n/messages.json
 msgid "Finished"
-msgstr ""
+msgstr "Terminado"
 
 #. [document.folder.untitled]
 #. defaultMessage is:
 #. Folder title
 #: i18n/messages.json
 msgid "Folder title"
-msgstr ""
+msgstr "Título de carpeta"
 
 #. [mapping.info]
 #. defaultMessage is:
@@ -951,6 +996,9 @@ msgid ""
 "Follow the steps below to map items in this dataset to structured Follow the"
 " Money entites. For more information, please refer to the {link}"
 msgstr ""
+"Sigue los pasos siguientes para asignar los elementos de este conjunto de "
+"datos a entidades estructuradas de Follow the Money. Para más información, "
+"consulta {link}"
 
 #. [collection.foreign_id]
 #. defaultMessage is:
@@ -960,7 +1008,7 @@ msgstr ""
 #. Foreign ID
 #: i18n/messages.json i18n/messages.json
 msgid "Foreign ID"
-msgstr ""
+msgstr "Identificación extranjera"
 
 #. [entity.similar.found_text]
 #. defaultMessage is:
@@ -977,44 +1025,52 @@ msgid ""
 "                {datasetCount, plural, one {dataset} other {datasets}}\n"
 "              "
 msgstr ""
+"Found {resultCount}\n"
+"                {resultCount, plural, una {similar entity} otras {similar entities}}\n"
+"                de {datasetCount}\n"
+"                {datasetCount, plural, un {dataset} otro {datasets}}\n"
+"              "
 
 #. [result.results]
 #. defaultMessage is:
 #. Found {total} results
 #: i18n/messages.json
 msgid "Found {total} results"
-msgstr ""
+msgstr "Se encontraron {total} resultados"
 
 #. [mapping.create.confirm]
 #. defaultMessage is:
 #. Generate
 #: i18n/messages.json
 msgid "Generate"
-msgstr ""
+msgstr "Generar"
 
+#. [document.mapping.start]
+#. defaultMessage is:
+#. Generate entities
 #. [entity.mapping.view]
 #. defaultMessage is:
 #. Generate entities
 #. [mapping.actions.create]
 #. defaultMessage is:
 #. Generate entities
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Generate entities"
-msgstr ""
+msgstr "Generar entidades"
 
 #. [mapping.title]
 #. defaultMessage is:
 #. Generate structured entities
 #: i18n/messages.json
 msgid "Generate structured entities"
-msgstr ""
+msgstr "Generar entidades estructuradas"
 
 #. [mapping.actions.create.toast]
 #. defaultMessage is:
 #. Generating entities...
 #: i18n/messages.json
 msgid "Generating entities..."
-msgstr ""
+msgstr "Generando entidades..."
 
 #. [dashboard.groups]
 #. defaultMessage is:
@@ -1026,68 +1082,68 @@ msgstr ""
 msgid "Groups"
 msgstr "Grupos"
 
-#. [footer.help]
-#. defaultMessage is:
-#. Help
-#: i18n/messages.json
-msgid "Help"
-msgstr "Ayuda"
-
 #. [document.upload.folder]
 #. defaultMessage is:
 #. If you would like to upload folders instead, { button }.
 #: i18n/messages.json
 msgid "If you would like to upload folders instead, { button }."
-msgstr ""
+msgstr "Si prefieres subir carpetas, { button }."
 
 #. [mapping.import.title]
 #. defaultMessage is:
 #. Import a mapping
 #: i18n/messages.json
 msgid "Import a mapping"
-msgstr ""
+msgstr "Exportar un mapeo"
 
 #. [diagram.import.title]
 #. defaultMessage is:
 #. Import a network diagram
 #: i18n/messages.json
 msgid "Import a network diagram"
-msgstr ""
+msgstr "Importar un diagrama de red"
+
+#. [entity.manager.bulk_import.link_text]
+#. defaultMessage is:
+#. Import a new table
+#: i18n/messages.json
+msgid "Import a new table"
+msgstr "Importar una nueva tabla"
 
 #. [diagrams.index.import]
 #. defaultMessage is:
 #. Import diagram
 #: i18n/messages.json
 msgid "Import diagram"
-msgstr ""
+msgstr "Importar diagrama"
 
 #. [mapping.import.button]
 #. defaultMessage is:
 #. Import existing mapping
 #: i18n/messages.json
 msgid "Import existing mapping"
-msgstr ""
+msgstr "Importar mapeo existente"
 
 #. [collection.reingest.index]
 #. defaultMessage is:
 #. Index documents as they are processed.
 #: i18n/messages.json
 msgid "Index documents as they are processed."
-msgstr ""
+msgstr "Indexar documentos mientras se procesan."
 
 #. [collection.reindex.processing]
 #. defaultMessage is:
 #. Indexing started.
 #: i18n/messages.json
 msgid "Indexing started."
-msgstr ""
+msgstr "Se inició el indexado."
 
 #. [entity.info.info]
 #. defaultMessage is:
 #. Info
 #: i18n/messages.json
 msgid "Info"
-msgstr ""
+msgstr "Información"
 
 #. [collection.info_url]
 #. defaultMessage is:
@@ -1097,49 +1153,49 @@ msgstr ""
 #. Information URL
 #: i18n/messages.json i18n/messages.json
 msgid "Information URL"
-msgstr ""
+msgstr "URL de información"
 
 #. [settings.saved]
 #. defaultMessage is:
 #. It's official, your profile is updated.
 #: i18n/messages.json
 msgid "It's official, your profile is updated."
-msgstr ""
+msgstr "Es oficial, tu perfil se actualizó."
 
 #. [collection.status.jobs]
 #. defaultMessage is:
 #. Jobs
 #: i18n/messages.json
 msgid "Jobs"
-msgstr ""
+msgstr "Trabajos"
 
 #. [xref.context.private]
 #. defaultMessage is:
 #. Keep private (no sharing)
 #: i18n/messages.json
 msgid "Keep private (no sharing)"
-msgstr ""
+msgstr "Mantener privado (no compartir)"
 
 #. [queryLogs.add_placeholder]
 #. defaultMessage is:
 #. Keep track of searches...
 #: i18n/messages.json
 msgid "Keep track of searches..."
-msgstr ""
+msgstr "Hacer seguimiento de búsquedas..."
 
 #. [mapping.error.keyMissing]
 #. defaultMessage is:
 #. Key Error: {id} entity must have at least one key
 #: i18n/messages.json
 msgid "Key Error: {id} entity must have at least one key"
-msgstr ""
+msgstr "Error de clave: {id} la entidad debe tener al menos una clave"
 
 #. [mapping.keys]
 #. defaultMessage is:
 #. Keys
 #: i18n/messages.json
 msgid "Keys"
-msgstr ""
+msgstr "Claves"
 
 #. [collection.edit.info.label]
 #. defaultMessage is:
@@ -1153,7 +1209,7 @@ msgstr "Etiqueta"
 #. Language
 #: i18n/messages.json
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #. [collection.edit.info.languages]
 #. defaultMessage is:
@@ -1172,47 +1228,54 @@ msgstr "Idiomas"
 msgid "Last updated"
 msgstr "Última actualización"
 
+#. [collection.last_updated]
+#. defaultMessage is:
+#. Last updated {date}
+#: i18n/messages.json
+msgid "Last updated {date}"
+msgstr "Última actualización {date}"
+
 #. [mapping.status.updated]
 #. defaultMessage is:
 #. Last updated:
 #: i18n/messages.json
 msgid "Last updated:"
-msgstr ""
+msgstr "Última actualización:"
 
 #. [mapping.keyAssign.additionalHelpToggle.less]
 #. defaultMessage is:
 #. Less
 #: i18n/messages.json
 msgid "Less"
-msgstr ""
+msgstr "Menos"
 
 #. [collection.edit.info.placeholder_info_url]
 #. defaultMessage is:
 #. Link to further information
 #: i18n/messages.json
 msgid "Link to further information"
-msgstr ""
+msgstr "Enlace a más información"
 
 #. [collection.edit.info.placeholder_publisher_url]
 #. defaultMessage is:
 #. Link to the publisher
 #: i18n/messages.json
 msgid "Link to the publisher"
-msgstr ""
+msgstr "Enlace a editorial"
 
 #. [collection.edit.info.placeholder_data_url]
 #. defaultMessage is:
 #. Link to the raw data in a downloadable form
 #: i18n/messages.json
 msgid "Link to the raw data in a downloadable form"
-msgstr ""
+msgstr "Enlace a datos sin procesar en formato descargable"
 
 #. [text.loading]
 #. defaultMessage is:
 #. Loading…
 #: i18n/messages.json
 msgid "Loading…"
-msgstr ""
+msgstr "Cargando..."
 
 #. [logout.success]
 #. defaultMessage is:
@@ -1231,7 +1294,10 @@ msgstr "Administrar tus alertas"
 #. [collection.creator]
 #. defaultMessage is:
 #. Manager
-#: i18n/messages.json
+#. [collection.edit.info.creator]
+#. defaultMessage is:
+#. Manager
+#: i18n/messages.json i18n/messages.json
 msgid "Manager"
 msgstr "Administrador"
 
@@ -1245,27 +1311,29 @@ msgid ""
 "Match your own data against the entities in this collection using the free {openrefine}\n"
 "              tool by adding the reconciliation endpoint."
 msgstr ""
+"Compara tus datos con las entidades en esta colección usando la herramienta gratuita {openrefine}\n"
+"              agregando el terminal de conciliación."
 
 #. [entity.info.tags]
 #. defaultMessage is:
 #. Mentions
 #: i18n/messages.json
 msgid "Mentions"
-msgstr ""
+msgstr "Menciones"
 
 #. [mapping.keyAssign.additionalHelpToggle.more]
 #. defaultMessage is:
 #. More about keys
 #: i18n/messages.json
 msgid "More about keys"
-msgstr ""
+msgstr "Más información sobre las claves"
 
 #. [result.more_results]
 #. defaultMessage is:
 #. More than {total} results
 #: i18n/messages.json
 msgid "More than {total} results"
-msgstr ""
+msgstr "Más de {total} resultados"
 
 #. [entity.column.name]
 #. defaultMessage is:
@@ -1291,7 +1359,7 @@ msgstr "Nombre"
 #. Network diagrams
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Network diagrams"
-msgstr ""
+msgstr "Diagramas de red"
 
 #. [diagram.description]
 #. defaultMessage is:
@@ -1300,20 +1368,22 @@ msgstr ""
 msgid ""
 "Network diagrams let you visualize complex relationships within a dataset."
 msgstr ""
+"Los diagramas de red te permiten ver relaciones complejas dentro de un "
+"conjunto de datos."
 
 #. [cases.index.create]
 #. defaultMessage is:
 #. New dataset
 #: i18n/messages.json
 msgid "New dataset"
-msgstr ""
+msgstr "Nuevo conjunto de datos"
 
 #. [diagrams.index.create]
 #. defaultMessage is:
 #. New diagram
 #: i18n/messages.json
 msgid "New diagram"
-msgstr ""
+msgstr "Nuevo diagrama"
 
 #. [document.folder.button]
 #. defaultMessage is:
@@ -1323,27 +1393,34 @@ msgstr ""
 #. New folder
 #: i18n/messages.json i18n/messages.json
 msgid "New folder"
-msgstr ""
+msgstr "Nueva carpeta"
 
 #. [settings.new_password]
 #. defaultMessage is:
 #. New password
 #: i18n/messages.json
 msgid "New password"
-msgstr ""
+msgstr "Nueva contraseña"
 
 #. [collection.index.empty]
 #. defaultMessage is:
 #. No datasets were found
 #: i18n/messages.json
 msgid "No datasets were found"
-msgstr ""
+msgstr "No se encontraron conjuntos de datos"
 
 #. [collection.index.no_results]
 #. defaultMessage is:
 #. No datasets were found matching this search
 #: i18n/messages.json
 msgid "No datasets were found matching this search"
+msgstr "No se encontraron conjuntos de datos para esta búsqueda"
+
+#. [diagram.add_entities.select_empty]
+#. defaultMessage is:
+#. No existing diagrams
+#: i18n/messages.json
+msgid "No existing diagrams"
 msgstr ""
 
 #. [entity.document.manager.empty]
@@ -1351,7 +1428,7 @@ msgstr ""
 #. No files or directories.
 #: i18n/messages.json
 msgid "No files or directories."
-msgstr ""
+msgstr "No hay archivos ni directorios"
 
 #. [entity.document.manager.emptyCanUpload]
 #. defaultMessage is:
@@ -1359,13 +1436,22 @@ msgstr ""
 #: i18n/messages.json
 msgid "No files or directories. Drop files here or click to upload."
 msgstr ""
+"No hay archivos ni directorios. Arrastra y suelta archivos aquí o haz clic "
+"para subirlos."
+
+#. [entity.manager.bulk_import.no_results]
+#. defaultMessage is:
+#. No matching documents found
+#: i18n/messages.json
+msgid "No matching documents found"
+msgstr "No se encontraron documentos que coincidan"
 
 #. [mapping.entityAssign.noResults]
 #. defaultMessage is:
 #. No matching objects available
 #: i18n/messages.json
 msgid "No matching objects available"
-msgstr ""
+msgstr "No hay objetos que coincidan disponibles"
 
 #. [email.body.empty]
 #. defaultMessage is:
@@ -1393,14 +1479,14 @@ msgstr "La vista previa para este documento no está disponible"
 #. No results
 #: i18n/messages.json
 msgid "No results"
-msgstr ""
+msgstr "No hay resultados"
 
 #. [result.none]
 #. defaultMessage is:
 #. No results found
 #: i18n/messages.json
 msgid "No results found"
-msgstr ""
+msgstr "No se encontraron resultados"
 
 #. [entity.search.no_results_title]
 #. defaultMessage is:
@@ -1417,7 +1503,7 @@ msgstr "Sin resultados de búsqueda"
 #. No selectors were extracted from this entity.
 #: i18n/messages.json
 msgid "No selectors were extracted from this entity."
-msgstr ""
+msgstr "No se extrajeron selectores de esta entidad."
 
 #. [document.search.no_match]
 #. defaultMessage is:
@@ -1425,6 +1511,8 @@ msgstr ""
 #: i18n/messages.json
 msgid "No single page within this document matches all your search terms."
 msgstr ""
+"Ninguna página de este documento coincide con todos los términos de "
+"búsqueda."
 
 #. [auth.unauthorized]
 #. defaultMessage is:
@@ -1448,7 +1536,19 @@ msgstr "Notificaciones"
 #. Objects
 #: i18n/messages.json
 msgid "Objects"
+msgstr "Objetos"
+
+#. [entity.manager.bulk_import.description.2]
+#. defaultMessage is:
+#. Once selected, you will be prompted to assign columns from that table to
+#. properties of the generated entities.
+#: i18n/messages.json
+msgid ""
+"Once selected, you will be prompted to assign columns from that table to "
+"properties of the generated entities."
 msgstr ""
+"Al seleccionar, se te pedirá que asignes columnas de esa tabla a las "
+"propiedades de las entidades generadas."
 
 #. [document.upload.notice]
 #. defaultMessage is:
@@ -1459,28 +1559,27 @@ msgid ""
 "Once the upload is complete, it will take a few moments for the documents to"
 " be processed and become searchable."
 msgstr ""
+"Cuando la carga se complete, tomará unos minutos para que los documentos se "
+"procesen y puedan aparecer en búsquedas."
 
 #. [result.solo]
 #. defaultMessage is:
 #. One result found
 #: i18n/messages.json
 msgid "One result found"
-msgstr ""
+msgstr "Se encontró un resultado"
 
 #. [collection.edit.info.placeholder_publisher]
 #. defaultMessage is:
 #. Organisation or person publishing this data
 #: i18n/messages.json
 msgid "Organisation or person publishing this data"
-msgstr ""
+msgstr "Organismo o persona que publica estos datos"
 
-#. [category.other]
-#. defaultMessage is:
-#. Other
 #. [mapping.propAssign.other]
 #. defaultMessage is:
 #. Other
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Other"
 msgstr "Otro"
 
@@ -1489,21 +1588,28 @@ msgstr "Otro"
 #. Overview
 #: i18n/messages.json
 msgid "Overview"
-msgstr ""
+msgstr "Resumen"
+
+#. [pages.not.found]
+#. defaultMessage is:
+#. Page not found
+#: i18n/messages.json
+msgid "Page not found"
+msgstr "Página no encontrada"
 
 #. [document.paging]
 #. defaultMessage is:
 #. Page {pageInput} of {numberOfPages}
 #: i18n/messages.json
 msgid "Page {pageInput} of {numberOfPages}"
-msgstr ""
+msgstr "Página {pageInput} de {numberOfPages}"
 
 #. [document.pdf.search.page]
 #. defaultMessage is:
 #. Page {page}
 #: i18n/messages.json
 msgid "Page {page}"
-msgstr ""
+msgstr "Página {page}"
 
 #. [password_auth.password]
 #. defaultMessage is:
@@ -1524,14 +1630,7 @@ msgstr "Las contraseñas no coinciden"
 #. Pending
 #: i18n/messages.json
 msgid "Pending"
-msgstr ""
-
-#. [collection.info.case]
-#. defaultMessage is:
-#. Personal dataset
-#: i18n/messages.json
-msgid "Personal dataset"
-msgstr ""
+msgstr "Pendiente"
 
 #. [nav.casefiles]
 #. defaultMessage is:
@@ -1544,7 +1643,7 @@ msgstr ""
 #. Personal datasets
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Personal datasets"
-msgstr ""
+msgstr "Conjuntos de datos personales"
 
 #. [case.description]
 #. defaultMessage is:
@@ -1557,34 +1656,31 @@ msgid ""
 "to a particular story. You can upload PDFs, email archives or spreadsheets, "
 "and they will be made easy to search and browse."
 msgstr ""
+"Los conjuntos de datos personales te permiten cargar y compartir documentos "
+"y datos que pertenecen a una historia particular. Puedes subir archivos PDF,"
+" enviar por correo electrónico archivos u hojas de cálculo, y se facilitará "
+"su búsqueda y navegación."
 
 #. [xref.match]
 #. defaultMessage is:
 #. Possible match
 #: i18n/messages.json
 msgid "Possible match"
-msgstr ""
+msgstr "Posible coincidencia"
 
 #. [mapping.props]
 #. defaultMessage is:
 #. Properties
 #: i18n/messages.json
 msgid "Properties"
-msgstr ""
+msgstr "Propiedades"
 
 #. [searchTips.proximity.title]
 #. defaultMessage is:
 #. Proximity searches
 #: i18n/messages.json
 msgid "Proximity searches"
-msgstr ""
-
-#. [collection.publish.confirm]
-#. defaultMessage is:
-#. Publish
-#: i18n/messages.json
-msgid "Publish"
-msgstr ""
+msgstr "Búsquedas por aproximación"
 
 #. [collection.publisher]
 #. defaultMessage is:
@@ -1594,84 +1690,91 @@ msgstr ""
 #. Publisher
 #: i18n/messages.json i18n/messages.json
 msgid "Publisher"
-msgstr ""
+msgstr "Editor"
 
 #. [collection.edit.info.publisher_url]
 #. defaultMessage is:
 #. Publisher URL
 #: i18n/messages.json
 msgid "Publisher URL"
-msgstr ""
+msgstr "URL del editor"
+
+#. [restricted.tag]
+#. defaultMessage is:
+#. RESTRICTED
+#: i18n/messages.json
+msgid "RESTRICTED"
+msgstr "RESTRINGIDO"
 
 #. [xref.recompute]
 #. defaultMessage is:
 #. Re-compute
 #: i18n/messages.json
 msgid "Re-compute"
-msgstr ""
+msgstr "Recomputar"
 
 #. [mapping.actions.save.toast]
 #. defaultMessage is:
 #. Re-generating entities...
 #: i18n/messages.json
 msgid "Re-generating entities..."
-msgstr ""
+msgstr "Regenerando entidades"
 
 #. [collection.info.reindex]
 #. defaultMessage is:
 #. Re-index all content
 #: i18n/messages.json
 msgid "Re-index all content"
-msgstr ""
+msgstr "Reindexar todo el contenido"
 
 #. [collection.info.reingest]
 #. defaultMessage is:
 #. Re-ingest documents
 #: i18n/messages.json
 msgid "Re-ingest documents"
-msgstr ""
+msgstr "Reintroducir documentos"
 
 #. [collection.reingest.processing]
 #. defaultMessage is:
 #. Re-ingest started.
 #: i18n/messages.json
 msgid "Re-ingest started."
-msgstr ""
+msgstr "Se inició la reintroducción."
 
 #. [collection.edit.info.analyze]
 #. defaultMessage is:
 #. Re-process
 #: i18n/messages.json
 msgid "Re-process"
-msgstr ""
+msgstr "Reprocesar"
 
 #. [settings.email.muted]
 #. defaultMessage is:
 #. Receive daily notification e-mails
 #: i18n/messages.json
 msgid "Receive daily notification e-mails"
-msgstr ""
+msgstr "Recibir notificaciones diarias por correo electrónico"
 
 #. [notifications.title]
 #. defaultMessage is:
 #. Recent notifications
 #: i18n/messages.json
 msgid "Recent notifications"
-msgstr ""
+msgstr "Notificaciones recientes"
 
 #. [collection.reconcile]
 #. defaultMessage is:
 #. Reconciliation
 #: i18n/messages.json
 msgid "Reconciliation"
-msgstr ""
+msgstr "Conciliación"
 
 #. [xref.entity]
 #. defaultMessage is:
 #. Reference
 #: i18n/messages.json
 msgid "Reference"
-msgstr ""
+msgstr "Referencia"
 
 #. [signup.register]
 #. defaultMessage is:
@@ -1687,48 +1790,49 @@ msgstr "Registro"
 msgid ""
 "Relationship Error: {id} entity must have a {source} and {target} assigned"
 msgstr ""
+"Error de relación: {id} entidad debe tener una {source} y {target} asignadas"
 
 #. [mapping.types.relationships]
 #. defaultMessage is:
 #. Relationships
 #: i18n/messages.json
 msgid "Relationships"
-msgstr ""
+msgstr "Relaciones"
 
 #. [mapping.flush.confirm]
 #. defaultMessage is:
 #. Remove
 #: i18n/messages.json
 msgid "Remove"
-msgstr ""
+msgstr "Eliminar"
 
 #. [queryLogs.query.delete.tooltip]
 #. defaultMessage is:
 #. Remove from {listType}
 #: i18n/messages.json
 msgid "Remove from {listType}"
-msgstr ""
+msgstr "Eliminar de {listType}"
 
 #. [mapping.actions.flush]
 #. defaultMessage is:
 #. Remove generated entities
 #: i18n/messages.json
 msgid "Remove generated entities"
-msgstr ""
+msgstr "Eliminar entidades generadas"
 
 #. [mapping.propRemove]
 #. defaultMessage is:
 #. Remove this property from mapping
 #: i18n/messages.json
 msgid "Remove this property from mapping"
-msgstr ""
+msgstr "Eliminar esta propiedad de la asignación"
 
 #. [mapping.actions.flush.toast]
 #. defaultMessage is:
 #. Removing generated entities...
 #: i18n/messages.json
 msgid "Removing generated entities..."
-msgstr ""
+msgstr "Eliminando entidades generadas"
 
 #. [xref.context.explain1]
 #. defaultMessage is:
@@ -1741,6 +1845,9 @@ msgid ""
 "judgements are sensitive information, so please select what group of users "
 "can view your decisions."
 msgstr ""
+"Revisar las coincidencias de referencias cruzadas te ayuda a marcar y "
+"compartir pistas. Tus juicios son información sensible, así que por favor "
+"selecciona qué grupo de usuarios puede ver tus decisiones."
 
 #. [case.save]
 #. defaultMessage is:
@@ -1767,14 +1874,14 @@ msgstr "Guardar cambios"
 #. Saved
 #: i18n/messages.json
 msgid "Saved"
-msgstr ""
+msgstr "Guardado"
 
 #. [diagram.status_in_progress]
 #. defaultMessage is:
 #. Saving...
 #: i18n/messages.json
 msgid "Saving..."
-msgstr ""
+msgstr "Guardando..."
 
 #. [xref.score]
 #. defaultMessage is:
@@ -1798,28 +1905,35 @@ msgstr "Buscar"
 #. Search companies, people and documents
 #: i18n/messages.json
 msgid "Search companies, people and documents"
-msgstr ""
+msgstr "Buscar empresas, personas y documentos"
 
 #. [sources.index.placeholder]
 #. defaultMessage is:
 #. Search datasets belonging to {group}...
 #: i18n/messages.json
 msgid "Search datasets belonging to {group}..."
-msgstr ""
+msgstr "Buscar conjuntos de datos que pertenecen a {group}..."
 
 #. [collection.index.placeholder]
 #. defaultMessage is:
 #. Search datasets...
 #: i18n/messages.json
 msgid "Search datasets..."
-msgstr ""
+msgstr "Buscar conjuntos de datos..."
+
+#. [entity.document.manager.search_placeholder]
+#. defaultMessage is:
+#. Search documents
+#: i18n/messages.json
+msgid "Search documents"
+msgstr "Buscar documentos"
 
 #. [queryLogs.query.search]
 #. defaultMessage is:
 #. Search for {query}
 #: i18n/messages.json
 msgid "Search for {query}"
-msgstr ""
+msgstr "Buscar {query}"
 
 #. [nav.querylogs]
 #. defaultMessage is:
@@ -1832,58 +1946,93 @@ msgstr ""
 #. Search history
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Search history"
-msgstr ""
+msgstr "Buscar historial"
 
 #. [search.placeholder]
 #. defaultMessage is:
 #. Search in {label}
 #: i18n/messages.json
 msgid "Search in {label}"
-msgstr ""
+msgstr "Buscar en {label}"
 
 #. [cases.placeholder]
 #. defaultMessage is:
 #. Search personal datasets...
 #: i18n/messages.json
 msgid "Search personal datasets..."
-msgstr ""
+msgstr "Buscar conjuntos de datos personales..."
 
 #. [case.users]
 #. defaultMessage is:
 #. Search users
 #: i18n/messages.json
 msgid "Search users"
-msgstr ""
+msgstr "Buscar usuarios"
+
+#. [entity.manager.search_placeholder]
+#. defaultMessage is:
+#. Search {schema}
+#: i18n/messages.json
+msgid "Search {schema}"
+msgstr "Buscar {schema}"
 
 #. [home.statistics.schemata]
 #. defaultMessage is:
 #. Search {things} entities
 #: i18n/messages.json
 msgid "Search {things} entities"
-msgstr ""
+msgstr "Buscar {things} entidades"
 
 #. [result.searching]
 #. defaultMessage is:
 #. Searching...
 #: i18n/messages.json
 msgid "Searching..."
-msgstr ""
+msgstr "Buscando..."
 
-#. [collection.select]
+#. [diagram.create.collection.existing]
 #. defaultMessage is:
 #. Select a dataset
-#. [diagram.collectionSelect]
-#. defaultMessage is:
-#. Select a dataset
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Select a dataset"
-msgstr ""
+msgstr "Seleccionar un conjunto de datos"
 
 #. [mapping.import.querySelect]
 #. defaultMessage is:
 #. Select a mapping query from this file to import:
 #: i18n/messages.json
 msgid "Select a mapping query from this file to import:"
+msgstr "Selecciona una consulta de mapeo de este archivo para importar:"
+
+#. [entity.manager.bulk_import.description.1]
+#. defaultMessage is:
+#. Select a table below from which to import new {schema} entities.
+#: i18n/messages.json
+msgid "Select a table below from which to import new {schema} entities."
+msgstr ""
+"Seleccione una tabla de abajo desde la cual importar nuevas entidades de "
+"{schema}."
+
+#. [entity.manager.bulk_import.placeholder]
+#. defaultMessage is:
+#. Select a table document
+#: i18n/messages.json
+msgid "Select a table document"
+msgstr "Seleccionar un documento de tabla"
+
+#. [entity.document.manager.cannot_map]
+#. defaultMessage is:
+#. Select a table document to generate structured entities
+#: i18n/messages.json
+msgid "Select a table document to generate structured entities"
+msgstr ""
+"Selecciona un documento de tablea para generar entidades estructuradas"
+
+#. [diagram.add_entities.select_placeholder]
+#. defaultMessage is:
+#. Select an existing diagram
+#: i18n/messages.json
+msgid "Select an existing diagram"
 msgstr ""
 
 #. [mapping.entityAssign.placeholder]
@@ -1891,21 +2040,21 @@ msgstr ""
 #. Select an object
 #: i18n/messages.json
 msgid "Select an object"
-msgstr ""
+msgstr "Seleccionar un objeto"
 
 #. [collection.edit.info.placeholder_country]
 #. defaultMessage is:
 #. Select countries
 #: i18n/messages.json
 msgid "Select countries"
-msgstr ""
+msgstr "Seleccionar países"
 
 #. [mapping.keyAssign.placeholder]
 #. defaultMessage is:
 #. Select keys from available columns
 #: i18n/messages.json
 msgid "Select keys from available columns"
-msgstr ""
+msgstr "Seleccionar claves de columnas disponibles"
 
 #. [collection.edit.info.placeholder_language]
 #. defaultMessage is:
@@ -1915,7 +2064,7 @@ msgstr ""
 #. Select languages
 #: i18n/messages.json i18n/messages.json
 msgid "Select languages"
-msgstr ""
+msgstr "Seleccionar idiomas"
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -1949,28 +2098,28 @@ msgstr "Configuraciones"
 #. Share
 #: i18n/messages.json
 msgid "Share"
-msgstr ""
+msgstr "Compartir"
 
 #. [case.share.with]
 #. defaultMessage is:
 #. Share with
 #: i18n/messages.json
 msgid "Share with"
-msgstr ""
+msgstr "Compartir con"
 
 #. [xref.context.select]
 #. defaultMessage is:
 #. Share with:
 #: i18n/messages.json
 msgid "Share with:"
-msgstr ""
+msgstr "Compartir con:"
 
 #. [collection.statistics.showmore]
 #. defaultMessage is:
 #. Show more
 #: i18n/messages.json
 msgid "Show more"
-msgstr ""
+msgstr "Mostrar más"
 
 #. [search.facets.showMore]
 #. defaultMessage is:
@@ -2025,7 +2174,7 @@ msgstr "Registrarse"
 #. Similar
 #: i18n/messages.json
 msgid "Similar"
-msgstr ""
+msgstr "Similar"
 
 #. [collection.index.sort.count]
 #. defaultMessage is:
@@ -2046,13 +2195,15 @@ msgid ""
 "Some sources are hidden from anonymous users. {signInButton} to see all "
 "results you are authorised to access."
 msgstr ""
+"Algunas fuentes se ocultan a los usuarios anónimos. {signInButton} para ver "
+"todos los resultados a los que estás autorizado a acceder."
 
 #. [sorting.bar.label]
 #. defaultMessage is:
 #. Sort by:
 #: i18n/messages.json
 msgid "Sort by:"
-msgstr ""
+msgstr "Ordenar por:"
 
 #. [mapping.keyAssign.helpText]
 #. defaultMessage is:
@@ -2063,48 +2214,50 @@ msgid ""
 "Specify which columns from the source data will be used to identify unique "
 "entities."
 msgstr ""
+"Especifica qué columnas de los datos fuente se utilizarán para identificar "
+"entidades únicas."
 
 #. [searchTips.spelling.title]
 #. defaultMessage is:
 #. Spelling variants
 #: i18n/messages.json
 msgid "Spelling variants"
-msgstr ""
+msgstr "Variantes ortográficas"
 
 #. [collection.reindex.confirm]
 #. defaultMessage is:
 #. Start indexing
 #: i18n/messages.json
 msgid "Start indexing"
-msgstr ""
+msgstr "Empezar a indexar"
 
 #. [collection.reingest.confirm]
 #. defaultMessage is:
 #. Start processing
 #: i18n/messages.json
 msgid "Start processing"
-msgstr ""
+msgstr "Empezar a procesar"
 
 #. [xref.context.submit]
 #. defaultMessage is:
 #. Start review
 #: i18n/messages.json
 msgid "Start review"
-msgstr ""
+msgstr "Empezar revisión"
 
 #. [mapping.status.status]
 #. defaultMessage is:
 #. Status:
 #: i18n/messages.json
 msgid "Status:"
-msgstr ""
+msgstr "Estado:"
 
 #. [xref.context.stop]
 #. defaultMessage is:
 #. Stop review
 #: i18n/messages.json
 msgid "Stop review"
-msgstr ""
+msgstr "Detener revisión"
 
 #. [diagram.update.submit]
 #. defaultMessage is:
@@ -2114,7 +2267,7 @@ msgstr ""
 #. Submit
 #: i18n/messages.json i18n/messages.json
 msgid "Submit"
-msgstr ""
+msgstr "Enviar"
 
 #. [auth.success]
 #. defaultMessage is:
@@ -2123,12 +2276,24 @@ msgstr ""
 msgid "Success"
 msgstr "Acierto"
 
+#. [diagram.add_entities.success]
+#. defaultMessage is:
+#. Successfully added {count} {count, plural, one {entity} other {entities}}
+#. to {diagram}
+#: i18n/messages.json
+msgid ""
+"Successfully added {count} {count, plural, one {entity} other {entities}} to"
+" {diagram}"
+msgstr ""
+"Se agregó correctamente {count} {count, plural, one {entity} other "
+"{entities}} a {diagram}"
+
 #. [entity.delete.success]
 #. defaultMessage is:
 #. Successfully deleted
 #: i18n/messages.json
 msgid "Successfully deleted"
-msgstr ""
+msgstr "Se eliminó correctamente"
 
 #. [collection.edit.info.summary]
 #. defaultMessage is:
@@ -2148,35 +2313,35 @@ msgstr "Resumen"
 #. System Status
 #: i18n/messages.json
 msgid "System Status"
-msgstr ""
+msgstr "Estado del sistema"
 
 #. [dashboard.status]
 #. defaultMessage is:
 #. System status
 #: i18n/messages.json
 msgid "System status"
-msgstr ""
+msgstr "Estado del sistema"
 
 #. [collection.status.progress]
 #. defaultMessage is:
 #. Tasks
 #: i18n/messages.json
 msgid "Tasks"
-msgstr ""
+msgstr "Tareas"
 
 #. [settings.email.tester]
 #. defaultMessage is:
 #. Test new features before they are finished
 #: i18n/messages.json
 msgid "Test new features before they are finished"
-msgstr ""
+msgstr "Prueba las funciones nuevas antes de que estén terminadas"
 
 #. [entity.info.text]
 #. defaultMessage is:
 #. Text
 #: i18n/messages.json
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #. [auth.bad_request]
 #. defaultMessage is:
@@ -2199,6 +2364,9 @@ msgid ""
 "                  or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow\n"
 "                  Aleph to generate unique entities correctly from your data."
 msgstr ""
+"Las mejores claves son las columnas de tus datos que contienen números de identificación, números de teléfono, direcciones de correo electrónico,\n"
+"                  u otra información de identificación única. Si no existen columnas con valores únicos, seleccione varias columnas para permitir que\n"
+"                  Aleph genere entidades exclusivas correctamente a partir de tus datos."
 
 #. [group.page.description]
 #. defaultMessage is:
@@ -2206,13 +2374,15 @@ msgstr ""
 #: i18n/messages.json
 msgid "The list below shows all datasets that belong to this group."
 msgstr ""
+"La lista a continuación muestra todos los conjuntos de datos que pertenecen "
+"a este grupo."
 
 #. [error.screen.not_found]
 #. defaultMessage is:
 #. The requested page could not be found.
 #: i18n/messages.json
 msgid "The requested page could not be found."
-msgstr ""
+msgstr "No se encontró la página solicitada."
 
 #. [searchTips.composite.1]
 #. defaultMessage is:
@@ -2225,6 +2395,9 @@ msgid ""
 "three terms: banana, ice, and cream.  Results with one or more of the given "
 "terms will follow"
 msgstr ""
+"La búsqueda <em>helado cremoso banana</em> prioriza los resultados que "
+"contienen los tres términos: banana, cremoso y banana. Luego seguirán los "
+"resultados con uno o más de los términos indicados"
 
 #. [document.viewer.ignored_file]
 #. defaultMessage is:
@@ -2243,28 +2416,35 @@ msgstr ""
 #. There are no cross-referencing results.
 #: i18n/messages.json
 msgid "There are no cross-referencing results."
-msgstr ""
+msgstr "No hay resultados de referencias cruzadas."
+
+#. [diagrams.no_diagrams]
+#. defaultMessage is:
+#. There are no network diagrams.
+#: i18n/messages.json
+msgid "There are no network diagrams."
+msgstr "No hay diagramas de red."
 
 #. [collection.status.no_active]
 #. defaultMessage is:
 #. There are no ongoing tasks
 #: i18n/messages.json
 msgid "There are no ongoing tasks"
-msgstr ""
+msgstr "No hay tareas en proceso"
 
 #. [entity.similar.empty]
 #. defaultMessage is:
 #. There are no similar entities.
 #: i18n/messages.json
 msgid "There are no similar entities."
-msgstr ""
+msgstr "No hay entidades similares."
 
 #. [document.folder.error]
 #. defaultMessage is:
 #. There was an error creating the folder.
 #: i18n/messages.json
 msgid "There was an error creating the folder."
-msgstr ""
+msgstr "Se produjo un error al crear la carpeta."
 
 #. [diagram.error_warning]
 #. defaultMessage is:
@@ -2275,13 +2455,15 @@ msgid ""
 "There was an error saving your latest changes, are you sure you want to "
 "leave?"
 msgstr ""
+"Hubo un error al guardar tus últimos cambios, ¿estás seguro de que quieres "
+"salir?"
 
 #. [document.upload.error]
 #. defaultMessage is:
 #. There was an error while uploading the file.
 #: i18n/messages.json
 msgid "There was an error while uploading the file."
-msgstr ""
+msgstr "Hubo un error al subir el archivo."
 
 #. [searchTips.composite.6]
 #. defaultMessage is:
@@ -2296,27 +2478,39 @@ msgid ""
 "appears with ice cream or gelato in the document but where chocolate is not "
 "present"
 msgstr ""
+"Estas operaciones se pueden combinar como desees. Por ejemplo <em>banana AND"
+" (“helado” OR “gelato”) -chocolate</em> arrojará resultados donde aparece "
+"banana con helado o gelato en el documento pero donde chocolate no esté "
+"presente"
+
+#. [collection.edit.info.restricted]
+#. defaultMessage is:
+#. This collection is restricted and viewers should be warned.
+#: i18n/messages.json
+msgid "This collection is restricted and viewers should be warned."
+msgstr ""
+"Esta colección está restringida y los visitantes deberían estar advertidos."
 
 #. [entity.references.no_relationships]
 #. defaultMessage is:
 #. This entity does not have any relationships.
 #: i18n/messages.json
 msgid "This entity does not have any relationships."
-msgstr ""
+msgstr "Esta entidad no tiene ninguna relación."
 
 #. [entity.search.empty_title]
 #. defaultMessage is:
 #. This folder is empty
 #: i18n/messages.json
 msgid "This folder is empty"
-msgstr ""
+msgstr "Esta carpeta está vacía"
 
 #. [sources.index.empty]
 #. defaultMessage is:
 #. This group is not linked to any datasets.
 #: i18n/messages.json
 msgid "This group is not linked to any datasets."
-msgstr ""
+msgstr "Este grupo no está vinculado a ningún conjunto de datos."
 
 #. [collection.index.sort.label]
 #. defaultMessage is:
@@ -2329,7 +2523,7 @@ msgstr ""
 #. Title
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #. [searchTips.proximity.1]
 #. defaultMessage is:
@@ -2348,27 +2542,33 @@ msgid ""
 "two words from each other, such as \"Bank of America\", \"Bank in America\","
 " even \"America has a Bank\"."
 msgstr ""
+"Para buscar dos términos con cierta separación uno del otro, usa comillas "
+"dobles <em>\"\"</em> entre las palabras y el símbolo de tilde <em>~</em> al "
+"final de la frase. Por ejemplo, al buscar <em>“Banco México”~2</em> se "
+"encontrarán resultados relevantes con los términos \"Banco\" y \"México\" "
+"que aparezcan a dos palabras uno del otro, como \"Banco de México\", \"Banco"
+" en México\", o incluso \"México tiene un banco\"."
 
 #. [alerts.track]
 #. defaultMessage is:
 #. Track
 #: i18n/messages.json
 msgid "Track"
-msgstr ""
+msgstr "Hacer seguimiento"
 
 #. [alert.suggest.prompt]
 #. defaultMessage is:
 #. Track {queryText}: {alertComponent}
 #: i18n/messages.json
 msgid "Track {queryText}: {alertComponent}"
-msgstr ""
+msgstr "Hacer seguimiento {queryText}: {alertComponent}"
 
 #. [alerts.title]
 #. defaultMessage is:
 #. Tracking alerts
 #: i18n/messages.json
 msgid "Tracking alerts"
-msgstr ""
+msgstr "Alertas de seguimiento"
 
 #. [entity.search.no_results_description]
 #. defaultMessage is:
@@ -2399,14 +2599,14 @@ msgstr "Tipo"
 #. Untitled dataset
 #: i18n/messages.json
 msgid "Untitled dataset"
-msgstr ""
+msgstr "Conjunto de datos sin título"
 
 #. [diagram.create.label_placeholder]
 #. defaultMessage is:
 #. Untitled diagram
 #: i18n/messages.json
 msgid "Untitled diagram"
-msgstr ""
+msgstr "Diagrama sin título"
 
 #. [alerts.save]
 #. defaultMessage is:
@@ -2423,31 +2623,42 @@ msgstr "Actualizar"
 #. Update Date
 #: i18n/messages.json
 msgid "Update Date"
-msgstr ""
+msgstr "Fecha de actualización"
+
+#. [collection.edit.info.frequency]
+#. defaultMessage is:
+#. Update frequency
+#: i18n/messages.json
+msgid "Update frequency"
+msgstr "Frecuencia de actualización"
 
 #. [collection.status.title]
 #. defaultMessage is:
 #. Update in progress ({percent}%)
 #: i18n/messages.json
 msgid "Update in progress ({percent}%)"
-msgstr ""
+msgstr "Actualización en progreso ({percent}%)"
 
 #. [mapping.save.confirm]
 #. defaultMessage is:
 #. Update mapping & re-generate
 #: i18n/messages.json
 msgid "Update mapping & re-generate"
-msgstr ""
+msgstr "Actualizar mapeo y regenerar"
 
-#. [collection.last_updated]
-#. defaultMessage is:
-#. Updated {date}
 #. [diagram.last_updated]
 #. defaultMessage is:
 #. Updated {date}
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Updated {date}"
 msgstr "Actualizado {date}"
+
+#. [collection.frequency]
+#. defaultMessage is:
+#. Updates
+#: i18n/messages.json
+msgid "Updates"
+msgstr "Actualizaciones"
 
 #. [mapping.save.question]
 #. defaultMessage is:
@@ -2458,6 +2669,8 @@ msgid ""
 "Updating this mapping will delete any previously generated entities and re-"
 "generate them. Are you sure you would like to continue?"
 msgstr ""
+"Al actualizar este mapeo se eliminará cualquier entidad generada "
+"anteriormente y se regenerarán. ¿Seguro que quieres continuar?"
 
 #. [document.upload.button]
 #. defaultMessage is:
@@ -2467,21 +2680,21 @@ msgstr ""
 #. Upload
 #: i18n/messages.json i18n/messages.json
 msgid "Upload"
-msgstr ""
+msgstr "Subir"
 
 #. [document.upload.title]
 #. defaultMessage is:
 #. Upload Documents
 #: i18n/messages.json
 msgid "Upload Documents"
-msgstr ""
+msgstr "Subir documentos"
 
 #. [document.upload.progress]
 #. defaultMessage is:
 #. Uploading: {file}...
 #: i18n/messages.json
 msgid "Uploading: {file}..."
-msgstr ""
+msgstr "Subiendo: {file}..."
 
 #. [searchTips.exact.1]
 #. defaultMessage is:
@@ -2494,6 +2707,9 @@ msgid ""
 "<em>\"barack obama\"</em> will return only results containing the exact "
 "phrase \"barack obama\""
 msgstr ""
+"Utiliza <em>\"\"</em> para obtener solo coincidencias exactas. Por ejemplo, "
+"la búsqueda <em>\"barack obama\"</em> devolverá solo resultados que "
+"contaengan la frase exacta \"barack obama\""
 
 #. [searchTips.spelling.1]
 #. defaultMessage is:
@@ -2510,6 +2726,11 @@ msgid ""
 "is defined by the number of spelling mistakes that must be made to get from "
 "the original word to the variant."
 msgstr ""
+"Utiliza <em>~</em> para hacer búsquedas no exactas. Por ejemplo, "
+"<em>Wladimir~2</em> arrojará no solo el término “Wladimir” sino variaciones "
+"ortográficas similares como \"Wladimyr\" o \"Vladimyr\". Una variante "
+"ortográfica está definida por el número de errores ortográficos que hay "
+"entre la palabra original y la variante."
 
 #. [settings.password.rules]
 #. defaultMessage is:
@@ -2517,6 +2738,18 @@ msgstr ""
 #: i18n/messages.json
 msgid "Use at least six characters"
 msgstr "Usa, al menos, seis caracteres"
+
+#. [restricted.explain]
+#. defaultMessage is:
+#. Use of this dataset is restricted. Read the description and contact
+#. {creator} before using this material.
+#: i18n/messages.json
+msgid ""
+"Use of this dataset is restricted. Read the description and contact "
+"{creator} before using this material."
+msgstr ""
+"El uso de este conjunto de datos está restringido. Lee la descripción y "
+"contacta a {creator} antes de usar este material."
 
 #. [profileinfo.api_desc]
 #. defaultMessage is:
@@ -2532,7 +2765,7 @@ msgstr ""
 #. Used for optical text recognition in non-Latin alphabets.
 #: i18n/messages.json
 msgid "Used for optical text recognition in non-Latin alphabets."
-msgstr ""
+msgstr "Se usa para reconocimiento óptico de texto en alfabetos no latinos."
 
 #. [collection.edit.users]
 #. defaultMessage is:
@@ -2558,6 +2791,8 @@ msgstr "Vista"
 msgid ""
 "View the latest updates to datasets, groups and tracking alerts you follow."
 msgstr ""
+"Revisa las últimas actualizaciones a conjuntos de datos, grupos y alertas de"
+" seguimiento que has definido."
 
 #. [signup.inbox.desc]
 #. defaultMessage is:
@@ -2576,14 +2811,14 @@ msgstr ""
 #. What's new, {role}?
 #: i18n/messages.json
 msgid "What's new, {role}?"
-msgstr ""
+msgstr "¿Qué hay de nuevo, {role}?"
 
 #. [dashboard.workspace]
 #. defaultMessage is:
 #. Workspace
 #: i18n/messages.json
 msgid "Workspace"
-msgstr ""
+msgstr "Espacio de trabajo"
 
 #. [xref.context.info.general]
 #. defaultMessage is:
@@ -2594,6 +2829,9 @@ msgid ""
 "You are in <strong>review mode</strong>. In this mode, you can record "
 "judgements about what cross-reference matches are good or bad results."
 msgstr ""
+"Estás en <strong>modo revisión</strong>. En este modo, puedes registrar "
+"juicios sobre cuáles coincidencias de referencias cruzadas son resultados "
+"aceptables o malos."
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
@@ -2603,48 +2841,44 @@ msgstr ""
 #. You are not tracking any searches
 #: i18n/messages.json i18n/messages.json
 msgid "You are not tracking any searches"
-msgstr ""
-
-#. [collection.publish.alert.text]
-#. defaultMessage is:
-#. You are publishing a dataset. Published datasets are understood as raw
-#. evidence and can be made public for every visitor of the system to see.
-#. Please make sure you do not publish material identifying your sources,
-#. directly or through metadata.
-#: i18n/messages.json
-msgid ""
-"You are publishing a dataset. Published datasets are understood as raw "
-"evidence and can be made public for every visitor of the system to see. "
-"Please make sure you do not publish material identifying your sources, "
-"directly or through metadata."
-msgstr ""
+msgstr "No estás haciendo seguimiento de ninguna búsqueda"
 
 #. [navbar.alert_remove]
 #. defaultMessage is:
 #. You are receiving alerts about this search.
 #: i18n/messages.json
 msgid "You are receiving alerts about this search."
-msgstr ""
+msgstr "Estás recibiendo alertas sobre esta búsqueda."
 
 #. [diagrams.no_results_title]
 #. defaultMessage is:
 #. You do not have any network diagrams yet
 #: i18n/messages.json
 msgid "You do not have any network diagrams yet"
-msgstr ""
+msgstr "Aún no tienes diagramas de red"
 
 #. [cases.no_results_title]
 #. defaultMessage is:
 #. You do not have any personal datasets yet.
 #: i18n/messages.json
 msgid "You do not have any personal datasets yet."
-msgstr ""
+msgstr "Aún no tienes conjuntos de datos personales."
 
 #. [notifications.no_notifications]
 #. defaultMessage is:
 #. You have no unseen notifications
 #: i18n/messages.json
 msgid "You have no unseen notifications"
+msgstr "No tienes notificaciones sin leer"
+
+#. [diagram.add_entities.selected_count]
+#. defaultMessage is:
+#. You have selected {count} {count_simple, plural, one {entity} other
+#. {entities}} to add to a diagram.
+#: i18n/messages.json
+msgid ""
+"You have selected {count} {count_simple, plural, one {entity} other "
+"{entities}} to add to a diagram."
 msgstr ""
 
 #. [mapping.entityAssign.helpText]
@@ -2652,21 +2886,21 @@ msgstr ""
 #. You must create an object of type "{range}" to be the {property}
 #: i18n/messages.json
 msgid "You must create an object of type \"{range}\" to be the {property}"
-msgstr ""
+msgstr "Debes crear un objeto de tipo \"{range}\" para que sea la {property}"
 
 #. [diagram.create.login]
 #. defaultMessage is:
 #. You must log in to create a diagram
 #: i18n/messages.json
 msgid "You must log in to create a diagram"
-msgstr ""
+msgstr "Debes iniciar sesión para crear un diagrama"
 
 #. [case.create.login]
 #. defaultMessage is:
 #. You must sign in to upload your own data.
 #: i18n/messages.json
 msgid "You must sign in to upload your own data."
-msgstr ""
+msgstr "Debes iniciar sesión para subir tus propios datos."
 
 #. [collection.xref.text]
 #. defaultMessage is:
@@ -2677,6 +2911,9 @@ msgid ""
 "You will now cross-reference this dataset against all other sources. Start "
 "this process once and then wait for it to complete."
 msgstr ""
+"Ahora harás una referencia cruzada de esta conjunto de datos con todas las "
+"demás fuentes. Empieza este proceso una vez y luego espera a que se "
+"complete."
 
 #. [alert.manager.description]
 #. defaultMessage is:
@@ -2687,6 +2924,8 @@ msgid ""
 "You will receive notifications when a new result is added that matches any "
 "of the alerts you have set up below."
 msgstr ""
+"Recibirás notificaciones cuando se agregue un nuevo resultado que coincida "
+"con cualquiera de las alertas que has configurado a continuación."
 
 #. [collection.analyze.alert.text]
 #. defaultMessage is:
@@ -2697,6 +2936,9 @@ msgid ""
 "You're about to re-index the entities in this dataset. This can be helpful "
 "if there are inconsistencies in how the data is presented."
 msgstr ""
+"Estás a punto de reindexar las entidades en este conjunto de datos. Esto "
+"puede ser útil si hay inconsistencias en la forma en que se presentan los "
+"datos."
 
 #. [collection.reingest.text]
 #. defaultMessage is:
@@ -2707,6 +2949,8 @@ msgid ""
 "You're about to re-process all documents in this dataset. This might take "
 "some time."
 msgstr ""
+"Estás a punto de reprocesar todos los documentos en este conjunto de datos. "
+"Esto podría tomar un tiempo."
 
 #. [password_auth.name]
 #. defaultMessage is:
@@ -2731,20 +2975,22 @@ msgid ""
 "Your decisions will be shared with the members of "
 "<strong>{context}</strong>."
 msgstr ""
+"Tus decisiones se compartirán con los miembros de "
+"<strong>{context}</strong>."
 
 #. [diagram.create.success]
 #. defaultMessage is:
 #. Your diagram has been created successfully.
 #: i18n/messages.json
 msgid "Your diagram has been created successfully."
-msgstr ""
+msgstr "Tu diagrama se ha creado correctamente."
 
 #. [diagram.update.success]
 #. defaultMessage is:
 #. Your diagram has been successfully updated.
 #: i18n/messages.json
 msgid "Your diagram has been successfully updated."
-msgstr ""
+msgstr "Tu diagrama se ha actualizado correctamente."
 
 #. [settings.email.no_change]
 #. defaultMessage is:
@@ -2758,7 +3004,7 @@ msgstr "Tu dirección de correo electrónico no puede ser modificada"
 #. Your mapping has been imported successfully.
 #: i18n/messages.json
 msgid "Your mapping has been imported successfully."
-msgstr ""
+msgstr "Tu mapeo se ha importado correctamente."
 
 #. [pass.auth.not_same]
 #. defaultMessage is:
@@ -2772,21 +3018,21 @@ msgstr "¡Tus contraseñas no coinciden!"
 #. click here
 #: i18n/messages.json
 msgid "click here"
-msgstr ""
+msgstr "haz clic aquí"
 
 #. [home.statistics.categories]
 #. defaultMessage is:
 #. from {collections} datasets
 #: i18n/messages.json
 msgid "from {collections} datasets"
-msgstr ""
+msgstr "de grupos de datos de {collections}"
 
 #. [home.statistics.countries]
 #. defaultMessage is:
 #. in {count} countries
 #: i18n/messages.json
 msgid "in {count} countries"
-msgstr ""
+msgstr "en {count} países"
 
 #. [search.filterTag.ancestors]
 #. defaultMessage is:
@@ -2802,124 +3048,138 @@ msgstr "en:"
 msgid "not:"
 msgstr "no:"
 
+#. [diagram.add.or]
+#. defaultMessage is:
+#. or
+#: i18n/messages.json
+msgid "or"
+msgstr "o"
+
+#. [restricted.explain.creator]
+#. defaultMessage is:
+#. the dataset owner
+#: i18n/messages.json
+msgid "the dataset owner"
+msgstr "el titular del conjunto de datos"
+
 #. [entity.properties.missing]
 #. defaultMessage is:
 #. unknown
 #: i18n/messages.json
 msgid "unknown"
-msgstr ""
+msgstr "desconocido"
 
 #. [facet.addresses]
 #. defaultMessage is:
 #. {count, plural, one {Address} other {Addresses}}
 #: i18n/messages.json
 msgid "{count, plural, one {Address} other {Addresses}}"
-msgstr ""
+msgstr "{count, plural, one {Address} other {Addresses}}"
 
 #. [facet.category]
 #. defaultMessage is:
 #. {count, plural, one {Category} other {Categories}}
 #: i18n/messages.json
 msgid "{count, plural, one {Category} other {Categories}}"
-msgstr ""
+msgstr "{count, plural, one {Category} other {Categories}}"
 
 #. [facet.countries]
 #. defaultMessage is:
 #. {count, plural, one {Country} other {Countries}}
 #: i18n/messages.json
 msgid "{count, plural, one {Country} other {Countries}}"
-msgstr ""
+msgstr "{count, plural, one {Country} other {Countries}}"
 
 #. [facet.collection_id]
 #. defaultMessage is:
 #. {count, plural, one {Dataset} other {Datasets}}
 #: i18n/messages.json
 msgid "{count, plural, one {Dataset} other {Datasets}}"
-msgstr ""
+msgstr "{count, plural, one {Dataset} other {Datasets}}"
 
 #. [facet.emails]
 #. defaultMessage is:
 #. {count, plural, one {E-Mail} other {E-Mails}}
 #: i18n/messages.json
 msgid "{count, plural, one {E-Mail} other {E-Mails}}"
-msgstr ""
+msgstr "{count, plural, one {E-Mail} other {E-Mails}}"
 
 #. [facet.mimetypes]
 #. defaultMessage is:
 #. {count, plural, one {File type} other {File types}}
 #: i18n/messages.json
 msgid "{count, plural, one {File type} other {File types}}"
-msgstr ""
+msgstr "{count, plural, one {File type} other {File types}}"
 
 #. [facet.ibans]
 #. defaultMessage is:
 #. {count, plural, one {IBAN} other {IBANs}}
 #: i18n/messages.json
 msgid "{count, plural, one {IBAN} other {IBANs}}"
-msgstr ""
+msgstr "{count, plural, one {IBAN} other {IBANs}}"
 
 #. [facet.languages]
 #. defaultMessage is:
 #. {count, plural, one {Language} other {Languages}}
 #: i18n/messages.json
 msgid "{count, plural, one {Language} other {Languages}}"
-msgstr ""
+msgstr "{count, plural, one {Language} other {Languages}}"
 
 #. [facet.names]
 #. defaultMessage is:
 #. {count, plural, one {Name} other {Names}}
 #: i18n/messages.json
 msgid "{count, plural, one {Name} other {Names}}"
-msgstr ""
+msgstr "{count, plural, one {Name} other {Names}}"
 
 #. [facet.phones]
 #. defaultMessage is:
 #. {count, plural, one {Phone number} other {Phone numbers}}
 #: i18n/messages.json
 msgid "{count, plural, one {Phone number} other {Phone numbers}}"
-msgstr ""
+msgstr "{count, plural, one {Phone number} other {Phone numbers}}"
 
 #. [facet.schema]
 #. defaultMessage is:
 #. {count, plural, one {Type} other {Types}}
 #: i18n/messages.json
 msgid "{count, plural, one {Type} other {Types}}"
-msgstr ""
+msgstr "{count, plural, one {Type} other {Types}}"
 
 #. [infoMode.collection.entries]
 #. defaultMessage is:
 #. {count} entries
 #: i18n/messages.json
 msgid "{count} entries"
-msgstr ""
+msgstr "{count} entradas"
 
 #. [valuelink.tooltip]
 #. defaultMessage is:
 #. {count} mentions in {appName}
 #: i18n/messages.json
 msgid "{count} mentions in {appName}"
-msgstr ""
+msgstr "{count} menciones en {appName}"
 
 #. [home.statistics.territories]
 #. defaultMessage is:
 #. {count} more countries & territories
 #: i18n/messages.json
 msgid "{count} more countries & territories"
-msgstr ""
+msgstr "{count} países y territorios más"
 
 #. [home.statistics.other]
 #. defaultMessage is:
 #. {count} more datasets
 #: i18n/messages.json
 msgid "{count} more datasets"
-msgstr ""
+msgstr "{count} conjuntos de datos más"
 
 #. [home.statistics.othertypes]
 #. defaultMessage is:
 #. {count} more entity types
 #: i18n/messages.json
 msgid "{count} more entity types"
-msgstr ""
+msgstr "{count} tipos de entidad más"
 
 #. [search.facets.filtersSelected]
 #. defaultMessage is:

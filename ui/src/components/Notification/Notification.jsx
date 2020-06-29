@@ -70,8 +70,10 @@ class Notification extends PureComponent {
       } else if (paramActive) {
         const param = this.getParam(token);
         message.push((<span key={token} className="param">{param}</span>));
+      } else if (token.length===0){
+        return false;
       } else {
-        message.push(token);
+        message.push((<span class="token">{token}</span>));
       }
     });
 
@@ -79,6 +81,9 @@ class Notification extends PureComponent {
     const { value, unit } = selectUnit(createdDate, Date.now());
     return (
       <li key={id} className="Notification">
+        <div className="notification-action">
+          {message}
+        </div>
         <div className="timestamp">
           <FormattedRelativeTime
             value={value}
@@ -88,7 +93,6 @@ class Notification extends PureComponent {
             numeric="auto"
           />
         </div>
-        {message}
       </li>
     );
   }

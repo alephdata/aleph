@@ -1,15 +1,33 @@
 import React, { Component } from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
+import { ErrorSection } from 'src/components/common';
 import DiagramListItem from 'src/components/Diagram/DiagramListItem';
 
 import './DiagramList.scss';
 
+const messages = defineMessages({
+  no_diagrams: {
+    id: 'diagrams.no_diagrams',
+    defaultMessage: 'There are no network diagrams.',
+  },
+});
+
 class DiagramList extends Component {
   render() {
-    const { getMoreItems, result, showCollection } = this.props;
+    const { getMoreItems, intl, result, showCollection } = this.props;
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
+
+    if (result.total === 0) {
+      return (
+        <ErrorSection
+          icon="graph"
+          title={intl.formatMessage(messages.no_diagrams)}
+        />
+      );
+    }
 
     return (
       <div className="DiagramList">
@@ -31,4 +49,4 @@ class DiagramList extends Component {
   }
 }
 
-export default DiagramList;
+export default injectIntl(DiagramList);

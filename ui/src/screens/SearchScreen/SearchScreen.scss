@@ -1,9 +1,10 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .SearchScreen {
   .total-count-span {
     display: inline-flex;
-    padding-left: 0.5em;
+    @include rtlSupportInvertedProp(padding, left, 0.5em, null);
     font-size: 1.1em;
     font-weight: bold;
   }
@@ -17,7 +18,7 @@
   }
 
   .total-icon {
-    margin-right: 0.5em;
+    @include rtlSupportInvertedProp(margin, right, 0.5em, null);
   }
 
   .facets {

@@ -1,0 +1,56 @@
+@import "src/app/variables.scss";
+@import "src/app/mixins.scss";
+
+$search-bar-width: 250px;
+
+.EntityActionBar {
+  &.bp3-control-group {
+    justify-content: space-between;
+
+    .bp3-input-group {
+      min-width: $search-bar-width;
+      .bp3-input:not(:first-child) {
+        @include rtlSupportInvertedProp(padding, left, 30px, 0);
+      }
+    }
+    .bp3-input-group, .bp3-button-group {
+      border-radius: 3px;
+    }
+  }
+
+  .bp3-divider {
+    @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
+    margin: 0 7px;
+  }
+
+  .bp3-overflow-list {
+    width: calc(100% - #{$search-bar-width + 10px});
+  }
+
+  &__delete, .bp3-popover-wrapper .bp3-button  {
+    border-top-right-radius: $aleph-border-radius !important;
+    border-bottom-right-radius: $aleph-border-radius !important;
+  }
+
+  &__overflow-list {
+    .bp3-popover-content {
+      padding: $aleph-grid-size/2;
+
+      .Count {
+        @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+      }
+    }
+  }
+
+  .prevent-flex-grow.bp3-popover-wrapper {
+    flex: 0 0 auto !important;
+  }
+
+  .align-middle {
+    vertical-align: middle;
+  }
+
+  .Count {
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+  }
+}

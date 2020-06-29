@@ -1,10 +1,11 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .CollectionIndex {
   &__controls {
     .SortingBar {
       margin-top: $aleph-grid-size;
-      text-align: right;
+      @include rtl(text-align, right, left)
     }
     .QueryTags {
       margin-top: $aleph-grid-size;

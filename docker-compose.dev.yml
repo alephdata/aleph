@@ -33,7 +33,7 @@ services:
     - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:51f77fb10d7c4cc7602e9d9ffbe3803313b29c49
+    image: alephdata/convert-document:c48bb70a4553809d3c6dcace37eceaa355e16ba7
     read_only: true
     restart: on-failure
     user: app
@@ -75,6 +75,7 @@ services:
     volumes:
     - archive-data:/data
     - "./aleph:/aleph/aleph"
+    - "./site:/aleph/site"
     - "./contrib:/aleph/contrib"
     - "./mappings:/aleph/mappings"
     - "/:/host"
@@ -103,6 +104,7 @@ services:
     volumes:
     - archive-data:/data
     - "./aleph:/aleph/aleph"
+    - "./site:/aleph/site"
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'

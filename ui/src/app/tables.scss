@@ -1,5 +1,6 @@
 @import "~@blueprintjs/core/src/blueprint.scss";
 @import "./variables.scss";
+@import "src/app/mixins.scss";
 
 // Column & row customisation for any tables.
 table {
@@ -15,10 +16,10 @@ table {
       width: 2em;
       max-width: 2em;
       overflow: visible;
-      padding-left: 0;
+      @include rtlSupportInvertedProp(padding, left, 0, null);
       padding-top: ($aleph-grid-size / 1.2);
       .bp3-button {
-        margin-left: 0;
+        @include rtlSupportInvertedProp(margin, left, 0, null);
       }
     }
   }
@@ -50,7 +51,7 @@ table {
     overflow: visible;
     max-width: unset;
     text-overflow: unset;
-    text-align: right;
+    @include rtl(text-align, right, left);
   }
 
   tr.active {
@@ -95,7 +96,6 @@ table {
 
   th.numeric, td.numeric, th.number, td.number {
     width: 1%;
-    text-align: right;
     white-space: nowrap;
     overflow: visible;
     max-width: unset !important;
@@ -104,8 +104,10 @@ table {
 
     // Float on the right, so that numbers overflow to the left.
     // (FormattedNumber creates a <span>)
-    & > span {
-      float: right;
+    span {
+      &.Numeric{
+        @include rtl(float, right, left);
+      }
     }
   }
 }
@@ -134,7 +136,7 @@ table.settings-table {
   @extend .data-table;
 
   th {
-    background-color: $aleph-facet-background;
+    background-color: $aleph-facet-background !important;
   }
 }
 
@@ -153,7 +155,7 @@ ul.info-rank {
     }
 
     .key {
-      padding-right: $aleph-grid-size;
+      @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
     }
 
     .value {
@@ -200,6 +202,6 @@ ul.info-rank li {
     white-space: nowrap;
     overflow: visible;
     color: $aleph-greyed-text;
-    margin-left: auto; // = align right
+    @include rtlSupportInvertedProp(margin, left, auto, null); // = align right
   }
 }

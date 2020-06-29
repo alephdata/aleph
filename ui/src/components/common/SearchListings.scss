@@ -1,6 +1,6 @@
 @import "~src/app/tables";
 @import "src/app/variables.scss";
-
+@import "src/app/mixins.scss";
 
 .SearchListings {
   @extend .settings-table;
@@ -15,15 +15,14 @@
   }
 
   &__text {
+    @include rtl(text-align, left, right);
     &.text-date {
       color: $gray3;
-      text-align: right;
+      @include rtl(text-align, right, left);
     }
 
     span {
       padding: 0 3px;
     }
   }
-
-
 }

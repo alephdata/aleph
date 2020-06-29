@@ -14,7 +14,7 @@ ingest-shell: services
 	$(INGESTDOCKER) /bin/bash
 
 ingest-tail:
-	$(COMPOSE) logs -f ingest-file
+	$(COMPOSE) logs -f ingest-file convert-document
 
 shell: services
 	$(APPDOCKER) /bin/bash
