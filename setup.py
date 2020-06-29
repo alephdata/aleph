@@ -27,6 +27,7 @@ setup(
             'azure = aleph.oauth:handle_azure_oauth',
             'google = aleph.oauth:handle_google_oauth',
             'keycloak = aleph.oauth:handle_keycloak_oauth',
+            'cognito = aleph.oauth:handle_cognito_oauth',
         ],
         'console_scripts': [
             'aleph = aleph.manage:cli',

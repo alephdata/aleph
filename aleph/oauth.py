@@ -7,8 +7,13 @@ from authlib.integrations.flask_client import OAuth
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from servicelayer.extensions import get_entry_point
+from jose import jwt as jwt_jose
+from jose import jwk
+from jose.utils import base64url_decode
+import time
 
 from aleph import settings
+
 
 oauth = OAuth()
 log = logging.getLogger(__name__)
@@ -77,6 +82,65 @@ def handle_google_oauth(provider, oauth_token):
     return Role.load_or_create(user_id, Role.USER, data.get('name'),
                                email=data.get('email'))
 
+def get_claims_cognito(token,keys,verify_aud=False):
+    headers = jwt_jose.get_unverified_headers(token)
+    kid = headers['kid']
+    key_index = -1
+    for i in range(len(keys)):
+        if kid == keys[i]['kid']:
+            key_index = i
+            break
+    if key_index == -1:
+        log.warning('Public key not found in jwks.json')
+        return False
+    #Construct Public Key
+    public_key = jwk.construct(keys[key_index])
+    message, encoded_signature = str(token).rsplit('.', 1)
+    decoded_signature = base64url_decode(encoded_signature.encode('utf-8'))
+
+    if not public_key.verify(message.encode("utf8"), decoded_signature):
+        log.warning('Signature verification failed')
+        return False
+
+    claims = jwt_jose.get_unverified_claims(token)
+
+    if time.time() > claims['exp']:
+        log.warning('Token is expired')
+        return False
+    if verify_aud:
+        if claims['aud'] != settings.OAUTH_KEY:
+            log.warning('Token was not issued for this audience')
+            return False
+    else:
+        log.warning(claims['client_id'])
+        if claims['client_id'] != settings.OAUTH_KEY:
+            log.warning('Token was not issued for this client')
+            return False
+    return claims
+
+def handle_cognito_oauth(provider, oauth_token):
+    from aleph.model import Role
+    superuser_group = 'Administrators'
+    #Get keys
+    keys = json.loads(urlopen(settings.OAUTH_CERT_URL).read())['keys']
+    #Verify tokens
+    id_token = get_claims_cognito(oauth_token.get('id_token'),keys,verify_aud=True)
+    access_token = get_claims_cognito(oauth_token.get('access_token'),keys)
+
+    groups = set(access_token.get('cognito:groups',[]))
+    user_id = 'cognito:{}'.format(id_token.get('cognito:username'))
+    role = Role.load_or_create(user_id, Role.USER,
+                               id_token.get('given_name'),
+                               email=id_token.get('email'),
+                               is_admin=superuser_group in groups)
+    role.clear_roles()
+    for role_name in groups:
+        group_role = Role.load_or_create('cognitogroup:%s' % role_name,
+                                         Role.GROUP,
+                                         role_name)
+        role.add_role(group_role)
+        log.debug("User %r is member of %r", role, group_role)
+    return role
 
 def handle_keycloak_oauth(provider, oauth_token):
     from aleph.model import Role
