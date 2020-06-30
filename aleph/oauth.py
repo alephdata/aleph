@@ -11,7 +11,6 @@ from authlib import jose
 
 from aleph import settings
 
-
 oauth = OAuth()
 log = logging.getLogger(__name__)
 
@@ -110,7 +109,7 @@ def handle_cognito_oauth(provider, oauth_token):
     role = Role.load_or_create(user_id, Role.USER,
                                id_token.get('given_name'),
                                email=id_token.get('email'),
-                               is_admin=settings.OAUTH_ADMINISTRATOR_GROUP in groups)
+                               is_admin=settings.OAUTH_ADMIN_GROUP in groups)
     role.clear_roles()
     for role_name in groups:
         group_role = Role.load_or_create('cognitogroup:%s' % role_name,
@@ -122,13 +121,12 @@ def handle_cognito_oauth(provider, oauth_token):
 
 def handle_keycloak_oauth(provider, oauth_token):
     from aleph.model import Role
-    superuser_role = 'superuser'
     access_token = oauth_token.get('access_token')
     token_data = jwt.decode(access_token, verify=False)
     clients = token_data.get('resource_access', {})
     client = clients.get(provider.client_id, {})
     roles = set(client.get('roles', []))
-    is_admin = superuser_role in roles
+    is_admin = settings.OAUTH_ADMIN_GROUP in roles
 
     user_id = 'kc:%s' % token_data.get('email')
     if token_data.get('idashboard'):
