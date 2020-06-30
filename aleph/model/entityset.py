@@ -68,6 +68,7 @@ class EntitySet(db.Model, SoftDeleteModel):
         data = self.to_dict_dates()
         data.update({
             'id': stringify(self.id),
+            'type': self.type,
             'label': self.label,
             'summary': self.summary,
             'entities': [e.entity_id for e in self.entities],
