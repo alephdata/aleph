@@ -6,16 +6,24 @@ from sqlalchemy.dialects.postgresql import JSONB
 from aleph.core import db
 from aleph.model import Role, Collection
 from aleph.model.common import SoftDeleteModel
-from aleph.model.common import make_textid, ENTITY_ID_LEN
+from aleph.model.common import ENTITY_ID_LEN, make_textid
 
 log = logging.getLogger(__name__)
 
 
+class Types:
+    # set types
+    GENERIC = 'generic'
+    DIAGRAM = 'diagram'
+    TIMELINE = 'timeline'
+
+
 class EntitySet(db.Model, SoftDeleteModel):
-    __tablename__ = 'set'
+    __tablename__ = 'entityset'
 
     id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True)
     label = db.Column(db.Unicode)
+    type = db.Column(db.String(10), index=True, default=Types.GENERIC)
     summary = db.Column(db.Unicode, nullable=True)
     layout = db.Column('layout', JSONB)
 
@@ -25,17 +33,32 @@ class EntitySet(db.Model, SoftDeleteModel):
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection)
 
+    parent_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'), index=True)
+    parent = db.relationship('EntitySet', backref='children', remote_side=[id])
+
+    entities = db.relationship('EntitySetItem', backref='entityset')
+
     def update(self, data, collection):
         self.updated_at = datetime.utcnow()
         self.deleted_at = None
         self.label = data.get('label', self.label)
+        self.type = data.get('type', self.type)
         self.summary = data.get('summary', self.summary)
         self.layout = data.get('layout', self.layout)
-        entities = []
-        for entity_id in self.entities:
-            entities.append(collection.ns.sign(entity_id))
-        self.entities = entities
+        self.id = data.get('id', self.id or make_textid())
         db.session.add(self)
+        self.update_entities(data.get('entities', []), collection.id)
+
+    def update_entities(self, entities, collection_id):
+        existing_entities = [e.entity_id for e in self.entities]
+        new_entities = set(entities) - set(existing_entities)
+        delete_entities = set(existing_entities) - set(entities)
+        db.session.query(EntitySetItem).filter_by(
+            entityset_id=self.id).filter(
+            EntitySetItem.entity_id.in_(delete_entities)).delete(synchronize_session=False)
+        for entity_id in new_entities:
+            esetitem = EntitySetItem(entity_id=entity_id, entityset_id=self.id, collection_id=collection_id)
+            db.session.add(esetitem)
 
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
@@ -47,7 +70,7 @@ class EntitySet(db.Model, SoftDeleteModel):
             'id': stringify(self.id),
             'label': self.label,
             'summary': self.summary,
-            'entities': self.entities,
+            'entities': [e.entity_id for e in self.entities],
             'layout': self.layout,
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
@@ -71,7 +94,7 @@ class EntitySet(db.Model, SoftDeleteModel):
                   synchronize_session=False)
 
     @classmethod
-    def create(cls, data,  collection, role_id):
+    def create(cls, data, collection, role_id):
         eset = cls()
         eset.layout = {}
         eset.role_id = role_id
@@ -84,11 +107,11 @@ class EntitySet(db.Model, SoftDeleteModel):
 
 
 class EntitySetItem(db.Model, SoftDeleteModel):
-    __tablename__ = 'set_item'
+    __tablename__ = 'entityset_item'
 
-    set_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entity_set.id'), index=True)  # noqa
-    entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
+    entityset_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'), index=True, primary_key=True)  # noqa
+    entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True, primary_key=True)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
 
     def __repr__(self):
-        return '<EntitySetItem(%r, %r)>' % (self.set_id, self.entity_id)
+        return '<EntitySetItem(%r, %r)>' % (self.entityset_id, self.entity_id)

@@ -3,6 +3,7 @@ from flask_babel import lazy_gettext
 from aleph.model.role import Role
 from aleph.model.alert import Alert
 from aleph.model.entity import Entity
+from aleph.model.entityset import EntitySet
 from aleph.model.diagram import Diagram
 from aleph.model.collection import Collection
 
@@ -51,7 +52,7 @@ class Events(object, metaclass=EventsRegistry):
         link_to='collection'
     )
 
-    # # UPDATE COLLECTION (collection)
+    # UPDATE COLLECTION (collection)
     UPDATE_COLLECTION = Event(
         template=lazy_gettext('{{actor}} changed the settings of {{collection}}'),  # noqa
         params={'collection': Collection},
@@ -83,6 +84,16 @@ class Events(object, metaclass=EventsRegistry):
         template=lazy_gettext('{{actor}} began diagramming {{diagram}} in {{collection}}'),  # noqa
         params={
             'diagram': Diagram,
+            'collection': Collection
+        },
+        link_to='table'
+    )
+
+    # CREATE ENTITYSET (collection)
+    CREATE_ENTITYSET = Event(
+        template=lazy_gettext('{{actor}} created a new {{entityset}} in {{collection}}'),  # noqa
+        params={
+            'entityset': EntitySet,
             'collection': Collection
         },
         link_to='table'
