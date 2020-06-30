@@ -9,7 +9,7 @@ from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
-from aleph.model import Alert, Diagram
+from aleph.model import Alert, Diagram, EntitySet
 from aleph.logic import resolver
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
@@ -316,12 +316,51 @@ class DiagramIndexSerializer(Serializer):
         return obj
 
 
+class EntitySetSerializer(Serializer):
+
+    def _collect(self, obj):
+        self.queue(Collection, obj.get('collection_id'))
+        for entity_id in ensure_list(obj.get('entities', [])):
+            self.queue(Entity, entity_id)
+
+    def _serialize(self, obj):
+        collection_id = obj.pop('collection_id', None)
+        entity_ids = obj.pop('entities', [])
+        obj.update({
+            'shallow': False,
+            'writeable': request.authz.can(collection_id, request.authz.WRITE),
+            'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
+            'entities': []
+        })
+        for ent_id in entity_ids:
+            entity = self.resolve(Entity, ent_id, EntitySerializer)
+            if entity is not None:
+                obj['entities'].append(entity)
+        return obj
+
+
+class EntitySetIndexSerializer(Serializer):
+
+    def _collect(self, obj):
+        self.queue(Collection, obj.get('collection_id'))
+
+    def _serialize(self, obj):
+        collection_id = obj.pop('collection_id', None)
+        obj.update({
+            'shallow': True,
+            'writeable': request.authz.can(collection_id, request.authz.WRITE),
+            'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
+        })
+        return obj
+
+
 class NotificationSerializer(Serializer):
     SERIALIZERS = {
         Alert: AlertSerializer,
         Entity: EntitySerializer,
         Collection: CollectionSerializer,
         Diagram: DiagramSerializer,
+        EntitySet: EntitySetSerializer,
         Role: RoleSerializer,
     }
 

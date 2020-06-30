@@ -91,3 +91,14 @@ class XrefQuery(Query):
 
     def get_index(self):
         return xref_index()
+
+
+class EntitySetItemsQuery(EntitiesQuery):
+    def __init__(self, *args, **kwargs):
+        self.entityset = kwargs.pop('entityset')
+        super(EntitySetItemsQuery, self).__init__(*args, **kwargs)
+
+    def get_filters(self):
+        filters = super(EntitySetItemsQuery, self).get_filters()
+        filters.append({'ids': {'values': [e.entity_id for e in self.entityset.entities]}})
+        return filters

@@ -18,6 +18,7 @@ from aleph.views.status_api import blueprint as status_api
 from aleph.views.mappings_api import blueprint as mappings_api
 from aleph.views.diagrams_api import blueprint as diagrams_api
 from aleph.views.linkages_api import blueprint as linkages_api
+from aleph.views.entitysets_api import blueprint as entitysets_api
 
 
 def mount_app_blueprints(app):
@@ -41,3 +42,4 @@ def mount_app_blueprints(app):
     app.register_blueprint(mappings_api)
     app.register_blueprint(diagrams_api)
     app.register_blueprint(linkages_api)
+    app.register_blueprint(entitysets_api)
