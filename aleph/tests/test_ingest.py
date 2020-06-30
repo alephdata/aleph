@@ -14,4 +14,4 @@ class IngestTestCase(TestCase):
     def test_crawl_sample_directory(self):
         samples_path = self.get_fixture_path('samples')
         crawl_directory(self.collection, samples_path)
-        assert Document.all().count() == 5, Document.all().count()
+        assert Document.all().count() == 4, Document.all().count()
