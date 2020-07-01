@@ -7,6 +7,7 @@ from authlib.integrations.flask_client import OAuth
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from servicelayer.extensions import get_entry_point
+from authlib import jose
 
 from aleph import settings
 
@@ -77,16 +78,55 @@ def handle_google_oauth(provider, oauth_token):
     return Role.load_or_create(user_id, Role.USER, data.get('name'),
                                email=data.get('email'))
 
+def handle_cognito_oauth(provider, oauth_token):
+    from aleph.model import Role
+    #Pull keys from Cognito server
+    keys = json.loads(urlopen(settings.OAUTH_CERT_URL).read())
+    key = lambda header, payload: jose.jwk.loads(keys,kid=header.get('kid'))
+    #Verify id and access token
+    id_token = jose.jwt.decode(oauth_token.get('id_token'),key,claims_options={
+        'exp': {
+            'essential': True
+        },
+        'aud': {
+            'essential':True,
+            'value': settings.OAUTH_KEY
+        }
+    })
+    id_token.validate()
+    access_token = jose.jwt.decode(oauth_token.get('access_token'),key,claims_options={
+        'exp': {
+            'essential': True
+        }
+    })
+    access_token.validate()
+    #Cognito access_token uses client_id instead of aud
+    if access_token.get('client_id') != settings.OAUTH_KEY:
+        return False
+    #Assign group and user permissions
+    groups = set(access_token.get('cognito:groups',[]))
+    user_id = 'cognito:{}'.format(id_token.get('sub'))
+    role = Role.load_or_create(user_id, Role.USER,
+                               id_token.get('given_name'),
+                               email=id_token.get('email'),
+                               is_admin=settings.OAUTH_ADMIN_GROUP in groups)
+    role.clear_roles()
+    for role_name in groups:
+        group_role = Role.load_or_create('cognitogroup:%s' % role_name,
+                                         Role.GROUP,
+                                         role_name)
+        role.add_role(group_role)
+        log.debug("User %r is member of %r", role, group_role)
+    return role
 
 def handle_keycloak_oauth(provider, oauth_token):
     from aleph.model import Role
-    superuser_role = 'superuser'
     access_token = oauth_token.get('access_token')
     token_data = jwt.decode(access_token, verify=False)
     clients = token_data.get('resource_access', {})
     client = clients.get(provider.client_id, {})
     roles = set(client.get('roles', []))
-    is_admin = superuser_role in roles
+    is_admin = settings.OAUTH_ADMIN_GROUP in roles
 
     user_id = 'kc:%s' % token_data.get('email')
     if token_data.get('idashboard'):

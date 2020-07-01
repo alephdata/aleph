@@ -9,6 +9,7 @@ from followthemoney.util import get_entity_id
 from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 
+from aleph.core import db
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
 from aleph.logic.entities import upsert_entity
@@ -91,6 +92,7 @@ class DiagramAPITest(TestCase):
 
         # Do the same replacement in layout
         layout = _replace_ids(layout, signed_entity_ids)
+        db.session.commit()
         return {
             'collection_id': str(self.col.id),
             'layout': layout,

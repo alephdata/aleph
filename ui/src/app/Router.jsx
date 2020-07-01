@@ -5,7 +5,6 @@ import { Spinner } from '@blueprintjs/core';
 
 import { fetchMetadata as fetchMetadataAction } from 'src/actions';
 import { selectSession, selectMetadata } from 'src/selectors';
-import './Router.scss';
 import NotFoundScreen from 'src/screens/NotFoundScreen/NotFoundScreen';
 
 import OAuthScreen from 'src/screens/OAuthScreen/OAuthScreen';
@@ -26,6 +25,8 @@ import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
 import EntitySetIndexScreen from 'src/screens/EntitySetIndexScreen/EntitySetIndexScreen';
 import EntitySetScreen from 'src/screens/EntitySetScreen/EntitySetScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
+
+import './Router.scss';
 
 
 class Router extends Component {
