@@ -8,24 +8,24 @@ from aleph.model import Role, Collection
 from aleph.model.common import SoftDeleteModel
 from aleph.model.common import ENTITY_ID_LEN, make_textid
 
-log = logging.getLogger(__name__)
-
-
-class Types:
-    # set types
-    GENERIC = 'generic'
-    DIAGRAM = 'diagram'
-    TIMELINE = 'timeline'
+log = logging.getLogger(__name__)    
 
 
 class EntitySet(db.Model, SoftDeleteModel):
     __tablename__ = 'entityset'
 
+    # set types
+    GENERIC = 'generic'
+    DIAGRAM = 'diagram'
+    TIMELINE = 'timeline'
+
+    TYPES = [GENERIC, DIAGRAM, TIMELINE]
+
     id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True)
     label = db.Column(db.Unicode)
-    type = db.Column(db.String(10), index=True, default=Types.GENERIC)
+    type = db.Column(db.String(10), index=True, default=GENERIC)
     summary = db.Column(db.Unicode, nullable=True)
-    layout = db.Column('layout', JSONB)
+    layout = db.Column('layout', JSONB, nullable=True)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     role = db.relationship(Role)
@@ -33,7 +33,7 @@ class EntitySet(db.Model, SoftDeleteModel):
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection)
 
-    parent_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'), index=True)
+    parent_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'))  # noqa
     parent = db.relationship('EntitySet', backref='children', remote_side=[id])
 
     entities = db.relationship('EntitySetItem', backref='entityset')
@@ -97,6 +97,7 @@ class EntitySet(db.Model, SoftDeleteModel):
     @classmethod
     def create(cls, data, collection, role_id):
         eset = cls()
+        eset.id = make_textid()
         eset.layout = {}
         eset.role_id = role_id
         eset.collection_id = collection.id

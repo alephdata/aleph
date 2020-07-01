@@ -6,11 +6,14 @@ EntitySetBase:
     summary:
       type: string
       nullable: true
+    type:
+      type: string
+      format: entitysettype
+      nullable: false
     layout:
       type: object
-      nullable: true
-      # allOf:
-      #   - $ref: '#/components/schemas/EntitySetLayout'
+      allOf:
+        - $ref: '#/components/schemas/DiagramLayout'
 
 EntitySetUpdate:
   type: object
@@ -41,7 +44,7 @@ EntitySetCreate:
             type: string
             format: entity_id
         required: ['id', 'schema', 'properties']
-  required: ["label", "collection_id"]
+  required: ['label', 'collection_id']
 
 EntitySet:
   type: object
@@ -55,6 +58,7 @@ EntitySet:
       - $ref: '#/components/schemas/Collection'
     role_id:
       type: string
+      readOnly: true
     entities:
       type: array
       items:
@@ -65,9 +69,10 @@ EntitySet:
           id:
             type: string
             format: entity_id
-        required: ["id", "schema"]
+        required: ['id', 'schema']
     writeable:
       type: boolean
-  required: ["collection", "role_id", "label", "layout", "entities", "writeable"]
+      readOnly: true
+  required: ['collection', 'role_id', 'label', 'type', 'entities', 'writeable']
 
 
