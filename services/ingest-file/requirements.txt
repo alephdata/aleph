@@ -9,7 +9,7 @@ countrytagger==0.1.2
 pyicu==2.5
 google-cloud-vision==1.0.0
 tesserocr==2.5.1
-spacy==2.2.4
+spacy==2.3.0
 fingerprints==1.0.1
 fasttext==0.9.2
 
