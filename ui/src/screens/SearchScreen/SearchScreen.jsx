@@ -10,7 +10,7 @@ import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
+  Collection, DateFacet, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
 } from 'src/components/common';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import SearchFacets from 'src/components/Facet/SearchFacets';
@@ -54,6 +54,7 @@ export class SearchScreen extends React.Component {
 
     this.updateQuery = this.updateQuery.bind(this);
     this.toggleFacets = this.toggleFacets.bind(this);
+    this.toggleDateFacet = this.toggleDateFacet.bind(this);
     this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);
@@ -139,8 +140,20 @@ export class SearchScreen extends React.Component {
     this.setState(({ hideFacets }) => ({ hideFacets: !hideFacets }));
   }
 
+  toggleDateFacet() {
+    const { dateFacetShown, query } = this.props;
+    if (dateFacetShown) {
+      query.remove('facet', 'dates')
+        .remove('facet_interval:dates', 'year');
+    } else {
+      query.add('facet', 'dates')
+        .add('facet_interval:dates', 'year');
+    }
+    this.updateQuery(query);
+  }
+
   render() {
-    const { query, result, intl } = this.props;
+    const { dateFacetShown, query, result, intl } = this.props;
     const { hideFacets } = this.state;
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
@@ -227,6 +240,19 @@ export class SearchScreen extends React.Component {
           </DualPane.SidePane>
           <DualPane.ContentPane>
             <SignInCallout />
+            <DateFacet
+              query={query}
+              updateQuery={this.updateQuery}
+              result={result}
+            />
+            <Button icon="calendar" onClick={this.toggleDateFacet}>
+              {dateFacetShown && (
+                <FormattedMessage id="search.screen.show_date" defaultMessage="Hide Date Filter" />
+              )}
+              {!dateFacetShown && (
+                <FormattedMessage id="search.screen.show_date" defaultMessage="Show Date Filter" />
+              )}
+            </Button>
             <QueryTags query={query} updateQuery={this.updateQuery} />
             <EntitySearch
               query={query}
@@ -246,10 +272,17 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     highlight: true,
     'filter:schemata': 'Thing',
+    // 'filter:gte:properties.birthDate': '2000-03-01',
+    // 'filter:lte:properties.birthDate': '2020-05-05',
+    'facet': 'dates',
+    'facet_interval:dates': 'year',
   };
+
+  console.log(context);
   const query = Query.fromLocation('entities', location, context, '');
   const result = selectEntitiesResult(state, query);
-  return { query, result };
+  const dateFacetShown = query.hasFacet('dates')
+  return { dateFacetShown, query, result };
 };
 
 export default compose(
