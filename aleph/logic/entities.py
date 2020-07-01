@@ -53,8 +53,7 @@ def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
 
 
 def refresh_entity(entity_id, sync=False):
-    if sync:
-        cache.kv.delete(cache.object_key(Entity, entity_id))
+    cache.kv.delete(cache.object_key(Entity, entity_id))
 
 
 def delete_entity(collection, entity, deleted_at=None, sync=False):
