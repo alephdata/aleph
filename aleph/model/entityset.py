@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 from normality import stringify
-from sqlalchemy import not_
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -47,28 +46,30 @@ class EntitySet(db.Model, SoftDeleteModel):
         self.updated_at = datetime.utcnow()
         self.deleted_at = None
         db.session.add(self)
-        self.update_entities(data.get('entities', []), collection)
+        self.update_entities(data.get('entities', []))
 
-    def update_entities(self, entities, collection):
-        pq = db.session.query(EntitySetItem)
-        pq = pq.filter(EntitySetItem.entityset_id == self.id)
-        pq = pq.filter(not_(EntitySetItem.entity_id.in_(entities)))
-        pq.update({EntitySetItem.deleted_at: self.updated_at},
-                  synchronize_session=False)
+    def update_entities(self, entities):
+        seen = set()
+        q = EntitySetItem.all(deleted=True)
+        q = q.filter(EntitySetItem.entityset_id == self.id)
+        for item in q:
+            seen.add(item.entity_id)
+            if item.entity_id in entities and item.deleted_at:
+                item.deleted_at = None
+                db.session.add(item)
+            if item.entity_id not in entities and not item.deleted_at:
+                item.deleted_at = self.updated_at
+                db.session.add(item)
 
         for entity_id in entities:
-            q = EntitySetItem.all(deleted=True)
-            q = q.filter(EntitySetItem.entityset_id == self.id)
-            q = q.filter(EntitySetItem.entity_id == self.entity_id)
-            item = q.first()
-            if item is None:
-                item = EntitySetItem()
-                item.entityset_id = self.id
-                item.entity = entity_id
-                item.created_at = self.updated_at
-                item.collection_id = collection.id
+            if entity_id in seen:
+                continue
+            item = EntitySetItem()
+            item.collection_id = self.collection_id
+            item.entityset_id = self.id
+            item.entity = entity_id
+            item.created_at = self.updated_at
             item.updated_at = self.updated_at
-            item.deleted_at = None
             db.session.add(item)
 
     def delete(self, deleted_at=None):
