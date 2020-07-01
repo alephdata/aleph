@@ -66,8 +66,8 @@ class Router extends Component {
           <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
           <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
           <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
-          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId?filter:match_collection_id=:otherId#mode=xref" />
-          <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId?filter:match_collection_id=:otherId#mode=xref" />
+          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
+          <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
           <Route path="/diagrams/:diagramId" exact component={DiagramScreen} />
           <Route path="/diagrams" exact component={DiagramIndexScreen} />
           <Route path="/search" exact component={SearchScreen} />

@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-24T15:58:23.269Z\n"
+"POT-Creation-Date: 2020-06-26T15:56:05.307Z\n"
 "Last-Translator: Laura M <kokoroko2@protonmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/aleph/teams/76591/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -174,6 +174,13 @@ msgstr ""
 msgid "Add a new relationship"
 msgstr ""
 
+#. [diagram.add_entities.title]
+#. defaultMessage is:
+#. Add entities to a diagram
+#: i18n/messages.json
+msgid "Add entities to a diagram"
+msgstr ""
+
 #. [mapping.propAssign.literalPlaceholder]
 #. defaultMessage is:
 #. Add fixed value text
@@ -188,20 +195,10 @@ msgstr ""
 msgid "Add new entity type"
 msgstr ""
 
-#. [diagram.add_entities.select_placeholder]
-#. defaultMessage is:
-#. Add to an existing diagram
-#: i18n/messages.json
-msgid "Add to an existing diagram"
-msgstr ""
-
 #. [entity.viewer.add_to_diagram]
 #. defaultMessage is:
 #. Add to diagram
-#. [diagram.add_entities.title]
-#. defaultMessage is:
-#. Add to diagram
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Add to diagram"
 msgstr ""
 
@@ -336,9 +333,6 @@ msgstr ""
 msgid "Bulk import"
 msgstr ""
 
-#. [collection.publish.cancel]
-#. defaultMessage is:
-#. Cancel
 #. [collection.reindex.cancel]
 #. defaultMessage is:
 #. Cancel
@@ -381,7 +375,7 @@ msgstr ""
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -528,26 +522,12 @@ msgstr ""
 msgid "Confirm password"
 msgstr "Confirmar senha"
 
-#. [collection.edit.info.contact]
-#. defaultMessage is:
-#. Contact
-#: i18n/messages.json
-msgid "Contact"
-msgstr "Contato"
-
 #. [collection.status.message]
 #. defaultMessage is:
 #. Continue to frolic about while data is being processed.
 #: i18n/messages.json
 msgid "Continue to frolic about while data is being processed."
 msgstr "Aguarde enquanto os dados são processados."
-
-#. [collection.info.publish]
-#. defaultMessage is:
-#. Convert to evidence
-#: i18n/messages.json
-msgid "Convert to evidence"
-msgstr ""
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -597,7 +577,7 @@ msgstr "Criar"
 msgid "Create a network diagram"
 msgstr ""
 
-#. [diagram.add.create_new]
+#. [diagram.add_entities.create_new]
 #. defaultMessage is:
 #. Create a new diagram
 #: i18n/messages.json
@@ -689,13 +669,6 @@ msgstr "URL da fonte do dado"
 #: i18n/messages.json
 msgid "Dataset"
 msgstr "Conjunto de dado"
-
-#. [collection.publish.succeed]
-#. defaultMessage is:
-#. Dataset is published
-#: i18n/messages.json
-msgid "Dataset is published"
-msgstr "Conjunto de dado publicado"
 
 #. [collection.edit.title]
 #. defaultMessage is:
@@ -1304,7 +1277,10 @@ msgstr "Gerencie seus alertas"
 #. [collection.creator]
 #. defaultMessage is:
 #. Manager
-#: i18n/messages.json
+#. [collection.edit.info.creator]
+#. defaultMessage is:
+#. Manager
+#: i18n/messages.json i18n/messages.json
 msgid "Manager"
 msgstr "Gerenciador"
 
@@ -1417,6 +1393,13 @@ msgstr ""
 #. No datasets were found matching this search
 #: i18n/messages.json
 msgid "No datasets were found matching this search"
+msgstr ""
+
+#. [diagram.add_entities.select_empty]
+#. defaultMessage is:
+#. No existing diagrams
+#: i18n/messages.json
+msgid "No existing diagrams"
 msgstr ""
 
 #. [entity.document.manager.empty]
@@ -1669,13 +1652,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "Proximity searches"
 msgstr "Pesquisar por aproximação"
-
-#. [collection.publish.confirm]
-#. defaultMessage is:
-#. Publish
-#: i18n/messages.json
-msgid "Publish"
-msgstr "Publicar"
 
 #. [collection.publisher]
 #. defaultMessage is:
@@ -2014,6 +1990,13 @@ msgstr ""
 #. Select a table document to generate structured entities
 #: i18n/messages.json
 msgid "Select a table document to generate structured entities"
+msgstr ""
+
+#. [diagram.add_entities.select_placeholder]
+#. defaultMessage is:
+#. Select an existing diagram
+#: i18n/messages.json
+msgid "Select an existing diagram"
 msgstr ""
 
 #. [mapping.entityAssign.placeholder]
@@ -2806,24 +2789,6 @@ msgstr ""
 msgid "You are not tracking any searches"
 msgstr "Você não está monitorando nenhuma pesquisa"
 
-#. [collection.publish.alert.text]
-#. defaultMessage is:
-#. You are publishing a dataset. Published datasets are understood as raw
-#. evidence and can be made public for every visitor of the system to see.
-#. Please make sure you do not publish material identifying your sources,
-#. directly or through metadata.
-#: i18n/messages.json
-msgid ""
-"You are publishing a dataset. Published datasets are understood as raw "
-"evidence and can be made public for every visitor of the system to see. "
-"Please make sure you do not publish material identifying your sources, "
-"directly or through metadata."
-msgstr ""
-"Você está publicando um conjunto de dados. Eles são entendidos como "
-"evidências originais e podem se tornar públicos para que todos os visitantes"
-" do sistema vejam. Por favor, tome cuidado para não publicas materiais "
-"identificando suas fontes, diretamente ou através dos metadados."
-
 #. [navbar.alert_remove]
 #. defaultMessage is:
 #. You are receiving alerts about this search.
@@ -2851,6 +2816,16 @@ msgstr ""
 #: i18n/messages.json
 msgid "You have no unseen notifications"
 msgstr "Você já viu todas suas notificações"
+
+#. [diagram.add_entities.selected_count]
+#. defaultMessage is:
+#. You have selected {count} {count_simple, plural, one {entity} other
+#. {entities}} to add to a diagram.
+#: i18n/messages.json
+msgid ""
+"You have selected {count} {count_simple, plural, one {entity} other "
+"{entities}} to add to a diagram."
+msgstr ""
 
 #. [mapping.entityAssign.helpText]
 #. defaultMessage is:

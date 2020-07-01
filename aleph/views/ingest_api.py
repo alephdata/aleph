@@ -68,7 +68,6 @@ def _notify(collection, document_id):
             params=params,
             channels=channels,
             actor_id=request.authz.id)
-    db.session.commit()
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/ingest',

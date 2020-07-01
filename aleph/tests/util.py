@@ -149,7 +149,6 @@ class TestCase(unittest.TestCase):
             foreign_id='test_private',
             label="Private Collection",
             category='grey',
-            casefile=False,
             creator=self.admin
         )
         self._banana = self.create_entity({
@@ -179,7 +178,6 @@ class TestCase(unittest.TestCase):
             foreign_id='test_public',
             label="Public Collection",
             category='news',
-            casefile=False,
             creator=self.admin
         )
         self._kwazulu = self.create_entity({

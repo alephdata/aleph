@@ -44,22 +44,25 @@ class DiagramSelect extends PureComponent {
   }
 
   render() {
-    const { buttonProps, items, onSelect } = this.props;
+    const { buttonProps, items, noResults, onSelect } = this.props;
 
     return (
       <SelectWrapper
         itemRenderer={this.itemRenderer}
         items={items}
         onItemSelect={onSelect}
-        popoverProps={{ minimal: true, fill: true }}
+        popoverProps={{ minimal: true, fill: true, position: "auto-start" }}
         inputProps={{ fill: true }}
         filterable={false}
+        noResults={<span className="error-text">{noResults}</span>}
         resetOnClose
         resetOnSelect
       >
         <Button
           fill
           icon="graph"
+          rightIcon="caret-down"
+          alignText="left"
           {...buttonProps}
         />
       </SelectWrapper>

@@ -2,11 +2,39 @@
 @import "src/app/mixins.scss";
 
 .EntityDeleteDialog {
-  &__file-list {
-    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*2, null);
+  &.blocking {
+    .bp3-button.bp3-intent-danger {
+      display: none;
+    }
   }
+  &__file-list {
+    list-style-type: none;
+    padding: 0;
 
-  .EntityLabel {
-    white-space: nowrap;
+    &__item {
+      margin: $aleph-grid-size/2 0;
+      display: flex;
+
+      &.deleted {
+        color: $red1;
+      }
+
+      &__icon {
+        width: $aleph-grid-size*2;
+        margin: 0 $aleph-grid-size/2;
+      }
+
+      .bp3-spinner {
+        display: inline-flex;
+      }
+
+      .bp3-icon {
+        vertical-align: middle;
+      }
+
+      .EntityLabel {
+        white-space: nowrap;
+      }
+    }
   }
 }

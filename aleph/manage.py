@@ -44,7 +44,6 @@ def ensure_collection(foreign_id, label):
     config = {
         'foreign_id': foreign_id,
         'label': label,
-        'casefile': False
     }
     create_collection(config, authz)
     return Collection.by_foreign_id(foreign_id)
