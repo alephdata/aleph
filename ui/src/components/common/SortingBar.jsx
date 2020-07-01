@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 
 import './SortingBar.scss';
 
@@ -26,7 +26,7 @@ class SortingBar extends PureComponent {
             />
           </span>
           <div className="SortingBar__control">
-            <Select
+            <SelectWrapper
               itemRenderer={this.renderOption}
               items={sortingOptions}
               onItemSelect={onSort}
@@ -50,7 +50,7 @@ class SortingBar extends PureComponent {
                 intent={Intent.PRIMARY}
                 rightIcon="caret-down"
               />
-            </Select>
+            </SelectWrapper>
           </div>
         </div>
         <div className="SortingBar__item">

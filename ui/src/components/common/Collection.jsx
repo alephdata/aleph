@@ -1,6 +1,5 @@
 import React, { Component, PureComponent } from 'react';
 import { Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
@@ -11,6 +10,7 @@ import { fetchCollection, fetchCollectionStatus, queryCollections } from 'src/ac
 import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 
 
 import './Collection.scss';
@@ -160,7 +160,7 @@ class CollectionSelect extends Component {
     const label = collection ? <CollectionLabel collection={collection} icon={false} /> : buttonProps.label;
 
     return (
-      <Select
+      <SelectWrapper
         itemRenderer={this.renderCollection}
         items={result.results}
         onItemSelect={this.onSelectCollection}
@@ -181,7 +181,7 @@ class CollectionSelect extends Component {
           icon="briefcase"
           alignText="left"
         />
-      </Select>
+      </SelectWrapper>
     );
   }
 }

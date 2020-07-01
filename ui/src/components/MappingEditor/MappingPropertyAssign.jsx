@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Menu, MenuDivider, MenuItem, PopoverInteractionKind } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
 import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
 import { MappingLabel } from './util';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 
 import './MappingPropertyAssign.scss';
 
@@ -138,7 +138,7 @@ export class MappingPropertyAssign extends Component {
                 <div className="MappingPropertyAssign__headerSelect__label">
                   <MappingLabel mapping={colValue} />
                 </div>
-                <Select
+                <SelectWrapper
                   id="property-select"
                   items={[]}
                   itemListRenderer={({ itemsParentRef, renderItem }) => (
@@ -156,7 +156,7 @@ export class MappingPropertyAssign extends Component {
                     rightIcon="caret-down"
                     className="MappingPropertyAssign__headerSelect__button"
                   />
-                </Select>
+                </SelectWrapper>
                 <div className="MappingPropertyAssign__headerSelect__remove">
                   <Button
                     icon="cross"
@@ -168,7 +168,7 @@ export class MappingPropertyAssign extends Component {
               </>
             )}
             {!colValue && (
-              <Select
+              <SelectWrapper
                 id="mapping-select"
                 fill
                 items={mappings.getValues().sort((a, b) => (a.id > b.id ? 1 : -1))}
@@ -183,7 +183,7 @@ export class MappingPropertyAssign extends Component {
                   text={intl.formatMessage(messages.placeholder)}
                   className="MappingPropertyAssign__headerSelect__button"
                 />
-              </Select>
+              </SelectWrapper>
             )}
           </div>
         )}

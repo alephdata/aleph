@@ -1,7 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Intent, FormGroup, InputGroup, Checkbox, Alignment, MenuItem, Classes } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -11,6 +10,7 @@ import Dashboard from 'src/components/Dashboard/Dashboard';
 import ClipboardInput from 'src/components/common/ClipboardInput';
 import { updateRole, fetchRole } from 'src/actions';
 import { selectMetadata, selectLocale, selectCurrentRole } from 'src/selectors';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 
 import './SettingsScreen.scss';
 
@@ -271,14 +271,13 @@ export class SettingsScreen extends React.Component {
               label={intl.formatMessage(messages.locale)}
               labelFor="locale"
             >
-              <Select
+              <SelectWrapper
                 itemRenderer={this.renderLocale}
                 items={locales}
                 onItemSelect={this.onSelectLocale}
                 popoverProps={{
                   minimal: true,
                   fill: true,
-                //  position: Position.BOTTOM_LEFT,
                 }}
                 inputProps={{
                   fill: true,
@@ -292,7 +291,7 @@ export class SettingsScreen extends React.Component {
                   icon="translate"
                   rightIcon="caret-down"
                 />
-              </Select>
+              </SelectWrapper>
             </FormGroup>
             <FormGroup
               label={intl.formatMessage(messages.api_key)}

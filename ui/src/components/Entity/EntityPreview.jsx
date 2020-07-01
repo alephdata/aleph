@@ -57,7 +57,6 @@ export class EntityPreview extends React.Component {
     if (!entityId) {
       return null;
     }
-    const drawerPos = isLangRtl(locale) ? Position.LEFT : Position.RIGHT;
     return (
       <EntityContextLoader entityId={entityId}>
         <Drawer
@@ -68,7 +67,7 @@ export class EntityPreview extends React.Component {
           hasBackdrop={false}
           autoFocus={false}
           enforceFocus={false}
-          position={drawerPos}
+          position={isLangRtl(locale) ? Position.LEFT : Position.RIGHT}
           // canOutsideClickClose={false}
           portalClassName="EntityPreview__overlay-container"
         >
