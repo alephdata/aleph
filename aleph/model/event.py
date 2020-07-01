@@ -91,7 +91,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # CREATE ENTITYSET (collection)
     CREATE_ENTITYSET = Event(
-        template=lazy_gettext('{{actor}} created a new {{entityset}} in {{collection}}'),  # noqa
+        template=lazy_gettext('{{actor}} created {{entityset}} in {{collection}}'),  # noqa
         params={
             'entityset': EntitySet,
             'collection': Collection
