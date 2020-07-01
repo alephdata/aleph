@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { Alert, Intent } from '@blueprintjs/core';
+import { Alert, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import c from 'classnames';
+
 import { deleteEntity } from 'src/actions';
 import { Entity } from 'src/components/common';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
@@ -34,7 +36,11 @@ const messages = defineMessages({
 export class EntityDeleteDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = { blocking: false };
+    this.state = {
+      blocking: false,
+      processingEntity: null,
+      deletedEntities: [],
+    };
     this.onDelete = this.onDelete.bind(this);
   }
 
@@ -45,9 +51,15 @@ export class EntityDeleteDialog extends Component {
     if (!blocking) {
       try {
         this.setState({ blocking: true });
-        await Promise.all(
-          entities.map(async entity => this.props.deleteEntity(entity.id)),
-        );
+
+        for (const entity of entities) {
+          this.setState({ processingEntity: entity.id });
+          await this.props.deleteEntity(entity.id);
+          this.setState(({ deletedEntities }) => (
+            { deletedEntities: [...deletedEntities, entity.id], processingEntity: null }
+          ));
+        }
+
         showSuccessToast(intl.formatMessage(messages.delete_success));
         if (redirectOnSuccess) {
           const parent = entities[0]?.getFirst('parent');
@@ -66,12 +78,13 @@ export class EntityDeleteDialog extends Component {
   }
 
   render() {
+    const { blocking, deletedEntities, processingEntity } = this.state;
     const { entities, intl } = this.props;
 
     return (
       <Alert
         isOpen={this.props.isOpen}
-        className="EntityDeleteDialog"
+        className={c('EntityDeleteDialog', { 'blocking': blocking })}
         icon="trash"
         intent={Intent.DANGER}
         cancelButtonText={intl.formatMessage(messages.button_cancel)}
@@ -79,28 +92,39 @@ export class EntityDeleteDialog extends Component {
         onCancel={this.props.toggleDialog}
         onConfirm={this.onDelete}
       >
-        {entities.length === 1 && (
+        {!blocking && (
           <FormattedMessage
-            id="entity.delete.question.one"
-            defaultMessage="Are you sure you want to delete {entityLabel}?"
-            values={{ entityLabel: <Entity.Label entity={entities[0]} truncate={30} icon /> }}
+            id="entity.delete.question.multiple"
+            defaultMessage={
+              `Are you sure you want to delete the following
+              {count, plural, one {item} other {items}}?`
+            }
+            values={{count: entities.length}}
           />
         )}
-        {entities.length !== 1 && (
-          <>
-            <FormattedMessage
-              id="entity.delete.question.multiple"
-              defaultMessage="Are you sure you want to delete the following items?"
-            />
-            <ul className="EntityDeleteDialog__file-list">
-              {entities.map(entity => (
-                <li key={entity.id}>
-                  <Entity.Label entity={entity} truncate={30} icon />
-                </li>
-              ))}
-            </ul>
-          </>
+        {blocking && (
+          <FormattedMessage
+            id="entity.delete.progress"
+            defaultMessage="Deleting..."
+          />
         )}
+        <ul className="EntityDeleteDialog__file-list">
+          {entities.map(entity => {
+            const isProcessing = processingEntity === entity.id;
+            const isDeleted = deletedEntities.indexOf(entity.id) > -1;
+            return (
+              <li key={entity.id} className={c('EntityDeleteDialog__file-list__item', { 'deleted': isDeleted })}>
+                <span className="EntityDeleteDialog__file-list__item__icon">
+                  {isProcessing && <Spinner size={14} />}
+                  {isDeleted && <Icon icon="tick" />}
+                </span>
+                <span className="EntityDeleteDialog__file-list__item__main">
+                  <Entity.Label entity={entity} truncate={30} icon />
+                </span>
+              </li>
+            )
+          })}
+        </ul>
       </Alert>
     );
   }
