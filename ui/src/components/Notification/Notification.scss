@@ -12,6 +12,7 @@ $notification-items-padding: $aleph-grid-size/6;
 
   .notification-action {
     display: flex;
+    flex-wrap: wrap;
     .param {
       font-weight: bold;
             
@@ -32,6 +33,7 @@ $notification-items-padding: $aleph-grid-size/6;
 
   .timestamp {
     color: $aleph-greyed-text;
+    white-space: nowrap;
     // font-size: $pt-font-size-small;
   }
 
