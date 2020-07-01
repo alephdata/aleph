@@ -13,12 +13,12 @@ EntitySetBase:
     layout:
       type: object
       allOf:
-        - $ref: '#/components/schemas/DiagramLayout'
+      - $ref: '#/components/schemas/DiagramLayout'
 
 EntitySetUpdate:
   type: object
   allOf:
-    - $ref: '#/components/schemas/EntitySetBase'
+  - $ref: '#/components/schemas/EntitySetBase'
   properties:
     entities:
       type: array
@@ -29,7 +29,7 @@ EntitySetUpdate:
 EntitySetCreate:
   type: object
   allOf:
-    - $ref: '#/components/schemas/EntitySetBase'
+  - $ref: '#/components/schemas/EntitySetBase'
   properties:
     collection_id:
       type: string
@@ -38,13 +38,13 @@ EntitySetCreate:
       items:
         type: object
         allOf:
-          - $ref: '#/components/schemas/EntityUpdate'
+        - $ref: '#/components/schemas/EntityUpdate'
         properties:
           id:
             type: string
             format: entity_id
         required: ['id', 'schema', 'properties']
-  required: ['label', 'collection_id']
+  required: ['label', 'type', 'collection_id']
 
 EntitySet:
   type: object
@@ -73,6 +73,6 @@ EntitySet:
     writeable:
       type: boolean
       readOnly: true
-  required: ['collection', 'role_id', 'label', 'type', 'entities', 'writeable']
+  required: ['collection', 'role_id', 'label', 'type', 'writeable']
 
 

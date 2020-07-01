@@ -93,7 +93,8 @@ class EntitySetAPITest(TestCase):
 
     def test_entityset_crud(self):
         url = '/api/2/entitysets'
-        res = self.client.post(url, json=self.input_data, headers=self.headers)  # noqa
+        res = self.client.post(url, json=self.input_data,
+                               headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'EntitySet')
         ent_id = self.input_data['entities'][0]['id']
@@ -126,12 +127,12 @@ class EntitySetAPITest(TestCase):
         assert res.status_code == 200, res
         validate(res.json, 'EntitySet')
         assert res.json['label'] == 'Royal Family'
-
-        updated_data = self._load_data_for_update('royal-family-v2.vis')
-        updated_data['label'] = 'Royal Family v2'
         res_str = json.dumps(res.json)
         assert 'Philip' in res_str
-        res = self.client.post(url, json=updated_data, headers=self.headers)
+
+        updated = self._load_data_for_update('royal-family-v2.vis')
+        updated['label'] = 'Royal Family v2'
+        res = self.client.post(url, json=updated, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'EntitySet')
         signed_id = res.json['entities'][0]['id']
@@ -164,7 +165,9 @@ class EntitySetAPITest(TestCase):
         validate(res.json, 'EntitySet')
         entityset2_id = res.json['id']
 
-        url = '/api/2/entitysets/%s/entities?filter:schemata=Thing' % entityset_id
+        query_url = '/api/2/entitysets/%s/entities?filter:schemata=%s'
+
+        url = query_url % (entityset_id, 'Thing')
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'EntitiesResponse')
@@ -176,13 +179,13 @@ class EntitySetAPITest(TestCase):
         assert len(facet['values']) == 3, facet['values']
         assert 'Elizabeth' in str(facet['values']), facet['values']
 
-        url = '/api/2/entitysets/%s/entities?filter:schemata=Interval' % entityset_id
+        url = query_url % (entityset_id, 'Interval')
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'EntitiesResponse')
         assert len(res.json['results']) == 4, len(res.json['results'])
 
-        url = '/api/2/entitysets/%s/entities?filter:schemata=Interval' % entityset2_id
+        url = query_url % (entityset2_id, 'Interval')
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'EntitiesResponse')
@@ -191,6 +194,7 @@ class EntitySetAPITest(TestCase):
     def test_create_empty(self):
         data = {
             'label': 'hello',
+            'type': 'generic',
             'collection_id': str(self.col.id),
         }
         url = '/api/2/entitysets'
@@ -209,6 +213,7 @@ class EntitySetAPITest(TestCase):
         url = '/api/2/entitysets'
         data = {
             'label': 'hello',
+            'type': 'diagram',
             'collection_id': str(self.col.id),
         }
         res = self.client.post(url, json=data, headers=self.headers_x)
@@ -217,6 +222,7 @@ class EntitySetAPITest(TestCase):
     def test_delete_when_collection_deleted(self):
         data = {
             'label': 'hello',
+            'type': 'generic',
             'collection_id': str(self.col.id),
         }
         url = '/api/2/entitysets'
@@ -239,6 +245,7 @@ class EntitySetAPITest(TestCase):
             'collection_id': str(self.col.id),
         }, {
             'label': 'Generic',
+            'type': 'generic',
             'collection_id': str(self.col.id),
         })
         url = '/api/2/entitysets'
@@ -252,12 +259,14 @@ class EntitySetAPITest(TestCase):
         assert len(res.json['results']) == 3
 
         for qfilter in ('timeline', 'diagram', 'generic'):
-            res = self.client.get(url + f'?filter:type={qfilter}', headers=self.headers)
+            res = self.client.get(url + f'?filter:type={qfilter}',
+                                  headers=self.headers)
             assert res.status_code == 200, res
             validate(res.json, 'QueryResponse')
             assert len(res.json['results']) == 1
 
-        res = self.client.get(url + f'?filter:type=timeline&filter:type=diagram', headers=self.headers)
+        qurl = url + f'?filter:type=timeline&filter:type=diagram'
+        res = self.client.get(qurl, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'QueryResponse')
         assert len(res.json['results']) == 2

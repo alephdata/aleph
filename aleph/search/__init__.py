@@ -100,5 +100,5 @@ class EntitySetItemsQuery(EntitiesQuery):
 
     def get_filters(self):
         filters = super(EntitySetItemsQuery, self).get_filters()
-        filters.append({'ids': {'values': [e.entity_id for e in self.entityset.entities]}})
+        filters.append({'ids': {'values': self.entityset.entities}})
         return filters

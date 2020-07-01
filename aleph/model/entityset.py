@@ -36,7 +36,12 @@ class EntitySet(db.Model, SoftDeleteModel):
     parent_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'))  # noqa
     parent = db.relationship('EntitySet', backref='children', remote_side=[id])
 
-    entities = db.relationship('EntitySetItem', backref='entityset')
+    @property
+    def entities(self):
+        q = db.session.query(EntitySetItem.entity_id)
+        q = q.filter(EntitySetItem.entityset_id == self.id)
+        q = q.filter(EntitySetItem.deleted_at == None)  # noqa
+        return [entity_id for entity_id, in q.all()]
 
     def update(self, data, collection):
         self.label = data.get('label', self.label)
@@ -54,12 +59,14 @@ class EntitySet(db.Model, SoftDeleteModel):
         q = q.filter(EntitySetItem.entityset_id == self.id)
         for item in q:
             seen.add(item.entity_id)
-            if item.entity_id in entities and item.deleted_at:
-                item.deleted_at = None
-                db.session.add(item)
-            if item.entity_id not in entities and not item.deleted_at:
-                item.deleted_at = self.updated_at
-                db.session.add(item)
+            if item.entity_id in entities:
+                if item.deleted_at is not None:
+                    item.deleted_at = None
+                    db.session.add(item)
+            if item.entity_id not in entities:
+                if item.deleted_at is None:
+                    item.deleted_at = self.updated_at
+                    db.session.add(item)
 
         for entity_id in entities:
             if entity_id in seen:
@@ -67,7 +74,7 @@ class EntitySet(db.Model, SoftDeleteModel):
             item = EntitySetItem()
             item.collection_id = self.collection_id
             item.entityset_id = self.id
-            item.entity = entity_id
+            item.entity_id = entity_id
             item.created_at = self.updated_at
             item.updated_at = self.updated_at
             db.session.add(item)
@@ -89,7 +96,7 @@ class EntitySet(db.Model, SoftDeleteModel):
             'type': self.type,
             'label': self.label,
             'summary': self.summary,
-            'entities': [e.entity_id for e in self.entities],
+            'entities': self.entities,
             'layout': self.layout,
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),

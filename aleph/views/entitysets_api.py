@@ -89,6 +89,7 @@ def create():
     data = parse_request('EntitySetCreate')
     collection = get_nested_collection(data, request.authz.WRITE)
     entityset = create_entityset(collection, data, request.authz)
+    db.session.commit()
     return EntitySetSerializer.jsonify(entityset)
 
 
@@ -192,7 +193,6 @@ def update(entityset_id):
     collection = get_db_collection(eset.collection_id, request.authz.WRITE)
     data = parse_request('EntitySetUpdate')
     eset.update(data, collection)
-    collection.touch()
     db.session.commit()
     return EntitySetSerializer.jsonify(eset)
 

@@ -1,6 +1,5 @@
 import logging
 
-from aleph.core import db
 from aleph.model import EntitySet, Events
 from aleph.logic.entities import upsert_entity
 from aleph.logic.notifications import publish
@@ -27,7 +26,6 @@ def create_entityset(collection, data, authz):
     layout = data.get('layout', {})
     data['layout'] = replace_layout_ids(layout, old_to_new_id_map)
     entityset = EntitySet.create(data, collection, authz)
-    db.session.commit()
     publish(Events.CREATE_ENTITYSET,
             params={'collection': collection, 'entityset': entityset},
             channels=[collection, authz.role],
