@@ -26,7 +26,7 @@ def create_entityset(collection, data, authz):
     data['entities'] = entity_ids
     layout = data.get('layout', {})
     data['layout'] = replace_layout_ids(layout, old_to_new_id_map)
-    entityset = EntitySet.create(data, collection, authz.id)
+    entityset = EntitySet.create(data, collection, authz)
     db.session.commit()
     publish(Events.CREATE_ENTITYSET,
             params={'collection': collection, 'entityset': entityset},

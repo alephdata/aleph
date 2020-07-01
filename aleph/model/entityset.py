@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 from normality import stringify
+from sqlalchemy import not_
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -8,7 +9,7 @@ from aleph.model import Role, Collection
 from aleph.model.common import SoftDeleteModel
 from aleph.model.common import ENTITY_ID_LEN, make_textid
 
-log = logging.getLogger(__name__)    
+log = logging.getLogger(__name__)
 
 
 class EntitySet(db.Model, SoftDeleteModel):
@@ -39,28 +40,44 @@ class EntitySet(db.Model, SoftDeleteModel):
     entities = db.relationship('EntitySetItem', backref='entityset')
 
     def update(self, data, collection):
-        self.updated_at = datetime.utcnow()
-        self.deleted_at = None
         self.label = data.get('label', self.label)
         self.type = data.get('type', self.type)
         self.summary = data.get('summary', self.summary)
         self.layout = data.get('layout', self.layout)
-        self.id = data.get('id', self.id or make_textid())
+        self.updated_at = datetime.utcnow()
+        self.deleted_at = None
         db.session.add(self)
-        self.update_entities(data.get('entities', []), collection.id)
+        self.update_entities(data.get('entities', []), collection)
 
-    def update_entities(self, entities, collection_id):
-        existing_entities = [e.entity_id for e in self.entities]
-        new_entities = set(entities) - set(existing_entities)
-        delete_entities = set(existing_entities) - set(entities)
-        db.session.query(EntitySetItem).filter_by(
-            entityset_id=self.id).filter(
-            EntitySetItem.entity_id.in_(delete_entities)).delete(synchronize_session=False)
-        for entity_id in new_entities:
-            esetitem = EntitySetItem(entity_id=entity_id, entityset_id=self.id, collection_id=collection_id)
-            db.session.add(esetitem)
+    def update_entities(self, entities, collection):
+        pq = db.session.query(EntitySetItem)
+        pq = pq.filter(EntitySetItem.entityset_id == self.id)
+        pq = pq.filter(not_(EntitySetItem.entity_id.in_(entities)))
+        pq.update({EntitySetItem.deleted_at: self.updated_at},
+                  synchronize_session=False)
+
+        for entity_id in entities:
+            q = EntitySetItem.all(deleted=True)
+            q = q.filter(EntitySetItem.entityset_id == self.id)
+            q = q.filter(EntitySetItem.entity_id == self.entity_id)
+            item = q.first()
+            if item is None:
+                item = EntitySetItem()
+                item.entityset_id = self.id
+                item.entity = entity_id
+                item.created_at = self.updated_at
+                item.collection_id = collection.id
+            item.updated_at = self.updated_at
+            item.deleted_at = None
+            db.session.add(item)
 
     def delete(self, deleted_at=None):
+        pq = db.session.query(EntitySetItem)
+        pq = pq.filter(EntitySetItem.entityset_id == self.id)
+        pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
+        pq.update({EntitySetItem.deleted_at: deleted_at},
+                  synchronize_session=False)
+
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
 
@@ -86,8 +103,9 @@ class EntitySet(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at=None):
-        deleted_at = deleted_at or datetime.utcnow()
+    def delete_by_collection(cls, collection_id, deleted_at):
+        EntitySetItem.delete_by_collection(collection_id, deleted_at)
+
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
@@ -95,14 +113,14 @@ class EntitySet(db.Model, SoftDeleteModel):
                   synchronize_session=False)
 
     @classmethod
-    def create(cls, data, collection, role_id):
-        eset = cls()
-        eset.id = make_textid()
-        eset.layout = {}
-        eset.role_id = role_id
-        eset.collection_id = collection.id
-        eset.update(data, collection)
-        return eset
+    def create(cls, data, collection, authz):
+        entityset = cls()
+        entityset.id = make_textid()
+        entityset.layout = {}
+        entityset.role_id = authz.id
+        entityset.collection_id = collection.id
+        entityset.update(data, collection)
+        return entityset
 
     def __repr__(self):
         return '<EntitySet(%r, %r)>' % (self.id, self.collection_id)
@@ -111,9 +129,25 @@ class EntitySet(db.Model, SoftDeleteModel):
 class EntitySetItem(db.Model, SoftDeleteModel):
     __tablename__ = 'entityset_item'
 
-    entityset_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'), index=True, primary_key=True)  # noqa
-    entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    entityset_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'), index=True)  # noqa
+    entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
+
+    @classmethod
+    def delete_by_collection(cls, collection_id, deleted_at):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq = pq.filter(cls.deleted_at == None)  # noqa
+        pq.update({cls.deleted_at: deleted_at},
+                  synchronize_session=False)
+
+        pq = db.session.query(cls)
+        pq = pq.filter(EntitySet.collection_id == collection_id)
+        pq = pq.filter(EntitySet.id == cls.entityset_id)
+        pq = pq.filter(cls.deleted_at == None)  # noqa
+        pq.update({cls.deleted_at: deleted_at},
+                  synchronize_session=False)
 
     def __repr__(self):
         return '<EntitySetItem(%r, %r)>' % (self.entityset_id, self.entity_id)
