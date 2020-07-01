@@ -3,7 +3,7 @@ normality==2.1.1
 pantomime==0.4.0
 followthemoney==1.33.2
 followthemoney-store[postgresql]==2.1.7
-servicelayer[google,amazon]==1.13.2
+servicelayer[google,amazon]==1.13.3
 languagecodes==1.0.5
 countrytagger==0.1.2
 pyicu==2.5
