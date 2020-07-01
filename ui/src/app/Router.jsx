@@ -23,8 +23,8 @@ import GroupScreen from 'src/screens/GroupScreen/GroupScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import CollectionIndexScreen from 'src/screens/CollectionIndexScreen/CollectionIndexScreen';
 import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
-import DiagramScreen from 'src/screens/DiagramScreen/DiagramScreen';
-import DiagramIndexScreen from 'src/screens/DiagramIndexScreen/DiagramIndexScreen';
+import EntitySetIndexScreen from 'src/screens/EntitySetIndexScreen/EntitySetIndexScreen';
+import EntitySetScreen from 'src/screens/EntitySetScreen/EntitySetScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
 
 
@@ -66,10 +66,12 @@ class Router extends Component {
           <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
           <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
           <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
-          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId?filter:match_collection_id=:otherId#mode=xref" />
-          <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId?filter:match_collection_id=:otherId#mode=xref" />
-          <Route path="/diagrams/:diagramId" exact component={DiagramScreen} />
-          <Route path="/diagrams" exact component={DiagramIndexScreen} />
+          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
+          <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
+          <Redirect from="/diagrams" to="/entitysets?filter\:type=diagram" />
+          <Redirect from="/diagrams/:diagramId" to="/entitysets/:diagramId" />
+          <Route path="/entitysets/:entitySetId" exact component={EntitySetScreen} />
+          <Route path="/entitysets" exact component={EntitySetIndexScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
           <Route path="/history" exact component={HistoryScreen} />

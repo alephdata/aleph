@@ -93,7 +93,7 @@ class DocumentSelectDialog extends Component {
             noResultsText={intl.formatMessage(messages.no_results)}
             buttonProps={{ placeholder: intl.formatMessage(messages.placeholder)}}
           />
-          <div class="bp3-form-helper-text">
+          <div className="bp3-form-helper-text">
             <FormattedMessage
               id='entity.manager.bulk_import.description.3'
               defaultMessage={

@@ -21,13 +21,6 @@ export {
   updateCollectionPermissions,
 } from './collectionActions';
 export {
-  createDiagram,
-  deleteDiagram,
-  fetchDiagram,
-  queryDiagrams,
-  updateDiagram,
-} from './diagramActions';
-export {
   createEntity,
   createEntityMapping,
   deleteEntity,
@@ -42,6 +35,13 @@ export {
   updateEntity,
   updateEntityMapping,
 } from './entityActions';
+export {
+  createEntitySet,
+  deleteEntitySet,
+  fetchEntitySet,
+  queryEntitySets,
+  updateEntitySet,
+} from './entitySetActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 

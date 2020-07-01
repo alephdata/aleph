@@ -6,40 +6,40 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
 import FormDialog from 'src/dialogs/common/FormDialog';
-import { createDiagram, queryDiagrams, updateDiagram } from 'src/actions';
-import { queryCollectionDiagrams } from 'src/queries';
-import { selectDiagramsResult } from 'src/selectors';
-import { Diagram } from 'src/components/common';
+import { createEntitySet, queryEntitySets, updateEntitySet } from 'src/actions';
+import { queryCollectionEntitySets } from 'src/queries';
+import { selectEntitySetsResult } from 'src/selectors';
+import { EntitySet } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
-import getDiagramLink from 'src/util/getDiagramLink';
+import getEntitySetLink from 'src/util/getEntitySetLink';
 
-import './AddToDiagramDialog.scss';
+import './AddToEntitySetDialog.scss';
 
 const messages = defineMessages({
   create_new: {
-    id: 'diagram.add_entities.create_new',
-    defaultMessage: 'Create a new diagram',
+    id: 'entityset.add_entities.create_new',
+    defaultMessage: 'Create a new {type}',
   },
   title: {
-    id: 'diagram.add_entities.title',
-    defaultMessage: 'Add entities to a diagram',
+    id: 'entityset.add_entities.title',
+    defaultMessage: 'Add entities to a {type}',
   },
   placeholder: {
-    id: 'diagram.add_entities.select_placeholder',
-    defaultMessage: 'Select an existing diagram',
+    id: 'entityset.add_entities.select_placeholder',
+    defaultMessage: 'Select an existing {type}',
   },
   empty: {
-    id: 'diagram.add_entities.select_empty',
-    defaultMessage: 'No existing diagrams',
+    id: 'entityset.add_entities.select_empty',
+    defaultMessage: 'No existing {type}s',
   },
   success_update: {
-    id: 'diagram.add_entities.success',
-    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {diagram}',
+    id: 'entityset.add_entities.success',
+    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {type}',
   },
 });
 
 
-class AddToDiagramDialog extends Component {
+class AddToEntitySetDialog extends Component {
   constructor(props) {
     super(props);
     this.state = { processing: false };
@@ -57,8 +57,8 @@ class AddToDiagramDialog extends Component {
 
   fetchIfNeeded() {
     const { query, result } = this.props;
-    if (result && !result.isPending && !result.isError) {
-      this.props.queryDiagrams({ query });
+    if (result.shouldLoad) {
+      this.props.queryEntitySets({ query });
     }
   }
 
@@ -73,25 +73,25 @@ class AddToDiagramDialog extends Component {
     });
   }
 
-  onSelect(diagram) {
+  onSelect(entitySet) {
     const { entities } = this.props;
-    const prevEntityCount = diagram.entities?.length;
+    const prevEntityCount = entitySet.entities?.length;
 
     const entityIds = entities.map(e => e.id);
-    const newDiagramData = {
-      ...diagram,
-      entities: diagram.entities ? [...diagram.entities, ...entityIds] : entityIds,
+    const newEntitySetData = {
+      ...entitySet,
+      entities: entitySet.entities ? [...entitySet.entities, ...entityIds] : entityIds,
     };
 
-    this.sendRequest(newDiagramData, prevEntityCount);
+    this.sendRequest(newEntitySetData, prevEntityCount);
   }
 
   onChangeLabel({ target }) {
     this.setState({ label: target.value });
   }
 
-  async sendRequest(diagram, prevEntityCount = 0) {
-    const { history, intl } = this.props;
+  async sendRequest(entitySet, prevEntityCount = 0) {
+    const { history, intl, type = 'set' } = this.props;
     const { processing } = this.state;
 
     if (processing) return;
@@ -99,24 +99,24 @@ class AddToDiagramDialog extends Component {
 
     try {
       let request;
-      if (diagram.id) {
-        request = this.props.updateDiagram(diagram.id, diagram);
+      if (entitySet.id) {
+        request = this.props.updateEntitySet(entitySet.id, entitySet);
       } else {
-        request = this.props.createDiagram(diagram);
+        request = this.props.createEntitySet(entitySet);
       }
 
-      request.then(updatedDiagram => {
+      request.then(updatedEntitySet => {
         this.setState({ processing: false });
         this.props.toggleDialog();
 
-        const newCount = updatedDiagram?.data?.entities?.length || 0;
+        const newCount = updatedEntitySet?.data?.entities?.length || 0;
         const updatedCount = newCount - prevEntityCount;
 
         showSuccessToast(
-          intl.formatMessage(messages.success_update, {count: updatedCount, diagram: diagram.label}),
+          intl.formatMessage(messages.success_update, {count: updatedCount, entitySet: entitySet.label, type}),
         );
         history.push({
-          pathname: getDiagramLink(updatedDiagram.data),
+          pathname: getEntitySetLink(updatedEntitySet.data),
         });
       })
     } catch (e) {
@@ -126,45 +126,45 @@ class AddToDiagramDialog extends Component {
   }
 
   render() {
-    const { entities, intl, isOpen, result, toggleDialog } = this.props;
+    const { entities, intl, isOpen, result, toggleDialog, type = 'set' } = this.props;
     const { label, processing } = this.state;
 
     return (
       <FormDialog
         icon="send-to-graph"
-        className="AddToDiagramDialog"
+        className="AddToEntitySetDialog"
         processing={processing}
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title)}
+        title={intl.formatMessage(messages.title, { type })}
         onClose={toggleDialog}
       >
         <div className="bp3-dialog-body">
           <p>
             <FormattedMessage
-              id="diagram.add_entities.selected_count"
-              defaultMessage="You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a diagram."
-              values={{ count: <strong>{entities.length}</strong>, count_simple: entities.length }}
+              id="entityset.add_entities.selected_count"
+              defaultMessage="You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a {type}."
+              values={{ count: <strong>{entities.length}</strong>, count_simple: entities.length, type }}
             />
           </p>
           <Divider />
-          <Diagram.Select
+          <EntitySet.Select
             onSelect={this.onSelect}
             items={result.results}
-            noResults={intl.formatMessage(messages.empty)}
+            noResults={intl.formatMessage(messages.empty, { type })}
             buttonProps={{
               icon: "send-to-graph",
               disabled: result.isLoading || result.shouldLoad,
-              text: intl.formatMessage(messages.placeholder)
+              text: intl.formatMessage(messages.placeholder, { type })
             }}
           />
           <div className="FormDialog__spacer">
-            <FormattedMessage id="diagram.add.or" defaultMessage="or" />
+            <FormattedMessage id="entityset.add.or" defaultMessage="or" />
           </div>
           <form onSubmit={this.onCreate}>
             <InputGroup
               fill
               leftIcon="graph"
-              placeholder={intl.formatMessage(messages.create_new)}
+              placeholder={intl.formatMessage(messages.create_new, { type })}
               rightElement={
                 <Button icon="arrow-right" minimal type="submit" />
               }
@@ -180,16 +180,19 @@ class AddToDiagramDialog extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const query = queryCollectionDiagrams(location, collection.id);
+  const { collection, location, type } = ownProps;
+  let query = queryCollectionEntitySets(location, collection.id);
+  if (type) {
+    query = query.setFilter('type', type);
+  }
   return {
     query,
-    result: selectDiagramsResult(state, query),
+    result: selectEntitySetsResult(state, query),
   };
 };
 
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { createDiagram, queryDiagrams, updateDiagram }),
-)(AddToDiagramDialog);
+  connect(mapStateToProps, { createEntitySet, queryEntitySets, updateEntitySet }),
+)(AddToEntitySetDialog);
