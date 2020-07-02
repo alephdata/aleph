@@ -7,7 +7,7 @@ from followthemoney.namespace import Namespace
 from jsonschema import FormatChecker
 
 from aleph import settings
-from aleph.model import Collection
+from aleph.model import Collection, EntitySet
 
 
 checker = FormatChecker()
@@ -50,6 +50,13 @@ def check_category(value):
 def check_frequency(value):
     if value not in Collection.FREQUENCIES.keys():
         raise ValueError(gettext('Invalid frequency.'))
+    return True
+
+
+@checker.checks("entitysettype", raises=ValueError)
+def check_entitysettype(value):
+    if value not in EntitySet.TYPES:
+        raise ValueError(gettext('Invalid set type.'))
     return True
 
 

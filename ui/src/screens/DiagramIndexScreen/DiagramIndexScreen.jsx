@@ -3,14 +3,14 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { queryDiagrams } from 'src/actions';
-import { selectDiagramsResult } from 'src/selectors';
+import { queryEntitySets } from 'src/actions';
+import { selectEntitySetsResult } from 'src/selectors';
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import { Breadcrumbs } from 'src/components/common';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
+import EntitySetCreateMenu from 'src/components/EntitySet/EntitySetCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
 
 
@@ -44,14 +44,14 @@ export class DiagramIndexScreen extends Component {
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryDiagrams({ query, next: result.next });
+      this.props.queryEntitySets({ query, next: result.next });
     }
   }
 
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (result.shouldLoad) {
-      this.props.queryDiagrams({ query });
+      this.props.queryEntitySets({ query });
     }
   }
 
@@ -90,7 +90,7 @@ export class DiagramIndexScreen extends Component {
               />
             </p>
             <div className="Dashboard__actions">
-              <DiagramCreateMenu />
+              <EntitySetCreateMenu type='diagram' />
             </div>
           </div>
           <DiagramList
@@ -106,10 +106,13 @@ export class DiagramIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('diagrams', location, {}, 'diagrams')
+  const context = {
+    'filter:type': 'diagram'
+  };
+  const query = Query.fromLocation('entitysets', location, context, 'entitySets')
     .sortBy('updated_at', 'desc');
 
-  const result = selectDiagramsResult(state, query);
+  const result = selectEntitySetsResult(state, query);
 
   return {
     query,
@@ -119,6 +122,6 @@ const mapStateToProps = (state, ownProps) => {
 
 
 export default compose(
-  connect(mapStateToProps, { queryDiagrams }),
+  connect(mapStateToProps, { queryEntitySets }),
   injectIntl,
 )(DiagramIndexScreen);

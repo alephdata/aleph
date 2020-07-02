@@ -8,9 +8,9 @@ from followthemoney.util import get_entity_id
 from aleph.core import cache, es, settings
 from aleph.authz import Authz
 from aleph.mail import email_role
-from aleph.model import Collection, Entity, Role, Alert, Diagram
+from aleph.model import Collection, Entity, Role, Alert, EntitySet
 from aleph.model import Event, Events
-from aleph.logic.util import collection_url, entity_url, ui_url, diagram_url
+from aleph.logic.util import collection_url, entity_url, ui_url, entityset_url
 from aleph.index.notifications import index_notification, delete_notifications
 from aleph.index.notifications import notifications_index
 from aleph.index.util import unpack_result
@@ -119,9 +119,9 @@ def render_notification(stub, notification):
             proxy = model.get_proxy(data)
             title = proxy.caption
             link = entity_url(value)
-        elif clazz == Diagram:
+        elif clazz == EntitySet:
             title = data.label
-            link = diagram_url(data.id)
+            link = entityset_url(data.id)
 
         template = '{{%s}}' % name
         html = html.replace(template, html_link(title, link))
