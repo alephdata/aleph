@@ -162,7 +162,7 @@ def reconcile_op(query, collection=None):
     if collection is not None:
         args['filter:collection_id'] = collection.get('id')
     parser = SearchQueryParser(args, request.authz)
-    schema = query.get('type') or Entity.THING
+    schema = query.get('type') or Entity.LEGAL_ENTITY
     proxy = model.make_entity(schema)
     proxy.add('name', query.get('query'))
     for p in query.get('properties', []):

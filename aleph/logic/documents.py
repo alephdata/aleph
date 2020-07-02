@@ -18,16 +18,25 @@ def crawl_directory(collection, path, parent=None, job_id=None):
         foreign_id = path.name
         if parent is not None:
             foreign_id = os.path.join(parent.foreign_id, foreign_id)
-        meta = {'file_name': path.name}
-        document = Document.save(collection,
-                                 parent=parent,
-                                 foreign_id=foreign_id,
-                                 content_hash=content_hash,
-                                 meta=meta)
-        db.session.commit()
-        job_id = job_id or Job.random_id()
-        ingest_entity(collection, document.to_proxy(), job_id=job_id)
-        log.info("Crawl [%s]: %s -> %s", collection.id, path, document.id)
+
+        # if the job_id is not set yet and path.is_dir(), we know it is the first
+        # iteration and we don't create an initial root folder as parent
+        # to be consistent with the behaviour of alephclient
+        if path.is_dir() and job_id is None:
+            document = None
+            job_id = Job.random_id()
+        else:
+            meta = {'file_name': path.name}
+            document = Document.save(collection,
+                                     parent=parent,
+                                     foreign_id=foreign_id,
+                                     content_hash=content_hash,
+                                     meta=meta)
+            db.session.commit()
+            job_id = job_id or Job.random_id()
+            ingest_entity(collection, document.to_proxy(), job_id=job_id)
+            log.info("Crawl [%s]: %s -> %s", collection.id, path, document.id)
+
         if path.is_dir():
             for child in path.iterdir():
                 crawl_directory(collection, child, document, job_id)
