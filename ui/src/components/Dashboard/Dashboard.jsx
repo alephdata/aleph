@@ -126,7 +126,7 @@ class Dashboard extends React.Component {
               text={intl.formatMessage(messages.diagrams)}
               label={<ResultCount result={diagramsCountResult} />}
               onClick={() => this.navigate('/diagrams')}
-              active={current === '/entitysets' && location.search.includes('diagram')}
+              active={current === '/diagrams'}
             />
             {(groupsResult.total === undefined || groupsResult.total > 0) && (
               <>
