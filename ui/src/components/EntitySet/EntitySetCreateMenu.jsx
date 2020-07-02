@@ -10,7 +10,7 @@ import EntitySetCreateDialog from 'src/dialogs/EntitySetCreateDialog/EntitySetCr
 const messages = defineMessages({
   login: {
     id: 'entityset.create.login',
-    defaultMessage: 'You must log in to create a entityset',
+    defaultMessage: 'You must log in to create a {type}',
   },
 });
 
@@ -52,7 +52,7 @@ class EntitySetCreateMenu extends Component {
         {canAdd && buttonContent}
         {!canAdd && (
           <Tooltip
-            content={intl.formatMessage(messages.login)}
+            content={intl.formatMessage(messages.login, { type })}
             position={Position.BOTTOM}
           >
             {buttonContent}
