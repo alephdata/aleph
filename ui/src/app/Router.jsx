@@ -71,8 +71,8 @@ class Router extends Component {
           <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
           <Redirect from="/diagrams" to="/entitysets?filter\:type=diagram" />
           <Redirect from="/diagrams/:diagramId" to="/entitysets/:diagramId" />
-          <Route path="/entitysets/:entitySetId" exact component={EntitySetScreen} />
-          <Route path="/entitysets" exact component={EntitySetIndexScreen} />
+          <Route path="/sets/:entitySetId" exact component={EntitySetScreen} />
+          <Route path="/sets" exact component={EntitySetIndexScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
           <Route path="/history" exact component={HistoryScreen} />
