@@ -13,33 +13,33 @@ import EntitySetManageMenu from 'src/components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'src/components/Diagram/DiagramEditor';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet } from 'src/components/common';
+import { Breadcrumbs, Collection, Diagram } from 'src/components/common';
 import updateStates from 'src/util/updateStates';
 
 const messages = defineMessages({
   status_success: {
-    id: 'entityset.status_success',
+    id: 'diagram.status_success',
     defaultMessage: 'Saved',
   },
   status_error: {
-    id: 'entityset.status_error',
+    id: 'diagram.status_error',
     defaultMessage: 'Error saving',
   },
   status_in_progress: {
-    id: 'entityset.status_in_progress',
+    id: 'diagram.status_in_progress',
     defaultMessage: 'Saving...',
   },
   error_warning: {
-    id: 'entityset.error_warning',
+    id: 'diagram.error_warning',
     defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
   },
   in_progress_warning: {
-    id: 'entityset.in_progress_warning',
+    id: 'diagram.in_progress_warning',
     defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
   },
 });
 
-export class EntitySetScreen extends Component {
+export class DiagramScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -50,8 +50,8 @@ export class EntitySetScreen extends Component {
     };
 
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
-    this.onEntitySetSearch = this.onEntitySetSearch.bind(this);
-    this.onEntitySetDownload = this.onEntitySetDownload.bind(this);
+    this.onDiagramSearch = this.onDiagramSearch.bind(this);
+    this.onDiagramDownload = this.onDiagramDownload.bind(this);
     this.onDownloadComplete = this.onDownloadComplete.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
   }
@@ -61,10 +61,10 @@ export class EntitySetScreen extends Component {
   }
 
   onCollectionSearch(queryText) {
-    const { history, entitySet } = this.props;
+    const { history, diagram } = this.props;
     const query = {
       q: queryText,
-      'filter:collection_id': entitySet.collection.id,
+      'filter:collection_id': diagram.collection.id,
     };
     history.push({
       pathname: '/search',
@@ -72,11 +72,11 @@ export class EntitySetScreen extends Component {
     });
   }
 
-  onEntitySetSearch(filterText) {
+  onDiagramSearch(filterText) {
     this.setState({ filterText });
   }
 
-  onEntitySetDownload() {
+  onDiagramDownload() {
     this.setState({ downloadTriggered: true });
   }
 
@@ -89,17 +89,17 @@ export class EntitySetScreen extends Component {
   }
 
   getSearchScopes() {
-    const { entitySet } = this.props;
+    const { diagram } = this.props;
     const scopes = [
       {
-        listItem: <Collection.Label collection={entitySet.collection} icon truncate={30} />,
-        label: entitySet.collection.label,
+        listItem: <Collection.Label collection={diagram.collection} icon truncate={30} />,
+        label: diagram.collection.label,
         onSearch: this.onCollectionSearch,
       },
       {
-        listItem: <EntitySet.Label entitySet={entitySet} icon truncate={30} />,
-        label: entitySet.label,
-        onSearch: this.onEntitySetSearch,
+        listItem: <Diagram.Label diagram={diagram} icon truncate={30} />,
+        label: diagram.label,
+        onSearch: this.onDiagramSearch,
         submitOnQueryChange: true,
       },
     ];
@@ -108,10 +108,10 @@ export class EntitySetScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { entitySet, entitySetId } = this.props;
+    const { diagram, diagramId } = this.props;
 
-    if (entitySet.shouldLoad || entitySet.shallow) {
-      this.props.fetchEntitySet(entitySetId);
+    if (diagram.shouldLoad || diagram.shallow) {
+      this.props.fetchEntitySet(diagramId);
     }
   }
 
@@ -130,27 +130,26 @@ export class EntitySetScreen extends Component {
   }
 
   render() {
-    const { entitySet, intl } = this.props;
-    const { type } = entitySet;
+    const { diagram, intl } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
-    if (entitySet.isError) {
-      return <ErrorScreen error={entitySet.error} />;
+    if (diagram.isError) {
+      return <ErrorScreen error={diagram.error} />;
     }
 
-    if ((!entitySet.id) || entitySet.shallow) {
+    if ((!diagram.id) || diagram.shallow) {
       return <LoadingScreen />;
     }
 
     const operation = (
-      <EntitySetManageMenu entitySet={entitySet} triggerDownload={this.onEntitySetDownload} />
+      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} />
     );
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation} status={this.formatStatus()}>
-        <Breadcrumbs.Collection key="collection" collection={entitySet.collection} />
+        <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.Text active>
-          <EntitySet.Label entitySet={entitySet} icon />
+          <Diagram.Label diagram={diagram} icon />
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
@@ -166,27 +165,19 @@ export class EntitySetScreen extends Component {
           message={intl.formatMessage(messages.error_warning)}
         />
         <Screen
-          title={entitySet.label}
-          description={entitySet.summary || ''}
+          title={diagram.label}
+          description={diagram.summary || ''}
           searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
-          {type === 'diagram' && (
-            <DiagramEditor
-              collection={entitySet.collection}
-              onStatusChange={this.onStatusChange}
-              diagram={entitySet}
-              downloadTriggered={downloadTriggered}
-              filterText={filterText}
-              onDownloadComplete={this.onDownloadComplete}
-            />
-          )}
-          {type === 'timeline' && (
-            <div>{ type }: { entitySet.label }</div>
-          )}
-          {type === 'generic' && (
-            <div>{ type }: { entitySet.label }</div>
-          )}
+          <DiagramEditor
+            collection={diagram.collection}
+            onStatusChange={this.onStatusChange}
+            diagram={diagram}
+            downloadTriggered={downloadTriggered}
+            filterText={filterText}
+            onDownloadComplete={this.onDownloadComplete}
+          />
         </Screen>
       </>
     );
@@ -194,11 +185,11 @@ export class EntitySetScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entitySetId } = ownProps.match.params;
+  const { diagramId } = ownProps.match.params;
 
   return {
-    entitySetId,
-    entitySet: selectEntitySet(state, entitySetId),
+    diagramId,
+    diagram: selectEntitySet(state, diagramId),
   };
 };
 
@@ -207,4 +198,4 @@ export default compose(
   withRouter,
   injectIntl,
   connect(mapStateToProps, { fetchEntitySet }),
-)(EntitySetScreen);
+)(DiagramScreen);

@@ -8,7 +8,7 @@ import { queryCollectionEntitySets } from 'src/queries';
 import { selectEntitySetsResult } from 'src/selectors';
 import { ErrorSection } from 'src/components/common';
 import EntitySetCreateMenu from 'src/components/EntitySet/EntitySetCreateMenu';
-import EntitySetList from 'src/components/EntitySet/EntitySetList';
+import DiagramList from 'src/components/Diagram/DiagramList';
 
 export class CollectionDiagramsIndexMode extends Component {
   constructor(props) {
@@ -35,8 +35,7 @@ export class CollectionDiagramsIndexMode extends Component {
         <div style={{ marginBottom: '10px' }}>
           <EntitySetCreateMenu collection={collection} type='diagram' />
         </div>
-        <EntitySetList
-          type='diagram'
+        <DiagramList
           result={result}
           getMoreItems={this.getMoreResults}
           showCollection={false}

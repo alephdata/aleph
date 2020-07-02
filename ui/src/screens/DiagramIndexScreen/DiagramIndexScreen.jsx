@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -11,49 +11,23 @@ import Dashboard from 'src/components/Dashboard/Dashboard';
 import { Breadcrumbs } from 'src/components/common';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import EntitySetCreateMenu from 'src/components/EntitySet/EntitySetCreateMenu';
-import EntitySetList from 'src/components/EntitySet/EntitySetList';
+import DiagramList from 'src/components/Diagram/DiagramList';
 
 
-import './EntitySetIndexScreen.scss';
+import './DiagramIndexScreen.scss';
 
 const messages = defineMessages({
-  breadcrumb: {
-    id: 'entitysets.browser.breadcrumb',
-    defaultMessage: '{type}s',
-  },
   title: {
-    id: 'entitysets.title',
-    defaultMessage: 'Sets',
-  },
-  title_diagrams: {
-    id: 'entitysets.title_diagrams',
+    id: 'diagrams.title',
     defaultMessage: 'Network diagrams',
   },
-  title_timelines: {
-    id: 'entitysets.title_timelines',
-    defaultMessage: 'Timelines',
-  },
-  description: {
-    id: 'entitysets.description',
-    defaultMessage: 'Sets let you group Entities within a dataset together for contextualized analysis.',
-  },
-  description_diagrams: {
-    id: 'entitysets.description_diagrams',
-    defaultMessage: 'Network diagrams let you visualize complex relationships within a dataset.',
-  },
-  description_timelines: {
-    id: 'entitysets.description_timelines',
-    defaultMessage: 'Timelines let you arrange events within a dataset for viszalization further analysis.',
-  },
   no_results_title: {
-    id: 'entitysets.no_results_title',
-    defaultMessage: 'You do not have any {type}s yet',
+    id: 'diagrams.no_results_title',
+    defaultMessage: 'You do not have any network diagrams yet',
   },
 });
 
-const CONCRETE_TYPES = ['diagram', 'timeline'];
-
-export class EntitySetIndexScreen extends Component {
+export class DiagramIndexScreen extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -82,40 +56,44 @@ export class EntitySetIndexScreen extends Component {
   }
 
   render() {
-    const { intl, result, type } = this.props;
+    const { intl, result } = this.props;
 
     if (result.isError) {
       return <ErrorScreen error={result.error} />;
     }
 
-    const msg = (id, type) => messages[CONCRETE_TYPES.includes(type) ? `${id}_${type}s` : id];
-
     const breadcrumbs = (
       <Breadcrumbs>
-        <li>{intl.formatMessage(messages.breadcrumb, { type })}</li>
+        <li>
+          <FormattedMessage
+            id="diagrams.browser.breadcrumb"
+            defaultMessage="Diagrams"
+          />
+        </li>
       </Breadcrumbs>
     );
 
-
     return (
       <Screen
-        className="EntitySetIndexScreen"
+        className="DiagramIndexScreen"
         breadcrumbs={breadcrumbs}
-        title={intl.formatMessage(msg('title', type), { type })}
+        title={intl.formatMessage(messages.title)}
         requireSession
       >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <h5 className="Dashboard__title">{intl.formatMessage(msg('title', type), { type })}</h5>
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
-              {intl.formatMessage(msg('description', type), { type })}
+              <FormattedMessage
+                id="diagram.description"
+                defaultMessage="Network diagrams let you visualize complex relationships within a dataset."
+              />
             </p>
             <div className="Dashboard__actions">
-              <EntitySetCreateMenu type={ type } />
+              <EntitySetCreateMenu type='diagram' />
             </div>
           </div>
-          <EntitySetList
-            type={type}
+          <DiagramList
             result={result}
             getMoreItems={this.getMoreResults}
             showCollection
@@ -128,19 +106,15 @@ export class EntitySetIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-
-  // FIXME
-  let query = Query.fromLocation('entitysets', location, {}, 'entitySets')
+  const context = {
+    'filter:type': 'diagram'
+  };
+  const query = Query.fromLocation('entitysets', location, context, 'entitySets')
     .sortBy('updated_at', 'desc');
-  const type = query.state['filter:type'];
-  if (type) {
-    query = query.setFilter('type', type);
-  }
 
   const result = selectEntitySetsResult(state, query);
 
   return {
-    type,
     query,
     result,
   };
@@ -150,4 +124,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps, { queryEntitySets }),
   injectIntl,
-)(EntitySetIndexScreen);
+)(DiagramIndexScreen);
