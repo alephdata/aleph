@@ -59,9 +59,7 @@ class Facet(object):
             for result in results:
                 self.update(result, result.get('id'))
 
-            data['values'] = sorted(results,
-                                    key=lambda k: k['count'],
-                                    reverse=True)
+            data['values'] = results
 
         if self.parser.get_facet_interval(self.name):
             results = []

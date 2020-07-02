@@ -1,6 +1,7 @@
 import logging
 from pprint import pprint, pformat  # noqa
 from followthemoney.types import registry
+from banal import ensure_list
 
 from aleph.core import es
 from aleph.index.util import (
@@ -140,9 +141,21 @@ class Query(object):
                     'date_histogram': {
                         'field': facet_name,
                         'calendar_interval': interval,
-                        'format': DATE_FORMAT
+                        'format': DATE_FORMAT,
+                        'min_doc_count': 0,
                     }
                 }
+                # Make sure we return empty buckets in the whole filter range
+                filters = self.parser.filters
+                min_val = filters.get('gte:%s' % facet_name) or filters.get('gt:%s' % facet_name)  # noqa
+                max_val = filters.get('lte:%s' % facet_name) or filters.get('lt:%s' % facet_name)  # noqa
+                if min_val or max_val:
+                    extended_bounds = {}
+                    if min_val:
+                        extended_bounds['min'] = ensure_list(min_val)[0]
+                    if max_val:
+                        extended_bounds['max'] = ensure_list(max_val)[0]
+                    facet_aggregations[agg_name]['date_histogram']['extended_bounds'] = extended_bounds  # noqa
 
             if not len(facet_aggregations):
                 break
