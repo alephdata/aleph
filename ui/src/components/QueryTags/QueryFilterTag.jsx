@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
 import {
-  Schema, Tag, Country, Language, Category, Collection, Entity,
+  Schema, Tag, Country, Language, Category, Collection, Date, Entity,
 } from 'src/components/common';
 
 import './QueryFilterTag.scss';
@@ -21,6 +21,7 @@ class QueryFilterTag extends PureComponent {
   }
 
   label = (filter, value) => {
+    console.log('getting label', filter, value);
     switch (filter) {
       case 'schema':
         return (
@@ -94,6 +95,26 @@ class QueryFilterTag extends PureComponent {
             {value}
           </>
         );
+      case 'eq:dates':
+        return (
+          <>
+            <Date value={value.replace('||/y', '')} />
+          </>
+        );
+      case 'lte:dates':
+        return (
+          <>
+            <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before: " />
+            <Date value={value.replace('||/y', '')} />
+          </>
+        );
+      case 'gte:dates':
+        return (
+          <>
+            <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After: " />
+            <Date value={value.replace('||/y', '')} />
+          </>
+        );
       default:
         return value;
     }
@@ -104,7 +125,8 @@ class QueryFilterTag extends PureComponent {
 
     return (
       <TagWidget
-        className="bp3-large QueryFilterTag"
+        large
+        className="QueryFilterTag"
         onRemove={this.onRemove}
       >
         {this.label(filter, value)}

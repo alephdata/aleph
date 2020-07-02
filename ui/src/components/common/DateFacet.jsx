@@ -12,37 +12,49 @@ export class DateFilter extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.result);
+    // console.log(this.props.result);
 
   }
 
   onSelect(selected) {
     console.log('selected', selected)
     const { query, updateQuery } = this.props;
+
+
     let newRange;
-    if (isArray(selected)) {
-      newRange = selected.sort();
+    if (Array.isArray(selected)) {
+      newRange = selected.sort().map(timestamp => `${new Date(timestamp).getFullYear()}||/y`);
     } else {
-      newRange = [selected, //selected plus 1 year]
+      const year = new Date(selected).getFullYear();
+      // const nextInterval = new Date(selected);
+      // console.log('next', nextInterval);
+      //
+      // nextInterval.setFullYear(new Date(selected).getFullYear() + 1);
+      // console.log('next', nextInterval.toISOString());
+      // newRange = [selected, nextInterval.toISOString().replace(/\.\d+Z/, "")];
+      newRange = [`${year}||/y`, `${year}||/y`]
     }
-    query.setFilter('gte:dates', newRange[0])
+    const newQuery = query.setFilter('gte:dates', newRange[0])
       .setFilter('lte:dates', newRange[1]);
 
-    this.props.updateQuery(query)
+    this.props.updateQuery(newQuery)
+  }
+
+  getLabel(timestamp) {
+    return new Date(timestamp).getFullYear();
   }
 
   render() {
     const { intervals, isOpen } = this.props;
 
-    if (!isOpen) return null;
+    if (!isOpen || !intervals) return null;
 
     return (
       <Histogram
-        data={intervals}
+        data={intervals.map(({label, ...rest}) => ({ label: this.getLabel(label), ...rest }))}
         onSelect={this.onSelect}
         containerProps={{
-          aspect: 5,
-          minHeight: 200,
+          height: 150,
         }}
       />
     );
@@ -50,9 +62,12 @@ export class DateFilter extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // const { location } = ownProps;
+  const { query, result } = ownProps;
   const isOpen = query.hasFacet('dates');
-  const intervals =
+
+  // console.log('query is', query, isOpen);
+  // console.log('result is', result);
+  const intervals = result?.facets?.dates?.intervals;
 
 
   // const context = {
@@ -66,6 +81,7 @@ const mapStateToProps = (state, ownProps) => {
   //
   // console.log(context);
   // const result = selectEntitiesResult(state, query);
+  // return { intervals, isOpen };
   return { intervals, isOpen };
 };
 

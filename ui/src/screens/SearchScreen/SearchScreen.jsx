@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
-import { Icon, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
+import { Icon, Button, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -99,6 +99,7 @@ export class SearchScreen extends React.Component {
   }
 
   updateQuery(newQuery) {
+    // console.log('updating query');
     const { history, location } = this.props;
     // make it so the preview disappears if the query is changed.
     const parsedHash = queryString.parse(location.hash);
@@ -141,15 +142,17 @@ export class SearchScreen extends React.Component {
   }
 
   toggleDateFacet() {
+    console.log('toggling date facet');
     const { dateFacetShown, query } = this.props;
+    let newQuery;
     if (dateFacetShown) {
-      query.remove('facet', 'dates')
+      newQuery = query.remove('facet', 'dates')
         .remove('facet_interval:dates', 'year');
     } else {
-      query.add('facet', 'dates')
+      newQuery = query.add('facet', 'dates')
         .add('facet_interval:dates', 'year');
     }
-    this.updateQuery(query);
+    this.updateQuery(newQuery);
   }
 
   render() {
@@ -240,20 +243,24 @@ export class SearchScreen extends React.Component {
           </DualPane.SidePane>
           <DualPane.ContentPane>
             <SignInCallout />
+            <div className="SearchScreen__control-bar">
+              <QueryTags query={query} updateQuery={this.updateQuery} />
+              <div>
+                <Button outlined icon="calendar" onClick={this.toggleDateFacet}>
+                  {dateFacetShown && (
+                    <FormattedMessage id="search.screen.show_date" defaultMessage="Hide Date Filter" />
+                  )}
+                  {!dateFacetShown && (
+                    <FormattedMessage id="search.screen.show_date" defaultMessage="Show Date Filter" />
+                  )}
+                </Button>
+              </div>
+            </div>
             <DateFacet
               query={query}
               updateQuery={this.updateQuery}
               result={result}
             />
-            <Button icon="calendar" onClick={this.toggleDateFacet}>
-              {dateFacetShown && (
-                <FormattedMessage id="search.screen.show_date" defaultMessage="Hide Date Filter" />
-              )}
-              {!dateFacetShown && (
-                <FormattedMessage id="search.screen.show_date" defaultMessage="Show Date Filter" />
-              )}
-            </Button>
-            <QueryTags query={query} updateQuery={this.updateQuery} />
             <EntitySearch
               query={query}
               updateQuery={this.updateQuery}
@@ -272,13 +279,8 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     highlight: true,
     'filter:schemata': 'Thing',
-    // 'filter:gte:properties.birthDate': '2000-03-01',
-    // 'filter:lte:properties.birthDate': '2020-05-05',
-    'facet': 'dates',
-    'facet_interval:dates': 'year',
   };
 
-  console.log(context);
   const query = Query.fromLocation('entities', location, context, '');
   const result = selectEntitiesResult(state, query);
   const dateFacetShown = query.hasFacet('dates')

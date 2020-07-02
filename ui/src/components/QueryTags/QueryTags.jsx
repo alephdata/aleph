@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-
 import { FormattedMessage } from 'react-intl';
+import _ from 'lodash';
 import { Button } from '@blueprintjs/core';
 import QueryFilterTag from './QueryFilterTag';
 
@@ -13,7 +13,14 @@ class QueryTags extends Component {
 
   removeFilterValue(filter, value) {
     const { query, updateQuery } = this.props;
-    updateQuery(query.removeFilter(filter, value));
+    let newQuery;
+    if (filter === 'eq:dates') {
+      newQuery = query.removeFilter('gte:dates', value)
+        .removeFilter('lte:dates', value);
+    } else {
+      newQuery = query.removeFilter(filter, value);
+    }
+    updateQuery(newQuery);
   }
 
   removeAllFilterValues() {
@@ -30,16 +37,22 @@ class QueryTags extends Component {
       return null;
     }
 
-    const filterTags = activeFilters.map(filter => query.getFilter(filter).map(value => (
-      <QueryFilterTag
-        filter={filter}
-        value={value}
-        remove={this.removeFilterValue}
-        key={value}
-      />
-    )));
+    let addlTags = [];
+    if (query.hasFilter('gte:dates') && query.hasFilter('lte:dates')) {
+      const gte = query.getFilter('gte:dates')[0];
+      const lte = query.getFilter('lte:dates')[0];
+      if (gte === lte) {
+        activeFilters = activeFilters.filter(f => (f !== 'gte:dates' && f !== 'lte:dates'))
+        addlTags.push({ filter: 'eq:dates', value: gte });
+      }
+    }
 
-    const showClearAll = filterTags.length > 1 || (filterTags[0] && filterTags[0].length > 1);
+    const filterTags = _.flatten(
+      activeFilters
+        .map(filter => query.getFilter(filter).map(value => ({ filter, value })))
+    );
+
+    const showClearAll = filterTags.length > 1;
 
     // @FIXME This should still selectively display filters for the following:
     // "?exclude={id}"
@@ -47,7 +60,14 @@ class QueryTags extends Component {
     // "?ancestors={id}"
     return (
       <div className="QueryTags">
-        {filterTags}
+        {[...filterTags, ...addlTags].map(({ filter, value }) => (
+          <QueryFilterTag
+            filter={filter}
+            value={value}
+            remove={this.removeFilterValue}
+            key={value}
+          />
+        ))}
         {showClearAll && (
           <Button
             className="filter-clear-tag bp3-tag bp3-large QueryFilterTag"
