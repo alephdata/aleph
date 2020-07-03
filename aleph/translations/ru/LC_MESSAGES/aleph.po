@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-24 17:58+0200\n"
+"POT-Creation-Date: 2020-06-26 17:56+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -116,27 +116,27 @@ msgstr "Прочие материалы"
 
 #: aleph/model/collection.py:51
 msgid "not known"
-msgstr ""
+msgstr "неизвестно"
 
 #: aleph/model/collection.py:52
 msgid "not updated"
-msgstr ""
+msgstr "не обновляется"
 
 #: aleph/model/collection.py:53
 msgid "daily"
-msgstr ""
+msgstr "ежедневно"
 
 #: aleph/model/collection.py:54
 msgid "weekly"
-msgstr ""
+msgstr "еженедельно"
 
 #: aleph/model/collection.py:55
 msgid "monthly"
-msgstr ""
+msgstr "ежемесячно"
 
 #: aleph/model/collection.py:56
 msgid "annual"
-msgstr ""
+msgstr "ежегодно"
 
 #: aleph/model/entity.py:77
 msgid "Invalid entity ID"
@@ -173,15 +173,19 @@ msgstr ""
 
 #: aleph/model/event.py:114
 msgid "{{actor}} published {{collection}}"
-msgstr ""
+msgstr "{{actor}} опубликовали {{collection}}"
 
-#: aleph/model/mapping.py:22
+#: aleph/model/mapping.py:23
 msgid "success"
 msgstr "успешно"
 
-#: aleph/model/mapping.py:23
+#: aleph/model/mapping.py:24
 msgid "failed"
 msgstr "неудача"
+
+#: aleph/model/mapping.py:25
+msgid "pending"
+msgstr ""
 
 #: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
@@ -257,7 +261,7 @@ msgstr "Неверная категория"
 
 #: aleph/validation/formats.py:52
 msgid "Invalid frequency."
-msgstr ""
+msgstr "Некорректная частота"
 
 #: aleph/validation/formats.py:60
 msgid "Invalid URL."
@@ -321,6 +325,10 @@ msgstr "Неверное имя пользователя или пароль."
 #: aleph/views/sessions_api.py:101
 msgid "Authentication has failed."
 msgstr "Ошибка авторизации."
+
+#: aleph/views/sessions_api.py:103
+msgid "Your account is blocked."
+msgstr ""
 
 #: aleph/views/util.py:75
 msgid "Error during data validation"

@@ -77,7 +77,7 @@ export class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const context = {
-    'filter:kind': 'casefile',
+    'filter:category': 'casefile',
   };
   let query = Query.fromLocation('collections', location, context, 'collections')
     .limit(30);

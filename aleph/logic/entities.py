@@ -4,6 +4,7 @@ from pprint import pformat  # noqa
 from followthemoney import model
 from followthemoney.graph import Node
 from followthemoney.types import registry
+from followthemoney.helpers import inline_names
 
 from aleph.core import db, cache
 from aleph.model import Entity, Document, Linkage, Mapping
@@ -34,18 +35,25 @@ def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
                                validate=validate)
     else:
         entity.update(data, collection, validate=validate)
-    collection.touch()
-    db.session.commit()
+
+    # Inline name properties from adjacent entities. See the
+    # docstring on `inline_names` for a more detailed discussion.
+    proxy = entity.to_proxy()
+    entity_ids = proxy.get_type_values(registry.entity)
+    for rel in index.entities_by_ids(entity_ids):
+        inline_names(proxy, model.get_proxy(rel))
+    entity.data = proxy.properties
+    db.session.add(entity)
+
     delete_aggregator_entity(collection, entity.id)
-    index.index_entity(entity, sync=sync)
+    index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(entity.id, sync=sync)
     refresh_collection(collection.id, sync=sync)
     return entity.id
 
 
 def refresh_entity(entity_id, sync=False):
-    if sync:
-        cache.kv.delete(cache.object_key(Entity, entity_id))
+    cache.kv.delete(cache.object_key(Entity, entity_id))
 
 
 def delete_entity(collection, entity, deleted_at=None, sync=False):

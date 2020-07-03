@@ -2,9 +2,9 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
-import { processApiEntity } from 'src/components/Diagram/util';
+import { processApiEntity } from 'src/components/EntitySet/util';
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
-import { updateDiagram } from 'src/actions';
+import { updateEntitySet } from 'src/actions';
 import updateStates from 'src/util/updateStates';
 
 import './DiagramEditor.scss';
@@ -77,7 +77,7 @@ class DiagramEditor extends React.Component {
         entities: entities ? entities.map(entity => entity.id) : [],
       };
 
-      this.props.updateDiagram(updatedDiagram.id, updatedDiagram)
+      this.props.updateEntitySet(updatedDiagram.id, updatedDiagram)
         .then(() => {
           onStatusChange(updateStates.SUCCESS);
         })
@@ -134,7 +134,7 @@ class DiagramEditor extends React.Component {
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {
-  updateDiagram,
+  updateEntitySet,
 };
 
 export default compose(

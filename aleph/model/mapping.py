@@ -18,9 +18,11 @@ class Mapping(db.Model, SoftDeleteModel):
 
     FAILED = 'failed'
     SUCCESS = 'success'
+    PENDING = 'pending'
     STATUS = {
         SUCCESS: lazy_gettext('success'),
-        FAILED: lazy_gettext('failed')
+        FAILED: lazy_gettext('failed'),
+        PENDING: lazy_gettext('pending'),
     }
 
     id = db.Column(db.Integer, primary_key=True)
@@ -53,18 +55,15 @@ class Mapping(db.Model, SoftDeleteModel):
         if table_id:
             self.table_id = table_id
         db.session.add(self)
-        db.session.commit()
 
     def set_status(self, status, error=None):
         self.last_run_status = status
         self.last_run_err_msg = error
         db.session.add(self)
-        db.session.commit()
 
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
-        db.session.commit()
 
     def to_dict(self):
         data = self.to_dict_dates()
@@ -88,8 +87,7 @@ class Mapping(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at=None):
-        deleted_at = deleted_at or datetime.utcnow()
+    def delete_by_collection(cls, collection_id, deleted_at):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa

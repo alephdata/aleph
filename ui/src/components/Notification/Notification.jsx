@@ -3,7 +3,7 @@ import { selectUnit } from '@formatjs/intl-utils';
 import { FormattedRelativeTime } from 'react-intl';
 
 import {
-  Collection, Diagram, Entity, QueryText, Role, Skeleton,
+  Collection, EntitySet, Entity, QueryText, Role, Skeleton,
 } from 'src/components/common';
 
 import './Notification.scss';
@@ -20,8 +20,8 @@ class Notification extends PureComponent {
     if (type === 'entity') {
       return <Entity.Link entity={object} preview icon />;
     }
-    if (type === 'diagram') {
-      return <Diagram.Link diagram={object} />;
+    if (type === 'entityset') {
+      return <EntitySet.Link entitySet={object} />;
     }
     if (type === 'alert') {
       return object ? <QueryText query={object.query} /> : null;

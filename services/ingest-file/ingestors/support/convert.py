@@ -60,12 +60,15 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                         return out_path
                 raise ProcessingException("Could not be converted to PDF.")
             except HTTPError as exc:
-                if exc.response.status_code == 400:
+                if exc.response.status_code in (400, 500):
+                    # For error 500, this might also be a temporary error
+                    # in the conversion service. But all attempts to divy
+                    # these phenomena apart have failed so far.
                     raise ProcessingException(res.text)
-                msg = "Converter not availble: %s (attempt: %s)"
+                msg = "Converter not available: %s (attempt: %s)"
                 log.info(msg, exc, attempt)
                 backoff(failures=math.sqrt(attempt))
             except RequestException as exc:
-                msg = "Converter not availble: %s (attempt: %s)"
+                msg = "Converter not available: %s (attempt: %s)"
                 log.error(msg, exc, attempt)
                 backoff(failures=math.sqrt(attempt))

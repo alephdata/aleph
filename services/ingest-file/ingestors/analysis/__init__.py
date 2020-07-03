@@ -23,9 +23,7 @@ class Analyzer(object):
     def feed(self, entity):
         if not settings.ANALYZE_ENTITIES:
             return
-        # TODO: should we have a schema called "Taggable" with
-        # the XXmentioned properties?
-        if not entity.schema.is_a('Document'):
+        if not entity.schema.is_a('Analyzable'):
             return
         # HACK: Tables will be mapped, don't try to tag them here.
         if entity.schema.is_a('Table'):

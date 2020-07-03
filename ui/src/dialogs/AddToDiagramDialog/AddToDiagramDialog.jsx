@@ -1,27 +1,36 @@
 import React, { Component } from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, Divider, InputGroup } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
 import FormDialog from 'src/dialogs/common/FormDialog';
-import { queryDiagrams, updateDiagram } from 'src/actions';
-import { queryCollectionDiagrams } from 'src/queries';
-import { selectDiagramsResult } from 'src/selectors';
+import { createEntitySet, queryEntitySets, updateEntitySet } from 'src/actions';
+import { queryCollectionEntitySets } from 'src/queries';
+import { selectEntitySetsResult } from 'src/selectors';
 import { Diagram } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
-import getDiagramLink from 'src/util/getDiagramLink';
+import getEntitySetLink from 'src/util/getEntitySetLink';
 
+import './AddToDiagramDialog.scss';
 
 const messages = defineMessages({
+  create_new: {
+    id: 'diagram.add_entities.create_new',
+    defaultMessage: 'Create a new diagram',
+  },
   title: {
     id: 'diagram.add_entities.title',
-    defaultMessage: 'Add to diagram',
+    defaultMessage: 'Add entities to a diagram',
   },
   placeholder: {
     id: 'diagram.add_entities.select_placeholder',
-    defaultMessage: 'Add to an existing diagram',
+    defaultMessage: 'Select an existing diagram',
+  },
+  empty: {
+    id: 'diagram.add_entities.select_empty',
+    defaultMessage: 'No existing diagrams',
   },
   success_update: {
     id: 'diagram.add_entities.success',
@@ -35,6 +44,8 @@ class AddToDiagramDialog extends Component {
     super(props);
     this.state = { processing: false };
 
+    this.onChangeLabel = this.onChangeLabel.bind(this);
+    this.onCreate = this.onCreate.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
 
@@ -47,16 +58,25 @@ class AddToDiagramDialog extends Component {
   fetchIfNeeded() {
     const { query, result } = this.props;
     if (result && !result.isPending && !result.isError) {
-      this.props.queryDiagrams({ query });
+      this.props.queryEntitySets({ query });
     }
   }
 
-  async onSelect(diagram) {
-    const { entities, history, intl } = this.props;
-    const { processing } = this.state;
+  onCreate(e) {
+    const { collection, entities } = this.props;
+    const { label } = this.state;
+    e.preventDefault();
+    this.sendRequest({
+      collection_id: collection.id,
+      label,
+      entities,
+      type: 'diagram',
+    });
+  }
 
-    if (processing) return;
-    this.setState({ processing: true });
+  onSelect(diagram) {
+    const { entities } = this.props;
+    const prevEntityCount = diagram.entities?.length;
 
     const entityIds = entities.map(e => e.id);
     const newDiagramData = {
@@ -64,21 +84,42 @@ class AddToDiagramDialog extends Component {
       entities: diagram.entities ? [...diagram.entities, ...entityIds] : entityIds,
     };
 
+    this.sendRequest(newDiagramData, prevEntityCount);
+  }
+
+  onChangeLabel({ target }) {
+    this.setState({ label: target.value });
+  }
+
+  async sendRequest(diagram, prevEntityCount = 0) {
+    const { history, intl } = this.props;
+    const { processing } = this.state;
+
+    if (processing) return;
+    this.setState({ processing: true });
+
     try {
-      const updatedDiagram = await this.props.updateDiagram(diagram.id, newDiagramData);
-      this.setState({ processing: false });
-      this.props.toggleDialog();
+      let request;
+      if (diagram.id) {
+        request = this.props.updateEntitySet(diagram.id, diagram);
+      } else {
+        request = this.props.createEntitySet(diagram);
+      }
 
-      const oldCount = diagram?.entities?.length;
-      const newCount = updatedDiagram?.data?.entities?.length || 0;
-      const updatedCount = oldCount ? newCount - oldCount : newCount;
+      request.then(updatedDiagram => {
+        this.setState({ processing: false });
+        this.props.toggleDialog();
 
-      showSuccessToast(
-        intl.formatMessage(messages.success_update, {count: updatedCount, diagram: diagram.label}),
-      );
-      history.push({
-        pathname: getDiagramLink(updatedDiagram.data),
-      });
+        const newCount = updatedDiagram?.data?.entities?.length || 0;
+        const updatedCount = newCount - prevEntityCount;
+
+        showSuccessToast(
+          intl.formatMessage(messages.success_update, {count: updatedCount, diagram: diagram.label}),
+        );
+        history.push({
+          pathname: getEntitySetLink(updatedDiagram.data),
+        });
+      })
     } catch (e) {
       showWarningToast(e.message);
       this.setState({ processing: false });
@@ -86,8 +127,8 @@ class AddToDiagramDialog extends Component {
   }
 
   render() {
-    const { intl, isOpen, openCreateDialog, result, toggleDialog } = this.props;
-    const { processing } = this.state;
+    const { entities, intl, isOpen, result, toggleDialog } = this.props;
+    const { label, processing } = this.state;
 
     return (
       <FormDialog
@@ -99,9 +140,18 @@ class AddToDiagramDialog extends Component {
         onClose={toggleDialog}
       >
         <div className="bp3-dialog-body">
+          <p>
+            <FormattedMessage
+              id="diagram.add_entities.selected_count"
+              defaultMessage="You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a diagram."
+              values={{ count: <strong>{entities.length}</strong>, count_simple: entities.length }}
+            />
+          </p>
+          <Divider />
           <Diagram.Select
             onSelect={this.onSelect}
             items={result.results}
+            noResults={intl.formatMessage(messages.empty)}
             buttonProps={{
               icon: "send-to-graph",
               disabled: result.isLoading || result.shouldLoad,
@@ -111,9 +161,19 @@ class AddToDiagramDialog extends Component {
           <div className="FormDialog__spacer">
             <FormattedMessage id="diagram.add.or" defaultMessage="or" />
           </div>
-          <Button icon="graph" onClick={openCreateDialog} fill>
-            <FormattedMessage id="diagram.add.create_new" defaultMessage="Create a new diagram" />
-          </Button>
+          <form onSubmit={this.onCreate}>
+            <InputGroup
+              fill
+              leftIcon="graph"
+              placeholder={intl.formatMessage(messages.create_new)}
+              rightElement={
+                <Button icon="arrow-right" minimal type="submit" />
+              }
+              dir="auto"
+              onChange={this.onChangeLabel}
+              value={label}
+            />
+          </form>
         </div>
       </FormDialog>
     );
@@ -122,15 +182,15 @@ class AddToDiagramDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const query = queryCollectionDiagrams(location, collection.id);
+  const query = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
   return {
     query,
-    result: selectDiagramsResult(state, query),
+    result: selectEntitySetsResult(state, query),
   };
 };
 
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { queryDiagrams, updateDiagram }),
+  connect(mapStateToProps, { createEntitySet, queryEntitySets, updateEntitySet }),
 )(AddToDiagramDialog);

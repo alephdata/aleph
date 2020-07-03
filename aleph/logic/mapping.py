@@ -79,9 +79,11 @@ def load_mapping(stage, collection, mapping_id, sync=False):
     try:
         map_to_aggregator(collection, mapping, aggregator)
         mapping.set_status(status=Mapping.SUCCESS)
+        db.session.commit()
         reindex_collection(collection, sync=sync)
     except Exception as exc:
         mapping.set_status(status=Mapping.FAILED, error=str(exc))
+        db.session.commit()
         aggregator.delete(origin=origin)
     finally:
         aggregator.close()
@@ -95,6 +97,4 @@ def flush_mapping(stage, collection, mapping_id, sync=True):
     aggregator.delete(origin=origin)
     aggregator.close()
     delete_entities(collection.id, origin=origin, sync=sync)
-    collection.touch()
-    db.session.commit()
     update_collection(collection, sync=sync)

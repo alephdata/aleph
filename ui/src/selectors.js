@@ -86,6 +86,10 @@ export function selectTester(state) {
   return role.is_tester || false;
 }
 
+export function selectAdmin(state) {
+  return selectSession(state).isAdmin || false;
+}
+
 export function selectAlerts(state) {
   return selectObject(state, state, 'alerts');
 }
@@ -102,8 +106,8 @@ export function selectRole(state, roleId) {
   return selectObject(state, state.roles, roleId);
 }
 
-export function selectDiagrams(state) {
-  return state.diagrams;
+export function selectEntitySets(state) {
+  return state.entitySets;
 }
 
 export function selectCollection(state, collectionId) {
@@ -127,8 +131,8 @@ export function selectEntity(state, entityId) {
   return result;
 }
 
-export function selectDiagram(state, diagramId) {
-  return selectObject(state, state.diagrams, diagramId);
+export function selectEntitySet(state, entitySetId) {
+  return selectObject(state, state.entitySets, entitySetId);
 }
 
 export function selectDocumentContent(state, documentId) {
@@ -167,8 +171,8 @@ export function selectNotificationsResult(state, query) {
   return result;
 }
 
-export function selectDiagramsResult(state, query) {
-  return selectResult(state, query, selectDiagram);
+export function selectEntitySetsResult(state, query) {
+  return selectResult(state, query, selectEntitySet);
 }
 
 export function selectEntityTags(state, entityId) {

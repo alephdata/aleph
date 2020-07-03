@@ -3,8 +3,8 @@ import { Button, Icon, MenuItem } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import c from 'classnames';
-import getDiagramLink from 'src/util/getDiagramLink';
 import { SelectWrapper } from '.';
+import getEntitySetLink from 'src/util/getEntitySetLink';
 
 
 class DiagramLabel extends PureComponent {
@@ -28,7 +28,7 @@ class DiagramLink extends PureComponent {
     const { diagram, className } = this.props;
     const content = <Diagram.Label {...this.props} />;
 
-    return <Link to={getDiagramLink(diagram)} className={c('DiagramLink', className)}>{content}</Link>;
+    return <Link to={getEntitySetLink(diagram)} className={c('DiagramLink', className)}>{content}</Link>;
   }
 }
 
@@ -44,22 +44,25 @@ class DiagramSelect extends PureComponent {
   }
 
   render() {
-    const { buttonProps, items, onSelect } = this.props;
+    const { buttonProps, items, noResults, onSelect } = this.props;
 
     return (
       <SelectWrapper
         itemRenderer={this.itemRenderer}
         items={items}
         onItemSelect={onSelect}
-        popoverProps={{ minimal: true, fill: true }}
+        popoverProps={{ minimal: true, fill: true, position: "auto-start" }}
         inputProps={{ fill: true }}
         filterable={false}
+        noResults={<span className="error-text">{noResults}</span>}
         resetOnClose
         resetOnSelect
       >
         <Button
           fill
           icon="graph"
+          rightIcon="caret-down"
+          alignText="left"
           {...buttonProps}
         />
       </SelectWrapper>

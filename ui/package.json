@@ -1,9 +1,9 @@
 {
   "name": "aleph-ui",
-  "version": "3.8.2",
+  "version": "3.8.4",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "1.33.0",
+    "@alephdata/followthemoney": "1.33.3",
     "@alephdata/react-ftm": "1.9.6",
     "@blueprintjs/core": "3.28.2",
     "@blueprintjs/datetime": "^3.15.1",

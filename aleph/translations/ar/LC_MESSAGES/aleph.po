@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-24 17:58+0200\n"
+"POT-Creation-Date: 2020-06-26 17:56+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Ido <leptep@gmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
@@ -175,13 +175,17 @@ msgstr "{{actor}} منح {{role}} الوصول إلى {{collection}}"
 msgid "{{actor}} published {{collection}}"
 msgstr "{{actor}} نشر {{collection}}"
 
-#: aleph/model/mapping.py:22
+#: aleph/model/mapping.py:23
 msgid "success"
 msgstr "تم بنجاح"
 
-#: aleph/model/mapping.py:23
+#: aleph/model/mapping.py:24
 msgid "failed"
 msgstr "فشلت العملية"
+
+#: aleph/model/mapping.py:25
+msgid "pending"
+msgstr ""
 
 #: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
@@ -321,6 +325,10 @@ msgstr "اسم مستخدم أو كلمة مرور غير صحيحة"
 #: aleph/views/sessions_api.py:101
 msgid "Authentication has failed."
 msgstr "فشلت المصادقة"
+
+#: aleph/views/sessions_api.py:103
+msgid "Your account is blocked."
+msgstr ""
 
 #: aleph/views/util.py:75
 msgid "Error during data validation"

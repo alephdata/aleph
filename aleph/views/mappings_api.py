@@ -111,6 +111,7 @@ def create(collection_id):
     query = load_query()
     entity = get_index_entity(entity_id, request.authz.READ)
     mapping = Mapping.create(query, entity.get('id'), collection, request.authz.id)  # noqa
+    db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
 
@@ -199,6 +200,7 @@ def update(collection_id, mapping_id):
     query = load_query()
     entity = get_index_entity(entity_id, request.authz.READ)
     mapping.update(query=query, table_id=entity.get('id'))
+    db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
 
@@ -235,6 +237,7 @@ def delete(collection_id, mapping_id):
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
+    db.session.commit()
     return ('', 204)
 
 
@@ -273,11 +276,11 @@ def trigger(collection_id, mapping_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.disabled = False
-    db.session.commit()
+    mapping.set_status(Mapping.PENDING)
     job_id = get_session_id()
     payload = {'mapping_id': mapping.id}
     queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
-    return ('', 202)
+    return MappingSerializer.jsonify(mapping, status=202)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush',  # noqa
@@ -314,6 +317,9 @@ def flush(collection_id, mapping_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.disabled = True
+    mapping.last_run_status = None
+    mapping.last_run_err_msg = None
+    db.session.add(mapping)
     db.session.commit()
     queue_task(collection, OP_FLUSH_MAPPING,
                job_id=get_session_id(),
