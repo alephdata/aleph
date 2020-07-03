@@ -2,8 +2,7 @@ import logging
 from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
 
-from aleph.core import kv, db
-from aleph.wsgi import app
+from aleph.core import kv, db, create_app
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.queues import OP_INDEX, OP_REINDEX, OP_REINGEST, OP_XREF
@@ -18,6 +17,7 @@ from aleph.logic.xref import xref_collection, xref_item
 from aleph.logic.processing import index_many
 
 log = logging.getLogger(__name__)
+app = create_app()
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
@@ -28,49 +28,60 @@ OPERATIONS = (OP_INDEX, OP_XREF, OP_REINGEST, OP_REINDEX, OP_XREF_ITEM,
 class AlephWorker(Worker):
 
     def boot(self):
+        self.often = get_rate_limit('often', unit=300, interval=1, limit=1)
         self.hourly = get_rate_limit('hourly', unit=3600, interval=1, limit=1)
         self.daily = get_rate_limit('daily', unit=3600, interval=24, limit=1)
+
+    def run_often(self):
+        log.info("Self-check...")
+        self.cleanup_jobs()
+        compute_collections()
+
+        if self.hourly.check():
+            self.hourly.update()
+            log.info("Running hourly tasks...")
+            check_alerts()
+
+        if self.daily.check():
+            self.daily.update()
+            log.info("Running daily tasks...")
+            generate_digest()
+            update_roles()
 
     def periodic(self):
         with app.app_context():
             db.session.remove()
-            if self.hourly.check():
-                self.hourly.update()
-                log.info("Running hourly tasks...")
-                self.cleanup_jobs()
-                compute_collections()
-                check_alerts()
+            if self.often.check():
+                self.often.update()
+                self.run_often()
 
-            if self.daily.check():
-                self.daily.update()
-                log.info("Running daily tasks...")
-                generate_digest()
-                update_roles()
+    def dispatch_task(self, collection, task):
+        stage = task.stage
+        payload = task.payload
+        sync = task.context.get('sync', False)
+        if stage.stage == OP_INDEX:
+            index_many(stage, collection, sync=sync, **payload)
+        if stage.stage == OP_LOAD_MAPPING:
+            load_mapping(stage, collection, **payload)
+        if stage.stage == OP_FLUSH_MAPPING:
+            flush_mapping(stage, collection, sync=sync, **payload)
+        if stage.stage == OP_REINGEST:
+            reingest_collection(collection, job_id=stage.job.id, **payload)
+        if stage.stage == OP_REINDEX:
+            reindex_collection(collection, sync=sync, **payload)
+        if stage.stage == OP_XREF:
+            xref_collection(stage, collection)
+        if stage.stage == OP_XREF_ITEM:
+            xref_item(stage, collection, **payload)
+        log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
     def handle(self, task):
         with app.app_context():
-            stage = task.stage
-            payload = task.payload
             collection = Collection.by_foreign_id(task.job.dataset.name)
             if collection is None:
                 log.error("Collection not found: %s", task.job.dataset)
                 return
-            sync = task.context.get('sync', False)
-            if stage.stage == OP_INDEX:
-                index_many(stage, collection, sync=sync, **payload)
-            if stage.stage == OP_LOAD_MAPPING:
-                load_mapping(stage, collection, **payload)
-            if stage.stage == OP_FLUSH_MAPPING:
-                flush_mapping(stage, collection, sync=sync, **payload)
-            if stage.stage == OP_REINGEST:
-                reingest_collection(collection, job_id=stage.job.id, **payload)
-            if stage.stage == OP_REINDEX:
-                reindex_collection(collection, sync=sync, **payload)
-            if stage.stage == OP_XREF:
-                xref_collection(stage, collection)
-            if stage.stage == OP_XREF_ITEM:
-                xref_item(stage, collection, **payload)
-            log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
+            self.dispatch_task(collection, task)
 
     def cleanup_job(self, job):
         if job.is_done():
