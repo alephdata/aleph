@@ -6,7 +6,7 @@ from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
 from aleph.queues import OP_ANALYZE, OP_INGEST
-from aleph.model import Collection, Entity, Document, Diagram, Mapping
+from aleph.model import Collection, Entity, Document, EntitySet, Mapping
 from aleph.model import Permission, Events, Linkage
 from aleph.index import collections as index
 from aleph.index import xref as xref_index
@@ -42,13 +42,8 @@ def refresh_collection(collection_id, sync=True):
     domain object. This will refresh stats and flush cache."""
     if collection_id is None:
         return
-    keys = [
-        cache.object_key(Collection, collection_id),
-        cache.object_key(Collection, collection_id, 'stats')
-    ]
-    if sync:
-        keys.append(cache.object_key(Collection, collection_id, 'schema'))
-    cache.kv.delete(*keys)
+    cache.kv.delete(cache.object_key(Collection, collection_id),
+                    cache.object_key(Collection, collection_id, 'stats'))
 
 
 def compute_collections():
@@ -56,14 +51,14 @@ def compute_collections():
         compute_collection(collection)
 
 
-def compute_collection(collection, sync=False):
+def compute_collection(collection, force=False, sync=False):
     key = cache.object_key(Collection, collection.id, 'stats')
-    if cache.get(key) and not sync:
+    if cache.get(key) is not None and not force:
         return
     refresh_collection(collection.id, sync=sync)
     cache.set(key, 'computed', expires=cache.EXPIRE - 60)
-    log.info("[%s] Changed, computing statistics...", collection)
-    index.update_collection_stats(collection.id)
+    log.info("[%s] Computing statistics...", collection)
+    index.update_collection_stats(collection.id, force=force)
     index.index_collection(collection, sync=sync)
 
 
@@ -123,7 +118,7 @@ def reindex_collection(collection, sync=False, flush=False):
             log.warn("Failed mapping [%s]: %s", mapping.id, ex)
     aggregate_model(collection, aggregator)
     index_aggregator(collection, aggregator, sync=sync)
-    compute_collection(collection, sync=True)
+    compute_collection(collection, force=True)
 
 
 def delete_collection(collection, keep_metadata=False, sync=False):
@@ -137,14 +132,14 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)
     deleted_at = collection.deleted_at or datetime.utcnow()
-    Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
-    Mapping.delete_by_collection(collection.id, deleted_at=deleted_at)
-    Diagram.delete_by_collection(collection.id, deleted_at=deleted_at)
+    Entity.delete_by_collection(collection.id, deleted_at)
+    EntitySet.delete_by_collection(collection.id, deleted_at)
+    Mapping.delete_by_collection(collection.id, deleted_at)
     Document.delete_by_collection(collection.id)
     if not keep_metadata:
         # Considering linkages metadata for now, might be wrong:
         Linkage.delete_by_collection(collection.id)
-        Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
+        Permission.delete_by_collection(collection.id, deleted_at)
         collection.delete(deleted_at=deleted_at)
     db.session.commit()
     if not keep_metadata:
@@ -157,5 +152,5 @@ def upgrade_collections():
     for collection in Collection.all(deleted=True):
         if collection.deleted_at is not None:
             delete_collection(collection, keep_metadata=True, sync=True)
-            continue
-        compute_collection(collection, sync=True)
+        else:
+            compute_collection(collection, force=True)

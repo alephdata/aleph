@@ -3,8 +3,8 @@ import { Button, Icon, MenuItem } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import c from 'classnames';
-import getDiagramLink from 'src/util/getDiagramLink';
 import { SelectWrapper } from '.';
+import getEntitySetLink from 'src/util/getEntitySetLink';
 
 
 class DiagramLabel extends PureComponent {
@@ -28,7 +28,7 @@ class DiagramLink extends PureComponent {
     const { diagram, className } = this.props;
     const content = <Diagram.Label {...this.props} />;
 
-    return <Link to={getDiagramLink(diagram)} className={c('DiagramLink', className)}>{content}</Link>;
+    return <Link to={getEntitySetLink(diagram)} className={c('DiagramLink', className)}>{content}</Link>;
   }
 }
 

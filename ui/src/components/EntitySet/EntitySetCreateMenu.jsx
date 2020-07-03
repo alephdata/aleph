@@ -5,16 +5,16 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { selectSession } from 'src/selectors';
 
-import DiagramCreateDialog from 'src/dialogs/DiagramCreateDialog/DiagramCreateDialog';
+import EntitySetCreateDialog from 'src/dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
 
 const messages = defineMessages({
   login: {
-    id: 'diagram.create.login',
-    defaultMessage: 'You must log in to create a diagram',
+    id: 'entityset.create.login',
+    defaultMessage: 'You must log in to create a {type}',
   },
 });
 
-class DiagramCreateMenu extends Component {
+class EntitySetCreateMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,19 +29,20 @@ class DiagramCreateMenu extends Component {
   ));
 
   render() {
-    const { collection, intl, session } = this.props;
+    const { type = 'generic', collection, intl, session } = this.props;
     const {
       isOpen, importEnabled,
     } = this.state;
     const canAdd = session?.loggedIn;
+    const canImportVisDiagram = canAdd && type === 'diagram';
 
     const buttonContent = (
       <ButtonGroup>
         <Button onClick={() => this.toggleDialog(false)} icon="send-to-graph" intent={Intent.PRIMARY} disabled={!canAdd}>
-          <FormattedMessage id="diagrams.index.create" defaultMessage="New diagram" />
+          <FormattedMessage id="entitysets.index.create" defaultMessage="New {type}" values={{ type }} />
         </Button>
-        <Button onClick={() => this.toggleDialog(true)} icon="import" disabled={!canAdd}>
-          <FormattedMessage id="diagrams.index.import" defaultMessage="Import diagram" />
+        <Button onClick={() => this.toggleDialog(true)} icon="import" disabled={!canImportVisDiagram}>
+          <FormattedMessage id="entitysets.index.import" defaultMessage="Import {type}" values={{ type }} />
         </Button>
       </ButtonGroup>
     );
@@ -51,17 +52,18 @@ class DiagramCreateMenu extends Component {
         {canAdd && buttonContent}
         {!canAdd && (
           <Tooltip
-            content={intl.formatMessage(messages.login)}
+            content={intl.formatMessage(messages.login, { type })}
             position={Position.BOTTOM}
           >
             {buttonContent}
           </Tooltip>
         )}
-        <DiagramCreateDialog
+        <EntitySetCreateDialog
           importEnabled={importEnabled}
           isOpen={isOpen}
           toggleDialog={this.toggleDialog}
-          diagram={{ collection }}
+          entitySet={{ collection }}
+          type={ type }
           canChangeCollection={!collection}
         />
       </>
@@ -76,4 +78,4 @@ const mapStateToProps = (state) => ({
 export default compose(
   connect(mapStateToProps),
   injectIntl,
-)(DiagramCreateMenu);
+)(EntitySetCreateMenu);

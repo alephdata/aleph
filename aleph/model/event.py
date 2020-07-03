@@ -3,7 +3,7 @@ from flask_babel import lazy_gettext
 from aleph.model.role import Role
 from aleph.model.alert import Alert
 from aleph.model.entity import Entity
-from aleph.model.diagram import Diagram
+from aleph.model.entityset import EntitySet
 from aleph.model.collection import Collection
 
 
@@ -44,21 +44,21 @@ class Events(object, metaclass=EventsRegistry):
     def names(cls):
         return list(cls.registry.keys())
 
-    # CREATE COLLECTION (collection)
+    # CREATE COLLECTION
     CREATE_COLLECTION = Event(
         template=lazy_gettext('{{actor}} created {{collection}}'),  # noqa
         params={'collection': Collection},
         link_to='collection'
     )
 
-    # # UPDATE COLLECTION (collection)
+    # UPDATE COLLECTION
     UPDATE_COLLECTION = Event(
         template=lazy_gettext('{{actor}} changed the settings of {{collection}}'),  # noqa
         params={'collection': Collection},
         link_to='collection'
     )
 
-    # UPLOAD DOCUMENT (document)
+    # UPLOAD DOCUMENT
     INGEST_DOCUMENT = Event(
         template=lazy_gettext('{{actor}} added {{document}} to {{collection}}'),  # noqa
         params={
@@ -68,7 +68,7 @@ class Events(object, metaclass=EventsRegistry):
         link_to='document'
     )
 
-    # EXECUTE MAPPING (document)
+    # EXECUTE MAPPING
     LOAD_MAPPING = Event(
         template=lazy_gettext('{{actor}} generated entities from {{table}} in {{collection}}'),  # noqa
         params={
@@ -78,17 +78,27 @@ class Events(object, metaclass=EventsRegistry):
         link_to='table'
     )
 
-    # CREATE DIAGRAM (document)
+    # CREATE DIAGRAM
     CREATE_DIAGRAM = Event(
         template=lazy_gettext('{{actor}} began diagramming {{diagram}} in {{collection}}'),  # noqa
         params={
-            'diagram': Diagram,
+            'diagram': EntitySet,
             'collection': Collection
         },
         link_to='table'
     )
 
-    # ALERT MATCH (entity)
+    # CREATE ENTITYSET
+    CREATE_ENTITYSET = Event(
+        template=lazy_gettext('{{actor}} created {{entityset}} in {{collection}}'),  # noqa
+        params={
+            'entityset': EntitySet,
+            'collection': Collection
+        },
+        link_to='table'
+    )
+
+    # ALERT MATCH
     MATCH_ALERT = Event(
         template=lazy_gettext('{{entity}} matches your alert for {{alert}}'),  # noqa
         params={
@@ -99,7 +109,7 @@ class Events(object, metaclass=EventsRegistry):
         link_to='entity'
     )
 
-    # GRANT COLLECTION (collection, role)
+    # GRANT COLLECTION
     GRANT_COLLECTION = Event(
         template=lazy_gettext('{{actor}} gave {{role}} access to {{collection}}'),  # noqa
         params={
@@ -109,7 +119,7 @@ class Events(object, metaclass=EventsRegistry):
         link_to='collection'
     )
 
-    # PUBLISH COLLECTION (collection)
+    # PUBLISH COLLECTION
     PUBLISH_COLLECTION = Event(
         template=lazy_gettext('{{actor}} published {{collection}}'),
         params={'collection': Collection},

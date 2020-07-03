@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 
-import DiagramEditDialog from 'src/dialogs/DiagramEditDialog/DiagramEditDialog';
-import DiagramDeleteDialog from 'src/dialogs/DiagramDeleteDialog/DiagramDeleteDialog';
+import EntitySetEditDialog from 'src/dialogs/EntitySetEditDialog/EntitySetEditDialog';
+import EntitySetDeleteDialog from 'src/dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 
 
-class DiagramManageMenu extends Component {
+class EntitySetManageMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,12 +22,12 @@ class DiagramManageMenu extends Component {
   toggleEdit = () => this.setState(({ editIsOpen }) => ({ editIsOpen: !editIsOpen }));
 
   render() {
-    const { diagram, triggerDownload } = this.props;
+    const { entitySet, triggerDownload } = this.props;
     const {
       editIsOpen, deleteIsOpen,
     } = this.state;
 
-    if (!diagram.writeable) {
+    if (!entitySet.writeable) {
       return null;
     }
 
@@ -35,24 +35,24 @@ class DiagramManageMenu extends Component {
       <>
         <ButtonGroup>
           <Button icon="cog" onClick={this.toggleEdit}>
-            <FormattedMessage id="diagram.info.edit" defaultMessage="Settings" />
+            <FormattedMessage id="entityset.info.edit" defaultMessage="Settings" />
           </Button>
           <Button icon="export" onClick={triggerDownload}>
-            <FormattedMessage id="diagram.info.export" defaultMessage="Export" />
+            <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
           </Button>
           <Button icon="trash" onClick={this.toggleDelete}>
-            <FormattedMessage id="diagram.info.delete" defaultMessage="Delete" />
+            <FormattedMessage id="entityset.info.delete" defaultMessage="Delete" />
           </Button>
         </ButtonGroup>
-        <DiagramEditDialog
-          diagram={diagram}
+        <EntitySetEditDialog
+          entitySet={entitySet}
           isOpen={editIsOpen}
           toggleDialog={this.toggleEdit}
           canChangeCollection={false}
         />
-        <DiagramDeleteDialog
+        <EntitySetDeleteDialog
           isOpen={deleteIsOpen}
-          diagram={diagram}
+          entitySet={entitySet}
           toggleDialog={this.toggleDelete}
         />
       </>
@@ -60,5 +60,5 @@ class DiagramManageMenu extends Component {
   }
 }
 
-DiagramManageMenu = injectIntl(DiagramManageMenu);
-export default DiagramManageMenu;
+EntitySetManageMenu = injectIntl(EntitySetManageMenu);
+export default EntitySetManageMenu;
