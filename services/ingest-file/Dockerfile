@@ -8,7 +8,7 @@ RUN apt-get -qq -y update \
         tesseract-ocr-swe \
         # tesseract-ocr-tam \
         # tesseract-ocr-tel \
-        tesseract-ocr-tgl \
+        tesseract-ocr-fil \
         # tesseract-ocr-tha \
         tesseract-ocr-tur \
         tesseract-ocr-ukr \
