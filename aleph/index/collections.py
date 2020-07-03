@@ -129,7 +129,8 @@ def get_collection_stats(collection_id):
     """Retrieve statistics on the content of a collection."""
     stats = {}
     for facet in STATS_FACETS:
-        stats[facet] = get_collection_facet(collection_id, facet, {})
+        empty = {'values': [], 'total': 0}
+        stats[facet] = get_collection_facet(collection_id, facet, empty)
     return stats
 
 
