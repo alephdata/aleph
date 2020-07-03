@@ -116,28 +116,40 @@ def get_collection(collection_id):
         return
 
     data = collection.to_dict()
-    things = get_collection_things(collection.id)
-    data['count'] = sum(things.values())
+
+    index = entities_read_index(schema=Entity.THING)
+    query = {'term': {'collection_id': collection_id}}
+    result = es.count(index=index, body={'query': query})
+    data['count'] = result.get('count', 0)
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
 
 def get_collection_stats(collection_id):
     """Retrieve statistics on the content of a collection."""
-    return {f: get_collection_facet(collection_id, f) for f in STATS_FACETS}
+    stats = {}
+    for facet in STATS_FACETS:
+        stats[facet] = get_collection_facet(collection_id, facet, {})
+    return stats
 
 
-def update_collection_stats(collection_id):
+def get_collection_facet(collection_id, facet, default=None):
+    """Compute some statistics on the content of a collection."""
+    key = cache.object_key(Collection, collection_id, facet)
+    return cache.get_complex(key) or default
+
+
+def update_collection_stats(collection_id, force=False):
     es.indices.refresh(entities_read_index())
     for facet in STATS_FACETS:
-        get_collection_facet(collection_id, facet, refresh=True)
+        update_collection_facet(collection_id, facet, force=force)
 
 
-def get_collection_facet(collection_id, facet, refresh=False):
+def update_collection_facet(collection_id, facet, force=False):
     """Compute some statistics on the content of a collection."""
     key = cache.object_key(Collection, collection_id, facet)
     data = cache.get_complex(key)
-    if not refresh and data is not None:
+    if not force and data is not None:
         return data
 
     query = {'term': {'collection_id': collection_id}}
@@ -172,7 +184,7 @@ def get_collection_facet(collection_id, facet, refresh=False):
 def get_collection_things(collection_id):
     """Showing the number of things in a collection is more indicative
     of its size than the overall collection entity count."""
-    schemata = get_collection_facet(collection_id, 'schema')
+    schemata = get_collection_facet(collection_id, 'schema', {})
     things = {}
     for schema, count in schemata.get('values', {}).items():
         schema = model.get(schema)

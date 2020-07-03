@@ -42,13 +42,8 @@ def refresh_collection(collection_id, sync=True):
     domain object. This will refresh stats and flush cache."""
     if collection_id is None:
         return
-    keys = [
-        cache.object_key(Collection, collection_id),
-        cache.object_key(Collection, collection_id, 'stats')
-    ]
-    if sync:
-        keys.append(cache.object_key(Collection, collection_id, 'schema'))
-    cache.kv.delete(*keys)
+    cache.kv.delete(cache.object_key(Collection, collection_id),
+                    cache.object_key(Collection, collection_id, 'stats'))
 
 
 def compute_collections():
@@ -56,14 +51,14 @@ def compute_collections():
         compute_collection(collection)
 
 
-def compute_collection(collection, sync=False):
+def compute_collection(collection, force=False, sync=False):
     key = cache.object_key(Collection, collection.id, 'stats')
-    if cache.get(key) and not sync:
+    if cache.get(key) is not None and not force:
         return
     refresh_collection(collection.id, sync=sync)
     cache.set(key, 'computed', expires=cache.EXPIRE - 60)
-    log.info("[%s] Changed, computing statistics...", collection)
-    index.update_collection_stats(collection.id)
+    log.info("[%s] Computing statistics...", collection)
+    index.update_collection_stats(collection.id, force=force)
     index.index_collection(collection, sync=sync)
 
 
@@ -123,7 +118,7 @@ def reindex_collection(collection, sync=False, flush=False):
             log.warn("Failed mapping [%s]: %s", mapping.id, ex)
     aggregate_model(collection, aggregator)
     index_aggregator(collection, aggregator, sync=sync)
-    compute_collection(collection, sync=True)
+    compute_collection(collection, force=True)
 
 
 def delete_collection(collection, keep_metadata=False, sync=False):
@@ -157,5 +152,5 @@ def upgrade_collections():
     for collection in Collection.all(deleted=True):
         if collection.deleted_at is not None:
             delete_collection(collection, keep_metadata=True, sync=True)
-            continue
-        compute_collection(collection, sync=True)
+        else:
+            compute_collection(collection, force=True)
