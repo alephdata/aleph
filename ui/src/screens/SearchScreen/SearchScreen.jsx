@@ -99,7 +99,6 @@ export class SearchScreen extends React.Component {
   }
 
   updateQuery(newQuery) {
-    // console.log('updating query');
     const { history, location } = this.props;
     // make it so the preview disappears if the query is changed.
     const parsedHash = queryString.parse(location.hash);
@@ -142,10 +141,9 @@ export class SearchScreen extends React.Component {
   }
 
   toggleDateFacet() {
-    console.log('toggling date facet');
-    const { dateFacetShown, query } = this.props;
+    const { dateFacetIsOpen, query } = this.props;
     let newQuery;
-    if (dateFacetShown) {
+    if (dateFacetIsOpen) {
       newQuery = query.remove('facet', 'dates')
         .remove('facet_interval:dates', 'year');
     } else {
@@ -156,7 +154,7 @@ export class SearchScreen extends React.Component {
   }
 
   render() {
-    const { dateFacetShown, query, result, intl } = this.props;
+    const { dateFacetIsOpen, dateFacetIntervals, query, result, intl } = this.props;
     const { hideFacets } = this.state;
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
@@ -164,6 +162,7 @@ export class SearchScreen extends React.Component {
     const hasExportLink = result && result.links && result.links.export;
     const exportLink = !hasExportLink ? null : result.links.export;
     const tooltip = intl.formatMessage(messages.alert_export_disabled);
+    const dateFacetDisabled = dateFacetIntervals && (!result.total || dateFacetIntervals.length <= 1);
 
     const operation = (
       <ButtonGroup>
@@ -244,22 +243,22 @@ export class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             <SignInCallout />
             <div className="SearchScreen__control-bar">
-              <QueryTags query={query} updateQuery={this.updateQuery} />
-              <div>
-                <Button outlined icon="calendar" onClick={this.toggleDateFacet}>
-                  {dateFacetShown && (
-                    <FormattedMessage id="search.screen.show_date" defaultMessage="Hide Date Filter" />
-                  )}
-                  {!dateFacetShown && (
-                    <FormattedMessage id="search.screen.show_date" defaultMessage="Show Date Filter" />
-                  )}
-                </Button>
-              </div>
+               <div className="SearchScreen__control-bar__button">
+                 <Button
+                  outlined
+                  icon="calendar"
+                  onClick={this.toggleDateFacet}
+                  disabled={dateFacetDisabled}
+                  active={dateFacetIsOpen}
+                />
+               </div>
+               <QueryTags query={query} updateQuery={this.updateQuery} />
             </div>
             <DateFacet
+              isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
+              intervals={dateFacetIntervals}
               query={query}
               updateQuery={this.updateQuery}
-              result={result}
             />
             <EntitySearch
               query={query}
@@ -283,8 +282,9 @@ const mapStateToProps = (state, ownProps) => {
 
   const query = Query.fromLocation('entities', location, context, '');
   const result = selectEntitiesResult(state, query);
-  const dateFacetShown = query.hasFacet('dates')
-  return { dateFacetShown, query, result };
+  const dateFacetIsOpen = query.hasFacet('dates')
+  const dateFacetIntervals = result?.facets?.dates?.intervals;
+  return { dateFacetIsOpen, dateFacetIntervals, query, result };
 };
 
 export default compose(

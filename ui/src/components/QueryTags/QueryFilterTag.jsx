@@ -21,7 +21,6 @@ class QueryFilterTag extends PureComponent {
   }
 
   label = (filter, value) => {
-    console.log('getting label', filter, value);
     switch (filter) {
       case 'schema':
         return (
@@ -104,14 +103,14 @@ class QueryFilterTag extends PureComponent {
       case 'lte:dates':
         return (
           <>
-            <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before: " />
+            <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before " />
             <Date value={value.replace('||/y', '')} />
           </>
         );
       case 'gte:dates':
         return (
           <>
-            <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After: " />
+            <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After " />
             <Date value={value.replace('||/y', '')} />
           </>
         );
