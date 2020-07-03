@@ -3,9 +3,11 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
+import { formatDateQParam } from 'src/components/Facet/util';
 
 import './DateFacet.scss';
 
+const DATE_FACET_HEIGHT = 150;
 
 export class DateFilter extends Component {
   constructor(props) {
@@ -18,15 +20,15 @@ export class DateFilter extends Component {
 
     let newRange;
     if (Array.isArray(selected)) {
-      newRange = selected.sort().map(timestamp => `${new Date(timestamp).getFullYear()}||/y`);
+      newRange = selected.sort().map(formatDateQParam);
     } else {
-      const year = new Date(selected).getFullYear();
-      newRange = [`${year}||/y`, `${year}||/y`]
+      const year = formatDateQParam(selected);
+      newRange = [year, year];
     }
     const newQuery = query.setFilter('gte:dates', newRange[0])
       .setFilter('lte:dates', newRange[1]);
 
-    this.props.updateQuery(newQuery)
+    updateQuery(newQuery)
   }
 
   getLabel(timestamp) {
@@ -36,24 +38,29 @@ export class DateFilter extends Component {
   render() {
     const { intervals, isOpen } = this.props;
     if (!isOpen || (intervals && intervals.length <= 1)) return null;
+    let content;
 
-    if (!intervals) {
-      return (
-        <div className="DateFacet">
-          <Spinner />
-        </div>
-      )
-    }
-
-    return (
-      <div className="DateFacet">
+    if (intervals) {
+      content = (
         <Histogram
           data={intervals.map(({label, ...rest}) => ({ label: this.getLabel(label), ...rest }))}
           onSelect={this.onSelect}
           containerProps={{
-            height: 150,
+            height: DATE_FACET_HEIGHT,
           }}
         />
+      )
+    } else {
+      content = (
+        <div style={{ minHeight: `${DATE_FACET_HEIGHT}px`}}>
+          <Spinner  />
+        </div>
+      );
+    }
+
+    return (
+      <div className="DateFacet">
+        {content}
       </div>
     );
   }

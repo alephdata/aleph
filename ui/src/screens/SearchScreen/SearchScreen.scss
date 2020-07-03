@@ -40,8 +40,8 @@
       margin-bottom: $aleph-grid-size;
 
       .bp3-button {
-        height: 36px;
-        width: 36px;
+        height: $aleph-query-tag-height;
+        width: $aleph-query-tag-height;
       }
     }
   }

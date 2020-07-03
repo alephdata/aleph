@@ -51,8 +51,9 @@ class QueryTags extends Component {
       activeFilters
         .map(filter => query.getFilter(filter).map(value => ({ filter, value })))
     );
+    const allTags = [...filterTags, ...addlTags];
 
-    const showClearAll = filterTags.length > 1;
+    const showClearAll = allTags.length > 1;
 
     // @FIXME This should still selectively display filters for the following:
     // "?exclude={id}"
@@ -60,7 +61,7 @@ class QueryTags extends Component {
     // "?ancestors={id}"
     return (
       <div className="QueryTags">
-        {[...filterTags, ...addlTags].map(({ filter, value }) => (
+        {allTags.map(({ filter, value }) => (
           <QueryFilterTag
             filter={filter}
             value={value}

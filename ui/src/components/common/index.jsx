@@ -8,7 +8,6 @@ import Collection from './Collection';
 import Count from './Count';
 import AppItem from './AppItem';
 import csvContextLoader from './csvContextLoader';
-import DateFacet from './DateFacet';
 import Diagram from './Diagram';
 import DualPane from './DualPane';
 import Entity from './Entity';
@@ -44,7 +43,6 @@ export {
   csvContextLoader,
   CheckboxList,
   Collection,
-  DateFacet,
   Diagram,
   DualPane,
   Entity,

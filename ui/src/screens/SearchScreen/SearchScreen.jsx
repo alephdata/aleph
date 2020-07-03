@@ -10,10 +10,11 @@ import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  Collection, DateFacet, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
+  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
 } from 'src/components/common';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import SearchFacets from 'src/components/Facet/SearchFacets';
+import DateFacet from 'src/components/Facet/DateFacet';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import SuggestAlert from 'src/components/SuggestAlert/SuggestAlert';
 import Screen from 'src/components/Screen/Screen';
