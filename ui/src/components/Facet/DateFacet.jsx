@@ -10,6 +10,13 @@ import './DateFacet.scss';
 
 const DATE_FACET_HEIGHT = 140;
 
+const messages = defineMessages({
+  results: {
+    id: 'search.screen.dates_label',
+    defaultMessage: 'results',
+  },
+});
+
 export class DateFilter extends Component {
   constructor(props) {
     super(props);
@@ -42,9 +49,11 @@ export class DateFilter extends Component {
     let content;
 
     if (intervals) {
+      const dataPropName = intl.formatMessage(messages.results);
       content = (
         <Histogram
-          data={intervals.map(({label, ...rest}) => ({ label: this.getLabel(label), ...rest }))}
+          data={intervals.map(({label, count, ...rest}) => ({ label: this.getLabel(label), [dataPropName]: count, ...rest }))}
+          dataPropName={dataPropName}
           onSelect={this.onSelect}
           containerProps={{
             height: DATE_FACET_HEIGHT,
