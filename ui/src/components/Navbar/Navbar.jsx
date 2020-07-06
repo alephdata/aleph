@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
+import { Alignment, Button, ControlGroup, Navbar as Bp3Navbar } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -70,11 +70,20 @@ export class Navbar extends React.Component {
           <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
             {!isHomepage && (
               <div className="Navbar__search-container">
-                <ScopedSearchBox
-                  query={query}
-                  searchScopes={scopes}
-                  onToggleSearchTips={this.props.onToggleSearchTips}
-                />
+                <div className="Navbar__search-container__content">
+                  <div className="Navbar__search-container__searchbar">
+                    <ScopedSearchBox
+                      query={query}
+                      searchScopes={scopes}
+                    />
+                  </div>
+                  <Button
+                    className="Navbar__search-container__search-tips bp3-fixed"
+                    icon="help"
+                    minimal
+                    onClick={this.props.onToggleSearchTips}
+                  />
+                </div>
               </div>
             )}
           </Bp3Navbar.Group>

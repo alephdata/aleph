@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { ControlGroup, Button, InputGroup } from '@blueprintjs/core';
+import { ControlGroup, Button, Icon, InputGroup } from '@blueprintjs/core';
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import ScopeSelect from 'src/components/Navbar/ScopeSelect';
@@ -23,7 +23,7 @@ const messages = defineMessages({
 });
 
 
-class SearchBox extends React.Component {
+class ScopedSearchBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = { queryText: '' };
@@ -81,28 +81,25 @@ class SearchBox extends React.Component {
 
     return (
       <form onSubmit={this.onSubmit} autoComplete="off">
-        <ControlGroup className="SearchBox" vertical={false} fill>
-          <ScopeSelect
-            scopes={searchScopes}
-            activeScope={activeScope}
-            onChangeScope={this.onChangeScope}
-          />
-          <InputGroup
-            fill
-            id="search-box"
-            leftIcon="search"
-            placeholder={placeholder}
-            rightElement={<SearchAlert queryText={queryText} />}
-            value={queryText}
-            onChange={this.onQueryChange}
-          />
-          <Button
-            className="SearchBox__search-tips bp3-fixed"
-            icon="help"
-            minimal
-            onClick={this.props.onToggleSearchTips}
-          />
-        </ControlGroup>
+        <InputGroup
+          fill
+          id="search-box"
+          leftElement={(
+            <>
+              <ScopeSelect
+                scopes={searchScopes}
+                activeScope={activeScope}
+                onChangeScope={this.onChangeScope}
+              />
+              <Icon icon="search" />
+            </>
+          )}
+          placeholder={placeholder}
+          rightElement={<SearchAlert queryText={queryText} />}
+          value={queryText}
+          onChange={this.onQueryChange}
+          className="ScopedSearchBox"
+        />
       </form>
     );
   }
@@ -117,4 +114,4 @@ export default compose(
   withRouter,
   connect(mapStateToProps),
   injectIntl,
-)(SearchBox);
+)(ScopedSearchBox);

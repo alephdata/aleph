@@ -1,7 +1,15 @@
 @import "src/app/mixins.scss";
 @import "src/app/variables.scss";
 
-.SearchBox {
+.ScopedSearchBox {
+  .bp3-input-left-container {
+    z-index: 100 !important;
+
+    & > * {
+      vertical-align: top;
+    }
+  }
+
   .bp3-input {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -9,44 +17,36 @@
     border-radius: 0 !important;
     box-shadow: none !important;
   }
-  .bp3-input-group {
-    #search-box {
-      &.bp3-input {
-        @include rtlSupportInvertedProp(padding, right, 0, 30px!important);
-      }
-    }
-    .bp3-input-action {
-      &:last-child {
-        @include rtl(left, initial, 0);
-        @include rtl(right, 0, initial);
-      }
-    }
-  }
-  &__icon {
-    display: flex;
-    align-items: center;
-    @include rtlSupportInvertedProp(margin, right, 15px !important, 0);
-  }
 
   &__scoped-input {
     &__scope-button {
+      height: $aleph-grid-size*3;
+      margin: 0 !important;
+      border-radius: 0 !important;
       white-space: nowrap;
       color: white !important;
       background: $gray1 !important;
-      box-shadow: none !important;
-      padding: 5px 10px;
       font-weight: 500;
 
+      .bp3-button-text {
+        padding: 0 $aleph-grid-size/2;
+        @media screen and (max-width: $aleph-screen-md-max-width) {
+          overflow: hidden;
+          max-width: 15vw;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        @media screen and (max-width: $aleph-screen-sm-max-width) {
+          max-width: 20vw;
+        }
+      }
       &.unclickable {
         cursor: auto;
       }
-
       .bp3-icon {
         color: white !important;
-        margin: 0 $aleph-icon-padding 0 0 !important;
       }
     }
-
     &__popover {
       .bp3-popover-content {
         padding: 0 !important;
@@ -63,16 +63,5 @@
         font-weight: 500;
       }
     }
-  }
-
-  &__search-tips {
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      display: none;
-    }
-  }
-
-  &__submit {
-    background-color: $blue3 !important;
-    border: none !important;
   }
 }
