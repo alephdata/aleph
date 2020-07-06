@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Card, Icon, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 import { formatDateQParam } from 'src/components/Facet/util';
@@ -44,7 +44,7 @@ export class DateFilter extends Component {
   }
 
   render() {
-    const { intervals, isOpen } = this.props;
+    const { intervals, intl, isOpen } = this.props;
     if (!isOpen || (intervals && intervals.length <= 1)) return null;
     let content;
 
