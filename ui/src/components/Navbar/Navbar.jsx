@@ -88,27 +88,35 @@ export class Navbar extends React.Component {
             )}
           </Bp3Navbar.Group>
           <Bp3Navbar.Group align={Alignment.RIGHT} className="Navbar__right-group" id="navbarSupportedContent">
-            <Link to="/datasets">
-              <Button icon="database" className="Navbar_collections-button bp3-minimal">
-                <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
-              </Button>
-            </Link>
-            {menuPages.map(page => (
-              <Link to={getPageLink(page)} key={page.name}>
-                <Button icon={page.icon} className="Navbar_collections-button bp3-minimal">
-                  {page.short}
-                </Button>
-              </Link>
-            ))}
             {!isHomepage && (
-              <div className="Navbar__mobile-search-toggle">
-                {!mobileSearchOpen && (
-                  <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
-                )}
-                {mobileSearchOpen && (
-                  <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
-                )}
-              </div>
+              <>
+                <div className="Navbar__mobile-search-toggle">
+                  {!mobileSearchOpen && (
+                    <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+                  )}
+                  {mobileSearchOpen && (
+                    <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+                  )}
+
+                </div>
+                {!mobileSearchOpen && <Bp3Navbar.Divider className="Navbar__mobile-search-divider" />}
+              </>
+            )}
+            {!mobileSearchOpen && (
+              <>
+                <Link to="/datasets">
+                  <Button icon="database" className="Navbar_collections-button bp3-minimal">
+                    <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
+                  </Button>
+                </Link>
+                {menuPages.map(page => (
+                  <Link to={getPageLink(page)} key={page.name}>
+                    <Button icon={page.icon} className="Navbar_collections-button bp3-minimal">
+                      {page.short}
+                    </Button>
+                  </Link>
+                ))}
+              </>
             )}
             <Bp3Navbar.Divider className={c({ 'mobile-hidden': mobileSearchOpen })} />
             <div className={c({ 'mobile-hidden': mobileSearchOpen })}>

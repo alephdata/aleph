@@ -1,6 +1,3 @@
-@import "src/app/mixins.scss";
-@import "src/app/variables.scss";
-
 .ScopedSearchBox {
   .bp3-input-left-container {
     z-index: 100 !important;
@@ -16,52 +13,5 @@
     white-space: nowrap;
     border-radius: 0 !important;
     box-shadow: none !important;
-  }
-
-  &__scoped-input {
-    &__scope-button {
-      height: $aleph-grid-size*3;
-      margin: 0 !important;
-      border-radius: 0 !important;
-      white-space: nowrap;
-      color: white !important;
-      background: $gray1 !important;
-      font-weight: 500;
-
-      .bp3-button-text {
-        padding: 0 $aleph-grid-size/2;
-        @media screen and (max-width: $aleph-screen-md-max-width) {
-          overflow: hidden;
-          max-width: 15vw;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        @media screen and (max-width: $aleph-screen-sm-max-width) {
-          max-width: 20vw;
-        }
-      }
-      &.unclickable {
-        cursor: auto;
-      }
-      .bp3-icon {
-        color: white !important;
-      }
-    }
-    &__popover {
-      .bp3-popover-content {
-        padding: 0 !important;
-      }
-
-      .bp3-menu {
-        background: $gray1 !important;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 5px !important;
-      }
-
-      .bp3-menu-item {
-        font-weight: 500;
-      }
-    }
   }
 }

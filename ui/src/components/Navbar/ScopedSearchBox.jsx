@@ -28,6 +28,7 @@ class ScopedSearchBox extends React.Component {
     super(props);
     this.state = { queryText: '' };
     this.onSubmit = this.onSubmit.bind(this);
+    this.onResize = this.onResize.bind(this);
     this.onChangeScope = this.onChangeScope.bind(this);
     this.onQueryChange = this.onQueryChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
@@ -41,6 +42,14 @@ class ScopedSearchBox extends React.Component {
       queryText: queryChanged ? nextQueryText : prevState.queryText,
       activeScope: nextProps.searchScopes[nextProps.searchScopes.length - 1],
     };
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
   }
 
   onQueryChange({ target }) {
@@ -69,6 +78,11 @@ class ScopedSearchBox extends React.Component {
 
   onChangeScope(newScope) {
     this.onSearchSubmit({ scope: newScope });
+  }
+
+  onResize() {
+    // blueprint input group doesn't handle resizing
+    this.forceUpdate();
   }
 
   render() {
