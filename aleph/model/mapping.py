@@ -87,8 +87,7 @@ class Mapping(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at=None):
-        deleted_at = deleted_at or datetime.utcnow()
+    def delete_by_collection(cls, collection_id, deleted_at):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa

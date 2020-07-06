@@ -22,11 +22,11 @@ export function queryCollectionEntities(location, collectionId, schema) {
   return Query.fromLocation('entities', location, context, 'entities').limit(200);
 }
 
-export function queryCollectionDiagrams(location, collectionId) {
+export function queryCollectionEntitySets(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
   };
-  return Query.fromLocation('diagrams', location, context, 'diagrams');
+  return Query.fromLocation('entitysets', location, context, 'entitySets');
 }
 
 export function queryCollectionXrefFacets(location, collectionId, contextId) {

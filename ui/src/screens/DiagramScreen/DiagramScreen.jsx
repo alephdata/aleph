@@ -6,10 +6,10 @@ import { Prompt, withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
-import { fetchDiagram } from 'src/actions';
-import { selectDiagram } from 'src/selectors';
+import { fetchEntitySet } from 'src/actions';
+import { selectEntitySet } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import DiagramManageMenu from 'src/components/Diagram/DiagramManageMenu';
+import EntitySetManageMenu from 'src/components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'src/components/Diagram/DiagramEditor';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -111,7 +111,7 @@ export class DiagramScreen extends Component {
     const { diagram, diagramId } = this.props;
 
     if (diagram.shouldLoad || diagram.shallow) {
-      this.props.fetchDiagram(diagramId);
+      this.props.fetchEntitySet(diagramId);
     }
   }
 
@@ -142,7 +142,7 @@ export class DiagramScreen extends Component {
     }
 
     const operation = (
-      <DiagramManageMenu diagram={diagram} triggerDownload={this.onDiagramDownload} />
+      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} />
     );
 
     const breadcrumbs = (
@@ -189,7 +189,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     diagramId,
-    diagram: selectDiagram(state, diagramId),
+    diagram: selectEntitySet(state, diagramId),
   };
 };
 
@@ -197,5 +197,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { fetchDiagram }),
+  connect(mapStateToProps, { fetchEntitySet }),
 )(DiagramScreen);

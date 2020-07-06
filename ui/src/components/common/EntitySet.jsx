@@ -7,38 +7,48 @@ import c from 'classnames';
 import getEntitySetLink from 'src/util/getEntitySetLink';
 
 
-class DiagramLabel extends PureComponent {
+const ICONS = {
+  diagram: 'graph',
+  timeline: 'timeline-events',
+  generic: 'box'
+}
+
+
+const getIcon = ({ type }) => ICONS[type] || ICONS.generic;
+
+
+class EntitySetLabel extends PureComponent {
   render() {
-    const { diagram, icon } = this.props;
-    if (!diagram || !diagram.id) {
+    const { entitySet, icon } = this.props;
+    if (!entitySet || !entitySet.id) {
       return null;
     }
 
     return (
-      <span className="DiagramLabel" title={diagram.label}>
-        {icon && <Icon icon="graph" className="left-icon" />}
-        <span>{diagram.label}</span>
+      <span className="EntitySetLabel" title={entitySet.label}>
+        {icon && <Icon icon={getIcon(entitySet)} className="left-icon" />}
+        <span>{entitySet.label}</span>
       </span>
     );
   }
 }
 
-class DiagramLink extends PureComponent {
+class EntitySetLink extends PureComponent {
   render() {
-    const { diagram, className } = this.props;
-    const content = <Diagram.Label {...this.props} />;
+    const { entitySet, className } = this.props;
+    const content = <EntitySet.Label {...this.props} />;
 
-    return <Link to={getEntitySetLink(diagram)} className={c('DiagramLink', className)}>{content}</Link>;
+    return <Link to={getEntitySetLink(entitySet)} className={c('EntitySetLink', className)}>{content}</Link>;
   }
 }
 
-class DiagramSelect extends PureComponent {
-  itemRenderer = (diagram, {handleClick}) => {
+class EntitySetSelect extends PureComponent {
+  itemRenderer = (entitySet, {handleClick}) => {
     return (
       <MenuItem
-        key={diagram.id}
+        key={entitySet.id}
         onClick={handleClick}
-        text={<DiagramLabel diagram={diagram} icon />}
+        text={<EntitySetLabel entitySet={entitySet} icon />}
       />
     );
   }
@@ -70,12 +80,12 @@ class DiagramSelect extends PureComponent {
   }
 }
 
-class Diagram {
-  static Label = DiagramLabel;
+class EntitySet {
+  static Label = EntitySetLabel;
 
-  static Link = withRouter(DiagramLink);
+  static Link = withRouter(EntitySetLink);
 
-  static Select = DiagramSelect;
+  static Select = EntitySetSelect;
 }
 
-export default Diagram;
+export default EntitySet;

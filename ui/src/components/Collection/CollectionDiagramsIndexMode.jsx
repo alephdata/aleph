@@ -3,11 +3,11 @@ import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { queryDiagrams } from 'src/actions';
-import { queryCollectionDiagrams } from 'src/queries';
-import { selectDiagramsResult } from 'src/selectors';
+import { queryEntitySets } from 'src/actions';
+import { queryCollectionEntitySets } from 'src/queries';
+import { selectEntitySetsResult } from 'src/selectors';
 import { ErrorSection } from 'src/components/common';
-import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
+import EntitySetCreateMenu from 'src/components/EntitySet/EntitySetCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
 
 export class CollectionDiagramsIndexMode extends Component {
@@ -19,7 +19,7 @@ export class CollectionDiagramsIndexMode extends Component {
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryDiagrams({ query, next: result.next });
+      this.props.queryEntitySets({ query, next: result.next });
     }
   }
 
@@ -33,7 +33,7 @@ export class CollectionDiagramsIndexMode extends Component {
     return (
       <div>
         <div style={{ marginBottom: '10px' }}>
-          <DiagramCreateMenu collection={collection} />
+          <EntitySetCreateMenu collection={collection} type='diagram' />
         </div>
         <DiagramList
           result={result}
@@ -47,15 +47,15 @@ export class CollectionDiagramsIndexMode extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const query = queryCollectionDiagrams(location, collection.id);
+  const query = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
   return {
     query,
-    result: selectDiagramsResult(state, query),
+    result: selectEntitySetsResult(state, query),
   };
 };
 
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryDiagrams }),
+  connect(mapStateToProps, { queryEntitySets }),
 )(CollectionDiagramsIndexMode);

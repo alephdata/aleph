@@ -1,20 +1,19 @@
 import logging
 
-from aleph.core import db
-from aleph.model import Diagram, Events
+from aleph.model import EntitySet, Events
 from aleph.logic.entities import upsert_entity
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
 
 
-def get_diagram(diagram_id):
-    return Diagram.by_id(diagram_id)
+def get_entityset(entityset_id):
+    return EntitySet.by_id(entityset_id)
 
 
-def create_diagram(collection, data, authz):
-    """Create a network diagram. This will create or update any entities
-    that already exist in the diagram and sign their IDs into the collection.
+def create_entityset(collection, data, authz):
+    """Create an entity set. This will create or update any entities
+    that already exist in the entityset and sign their IDs into the collection.
     """
     old_to_new_id_map = {}
     entity_ids = []
@@ -26,13 +25,12 @@ def create_diagram(collection, data, authz):
     data['entities'] = entity_ids
     layout = data.get('layout', {})
     data['layout'] = replace_layout_ids(layout, old_to_new_id_map)
-    diagram = Diagram.create(data, collection, authz.id)
-    db.session.commit()
-    publish(Events.CREATE_DIAGRAM,
-            params={'collection': collection, 'diagram': diagram},
+    entityset = EntitySet.create(data, collection, authz)
+    publish(Events.CREATE_ENTITYSET,
+            params={'collection': collection, 'entityset': entityset},
             channels=[collection, authz.role],
             actor_id=authz.id)
-    return diagram
+    return entityset
 
 
 def replace_layout_ids(layout, old_to_new_id_map):

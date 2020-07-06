@@ -7,9 +7,9 @@ import { ResultCount, Skeleton, AppItem } from 'src/components/common';
 import c from 'classnames';
 
 import Query from 'src/app/Query';
-import { queryCollections, queryDiagrams, queryRoles} from 'src/actions';
+import { queryCollections, queryEntitySets, queryRoles} from 'src/actions';
 import { queryGroups } from 'src/queries';
-import { selectAlerts, selectCollectionsResult, selectDiagramsResult, selectRolesResult } from 'src/selectors';
+import { selectAlerts, selectCollectionsResult, selectEntitySetsResult, selectRolesResult } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
       this.props.queryCollections({query: casesCountQuery});
     }
     if (diagramsCountResult.shouldLoad) {
-      this.props.queryDiagrams({query: diagramsCountQuery});
+      this.props.queryEntitySets({query: diagramsCountQuery});
     }
   }
 
@@ -184,7 +184,8 @@ const mapStateToProps = (state, ownProps) => {
     .limit(0);
 
   const diagramsCountQuery = Query
-    .fromLocation('diagrams', location, {}, 'diagrams')
+    .fromLocation('entitysets', location, {}, 'entitySets')
+    .setFilter('type', 'diagram')
     .limit(0);
 
   return {
@@ -193,12 +194,12 @@ const mapStateToProps = (state, ownProps) => {
     casesCountQuery,
     casesCountResult: selectCollectionsResult(state, casesCountQuery),
     diagramsCountQuery,
-    diagramsCountResult: selectDiagramsResult(state, diagramsCountQuery),
+    diagramsCountResult: selectEntitySetsResult(state, diagramsCountQuery),
     alerts: selectAlerts(state),
   };
 };
 
 Dashboard = injectIntl(Dashboard);
-Dashboard = connect(mapStateToProps, { queryRoles, queryCollections, queryDiagrams })(Dashboard);
+Dashboard = connect(mapStateToProps, { queryRoles, queryCollections, queryEntitySets })(Dashboard);
 Dashboard = withRouter(Dashboard);
 export default Dashboard;

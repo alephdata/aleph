@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Card, Classes, Icon, H4 } from '@blueprintjs/core';
-import getDiagramLink from 'src/util/getDiagramLink';
+import getEntitySetLink from 'src/util/getEntitySetLink';
 import c from 'classnames';
 
 import {
@@ -34,7 +34,7 @@ const DiagramListItem = ({ diagram, isPending, showCollection }) => {
 
   return (
     <div className="DiagramListItem" key={diagram.id}>
-      <Link className="DiagramListItem__link" to={getDiagramLink(diagram)}>
+      <Link className="DiagramListItem__link" to={getEntitySetLink(diagram)}>
         <Card elevation={1} className="DiagramListItem__content">
           {showCollection && (
             <div className="DiagramListItem__collection">

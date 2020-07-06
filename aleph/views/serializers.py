@@ -9,7 +9,7 @@ from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
-from aleph.model import Alert, Diagram
+from aleph.model import Alert, EntitySet
 from aleph.logic import resolver
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
@@ -278,7 +278,7 @@ class QueryLogSerializer(Serializer):
     pass
 
 
-class DiagramSerializer(Serializer):
+class EntitySetSerializer(Serializer):
 
     def _collect(self, obj):
         self.queue(Collection, obj.get('collection_id'))
@@ -301,7 +301,7 @@ class DiagramSerializer(Serializer):
         return obj
 
 
-class DiagramIndexSerializer(Serializer):
+class EntitySetIndexSerializer(Serializer):
 
     def _collect(self, obj):
         self.queue(Collection, obj.get('collection_id'))
@@ -321,7 +321,7 @@ class NotificationSerializer(Serializer):
         Alert: AlertSerializer,
         Entity: EntitySerializer,
         Collection: CollectionSerializer,
-        Diagram: DiagramSerializer,
+        EntitySet: EntitySetSerializer,
         Role: RoleSerializer,
     }
 

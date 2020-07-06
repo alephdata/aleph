@@ -2,9 +2,9 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
-import { fetchCollection, queryCollectionXref, queryDiagrams, mutate } from 'src/actions';
-import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectDiagramsResult } from 'src/selectors';
+import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'src/queries';
+import { fetchCollection, queryCollectionXref, queryEntitySets, mutate } from 'src/actions';
+import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitySetsResult } from 'src/selectors';
 
 
 class CollectionContextLoader extends PureComponent {
@@ -39,7 +39,7 @@ class CollectionContextLoader extends PureComponent {
 
     const { diagramsQuery, diagramsResult } = this.props;
     if (diagramsResult.shouldLoad) {
-      this.props.queryDiagrams({ query: diagramsQuery });
+      this.props.queryEntitySets({ query: diagramsQuery });
     }
   }
 
@@ -51,7 +51,8 @@ class CollectionContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
-  const diagramsQuery = queryCollectionDiagrams(location, collectionId);
+  const entitySetsQuery = queryCollectionEntitySets(location, collectionId);
+  const diagramsQuery = entitySetsQuery.setFilter('type', 'diagram');
   const xrefQuery = queryCollectionXrefFacets(location, collectionId);
   return {
     collection: selectCollection(state, collectionId),
@@ -59,7 +60,7 @@ const mapStateToProps = (state, ownProps) => {
     xrefQuery,
     xrefResult: selectCollectionXrefResult(state, xrefQuery),
     diagramsQuery,
-    diagramsResult: selectDiagramsResult(state, diagramsQuery),
+    diagramsResult: selectEntitySetsResult(state, diagramsQuery),
   };
 };
 
@@ -67,7 +68,7 @@ const mapDispatchToProps = {
   mutate,
   fetchCollection,
   queryCollectionXref,
-  queryDiagrams,
+  queryEntitySets,
 };
 
 export default compose(

@@ -4,38 +4,39 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { deleteDiagram } from 'src/actions';
+import { deleteEntitySet } from 'src/actions';
 import getCollectionLink from 'src/util/getCollectionLink';
 
 
 const messages = defineMessages({
   button_confirm: {
-    id: 'diagram.delete.confirm',
+    id: 'entityset.delete.confirm',
     defaultMessage: 'Delete',
   },
   button_cancel: {
-    id: 'diagram.delete.cancel',
+    id: 'entityset.delete.cancel',
     defaultMessage: 'Cancel',
   },
 });
 
 
-class DiagramDeleteDialog extends Component {
+class EntitySetDeleteDialog extends Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
   }
 
   async onDelete() {
-    const { diagram, history } = this.props;
-    await this.props.deleteDiagram(diagram.id);
+    const { entitySet, history } = this.props;
+    await this.props.deleteEntitySet(entitySet.id);
     history.push({
-      pathname: `${getCollectionLink(diagram.collection)}#mode=diagrams`,
+      pathname: `${getCollectionLink(entitySet.collection)}#mode=${entitySet.type}s`,
     });
   }
 
   render() {
-    const { intl } = this.props;
+    const { intl, entitySet } = this.props;
+    const { type } = entitySet;
     return (
       <Alert
         isOpen={this.props.isOpen}
@@ -47,18 +48,19 @@ class DiagramDeleteDialog extends Component {
         onConfirm={this.onDelete}
       >
         <FormattedMessage
-          id="diagram.delete.question"
-          defaultMessage="Are you sure you want to delete this diagram?"
+          id="entityset.delete.question"
+          defaultMessage="Are you sure you want to delete this {type}?"
+          values={{ type }}
         />
       </Alert>
     );
   }
 }
 
-const mapDispatchToProps = { deleteDiagram };
+const mapDispatchToProps = { deleteEntitySet };
 
 export default compose(
   withRouter,
   connect(null, mapDispatchToProps),
   injectIntl,
-)(DiagramDeleteDialog);
+)(EntitySetDeleteDialog);
