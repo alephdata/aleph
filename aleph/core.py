@@ -120,6 +120,7 @@ def get_es():
         except TransportError as exc:
             log.warning("ElasticSearch error: %s", exc.error)
             backoff(failures=attempt)
+    raise RuntimeError("Could not connect to ElasticSearch")
 
 
 def get_archive():
