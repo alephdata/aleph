@@ -17,6 +17,10 @@
     margin: 2px 0;
   }
 
+  &__right {
+    display: flex;
+  }
+
   &__status {
     @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
   }

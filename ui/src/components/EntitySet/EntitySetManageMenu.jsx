@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { Button, ButtonGroup, ControlGroup, Divider, Menu, MenuItem, Popover } from '@blueprintjs/core';
 
+import { SearchBox } from 'src/components/common';
 import EntitySetEditDialog from 'src/dialogs/EntitySetEditDialog/EntitySetEditDialog';
 import EntitySetDeleteDialog from 'src/dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 
+import './EntitySetManageMenu.scss';
+
+const messages = defineMessages({
+  placeholder: {
+    id: 'entity_set.menu.search_placeholder',
+    defaultMessage: 'Search {set_name}',
+  },
+});
 
 class EntitySetManageMenu extends Component {
   constructor(props) {
@@ -21,29 +30,48 @@ class EntitySetManageMenu extends Component {
 
   toggleEdit = () => this.setState(({ editIsOpen }) => ({ editIsOpen: !editIsOpen }));
 
-  render() {
-    const { entitySet, triggerDownload } = this.props;
-    const {
-      editIsOpen, deleteIsOpen,
-    } = this.state;
+  renderMenu() {
+    const { triggerDownload } = this.props;
 
-    if (!entitySet.writeable) {
-      return null;
-    }
+    return (
+      <Menu>
+        <MenuItem icon="export" onClick={triggerDownload} text={
+          <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
+        } />
+        <MenuItem icon="trash" onClick={this.toggleDelete} text={
+          <FormattedMessage id="entityset.info.delete" defaultMessage="Delete" />
+        } />
+      </Menu>
+    );
+  }
+
+  render() {
+    const { entitySet, intl, onSearch, triggerDownload } = this.props;
+    const { editIsOpen, deleteIsOpen } = this.state;
 
     return (
       <>
-        <ButtonGroup>
-          <Button icon="cog" onClick={this.toggleEdit}>
-            <FormattedMessage id="entityset.info.edit" defaultMessage="Settings" />
-          </Button>
-          <Button icon="export" onClick={triggerDownload}>
-            <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
-          </Button>
-          <Button icon="trash" onClick={this.toggleDelete}>
-            <FormattedMessage id="entityset.info.delete" defaultMessage="Delete" />
-          </Button>
-        </ButtonGroup>
+        <ControlGroup className="EntitySetManageMenu">
+          {onSearch && (
+            <>
+              <SearchBox
+                onSearch={onSearch}
+                placeholder={intl.formatMessage(messages.placeholder, { set_name: entitySet.label })}
+              />
+              <Divider />
+            </>
+          )}
+          {entitySet.writeable && (
+            <ButtonGroup>
+              <Button icon="cog" onClick={this.toggleEdit}>
+                <FormattedMessage id="entityset.info.edit" defaultMessage="Settings" />
+              </Button>
+              <Popover minimal content={this.renderMenu()}>
+                <Button rightIcon="caret-down" />
+              </Popover>
+            </ButtonGroup>
+          )}
+        </ControlGroup>
         <EntitySetEditDialog
           entitySet={entitySet}
           isOpen={editIsOpen}

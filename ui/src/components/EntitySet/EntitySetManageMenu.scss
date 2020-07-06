@@ -1,0 +1,19 @@
+@import "src/app/variables.scss";
+@import "src/app/mixins.scss";
+
+.EntitySetManageMenu {
+  // display: flex;
+
+  // .search-box {
+  //   @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
+  // }
+  .bp3-input-group {
+    border-radius: $aleph-border-radius;
+  }
+
+  .bp3-divider {
+    margin: $aleph-grid-size/2 !important;
+  }
+
+
+}

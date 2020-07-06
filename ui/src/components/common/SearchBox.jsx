@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
+import { InputGroup } from '@blueprintjs/core';
+
 
 const messages = defineMessages({
   search_placeholder: {
@@ -13,7 +15,7 @@ export class SearchBox extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onSearchChange = this.onSearchChange.bind(this);
+    this.onQueryTextChange = this.onQueryTextChange.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
   }
 
@@ -27,8 +29,8 @@ export class SearchBox extends PureComponent {
     return {};
   }
 
-  onSearchChange(e) {
-    const queryText = (e.target.value && e.target.value.length > 0) ? e.target.value : null;
+  onQueryTextChange(e) {
+    const queryText = e.target.value;
     this.setState({ queryText });
   }
 
@@ -42,25 +44,21 @@ export class SearchBox extends PureComponent {
   }
 
   render() {
-    const { intl, searchPlaceholder, className } = this.props;
+    const { intl, placeholder, className } = this.props;
     const { queryText } = this.state;
-    const placeholder = searchPlaceholder || intl.formatMessage(messages.search_placeholder);
+    const searchPlaceholder = placeholder || intl.formatMessage(messages.search_placeholder);
     if (!this.props.onSearch) {
       return null;
     }
     return (
       <form onSubmit={this.onSubmitSearch} className={c(['search-box', className])}>
-        <div className={c('bp3-input-group')}>
-          <span className="bp3-icon bp3-icon-search" />
-          <input
-            className="bp3-input"
-            type="search"
-            dir="auto"
-            placeholder={placeholder}
-            onChange={this.onSearchChange}
-            value={queryText || ''}
-          />
-        </div>
+        <InputGroup
+          fill
+          leftIcon="search"
+          onChange={this.onQueryTextChange}
+          placeholder={searchPlaceholder}
+          value={queryText}
+        />
       </form>
     );
   }

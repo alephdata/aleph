@@ -96,12 +96,6 @@ export class DiagramScreen extends Component {
         label: diagram.collection.label,
         onSearch: this.onCollectionSearch,
       },
-      {
-        listItem: <Diagram.Label diagram={diagram} icon truncate={30} />,
-        label: diagram.label,
-        onSearch: this.onDiagramSearch,
-        submitOnQueryChange: true,
-      },
     ];
 
     return scopes;
@@ -142,7 +136,7 @@ export class DiagramScreen extends Component {
     }
 
     const operation = (
-      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} />
+      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch}/>
     );
 
     const breadcrumbs = (
