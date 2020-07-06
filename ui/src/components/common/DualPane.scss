@@ -4,7 +4,7 @@
 
 .DualPane {
   @extend .pane-layout;
-  
+
   padding: $aleph-content-padding;
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     padding: $aleph-mobile-content-padding;
@@ -18,6 +18,7 @@
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     order: 2;
+    padding: $aleph-grid-size 0 !important;
   }
 }
 
@@ -25,7 +26,7 @@
   @extend .pane-layout-side;
   @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
   @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, null);
-  
+
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     margin-bottom: 1em;
     @include rtlSupportInvertedProp(border, right, none, null);

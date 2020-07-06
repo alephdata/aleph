@@ -16,11 +16,17 @@
   }
 
   &.filter-clear-tag {
+    // box-shadow: none !important;
+    // background: none !important;
     vertical-align: initial;
     font-weight: normal !important;
     border-color: $aleph-link-color !important;
     color: $aleph-link-color !important;
     height: $aleph-query-tag-height;
+
+    &:hover {
+      background-color: $aleph-breadcrumbs-color;
+    }
   }
 
   a, a:hover {

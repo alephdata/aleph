@@ -73,6 +73,7 @@ class QueryTags extends Component {
           <Button
             className="filter-clear-tag bp3-tag bp3-large QueryFilterTag"
             onClick={this.removeAllFilterValues}
+            outlined
           >
             <FormattedMessage
               id="queryFilters.clearAll"

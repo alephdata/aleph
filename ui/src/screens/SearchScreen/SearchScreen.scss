@@ -35,10 +35,9 @@
     display: flex;
     flex-flow: row-reverse nowrap;
     justify-content: space-between;
+    margin-bottom: $aleph-grid-size;
 
     &__button {
-      margin-bottom: $aleph-grid-size;
-
       .bp3-button {
         height: $aleph-query-tag-height;
         width: $aleph-query-tag-height;

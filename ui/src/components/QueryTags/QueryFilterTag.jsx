@@ -107,7 +107,7 @@ class QueryFilterTag extends PureComponent {
 
         return (
           <>
-            <Icon icon="calendar" />
+            <Icon icon="calendar" className="left-icon" />
             {prefix}
             <Date value={cleanDateQParam(value)} />
           </>

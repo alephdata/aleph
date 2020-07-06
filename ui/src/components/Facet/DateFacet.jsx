@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { Spinner } from '@blueprintjs/core';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { Card, Icon, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 import { formatDateQParam } from 'src/components/Facet/util';
 
 import './DateFacet.scss';
 
-const DATE_FACET_HEIGHT = 150;
+const DATE_FACET_HEIGHT = 140;
 
 export class DateFilter extends Component {
   constructor(props) {
@@ -59,13 +60,20 @@ export class DateFilter extends Component {
     }
 
     return (
-      <div className="DateFacet">
+      <Card className="DateFacet">
+        <div className="DateFacet__label">
+          <Icon icon="calendar" className="left-icon" />
+          <span className="DateFacet__label__text">
+            <FormattedMessage id="search.screen.dates_title" defaultMessage="Dates" />
+          </span>
+        </div>
         {content}
-      </div>
+      </Card>
     );
   }
 }
 
 export default compose(
   withRouter,
+  injectIntl,
 )(DateFilter);

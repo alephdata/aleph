@@ -39,6 +39,14 @@ const messages = defineMessages({
     id: 'search.screen.export_disabled',
     defaultMessage: 'Cannot export more than 10,000 results at a time',
   },
+  date_facet_show: {
+    id: 'search.screen.show_dates',
+    defaultMessage: 'Show date filter',
+  },
+  date_facet_hide: {
+    id: 'search.screen.hide_dates',
+    defaultMessage: 'Hide date filter',
+  },
 });
 
 const facetKeys = [
@@ -245,13 +253,18 @@ export class SearchScreen extends React.Component {
             <SignInCallout />
             <div className="SearchScreen__control-bar">
                <div className="SearchScreen__control-bar__button">
-                 <Button
-                  outlined
-                  icon="calendar"
-                  onClick={this.toggleDateFacet}
+                <Tooltip
+                  content={intl.formatMessage(dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show)}
                   disabled={dateFacetDisabled}
-                  active={dateFacetIsOpen}
-                />
+                >
+                  <Button
+                    outlined
+                    icon="calendar"
+                    onClick={this.toggleDateFacet}
+                    disabled={dateFacetDisabled}
+                    active={dateFacetIsOpen}
+                  />
+                </Tooltip>
                </div>
                <QueryTags query={query} updateQuery={this.updateQuery} />
             </div>
