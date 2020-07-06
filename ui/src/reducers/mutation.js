@@ -12,7 +12,7 @@ import {
   createEntityMapping,
   updateEntityMapping,
   deleteEntityMapping,
-  createEntity,
+  // createEntity,
   triggerCollectionCancel,
   // triggerCollectionAnalyze,
   updateCollectionPermissions,
@@ -42,10 +42,9 @@ export default createReducer({
   [deleteEntityMapping.COMPLETE]: update,
   [triggerCollectionCancel.COMPLETE]: update,
   [updateCollectionPermissions.COMPLETE]: update,
-  [createEntity.COMPLETE]: update,
+  // [createEntity.COMPLETE]: update,
   [deleteEntity.COMPLETE]: update,
   [ingestDocument.COMPLETE]: update,
   [deleteQueryLog.COMPLETE]: update,
   [updateRole.COMPLETE]: update,
-
 }, initialState);
