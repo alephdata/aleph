@@ -34,6 +34,7 @@ class PlainTextIngestor(Ingestor, EncodingSupport):
         'text/javascript',
         'text/x-algol68',
     ]
+    EXTENSIONS = ['txt', 'md', 'rst', 'nfo']
     MAX_SIZE = 4 * 1024 * 1024
     SCORE = 1
 
