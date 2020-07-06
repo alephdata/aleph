@@ -3,42 +3,43 @@ import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { updateDiagram } from 'src/actions';
+import { updateEntitySet } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import FormDialog from 'src/dialogs/common/FormDialog';
 
 const messages = defineMessages({
   label_placeholder: {
-    id: 'diagram.create.label_placeholder',
-    defaultMessage: 'Untitled diagram',
+    id: 'entityset.create.label_placeholder',
+    defaultMessage: 'Untitled {type}',
   },
   summary_placeholder: {
-    id: 'diagram.create.summary_placeholder',
-    defaultMessage: 'A brief description of the diagram',
+    id: 'entityset.create.summary_placeholder',
+    defaultMessage: 'A brief description of the {type}',
   },
   title_update: {
-    id: 'diagram.update.title',
-    defaultMessage: 'Diagram settings',
+    id: 'entityset.update.title',
+    defaultMessage: 'Settings',
   },
   submit_update: {
-    id: 'diagram.update.submit',
+    id: 'entityset.update.submit',
     defaultMessage: 'Submit',
   },
   success_update: {
-    id: 'diagram.update.success',
-    defaultMessage: 'Your diagram has been successfully updated.',
+    id: 'entityset.update.success',
+    defaultMessage: 'Your {type} has been successfully updated.',
   },
 });
 
 
-class DiagramEditDialog extends Component {
+class EntitySetEditDialog extends Component {
   constructor(props) {
     super(props);
-    const { diagram } = this.props;
+    const { entitySet } = this.props;
 
     this.state = {
-      label: diagram.label || '',
-      summary: diagram.summary || '',
+      type: entitySet.type || 'generic',
+      label: entitySet.label || '',
+      summary: entitySet.summary || '',
       processing: false,
     };
 
@@ -51,23 +52,24 @@ class DiagramEditDialog extends Component {
     this.setState({
       label: '',
       summary: '',
+      type: '',
     });
   }
 
   async onSubmit(event) {
-    const { diagram, intl } = this.props;
-    const { label, processing, summary } = this.state;
+    const { entitySet, intl } = this.props;
+    const { type, label, processing, summary } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
     this.setState({ processing: true });
 
     try {
-      await this.props.updateDiagram(diagram.id, { label, summary });
+      await this.props.updateEntitySet(entitySet.id, { label, summary });
       this.setState({ processing: false });
       this.props.toggleDialog();
 
       showSuccessToast(
-        intl.formatMessage(messages.success_update),
+        intl.formatMessage({...messages.success_update, values: { type } }),
       );
     } catch (e) {
       showWarningToast(e.message);
@@ -90,7 +92,7 @@ class DiagramEditDialog extends Component {
 
   render() {
     const { intl, isOpen, toggleDialog } = this.props;
-    const { label, processing, summary } = this.state;
+    const { type, label, processing, summary } = this.state;
     const disabled = !this.checkValid();
 
 
@@ -106,14 +108,14 @@ class DiagramEditDialog extends Component {
           <div className="bp3-dialog-body">
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="label">
-                <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
+                <FormattedMessage id="entityset.choose.name" defaultMessage="Title" />
                 <div className="bp3-input-group bp3-fill">
                   <input
                     id="label"
                     type="text"
                     className="bp3-input"
                     autoComplete="off"
-                    placeholder={intl.formatMessage(messages.label_placeholder)}
+                    placeholder={intl.formatMessage(messages.label_placeholder, { type })}
                     onChange={this.onChangeLabel}
                     value={label}
                   />
@@ -123,14 +125,14 @@ class DiagramEditDialog extends Component {
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="summary">
                 <FormattedMessage
-                  id="diagram.choose.summary"
+                  id="entityset.choose.summary"
                   defaultMessage="Summary"
                 />
                 <div className="bp3-input-group bp3-fill">
                   <textarea
                     id="summary"
                     className="bp3-input"
-                    placeholder={intl.formatMessage(messages.summary_placeholder)}
+                    placeholder={intl.formatMessage(messages.summary_placeholder, { type })}
                     onChange={this.onChangeSummary}
                     value={summary}
                     rows={5}
@@ -159,5 +161,5 @@ class DiagramEditDialog extends Component {
 
 const mapStateToProps = () => ({});
 
-DiagramEditDialog = injectIntl(DiagramEditDialog);
-export default connect(mapStateToProps, { updateDiagram })(DiagramEditDialog);
+EntitySetEditDialog = injectIntl(EntitySetEditDialog);
+export default connect(mapStateToProps, { updateEntitySet })(EntitySetEditDialog);

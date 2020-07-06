@@ -11,12 +11,13 @@ from flask_cors import CORS
 from flask_babel import Babel
 from flask_talisman import Talisman
 from followthemoney import set_model_locale
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, TransportError
 from urlnormalizer import query_string
 from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.logs import configure_logging
 from servicelayer.extensions import get_extensions
+from servicelayer.util import service_retries, backoff
 
 from aleph import settings
 from aleph.cache import Cache
@@ -107,11 +108,19 @@ def configure_alembic(config):
 
 
 def get_es():
-    if not hasattr(settings, '_es_instance'):
-        timeout = settings.ELASTICSEARCH_TIMEOUT
-        es = Elasticsearch(settings.ELASTICSEARCH_URL, timeout=timeout)
-        settings._es_instance = es
-    return settings._es_instance
+    url = settings.ELASTICSEARCH_URL
+    timeout = settings.ELASTICSEARCH_TIMEOUT
+    for attempt in service_retries():
+        try:
+            if not hasattr(settings, '_es_instance'):
+                es = Elasticsearch(url, timeout=timeout)
+                es.info()
+                settings._es_instance = es
+            return settings._es_instance
+        except TransportError as exc:
+            log.warning("ElasticSearch error: %s", exc.error)
+            backoff(failures=attempt)
+    raise RuntimeError("Could not connect to ElasticSearch")
 
 
 def get_archive():

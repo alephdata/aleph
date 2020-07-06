@@ -6,12 +6,12 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
 import FormDialog from 'src/dialogs/common/FormDialog';
-import { createDiagram, queryDiagrams, updateDiagram } from 'src/actions';
-import { queryCollectionDiagrams } from 'src/queries';
-import { selectDiagramsResult } from 'src/selectors';
+import { createEntitySet, queryEntitySets, updateEntitySet } from 'src/actions';
+import { queryCollectionEntitySets } from 'src/queries';
+import { selectEntitySetsResult } from 'src/selectors';
 import { Diagram } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
-import getDiagramLink from 'src/util/getDiagramLink';
+import getEntitySetLink from 'src/util/getEntitySetLink';
 
 import './AddToDiagramDialog.scss';
 
@@ -58,7 +58,7 @@ class AddToDiagramDialog extends Component {
   fetchIfNeeded() {
     const { query, result } = this.props;
     if (result && !result.isPending && !result.isError) {
-      this.props.queryDiagrams({ query });
+      this.props.queryEntitySets({ query });
     }
   }
 
@@ -69,7 +69,8 @@ class AddToDiagramDialog extends Component {
     this.sendRequest({
       collection_id: collection.id,
       label,
-      entities
+      entities,
+      type: 'diagram',
     });
   }
 
@@ -100,9 +101,9 @@ class AddToDiagramDialog extends Component {
     try {
       let request;
       if (diagram.id) {
-        request = this.props.updateDiagram(diagram.id, diagram);
+        request = this.props.updateEntitySet(diagram.id, diagram);
       } else {
-        request = this.props.createDiagram(diagram);
+        request = this.props.createEntitySet(diagram);
       }
 
       request.then(updatedDiagram => {
@@ -116,7 +117,7 @@ class AddToDiagramDialog extends Component {
           intl.formatMessage(messages.success_update, {count: updatedCount, diagram: diagram.label}),
         );
         history.push({
-          pathname: getDiagramLink(updatedDiagram.data),
+          pathname: getEntitySetLink(updatedDiagram.data),
         });
       })
     } catch (e) {
@@ -181,15 +182,15 @@ class AddToDiagramDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const query = queryCollectionDiagrams(location, collection.id);
+  const query = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
   return {
     query,
-    result: selectDiagramsResult(state, query),
+    result: selectEntitySetsResult(state, query),
   };
 };
 
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { createDiagram, queryDiagrams, updateDiagram }),
+  connect(mapStateToProps, { createEntitySet, queryEntitySets, updateEntitySet }),
 )(AddToDiagramDialog);

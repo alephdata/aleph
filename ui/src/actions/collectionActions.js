@@ -23,7 +23,7 @@ export const updateCollection = asyncActionCreator(collection => async () => {
 }, { name: 'UPDATE_COLLECTION' });
 
 export const deleteCollection = asyncActionCreator(collection => async () => {
-  const config = { params: { sync: true } };
+  const config = { params: { sync: false } };
   await endpoint.delete(`collections/${collection.id}`, config);
   return { id: collection.id };
 }, { name: 'DELETE_COLLECTION' });

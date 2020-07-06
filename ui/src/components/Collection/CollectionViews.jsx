@@ -12,8 +12,8 @@ import CollectionEntitiesMode from 'src/components/Collection/CollectionEntities
 import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import collectionViewIds from 'src/components/Collection/collectionViewIds';
-import { queryCollectionDiagrams, queryCollectionXrefFacets } from 'src/queries';
-import { selectModel, selectDiagramsResult, selectCollectionXrefResult } from 'src/selectors';
+import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'src/queries';
+import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'src/selectors';
 
 import './CollectionViews.scss';
 
@@ -128,7 +128,7 @@ class CollectionViews extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const model = selectModel(state);
-  const diagramsQuery = queryCollectionDiagrams(location, collection.id);
+  const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
   const schemata = collection?.statistics?.schema?.values;
   let documentTabCount, entitiesTabCount;
@@ -155,7 +155,7 @@ const mapStateToProps = (state, ownProps) => {
     showEntitiesTab: collection.casefile,
     showDocumentsTab: (documentTabCount > 0 || collection.writeable),
     xref: selectCollectionXrefResult(state, xrefQuery),
-    diagrams: selectDiagramsResult(state, diagramsQuery),
+    diagrams: selectEntitySetsResult(state, diagramsQuery),
   };
 };
 
