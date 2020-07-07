@@ -46,7 +46,7 @@ class EntitySetManageMenu extends Component {
   }
 
   render() {
-    const { entitySet, intl, onSearch, triggerDownload } = this.props;
+    const { entitySet, intl, onSearch } = this.props;
     const { editIsOpen, deleteIsOpen } = this.state;
 
     return (

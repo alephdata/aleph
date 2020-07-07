@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { Alignment, Button, ControlGroup, Navbar as Bp3Navbar } from '@blueprintjs/core';
+import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

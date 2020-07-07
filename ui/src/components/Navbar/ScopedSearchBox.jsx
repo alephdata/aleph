@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { ControlGroup, Button, Icon, InputGroup } from '@blueprintjs/core';
+import { Icon, InputGroup } from '@blueprintjs/core';
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import ScopeSelect from 'src/components/Navbar/ScopeSelect';

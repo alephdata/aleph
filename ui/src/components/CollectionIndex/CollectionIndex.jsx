@@ -55,7 +55,7 @@ export class CollectionIndex extends Component {
   }
 
   onSearch(queryText) {
-    const { query, updateQuery } = this.props;
+    const { query } = this.props;
 
     const newQuery = query.set('q', queryText);
     this.updateQuery(newQuery);

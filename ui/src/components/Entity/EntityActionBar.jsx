@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Boundary, Button, ButtonGroup, ControlGroup, InputGroup, OverflowList, Popover } from '@blueprintjs/core';
+import { Boundary, Button, ButtonGroup, ControlGroup, OverflowList, Popover } from '@blueprintjs/core';
 
 import { Count, SearchBox } from 'src/components/common';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
