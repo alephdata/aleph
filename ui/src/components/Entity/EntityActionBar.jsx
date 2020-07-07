@@ -42,7 +42,7 @@ class EntityActionBar extends Component {
   }
 
   render() {
-    const { children, query, onSearchSubmit, searchPlaceholder, selection, writeable } = this.props;
+    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, selection, writeable } = this.props;
 
     const deleteButton = (
       <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length} className="EntityActionBar__delete">
@@ -70,6 +70,7 @@ class EntityActionBar extends Component {
             onSearch={onSearchSubmit}
             placeholder={searchPlaceholder}
             query={query}
+            inputProps={{ disabled: searchDisabled }}
           />
         </ControlGroup>
         {writeable && selection && (
