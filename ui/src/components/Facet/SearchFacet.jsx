@@ -11,7 +11,7 @@ import {
 import c from 'classnames';
 
 import getFacetConfig from 'src/util/getFacetConfig';
-import { CheckboxList } from 'src/components/common';
+import { CheckboxList, Schema } from 'src/components/common';
 
 import './SearchFacet.scss';
 
@@ -90,6 +90,10 @@ class SearchFacet extends Component {
     const isUpdating = result.total === undefined;
     const isMultiSelect = field !== 'schema';
 
+    const values = field === 'schema'
+      ? facet?.values?.map(({ id, label, ...rest }) => ({ label: <Schema.Label schema={id} icon />, id, ...rest }))
+      : facet?.values;
+
     return (
       <div className="SearchFacet">
         <div
@@ -135,9 +139,9 @@ class SearchFacet extends Component {
           )}
         </div>
         <Collapse isOpen={isOpen} className={c({ updating: isUpdating })}>
-          {facet.values !== undefined && (
+          {values !== undefined && (
             <CheckboxList
-              items={facet.values}
+              items={values}
               selectedItems={current}
               onItemClick={this.onSelect}
               isMultiSelect={isMultiSelect}
