@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import c from 'classnames';
-import { Button, InputGroup } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import './Statistics.scss';
 
@@ -24,10 +24,8 @@ class Statistics extends PureComponent {
     super(props);
     this.state = {
       listLen: 15,
-      filterVal: '',
     };
     this.onExpand = this.onExpand.bind(this);
-    this.onFilterChange = this.onFilterChange.bind(this);
   }
 
   onExpand() {
@@ -35,58 +33,30 @@ class Statistics extends PureComponent {
     this.setState(prevState => ({ listLen: prevState.listLen + expandIncrement }));
   }
 
-  onFilterChange(event) {
-    const filterVal = event.target.value;
-    this.setState({ filterVal });
-  }
-
   getItemsList() {
-    const { hasFilter, isPending, statistic } = this.props;
-    const { filterVal } = this.state;
+    const { isPending, statistic } = this.props;
     if (isPending) {
       return Array.from({ length: 40 }, (i, ii) => ([ii]));
     }
-    const list = Object.entries(statistic);
-
-    if (hasFilter) {
-      return list.filter(([label]) => (
-        label.toLowerCase().includes(filterVal.toLowerCase())
-      ));
-    }
-
-    return list;
+    return Object.entries(statistic);
   }
 
   render() {
     const {
       seeMoreButtonText,
-      filterPlaceholder,
-      hasFilter,
       headline,
       isPending,
       styleType,
       children = isPending ? Statistics.Noop : Statistics.Item,
       ItemContentContainer = Statistics.ItemContentContainer,
     } = this.props;
-    const {
-      listLen,
-      filterVal,
-    } = this.state;
+    const { listLen } = this.state;
     const list = this.getItemsList();
 
     const rest = list.length - listLen;
     return (
       <div className={c('Statistics bp3-callout', styleType)}>
         <h5 className={c('bp3-heading', 'Statistics__headline', { 'bp3-skeleton': isPending })}>{headline}</h5>
-        {hasFilter && (
-          <InputGroup
-            className="Statistics__filter"
-            leftIcon="search"
-            placeholder={filterPlaceholder}
-            onChange={this.onFilterChange}
-            value={filterVal}
-          />
-        )}
         <ul className="Statistics__list">
           {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({
             className: c('Statistics__list-item', { 'bp3-skeleton': isPending }),
