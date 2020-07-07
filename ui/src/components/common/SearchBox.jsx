@@ -44,7 +44,7 @@ export class SearchBox extends PureComponent {
   }
 
   render() {
-    const { intl, placeholder, className } = this.props;
+    const { intl, placeholder, className, inputProps } = this.props;
     const { queryText } = this.state;
     const searchPlaceholder = placeholder || intl.formatMessage(messages.search_placeholder);
     if (!this.props.onSearch) {
@@ -58,6 +58,7 @@ export class SearchBox extends PureComponent {
           onChange={this.onQueryTextChange}
           placeholder={searchPlaceholder}
           value={queryText}
+          {...inputProps}
         />
       </form>
     );

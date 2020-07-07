@@ -11,7 +11,7 @@ import './EntitySetManageMenu.scss';
 const messages = defineMessages({
   placeholder: {
     id: 'entity_set.menu.search_placeholder',
-    defaultMessage: 'Search {set_name}',
+    defaultMessage: 'Search in {set_name}',
   },
 });
 
