@@ -33,15 +33,13 @@ def create_collection(data, authz, sync=False):
 def update_collection(collection, sync=False):
     """Create or update a collection."""
     Authz.flush()
-    refresh_collection(collection.id, sync=sync)
+    refresh_collection(collection.id)
     return index.index_collection(collection, sync=sync)
 
 
-def refresh_collection(collection_id, sync=True):
+def refresh_collection(collection_id):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and flush cache."""
-    if collection_id is None:
-        return
     cache.kv.delete(cache.object_key(Collection, collection_id),
                     cache.object_key(Collection, collection_id, 'stats'))
 
@@ -55,7 +53,7 @@ def compute_collection(collection, force=False, sync=False):
     key = cache.object_key(Collection, collection.id, 'stats')
     if cache.get(key) is not None and not force:
         return
-    refresh_collection(collection.id, sync=sync)
+    refresh_collection(collection.id)
     cache.set(key, 'computed', expires=cache.EXPIRE - 60)
     log.info("[%s] Computing statistics...", collection)
     index.update_collection_stats(collection.id, force=force)
@@ -142,7 +140,7 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     if not keep_metadata:
         index.delete_collection(collection.id, sync=True)
         Authz.flush()
-    refresh_collection(collection.id, sync=True)
+    refresh_collection(collection.id)
 
 
 def upgrade_collections():

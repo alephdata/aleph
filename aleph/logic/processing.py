@@ -24,7 +24,7 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=100):
         stage.mark_done(len(tasks))
     aggregator = get_aggregator(collection)
     index_aggregator(collection, aggregator, entity_ids=entity_ids, sync=sync)
-    refresh_collection(collection.id, sync=sync)
+    refresh_collection(collection.id)
 
 
 def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):

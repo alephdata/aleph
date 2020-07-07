@@ -48,7 +48,7 @@ def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
     delete_aggregator_entity(collection, entity.id)
     index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(entity.id)
-    refresh_collection(collection.id, sync=sync)
+    refresh_collection(collection.id)
     return entity.id
 
 
@@ -78,7 +78,7 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
     delete_aggregator_entity(collection, entity_id)
     refresh_entity(entity_id)
-    refresh_collection(collection.id, sync=sync)
+    refresh_collection(collection.id)
 
 
 def entity_references(entity, authz=None):
