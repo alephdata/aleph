@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Boundary, Button, ButtonGroup, ControlGroup, InputGroup, OverflowList, Popover } from '@blueprintjs/core';
 
-import { Count } from 'src/components/common';
+import { Count, SearchBox } from 'src/components/common';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 
 import './EntityActionBar.scss';
@@ -11,22 +11,10 @@ class EntityActionBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      queryText: '',
       deleteIsOpen: false,
     };
 
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
-    this.onQueryTextChange = this.onQueryTextChange.bind(this);
-    this.onSearchSubmit = this.onSearchSubmit.bind(this);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const nextQueryText = nextProps.query ? nextProps.query.getString('q') : prevState.queryText;
-    const queryChanged = !prevState?.prevQuery || prevState.prevQuery.getString('q') !== nextQueryText;
-    return {
-      prevQuery: nextProps.query,
-      queryText: queryChanged ? nextQueryText : prevState.queryText,
-    };
   }
 
   toggleDeleteSelection() {
@@ -36,17 +24,6 @@ class EntityActionBar extends Component {
       resetSelection();
     }
     this.setState(({ deleteIsOpen: !deleteIsOpen }));
-  }
-
-  onQueryTextChange({ target }) {
-    const queryText = target.value;
-    this.setState({ queryText });
-  }
-
-  onSearchSubmit(e) {
-    e.preventDefault();
-    const { queryText } = this.state;
-    this.props.onSearchSubmit(queryText);
   }
 
   overflowListRenderer = (overflowItems) => {
@@ -65,8 +42,7 @@ class EntityActionBar extends Component {
   }
 
   render() {
-    const { children, searchPlaceholder, selection, writeable } = this.props;
-    const { queryText } = this.state;
+    const { children, query, onSearchSubmit, searchPlaceholder, selection, writeable } = this.props;
 
     const deleteButton = (
       <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length} className="EntityActionBar__delete">
@@ -90,15 +66,11 @@ class EntityActionBar extends Component {
               observeParents
             />
           )}
-          <form onSubmit={this.onSearchSubmit}>
-            <InputGroup
-              fill
-              leftIcon="search"
-              onChange={this.onQueryTextChange}
-              placeholder={searchPlaceholder}
-              value={queryText}
-            />
-          </form>
+          <SearchBox
+            onSearch={onSearchSubmit}
+            placeholder={searchPlaceholder}
+            query={query}
+          />
         </ControlGroup>
         {writeable && selection && (
           <EntityDeleteDialog

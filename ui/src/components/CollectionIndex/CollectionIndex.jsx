@@ -153,6 +153,7 @@ export class CollectionIndex extends Component {
           <SearchBox
             onSearch={this.onSearch}
             placeholder={placeholder}
+            query={query}
             inputProps={{ large: true, autoFocus: true }}
           />
           <SortingBar

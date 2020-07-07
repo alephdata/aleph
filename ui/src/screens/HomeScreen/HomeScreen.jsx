@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import { Redirect } from 'react-router-dom';
-import {
-  ControlGroup, InputGroup,
-} from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import {
-  defineMessages, injectIntl,
-} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
+
+import { SearchBox } from 'src/components/common';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
@@ -33,8 +30,6 @@ const messages = defineMessages({
 export class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { query: '' };
-    this.onChangeQuery = this.onChangeQuery.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -43,16 +38,12 @@ export class HomeScreen extends Component {
     this.props.fetchStatistics();
   }
 
-  onChangeQuery({ target }) {
-    this.setState({ query: target.value });
-  }
-
-  onSubmit() {
+  onSubmit(queryText) {
     const { history } = this.props;
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: this.state.query,
+        q: queryText,
       }),
     });
   }
@@ -81,20 +72,11 @@ export class HomeScreen extends Component {
                   <p className="HomeScreen__description">{appDescription}</p>
                 )}
               </div>
-
-              <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
-                <ControlGroup fill>
-                  <InputGroup
-                    id="search-box"
-                    large
-                    autoFocus
-                    leftIcon="search"
-                    placeholder={intl.formatMessage(messages.placeholder, { samples })}
-                    value={this.state.query}
-                    onChange={this.onChangeQuery}
-                  />
-                </ControlGroup>
-              </form>
+              <SearchBox
+                onSearch={this.onSubmit}
+                placeholder={intl.formatMessage(messages.placeholder, { samples })}
+                inputProps={{ large: true, autoFocus: true }}
+              />
               <StatisticsGroup statistics={statistics} />
             </div>
           </div>

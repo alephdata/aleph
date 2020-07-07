@@ -20,13 +20,12 @@ export class SearchBox extends PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.searchText !== prevState.searchText) {
-      return {
-        searchText: nextProps.searchText,
-        queryText: nextProps.searchText,
-      };
-    }
-    return {};
+    const nextQueryText = nextProps.query ? nextProps.query.getString('q') : prevState.queryText;
+    const queryChanged = !prevState?.prevQuery || prevState.prevQuery.getString('q') !== nextQueryText;
+    return {
+      prevQuery: nextProps.query,
+      queryText: queryChanged ? nextQueryText : prevState.queryText,
+    };
   }
 
   onQueryTextChange(e) {
