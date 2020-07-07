@@ -12,6 +12,7 @@ from aleph.core import db, archive
 from aleph.model import Document, Entity, Events
 from aleph.queues import ingest_entity
 from aleph.index.entities import index_proxy
+from aleph.logic.documents import ingest_flush
 from aleph.logic.notifications import publish, channel_tag
 from aleph.views.util import get_db_collection, get_flag
 from aleph.views.util import jsonify, validate, get_session_id
@@ -138,6 +139,7 @@ def ingest_upload(collection_id):
         proxy = document.to_proxy(ns=collection.ns)
         if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync and index:
             index_proxy(collection, proxy, sync=sync)
+        ingest_flush(collection, entity_id=proxy.id)
         ingest_entity(collection, proxy, job_id=job_id, index=index)
         _notify(collection, proxy.id)
         return jsonify({
