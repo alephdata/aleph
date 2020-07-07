@@ -21,10 +21,6 @@
     display: flex;
   }
 
-  &__status {
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
-  }
-
   .bp3-breadcrumbs {
     height: auto;
     position: relative;
