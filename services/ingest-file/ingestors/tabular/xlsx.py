@@ -56,6 +56,6 @@ class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
     @classmethod
     def match(cls, file_path, entity):
         score = super(ExcelXMLIngestor, cls).match(file_path, entity)
-        if score <= 0 and cls.inspect_ooxml_manifest(file_path):
-            score = cls.SCORE * 2
+        if score > 0 and not cls.inspect_ooxml_manifest(file_path):
+            return -1
         return score

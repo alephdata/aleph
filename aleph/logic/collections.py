@@ -5,13 +5,13 @@ from servicelayer.jobs import Job
 from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
-from aleph.queues import OP_ANALYZE, OP_INGEST
 from aleph.model import Collection, Entity, Document, EntitySet, Mapping
 from aleph.model import Permission, Events, Linkage
 from aleph.index import collections as index
 from aleph.index import xref as xref_index
 from aleph.index import entities as entities_index
 from aleph.logic.notifications import publish, flush_notifications
+from aleph.logic.documents import ingest_flush
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
@@ -94,10 +94,7 @@ def index_aggregator(collection, aggregator, entity_ids=None, sync=False):
 def reingest_collection(collection, job_id=None, index=False):
     """Trigger a re-ingest for all documents in the collection."""
     job_id = job_id or Job.random_id()
-    aggregator = get_aggregator(collection)
-    aggregator.delete(origin=OP_ANALYZE)
-    aggregator.delete(origin=OP_INGEST)
-    aggregator.close()
+    ingest_flush(collection)
     for document in Document.by_collection(collection.id):
         proxy = document.to_proxy(ns=collection.ns)
         ingest_entity(collection, proxy, job_id=job_id, index=index)

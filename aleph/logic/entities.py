@@ -47,12 +47,12 @@ def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
 
     delete_aggregator_entity(collection, entity.id)
     index.index_proxy(collection, proxy, sync=sync)
-    refresh_entity(entity.id, sync=sync)
+    refresh_entity(entity.id)
     refresh_collection(collection.id, sync=sync)
     return entity.id
 
 
-def refresh_entity(entity_id, sync=False):
+def refresh_entity(entity_id):
     cache.kv.delete(cache.object_key(Entity, entity_id))
 
 
@@ -77,7 +77,7 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
     delete_aggregator_entity(collection, entity_id)
-    refresh_entity(entity_id, sync=sync)
+    refresh_entity(entity_id)
     refresh_collection(collection.id, sync=sync)
 
 
