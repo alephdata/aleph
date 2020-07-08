@@ -5,8 +5,9 @@ import { queryEndpoint } from './util';
 export const queryCollections = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_COLLECTIONS' });
 
 
-export const fetchCollection = asyncActionCreator(({ id }) => async () => {
-  const response = await endpoint.get(`collections/${id}`);
+export const fetchCollection = asyncActionCreator(({ id, refresh }) => async () => {
+  const config = { params: { refresh } };
+  const response = await endpoint.get(`collections/${id}`, config);
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION' });
 
@@ -43,7 +44,7 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
   const config = { params: { sync: true } };
   const response = await endpoint.post(`collections/${id}/permissions`, permissions, config);
   return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
+}, { name: 'UPDATE_COLLECTION_PERMISSIONS' });
 
 export const queryCollectionXref = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_XREF' });
 

@@ -29,7 +29,8 @@ class CollectionContextLoader extends PureComponent {
 
     const loadDeep = (collection.shallow && !collection.isPending);
     if (collection.shouldLoad || loadDeep) {
-      this.props.fetchCollection({ id: collectionId });
+      const refresh = collection.shallow === false;
+      this.props.fetchCollection({ id: collectionId, refresh });
     }
 
     const { xrefResult, xrefQuery } = this.props;
