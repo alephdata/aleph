@@ -9,7 +9,7 @@ from aleph.queues import queue_task, get_status, cancel_queue
 from aleph.queues import OP_REINGEST, OP_REINDEX
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import create_collection, update_collection
-from aleph.logic.collections import delete_collection
+from aleph.logic.collections import delete_collection, compute_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
@@ -139,6 +139,8 @@ def view(collection_id):
     """
     data = get_index_collection(collection_id)
     cobj = get_db_collection(collection_id)
+    if get_flag('refresh', False):
+        compute_collection(cobj, force=False)
     data.update({
       'statistics': get_collection_stats(cobj.id),
       'status': get_status(cobj),

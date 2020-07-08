@@ -53,10 +53,9 @@ def compute_collection(collection, force=False, sync=False):
     key = cache.object_key(Collection, collection.id, 'stats')
     if cache.get(key) is not None and not force:
         return
-    refresh_collection(collection.id)
     cache.set(key, 'computed', expires=cache.EXPIRE - 60)
     log.info("[%s] Computing statistics...", collection)
-    index.update_collection_stats(collection.id, force=force)
+    index.update_collection_stats(collection.id)
     index.index_collection(collection, sync=sync)
 
 

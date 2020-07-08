@@ -140,19 +140,14 @@ def get_collection_facet(collection_id, facet, default=None):
     return cache.get_complex(key) or default
 
 
-def update_collection_stats(collection_id, force=False):
+def update_collection_stats(collection_id):
     es.indices.refresh(entities_read_index())
     for facet in STATS_FACETS:
-        update_collection_facet(collection_id, facet, force=force)
+        update_collection_facet(collection_id, facet)
 
 
-def update_collection_facet(collection_id, facet, force=False):
+def update_collection_facet(collection_id, facet):
     """Compute some statistics on the content of a collection."""
-    key = cache.object_key(Collection, collection_id, facet)
-    data = cache.get_complex(key)
-    if not force and data is not None:
-        return data
-
     query = {'term': {'collection_id': collection_id}}
     query = {
         'size': 0,
@@ -178,6 +173,7 @@ def update_collection_facet(collection_id, facet, force=False):
         'values': values,
         'total': aggregations.get('total').get('value', 0)
     }
+    key = cache.object_key(Collection, collection_id, facet)
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
