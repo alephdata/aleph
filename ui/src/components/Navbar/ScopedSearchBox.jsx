@@ -99,14 +99,11 @@ class ScopedSearchBox extends React.Component {
           fill
           id="search-box"
           leftElement={(
-            <>
-              <ScopeSelect
-                scopes={searchScopes}
-                activeScope={activeScope}
-                onChangeScope={this.onChangeScope}
-              />
-              <Icon icon="search" />
-            </>
+            <ScopeSelect
+              scopes={searchScopes}
+              activeScope={activeScope}
+              onChangeScope={this.onChangeScope}
+            />
           )}
           placeholder={placeholder}
           rightElement={<SearchAlert queryText={queryText} />}

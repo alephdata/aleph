@@ -1,17 +1,29 @@
+@import "src/app/variables.scss";
+@import "src/app/mixins.scss";
+
 .ScopedSearchBox {
-  .bp3-input-left-container {
-    z-index: 100 !important;
-
-    & > * {
-      vertical-align: top;
-    }
-  }
-
-  .bp3-input {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
+  // &.bp3-input-group {
+  //   display: flex;
+  //   justify-content: space-between;
+  // }
+  // .bp3-input-left-container, .bp3-input, .bp3-input-action {
+  //
+  // }
+  //
+  // .bp3-input-left-container {
+  //   position: relative !important;
+  // }
+  //
+  // .bp3-icon-search {
+  //   position: absolute;
+  // }
+  //
+  // .bp3-input {
+  //   overflow: hidden;
+  //   text-overflow: ellipsis;
+  //   white-space: nowrap;
+  //   border-radius: 0 !important;
+  //   box-shadow: none !important;
+  //   @include rtlSupportInvertedProp(padding, left, $aleph-grid-size !important, 0 !important);
+  // }
 }
