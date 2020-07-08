@@ -26,7 +26,7 @@ from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
-from aleph.logic.roles import create_user, update_roles
+from aleph.logic.roles import create_user, update_roles, delete_role
 from aleph.logic.permissions import update_permission
 
 log = logging.getLogger('aleph')
@@ -234,6 +234,16 @@ def createuser(email, password=None, name=None, admin=False):  # noqa
     """Create a user and show their API key."""
     role = create_user(email, name, password, is_admin=admin)
     print("User created. ID: %s, API Key: %s" % (role.id, role.api_key))
+
+
+@cli.command()
+@click.argument('foreign_id')
+def deleterole(foreign_id):  # noqa
+    """Hard-delete a role (user, or group) from the database."""
+    role = Role.by_foreign_id(foreign_id)
+    if role is None:
+        raise click.BadParameter("No such role: %r" % foreign_id)
+    delete_role(role)
 
 
 @cli.command()

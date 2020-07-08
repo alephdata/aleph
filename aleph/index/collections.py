@@ -161,6 +161,7 @@ def update_collection_facet(collection_id, facet):
     facet_type = registry.groups.get(facet)
     if facet_type is not None:
         schemata = model.get_type_schemata(facet_type)
+        schemata = [s for s in schemata if s.is_a(Entity.THING)]
     result = es.search(index=entities_read_index(schema=schemata),
                        body=query,
                        request_timeout=3600,

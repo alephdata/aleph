@@ -5,7 +5,9 @@ from flask import render_template
 from aleph.core import db, settings, cache
 from aleph.authz import Authz
 from aleph.mail import email_role
-from aleph.model import Role
+from aleph.model import Role, Alert, QueryLog, Permission, EntitySet
+from aleph.model import Collection, Document, Entity, Linkage, Mapping
+from aleph.model.role import membership
 from aleph.logic.notifications import get_role_channels
 
 log = logging.getLogger(__name__)
@@ -68,6 +70,38 @@ def update_role(role):
     refresh_role(role)
     get_role(role.id)
     get_role_channels(role)
+
+
+def delete_role(role):
+    """Fully delete a role from the database and transfer the
+    ownership of documents and entities created by it to the
+    system user."""
+    # Doesn't update the search index, so they're out of sync.
+    fallback = Role.load_cli_user()
+
+    def _del(cls, col):
+        pq = db.session.query(cls)
+        pq = pq.filter(col == role.id)
+        pq.delete(synchronize_session=False)
+
+    def _repo(cls, col):
+        pq = db.session.query(cls).filter(col == role.id)
+        pq.update({col: fallback.id}, synchronize_session=False)
+
+    _del(Alert, Alert.role_id)
+    _del(QueryLog, QueryLog.role_id)
+    _del(Permission, Permission.role_id)
+    _del(membership, membership.c.group_id)
+    _del(membership, membership.c.member_id)
+    _repo(Collection, Collection.creator_id)
+    _repo(Document, Document.role_id)
+    _repo(Entity, Entity.role_id)
+    _repo(EntitySet, EntitySet.role_id)
+    _repo(Mapping, Mapping.role_id)
+    _repo(Linkage, Linkage.decider_id)
+    _repo(Linkage, Linkage.context_id)
+    db.session.delete(role)
+    db.session.commit()
 
 
 def refresh_role(role, sync=False):
