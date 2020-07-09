@@ -2,7 +2,6 @@ import logging
 from pprint import pprint  # noqa
 from normality import normalize
 from followthemoney import model
-from followthemoney.types import registry
 
 from aleph.core import es, cache, settings
 from aleph.model import Collection, Entity
@@ -141,42 +140,32 @@ def get_collection_facet(collection_id, facet, default=None):
 
 
 def update_collection_stats(collection_id):
-    es.indices.refresh(entities_read_index())
-    for facet in STATS_FACETS:
-        update_collection_facet(collection_id, facet)
-
-
-def update_collection_facet(collection_id, facet):
     """Compute some statistics on the content of a collection."""
+    aggs = {}
+    for facet in STATS_FACETS:
+        # Regarding facet size, 300 would be optimal because it's
+        # guaranteed to capture all schemata and countries. But it
+        # adds a whole lot to the compute time, so let's see how
+        # this goes.
+        aggs[facet + '.values'] = {'terms': {'field': facet, 'size': 50}}
+        aggs[facet + '.total'] = {'cardinality': {'field': facet}}
     query = {'term': {'collection_id': collection_id}}
-    query = {
-        'size': 0,
-        'query': {'bool': {'filter': [query]}},
-        'aggs': {
-            'values': {'terms': {'field': facet, 'size': 300}},
-            'total': {'cardinality': {'field': facet}}
-        }
-    }
-    schemata = set()
-    facet_type = registry.groups.get(facet)
-    if facet_type is not None:
-        schemata = model.get_type_schemata(facet_type)
-        schemata = [s for s in schemata if s.is_a(Entity.THING)]
-    result = es.search(index=entities_read_index(schema=schemata),
+    query = {'size': 0, 'query': query, 'aggs': aggs}
+    result = es.search(index=entities_read_index(),
                        body=query,
                        request_timeout=3600,
                        timeout='20m')
-    aggregations = result.get('aggregations')
-    values = {}
-    for bucket in aggregations.get('values').get('buckets', []):
-        values[bucket['key']] = bucket['doc_count']
-    data = {
-        'values': values,
-        'total': aggregations.get('total').get('value', 0)
-    }
-    key = cache.object_key(Collection, collection_id, facet)
-    cache.set_complex(key, data, expires=cache.EXPIRE)
-    return data
+    results = result.get('aggregations', {})
+    for facet in STATS_FACETS:
+        values = {}
+        for bucket in results.get(facet + '.values').get('buckets', []):
+            values[bucket['key']] = bucket['doc_count']
+        data = {
+            'values': values,
+            'total': results.get(facet + '.total', {}).get('value', 0)
+        }
+        key = cache.object_key(Collection, collection_id, facet)
+        cache.set_complex(key, data)
 
 
 def get_collection_things(collection_id):
