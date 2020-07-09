@@ -12,14 +12,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-26 17:56+0200\n"
+"POT-Creation-Date: 2020-07-09 19:12+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Miguel Sojo <miguelsojo@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.7.0\n"
+"Generated-By: Babel 2.8.0\n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -35,7 +35,7 @@ msgstr "TeliaSonera"
 msgid "Vladimir Putin"
 msgstr "Vladimir Putin"
 
-#: aleph/logic/roles.py:42
+#: aleph/logic/roles.py:44
 msgid "Registration"
 msgstr "Registro"
 
@@ -164,14 +164,18 @@ msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
 msgstr "{{actor}} empezó a diagramar {{diagram}} en {{collection}}"
 
 #: aleph/model/event.py:93
+msgid "{{actor}} created {{entityset}} in {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:103
 msgid "{{entity}} matches your alert for {{alert}}"
 msgstr "{{entity}} coincide con tu alerta para {{alert}}"
 
-#: aleph/model/event.py:104
+#: aleph/model/event.py:114
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr "{{actor}} otorgó acceso de {{role}} a {{collection}}"
 
-#: aleph/model/event.py:114
+#: aleph/model/event.py:124
 msgid "{{actor}} published {{collection}}"
 msgstr "{{actor}} publicó {{collection}}"
 
@@ -185,7 +189,7 @@ msgstr "error"
 
 #: aleph/model/mapping.py:25
 msgid "pending"
-msgstr ""
+msgstr "pendiente"
 
 #: aleph/search/__init__.py:48
 msgid "No schema is specified for the query."
@@ -269,20 +273,24 @@ msgstr "Categoría inválida."
 msgid "Invalid frequency."
 msgstr "Frecuencia inválida."
 
-#: aleph/validation/formats.py:60
+#: aleph/validation/formats.py:59
+msgid "Invalid set type."
+msgstr ""
+
+#: aleph/validation/formats.py:67
 msgid "Invalid URL."
 msgstr "URL inválida."
 
-#: aleph/validation/formats.py:68
+#: aleph/validation/formats.py:75
 msgid "Invalid language code."
 msgstr "Código de lenguaje inválido."
 
-#: aleph/validation/formats.py:76
+#: aleph/validation/formats.py:83
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "Nombre de esquema inválido: %s"
 
-#: aleph/validation/formats.py:84
+#: aleph/validation/formats.py:91
 #, python-format
 msgid "Invalid date: %s"
 msgstr "Fecha inválida: %s"
@@ -334,7 +342,7 @@ msgstr "Error en la autenticación."
 
 #: aleph/views/sessions_api.py:103
 msgid "Your account is blocked."
-msgstr ""
+msgstr "Tu cuenta está bloqueada"
 
 #: aleph/views/util.py:75
 msgid "Error during data validation"
