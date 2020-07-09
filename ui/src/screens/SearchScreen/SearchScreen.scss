@@ -30,6 +30,20 @@
   .SignInCallout {
     margin-bottom: $aleph-grid-size;
   }
+
+  &__control-bar {
+    display: flex;
+    flex-flow: row-reverse nowrap;
+    justify-content: space-between;
+    margin-bottom: $aleph-grid-size;
+
+    &__button {
+      .bp3-button {
+        height: $aleph-query-tag-height;
+        width: $aleph-query-tag-height;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: $aleph-screen-sm-max-width) {

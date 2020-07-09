@@ -1,0 +1,25 @@
+@import "src/app/variables.scss";
+
+.DateFacet {
+  &.bp3-card {
+    border: 1px solid $aleph-border-color;
+    box-shadow: none;
+    margin: $aleph-grid-size/2 0 $aleph-grid-size*2;
+    padding-top: $aleph-grid-size*2;
+    padding-bottom: $aleph-grid-size/2;
+    position: relative;
+  }
+
+  &__label {
+    padding-bottom: $aleph-grid-size;
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+
+  .bp3-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

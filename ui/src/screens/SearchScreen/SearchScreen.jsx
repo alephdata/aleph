@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
-import { Icon, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
+import { Icon, Button, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -14,6 +14,7 @@ import {
 } from 'src/components/common';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import SearchFacets from 'src/components/Facet/SearchFacets';
+import DateFacet from 'src/components/Facet/DateFacet';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import SuggestAlert from 'src/components/SuggestAlert/SuggestAlert';
 import Screen from 'src/components/Screen/Screen';
@@ -38,6 +39,14 @@ const messages = defineMessages({
     id: 'search.screen.export_disabled',
     defaultMessage: 'Cannot export more than 10,000 results at a time',
   },
+  date_facet_show: {
+    id: 'search.screen.show_dates',
+    defaultMessage: 'Show date filter',
+  },
+  date_facet_hide: {
+    id: 'search.screen.hide_dates',
+    defaultMessage: 'Hide date filter',
+  },
 });
 
 const facetKeys = [
@@ -54,6 +63,7 @@ export class SearchScreen extends React.Component {
 
     this.updateQuery = this.updateQuery.bind(this);
     this.toggleFacets = this.toggleFacets.bind(this);
+    this.toggleDateFacet = this.toggleDateFacet.bind(this);
     this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);
@@ -139,8 +149,21 @@ export class SearchScreen extends React.Component {
     this.setState(({ hideFacets }) => ({ hideFacets: !hideFacets }));
   }
 
+  toggleDateFacet() {
+    const { dateFacetIsOpen, query } = this.props;
+    let newQuery;
+    if (dateFacetIsOpen) {
+      newQuery = query.remove('facet', 'dates')
+        .remove('facet_interval:dates', 'year');
+    } else {
+      newQuery = query.add('facet', 'dates')
+        .add('facet_interval:dates', 'year');
+    }
+    this.updateQuery(newQuery);
+  }
+
   render() {
-    const { query, result, intl } = this.props;
+    const { dateFacetIsOpen, dateFacetIntervals, query, result, intl } = this.props;
     const { hideFacets } = this.state;
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
@@ -148,6 +171,7 @@ export class SearchScreen extends React.Component {
     const hasExportLink = result && result.links && result.links.export;
     const exportLink = !hasExportLink ? null : result.links.export;
     const tooltip = intl.formatMessage(messages.alert_export_disabled);
+    const dateFacetDisabled = dateFacetIntervals && (!result.total || dateFacetIntervals.length <= 1);
 
     const operation = (
       <ButtonGroup>
@@ -227,7 +251,29 @@ export class SearchScreen extends React.Component {
           </DualPane.SidePane>
           <DualPane.ContentPane>
             <SignInCallout />
-            <QueryTags query={query} updateQuery={this.updateQuery} />
+            <div className="SearchScreen__control-bar">
+               <div className="SearchScreen__control-bar__button">
+                <Tooltip
+                  content={intl.formatMessage(dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show)}
+                  disabled={dateFacetDisabled}
+                >
+                  <Button
+                    outlined
+                    icon="calendar"
+                    onClick={this.toggleDateFacet}
+                    disabled={dateFacetDisabled}
+                    active={dateFacetIsOpen}
+                  />
+                </Tooltip>
+               </div>
+               <QueryTags query={query} updateQuery={this.updateQuery} />
+            </div>
+            <DateFacet
+              isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
+              intervals={dateFacetIntervals}
+              query={query}
+              updateQuery={this.updateQuery}
+            />
             <EntitySearch
               query={query}
               updateQuery={this.updateQuery}
@@ -247,9 +293,12 @@ const mapStateToProps = (state, ownProps) => {
     highlight: true,
     'filter:schemata': 'Thing',
   };
+
   const query = Query.fromLocation('entities', location, context, '');
   const result = selectEntitiesResult(state, query);
-  return { query, result };
+  const dateFacetIsOpen = query.hasFacet('dates')
+  const dateFacetIntervals = result?.facets?.dates?.intervals;
+  return { dateFacetIsOpen, dateFacetIntervals, query, result };
 };
 
 export default compose(
