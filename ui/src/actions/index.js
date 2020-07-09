@@ -22,19 +22,21 @@ export {
 } from './collectionActions';
 export {
   createEntity,
-  createEntityMapping,
   deleteEntity,
-  deleteEntityMapping,
   fetchEntity,
-  fetchEntityMapping,
   fetchEntityReferences,
   fetchEntityTags,
-  flushEntityMapping,
   queryEntities,
   queryEntityExpand,
   updateEntity,
-  updateEntityMapping,
 } from './entityActions';
+export {
+  createEntityMapping,
+  deleteEntityMapping,
+  fetchEntityMapping,
+  flushEntityMapping,
+  updateEntityMapping,
+} from './entityMappingActions';
 export {
   createEntitySet,
   deleteEntitySet,
