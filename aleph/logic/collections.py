@@ -31,7 +31,7 @@ def create_collection(data, authz, sync=False):
 
 
 def update_collection(collection, sync=False):
-    """Create or update a collection."""
+    """Update a collection and re-index."""
     Authz.flush()
     refresh_collection(collection.id)
     return index.index_collection(collection, sync=sync)
@@ -53,7 +53,8 @@ def compute_collection(collection, force=False, sync=False):
     key = cache.object_key(Collection, collection.id, 'stats')
     if cache.get(key) is not None and not force:
         return
-    cache.set(key, 'computed', expires=cache.EXPIRE - 60)
+    refresh_collection(collection.id)
+    cache.set(key, 'computed', expires=cache.EXPIRE)
     log.info("[%s] Computing statistics...", collection)
     index.update_collection_stats(collection.id)
     index.index_collection(collection, sync=sync)
