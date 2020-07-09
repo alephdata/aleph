@@ -124,54 +124,49 @@ def get_collection(collection_id):
     return data
 
 
+def _facet_key(collection_id, facet):
+    return cache.object_key(Collection, collection_id, facet)
+
+
 def get_collection_stats(collection_id):
     """Retrieve statistics on the content of a collection."""
+    keys = {_facet_key(collection_id, f): f for f in STATS_FACETS}
+    empty = {'values': [], 'total': 0}
     stats = {}
-    for facet in STATS_FACETS:
-        empty = {'values': [], 'total': 0}
-        stats[facet] = get_collection_facet(collection_id, facet, empty)
+    for key, result in cache.get_many_complex(keys.keys(), empty):
+        stats[keys[key]] = result
     return stats
 
 
-def get_collection_facet(collection_id, facet, default=None):
-    """Compute some statistics on the content of a collection."""
-    key = cache.object_key(Collection, collection_id, facet)
-    return cache.get_complex(key) or default
-
-
-def update_collection_stats(collection_id):
+def update_collection_stats(collection_id, facets=STATS_FACETS):
     """Compute some statistics on the content of a collection."""
     aggs = {}
-    for facet in STATS_FACETS:
+    for facet in facets:
         # Regarding facet size, 300 would be optimal because it's
         # guaranteed to capture all schemata and countries. But it
         # adds a whole lot to the compute time, so let's see how
         # this goes.
-        aggs[facet + '.values'] = {'terms': {'field': facet, 'size': 50}}
+        aggs[facet + '.values'] = {'terms': {'field': facet, 'size': 100}}
         aggs[facet + '.total'] = {'cardinality': {'field': facet}}
     query = {'term': {'collection_id': collection_id}}
     query = {'size': 0, 'query': query, 'aggs': aggs}
-    result = es.search(index=entities_read_index(),
-                       body=query,
-                       request_timeout=3600,
-                       timeout='20m')
+    result = es.search(index=entities_read_index(), body=query,
+                       request_timeout=3600, timeout='20m')
     results = result.get('aggregations', {})
-    for facet in STATS_FACETS:
-        values = {}
-        for bucket in results.get(facet + '.values').get('buckets', []):
-            values[bucket['key']] = bucket['doc_count']
-        data = {
-            'values': values,
-            'total': results.get(facet + '.total', {}).get('value', 0)
-        }
-        key = cache.object_key(Collection, collection_id, facet)
-        cache.set_complex(key, data)
+    for facet in facets:
+        buckets = results.get(facet + '.values').get('buckets', [])
+        values = {b['key']: b['doc_count'] for b in buckets}
+        total = results.get(facet + '.total', {}).get('value', 0)
+        data = {'values': values, 'total': total}
+        cache.set_complex(_facet_key(collection_id, facet), data)
 
 
 def get_collection_things(collection_id):
     """Showing the number of things in a collection is more indicative
     of its size than the overall collection entity count."""
-    schemata = get_collection_facet(collection_id, 'schema', {})
+    schemata = cache.get_complex(_facet_key(collection_id, 'schema'))
+    if schemata is None:
+        return {}
     things = {}
     for schema, count in schemata.get('values', {}).items():
         schema = model.get(schema)

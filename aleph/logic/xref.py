@@ -11,6 +11,7 @@ from aleph.logic import resolver
 from aleph.queues import queue_task, OP_XREF_ITEM
 from aleph.index import xref as index
 from aleph.index.entities import iter_entities, entities_by_ids
+from aleph.index.entities import PROXY_INCLUDES
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
@@ -19,7 +20,6 @@ from aleph.logic.util import entity_url
 
 log = logging.getLogger(__name__)
 SCORE_CUTOFF = 0.3
-INCLUDES = ['schema', 'properties', 'collection_id']
 
 
 def _query_item(collection, entity):
@@ -31,7 +31,7 @@ def _query_item(collection, entity):
     query = {
         'query': query,
         'size': 100,
-        '_source': {'includes': INCLUDES}
+        '_source': {'includes': PROXY_INCLUDES}
     }
     matchable = list(entity.schema.matchable_schemata)
     index = entities_read_index(schema=matchable)
@@ -50,7 +50,7 @@ def _query_item(collection, entity):
 
 def _query_matches(collection, entity_ids):
     """Generate matches for indexing."""
-    for data in entities_by_ids(entity_ids, includes=INCLUDES):
+    for data in entities_by_ids(entity_ids):
         entity = model.get_proxy(data)
         yield from _query_item(collection, entity)
 
