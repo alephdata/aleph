@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Tag as TagWidget } from '@blueprintjs/core';
+import { Icon, Tag as TagWidget } from '@blueprintjs/core';
+import { cleanDateQParam } from 'src/components/Facet/util';
 
 import {
-  Schema, Tag, Country, Language, Category, Collection, Entity,
+  Schema, Tag, Country, Language, Category, Collection, Date, Entity,
 } from 'src/components/common';
 
 import './QueryFilterTag.scss';
@@ -94,6 +95,23 @@ class QueryFilterTag extends PureComponent {
             {value}
           </>
         );
+      case 'eq:dates':
+      case 'lte:dates':
+      case 'gte:dates':
+        let prefix;
+        if (filter === 'gte:dates') {
+          prefix = <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After " />
+        } else if (filter === 'lte:dates') {
+          prefix = <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before " />
+        }
+
+        return (
+          <>
+            <Icon icon="calendar" className="left-icon" />
+            {prefix}
+            <Date value={cleanDateQParam(value)} />
+          </>
+        );
       default:
         return value;
     }
@@ -104,7 +122,8 @@ class QueryFilterTag extends PureComponent {
 
     return (
       <TagWidget
-        className="bp3-large QueryFilterTag"
+        large
+        className="QueryFilterTag"
         onRemove={this.onRemove}
       >
         {this.label(filter, value)}

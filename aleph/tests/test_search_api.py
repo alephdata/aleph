@@ -87,12 +87,14 @@ class SearchApiTestCase(TestCase):
     def test_facet_interval(self):
         _, headers = self.login(is_admin=True)
         res = self.client.get(self.url + '&q=banana&facet=properties.birthDate'
-                              '&facet_interval:properties.birthDate=month'
-                              '&facet_size:properties.birthDate=0',
+                              '&facet_interval:properties.birthDate=year'
+                              '&filter:gte:properties.birthDate=1969||/y'
+                              '&filter:lte:properties.birthDate=1971||/y',
                               headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 3, res.json
         facets = res.json['facets']['properties.birthDate']['intervals']
-        assert facets[0]['label'].startswith('1970'), facets
-        assert facets[0]['count'] == 1, facets
+        assert facets[0]['label'].startswith('1969'), facets
+        assert facets[0]['count'] == 0, facets
+        assert facets[1]['count'] == 3, facets
         assert len(facets) == 3, facets

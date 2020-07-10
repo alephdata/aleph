@@ -5,7 +5,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-26T15:56:05.307Z\n"
+"POT-Creation-Date: 2020-07-09T17:12:21.295Z\n"
 "Last-Translator: Ido <leptep@gmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -95,12 +95,12 @@ msgstr ""
 msgid "A brief description of the dataset"
 msgstr "وصف موجز لقاعدة البيانات"
 
-#. [diagram.create.summary_placeholder]
+#. [entityset.create.summary_placeholder]
 #. defaultMessage is:
-#. A brief description of the diagram
+#. A brief description of the {type}
 #: i18n/messages.json
-msgid "A brief description of the diagram"
-msgstr "وصف موجز للرسم البياني"
+msgid "A brief description of the {type}"
+msgstr ""
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
@@ -200,6 +200,13 @@ msgstr "أضف نوع كيان جديد"
 msgid "Add to diagram"
 msgstr ""
 
+#. [search.filterTag.dates_after]
+#. defaultMessage is:
+#. After
+#: i18n/messages.json
+msgid "After "
+msgstr ""
+
 #. [mapping.infoLink]
 #. defaultMessage is:
 #. Aleph data mapping documentation
@@ -254,10 +261,13 @@ msgstr "هل أنت متأكد من أنك مستعد لإنشاء كيانات 
 
 #. [entity.delete.question.multiple]
 #. defaultMessage is:
-#. Are you sure you want to delete the following items?
+#. Are you sure you want to delete the following
+#.               {count, plural, one {item} other {items}}?
 #: i18n/messages.json
-msgid "Are you sure you want to delete the following items?"
-msgstr "هل أنت متأكد أنك تريد حذف العناصر التالية؟"
+msgid ""
+"Are you sure you want to delete the following\n"
+"              {count, plural, one {item} other {items}}?"
+msgstr ""
 
 #. [collection.delete.question]
 #. defaultMessage is:
@@ -265,13 +275,6 @@ msgstr "هل أنت متأكد أنك تريد حذف العناصر التال�
 #: i18n/messages.json
 msgid "Are you sure you want to delete this dataset and all contained items?"
 msgstr "هل أنت متاكد من أنك تريد حذف مجموعة البيانات وجميع العناصر المتضمنة؟"
-
-#. [diagram.delete.question]
-#. defaultMessage is:
-#. Are you sure you want to delete this diagram?
-#: i18n/messages.json
-msgid "Are you sure you want to delete this diagram?"
-msgstr "هل أنت متأكد أنك تريد حذف هذا الرسم البياني؟"
 
 #. [mapping.delete.question]
 #. defaultMessage is:
@@ -281,12 +284,12 @@ msgid ""
 "Are you sure you want to delete this mapping and all generated entities?"
 msgstr "هل أنت متأكد أنك تريد حذف هذا التعيين وجميع الكيانات التي تم إنشاؤها؟"
 
-#. [entity.delete.question.one]
+#. [entityset.delete.question]
 #. defaultMessage is:
-#. Are you sure you want to delete {entityLabel}?
+#. Are you sure you want to delete this {type}?
 #: i18n/messages.json
-msgid "Are you sure you want to delete {entityLabel}?"
-msgstr "هل أنت متأكد أنك تريد حذف {entityLabel}؟"
+msgid "Are you sure you want to delete this {type}?"
+msgstr ""
 
 #. [mapping.flush.question]
 #. defaultMessage is:
@@ -310,6 +313,13 @@ msgstr "تعيين كملكية"
 #: i18n/messages.json
 msgid "Attachments"
 msgstr "مرفقات"
+
+#. [search.filterTag.dates_before]
+#. defaultMessage is:
+#. Before
+#: i18n/messages.json
+msgid "Before "
+msgstr ""
 
 #. [history.screen.subheading]
 #. defaultMessage is:
@@ -349,10 +359,10 @@ msgstr ""
 #. [collection.xref.cancel]
 #. defaultMessage is:
 #. Cancel
-#. [diagram.delete.cancel]
+#. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
-#. [entity.delete.cancel]
+#. [entityset.delete.cancel]
 #. defaultMessage is:
 #. Cancel
 #. [mapping.create.cancel]
@@ -556,28 +566,28 @@ msgstr "الدول"
 msgid "Country"
 msgstr "دولة"
 
-#. [diagram.create.submit]
+#. [document.folder.save]
 #. defaultMessage is:
 #. Create
-#. [document.folder.save]
+#. [entityset.create.submit]
 #. defaultMessage is:
 #. Create
 #: i18n/messages.json i18n/messages.json
 msgid "Create"
 msgstr "إنشاء"
 
-#. [diagram.create.title]
-#. defaultMessage is:
-#. Create a network diagram
-#: i18n/messages.json
-msgid "Create a network diagram"
-msgstr "إنشاء رسم تخطيطي للشبكة"
-
 #. [diagram.add_entities.create_new]
 #. defaultMessage is:
 #. Create a new diagram
 #: i18n/messages.json
 msgid "Create a new diagram"
+msgstr ""
+
+#. [entity.manager.bulk_import.link_text]
+#. defaultMessage is:
+#. Create a new personal dataset
+#: i18n/messages.json
+msgid "Create a new personal dataset"
 msgstr ""
 
 #. [alerts.add_placeholder]
@@ -593,6 +603,13 @@ msgstr "إنشاء تنبيه تتبع جديد ..."
 #: i18n/messages.json
 msgid "Create a personal dataset"
 msgstr "إنشاء مجموعة بيانات شخصية"
+
+#. [entityset.create.title]
+#. defaultMessage is:
+#. Create a {type}
+#: i18n/messages.json
+msgid "Create a {type}"
+msgstr ""
 
 #. [collection.index.sort.created_at]
 #. defaultMessage is:
@@ -655,7 +672,7 @@ msgstr "رابط مصدر البيانات"
 #. [xref.match_collection]
 #. defaultMessage is:
 #. Dataset
-#. [diagram.create.collection]
+#. [entityset.create.collection]
 #. defaultMessage is:
 #. Dataset
 #. [collection.status.collection]
@@ -693,10 +710,17 @@ msgstr "مجموعات البيانات"
 msgid "Date"
 msgstr "التاريخ"
 
-#. [diagram.info.delete]
+#. [search.screen.dates_title]
+#. defaultMessage is:
+#. Dates
+#: i18n/messages.json
+msgid "Dates"
+msgstr ""
+
+#. [entity.viewer.delete]
 #. defaultMessage is:
 #. Delete
-#. [entity.viewer.delete]
+#. [entityset.info.delete]
 #. defaultMessage is:
 #. Delete
 #. [mapping.actions.delete]
@@ -708,10 +732,10 @@ msgstr "التاريخ"
 #. [collection.edit.info.delete]
 #. defaultMessage is:
 #. Delete
-#. [diagram.delete.confirm]
+#. [entity.delete.confirm]
 #. defaultMessage is:
 #. Delete
-#. [entity.delete.confirm]
+#. [entityset.delete.confirm]
 #. defaultMessage is:
 #. Delete
 #. [mapping.delete.confirm]
@@ -740,12 +764,12 @@ msgstr ""
 msgid "Deleting mapping and any generated entities..."
 msgstr "حذف التعيين وأي كيانات تم إنشاؤها ..."
 
-#. [diagram.update.title]
+#. [entity.delete.progress]
 #. defaultMessage is:
-#. Diagram settings
+#. Deleting...
 #: i18n/messages.json
-msgid "Diagram settings"
-msgstr "إعدادات الرسم البياني"
+msgid "Deleting..."
+msgstr ""
 
 #. [diagrams.browser.breadcrumb]
 #. defaultMessage is:
@@ -789,7 +813,7 @@ msgstr "المستندات قيد المعالجة ..."
 msgid "Don't have account? Register!"
 msgstr "ليس لديك حساب؟ سجل!"
 
-#. [diagram.create.collection.new]
+#. [entityset.create.collection.new]
 #. defaultMessage is:
 #. Don't see the dataset you're looking for? {link}
 #: i18n/messages.json
@@ -915,7 +939,7 @@ msgstr "تطابقات تامة"
 msgid "Expand"
 msgstr "توسيع النطاق"
 
-#. [diagram.info.export]
+#. [entityset.info.export]
 #. defaultMessage is:
 #. Export
 #. [search.screen.export]
@@ -1069,6 +1093,13 @@ msgstr "الكيانات قيد الإنشاء"
 msgid "Groups"
 msgstr "مجموعات"
 
+#. [search.screen.hide_dates]
+#. defaultMessage is:
+#. Hide date filter
+#: i18n/messages.json
+msgid "Hide date filter"
+msgstr ""
+
 #. [document.upload.folder]
 #. defaultMessage is:
 #. If you would like to upload folders instead, { button }.
@@ -1090,26 +1121,19 @@ msgstr "استيراد الرسم التخطيطي"
 msgid "Import a network diagram"
 msgstr "استيراد مخطط شبكة"
 
-#. [entity.manager.bulk_import.link_text]
-#. defaultMessage is:
-#. Import a new table
-#: i18n/messages.json
-msgid "Import a new table"
-msgstr ""
-
-#. [diagrams.index.import]
-#. defaultMessage is:
-#. Import diagram
-#: i18n/messages.json
-msgid "Import diagram"
-msgstr "استيراد الرسم التخطيطي"
-
 #. [mapping.import.button]
 #. defaultMessage is:
 #. Import existing mapping
 #: i18n/messages.json
 msgid "Import existing mapping"
 msgstr "استيراد الرسم التخطيطي الموجود"
+
+#. [entitysets.index.import]
+#. defaultMessage is:
+#. Import {type}
+#: i18n/messages.json
+msgid "Import {type}"
+msgstr ""
 
 #. [collection.reingest.index]
 #. defaultMessage is:
@@ -1363,13 +1387,6 @@ msgstr "تتيح لك المخططات الشبكية تصور العلاقات 
 msgid "New dataset"
 msgstr "مجموعة بيانات جديدة"
 
-#. [diagrams.index.create]
-#. defaultMessage is:
-#. New diagram
-#: i18n/messages.json
-msgid "New diagram"
-msgstr "رسم تخطيطي جديد"
-
 #. [document.folder.button]
 #. defaultMessage is:
 #. New folder
@@ -1386,6 +1403,13 @@ msgstr "مجلد جديد"
 #: i18n/messages.json
 msgid "New password"
 msgstr "كلمة سر جديدة"
+
+#. [entitysets.index.create]
+#. defaultMessage is:
+#. New {type}
+#: i18n/messages.json
+msgid "New {type}"
+msgstr ""
 
 #. [collection.index.empty]
 #. defaultMessage is:
@@ -1968,7 +1992,7 @@ msgstr "البحث عن الكيانات {things}"
 msgid "Searching..."
 msgstr "جاري البحث"
 
-#. [diagram.create.collection.existing]
+#. [entityset.create.collection.existing]
 #. defaultMessage is:
 #. Select a dataset
 #: i18n/messages.json
@@ -2057,14 +2081,17 @@ msgstr "خطأ في الخادم"
 #. [dashboard.settings]
 #. defaultMessage is:
 #. Settings
-#. [diagram.info.edit]
+#. [entityset.info.edit]
+#. defaultMessage is:
+#. Settings
+#. [entityset.update.title]
 #. defaultMessage is:
 #. Settings
 #. [settings.title]
 #. defaultMessage is:
 #. Settings
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Settings"
 msgstr "الإعدادات"
 
@@ -2088,6 +2115,13 @@ msgstr "مشاركة مع"
 #: i18n/messages.json
 msgid "Share with:"
 msgstr "مشاركة مع:"
+
+#. [search.screen.show_dates]
+#. defaultMessage is:
+#. Show date filter
+#: i18n/messages.json
+msgid "Show date filter"
+msgstr ""
 
 #. [collection.statistics.showmore]
 #. defaultMessage is:
@@ -2232,7 +2266,7 @@ msgstr "الحالة:"
 msgid "Stop review"
 msgstr "انهاء المراجعة - المعاينة"
 
-#. [diagram.update.submit]
+#. [entityset.update.submit]
 #. defaultMessage is:
 #. Submit
 #. [mapping.import.submit]
@@ -2272,7 +2306,7 @@ msgstr "تم الحذف بنجاح"
 #. [case.choose.summary]
 #. defaultMessage is:
 #. Summary
-#. [diagram.choose.summary]
+#. [entityset.choose.summary]
 #. defaultMessage is:
 #. Summary
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -2482,7 +2516,7 @@ msgstr "هذه المجموعة ليست مرتبطة بأي من مجموعات
 #. [case.choose.name]
 #. defaultMessage is:
 #. Title
-#. [diagram.choose.name]
+#. [entityset.choose.name]
 #. defaultMessage is:
 #. Title
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -2566,12 +2600,12 @@ msgstr ""
 "مجموعة بيانات غير معنونة\n"
 "مجموعة بيانات بدون عنوان"
 
-#. [diagram.create.label_placeholder]
+#. [entityset.create.label_placeholder]
 #. defaultMessage is:
-#. Untitled diagram
+#. Untitled {type}
 #: i18n/messages.json
-msgid "Untitled diagram"
-msgstr "رسم تخطيطي بدون عنوان"
+msgid "Untitled {type}"
+msgstr ""
 
 #. [alerts.save]
 #. defaultMessage is:
@@ -2844,12 +2878,12 @@ msgstr ""
 msgid "You must create an object of type \"{range}\" to be the {property}"
 msgstr "يجب إنشاء كائن من النوع \"{range}\" ليكون {property}"
 
-#. [diagram.create.login]
+#. [entityset.create.login]
 #. defaultMessage is:
-#. You must log in to create a diagram
+#. You must log in to create a {type}
 #: i18n/messages.json
-msgid "You must log in to create a diagram"
-msgstr "يجب عليك تسجيل الدخول لإنشاء رسم تخطيطي"
+msgid "You must log in to create a {type}"
+msgstr ""
 
 #. [case.create.login]
 #. defaultMessage is:
@@ -2926,20 +2960,6 @@ msgid ""
 "<strong>{context}</strong>."
 msgstr "ستتم مشاركة قراراتك مع أعضاء {context}."
 
-#. [diagram.create.success]
-#. defaultMessage is:
-#. Your diagram has been created successfully.
-#: i18n/messages.json
-msgid "Your diagram has been created successfully."
-msgstr "تم إنشاء الرسم التخطيطي الخاص بك بنجاح."
-
-#. [diagram.update.success]
-#. defaultMessage is:
-#. Your diagram has been successfully updated.
-#: i18n/messages.json
-msgid "Your diagram has been successfully updated."
-msgstr "تم تحديث الرسم التخطيطي الخاص بك بنجاح."
-
 #. [settings.email.no_change]
 #. defaultMessage is:
 #. Your e-mail address cannot be changed
@@ -2960,6 +2980,20 @@ msgstr "تم استيراد رسم الخرائط الخاص بك بنجاح."
 #: i18n/messages.json
 msgid "Your passwords are not the same!"
 msgstr "كلمات السر الخاصة بك ليست هي نفسها!"
+
+#. [entityset.create.success]
+#. defaultMessage is:
+#. Your {type} has been created successfully.
+#: i18n/messages.json
+msgid "Your {type} has been created successfully."
+msgstr ""
+
+#. [entityset.update.success]
+#. defaultMessage is:
+#. Your {type} has been successfully updated.
+#: i18n/messages.json
+msgid "Your {type} has been successfully updated."
+msgstr ""
 
 #. [document.upload.folder-toggle]
 #. defaultMessage is:
@@ -3001,6 +3035,13 @@ msgstr "ليس:"
 #. or
 #: i18n/messages.json
 msgid "or"
+msgstr ""
+
+#. [search.screen.dates_label]
+#. defaultMessage is:
+#. results
+#: i18n/messages.json
+msgid "results"
 msgstr ""
 
 #. [restricted.explain.creator]

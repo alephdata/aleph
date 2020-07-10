@@ -17,6 +17,8 @@ import {
   deleteEntity,
   deleteQueryLog,
   updateRole,
+  loginWithToken,
+  logout,
 } from 'src/actions';
 
 const initialState = timestamp();
@@ -27,6 +29,8 @@ function update() {
 
 export default createReducer({
   [mutate]: update,
+  [loginWithToken]: update,
+  [logout]: update,
   // Clear out the redux cache when operations are performed that
   // may affect the content of the results.
   [createCollection.COMPLETE]: update,

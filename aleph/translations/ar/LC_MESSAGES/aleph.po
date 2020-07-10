@@ -12,14 +12,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-26 17:56+0200\n"
+"POT-Creation-Date: 2020-07-09 19:12+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Ido <leptep@gmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.7.0\n"
+"Generated-By: Babel 2.8.0\n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
@@ -35,7 +35,7 @@ msgstr "تيلياسونيرا"
 msgid "Vladimir Putin"
 msgstr "فلاديمير بوتين"
 
-#: aleph/logic/roles.py:42
+#: aleph/logic/roles.py:44
 msgid "Registration"
 msgstr "التسجيل"
 
@@ -164,14 +164,18 @@ msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
 msgstr " {{actor}} بدأ برسم {{diagram}} في {{collection}}"
 
 #: aleph/model/event.py:93
+msgid "{{actor}} created {{entityset}} in {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:103
 msgid "{{entity}} matches your alert for {{alert}}"
 msgstr "{{entity}} يطابق تنبيعك ل {{alert}}"
 
-#: aleph/model/event.py:104
+#: aleph/model/event.py:114
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr "{{actor}} منح {{role}} الوصول إلى {{collection}}"
 
-#: aleph/model/event.py:114
+#: aleph/model/event.py:124
 msgid "{{actor}} published {{collection}}"
 msgstr "{{actor}} نشر {{collection}}"
 
@@ -263,20 +267,24 @@ msgstr "الفئة غير متاحة"
 msgid "Invalid frequency."
 msgstr ""
 
-#: aleph/validation/formats.py:60
+#: aleph/validation/formats.py:59
+msgid "Invalid set type."
+msgstr ""
+
+#: aleph/validation/formats.py:67
 msgid "Invalid URL."
 msgstr "عنوان URL غير صحيح"
 
-#: aleph/validation/formats.py:68
+#: aleph/validation/formats.py:75
 msgid "Invalid language code."
 msgstr "رمز اللغة غير صحيح"
 
-#: aleph/validation/formats.py:76
+#: aleph/validation/formats.py:83
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "اسم مخطط غير صحيح : 1%s"
 
-#: aleph/validation/formats.py:84
+#: aleph/validation/formats.py:91
 #, python-format
 msgid "Invalid date: %s"
 msgstr "تاريخ خاطئ 1%s"

@@ -567,7 +567,6 @@ def expand(entity_id):
       tags:
       - Entity
     """
-    enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     edge_types = request.args.getlist('edge_types')
     collection_id = entity.get('collection_id')

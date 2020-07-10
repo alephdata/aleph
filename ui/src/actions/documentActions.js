@@ -14,9 +14,7 @@ export const ingestDocument = asyncActionCreator(
       headers: {
         'content-type': 'multipart/form-data',
       },
-      params: {
-        sync: true,
-      },
+      params: { sync: true },
     };
     const response = await endpoint.post(`collections/${collectionId}/ingest`, formData, config);
     return { ...response.data };

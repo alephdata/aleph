@@ -5,7 +5,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-06-26T15:56:05.307Z\n"
+"POT-Creation-Date: 2020-07-09T17:12:21.295Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -90,11 +90,11 @@ msgstr ""
 msgid "A brief description of the dataset"
 msgstr ""
 
-#. [diagram.create.summary_placeholder]
+#. [entityset.create.summary_placeholder]
 #. defaultMessage is:
-#. A brief description of the diagram
+#. A brief description of the {type}
 #: i18n/messages.json
-msgid "A brief description of the diagram"
+msgid "A brief description of the {type}"
 msgstr ""
 
 #. [collection.edit.info.placeholder_summary]
@@ -195,6 +195,13 @@ msgstr ""
 msgid "Add to diagram"
 msgstr ""
 
+#. [search.filterTag.dates_after]
+#. defaultMessage is:
+#. After
+#: i18n/messages.json
+msgid "After "
+msgstr ""
+
 #. [mapping.infoLink]
 #. defaultMessage is:
 #. Aleph data mapping documentation
@@ -249,9 +256,12 @@ msgstr ""
 
 #. [entity.delete.question.multiple]
 #. defaultMessage is:
-#. Are you sure you want to delete the following items?
+#. Are you sure you want to delete the following
+#.               {count, plural, one {item} other {items}}?
 #: i18n/messages.json
-msgid "Are you sure you want to delete the following items?"
+msgid ""
+"Are you sure you want to delete the following\n"
+"              {count, plural, one {item} other {items}}?"
 msgstr ""
 
 #. [collection.delete.question]
@@ -259,13 +269,6 @@ msgstr ""
 #. Are you sure you want to delete this dataset and all contained items?
 #: i18n/messages.json
 msgid "Are you sure you want to delete this dataset and all contained items?"
-msgstr ""
-
-#. [diagram.delete.question]
-#. defaultMessage is:
-#. Are you sure you want to delete this diagram?
-#: i18n/messages.json
-msgid "Are you sure you want to delete this diagram?"
 msgstr ""
 
 #. [mapping.delete.question]
@@ -276,11 +279,11 @@ msgid ""
 "Are you sure you want to delete this mapping and all generated entities?"
 msgstr ""
 
-#. [entity.delete.question.one]
+#. [entityset.delete.question]
 #. defaultMessage is:
-#. Are you sure you want to delete {entityLabel}?
+#. Are you sure you want to delete this {type}?
 #: i18n/messages.json
-msgid "Are you sure you want to delete {entityLabel}?"
+msgid "Are you sure you want to delete this {type}?"
 msgstr ""
 
 #. [mapping.flush.question]
@@ -302,6 +305,13 @@ msgstr ""
 #. Attachments
 #: i18n/messages.json
 msgid "Attachments"
+msgstr ""
+
+#. [search.filterTag.dates_before]
+#. defaultMessage is:
+#. Before
+#: i18n/messages.json
+msgid "Before "
 msgstr ""
 
 #. [history.screen.subheading]
@@ -342,10 +352,10 @@ msgstr ""
 #. [collection.xref.cancel]
 #. defaultMessage is:
 #. Cancel
-#. [diagram.delete.cancel]
+#. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
-#. [entity.delete.cancel]
+#. [entityset.delete.cancel]
 #. defaultMessage is:
 #. Cancel
 #. [mapping.create.cancel]
@@ -549,28 +559,28 @@ msgstr "Države"
 msgid "Country"
 msgstr "Država"
 
-#. [diagram.create.submit]
+#. [document.folder.save]
 #. defaultMessage is:
 #. Create
-#. [document.folder.save]
+#. [entityset.create.submit]
 #. defaultMessage is:
 #. Create
 #: i18n/messages.json i18n/messages.json
 msgid "Create"
 msgstr "Kreiraj"
 
-#. [diagram.create.title]
-#. defaultMessage is:
-#. Create a network diagram
-#: i18n/messages.json
-msgid "Create a network diagram"
-msgstr ""
-
 #. [diagram.add_entities.create_new]
 #. defaultMessage is:
 #. Create a new diagram
 #: i18n/messages.json
 msgid "Create a new diagram"
+msgstr ""
+
+#. [entity.manager.bulk_import.link_text]
+#. defaultMessage is:
+#. Create a new personal dataset
+#: i18n/messages.json
+msgid "Create a new personal dataset"
 msgstr ""
 
 #. [alerts.add_placeholder]
@@ -585,6 +595,13 @@ msgstr ""
 #. Create a personal dataset
 #: i18n/messages.json
 msgid "Create a personal dataset"
+msgstr ""
+
+#. [entityset.create.title]
+#. defaultMessage is:
+#. Create a {type}
+#: i18n/messages.json
+msgid "Create a {type}"
 msgstr ""
 
 #. [collection.index.sort.created_at]
@@ -648,7 +665,7 @@ msgstr ""
 #. [xref.match_collection]
 #. defaultMessage is:
 #. Dataset
-#. [diagram.create.collection]
+#. [entityset.create.collection]
 #. defaultMessage is:
 #. Dataset
 #. [collection.status.collection]
@@ -686,10 +703,17 @@ msgstr ""
 msgid "Date"
 msgstr "Datum"
 
-#. [diagram.info.delete]
+#. [search.screen.dates_title]
+#. defaultMessage is:
+#. Dates
+#: i18n/messages.json
+msgid "Dates"
+msgstr ""
+
+#. [entity.viewer.delete]
 #. defaultMessage is:
 #. Delete
-#. [entity.viewer.delete]
+#. [entityset.info.delete]
 #. defaultMessage is:
 #. Delete
 #. [mapping.actions.delete]
@@ -701,10 +725,10 @@ msgstr "Datum"
 #. [collection.edit.info.delete]
 #. defaultMessage is:
 #. Delete
-#. [diagram.delete.confirm]
+#. [entity.delete.confirm]
 #. defaultMessage is:
 #. Delete
-#. [entity.delete.confirm]
+#. [entityset.delete.confirm]
 #. defaultMessage is:
 #. Delete
 #. [mapping.delete.confirm]
@@ -733,11 +757,11 @@ msgstr ""
 msgid "Deleting mapping and any generated entities..."
 msgstr ""
 
-#. [diagram.update.title]
+#. [entity.delete.progress]
 #. defaultMessage is:
-#. Diagram settings
+#. Deleting...
 #: i18n/messages.json
-msgid "Diagram settings"
+msgid "Deleting..."
 msgstr ""
 
 #. [diagrams.browser.breadcrumb]
@@ -782,7 +806,7 @@ msgstr "Dokumenti se procesuiraju..."
 msgid "Don't have account? Register!"
 msgstr "Nemate kreiran profil? Registrujte se!"
 
-#. [diagram.create.collection.new]
+#. [entityset.create.collection.new]
 #. defaultMessage is:
 #. Don't see the dataset you're looking for? {link}
 #: i18n/messages.json
@@ -908,7 +932,7 @@ msgstr ""
 msgid "Expand"
 msgstr ""
 
-#. [diagram.info.export]
+#. [entityset.info.export]
 #. defaultMessage is:
 #. Export
 #. [search.screen.export]
@@ -1054,6 +1078,13 @@ msgstr ""
 msgid "Groups"
 msgstr "Grupe"
 
+#. [search.screen.hide_dates]
+#. defaultMessage is:
+#. Hide date filter
+#: i18n/messages.json
+msgid "Hide date filter"
+msgstr ""
+
 #. [document.upload.folder]
 #. defaultMessage is:
 #. If you would like to upload folders instead, { button }.
@@ -1075,25 +1106,18 @@ msgstr ""
 msgid "Import a network diagram"
 msgstr ""
 
-#. [entity.manager.bulk_import.link_text]
-#. defaultMessage is:
-#. Import a new table
-#: i18n/messages.json
-msgid "Import a new table"
-msgstr ""
-
-#. [diagrams.index.import]
-#. defaultMessage is:
-#. Import diagram
-#: i18n/messages.json
-msgid "Import diagram"
-msgstr ""
-
 #. [mapping.import.button]
 #. defaultMessage is:
 #. Import existing mapping
 #: i18n/messages.json
 msgid "Import existing mapping"
+msgstr ""
+
+#. [entitysets.index.import]
+#. defaultMessage is:
+#. Import {type}
+#: i18n/messages.json
+msgid "Import {type}"
 msgstr ""
 
 #. [collection.reingest.index]
@@ -1346,13 +1370,6 @@ msgstr ""
 msgid "New dataset"
 msgstr ""
 
-#. [diagrams.index.create]
-#. defaultMessage is:
-#. New diagram
-#: i18n/messages.json
-msgid "New diagram"
-msgstr ""
-
 #. [document.folder.button]
 #. defaultMessage is:
 #. New folder
@@ -1368,6 +1385,13 @@ msgstr "Nova datoteka"
 #. New password
 #: i18n/messages.json
 msgid "New password"
+msgstr ""
+
+#. [entitysets.index.create]
+#. defaultMessage is:
+#. New {type}
+#: i18n/messages.json
+msgid "New {type}"
 msgstr ""
 
 #. [collection.index.empty]
@@ -1942,7 +1966,7 @@ msgstr ""
 msgid "Searching..."
 msgstr "Traženje..."
 
-#. [diagram.create.collection.existing]
+#. [entityset.create.collection.existing]
 #. defaultMessage is:
 #. Select a dataset
 #: i18n/messages.json
@@ -2031,14 +2055,17 @@ msgstr "Greška na serveru"
 #. [dashboard.settings]
 #. defaultMessage is:
 #. Settings
-#. [diagram.info.edit]
+#. [entityset.info.edit]
+#. defaultMessage is:
+#. Settings
+#. [entityset.update.title]
 #. defaultMessage is:
 #. Settings
 #. [settings.title]
 #. defaultMessage is:
 #. Settings
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Settings"
 msgstr "Podešavanja"
 
@@ -2061,6 +2088,13 @@ msgstr ""
 #. Share with:
 #: i18n/messages.json
 msgid "Share with:"
+msgstr ""
+
+#. [search.screen.show_dates]
+#. defaultMessage is:
+#. Show date filter
+#: i18n/messages.json
+msgid "Show date filter"
 msgstr ""
 
 #. [collection.statistics.showmore]
@@ -2204,7 +2238,7 @@ msgstr ""
 msgid "Stop review"
 msgstr ""
 
-#. [diagram.update.submit]
+#. [entityset.update.submit]
 #. defaultMessage is:
 #. Submit
 #. [mapping.import.submit]
@@ -2244,7 +2278,7 @@ msgstr ""
 #. [case.choose.summary]
 #. defaultMessage is:
 #. Summary
-#. [diagram.choose.summary]
+#. [entityset.choose.summary]
 #. defaultMessage is:
 #. Summary
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -2446,7 +2480,7 @@ msgstr ""
 #. [case.choose.name]
 #. defaultMessage is:
 #. Title
-#. [diagram.choose.name]
+#. [entityset.choose.name]
 #. defaultMessage is:
 #. Title
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -2523,11 +2557,11 @@ msgstr "Tip"
 msgid "Untitled dataset"
 msgstr ""
 
-#. [diagram.create.label_placeholder]
+#. [entityset.create.label_placeholder]
 #. defaultMessage is:
-#. Untitled diagram
+#. Untitled {type}
 #: i18n/messages.json
-msgid "Untitled diagram"
+msgid "Untitled {type}"
 msgstr ""
 
 #. [alerts.save]
@@ -2791,11 +2825,11 @@ msgstr ""
 msgid "You must create an object of type \"{range}\" to be the {property}"
 msgstr ""
 
-#. [diagram.create.login]
+#. [entityset.create.login]
 #. defaultMessage is:
-#. You must log in to create a diagram
+#. You must log in to create a {type}
 #: i18n/messages.json
-msgid "You must log in to create a diagram"
+msgid "You must log in to create a {type}"
 msgstr ""
 
 #. [case.create.login]
@@ -2869,20 +2903,6 @@ msgid ""
 "<strong>{context}</strong>."
 msgstr ""
 
-#. [diagram.create.success]
-#. defaultMessage is:
-#. Your diagram has been created successfully.
-#: i18n/messages.json
-msgid "Your diagram has been created successfully."
-msgstr ""
-
-#. [diagram.update.success]
-#. defaultMessage is:
-#. Your diagram has been successfully updated.
-#: i18n/messages.json
-msgid "Your diagram has been successfully updated."
-msgstr ""
-
 #. [settings.email.no_change]
 #. defaultMessage is:
 #. Your e-mail address cannot be changed
@@ -2903,6 +2923,20 @@ msgstr ""
 #: i18n/messages.json
 msgid "Your passwords are not the same!"
 msgstr "Vaše šifre nisu iste!"
+
+#. [entityset.create.success]
+#. defaultMessage is:
+#. Your {type} has been created successfully.
+#: i18n/messages.json
+msgid "Your {type} has been created successfully."
+msgstr ""
+
+#. [entityset.update.success]
+#. defaultMessage is:
+#. Your {type} has been successfully updated.
+#: i18n/messages.json
+msgid "Your {type} has been successfully updated."
+msgstr ""
 
 #. [document.upload.folder-toggle]
 #. defaultMessage is:
@@ -2944,6 +2978,13 @@ msgstr "osim:"
 #. or
 #: i18n/messages.json
 msgid "or"
+msgstr ""
+
+#. [search.screen.dates_label]
+#. defaultMessage is:
+#. results
+#: i18n/messages.json
+msgid "results"
 msgstr ""
 
 #. [restricted.explain.creator]

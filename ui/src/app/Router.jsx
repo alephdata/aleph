@@ -31,8 +31,16 @@ import './Router.scss';
 
 class Router extends Component {
   componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
     const { metadata, fetchMetadata } = this.props;
-    if (!metadata.app) {
+    if (metadata.shouldLoad) {
       fetchMetadata();
     }
   }
