@@ -6,7 +6,7 @@ import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'src/queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'src/selectors';
-import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'src/actions';
+import { createEntity, queryEntities, queryEntityExpand, updateEntity, updateEntitySet } from 'src/actions';
 import updateStates from 'src/util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
@@ -18,9 +18,11 @@ const entityEditorWrapper = (EditorComponent) => {
         this.entityManager = new EntityManager({
           model: props.model,
           namespace: new Namespace(props.collection.foreign_id),
+          pivotTypes: props.diagram?.pivotTypes,
           createEntity: this.createEntity.bind(this),
           expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
+          updatePivotTypes: this.updatePivotTypes.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
         });
 
@@ -94,6 +96,22 @@ const entityEditorWrapper = (EditorComponent) => {
         }
       }
 
+      async updatePivotTypes(pivotTypes) {
+        const { diagram, onStatusChange } = this.props;
+        if (!diagram) return;
+
+        onStatusChange(updateStates.IN_PROGRESS);
+        const updatedDiagram = {...diagram, pivotTypes};
+
+        this.props.updateEntitySet(diagram.id, updatedDiagram)
+          .then(() => {
+            onStatusChange(updateStates.SUCCESS);
+          })
+          .catch(() => {
+            onStatusChange(updateStates.ERROR);
+          });
+      }
+
       render() {
         // return editor component with entityManager
         return (
@@ -135,6 +153,7 @@ const mapDispatchToProps = {
   queryEntities,
   queryEntityExpand,
   updateEntity,
+  updateEntitySet,
 };
 
 export default entityEditorWrapper;
