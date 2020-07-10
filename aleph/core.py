@@ -77,10 +77,6 @@ def create_app(config={}):
     from aleph.views import mount_app_blueprints
     mount_app_blueprints(app)
 
-    # Monkey-patch followthemoney
-    # from aleph.logic.names import name_frequency
-    # registry.name._specificity = name_frequency
-
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
     for plugin in get_extensions('aleph.init'):

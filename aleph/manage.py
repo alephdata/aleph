@@ -20,7 +20,6 @@ from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
-from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
@@ -146,16 +145,6 @@ def update():
     """Re-index all collections and clear some caches."""
     update_roles()
     upgrade_collections()
-
-
-@cli.command('namefreq')
-def namefreq():
-    """Compute frequency distribution of name tokens."""
-    compute_name_frequencies()
-    # from aleph.logic.names import name_frequency
-    # name_frequency("John Smith")
-    # name_frequency("Friedrich Lindenberg")
-    # name_frequency("Ion Radu")
 
 
 @cli.command()
