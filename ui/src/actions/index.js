@@ -46,6 +46,7 @@ export {
 } from './entitySetActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
+export { loginWithToken, loginWithPassword, logout } from './sessionActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');
