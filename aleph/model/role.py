@@ -115,9 +115,11 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return data
 
     @classmethod
-    def by_foreign_id(cls, foreign_id):
+    def by_foreign_id(cls, foreign_id, deleted=False):
         if foreign_id is not None:
-            return cls.all().filter_by(foreign_id=foreign_id).first()
+            q = cls.all(deleted=deleted)
+            q = q.filter(cls.foreign_id == foreign_id)
+            return q.first()
 
     @classmethod
     def by_email(cls, email):

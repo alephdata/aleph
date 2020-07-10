@@ -240,7 +240,7 @@ def createuser(email, password=None, name=None, admin=False):  # noqa
 @click.argument('foreign_id')
 def deleterole(foreign_id):  # noqa
     """Hard-delete a role (user, or group) from the database."""
-    role = Role.by_foreign_id(foreign_id)
+    role = Role.by_foreign_id(foreign_id, deleted=True)
     if role is None:
         raise click.BadParameter("No such role: %r" % foreign_id)
     delete_role(role)
