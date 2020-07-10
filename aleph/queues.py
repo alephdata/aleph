@@ -54,7 +54,9 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
     from aleph.logic.aggregator import get_aggregator_name
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     stage = get_stage(collection, OP_INGEST, job_id=job_id)
-    pipeline = [OP_ANALYZE, OP_INDEX] if index else [OP_ANALYZE]
+    pipeline = list(settings.INGEST_PIPELINE)
+    if index:
+        pipeline.append(OP_INDEX)
     context = {
         'languages': collection.languages,
         'ftmstore': get_aggregator_name(collection),

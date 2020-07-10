@@ -84,7 +84,7 @@ OAUTH_TOKEN_URL = env.get('ALEPH_OAUTH_TOKEN_URL')
 OAUTH_AUTHORIZE_URL = env.get('ALEPH_OAUTH_AUTHORIZE_URL')
 OAUTH_UI_CALLBACK = env.get('ALEPH_OAUTH_UI_CALLBACK', '/oauth')
 OAUTH_CERT_URL = env.get('ALEPH_OAUTH_CERT_URL')
-OAUTH_ADMIN_GROUP = env.get('ALEPH_OAUTH_ADMIN_GROUP','superuser')
+OAUTH_ADMIN_GROUP = env.get('ALEPH_OAUTH_ADMIN_GROUP', 'superuser')
 
 # No authentication. Everyone is admin.
 SINGLE_USER = env.to_bool('ALEPH_SINGLE_USER')
@@ -102,6 +102,9 @@ DEFAULT_LANGUAGE = env.get('ALEPH_DEFAULT_LANGUAGE', 'en')
 UI_LANGUAGES = ['ru', 'es', 'de', 'en', 'ar']
 UI_LANGUAGES = env.to_list('ALEPH_UI_LANGUAGES', UI_LANGUAGES)
 UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
+
+# Document processing pipeline
+INGEST_PIPELINE = env.to_list('ALEPH_INGEST_PIPELINE', ['analyze'])
 
 # Result high-lighting
 RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)
