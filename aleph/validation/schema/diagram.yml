@@ -85,3 +85,10 @@ DiagramLayout:
         type: object
         allOf:
           - $ref: '#/components/schemas/DiagramGrouping'
+    settings:
+      type: object
+      properties:
+        pivotTypes:
+          type: array
+          items:
+            type: string
