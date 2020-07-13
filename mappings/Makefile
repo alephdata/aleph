@@ -1,5 +1,3 @@
-FTM_STORE_URI := sqlite:////tmp/store.sqlite
-export FTM_STORE_URI
 
 all: peps sanctions samples
 
