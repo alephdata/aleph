@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { Icon, InputGroup } from '@blueprintjs/core';
+import { ControlGroup, InputGroup } from '@blueprintjs/core';
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import ScopeSelect from 'src/components/Navbar/ScopeSelect';
@@ -28,7 +28,6 @@ class ScopedSearchBox extends React.Component {
     super(props);
     this.state = { queryText: '' };
     this.onSubmit = this.onSubmit.bind(this);
-    this.onResize = this.onResize.bind(this);
     this.onChangeScope = this.onChangeScope.bind(this);
     this.onQueryChange = this.onQueryChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
@@ -42,14 +41,6 @@ class ScopedSearchBox extends React.Component {
       queryText: queryChanged ? nextQueryText : prevState.queryText,
       activeScope: nextProps.searchScopes[nextProps.searchScopes.length - 1],
     };
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.onResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResize);
   }
 
   onQueryChange({ target }) {
@@ -80,11 +71,6 @@ class ScopedSearchBox extends React.Component {
     this.onSearchSubmit({ scope: newScope });
   }
 
-  onResize() {
-    // blueprint input group doesn't handle resizing
-    this.forceUpdate();
-  }
-
   render() {
     const { searchScopes, intl } = this.props;
     const { queryText, activeScope } = this.state;
@@ -95,22 +81,23 @@ class ScopedSearchBox extends React.Component {
 
     return (
       <form onSubmit={this.onSubmit} autoComplete="off">
-        <InputGroup
-          fill
-          id="search-box"
-          leftElement={(
-            <ScopeSelect
-              scopes={searchScopes}
-              activeScope={activeScope}
-              onChangeScope={this.onChangeScope}
-            />
-          )}
-          placeholder={placeholder}
-          rightElement={<SearchAlert queryText={queryText} />}
-          value={queryText}
-          onChange={this.onQueryChange}
-          className="ScopedSearchBox"
-        />
+        <ControlGroup vertical={false} fill>
+          <ScopeSelect
+            scopes={searchScopes}
+            activeScope={activeScope}
+            onChangeScope={this.onChangeScope}
+          />
+          <InputGroup
+            fill
+            id="search-box"
+            leftIcon="search"
+            placeholder={placeholder}
+            rightElement={<SearchAlert queryText={queryText} />}
+            value={queryText}
+            onChange={this.onQueryChange}
+            className="ScopedSearchBox"
+          />
+        </ControlGroup>
       </form>
     );
   }
