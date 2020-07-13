@@ -9,7 +9,7 @@ from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
-from aleph.model import Alert, EntitySet
+from aleph.model import Alert, EntitySet, EntitySetItem
 from aleph.logic import resolver
 from aleph.logic.entities import check_write_entity
 from aleph.logic.util import collection_url, entity_url, archive_url
@@ -266,6 +266,11 @@ class XrefSerializer(Serializer):
         obj["match_collection"] = self.resolve(
             Collection, match_collection_id, CollectionSerializer
         )
+        try:
+            obj["decision"] = str(obj["decision"].value)
+        except AttributeError:
+            obj["decision"] = None
+
         if obj["entity"] and obj["match"]:
             return obj
 
@@ -300,6 +305,27 @@ class EntitySetSerializer(Serializer):
         return obj
 
 
+class EntitySetItemSerializer(Serializer):
+    def _collect(self, obj):
+        self.queue(Collection, obj.get("collection_id"))
+        self.queue(Entity, obj.get("entity_id"))
+
+    def _serialize(self, obj):
+        collection_id = obj.pop("collection_id", None)
+        entity_id = obj.pop("entity_id", [])
+        obj.update(
+            {
+                "shallow": False,
+                "writeable": request.authz.can(collection_id, request.authz.WRITE),
+                "collection": self.resolve(
+                    Collection, collection_id, CollectionSerializer
+                ),  # noqa
+                "entity": self.resolve(Entity, entity_id, EntitySerializer),
+            }
+        )
+        return obj
+
+
 class EntitySetIndexSerializer(Serializer):
     def _collect(self, obj):
         self.queue(Collection, obj.get("collection_id"))
@@ -324,6 +350,7 @@ class NotificationSerializer(Serializer):
         Entity: EntitySerializer,
         Collection: CollectionSerializer,
         EntitySet: EntitySetSerializer,
+        EntitySetItem: EntitySetItemSerializer,
         Role: RoleSerializer,
     }
 

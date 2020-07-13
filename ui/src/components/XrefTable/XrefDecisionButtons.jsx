@@ -36,18 +36,18 @@ class XrefDecisionButtons extends Component {
       <ButtonGroup className="XrefDecisionButtons" vertical>
         <Button icon="tick"
                 disabled={blocking}
-                intent={xref.decision === true ? Intent.SUCCESS : Intent.NONE}
-                active={xref.decision === true}
-                onClick={(e) => this.onDecide(true)} />
+                intent={xref.decision === 'positive' ? Intent.SUCCESS : Intent.NONE}
+                active={xref.decision === 'positive' }
+                onClick={(e) => this.onDecide('positive')} />
         <Button icon="help"
                 disabled={blocking}
-                active={xref.decision === undefined}
-                onClick={(e) => this.onDecide(undefined)} />
+                active={xref.decision === 'unsure' }
+                onClick={(e) => this.onDecide('unsure')} />
         <Button icon="cross"
                 disabled={blocking}
-                intent={xref.decision === false ? Intent.DANGER : Intent.NONE}
-                active={xref.decision === false}
-                onClick={(e) => this.onDecide(false)} />
+                intent={xref.decision === 'negative' ? Intent.DANGER : Intent.NONE}
+                active={xref.decision === 'negative'}
+                onClick={(e) => this.onDecide('negative')} />
       </ButtonGroup>
     );
   }

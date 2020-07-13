@@ -75,4 +75,40 @@ EntitySet:
       readOnly: true
   required: ['collection', 'role_id', 'label', 'type', 'writeable']
 
+Judgement:
+  type: string
+  enum: ['positive', 'negative', 'unsure', 'no_judgement']
 
+EntitySetItemAdd:
+  type: object
+  properties:
+    entity_id:
+      type: string
+    compared_to_entity_id:
+      type: string
+    judgement:
+      type: string
+      allOf:
+      - $ref: '#/components/schemas/Judgement'
+  required: ['entity_id']
+
+EntitySetItem:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    entityset_id:
+      type: string
+    collection_id:
+      type: string
+    entity:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Entity'
+    compared_to_entity_id:
+      type: string
+    judgement:
+      type: string
+      allOf:
+      - $ref: '#/components/schemas/Judgement'
+  required: ['entityset_id', 'entity']

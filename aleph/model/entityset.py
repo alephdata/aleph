@@ -1,7 +1,9 @@
 import logging
+from enum import Enum
 from datetime import datetime
 from normality import stringify
 from sqlalchemy.dialects.postgresql import JSONB
+from banal import ensure_list
 
 from aleph.core import db
 from aleph.model import Role, Collection
@@ -11,6 +13,13 @@ from aleph.model.common import ENTITY_ID_LEN, make_textid
 log = logging.getLogger(__name__)
 
 
+class Judgement(Enum):
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    UNSURE = "unsure"
+    NO_JUDGEMENT = "no_judgement"
+
+
 class EntitySet(db.Model, SoftDeleteModel):
     __tablename__ = "entityset"
 
@@ -18,8 +27,9 @@ class EntitySet(db.Model, SoftDeleteModel):
     GENERIC = "generic"
     DIAGRAM = "diagram"
     TIMELINE = "timeline"
+    PROFILE = "profile"
 
-    TYPES = [GENERIC, DIAGRAM, TIMELINE]
+    TYPES = frozenset([GENERIC, DIAGRAM, TIMELINE, PROFILE])
 
     id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True)
     label = db.Column(db.Unicode)
@@ -47,6 +57,113 @@ class EntitySet(db.Model, SoftDeleteModel):
         q = q.filter(EntitySetItem.deleted_at == None)  # noqa
         return [entity_id for entity_id, in q.all()]
 
+    @property
+    def root(self):
+        p = self
+        while p.parent_id is not None:
+            p = p.parent
+        return p
+
+    @classmethod
+    def create(cls, data, collection, authz):
+        entityset = cls()
+        entityset.id = make_textid()
+        entityset.layout = {}
+        entityset.role_id = authz.id
+        entityset.collection_id = collection.id
+        entityset.update(data, collection)
+        return entityset
+
+    @classmethod
+    def by_authz(cls, authz, types=None):
+        ids = authz.collections(authz.READ)
+        q = cls.by_type(types)
+        q = q.filter(cls.collection_id.in_(ids))
+        return q
+
+    @classmethod
+    def by_type(cls, types):
+        """Retuns EntitySets of a particular type"""
+        q = EntitySet.all()
+        if types is not None:
+            types = ensure_list(types)
+            if not cls.TYPES.issuperset(types):
+                raise TypeError(f"Invalid value for types: {types}")
+            elif types != cls.TYPES:
+                q = q.filter(EntitySet.type.in_(types))
+        return q
+
+    @classmethod
+    def by_collection_id(cls, collection_id, types=None):
+        """Retuns EntitySets within a given collection_id
+        """
+        q = cls.by_type(types)
+        q = q.filter(EntitySet.collection_id == collection_id)
+        return q
+
+    @classmethod
+    def by_entity_id(cls, entity_id, collection_id=None, judgements=None, types=None):
+        """Retuns EntitySets that include EntitySetItems with the provided entity_id.
+
+        NOTE: This only considers EntitySetItems who haven't been deleted
+        """
+        q = cls.by_type(types)
+        q = q.join(EntitySetItem)
+        q = q.filter(EntitySetItem.deleted_at == None)  # NOQA
+        q = q.filter(EntitySetItem.entity_id == entity_id)
+        if collection_id is not None:
+            q = q.filter(EntitySet.collection_id == collection_id)
+        if judgements is not None:
+            q = q.filter(EntitySetItem.judgement.in_(ensure_list(judgements)))
+        return q
+
+    @classmethod
+    def delete_by_collection(cls, collection_id, deleted_at):
+        EntitySetItem.delete_by_collection(collection_id, deleted_at)
+
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq = pq.filter(cls.deleted_at == None)  # noqa
+        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+
+    def items(self, deleted=False):
+        q = EntitySetItem.all(deleted=deleted)
+        q = q.filter(EntitySetItem.entityset_id == self.id)
+        return q
+
+    def iter_descendants(self):
+        for c in self.children:
+            yield c
+            yield from c.iter_children()
+
+    def take_items_from(self, other):
+        """Moves EntitySetItems belonging to other EntitySet into this EntitySet
+
+        The other EntitySet will not be deleted, however it won't have any items
+        """
+        pq = db.session.query(EntitySetItem)
+        pq = pq.filter(EntitySetItem.entityset_id == other.id)
+        pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
+        return pq.update({EntitySetItem.entityset_id: self.id})
+
+    def profile(self, judgements=None, most_recent=True):
+        q = self.items()
+        if most_recent:
+            q = q.order_by(
+                EntitySetItem.entity_id, EntitySetItem.updated_at.desc()
+            ).distinct(EntitySetItem.entity_id)
+        if judgements is not None:
+            # If we also select most_recent, we need to use subqueries to
+            # ensure that the most_recent transform happens before we filter
+            # based on judgements.
+            if most_recent:
+                subq = q.subquery()
+                q = db.session.query(EntitySetItem).join(
+                    subq, subq.c.id == EntitySetItem.id
+                )
+            q = q.filter(EntitySetItem.judgement.in_(judgements))
+        return q.all()
+
     def update(self, data, collection):
         self.label = data.get("label", self.label)
         self.type = data.get("type", self.type)
@@ -58,30 +175,32 @@ class EntitySet(db.Model, SoftDeleteModel):
         self.update_entities(data.get("entities", []))
 
     def update_entities(self, entities):
-        seen = set()
+        """Update entities to the current EntitySet. Will delete EntitySetItems
+        not in the provided entities list
+        """
         q = EntitySetItem.all(deleted=True)
         q = q.filter(EntitySetItem.entityset_id == self.id)
-        for item in q:
-            seen.add(item.entity_id)
-            if item.entity_id in entities:
-                if item.deleted_at is not None:
-                    item.deleted_at = None
-                    db.session.add(item)
-            if item.entity_id not in entities:
-                if item.deleted_at is None:
-                    item.deleted_at = self.updated_at
-                    db.session.add(item)
+        existing_items = {item.entity_id: item for item in q}
 
         for entity_id in entities:
-            if entity_id in seen:
-                continue
-            item = EntitySetItem()
+            if entity_id in existing_items:
+                item = existing_items.pop(entity_id)
+                item.deleted_at = None
+            else:
+                item = EntitySetItem()
+                item.created_at = self.updated_at
+            item.added_by_id = self.role_id
             item.collection_id = self.collection_id
             item.entityset_id = self.id
             item.entity_id = entity_id
-            item.created_at = self.updated_at
             item.updated_at = self.updated_at
             db.session.add(item)
+
+        # Now we delete any existing EntitySetItems that haven't been
+        # referenced in entities and removed from the existing_items dict
+        for item in existing_items.values():
+            if item.deleted_at is None:
+                item.delete()
 
     def delete(self, deleted_at=None):
         pq = db.session.query(EntitySetItem)
@@ -108,32 +227,6 @@ class EntitySet(db.Model, SoftDeleteModel):
         )
         return data
 
-    @classmethod
-    def by_authz(cls, authz):
-        ids = authz.collections(authz.READ)
-        q = cls.all()
-        q = q.filter(cls.collection_id.in_(ids))
-        return q
-
-    @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at):
-        EntitySetItem.delete_by_collection(collection_id, deleted_at)
-
-        pq = db.session.query(cls)
-        pq = pq.filter(cls.collection_id == collection_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
-
-    @classmethod
-    def create(cls, data, collection, authz):
-        entityset = cls()
-        entityset.id = make_textid()
-        entityset.layout = {}
-        entityset.role_id = authz.id
-        entityset.collection_id = collection.id
-        entityset.update(data, collection)
-        return entityset
-
     def __repr__(self):
         return "<EntitySet(%r, %r)>" % (self.id, self.collection_id)
 
@@ -150,6 +243,20 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         db.Integer, db.ForeignKey("collection.id"), index=True
     )  # noqa
 
+    compared_to_entity_id = db.Column(db.String(ENTITY_ID_LEN))
+    added_by_id = db.Column(db.Integer, db.ForeignKey("role.id"))
+    judgement = db.Column(db.Enum(Judgement))
+
+    entityset = db.relationship(EntitySet)
+    collection = db.relationship(Collection)
+    added_by = db.relationship(Role)
+
+    @classmethod
+    def create(cls, *, judgement=None, **data):
+        if judgement is not None:
+            judgement = Judgement(judgement)
+        return cls(judgement=judgement, **data)
+
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at):
         pq = db.session.query(cls)
@@ -162,6 +269,21 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         pq = pq.filter(EntitySet.id == cls.entityset_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
         pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+
+    def to_dict(self):
+        data = self.to_dict_dates()
+        data.update(
+            {
+                "id": stringify(self.id),
+                "entityset_id": self.entityset_id,
+                "entity_id": self.entity_id,
+                "collection_id": self.collection_id,
+                "added_by_id": self.added_by_id,
+                "judgement": getattr(self.judgement, "name", None),
+                "compared_to_entity_id": self.compared_to_entity_id,
+            }
+        )
+        return data
 
     def __repr__(self):
         return "<EntitySetItem(%r, %r)>" % (self.entityset_id, self.entity_id)

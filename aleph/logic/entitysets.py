@@ -1,6 +1,6 @@
 import logging
 
-from aleph.model import EntitySet, Events
+from aleph.model import EntitySet, EntitySetItem, Events
 from aleph.logic.entities import upsert_entity
 from aleph.logic.notifications import publish
 
@@ -9,6 +9,10 @@ log = logging.getLogger(__name__)
 
 def get_entityset(entityset_id):
     return EntitySet.by_id(entityset_id)
+
+
+def get_entitysetitem(entitysetitem_id):
+    return EntitySetItem.by_id(entitysetitem_id)
 
 
 def create_entityset(collection, data, authz):

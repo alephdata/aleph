@@ -10,7 +10,7 @@ Linkage:
       type: string
       readOnly: true
     decision:
-      type: boolean
+      type: integer
     entity_id:
       type: string
     profile_id:
