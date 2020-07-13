@@ -18,7 +18,7 @@ const entityEditorWrapper = (EditorComponent) => {
         this.entityManager = new EntityManager({
           model: props.model,
           namespace: new Namespace(props.collection.foreign_id),
-          pivotTypes: props.diagram?.pivotTypes,
+          pivotTypes: props.diagram?.settings?.pivotTypes,
           createEntity: this.createEntity.bind(this),
           expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
@@ -101,7 +101,7 @@ const entityEditorWrapper = (EditorComponent) => {
         if (!diagram) return;
 
         onStatusChange(updateStates.IN_PROGRESS);
-        const updatedDiagram = {...diagram, pivotTypes};
+        const updatedDiagram = {...diagram, settings: { pivotTypes }};
 
         this.props.updateEntitySet(diagram.id, updatedDiagram)
           .then(() => {
