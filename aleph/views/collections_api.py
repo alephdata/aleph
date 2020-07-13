@@ -9,7 +9,7 @@ from aleph.queues import queue_task, get_status, cancel_queue
 from aleph.queues import OP_REINGEST, OP_REINDEX
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import create_collection, update_collection
-from aleph.logic.collections import delete_collection
+from aleph.logic.collections import delete_collection, refresh_collection
 from aleph.index.collections import update_collection_stats
 from aleph.logic.processing import bulk_write
 from aleph.logic.util import collection_url
@@ -372,6 +372,7 @@ def cancel(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     cancel_queue(collection)
+    refresh_collection(collection_id)
     return ('', 204)
 
 
