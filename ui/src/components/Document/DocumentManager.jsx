@@ -6,12 +6,14 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
+
 import DocumentUploadDialog from 'src/dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntityActionBar from 'src/components/Entity/EntityActionBar';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'src/components/common';
 import getEntityLink from 'src/util/getEntityLink';
+import { selectEntitiesResult } from 'src/selectors';
 import { queryEntities } from 'src/actions';
 
 import './DocumentManager.scss';
@@ -102,7 +104,7 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, query, hasPending, intl,
+      collection, document, query, result, hasPending, intl,
     } = this.props;
     const { selection } = this.state;
     const mutableCollection = collection !== undefined && collection.writeable;
@@ -130,6 +132,7 @@ export class DocumentManager extends Component {
           resetSelection={() => this.setState({ selection: []})}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
+          searchDisabled={result.total === 0 && !query.hasQuery()}
         >
           { canUpload && (
             <Button icon="upload" onClick={this.toggleUpload}>
@@ -185,7 +188,8 @@ const mapStateToProps = (state, ownProps) => {
   if (collection.writeable) {
     query = query.set('cache', 'false');
   }
-  return { query };
+  const result = selectEntitiesResult(state, query);
+  return { query, result };
 };
 
 export default compose(

@@ -7,12 +7,9 @@ import { Waypoint } from 'react-waypoint';
 
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
-import {
-  ErrorSection, SortingBar,
-} from 'src/components/common';
+import { ErrorSection, SearchBox, SortingBar } from 'src/components/common';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import CollectionIndexItem from './CollectionIndexItem';
-import CollectionIndexSearch from './CollectionIndexSearch';
 
 import './CollectionIndex.scss';
 
@@ -44,6 +41,7 @@ export class CollectionIndex extends Component {
     super(props);
 
     this.onSort = this.onSort.bind(this);
+    this.onSearch = this.onSearch.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
   }
@@ -54,6 +52,13 @@ export class CollectionIndex extends Component {
 
   componentDidUpdate() {
     this.fetchIfNeeded();
+  }
+
+  onSearch(queryText) {
+    const { query } = this.props;
+
+    const newQuery = query.set('q', queryText);
+    this.updateQuery(newQuery);
   }
 
   onSort({ field, direction }) {
@@ -145,10 +150,11 @@ export class CollectionIndex extends Component {
     return (
       <div className="CollectionIndex">
         <div className="CollectionIndex__controls">
-          <CollectionIndexSearch
-            query={query}
-            updateQuery={this.updateQuery}
+          <SearchBox
+            onSearch={this.onSearch}
             placeholder={placeholder}
+            query={query}
+            inputProps={{ large: true, autoFocus: true }}
           />
           <SortingBar
             sortingOptions={sortingOptions}

@@ -10,6 +10,7 @@ import c from 'classnames';
 import { fetchCollection, fetchCollectionStatus, queryCollections } from 'src/actions';
 import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
+import { Skeleton } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 
@@ -21,8 +22,11 @@ class CollectionLabel extends PureComponent {
       collection, icon = true, label = true, updating = false, truncate, className,
     } = this.props;
 
-    if (!collection || !collection.id) {
+    if (!collection) {
       return null;
+    }
+    if (!collection.id && collection.isPending) {
+      return <Skeleton.Text type="span" length={15} />;
     }
 
     let iconName = 'database';

@@ -17,8 +17,8 @@
     margin: 2px 0;
   }
 
-  &__status {
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
+  &__right {
+    display: flex;
   }
 
   .bp3-breadcrumbs {

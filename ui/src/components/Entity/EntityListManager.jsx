@@ -10,7 +10,7 @@ import queryString from 'query-string';
 import { TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
-import { Count } from 'src/components/common';
+import { Count, ErrorSection } from 'src/components/common';
 import AddToDiagramDialog from 'src/dialogs/AddToDiagramDialog/AddToDiagramDialog';
 import DocumentSelectDialog from 'src/dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'src/components/Entity/EntityActionBar';
@@ -26,6 +26,10 @@ const messages = defineMessages({
   search_placeholder: {
     id: 'entity.manager.search_placeholder',
     defaultMessage: 'Search {schema}',
+  },
+  empty: {
+    id: 'entity.manager.search_empty',
+    defaultMessage: 'No matching {schema} results found',
   },
 });
 
@@ -137,6 +141,7 @@ export class EntityListManager extends Component {
     const { collection, entityManager, query, intl, result, schema, sort } = this.props;
     const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
+    const showEmptyComponent = result.total === 0 && query.hasQuery();
 
     return (
       <div className="EntityListManager">
@@ -147,6 +152,7 @@ export class EntityListManager extends Component {
           resetSelection={() => this.setState({ selection: []})}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
+          searchDisabled={result.total === 0 && !query.hasQuery()}
         >
           <Button icon="import" onClick={this.toggleDocumentSelectDialog}>
             <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
@@ -160,23 +166,33 @@ export class EntityListManager extends Component {
           )}
         </EntityActionBar>
         <div className="EntityListManager__content">
-          <TableEditor
-            entities={result.results}
-            schema={schema}
-            entityManager={entityManager}
-            sort={sort}
-            sortColumn={this.onSortColumn}
-            selection={selection}
-            updateSelection={this.updateSelection}
-            writeable={collection.writeable}
-            isPending={result.isPending}
-            visitEntity={visitEntity}
-          />
-          <Waypoint
-            onEnter={this.getMoreResults}
-            bottomOffset="-600px"
-            scrollableAncestor={window}
-          />
+          {showEmptyComponent && (
+            <ErrorSection
+              icon="search"
+              title={intl.formatMessage(messages.empty, { schema: schema.plural.toLowerCase() })}
+            />
+          )}
+          {!showEmptyComponent && (
+            <>
+              <TableEditor
+                entities={result.results}
+                schema={schema}
+                entityManager={entityManager}
+                sort={sort}
+                sortColumn={this.onSortColumn}
+                selection={selection}
+                updateSelection={this.updateSelection}
+                writeable={collection.writeable}
+                isPending={result.isPending}
+                visitEntity={visitEntity}
+              />
+              <Waypoint
+                onEnter={this.getMoreResults}
+                bottomOffset="-600px"
+                scrollableAncestor={window}
+              />
+            </>
+          )}
         </div>
         <DocumentSelectDialog
           schema={schema}

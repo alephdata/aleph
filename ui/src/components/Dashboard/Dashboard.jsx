@@ -179,12 +179,10 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const groupsQuery = queryGroups(location);
   const caseFilter = {'filter:category': 'casefile'};
-  const casesCountQuery = Query
-    .fromLocation('collections', location, caseFilter, 'collections')
+  const casesCountQuery = new Query('collections', {}, caseFilter, 'collections')
     .limit(0);
 
-  const diagramsCountQuery = Query
-    .fromLocation('entitysets', location, {}, 'entitySets')
+  const diagramsCountQuery = new Query('entitysets', {}, {}, 'entitySets')
     .setFilter('type', 'diagram')
     .limit(0);
 

@@ -18,7 +18,6 @@ import Mention from './Mention';
 import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
-import Suggest from './Suggest';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
 import ErrorSection from './ErrorSection';
@@ -55,7 +54,6 @@ export {
   Property,
   Role,
   Schema,
-  Suggest,
   SectionLoading,
   TextLoading,
   ErrorSection,
