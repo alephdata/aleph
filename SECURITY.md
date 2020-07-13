@@ -6,7 +6,7 @@ Aleph is a fast-moving project, developed through grant funding. We thus cannot 
 long-term support releases. Instead, we advise all implementors of the software to keep their
 installations up to date as much as they can.
 
-At the time of writing, versions 1.x and 2.x, 3.0, 3.1 are completely discontinued.
+At the time of writing, versions 1.x and 2.x, and > 3.6 are completely discontinued.
 
 ## Reporting a Vulnerability
 
