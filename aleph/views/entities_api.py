@@ -251,7 +251,7 @@ def create():
     data.pop('id', None)
     validate = get_flag('validate', default=False)
     entity_id = upsert_entity(data, collection, validate=validate,
-                              role_id=request.authz.id, sync=True)
+                              authz=request.authz, sync=True)
     db.session.commit()
     tag_request(entity_id=entity_id, collection_id=str(collection.id))
     entity = get_index_entity(entity_id, request.authz.READ)
@@ -485,9 +485,8 @@ def update(entity_id):
     data['id'] = entity_id
     sync = get_flag('sync', default=True)
     validate = get_flag('validate', default=False)
-    entity_id = upsert_entity(data, collection,
-                              validate=validate,
-                              sync=sync)
+    entity_id = upsert_entity(data, collection, validate=validate,
+                              authz=request.authz, sync=sync)
     db.session.commit()
     return view(entity_id)
 
@@ -568,7 +567,6 @@ def expand(entity_id):
       tags:
       - Entity
     """
-    enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     edge_types = request.args.getlist('edge_types')
     collection_id = entity.get('collection_id')

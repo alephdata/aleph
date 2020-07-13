@@ -22,19 +22,21 @@ export {
 } from './collectionActions';
 export {
   createEntity,
-  createEntityMapping,
   deleteEntity,
-  deleteEntityMapping,
   fetchEntity,
-  fetchEntityMapping,
   fetchEntityReferences,
   fetchEntityTags,
-  flushEntityMapping,
   queryEntities,
   queryEntityExpand,
   updateEntity,
-  updateEntityMapping,
 } from './entityActions';
+export {
+  createEntityMapping,
+  deleteEntityMapping,
+  fetchEntityMapping,
+  flushEntityMapping,
+  updateEntityMapping,
+} from './entityMappingActions';
 export {
   createEntitySet,
   deleteEntitySet,
@@ -44,6 +46,7 @@ export {
 } from './entitySetActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
+export { loginWithToken, loginWithPassword, logout } from './sessionActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

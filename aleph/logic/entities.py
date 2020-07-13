@@ -18,7 +18,7 @@ from aleph.logic.graph import Graph
 log = logging.getLogger(__name__)
 
 
-def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
+def upsert_entity(data, collection, validate=True, authz=None, sync=False):
     """Create or update an entity in the database. This has a side hustle
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
@@ -30,6 +30,7 @@ def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
                               collection=collection,
                               deleted=True)
     if entity is None:
+        role_id = authz.id if authz is not None else None
         entity = Entity.create(data, collection,
                                role_id=role_id,
                                validate=validate)
@@ -47,13 +48,13 @@ def upsert_entity(data, collection, validate=True, role_id=None, sync=False):
 
     delete_aggregator_entity(collection, entity.id)
     index.index_proxy(collection, proxy, sync=sync)
-    refresh_entity(entity.id, sync=sync)
-    refresh_collection(collection.id, sync=sync)
+    refresh_entity(collection, entity.id)
     return entity.id
 
 
-def refresh_entity(entity_id, sync=False):
+def refresh_entity(collection, entity_id):
     cache.kv.delete(cache.object_key(Entity, entity_id))
+    refresh_collection(collection.id)
 
 
 def delete_entity(collection, entity, deleted_at=None, sync=False):
@@ -77,8 +78,7 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
     delete_aggregator_entity(collection, entity_id)
-    refresh_entity(entity_id, sync=sync)
-    refresh_collection(collection.id, sync=sync)
+    refresh_entity(collection, entity_id)
 
 
 def entity_references(entity, authz=None):

@@ -73,7 +73,7 @@ class Notification extends PureComponent {
       } else if (token.length===0){
         return false;
       } else {
-        message.push((<span class="token">{token}</span>));
+        message.push((<span key={token} className="token">{token}</span>));
       }
     });
 

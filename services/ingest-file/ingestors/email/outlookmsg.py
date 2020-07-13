@@ -90,6 +90,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
 
     @classmethod
     def match(cls, file_path, entity):
-        if isOleFile(file_path):
-            return super(OutlookMsgIngestor, cls).match(file_path, entity)
-        return -1
+        score = super(OutlookMsgIngestor, cls).match(file_path, entity)
+        if score > 0 and not isOleFile(file_path):
+            return -1
+        return score

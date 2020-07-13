@@ -1,7 +1,7 @@
 # Dependencies maintained by OCCRP
 banal==1.0.1
 urlnormalizer==1.2.5
-followthemoney==1.33.3
+followthemoney==1.33.4
 followthemoney-store[postgresql]==2.1.7
 fingerprints==1.0.1
 servicelayer[google,amazon]==1.13.4
@@ -16,7 +16,7 @@ Flask-Migrate==2.5.3
 Flask-Cors==3.0.8
 Flask-Babel==1.0.0
 flask-talisman==0.7.0
-SQLAlchemy==1.3.17
+SQLAlchemy==1.3.18
 alembic==1.4.2
 authlib==0.14.3
 

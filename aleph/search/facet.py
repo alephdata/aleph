@@ -59,25 +59,21 @@ class Facet(object):
             for result in results:
                 self.update(result, result.get('id'))
 
-            data['values'] = sorted(results,
-                                    key=lambda k: k['count'],
-                                    reverse=True)
+            data['values'] = results
 
         if self.parser.get_facet_interval(self.name):
             results = []
             for bucket in self.intervals.get('buckets', []):
                 key = str(bucket.get('key_as_string'))
                 count = bucket.pop('doc_count', 0)
-                if count > 0:
-                    results.append({
-                        'id': key,
-                        'label': key,
-                        'count': count,
-                        'active': key in active
-                    })
+                results.append({
+                    'id': key,
+                    'label': key,
+                    'count': count,
+                    'active': key in active
+                })
             data['intervals'] = sorted(results,
-                                       key=lambda k: k['count'],
-                                       reverse=True)
+                                       key=lambda k: k['id'])
         return data
 
 

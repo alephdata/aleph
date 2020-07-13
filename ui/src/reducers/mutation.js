@@ -7,19 +7,18 @@ import {
   createCollection,
   updateCollection,
   deleteCollection,
-  // executeFlush,
-  // executeTrigger,
   createEntityMapping,
   updateEntityMapping,
   deleteEntityMapping,
-  createEntity,
   triggerCollectionCancel,
-  // triggerCollectionAnalyze,
   updateCollectionPermissions,
   ingestDocument,
+  createEntity,
   deleteEntity,
   deleteQueryLog,
   updateRole,
+  loginWithToken,
+  logout,
 } from 'src/actions';
 
 const initialState = timestamp();
@@ -30,13 +29,13 @@ function update() {
 
 export default createReducer({
   [mutate]: update,
+  [loginWithToken]: update,
+  [logout]: update,
   // Clear out the redux cache when operations are performed that
   // may affect the content of the results.
   [createCollection.COMPLETE]: update,
   [updateCollection.COMPLETE]: update,
   [deleteCollection.COMPLETE]: update,
-  // [executeFlush.COMPLETE]: update,
-  // [executeTrigger.COMPLETE]: update,
   [createEntityMapping.COMPLETE]: update,
   [updateEntityMapping.COMPLETE]: update,
   [deleteEntityMapping.COMPLETE]: update,
@@ -47,5 +46,4 @@ export default createReducer({
   [ingestDocument.COMPLETE]: update,
   [deleteQueryLog.COMPLETE]: update,
   [updateRole.COMPLETE]: update,
-
 }, initialState);

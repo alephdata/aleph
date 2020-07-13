@@ -13,6 +13,7 @@ import {
 
 const initialState = {};
 
+
 export default createReducer({
   [queryCollections.COMPLETE]: (state, { result }) => resultObjects(state, result),
 

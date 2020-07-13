@@ -16,12 +16,11 @@
   }
 
   &.filter-clear-tag {
-    box-shadow: none !important;
-    background: none !important;
     vertical-align: initial;
     font-weight: normal !important;
-    border: 1px solid $aleph-link-color;
+    border-color: $aleph-link-color !important;
     color: $aleph-link-color !important;
+    height: $aleph-query-tag-height;
   }
 
   a, a:hover {

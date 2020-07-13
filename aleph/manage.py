@@ -20,13 +20,12 @@ from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
-from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
-from aleph.logic.roles import create_user, update_roles
+from aleph.logic.roles import create_user, update_roles, delete_role
 from aleph.logic.permissions import update_permission
 
 log = logging.getLogger('aleph')
@@ -148,16 +147,6 @@ def update():
     upgrade_collections()
 
 
-@cli.command('namefreq')
-def namefreq():
-    """Compute frequency distribution of name tokens."""
-    compute_name_frequencies()
-    # from aleph.logic.names import name_frequency
-    # name_frequency("John Smith")
-    # name_frequency("Friedrich Lindenberg")
-    # name_frequency("Ion Radu")
-
-
 @cli.command()
 @click.argument('foreign_id')
 @click.option('-a', '--against', multiple=True, help='foreign IDs of collections to xref against')  # noqa
@@ -234,6 +223,16 @@ def createuser(email, password=None, name=None, admin=False):  # noqa
     """Create a user and show their API key."""
     role = create_user(email, name, password, is_admin=admin)
     print("User created. ID: %s, API Key: %s" % (role.id, role.api_key))
+
+
+@cli.command()
+@click.argument('foreign_id')
+def deleterole(foreign_id):  # noqa
+    """Hard-delete a role (user, or group) from the database."""
+    role = Role.by_foreign_id(foreign_id, deleted=True)
+    if role is None:
+        raise click.BadParameter("No such role: %r" % foreign_id)
+    delete_role(role)
 
 
 @cli.command()

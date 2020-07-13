@@ -27,12 +27,6 @@ def _source_spec(includes, excludes):
     return {'includes': includes, 'excludes': excludes}
 
 
-def _cache_entity(entity):
-    # Cache entities only briefly to avoid filling up redis
-    key = cache.object_key(Entity, entity.get('id'))
-    cache.set_complex(key, entity, expires=60 * 60 * 2)
-
-
 def _entities_query(filters, authz, collection_id, schemata):
     filters = filters or []
     if authz is not None:
@@ -55,8 +49,7 @@ def get_field_type(field):
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
-                  includes=PROXY_INCLUDES, excludes=None, filters=None,
-                  cached=False):
+                  includes=PROXY_INCLUDES, excludes=None, filters=None):
     """Scan all entities matching the given criteria."""
     query = {
         'query': _entities_query(filters, authz, collection_id, schemata),
@@ -68,8 +61,6 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
                     request_timeout=MAX_REQUEST_TIMEOUT):
         entity = unpack_result(res)
         if entity is not None:
-            if cached:
-                _cache_entity(entity)
             yield entity
 
 
@@ -96,9 +87,18 @@ def entities_by_ids(ids, schemata=None, cached=False,
     ids = ensure_list(ids)
     if not len(ids):
         return
+    cached = cached and excludes is None and includes == PROXY_INCLUDES
+    entities = {}
+    if cached:
+        keys = [cache.object_key(Entity, i) for i in ids]
+        for _, entity in cache.get_many_complex(keys):
+            if entity is not None:
+                entities[entity.get('id')] = entity
+
+    missing = [i for i in ids if entities.get(id) is None]
     index = entities_read_index(schema=schemata)
     query = {
-        'query': {'ids': {'values': ids}},
+        'query': {'ids': {'values': missing}},
         '_source': _source_spec(includes, excludes),
         'size': MAX_PAGE
     }
@@ -106,21 +106,20 @@ def entities_by_ids(ids, schemata=None, cached=False,
     for doc in result.get('hits', {}).get('hits', []):
         entity = unpack_result(doc)
         if entity is not None:
+            entity_id = entity.get('id')
+            entities[entity_id] = entity
             if cached:
-                _cache_entity(entity)
+                key = cache.object_key(Entity, entity_id)
+                cache.set_complex(key, entity, expires=60 * 60 * 2)
+
+    for i in ids:
+        entity = entities.get(i)
+        if entity is not None:
             yield entity
 
 
 def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
-    if entity_id is None:
-        return
-    if kwargs.get('includes') is None and kwargs.get('excludes') is None:
-        key = cache.object_key(Entity, entity_id)
-        entity = cache.get_complex(key)
-        if entity is not None:
-            return entity
-        log.debug("Entity [%s]: cache miss", entity_id)
     for entity in entities_by_ids(entity_id, cached=True, **kwargs):
         return entity
 
