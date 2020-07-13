@@ -2,6 +2,7 @@ import logging
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
+from werkzeug.middleware.profiler import ProfilerMiddleware
 from flask import Flask, request
 from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -47,7 +48,11 @@ def create_app(config={}):
         'FLASK_SKIP_DOTENV': True,
         'FLASK_DEBUG': settings.DEBUG,
         'BABEL_DOMAIN': 'aleph',
+        'PROFILE': settings.PROFILE,
     })
+
+    if settings.PROFILE:
+        app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30])
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
     configure_oauth(app, cache=get_cache())
