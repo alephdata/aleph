@@ -52,6 +52,7 @@ class EntityActionBar extends Component {
   overflowListRenderer = (overflowItems) => {
     const menuContent = overflowItems.map((item, i) => <React.Fragment key={i}>{item}</React.Fragment>);
     return (
+      // TODO:: Popover looks ok in rtl position?
       <Popover
         content={<ButtonGroup vertical minimal alignText="left">{menuContent}</ButtonGroup>}
         position="bottom-left"

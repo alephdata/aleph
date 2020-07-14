@@ -21,6 +21,7 @@ class DownloadButton extends React.PureComponent {
       return null;
     }
     return (
+      // TODO:: how does this toolbar look in rtl position?
       <Tooltip
         content={intl.formatMessage(messages.mode_download)}
         position={Position.BOTTOM_RIGHT}

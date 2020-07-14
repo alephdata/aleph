@@ -27,6 +27,7 @@ $search-bar-width: 250px;
     width: calc(100% - #{$search-bar-width + 10px});
   }
 
+  // TODO:: how do the borders look in rtl?
   &__delete, .bp3-popover-wrapper .bp3-button  {
     border-top-right-radius: $aleph-border-radius !important;
     border-bottom-right-radius: $aleph-border-radius !important;

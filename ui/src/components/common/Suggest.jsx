@@ -64,7 +64,7 @@ export class Suggest extends React.PureComponent {
   }
 
   renderQueryList = (listProps) => {
-    const { inputProps = {}, popoverProps = {}} = this.props;
+    const { inputProps = {}, popoverProps = {} } = this.props;
     const { isOpen, selectedItem } = this.state;
     const { handleKeyDown, handleKeyUp } = listProps;
 
@@ -74,6 +74,7 @@ export class Suggest extends React.PureComponent {
         autoFocus={false}
         enforceFocus={false}
         isOpen={isOpen}
+        // TODO:: Is positioning fine in rtl?
         position={Position.BOTTOM_LEFT}
         {...popoverProps}
         className={classNames(listProps.className, popoverProps.className)}
@@ -197,9 +198,9 @@ export class Suggest extends React.PureComponent {
       });
     } else if (
       openOnKeyDown
-        && which !== Keys.BACKSPACE
-        && which !== Keys.ARROW_LEFT
-        && which !== Keys.ARROW_RIGHT
+      && which !== Keys.BACKSPACE
+      && which !== Keys.ARROW_LEFT
+      && which !== Keys.ARROW_RIGHT
     ) {
       this.setState({ isOpen: true });
     }

@@ -169,7 +169,6 @@ class AddToDiagramDialog extends Component {
               rightElement={
                 <Button icon="arrow-right" minimal type="submit" />
               }
-              dir="auto"
               onChange={this.onChangeLabel}
               value={label}
             />

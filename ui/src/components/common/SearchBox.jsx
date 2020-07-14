@@ -55,7 +55,6 @@ export class SearchBox extends PureComponent {
           <input
             className="bp3-input"
             type="search"
-            dir="auto"
             placeholder={placeholder}
             onChange={this.onSearchChange}
             value={queryText || ''}

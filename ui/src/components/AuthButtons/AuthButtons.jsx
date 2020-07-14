@@ -129,7 +129,8 @@ export class AuthButtons extends Component {
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
             )}
-            position={Position.BOTTOM_LEFT}
+        // TODO:: Is positioning fine in rtl?
+        position={Position.BOTTOM_LEFT}
             fill
           >
             <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
