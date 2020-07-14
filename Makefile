@@ -1,4 +1,4 @@
-COMPOSE=docker-compose -f docker-compose.dev.yml 
+COMPOSE=docker-compose -f docker-compose.dev.yml
 APPDOCKER=$(COMPOSE) run --rm app
 INGESTDOCKER=$(COMPOSE) run --rm ingest-file
 ALEPH_TAG=latest

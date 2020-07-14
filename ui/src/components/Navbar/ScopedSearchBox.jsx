@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { ControlGroup, Button, InputGroup } from '@blueprintjs/core';
+import { ControlGroup, InputGroup } from '@blueprintjs/core';
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import ScopeSelect from 'src/components/Navbar/ScopeSelect';
@@ -23,7 +23,7 @@ const messages = defineMessages({
 });
 
 
-class SearchBox extends React.Component {
+class ScopedSearchBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = { queryText: '' };
@@ -81,7 +81,7 @@ class SearchBox extends React.Component {
 
     return (
       <form onSubmit={this.onSubmit} autoComplete="off">
-        <ControlGroup className="SearchBox" vertical={false} fill>
+        <ControlGroup vertical={false} fill>
           <ScopeSelect
             scopes={searchScopes}
             activeScope={activeScope}
@@ -95,12 +95,7 @@ class SearchBox extends React.Component {
             rightElement={<SearchAlert queryText={queryText} />}
             value={queryText}
             onChange={this.onQueryChange}
-          />
-          <Button
-            className="SearchBox__search-tips bp3-fixed"
-            icon="help"
-            minimal
-            onClick={this.props.onToggleSearchTips}
+            className="ScopedSearchBox"
           />
         </ControlGroup>
       </form>
@@ -117,4 +112,4 @@ export default compose(
   withRouter,
   connect(mapStateToProps),
   injectIntl,
-)(SearchBox);
+)(ScopedSearchBox);

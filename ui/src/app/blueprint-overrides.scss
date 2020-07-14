@@ -109,6 +109,11 @@ table {
       @include rtlSupportInvertedProp(padding, left, 40px, null);
     }
   }
+
+  .bp3-input-left-container {
+    @include rtl(right, initial, 0);
+    @include rtl(left, 0, initial);
+  }
 }
 
 .bp3-control-group {
@@ -178,7 +183,7 @@ table {
 
   &.bp3-align-left {
     @include rtl(float, left, right);
-  } 
+  }
 }
 
 .bp3-breadcrumb .bp3-icon {
@@ -226,7 +231,7 @@ table {
       .bp3-icon {
         margin: 0 -7px;
       }
-    } 
+    }
   }
 
   .bp3-dialog-footer-actions .bp3-button {

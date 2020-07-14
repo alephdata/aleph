@@ -33,11 +33,11 @@ const CheckboxList = ({
           key={item.id}
         >
           <Icon icon={icon} iconSize={12} className="tick" />
-          <span className="label" title={item.label}>{item.label}</span>
+          <span className="label">{item.label}</span>
           {item.count !== undefined && (
-          <span className="count">
-            <FormattedNumber value={item.count} />
-          </span>
+            <span className="count">
+              <FormattedNumber value={item.count} />
+            </span>
           )}
 
         </li>
