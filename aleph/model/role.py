@@ -68,7 +68,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return False
         if self.is_muted or self.is_blocked:
             return False
-        # TODO: ignore people that have not logged in for a certain time?
+        if self.updated_at < (datetime.utcnow() - settings.ROLE_INACTIVE):
+            # Disable sending notifications to roles that haven't been
+            # logged in for a set amount of time.
+            return False
         return True
 
     @property
@@ -82,13 +85,16 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if data.get("password"):
             self.set_password(data.get("password"))
         self.locale = stringify(data.get("locale", self.locale))
+        self.touch()
+
+    def touch(self):
         self.updated_at = datetime.utcnow()
+        db.session.add(self)
 
     def clear_roles(self):
         """Removes any existing roles from group membership."""
         self.roles = []
-        self.updated_at = datetime.utcnow()
-        db.session.add(self)
+        self.touch()
         db.session.flush()
 
     def add_role(self, role):
@@ -197,7 +203,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def public_roles(cls):
         """Roles which make a collection to be considered public."""
-        return set([cls.load_id(cls.SYSTEM_USER), cls.load_id(cls.SYSTEM_GUEST),])
+        return set([cls.load_id(cls.SYSTEM_USER), cls.load_id(cls.SYSTEM_GUEST)])
 
     @classmethod
     def by_prefix(cls, prefix, exclude=[]):
@@ -209,6 +215,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         query = "%%%s%%" % query
         q = cls.all()
         q = q.filter(Role.type == Role.USER)
+        q = q.filter(Role.is_blocked == False)  # noqa
         if len(exclude):
             q = q.filter(not_(Role.id.in_(exclude)))
         q = q.filter(

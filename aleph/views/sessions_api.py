@@ -54,6 +54,7 @@ def password_login():
     if not role.check_password(data.get("password")):
         raise BadRequest(gettext("Invalid user or password."))
 
+    role.touch()
     db.session.commit()
     update_role(role)
     authz = Authz.from_role(role)

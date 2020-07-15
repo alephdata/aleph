@@ -7,6 +7,7 @@ import os
 import uuid
 from servicelayer import env
 from flask_babel import lazy_gettext
+from datetime import timedelta
 
 # The aleph module directory
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -138,6 +139,9 @@ MAIL_USE_TLS = env.to_bool("ALEPH_MAIL_TLS", True)
 MAIL_PORT = env.to_int("ALEPH_MAIL_PORT", 465)
 MAIL_DEBUG = env.to_bool("ALEPH_MAIL_DEBUG", DEBUG)
 
+# Roles that haven't logged in since X months will stop receiving notifications.
+ROLE_INACTIVE = env.to_int("ALEPH_ROLE_INACTIVE", 6 * 30)
+ROLE_INACTIVE = timedelta(days=ROLE_INACTIVE)
 
 ###############################################################################
 # Database and search index
