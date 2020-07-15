@@ -28,6 +28,7 @@ setup(
             'google = aleph.oauth:handle_google_oauth',
             'keycloak = aleph.oauth:handle_keycloak_oauth',
             'cognito = aleph.oauth:handle_cognito_oauth',
+            'adfs = aleph.oauth:handle_adfs_oauth',
         ],
         'console_scripts': [
             'aleph = aleph.manage:cli',
