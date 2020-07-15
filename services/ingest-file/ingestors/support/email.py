@@ -16,7 +16,6 @@ log = logging.getLogger(__name__)
 
 
 class EmailIdentity(object):
-
     def __init__(self, manager, name, email):
         self.email = ascii_text(stringify(email))
         self.name = stringify(name)
@@ -30,7 +29,7 @@ class EmailIdentity(object):
         # to use that without encoding the name.
         self.label = None
         if self.name is not None and self.email is not None:
-            self.label = '%s <%s>' % (self.name, self.email)
+            self.label = "%s <%s>" % (self.name, self.email)
         elif self.name is None and self.email is not None:
             self.label = self.email
         elif self.email is None and self.name is not None:
@@ -40,19 +39,18 @@ class EmailIdentity(object):
         if self.email is not None:
             key = self.email.lower().strip()
             fragment = safe_fragment(self.label)
-            self.entity = manager.make_entity('Person')
-            self.entity.context = {
-                'mutable': False
-            }
+            self.entity = manager.make_entity("Person")
+            self.entity.context = {"mutable": False}
             self.entity.make_id(key)
-            self.entity.add('name', self.name)
-            self.entity.add('email', self.email)
+            self.entity.add("name", self.name)
+            self.entity.add("email", self.email)
             manager.emit_entity(self.entity, fragment=fragment)
 
 
 class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
     """Extract metadata from email messages."""
-    MID_RE = re.compile(r'<([^>]*)>')
+
+    MID_RE = re.compile(r"<([^>]*)>")
 
     def ingest_attachment(self, entity, name, mime_type, body):
         has_body = body is not None and len(body)
@@ -60,22 +58,22 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             # Hello, Outlook.
             return
 
-        file_name = safe_filename(name, default='attachment')
+        file_name = safe_filename(name, default="attachment")
         file_path = self.make_work_file(file_name)
-        with open(file_path, 'wb') as fh:
+        with open(file_path, "wb") as fh:
             if isinstance(body, str):
-                body = body.encode('utf-8')
+                body = body.encode("utf-8")
             if body is not None:
                 fh.write(body)
 
         checksum = self.manager.store(file_path, mime_type=mime_type)
         file_path.unlink()
 
-        child = self.manager.make_entity('Document', parent=entity)
+        child = self.manager.make_entity("Document", parent=entity)
         child.make_id(name, checksum)
-        child.add('contentHash', checksum)
-        child.add('fileName', name)
-        child.add('mimeType', mime_type)
+        child.add("contentHash", checksum)
+        child.add("fileName", name)
+        child.add("mimeType", mime_type)
         self.manager.queue_entity(child)
 
     def get_header(self, msg, *headers):
@@ -113,8 +111,8 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 entity.add(eprop, identity.entity)
             if lprop is not None:
                 entity.add(lprop, identity.label)
-            entity.add('namesMentioned', identity.name)
-            entity.add('emailMentioned', identity.email)
+            entity.add("namesMentioned", identity.name)
+            entity.add("emailMentioned", identity.email)
 
     def parse_message_ids(self, values):
         message_ids = []
@@ -141,68 +139,68 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
         # https://cr.yp.to/immhf/thread.html
         ctx = self.manager.stage.job.dataset.name
 
-        for message_id in entity.get('messageId'):
-            key = self.cache_key('mid-ent', ctx, message_id)
+        for message_id in entity.get("messageId"):
+            key = self.cache_key("mid-ent", ctx, message_id)
             self.add_cache_set(key, entity.id)
 
-            rev_key = self.cache_key('ent-mid', ctx, message_id)
+            rev_key = self.cache_key("ent-mid", ctx, message_id)
             for response_id in self.get_cache_set(rev_key):
                 if response_id == entity.id:
                     continue
-                email = self.manager.make_entity('Email')
+                email = self.manager.make_entity("Email")
                 email.id = response_id
-                email.add('inReplyToEmail', entity.id)
+                email.add("inReplyToEmail", entity.id)
                 fragment = safe_fragment(message_id)
                 self.manager.emit_entity(email, fragment=fragment)
 
-        for message_id in entity.get('inReplyTo'):
+        for message_id in entity.get("inReplyTo"):
             # forward linking: from message ID to entity ID
-            key = self.cache_key('mid-ent', ctx, message_id)
+            key = self.cache_key("mid-ent", ctx, message_id)
             for email_id in self.get_cache_set(key):
                 if email_id != entity.id:
-                    entity.add('inReplyToEmail', email_id)
+                    entity.add("inReplyToEmail", email_id)
 
             # backward linking: prepare entity ID for message to come
-            rev_key = self.cache_key('ent-mid', ctx, message_id)
+            rev_key = self.cache_key("ent-mid", ctx, message_id)
             self.add_cache_set(rev_key, entity.id)
 
     def extract_msg_headers(self, entity, msg):
         """Parse E-Mail headers into FtM properties."""
         try:
-            entity.add('indexText', msg.values())
+            entity.add("indexText", msg.values())
         except Exception as ex:
             log.warning("Cannot parse all headers: %r", ex)
-        entity.add('subject', self.get_header(msg, 'Subject'))
-        entity.add('date', self.get_dates(msg, 'Date'))
-        entity.add('mimeType', self.get_header(msg, 'Content-Type'))
-        entity.add('threadTopic', self.get_header(msg, 'Thread-Topic'))
-        entity.add('generator', self.get_header(msg, 'X-Mailer'))
-        entity.add('language', self.get_header(msg, 'Content-Language'))
-        entity.add('keywords', self.get_header(msg, 'Keywords'))
-        entity.add('summary', self.get_header(msg, 'Comments'))
-        message_id = self.get_header(msg, 'Message-ID')
-        entity.add('messageId', self.parse_message_ids(message_id))
-        references = self.get_header(msg, 'References')
-        in_reply_to = self.get_header(msg, 'In-Reply-To')
-        entity.add('inReplyTo', self.parse_references(references, in_reply_to))
+        entity.add("subject", self.get_header(msg, "Subject"))
+        entity.add("date", self.get_dates(msg, "Date"))
+        entity.add("mimeType", self.get_header(msg, "Content-Type"))
+        entity.add("threadTopic", self.get_header(msg, "Thread-Topic"))
+        entity.add("generator", self.get_header(msg, "X-Mailer"))
+        entity.add("language", self.get_header(msg, "Content-Language"))
+        entity.add("keywords", self.get_header(msg, "Keywords"))
+        entity.add("summary", self.get_header(msg, "Comments"))
+        message_id = self.get_header(msg, "Message-ID")
+        entity.add("messageId", self.parse_message_ids(message_id))
+        references = self.get_header(msg, "References")
+        in_reply_to = self.get_header(msg, "In-Reply-To")
+        entity.add("inReplyTo", self.parse_references(references, in_reply_to))
 
-        return_path = self.get_header_identities(msg, 'Return-Path')
+        return_path = self.get_header_identities(msg, "Return-Path")
         self.apply_identities(entity, return_path)
 
-        reply_to = self.get_header_identities(msg, 'Reply-To')
+        reply_to = self.get_header_identities(msg, "Reply-To")
         self.apply_identities(entity, reply_to)
 
-        sender = self.get_header_identities(msg, 'Sender', 'X-Sender')
-        self.apply_identities(entity, sender, 'emitters', 'sender')
+        sender = self.get_header_identities(msg, "Sender", "X-Sender")
+        self.apply_identities(entity, sender, "emitters", "sender")
 
-        froms = self.get_header_identities(msg, 'From', 'X-From')
-        self.apply_identities(entity, froms, 'emitters', 'from')
+        froms = self.get_header_identities(msg, "From", "X-From")
+        self.apply_identities(entity, froms, "emitters", "from")
 
-        tos = self.get_header_identities(msg, 'To', 'Resent-To')
-        self.apply_identities(entity, tos, 'recipients', 'to')
+        tos = self.get_header_identities(msg, "To", "Resent-To")
+        self.apply_identities(entity, tos, "recipients", "to")
 
-        ccs = self.get_header_identities(msg, 'CC', 'Cc', 'Resent-Cc')
-        self.apply_identities(entity, ccs, 'recipients', 'cc')
+        ccs = self.get_header_identities(msg, "CC", "Cc", "Resent-Cc")
+        self.apply_identities(entity, ccs, "recipients", "cc")
 
-        bccs = self.get_header_identities(msg, 'Bcc', 'BCC', 'Resent-Bcc')
-        self.apply_identities(entity, bccs, 'recipients', 'bcc')
+        bccs = self.get_header_identities(msg, "Bcc", "BCC", "Resent-Bcc")
+        self.apply_identities(entity, bccs, "recipients", "bcc")

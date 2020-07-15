@@ -9,16 +9,16 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = '2b478162b2b7'
-down_revision = 'b3959bf8cc66'
+revision = "2b478162b2b7"
+down_revision = "b3959bf8cc66"
 
 
 def upgrade():
-    op.add_column('role', sa.Column('is_blocked', sa.Boolean(), nullable=True))
-    op.add_column('role', sa.Column('is_tester', sa.Boolean(), nullable=True))
-    op.execute('UPDATE role SET is_blocked = false, is_tester = false')
-    op.alter_column('role', 'is_blocked', nullable=False)
-    op.alter_column('role', 'is_tester', nullable=False)
+    op.add_column("role", sa.Column("is_blocked", sa.Boolean(), nullable=True))
+    op.add_column("role", sa.Column("is_tester", sa.Boolean(), nullable=True))
+    op.execute("UPDATE role SET is_blocked = false, is_tester = false")
+    op.alter_column("role", "is_blocked", nullable=False)
+    op.alter_column("role", "is_tester", nullable=False)
 
 
 def downgrade():

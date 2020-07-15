@@ -17,8 +17,8 @@ class TableSupport(EncodingSupport, TempFileSupport):
     def emit_row_dicts(self, table, rows, headers=None):
         csv_path = self.make_work_file(table.id)
         row_count = 0
-        with open(csv_path, 'w', encoding=self.DEFAULT_ENCODING) as fp:
-            csv_writer = csv.writer(fp, dialect='unix')
+        with open(csv_path, "w", encoding=self.DEFAULT_ENCODING) as fp:
+            csv_writer = csv.writer(fp, dialect="unix")
             for row in rows:
                 if headers is None:
                     headers = list(row.keys())
@@ -33,13 +33,13 @@ class TableSupport(EncodingSupport, TempFileSupport):
                     log.info("Table emit [%s]: %s...", table, row_count)
         if row_count > 0:
             csv_hash = self.manager.store(csv_path, mime_type=CSV)
-            table.set('csvHash', csv_hash)
-        table.set('rowCount', row_count + 1)
-        table.set('columns', registry.json.pack(headers))
+            table.set("csvHash", csv_hash)
+        table.set("rowCount", row_count + 1)
+        table.set("columns", registry.json.pack(headers))
 
     def wrap_row_tuples(self, rows):
         for row in rows:
-            headers = ['Column %s' % i for i in range(1, len(row) + 1)]
+            headers = ["Column %s" % i for i in range(1, len(row) + 1)]
             yield OrderedDict(zip(headers, row))
 
     def emit_row_tuples(self, table, rows):

@@ -15,8 +15,8 @@ class ShellSupport(object):
 
     @classmethod
     def find_command(self, name):
-        config_name = '%s_BIN' % name
-        config_name = config_name.replace('-', '_').upper()
+        config_name = "%s_BIN" % name
+        config_name = config_name.replace("-", "_").upper()
         return env.get(config_name, find_executable(name))
 
     def exec_command(self, command, *args):
@@ -26,16 +26,17 @@ class ShellSupport(object):
         cmd = [binary]
         cmd.extend([path_string(a) for a in args])
         try:
-            code = subprocess.call(cmd, timeout=self.COMMAND_TIMEOUT,
-                                   stdout=open(os.devnull, 'wb'))
+            code = subprocess.call(
+                cmd, timeout=self.COMMAND_TIMEOUT, stdout=open(os.devnull, "wb")
+            )
         except (IOError, OSError) as ose:
-            raise ProcessingException('Error: %s' % ose) from ose
+            raise ProcessingException("Error: %s" % ose) from ose
         except subprocess.TimeoutExpired as timeout:
-            raise ProcessingException('Processing timed out.') from timeout
+            raise ProcessingException("Processing timed out.") from timeout
 
         if code != 0:
-            raise ProcessingException('Failed: %s' % ' '.join(cmd))
+            raise ProcessingException("Failed: %s" % " ".join(cmd))
 
     def assert_outfile(self, path):
         if not path.exists():
-            raise ProcessingException('File missing: {}'.format(path))
+            raise ProcessingException("File missing: {}".format(path))

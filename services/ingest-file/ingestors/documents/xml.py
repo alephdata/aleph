@@ -11,11 +11,12 @@ from ingestors.exc import ProcessingException
 class XMLIngestor(Ingestor, EncodingSupport, XMLSupport, HTMLSupport):
     "XML file ingestor class. Generates a tabular HTML representation."
 
-    MIME_TYPES = ['text/xml']
-    EXTENSIONS = ['xml']
+    MIME_TYPES = ["text/xml"]
+    EXTENSIONS = ["xml"]
     SCORE = 1
     MAX_SIZE = 4 * 1024 * 1024
-    XSLT = etree.XML(b"""<?xml version="1.0" encoding="UTF-8"?>
+    XSLT = etree.XML(
+        b"""<?xml version="1.0" encoding="UTF-8"?>
         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             version="1.0">
         <xsl:output omit-xml-declaration="yes" indent="yes"/>
@@ -51,22 +52,23 @@ class XMLIngestor(Ingestor, EncodingSupport, XMLSupport, HTMLSupport):
             </tr>
         </xsl:template>
 
-        </xsl:stylesheet>""")
+        </xsl:stylesheet>"""
+    )
 
     def ingest(self, file_path, entity):
         """Ingestor implementation."""
-        entity.schema = model.get('HyperText')
-        for file_size in entity.get('fileSize'):
+        entity.schema = model.get("HyperText")
+        for file_size in entity.get("fileSize"):
             if int(file_size) > self.MAX_SIZE:
                 raise ProcessingException("XML file is too large.")
 
         doc = self.parse_xml_path(file_path)
         text = self.extract_html_text(doc.getroot())
-        entity.set('bodyText', text)
+        entity.set("bodyText", text)
         try:
             transform = etree.XSLT(self.XSLT)
             html_doc = transform(doc)
             html_body = html.tostring(html_doc, encoding=str, pretty_print=True)
-            entity.set('bodyHtml', html_body)
+            entity.set("bodyHtml", html_body)
         except ValueError as ve:
             raise ProcessingException("Error converting XML file: %s" % ve) from ve

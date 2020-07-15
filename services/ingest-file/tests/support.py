@@ -26,16 +26,15 @@ def queue_entity(self, entity):
 
 
 class TestCase(unittest.TestCase):
-
     def setUp(self):
         # Force tests to use fake configuration
         ingestors_settings.TESTING = True
         service_settings.REDIS_URL = None
-        service_settings.ARCHIVE_TYPE = 'file'
+        service_settings.ARCHIVE_TYPE = "file"
         service_settings.ARCHIVE_PATH = mkdtemp()
-        ftmstore_settings.DATABASE_URI = 'sqlite://'
+        ftmstore_settings.DATABASE_URI = "sqlite://"
         conn = get_fakeredis()
-        job = Job.create(conn, 'test')
+        job = Job.create(conn, "test")
         stage = Stage(job, OP_INGEST)
         dataset = get_dataset(job.dataset.name, OP_INGEST)
         self.manager = Manager(dataset, stage, {})
@@ -51,17 +50,17 @@ class TestCase(unittest.TestCase):
         self.manager.entities = []
         self.manager.dataset.delete()
         cur_path = ensure_path(__file__).parent
-        cur_path = cur_path.joinpath('fixtures')
+        cur_path = cur_path.joinpath("fixtures")
         path = cur_path.joinpath(fixture_path)
-        entity = self.manager.make_entity('Document')
+        entity = self.manager.make_entity("Document")
         if not path.exists():
             raise RuntimeError(path)
         if path.is_file():
             checksum = self.manager.store(path)
             entity.make_id(path.name, checksum)
-            entity.set('contentHash', checksum)
-            entity.set('fileSize', path.stat().st_size)
-            entity.set('fileName', path.name)
+            entity.set("contentHash", checksum)
+            entity.set("fileSize", path.stat().st_size)
+            entity.set("fileName", path.name)
         else:
             entity.make_id(fixture_path)
         return path, entity
@@ -76,5 +75,4 @@ class TestCase(unittest.TestCase):
         return self.manager.dataset.get(id)
 
     def assertSuccess(self, entity):
-        self.assertEqual(entity.first('processingStatus'),
-                         self.manager.STATUS_SUCCESS)
+        self.assertEqual(entity.first("processingStatus"), self.manager.STATUS_SUCCESS)

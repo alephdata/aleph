@@ -12,44 +12,53 @@ from alembic import op
 import sqlalchemy as sa
 import uuid
 
-log = logging.getLogger('migrate')
+log = logging.getLogger("migrate")
 
-revision = '4212acfa7aec'
-down_revision = '235fd19bb942'
+revision = "4212acfa7aec"
+down_revision = "235fd19bb942"
 
 SCHEMA = {
-    '/entity/person.json#': 'Person',
-    '/entity/organization.json#': 'Organization',
-    '/entity/entity.json#': 'LegalEntity',
-    '/entity/company.json#': 'Company'
+    "/entity/person.json#": "Person",
+    "/entity/organization.json#": "Organization",
+    "/entity/entity.json#": "LegalEntity",
+    "/entity/company.json#": "Company",
 }
 
 
 def upgrade():
-    op.alter_column('document', 'collection_id', existing_type=sa.INTEGER(), nullable=False)  # noqa
-    op.add_column('entity', sa.Column('collection_id', sa.Integer, nullable=True))  # noqa
-    op.create_index(op.f('ix_entity_collection_id'), 'entity', ['collection_id'], unique=False)  # noqa
-    op.create_foreign_key(None, 'entity', 'collection', ['collection_id'], ['id'])  # noqa
-    op.create_table('entity_identity',
-        sa.Column('id', sa.Integer, nullable=False),
-        sa.Column('created_at', sa.DateTime(), nullable=True),
-        sa.Column('updated_at', sa.DateTime(), nullable=True),
-        sa.Column('entity_id', sa.Unicode(255), nullable=True),
-        sa.Column('identity', sa.Unicode(255), nullable=True),
-        sa.PrimaryKeyConstraint('id')
+    op.alter_column(
+        "document", "collection_id", existing_type=sa.INTEGER(), nullable=False
+    )  # noqa
+    op.add_column(
+        "entity", sa.Column("collection_id", sa.Integer, nullable=True)
+    )  # noqa
+    op.create_index(
+        op.f("ix_entity_collection_id"), "entity", ["collection_id"], unique=False
+    )  # noqa
+    op.create_foreign_key(
+        None, "entity", "collection", ["collection_id"], ["id"]
+    )  # noqa
+    op.create_table(
+        "entity_identity",
+        sa.Column("id", sa.Integer, nullable=False),
+        sa.Column("created_at", sa.DateTime(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(), nullable=True),
+        sa.Column("entity_id", sa.Unicode(255), nullable=True),
+        sa.Column("identity", sa.Unicode(255), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
     )
 
     bind = op.get_bind()
     meta = sa.MetaData()
     meta.bind = bind
     meta.reflect()
-    entity_table = meta.tables['entity']
-    entity_identity_table = meta.tables['entity_identity']
-    document_table = meta.tables['document']
-    collection_entity_table = meta.tables['collection_entity']
-    reference_table = meta.tables['reference']
-    permission_table = meta.tables['permission']
-    alert_table = meta.tables['alert']
+    entity_table = meta.tables["entity"]
+    entity_identity_table = meta.tables["entity_identity"]
+    document_table = meta.tables["document"]
+    collection_entity_table = meta.tables["collection_entity"]
+    reference_table = meta.tables["reference"]
+    permission_table = meta.tables["permission"]
+    alert_table = meta.tables["alert"]
     q = sa.select([entity_table])
     rp = bind.execute(q)
     entities_all = rp.fetchall()
@@ -74,21 +83,21 @@ def upgrade():
             bind.execute(cq)
             continue
 
-        data = entity['data']
-        data.pop('identifiers', None)
-        data['country'] = data.pop('jurisdiction_code', None)
-        data['birthDate'] = data.pop('birth_date', None)
-        data['deathDate'] = data.pop('death_date', None)
-        data['alias'] = []
+        data = entity["data"]
+        data.pop("identifiers", None)
+        data["country"] = data.pop("jurisdiction_code", None)
+        data["birthDate"] = data.pop("birth_date", None)
+        data["deathDate"] = data.pop("death_date", None)
+        data["alias"] = []
 
-        for on in data.pop('other_names', []):
-            name = on.get('name')
+        for on in data.pop("other_names", []):
+            name = on.get("name")
             if name is None:
                 continue
-            data['alias'].append(name)
+            data["alias"].append(name)
 
         for k, v in data.items():
-            if v is None or v == '':
+            if v is None or v == "":
                 data.pop(k)
 
         schema = SCHEMA.get(entity.type)
@@ -98,7 +107,11 @@ def upgrade():
         alerts = bind.execute(cq).fetchall()
 
         cq = sa.select([reference_table, document_table.c.collection_id])
-        cq = cq.select_from(reference_table.join(document_table, reference_table.c.document_id == document_table.c.id))  # noqa
+        cq = cq.select_from(
+            reference_table.join(
+                document_table, reference_table.c.document_id == document_table.c.id
+            )
+        )  # noqa
         cq = cq.where(reference_table.c.entity_id == entity.id)
         references = bind.execute(cq).fetchall()
 
@@ -118,25 +131,27 @@ def upgrade():
             else:
                 eid = uuid.uuid4().hex
                 ent = {
-                    'id': eid,
-                    'name': entity.name,
-                    'state': entity.state,
-                    'type': schema,
-                    'data': data,
-                    'collection_id': coll_id,
-                    'created_at': entity.created_at,
-                    'updated_at': entity.updated_at
+                    "id": eid,
+                    "name": entity.name,
+                    "state": entity.state,
+                    "type": schema,
+                    "data": data,
+                    "collection_id": coll_id,
+                    "created_at": entity.created_at,
+                    "updated_at": entity.updated_at,
                 }
                 q = sa.insert(entity_table).values(ent)
                 bind.execute(q)
 
             if len(colls) > 1:
-                q = sa.insert(entity_identity_table).values({
-                    'created_at': entity.updated_at,
-                    'updated_at': entity.updated_at,
-                    'entity_id': eid,
-                    'identity': identity
-                })
+                q = sa.insert(entity_identity_table).values(
+                    {
+                        "created_at": entity.updated_at,
+                        "updated_at": entity.updated_at,
+                        "entity_id": eid,
+                        "identity": identity,
+                    }
+                )
                 bind.execute(q)
 
             for alert in alerts:
@@ -151,27 +166,27 @@ def upgrade():
                     bind.execute(q)
                 if perm is not None and eid != entity.id:
                     ad = dict(alert)
-                    ad.pop('id', None)
-                    ad['entity_id'] = eid
+                    ad.pop("id", None)
+                    ad["entity_id"] = eid
                     q = sa.insert(alert_table).values(ad)
                     bind.execute(q)
 
             for ref in references:
                 refdata = dict(ref)
-                collection_id = refdata.pop('collection_id')
-                if entity.state == 'pending' and coll_id == collection_id:
+                collection_id = refdata.pop("collection_id")
+                if entity.state == "pending" and coll_id == collection_id:
                     q = sa.update(reference_table)
                     q = q.where(reference_table.c.id == ref.id)
                     q = q.values(entity_id=eid)
                     bind.execute(q)
-                if entity.state == 'active' and eid != ref.entity_id:
-                    refdata.pop('id', None)
-                    refdata['entity_id'] = eid
+                if entity.state == "active" and eid != ref.entity_id:
+                    refdata.pop("id", None)
+                    refdata["entity_id"] = eid
                     q = sa.insert(reference_table).values(refdata)
                     bind.execute(q)
 
-    op.drop_table('collection_document')
-    op.drop_table('collection_entity')
+    op.drop_table("collection_document")
+    op.drop_table("collection_entity")
     # op.alter_column('entity', 'collection_id', nullable=False)  # noqa
 
 

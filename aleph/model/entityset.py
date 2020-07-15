@@ -12,12 +12,12 @@ log = logging.getLogger(__name__)
 
 
 class EntitySet(db.Model, SoftDeleteModel):
-    __tablename__ = 'entityset'
+    __tablename__ = "entityset"
 
     # set types
-    GENERIC = 'generic'
-    DIAGRAM = 'diagram'
-    TIMELINE = 'timeline'
+    GENERIC = "generic"
+    DIAGRAM = "diagram"
+    TIMELINE = "timeline"
 
     TYPES = [GENERIC, DIAGRAM, TIMELINE]
 
@@ -25,16 +25,20 @@ class EntitySet(db.Model, SoftDeleteModel):
     label = db.Column(db.Unicode)
     type = db.Column(db.String(10), index=True, default=GENERIC)
     summary = db.Column(db.Unicode, nullable=True)
-    layout = db.Column('layout', JSONB, nullable=True)
+    layout = db.Column("layout", JSONB, nullable=True)
 
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), index=True)
     role = db.relationship(Role)
 
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
+    collection_id = db.Column(
+        db.Integer, db.ForeignKey("collection.id"), index=True
+    )  # noqa
     collection = db.relationship(Collection)
 
-    parent_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'))  # noqa
-    parent = db.relationship('EntitySet', backref='children', remote_side=[id])
+    parent_id = db.Column(
+        db.String(ENTITY_ID_LEN), db.ForeignKey("entityset.id")
+    )  # noqa
+    parent = db.relationship("EntitySet", backref="children", remote_side=[id])
 
     @property
     def entities(self):
@@ -44,14 +48,14 @@ class EntitySet(db.Model, SoftDeleteModel):
         return [entity_id for entity_id, in q.all()]
 
     def update(self, data, collection):
-        self.label = data.get('label', self.label)
-        self.type = data.get('type', self.type)
-        self.summary = data.get('summary', self.summary)
-        self.layout = data.get('layout', self.layout)
+        self.label = data.get("label", self.label)
+        self.type = data.get("type", self.type)
+        self.summary = data.get("summary", self.summary)
+        self.layout = data.get("layout", self.layout)
         self.updated_at = datetime.utcnow()
         self.deleted_at = None
         db.session.add(self)
-        self.update_entities(data.get('entities', []))
+        self.update_entities(data.get("entities", []))
 
     def update_entities(self, entities):
         seen = set()
@@ -83,24 +87,25 @@ class EntitySet(db.Model, SoftDeleteModel):
         pq = db.session.query(EntitySetItem)
         pq = pq.filter(EntitySetItem.entityset_id == self.id)
         pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
-        pq.update({EntitySetItem.deleted_at: deleted_at},
-                  synchronize_session=False)
+        pq.update({EntitySetItem.deleted_at: deleted_at}, synchronize_session=False)
 
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
 
     def to_dict(self):
         data = self.to_dict_dates()
-        data.update({
-            'id': stringify(self.id),
-            'type': self.type,
-            'label': self.label,
-            'summary': self.summary,
-            'entities': self.entities,
-            'layout': self.layout,
-            'role_id': stringify(self.role_id),
-            'collection_id': stringify(self.collection_id),
-        })
+        data.update(
+            {
+                "id": stringify(self.id),
+                "type": self.type,
+                "label": self.label,
+                "summary": self.summary,
+                "entities": self.entities,
+                "layout": self.layout,
+                "role_id": stringify(self.role_id),
+                "collection_id": stringify(self.collection_id),
+            }
+        )
         return data
 
     @classmethod
@@ -117,8 +122,7 @@ class EntitySet(db.Model, SoftDeleteModel):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at},
-                  synchronize_session=False)
+        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
 
     @classmethod
     def create(cls, data, collection, authz):
@@ -131,31 +135,33 @@ class EntitySet(db.Model, SoftDeleteModel):
         return entityset
 
     def __repr__(self):
-        return '<EntitySet(%r, %r)>' % (self.id, self.collection_id)
+        return "<EntitySet(%r, %r)>" % (self.id, self.collection_id)
 
 
 class EntitySetItem(db.Model, SoftDeleteModel):
-    __tablename__ = 'entityset_item'
+    __tablename__ = "entityset_item"
 
     id = db.Column(db.Integer, primary_key=True)
-    entityset_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey('entityset.id'), index=True)  # noqa
+    entityset_id = db.Column(
+        db.String(ENTITY_ID_LEN), db.ForeignKey("entityset.id"), index=True
+    )  # noqa
     entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
+    collection_id = db.Column(
+        db.Integer, db.ForeignKey("collection.id"), index=True
+    )  # noqa
 
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at},
-                  synchronize_session=False)
+        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
 
         pq = db.session.query(cls)
         pq = pq.filter(EntitySet.collection_id == collection_id)
         pq = pq.filter(EntitySet.id == cls.entityset_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at},
-                  synchronize_session=False)
+        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
 
     def __repr__(self):
-        return '<EntitySetItem(%r, %r)>' % (self.entityset_id, self.entity_id)
+        return "<EntitySetItem(%r, %r)>" % (self.entityset_id, self.entity_id)

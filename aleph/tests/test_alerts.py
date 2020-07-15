@@ -8,17 +8,16 @@ from aleph.tests.util import TestCase
 
 
 class AlertsTestCase(TestCase):
-
     def setUp(self):
         super(AlertsTestCase, self).setUp()
         self.load_fixtures()
-        self.email = 'test@pudo.org'
-        self.role_email = self.create_user('with_email', email=self.email)
-        self.role_no_email = self.create_user('without_email')
+        self.email = "test@pudo.org"
+        self.role_email = self.create_user("with_email", email=self.email)
+        self.role_no_email = self.create_user("without_email")
         self.role_no_email.email = None
 
     def test_notify(self):
-        data = {'query': 'Kashmir'}
+        data = {"query": "Kashmir"}
         failed_alert = Alert.create(data, self.role_no_email.id)
         failed_alert.notified_at = datetime.utcnow() - timedelta(hours=72)
 
@@ -27,7 +26,7 @@ class AlertsTestCase(TestCase):
         db.session.commit()
 
         res = get_notifications(self.role_email)
-        notcount = res.get('hits').get('total').get('value')
+        notcount = res.get("hits").get("total").get("value")
         assert notcount == 0, notcount
 
         db.session.refresh(alert)
@@ -37,10 +36,10 @@ class AlertsTestCase(TestCase):
 
         check_alerts()
         res = get_notifications(self.role_email)
-        notcount = res.get('hits').get('total').get('value')
-        assert notcount == 1, res.get('hits')
+        notcount = res.get("hits").get("total").get("value")
+        assert notcount == 1, res.get("hits")
 
         check_alerts()
         res = get_notifications(self.role_email)
-        notcount = res.get('hits').get('total').get('value')
-        assert notcount == 1, res.get('hits')
+        notcount = res.get("hits").get("total").get("value")
+        assert notcount == 1, res.get("hits")

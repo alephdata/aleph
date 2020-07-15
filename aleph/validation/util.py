@@ -6,17 +6,17 @@ def to_jsonschema(obj):
     to make for valid JSON Schema."""
     if is_mapping(obj):
         # Re-write nullable fields:
-        type_ = obj.get('type')
+        type_ = obj.get("type")
 
-        if obj.get('nullable', False):
-            type_ = obj.pop('type', None)
-            format_ = obj.pop('format', None)
-            obj['oneOf'] = [
-                {'type': 'null'},
-                {'type': type_, 'format': format_},
+        if obj.get("nullable", False):
+            type_ = obj.pop("type", None)
+            format_ = obj.pop("format", None)
+            obj["oneOf"] = [
+                {"type": "null"},
+                {"type": type_, "format": format_},
             ]
 
-        obj.pop('nullable', None)
+        obj.pop("nullable", None)
         out = {}
         for key, value in obj.items():
             out[key] = to_jsonschema(value)

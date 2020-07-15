@@ -22,7 +22,9 @@ def cli():
 
 
 @cli.command()
-@click.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
+@click.option(
+    "-s", "--sync", is_flag=True, default=False, help="Run without threads"
+)  # noqa
 def process(sync):
     """Start the queue and process tasks as they come. Blocks while waiting"""
     worker = IngestWorker(stages=STAGES)
@@ -33,7 +35,7 @@ def process(sync):
 
 
 @cli.command()
-@click.argument('dataset')
+@click.argument("dataset")
 def cancel(dataset):
     """Delete scheduled tasks for given dataset"""
     conn = get_redis()
@@ -48,18 +50,18 @@ def killthekitten():
 
 
 def _ingest_path(db, conn, dataset, path, languages=[]):
-    context = {'languages': languages}
+    context = {"languages": languages}
     job = Job.create(conn, dataset)
     stage = job.get_stage(OP_INGEST)
     manager = Manager(db, stage, context)
     path = ensure_path(path)
     if path is not None:
         if path.is_file():
-            entity = manager.make_entity('Document')
+            entity = manager.make_entity("Document")
             checksum = manager.store(path)
-            entity.set('contentHash', checksum)
+            entity.set("contentHash", checksum)
             entity.make_id(checksum)
-            entity.set('fileName', path.name)
+            entity.set("fileName", path.name)
             manager.queue_entity(entity)
         if path.is_dir():
             DirectoryIngestor.crawl(manager, path)
@@ -67,13 +69,9 @@ def _ingest_path(db, conn, dataset, path, languages=[]):
 
 
 @cli.command()
-@click.option('--languages',
-              multiple=True,
-              help="3-letter language code (ISO 639)")
-@click.option('--dataset',
-              required=True,
-              help="Name of the dataset")
-@click.argument('path', type=click.Path(exists=True))
+@click.option("--languages", multiple=True, help="3-letter language code (ISO 639)")
+@click.option("--dataset", required=True, help="Name of the dataset")
+@click.argument("path", type=click.Path(exists=True))
 def ingest(path, dataset, languages=None):
     """Queue a set of files for ingest."""
     conn = get_redis()
@@ -82,17 +80,13 @@ def ingest(path, dataset, languages=None):
 
 
 @cli.command()
-@click.option('--languages',
-              multiple=True,
-              help="3-letter language code (ISO 639)")
-@click.option('--dataset',
-              default='test',
-              help="Name of the dataset")
-@click.argument('path', type=click.Path(exists=True))
+@click.option("--languages", multiple=True, help="3-letter language code (ISO 639)")
+@click.option("--dataset", default="test", help="Name of the dataset")
+@click.argument("path", type=click.Path(exists=True))
 def debug(path, dataset, languages=None):
     """Debug the ingest for the given path."""
     conn = get_fakeredis()
-    settings.sts.DATABASE_URI = 'sqlite://'
+    settings.sts.DATABASE_URI = "sqlite://"
     db = get_dataset(dataset, OP_INGEST)
     _ingest_path(db, conn, dataset, path, languages=languages)
     worker = IngestWorker(conn=conn, stages=STAGES)

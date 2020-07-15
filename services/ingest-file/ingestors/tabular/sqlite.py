@@ -12,14 +12,14 @@ log = logging.getLogger(__name__)
 
 
 class SQLiteIngestor(Ingestor, TableSupport):
-    VALID_TABLE = re.compile(r'[\w\d\_\-]{2,4096}')
+    VALID_TABLE = re.compile(r"[\w\d\_\-]{2,4096}")
     MIME_TYPES = [
-        'application/x-sqlite3',
-        'application/x-sqlite',
-        'application/sqlite3',
-        'application/sqlite',
+        "application/x-sqlite3",
+        "application/x-sqlite",
+        "application/sqlite3",
+        "application/sqlite",
     ]
-    EXTENSIONS = ['sqlite3', 'sqlite', 'db']
+    EXTENSIONS = ["sqlite3", "sqlite", "db"]
     SCORE = 8
 
     def get_tables(self, conn):
@@ -50,13 +50,13 @@ class SQLiteIngestor(Ingestor, TableSupport):
                 log.warning("SQLite error: %s", oe)
 
     def ingest(self, file_path, entity):
-        entity.schema = model.get('Workbook')
+        entity.schema = model.get("Workbook")
         conn = sqlite3.connect(file_path)
         try:
             for table_name in self.get_tables(conn):
-                table = self.manager.make_entity('Table', parent=entity)
+                table = self.manager.make_entity("Table", parent=entity)
                 table.make_id(entity, table_name)
-                table.set('title', table_name)
+                table.set("title", table_name)
                 rows = self.generate_rows(conn, table_name)
                 self.emit_row_dicts(table, rows)
                 self.manager.emit_entity(table)

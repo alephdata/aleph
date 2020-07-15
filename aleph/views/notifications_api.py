@@ -7,10 +7,10 @@ from aleph.views.serializers import NotificationSerializer
 from aleph.views.util import require
 
 
-blueprint = Blueprint('notifications_api', __name__)
+blueprint = Blueprint("notifications_api", __name__)
 
 
-@blueprint.route('/api/2/notifications', methods=['GET'])
+@blueprint.route("/api/2/notifications", methods=["GET"])
 def index():
     """
     ---

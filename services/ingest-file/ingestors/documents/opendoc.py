@@ -19,34 +19,30 @@ class OpenDocumentIngestor(Ingestor, OpenDocumentSupport, PDFSupport):
     """
 
     MIME_TYPES = [
-        'application/vnd.oasis.opendocument.text',
-        'application/vnd.oasis.opendocument.text-template',
-        'application/vnd.oasis.opendocument.presentation',
-        'application/vnd.oasis.opendocument.graphics',
-        'application/vnd.oasis.opendocument.graphics-flat-xml',
-        'application/vnd.oasis.opendocument.graphics-template'
-        'application/vnd.oasis.opendocument.presentation-flat-xml',
-        'application/vnd.oasis.opendocument.presentation-template',
-        'application/vnd.oasis.opendocument.chart',
-        'application/vnd.oasis.opendocument.chart-template',
-        'application/vnd.oasis.opendocument.image',
-        'application/vnd.oasis.opendocument.image-template',
-        'application/vnd.oasis.opendocument.formula',
-        'application/vnd.oasis.opendocument.formula-template',
-        'application/vnd.oasis.opendocument.text-flat-xml',
-        'application/vnd.oasis.opendocument.text-master',
-        'application/vnd.oasis.opendocument.text-web',
+        "application/vnd.oasis.opendocument.text",
+        "application/vnd.oasis.opendocument.text-template",
+        "application/vnd.oasis.opendocument.presentation",
+        "application/vnd.oasis.opendocument.graphics",
+        "application/vnd.oasis.opendocument.graphics-flat-xml",
+        "application/vnd.oasis.opendocument.graphics-template"
+        "application/vnd.oasis.opendocument.presentation-flat-xml",
+        "application/vnd.oasis.opendocument.presentation-template",
+        "application/vnd.oasis.opendocument.chart",
+        "application/vnd.oasis.opendocument.chart-template",
+        "application/vnd.oasis.opendocument.image",
+        "application/vnd.oasis.opendocument.image-template",
+        "application/vnd.oasis.opendocument.formula",
+        "application/vnd.oasis.opendocument.formula-template",
+        "application/vnd.oasis.opendocument.text-flat-xml",
+        "application/vnd.oasis.opendocument.text-master",
+        "application/vnd.oasis.opendocument.text-web",
     ]
-    EXTENSIONS = [
-        'odt',
-        'odp',
-        'otp'
-    ]
+    EXTENSIONS = ["odt", "odp", "otp"]
     SCORE = 7
 
     def ingest(self, file_path, entity):
         """Ingestor implementation."""
-        entity.schema = model.get('Pages')
+        entity.schema = model.get("Pages")
         self.parse_opendocument(file_path, entity)
         pdf_path = self.document_to_pdf(file_path, entity)
         self.pdf_alternative_extract(entity, pdf_path)

@@ -18,17 +18,17 @@ class OpenDocumentSupport(TimestampSupport):
 
         for child in doc.meta.childNodes:
             value = str(child)
-            if child.tagName == 'dc:title':
-                entity.add('title', value)
-            if child.tagName == 'dc:description':
-                entity.add('summary', value)
-            if child.tagName == 'dc:creator':
-                entity.add('author', value)
-            if child.tagName == 'dc:date':
-                entity.add('date', self.parse_timestamp(value))
-            if child.tagName == 'meta:creation-date':
-                entity.add('authoredAt', self.parse_timestamp(value))
-            if child.tagName == 'meta:generator':
-                entity.add('generator', value)
+            if child.tagName == "dc:title":
+                entity.add("title", value)
+            if child.tagName == "dc:description":
+                entity.add("summary", value)
+            if child.tagName == "dc:creator":
+                entity.add("author", value)
+            if child.tagName == "dc:date":
+                entity.add("date", self.parse_timestamp(value))
+            if child.tagName == "meta:creation-date":
+                entity.add("authoredAt", self.parse_timestamp(value))
+            if child.tagName == "meta:generator":
+                entity.add("generator", value)
 
         return doc

@@ -22,6 +22,7 @@ class Graph(FtMGraph):
 
     def resolve(self):
         from aleph.logic import resolver
+
         for id_ in self.queued:
             node_id = registry.entity.node_id_safe(id_)
             node = self.nodes.get(node_id)
@@ -50,7 +51,7 @@ class GraphQuery(object):
         if authz is not None:
             self.filters.append(authz_query(authz))
         if collection_ids is not None:
-            filter_ = field_filter_query('collection_id', collection_ids)
+            filter_ = field_filter_query("collection_id", collection_ids)
             self.filters.append(filter_)
 
     def node(self, node, limit=0, count=False):
@@ -76,32 +77,33 @@ class GraphQuery(object):
         "Generate a sequence of ES queries representing the patterns."
         queries = []
         for patterns in self._group_patterns():
-            query = {'filter': list(self.filters)}
+            query = {"filter": list(self.filters)}
             if len(patterns) == 1:
-                query['filter'].append(patterns[0].filter)
+                query["filter"].append(patterns[0].filter)
             else:
-                query['minimum_should_match'] = 1
-                query['should'] = []
+                query["minimum_should_match"] = 1
+                query["should"] = []
                 for pattern in patterns:
-                    query['should'].append(pattern.filter)
+                    query["should"].append(pattern.filter)
 
             query = {
-                'size': patterns[0].limit,
-                'query': {'bool': query},
-                '_source': _source_spec(PROXY_INCLUDES, None)
+                "size": patterns[0].limit,
+                "query": {"bool": query},
+                "_source": _source_spec(PROXY_INCLUDES, None),
             }
             counters = {}
             for pattern in patterns:
                 if pattern.count:
                     counters[pattern.id] = pattern.filter
             if len(counters):
-                query['aggs'] = {
-                    'counters': {'filters': {'filters': counters}}
-                }
+                query["aggs"] = {"counters": {"filters": {"filters": counters}}}
             index = patterns[0].index
             queries.append((patterns, index, query))
-        log.info("GraphQuery has %d patterns, %s queries...",
-                 len(self.patterns), len(queries))
+        log.info(
+            "GraphQuery has %d patterns, %s queries...",
+            len(self.patterns),
+            len(queries),
+        )
         return queries
 
     def execute(self):
@@ -111,17 +113,17 @@ class GraphQuery(object):
             return []
         body = []
         for (_, index, query) in queries:
-            body.append({'index': index})
+            body.append({"index": index})
             body.append(query)
         results = es.msearch(body=body)
-        responses = results.get('responses', [])
+        responses = results.get("responses", [])
         for ((patterns, _, _), result) in zip(queries, responses):
-            hits = result.get('hits', {}).get('hits', [])
+            hits = result.get("hits", {}).get("hits", [])
             results = [unpack_result(r) for r in hits]
-            aggs = result.get('aggregations', {}).get('counters', {})
-            counters = aggs.get('buckets', {})
+            aggs = result.get("aggregations", {}).get("counters", {})
+            counters = aggs.get("buckets", {})
             for pattern in patterns:
-                count = counters.get(pattern.id, {}).get('doc_count')
+                count = counters.get(pattern.id, {}).get("doc_count")
                 pattern.apply(count, results)
         return self.patterns
 
@@ -141,7 +143,7 @@ class QueryPattern(object):
         self.prop = prop
         if prop is not None:
             self.index = entities_read_index(prop.schema)
-            field = 'properties.%s' % prop.name
+            field = "properties.%s" % prop.name
             self.filter = field_filter_query(field, node.value)
             self.id = prop.qname
         else:

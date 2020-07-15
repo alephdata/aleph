@@ -36,12 +36,14 @@ def crawl_directory(collection, path, parent=None, job_id=None):
             document = None
             job_id = Job.random_id()
         else:
-            meta = {'file_name': path.name}
-            document = Document.save(collection,
-                                     parent=parent,
-                                     foreign_id=foreign_id,
-                                     content_hash=content_hash,
-                                     meta=meta)
+            meta = {"file_name": path.name}
+            document = Document.save(
+                collection,
+                parent=parent,
+                foreign_id=foreign_id,
+                content_hash=content_hash,
+                meta=meta,
+            )
             db.session.commit()
             job_id = job_id or Job.random_id()
             proxy = document.to_proxy()

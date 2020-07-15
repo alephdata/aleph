@@ -4,17 +4,14 @@ from graphene import relay
 
 
 class Entity(graphene.ObjectType):
-
     class Meta:
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
-    name = graphene.String(description='The name of the faction.')
+    name = graphene.String(description="The name of the faction.")
 
     @classmethod
     def get_node(cls, info, id):
-        return {
-            'name': 'foo-%s' % id
-        }
+        return {"name": "foo-%s" % id}
 
 
 class Query(graphene.ObjectType):
@@ -27,13 +24,13 @@ class Query(graphene.ObjectType):
 
 schema = graphene.Schema(query=Query)
 
-query = '''
+query = """
     query bar {
         node(id: "banana") {
             name
         }
     }
-'''
+"""
 
 result = schema.execute(query)
 pprint(result.errors)

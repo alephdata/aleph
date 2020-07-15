@@ -13,22 +13,24 @@ from aleph.views.util import get_db_collection, parse_request
 from aleph.views.util import get_index_entity, get_session_id, obj_or_404
 
 
-blueprint = Blueprint('mappings_api', __name__)
+blueprint = Blueprint("mappings_api", __name__)
 log = logging.getLogger(__name__)
 
 
 def load_query():
     try:
-        query = request.json.get('mapping_query', {})
+        query = request.json.get("mapping_query", {})
         # just for validation
-        model.make_mapping({'entities': query})
+        model.make_mapping({"entities": query})
     except Exception as ex:
         log.exception("Validation error: %s", request.json)
         raise BadRequest(str(ex))
     return query
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings', methods=['GET'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/mappings", methods=["GET"]
+)  # noqa
 def index(collection_id):
     """Returns a list of mappings for the collection and table.
     ---
@@ -68,13 +70,15 @@ def index(collection_id):
     """
     collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
-    table_id = first(parser.filters.get('table'))
+    table_id = first(parser.filters.get("table"))
     q = Mapping.by_collection(collection.id, table_id=table_id)
     result = DatabaseQueryResult(request, q, parser=parser)
     return MappingSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings', methods=['POST', 'PUT'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/mappings", methods=["POST", "PUT"]
+)  # noqa
 def create(collection_id):
     """Create a mapping.
     ---
@@ -106,16 +110,20 @@ def create(collection_id):
       - Mapping
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    data = parse_request('MappingCreate')
-    entity_id = data.get('table_id')
+    data = parse_request("MappingCreate")
+    entity_id = data.get("table_id")
     query = load_query()
     entity = get_index_entity(entity_id, request.authz.READ)
-    mapping = Mapping.create(query, entity.get('id'), collection, request.authz.id)  # noqa
+    mapping = Mapping.create(
+        query, entity.get("id"), collection, request.authz.id
+    )  # noqa
     db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['GET'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>", methods=["GET"]
+)  # noqa
 def view(collection_id, mapping_id):
     """Return the mapping with id `mapping_id`.
     ---
@@ -154,7 +162,10 @@ def view(collection_id, mapping_id):
     return MappingSerializer.jsonify(mapping)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['POST', 'PUT'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
+    methods=["POST", "PUT"],
+)  # noqa
 def update(collection_id, mapping_id):
     """Update the mapping with id `mapping_id`.
     ---
@@ -195,16 +206,19 @@ def update(collection_id, mapping_id):
     """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    data = parse_request('MappingCreate')
-    entity_id = data.get('table_id')
+    data = parse_request("MappingCreate")
+    entity_id = data.get("table_id")
     query = load_query()
     entity = get_index_entity(entity_id, request.authz.READ)
-    mapping.update(query=query, table_id=entity.get('id'))
+    mapping.update(query=query, table_id=entity.get("id"))
     db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['DELETE'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
+    methods=["DELETE"],
+)  # noqa
 def delete(collection_id, mapping_id):
     """Delete a mapping.
     ---
@@ -238,11 +252,13 @@ def delete(collection_id, mapping_id):
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
     db.session.commit()
-    return ('', 204)
+    return ("", 204)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/trigger',  # noqa
-                 methods=['POST', 'PUT'])
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/trigger",  # noqa
+    methods=["POST", "PUT"],
+)
 def trigger(collection_id, mapping_id):
     """Load entities by running the mapping with id `mapping_id`. Flushes
     previously loaded entities before loading new entities.
@@ -278,13 +294,15 @@ def trigger(collection_id, mapping_id):
     mapping.disabled = False
     mapping.set_status(Mapping.PENDING)
     job_id = get_session_id()
-    payload = {'mapping_id': mapping.id}
+    payload = {"mapping_id": mapping.id}
     queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
     return MappingSerializer.jsonify(mapping, status=202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush',  # noqa
-                 methods=['POST', 'PUT'])
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush",  # noqa
+    methods=["POST", "PUT"],
+)
 def flush(collection_id, mapping_id):
     """Flush all entities loaded by mapping with id `mapping_id`.
     ---
@@ -321,7 +339,10 @@ def flush(collection_id, mapping_id):
     mapping.last_run_err_msg = None
     db.session.add(mapping)
     db.session.commit()
-    queue_task(collection, OP_FLUSH_MAPPING,
-               job_id=get_session_id(),
-               payload={'mapping_id': mapping.id})
-    return ('', 202)
+    queue_task(
+        collection,
+        OP_FLUSH_MAPPING,
+        job_id=get_session_id(),
+        payload={"mapping_id": mapping.id},
+    )
+    return ("", 202)

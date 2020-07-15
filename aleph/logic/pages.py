@@ -20,14 +20,14 @@ def load_pages(locale):
     candidates = {}
     for path in directory.iterdir():
         page = frontmatter.load(path).to_dict()
-        name, lang, _ = path.name.split('.', 2)
-        page['name'] = name
-        page['lang'] = lang
-        page['title'] = page.get('title', name)
-        page['short'] = page.get('short', page['title'])
-        page['icon'] = page.get('icon', 'book')
-        page['menu'] = page.get('menu', False)
-        page['home'] = page.get('home', False)
+        name, lang, _ = path.name.split(".", 2)
+        page["name"] = name
+        page["lang"] = lang
+        page["title"] = page.get("title", name)
+        page["short"] = page.get("short", page["title"])
+        page["icon"] = page.get("icon", "book")
+        page["menu"] = page.get("menu", False)
+        page["home"] = page.get("home", False)
         candidates.setdefault(name, {})
         candidates[name][lang] = page
     pages = []

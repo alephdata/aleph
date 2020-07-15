@@ -12,10 +12,10 @@ log = logging.getLogger(__name__)
 class TagAggregator(object):
     MAX_TAGS = 10000
     CUTOFFS = {
-        TAG_COUNTRY: .3,
-        TAG_PERSON: .003,
-        TAG_COMPANY: .003,
-        TAG_PHONE: .05,
+        TAG_COUNTRY: 0.3,
+        TAG_PERSON: 0.003,
+        TAG_COMPANY: 0.003,
+        TAG_PHONE: 0.05,
     }
 
     def __init__(self):

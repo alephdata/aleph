@@ -7,11 +7,11 @@ from aleph.views.util import get_db_collection
 from aleph.views.util import require, stream_ijson
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('bulk_api', __name__)
+blueprint = Blueprint("bulk_api", __name__)
 
 
-@blueprint.route('/api/2/entities/_stream')
-@blueprint.route('/api/2/collections/<int:collection_id>/_stream')
+@blueprint.route("/api/2/entities/_stream")
+@blueprint.route("/api/2/collections/<int:collection_id>/_stream")
 def entities(collection_id=None):
     """
     ---
@@ -41,15 +41,16 @@ def entities(collection_id=None):
       - Entity
     """
     require(request.authz.can_stream())
-    log.debug("Stream entities [%r] begins... (coll: %s)",
-              request.authz, collection_id)
-    schemata = ensure_list(request.args.getlist('schema'))
-    includes = ensure_list(request.args.getlist('include'))
+    log.debug("Stream entities [%r] begins... (coll: %s)", request.authz, collection_id)
+    schemata = ensure_list(request.args.getlist("schema"))
+    includes = ensure_list(request.args.getlist("include"))
     includes = includes or PROXY_INCLUDES
     if collection_id is not None:
         get_db_collection(collection_id, request.authz.READ)
-    entities = iter_entities(authz=request.authz,
-                             collection_id=collection_id,
-                             schemata=schemata,
-                             includes=includes)
+    entities = iter_entities(
+        authz=request.authz,
+        collection_id=collection_id,
+        schemata=schemata,
+        includes=includes,
+    )
     return stream_ijson(entities)

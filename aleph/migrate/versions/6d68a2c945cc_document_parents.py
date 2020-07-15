@@ -9,15 +9,14 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = '6d68a2c945cc'
-down_revision = '83dd3cee52da'
+revision = "6d68a2c945cc"
+down_revision = "83dd3cee52da"
 
 
 def upgrade():
-    op.add_column('document', sa.Column('parent_id', sa.BigInteger(),
-                  nullable=True))
-    op.drop_column('document', 'error_details')
-    op.create_index(op.f('ix_entity_state'), 'entity', ['state'], unique=False)
+    op.add_column("document", sa.Column("parent_id", sa.BigInteger(), nullable=True))
+    op.drop_column("document", "error_details")
+    op.create_index(op.f("ix_entity_state"), "entity", ["state"], unique=False)
 
 
 def downgrade():

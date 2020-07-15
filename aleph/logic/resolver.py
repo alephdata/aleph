@@ -20,14 +20,14 @@ LOADERS = {
     Role: get_role,
     Collection: get_collection,
     Alert: get_alert,
-    EntitySet: get_entityset
+    EntitySet: get_entityset,
 }
 
 
 def _instrument_stub(stub):
-    if not hasattr(stub, '_rx_queue'):
+    if not hasattr(stub, "_rx_queue"):
         stub._rx_queue = set()
-    if not hasattr(stub, '_rx_cache'):
+    if not hasattr(stub, "_rx_cache"):
         stub._rx_cache = {}
 
 
@@ -69,7 +69,7 @@ def resolve(stub):
 
     for schema, ids in queries.items():
         for entity in entities_by_ids(ids, schemata=schema, cached=True):
-            stub._rx_cache[(Entity, entity.get('id'))] = entity
+            stub._rx_cache[(Entity, entity.get("id"))] = entity
 
 
 def get(stub, clazz, key):

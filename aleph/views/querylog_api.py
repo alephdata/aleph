@@ -6,10 +6,10 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import QueryLogSerializer
 from aleph.views.util import require
 
-blueprint = Blueprint('querylog_api', __name__)
+blueprint = Blueprint("querylog_api", __name__)
 
 
-@blueprint.route('/api/2/querylog', methods=['GET'])
+@blueprint.route("/api/2/querylog", methods=["GET"])
 def index():
     """Get query logs for the user.
     ---
@@ -40,7 +40,7 @@ def index():
     return QueryLogSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/querylog', methods=['DELETE'])
+@blueprint.route("/api/2/querylog", methods=["DELETE"])
 def delete():
     """Delete the query logs for a particular search term.
     ---
@@ -59,9 +59,9 @@ def delete():
       - Query Log
     """
     require(request.authz.logged_in)
-    query = request.args.get('query')
+    query = request.args.get("query")
     if not query:
-        return ('', 404)
+        return ("", 404)
     QueryLog.delete_query(request.authz.id, query)
     db.session.commit()
-    return ('', 204)
+    return ("", 204)

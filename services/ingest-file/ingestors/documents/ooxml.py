@@ -12,25 +12,32 @@ class OfficeOpenXMLIngestor(Ingestor, OOXMLSupport, PDFSupport):
     Mostly a slightly adjusted PDF ingestor.
     """
 
-    PREFIX = 'application/vnd.openxmlformats-officedocument.'
+    PREFIX = "application/vnd.openxmlformats-officedocument."
     MIME_TYPES = [
-        PREFIX + 'wordprocessingml.document',
-        PREFIX + 'wordprocessingml.template',
-        PREFIX + 'presentationml.slideshow',
-        PREFIX + 'presentationml.presentation',
-        PREFIX + 'presentationml.template',
-        PREFIX + 'presentationml.slideshow',
+        PREFIX + "wordprocessingml.document",
+        PREFIX + "wordprocessingml.template",
+        PREFIX + "presentationml.slideshow",
+        PREFIX + "presentationml.presentation",
+        PREFIX + "presentationml.template",
+        PREFIX + "presentationml.slideshow",
     ]
     EXTENSIONS = [
-        'docx', 'docm', 'dotx', 'dotm',
-        'potx', 'pptx', 'ppsx', 'pptm',
-        'ppsm', 'potm'
+        "docx",
+        "docm",
+        "dotx",
+        "dotm",
+        "potx",
+        "pptx",
+        "ppsx",
+        "pptm",
+        "ppsm",
+        "potm",
     ]
     SCORE = 7
 
     def ingest(self, file_path, entity):
         """Ingestor implementation."""
-        entity.schema = model.get('Pages')
+        entity.schema = model.get("Pages")
         self.ooxml_extract_metadata(file_path, entity)
         pdf_path = self.document_to_pdf(file_path, entity)
         self.pdf_alternative_extract(entity, pdf_path)

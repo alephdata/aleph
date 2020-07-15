@@ -20,7 +20,7 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=100):
         # pull a whole batch of them off the queue and do it at once.
         tasks = stage.get_tasks(limit=max(1, batch - len(entity_ids)))
         for task in tasks:
-            entity_ids.extend(ensure_list(task.payload.get('entity_ids')))
+            entity_ids.extend(ensure_list(task.payload.get("entity_ids")))
         stage.mark_done(len(tasks))
     aggregator = get_aggregator(collection)
     index_aggregator(collection, aggregator, entity_ids=entity_ids, sync=sync)
@@ -44,11 +44,11 @@ def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):
         if not unsafe:
             entity = remove_checksums(entity)
         entity.context = {
-            'role_id': role_id,
-            'created_at': now,
-            'updated_at': now,
+            "role_id": role_id,
+            "created_at": now,
+            "updated_at": now,
         }
-        writer.put(entity, origin='bulk')
+        writer.put(entity, origin="bulk")
         if index and len(entity_ids) < MAX_PAGE:
             entity_ids.add(entity.id)
     writer.flush()

@@ -2,8 +2,8 @@ import dataset
 from itertools import combinations
 from unicodecsv import writer
 
-db = dataset.connect('postgresql://localhost/aleph')
-query = '''
+db = dataset.connect("postgresql://localhost/aleph")
+query = """
     SELECT d.id AS doc_id, a.text2 AS entity, SUM(dt.weight) AS weight
         FROM document_tag dt
             LEFT JOIN document d ON dt.document_id = d.id
@@ -12,7 +12,7 @@ query = '''
         GROUP BY a.text2, d.id
         HAVING COUNT(d.id) > 1
         ORDER BY SUM(dt.weight) DESC;
-'''
+"""
 
 entities = {}
 documents = {}
@@ -32,8 +32,8 @@ for doc_id, mentions in documents.items():
             links[link] = 0
         links[link] += 1
 
-with open('links.csv', 'w') as fh:
+with open("links.csv", "w") as fh:
     csv = writer(fh)
-    csv.writerow(['source', 'source_weight', 'target', 'target_weight', 'weight'])
+    csv.writerow(["source", "source_weight", "target", "target_weight", "weight"])
     for (a, b), weight in links.items():
         csv.writerow([a, entities.get(a), b, entities.get(b), weight])

@@ -12,13 +12,12 @@ log = logging.getLogger(__name__)
 
 
 class QueryResult(object):
-
     def __init__(self, request, parser=None, results=None, total=None):
         self.request = request
         self.parser = parser or QueryParser(request.args, request.authz)
         self.results = results or []
         self.total = total or 0
-        self.total_type = 'eq'
+        self.total_type = "eq"
 
     @property
     def pages(self):
@@ -30,7 +29,7 @@ class QueryResult(object):
         if page < 1 or page > self.pages:
             return None
         offset = (page - 1) * self.parser.limit
-        args = [('offset', str(offset))]
+        args = [("offset", str(offset))]
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
 
@@ -40,21 +39,20 @@ class QueryResult(object):
             results = serializer().serialize_many(results)
 
         return {
-            'status': 'ok',
-            'results': results,
-            'total': self.total,
-            'total_type': self.total_type,
-            'page': self.parser.page,
-            'limit': self.parser.limit,
-            'offset': self.parser.offset,
-            'pages': self.pages,
-            'next': self.page_url(self.parser.page + 1),
-            'previous': self.page_url(self.parser.page - 1),
+            "status": "ok",
+            "results": results,
+            "total": self.total,
+            "total_type": self.total_type,
+            "page": self.parser.page,
+            "limit": self.parser.limit,
+            "offset": self.parser.offset,
+            "pages": self.pages,
+            "next": self.page_url(self.parser.page + 1),
+            "previous": self.page_url(self.parser.page - 1),
         }
 
 
 class DatabaseQueryResult(QueryResult):
-
     def __init__(self, request, query, parser=None):
         super(DatabaseQueryResult, self).__init__(request, parser=parser)
         self.total = query.count()
@@ -65,23 +63,23 @@ class DatabaseQueryResult(QueryResult):
 
 class SearchQueryResult(QueryResult):
     FACETS = {
-        'collection_id': CollectionFacet,
-        'match_collection_id': CollectionFacet,
-        'languages': LanguageFacet,
-        'countries': CountryFacet,
-        'category': CategoryFacet,
-        'schema': SchemaFacet,
-        'schemata': SchemaFacet
+        "collection_id": CollectionFacet,
+        "match_collection_id": CollectionFacet,
+        "languages": LanguageFacet,
+        "countries": CountryFacet,
+        "category": CategoryFacet,
+        "schema": SchemaFacet,
+        "schemata": SchemaFacet,
     }
 
     def __init__(self, request, parser, result):
         super(SearchQueryResult, self).__init__(request, parser=parser)
         self.result = result
-        hits = self.result.get('hits', {})
-        total = hits.get('total', {})
-        self.total = total.get('value')
-        self.total_type = total.get('relation')
-        for doc in hits.get('hits', []):
+        hits = self.result.get("hits", {})
+        total = hits.get("total", {})
+        self.total = total.get("value")
+        self.total_type = total.get("relation")
+        for doc in hits.get("hits", []):
             # log.info("Res: %s", pformat(doc))
             doc = unpack_result(doc)
             if doc is not None:
@@ -89,7 +87,7 @@ class SearchQueryResult(QueryResult):
 
     def get_facets(self):
         facets = {}
-        aggregations = self.result.get('aggregations')
+        aggregations = self.result.get("aggregations")
         for name in self.parser.facet_names:
             facet_cls = self.FACETS.get(name, Facet)
             facets[name] = facet_cls(name, aggregations, self.parser)
@@ -97,5 +95,5 @@ class SearchQueryResult(QueryResult):
 
     def to_dict(self, serializer=None):
         data = super(SearchQueryResult, self).to_dict(serializer=serializer)
-        data['facets'] = self.get_facets()
+        data["facets"] = self.get_facets()
         return data

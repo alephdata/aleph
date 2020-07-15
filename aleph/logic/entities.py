@@ -24,16 +24,12 @@ def upsert_entity(data, collection, validate=True, authz=None, sync=False):
     database entity in the event that it gets edited by the user.
     """
     entity = None
-    entity_id = collection.ns.sign(data.get('id'))
+    entity_id = collection.ns.sign(data.get("id"))
     if entity_id is not None:
-        entity = Entity.by_id(entity_id,
-                              collection=collection,
-                              deleted=True)
+        entity = Entity.by_id(entity_id, collection=collection, deleted=True)
     if entity is None:
         role_id = authz.id if authz is not None else None
-        entity = Entity.create(data, collection,
-                               role_id=role_id,
-                               validate=validate)
+        entity = Entity.create(data, collection, role_id=role_id, validate=validate)
     else:
         entity.update(data, collection, validate=validate)
 
@@ -62,7 +58,7 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     # reference the given entity. Usually this is going to be child
     # documents, or directoships referencing a person. It's a pretty
     # dangerous operation, though.
-    entity_id = collection.ns.sign(entity.get('id'))
+    entity_id = collection.ns.sign(entity.get("id"))
     for adjacent in index.iter_adjacent(entity):
         log.warning("Recursive delete: %r", adjacent)
         delete_entity(collection, adjacent, deleted_at=deleted_at, sync=sync)
@@ -119,8 +115,9 @@ def entity_tags(entity, authz=None, edge_types=registry.pivots):
             yield (field, res.node.value, res.count)
 
 
-def entity_expand(entity, collection_ids, edge_types, limit,
-                  properties=None, authz=None):
+def entity_expand(
+    entity, collection_ids, edge_types, limit, properties=None, authz=None
+):
     """Expand an entity's graph to find adjacent entities that are connected
     by a common property value(eg: having the same email or phone number), a
     property (eg: Passport entity linked to a Person) or an Entity type edge.

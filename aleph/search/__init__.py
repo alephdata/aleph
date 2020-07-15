@@ -16,16 +16,16 @@ log = logging.getLogger(__name__)
 
 
 class CollectionsQuery(Query):
-    TEXT_FIELDS = ['label^3', 'text']
-    SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
-    SKIP_FILTERS = ['writeable']
-    PREFIX_FIELD = 'label'
+    TEXT_FIELDS = ["label^3", "text"]
+    SORT_DEFAULT = ["_score", {"label.kw": "asc"}]
+    SKIP_FILTERS = ["writeable"]
+    PREFIX_FIELD = "label"
 
     def get_filters(self):
         filters = super(CollectionsQuery, self).get_filters()
-        if self.parser.getbool('filter:writeable'):
+        if self.parser.getbool("filter:writeable"):
             ids = self.parser.authz.collections(self.parser.authz.WRITE)
-            filters.append({'ids': {'values': ids}})
+            filters.append({"ids": {"values": ids}})
         return filters
 
     def get_index(self):
@@ -33,17 +33,17 @@ class CollectionsQuery(Query):
 
 
 class EntitiesQuery(Query):
-    TEXT_FIELDS = ['fingerprints.text^3', 'text']
-    PREFIX_FIELD = 'names.text'
-    SKIP_FILTERS = ['schema', 'schemata']
+    TEXT_FIELDS = ["fingerprints.text^3", "text"]
+    PREFIX_FIELD = "names.text"
+    SKIP_FILTERS = ["schema", "schemata"]
     INCLUDE_FIELDS = PROXY_INCLUDES
     SORT_DEFAULT = []
 
     def get_index(self):
-        schemata = self.parser.getlist('filter:schema')
+        schemata = self.parser.getlist("filter:schema")
         if len(schemata):
             return entities_read_index(schema=schemata, expand=False)
-        schemata = self.parser.getlist('filter:schemata')
+        schemata = self.parser.getlist("filter:schemata")
         if not len(schemata):
             raise BadRequest(gettext("No schema is specified for the query."))
         return entities_read_index(schema=schemata)
@@ -69,15 +69,13 @@ class MatchQuery(EntitiesQuery):
 
     def get_query(self):
         query = super(MatchQuery, self).get_query()
-        return match_query(self.entity,
-                           collection_ids=self.collection_ids,
-                           query=query)
+        return match_query(self.entity, collection_ids=self.collection_ids, query=query)
 
 
 class XrefQuery(Query):
-    TEXT_FIELDS = ['text']
-    SORT_DEFAULT = [{'score': 'desc'}]
-    AUTHZ_FIELD = 'match_collection_id'
+    TEXT_FIELDS = ["text"]
+    SORT_DEFAULT = [{"score": "desc"}]
+    AUTHZ_FIELD = "match_collection_id"
 
     def __init__(self, parser, collection_id=None):
         self.collection_id = collection_id
@@ -86,7 +84,7 @@ class XrefQuery(Query):
 
     def get_filters(self):
         filters = super(XrefQuery, self).get_filters()
-        filters.append({'term': {'collection_id': self.collection_id}})
+        filters.append({"term": {"collection_id": self.collection_id}})
         return filters
 
     def get_index(self):
@@ -95,10 +93,10 @@ class XrefQuery(Query):
 
 class EntitySetItemsQuery(EntitiesQuery):
     def __init__(self, *args, **kwargs):
-        self.entityset = kwargs.pop('entityset')
+        self.entityset = kwargs.pop("entityset")
         super(EntitySetItemsQuery, self).__init__(*args, **kwargs)
 
     def get_filters(self):
         filters = super(EntitySetItemsQuery, self).get_filters()
-        filters.append({'ids': {'values': self.entityset.entities}})
+        filters.append({"ids": {"values": self.entityset.entities}})
         return filters

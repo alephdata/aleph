@@ -26,9 +26,9 @@ class Manager(object):
     into a larger processing framework."""
 
     #: Indicates that during the processing no errors or failures occured.
-    STATUS_SUCCESS = u'success'
+    STATUS_SUCCESS = u"success"
     #: Indicates occurance of errors during the processing.
-    STATUS_FAILURE = u'failure'
+    STATUS_FAILURE = u"failure"
 
     MAGIC = magic.Magic(mime=True)
 
@@ -37,13 +37,13 @@ class Manager(object):
         self.writer = dataset.bulk()
         self.stage = stage
         self.context = context
-        self.ns = Namespace(self.context.get('namespace'))
-        self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
+        self.ns = Namespace(self.context.get("namespace"))
+        self.work_path = ensure_path(mkdtemp(prefix="ingestor-"))
         self.emitted = set()
 
     @property
     def archive(self):
-        if not hasattr(settings, '_archive'):
+        if not hasattr(settings, "_archive"):
             settings._archive = init_archive()
         return settings._archive
 
@@ -58,18 +58,18 @@ class Manager(object):
         """Derive entity properties by knowing it's parent folder."""
         if parent is not None and child is not None:
             # Folder hierarchy:
-            child.add('parent', parent.id)
-            child.add('ancestors', parent.get('ancestors'))
-            child.add('ancestors', parent.id)
+            child.add("parent", parent.id)
+            child.add("ancestors", parent.get("ancestors"))
+            child.add("ancestors", parent.id)
             self.apply_context(child, parent)
 
     def apply_context(self, entity, source):
         # Aleph-specific context data:
         entity.context = {
-            'created_at': source.context.get('created_at'),
-            'updated_at': source.context.get('updated_at'),
-            'role_id': source.context.get('role_id'),
-            'mutable': False,
+            "created_at": source.context.get("created_at"),
+            "updated_at": source.context.get("updated_at"),
+            "role_id": source.context.get("role_id"),
+            "mutable": False,
         }
 
     def emit_entity(self, entity, fragment=None):
@@ -83,18 +83,18 @@ class Manager(object):
         if len(texts):
             doc = self.make_entity(entity.schema)
             doc.id = entity.id
-            doc.add('indexText', texts)
+            doc.add("indexText", texts)
             self.emit_entity(doc, fragment=safe_fragment(fragment))
 
     def auction(self, file_path, entity):
-        if not entity.has('mimeType'):
+        if not entity.has("mimeType"):
             if file_path.is_dir():
-                entity.add('mimeType', DirectoryIngestor.MIME_TYPE)
+                entity.add("mimeType", DirectoryIngestor.MIME_TYPE)
                 return DirectoryIngestor
-            entity.add('mimeType', self.MAGIC.from_file(file_path.as_posix()))
+            entity.add("mimeType", self.MAGIC.from_file(file_path.as_posix()))
 
         best_score, best_cls = 0, None
-        for cls in get_extensions('ingestors'):
+        for cls in get_extensions("ingestors"):
             score = cls.match(file_path, entity)
             if score > best_score:
                 best_score = score
@@ -116,12 +116,12 @@ class Manager(object):
 
     def load(self, content_hash, file_name=None):
         # log.info("Local archive name: %s", file_name)
-        return self.archive.load_file(content_hash,
-                                      file_name=file_name,
-                                      temp_path=self.work_path)
+        return self.archive.load_file(
+            content_hash, file_name=file_name, temp_path=self.work_path
+        )
 
     def ingest_entity(self, entity):
-        for content_hash in entity.get('contentHash', quiet=True):
+        for content_hash in entity.get("contentHash", quiet=True):
             file_name = entity_filename(entity)
             file_path = self.load(content_hash, file_name=file_name)
             if file_path is None or not file_path.exists():
@@ -133,17 +133,17 @@ class Manager(object):
     def ingest(self, file_path, entity, **kwargs):
         """Main execution step of an ingestor."""
         file_path = ensure_path(file_path)
-        if file_path.is_file() and not entity.has('fileSize'):
-            entity.add('fileSize', file_path.stat().st_size)
+        if file_path.is_file() and not entity.has("fileSize"):
+            entity.add("fileSize", file_path.stat().st_size)
 
-        entity.set('processingStatus', self.STATUS_FAILURE)
+        entity.set("processingStatus", self.STATUS_FAILURE)
         try:
             ingestor_class = self.auction(file_path, entity)
             log.info("Ingestor [%r]: %s", entity, ingestor_class.__name__)
             self.delegate(ingestor_class, file_path, entity)
-            entity.set('processingStatus', self.STATUS_SUCCESS)
+            entity.set("processingStatus", self.STATUS_SUCCESS)
         except ProcessingException as pexc:
-            entity.set('processingError', stringify(pexc))
+            entity.set("processingError", stringify(pexc))
             log.error("[%r] Failed to process: %s", entity, pexc)
         finally:
             self.finalize(entity)

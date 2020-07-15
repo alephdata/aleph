@@ -10,13 +10,13 @@ log = logging.getLogger(__name__)
 
 class QueryLog(db.Model, IdModel):
     """Records a search query conducted by a user."""
-    __tablename__ = 'query_log'
+
+    __tablename__ = "query_log"
 
     id = db.Column(db.BigInteger, primary_key=True)
     query = db.Column(db.Unicode, nullable=True)
     session_id = db.Column(db.Unicode, nullable=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'),
-                        index=True, nullable=True)
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), index=True, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     @classmethod
@@ -28,9 +28,9 @@ class QueryLog(db.Model, IdModel):
 
     @classmethod
     def query_log(cls, role_id=None):
-        first = func.min(cls.created_at).label('first')
-        last = func.max(cls.created_at).label('last')
-        count = func.count(cls.id).label('count')
+        first = func.min(cls.created_at).label("first")
+        last = func.max(cls.created_at).label("last")
+        count = func.count(cls.id).label("count")
         q = db.session.query(cls.query, first, last, count)
         q = q.filter(cls.role_id == role_id)
         q = q.filter(cls.query != None)  # noqa
@@ -48,5 +48,4 @@ class QueryLog(db.Model, IdModel):
         return obj
 
     def __repr__(self):
-        return '<QueryLog(%r, %r, %r)>' % \
-            (self.query, self.role_id, self.session_id)
+        return "<QueryLog(%r, %r, %r)>" % (self.query, self.role_id, self.session_id)

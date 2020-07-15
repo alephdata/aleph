@@ -18,39 +18,43 @@ from aleph.views.util import get_db_collection, get_flag
 from aleph.views.util import jsonify, validate, get_session_id
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('ingest_api', __name__)
+blueprint = Blueprint("ingest_api", __name__)
 
 
 def _load_parent(collection, meta):
     """Determine the parent document for the document that is to be
     ingested."""
-    parent = ensure_dict(meta.get('parent'))
-    parent_id = meta.get('parent_id', parent.get('id'))
+    parent = ensure_dict(meta.get("parent"))
+    parent_id = meta.get("parent_id", parent.get("id"))
     if parent_id is None:
         return
     parent = Document.by_id(parent_id, collection=collection)
     if parent is None:
-        raise BadRequest(response=jsonify({
-            'status': 'error',
-            'message': 'Cannot load parent document'
-        }, status=400))
+        raise BadRequest(
+            response=jsonify(
+                {"status": "error", "message": "Cannot load parent document"},
+                status=400,
+            )
+        )
     return parent
 
 
 def _load_metadata():
     """Unpack the common, pre-defined metadata for all the uploaded files."""
     try:
-        meta = json.loads(request.form.get('meta', '{}'))
+        meta = json.loads(request.form.get("meta", "{}"))
     except Exception as ex:
         raise BadRequest(str(ex))
 
-    validate(meta, 'DocumentIngest')
-    foreign_id = stringify(meta.get('foreign_id'))
+    validate(meta, "DocumentIngest")
+    foreign_id = stringify(meta.get("foreign_id"))
     if not len(request.files) and foreign_id is None:
-        raise BadRequest(response=jsonify({
-            'status': 'error',
-            'message': 'Directories need to have a foreign_id'
-        }, status=400))
+        raise BadRequest(
+            response=jsonify(
+                {"status": "error", "message": "Directories need to have a foreign_id"},
+                status=400,
+            )
+        )
     return meta, foreign_id
 
 
@@ -61,18 +65,18 @@ def _notify(collection, document_id):
         channel_tag(document_id, Entity),
         channel_tag(collection),
     ]
-    params = {
-        'collection': collection,
-        'document': document_id
-    }
-    publish(Events.INGEST_DOCUMENT,
-            params=params,
-            channels=channels,
-            actor_id=request.authz.id)
+    params = {"collection": collection, "document": document_id}
+    publish(
+        Events.INGEST_DOCUMENT,
+        params=params,
+        channels=channels,
+        actor_id=request.authz.id,
+    )
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/ingest',
-                 methods=['POST', 'PUT'])
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/ingest", methods=["POST", "PUT"]
+)
 def ingest_upload(collection_id):
     """
     ---
@@ -116,24 +120,26 @@ def ingest_upload(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     job_id = get_session_id()
-    sync = get_flag('sync', default=False)
-    index = get_flag('index', default=True)
+    sync = get_flag("sync", default=False)
+    index = get_flag("index", default=True)
     meta, foreign_id = _load_metadata()
     parent = _load_parent(collection, meta)
-    upload_dir = ensure_path(mkdtemp(prefix='aleph.upload.'))
+    upload_dir = ensure_path(mkdtemp(prefix="aleph.upload."))
     try:
         content_hash = None
         for storage in request.files.values():
-            path = safe_filename(storage.filename, default='upload')
+            path = safe_filename(storage.filename, default="upload")
             path = upload_dir.joinpath(path)
             storage.save(str(path))
             content_hash = archive.archive_file(path)
-        document = Document.save(collection=collection,
-                                 parent=parent,
-                                 foreign_id=foreign_id,
-                                 content_hash=content_hash,
-                                 meta=meta,
-                                 role_id=request.authz.id)
+        document = Document.save(
+            collection=collection,
+            parent=parent,
+            foreign_id=foreign_id,
+            content_hash=content_hash,
+            meta=meta,
+            role_id=request.authz.id,
+        )
         collection.touch()
         db.session.commit()
         proxy = document.to_proxy(ns=collection.ns)
@@ -142,9 +148,6 @@ def ingest_upload(collection_id):
         ingest_flush(collection, entity_id=proxy.id)
         ingest_entity(collection, proxy, job_id=job_id, index=index)
         _notify(collection, proxy.id)
-        return jsonify({
-          'status': 'ok',
-          'id': proxy.id
-        }, status=201)
+        return jsonify({"status": "ok", "id": proxy.id}, status=201)
     finally:
         shutil.rmtree(upload_dir)

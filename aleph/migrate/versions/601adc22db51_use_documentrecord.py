@@ -7,8 +7,8 @@ Create Date: 2016-03-10 22:01:12.981702
 """
 
 # revision identifiers, used by Alembic.
-revision = '601adc22db51'
-down_revision = 'e34d28e9a167'
+revision = "601adc22db51"
+down_revision = "e34d28e9a167"
 
 import logging
 from alembic import op
@@ -19,25 +19,26 @@ log = logging.getLogger(__name__)
 
 
 def upgrade():
-    op.create_table('document_record',
-        sa.Column('id', sa.BigInteger(), nullable=False),
-        sa.Column('sheet', sa.Integer(), nullable=False),
-        sa.Column('row_id', sa.Integer(), nullable=False),
-        sa.Column('data', postgresql.JSONB(), nullable=True),
-        sa.Column('document_id', sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(['document_id'], ['document.id'], ),
-        sa.PrimaryKeyConstraint('id')
+    op.create_table(
+        "document_record",
+        sa.Column("id", sa.BigInteger(), nullable=False),
+        sa.Column("sheet", sa.Integer(), nullable=False),
+        sa.Column("row_id", sa.Integer(), nullable=False),
+        sa.Column("data", postgresql.JSONB(), nullable=True),
+        sa.Column("document_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(["document_id"], ["document.id"],),
+        sa.PrimaryKeyConstraint("id"),
     )
     bind = op.get_bind()
     meta = sa.MetaData()
     meta.bind = bind
     meta.reflect()
-    documents = meta.tables['document']
-    records = meta.tables['document_record']
+    documents = meta.tables["document"]
+    records = meta.tables["document_record"]
     for name, table in meta.tables.items():
-        if not name.startswith('tabular_'):
+        if not name.startswith("tabular_"):
             continue
-        _, doc_hash, sheet = name.split('_')
+        _, doc_hash, sheet = name.split("_")
         q = sa.select([documents]).where(documents.c.content_hash == doc_hash)
         rp = bind.execute(q)
         for doc in rp.fetchall():
@@ -50,17 +51,20 @@ def upgrade():
                 inserts = []
                 for row in rows:
                     row = dict(row)
-                    row_id = row.pop('_id')
-                    inserts.append({
-                        'document_id': doc.id,
-                        'sheet': int(sheet),
-                        'row_id': row_id,
-                        'data': row
-                    })
+                    row_id = row.pop("_id")
+                    inserts.append(
+                        {
+                            "document_id": doc.id,
+                            "sheet": int(sheet),
+                            "row_id": row_id,
+                            "data": row,
+                        }
+                    )
                 bind.execute(records.insert(), inserts)
-    op.create_index(op.f('ix_document_record_doc'), 'document_record',
-                    ['document_id'], unique=False)
+    op.create_index(
+        op.f("ix_document_record_doc"), "document_record", ["document_id"], unique=False
+    )
 
 
 def downgrade():
-    op.drop_table('document_record')
+    op.drop_table("document_record")

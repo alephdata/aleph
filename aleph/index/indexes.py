@@ -24,7 +24,7 @@ def schema_index(schema, version):
     """Convert a schema object to an index name."""
     if schema.abstract:
         raise InvalidData("Cannot index abstract schema: %s" % schema)
-    name = 'entity-%s' % schema.name.lower()
+    name = "entity-%s" % schema.name.lower()
     return index_name(name, version=version)
 
 
@@ -51,7 +51,7 @@ def entities_index_list(schema=None, expand=True):
 
 def entities_read_index(schema=None, expand=True):
     indexes = entities_index_list(schema=schema, expand=expand)
-    return ','.join(indexes)
+    return ",".join(indexes)
 
 
 def entities_write_index(schema):
@@ -74,7 +74,7 @@ def configure_schema(schema, version):
     numeric_mapping = {registry.date.group: NUMERIC}
     for prop in schema.properties.values():
         config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
-        config['copy_to'] = ['text']
+        config["copy_to"] = ["text"]
         schema_mapping[prop.name] = config
         if prop.type in NUMERIC_TYPES:
             numeric_mapping[prop.name] = NUMERIC
@@ -90,7 +90,7 @@ def configure_schema(schema, version):
                 "search_analyzer": "latin_query",
                 "fields": {"kw": KEYWORD},
                 "boost": 3.0,
-                "copy_to": "text"
+                "copy_to": "text",
             },
             "schema": KEYWORD,
             "schemata": KEYWORD,
@@ -107,42 +107,33 @@ def configure_schema(schema, version):
             registry.mimetype.group: KEYWORD,
             registry.identifier.group: KEYWORD,
             registry.date.group: PARTIAL_DATE,
-            registry.address.group: {
-                "type": "keyword",
-                "fields": {"text": LATIN_TEXT}
-            },
+            registry.address.group: {"type": "keyword", "fields": {"text": LATIN_TEXT}},
             registry.name.group: {
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT},
-                "copy_to": "text"
+                "copy_to": "text",
             },
             "fingerprints": {
                 "type": "keyword",
                 "normalizer": "latin_index",
                 "copy_to": "text",
-                "fields": {"text": LATIN_TEXT}
+                "fields": {"text": LATIN_TEXT},
             },
             "text": {
                 "type": "text",
                 "analyzer": "latin_index",
                 "search_analyzer": "latin_query",
                 "term_vector": "with_positions_offsets",
-                "store": True
+                "store": True,
             },
-            "properties": {
-                "type": "object",
-                "properties": schema_mapping
-            },
-            "numeric": {
-                "type": "object",
-                "properties": numeric_mapping
-            },
+            "properties": {"type": "object", "properties": schema_mapping},
+            "numeric": {"type": "object", "properties": numeric_mapping},
             "role_id": KEYWORD,
             "collection_id": KEYWORD,
             "origin": KEYWORD,
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
-        }
+        },
     }
     index = schema_index(model.get(schema), version)
     settings = index_settings(shards=get_shard_weight(schema))

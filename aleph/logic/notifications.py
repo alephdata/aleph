@@ -17,7 +17,7 @@ from aleph.index.util import unpack_result
 from aleph.util import html_link
 
 log = logging.getLogger(__name__)
-GLOBAL = 'Global'
+GLOBAL = "Global"
 
 
 def channel_tag(obj, clazz=None):
@@ -27,7 +27,7 @@ def channel_tag(obj, clazz=None):
 
     obj = get_entity_id(obj)
     if obj is not None:
-        return '%s:%s' % (clazz.__name__, obj)
+        return "%s:%s" % (clazz.__name__, obj)
 
 
 def publish(event, actor_id=None, params=None, channels=None):
@@ -46,7 +46,7 @@ def flush_notifications(obj, clazz=None, sync=False):
 def get_role_channels(role):
     """Generate the set of notification channels that the current
     user should listen to."""
-    key = cache.object_key(Role, role.id, 'channels')
+    key = cache.object_key(Role, role.id, "channels")
     channels = cache.get_list(key)
     if len(channels):
         return channels
@@ -64,25 +64,25 @@ def get_role_channels(role):
 def get_notifications(role, since=None, parser=None):
     """Fetch a stream of notifications for the given role."""
     channels = get_role_channels(role)
-    filters = [{'terms': {'channels': channels}}]
+    filters = [{"terms": {"channels": channels}}]
     if since is not None:
-        filters.append({'range': {'created_at': {'gt': since}}})
-    must_not = [{'term': {'actor_id': role.id}}]
+        filters.append({"range": {"created_at": {"gt": since}}})
+    must_not = [{"term": {"actor_id": role.id}}]
     query = {
-        'size': 30,
-        'query': {'bool': {'filter': filters, 'must_not': must_not}},
-        'sort': [{'created_at': {'order': 'desc'}}]
+        "size": 30,
+        "query": {"bool": {"filter": filters, "must_not": must_not}},
+        "sort": [{"created_at": {"order": "desc"}}],
     }
     if parser is not None:
-        query['size'] = parser.limit
-        query['from'] = parser.offset
+        query["size"] = parser.limit
+        query["from"] = parser.offset
     return es.search(index=notifications_index(), body=query)
 
 
 def _iter_params(data, event):
-    if data.get('actor_id') is not None:
-        yield 'actor', Role, data.get('actor_id')
-    params = data.get('params', {})
+    if data.get("actor_id") is not None:
+        yield "actor", Role, data.get("actor_id")
+    params = data.get("params", {})
     for name, clazz in event.params.items():
         value = params.get(name)
         if value is not None:
@@ -93,8 +93,9 @@ def render_notification(stub, notification):
     """Generate a text version of the notification, suitable for use
     in an email or text message."""
     from aleph.logic import resolver
+
     notification = unpack_result(notification)
-    event = Events.get(notification.get('event'))
+    event = Events.get(notification.get("event"))
     if event is None:
         return
 
@@ -109,11 +110,11 @@ def render_notification(stub, notification):
             return
         link, title = None, None
         if clazz == Role:
-            title = data.get('label')
+            title = data.get("label")
         elif clazz == Alert:
-            title = data.get('query')
+            title = data.get("query")
         elif clazz == Collection:
-            title = data.get('label')
+            title = data.get("label")
             link = collection_url(value)
         elif clazz == Entity:
             proxy = model.get_proxy(data)
@@ -123,12 +124,12 @@ def render_notification(stub, notification):
             title = data.label
             link = entityset_url(data.id)
 
-        template = '{{%s}}' % name
+        template = "{{%s}}" % name
         html = html.replace(template, html_link(title, link))
         plain = plain.replace(template, "'%s'" % title)
         if name == event.link_to:
-            plain = '%s (%s)' % (plain, link)
-    return {'plain': plain, 'html': html}
+            plain = "%s (%s)" % (plain, link)
+    return {"plain": plain, "html": html}
 
 
 def generate_digest():
@@ -143,21 +144,23 @@ def generate_role_digest(role):
     # TODO: get and use the role's locale preference.
     since = datetime.utcnow() - timedelta(hours=26)
     result = get_notifications(role, since=since)
-    hits = result.get('hits', {})
-    total_count = hits.get('total', {}).get('value')
+    hits = result.get("hits", {})
+    total_count = hits.get("total", {}).get("value")
     log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:
         return
-    notifications = [render_notification(role, n) for n in hits.get('hits')]
+    notifications = [render_notification(role, n) for n in hits.get("hits")]
     notifications = [n for n in notifications if n is not None]
-    params = dict(notifications=notifications,
-                  role=role,
-                  total_count=total_count,
-                  manage_url=ui_url('notifications'),
-                  ui_url=settings.APP_UI_URL,
-                  app_title=settings.APP_TITLE)
-    plain = render_template('email/notifications.txt', **params)
-    html = render_template('email/notifications.html', **params)
+    params = dict(
+        notifications=notifications,
+        role=role,
+        total_count=total_count,
+        manage_url=ui_url("notifications"),
+        ui_url=settings.APP_UI_URL,
+        app_title=settings.APP_TITLE,
+    )
+    plain = render_template("email/notifications.txt", **params)
+    html = render_template("email/notifications.html", **params)
     log.info("Notification: %s", plain)
-    subject = '%s notifications' % total_count
+    subject = "%s notifications" % total_count
     email_role(role, subject, html=html, plain=plain)

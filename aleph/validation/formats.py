@@ -17,7 +17,7 @@ checker = FormatChecker()
 def check_locale(value):
     value = stringify(value)
     if value not in settings.UI_LANGUAGES:
-        raise ValueError(gettext('Invalid user locale.'))
+        raise ValueError(gettext("Invalid user locale."))
     return True
 
 
@@ -25,7 +25,7 @@ def check_locale(value):
 def check_country_code(value):
     value = registry.country.clean(value)
     if not registry.country.validate(value):
-        msg = gettext('Invalid country code: %s')
+        msg = gettext("Invalid country code: %s")
         raise ValueError(msg % value)
     return True
 
@@ -34,7 +34,7 @@ def check_country_code(value):
 def check_entity_id(value):
     value, _ = Namespace.parse(value)
     if not registry.entity.validate(value):
-        msg = gettext('Invalid entity ID: %s')
+        msg = gettext("Invalid entity ID: %s")
         raise ValueError(msg % value)
     return True
 
@@ -42,21 +42,21 @@ def check_entity_id(value):
 @checker.checks("category", raises=ValueError)
 def check_category(value):
     if value not in Collection.CATEGORIES.keys():
-        raise ValueError(gettext('Invalid category.'))
+        raise ValueError(gettext("Invalid category."))
     return True
 
 
 @checker.checks("frequency", raises=ValueError)
 def check_frequency(value):
     if value not in Collection.FREQUENCIES.keys():
-        raise ValueError(gettext('Invalid frequency.'))
+        raise ValueError(gettext("Invalid frequency."))
     return True
 
 
 @checker.checks("entitysettype", raises=ValueError)
 def check_entitysettype(value):
     if value not in EntitySet.TYPES:
-        raise ValueError(gettext('Invalid set type.'))
+        raise ValueError(gettext("Invalid set type."))
     return True
 
 
@@ -64,7 +64,7 @@ def check_entitysettype(value):
 def check_url(value):
     value = stringify(value)
     if value is not None and normalize_url(value) is None:
-        raise ValueError(gettext('Invalid URL.'))
+        raise ValueError(gettext("Invalid URL."))
     return True
 
 
@@ -72,7 +72,7 @@ def check_url(value):
 def check_language(value):
     value = registry.language.clean(value)
     if not registry.language.validate(value):
-        raise ValueError(gettext('Invalid language code.'))
+        raise ValueError(gettext("Invalid language code."))
     return True
 
 
@@ -80,7 +80,7 @@ def check_language(value):
 def check_schema(value):
     schema = model.get(value)
     if schema is None:
-        msg = gettext('Invalid schema name: %s')
+        msg = gettext("Invalid schema name: %s")
         raise ValueError(msg % value)
     return True
 
@@ -88,5 +88,5 @@ def check_schema(value):
 @checker.checks("partial-date", raises=ValueError)
 def check_partial_date(value):
     if not registry.date.validate(value):
-        raise ValueError(gettext('Invalid date: %s') % value)
+        raise ValueError(gettext("Invalid date: %s") % value)
     return True

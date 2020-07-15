@@ -14,11 +14,11 @@ from aleph.views.util import get_nested_collection, get_db_collection
 from aleph.views.util import obj_or_404, parse_request
 
 
-blueprint = Blueprint('entitysets_api', __name__)
+blueprint = Blueprint("entitysets_api", __name__)
 log = logging.getLogger(__name__)
 
 
-@blueprint.route('/api/2/entitysets', methods=['GET'])
+@blueprint.route("/api/2/entitysets", methods=["GET"])
 def index():
     """Returns a list of entitysets for the role
     ---
@@ -55,17 +55,17 @@ def index():
     """
     parser = QueryParser(request.args, request.authz)
     q = EntitySet.by_authz(request.authz)
-    collection_ids = ensure_list(parser.filters.get('collection_id'))
+    collection_ids = ensure_list(parser.filters.get("collection_id"))
     if len(collection_ids):
         q = q.filter(EntitySet.collection_id.in_(collection_ids))
-    types = ensure_list(parser.filters.get('type'))
+    types = ensure_list(parser.filters.get("type"))
     if len(types):
         q = q.filter(EntitySet.type.in_(types))
     result = DatabaseQueryResult(request, q, parser=parser)
     return EntitySetIndexSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/entitysets', methods=['POST', 'PUT'])
+@blueprint.route("/api/2/entitysets", methods=["POST", "PUT"])
 def create():
     """Create an entityset.
     ---
@@ -86,14 +86,14 @@ def create():
       tags:
       - EntitySet
     """
-    data = parse_request('EntitySetCreate')
+    data = parse_request("EntitySetCreate")
     collection = get_nested_collection(data, request.authz.WRITE)
     entityset = create_entityset(collection, data, request.authz)
     db.session.commit()
     return EntitySetSerializer.jsonify(entityset)
 
 
-@blueprint.route('/api/2/entitysets/<entityset_id>', methods=['GET'])
+@blueprint.route("/api/2/entitysets/<entityset_id>", methods=["GET"])
 def view(entityset_id):
     """Return the entityset with id `entityset_id`.
     ---
@@ -123,7 +123,7 @@ def view(entityset_id):
     return EntitySetSerializer.jsonify(entityset)
 
 
-@blueprint.route('/api/2/entitysets/<entityset_id>/entities', methods=['GET'])
+@blueprint.route("/api/2/entitysets/<entityset_id>/entities", methods=["GET"])
 def entities(entityset_id):
     """Search entities in the entity set with id `entityset_id`.
     ---
@@ -155,12 +155,11 @@ def entities(entityset_id):
     get_db_collection(entityset.collection_id, request.authz.READ)
     parser = SearchQueryParser(request.args, request.authz)
     tag_request(query=parser.text, prefix=parser.prefix)
-    result = EntitySetItemsQuery.handle(request, parser=parser,
-                                        entityset=entityset)
+    result = EntitySetItemsQuery.handle(request, parser=parser, entityset=entityset)
     return EntitySerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/entitysets/<entityset_id>', methods=['POST', 'PUT'])
+@blueprint.route("/api/2/entitysets/<entityset_id>", methods=["POST", "PUT"])
 def update(entityset_id):
     """Update the entityset with id `entityset_id`.
     ---
@@ -191,13 +190,13 @@ def update(entityset_id):
     """
     eset = obj_or_404(EntitySet.by_id(entityset_id))
     collection = get_db_collection(eset.collection_id, request.authz.WRITE)
-    data = parse_request('EntitySetUpdate')
+    data = parse_request("EntitySetUpdate")
     eset.update(data, collection)
     db.session.commit()
     return EntitySetSerializer.jsonify(eset)
 
 
-@blueprint.route('/api/2/entitysets/<entityset_id>', methods=['DELETE'])
+@blueprint.route("/api/2/entitysets/<entityset_id>", methods=["DELETE"])
 def delete(entityset_id):
     """Delete an entityset.
     ---
@@ -222,4 +221,4 @@ def delete(entityset_id):
     eset.delete()
     collection.touch()
     db.session.commit()
-    return ('', 204)
+    return ("", 204)

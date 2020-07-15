@@ -20,7 +20,7 @@ from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
 
-blueprint = Blueprint('base_api', __name__)
+blueprint = Blueprint("base_api", __name__)
 log = logging.getLogger(__name__)
 
 
@@ -31,45 +31,45 @@ def _metadata_locale(locale):
     # user.
     auth = {}
     if settings.PASSWORD_LOGIN:
-        auth['password_login_uri'] = url_for('sessions_api.password_login')
-        auth['registration_uri'] = url_for('roles_api.create_code')
+        auth["password_login_uri"] = url_for("sessions_api.password_login")
+        auth["registration_uri"] = url_for("roles_api.create_code")
     if settings.OAUTH:
-        auth['oauth_uri'] = url_for('sessions_api.oauth_init')
+        auth["oauth_uri"] = url_for("sessions_api.oauth_init")
 
     locales = settings.UI_LANGUAGES
     locales = {l: Locale(l).get_language_name(l) for l in locales}
 
     data = {
-        'status': 'ok',
-        'maintenance': request.authz.in_maintenance,
-        'app': {
-            'title': settings.APP_TITLE,
-            'description': settings.APP_DESCRIPTION,
-            'version': __version__,
-            'banner': settings.APP_BANNER,
-            'ui_uri': settings.APP_UI_URL,
-            'samples': settings.SAMPLE_SEARCHES,
-            'logo': settings.APP_LOGO,
-            'favicon': settings.APP_FAVICON,
-            'locale': locale,
-            'locales': locales
+        "status": "ok",
+        "maintenance": request.authz.in_maintenance,
+        "app": {
+            "title": settings.APP_TITLE,
+            "description": settings.APP_DESCRIPTION,
+            "version": __version__,
+            "banner": settings.APP_BANNER,
+            "ui_uri": settings.APP_UI_URL,
+            "samples": settings.SAMPLE_SEARCHES,
+            "logo": settings.APP_LOGO,
+            "favicon": settings.APP_FAVICON,
+            "locale": locale,
+            "locales": locales,
         },
-        'categories': Collection.CATEGORIES,
-        'frequencies': Collection.FREQUENCIES,
-        'pages': load_pages(locale),
-        'model': model.to_dict(),
-        'token': None,
-        'auth': auth
+        "categories": Collection.CATEGORIES,
+        "frequencies": Collection.FREQUENCIES,
+        "pages": load_pages(locale),
+        "model": model.to_dict(),
+        "token": None,
+        "auth": auth,
     }
 
     if settings.SINGLE_USER:
         role = Role.load_cli_user()
         authz = Authz.from_role(role)
-        data['token'] = authz.to_token(role=role)
+        data["token"] = authz.to_token(role=role)
     return jsonify(data)
 
 
-@blueprint.route('/api/2/metadata')
+@blueprint.route("/api/2/metadata")
 def metadata():
     """Get operational metadata for the frontend.
     ---
@@ -89,21 +89,24 @@ def metadata():
     return _metadata_locale(locale)
 
 
-@blueprint.route('/api/openapi.json')
+@blueprint.route("/api/openapi.json")
 def openapi():
     """Generate an OpenAPI 3.0 documentation JSON file for the API."""
     spec = get_openapi_spec(current_app)
     for name, view in current_app.view_functions.items():
-        if name in ('static', 'base_api.openapi',
-                    'base_api.api_v1_message',
-                    'sessions_api.oauth_callback'):
+        if name in (
+            "static",
+            "base_api.openapi",
+            "base_api.api_v1_message",
+            "sessions_api.oauth_callback",
+        ):
             continue
-        log.info('%s - %s', name, view.__qualname__)
+        log.info("%s - %s", name, view.__qualname__)
         spec.path(view=view)
     return jsonify(spec.to_dict())
 
 
-@blueprint.route('/api/2/statistics')
+@blueprint.route("/api/2/statistics")
 def statistics():
     """Get a summary of the data acessible to the current user.
     ---
@@ -135,25 +138,27 @@ def statistics():
     categories = defaultdict(int)
     for collection_id in collections:
         data = resolver.get(request, Collection, collection_id)
-        if data is None or data.get('casefile'):
+        if data is None or data.get("casefile"):
             continue
-        categories[data.get('category')] += 1
+        categories[data.get("category")] += 1
         things = get_collection_things(collection_id)
         for schema, count in things.items():
             schemata[schema] += count
-        for country in data.get('countries', []):
+        for country in data.get("countries", []):
             countries[country] += 1
 
-    return jsonify({
-        'collections': len(collections),
-        'schemata': dict(schemata),
-        'countries': dict(countries),
-        'categories': dict(categories),
-        'things': sum(schemata.values()),
-    })
+    return jsonify(
+        {
+            "collections": len(collections),
+            "schemata": dict(schemata),
+            "countries": dict(countries),
+            "categories": dict(categories),
+            "things": sum(schemata.values()),
+        }
+    )
 
 
-@blueprint.route('/healthz')
+@blueprint.route("/healthz")
 def healthz():
     """
     ---
@@ -177,76 +182,68 @@ def healthz():
       - System
     """
     request.rate_limit = None
-    return jsonify({'status': 'ok'})
+    return jsonify({"status": "ok"})
 
 
 @blueprint.app_errorhandler(NotModified)
 def handle_not_modified(err):
-    return ('', 304)
+    return ("", 304)
 
 
 @blueprint.app_errorhandler(400)
 def handle_bad_request(err):
     if err.response is not None and err.response.is_json:
         return err.response
-    return jsonify({
-        'status': 'error',
-        'message': err.description
-    }, status=400)
+    return jsonify({"status": "error", "message": err.description}, status=400)
 
 
 @blueprint.app_errorhandler(403)
 def handle_authz_error(err):
-    return jsonify({
-        'status': 'error',
-        'message': gettext('You are not authorized to do this.'),
-        'roles': request.authz.roles
-    }, status=403)
+    return jsonify(
+        {
+            "status": "error",
+            "message": gettext("You are not authorized to do this."),
+            "roles": request.authz.roles,
+        },
+        status=403,
+    )
 
 
 @blueprint.app_errorhandler(404)
 def handle_not_found_error(err):
-    return jsonify({
-        'status': 'error',
-        'message': gettext('This path does not exist.')
-    }, status=404)
+    return jsonify(
+        {"status": "error", "message": gettext("This path does not exist.")}, status=404
+    )
 
 
 @blueprint.app_errorhandler(500)
 def handle_server_error(err):
     log.exception("%s: %s", type(err).__name__, err)
-    return jsonify({
-        'status': 'error',
-        'message': gettext('Internal server error.')
-    }, status=500)
+    return jsonify(
+        {"status": "error", "message": gettext("Internal server error.")}, status=500
+    )
 
 
 @blueprint.app_errorhandler(InvalidData)
 def handle_invalid_data(err):
-    return jsonify({
-        'status': 'error',
-        'message': str(err),
-        'errors': err.errors
-    }, status=400)
+    return jsonify(
+        {"status": "error", "message": str(err), "errors": err.errors}, status=400
+    )
 
 
 @blueprint.app_errorhandler(DecodeError)
 @blueprint.app_errorhandler(ExpiredSignatureError)
 def handle_jwt_expired(err):
-    return jsonify({
-        'status': 'error',
-        'errors': gettext('Access token is invalid.')
-    }, status=401)
+    return jsonify(
+        {"status": "error", "errors": gettext("Access token is invalid.")}, status=401
+    )
 
 
 @blueprint.app_errorhandler(TransportError)
 def handle_es_error(err):
     message = err.error
-    if hasattr(err, 'info') and isinstance(err.info, dict):
-        error = err.info.get('error', {})
-        for root_cause in error.get('root_cause', []):
-            message = root_cause.get('reason', message)
-    return jsonify({
-        'status': 'error',
-        'message': message
-    }, status=err.status_code)
+    if hasattr(err, "info") and isinstance(err.info, dict):
+        error = err.info.get("error", {})
+        for root_cause in error.get("root_cause", []):
+            message = root_cause.get("reason", message)
+    return jsonify({"status": "error", "message": message}, status=err.status_code)

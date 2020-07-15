@@ -5,7 +5,6 @@ from aleph.views.util import validate
 
 
 class SchemaValidationTest(TestCase):
-
     def test_role_schema(self):
         data = {
             "name": "sunu",
@@ -15,4 +14,4 @@ class SchemaValidationTest(TestCase):
             "locale": "en-us",
         }
         with self.assertRaises(BadRequest):
-            validate(data, 'RoleUpdate')
+            validate(data, "RoleUpdate")

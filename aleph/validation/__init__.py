@@ -10,8 +10,8 @@ from aleph.validation.formats import checker
 from aleph.validation.spec import spec_info, spec_tags, spec_docs
 from aleph.validation.util import to_jsonschema
 
-URI = 'https://schema.alephdata.org/'
-SCHEMA_DIR = os.path.join(os.path.dirname(__file__), 'schema')
+URI = "https://schema.alephdata.org/"
+SCHEMA_DIR = os.path.join(os.path.dirname(__file__), "schema")
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def get_schemata():
     schemata = {}
     for file_name in os.listdir(SCHEMA_DIR):
         file_path = os.path.join(SCHEMA_DIR, file_name)
-        data = yaml.safe_load(open(file_path, 'r'))
+        data = yaml.safe_load(open(file_path, "r"))
         schemata.update(data)
     return schemata
 
@@ -44,22 +44,16 @@ def get_openapi_spec(app):
 
 
 def get_resolver():
-    if not hasattr(settings, '_json_resolver'):
+    if not hasattr(settings, "_json_resolver"):
         resolver = RefResolver(URI, {})
         schemata = get_schemata()
-        resolver.store[URI] = {
-            'components': {
-                'schemas': to_jsonschema(schemata)
-            }
-        }
+        resolver.store[URI] = {"components": {"schemas": to_jsonschema(schemata)}}
         settings._json_resolver = resolver
     return settings._json_resolver
 
 
 def get_validator(schema):
-    ref = '#/components/schemas/%s' % schema
+    ref = "#/components/schemas/%s" % schema
     resolver = get_resolver()
     _, schema = resolver.resolve(ref)
-    return Draft4Validator(schema,
-                           format_checker=checker,
-                           resolver=resolver)
+    return Draft4Validator(schema, format_checker=checker, resolver=resolver)

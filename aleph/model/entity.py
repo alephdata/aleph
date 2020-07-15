@@ -15,17 +15,26 @@ log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, SoftDeleteModel):
-    THING = 'Thing'
-    LEGAL_ENTITY = 'LegalEntity'
+    THING = "Thing"
+    LEGAL_ENTITY = "LegalEntity"
 
-    id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True,
-                   default=make_textid, nullable=False, unique=False)
+    id = db.Column(
+        db.String(ENTITY_ID_LEN),
+        primary_key=True,
+        default=make_textid,
+        nullable=False,
+        unique=False,
+    )
     schema = db.Column(db.String(255), index=True)
-    data = db.Column('data', JSONB)
+    data = db.Column("data", JSONB)
 
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
-    collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=True)  # noqa
+    collection_id = db.Column(
+        db.Integer, db.ForeignKey("collection.id"), index=True
+    )  # noqa
+    collection = db.relationship(
+        Collection, backref=db.backref("entities", lazy="dynamic")
+    )  # noqa
 
     @property
     def model(self):
@@ -59,20 +68,22 @@ class Entity(db.Model, SoftDeleteModel):
         db.session.add(self)
 
     def to_proxy(self):
-        return model.get_proxy({
-            'id': self.id,
-            'schema': self.schema,
-            'properties': self.data,
-            'created_at': iso_text(self.created_at),
-            'updated_at': iso_text(self.updated_at),
-            'role_id': self.role_id,
-            'mutable': True
-        })
+        return model.get_proxy(
+            {
+                "id": self.id,
+                "schema": self.schema,
+                "properties": self.data,
+                "created_at": iso_text(self.created_at),
+                "updated_at": iso_text(self.updated_at),
+                "role_id": self.role_id,
+                "mutable": True,
+            }
+        )
 
     @classmethod
     def create(cls, data, collection, role_id=None, validate=True):
         entity = cls()
-        entity_id = data.get('id') or make_textid()
+        entity_id = data.get("id") or make_textid()
         if not registry.entity.validate(entity_id):
             raise InvalidData(gettext("Invalid entity ID"))
         entity.id = collection.ns.sign(entity_id)
@@ -101,8 +112,7 @@ class Entity(db.Model, SoftDeleteModel):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at},
-                  synchronize_session=False)
+        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
 
     def __repr__(self):
-        return '<Entity(%r, %r)>' % (self.id, self.schema)
+        return "<Entity(%r, %r)>" % (self.id, self.schema)

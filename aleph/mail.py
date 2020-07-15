@@ -13,11 +13,11 @@ def email_role(role, subject, html=None, plain=None):
         return
 
     try:
-        sender = '%s <%s>' % (settings.APP_TITLE, settings.MAIL_FROM)
-        subject = '[%s] %s' % (settings.APP_TITLE, subject)
+        sender = "%s <%s>" % (settings.APP_TITLE, settings.MAIL_FROM)
+        subject = "[%s] %s" % (settings.APP_TITLE, subject)
         msg = Message(subject=subject, sender=sender, recipients=[role.email])
         msg.body = plain
         msg.html = html
         mail.send(msg)
     except Exception as exc:
-        log.error('Error sending email [%r]: %s', role, exc)
+        log.error("Error sending email [%r]: %s", role, exc)

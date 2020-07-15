@@ -28,7 +28,7 @@ from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import create_user, update_roles, delete_role
 from aleph.logic.permissions import update_permission
 
-log = logging.getLogger('aleph')
+log = logging.getLogger("aleph")
 
 
 def get_collection(foreign_id):
@@ -41,8 +41,8 @@ def get_collection(foreign_id):
 def ensure_collection(foreign_id, label):
     authz = Authz.from_role(Role.load_cli_user())
     config = {
-        'foreign_id': foreign_id,
-        'label': label,
+        "foreign_id": foreign_id,
+        "label": label,
     }
     create_collection(config, authz)
     return Collection.by_foreign_id(foreign_id)
@@ -59,11 +59,17 @@ def collections():
     collections = []
     for coll in Collection.all():
         collections.append((coll.foreign_id, coll.id, coll.label))
-    print(tabulate(collections, headers=['Foreign ID', 'ID', 'Label']))
+    print(tabulate(collections, headers=["Foreign ID", "ID", "Label"]))
 
 
 @cli.command()
-@click.option('-s', '--sync', is_flag=True, default=False, help='Run without threads and quit when no tasks are left.')  # noqa
+@click.option(
+    "-s",
+    "--sync",
+    is_flag=True,
+    default=False,
+    help="Run without threads and quit when no tasks are left.",
+)  # noqa
 def worker(sync=False):
     """Run the queue-based worker service."""
     worker = get_worker()
@@ -74,24 +80,26 @@ def worker(sync=False):
 
 
 @cli.command()
-@click.argument('path', type=click.Path(exists=True))
-@click.option('-l', '--language', multiple=True, help='ISO language codes for OCR')  # noqa
-@click.option('-f', '--foreign_id', help='Foreign ID of the collection')
+@click.argument("path", type=click.Path(exists=True))
+@click.option(
+    "-l", "--language", multiple=True, help="ISO language codes for OCR"
+)  # noqa
+@click.option("-f", "--foreign_id", help="Foreign ID of the collection")
 def crawldir(path, language=None, foreign_id=None):
     """Crawl the given directory."""
     path = Path(path)
     if foreign_id is None:
-        foreign_id = 'directory:%s' % slugify(path)
+        foreign_id = "directory:%s" % slugify(path)
     collection = ensure_collection(foreign_id, path.name)
-    log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
+    log.info("Crawling %s to %s (%s)...", path, foreign_id, collection.id)
     crawl_directory(collection, path)
-    log.info('Complete. Make sure a worker is running :)')
+    log.info("Complete. Make sure a worker is running :)")
     update_collection(collection)
 
 
 @cli.command()
-@click.argument('foreign_id')
-@click.option('-k', '--keep-metadata', is_flag=True, default=False)
+@click.argument("foreign_id")
+@click.option("-k", "--keep-metadata", is_flag=True, default=False)
 def delete(foreign_id, keep_metadata=False):
     """Delete all the contents for a given collecton."""
     collection = get_collection(foreign_id)
@@ -99,16 +107,16 @@ def delete(foreign_id, keep_metadata=False):
 
 
 @cli.command()
-@click.argument('foreign_id')
-@click.option('--flush', is_flag=True, default=False)
+@click.argument("foreign_id")
+@click.option("--flush", is_flag=True, default=False)
 def reindex(foreign_id, flush=False):
     """Index all the aggregator contents for a collection."""
     collection = get_collection(foreign_id)
     reindex_collection(collection, flush=flush)
 
 
-@cli.command('reindex-casefiles')
-@click.option('--flush', is_flag=True, default=False)
+@cli.command("reindex-casefiles")
+@click.option("--flush", is_flag=True, default=False)
 def reindex_casefiles(flush=False):
     """Re-index all the casefile collections."""
     for collection in Collection.all_casefiles():
@@ -117,16 +125,16 @@ def reindex_casefiles(flush=False):
 
 
 @cli.command()
-@click.argument('foreign_id')
-@click.option('--index', is_flag=True, default=False)
+@click.argument("foreign_id")
+@click.option("--index", is_flag=True, default=False)
 def reingest(foreign_id, index=False):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
     reingest_collection(collection, index=index)
 
 
-@cli.command('reingest-casefiles')
-@click.option('--index', is_flag=True, default=False)
+@cli.command("reingest-casefiles")
+@click.option("--index", is_flag=True, default=False)
 def reingest_casefiles(index=False):
     """Re-ingest all the casefile collections."""
     for collection in Collection.all_casefiles():
@@ -148,20 +156,27 @@ def update():
 
 
 @cli.command()
-@click.argument('foreign_id')
-@click.option('-a', '--against', multiple=True, help='foreign IDs of collections to xref against')  # noqa
+@click.argument("foreign_id")
+@click.option(
+    "-a", "--against", multiple=True, help="foreign IDs of collections to xref against"
+)  # noqa
 def xref(foreign_id, against=None):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
     against = [get_collection(c).id for c in ensure_list(against)]
-    against = {'against_collection_ids': against}
+    against = {"against_collection_ids": against}
     queue_task(collection, OP_XREF, payload=against)
 
 
-@cli.command('load-entities')
-@click.argument('foreign_id')
-@click.option('-i', '--infile', type=click.File('r'), default='-')  # noqa
-@click.option('--unsafe', is_flag=True, default=False, help='Allow loading references to archive hashes.')  # noqa
+@cli.command("load-entities")
+@click.argument("foreign_id")
+@click.option("-i", "--infile", type=click.File("r"), default="-")  # noqa
+@click.option(
+    "--unsafe",
+    is_flag=True,
+    default=False,
+    help="Allow loading references to archive hashes.",
+)  # noqa
 def load_entities(foreign_id, infile, unsafe=False):
     """Load FtM entities from the specified iJSON file."""
     collection = ensure_collection(foreign_id, foreign_id)
@@ -172,29 +187,28 @@ def load_entities(foreign_id, infile, unsafe=False):
             if not line:
                 return
             if idx % 1000 == 0:
-                log.info("[%s] Loaded %s entities from: %s",
-                         collection, idx, infile.name)
+                log.info(
+                    "[%s] Loaded %s entities from: %s", collection, idx, infile.name
+                )
             yield json.loads(line)
 
     role = Role.load_cli_user()
-    bulk_write(collection, read_entities(), unsafe=unsafe,
-               role_id=role.id, index=False)
+    bulk_write(collection, read_entities(), unsafe=unsafe, role_id=role.id, index=False)
     reindex_collection(collection)
 
 
-@cli.command('dump-entities')
-@click.argument('foreign_id')
-@click.option('-o', '--outfile', type=click.File('w'), default='-')  # noqa
+@cli.command("dump-entities")
+@click.argument("foreign_id")
+@click.option("-o", "--outfile", type=click.File("w"), default="-")  # noqa
 def dump_entities(foreign_id, outfile):
     """Export FtM entities for the given collection."""
     collection = get_collection(foreign_id)
-    for entity in iter_proxies(collection_id=collection.id,
-                               excludes=['text']):
+    for entity in iter_proxies(collection_id=collection.id, excludes=["text"]):
         write_object(outfile, entity)
 
 
 @cli.command()
-@click.argument('foreign_id', required=False)
+@click.argument("foreign_id", required=False)
 def status(foreign_id=None):
     """Get the queue status (pending and finished tasks.)"""
     if foreign_id is not None:
@@ -206,7 +220,7 @@ def status(foreign_id=None):
 
 
 @cli.command()
-@click.argument('foreign_id')
+@click.argument("foreign_id")
 def cancel(foreign_id):
     """Cancel all queued tasks for the dataset."""
     collection = get_collection(foreign_id)
@@ -215,10 +229,12 @@ def cancel(foreign_id):
 
 
 @cli.command()
-@click.argument('email')
-@click.option('-p', '--password', help="Set a user password")
-@click.option('-n', '--name', help="Set a label")
-@click.option('-a', '--admin', is_flag=True, default=False, help='Make the user an admin.')  # noqa
+@click.argument("email")
+@click.option("-p", "--password", help="Set a user password")
+@click.option("-n", "--name", help="Set a label")
+@click.option(
+    "-a", "--admin", is_flag=True, default=False, help="Make the user an admin."
+)  # noqa
 def createuser(email, password=None, name=None, admin=False):  # noqa
     """Create a user and show their API key."""
     role = create_user(email, name, password, is_admin=admin)
@@ -226,7 +242,7 @@ def createuser(email, password=None, name=None, admin=False):  # noqa
 
 
 @cli.command()
-@click.argument('foreign_id')
+@click.argument("foreign_id")
 def deleterole(foreign_id):  # noqa
     """Hard-delete a role (user, or group) from the database."""
     role = Role.by_foreign_id(foreign_id, deleted=True)
@@ -236,7 +252,7 @@ def deleterole(foreign_id):  # noqa
 
 
 @cli.command()
-@click.argument('foreign_id')
+@click.argument("foreign_id")
 def publish(foreign_id):
     """Make a collection visible to all users."""
     collection = get_collection(foreign_id)

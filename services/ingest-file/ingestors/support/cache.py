@@ -9,11 +9,10 @@ log = logging.getLogger(__name__)
 
 
 class CacheSupport(object):
-
     @property
     def tags(self):
-        if not hasattr(CacheSupport, '_tags'):
-            CacheSupport._tags = Tags('ingest_cache')
+        if not hasattr(CacheSupport, "_tags"):
+            CacheSupport._tags = Tags("ingest_cache")
         return CacheSupport._tags
 
     def cache_key(self, *parts):

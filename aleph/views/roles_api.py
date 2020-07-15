@@ -14,11 +14,11 @@ from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
 from aleph.views.context import tag_request
 
-blueprint = Blueprint('roles_api', __name__)
+blueprint = Blueprint("roles_api", __name__)
 log = logging.getLogger(__name__)
 
 
-@blueprint.route('/api/2/roles/_suggest', methods=['GET'])
+@blueprint.route("/api/2/roles/_suggest", methods=["GET"])
 def suggest():
     """
     ---
@@ -55,20 +55,22 @@ def suggest():
     parser = QueryParser(request.args, request.authz, limit=10)
     if parser.prefix is None or len(parser.prefix) < 3:
         # Do not return 400 because it's a routine event.
-        return jsonify({
-            'status': 'error',
-            'message': gettext('prefix filter is too short'),
-            'results': [],
-            'total': 0
-        })
+        return jsonify(
+            {
+                "status": "error",
+                "message": gettext("prefix filter is too short"),
+                "results": [],
+                "total": 0,
+            }
+        )
     # this only returns users, not groups
-    exclude = ensure_list(parser.excludes.get('id'))
+    exclude = ensure_list(parser.excludes.get("id"))
     q = Role.by_prefix(parser.prefix, exclude=exclude)
     result = DatabaseQueryResult(request, q, parser=parser)
     return RoleSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/roles/code', methods=['POST'])
+@blueprint.route("/api/2/roles/code", methods=["POST"])
 def create_code():
     """Send a account creation token to an email address.
     ---
@@ -99,15 +101,14 @@ def create_code():
     """
     require(settings.PASSWORD_LOGIN)
     require(not request.authz.in_maintenance)
-    data = parse_request('RoleCodeCreate')
+    data = parse_request("RoleCodeCreate")
     challenge_role(data)
-    return jsonify({
-        'status': 'ok',
-        'message': gettext('To proceed, please check your email.')
-    })
+    return jsonify(
+        {"status": "ok", "message": gettext("To proceed, please check your email.")}
+    )
 
 
-@blueprint.route('/api/2/roles', methods=['POST'])
+@blueprint.route("/api/2/roles", methods=["POST"])
 def create():
     """Create a user role.
     ---
@@ -132,31 +133,29 @@ def create():
     """
     require(settings.PASSWORD_LOGIN)
     require(not request.authz.in_maintenance)
-    data = parse_request('RoleCreate')
+    data = parse_request("RoleCreate")
     try:
-        email = Role.SIGNATURE.loads(data.get('code'),
-                                     max_age=Role.SIGNATURE_MAX_AGE)
+        email = Role.SIGNATURE.loads(data.get("code"), max_age=Role.SIGNATURE_MAX_AGE)
     except BadSignature:
-        return jsonify({
-            'status': 'error',
-            'message': gettext('Invalid code')
-        }, status=400)
+        return jsonify(
+            {"status": "error", "message": gettext("Invalid code")}, status=400
+        )
 
     role = Role.by_email(email)
     if role is not None:
-        return jsonify({
-            'status': 'error',
-            'message': gettext('Email is already registered')
-        }, status=409)
+        return jsonify(
+            {"status": "error", "message": gettext("Email is already registered")},
+            status=409,
+        )
 
-    role = create_user(email, data.get('name'), data.get('password'))
+    role = create_user(email, data.get("name"), data.get("password"))
     # Let the serializer return more info about this user
     request.authz = Authz.from_role(role)
     tag_request(role_id=role.id)
     return RoleSerializer.jsonify(role, status=201)
 
 
-@blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
+@blueprint.route("/api/2/roles/<int:id>", methods=["GET"])
 def view(id):
     """Retrieve role details.
     ---
@@ -188,7 +187,7 @@ def view(id):
     return RoleSerializer.jsonify(role)
 
 
-@blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
+@blueprint.route("/api/2/roles/<int:id>", methods=["POST", "PUT"])
 def update(id):
     """Change user settings.
     ---
@@ -222,14 +221,14 @@ def update(id):
     """
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_write_role(role.id))
-    data = parse_request('RoleUpdate')
+    data = parse_request("RoleUpdate")
 
     # When changing passwords, check the old password first.
     # cf. https://github.com/alephdata/aleph/issues/718
-    if data.get('password'):
-        current_password = data.get('current_password')
+    if data.get("password"):
+        current_password = data.get("current_password")
         if not role.check_password(current_password):
-            raise BadRequest(gettext('Incorrect password.'))
+            raise BadRequest(gettext("Incorrect password."))
 
     role.update(data)
     db.session.add(role)

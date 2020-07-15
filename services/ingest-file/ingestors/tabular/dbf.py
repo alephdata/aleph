@@ -13,12 +13,12 @@ log = logging.getLogger(__name__)
 
 class DBFIngestor(Ingestor, TableSupport):
     MIME_TYPES = [
-        'application/dbase',
-        'application/x-dbase',
-        'application/dbf',
-        'application/x-dbf'
+        "application/dbase",
+        "application/x-dbase",
+        "application/dbf",
+        "application/x-dbf",
     ]
-    EXTENSIONS = ['dbf']
+    EXTENSIONS = ["dbf"]
     BASE_SCORE = 8
 
     def generate_rows(self, table):
@@ -30,9 +30,9 @@ class DBFIngestor(Ingestor, TableSupport):
                 log.warning("Cannot decode DBF row: %s", ex)
 
     def ingest(self, file_path, entity):
-        entity.schema = model.get('Table')
+        entity.schema = model.get("Table")
         try:
             table = Table(file_path.as_posix()).open()
             self.emit_row_dicts(entity, self.generate_rows(table))
         except DbfError as err:
-            raise ProcessingException('Cannot open DBF file: %s' % err) from err  # noqa
+            raise ProcessingException("Cannot open DBF file: %s" % err) from err  # noqa

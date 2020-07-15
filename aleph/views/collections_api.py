@@ -19,10 +19,10 @@ from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, parse_request, jsonify
 from aleph.views.util import render_xml, get_flag, get_session_id
 
-blueprint = Blueprint('collections_api', __name__)
+blueprint = Blueprint("collections_api", __name__)
 
 
-@blueprint.route('/api/2/collections', methods=['GET'])
+@blueprint.route("/api/2/collections", methods=["GET"])
 def index():
     """
     ---
@@ -52,7 +52,7 @@ def index():
     return CollectionSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/sitemap.xml')
+@blueprint.route("/api/2/sitemap.xml")
 def sitemap():
     """
     ---
@@ -77,14 +77,13 @@ def sitemap():
     for collection in Collection.all_authz(Authz.from_role(None)):
         updated_at = collection.updated_at.date().isoformat()
         updated_at = max(settings.SITEMAP_FLOOR, updated_at)
-        collections.append({
-            'url': collection_url(collection.id),
-            'updated_at': updated_at
-        })
-    return render_xml('sitemap.xml', collections=collections)
+        collections.append(
+            {"url": collection_url(collection.id), "updated_at": updated_at}
+        )
+    return render_xml("sitemap.xml", collections=collections)
 
 
-@blueprint.route('/api/2/collections', methods=['POST', 'PUT'])
+@blueprint.route("/api/2/collections", methods=["POST", "PUT"])
 def create():
     """
     ---
@@ -107,13 +106,13 @@ def create():
                 $ref: '#/components/schemas/Collection'
     """
     require(request.authz.logged_in)
-    data = parse_request('CollectionCreate')
-    sync = get_flag('sync', True)
+    data = parse_request("CollectionCreate")
+    sync = get_flag("sync", True)
     collection = create_collection(data, request.authz, sync=sync)
-    return view(collection.get('id'))
+    return view(collection.get("id"))
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>', methods=['GET'])
+@blueprint.route("/api/2/collections/<int:collection_id>", methods=["GET"])
 def view(collection_id):
     """
     ---
@@ -140,17 +139,21 @@ def view(collection_id):
     """
     data = get_index_collection(collection_id)
     cobj = get_db_collection(collection_id)
-    if get_flag('refresh', False):
-        update_collection_stats(collection_id, ['schema'])
-    data.update({
-      'statistics': get_collection_stats(cobj.id),
-      'status': get_status(cobj),
-      'shallow': False
-    })
+    if get_flag("refresh", False):
+        update_collection_stats(collection_id, ["schema"])
+    data.update(
+        {
+            "statistics": get_collection_stats(cobj.id),
+            "status": get_status(cobj),
+            "shallow": False,
+        }
+    )
     return CollectionSerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>', methods=['POST', 'PUT'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>", methods=["POST", "PUT"]
+)  # noqa
 def update(collection_id):
     """
     ---
@@ -182,15 +185,17 @@ def update(collection_id):
                 $ref: '#/components/schemas/Collection'
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    data = parse_request('CollectionUpdate')
-    sync = get_flag('sync')
+    data = parse_request("CollectionUpdate")
+    sync = get_flag("sync")
     collection.update(data, request.authz)
     db.session.commit()
     data = update_collection(collection, sync=sync)
     return CollectionSerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/reingest', methods=['POST', 'PUT'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/reingest", methods=["POST", "PUT"]
+)  # noqa
 def reingest(collection_id):
     """
     ---
@@ -220,12 +225,14 @@ def reingest(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     job_id = get_session_id()
-    data = {'index': get_flag('index', False)}
+    data = {"index": get_flag("index", False)}
     queue_task(collection, OP_REINGEST, job_id=job_id, payload=data)
-    return ('', 202)
+    return ("", 202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/reindex', methods=['POST', 'PUT'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/reindex", methods=["POST", "PUT"]
+)  # noqa
 def reindex(collection_id):
     """
     ---
@@ -254,13 +261,17 @@ def reindex(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     job_id = get_session_id()
-    data = {'flush': get_flag('flush', False)}
+    data = {"flush": get_flag("flush", False)}
     queue_task(collection, OP_REINDEX, job_id=job_id, payload=data)
-    return ('', 202)
+    return ("", 202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/_bulk', methods=['POST'])  # noqa
-@blueprint.route('/api/2/collections/<int:collection_id>/bulk', methods=['POST'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/_bulk", methods=["POST"]
+)  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/bulk", methods=["POST"]
+)  # noqa
 def bulk(collection_id):
     """
     ---
@@ -302,18 +313,19 @@ def bulk(collection_id):
 
     # This will disable checksum security measures in order to allow bulk
     # loading of document data.
-    unsafe = get_flag('unsafe', default=False)
+    unsafe = get_flag("unsafe", default=False)
     unsafe = unsafe and request.authz.is_admin
 
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, unsafe=unsafe,
-               role_id=request.authz.id)
+    bulk_write(collection, entities, unsafe=unsafe, role_id=request.authz.id)
     collection.touch()
     db.session.commit()
-    return ('', 204)
+    return ("", 204)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/status', methods=['GET'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/status", methods=["GET"]
+)  # noqa
 def status(collection_id):
     """
     ---
@@ -344,7 +356,9 @@ def status(collection_id):
     return jsonify(get_status(collection))
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/status', methods=['DELETE'])  # noqa
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/status", methods=["DELETE"]
+)  # noqa
 def cancel(collection_id):
     """
     ---
@@ -373,10 +387,10 @@ def cancel(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     cancel_queue(collection)
     refresh_collection(collection_id)
-    return ('', 204)
+    return ("", 204)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>', methods=['DELETE'])
+@blueprint.route("/api/2/collections/<int:collection_id>", methods=["DELETE"])
 def delete(collection_id):
     """
     ---
@@ -408,7 +422,7 @@ def delete(collection_id):
         - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    keep_metadata = get_flag('keep_metadata', default=False)
-    sync = get_flag('sync', default=True)
+    keep_metadata = get_flag("keep_metadata", default=False)
+    sync = get_flag("sync", default=True)
     delete_collection(collection, keep_metadata=keep_metadata, sync=sync)
-    return ('', 204)
+    return ("", 204)

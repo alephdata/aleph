@@ -4,9 +4,7 @@ from followthemoney.types import registry
 from banal import ensure_list
 
 from aleph.core import es
-from aleph.index.util import (
-    NUMERIC_TYPES, authz_query, field_filter_query, DATE_FORMAT
-)
+from aleph.index.util import NUMERIC_TYPES, authz_query, field_filter_query, DATE_FORMAT
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.index.entities import get_field_type
@@ -25,16 +23,16 @@ class Query(object):
     RESULT_CLASS = SearchQueryResult
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
-    TEXT_FIELDS = ['text']
-    PREFIX_FIELD = 'name'
+    TEXT_FIELDS = ["text"]
+    PREFIX_FIELD = "name"
     SKIP_FILTERS = []
-    AUTHZ_FIELD = 'collection_id'
+    AUTHZ_FIELD = "collection_id"
     SORT_FIELDS = {
-        'label': 'label.kw',
-        'name': 'name.kw',
-        'score': '_score',
+        "label": "label.kw",
+        "name": "name.kw",
+        "score": "_score",
     }
-    SORT_DEFAULT = ['_score']
+    SORT_DEFAULT = ["_score"]
 
     def __init__(self, parser):
         self.parser = parser
@@ -42,24 +40,24 @@ class Query(object):
     def get_text_query(self):
         query = []
         if self.parser.text:
-            query.append({
-                "query_string": {
-                    "query": self.parser.text,
-                    "fields": self.TEXT_FIELDS,
-                    "analyzer": "latin_query",
-                    "default_operator": "AND",
-                    "minimum_should_match": "3<80%",
-                    "lenient": True
+            query.append(
+                {
+                    "query_string": {
+                        "query": self.parser.text,
+                        "fields": self.TEXT_FIELDS,
+                        "analyzer": "latin_query",
+                        "default_operator": "AND",
+                        "minimum_should_match": "3<80%",
+                        "lenient": True,
+                    }
                 }
-            })
+            )
         if self.parser.prefix:
-            query.append({
-                "match_phrase_prefix": {
-                    self.PREFIX_FIELD: self.parser.prefix
-                }
-            })
+            query.append(
+                {"match_phrase_prefix": {self.PREFIX_FIELD: self.parser.prefix}}
+            )
         if not len(query):
-            query.append({'match_all': {}})
+            query.append({"match_all": {}})
         return query
 
     def get_filters(self):
@@ -83,7 +81,7 @@ class Query(object):
         """Apply negative filters."""
         filters = []
         for field, _ in self.parser.empties.items():
-            filters.append({'exists': {'field': field}})
+            filters.append({"exists": {"field": field}})
 
         for field, values in self.parser.excludes.items():
             filters.append(field_filter_query(field, values))
@@ -97,16 +95,16 @@ class Query(object):
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
-        return {'bool': {'filter': filters}}
+        return {"bool": {"filter": filters}}
 
     def get_query(self):
         return {
-            'bool': {
-                'should': self.get_text_query(),
-                'must': [],
-                'must_not': self.get_negative_filters(),
-                'filter': self.get_filters(),
-                'minimum_should_match': 1
+            "bool": {
+                "should": self.get_text_query(),
+                "must": [],
+                "must_not": self.get_negative_filters(),
+                "filter": self.get_filters(),
+                "minimum_should_match": 1,
             }
         }
 
@@ -116,46 +114,48 @@ class Query(object):
         for facet_name in self.parser.facet_names:
             facet_aggregations = {}
             if self.parser.get_facet_values(facet_name):
-                agg_name = '%s.values' % facet_name
+                agg_name = "%s.values" % facet_name
                 facet_aggregations[agg_name] = {
-                    'terms': {
-                        'field': facet_name,
-                        'size': self.parser.get_facet_size(facet_name)
+                    "terms": {
+                        "field": facet_name,
+                        "size": self.parser.get_facet_size(facet_name),
                     }
                 }
 
             if self.parser.get_facet_total(facet_name):
                 # Option to return total distinct value counts for
                 # a given facet, instead of the top buckets.
-                agg_name = '%s.cardinality' % facet_name
-                facet_aggregations[agg_name] = {
-                    'cardinality': {
-                        'field': facet_name
-                    }
-                }
+                agg_name = "%s.cardinality" % facet_name
+                facet_aggregations[agg_name] = {"cardinality": {"field": facet_name}}
 
             interval = self.parser.get_facet_interval(facet_name)
             if interval is not None:
-                agg_name = '%s.intervals' % facet_name
+                agg_name = "%s.intervals" % facet_name
                 facet_aggregations[agg_name] = {
-                    'date_histogram': {
-                        'field': facet_name,
-                        'calendar_interval': interval,
-                        'format': DATE_FORMAT,
-                        'min_doc_count': 0,
+                    "date_histogram": {
+                        "field": facet_name,
+                        "calendar_interval": interval,
+                        "format": DATE_FORMAT,
+                        "min_doc_count": 0,
                     }
                 }
                 # Make sure we return empty buckets in the whole filter range
                 filters = self.parser.filters
-                min_val = filters.get('gte:%s' % facet_name) or filters.get('gt:%s' % facet_name)  # noqa
-                max_val = filters.get('lte:%s' % facet_name) or filters.get('lt:%s' % facet_name)  # noqa
+                min_val = filters.get("gte:%s" % facet_name) or filters.get(
+                    "gt:%s" % facet_name
+                )  # noqa
+                max_val = filters.get("lte:%s" % facet_name) or filters.get(
+                    "lt:%s" % facet_name
+                )  # noqa
                 if min_val or max_val:
                     extended_bounds = {}
                     if min_val:
-                        extended_bounds['min'] = ensure_list(min_val)[0]
+                        extended_bounds["min"] = ensure_list(min_val)[0]
                     if max_val:
-                        extended_bounds['max'] = ensure_list(max_val)[0]
-                    facet_aggregations[agg_name]['date_histogram']['extended_bounds'] = extended_bounds  # noqa
+                        extended_bounds["max"] = ensure_list(max_val)[0]
+                    facet_aggregations[agg_name]["date_histogram"][
+                        "extended_bounds"
+                    ] = extended_bounds  # noqa
 
             if not len(facet_aggregations):
                 break
@@ -164,11 +164,11 @@ class Query(object):
             # aggregation filters thing:
             # https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-request-post-filter.html  # noqa
             other_filters = self.get_post_filters(exclude=facet_name)
-            if len(other_filters['bool']['filter']):
-                agg_name = '%s.filtered' % facet_name
+            if len(other_filters["bool"]["filter"]):
+                agg_name = "%s.filtered" % facet_name
                 aggregations[agg_name] = {
-                    'filter': other_filters,
-                    'aggregations': facet_aggregations
+                    "filter": other_filters,
+                    "aggregations": facet_aggregations,
                 }
             else:
                 aggregations.update(facet_aggregations)
@@ -180,16 +180,16 @@ class Query(object):
         if not len(self.parser.sorts):
             return self.SORT_DEFAULT
 
-        sort_fields = ['_score']
+        sort_fields = ["_score"]
         for (field, direction) in self.parser.sorts:
             field = self.SORT_FIELDS.get(field, field)
             type_ = get_field_type(field)
-            config = {'order': direction, 'missing': '_last'}
+            config = {"order": direction, "missing": "_last"}
             if field == registry.date.group:
-                field = 'numeric.dates'
-                config['mode'] = 'min'
+                field = "numeric.dates"
+                config["mode"] = "min"
             if type_ in NUMERIC_TYPES:
-                field = field.replace('properties.', 'numeric.')
+                field = field.replace("properties.", "numeric.")
             sort_fields.append({field: config})
         return list(reversed(sort_fields))
 
@@ -197,34 +197,34 @@ class Query(object):
         if not self.parser.highlight:
             return {}
         return {
-            'encoder': 'html',
-            'fields': {
-                'text': {
-                    'type': 'fvh',
-                    'number_of_fragments': self.parser.highlight_count,
-                    'fragment_size': self.parser.highlight_length
+            "encoder": "html",
+            "fields": {
+                "text": {
+                    "type": "fvh",
+                    "number_of_fragments": self.parser.highlight_count,
+                    "fragment_size": self.parser.highlight_length,
                 }
-            }
+            },
         }
 
     def get_source(self):
         source = {}
         if self.INCLUDE_FIELDS:
-            source['includes'] = self.INCLUDE_FIELDS
+            source["includes"] = self.INCLUDE_FIELDS
         elif self.EXCLUDE_FIELDS:
-            source['excludes'] = self.EXCLUDE_FIELDS
+            source["excludes"] = self.EXCLUDE_FIELDS
         return source
 
     def get_body(self):
         body = {
-            'query': self.get_query(),
-            'post_filter': self.get_post_filters(),
-            'from': self.parser.offset,
-            'size': self.parser.limit,
-            'aggregations': self.get_aggregations(),
-            'sort': self.get_sort(),
-            'highlight': self.get_highlight(),
-            '_source': self.get_source()
+            "query": self.get_query(),
+            "post_filter": self.get_post_filters(),
+            "from": self.parser.offset,
+            "size": self.parser.limit,
+            "aggregations": self.get_aggregations(),
+            "sort": self.get_sort(),
+            "highlight": self.get_highlight(),
+            "_source": self.get_source(),
         }
         # log.info("Query: %s", pformat(body))
         return body
@@ -235,9 +235,8 @@ class Query(object):
     def search(self):
         """Execute the query as assmbled."""
         # log.info("Search index: %s", self.get_index())
-        result = es.search(index=self.get_index(),
-                           body=self.get_body())
-        log.info("Took: %sms", result.get('took'))
+        result = es.search(index=self.get_index(), body=self.get_body())
+        log.info("Took: %sms", result.get("took"))
         # log.info("%s", pformat(result.get('profile')))
         return result
 

@@ -6,9 +6,14 @@ from ingestors.analysis.util import TAG_EMAIL, TAG_PHONE
 from ingestors.analysis.util import TAG_IBAN, TAG_COUNTRY
 
 
-EMAIL_REGEX = re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}', re.IGNORECASE)  # noqa
-PHONE_REGEX = re.compile(r'(\+?[\d\-\(\)\/\s]{5,}\d{2})', re.IGNORECASE)  # noqa
-IBAN_REGEX = re.compile(r'\b([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})\b', re.IGNORECASE)  # noqa
+EMAIL_REGEX = re.compile(
+    r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.IGNORECASE
+)  # noqa
+PHONE_REGEX = re.compile(r"(\+?[\d\-\(\)\/\s]{5,}\d{2})", re.IGNORECASE)  # noqa
+IBAN_REGEX = re.compile(
+    r"\b([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})\b",
+    re.IGNORECASE,
+)  # noqa
 
 REGEX_TYPES = {
     EMAIL_REGEX: TAG_EMAIL,
