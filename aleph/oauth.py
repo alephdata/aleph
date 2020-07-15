@@ -119,6 +119,33 @@ def handle_cognito_oauth(provider, oauth_token):
         log.debug("User %r is member of %r", role, group_role)
     return role
 
+def handle_adfs_oauth(provdier, oauth_token):
+    #Assumes allatclaims with given_name and email configured
+    #Optional group grant as well for administrative purposes
+    from aleph.model import Role
+    #URL of public key of AD FS server
+    key = urlopen(settings.OAUTH_CERT_URL).read()
+    id_token = jwt.decode(
+        oauth_token.get('id_token'),
+        key,
+        audience=settings.OAUTH_KEY,
+        options={'require':['exp','aud']},
+        algorithms='RS256')
+    
+    user_id = 'adfs:{}'.format(id_token.get('sub'))
+    role = Role.load_or_create(user_id, Role.USER,
+                               id_token.get('given_name'),
+                               email=id_token.get('email'),
+                               is_admin=settings.OAUTH_ADMIN_GROUP == id_token.get('group'))
+    role.clear_roles()
+    if id_token.get('group'):
+        group_role = Role.load_or_create('adfs:%s' % id_token.get('group'),
+                                         Role.GROUP,
+                                         id_token.get('group'))
+        role.add_role(group_role)
+        log.debug("User %r is member of %r", role, group_role)      
+    return role
+
 def handle_keycloak_oauth(provider, oauth_token):
     from aleph.model import Role
     access_token = oauth_token.get('access_token')
