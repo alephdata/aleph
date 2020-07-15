@@ -146,18 +146,18 @@ def handle_adfs_oauth(provdier, oauth_token):
     )
 
     user_id = "adfs:{}".format(id_token.get("sub"))
+    group = id_token.get("group")
     role = Role.load_or_create(
         user_id,
         Role.USER,
         id_token.get("given_name"),
         email=id_token.get("email"),
-        is_admin=settings.OAUTH_ADMIN_GROUP == id_token.get("group"),
+        is_admin=settings.OAUTH_ADMIN_GROUP == group,
     )
     role.clear_roles()
-    if id_token.get("group"):
-        group_role = Role.load_or_create(
-            "adfs:%s" % id_token.get("group"), Role.GROUP, id_token.get("group")
-        )
+    if group:
+        foreign_id = "adfs:%s" % group
+        group_role = Role.load_or_create(foreign_id, Role.GROUP, group)
         role.add_role(group_role)
         log.debug("User %r is member of %r", role, group_role)
     return role
