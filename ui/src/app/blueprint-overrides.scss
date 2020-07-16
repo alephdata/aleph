@@ -106,7 +106,7 @@ table {
       @include rtl(right, initial, 0);
     }
   }
-  
+
   &.bp3-large {
     .bp3-input:not(:first-child){
       @include rtlSupportInvertedProp(padding, left, 40px, null);
@@ -156,16 +156,16 @@ table {
         &:not(:last-child) {
           @include buttonNotLastChild;
         }
-        
+
         &:not(:first-child) {
           @include buttonNotFirstChild;
         }
       }
-      
+
       > .bp3-popover-wrapper:not(:first-child) .bp3-button {
         @include buttonNotFirstChild;
       }
-  
+
       > .bp3-popover-wrapper:not(:last-child) .bp3-button{
         @include buttonNotLastChild;
       }
@@ -192,7 +192,7 @@ table {
       @include rtlSupportInvertedProp(margin, right, 10px, -26px);
     }
   }
-  
+
   input {
     @include rtl(right, null, 0);
     @include rtl(left, 0, null);
@@ -293,12 +293,12 @@ table {
   }
 }
 
-// this is for the delete document dialog 
+// this is for the delete document dialog
 .bp3-alert-body .bp3-icon {
   @include rtlSupportInvertedProp(margin, right, 20px, 0px);
 }
 
-// two rules for a specific dataset settings dialog 
+// two rules for a specific dataset settings dialog
 .bp3-select {
   select {
     @include rtl(text-align, left, right);
@@ -310,8 +310,7 @@ table {
   }
 }
 
-// =================> Begin Overrides from react-ftm - diagrams <===================
-/* TODO:: maybe better to move these rules to react-ftm? */
+// =================> Begin Overrides from react-ftm <===================
 
 .TableView__close {
   @include rtl(right, 10px, initial);
