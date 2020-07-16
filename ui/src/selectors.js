@@ -49,7 +49,7 @@ export function selectLocale(state) {
 export function selectMetadata(state) {
   const metadata = selectObject(state, state, 'metadata');
   const locale = selectLocale(state);
-  if (metadata.app && metadata.app.locale !== locale) {
+  if (!metadata.isPending && metadata.app && metadata.app.locale !== locale) {
     return loadState();
   }
   return metadata;
