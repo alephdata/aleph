@@ -20,6 +20,7 @@ class TagIcon extends PureComponent {
 
   render() {
     const { field } = this.props;
+    if (field === 'urls') { return null; }
     return this.icons[field] || this.icons.link;
   }
 }
