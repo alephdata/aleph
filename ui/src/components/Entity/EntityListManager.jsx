@@ -254,7 +254,8 @@ export class EntityListManager extends Component {
           isOpen={this.state.edgeCreateIsOpen}
           toggleDialog={this.toggleEdgeCreateDialog}
           onSubmit={this.onEdgeCreate}
-          entityManager={entityManager}
+          model={entityManager.model}
+          getEntitySuggestions={entityManager.getEntitySuggestions}
           intl={intl}
         />
         <AddToDiagramDialog
