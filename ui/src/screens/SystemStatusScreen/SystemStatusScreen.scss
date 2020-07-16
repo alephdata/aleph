@@ -11,8 +11,4 @@
   td.text {
     @include rtlSupportInvertedProp(padding, left, 0, null)
   }
-
-  td.narrow {
-    @include rtlSupportInvertedProp(padding, right, 0, null)
-  }
 }

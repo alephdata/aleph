@@ -10,7 +10,7 @@ $search-bar-width: 250px;
     .bp3-input-group {
       min-width: $search-bar-width;
       .bp3-input:not(:first-child) {
-        @include rtlSupportInvertedProp(padding, left, 30px, 0);
+        @include rtlSupportInvertedProp(padding, left, 30px, null);
       }
     }
     .bp3-input-group, .bp3-button-group {

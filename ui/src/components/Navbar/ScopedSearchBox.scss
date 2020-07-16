@@ -9,7 +9,7 @@
       white-space: nowrap;
       border-radius: 0 !important;
       box-shadow: none !important;
-      @include rtlSupportInvertedProp(padding, right, 0, 30px !important);
+      padding: 0 30px!important;
     }
     .bp3-input-action {
       &:last-child {
