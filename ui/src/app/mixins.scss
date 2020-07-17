@@ -8,6 +8,23 @@
   hyphens: auto;
 }
 
+@mixin buttonNotFirstChild {
+  border-radius: 3px;
+  @include rtl(border-bottom-left-radius, 0, null);
+  @include rtl(border-top-left-radius, 0, null);
+  @include rtl(border-bottom-right-radius, null, 0);
+  @include rtl(border-top-right-radius, null, 0);
+}
+
+@mixin buttonNotLastChild {
+  border-radius: 3px;
+  @include rtl(border-bottom-right-radius, 0, null);
+  @include rtl(border-top-right-radius, 0, null);
+  @include rtl(border-bottom-left-radius, null, 0);
+  @include rtl(border-top-left-radius, null, 0);
+  @include rtlSupportInvertedProp(margin, right, -1px, null);
+}
+
 @mixin rtl($property, $ltr-value, $rtl-value) {
   [dir=ltr] & {
     #{$property}: $ltr-value;

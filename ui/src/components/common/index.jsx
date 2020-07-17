@@ -32,6 +32,7 @@ import Summary from './Summary';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
 import ResultText from './ResultText';
+import SelectWrapper from './SelectWrapper';
 
 
 export {
@@ -69,6 +70,7 @@ export {
   QueryText,
   ResultCount,
   ResultText,
+  SelectWrapper,
 };
 
 export * from './types';

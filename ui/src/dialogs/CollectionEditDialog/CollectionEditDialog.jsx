@@ -198,7 +198,6 @@ export class CollectionEditDialog extends Component {
                 id="summary"
                 className="bp3-input bp3-fill"
                 placeholder={intl.formatMessage(messages.placeholder_summary)}
-                dir="auto"
                 rows={5}
                 onChange={this.onFieldChange}
                 value={collection.summary || ''}
@@ -338,7 +337,6 @@ export class CollectionEditDialog extends Component {
                   <input
                     className="bp3-input bp3-fill"
                     type="text"
-                    dir="auto"
                     disabled
                     value={collection.foreign_id || ''}
                   />

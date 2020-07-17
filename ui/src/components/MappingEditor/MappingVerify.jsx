@@ -3,12 +3,12 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, HTMLTable, MenuItem, Tooltip } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
 import { PropertyEditor } from '@alephdata/react-ftm';
 import { Property } from 'src/components/common';
 
 import { selectLocale } from 'src/selectors';
 import { MappingLabel } from './util';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 
 
 import './MappingVerify.scss';
@@ -59,7 +59,7 @@ class MappingVerifyItem extends Component {
       .sort((a, b) => (a.label > b.label ? 1 : -1));
 
     return (
-      <Select
+      <SelectWrapper
         id="entity-select"
         items={items}
         itemRenderer={itemRenderer}
@@ -71,7 +71,7 @@ class MappingVerifyItem extends Component {
           text={intl.formatMessage(messages.literal_button_text)}
           icon="add"
         />
-      </Select>
+      </SelectWrapper>
     );
   }
 

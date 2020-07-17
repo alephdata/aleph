@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 $preview-padding: $aleph-grid-size*1.5;
 
@@ -9,8 +10,8 @@ $preview-padding: $aleph-grid-size*1.5;
   }
 
   &__overlay-container .bp3-overlay.bp3-overlay-container {
-    right: 0;
-    left: auto;
+    @include rtl(right, 0, auto);
+    @include rtl(left, auto, 0);
     overflow: visible;
   }
 

@@ -2,14 +2,15 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Drawer } from '@blueprintjs/core';
+import { Drawer, Position } from '@blueprintjs/core';
+import { isLangRtl } from '@alephdata/react-ftm';
 
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityViews from 'src/components/Entity/EntityViews';
 import { SectionLoading, ErrorSection } from 'src/components/common';
-import { selectEntity, selectEntityView } from 'src/selectors';
+import { selectEntity, selectEntityView, selectLocale } from 'src/selectors';
 import queryString from 'query-string';
 import togglePreview from 'src/util/togglePreview';
 
@@ -52,7 +53,7 @@ export class EntityPreview extends React.Component {
   }
 
   render() {
-    const { entityId, entity, hidden } = this.props;
+    const { entityId, entity, hidden, locale } = this.props;
     if (!entityId) {
       return null;
     }
@@ -66,6 +67,7 @@ export class EntityPreview extends React.Component {
           hasBackdrop={false}
           autoFocus={false}
           enforceFocus={false}
+          position={isLangRtl(locale) ? Position.LEFT : Position.RIGHT}
           // canOutsideClickClose={false}
           portalClassName="EntityPreview__overlay-container"
         >
@@ -87,6 +89,7 @@ const mapStateToProps = (state, ownProps) => {
     parsedHash,
     entity: selectEntity(state, entityId),
     activeMode: selectEntityView(state, entityId, activeMode, true),
+    locale: selectLocale(state),
   };
 };
 

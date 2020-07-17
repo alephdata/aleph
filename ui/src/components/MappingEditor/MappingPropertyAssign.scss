@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
 .MappingPropertyAssign {
   &.TableViewer {
@@ -48,7 +49,8 @@
     &__remove {
       position: absolute;
       top: 0;
-      right: 0;
+      @include rtl(right, 0, null);
+      @include rtl(left, null, 0);
       .bp3-icon {
         color: white !important;
       }

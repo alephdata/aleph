@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   Button, MenuItem, Classes, Alignment, Icon,
 } from '@blueprintjs/core';
-import { Select as BlueprintSelect } from '@blueprintjs/select';
+import SelectWrapper from './SelectWrapper';
 
 import wordList from 'src/util/wordList';
 import { suggestRoles } from 'src/actions';
@@ -115,7 +115,7 @@ class Select extends Component {
     const items = roles || suggested;
     const label = role ? role.label : intl.formatMessage(messages.label);
     return (
-      <BlueprintSelect
+      <SelectWrapper
         itemRenderer={this.renderRole}
         items={items}
         onItemSelect={this.onSelectRole}
@@ -123,7 +123,6 @@ class Select extends Component {
         popoverProps={{
           minimal: true,
           fill: true,
-          // position: Position.BOTTOM_LEFT,
         }}
         inputProps={{
           fill: true,
@@ -141,7 +140,7 @@ class Select extends Component {
           rightIcon="search"
           alignText={Alignment.LEFT}
         />
-      </BlueprintSelect>
+      </SelectWrapper>
     );
   }
 }
@@ -153,7 +152,7 @@ class Role {
 
   static List = RoleList;
 
-  static Select = connect(null, { suggestRoles })(injectIntl(Select));;
+  static Select = connect(null, { suggestRoles })(injectIntl(Select));
 }
 
 export default Role;

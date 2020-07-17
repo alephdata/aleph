@@ -1,7 +1,7 @@
 import React from 'react';
 import c from 'classnames';
 import { Button, MenuItem } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 
 import './ScopeSelect.scss';
 
@@ -18,7 +18,7 @@ class ScopeSelect extends React.Component {
     const { scopes, activeScope } = this.props;
     const multipleScopes = scopes.length > 1;
     return (
-      <Select
+      <SelectWrapper
         filterable={false}
         items={scopes}
         itemRenderer={this.renderItem}
@@ -35,7 +35,7 @@ class ScopeSelect extends React.Component {
           text={activeScope.listItem}
           rightIcon={multipleScopes ? 'caret-down' : null}
         />
-      </Select>
+      </SelectWrapper>
     );
   }
 }

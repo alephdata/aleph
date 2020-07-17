@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, Collapse, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
-import { Select, MultiSelect } from '@blueprintjs/select';
+import { MultiSelect } from '@blueprintjs/select';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 import { MappingLabel } from './util';
 
 import './MappingKeyAssign.scss';
@@ -164,7 +165,7 @@ export class MappingKeyAssignItem extends Component {
             labelFor="entity-select"
             helperText={disabled ? intl.formatMessage(messages.entityAssignNoResults) : ''}
           >
-            <Select
+            <SelectWrapper
               id="entity-select"
               items={items}
               itemRenderer={entityItemRenderer}
@@ -178,7 +179,7 @@ export class MappingKeyAssignItem extends Component {
                 rightIcon="caret-down"
                 disabled={disabled}
               />
-            </Select>
+            </SelectWrapper>
           </FormGroup>
         </span>
         {disabled && (
