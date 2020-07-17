@@ -4,7 +4,7 @@
 $notification-items-padding: 1px;
 
 .Notification {
-  padding: $aleph-grid-size;
+  padding: $aleph-grid-size*1.3 0;
   line-height: 1.5em;
   border-bottom: 1px solid $aleph-border-color;
   display: flex;
@@ -14,7 +14,7 @@ $notification-items-padding: 1px;
     .param {
       font-weight: bold;
       .bp3-icon, .bp3-icon svg {
-        @include rtlSupportInvertedProp(margin, right, 1px, null);
+        @include rtlSupportInvertedProp(margin, right, $notification-items-padding*1.5, null);
       }
       .Role {
         span {
