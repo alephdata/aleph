@@ -148,6 +148,7 @@ export class EntityListManager extends Component {
       showSuccessToast(
         intl.formatMessage(messages.edge_create_success, { source: source.getCaption(), target: target.getCaption() })
       );
+      this.setState({ selection: [] });
       this.toggleEdgeCreateDialog();
     } catch (e) {
       showErrorToast(e);
