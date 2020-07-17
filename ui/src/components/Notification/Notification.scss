@@ -39,7 +39,8 @@ $notification-items-padding: 1px;
   .timestamp {
     color: $aleph-greyed-text;
     white-space: nowrap;
-    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size, null);
+    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*2, null);
+    @include rtl(text-align, right, left);
   }
 
   .EntityLabel {
