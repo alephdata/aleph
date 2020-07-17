@@ -169,7 +169,9 @@ class TestCase(unittest.TestCase):
         self._banana3 = self.create_entity(
             {
                 "schema": "Person",
-                "properties": {"name": ["Banana"], "birthDate": "1970-05-21"},
+                "properties": {
+                    "name": ["Banana ba Nana"], "birthDate": "1970-05-21"
+                },
             },
             self.private_coll,
         )

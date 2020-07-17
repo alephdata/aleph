@@ -47,7 +47,6 @@ class Query(object):
                         "fields": self.TEXT_FIELDS,
                         "analyzer": "latin_query",
                         "default_operator": "AND",
-                        "minimum_should_match": "3<80%",
                         "lenient": True,
                     }
                 }

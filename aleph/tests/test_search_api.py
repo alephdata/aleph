@@ -26,7 +26,6 @@ class SearchApiTestCase(TestCase):
         assert b"Banana" in res.data, res.json
 
     def test_facet_attribute(self):
-        _, headers = self.login(is_admin=True)
         res = self.client.get(self.url + "&facet=names")
         assert res.status_code == 200, res
         facet = res.json["facets"]["names"]
@@ -107,3 +106,16 @@ class SearchApiTestCase(TestCase):
         assert facets[0]["count"] == 0, facets
         assert facets[1]["count"] == 3, facets
         assert len(facets) == 3, facets
+
+    def test_boolean_query(self):
+        _, headers = self.login(is_admin=True)
+        res = self.client.get(
+            self.url + "&q=banana OR kwazulu", headers=headers
+        )
+        assert res.status_code == 200, res
+        assert res.json["total"] == 4, res.json
+        res = self.client.get(
+            self.url + "&q=banana AND nana", headers=headers
+        )
+        assert res.status_code == 200, res
+        assert res.json["total"] == 1, res.json
