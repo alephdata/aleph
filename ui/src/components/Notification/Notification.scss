@@ -32,6 +32,7 @@ $notification-items-padding: 1px;
 
     & > * {
       padding: 0 $notification-items-padding;
+      display: inline;
     }
   }
 
