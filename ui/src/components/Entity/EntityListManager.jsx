@@ -137,7 +137,7 @@ export class EntityListManager extends Component {
         source.setProperty(type.property, target.id);
         entityManager.updateEntity(source);
       } else if (type.schema?.edge) {
-        const entity = await entityManager.createEntity({
+        await entityManager.createEntity({
           schema: type.schema,
           properties: {
             [type.schema.edge.source]: source.id,
@@ -159,7 +159,7 @@ export class EntityListManager extends Component {
     if (!table?.id) return;
     const { history, schema } = this.props;
     const pathname = getEntityLink(table);
-    history.push({ pathname, hash: queryString.stringify({mode: 'mapping', schema: schema.name}) });
+    history.push({ pathname, hash: queryString.stringify({ mode: 'mapping', schema: schema.name }) });
   }
 
   toggleDocumentSelectDialog() {
@@ -192,7 +192,7 @@ export class EntityListManager extends Component {
           query={query}
           writeable={collection.writeable}
           selection={selection}
-          resetSelection={() => this.setState({ selection: []})}
+          resetSelection={() => this.setState({ selection: [] })}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
           searchDisabled={result.total === 0 && !query.hasQuery()}
