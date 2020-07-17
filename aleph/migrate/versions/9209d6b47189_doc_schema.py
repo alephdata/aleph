@@ -9,27 +9,35 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = '9209d6b47189'
-down_revision = '84c0965d86e5'
+revision = "9209d6b47189"
+down_revision = "84c0965d86e5"
 
 SCHEMATA = {
-    'text': 'Pages',
-    'scroll': 'PlainText',
-    'html': 'HyperText',
-    'tabular': 'Table',
-    'other': 'Document'
+    "text": "Pages",
+    "scroll": "PlainText",
+    "html": "HyperText",
+    "tabular": "Table",
+    "other": "Document",
 }
 
 
 def upgrade():
-    op.alter_column('document', 'type', new_column_name='schema', type_=sa.String(255), nullable=False)  # noqa
-    op.alter_column('entity', 'type', new_column_name='schema', type_=sa.String(255), nullable=False)   # noqa
+    op.alter_column(
+        "document",
+        "type",
+        new_column_name="schema",
+        type_=sa.String(255),
+        nullable=False,
+    )  # noqa
+    op.alter_column(
+        "entity", "type", new_column_name="schema", type_=sa.String(255), nullable=False
+    )  # noqa
 
     bind = op.get_bind()
     meta = sa.MetaData()
     meta.bind = bind
     meta.reflect()
-    documents = meta.tables['document']
+    documents = meta.tables["document"]
     for old, new in SCHEMATA.items():
         q = sa.update(documents)
         q = q.where(documents.c.schema == old)

@@ -6,12 +6,13 @@ from followthemoney import model
 from followthemoney.types import registry
 
 log = logging.getLogger(__name__)
-OP_TRANSLATE = 'translate'
+OP_TRANSLATE = "translate"
 
 # Not part of the example, just needed for google cloud translation:
 from google.cloud import translate  # noqa
-PROJECT_ID = os.environ.get('GOOGLE_PROJECT_ID')
-TARGET_LANGUAGE = os.environ.get('TRANSLATE_LANGUAGE', 'en')
+
+PROJECT_ID = os.environ.get("GOOGLE_PROJECT_ID")
+TARGET_LANGUAGE = os.environ.get("TRANSLATE_LANGUAGE", "en")
 
 
 class ServiceWorker(Worker):
@@ -20,19 +21,19 @@ class ServiceWorker(Worker):
     def dispatch_next(self, task, entity_ids):
         if not len(entity_ids):
             return
-        pipeline = task.context.get('pipeline')
+        pipeline = task.context.get("pipeline")
         if pipeline is None or not len(pipeline):
             return
         # Find what the next index stage is:
         next_stage = pipeline.pop(0)
         stage = task.job.get_stage(next_stage)
         context = task.context
-        context['pipeline'] = pipeline
-        log.info('Sending %s entities to: %s', len(entity_ids), next_stage)
-        stage.queue({'entity_ids': entity_ids}, context)
+        context["pipeline"] = pipeline
+        log.info("Sending %s entities to: %s", len(entity_ids), next_stage)
+        stage.queue({"entity_ids": entity_ids}, context)
 
     def translate(self, writer, entity):
-        if not entity.schema.is_a('Analyzable'):
+        if not entity.schema.is_a("Analyzable"):
             return
 
         # This isn't part of the example, just a generic call to Google
@@ -42,7 +43,7 @@ class ServiceWorker(Worker):
         #
         # This code isn't the point. Don't run it in production, and if you
         # do anyway, don't complain about the fact it's bad. PRs welcome.
-        if not hasattr(self, 'client'):
+        if not hasattr(self, "client"):
             self.client = translate.TranslationServiceClient()
             self.parent = self.client.location_path(PROJECT_ID, "global")
 
@@ -62,15 +63,15 @@ class ServiceWorker(Worker):
         translated.id = entity.id
         for translation in response.translations:
             # log.debug("Received: %s", translation.translated_text)
-            translated.add('indexText', translation.translated_text)
+            translated.add("indexText", translation.translated_text)
             # Store the generated translation fragment for the entity
             # in the ftm-store database. All the properties of the
             # entity will be combined upon indexing.
             writer.put(translated)
 
     def handle(self, task):
-        name = task.context.get('ftmstore', task.job.dataset.name)
-        entity_ids = task.payload.get('entity_ids')
+        name = task.context.get("ftmstore", task.job.dataset.name)
+        entity_ids = task.payload.get("entity_ids")
         dataset = Dataset(name, OP_TRANSLATE)
         try:
             writer = dataset.bulk()

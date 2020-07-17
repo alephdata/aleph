@@ -34,10 +34,6 @@
       &__value {
         width: 75%;
         @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
-
-        .bp3-button {
-          @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
-        }
       }
 
       &__label {

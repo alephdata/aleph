@@ -12,23 +12,25 @@ from aleph.util import anonymize_email
 log = logging.getLogger(__name__)
 
 
-membership = db.Table('role_membership',
-    db.Column('group_id', db.Integer, db.ForeignKey('role.id')),  # noqa
-    db.Column('member_id', db.Integer, db.ForeignKey('role.id'))  # noqa
+membership = db.Table(
+    "role_membership",
+    db.Column("group_id", db.Integer, db.ForeignKey("role.id")),  # noqa
+    db.Column("member_id", db.Integer, db.ForeignKey("role.id")),  # noqa
 )
 
 
 class Role(db.Model, IdModel, SoftDeleteModel):
     """A user, group or other access control subject."""
-    __tablename__ = 'role'
 
-    USER = 'user'
-    GROUP = 'group'
-    SYSTEM = 'system'
+    __tablename__ = "role"
+
+    USER = "user"
+    GROUP = "group"
+    SYSTEM = "system"
     TYPES = [USER, GROUP, SYSTEM]
 
-    SYSTEM_GUEST = 'guest'
-    SYSTEM_USER = 'user'
+    SYSTEM_GUEST = "guest"
+    SYSTEM_USER = "user"
 
     #: Generates URL-safe signatures for invitations.
     SIGNATURE = URLSafeTimedSerializer(settings.SECRET_KEY)
@@ -39,7 +41,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
-    type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
+    type = db.Column(db.Enum(*TYPES, name="role_type"), nullable=False)
     api_key = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_muted = db.Column(db.Boolean, nullable=False, default=False)
@@ -50,7 +52,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     reset_token = db.Column(db.Unicode, nullable=True)
     locale = db.Column(db.Unicode, nullable=True)
 
-    permissions = db.relationship('Permission', backref='role')
+    permissions = db.relationship("Permission", backref="role")
 
     @property
     def has_password(self):
@@ -66,7 +68,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return False
         if self.is_muted or self.is_blocked:
             return False
-        # TODO: ignore people that have not logged in for a certain time?
+        if self.updated_at < (datetime.utcnow() - settings.ROLE_INACTIVE):
+            # Disable sending notifications to roles that haven't been
+            # logged in for a set amount of time.
+            return False
         return True
 
     @property
@@ -74,19 +79,22 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return anonymize_email(self.name, self.email)
 
     def update(self, data):
-        self.name = data.get('name', self.name)
-        self.is_muted = data.get('is_muted', self.is_muted)
-        self.is_tester = data.get('is_tester', self.is_tester)
-        if data.get('password'):
-            self.set_password(data.get('password'))
-        self.locale = stringify(data.get('locale', self.locale))
+        self.name = data.get("name", self.name)
+        self.is_muted = data.get("is_muted", self.is_muted)
+        self.is_tester = data.get("is_tester", self.is_tester)
+        if data.get("password"):
+            self.set_password(data.get("password"))
+        self.locale = stringify(data.get("locale", self.locale))
+        self.touch()
+
+    def touch(self):
         self.updated_at = datetime.utcnow()
+        db.session.add(self)
 
     def clear_roles(self):
         """Removes any existing roles from group membership."""
         self.roles = []
-        self.updated_at = datetime.utcnow()
-        db.session.add(self)
+        self.touch()
         db.session.flush()
 
     def add_role(self, role):
@@ -98,20 +106,22 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def to_dict(self):
         data = self.to_dict_dates()
-        data.update({
-            'id': stringify(self.id),
-            'type': self.type,
-            'name': self.name,
-            'label': self.label,
-            'email': self.email,
-            'locale': self.locale,
-            'api_key': self.api_key,
-            'is_admin': self.is_admin,
-            'is_muted': self.is_muted,
-            'is_tester': self.is_tester,
-            'has_password': self.has_password,
-            # 'notified_at': self.notified_at
-        })
+        data.update(
+            {
+                "id": stringify(self.id),
+                "type": self.type,
+                "name": self.name,
+                "label": self.label,
+                "email": self.email,
+                "locale": self.locale,
+                "api_key": self.api_key,
+                "is_admin": self.is_admin,
+                "is_muted": self.is_muted,
+                "is_tester": self.is_tester,
+                "has_password": self.has_password,
+                # 'notified_at': self.notified_at
+            }
+        )
         return data
 
     @classmethod
@@ -175,15 +185,14 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def load_cli_user(cls):
-        return cls.load_or_create(foreign_id=settings.SYSTEM_USER,
-                                  name='Aleph',
-                                  type=cls.USER,
-                                  is_admin=True)
+        return cls.load_or_create(
+            foreign_id=settings.SYSTEM_USER, name="Aleph", type=cls.USER, is_admin=True
+        )
 
     @classmethod
     def load_id(cls, foreign_id):
         """Load a role and return the ID."""
-        if not hasattr(settings, '_roles'):
+        if not hasattr(settings, "_roles"):
             settings._roles = {}
         if foreign_id not in settings._roles:
             role_id = cls.all_ids().filter_by(foreign_id=foreign_id).first()
@@ -194,10 +203,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def public_roles(cls):
         """Roles which make a collection to be considered public."""
-        return set([
-            cls.load_id(cls.SYSTEM_USER),
-            cls.load_id(cls.SYSTEM_GUEST),
-        ])
+        return set([cls.load_id(cls.SYSTEM_USER), cls.load_id(cls.SYSTEM_GUEST)])
 
     @classmethod
     def by_prefix(cls, prefix, exclude=[]):
@@ -205,16 +211,16 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         :param str pattern: Pattern to match.
         """
-        query = prefix.replace('%', ' ').replace('_', ' ')
-        query = '%%%s%%' % query
+        query = prefix.replace("%", " ").replace("_", " ")
+        query = "%%%s%%" % query
         q = cls.all()
         q = q.filter(Role.type == Role.USER)
+        q = q.filter(Role.is_blocked == False)  # noqa
         if len(exclude):
             q = q.filter(not_(Role.id.in_(exclude)))
-        q = q.filter(or_(
-            func.lower(cls.email) == prefix.lower(),
-            cls.name.ilike(query)
-        ))
+        q = q.filter(
+            or_(func.lower(cls.email) == prefix.lower(), cls.name.ilike(query))
+        )
         q = q.order_by(Role.id.asc())
         return q
 
@@ -249,15 +255,17 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         :param str secret: The password to be checked.
         :rtype: bool
         """
-        digest = self.password_digest or ''
+        digest = self.password_digest or ""
         return check_password_hash(digest, secret)
 
     def __repr__(self):
-        return '<Role(%r,%r)>' % (self.id, self.foreign_id)
+        return "<Role(%r,%r)>" % (self.id, self.foreign_id)
 
 
-Role.members = db.relationship(Role,
-                               secondary=membership,
-                               primaryjoin=Role.id == membership.c.group_id,
-                               secondaryjoin=Role.id == membership.c.member_id,
-                               backref="roles")
+Role.members = db.relationship(
+    Role,
+    secondary=membership,
+    primaryjoin=Role.id == membership.c.group_id,
+    secondaryjoin=Role.id == membership.c.member_id,
+    backref="roles",
+)

@@ -15,24 +15,24 @@ log = logging.getLogger(__name__)
 
 
 def xref_index():
-    return index_name('xref', settings.INDEX_WRITE)
+    return index_name("xref", settings.INDEX_WRITE)
 
 
 def configure_xref():
     mapping = {
-        'date_detection': False,
-        'dynamic': False,
-        'properties': {
-            'score': {'type': 'float'},
-            'entity_id': KEYWORD,
-            'collection_id': KEYWORD,
-            'match_id': KEYWORD,
-            'match_collection_id': KEYWORD,
+        "date_detection": False,
+        "dynamic": False,
+        "properties": {
+            "score": {"type": "float"},
+            "entity_id": KEYWORD,
+            "collection_id": KEYWORD,
+            "match_id": KEYWORD,
+            "match_collection_id": KEYWORD,
             registry.country.group: KEYWORD,
-            'schema': KEYWORD,
-            'text': {'type': 'text', 'analyzer': 'latin_index'},
-            'created_at': {'type': 'date'},
-        }
+            "schema": KEYWORD,
+            "text": {"type": "text", "analyzer": "latin_index"},
+            "created_at": {"type": "date"},
+        },
     }
     settings = index_settings(shards=SHARDS_HEAVY)
     return configure_index(xref_index(), mapping, settings)
@@ -45,21 +45,23 @@ def index_matches(collection, matches, sync=False):
         xref_id = hash_data((entity.id, collection.id, match.id))
         text = ensure_list(entity.get_type_values(registry.name))
         text.extend(match.get_type_values(registry.name))
-        actions.append({
-            '_id': xref_id,
-            '_index': xref_index(),
-            '_source': {
-                'score': score,
-                'entity_id': entity.id,
-                'collection_id': collection.id,
-                'match_id': match.id,
-                'match_collection_id': match_collection_id,
-                'countries': match.get_type_values(registry.country),
-                'schema': match.schema.name,
-                'text': text,
-                'created_at': datetime.utcnow(),
+        actions.append(
+            {
+                "_id": xref_id,
+                "_index": xref_index(),
+                "_source": {
+                    "score": score,
+                    "entity_id": entity.id,
+                    "collection_id": collection.id,
+                    "match_id": match.id,
+                    "match_collection_id": match_collection_id,
+                    "countries": match.get_type_values(registry.country),
+                    "schema": match.schema.name,
+                    "text": text,
+                    "created_at": datetime.utcnow(),
+                },
             }
-        })
+        )
 
     if len(actions):
         log.info("Indexing %d xref matches...", len(actions))
@@ -68,39 +70,36 @@ def index_matches(collection, matches, sync=False):
 
 def iter_matches(collection, authz):
     """Scan all matching xref results, does not support sorting."""
-    filters = [{'term': {'collection_id': collection.id}},
-               authz_query(authz, field='match_collection_id')]
-    query = {'query': {'bool': {'filter': filters}}}
+    filters = [
+        {"term": {"collection_id": collection.id}},
+        authz_query(authz, field="match_collection_id"),
+    ]
+    query = {"query": {"bool": {"filter": filters}}}
     for res in scan(es, index=xref_index(), query=query):
         yield unpack_result(res)
 
 
 def get_xref(xref_id, collection_id=None):
     """Get an xref match combo by its ID."""
-    filters = [{'ids': {'values': [xref_id]}}]
+    filters = [{"ids": {"values": [xref_id]}}]
     if collection_id is not None:
-        filters.append({'term': {'collection_id': collection_id}})
-    query = {'query': {'bool': {'filter': filters}}, 'size': 1}
+        filters.append({"term": {"collection_id": collection_id}})
+    query = {"query": {"bool": {"filter": filters}}, "size": 1}
     result = es.search(index=xref_index(), body=query)
-    for doc in result.get('hits', {}).get('hits', []):
+    for doc in result.get("hits", {}).get("hits", []):
         return unpack_result(doc)
 
 
 def delete_xref(collection, entity_id=None, sync=False):
     """Delete xref matches of an entity or a collection."""
     shoulds = [
-        {'term': {'collection_id': collection.id}},
-        {'term': {'match_collection_id': collection.id}},
+        {"term": {"collection_id": collection.id}},
+        {"term": {"match_collection_id": collection.id}},
     ]
     if entity_id is not None:
         shoulds = [
-            {'term': {'entity_id': entity_id}},
-            {'term': {'match_id': entity_id}},
+            {"term": {"entity_id": entity_id}},
+            {"term": {"match_id": entity_id}},
         ]
-    query = {
-        'bool': {
-            'should': shoulds,
-            'minimum_should_match': 1
-        }
-    }
+    query = {"bool": {"should": shoulds, "minimum_should_match": 1}}
     query_delete(xref_index(), query, sync=sync)

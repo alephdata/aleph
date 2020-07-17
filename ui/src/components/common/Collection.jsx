@@ -1,6 +1,5 @@
 import React, { Component, PureComponent } from 'react';
 import { Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
@@ -10,7 +9,9 @@ import c from 'classnames';
 import { fetchCollection, fetchCollectionStatus, queryCollections } from 'src/actions';
 import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
+import { Skeleton } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
+import SelectWrapper from 'src/components/common/SelectWrapper';
 
 
 import './Collection.scss';
@@ -21,8 +22,11 @@ class CollectionLabel extends PureComponent {
       collection, icon = true, label = true, updating = false, truncate, className,
     } = this.props;
 
-    if (!collection || !collection.id) {
+    if (!collection) {
       return null;
+    }
+    if (!collection.id && collection.isPending) {
+      return <Skeleton.Text type="span" length={15} />;
     }
 
     let iconName = 'database';
@@ -160,7 +164,7 @@ class CollectionSelect extends Component {
     const label = collection ? <CollectionLabel collection={collection} icon={false} /> : buttonProps.label;
 
     return (
-      <Select
+      <SelectWrapper
         itemRenderer={this.renderCollection}
         items={result.results}
         onItemSelect={this.onSelectCollection}
@@ -181,7 +185,7 @@ class CollectionSelect extends Component {
           icon="briefcase"
           alignText="left"
         />
-      </Select>
+      </SelectWrapper>
     );
   }
 }

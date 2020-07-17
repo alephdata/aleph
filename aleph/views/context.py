@@ -17,11 +17,12 @@ from aleph.model import Role
 
 log = logging.getLogger(__name__)
 local = threading.local()
-blueprint = Blueprint('context', __name__)
+blueprint = Blueprint("context", __name__)
 
 
 class NotModified(Exception):
     """Converts to HTTP status 304."""
+
     pass
 
 
@@ -61,7 +62,7 @@ def enable_cache(vary_user=True, vary=None):
 
 
 def _get_remote_ip():
-    forwarded_for = request.headers.getlist('X-Forwarded-For')
+    forwarded_for = request.headers.getlist("X-Forwarded-For")
     if len(forwarded_for):
         return forwarded_for[0]
     return request.remote_addr
@@ -70,8 +71,8 @@ def _get_remote_ip():
 def _get_credential_authz(credential):
     if credential is None or not len(credential):
         return
-    if ' ' in credential:
-        _, credential = credential.split(' ', 1)
+    if " " in credential:
+        _, credential = credential.split(" ", 1)
     authz = Authz.from_token(credential, scope=request.path)
     if authz is not None:
         return authz
@@ -84,12 +85,12 @@ def _get_credential_authz(credential):
 def enable_authz(request):
     authz = None
 
-    if 'Authorization' in request.headers:
-        credential = request.headers.get('Authorization')
+    if "Authorization" in request.headers:
+        credential = request.headers.get("Authorization")
         authz = _get_credential_authz(credential)
 
-    if authz is None and 'api_key' in request.args:
-        authz = _get_credential_authz(request.args.get('api_key'))
+    if authz is None and "api_key" in request.args:
+        authz = _get_credential_authz(request.args.get("api_key"))
 
     authz = authz or Authz.from_role(role=None)
     request.authz = authz
@@ -99,10 +100,9 @@ def enable_rate_limit(request):
     if request.authz.logged_in and not request.authz.is_blocked:
         return
     limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
-    request.rate_limit = get_rate_limit(_get_remote_ip(),
-                                        limit=limit,
-                                        interval=settings.API_RATE_WINDOW,
-                                        unit=60)
+    request.rate_limit = get_rate_limit(
+        _get_remote_ip(), limit=limit, interval=settings.API_RATE_WINDOW, unit=60
+    )
     if not request.rate_limit.check():
         raise TooManyRequests("Rate limit exceeded.")
 
@@ -113,7 +113,7 @@ def setup_request():
     By default, caching will be disabled."""
     request._begin_time = time.time()
     request._app_locale = str(get_locale())
-    request._session_id = request.headers.get('X-Aleph-Session')
+    request._session_id = request.headers.get("X-Aleph-Session")
     request._http_cache = False
     request._http_private = False
     request._http_revalidate = False
@@ -129,30 +129,30 @@ def finalize_response(resp):
     """Post-request processing to set cache parameters."""
     # Compute overall request duration:
     now = time.time()
-    took = now - getattr(request, '_begin_time', now)
+    took = now - getattr(request, "_begin_time", now)
 
     # Finalize reporting of the rate limiter:
-    if hasattr(request, 'rate_limit') and request.rate_limit is not None:
+    if hasattr(request, "rate_limit") and request.rate_limit is not None:
         usage = request.rate_limit.update(amount=math.ceil(took))
-        resp.headers['X-Rate-Limit'] = request.rate_limit.limit
-        resp.headers['X-Rate-Usage'] = usage
+        resp.headers["X-Rate-Limit"] = request.rate_limit.limit
+        resp.headers["X-Rate-Usage"] = usage
 
     generate_request_log(resp, took)
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
-        resp.headers['X-Accel-Buffering'] = 'no'
+        resp.headers["X-Accel-Buffering"] = "no"
 
-    if not hasattr(request, '_http_cache') or not request._http_cache:
+    if not hasattr(request, "_http_cache") or not request._http_cache:
         resp.cache_control.no_cache = True
         return resp
 
-    if request.method != 'GET' or resp.status_code != 200:
+    if request.method != "GET" or resp.status_code != 200:
         resp.cache_control.no_cache = True
         return resp
 
     resp.cache_control.public = True
-    resp.vary.add('Accept-Language')
-    resp.vary.add('Authorization')
+    resp.vary.add("Accept-Language")
+    resp.vary.add("Authorization")
 
     if request._http_etag:
         resp.set_etag(request._http_etag)
@@ -176,33 +176,34 @@ def generate_request_log(resp, took):
         return
 
     payload = {
-        'v': __version__,
-        'method': request.method,
-        'endpoint': request.endpoint,
-        'referrer': request.referrer,
-        'ip': _get_remote_ip(),
-        'ua': str(request.user_agent),
-        'time': datetime.utcnow().isoformat(),
-        'session_id': getattr(request, '_session_id', None),
-        'locale': getattr(request, '_app_locale', None),
-        'took': took,
-        'url': request.url,
-        'path': request.full_path,
-        'status': resp.status_code
+        "v": __version__,
+        "method": request.method,
+        "endpoint": request.endpoint,
+        "referrer": request.referrer,
+        "ip": _get_remote_ip(),
+        "ua": str(request.user_agent),
+        "time": datetime.utcnow().isoformat(),
+        "session_id": getattr(request, "_session_id", None),
+        "locale": getattr(request, "_app_locale", None),
+        "took": took,
+        "url": request.url,
+        "path": request.full_path,
+        "status": resp.status_code,
     }
-    if hasattr(request, 'authz'):
-        payload['role_id'] = request.authz.id
+    if hasattr(request, "authz"):
+        payload["role_id"] = request.authz.id
     tags = dict(request.view_args or ())
-    if hasattr(request, '_log_tags'):
+    if hasattr(request, "_log_tags"):
         tags.update(request._log_tags)
     for tag, value in tags.items():
         if value is not None and tag not in payload:
             payload[tag] = value
 
     # log.info("Log: %s", pformat(payload))
-    if not hasattr(local, '_gcp_logger'):
+    if not hasattr(local, "_gcp_logger"):
         from google.cloud.logging import Client
+
         client = Client()
-        logger_name = '%s-api' % settings.APP_NAME
+        logger_name = "%s-api" % settings.APP_NAME
         local._gcp_logger = client.logger(logger_name)
     local._gcp_logger.log_struct(payload)

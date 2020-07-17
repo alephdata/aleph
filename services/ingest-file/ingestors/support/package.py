@@ -10,10 +10,9 @@ log = logging.getLogger(__name__)
 
 
 class PackageSupport(TempFileSupport, EncodingSupport):
-
-    def ensure_path(self, base_dir, name, encoding='utf-8'):
+    def ensure_path(self, base_dir, name, encoding="utf-8"):
         if isinstance(name, bytes):
-            name = name.decode(encoding, 'ignore')
+            name = name.decode(encoding, "ignore")
         return self.make_work_file(name, prefix=base_dir)
 
     def extract_member(self, base_dir, name, fh, encoding):
@@ -23,13 +22,13 @@ class PackageSupport(TempFileSupport, EncodingSupport):
         file_name = out_path.name
         try:
             log.debug("Unpack: %s", file_name)
-            with open(out_path, 'wb') as out_fh:
+            with open(out_path, "wb") as out_fh:
                 shutil.copyfileobj(fh, out_fh)
         finally:
             fh.close()
 
     def ingest(self, file_path, entity):
-        entity.schema = model.get('Package')
+        entity.schema = model.get("Package")
         temp_dir = self.make_empty_directory()
         self.unpack(file_path, entity, temp_dir)
         self.manager.delegate(DirectoryIngestor, temp_dir, entity)

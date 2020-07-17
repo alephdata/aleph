@@ -1,5 +1,7 @@
 ---
 title: Getting help
+short: Help
+menu: true
 icon: lifesaver
 ---
 
@@ -9,4 +11,4 @@ We’ve written a small [handbook for the platform](https://docs.alephdata.org/g
 * If you are looking for **support with your investigative work**, file a request with the research service at [OCCRP ID](https://id.occrp.org/).
 * If you have issues signing in to **your user account**, e-mail [tech@occrp.org](mailto:tech@occrp.org) (GPG: `5500 A59A`) 
 
-Please note that this is a service intended for the use of **professional journalists** and some activists. We are unable to provide support to people working in other fields.
+Please note that this is a service intended for the use by **professional journalists** and some activists. We are unable to provide support to people working in other fields.

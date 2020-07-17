@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react';
-import { Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
+import { Divider, Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { Category, Collection, Entity, Skeleton, Restricted } from 'src/components/common';
@@ -143,6 +143,7 @@ export default class Breadcrumbs extends Component {
         </div>
         <div className="Breadcrumbs__right">
           {status && this.renderStatus()}
+          {status && operation && <Divider />}
           {operation}
         </div>
       </nav>

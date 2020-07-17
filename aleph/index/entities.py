@@ -18,13 +18,13 @@ from aleph.index.util import MAX_REQUEST_TIMEOUT, MAX_TIMEOUT
 
 
 log = logging.getLogger(__name__)
-PROXY_INCLUDES = ['schema', 'properties', 'collection_id']
+PROXY_INCLUDES = ["schema", "properties", "collection_id"]
 
 
 def _source_spec(includes, excludes):
     includes = ensure_list(includes)
     excludes = ensure_list(excludes)
-    return {'includes': includes, 'excludes': excludes}
+    return {"includes": includes, "excludes": excludes}
 
 
 def _entities_query(filters, authz, collection_id, schemata):
@@ -32,14 +32,14 @@ def _entities_query(filters, authz, collection_id, schemata):
     if authz is not None:
         filters.append(authz_query(authz))
     if collection_id is not None:
-        filters.append({'term': {'collection_id': collection_id}})
+        filters.append({"term": {"collection_id": collection_id}})
     if ensure_list(schemata):
-        filters.append({'terms': {'schemata': ensure_list(schemata)}})
-    return {'bool': {'filter': filters}}
+        filters.append({"terms": {"schemata": ensure_list(schemata)}})
+    return {"bool": {"filter": filters}}
 
 
 def get_field_type(field):
-    field = field.split('.')[-1]
+    field = field.split(".")[-1]
     if field in registry.groups:
         return registry.groups[field]
     for prop in model.properties:
@@ -48,17 +48,27 @@ def get_field_type(field):
     return registry.string
 
 
-def iter_entities(authz=None, collection_id=None, schemata=None,
-                  includes=PROXY_INCLUDES, excludes=None, filters=None):
+def iter_entities(
+    authz=None,
+    collection_id=None,
+    schemata=None,
+    includes=PROXY_INCLUDES,
+    excludes=None,
+    filters=None,
+):
     """Scan all entities matching the given criteria."""
     query = {
-        'query': _entities_query(filters, authz, collection_id, schemata),
-        '_source': _source_spec(includes, excludes)
+        "query": _entities_query(filters, authz, collection_id, schemata),
+        "_source": _source_spec(includes, excludes),
     }
     index = entities_read_index(schema=schemata)
-    for res in scan(es, index=index, query=query,
-                    timeout=MAX_TIMEOUT,
-                    request_timeout=MAX_REQUEST_TIMEOUT):
+    for res in scan(
+        es,
+        index=index,
+        query=query,
+        timeout=MAX_TIMEOUT,
+        request_timeout=MAX_REQUEST_TIMEOUT,
+    ):
         entity = unpack_result(res)
         if entity is not None:
             yield entity
@@ -66,7 +76,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
 
 def iter_proxies(**kw):
     for data in iter_entities(**kw):
-        schema = model.get(data.get('schema'))
+        schema = model.get(data.get("schema"))
         if schema is None:
             continue
         yield model.get_proxy(data)
@@ -74,14 +84,17 @@ def iter_proxies(**kw):
 
 def iter_adjacent(entity):
     """Used for recursively deleting entities and their linked associations."""
-    query = {'term': {'entities': entity.get('id')}}
-    yield from iter_entities(includes=['collection_id'],
-                             collection_id=entity.get('collection_id'),
-                             filters=[query])
+    query = {"term": {"entities": entity.get("id")}}
+    yield from iter_entities(
+        includes=["collection_id"],
+        collection_id=entity.get("collection_id"),
+        filters=[query],
+    )
 
 
-def entities_by_ids(ids, schemata=None, cached=False,
-                    includes=PROXY_INCLUDES, excludes=None):
+def entities_by_ids(
+    ids, schemata=None, cached=False, includes=PROXY_INCLUDES, excludes=None
+):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     ids = ensure_list(ids)
@@ -93,20 +106,20 @@ def entities_by_ids(ids, schemata=None, cached=False,
         keys = [cache.object_key(Entity, i) for i in ids]
         for _, entity in cache.get_many_complex(keys):
             if entity is not None:
-                entities[entity.get('id')] = entity
+                entities[entity.get("id")] = entity
 
     missing = [i for i in ids if entities.get(id) is None]
     index = entities_read_index(schema=schemata)
     query = {
-        'query': {'ids': {'values': missing}},
-        '_source': _source_spec(includes, excludes),
-        'size': MAX_PAGE
+        "query": {"ids": {"values": missing}},
+        "_source": _source_spec(includes, excludes),
+        "size": MAX_PAGE,
     }
     result = es.search(index=index, body=query)
-    for doc in result.get('hits', {}).get('hits', []):
+    for doc in result.get("hits", {}).get("hits", []):
         entity = unpack_result(doc)
         if entity is not None:
-            entity_id = entity.get('id')
+            entity_id = entity.get("id")
             entities[entity_id] = entity
             if cached:
                 key = cache.object_key(Entity, entity_id)
@@ -151,19 +164,19 @@ def _numeric_values(type_, values):
 def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
     data = proxy.to_full_dict()
-    data['schemata'] = list(proxy.schema.names)
+    data["schemata"] = list(proxy.schema.names)
 
-    names = ensure_list(data.get('names'))
+    names = ensure_list(data.get("names"))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
-    data['fingerprints'] = [fp for fp in fps if fp is not None]
+    data["fingerprints"] = [fp for fp in fps if fp is not None]
 
     # Slight hack: a magic property in followthemoney that gets taken out
     # of the properties and added straight to the index text.
-    properties = data.get('properties')
-    text = properties.pop('indexText', [])
+    properties = data.get("properties")
+    text = properties.pop("indexText", [])
     text.extend(fps)
-    data['text'] = text
+    data["text"] = text
 
     # integer casting
     numeric = {}
@@ -172,24 +185,24 @@ def format_proxy(proxy, collection):
             values = proxy.get(prop)
             numeric[prop.name] = _numeric_values(prop.type, values)
     # also cast group field for dates
-    numeric['dates'] = _numeric_values(registry.date, data.get('dates'))
-    data['numeric'] = numeric
+    numeric["dates"] = _numeric_values(registry.date, data.get("dates"))
+    data["numeric"] = numeric
 
     # Context data - from aleph system, not followthemoney.
     now = iso_text(datetime.utcnow())
-    data['created_at'] = min(ensure_list(data.get('created_at')), default=now)
-    data['updated_at'] = min(ensure_list(data.get('updated_at')), default=now)
+    data["created_at"] = min(ensure_list(data.get("created_at")), default=now)
+    data["updated_at"] = min(ensure_list(data.get("updated_at")), default=now)
     # FIXME: Can there ever really be multiple role_ids?
-    data['role_id'] = first(data.get('role_id'))
-    data['mutable'] = max(ensure_list(data.get('mutable')), default=False)
-    data['origin'] = ensure_list(data.get('origin'))
-    data['collection_id'] = collection.id
+    data["role_id"] = first(data.get("role_id"))
+    data["mutable"] = max(ensure_list(data.get("mutable")), default=False)
+    data["origin"] = ensure_list(data.get("origin"))
+    data["collection_id"] = collection.id
     # log.info("%s", pformat(data))
-    entity_id = data.pop('id')
+    entity_id = data.pop("id")
     return {
-        '_id': entity_id,
-        '_index': entities_write_index(data.get('schema')),
-        '_source': data
+        "_id": entity_id,
+        "_index": entities_write_index(data.get("schema")),
+        "_source": data,
     }
 
 
@@ -197,9 +210,8 @@ def delete_entity(entity_id, exclude=None, sync=False):
     """Delete an entity from the index."""
     if exclude is not None:
         exclude = entities_write_index(exclude)
-    for entity in entities_by_ids(entity_id, excludes='*'):
-        index = entity.get('_index')
+    for entity in entities_by_ids(entity_id, excludes="*"):
+        index = entity.get("_index")
         if index == exclude:
             continue
-        es.delete(index=index, id=entity_id, ignore=[404],
-                  refresh=refresh_sync(sync))
+        es.delete(index=index, id=entity_id, ignore=[404], refresh=refresh_sync(sync))

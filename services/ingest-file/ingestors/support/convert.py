@@ -18,40 +18,42 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
     """Provides helpers for UNO document conversion via HTTP."""
 
     def document_to_pdf(self, file_path, entity):
-        key = self.cache_key('pdf', entity.first('contentHash'))
+        key = self.cache_key("pdf", entity.first("contentHash"))
         pdf_hash = self.tags.get(key)
         if pdf_hash is not None:
-            file_name = entity_filename(entity, extension='pdf')
+            file_name = entity_filename(entity, extension="pdf")
             path = self.manager.load(pdf_hash, file_name=file_name)
             if path is not None:
                 log.info("Using PDF cache: %s", file_name)
-                entity.set('pdfHash', pdf_hash)
+                entity.set("pdfHash", pdf_hash)
                 return path
 
         pdf_file = self._document_to_pdf(file_path, entity)
         if pdf_file is not None:
             content_hash = self.manager.store(pdf_file)
-            entity.set('pdfHash', content_hash)
+            entity.set("pdfHash", content_hash)
             self.tags.set(key, content_hash)
         return pdf_file
 
     def _document_to_pdf(self, file_path, entity):
         """Converts an office document to PDF."""
         file_name = entity_filename(entity)
-        mime_type = entity.first('mimeType')
-        log.info('Converting [%s] to PDF...', file_name)
+        mime_type = entity.first("mimeType")
+        log.info("Converting [%s] to PDF...", file_name)
         for attempt in count(1):
             try:
-                with open(file_path, 'rb') as fh:
-                    files = {'file': (file_name, fh, mime_type)}
-                    res = requests.post(CONVERT_URL,
-                                        params={'timeout': CONVERT_TIMEOUT},
-                                        files=files,
-                                        timeout=CONVERT_TIMEOUT + 10,
-                                        stream=True)
+                with open(file_path, "rb") as fh:
+                    files = {"file": (file_name, fh, mime_type)}
+                    res = requests.post(
+                        CONVERT_URL,
+                        params={"timeout": CONVERT_TIMEOUT},
+                        files=files,
+                        timeout=CONVERT_TIMEOUT + 10,
+                        stream=True,
+                    )
                 res.raise_for_status()
-                out_path = self.make_work_file('out.pdf')
-                with open(out_path, 'wb') as fh:
+                out_path = self.make_work_file("out.pdf")
+                with open(out_path, "wb") as fh:
                     bytes_written = 0
                     for chunk in res.iter_content(chunk_size=None):
                         bytes_written += len(chunk)

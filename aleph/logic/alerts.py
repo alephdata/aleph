@@ -40,16 +40,16 @@ def check_alert(alert_id):
         db.session.commit()
         return
 
-    for result in result.get('hits').get('hits', []):
+    for result in result.get("hits").get("hits", []):
         entity = unpack_result(result)
         if entity is None:
             continue
-        log.info('Alert [%s]: %s', alert.query, entity.get('id'))
+        log.info("Alert [%s]: %s", alert.query, entity.get("id"))
         params = {
-            'alert': alert,
-            'role': alert.role,
-            'entity': entity.get('id'),
-            'collection': entity.get('collection_id')
+            "alert": alert,
+            "role": alert.role,
+            "entity": entity.get("id"),
+            "collection": entity.get("collection_id"),
         }
         channels = [alert.role]
         # channels.append(channel_tag(collection_id, Collection))
@@ -65,27 +65,25 @@ def alert_query(alert, authz):
     latest known result."""
     # Many users have bookmarked complex queries, otherwise we'd use a
     # precise match query.
-    queries = [{
-        'query_string': {
-            'query': alert.query,
-            'lenient': True,
-            'default_field': 'text',
-            'default_operator': 'AND',
-            'minimum_should_match': '90%'
+    queries = [
+        {
+            "query_string": {
+                "query": alert.query,
+                "lenient": True,
+                "default_field": "text",
+                "default_operator": "AND",
+                "minimum_should_match": "90%",
+            }
         }
-    }]
+    ]
     filters = [authz_query(authz)]
     if alert.notified_at is not None:
         notified_at = alert.notified_at.isoformat()
-        filters.append({'range': {'updated_at': {'gt': notified_at}}})
+        filters.append({"range": {"updated_at": {"gt": notified_at}}})
     return {
-        'size': 50,
-        '_source': {'includes': ['collection_id']},
-        'query': {
-            'bool': {
-                'should': queries,
-                'filter': filters,
-                'minimum_should_match': 1
-            }
-        }
+        "size": 50,
+        "_source": {"includes": ["collection_id"]},
+        "query": {
+            "bool": {"should": queries, "filter": filters, "minimum_should_match": 1}
+        },
     }

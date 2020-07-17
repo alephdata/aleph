@@ -7,30 +7,28 @@ from aleph.tests.util import TestCase
 
 
 class NotificationsTestCase(TestCase):
-
     def setUp(self):
         super(NotificationsTestCase, self).setUp()
 
     def test_publish_event(self):
         role = self.create_user()
-        email = 'test@aleph.skynet'
-        label = 'So public'
-        recipient = self.create_user(foreign_id='rolex',
-                                     email=email)
+        email = "test@aleph.skynet"
+        label = "So public"
+        recipient = self.create_user(foreign_id="rolex", email=email)
         update_role(recipient)
-        collection = self.create_collection(foreign_id='NoNoNo', label=label)
+        collection = self.create_collection(foreign_id="NoNoNo", label=label)
         event = Events.PUBLISH_COLLECTION
-        publish(event, role.id,
-                params={'collection': collection},
-                channels=[GLOBAL])
+        publish(event, role.id, params={"collection": collection}, channels=[GLOBAL])
         db.session.commit()
 
         result = get_notifications(recipient)
-        notifications = result.get('hits', {})
-        assert 1 == notifications['total']['value'], notifications
-        not0 = notifications['hits'][0]['_source']
-        assert not0['event'] == event.name, not0['event']
-        assert not0['params']['collection'] == str(collection.id), not0['params']  # noqa
+        notifications = result.get("hits", {})
+        assert 1 == notifications["total"]["value"], notifications
+        not0 = notifications["hits"][0]["_source"]
+        assert not0["event"] == event.name, not0["event"]
+        assert not0["params"]["collection"] == str(collection.id), not0[
+            "params"
+        ]  # noqa
 
         with mail.record_messages() as outbox:
             assert len(outbox) == 0, outbox

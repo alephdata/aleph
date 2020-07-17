@@ -10,35 +10,25 @@ from ingestors.exc import ProcessingException
 
 
 class SevenZipIngestor(PackageSupport, Ingestor, ShellSupport):
-    MIME_TYPES = [
-        'application/x-7z-compressed',
-        'application/7z-compressed'
-    ]
-    EXTENSIONS = [
-        '7z',
-        '7zip'
-    ]
+    MIME_TYPES = ["application/x-7z-compressed", "application/7z-compressed"]
+    EXTENSIONS = ["7z", "7zip"]
     SCORE = 4
 
     def unpack(self, file_path, entity, temp_dir):
-        self.exec_command('7z',
-                          'x', file_path,
-                          '-y',
-                          '-r',
-                          '-bb0',
-                          '-bd',
-                          '-oc:%s' % temp_dir)
+        self.exec_command(
+            "7z", "x", file_path, "-y", "-r", "-bb0", "-bd", "-oc:%s" % temp_dir
+        )
 
 
 class SingleFilePackageIngestor(PackageSupport, Ingestor):
     SCORE = 2
 
     def unpack(self, file_path, entity, temp_dir):
-        file_name = entity.first('fileName') or 'extracted'
+        file_name = entity.first("fileName") or "extracted"
         for ext in self.EXTENSIONS:
-            ext = '.' + ext
+            ext = "." + ext
             if file_name.endswith(ext):
-                file_name = file_name[:len(file_name) - len(ext)]
+                file_name = file_name[: len(file_name) - len(ext)]
         temp_file = self.make_work_file(file_name, prefix=temp_dir)
         self.unpack_file(file_path, temp_file)
 
@@ -53,43 +43,31 @@ class SingleFilePackageIngestor(PackageSupport, Ingestor):
 
 
 class GzipIngestor(SingleFilePackageIngestor):
-    MIME_TYPES = [
-        'application/gzip',
-        'application/x-gzip',
-        'multipart/x-gzip'
-    ]
-    EXTENSIONS = [
-        'gz',
-        'tgz'
-    ]
+    MIME_TYPES = ["application/gzip", "application/x-gzip", "multipart/x-gzip"]
+    EXTENSIONS = ["gz", "tgz"]
 
     def unpack_file(self, file_path, temp_file):
         try:
             with gzip.GzipFile(file_path) as src:
-                with open(temp_file, 'wb') as dst:
+                with open(temp_file, "wb") as dst:
                     shutil.copyfileobj(src, dst)
         except IOError as ioe:
-            raise ProcessingException('Error: %s' % ioe)
+            raise ProcessingException("Error: %s" % ioe)
 
 
 class BZ2Ingestor(SingleFilePackageIngestor):
     MIME_TYPES = [
-        'application/x-bzip',
-        'application/x-bzip2',
-        'multipart/x-bzip',
-        'multipart/x-bzip2'
+        "application/x-bzip",
+        "application/x-bzip2",
+        "multipart/x-bzip",
+        "multipart/x-bzip2",
     ]
-    EXTENSIONS = [
-        'bz',
-        'tbz',
-        'bz2',
-        'tbz2'
-    ]
+    EXTENSIONS = ["bz", "tbz", "bz2", "tbz2"]
 
     def unpack_file(self, file_path, temp_file):
         try:
             with bz2.BZ2File(file_path) as src:
-                with open(temp_file, 'wb') as dst:
+                with open(temp_file, "wb") as dst:
                     shutil.copyfileobj(src, dst)
         except IOError as ioe:
-            raise ProcessingException('Error: %s' % ioe)
+            raise ProcessingException("Error: %s" % ioe)

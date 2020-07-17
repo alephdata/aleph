@@ -13,8 +13,11 @@ log = logging.getLogger(__name__)
 BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
-NUMERIC_TYPES = (registry.number, registry.date,)
-MAX_TIMEOUT = '700m'
+NUMERIC_TYPES = (
+    registry.number,
+    registry.date,
+)
+MAX_TIMEOUT = "700m"
 MAX_REQUEST_TIMEOUT = 84600
 
 # Mapping shortcuts
@@ -30,21 +33,21 @@ SHARDS_DEFAULT = 5
 SHARDS_HEAVY = 10
 
 SHARD_WEIGHTS = {
-    'Folder': SHARDS_LIGHT,
-    'Package': SHARDS_LIGHT,
-    'Workbook': SHARDS_LIGHT,
-    'Video': SHARDS_LIGHT,
-    'Audio': SHARDS_LIGHT,
-    'Airplane': SHARDS_LIGHT,
-    'Associate': SHARDS_LIGHT,
-    'Family': SHARDS_LIGHT,
-    'Passport': SHARDS_LIGHT,
-    'Document': SHARDS_LIGHT,
-    'Page': SHARDS_HEAVY,
-    'Email': SHARDS_HEAVY,
-    'PlainText': SHARDS_HEAVY,
-    'Pages': SHARDS_HEAVY,
-    'Table': SHARDS_HEAVY,
+    "Folder": SHARDS_LIGHT,
+    "Package": SHARDS_LIGHT,
+    "Workbook": SHARDS_LIGHT,
+    "Video": SHARDS_LIGHT,
+    "Audio": SHARDS_LIGHT,
+    "Airplane": SHARDS_LIGHT,
+    "Associate": SHARDS_LIGHT,
+    "Family": SHARDS_LIGHT,
+    "Passport": SHARDS_LIGHT,
+    "Document": SHARDS_LIGHT,
+    "Page": SHARDS_HEAVY,
+    "Email": SHARDS_HEAVY,
+    "PlainText": SHARDS_HEAVY,
+    "Pages": SHARDS_HEAVY,
+    "Table": SHARDS_HEAVY,
 }
 
 
@@ -61,58 +64,51 @@ def refresh_sync(sync):
 
 
 def index_name(name, version):
-    return '-'.join((settings.INDEX_PREFIX, name, version))
+    return "-".join((settings.INDEX_PREFIX, name, version))
 
 
 def unpack_result(res):
     """Turn a document hit from ES into a more traditional JSON object."""
-    error = res.get('error')
+    error = res.get("error")
     if error is not None:
         raise RuntimeError("Query error: %r" % error)
-    if res.get('found') is False:
+    if res.get("found") is False:
         return
-    data = res.get('_source', {})
-    data['id'] = res.get('_id')
+    data = res.get("_source", {})
+    data["id"] = res.get("_id")
 
-    _score = res.get('_score')
-    if _score is not None and _score != 0.0 and 'score' not in data:
-        data['score'] = _score
+    _score = res.get("_score")
+    if _score is not None and _score != 0.0 and "score" not in data:
+        data["score"] = _score
 
-    data['_index'] = res.get('_index')
+    data["_index"] = res.get("_index")
 
-    if 'highlight' in res:
-        data['highlight'] = []
-        for key, value in res.get('highlight', {}).items():
-            data['highlight'].extend(value)
+    if "highlight" in res:
+        data["highlight"] = []
+        for key, value in res.get("highlight", {}).items():
+            data["highlight"].extend(value)
     return data
 
 
-def authz_query(authz, field='collection_id'):
+def authz_query(authz, field="collection_id"):
     """Generate a search query filter from an authz object."""
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
-        return {'match_all': {}}
+        return {"match_all": {}}
     collections = authz.collections(authz.READ)
     if not len(collections):
-        return {'match_none': {}}
-    return {'terms': {field: collections}}
+        return {"match_none": {}}
+    return {"terms": {field: collections}}
 
 
 def bool_query():
-    return {
-        'bool': {
-            'should': [],
-            'filter': [],
-            'must': [],
-            'must_not': []
-        }
-    }
+    return {"bool": {"should": [], "filter": [], "must": [], "must_not": []}}
 
 
 def none_query(query=None):
     if query is None:
         query = bool_query()
-    query['bool']['must'].append({'match_none': {}})
+    query["bool"]["must"].append({"match_none": {}})
     return query
 
 
@@ -120,37 +116,39 @@ def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
     values = ensure_list(values)
     if not len(values):
-        return {'match_all': {}}
-    if field in ['_id', 'id']:
-        return {'ids': {'values': values}}
-    if field in ['names']:
-        field = 'fingerprints'
-    if field.startswith(('gt:', 'gte:', 'lt:', 'lte:')):
-        op, field = field.split(':', 1)
-        return {'range': {field: {op: values[0]}}}
+        return {"match_all": {}}
+    if field in ["_id", "id"]:
+        return {"ids": {"values": values}}
+    if field in ["names"]:
+        field = "fingerprints"
+    if field.startswith(("gt:", "gte:", "lt:", "lte:")):
+        op, field = field.split(":", 1)
+        return {"range": {field: {op: values[0]}}}
     if len(values) == 1:
         # if field in ['addresses']:
         #     field = '%s.text' % field
         #     return {'match_phrase': {field: values[0]}}
-        return {'term': {field: values[0]}}
-    return {'terms': {field: values}}
+        return {"term": {field: values[0]}}
+    return {"terms": {field: values}}
 
 
 def query_delete(index, query, sync=False, **kwargs):
     "Delete all documents matching the given query inside the index."
     for attempt in service_retries():
         try:
-            es.delete_by_query(index=index,
-                               body={'query': query},
-                               conflicts='proceed',
-                               wait_for_completion=sync,
-                               refresh=refresh_sync(sync),
-                               request_timeout=MAX_REQUEST_TIMEOUT,
-                               timeout=MAX_TIMEOUT,
-                               **kwargs)
+            es.delete_by_query(
+                index=index,
+                body={"query": query},
+                conflicts="proceed",
+                wait_for_completion=sync,
+                refresh=refresh_sync(sync),
+                request_timeout=MAX_REQUEST_TIMEOUT,
+                timeout=MAX_TIMEOUT,
+                **kwargs
+            )
             return
         except TransportError as exc:
-            if exc.status_code in ('400', '403'):
+            if exc.status_code in ("400", "403"):
                 raise
             log.warning("Query delete failed: %s", exc)
             backoff(failures=attempt)
@@ -159,17 +157,20 @@ def query_delete(index, query, sync=False, **kwargs):
 def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     """Bulk indexing with timeouts, bells and whistles."""
     # start_time = time()
-    stream = streaming_bulk(es, actions,
-                            chunk_size=chunk_size,
-                            max_retries=10,
-                            initial_backoff=2,
-                            yield_ok=False,
-                            raise_on_error=False,
-                            refresh=refresh_sync(sync),
-                            request_timeout=MAX_REQUEST_TIMEOUT,
-                            timeout=MAX_TIMEOUT)
+    stream = streaming_bulk(
+        es,
+        actions,
+        chunk_size=chunk_size,
+        max_retries=10,
+        initial_backoff=2,
+        yield_ok=False,
+        raise_on_error=False,
+        refresh=refresh_sync(sync),
+        request_timeout=MAX_REQUEST_TIMEOUT,
+        timeout=MAX_TIMEOUT,
+    )
     for _, details in stream:
-        if details.get('delete', {}).get('status') == 404:
+        if details.get("delete", {}).get("status") == 404:
             continue
         log.warning("Error during index: %r", details)
     # duration = (time() - start_time)
@@ -181,11 +182,11 @@ def index_safe(index, id, body, **kwargs):
     for attempt in service_retries():
         try:
             es.index(index=index, id=id, body=body, **kwargs)
-            body['id'] = str(id)
-            body.pop('text', None)
+            body["id"] = str(id)
+            body.pop("text", None)
             return body
         except TransportError as exc:
-            if exc.status_code in ('400', '403'):
+            if exc.status_code in ("400", "403"):
                 raise
             log.warning("Index error [%s:%s]: %s", index, id, exc)
             backoff(failures=attempt)
@@ -193,8 +194,8 @@ def index_safe(index, id, body, **kwargs):
 
 def _check_response(index, res):
     """Check if a request succeeded."""
-    if res.get('status', 0) > 399 and not res.get('acknowledged'):
-        error = res.get('error', {}).get('reason')
+    if res.get("status", 0) > 399 and not res.get("acknowledged"):
+        error = res.get("error", {}).get("reason")
         log.error("Index [%s] error: %s", index, error)
         return False
     return True
@@ -204,7 +205,7 @@ def rewrite_mapping_safe(pending, existing):
     """This re-writes mappings for ElasticSearch in such a way that
     immutable values are kept to their existing setting, while other
     fields are updated."""
-    IMMUTABLE = ('type', 'analyzer', 'normalizer', 'index')
+    IMMUTABLE = ("type", "analyzer", "normalizer", "index")
     # This is a pretty bad idea long-term. We need to make it easier
     # to use multiple index generations instead.
     if not isinstance(pending, dict) or not isinstance(existing, dict):
@@ -241,17 +242,17 @@ def configure_index(index, mapping, settings):
     if es.indices.exists(index=index):
         log.info("Configuring index: %s...", index)
         options = {
-            'index': index,
-            'timeout': MAX_TIMEOUT,
-            'master_timeout': MAX_TIMEOUT
+            "index": index,
+            "timeout": MAX_TIMEOUT,
+            "master_timeout": MAX_TIMEOUT,
         }
         config = es.indices.get(index=index).get(index, {})
-        mapping = rewrite_mapping_safe(mapping, config.get('mappings'))
+        mapping = rewrite_mapping_safe(mapping, config.get("mappings"))
         res = es.indices.put_mapping(body=mapping, ignore=[400], **options)
         if not _check_response(index, res):
             return False
-        settings.get('index').pop('number_of_shards')
-        if check_settings_changed(settings, config.get('settings')):
+        settings.get("index").pop("number_of_shards")
+        if check_settings_changed(settings, config.get("settings")):
             res = es.indices.close(ignore_unavailable=True, **options)
             res = es.indices.put_settings(body=settings, **options)
             if not _check_response(index, res):
@@ -260,10 +261,7 @@ def configure_index(index, mapping, settings):
         return True
     else:
         log.info("Creating index: %s...", index)
-        body = {
-            'settings': settings,
-            'mappings': mapping
-        }
+        body = {"settings": settings, "mappings": mapping}
         res = es.indices.create(index, body=body, ignore=[400])
         return True
 
@@ -277,36 +275,27 @@ def index_settings(shards=5, replicas=2):
             # "refresh_interval": refresh,
             "analysis": {
                 "analyzer": {
-                    "latin_index": {
-                        "tokenizer": "standard",
-                        "filter": ["latinize"]
-                    },
-                    "icu_latin": {
-                        "tokenizer": "standard",
-                        "filter": ["latinize"]
-                    },
+                    "latin_index": {"tokenizer": "standard", "filter": ["latinize"]},
+                    "icu_latin": {"tokenizer": "standard", "filter": ["latinize"]},
                     "latin_query": {
                         "tokenizer": "standard",
-                        "filter": ["latinize", "synonames"]
-                    }
+                        "filter": ["latinize", "synonames"],
+                    },
                 },
                 "normalizer": {
-                    "latin_index": {
-                        "type": "custom",
-                        "filter": ["latinize"]
-                    }
+                    "latin_index": {"type": "custom", "filter": ["latinize"]}
                 },
                 "filter": {
                     "latinize": {
                         "type": "icu_transform",
-                        "id": "Any-Latin; NFKD; Lower(); [:Nonspacing Mark:] Remove; NFKC"  # noqa
+                        "id": "Any-Latin; NFKD; Lower(); [:Nonspacing Mark:] Remove; NFKC",  # noqa
                     },
                     "synonames": {
                         "type": "synonym",
                         "lenient": "true",
-                        "synonyms_path": "synonames.txt"
-                    }
-                }
-            }
+                        "synonyms_path": "synonames.txt",
+                    },
+                },
+            },
         }
     }

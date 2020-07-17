@@ -16,35 +16,29 @@ def _make_queries(prop, value, specificity):
     if prop.type == registry.name:
         boost = (1 + specificity) * 2
         yield {
-            'match': {
-                'fingerprints.text': {
-                    'query': value,
-                    'operator': 'and',
-                    'minimum_should_match': '60%',
-                    'boost': boost
+            "match": {
+                "fingerprints.text": {
+                    "query": value,
+                    "operator": "and",
+                    "minimum_should_match": "60%",
+                    "boost": boost,
                 }
             }
         }
         fp = fingerprints.generate(value)
         if fp is not None and fp != value:
             yield {
-                'match': {
-                    'fingerprints.text': {
-                        'query': value,
-                        'operator': 'and',
-                        'minimum_should_match': '60%',
-                        'boost': boost
+                "match": {
+                    "fingerprints.text": {
+                        "query": value,
+                        "operator": "and",
+                        "minimum_should_match": "60%",
+                        "boost": boost,
                     }
                 }
             }
     elif prop.type.group is not None:
-        yield {
-            'term': {
-                prop.type.group: {
-                    'value': value
-                }
-            }
-        }
+        yield {"term": {prop.type.group: {"value": value}}}
 
 
 def match_query(proxy, collection_ids=None, query=None):
@@ -60,13 +54,11 @@ def match_query(proxy, collection_ids=None, query=None):
     # if source_collection_id is not None:
     #     must_not.append({'term': {'collection_id': source_collection_id}})
     if len(must_not):
-        query['bool']['must_not'].extend(must_not)
+        query["bool"]["must_not"].extend(must_not)
 
     collection_ids = ensure_list(collection_ids)
     if len(collection_ids):
-        query['bool']['filter'].append({
-            'terms': {'collection_id': collection_ids}
-        })
+        query["bool"]["filter"].append({"terms": {"collection_id": collection_ids}})
 
     filters = []
     for (prop, value) in proxy.itervalues():
@@ -91,11 +83,8 @@ def match_query(proxy, collection_ids=None, query=None):
         return none_query()
 
     # make it mandatory to have at least one match
-    query['bool']['must'].append({
-        'bool': {
-            'should': required,
-            'minimum_should_match': 1
-        }
-    })
-    query['bool']['should'].extend(scoring)
+    query["bool"]["must"].append(
+        {"bool": {"should": required, "minimum_should_match": 1}}
+    )
+    query["bool"]["should"].extend(scoring)
     return query

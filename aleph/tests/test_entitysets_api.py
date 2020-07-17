@@ -19,12 +19,12 @@ log = logging.getLogger(__name__)
 
 def _normalize_data(data):
     """Turn entities in properties into entity ids"""
-    entities = data['layout']['entities']
+    entities = data["layout"]["entities"]
     for obj in entities:
-        schema = model.get(obj.get('schema'))
+        schema = model.get(obj.get("schema"))
         if schema is None:
-            raise InvalidData("Invalid schema %s" % obj.get('schema'))
-        properties = obj.get('properties', {})
+            raise InvalidData("Invalid schema %s" % obj.get("schema"))
+        properties = obj.get("properties", {})
         for name, values in list(properties.items()):
             prop = schema.get(name)
             if prop.type == registry.entity:
@@ -36,39 +36,38 @@ def _normalize_data(data):
 
 
 class EntitySetAPITest(TestCase):
-
     def setUp(self):
         super(EntitySetAPITest, self).setUp()
-        self.col = self.create_collection(data={'foreign_id': 'coll1'})
-        self.col2 = self.create_collection(data={'foreign_id': 'coll2'})
+        self.col = self.create_collection(data={"foreign_id": "coll1"})
+        self.col2 = self.create_collection(data={"foreign_id": "coll2"})
         _, self.headers = self.login(is_admin=True)
-        self.rolex = self.create_user(foreign_id='user_3')
-        _, self.headers_x = self.login(foreign_id='user_3')
-        self.input_data = self._load_data_for_import('royal-family.vis')
+        self.rolex = self.create_user(foreign_id="user_3")
+        _, self.headers_x = self.login(foreign_id="user_3")
+        self.input_data = self._load_data_for_import("royal-family.vis")
         # pprint(self.input_data)
 
     def _load_data_for_import(self, fixture):
         fixture = self.get_fixture_path(fixture)
-        with open(fixture, 'r') as fp:
+        with open(fixture, "r") as fp:
             data = json.load(fp)
-        layout = data.pop('layout')
-        entities = layout.pop('entities')
+        layout = data.pop("layout")
+        entities = layout.pop("entities")
         return {
-            'collection_id': str(self.col.id),
-            'layout': layout,
-            'entities': entities,
-            'label': 'Royal Family',
-            'type': 'diagram',
-            'summary': '...'
+            "collection_id": str(self.col.id),
+            "layout": layout,
+            "entities": entities,
+            "label": "Royal Family",
+            "type": "diagram",
+            "summary": "...",
         }
 
     def _load_data_for_update(self, fixture):
         fixture = self.get_fixture_path(fixture)
-        with open(fixture, 'r') as fp:
+        with open(fixture, "r") as fp:
             data = json.load(fp)
         data = _normalize_data(data)
-        layout = data.pop('layout')
-        entities = layout.pop('entities')
+        layout = data.pop("layout")
+        entities = layout.pop("entities")
         # Replace entitiy ids with our own newly created signed
         # entity ids.
         signed_entity_ids = {}
@@ -78,71 +77,70 @@ class EntitySetAPITest(TestCase):
                 ent = ent.replace(old_id, new_id)
             ent = json.loads(ent)
             # clear existing id if any
-            ent.pop('foreign_id', None)
+            ent.pop("foreign_id", None)
             signed_entity_id = upsert_entity(ent, self.col)
-            signed_entity_ids[ent['id']] = signed_entity_id
+            signed_entity_ids[ent["id"]] = signed_entity_id
 
         return {
-            'collection_id': str(self.col.id),
-            'layout': layout,
-            'entities': list(signed_entity_ids.values()),
-            'label': 'Royal Family',
-            'type': 'diagram',
-            'summary': '...'
+            "collection_id": str(self.col.id),
+            "layout": layout,
+            "entities": list(signed_entity_ids.values()),
+            "label": "Royal Family",
+            "type": "diagram",
+            "summary": "...",
         }
 
     def test_entityset_crud(self):
-        url = '/api/2/entitysets'
-        res = self.client.post(url, json=self.input_data,
-                               headers=self.headers)
+        url = "/api/2/entitysets"
+        res = self.client.post(url, json=self.input_data, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'EntitySet')
-        ent_id = self.input_data['entities'][0]['id']
+        validate(res.json, "EntitySet")
+        ent_id = self.input_data["entities"][0]["id"]
         assert ent_id in str(res.json), res.json
-        assert len(res.json['entities']) == 7, len(res.json['entities'])
-        entityset_id = res.json['id']
+        assert len(res.json["entities"]) == 7, len(res.json["entities"])
+        entityset_id = res.json["id"]
 
-        url = '/api/2/entitysets'
+        url = "/api/2/entitysets"
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'QueryResponse')
-        assert len(res.json['results']) == 1
+        validate(res.json, "QueryResponse")
+        assert len(res.json["results"]) == 1
 
-        url = '/api/2/entitysets?filter:collection_id=%s' % self.col.id
+        url = "/api/2/entitysets?filter:collection_id=%s" % self.col.id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'QueryResponse')
-        assert len(res.json['results']) == 1
+        validate(res.json, "QueryResponse")
+        assert len(res.json["results"]) == 1
         res = self.client.get(url, headers=self.headers_x)
         assert res.status_code == 200, res
-        assert len(res.json['results']) == 0
-        url = '/api/2/entitysets?filter:collection_id=%s' % self.col2.id
+        assert len(res.json["results"]) == 0
+        url = "/api/2/entitysets?filter:collection_id=%s" % self.col2.id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'QueryResponse')
-        assert len(res.json['results']) == 0
+        validate(res.json, "QueryResponse")
+        assert len(res.json["results"]) == 0
 
-        url = '/api/2/entitysets/%s' % entityset_id
+        url = "/api/2/entitysets/%s" % entityset_id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'EntitySet')
-        assert res.json['label'] == 'Royal Family'
+        validate(res.json, "EntitySet")
+        assert res.json["label"] == "Royal Family"
         res_str = json.dumps(res.json)
-        assert 'Philip' in res_str
+        assert "Philip" in res_str
 
-        updated = self._load_data_for_update('royal-family-v2.vis')
-        updated['label'] = 'Royal Family v2'
+        updated = self._load_data_for_update("royal-family-v2.vis")
+        updated["label"] = "Royal Family v2"
         res = self.client.post(url, json=updated, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'EntitySet')
-        signed_id = res.json['entities'][0]['id']
+        validate(res.json, "EntitySet")
+        signed_id = res.json["entities"][0]["id"]
         assert self.col.ns.verify(signed_id)
-        assert len(res.json['entities']) == 4, len(res.json['entities'])
-        assert res.json['label'] == 'Royal Family v2'
-        assert res.json['summary'] == '...'
+        assert len(res.json["entities"]) == 4, len(res.json["entities"])
+        assert res.json["label"] == "Royal Family v2"
+        assert res.json["summary"] == "..."
         res_str = json.dumps(res.json)
-        assert 'Philip' not in res_str
-        assert 'Charles' in res_str
+        assert "Philip" not in res_str
+        assert "Charles" in res_str
 
         res = self.client.delete(url, headers=self.headers)
         assert res.status_code == 204, res
@@ -150,123 +148,118 @@ class EntitySetAPITest(TestCase):
         assert res.status_code == 404, res
 
     def test_entityset_items_query(self):
-        url = '/api/2/entitysets'
+        url = "/api/2/entitysets"
         res = self.client.post(url, json=self.input_data, headers=self.headers)  # noqa
         assert res.status_code == 200, res
-        validate(res.json, 'EntitySet')
-        ent_id = self.input_data['entities'][0]['id']
+        validate(res.json, "EntitySet")
+        ent_id = self.input_data["entities"][0]["id"]
         assert ent_id in str(res.json), res.json
-        assert len(res.json['entities']) == 7, len(res.json['entities'])
-        entityset_id = res.json['id']
+        assert len(res.json["entities"]) == 7, len(res.json["entities"])
+        entityset_id = res.json["id"]
 
-        entityset2_data = self._load_data_for_import('royal-family-v2.vis')
+        entityset2_data = self._load_data_for_import("royal-family-v2.vis")
         res = self.client.post(url, json=entityset2_data, headers=self.headers)  # noqa
         assert res.status_code == 200, res
-        validate(res.json, 'EntitySet')
-        entityset2_id = res.json['id']
+        validate(res.json, "EntitySet")
+        entityset2_id = res.json["id"]
 
-        query_url = '/api/2/entitysets/%s/entities?filter:schemata=%s'
+        query_url = "/api/2/entitysets/%s/entities?filter:schemata=%s"
 
-        url = query_url % (entityset_id, 'Thing')
+        url = query_url % (entityset_id, "Thing")
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'EntitiesResponse')
-        assert len(res.json['results']) == 3, len(res.json['results'])
+        validate(res.json, "EntitiesResponse")
+        assert len(res.json["results"]) == 3, len(res.json["results"])
 
-        res = self.client.get(url + '&facet=names', headers=self.headers)
+        res = self.client.get(url + "&facet=names", headers=self.headers)
         assert res.status_code == 200, res
-        facet = res.json['facets']['names']
-        assert len(facet['values']) == 3, facet['values']
-        assert 'Elizabeth' in str(facet['values']), facet['values']
+        facet = res.json["facets"]["names"]
+        assert len(facet["values"]) == 3, facet["values"]
+        assert "Elizabeth" in str(facet["values"]), facet["values"]
 
-        url = query_url % (entityset_id, 'Interval')
+        url = query_url % (entityset_id, "Interval")
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'EntitiesResponse')
-        assert len(res.json['results']) == 4, len(res.json['results'])
+        validate(res.json, "EntitiesResponse")
+        assert len(res.json["results"]) == 4, len(res.json["results"])
 
-        url = query_url % (entityset2_id, 'Interval')
+        url = query_url % (entityset2_id, "Interval")
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'EntitiesResponse')
-        assert len(res.json['results']) == 2, len(res.json['results'])
+        validate(res.json, "EntitiesResponse")
+        assert len(res.json["results"]) == 2, len(res.json["results"])
 
     def test_create_empty(self):
         data = {
-            'label': 'hello',
-            'type': 'generic',
-            'collection_id': str(self.col.id),
+            "label": "hello",
+            "type": "generic",
+            "collection_id": str(self.col.id),
         }
-        url = '/api/2/entitysets'
+        url = "/api/2/entitysets"
         res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 200, res
 
     def test_create_without_collection_id(self):
         data = {
-            'label': 'hello',
+            "label": "hello",
         }
-        url = '/api/2/entitysets'
+        url = "/api/2/entitysets"
         res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 400, res
 
     def test_unauthorized_create(self):
-        url = '/api/2/entitysets'
+        url = "/api/2/entitysets"
         data = {
-            'label': 'hello',
-            'type': 'diagram',
-            'collection_id': str(self.col.id),
+            "label": "hello",
+            "type": "diagram",
+            "collection_id": str(self.col.id),
         }
         res = self.client.post(url, json=data, headers=self.headers_x)
         assert res.status_code == 403, res
 
     def test_delete_when_collection_deleted(self):
         data = {
-            'label': 'hello',
-            'type': 'generic',
-            'collection_id': str(self.col.id),
+            "label": "hello",
+            "type": "generic",
+            "collection_id": str(self.col.id),
         }
-        url = '/api/2/entitysets'
+        url = "/api/2/entitysets"
         res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 200, res
-        entityset_id = res.json['id']
+        entityset_id = res.json["id"]
         delete_collection(self.col)
-        url = '/api/2/entitysets/%s' % entityset_id
+        url = "/api/2/entitysets/%s" % entityset_id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 404, res
 
     def test_entitysets_types_filter(self):
-        entitysets = ({
-            'label': 'Timeline',
-            'type': 'timeline',
-            'collection_id': str(self.col.id),
-        }, {
-            'label': 'Diagram',
-            'type': 'diagram',
-            'collection_id': str(self.col.id),
-        }, {
-            'label': 'Generic',
-            'type': 'generic',
-            'collection_id': str(self.col.id),
-        })
-        url = '/api/2/entitysets'
+        entitysets = (
+            {
+                "label": "Timeline",
+                "type": "timeline",
+                "collection_id": str(self.col.id),
+            },
+            {"label": "Diagram", "type": "diagram", "collection_id": str(self.col.id),},
+            {"label": "Generic", "type": "generic", "collection_id": str(self.col.id),},
+        )
+        url = "/api/2/entitysets"
         for eset in entitysets:
             res = self.client.post(url, json=eset, headers=self.headers)
             assert res.status_code == 200, res
 
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'QueryResponse')
-        assert len(res.json['results']) == 3
+        validate(res.json, "QueryResponse")
+        assert len(res.json["results"]) == 3
 
-        for qfilter in ('timeline', 'diagram', 'generic'):
-            res = self.client.get(url + f'?filter:type={qfilter}',
-                                  headers=self.headers)
+        for qfilter in ("timeline", "diagram", "generic"):
+            res = self.client.get(url + f"?filter:type={qfilter}", headers=self.headers)
             assert res.status_code == 200, res
-            validate(res.json, 'QueryResponse')
-            assert len(res.json['results']) == 1
+            validate(res.json, "QueryResponse")
+            assert len(res.json["results"]) == 1
 
-        qurl = url + f'?filter:type=timeline&filter:type=diagram'
+        qurl = url + f"?filter:type=timeline&filter:type=diagram"
         res = self.client.get(qurl, headers=self.headers)
         assert res.status_code == 200, res
-        validate(res.json, 'QueryResponse')
-        assert len(res.json['results']) == 2
+        validate(res.json, "QueryResponse")
+        assert len(res.json["results"]) == 2

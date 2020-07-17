@@ -42,10 +42,10 @@ def get_flag(name, default=False):
 
 
 def get_session_id():
-    role_id = stringify(request.authz.id) or 'anonymous'
+    role_id = stringify(request.authz.id) or "anonymous"
     session_id = stringify(request._session_id)
     session_id = session_id or Job.random_id()
-    return '%s:%s' % (role_id, session_id)
+    return "%s:%s" % (role_id, session_id)
 
 
 def parse_request(schema):
@@ -62,24 +62,27 @@ def validate(data, schema):
     validator = get_validator(schema)
     errors = {}
     for error in validator.iter_errors(data):
-        path = '.'.join((str(c) for c in error.path))
+        path = ".".join((str(c) for c in error.path))
         errors[path] = error.message
         log.info("ERROR [%s]: %s", path, error.message)
 
     if not len(errors):
         return data
 
-    resp = jsonify({
-        'status': 'error',
-        'errors': errors,
-        'message': gettext('Error during data validation')
-    }, status=400)
+    resp = jsonify(
+        {
+            "status": "error",
+            "errors": errors,
+            "message": gettext("Error during data validation"),
+        },
+        status=400,
+    )
     raise BadRequest(response=resp)
 
 
 def get_index_entity(entity_id, action=Authz.READ, **kwargs):
     entity = obj_or_404(_get_index_entity(entity_id, **kwargs))
-    require(request.authz.can(entity['collection_id'], action))
+    require(request.authz.can(entity["collection_id"], action))
     return entity
 
 
@@ -90,33 +93,50 @@ def get_db_collection(collection_id, action=Authz.READ):
 
 
 def get_nested_collection(data, action=Authz.READ):
-    collection = ensure_dict(data.get('collection'))
-    collection_id = data.get('collection_id', collection.get('id'))
+    collection = ensure_dict(data.get("collection"))
+    collection_id = data.get("collection_id", collection.get("id"))
     return get_db_collection(collection_id, action)
 
 
 def get_index_collection(collection_id, action=Authz.READ):
     collection = obj_or_404(_get_index_collection(collection_id))
-    require(request.authz.can(collection['id'], action))
+    require(request.authz.can(collection["id"], action))
     return collection
 
 
 def get_url_path(url):
     try:
-        return url_parse(url).replace(netloc='', scheme='').to_url() or '/'
+        return url_parse(url).replace(netloc="", scheme="").to_url() or "/"
     except Exception:
-        return '/'
+        return "/"
 
 
 CLEANER = Cleaner(
     style=True,
     meta=True,
     links=False,
-    remove_tags=['body', 'form'],
-    kill_tags=['area', 'audio', 'base', 'bgsound', 'embed', 'frame',
-               'frameset', 'head', 'img', 'iframe', 'input', 'link',
-               'map', 'meta', 'nav', 'object', 'plaintext', 'track',
-               'video']
+    remove_tags=["body", "form"],
+    kill_tags=[
+        "area",
+        "audio",
+        "base",
+        "bgsound",
+        "embed",
+        "frame",
+        "frameset",
+        "head",
+        "img",
+        "iframe",
+        "input",
+        "link",
+        "map",
+        "meta",
+        "nav",
+        "object",
+        "plaintext",
+        "track",
+        "video",
+    ],
 )
 
 
@@ -126,19 +146,19 @@ def sanitize_html(html_text, base_url, encoding=None):
         return
     try:
         cleaned = CLEANER.clean_html(html_text)
-        encoding = encoding or 'utf-8'
+        encoding = encoding or "utf-8"
         parser = html.HTMLParser(encoding=encoding)
-        data = cleaned.encode(encoding, 'replace')
+        data = cleaned.encode(encoding, "replace")
         doc = html.document_fromstring(data, parser=parser)
         for (el, attr, href, _) in doc.iterlinks():
             href = normalize_href(href, base_url)
             if href is not None:
                 el.set(attr, href)
-            if el.tag == 'a':
-                el.set('target', '_blank')
-                rel = set(el.get('rel', '').lower().split())
-                rel.update(['nofollow', 'noreferrer', 'external', 'noopener'])
-                el.set('rel', ' '.join(rel))
+            if el.tag == "a":
+                el.set("target", "_blank")
+                rel = set(el.get("rel", "").lower().split())
+                rel.update(["nofollow", "noreferrer", "external", "noopener"])
+                el.set("rel", " ".join(rel))
         return tostring(doc)
     except Exception as exc:
         log.warning("HTML sanitizer failure [%s]: %s", type(exc), exc)
@@ -164,42 +184,43 @@ def normalize_href(href, base_url):
 def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
     """Serialize to JSON and also dump from the given schema."""
     data = encoder().encode(obj)
-    mimetype = 'application/json'
-    if 'callback' in request.args:
-        cb = request.args.get('callback')
-        data = '%s && %s(%s)' % (cb, cb, data)
+    mimetype = "application/json"
+    if "callback" in request.args:
+        cb = request.args.get("callback")
+        data = "%s && %s(%s)" % (cb, cb, data)
         # mime cf. https://stackoverflow.com/questions/24528211/
-        mimetype = 'application/javascript'
-    return Response(data,
-                    headers=headers,
-                    status=status,
-                    mimetype=mimetype)
+        mimetype = "application/javascript"
+    return Response(data, headers=headers, status=status, mimetype=mimetype)
 
 
 def stream_ijson(iterable, encoder=JSONEncoder):
     """Stream JSON line-based data."""
+
     def _generate_stream():
         for row in iterable:
-            row.pop('_index', None)
+            row.pop("_index", None)
             yield encoder().encode(row)
-            yield '\n'
-    return Response(_generate_stream(), mimetype='application/json+stream')
+            yield "\n"
+
+    return Response(_generate_stream(), mimetype="application/json+stream")
 
 
 def stream_csv(iterable):
     """Stream JSON line-based data."""
+
     def _generate_stream():
         for row in iterable:
             values = []
             for value in row:
-                values.append(stringify(value) or '')
+                values.append(stringify(value) or "")
             buffer = io.StringIO()
-            writer = csv.writer(buffer, dialect='excel', delimiter=',')
+            writer = csv.writer(buffer, dialect="excel", delimiter=",")
             writer.writerow(values)
             yield buffer.getvalue()
-    return Response(_generate_stream(), mimetype='text_csv')
+
+    return Response(_generate_stream(), mimetype="text_csv")
 
 
 def render_xml(template, **kwargs):
     data = render_template(template, **kwargs)
-    return Response(data, mimetype='text/xml')
+    return Response(data, mimetype="text/xml")

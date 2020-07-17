@@ -13,15 +13,10 @@ log = logging.getLogger(__name__)
 
 class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
     MIME_TYPES = [
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',  # noqa
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.template',  # noqa
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # noqa
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.template",  # noqa
     ]
-    EXTENSIONS = [
-        'xlsx',
-        'xlsm',
-        'xltx',
-        'xltm'
-    ]
+    EXTENSIONS = ["xlsx", "xlsm", "xltx", "xltm"]
     SCORE = 7
 
     def generate_rows(self, sheet):
@@ -32,24 +27,26 @@ class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
                 log.warning("Failed to read Excel row: %s", ve)
 
     def ingest(self, file_path, entity):
-        entity.schema = model.get('Workbook')
+        entity.schema = model.get("Workbook")
         self.ooxml_extract_metadata(file_path, entity)
         try:
             book = load_workbook(file_path, read_only=True)
         except Exception as err:
-            raise ProcessingException('Invalid Excel file: %s' % err)
+            raise ProcessingException("Invalid Excel file: %s" % err)
 
         try:
             for name in book.sheetnames:
-                table = self.manager.make_entity('Table', parent=entity)
+                table = self.manager.make_entity("Table", parent=entity)
                 table.make_id(entity.id, name)
-                table.set('title', name)
-                log.debug('Sheet: %s', name)
+                table.set("title", name)
+                log.debug("Sheet: %s", name)
                 self.emit_row_tuples(table, self.generate_rows(book[name]))
-                if table.has('csvHash'):
+                if table.has("csvHash"):
                     self.manager.emit_entity(table)
         except Exception as err:
-            raise ProcessingException('Cannot read Excel file: %s' % err) from err  # noqa
+            raise ProcessingException(
+                "Cannot read Excel file: %s" % err
+            ) from err  # noqa
         finally:
             book.close()
 

@@ -12,31 +12,25 @@ from ingestors.support.opendoc import OpenDocumentSupport
 log = logging.getLogger(__name__)
 
 
-class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport,
-                                    OpenDocumentSupport):
+class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport, OpenDocumentSupport):
     MIME_TYPES = [
-        'application/vnd.oasis.opendocument.spreadsheet',
-        'application/vnd.oasis.opendocument.spreadsheet-template'
+        "application/vnd.oasis.opendocument.spreadsheet",
+        "application/vnd.oasis.opendocument.spreadsheet-template",
     ]
-    EXTENSIONS = ['ods', 'ots']
+    EXTENSIONS = ["ods", "ots"]
     SCORE = 7
-    VALUE_FIELDS = [
-        'date-value',
-        'time-value',
-        'boolean-value',
-        'value'
-    ]
+    VALUE_FIELDS = ["date-value", "time-value", "boolean-value", "value"]
 
     def convert_cell(self, cell):
-        cell_type = cell.getAttrNS(OFFICENS, 'value-type')
+        cell_type = cell.getAttrNS(OFFICENS, "value-type")
         if cell_type == "currency":
-            value = cell.getAttrNS(OFFICENS, 'value')
+            value = cell.getAttrNS(OFFICENS, "value")
             currency = cell.getAttrNS(OFFICENS, cell_type)
             if value is None:
                 return None
             if currency is None:
                 return value
-            return value + ' ' + currency
+            return value + " " + currency
 
         for field in self.VALUE_FIELDS:
             value = cell.getAttrNS(OFFICENS, field)
@@ -49,7 +43,7 @@ class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport,
         content = []
         for paragraph in cell.getElementsByType(P):
             content.append(extractText(paragraph))
-        return '\n'.join(content)
+        return "\n".join(content)
 
     def generate_csv(self, table):
         for row in table.getElementsByType(TableRow):
@@ -62,13 +56,13 @@ class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport,
             yield values
 
     def ingest(self, file_path, entity):
-        entity.schema = model.get('Workbook')
+        entity.schema = model.get("Workbook")
         doc = self.parse_opendocument(file_path, entity)
         for sheet in doc.spreadsheet.getElementsByType(Table):
-            name = sheet.getAttribute('name')
-            table = self.manager.make_entity('Table', parent=entity)
+            name = sheet.getAttribute("name")
+            table = self.manager.make_entity("Table", parent=entity)
             table.make_id(entity, name)
-            table.set('title', name)
+            table.set("title", name)
             self.emit_row_tuples(table, self.generate_csv(sheet))
-            if table.has('csvHash'):
+            if table.has("csvHash"):
                 self.manager.emit_entity(table)

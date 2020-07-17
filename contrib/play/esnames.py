@@ -13,16 +13,16 @@ def name_tokens(name):
     # if len(name) > 2:
     #     return [name]
     # return []
-    return [n for n in name.split(' ') if len(n)]
+    return [n for n in name.split(" ") if len(n)]
 
 
 def get_entities():
     params = {
-        'include': ['names', 'countries', 'schema'],
-        'schema': ['Thing'],
-        'api_key': os.environ.get('ALEPH_API_KEY')
+        "include": ["names", "countries", "schema"],
+        "schema": ["Thing"],
+        "api_key": os.environ.get("ALEPH_API_KEY"),
     }
-    url = 'http://localhost:5000/api/2/entities/_stream'
+    url = "http://localhost:5000/api/2/entities/_stream"
     res = requests.get(url, params=params, stream=True)
     for line in res.iter_lines():
         entity = json.loads(line)
@@ -30,7 +30,7 @@ def get_entities():
 
 
 def flush():
-    conn.delete('_total')
+    conn.delete("_total")
     for key in conn.scan_iter("names:*"):
         conn.delete(key)
 
@@ -41,7 +41,7 @@ def name_stats():
     name_lengths = []
     for idx, entity in enumerate(get_entities()):
         tokens = defaultdict(int)
-        for name in entity.get('names', []):
+        for name in entity.get("names", []):
             name_count += 1
             name = name_tokens(name)
             name_lengths.append(len(name))
@@ -49,8 +49,8 @@ def name_stats():
                 tokens[token] += 1
 
         for key, count in tokens.items():
-            conn.incrby('names:' + key, count)
-        conn.incrby('_total', sum(tokens.values()))
+            conn.incrby("names:" + key, count)
+        conn.incrby("_total", sum(tokens.values()))
 
         if idx % 1000 == 0:
             print(idx)
@@ -58,9 +58,9 @@ def name_stats():
             break
 
     # print('unique tokens', len(tokens))
-    print('name count', name_count)
+    print("name count", name_count)
     name_avg = sum(name_lengths) / float(name_count)
-    print('name avg', name_avg)
+    print("name avg", name_avg)
     # counter = Counter(tokens)
     # print(counter.most_common(50))
 
@@ -78,7 +78,7 @@ def name_score(name):
     total = max_value
     # total = int(conn.get('_total'))
     tokens = name_tokens(name)
-    keys = ['names:' + t for t in tokens]
+    keys = ["names:" + t for t in tokens]
     values = conn.mget(keys)
     total_score = 1
     for value in values:
@@ -92,9 +92,9 @@ def name_score(name):
     # print(total, values)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # name_stats()
-    name_score('the bank')
-    name_score('zen koan')
-    name_score('nazarbayev')
-    name_score('friedrich lindenberg')
+    name_score("the bank")
+    name_score("zen koan")
+    name_score("nazarbayev")
+    name_score("friedrich lindenberg")

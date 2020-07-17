@@ -14,20 +14,11 @@ log = logging.getLogger(__name__)
 
 
 class RFC822Ingestor(Ingestor, EmailSupport, EncodingSupport):
-    MIME_TYPES = [
-        'multipart/mixed',
-        'message/rfc822'
-    ]
-    BODY_HTML = 'text/html'
-    BODY_PLAIN = 'text/plain'
+    MIME_TYPES = ["multipart/mixed", "message/rfc822"]
+    BODY_HTML = "text/html"
+    BODY_PLAIN = "text/plain"
     BODY_TYPES = [BODY_HTML, BODY_PLAIN]
-    EXTENSIONS = [
-        'eml',
-        'emlx',
-        'rfc822',
-        'email',
-        'msg'
-    ]
+    EXTENSIONS = ["eml", "emlx", "rfc822", "email", "msg"]
     SCORE = 7
 
     def decode_part(self, part):
@@ -45,25 +36,22 @@ class RFC822Ingestor(Ingestor, EmailSupport, EncodingSupport):
         is_attachment = is_attachment or mime_type not in self.BODY_TYPES
         if is_attachment:
             payload = part.get_payload(decode=True)
-            self.ingest_attachment(entity,
-                                   file_name,
-                                   mime_type,
-                                   payload)
+            self.ingest_attachment(entity, file_name, mime_type, payload)
         elif self.BODY_HTML in mime_type:
             payload = self.decode_part(part)
             self.extract_html_content(entity, payload, extract_metadata=False)
         elif self.BODY_PLAIN in mime_type:
-            entity.add('bodyText', self.decode_part(part))
+            entity.add("bodyText", self.decode_part(part))
         else:
             log.error("Dangling MIME fragment: %s", part)
 
     def ingest(self, file_path, entity):
-        entity.schema = model.get('Email')
+        entity.schema = model.get("Email")
         try:
-            with open(file_path, 'rb') as fh:
+            with open(file_path, "rb") as fh:
                 msg = email.message_from_binary_file(fh, policy=default)
         except (MessageError, ValueError, IndexError) as err:
-            raise ProcessingException('Cannot parse email: %s' % err) from err
+            raise ProcessingException("Cannot parse email: %s" % err) from err
 
         self.extract_msg_headers(entity, msg)
         self.resolve_message_ids(entity)

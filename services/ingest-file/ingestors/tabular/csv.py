@@ -15,21 +15,18 @@ class CSVIngestor(Ingestor, TableSupport):
 
     This expects a properly formatted CSV file with a header in the first row.
     """
-    MIME_TYPES = [
-        'text/csv',
-        'text/tsv',
-        'text/tab-separated-values'
-    ]
-    EXTENSIONS = ['csv', 'tsv']
+
+    MIME_TYPES = ["text/csv", "text/tsv", "text/tab-separated-values"]
+    EXTENSIONS = ["csv", "tsv"]
     SCORE = 7
 
     def ingest(self, file_path, entity):
-        entity.schema = model.get('Table')
-        with io.open(file_path, 'rb') as fh:
+        entity.schema = model.get("Table")
+        with io.open(file_path, "rb") as fh:
             encoding = self.detect_stream_encoding(fh)
             log.debug("Detected encoding [%r]: %s", entity, encoding)
 
-        fh = io.open(file_path, 'r', encoding=encoding, errors='replace')
+        fh = io.open(file_path, "r", encoding=encoding, errors="replace")
         try:
             sample = fh.read(4096 * 10)
             fh.seek(0)

@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 def _get_table_csv_link(table):
     proxy = model.get_proxy(table)
-    csv_hash = proxy.first('csvHash')
+    csv_hash = proxy.first("csvHash")
     if csv_hash is None:
         raise RuntimeError("Source table doesn't have a CSV version")
     url = archive.generate_url(csv_hash)
@@ -29,7 +29,7 @@ def _get_table_csv_link(table):
 
 
 def mapping_origin(mapping_id):
-    return 'mapping:%s' % mapping_id
+    return "mapping:%s" % mapping_id
 
 
 def map_to_aggregator(collection, mapping, aggregator):
@@ -38,10 +38,7 @@ def map_to_aggregator(collection, mapping, aggregator):
         table = aggregator.get(mapping.table_id)
     if table is None:
         raise RuntimeError("Table cannot be found: %s" % mapping.table_id)
-    config = {
-        'csv_url': _get_table_csv_link(table),
-        'entities': mapping.query
-    }
+    config = {"csv_url": _get_table_csv_link(table), "entities": mapping.query}
     mapper = model.make_mapping(config, key_prefix=collection.foreign_id)
     origin = mapping_origin(mapping.id)
     aggregator.delete(origin=origin)
@@ -51,9 +48,9 @@ def map_to_aggregator(collection, mapping, aggregator):
             log.info("[%s] Mapped %s rows ...", mapping.id, idx)
         for entity in mapper.map(record).values():
             entity.context = mapping.get_proxy_context()
-            entity.context['mutable'] = True
-            if entity.schema.is_a('Thing'):
-                entity.add('proof', mapping.table_id)
+            entity.context["mutable"] = True
+            if entity.schema.is_a("Thing"):
+                entity.add("proof", mapping.table_id)
             entity = collection.ns.apply(entity)
             entity = remove_checksums(entity)
             writer.put(entity, fragment=idx, origin=origin)
@@ -72,10 +69,12 @@ def load_mapping(stage, collection, mapping_id, sync=False):
     delete_entities(collection.id, origin=origin, sync=True)
     if mapping.disabled:
         return log.info("Mapping is disabled: %s", mapping_id)
-    publish(Events.LOAD_MAPPING,
-            params={'collection': collection, 'table': mapping.table_id},
-            channels=[collection, mapping.role],
-            actor_id=mapping.role_id)
+    publish(
+        Events.LOAD_MAPPING,
+        params={"collection": collection, "table": mapping.table_id},
+        channels=[collection, mapping.role],
+        actor_id=mapping.role_id,
+    )
     try:
         map_to_aggregator(collection, mapping, aggregator)
         mapping.set_status(status=Mapping.SUCCESS)

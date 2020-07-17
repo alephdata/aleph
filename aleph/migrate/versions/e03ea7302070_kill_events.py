@@ -11,19 +11,22 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'e03ea7302070'
-down_revision = 'cbd285d713b4'
+revision = "e03ea7302070"
+down_revision = "cbd285d713b4"
 
 
 def upgrade():
-    op.drop_table('event')
+    op.drop_table("event")
 
 
 def downgrade():
-    op.create_table('event',
-    sa.Column('id', sa.BIGINT(), nullable=False),
-    sa.Column('origin', sa.VARCHAR(), autoincrement=False, nullable=True),
-    sa.Column('data', postgresql.JSONB(), autoincrement=False, nullable=True),
-    sa.Column('created_at', postgresql.TIMESTAMP(), autoincrement=False, nullable=True),
-    sa.PrimaryKeyConstraint('id', name='event_pkey')
+    op.create_table(
+        "event",
+        sa.Column("id", sa.BIGINT(), nullable=False),
+        sa.Column("origin", sa.VARCHAR(), autoincrement=False, nullable=True),
+        sa.Column("data", postgresql.JSONB(), autoincrement=False, nullable=True),
+        sa.Column(
+            "created_at", postgresql.TIMESTAMP(), autoincrement=False, nullable=True
+        ),
+        sa.PrimaryKeyConstraint("id", name="event_pkey"),
     )

@@ -7,8 +7,8 @@ from ingestors.manager import Manager
 from ingestors.analysis import Analyzer
 
 log = logging.getLogger(__name__)
-OP_INGEST = 'ingest'
-OP_ANALYZE = 'analyze'
+OP_INGEST = "ingest"
+OP_ANALYZE = "analyze"
 
 
 class IngestWorker(Worker):
@@ -17,20 +17,20 @@ class IngestWorker(Worker):
     def dispatch_next(self, task, entity_ids):
         if not len(entity_ids):
             return
-        pipeline = task.context.get('pipeline')
+        pipeline = task.context.get("pipeline")
         if pipeline is None or not len(pipeline):
             return
         next_stage = pipeline.pop(0)
         stage = task.job.get_stage(next_stage)
         context = task.context
-        context['pipeline'] = pipeline
-        log.info('Sending %s entities to: %s', len(entity_ids), next_stage)
-        stage.queue({'entity_ids': entity_ids}, context)
+        context["pipeline"] = pipeline
+        log.info("Sending %s entities to: %s", len(entity_ids), next_stage)
+        stage.queue({"entity_ids": entity_ids}, context)
 
     def _ingest(self, dataset, task):
         manager = Manager(dataset, task.stage, task.context)
         entity = model.get_proxy(task.payload)
-        log.debug('Ingest: %r', entity)
+        log.debug("Ingest: %r", entity)
         try:
             manager.ingest_entity(entity)
         finally:
@@ -38,7 +38,7 @@ class IngestWorker(Worker):
         return manager.emitted
 
     def _analyze(self, dataset, task):
-        entity_ids = task.payload.get('entity_ids')
+        entity_ids = task.payload.get("entity_ids")
         analyzer = None
         for entity in dataset.partials(entity_id=entity_ids):
             if analyzer is None or analyzer.entity.id != entity.id:
@@ -52,7 +52,7 @@ class IngestWorker(Worker):
         return entity_ids
 
     def handle(self, task):
-        name = task.context.get('ftmstore', task.job.dataset.name)
+        name = task.context.get("ftmstore", task.job.dataset.name)
         dataset = get_dataset(name, task.stage.stage)
         try:
             if task.stage.stage == OP_INGEST:

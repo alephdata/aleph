@@ -5,15 +5,14 @@ from aleph.tests.util import TestCase
 
 
 class LinkageTestCase(TestCase):
-
     def test_decide_xref(self):
-        w = self.create_user('user')
+        w = self.create_user("user")
         coll = self.create_collection()
         xref = {
-            'entity_id': 'a1',
-            'collection_id': coll.id,
-            'match_id': 'a2',
-            'match_collection_id': coll.id,
+            "entity_id": "a1",
+            "collection_id": coll.id,
+            "match_id": "a2",
+            "match_collection_id": coll.id,
         }
         decide_xref(xref, decision=True, context_id=w.id, decider_id=w.id)
         linkages = list(Linkage.all())
@@ -21,10 +20,10 @@ class LinkageTestCase(TestCase):
         assert linkages[0].profile_id == linkages[1].profile_id, linkages
 
         xref = {
-            'entity_id': 'a1',
-            'collection_id': coll.id,
-            'match_id': 'b1',
-            'match_collection_id': coll.id,
+            "entity_id": "a1",
+            "collection_id": coll.id,
+            "match_id": "b1",
+            "match_collection_id": coll.id,
         }
         decide_xref(xref, decision=False, context_id=w.id, decider_id=w.id)
         linkages = list(Linkage.all())
@@ -33,33 +32,33 @@ class LinkageTestCase(TestCase):
         assert profiles == 1, profiles
 
         xref = {
-            'entity_id': 'b1',
-            'collection_id': coll.id,
-            'match_id': 'b2',
-            'match_collection_id': coll.id,
+            "entity_id": "b1",
+            "collection_id": coll.id,
+            "match_id": "b2",
+            "match_collection_id": coll.id,
         }
         decide_xref(xref, decision=True, context_id=w.id, decider_id=w.id)
         profiles = db.session.query(Linkage.profile_id.distinct()).count()
         assert profiles == 2, profiles
 
         xref = {
-            'entity_id': 'a1',
-            'collection_id': coll.id,
-            'match_id': 'b1',
-            'match_collection_id': coll.id,
+            "entity_id": "a1",
+            "collection_id": coll.id,
+            "match_id": "b1",
+            "match_collection_id": coll.id,
         }
         decide_xref(xref, decision=True, context_id=w.id, decider_id=w.id)
         profiles = db.session.query(Linkage.profile_id.distinct()).count()
         assert profiles == 1, profiles
 
     def test_change_xref(self):
-        w = self.create_user('user')
+        w = self.create_user("user")
         coll = self.create_collection()
         xref = {
-            'entity_id': 'a1',
-            'collection_id': coll.id,
-            'match_id': 'a2',
-            'match_collection_id': coll.id,
+            "entity_id": "a1",
+            "collection_id": coll.id,
+            "match_id": "a2",
+            "match_collection_id": coll.id,
         }
         decide_xref(xref, decision=True, context_id=w.id, decider_id=w.id)
         linkages = list(Linkage.all())
@@ -68,10 +67,10 @@ class LinkageTestCase(TestCase):
         assert linkages[0].decision == linkages[1].decision, linkages
 
         xref = {
-            'entity_id': 'a1',
-            'collection_id': coll.id,
-            'match_id': 'a2',
-            'match_collection_id': coll.id,
+            "entity_id": "a1",
+            "collection_id": coll.id,
+            "match_id": "a2",
+            "match_collection_id": coll.id,
         }
         decide_xref(xref, decision=False, context_id=w.id, decider_id=w.id)
         linkages = list(Linkage.all())

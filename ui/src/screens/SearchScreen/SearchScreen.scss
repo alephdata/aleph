@@ -43,6 +43,12 @@
         width: $aleph-query-tag-height;
       }
     }
+
+    .QueryTags {
+      .bp3-tag {
+        @include rtlSupportInvertedProp(margin, right, 4px, 0);
+      }
+    }
   }
 }
 

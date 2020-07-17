@@ -16,13 +16,13 @@ class OLESupport(TimestampSupport, EncodingSupport):
             value = getattr(meta, prop, None)
             if not isinstance(value, bytes):
                 return
-            encoding = 'cp%s' % meta.codepage
+            encoding = "cp%s" % meta.codepage
             return self.decode_string(value, encoding)
         except Exception:
             log.warning("Could not read metadata: %s", prop)
 
     def extract_ole_metadata(self, file_path, entity):
-        with open(file_path, 'rb') as fh:
+        with open(file_path, "rb") as fh:
             if not isOleFile(fh):
                 return
             fh.seek(0)
@@ -38,21 +38,21 @@ class OLESupport(TimestampSupport, EncodingSupport):
 
     def extract_olefileio_metadata(self, ole, entity):
         try:
-            entity.add('authoredAt', self.parse_timestamp(ole.root.getctime()))
+            entity.add("authoredAt", self.parse_timestamp(ole.root.getctime()))
         except Exception:
             log.warning("Failed to parse OLE ctime.")
         try:
-            entity.add('modifiedAt', self.parse_timestamp(ole.root.getmtime()))
+            entity.add("modifiedAt", self.parse_timestamp(ole.root.getmtime()))
         except Exception:
             log.warning("Failed to parse OLE mtime.")
 
         meta = ole.get_metadata()
-        entity.add('title', self.decode_meta(meta, 'title'))
-        entity.add('author', self.decode_meta(meta, 'author'))
-        entity.add('author', self.decode_meta(meta, 'last_saved_by'))
-        entity.add('author', self.decode_meta(meta, 'company'))
-        entity.add('summary', self.decode_meta(meta, 'notes'))
-        entity.add('generator', self.decode_meta(meta, 'creating_application'))
-        entity.add('authoredAt', self.decode_meta(meta, 'create_time'))
-        entity.add('modifiedAt', self.decode_meta(meta, 'last_saved_time'))
-        entity.add('language', self.decode_meta(meta, 'language'))
+        entity.add("title", self.decode_meta(meta, "title"))
+        entity.add("author", self.decode_meta(meta, "author"))
+        entity.add("author", self.decode_meta(meta, "last_saved_by"))
+        entity.add("author", self.decode_meta(meta, "company"))
+        entity.add("summary", self.decode_meta(meta, "notes"))
+        entity.add("generator", self.decode_meta(meta, "creating_application"))
+        entity.add("authoredAt", self.decode_meta(meta, "create_time"))
+        entity.add("modifiedAt", self.decode_meta(meta, "last_saved_time"))
+        entity.add("language", self.decode_meta(meta, "language"))

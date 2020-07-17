@@ -6,7 +6,6 @@ from aleph.tests.util import TestCase
 
 
 class RoleModelTest(TestCase):
-
     def setUp(self):
         super(RoleModelTest, self).setUp()
 
@@ -40,7 +39,7 @@ class RoleModelTest(TestCase):
                 foreign_id=self.role.foreign_id,
                 type=self.role.type,
                 name=self.role.name,
-                email=self.role.email
+                email=self.role.email,
             ),
-            self.role
+            self.role,
         )

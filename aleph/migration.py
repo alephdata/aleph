@@ -19,6 +19,7 @@ def cleanup_deleted():
     from aleph.model import Alert, Entity, Collection
     from aleph.model import Permission, Role, Document
     from aleph.model import EntitySet, EntitySetItem, Mapping
+
     Mapping.cleanup_deleted()
     EntitySetItem.cleanup_deleted()
     EntitySet.cleanup_deleted()
@@ -44,5 +45,5 @@ def destroy_db():
             except InternalError:
                 pass
     for enum in inspect(db.engine).get_enums():
-        enum = ENUM(name=enum['name'])
+        enum = ENUM(name=enum["name"])
         enum.drop(bind=db.engine, checkfirst=True)

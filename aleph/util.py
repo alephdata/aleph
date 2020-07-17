@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 
 def html_link(text, link):
-    text = text or '[untitled]'
+    text = text or "[untitled]"
     if link is None:
         return "<span class='reference'>%s</span>" % text
     return "<a class='reference' href='%s'>%s</a>" % (link, text)
@@ -22,15 +22,15 @@ def anonymize_email(name, email):
     email = stringify(email)
     if email is None:
         return name
-    if '@' in email:
-        mailbox, domain = email.rsplit('@', 1)
+    if "@" in email:
+        mailbox, domain = email.rsplit("@", 1)
         if len(mailbox):
-            repl = '*' * (len(mailbox) - 1)
+            repl = "*" * (len(mailbox) - 1)
             mailbox = mailbox[0] + repl
-        email = '%s@%s' % (mailbox, domain)
+        email = "%s@%s" % (mailbox, domain)
     if name is None:
         return email
-    return '%s <%s>' % (name, email)
+    return "%s <%s>" % (name, email)
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -41,11 +41,11 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(obj, (datetime, date)):
             return obj.isoformat()
         if isinstance(obj, bytes):
-            return obj.decode('utf-8')
+            return obj.decode("utf-8")
         if isinstance(obj, LazyString):
             return str(obj)
         if isinstance(obj, set):
             return [o for o in obj]
-        if hasattr(obj, 'to_dict'):
+        if hasattr(obj, "to_dict"):
             return obj.to_dict()
         return json.JSONEncoder.default(self, obj)

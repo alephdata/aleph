@@ -17,9 +17,9 @@ log = logging.getLogger(__name__)
 
 
 class Document(db.Model, DatedModel):
-    SCHEMA = 'Document'
-    SCHEMA_FOLDER = 'Folder'
-    SCHEMA_TABLE = 'Table'
+    SCHEMA = "Document"
+    SCHEMA_FOLDER = "Folder"
+    SCHEMA_TABLE = "Table"
 
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
@@ -27,10 +27,14 @@ class Document(db.Model, DatedModel):
     schema = db.Column(db.String(255), nullable=False)
     meta = db.Column(JSONB, default={})
 
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=True)  # noqa
     parent_id = db.Column(db.BigInteger, nullable=True, index=True)  # noqa
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
-    collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
+    collection_id = db.Column(
+        db.Integer, db.ForeignKey("collection.id"), nullable=False, index=True
+    )  # noqa
+    collection = db.relationship(
+        Collection, backref=db.backref("documents", lazy="dynamic")
+    )  # noqa
 
     def __init__(self, **kw):
         self.meta = {}
@@ -44,11 +48,11 @@ class Document(db.Model, DatedModel):
     def ancestors(self):
         if self.parent_id is None:
             return []
-        key = cache.key('ancestors', self.id)
+        key = cache.key("ancestors", self.id)
         ancestors = cache.get_list(key)
         if len(ancestors):
             return ancestors
-        parent_key = cache.key('ancestors', self.parent_id)
+        parent_key = cache.key("ancestors", self.parent_id)
         ancestors = cache.get_list(parent_key)
         if not len(ancestors):
             ancestors = []
@@ -61,14 +65,32 @@ class Document(db.Model, DatedModel):
         return ancestors
 
     def update(self, data):
-        props = ('title', 'summary', 'author', 'crawler', 'source_url',
-                 'file_name', 'mime_type', 'headers', 'date', 'authored_at',
-                 'modified_at', 'published_at', 'retrieved_at', 'languages',
-                 'countries', 'keywords')
-        data['countries'] = ensure_list(data.get('countries', []))
-        data['countries'] = [registry.country.clean(val) for val in data['countries']]  # noqa
-        data['languages'] = ensure_list(data.get('languages', []))
-        data['languages'] = [registry.language.clean(val) for val in data['languages']]  # noqa
+        props = (
+            "title",
+            "summary",
+            "author",
+            "crawler",
+            "source_url",
+            "file_name",
+            "mime_type",
+            "headers",
+            "date",
+            "authored_at",
+            "modified_at",
+            "published_at",
+            "retrieved_at",
+            "languages",
+            "countries",
+            "keywords",
+        )
+        data["countries"] = ensure_list(data.get("countries", []))
+        data["countries"] = [
+            registry.country.clean(val) for val in data["countries"]
+        ]  # noqa
+        data["languages"] = ensure_list(data.get("languages", []))
+        data["languages"] = [
+            registry.language.clean(val) for val in data["languages"]
+        ]  # noqa
         for prop in props:
             text = data.get(prop, self.meta.get(prop))
             if isinstance(text, list):
@@ -79,7 +101,7 @@ class Document(db.Model, DatedModel):
             if self.meta.get(prop) is None:
                 self.meta.pop(prop, None)
 
-        flag_modified(self, 'meta')
+        flag_modified(self, "meta")
 
     def delete(self, deleted_at=None):
         db.session.delete(self)
@@ -91,8 +113,15 @@ class Document(db.Model, DatedModel):
         pq.delete(synchronize_session=False)
 
     @classmethod
-    def save(cls, collection, parent=None, foreign_id=None,
-             content_hash=None, meta=None, role_id=None):
+    def save(
+        cls,
+        collection,
+        parent=None,
+        foreign_id=None,
+        content_hash=None,
+        meta=None,
+        role_id=None,
+    ):
         """Try and find a document by various criteria."""
         foreign_id = sanitize_text(foreign_id)
 
@@ -161,46 +190,48 @@ class Document(db.Model, DatedModel):
 
     def to_proxy(self, ns=None):
         ns = ns or self.collection.ns
-        proxy = model.get_proxy({
-            'id': ns.sign(self.id),
-            'schema': self.model,
-            'properties': {},
-            'created_at': iso_text(self.created_at),
-            'updated_at': iso_text(self.updated_at),
-            'role_id': self.role_id,
-            'mutable': True
-        })
+        proxy = model.get_proxy(
+            {
+                "id": ns.sign(self.id),
+                "schema": self.model,
+                "properties": {},
+                "created_at": iso_text(self.created_at),
+                "updated_at": iso_text(self.updated_at),
+                "role_id": self.role_id,
+                "mutable": True,
+            }
+        )
         meta = dict(self.meta)
-        headers = meta.pop('headers', None)
+        headers = meta.pop("headers", None)
         if is_mapping(headers):
-            headers = {slugify(k, sep='_'): v for k, v in headers.items()}
-            proxy.set('headers', registry.json.pack(headers), quiet=True)
+            headers = {slugify(k, sep="_"): v for k, v in headers.items()}
+            proxy.set("headers", registry.json.pack(headers), quiet=True)
         else:
             headers = {}
-        proxy.set('contentHash', self.content_hash)
-        proxy.set('parent', ns.sign(self.parent_id))
-        proxy.set('ancestors', [ns.sign(a) for a in self.ancestors])
-        proxy.set('crawler', meta.get('crawler'))
-        proxy.set('sourceUrl', meta.get('source_url'))
-        proxy.set('title', meta.get('title'))
-        proxy.set('fileName', meta.get('file_name'))
-        if not proxy.has('fileName'):
-            disposition = headers.get('content_disposition')
+        proxy.set("contentHash", self.content_hash)
+        proxy.set("parent", ns.sign(self.parent_id))
+        proxy.set("ancestors", [ns.sign(a) for a in self.ancestors])
+        proxy.set("crawler", meta.get("crawler"))
+        proxy.set("sourceUrl", meta.get("source_url"))
+        proxy.set("title", meta.get("title"))
+        proxy.set("fileName", meta.get("file_name"))
+        if not proxy.has("fileName"):
+            disposition = headers.get("content_disposition")
             if disposition is not None:
                 _, attrs = cgi.parse_header(disposition)
-                proxy.set('fileName', attrs.get('filename'))
-        proxy.set('mimeType', meta.get('mime_type'))
-        if not proxy.has('mimeType'):
-            proxy.set('mimeType', headers.get('content_type'))
-        proxy.set('language', meta.get('languages'))
-        proxy.set('country', meta.get('countries'))
-        proxy.set('keywords', meta.get('keywords'))
-        proxy.set('authoredAt', meta.get('authored_at'))
-        proxy.set('modifiedAt', meta.get('modified_at'))
-        proxy.set('publishedAt', meta.get('published_at'))
-        proxy.set('retrievedAt', meta.get('retrieved_at'))
-        proxy.set('sourceUrl', meta.get('source_url'))
+                proxy.set("fileName", attrs.get("filename"))
+        proxy.set("mimeType", meta.get("mime_type"))
+        if not proxy.has("mimeType"):
+            proxy.set("mimeType", headers.get("content_type"))
+        proxy.set("language", meta.get("languages"))
+        proxy.set("country", meta.get("countries"))
+        proxy.set("keywords", meta.get("keywords"))
+        proxy.set("authoredAt", meta.get("authored_at"))
+        proxy.set("modifiedAt", meta.get("modified_at"))
+        proxy.set("publishedAt", meta.get("published_at"))
+        proxy.set("retrievedAt", meta.get("retrieved_at"))
+        proxy.set("sourceUrl", meta.get("source_url"))
         return proxy
 
     def __repr__(self):
-        return '<Document(%r,%r)>' % (self.id, self.schema)
+        return "<Document(%r,%r)>" % (self.id, self.schema)

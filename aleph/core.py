@@ -2,6 +2,7 @@ import logging
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
+from werkzeug.middleware.profiler import ProfilerMiddleware
 from flask import Flask, request
 from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -23,7 +24,7 @@ from aleph import settings
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
-NONE = '\'none\''
+NONE = "'none'"
 log = logging.getLogger(__name__)
 
 db = SQLAlchemy()
@@ -35,51 +36,62 @@ talisman = Talisman()
 
 def create_app(config={}):
     configure_logging()
-    app = Flask('aleph')
+    app = Flask("aleph")
     app.config.from_object(settings)
     app.config.update(config)
 
-    if 'postgres' not in settings.DATABASE_URI:
+    if "postgres" not in settings.DATABASE_URI:
         raise RuntimeError("aleph database must be PostgreSQL!")
 
-    app.config.update({
-        'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI,
-        'FLASK_SKIP_DOTENV': True,
-        'FLASK_DEBUG': settings.DEBUG,
-        'BABEL_DOMAIN': 'aleph',
-    })
+    app.config.update(
+        {
+            "SQLALCHEMY_DATABASE_URI": settings.DATABASE_URI,
+            "FLASK_SKIP_DOTENV": True,
+            "FLASK_DEBUG": settings.DEBUG,
+            "BABEL_DOMAIN": "aleph",
+            "PROFILE": settings.PROFILE,
+        }
+    )
+
+    if settings.PROFILE:
+        app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30])
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
     configure_oauth(app, cache=get_cache())
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
-    CORS(app,
-         resources=r'/api/*',
-         origins=settings.CORS_ORIGINS,
-         supports_credentials=True)
+    CORS(
+        app,
+        resources=r"/api/*",
+        origins=settings.CORS_ORIGINS,
+        supports_credentials=True,
+    )
     feature_policy = {
-        'accelerometer': NONE,
-        'camera': NONE,
-        'geolocation': NONE,
-        'gyroscope': NONE,
-        'magnetometer': NONE,
-        'microphone': NONE,
-        'payment': NONE,
-        'usb': NONE
+        "accelerometer": NONE,
+        "camera": NONE,
+        "geolocation": NONE,
+        "gyroscope": NONE,
+        "magnetometer": NONE,
+        "microphone": NONE,
+        "payment": NONE,
+        "usb": NONE,
     }
-    talisman.init_app(app,
-                      force_https=settings.FORCE_HTTPS,
-                      strict_transport_security=settings.FORCE_HTTPS,
-                      feature_policy=feature_policy,
-                      content_security_policy=settings.CONTENT_POLICY)
+    talisman.init_app(
+        app,
+        force_https=settings.FORCE_HTTPS,
+        strict_transport_security=settings.FORCE_HTTPS,
+        feature_policy=feature_policy,
+        content_security_policy=settings.CONTENT_POLICY,
+    )
 
     from aleph.views import mount_app_blueprints
+
     mount_app_blueprints(app)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
-    for plugin in get_extensions('aleph.init'):
+    for plugin in get_extensions("aleph.init"):
         plugin(app=app)
 
     return app
@@ -99,7 +111,7 @@ def determine_locale():
 
 @migrate.configure
 def configure_alembic(config):
-    config.set_main_option('sqlalchemy.url', settings.DATABASE_URI)
+    config.set_main_option("sqlalchemy.url", settings.DATABASE_URI)
     return config
 
 
@@ -108,7 +120,7 @@ def get_es():
     timeout = settings.ELASTICSEARCH_TIMEOUT
     for attempt in service_retries():
         try:
-            if not hasattr(settings, '_es_instance'):
+            if not hasattr(settings, "_es_instance"):
                 es = Elasticsearch(url, timeout=timeout)
                 es.info()
                 settings._es_instance = es
@@ -120,13 +132,13 @@ def get_es():
 
 
 def get_archive():
-    if not hasattr(settings, '_archive'):
+    if not hasattr(settings, "_archive"):
         settings._archive = init_archive()
     return settings._archive
 
 
 def get_cache():
-    if not hasattr(settings, '_cache') or settings._cache is None:
+    if not hasattr(settings, "_cache") or settings._cache is None:
         settings._cache = Cache(get_redis(), prefix=settings.APP_NAME)
     return settings._cache
 
@@ -140,15 +152,15 @@ archive = LocalProxy(get_archive)
 def url_for(*a, **kw):
     """Overwrite Flask url_for to force external paths."""
     try:
-        kw['_external'] = False
-        query = kw.pop('_query', None)
-        authorize = kw.pop('_authorize', False)
-        relative = kw.pop('_relative', False)
+        kw["_external"] = False
+        query = kw.pop("_query", None)
+        authorize = kw.pop("_authorize", False)
+        relative = kw.pop("_relative", False)
         path = flask_url_for(*a, **kw)
-        if authorize is True and hasattr(request, 'authz'):
+        if authorize is True and hasattr(request, "authz"):
             token = request.authz.to_token(scope=path)
             query = list(ensure_list(query))
-            query.append(('api_key', token))
+            query.append(("api_key", token))
         return url_external(path, query, relative=relative)
     except RuntimeError:
         return None
@@ -166,7 +178,7 @@ def url_external(path, query, relative=False):
         api_url = settings.APP_UI_URL
         if settings.FORCE_HTTPS:
             parsed = urlparse(api_url)
-            parsed = parsed._replace(scheme='https')
+            parsed = parsed._replace(scheme="https")
             api_url = parsed.geturl()
         return urljoin(api_url, path)
     except RuntimeError:

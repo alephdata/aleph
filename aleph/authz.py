@@ -17,9 +17,10 @@ class Authz(object):
     This is usually attached to a request, but can also be used separately,
     e.g. in the context of notifications.
     """
-    READ = 'read'
-    WRITE = 'write'
-    PREFIX = 'aauthz'
+
+    READ = "read"
+    WRITE = "write"
+    PREFIX = "aauthz"
 
     def __init__(self, role_id, roles, is_admin=False, is_blocked=False):
         self.id = role_id
@@ -40,8 +41,9 @@ class Authz(object):
         if collections:
             collections = json.loads(collections)
             self._collections[action] = collections
-            log.debug("[C] Authz: %s (%s): %d collections",
-                      self, action, len(collections))
+            log.debug(
+                "[C] Authz: %s (%s): %d collections", self, action, len(collections)
+            )
             return collections
 
         if self.is_admin:
@@ -57,8 +59,7 @@ class Authz(object):
             q = q.distinct()
             # log.info("Query: %s - roles: %s", q, self.roles)
         collections = [c for (c,) in q.all()]
-        log.debug("Authz: %s (%s): %d collections",
-                  self, action, len(collections))
+        log.debug("Authz: %s (%s): %d collections", self, action, len(collections))
         cache.kv.hset(self.PREFIX, key, json.dumps(collections))
         self._collections[action] = collections
         return collections
@@ -125,23 +126,23 @@ class Authz(object):
     def to_token(self, scope=None, role=None):
         exp = datetime.utcnow() + timedelta(days=1)
         payload = {
-            'u': self.id,
-            'exp': exp,
-            'r': list(self.roles),
-            'a': self.is_admin,
-            'b': self.is_blocked,
+            "u": self.id,
+            "exp": exp,
+            "r": list(self.roles),
+            "a": self.is_admin,
+            "b": self.is_blocked,
         }
         if scope is not None:
-            payload['s'] = scope
+            payload["s"] = scope
         if role is not None:
             role = role.to_dict()
-            role.pop('created_at', None)
-            role.pop('updated_at', None)
-            payload['role'] = role
+            role.pop("created_at", None)
+            role.pop("updated_at", None)
+            payload["role"] = role
         return jwt.encode(payload, settings.SECRET_KEY)
 
     def __repr__(self):
-        return '<Authz(%s)>' % self.id
+        return "<Authz(%s)>" % self.id
 
     @classmethod
     def from_role(cls, role):
@@ -153,9 +154,7 @@ class Authz(object):
         if not role.is_blocked:
             roles.add(Role.load_id(Role.SYSTEM_USER))
             roles.update([g.id for g in role.roles])
-        return cls(role.id, roles,
-                   is_admin=role.is_admin,
-                   is_blocked=role.is_blocked)
+        return cls(role.id, roles, is_admin=role.is_admin, is_blocked=role.is_blocked)
 
     @classmethod
     def from_token(cls, token, scope=None):
@@ -163,12 +162,11 @@ class Authz(object):
             return
         try:
             data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
-            if 's' in data and data.get('s') != scope:
+            if "s" in data and data.get("s") != scope:
                 raise Unauthorized()
-            return cls(data.get('u'),
-                       data.get('r'),
-                       data.get('a', False),
-                       data.get('b', False))
+            return cls(
+                data.get("u"), data.get("r"), data.get("a", False), data.get("b", False)
+            )
         except (jwt.DecodeError, TypeError):
             return
 

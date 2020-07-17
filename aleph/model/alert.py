@@ -8,14 +8,15 @@ from aleph.model.common import SoftDeleteModel
 
 class Alert(db.Model, SoftDeleteModel):
     """A subscription to notifications on a given query."""
-    __tablename__ = 'alert'
+
+    __tablename__ = "alert"
 
     id = db.Column(db.Integer, primary_key=True)
     query = db.Column(db.Unicode, nullable=True)
     notified_at = db.Column(db.DateTime, nullable=True)
 
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
-    role = db.relationship(Role, backref=db.backref('alerts', lazy='dynamic'))  # noqa
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), index=True)
+    role = db.relationship(Role, backref=db.backref("alerts", lazy="dynamic"))  # noqa
 
     @property
     def normalized(self):
@@ -40,13 +41,15 @@ class Alert(db.Model, SoftDeleteModel):
 
     def to_dict(self):
         data = self.to_dict_dates()
-        data.update({
-            'id': stringify(self.id),
-            'query': self.query,
-            'normalized': self.normalized,
-            'role_id': stringify(self.role_id),
-            'notified_at': self.notified_at
-        })
+        data.update(
+            {
+                "id": stringify(self.id),
+                "query": self.query,
+                "normalized": self.normalized,
+                "role_id": stringify(self.role_id),
+                "notified_at": self.notified_at,
+            }
+        )
         return data
 
     @classmethod
@@ -68,9 +71,9 @@ class Alert(db.Model, SoftDeleteModel):
     def create(cls, data, role_id):
         alert = cls()
         alert.role_id = role_id
-        alert.query = stringify(data.get('query'))
+        alert.query = stringify(data.get("query"))
         alert.update()
         return alert
 
     def __repr__(self):
-        return '<Alert(%r, %r)>' % (self.id, self.query)
+        return "<Alert(%r, %r)>" % (self.id, self.query)

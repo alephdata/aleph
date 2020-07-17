@@ -24,8 +24,9 @@ class IdModel(object):
 
 class DatedModel(object):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
-                           onupdate=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     @classmethod
     def all(cls, deleted=False):
@@ -52,10 +53,7 @@ class DatedModel(object):
         db.session.delete(self)
 
     def to_dict_dates(self):
-        return {
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
-        }
+        return {"created_at": self.created_at, "updated_at": self.updated_at}
 
 
 class SoftDeleteModel(DatedModel):
@@ -68,7 +66,7 @@ class SoftDeleteModel(DatedModel):
     def to_dict_dates(self):
         data = super(SoftDeleteModel, self).to_dict_dates()
         if self.deleted_at:
-            data['deleted_at'] = self.deleted_at
+            data["deleted_at"] = self.deleted_at
         return data
 
     @classmethod

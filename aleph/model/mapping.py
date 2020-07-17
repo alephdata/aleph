@@ -14,25 +14,30 @@ log = logging.getLogger(__name__)
 
 class Mapping(db.Model, SoftDeleteModel):
     """A mapping to load entities from a table"""
-    __tablename__ = 'mapping'
 
-    FAILED = 'failed'
-    SUCCESS = 'success'
-    PENDING = 'pending'
+    __tablename__ = "mapping"
+
+    FAILED = "failed"
+    SUCCESS = "success"
+    PENDING = "pending"
     STATUS = {
-        SUCCESS: lazy_gettext('success'),
-        FAILED: lazy_gettext('failed'),
-        PENDING: lazy_gettext('pending'),
+        SUCCESS: lazy_gettext("success"),
+        FAILED: lazy_gettext("failed"),
+        PENDING: lazy_gettext("pending"),
     }
 
     id = db.Column(db.Integer, primary_key=True)
-    query = db.Column('query', JSONB)
+    query = db.Column("query", JSONB)
 
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
-    role = db.relationship(Role, backref=db.backref('mappings', lazy='dynamic'))  # noqa
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), index=True)
+    role = db.relationship(Role, backref=db.backref("mappings", lazy="dynamic"))  # noqa
 
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
-    collection = db.relationship(Collection, backref=db.backref('mappings', lazy='dynamic'))  # noqa
+    collection_id = db.Column(
+        db.Integer, db.ForeignKey("collection.id"), index=True
+    )  # noqa
+    collection = db.relationship(
+        Collection, backref=db.backref("mappings", lazy="dynamic")
+    )  # noqa
 
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
@@ -43,9 +48,9 @@ class Mapping(db.Model, SoftDeleteModel):
     def get_proxy_context(self):
         """Metadata to be added to each generated entity."""
         return {
-            'created_at': iso_text(self.created_at),
-            'updated_at': iso_text(self.updated_at),
-            'role_id': self.role_id,
+            "created_at": iso_text(self.created_at),
+            "updated_at": iso_text(self.updated_at),
+            "role_id": self.role_id,
         }
 
     def update(self, query=None, table_id=None):
@@ -68,15 +73,17 @@ class Mapping(db.Model, SoftDeleteModel):
     def to_dict(self):
         data = self.to_dict_dates()
         status = self.STATUS.get(self.last_run_status)
-        data.update({
-            'id': stringify(self.id),
-            'query': dict(self.query),
-            'role_id': stringify(self.role_id),
-            'collection_id': stringify(self.collection_id),
-            'table_id': self.table_id,
-            'last_run_status': status,
-            'last_run_err_msg': self.last_run_err_msg
-        })
+        data.update(
+            {
+                "id": stringify(self.id),
+                "query": dict(self.query),
+                "role_id": stringify(self.role_id),
+                "collection_id": stringify(self.collection_id),
+                "table_id": self.table_id,
+                "last_run_status": status,
+                "last_run_err_msg": self.last_run_err_msg,
+            }
+        )
         return data
 
     @classmethod
@@ -91,8 +98,7 @@ class Mapping(db.Model, SoftDeleteModel):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at},
-                  synchronize_session=False)
+        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
 
     @classmethod
     def delete_by_table(cls, entity_id):
@@ -111,4 +117,4 @@ class Mapping(db.Model, SoftDeleteModel):
         return mapping
 
     def __repr__(self):
-        return '<Mapping(%r, %r)>' % (self.id, self.table_id)
+        return "<Mapping(%r, %r)>" % (self.id, self.table_id)

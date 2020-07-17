@@ -9,14 +9,18 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = '8dff301e1b1f'
-down_revision = '23c4b0bf13bf'
+revision = "8dff301e1b1f"
+down_revision = "23c4b0bf13bf"
 
 
 def upgrade():
-    op.add_column('collection', sa.Column('frequency', sa.Unicode(), nullable=True))  # noqa
-    op.add_column('collection', sa.Column('restricted', sa.Boolean(), nullable=True))  # noqa
-    op.add_column('collection', sa.Column('xref', sa.Boolean(), nullable=True))  # noqa
+    op.add_column(
+        "collection", sa.Column("frequency", sa.Unicode(), nullable=True)
+    )  # noqa
+    op.add_column(
+        "collection", sa.Column("restricted", sa.Boolean(), nullable=True)
+    )  # noqa
+    op.add_column("collection", sa.Column("xref", sa.Boolean(), nullable=True))  # noqa
 
 
 def downgrade():

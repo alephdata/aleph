@@ -7,10 +7,10 @@ from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import jsonify, require
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('status_api', __name__)
+blueprint = Blueprint("status_api", __name__)
 
 
-@blueprint.route('/api/2/status', methods=['GET'])
+@blueprint.route("/api/2/status", methods=["GET"])
 def status():
     """
     ---
@@ -31,7 +31,7 @@ def status():
     require(request.authz.logged_in)
     request.rate_limit = None
     status = get_active_collection_status()
-    active_collections = status.pop('datasets', [])
+    active_collections = status.pop("datasets", [])
     active_foreign_ids = set(active_collections.keys())
     collections = request.authz.collections(request.authz.READ)
     serializer = CollectionSerializer(reference=True)
@@ -42,10 +42,7 @@ def status():
             continue
         if collection.id in collections:
             result = active_collections[fid]
-            result['collection'] = serializer.serialize(collection.to_dict())
-            result['id'] = fid
+            result["collection"] = serializer.serialize(collection.to_dict())
+            result["id"] = fid
             results.append(result)
-    return jsonify({
-        'results': results,
-        'total': len(results)
-    })
+    return jsonify({"results": results, "total": len(results)})

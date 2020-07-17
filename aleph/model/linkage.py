@@ -19,30 +19,42 @@ class Linkage(db.Model, DatedModel):
     profile, that it certainly is part of the profile or that it
     is certainly not part of the profile.
     """
+
     id = db.Column(db.BigInteger, primary_key=True)
     profile_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
     entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
+    collection_id = db.Column(
+        db.Integer, db.ForeignKey("collection.id"), index=True
+    )  # noqa
     decision = db.Column(db.Boolean, default=None, nullable=True)
-    decider_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-    context_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    decider_id = db.Column(db.Integer, db.ForeignKey("role.id"))
+    context_id = db.Column(db.Integer, db.ForeignKey("role.id"))
 
     def to_dict(self):
         data = self.to_dict_dates()
-        data.update({
-            'id': stringify(self.id),
-            'profile_id': self.profile_id,
-            'entity_id': self.entity_id,
-            'collection_id': self.collection_id,
-            'decision': self.decision,
-            'decider_id': stringify(self.decider_id),
-            'context_id': stringify(self.context_id),
-        })
+        data.update(
+            {
+                "id": stringify(self.id),
+                "profile_id": self.profile_id,
+                "entity_id": self.entity_id,
+                "collection_id": self.collection_id,
+                "decision": self.decision,
+                "decider_id": stringify(self.decider_id),
+                "context_id": stringify(self.context_id),
+            }
+        )
         return data
 
     @classmethod
-    def save(cls, profile_id, entity_id, collection_id, context_id,
-             decision=None, decider_id=None):
+    def save(
+        cls,
+        profile_id,
+        entity_id,
+        collection_id,
+        context_id,
+        decision=None,
+        decider_id=None,
+    ):
         q = cls.by_profile(profile_id)
         q = q.filter(cls.entity_id == entity_id)
         q = q.filter(cls.collection_id == collection_id)
@@ -108,8 +120,7 @@ class Linkage(db.Model, DatedModel):
         return q
 
     @classmethod
-    def by_entity(cls, entity_id, decision=None, collection_id=None,
-                  context_id=None):
+    def by_entity(cls, entity_id, decision=None, collection_id=None, context_id=None):
         q = cls.all()
         q = q.filter(cls.entity_id == entity_id)
         if decision is not None:
@@ -141,8 +152,9 @@ class Linkage(db.Model, DatedModel):
             return decisions
         entity = aliased(cls)
         match = aliased(cls)
-        q = db.session.query(entity.entity_id, entity.decision,
-                             match.entity_id, match.decision)
+        q = db.session.query(
+            entity.entity_id, entity.decision, match.entity_id, match.decision
+        )
         q = q.filter(entity.profile_id == match.profile_id)
         q = q.filter(entity.context_id == context_id)
         q = q.filter(entity.decision != None)  # noqa
@@ -152,8 +164,9 @@ class Linkage(db.Model, DatedModel):
         for (entity_id, match_id) in pairs:
             if entity_id is None or match_id is None:
                 continue
-            options.append(and_(entity.entity_id == entity_id,
-                                match.entity_id == match_id))
+            options.append(
+                and_(entity.entity_id == entity_id, match.entity_id == match_id)
+            )
         q = q.filter(or_(*options))
         for (entity_id, dec1, match_id, dec2) in q.all():
             decs = sorted((dec1, dec2))

@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Button, Icon, MenuItem } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import c from 'classnames';
+import { SelectWrapper } from '.';
 import getEntitySetLink from 'src/util/getEntitySetLink';
 
 
@@ -47,7 +47,7 @@ class DiagramSelect extends PureComponent {
     const { buttonProps, items, noResults, onSelect } = this.props;
 
     return (
-      <Select
+      <SelectWrapper
         itemRenderer={this.itemRenderer}
         items={items}
         onItemSelect={onSelect}
@@ -65,7 +65,7 @@ class DiagramSelect extends PureComponent {
           alignText="left"
           {...buttonProps}
         />
-      </Select>
+      </SelectWrapper>
     )
   }
 }

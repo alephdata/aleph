@@ -10,7 +10,8 @@
   }
 
   .bp3-icon {
-    margin: 0 $aleph-icon-padding 0 0 !important;
+    margin: 0!important;
+    @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding!important, null);
     color: inherit !important;
   }
 }

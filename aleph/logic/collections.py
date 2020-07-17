@@ -15,17 +15,19 @@ from aleph.logic.documents import ingest_flush
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
-MODEL_ORIGIN = 'model'
+MODEL_ORIGIN = "model"
 
 
 def create_collection(data, authz, sync=False):
     now = datetime.utcnow()
     collection = Collection.create(data, authz, created_at=now)
     if collection.created_at == now:
-        publish(Events.CREATE_COLLECTION,
-                params={'collection': collection},
-                channels=[collection, authz.role],
-                actor_id=authz.id)
+        publish(
+            Events.CREATE_COLLECTION,
+            params={"collection": collection},
+            channels=[collection, authz.role],
+            actor_id=authz.id,
+        )
     db.session.commit()
     return update_collection(collection, sync=sync)
 
@@ -40,8 +42,10 @@ def update_collection(collection, sync=False):
 def refresh_collection(collection_id):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and flush cache."""
-    cache.kv.delete(cache.object_key(Collection, collection_id),
-                    cache.object_key(Collection, collection_id, 'stats'))
+    cache.kv.delete(
+        cache.object_key(Collection, collection_id),
+        cache.object_key(Collection, collection_id, "stats"),
+    )
 
 
 def compute_collections():
@@ -50,13 +54,13 @@ def compute_collections():
 
 
 def compute_collection(collection, force=False, sync=False):
-    key = cache.object_key(Collection, collection.id, 'stats')
+    key = cache.object_key(Collection, collection.id, "stats")
     if cache.get(key) is not None and not force:
         return
     refresh_collection(collection.id)
     log.info("[%s] Computing statistics...", collection)
     index.update_collection_stats(collection.id)
-    cache.set(key, 'computed', expires=cache.EXPIRE)
+    cache.set(key, "computed", expires=cache.EXPIRE)
     index.index_collection(collection, sync=sync)
 
 
@@ -67,11 +71,11 @@ def aggregate_model(collection, aggregator):
     writer = aggregator.bulk()
     for document in Document.by_collection(collection.id):
         proxy = document.to_proxy(ns=collection.ns)
-        writer.put(proxy, fragment='db', origin=MODEL_ORIGIN)
+        writer.put(proxy, fragment="db", origin=MODEL_ORIGIN)
     for entity in Entity.by_collection(collection.id):
         proxy = entity.to_proxy()
         aggregator.delete(entity_id=proxy.id)
-        writer.put(proxy, fragment='db', origin=MODEL_ORIGIN)
+        writer.put(proxy, fragment="db", origin=MODEL_ORIGIN)
     writer.flush()
 
 
@@ -101,6 +105,7 @@ def reingest_collection(collection, job_id=None, index=False):
 def reindex_collection(collection, sync=False, flush=False):
     """Re-index all entities from the model, mappings and aggregator cache."""
     from aleph.logic.mapping import map_to_aggregator
+
     if flush:
         log.debug("[%s] Flushing...", collection)
         index.delete_entities(collection.id, sync=True)

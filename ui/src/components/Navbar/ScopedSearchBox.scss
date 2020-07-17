@@ -1,19 +1,15 @@
-@import "src/app/mixins.scss";
 @import "src/app/variables.scss";
+@import "src/app/mixins.scss";
 
-.SearchBox {
-  .bp3-input {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-  .bp3-input-group {
-    #search-box {
-      &.bp3-input {
-        @include rtlSupportInvertedProp(padding, right, 0, 30px!important);
-      }
+.ScopedSearchBox {
+  &.bp3-input-group {
+    .bp3-input {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      padding: 0 30px!important;
     }
     .bp3-input-action {
       &:last-child {
@@ -21,58 +17,5 @@
         @include rtl(right, 0, initial);
       }
     }
-  }
-  &__icon {
-    display: flex;
-    align-items: center;
-    @include rtlSupportInvertedProp(margin, right, 15px !important, 0);
-  }
-
-  &__scoped-input {
-    &__scope-button {
-      white-space: nowrap;
-      color: white !important;
-      background: $gray1 !important;
-      box-shadow: none !important;
-      padding: 5px 10px;
-      font-weight: 500;
-
-      &.unclickable {
-        cursor: auto;
-      }
-
-      .bp3-icon {
-        color: white !important;
-        margin: 0 $aleph-icon-padding 0 0 !important;
-      }
-    }
-
-    &__popover {
-      .bp3-popover-content {
-        padding: 0 !important;
-      }
-
-      .bp3-menu {
-        background: $gray1 !important;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 5px !important;
-      }
-
-      .bp3-menu-item {
-        font-weight: 500;
-      }
-    }
-  }
-
-  &__search-tips {
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      display: none;
-    }
-  }
-
-  &__submit {
-    background-color: $blue3 !important;
-    border: none !important;
   }
 }

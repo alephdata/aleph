@@ -34,95 +34,78 @@ class QueryTestCase(TestCase):
                 except Exception:
                     pass
             if not has_equal:
-                self.fail('Item %r missing' % item1)
+                self.fail("Item %r missing" % item1)
 
     def test_no_text(self):
         q = query([])
-        self.assertEqual(q.get_text_query(), [{'match_all': {}}])
+        self.assertEqual(q.get_text_query(), [{"match_all": {}}])
 
     def test_has_text(self):
-        q = query([('q', 'search text')])
+        q = query([("q", "search text")])
         text_q = q.get_text_query()
-        self.assertEqual(text_q[0]['query_string']['query'],
-                         'search text')
+        self.assertEqual(text_q[0]["query_string"]["query"], "search text")
 
     def test_has_prefix(self):
-        q = query([('prefix', 'tex')])
+        q = query([("prefix", "tex")])
         text_q = q.get_text_query()
-        self.assertEqual(text_q[0]['match_phrase_prefix']['name'], 'tex')
+        self.assertEqual(text_q[0]["match_phrase_prefix"]["name"], "tex")
 
     def test_id_filter(self):
-        q = query([
-            ('filter:id', '5'),
-            ('filter:id', '8'),
-            ('filter:id', '2'),
-            ('filter:_id', '3')
-        ])
+        q = query(
+            [
+                ("filter:id", "5"),
+                ("filter:id", "8"),
+                ("filter:id", "2"),
+                ("filter:_id", "3"),
+            ]
+        )
 
-        self.assertEqual(q.get_filters(), [{
-            'ids': {
-                'values': ['8', '5', '2', '3']}
-            }
-        ])
+        self.assertEqual(q.get_filters(), [{"ids": {"values": ["8", "5", "2", "3"]}}])
 
     def test_filters(self):
-        q = query([
-            ('filter:key1', 'foo'),
-            ('filter:key1', 'bar'),
-            ('filter:key2', 'blah'),
-            ('filter:key2', 'blahblah'),
-            ('filter:gte:date', '2018'),
-        ])
+        q = query(
+            [
+                ("filter:key1", "foo"),
+                ("filter:key1", "bar"),
+                ("filter:key2", "blah"),
+                ("filter:key2", "blahblah"),
+                ("filter:gte:date", "2018"),
+            ]
+        )
 
-        self.assertEqual(q.get_filters(), [
-            {
-                'terms': {
-                    'key1': ['foo', 'bar']
-                }
-            },
-            {
-                'terms': {
-                    'key2': ['blah', 'blahblah']
-                }
-            },
-            {
-                'range': {
-                    'date': {
-                        'gte': '2018'
-                    }
-                }
-            }
-        ])
+        self.assertEqual(
+            q.get_filters(),
+            [
+                {"terms": {"key1": ["foo", "bar"]}},
+                {"terms": {"key2": ["blah", "blahblah"]}},
+                {"range": {"date": {"gte": "2018"}}},
+            ],
+        )
 
     def test_offset(self):
-        q = query([('offset', 10), ('limit', 100)])
+        q = query([("offset", 10), ("limit", 100)])
         body = q.get_body()
-        self.assertDictContainsSubset({'from': 10, 'size': 100}, body)
+        self.assertDictContainsSubset({"from": 10, "size": 100}, body)
 
     def test_post_filters(self):
-        q = query([
-            ('filter:key1', 'foo'),
-            ('post_filter:key2', 'foo'),
-            ('post_filter:key2', 'bar'),
-            ('post_filter:key3', 'blah'),
-            ('post_filter:key3', 'blahblah')
-        ])
-        self.assertEqual(q.get_filters(), [{
-            'term': {'key1': 'foo'}
-        }])
-        self.assertEqual(q.get_post_filters(), {
-            'bool': {
-                'filter': [
-                    {
-                        'terms': {
-                            'key2': ['foo', 'bar']
-                        }
-                    },
-                    {
-                        'terms': {
-                            'key3': ['blah', 'blahblah']
-                        }
-                    }
-                ]
-            }
-        })
+        q = query(
+            [
+                ("filter:key1", "foo"),
+                ("post_filter:key2", "foo"),
+                ("post_filter:key2", "bar"),
+                ("post_filter:key3", "blah"),
+                ("post_filter:key3", "blahblah"),
+            ]
+        )
+        self.assertEqual(q.get_filters(), [{"term": {"key1": "foo"}}])
+        self.assertEqual(
+            q.get_post_filters(),
+            {
+                "bool": {
+                    "filter": [
+                        {"terms": {"key2": ["foo", "bar"]}},
+                        {"terms": {"key3": ["blah", "blahblah"]}},
+                    ]
+                }
+            },
+        )

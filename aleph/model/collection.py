@@ -24,38 +24,38 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     # Category schema for collections.
     # TODO: should this be configurable?
     CATEGORIES = {
-        'news': lazy_gettext('News archives'),
-        'leak': lazy_gettext('Leaks'),
-        'land': lazy_gettext('Land registry'),
-        'gazette': lazy_gettext('Gazettes'),
-        'court': lazy_gettext('Court archives'),
-        'company': lazy_gettext('Company registries'),
-        'sanctions': lazy_gettext('Sanctions lists'),
-        'procurement': lazy_gettext('Procurement'),
-        'finance': lazy_gettext('Financial records'),
-        'grey': lazy_gettext('Grey literature'),
-        'library': lazy_gettext('Document libraries'),
-        'license': lazy_gettext('Licenses and concessions'),
-        'regulatory': lazy_gettext('Regulatory filings'),
-        'poi': lazy_gettext('Persons of interest'),
-        'customs': lazy_gettext('Customs declarations'),
-        'census': lazy_gettext('Population census'),
-        'transport': lazy_gettext('Air and maritime registers'),
-        'casefile': lazy_gettext('Personal datasets'),
-        'other': lazy_gettext('Other material')
+        "news": lazy_gettext("News archives"),
+        "leak": lazy_gettext("Leaks"),
+        "land": lazy_gettext("Land registry"),
+        "gazette": lazy_gettext("Gazettes"),
+        "court": lazy_gettext("Court archives"),
+        "company": lazy_gettext("Company registries"),
+        "sanctions": lazy_gettext("Sanctions lists"),
+        "procurement": lazy_gettext("Procurement"),
+        "finance": lazy_gettext("Financial records"),
+        "grey": lazy_gettext("Grey literature"),
+        "library": lazy_gettext("Document libraries"),
+        "license": lazy_gettext("Licenses and concessions"),
+        "regulatory": lazy_gettext("Regulatory filings"),
+        "poi": lazy_gettext("Persons of interest"),
+        "customs": lazy_gettext("Customs declarations"),
+        "census": lazy_gettext("Population census"),
+        "transport": lazy_gettext("Air and maritime registers"),
+        "casefile": lazy_gettext("Personal datasets"),
+        "other": lazy_gettext("Other material"),
     }
-    CASEFILE = 'casefile'
+    CASEFILE = "casefile"
 
     # How often a collection is updated:
     FREQUENCIES = {
-        'unknown': lazy_gettext('not known'),
-        'never': lazy_gettext('not updated'),
-        'daily': lazy_gettext('daily'),
-        'weekly': lazy_gettext('weekly'),
-        'monthly': lazy_gettext('monthly'),
-        'annual': lazy_gettext('annual'),
+        "unknown": lazy_gettext("not known"),
+        "never": lazy_gettext("not updated"),
+        "daily": lazy_gettext("daily"),
+        "weekly": lazy_gettext("weekly"),
+        "monthly": lazy_gettext("monthly"),
+        "annual": lazy_gettext("annual"),
     }
-    DEFAULT_FREQUENCY = 'unknown'
+    DEFAULT_FREQUENCY = "unknown"
 
     label = db.Column(db.Unicode)
     summary = db.Column(db.Unicode, nullable=True)
@@ -75,7 +75,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     # Run xref on entity changes:
     xref = db.Column(db.Boolean, default=False)
 
-    creator_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=True)
     creator = db.relationship(Role)
 
     def touch(self):
@@ -84,33 +84,35 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         db.session.add(self)
 
     def update(self, data, authz):
-        self.label = data.get('label', self.label)
-        self.summary = data.get('summary', self.summary)
-        self.publisher = data.get('publisher', self.publisher)
-        self.publisher_url = data.get('publisher_url', self.publisher_url)
+        self.label = data.get("label", self.label)
+        self.summary = data.get("summary", self.summary)
+        self.publisher = data.get("publisher", self.publisher)
+        self.publisher_url = data.get("publisher_url", self.publisher_url)
         if self.publisher_url is not None:
             self.publisher_url = stringify(self.publisher_url)
-        self.info_url = data.get('info_url', self.info_url)
+        self.info_url = data.get("info_url", self.info_url)
         if self.info_url is not None:
             self.info_url = stringify(self.info_url)
-        self.data_url = data.get('data_url', self.data_url)
+        self.data_url = data.get("data_url", self.data_url)
         if self.data_url is not None:
             self.data_url = stringify(self.data_url)
-        self.countries = ensure_list(data.get('countries', self.countries))
+        self.countries = ensure_list(data.get("countries", self.countries))
         self.countries = [registry.country.clean(val) for val in self.countries]  # noqa
-        self.languages = ensure_list(data.get('languages', self.languages))
-        self.languages = [registry.language.clean(val) for val in self.languages]  # noqa
-        self.frequency = data.get('frequency', self.frequency)
-        self.restricted = data.get('restricted', self.restricted)
-        self.xref = data.get('xref', self.xref)
+        self.languages = ensure_list(data.get("languages", self.languages))
+        self.languages = [
+            registry.language.clean(val) for val in self.languages
+        ]  # noqa
+        self.frequency = data.get("frequency", self.frequency)
+        self.restricted = data.get("restricted", self.restricted)
+        self.xref = data.get("xref", self.xref)
 
         # Some fields are editable only by admins in order to have
         # a strict separation between source evidence and case
         # material.
         if authz.is_admin:
-            self.category = data.get('category', self.category)
-            creator = ensure_dict(data.get('creator'))
-            creator_id = data.get('creator_id', creator.get('id'))
+            self.category = data.get("category", self.category)
+            creator = ensure_dict(data.get("creator"))
+            creator_id = data.get("creator_id", creator.get("id"))
             creator = Role.by_id(creator_id)
             if creator is not None:
                 self.creator = creator
@@ -149,37 +151,39 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     @property
     def ns(self):
-        if not hasattr(self, '_ns'):
+        if not hasattr(self, "_ns"):
             self._ns = Namespace(self.foreign_id)
         return self._ns
 
     def to_dict(self):
         data = self.to_dict_dates()
-        data['category'] = self.CASEFILE
+        data["category"] = self.CASEFILE
         if self.category in self.CATEGORIES:
-            data['category'] = self.category
-        data['frequency'] = self.DEFAULT_FREQUENCY
+            data["category"] = self.category
+        data["frequency"] = self.DEFAULT_FREQUENCY
         if self.frequency in self.FREQUENCIES:
-            data['frequency'] = self.frequency
-        data.update({
-            'id': stringify(self.id),
-            'collection_id': stringify(self.id),
-            'foreign_id': self.foreign_id,
-            'creator_id': stringify(self.creator_id),
-            'team_id': self.team_id,
-            'label': self.label,
-            'summary': self.summary,
-            'publisher': self.publisher,
-            'publisher_url': self.publisher_url,
-            'info_url': self.info_url,
-            'data_url': self.data_url,
-            'casefile': self.casefile,
-            'secret': self.secret,
-            'xref': self.xref,
-            'restricted': self.restricted,
-            'countries': registry.country.normalize_set(self.countries),
-            'languages': registry.language.normalize_set(self.languages),
-        })
+            data["frequency"] = self.frequency
+        data.update(
+            {
+                "id": stringify(self.id),
+                "collection_id": stringify(self.id),
+                "foreign_id": self.foreign_id,
+                "creator_id": stringify(self.creator_id),
+                "team_id": self.team_id,
+                "label": self.label,
+                "summary": self.summary,
+                "publisher": self.publisher,
+                "publisher_url": self.publisher_url,
+                "info_url": self.info_url,
+                "data_url": self.data_url,
+                "casefile": self.casefile,
+                "secret": self.secret,
+                "xref": self.xref,
+                "restricted": self.restricted,
+                "countries": registry.country.normalize_set(self.countries),
+                "languages": registry.language.normalize_set(self.languages),
+            }
+        )
         return data
 
     @classmethod
@@ -216,7 +220,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def create(cls, data, authz, created_at=None):
-        foreign_id = data.get('foreign_id') or make_textid()
+        foreign_id = data.get("foreign_id") or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
         if collection is None:
             collection = cls()
@@ -231,7 +235,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return collection
 
     def __repr__(self):
-        fmt = '<Collection(%r, %r, %r)>'
+        fmt = "<Collection(%r, %r, %r)>"
         return fmt % (self.id, self.foreign_id, self.label)
 
     def __str__(self):

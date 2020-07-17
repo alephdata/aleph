@@ -21,16 +21,22 @@ app = create_app()
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = (OP_INDEX, OP_XREF, OP_REINGEST, OP_REINDEX, OP_XREF_ITEM,
-              OP_LOAD_MAPPING, OP_FLUSH_MAPPING)
+OPERATIONS = (
+    OP_INDEX,
+    OP_XREF,
+    OP_REINGEST,
+    OP_REINDEX,
+    OP_XREF_ITEM,
+    OP_LOAD_MAPPING,
+    OP_FLUSH_MAPPING,
+)
 
 
 class AlephWorker(Worker):
-
     def boot(self):
-        self.often = get_rate_limit('often', unit=300, interval=1, limit=1)
-        self.hourly = get_rate_limit('hourly', unit=3600, interval=1, limit=1)
-        self.daily = get_rate_limit('daily', unit=3600, interval=24, limit=1)
+        self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
+        self.hourly = get_rate_limit("hourly", unit=3600, interval=1, limit=1)
+        self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
 
     def run_often(self):
         log.info("Self-check...")
@@ -58,7 +64,7 @@ class AlephWorker(Worker):
     def dispatch_task(self, collection, task):
         stage = task.stage
         payload = task.payload
-        sync = task.context.get('sync', False)
+        sync = task.context.get("sync", False)
         if stage.stage == OP_INDEX:
             index_many(stage, collection, sync=sync, **payload)
         if stage.stage == OP_LOAD_MAPPING:

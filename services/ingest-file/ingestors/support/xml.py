@@ -12,11 +12,13 @@ class XMLSupport(object):
     """Safe XML document parser."""
 
     def get_xml_parser(self, **kwargs):
-        return etree.XMLParser(ns_clean=True,
-                               recover=True,
-                               resolve_entities=False,
-                               no_network=True,
-                               **kwargs)
+        return etree.XMLParser(
+            ns_clean=True,
+            recover=True,
+            resolve_entities=False,
+            no_network=True,
+            **kwargs
+        )
 
     def parse_xml_path(self, file_path, **kwargs):
         if isinstance(file_path, Path):

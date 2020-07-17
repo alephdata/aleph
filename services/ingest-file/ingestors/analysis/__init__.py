@@ -13,7 +13,6 @@ log = logging.getLogger(__name__)
 
 
 class Analyzer(object):
-
     def __init__(self, dataset, entity):
         self.dataset = dataset
         self.entity = model.make_entity(entity.schema)
@@ -23,10 +22,10 @@ class Analyzer(object):
     def feed(self, entity):
         if not settings.ANALYZE_ENTITIES:
             return
-        if not entity.schema.is_a('Analyzable'):
+        if not entity.schema.is_a("Analyzable"):
             return
         # HACK: Tables will be mapped, don't try to tag them here.
-        if entity.schema.is_a('Table'):
+        if entity.schema.is_a("Table"):
             return
 
         texts = entity.get_type_values(registry.text)
@@ -42,6 +41,5 @@ class Analyzer(object):
             self.entity.add(prop, label, cleaned=True)
 
         if len(self.aggregator):
-            log.debug("Extracted %d tags: %r",
-                      len(self.aggregator), self.entity)
+            log.debug("Extracted %d tags: %r", len(self.aggregator), self.entity)
             self.dataset.put(self.entity)

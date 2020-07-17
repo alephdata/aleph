@@ -10,10 +10,10 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'aca5ebda9763'
-down_revision = 'ae4b1cec6294'
+revision = "aca5ebda9763"
+down_revision = "ae4b1cec6294"
 
-SKIP_COLUMNS = ['id', 'updated_at', 'created_at', 'entity_id']
+SKIP_COLUMNS = ["id", "updated_at", "created_at", "entity_id"]
 
 
 def clean_data(row):
@@ -27,46 +27,46 @@ def clean_data(row):
 
 
 def upgrade():
-    op.add_column('entity', sa.Column('data', postgresql.JSONB(), nullable=True))
-    op.add_column('entity', sa.Column('identifiers', postgresql.ARRAY(sa.Unicode()), nullable=True))
+    op.add_column("entity", sa.Column("data", postgresql.JSONB(), nullable=True))
+    op.add_column(
+        "entity",
+        sa.Column("identifiers", postgresql.ARRAY(sa.Unicode()), nullable=True),
+    )
     bind = op.get_bind()
     meta = sa.MetaData()
     meta.bind = bind
     meta.reflect()
-    entity_table = meta.tables['entity']
-    entity_other_name_table = meta.tables['entity_other_name']
-    entity_identifiers_table = meta.tables['entity_identifier']
+    entity_table = meta.tables["entity"]
+    entity_other_name_table = meta.tables["entity_other_name"]
+    entity_identifiers_table = meta.tables["entity_identifier"]
     rp = bind.execute(sa.select([entity_table]))
     while True:
         entity = rp.fetchone()
         if entity is None:
             break
 
-        data = {
-            'identifiers': [],
-            'other_names': []
-        }
+        data = {"identifiers": [], "other_names": []}
         data.update(clean_data(entity))
-        data.pop('name', None)
-        data.pop('type', None)
-        data.pop('state', None)
-        data.pop('deleted_at', None)
+        data.pop("name", None)
+        data.pop("type", None)
+        data.pop("state", None)
+        data.pop("deleted_at", None)
 
         q = sa.select([entity_other_name_table])
         q = q.where(entity_other_name_table.c.entity_id == entity.id)
         for row in bind.execute(q).fetchall():
             row = clean_data(row)
-            if not row.get('deleted_at'):
-                data['other_names'].append(row)
+            if not row.get("deleted_at"):
+                data["other_names"].append(row)
 
         identifiers = []
         q = sa.select([entity_identifiers_table])
         q = q.where(entity_identifiers_table.c.entity_id == entity.id)
         for row in bind.execute(q).fetchall():
             row = clean_data(row)
-            if not row.get('deleted_at'):
-                data['identifiers'].append(row)
-                ident = '%(scheme)s:%(identifier)s' % row
+            if not row.get("deleted_at"):
+                data["identifiers"].append(row)
+                ident = "%(scheme)s:%(identifier)s" % row
                 identifiers.append(ident)
 
         q = sa.update(entity_table).where(entity_table.c.id == entity.id)
@@ -77,6 +77,5 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_column('entity', 'identifiers')
-    op.drop_column('entity', 'data')
-    
+    op.drop_column("entity", "identifiers")
+    op.drop_column("entity", "data")

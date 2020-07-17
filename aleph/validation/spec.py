@@ -1,4 +1,3 @@
-
 DESCRIPTION = """
 Aleph is a powerful tool for people who follow the money. It helps
 investigators to securely access and search large amounts of data - no
@@ -45,87 +44,87 @@ cookies or any other type of stateful API.
 """
 
 spec_info = {
-    'description': DESCRIPTION,
-    'contact': {'url': 'https://github.com/alephdata/aleph'},
-    'license': {
-        'name': 'MIT',
-        'url': 'https://github.com/alephdata/aleph/blob/master/LICENSE.txt',
+    "description": DESCRIPTION,
+    "contact": {"url": "https://github.com/alephdata/aleph"},
+    "license": {
+        "name": "MIT",
+        "url": "https://github.com/alephdata/aleph/blob/master/LICENSE.txt",
     },
-    'x-logo': {
-        'altText': 'Aleph logo',
-        'url': 'https://avatars3.githubusercontent.com/u/26249985?s=200&v=4',
+    "x-logo": {
+        "altText": "Aleph logo",
+        "url": "https://avatars3.githubusercontent.com/u/26249985?s=200&v=4",
     },
 }
 
 spec_docs = {
-    'description': 'Find out more about Aleph, a suite of data analysis tools for investigators.',  # noqa
-    'url': 'https://docs.alephdata.org/',
+    "description": "Find out more about Aleph, a suite of data analysis tools for investigators.",  # noqa
+    "url": "https://docs.alephdata.org/",
 }
 
 spec_tags = [
     {
-        'description': 'Search, create and manage entities.',
-        'name': 'Entity',
-        'x-displayName': 'Entities and Search API',
+        "description": "Search, create and manage entities.",
+        "name": "Entity",
+        "x-displayName": "Entities and Search API",
     },
     {
-        'description': 'Create and manage collections.',
-        'name': 'Collection',
-        'x-displayName': 'Collections API',
+        "description": "Create and manage collections.",
+        "name": "Collection",
+        "x-displayName": "Collections API",
     },
     {
-        'description': 'Create and manage mappings.',
-        'name': 'Mapping',
-        'x-displayName': 'Mappings API',
+        "description": "Create and manage mappings.",
+        "name": "Mapping",
+        "x-displayName": "Mappings API",
     },
     {
-        'description': 'Create and manage VIS diagrams.',
-        'name': 'Diagram',
-        'x-displayName': 'VIS Diagrams API',
+        "description": "Create and manage VIS diagrams.",
+        "name": "Diagram",
+        "x-displayName": "VIS Diagrams API",
     },
     {
-        'description': 'Create and manage alerts.',
-        'name': 'Alert',
-        'x-displayName': 'Alerts API',
+        "description": "Create and manage alerts.",
+        "name": "Alert",
+        "x-displayName": "Alerts API",
     },
     {
-        'description': 'Download blobs from the archive.',
-        'name': 'Archive',
-        'x-displayName': 'Archive API',
+        "description": "Download blobs from the archive.",
+        "name": "Archive",
+        "x-displayName": "Archive API",
     },
     {
-        'description': 'Cross-reference entities of a collection with other collections.',  # noqa
-        'name': 'Xref',
-        'x-displayName': 'Cross-reference API',
+        "description": "Cross-reference entities of a collection with other collections.",  # noqa
+        "name": "Xref",
+        "x-displayName": "Cross-reference API",
     },
     {
-        'description': 'Manage users, groups and sessions',
-        'name': 'Role',
-        'x-displayName': 'Roles & Groups API',
+        "description": "Manage users, groups and sessions",
+        "name": "Role",
+        "x-displayName": "Roles & Groups API",
     },
     {
-        'description': 'Upload documents to a collection.',
-        'name': 'Ingest',
-        'x-displayName': 'Ingest API',
+        "description": "Upload documents to a collection.",
+        "name": "Ingest",
+        "x-displayName": "Ingest API",
     },
     {
-        'description': 'Fetch and manage notifications',
-        'name': 'Notification',
-        'x-displayName': 'Notifications API',
+        "description": "Fetch and manage notifications",
+        "name": "Notification",
+        "x-displayName": "Notifications API",
     },
     {
-        'description': 'Fetch and manage permissions on a collection',
-        'name': 'Permission',
-        'x-displayName': 'Permissions API',
+        "description": "Fetch and manage permissions on a collection",
+        "name": "Permission",
+        "x-displayName": "Permissions API",
     },
     {
-        'description': 'Fetch and delete query logs',
-        'name': 'Query Log',
-        'x-displayName': 'Query Log API',
+        "description": "Fetch and delete query logs",
+        "name": "Query Log",
+        "x-displayName": "Query Log API",
     },
     {
-        'description': 'System-wide APIs',
-        'name': 'System',
-        'x-displayName': 'System-wide API',
-    }
+        "description": "System-wide APIs",
+        "name": "System",
+        "x-displayName": "System-wide API",
+    },
 ]

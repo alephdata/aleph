@@ -14,11 +14,11 @@ NAME_MAX_LENGTH = 100
 NAME_MIN_LENGTH = 4
 # https://spacy.io/api/annotation#named-entities
 SPACY_TYPES = {
-    'PER': TAG_PERSON,
-    'PERSON': TAG_PERSON,
-    'ORG': TAG_COMPANY,
-    'LOC': TAG_LOCATION,
-    'GPE': TAG_LOCATION
+    "PER": TAG_PERSON,
+    "PERSON": TAG_PERSON,
+    "ORG": TAG_COMPANY,
+    "LOC": TAG_LOCATION,
+    "GPE": TAG_LOCATION,
 }
 
 
@@ -27,14 +27,14 @@ def clean_name(text):
         return
     text = clean_entity_name(text)
     text = collapse_spaces(text)
-    if text is None or len(text) <= NAME_MIN_LENGTH or ' ' not in text:
+    if text is None or len(text) <= NAME_MIN_LENGTH or " " not in text:
         return
     return text
 
 
 def _load_model(lang):
     """Load the spaCy model for the specified language"""
-    attr_name = '_nlp_%s' % lang
+    attr_name = "_nlp_%s" % lang
     if not hasattr(settings, attr_name):
         log.info("Loading spaCy model: %s..." % lang)
         try:

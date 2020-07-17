@@ -43,7 +43,7 @@ def temp_locale(temp):
     try:
         currlocale = locale.getlocale()
     except ValueError:
-        currlocale = ('en_US', 'UTF-8')
+        currlocale = ("en_US", "UTF-8")
     locale.setlocale(locale.LC_CTYPE, temp)
     yield
     locale.setlocale(locale.LC_CTYPE, currlocale)

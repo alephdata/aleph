@@ -11,8 +11,8 @@ from followthemoney import model
 from followthemoney.namespace import Namespace
 
 # revision identifiers, used by Alembic.
-revision = 'b3959bf8cc66'
-down_revision = '1519391870a0'
+revision = "b3959bf8cc66"
+down_revision = "1519391870a0"
 
 
 def upgrade():
@@ -20,8 +20,8 @@ def upgrade():
     meta = sa.MetaData()
     meta.bind = bind
     meta.reflect()
-    entity_table = meta.tables['entity']
-    collection_table = meta.tables['collection']
+    entity_table = meta.tables["entity"]
+    collection_table = meta.tables["collection"]
     q = sa.select([collection_table])
     crp = bind.execute(q)
     for collection in crp.fetchall():
@@ -33,20 +33,19 @@ def upgrade():
             entity = erp.fetchone()
             if not entity:
                 break
-            proxy = model.get_proxy({
-                'id': entity.id,
-                'schema': entity.schema,
-                'properties': entity.data
-            }, cleaned=False)
-            proxy.add('name', entity.name, quiet=True, cleaned=False)
+            proxy = model.get_proxy(
+                {"id": entity.id, "schema": entity.schema, "properties": entity.data},
+                cleaned=False,
+            )
+            proxy.add("name", entity.name, quiet=True, cleaned=False)
             proxy = ns.apply(proxy)
             q = sa.update(entity_table)
             q = q.where(entity_table.c.id == entity.id)
             q = q.values(id=proxy.id, data=proxy.properties)
             bind.execute(q)
 
-    op.drop_column('entity', 'foreign_id')
-    op.drop_column('entity', 'name')
+    op.drop_column("entity", "foreign_id")
+    op.drop_column("entity", "name")
 
 
 def downgrade():

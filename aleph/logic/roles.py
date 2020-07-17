@@ -31,32 +31,32 @@ def get_role(role_id):
 def challenge_role(data):
     """Given an email address, this will send out a message to allow
     the user to then register an account."""
-    signature = Role.SIGNATURE.dumps(data['email'])
-    url = '{}activate/{}'.format(settings.APP_UI_URL, signature)
-    role = Role(email=data['email'], name=data['email'])
-    params = dict(url=url,
-                  role=role,
-                  ui_url=settings.APP_UI_URL,
-                  app_title=settings.APP_TITLE)
-    plain = render_template('email/registration_code.txt', **params)
-    html = render_template('email/registration_code.html', **params)
+    signature = Role.SIGNATURE.dumps(data["email"])
+    url = "{}activate/{}".format(settings.APP_UI_URL, signature)
+    role = Role(email=data["email"], name=data["email"])
+    params = dict(
+        url=url, role=role, ui_url=settings.APP_UI_URL, app_title=settings.APP_TITLE
+    )
+    plain = render_template("email/registration_code.txt", **params)
+    html = render_template("email/registration_code.html", **params)
     log.info("Challenge: %s", plain)
-    email_role(role, gettext('Registration'), html=html, plain=plain)
+    email_role(role, gettext("Registration"), html=html, plain=plain)
 
 
 def create_system_roles():
     log.info("Creating system roles...")
-    Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM, 'All visitors')
-    Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM, 'Logged-in users')
+    Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM, "All visitors")
+    Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM, "Logged-in users")
     Role.load_cli_user()
     db.session.commit()
 
 
 def create_user(email, name, password, is_admin=False):
     """Create a password-based user."""
-    foreign_id = 'password:{}'.format(email)
-    role = Role.load_or_create(foreign_id, Role.USER, name,
-                               email=email, is_admin=is_admin)
+    foreign_id = "password:{}".format(email)
+    role = Role.load_or_create(
+        foreign_id, Role.USER, name, email=email, is_admin=is_admin
+    )
     if password is not None:
         role.set_password(password)
     db.session.add(role)
@@ -105,8 +105,9 @@ def delete_role(role):
 
 
 def refresh_role(role, sync=False):
-    cache.kv.delete(cache.object_key(Role, role.id),
-                    cache.object_key(Role, role.id, 'channels'))
+    cache.kv.delete(
+        cache.object_key(Role, role.id), cache.object_key(Role, role.id, "channels")
+    )
     Authz.flush_role(role.id)
 
 

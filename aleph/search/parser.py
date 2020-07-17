@@ -11,8 +11,9 @@ log = logging.getLogger(__name__)
 
 class QueryParser(object):
     """Hold state for common query parameters."""
-    SORT_ASC = 'asc'
-    SORT_DESC = 'desc'
+
+    SORT_ASC = "asc"
+    SORT_DESC = "desc"
     SORT_DEFAULT = SORT_ASC
     SORTS = [SORT_ASC, SORT_DESC]
 
@@ -21,15 +22,15 @@ class QueryParser(object):
             args = OrderedMultiDict(args)
         self.args = args
         self.authz = authz
-        self.offset = max(0, self.getint('offset', 0))
+        self.offset = max(0, self.getint("offset", 0))
         if limit is None:
-            limit = min(max_limit, max(0, self.getint('limit', 20)))
+            limit = min(max_limit, max(0, self.getint("limit", 20)))
         self.limit = limit
-        self.text = sanitize_text(self.get('q'))
-        self.prefix = sanitize_text(self.get('prefix'))
+        self.text = sanitize_text(self.get("q"))
+        self.prefix = sanitize_text(self.get("prefix"))
 
         # Disable or enable query caching
-        self.cache = self.getbool('cache', settings.CACHE)
+        self.cache = self.getbool("cache", settings.CACHE)
 
     @property
     def page(self):
@@ -42,29 +43,29 @@ class QueryParser(object):
         for key in self.args.keys():
             if not key.startswith(prefix):
                 continue
-            name = key[len(prefix):]
+            name = key[len(prefix) :]
             items[name] = set(self.getlist(key))
         return items
 
     @property
     def filters(self):
-        return self.prefixed_items('filter:')
+        return self.prefixed_items("filter:")
 
     @property
     def excludes(self):
-        return self.prefixed_items('exclude:')
+        return self.prefixed_items("exclude:")
 
     @property
     def empties(self):
-        return self.prefixed_items('empty:')
+        return self.prefixed_items("empty:")
 
     @property
     def sorts(self):
         sort = []
-        for value in self.getlist('sort'):
+        for value in self.getlist("sort"):
             direction = self.SORT_DEFAULT
-            if ':' in value:
-                value, direction = value.rsplit(':', 1)
+            if ":" in value:
+                value, direction = value.rsplit(":", 1)
             if direction in self.SORTS:
                 sort.append((value, direction))
         return sort
@@ -72,16 +73,16 @@ class QueryParser(object):
     @property
     def items(self):
         for (key, value) in self.args.items(multi=True):
-            if key == 'offset':
+            if key == "offset":
                 continue
-            value = sanitize_text(value, encoding='utf-8')
+            value = sanitize_text(value, encoding="utf-8")
             if value is not None:
                 yield key, value
 
     def getlist(self, name, default=None):
         values = []
         for value in self.args.getlist(name):
-            value = sanitize_text(value, encoding='utf-8')
+            value = sanitize_text(value, encoding="utf-8")
             if value is not None:
                 values.append(value)
         return values or (default or [])
@@ -110,14 +111,14 @@ class QueryParser(object):
 
     def to_dict(self):
         parser = {
-            'text': self.text,
-            'prefix': self.prefix,
-            'offset': self.offset,
-            'limit': self.limit,
-            'filters': {key: list(val) for key, val in self.filters.items()},
-            'sorts': self.sorts,
-            'empties': {key: list(val) for key, val in self.empties.items()},
-            'excludes': {key: list(val) for key, val in self.excludes.items()},
+            "text": self.text,
+            "prefix": self.prefix,
+            "offset": self.offset,
+            "limit": self.limit,
+            "filters": {key: list(val) for key, val in self.filters.items()},
+            "sorts": self.sorts,
+            "empties": {key: list(val) for key, val in self.empties.items()},
+            "excludes": {key: list(val) for key, val in self.excludes.items()},
         }
         return parser
 
@@ -134,32 +135,32 @@ class SearchQueryParser(QueryParser):
         # Set of field names to facet by (i.e. include the count of distinct
         # values in the result set). These must match 'keyword' fields in the
         # index.
-        self.facet_names = set(self.getlist('facet'))
+        self.facet_names = set(self.getlist("facet"))
         filter_names = list(self.filters.keys())
         self.facet_filters = self.facet_names.intersection(filter_names)
 
         # Include highlighted fragments of matching text in the result.
-        self.highlight = self.getbool('highlight', False)
+        self.highlight = self.getbool("highlight", False)
         self.highlight = self.highlight and settings.RESULT_HIGHLIGHT
         self.highlight = self.highlight and self.text
         # Length of each snippet in characters
-        self.highlight_length = self.getint('highlight_length', 100)
+        self.highlight_length = self.getint("highlight_length", 100)
         # Number of snippets per document, 0 = return full document text.
-        self.highlight_count = self.getint('highlight_count', 1)
+        self.highlight_count = self.getint("highlight_count", 1)
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""
-        return self.getint('facet_size:%s' % name, 50)
+        return self.getint("facet_size:%s" % name, 50)
 
     def get_facet_total(self, name):
         """Flag to perform a count of the total number of distinct values."""
-        return self.getbool('facet_total:%s' % name, False)
+        return self.getbool("facet_total:%s" % name, False)
 
     def get_facet_values(self, name):
         """Flag to disable returning actual values (i.e. count only)."""
         if self.get_facet_size(name) == 0:
             return False
-        return self.getbool('facet_values:%s' % name, True)
+        return self.getbool("facet_values:%s" % name, True)
 
     def get_facet_interval(self, name):
         """Interval to facet on when faceting on date properties
@@ -167,9 +168,9 @@ class SearchQueryParser(QueryParser):
         See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-datehistogram-aggregation.html#calendar_intervals   # noqa
         for available options for possible values
         """
-        return self.get('facet_interval:%s' % name)
+        return self.get("facet_interval:%s" % name)
 
     def to_dict(self):
         parser = super(SearchQueryParser, self).to_dict()
-        parser['facet_filters'] = list(self.facet_filters)
+        parser["facet_filters"] = list(self.facet_filters)
         return parser

@@ -1,30 +1,46 @@
 @import "src/app/variables.scss";
 @import "src/app/mixins.scss";
 
-$notification-items-padding: $aleph-grid-size/3;
+$notification-items-padding: 1px;
 
 .Notification {
-  padding: $aleph-grid-size;
+  padding: $aleph-grid-size*1.3 0;
   line-height: 1.5em;
   border-bottom: 1px solid $aleph-border-color;
   display: flex;
   justify-content: space-between;
 
   .notification-action {
-    display: flex;
-    & > * {
-      padding: 0 $notification-items-padding;
-    }
-    .bp3-icon {
-      @include rtlSupportInvertedProp(margin, right, $notification-items-padding, null);
-    }
     .param {
       font-weight: bold;
+      .bp3-icon, .bp3-icon svg {
+        @include rtlSupportInvertedProp(margin, right, $notification-items-padding*1.5, null);
+      }
+      .Role {
+        span {
+          @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
+        }
+      }
+    }
+    .token {
+      @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
+    }
+
+    .bp3-icon.left-icon {
+      @include rtlSupportInvertedProp(padding, right, 3px !important, null);
+    }
+
+    & > * {
+      padding: 0 $notification-items-padding;
+      display: inline;
     }
   }
 
   .timestamp {
     color: $aleph-greyed-text;
+    white-space: nowrap;
+    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*2, null);
+    @include rtl(text-align, right, left);
   }
 
   .EntityLabel {

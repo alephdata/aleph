@@ -18,7 +18,6 @@ import Mention from './Mention';
 import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
-import Suggest from './Suggest';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
 import ErrorSection from './ErrorSection';
@@ -33,6 +32,7 @@ import Summary from './Summary';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
 import ResultText from './ResultText';
+import SelectWrapper from './SelectWrapper';
 
 
 export {
@@ -55,7 +55,6 @@ export {
   Property,
   Role,
   Schema,
-  Suggest,
   SectionLoading,
   TextLoading,
   ErrorSection,
@@ -71,6 +70,7 @@ export {
   QueryText,
   ResultCount,
   ResultText,
+  SelectWrapper,
 };
 
 export * from './types';

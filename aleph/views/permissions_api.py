@@ -8,10 +8,10 @@ from aleph.logic.collections import update_collection
 from aleph.views.serializers import PermissionSerializer
 from aleph.views.util import get_db_collection, jsonify, parse_request
 
-blueprint = Blueprint('permissions_api', __name__)
+blueprint = Blueprint("permissions_api", __name__)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/permissions')
+@blueprint.route("/api/2/collections/<int:collection_id>/permissions")
 def index(collection_id):
     """
     ---
@@ -64,22 +64,22 @@ def index(collection_id):
     for role in roles:
         if collection.casefile and role.is_public:
             continue
-        permissions.append({
-            'collection_id': collection.id,
-            'write': False,
-            'read': False,
-            'role_id': str(role.id)
-        })
+        permissions.append(
+            {
+                "collection_id": collection.id,
+                "write": False,
+                "read": False,
+                "role_id": str(role.id),
+            }
+        )
 
     permissions = PermissionSerializer().serialize_many(permissions)
-    return jsonify({
-        'total': len(permissions),
-        'results': permissions
-    })
+    return jsonify({"total": len(permissions), "results": permissions})
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/permissions',
-                 methods=['POST', 'PUT'])
+@blueprint.route(
+    "/api/2/collections/<int:collection_id>/permissions", methods=["POST", "PUT"]
+)
 def update(collection_id):
     """
     ---
@@ -117,21 +117,23 @@ def update(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    for permission in parse_request('PermissionUpdateList'):
-        role_obj = ensure_dict(permission.get('role'))
-        role_id = permission.get('role_id', role_obj.get('id'))
+    for permission in parse_request("PermissionUpdateList"):
+        role_obj = ensure_dict(permission.get("role"))
+        role_id = permission.get("role_id", role_obj.get("id"))
         role = Role.by_id(role_id)
         if not check_visible(role, request.authz):
             continue
         if role.is_public:
-            permission['write'] = False
+            permission["write"] = False
         if collection.casefile and role.is_public:
-            permission['read'] = False
+            permission["read"] = False
 
-        update_permission(role,
-                          collection,
-                          permission['read'],
-                          permission['write'],
-                          editor_id=request.authz.id)
+        update_permission(
+            role,
+            collection,
+            permission["read"],
+            permission["write"],
+            editor_id=request.authz.id,
+        )
     update_collection(collection)
     return index(collection_id)

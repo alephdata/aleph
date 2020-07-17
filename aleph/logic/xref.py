@@ -28,15 +28,11 @@ def _query_item(collection, entity):
     if query == none_query():
         return
 
-    query = {
-        'query': query,
-        'size': 100,
-        '_source': {'includes': PROXY_INCLUDES}
-    }
+    query = {"query": query, "size": 100, "_source": {"includes": PROXY_INCLUDES}}
     matchable = list(entity.schema.matchable_schemata)
     index = entities_read_index(schema=matchable)
     result = es.search(index=index, body=query)
-    for result in result.get('hits').get('hits'):
+    for result in result.get("hits").get("hits"):
         result = unpack_result(result)
         if result is None:
             continue
@@ -45,7 +41,7 @@ def _query_item(collection, entity):
         if score >= SCORE_CUTOFF:
             # log.debug('Match: %r <-[%.3f]-> %r',
             #           entity.caption, score, match.caption)
-            yield score, entity, result.get('collection_id'), match
+            yield score, entity, result.get("collection_id"), match
 
 
 def _query_matches(collection, entity_ids):
@@ -62,7 +58,7 @@ def xref_item(stage, collection, entity_id=None, batch=50):
     # entity one by one, we do it 101 at a time. This avoids sending redudant
     # queries to the database and elasticsearch, making cross-ref much faster.
     for task in stage.get_tasks(limit=batch):
-        entity_ids.append(task.payload.get('entity_id'))
+        entity_ids.append(task.payload.get("entity_id"))
     matches = _query_matches(collection, entity_ids)
     index.index_matches(collection, matches, sync=False)
     stage.mark_done(len(entity_ids) - 1)
@@ -74,55 +70,61 @@ def xref_collection(stage, collection):
     matchable = [s.name for s in model if s.matchable]
     entities = iter_entities(collection_id=collection.id, schemata=matchable)
     for entity in entities:
-        queue_task(collection, OP_XREF_ITEM, job_id=stage.job.id,
-                   payload={'entity_id': entity.get('id')})
+        queue_task(
+            collection,
+            OP_XREF_ITEM,
+            job_id=stage.job.id,
+            payload={"entity_id": entity.get("id")},
+        )
 
 
 def _format_date(proxy):
     dates = proxy.get_type_values(registry.date)
     if not len(dates):
-        return ''
+        return ""
     return min(dates)
 
 
 def _format_country(proxy):
     countries = [c.upper() for c in proxy.countries]
-    return ', '.join(countries)
+    return ", ".join(countries)
 
 
 def _iter_match_batch(stub, sheet, batch):
     matchable = [s.name for s in model if s.matchable]
     entities = set()
     for match in batch:
-        entities.add(match.get('entity_id'))
-        entities.add(match.get('match_id'))
-        resolver.queue(stub, Collection, match.get('match_collection_id'))
+        entities.add(match.get("entity_id"))
+        entities.add(match.get("match_id"))
+        resolver.queue(stub, Collection, match.get("match_collection_id"))
 
     resolver.resolve(stub)
     entities = entities_by_ids(list(entities), schemata=matchable)
-    entities = {e.get('id'): e for e in entities}
+    entities = {e.get("id"): e for e in entities}
 
     for obj in batch:
-        entity = entities.get(str(obj.get('entity_id')))
-        match = entities.get(str(obj.get('match_id')))
-        collection_id = obj.get('match_collection_id')
+        entity = entities.get(str(obj.get("entity_id")))
+        match = entities.get(str(obj.get("match_id")))
+        collection_id = obj.get("match_collection_id")
         collection = resolver.get(stub, Collection, collection_id)
         if entity is None or match is None or collection is None:
             continue
         eproxy = model.get_proxy(entity)
         mproxy = model.get_proxy(match)
-        sheet.append([
-            obj.get('score'),
-            eproxy.caption,
-            _format_date(eproxy),
-            _format_country(eproxy),
-            collection.get('label'),
-            mproxy.caption,
-            _format_date(mproxy),
-            _format_country(mproxy),
-            entity_url(eproxy.id),
-            entity_url(mproxy.id),
-        ])
+        sheet.append(
+            [
+                obj.get("score"),
+                eproxy.caption,
+                _format_date(eproxy),
+                _format_country(eproxy),
+                collection.get("label"),
+                mproxy.caption,
+                _format_date(mproxy),
+                _format_country(mproxy),
+                entity_url(eproxy.id),
+                entity_url(mproxy.id),
+            ]
+        )
 
 
 def export_matches(collection, authz):
@@ -130,18 +132,18 @@ def export_matches(collection, authz):
     to an Excel formatted export."""
     excel = ExcelWriter()
     headers = [
-        'Score',
-        'Entity Name',
-        'Entity Date',
-        'Entity Countries',
-        'Candidate Collection',
-        'Candidate Name',
-        'Candidate Date',
-        'Candidate Countries',
-        'Entity Link',
-        'Candidate Link',
+        "Score",
+        "Entity Name",
+        "Entity Date",
+        "Entity Countries",
+        "Candidate Collection",
+        "Candidate Name",
+        "Candidate Date",
+        "Candidate Countries",
+        "Entity Link",
+        "Candidate Link",
     ]
-    sheet = excel.make_sheet('Cross-reference', headers)
+    sheet = excel.make_sheet("Cross-reference", headers)
     batch = []
     for match in index.iter_matches(collection, authz):
         batch.append(match)

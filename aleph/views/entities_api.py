@@ -21,11 +21,11 @@ from aleph.views.serializers import EntitySerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('entities_api', __name__)
+blueprint = Blueprint("entities_api", __name__)
 
 
-@blueprint.route('/api/2/search', methods=['GET'])
-@blueprint.route('/api/2/entities', methods=['GET'])
+@blueprint.route("/api/2/search", methods=["GET"])
+@blueprint.route("/api/2/entities", methods=["GET"])
 def index():
     """
     ---
@@ -128,22 +128,18 @@ def index():
     # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.args, request.authz)
     if parser.text:
-        QueryLog.save(request.authz.id,
-                      request._session_id,
-                      parser.text)
+        QueryLog.save(request.authz.id, request._session_id, parser.text)
         db.session.commit()
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
     links = {}
     if request.authz.logged_in and result.total <= MAX_PAGE:
         query = list(request.args.items(multi=True))
-        links['export'] = url_for('entities_api.export',
-                                  _authorize=True,
-                                  _query=query)
-    return EntitySerializer.jsonify_result(result, extra={'links': links})
+        links["export"] = url_for("entities_api.export", _authorize=True, _query=query)
+    return EntitySerializer.jsonify_result(result, extra={"links": links})
 
 
-@blueprint.route('/api/2/search/export', methods=['GET'])  # noqa
+@blueprint.route("/api/2/search/export", methods=["GET"])  # noqa
 def export():
     """
     ---
@@ -173,13 +169,13 @@ def export():
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
     stream = export_entities(request, result)
-    response = Response(stream, mimetype='application/zip')
-    disposition = 'attachment; filename={}'.format('Query_export.zip')
-    response.headers['Content-Disposition'] = disposition
+    response = Response(stream, mimetype="application/zip")
+    disposition = "attachment; filename={}".format("Query_export.zip")
+    response.headers["Content-Disposition"] = disposition
     return response
 
 
-@blueprint.route('/api/2/match', methods=['POST'])
+@blueprint.route("/api/2/match", methods=["POST"])
 def match():
     """
     ---
@@ -210,16 +206,15 @@ def match():
       tags:
       - Entity
     """
-    entity = parse_request('EntityUpdate')
+    entity = parse_request("EntityUpdate")
     entity = model.get_proxy(entity)
     tag_request(schema=entity.schema.name, caption=entity.caption)
-    collection_ids = request.args.getlist('collection_ids')
-    result = MatchQuery.handle(request, entity=entity,
-                               collection_ids=collection_ids)
+    collection_ids = request.args.getlist("collection_ids")
+    result = MatchQuery.handle(request, entity=entity, collection_ids=collection_ids)
     return EntitySerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
+@blueprint.route("/api/2/entities", methods=["POST", "PUT"])
 def create():
     """
     ---
@@ -246,20 +241,21 @@ def create():
       tags:
         - Entity
     """
-    data = parse_request('EntityCreate')
+    data = parse_request("EntityCreate")
     collection = get_nested_collection(data, request.authz.WRITE)
-    data.pop('id', None)
-    validate = get_flag('validate', default=False)
-    entity_id = upsert_entity(data, collection, validate=validate,
-                              authz=request.authz, sync=True)
+    data.pop("id", None)
+    validate = get_flag("validate", default=False)
+    entity_id = upsert_entity(
+        data, collection, validate=validate, authz=request.authz, sync=True
+    )
     db.session.commit()
     tag_request(entity_id=entity_id, collection_id=str(collection.id))
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
 
 
-@blueprint.route('/api/2/documents/<entity_id>', methods=['GET'])
-@blueprint.route('/api/2/entities/<entity_id>', methods=['GET'])
+@blueprint.route("/api/2/documents/<entity_id>", methods=["GET"])
+@blueprint.route("/api/2/entities/<entity_id>", methods=["GET"])
 def view(entity_id):
     """
     ---
@@ -283,19 +279,20 @@ def view(entity_id):
       - Entity
     """
     enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ,
-                              excludes=['text', 'numeric.*'])
-    tag_request(collection_id=entity.get('collection_id'))
+    entity = get_index_entity(
+        entity_id, request.authz.READ, excludes=["text", "numeric.*"]
+    )
+    tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
-    html = proxy.first('bodyHtml', quiet=True)
-    source_url = proxy.first('sourceUrl', quiet=True)
-    encoding = proxy.first('encoding', quiet=True)
-    entity['safeHtml'] = sanitize_html(html, source_url, encoding=encoding)
-    entity['shallow'] = False
+    html = proxy.first("bodyHtml", quiet=True)
+    source_url = proxy.first("sourceUrl", quiet=True)
+    encoding = proxy.first("encoding", quiet=True)
+    entity["safeHtml"] = sanitize_html(html, source_url, encoding=encoding)
+    entity["shallow"] = False
     return EntitySerializer.jsonify(entity)
 
 
-@blueprint.route('/api/2/entities/<entity_id>/similar', methods=['GET'])
+@blueprint.route("/api/2/entities/<entity_id>/similar", methods=["GET"])
 def similar(entity_id):
     """
     ---
@@ -333,13 +330,13 @@ def similar(entity_id):
     """
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
-    tag_request(collection_id=entity.get('collection_id'))
+    tag_request(collection_id=entity.get("collection_id"))
     entity = model.get_proxy(entity)
     result = MatchQuery.handle(request, entity=entity)
     return EntitySerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/entities/<entity_id>/references', methods=['GET'])
+@blueprint.route("/api/2/entities/<entity_id>/references", methods=["GET"])
 def references(entity_id):
     """
     ---
@@ -373,22 +370,16 @@ def references(entity_id):
     """
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
-    tag_request(collection_id=entity.get('collection_id'))
+    tag_request(collection_id=entity.get("collection_id"))
     results = []
     for prop, total in entity_references(entity, request.authz):
-        results.append({
-            'count': total,
-            'property': prop,
-            'schema': prop.schema.name,
-        })
-    return jsonify({
-        'status': 'ok',
-        'total': len(results),
-        'results': results
-    })
+        results.append(
+            {"count": total, "property": prop, "schema": prop.schema.name,}
+        )
+    return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
-@blueprint.route('/api/2/entities/<entity_id>/tags', methods=['GET'])
+@blueprint.route("/api/2/entities/<entity_id>/tags", methods=["GET"])
 def tags(entity_id):
     """
     ---
@@ -422,27 +413,20 @@ def tags(entity_id):
     """
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
-    tag_request(collection_id=entity.get('collection_id'))
+    tag_request(collection_id=entity.get("collection_id"))
     results = []
     for (field, value, total) in entity_tags(entity, request.authz):
-        qvalue = quote(value.encode('utf-8'))
-        key = ('filter:%s' % field, qvalue)
-        results.append({
-            'id': query_string([key]),
-            'value': value,
-            'field': field,
-            'count': total,
-        })
+        qvalue = quote(value.encode("utf-8"))
+        key = ("filter:%s" % field, qvalue)
+        results.append(
+            {"id": query_string([key]), "value": value, "field": field, "count": total,}
+        )
 
-    results.sort(key=lambda p: p['count'], reverse=True)
-    return jsonify({
-        'status': 'ok',
-        'total': len(results),
-        'results': results
-    })
+    results.sort(key=lambda p: p["count"], reverse=True)
+    return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
-@blueprint.route('/api/2/entities/<entity_id>', methods=['POST', 'PUT'])
+@blueprint.route("/api/2/entities/<entity_id>", methods=["POST", "PUT"])
 def update(entity_id):
     """
     ---
@@ -474,24 +458,24 @@ def update(entity_id):
       tags:
       - Entity
     """
-    data = parse_request('EntityUpdate')
+    data = parse_request("EntityUpdate")
     try:
         entity = get_index_entity(entity_id, request.authz.WRITE)
-        collection = get_db_collection(entity.get('collection_id'),
-                                       request.authz.WRITE)
+        collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
     except NotFound:
         collection = get_nested_collection(data, request.authz.WRITE)
     tag_request(collection_id=collection.id)
-    data['id'] = entity_id
-    sync = get_flag('sync', default=True)
-    validate = get_flag('validate', default=False)
-    entity_id = upsert_entity(data, collection, validate=validate,
-                              authz=request.authz, sync=sync)
+    data["id"] = entity_id
+    sync = get_flag("sync", default=True)
+    validate = get_flag("validate", default=False)
+    entity_id = upsert_entity(
+        data, collection, validate=validate, authz=request.authz, sync=sync
+    )
     db.session.commit()
     return view(entity_id)
 
 
-@blueprint.route('/api/2/entities/<entity_id>', methods=['DELETE'])
+@blueprint.route("/api/2/entities/<entity_id>", methods=["DELETE"])
 def delete(entity_id):
     """
     ---
@@ -511,15 +495,14 @@ def delete(entity_id):
       - Entity
     """
     entity = get_index_entity(entity_id, request.authz.WRITE)
-    collection = get_db_collection(entity.get('collection_id'),
-                                   request.authz.WRITE)
+    collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
     tag_request(collection_id=collection.id)
-    delete_entity(collection, entity, sync=get_flag('sync', True))
+    delete_entity(collection, entity, sync=get_flag("sync", True))
     db.session.commit()
-    return ('', 204)
+    return ("", 204)
 
 
-@blueprint.route('/api/2/entities/<entity_id>/expand', methods=['GET'])
+@blueprint.route("/api/2/entities/<entity_id>/expand", methods=["GET"])
 def expand(entity_id):
     """Returns a list of diagrams for the role
     ---
@@ -568,25 +551,31 @@ def expand(entity_id):
       - Entity
     """
     entity = get_index_entity(entity_id, request.authz.READ)
-    edge_types = request.args.getlist('edge_types')
-    collection_id = entity.get('collection_id')
+    edge_types = request.args.getlist("edge_types")
+    collection_id = entity.get("collection_id")
     tag_request(collection_id=collection_id)
-    parser = QueryParser(request.args, request.authz,
-                         max_limit=MAX_EXPAND_ENTITIES)
-    properties = parser.filters.get('property')
+    parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
+    properties = parser.filters.get("property")
     results = []
     for (prop, total, proxies) in entity_expand(
-        entity, collection_ids=[collection_id],
-        edge_types=edge_types, properties=properties, authz=request.authz,
-        limit=parser.limit
+        entity,
+        collection_ids=[collection_id],
+        edge_types=edge_types,
+        properties=properties,
+        authz=request.authz,
+        limit=parser.limit,
     ):
-        results.append({
-            'count': total,
-            'property': prop.name,
-            'entities': [proxy.to_dict() for proxy in proxies]
-        })
-    return jsonify({
-        'status': 'ok',
-        'total': sum(result['count'] for result in results),
-        'results': results
-    })
+        results.append(
+            {
+                "count": total,
+                "property": prop.name,
+                "entities": [proxy.to_dict() for proxy in proxies],
+            }
+        )
+    return jsonify(
+        {
+            "status": "ok",
+            "total": sum(result["count"] for result in results),
+            "results": results,
+        }
+    )

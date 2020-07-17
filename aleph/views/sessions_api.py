@@ -15,10 +15,10 @@ from aleph.views.util import get_url_path, parse_request
 from aleph.views.util import require, jsonify
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('sessions_api', __name__)
+blueprint = Blueprint("sessions_api", __name__)
 
 
-@blueprint.route('/api/2/sessions/login', methods=['POST'])
+@blueprint.route("/api/2/sessions/login", methods=["POST"])
 def password_login():
     """Provides email and password authentication.
     ---
@@ -46,25 +46,23 @@ def password_login():
       - Role
     """
     require(settings.PASSWORD_LOGIN)
-    data = parse_request('Login')
-    role = Role.by_email(data.get('email'))
+    data = parse_request("Login")
+    role = Role.by_email(data.get("email"))
     if role is None or not role.has_password:
         raise BadRequest(gettext("Invalid user or password."))
 
-    if not role.check_password(data.get('password')):
+    if not role.check_password(data.get("password")):
         raise BadRequest(gettext("Invalid user or password."))
 
+    role.touch()
     db.session.commit()
     update_role(role)
     authz = Authz.from_role(role)
     request.authz = authz
-    return jsonify({
-        'status': 'ok',
-        'token': authz.to_token(role=role)
-    })
+    return jsonify({"status": "ok", "token": authz.to_token(role=role)})
 
 
-@blueprint.route('/api/2/sessions/oauth')
+@blueprint.route("/api/2/sessions/oauth")
 def oauth_init():
     """Init OAuth auth flow.
     ---
@@ -78,12 +76,12 @@ def oauth_init():
       - Role
     """
     require(settings.OAUTH)
-    url = url_for('.oauth_callback')
-    state = request.args.get('next', request.referrer)
+    url = url_for(".oauth_callback")
+    state = request.args.get("next", request.referrer)
     return oauth.provider.authorize_redirect(url, state=state)
 
 
-@blueprint.route('/api/2/sessions/callback')
+@blueprint.route("/api/2/sessions/callback")
 def oauth_callback():
     require(settings.OAUTH)
     try:
@@ -106,8 +104,8 @@ def oauth_callback():
     log.info("Logged in: %r", role)
     request.authz = Authz.from_role(role)
     token = request.authz.to_token(role=role)
-    token = token.decode('utf-8')
-    next_path = get_url_path(request.args.get('state'))
+    token = token.decode("utf-8")
+    next_path = get_url_path(request.args.get("state"))
     next_url = ui_url(settings.OAUTH_UI_CALLBACK, next=next_path)
-    next_url = '%s#token=%s' % (next_url, token)
+    next_url = "%s#token=%s" % (next_url, token)
     return redirect(next_url)
