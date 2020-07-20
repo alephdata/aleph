@@ -6,7 +6,7 @@ import c from 'classnames';
 
 import {
   Country, Collection, Entity, FileSize, Date, Skeleton,
-} from 'src/components/common';
+} from 'components/common';
 /* eslint-disable */
 
 class EntityTableViewerRow extends Component {

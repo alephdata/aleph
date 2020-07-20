@@ -4,7 +4,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { deleteCollection } from 'src/actions';
+import { deleteCollection } from 'actions';
 
 
 const messages = defineMessages({

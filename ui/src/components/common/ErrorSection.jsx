@@ -3,8 +3,8 @@ import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { NonIdealState } from '@blueprintjs/core';
 
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
-import { selectSession, selectMetadata } from 'src/selectors';
+import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
+import { selectSession, selectMetadata } from 'selectors';
 
 import './ErrorSection.scss';
 

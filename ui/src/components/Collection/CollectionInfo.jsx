@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   Country, Role, Date, URL, Frequency,
-} from 'src/components/common';
+} from 'components/common';
 
 import './CollectionInfo.scss';
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { EntitySelect as VLEntitySelect } from '@alephdata/react-ftm';
 
-import { selectEntitiesResult } from 'src/selectors';
+import { selectEntitiesResult } from 'selectors';
 
 class EntitySelect extends Component {
   render() {

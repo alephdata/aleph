@@ -5,26 +5,26 @@ import queryString from 'query-string';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { Entity as EntityObject } from '@alephdata/followthemoney';
 
-import Query from 'src/app/Query';
-import Screen from 'src/components/Screen/Screen';
-import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
+import Query from 'app/Query';
+import Screen from 'components/Screen/Screen';
+import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import EntityHeading from 'src/components/Entity/EntityHeading';
-import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import EntityViews from 'src/components/Entity/EntityViews';
-import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
-import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'src/components/common';
-import { DownloadButton } from 'src/components/Toolbar';
-import getEntityLink from 'src/util/getEntityLink';
-import { queryEntityReference } from 'src/queries';
+import EntityHeading from 'components/Entity/EntityHeading';
+import EntityInfoMode from 'components/Entity/EntityInfoMode';
+import EntityViews from 'components/Entity/EntityViews';
+import EntityDeleteDialog from 'dialogs/EntityDeleteDialog/EntityDeleteDialog';
+import LoadingScreen from 'components/Screen/LoadingScreen';
+import ErrorScreen from 'components/Screen/ErrorScreen';
+import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
+import { DownloadButton } from 'components/Toolbar';
+import getEntityLink from 'util/getEntityLink';
+import { queryEntityReference } from 'queries';
 import {
   selectEntity, selectEntityReference, selectEntityView,
-} from 'src/selectors';
+} from 'selectors';
 
-import 'src/components/common/ItemOverview.scss';
+import 'components/common/ItemOverview.scss';
 
 const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
 

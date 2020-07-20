@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { Tag as Bp3Tag, Tooltip } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { Count, Property, Tag } from 'src/components/common';
-import wordList from 'src/util/wordList';
-import ensureArray from 'src/util/ensureArray';
-import getValueLink from 'src/util/getValueLink';
-import { selectValueCount, selectMetadata } from 'src/selectors';
+import { Count, Property, Tag } from 'components/common';
+import wordList from 'util/wordList';
+import ensureArray from 'util/ensureArray';
+import getValueLink from 'util/getValueLink';
+import { selectValueCount, selectMetadata } from 'selectors';
 
 import './Mention.scss';
 

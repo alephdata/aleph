@@ -7,10 +7,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { Count, Schema } from 'src/components/common';
-import EntityListManager from 'src/components/Entity/EntityListManager';
-import { queryCollectionEntities } from 'src/queries';
-import { selectModel } from 'src/selectors';
+import { Count, Schema } from 'components/common';
+import EntityListManager from 'components/Entity/EntityListManager';
+import { queryCollectionEntities } from 'queries';
+import { selectModel } from 'selectors';
 
 import './CollectionEntitiesMode.scss';
 

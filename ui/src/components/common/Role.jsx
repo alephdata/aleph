@@ -7,8 +7,8 @@ import {
 } from '@blueprintjs/core';
 import SelectWrapper from './SelectWrapper';
 
-import wordList from 'src/util/wordList';
-import { suggestRoles } from 'src/actions';
+import wordList from 'util/wordList';
+import { suggestRoles } from 'actions';
 
 import './Role.scss';
 

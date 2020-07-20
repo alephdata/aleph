@@ -6,10 +6,10 @@ import {
   queryCollections,
   createCollection,
   deleteCollection,
-} from 'src/actions';
+} from 'actions';
 import {
   objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects,
-} from 'src/reducers/util';
+} from 'reducers/util';
 
 const initialState = {};
 

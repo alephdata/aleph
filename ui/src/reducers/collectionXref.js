@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { queryCollectionXref, decideCollectionXref } from 'src/actions';
+import { queryCollectionXref, decideCollectionXref } from 'actions';
 import { resultObjects, objectLoadComplete } from './util';
 
 export default createReducer({

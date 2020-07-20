@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Schema } from 'src/components/common';
+import { Schema } from 'components/common';
 
 import './MappingQueryLabel.scss';
 

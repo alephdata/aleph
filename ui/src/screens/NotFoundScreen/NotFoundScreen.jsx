@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
 
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import ErrorScreen from 'components/Screen/ErrorScreen';
 
 
 const messages = defineMessages({

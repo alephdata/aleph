@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, ControlGroup, Divider, Menu, MenuItem, Popover } from '@blueprintjs/core';
 
-import { SearchBox } from 'src/components/common';
-import EntitySetEditDialog from 'src/dialogs/EntitySetEditDialog/EntitySetEditDialog';
-import EntitySetDeleteDialog from 'src/dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
+import { SearchBox } from 'components/common';
+import EntitySetEditDialog from 'dialogs/EntitySetEditDialog/EntitySetEditDialog';
+import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 
 import './EntitySetManageMenu.scss';
 

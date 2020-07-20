@@ -1,5 +1,5 @@
 import { createAction } from 'redux-act';
-import { endpoint } from 'src/app/api';
+import { endpoint } from 'app/api';
 
 export const loginWithToken = createAction('LOGIN');
 export const logout = createAction('LOGOUT');

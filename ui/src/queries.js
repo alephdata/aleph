@@ -1,4 +1,4 @@
-import Query from 'src/app/Query';
+import Query from 'app/Query';
 
 
 export function queryGroups(location) {

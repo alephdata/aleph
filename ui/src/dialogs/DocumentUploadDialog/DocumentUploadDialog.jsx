@@ -5,9 +5,9 @@ import {
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { ingestDocument as ingestDocumentAction } from 'src/actions';
-import { showErrorToast, showSuccessToast } from 'src/app/toast';
-import convertPathsToTree from 'src/util/convertPathsToTree';
+import { ingestDocument as ingestDocumentAction } from 'actions';
+import { showErrorToast, showSuccessToast } from 'app/toast';
+import convertPathsToTree from 'util/convertPathsToTree';
 import DocumentUploadForm from './DocumentUploadForm';
 import DocumentUploadStatus from './DocumentUploadStatus';
 import DocumentUploadView from './DocumentUploadView';

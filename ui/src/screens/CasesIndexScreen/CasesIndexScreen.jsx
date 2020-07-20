@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import Query from 'src/app/Query';
-import { queryCollections } from 'src/actions';
-import Screen from 'src/components/Screen/Screen';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import { Breadcrumbs } from 'src/components/common';
-import CollectionIndex from 'src/components/CollectionIndex/CollectionIndex';
-import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
+import Query from 'app/Query';
+import { queryCollections } from 'actions';
+import Screen from 'components/Screen/Screen';
+import Dashboard from 'components/Dashboard/Dashboard';
+import { Breadcrumbs } from 'components/common';
+import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
+import CaseCreateButton from 'components/Toolbar/CaseCreateButton';
 
 import './CasesIndexScreen.scss';
 

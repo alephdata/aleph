@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Country as VLCountry, CountrySelect } from '@alephdata/react-ftm';
-import { selectLocale, selectModel } from 'src/selectors';
+import { selectLocale, selectModel } from 'selectors';
 
 const mapStateToProps = (state) => {
   const model = selectModel(state);

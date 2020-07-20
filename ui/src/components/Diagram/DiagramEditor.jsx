@@ -2,10 +2,10 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
-import { processApiEntity } from 'src/components/EntitySet/util';
-import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
-import { updateEntitySet } from 'src/actions';
-import updateStates from 'src/util/updateStates';
+import { processApiEntity } from 'components/EntitySet/util';
+import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
+import { updateEntitySet } from 'actions';
+import updateStates from 'util/updateStates';
 
 import './DiagramEditor.scss';
 

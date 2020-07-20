@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { loadState } from 'src/reducers/util';
+import { loadState } from 'reducers/util';
 
 
 function selectTimestamp(state) {

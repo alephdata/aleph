@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { ResultCount, Skeleton, AppItem } from 'src/components/common';
+import { ResultCount, Skeleton, AppItem } from 'components/common';
 import c from 'classnames';
 
-import Query from 'src/app/Query';
-import { queryCollections, queryEntitySets, queryRoles} from 'src/actions';
-import { queryGroups } from 'src/queries';
-import { selectAlerts, selectCollectionsResult, selectEntitySetsResult, selectRolesResult } from 'src/selectors';
+import Query from 'app/Query';
+import { queryCollections, queryEntitySets, queryRoles} from 'actions';
+import { queryGroups } from 'queries';
+import { selectAlerts, selectCollectionsResult, selectEntitySetsResult, selectRolesResult } from 'selectors';
 
 import './Dashboard.scss';
 

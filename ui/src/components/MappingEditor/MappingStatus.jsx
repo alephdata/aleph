@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Callout, Intent } from '@blueprintjs/core';
-import { Date } from 'src/components/common';
+import { Date } from 'components/common';
 
 import './MappingStatus.scss';
 

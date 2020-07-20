@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 import { SelectWrapper } from '.';
-import getEntitySetLink from 'src/util/getEntitySetLink';
+import getEntitySetLink from 'util/getEntitySetLink';
 
 
 class DiagramLabel extends PureComponent {

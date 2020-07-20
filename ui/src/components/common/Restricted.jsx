@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Popover, Position, Tag, Intent, Callout } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
-import { Role } from 'src/components/common';
+import { Role } from 'components/common';
 
 import './Restricted.scss';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pre } from '@blueprintjs/core';
 
-import { Skeleton } from 'src/components/common';
+import { Skeleton } from 'components/common';
 
 import './TextViewer.scss';
 

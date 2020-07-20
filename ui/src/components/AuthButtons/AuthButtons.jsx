@@ -6,9 +6,9 @@ import {
   Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position,
 } from '@blueprintjs/core';
 
-import { fetchRole } from 'src/actions';
-import { selectCurrentRole, selectSession, selectMetadata } from 'src/selectors';
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
+import { fetchRole } from 'actions';
+import { selectCurrentRole, selectSession, selectMetadata } from 'selectors';
+import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './AuthButtons.scss';
 

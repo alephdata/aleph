@@ -6,7 +6,7 @@ import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
 import { MappingLabel } from './util';
-import SelectWrapper from 'src/components/common/SelectWrapper';
+import SelectWrapper from 'components/common/SelectWrapper';
 
 import './MappingPropertyAssign.scss';
 

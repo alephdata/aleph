@@ -4,8 +4,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import { triggerCollectionXref } from 'src/actions';
-import { showSuccessToast, showWarningToast } from 'src/app/toast';
+import { triggerCollectionXref } from 'actions';
+import { showSuccessToast, showWarningToast } from 'app/toast';
 
 
 const messages = defineMessages({

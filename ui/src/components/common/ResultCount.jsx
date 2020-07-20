@@ -1,5 +1,5 @@
 import React from 'react';
-import Count from 'src/components/common/Count';
+import Count from 'components/common/Count';
 
 const ResultCount = ({result, ...rest}) => (
   <Count

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import ClipboardInput from 'src/components/common/ClipboardInput';
+import ClipboardInput from 'components/common/ClipboardInput';
 
 import './CollectionReference.scss';
 

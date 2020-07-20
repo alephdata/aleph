@@ -1,7 +1,7 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'components/common';
 
 const messages = defineMessages({
   no_viewer: {

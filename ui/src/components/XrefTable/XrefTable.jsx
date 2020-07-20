@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import c from 'classnames';
 
-import { ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'components/common';
 import XrefTableRow from './XrefTableRow';
 
 import './XrefTable.scss';

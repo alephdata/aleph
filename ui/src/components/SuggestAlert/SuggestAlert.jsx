@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { Callout } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
-import SearchAlert from 'src/components/SearchAlert/SearchAlert';
-import { QueryText } from 'src/components/common';
-import { selectAlerts, selectSession } from 'src/selectors';
+import SearchAlert from 'components/SearchAlert/SearchAlert';
+import { QueryText } from 'components/common';
+import { selectAlerts, selectSession } from 'selectors';
 
 class SuggestAlert extends PureComponent {
   render() {

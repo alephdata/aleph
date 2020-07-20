@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { fetchEntityTags } from 'src/actions';
+import { fetchEntityTags } from 'actions';
 
 const initialState = {};
 

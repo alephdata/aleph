@@ -4,11 +4,11 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { Role } from 'src/components/common';
-import { showWarningToast } from 'src/app/toast';
-import { queryGroups } from 'src/queries';
-import { queryRoles } from 'src/actions';
-import { selectCurrentRole, selectRolesResult } from 'src/selectors';
+import { Role } from 'components/common';
+import { showWarningToast } from 'app/toast';
+import { queryGroups } from 'queries';
+import { queryRoles } from 'actions';
+import { selectCurrentRole, selectRolesResult } from 'selectors';
 
 const messages = defineMessages({
   title: {

@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import timestamp from 'src/util/timestamp';
+import timestamp from 'util/timestamp';
 
 import {
   mutate,
@@ -19,7 +19,7 @@ import {
   updateRole,
   loginWithToken,
   logout,
-} from 'src/actions';
+} from 'actions';
 
 const initialState = timestamp();
 

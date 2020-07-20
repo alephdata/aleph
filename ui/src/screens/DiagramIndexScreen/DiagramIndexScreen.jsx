@@ -3,15 +3,15 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { queryEntitySets } from 'src/actions';
-import { selectEntitySetsResult } from 'src/selectors';
-import Query from 'src/app/Query';
-import Screen from 'src/components/Screen/Screen';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import { Breadcrumbs } from 'src/components/common';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import EntitySetCreateMenu from 'src/components/EntitySet/EntitySetCreateMenu';
-import DiagramList from 'src/components/Diagram/DiagramList';
+import { queryEntitySets } from 'actions';
+import { selectEntitySetsResult } from 'selectors';
+import Query from 'app/Query';
+import Screen from 'components/Screen/Screen';
+import Dashboard from 'components/Dashboard/Dashboard';
+import { Breadcrumbs } from 'components/common';
+import ErrorScreen from 'components/Screen/ErrorScreen';
+import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
+import DiagramList from 'components/Diagram/DiagramList';
 
 
 import './DiagramIndexScreen.scss';

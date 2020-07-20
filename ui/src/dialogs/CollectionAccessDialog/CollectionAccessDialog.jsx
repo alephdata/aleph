@@ -3,11 +3,11 @@ import { Button, Checkbox, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
-import { selectCollectionPermissions } from 'src/selectors';
-import { Role } from 'src/components/common';
-import FormDialog from 'src/dialogs/common/FormDialog';
-import { showSuccessToast, showWarningToast } from 'src/app/toast';
+import { updateCollectionPermissions, fetchCollectionPermissions } from 'actions';
+import { selectCollectionPermissions } from 'selectors';
+import { Role } from 'components/common';
+import FormDialog from 'dialogs/common/FormDialog';
+import { showSuccessToast, showWarningToast } from 'app/toast';
 
 import './CollectionAccessDialog.scss';
 

@@ -6,9 +6,9 @@ import {
 } from 'react-intl';
 import {
   Category, Country, Schema, Numeric, SinglePane,
-} from 'src/components/common';
+} from 'components/common';
 import Statistics from './Statistics';
-import getStatLink from 'src/util/getStatLink';
+import getStatLink from 'util/getStatLink';
 
 import './StatisticsGroup.scss';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facet } from 'src/components/common';
+import { Facet } from 'components/common';
 import SearchFacet from './SearchFacet';
 
 import './SearchFacets.scss';

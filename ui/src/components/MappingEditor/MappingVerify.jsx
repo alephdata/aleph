@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, HTMLTable, MenuItem, Tooltip } from '@blueprintjs/core';
 import { PropertyEditor } from '@alephdata/react-ftm';
-import { Property } from 'src/components/common';
+import { Property } from 'components/common';
 
-import { selectLocale } from 'src/selectors';
+import { selectLocale } from 'selectors';
 import { MappingLabel } from './util';
-import SelectWrapper from 'src/components/common/SelectWrapper';
+import SelectWrapper from 'components/common/SelectWrapper';
 
 
 import './MappingVerify.scss';

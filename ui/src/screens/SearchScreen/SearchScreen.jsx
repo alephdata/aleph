@@ -7,18 +7,18 @@ import { Icon, Button, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/c
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Query from 'src/app/Query';
-import { selectEntitiesResult } from 'src/selectors';
+import Query from 'app/Query';
+import { selectEntitiesResult } from 'selectors';
 import {
   Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
-} from 'src/components/common';
-import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import SearchFacets from 'src/components/Facet/SearchFacets';
-import DateFacet from 'src/components/Facet/DateFacet';
-import QueryTags from 'src/components/QueryTags/QueryTags';
-import SuggestAlert from 'src/components/SuggestAlert/SuggestAlert';
-import Screen from 'src/components/Screen/Screen';
-import togglePreview from 'src/util/togglePreview';
+} from 'components/common';
+import EntitySearch from 'components/EntitySearch/EntitySearch';
+import SearchFacets from 'components/Facet/SearchFacets';
+import DateFacet from 'components/Facet/DateFacet';
+import QueryTags from 'components/QueryTags/QueryTags';
+import SuggestAlert from 'components/SuggestAlert/SuggestAlert';
+import Screen from 'components/Screen/Screen';
+import togglePreview from 'util/togglePreview';
 
 import './SearchScreen.scss';
 

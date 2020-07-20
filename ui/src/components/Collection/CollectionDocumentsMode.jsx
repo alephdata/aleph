@@ -2,8 +2,8 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import DocumentManager from 'src/components/Document/DocumentManager';
-import { queryCollectionDocuments } from 'src/queries';
+import DocumentManager from 'components/Document/DocumentManager';
+import { queryCollectionDocuments } from 'queries';
 
 
 class CollectionDocumentsMode extends React.Component {

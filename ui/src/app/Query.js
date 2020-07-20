@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import queryString from 'query-string';
-import ensureArray from 'src/util/ensureArray';
-import getFacetConfig from 'src/util/getFacetConfig';
+import ensureArray from 'util/ensureArray';
+import getFacetConfig from 'util/getFacetConfig';
 
 class Query {
   // State of a particular API query. This doesn't need to be specific to any one
