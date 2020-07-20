@@ -4,6 +4,7 @@ from followthemoney.types import registry
 
 from ingestors.analysis.util import TAG_EMAIL, TAG_PHONE
 from ingestors.analysis.util import TAG_IBAN, TAG_COUNTRY
+from ingestors.analysis.util import TAG_IDNO
 
 
 EMAIL_REGEX = re.compile(
