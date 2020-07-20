@@ -61,6 +61,10 @@ def get_synonames_path():
     return settings.ELASTICSEARCH_SYNONAMES_PATH
 
 
+def get_replica_number():
+    return settings.ELASTICSEARCH_REPLICAS
+
+
 def refresh_sync(sync):
     if settings.TESTING:
         return True
@@ -270,12 +274,12 @@ def configure_index(index, mapping, settings):
         return True
 
 
-def index_settings(shards=5, replicas=2):
+def index_settings(shards=5):
     """Configure an index in ES with support for text transliteration."""
     return {
         "index": {
             "number_of_shards": str(shards),
-            "number_of_replicas": str(replicas),
+            "number_of_replicas": str(get_replica_number()),
             # "refresh_interval": refresh,
             "analysis": {
                 "analyzer": {
