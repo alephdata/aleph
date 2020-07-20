@@ -14,11 +14,15 @@ IBAN_REGEX = re.compile(
     r"\b([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})\b",
     re.IGNORECASE,
 )  # noqa
+# Matches Russian national ID numbers, Iranian w/dashes, and Iranian w/o dashes
+NATLIDNO_REGEX = re.compile(r"\\b\d{3}-\d{6}-\d{1}\\b|\\b\d{3}-\d{3}-\d{3} \d{2}\\b|\\b\d{10}\\b", re.IGNORECASE)
+
 
 REGEX_TYPES = {
     EMAIL_REGEX: TAG_EMAIL,
     PHONE_REGEX: TAG_PHONE,
     IBAN_REGEX: TAG_IBAN,
+    NATLIDNO_REGEX: TAG_IDNO,
 }
 
 

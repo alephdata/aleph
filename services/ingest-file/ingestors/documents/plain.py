@@ -2,10 +2,11 @@ from followthemoney import model
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.encoding import EncodingSupport
+from ingestors.support.translate import TranslateSupport
 from ingestors.exc import ProcessingException
 
 
-class PlainTextIngestor(Ingestor, EncodingSupport):
+class PlainTextIngestor(Ingestor, EncodingSupport, TranslateSupport):
     """Plan text file ingestor class.
 
     Extracts the text from the document and enforces unicode on it.
@@ -48,3 +49,5 @@ class PlainTextIngestor(Ingestor, EncodingSupport):
 
         text = self.read_file_decoded(entity, file_path)
         entity.set("bodyText", text)
+
+        self.translate_text(entity, text)

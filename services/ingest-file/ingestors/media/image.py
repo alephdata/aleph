@@ -6,12 +6,13 @@ from followthemoney import model
 from ingestors.ingestor import Ingestor
 from ingestors.support.ocr import OCRSupport
 from ingestors.support.timestamp import TimestampSupport
+from ingestors.support.translate import TranslateSupport
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class ImageIngestor(Ingestor, OCRSupport, TimestampSupport):
+class ImageIngestor(Ingestor, OCRSupport, TimestampSupport, TranslateSupport):
     """Image file ingestor class. Extracts the text from images using OCR."""
 
     MIME_TYPES = [
@@ -67,6 +68,8 @@ class ImageIngestor(Ingestor, OCRSupport, TimestampSupport):
             languages = self.manager.context.get("languages")
             text = self.extract_ocr_text(data, languages=languages)
             entity.add("bodyText", text)
+
+            self.translate_text(entity, text)
         except (OSError, IOError, Exception) as err:
             raise ProcessingException("Failed to open image: %s" % err)
 

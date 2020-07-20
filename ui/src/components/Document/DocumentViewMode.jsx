@@ -18,7 +18,7 @@ const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/
 
 export class DocumentViewMode extends React.Component {
   renderContent() {
-    const { document, queryText, activeMode } = this.props;
+    const { document, queryText, activeMode, showTranslation } = this.props;
     const processingError = document.getProperty('processingError');
 
     if (processingError && processingError.length) {
@@ -36,9 +36,9 @@ export class DocumentViewMode extends React.Component {
       );
     }
     if (document.schema.isA('Image')) {
-      if (activeMode === 'text') {
+      if (activeMode === 'text' || activeMode === 'translatedText') {
         return (
-          <TextViewer document={document} queryText={queryText} />
+          <TextViewer document={document} queryText={queryText} showTranslation={showTranslation} />
         );
       }
       return (
@@ -56,13 +56,19 @@ export class DocumentViewMode extends React.Component {
     }
     if (document.schema.isA('PlainText')) {
       return (
-        <TextViewer document={document} queryText={queryText} />
+        <TextViewer document={document} queryText={queryText} showTranslation={showTranslation} />
       );
     }
     if (document.schema.isA('HyperText')) {
-      return (
-        <HtmlViewer document={document} queryText={queryText} />
-      );
+      if (activeMode === 'translatedText') {
+        return (
+          <TextViewer document={document} queryText={queryText} showTranslation={showTranslation} />
+        );
+      } else {
+        return (
+          <HtmlViewer document={document} queryText={queryText} />
+        );
+      }
     }
     if (document.schema.isA('Pages')) {
       return (
@@ -70,6 +76,7 @@ export class DocumentViewMode extends React.Component {
           document={document}
           queryText={queryText}
           activeMode={activeMode}
+          showTranslation={showTranslation}
         />
       );
     }

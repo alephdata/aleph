@@ -27,7 +27,7 @@ class PdfViewerPage extends Component {
   }
 
   render() {
-    const { document, entity, numPages, page } = this.props;
+    const { document, entity, numPages, page, showTranslation } = this.props;
     if (document.isPending || numPages === undefined) {
       return <SectionLoading />;
     }
@@ -35,7 +35,7 @@ class PdfViewerPage extends Component {
       <>
         <PagingButtons document={document} numberOfPages={numPages} page={page} />
         {entity && (
-          <TextViewer document={entity} noStyle />
+          <TextViewer document={entity} showTranslation={showTranslation} noStyle />
         )}
       </>
     );

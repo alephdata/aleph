@@ -54,6 +54,10 @@ class EntityViews extends React.Component {
     const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
+    const translatedText = entity.getProperty('altBodyText');
+    const hasTextTranslation= translatedText && translatedText.length > 0;
+    const hasAltBodyText = entity.getProperty('hasAltBodyText');
+    const hasPageTranslation = hasAltBodyText && hasAltBodyText.length > 0;
     const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
     const processingError = entity.getProperty('processingError');
 
@@ -124,6 +128,18 @@ class EntityViews extends React.Component {
             panel={
               <DocumentViewMode document={entity} activeMode={activeMode} />
             }
+          />
+        )}
+        {(hasViewer && (hasTextTranslation || hasPageTranslation)) && (
+          <Tab
+            id="translatedText"
+            title={(
+              <>
+                <Icon icon="translate" className="left-icon" />
+                <FormattedMessage id="entity.info.translatedText" defaultMessage="Translated text" />
+              </>
+            )}
+            panel={<DocumentViewMode document={entity} activeMode={activeMode} showTranslation={true} />}
           />
         )}
         {refs.map(ref => (

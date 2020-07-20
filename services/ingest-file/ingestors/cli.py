@@ -16,6 +16,22 @@ log = logging.getLogger(__name__)
 STAGES = [OP_ANALYZE, OP_INGEST]
 
 
+def setup_debugpy_server(debug_enabled, wait_for_client=False):
+    """
+    If debugging is enabled, then configures the debugpy server and waits for a client connect.
+    NOTE: The wait for the client is blocking.
+    """
+    if debug_enabled:
+        log.info(f"Debugging enabled, debugpy server listening on {settings.DEBUGPY_ADDRESS}:{settings.DEBUGPY_PORT}.")
+        import debugpy
+        
+        debugpy.listen((settings.DEBUGPY_ADDRESS, settings.DEBUGPY_PORT))
+        if wait_for_client:
+            log.warn("Blocking to wait for a debugpy client connection...")
+            debugpy.wait_for_client()
+            log.info("debugpy client attached.")
+
+
 @click.group()
 def cli():
     configure_logging()
@@ -26,6 +42,8 @@ def cli():
     "-s", "--sync", is_flag=True, default=False, help="Run without threads"
 )  # noqa
 def process(sync):
+    setup_debugpy_server(settings.DEBUGPY_PROCESS, settings.DEBUGPY_WAIT_FOR_CLIENT)
+
     """Start the queue and process tasks as they come. Blocks while waiting"""
     worker = IngestWorker(stages=STAGES)
     if sync:

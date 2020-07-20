@@ -152,6 +152,9 @@ ALEMBIC_DIR = os.path.join(APP_DIR, "migrate")
 
 ELASTICSEARCH_URL = env.get("ALEPH_ELASTICSEARCH_URI", "http://localhost:9200")
 ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 30)
+# Path to the synonames dictionary file for ES to use. For AWS, should be the path to the package
+# (e.g. analyzers/<package-id>)
+ELASTICSEARCH_SYNONAMES_PATH = env.get("ELASTICSEARCH_SYNONAMES_PATH", "synonames.txt")
 
 INDEX_PREFIX = env.get("ALEPH_INDEX_PREFIX", APP_NAME)
 INDEX_WRITE = env.get("ALEPH_INDEX_WRITE", "v1")

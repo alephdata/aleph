@@ -106,7 +106,7 @@ export class PdfViewer extends Component {
 
   renderPdf() {
     const {
-      document, page, rotate, numPages,
+      document, page, rotate, numPages
     } = this.props;
     const { width } = this.state;
     const { Document, Page } = this.state.components;
@@ -149,7 +149,7 @@ export class PdfViewer extends Component {
 
   render() {
     const {
-      document, activeMode, baseQuery, page, queryText, numPages,
+      document, activeMode, baseQuery, page, queryText, numPages, showTranslation
     } = this.props;
     if (document.isPending || numPages === undefined || numPages === null) {
       return <SectionLoading />;
@@ -165,12 +165,13 @@ export class PdfViewer extends Component {
                 queryText={queryText}
                 baseQuery={baseQuery}
               >
-                {activeMode === 'text' && (
+                {(activeMode === 'text' || activeMode === 'translatedText') && (
                   <PdfViewerPage
                     document={document}
                     page={page}
                     numPages={numPages}
                     baseQuery={baseQuery}
+                    showTranslation={showTranslation}
                   />
                 )}
                 {activeMode === 'view' && this.renderPdf()}

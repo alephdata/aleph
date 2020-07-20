@@ -8,6 +8,7 @@ TAG_EMAIL = "emailMentioned"
 TAG_PHONE = "phoneMentioned"
 TAG_IBAN = "ibanMentioned"
 TAG_LOCATION = "location"
+TAG_IDNO = "idNumber" 
 
 
 def text_chunks(texts, sep=" ", max_chunk=2000):

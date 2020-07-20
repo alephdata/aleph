@@ -7,8 +7,8 @@ import './TextViewer.scss';
 
 class TextViewer extends React.Component {
   render() {
-    const { document, noStyle } = this.props;
-    const bodyText = document.getFirst('bodyText');
+    const { document, noStyle, showTranslation } = this.props;
+    const bodyText = showTranslation ? document.getProperty('altBodyText') : document.getFirst('bodyText');
     const text = document.isPending
       ? <Skeleton.Text type="pre" length={4000} />
       : <Pre>{bodyText}</Pre>;

@@ -5,9 +5,10 @@ from normality import collapse_spaces  # noqa
 
 from ingestors.support.ocr import OCRSupport
 from ingestors.support.convert import DocumentConvertSupport
+from ingestors.support.translate import TranslateSupport
 
 
-class PDFSupport(DocumentConvertSupport, OCRSupport):
+class PDFSupport(DocumentConvertSupport, OCRSupport, TranslateSupport):
     """Provides helpers for PDF file context extraction."""
 
     def pdf_extract(self, entity, pdf):
@@ -43,6 +44,13 @@ class PDFSupport(DocumentConvertSupport, OCRSupport):
         entity.set("document", document)
         entity.set("index", page.page_no)
         entity.add("bodyText", text)
+
+        translated_text = self.translate_text(entity, text)
+        if translated_text and len(translated_text):
+            text = text + "\n" + "\n".join(translated_text)
+            # At least one page has translated text, so mark it as so on the parent document
+            document.set("hasAltBodyText", 1)
+        
         self.manager.apply_context(entity, document)
         self.manager.emit_entity(entity)
         self.manager.emit_text_fragment(document, text, entity.id)

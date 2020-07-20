@@ -57,6 +57,10 @@ def get_shard_weight(schema):
     return SHARD_WEIGHTS.get(schema.name, SHARDS_DEFAULT)
 
 
+def get_synonames_path():
+    return settings.ELASTICSEARCH_SYNONAMES_PATH
+
+
 def refresh_sync(sync):
     if settings.TESTING:
         return True
@@ -293,7 +297,7 @@ def index_settings(shards=5, replicas=2):
                     "synonames": {
                         "type": "synonym",
                         "lenient": "true",
-                        "synonyms_path": "synonames.txt",
+                        "synonyms_path": get_synonames_path()
                     },
                 },
             },
