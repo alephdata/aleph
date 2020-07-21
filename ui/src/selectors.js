@@ -48,9 +48,11 @@ export function selectLocale(state) {
 
 export function selectMetadata(state) {
   const metadata = selectObject(state, state, 'metadata');
-  const locale = selectLocale(state);
-  if (!metadata.isPending && metadata.app && metadata.app.locale !== locale) {
-    return loadState();
+  if (!metadata.isPending) {
+    const locale = selectLocale(state);
+    const localeMismatch = metadata.app && metadata.app.locale !== locale;
+    metadata.shouldLoad = metadata.shouldLoad || localeMismatch;
+    metadata.shouldLoad = metadata.shouldLoad || metadata.isError;
   }
   return metadata;
 }
