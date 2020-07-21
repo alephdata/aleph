@@ -170,7 +170,8 @@ class TestCase(unittest.TestCase):
             {
                 "schema": "Person",
                 "properties": {
-                    "name": ["Banana ba Nana"], "birthDate": "1970-05-21"
+                    "name": ["Banana ba Nana"], "birthDate": "1969-05-21",
+                    "deathDate": "1972-04-23"
                 },
             },
             self.private_coll,
