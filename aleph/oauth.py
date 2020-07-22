@@ -123,7 +123,7 @@ def handle_adfs_oauth(provdier, oauth_token):
     from aleph.model import Role
 
     # URL of public key of AD FS server
-    key = urlopen(settings.OAUTH_CERT_URL).read()
+    key = requests.get(settings.OAUTH_CERT_URL).data
     id_token = jwt.decode(
         oauth_token.get("id_token"),
         key,
