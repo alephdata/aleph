@@ -2,10 +2,8 @@ import jwt
 import json
 import base64
 import logging
-from urllib.request import urlopen
+import requests
 from authlib.integrations.flask_client import OAuth
-from cryptography.x509 import load_pem_x509_certificate
-from cryptography.hazmat.backends import default_backend
 from servicelayer.extensions import get_entry_point
 from authlib import jose
 
@@ -13,6 +11,7 @@ from aleph import settings
 
 oauth = OAuth()
 log = logging.getLogger(__name__)
+AZURE_KEYS_URL = "https://login.microsoftonline.com/common/discovery/keys"
 
 
 def configure_oauth(app, cache):
@@ -47,31 +46,19 @@ def handle_azure_oauth(provider, oauth_token):
     headerbit = base64.b64decode(headerbit).decode("utf8")
     headerbit = json.loads(headerbit)
 
-    # Load cert from MS - can be cached for upwards of 24hrs, not done now
-    cert_loc = "https://login.microsoftonline.com/common/discovery/keys"
-    cert_data = json.loads(urlopen(cert_loc).read())
-    pemstart = "-----BEGIN CERTIFICATE-----\n"
-    pemend = "\n-----END CERTIFICATE-----\n"
-    # Find correct cert based on header
-    for key in cert_data["keys"]:
-        if headerbit["kid"] == key["kid"] and headerbit["x5t"] == key["x5t"]:
-            mspubkey = key["x5c"][0]
-            break
-    cert_str = pemstart + mspubkey + pemend
-    cert_str = cert_str.encode("ascii")
-    cert_obj = load_pem_x509_certificate(cert_str, default_backend())
-    public_key = cert_obj.public_key()
+    # Load OAuth certificates from Microsoft.
+    # TODO: this can be cached 24 hours.
+    log.debug("Fetching Azure OAuth keys...")
+    res = requests.get(AZURE_KEYS_URL, timeout=10)
+    pk = jose.jwk.loads(res.json(), kid=headerbit["kid"])
 
     # Decode incoming token and verify against the MS cert
-    token_data = jwt.decode(
-        id_token, public_key, verify=True, audience=settings.OAUTH_KEY
-    )
-
-    # All Ok, move on
-    user_id = "azure:%s" % token_data["upn"]
-    return Role.load_or_create(
-        user_id, Role.USER, token_data["name"], email=token_data["upn"]
-    )
+    token_data = jwt.decode(id_token, pk, verify=True, audience=settings.OAUTH_KEY)
+    upn = token_data["upn"]
+    name = token_data["name"]
+    log.debug("Decoded token: %s (%s)", upn, name)
+    user_id = "azure:%s" % upn
+    return Role.load_or_create(user_id, Role.USER, name, email=upn)
 
 
 def handle_google_oauth(provider, oauth_token):
@@ -88,7 +75,7 @@ def handle_cognito_oauth(provider, oauth_token):
     from aleph.model import Role
 
     # Pull keys from Cognito server
-    keys = json.loads(urlopen(settings.OAUTH_CERT_URL).read())
+    keys = requests.get(settings.OAUTH_CERT_URL).json()
     key = lambda header, payload: jose.jwk.loads(keys, kid=header.get("kid"))
     # Verify id and access token
     id_token = jose.jwt.decode(
