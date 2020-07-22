@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Card, Icon, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
-import { formatDateQParam } from 'src/components/Facet/util';
+import { formatDateQParam } from 'components/Facet/util';
 
 import './DateFacet.scss';
 

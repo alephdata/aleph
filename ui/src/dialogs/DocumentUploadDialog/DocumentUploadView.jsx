@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Button, Checkbox, Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import convertPathsToTree from 'src/util/convertPathsToTree';
+import convertPathsToTree from 'util/convertPathsToTree';
 
 import './DocumentUploadView.scss';
 

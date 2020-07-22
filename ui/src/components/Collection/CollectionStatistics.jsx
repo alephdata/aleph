@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { Country, Facet, Numeric, Schema } from 'src/components/common';
-import Statistics from 'src/components/StatisticsGroup/Statistics';
-import { selectModel } from 'src/selectors';
-import getStatLink from 'src/util/getStatLink';
+import { Country, Facet, Numeric, Schema } from 'components/common';
+import Statistics from 'components/StatisticsGroup/Statistics';
+import { selectModel } from 'selectors';
+import getStatLink from 'util/getStatLink';
 
 import './CollectionStatistics.scss';
 

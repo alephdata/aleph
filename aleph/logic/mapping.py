@@ -43,6 +43,7 @@ def map_to_aggregator(collection, mapping, aggregator):
     origin = mapping_origin(mapping.id)
     aggregator.delete(origin=origin)
     writer = aggregator.bulk()
+    idx = 0
     for idx, record in enumerate(mapper.source.records, 1):
         if idx > 0 and idx % 1000 == 0:
             log.info("[%s] Mapped %s rows ...", mapping.id, idx)

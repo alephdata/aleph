@@ -7,11 +7,11 @@ import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/h
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
-import EntityPreview from 'src/components/Entity/EntityPreview';
-import Navbar from 'src/components/Navbar/Navbar';
-import SearchTips from 'src/components/SearchTips/SearchTips';
-import { selectSession, selectMetadata } from 'src/selectors';
+import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
+import EntityPreview from 'components/Entity/EntityPreview';
+import Navbar from 'components/Navbar/Navbar';
+import SearchTips from 'components/SearchTips/SearchTips';
+import { selectSession, selectMetadata } from 'selectors';
 
 import './Screen.scss';
 

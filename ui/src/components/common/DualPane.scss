@@ -1,6 +1,6 @@
-@import "src/app/variables.scss";
-@import "src/app/layouts.scss";
-@import "src/app/mixins.scss";
+@import "app/variables.scss";
+@import "app/layouts.scss";
+@import "app/mixins.scss";
 
 .DualPane {
   @extend .pane-layout;

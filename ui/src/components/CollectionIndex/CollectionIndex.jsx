@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
 
-import { queryCollections } from 'src/actions';
-import { selectCollectionsResult } from 'src/selectors';
-import { ErrorSection, SearchBox, SortingBar } from 'src/components/common';
-import QueryTags from 'src/components/QueryTags/QueryTags';
+import { queryCollections } from 'actions';
+import { selectCollectionsResult } from 'selectors';
+import { ErrorSection, SearchBox, SortingBar } from 'components/common';
+import QueryTags from 'components/QueryTags/QueryTags';
 import CollectionIndexItem from './CollectionIndexItem';
 
 import './CollectionIndex.scss';

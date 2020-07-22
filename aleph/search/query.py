@@ -4,7 +4,13 @@ from followthemoney.types import registry
 from banal import ensure_list
 
 from aleph.core import es
-from aleph.index.util import NUMERIC_TYPES, authz_query, field_filter_query, DATE_FORMAT
+from aleph.index.util import (
+    NUMERIC_TYPES,
+    authz_query,
+    field_filter_query,
+    DATE_FORMAT,
+    range_filter_query,
+)
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.index.entities import get_field_type
@@ -69,11 +75,24 @@ class Query(object):
             authz = authz_query(self.parser.authz, field=self.AUTHZ_FIELD)
             filters.append(authz)
 
+        range_filters = dict()
         for field, values in self.parser.filters.items():
             if field in self.SKIP_FILTERS:
                 continue
             if field not in self.parser.facet_names:
+                # Collect all range query filters for a field in a single query
+                if field.startswith(("gt:", "gte:", "lt:", "lte:")):
+                    op, field = field.split(":", 1)
+                    if range_filters.get(field) is None:
+                        range_filters[field] = {op: list(values)[0]}
+                    else:
+                        range_filters[field][op] = list(values)[0]
+                    continue
                 filters.append(field_filter_query(field, values))
+
+        for field, ops in range_filters.items():
+            filters.append(range_filter_query(field, ops))
+
         return filters
 
     def get_negative_filters(self):

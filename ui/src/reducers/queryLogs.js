@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
-import { deleteQueryLog, fetchQueryLogs } from 'src/actions';
-import { queryEntities } from 'src/actions/entityActions';
+import { deleteQueryLog, fetchQueryLogs } from 'actions';
+import { queryEntities } from 'actions/entityActions';
 import { mergeResults } from './util';
 
 const initialState = {

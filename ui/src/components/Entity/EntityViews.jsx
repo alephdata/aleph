@@ -7,17 +7,17 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
-} from 'src/components/common';
-import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
+} from 'components/common';
+import { queryEntitySimilar, queryFolderDocuments } from 'queries';
 import {
   selectEntitiesResult, selectEntityReferences, selectEntityTags,
-} from 'src/selectors';
-import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
-import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
-import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import EntityMappingMode from 'src/components/Entity/EntityMappingMode';
-import DocumentViewMode from 'src/components/Document/DocumentViewMode';
+} from 'selectors';
+import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
+import EntityTagsMode from 'components/Entity/EntityTagsMode';
+import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
+import EntityInfoMode from 'components/Entity/EntityInfoMode';
+import EntityMappingMode from 'components/Entity/EntityMappingMode';
+import DocumentViewMode from 'components/Document/DocumentViewMode';
 
 
 class EntityViews extends React.Component {

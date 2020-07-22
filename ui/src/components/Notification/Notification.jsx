@@ -4,7 +4,7 @@ import { FormattedRelativeTime } from 'react-intl';
 
 import {
   Collection, EntitySet, Entity, QueryText, Role, Skeleton,
-} from 'src/components/common';
+} from 'components/common';
 
 import './Notification.scss';
 

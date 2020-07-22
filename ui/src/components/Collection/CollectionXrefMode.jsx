@@ -8,14 +8,14 @@ import queryString from 'query-string';
 import { Callout, Intent, Button, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import SearchFacets from 'src/components/Facet/SearchFacets';
-import CollectionXrefManageMenu from 'src/components/Collection/CollectionXrefManageMenu';
-import XrefTable from 'src/components/XrefTable/XrefTable';
-import { queryCollectionXrefFacets } from 'src/queries';
-import { selectCollectionXrefResult, selectCurrentRole } from 'src/selectors';
-import { queryCollectionXref, queryRoles } from 'src/actions';
-import { queryGroups } from 'src/queries';
-import { selectRolesResult, selectRole } from 'src/selectors';
+import SearchFacets from 'components/Facet/SearchFacets';
+import CollectionXrefManageMenu from 'components/Collection/CollectionXrefManageMenu';
+import XrefTable from 'components/XrefTable/XrefTable';
+import { queryCollectionXrefFacets } from 'queries';
+import { selectCollectionXrefResult, selectCurrentRole } from 'selectors';
+import { queryCollectionXref, queryRoles } from 'actions';
+import { queryGroups } from 'queries';
+import { selectRolesResult, selectRole } from 'selectors';
 
 import './CollectionXrefMode.scss';
 import { Role } from '../common';

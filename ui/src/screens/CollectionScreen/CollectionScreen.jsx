@@ -4,16 +4,16 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import Screen from 'src/components/Screen/Screen';
-import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
-import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
-import CollectionHeading from 'src/components/Collection/CollectionHeading';
-import CollectionViews from 'src/components/Collection/CollectionViews';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import DocumentDropzone from 'src/components/Document/DocumentDropzone';
-import collectionViewIds from 'src/components/Collection/collectionViewIds';
-import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
-import { selectCollection, selectCollectionStatus } from 'src/selectors';
+import Screen from 'components/Screen/Screen';
+import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
+import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
+import CollectionHeading from 'components/Collection/CollectionHeading';
+import CollectionViews from 'components/Collection/CollectionViews';
+import ErrorScreen from 'components/Screen/ErrorScreen';
+import DocumentDropzone from 'components/Document/DocumentDropzone';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+import { Collection, SinglePane, Breadcrumbs } from 'components/common';
+import { selectCollection, selectCollectionStatus } from 'selectors';
 
 
 export class CollectionScreen extends Component {

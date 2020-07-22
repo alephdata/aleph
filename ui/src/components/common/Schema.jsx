@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectModel } from 'src/selectors';
+import { selectModel } from 'selectors';
 import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
 
 function SchemaLink(props) {

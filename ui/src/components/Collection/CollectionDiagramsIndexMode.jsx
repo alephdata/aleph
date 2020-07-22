@@ -3,12 +3,12 @@ import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { queryEntitySets } from 'src/actions';
-import { queryCollectionEntitySets } from 'src/queries';
-import { selectEntitySetsResult } from 'src/selectors';
-import { ErrorSection } from 'src/components/common';
-import EntitySetCreateMenu from 'src/components/EntitySet/EntitySetCreateMenu';
-import DiagramList from 'src/components/Diagram/DiagramList';
+import { queryEntitySets } from 'actions';
+import { queryCollectionEntitySets } from 'queries';
+import { selectEntitySetsResult } from 'selectors';
+import { ErrorSection } from 'components/common';
+import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
+import DiagramList from 'components/Diagram/DiagramList';
 
 export class CollectionDiagramsIndexMode extends Component {
   constructor(props) {

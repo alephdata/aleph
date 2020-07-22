@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 // import logger from 'redux-logger';
 import { throttle } from 'lodash';
 
-import rootReducer from 'src/reducers';
+import rootReducer from 'reducers';
 import { loadState, saveState } from './storage';
 import errorToastMiddleware from './error-toast-middleware';
 

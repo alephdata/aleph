@@ -4,8 +4,8 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { deleteEntitySet } from 'src/actions';
-import getCollectionLink from 'src/util/getCollectionLink';
+import { deleteEntitySet } from 'actions';
+import getCollectionLink from 'util/getCollectionLink';
 
 
 const messages = defineMessages({

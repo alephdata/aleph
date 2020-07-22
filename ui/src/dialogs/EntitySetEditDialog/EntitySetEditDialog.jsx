@@ -3,9 +3,9 @@ import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { updateEntitySet } from 'src/actions';
-import { showSuccessToast, showWarningToast } from 'src/app/toast';
-import FormDialog from 'src/dialogs/common/FormDialog';
+import { updateEntitySet } from 'actions';
+import { showSuccessToast, showWarningToast } from 'app/toast';
+import FormDialog from 'dialogs/common/FormDialog';
 
 const messages = defineMessages({
   label_placeholder: {

@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import { fetchEntityReferences } from 'src/actions';
-import { objectLoadStart, objectLoadError, objectLoadComplete } from 'src/reducers/util';
+import { fetchEntityReferences } from 'actions';
+import { objectLoadStart, objectLoadError, objectLoadComplete } from 'reducers/util';
 
 const initialState = {};
 

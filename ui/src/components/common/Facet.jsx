@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { injectIntl } from 'react-intl';
 import { Icon } from '@blueprintjs/core';
-import getFacetConfig from 'src/util/getFacetConfig';
+import getFacetConfig from 'util/getFacetConfig';
 
 
 class FacetLabel extends PureComponent {

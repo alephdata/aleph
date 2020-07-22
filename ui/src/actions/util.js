@@ -1,4 +1,4 @@
-import { endpoint } from 'src/app/api';
+import { endpoint } from 'app/api';
 
 export const MAX_RESULTS = 9999;
 

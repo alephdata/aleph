@@ -4,13 +4,13 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Query from 'src/app/Query';
-import { PagingButtons } from 'src/components/Toolbar';
-import { SectionLoading, Skeleton } from 'src/components/common';
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
-import PdfViewerSearch from 'src/viewers/PdfViewerSearch';
-import PdfViewerPage from 'src/viewers/PdfViewerPage';
+import Query from 'app/Query';
+import { PagingButtons } from 'components/Toolbar';
+import { SectionLoading, Skeleton } from 'components/common';
+import { queryEntities } from 'actions';
+import { selectEntitiesResult } from 'selectors';
+import PdfViewerSearch from 'viewers/PdfViewerSearch';
+import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
 

@@ -9,16 +9,16 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
-import entityEditorWrapper from 'src/components/Entity/entityEditorWrapper';
-import { Count, ErrorSection } from 'src/components/common';
-import AddToDiagramDialog from 'src/dialogs/AddToDiagramDialog/AddToDiagramDialog';
-import DocumentSelectDialog from 'src/dialogs/DocumentSelectDialog/DocumentSelectDialog';
-import EntityActionBar from 'src/components/Entity/EntityActionBar';
-import { queryEntities } from 'src/actions';
-import { queryCollectionEntities } from 'src/queries';
-import { selectEntitiesResult } from 'src/selectors';
-import { showErrorToast, showSuccessToast } from 'src/app/toast';
-import getEntityLink from 'src/util/getEntityLink';
+import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
+import { Count, ErrorSection } from 'components/common';
+import AddToDiagramDialog from 'dialogs/AddToDiagramDialog/AddToDiagramDialog';
+import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
+import EntityActionBar from 'components/Entity/EntityActionBar';
+import { queryEntities } from 'actions';
+import { queryCollectionEntities } from 'queries';
+import { selectEntitiesResult } from 'selectors';
+import { showErrorToast, showSuccessToast } from 'app/toast';
+import getEntityLink from 'util/getEntityLink';
 
 import './EntityListManager.scss';
 

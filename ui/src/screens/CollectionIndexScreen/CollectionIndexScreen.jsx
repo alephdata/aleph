@@ -6,16 +6,16 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { ButtonGroup } from '@blueprintjs/core';
 
-import Query from 'src/app/Query';
-import { queryCollections } from 'src/actions';
-import { selectCollectionsResult } from 'src/selectors';
+import Query from 'app/Query';
+import { queryCollections } from 'actions';
+import { selectCollectionsResult } from 'selectors';
 import {
   Breadcrumbs, DualPane, SignInCallout, ResultText,
-} from 'src/components/common';
-import SearchFacets from 'src/components/Facet/SearchFacets';
-import Screen from 'src/components/Screen/Screen';
-import CollectionIndex from 'src/components/CollectionIndex/CollectionIndex';
-import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
+} from 'components/common';
+import SearchFacets from 'components/Facet/SearchFacets';
+import Screen from 'components/Screen/Screen';
+import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
+import CaseCreateButton from 'components/Toolbar/CaseCreateButton';
 
 import './CollectionIndexScreen.scss';
 

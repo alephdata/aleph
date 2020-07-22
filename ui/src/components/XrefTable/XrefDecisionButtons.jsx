@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 
-import { decideCollectionXref } from 'src/actions';
-import { showWarningToast } from 'src/app/toast';
+import { decideCollectionXref } from 'actions';
+import { showWarningToast } from 'app/toast';
 
 
 class XrefDecisionButtons extends Component {

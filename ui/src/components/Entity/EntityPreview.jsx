@@ -5,16 +5,16 @@ import { withRouter } from 'react-router';
 import { Drawer, Position } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
 
-import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
-import EntityHeading from 'src/components/Entity/EntityHeading';
-import EntityToolbar from 'src/components/Entity/EntityToolbar';
-import EntityViews from 'src/components/Entity/EntityViews';
-import { SectionLoading, ErrorSection } from 'src/components/common';
-import { selectEntity, selectEntityView, selectLocale } from 'src/selectors';
+import EntityContextLoader from 'components/Entity/EntityContextLoader';
+import EntityHeading from 'components/Entity/EntityHeading';
+import EntityToolbar from 'components/Entity/EntityToolbar';
+import EntityViews from 'components/Entity/EntityViews';
+import { SectionLoading, ErrorSection } from 'components/common';
+import { selectEntity, selectEntityView, selectLocale } from 'selectors';
 import queryString from 'query-string';
-import togglePreview from 'src/util/togglePreview';
+import togglePreview from 'util/togglePreview';
 
-import 'src/components/common/ItemOverview.scss';
+import 'components/common/ItemOverview.scss';
 import './EntityPreview.scss';
 
 

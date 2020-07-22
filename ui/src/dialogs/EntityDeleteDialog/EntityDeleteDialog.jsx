@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import c from 'classnames';
 
-import { deleteEntity } from 'src/actions';
-import { Entity } from 'src/components/common';
-import { showErrorToast, showSuccessToast } from 'src/app/toast';
-import getCollectionLink from 'src/util/getCollectionLink';
-import getEntityLink from 'src/util/getEntityLink';
+import { deleteEntity } from 'actions';
+import { Entity } from 'components/common';
+import { showErrorToast, showSuccessToast } from 'app/toast';
+import getCollectionLink from 'util/getCollectionLink';
+import getEntityLink from 'util/getEntityLink';
 
 import './EntityDeleteDialog.scss';
 

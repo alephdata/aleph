@@ -3,9 +3,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent, Position, Tooltip } from '@blueprintjs/core';
-import { selectSession } from 'src/selectors';
+import { selectSession } from 'selectors';
 
-import EntitySetCreateDialog from 'src/dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
+import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
 
 const messages = defineMessages({
   login: {

@@ -4,10 +4,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
-import { ErrorSection } from 'src/components/common';
-import { queryNotifications } from 'src/actions';
-import { selectNotificationsResult } from 'src/selectors';
-import Notification from 'src/components/Notification/Notification';
+import { ErrorSection } from 'components/common';
+import { queryNotifications } from 'actions';
+import { selectNotificationsResult } from 'selectors';
+import Notification from 'components/Notification/Notification';
 
 import './NotificationList.scss';
 

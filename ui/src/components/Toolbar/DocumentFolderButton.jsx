@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 
-import DocumentFolderDialog from 'src/dialogs/DocumentFolderDialog/DocumentFolderDialog';
+import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';
 
 class DocumentFolderButton extends React.Component {
   constructor(props) {

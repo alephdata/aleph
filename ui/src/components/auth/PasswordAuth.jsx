@@ -1,7 +1,7 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
-import { showWarningToast } from 'src/app/toast';
+import { showWarningToast } from 'app/toast';
 
 const messages = defineMessages({
   not_same: {

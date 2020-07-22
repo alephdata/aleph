@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, Tooltip, ProgressBar, Intent } from '@blueprintjs/core';
 
-import { Collection, ErrorSection, Numeric, Skeleton } from 'src/components/common';
-import Screen from 'src/components/Screen/Screen';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { triggerCollectionCancel, fetchSystemStatus } from 'src/actions';
-import { selectSystemStatus } from 'src/selectors';
+import { Collection, ErrorSection, Numeric, Skeleton } from 'components/common';
+import Screen from 'components/Screen/Screen';
+import Dashboard from 'components/Dashboard/Dashboard';
+import ErrorScreen from 'components/Screen/ErrorScreen';
+import { triggerCollectionCancel, fetchSystemStatus } from 'actions';
+import { selectSystemStatus } from 'selectors';
 import { Link } from 'react-router-dom';
-import getCollectionLink from 'src/util/getCollectionLink';
+import getCollectionLink from 'util/getCollectionLink';
 
 import './SystemStatusScreen.scss';
 

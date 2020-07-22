@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import timestamp from 'src/util/timestamp';
+import timestamp from 'util/timestamp';
 
 
 export function mergeResults(previous, current) {

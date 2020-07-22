@@ -10,8 +10,8 @@ import {
 } from '@blueprintjs/core';
 import c from 'classnames';
 
-import getFacetConfig from 'src/util/getFacetConfig';
-import { CheckboxList, Schema } from 'src/components/common';
+import getFacetConfig from 'util/getFacetConfig';
+import { CheckboxList, Schema } from 'components/common';
 
 import './SearchFacet.scss';
 

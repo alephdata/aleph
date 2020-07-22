@@ -1,9 +1,9 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import Screen from 'src/components/Screen/Screen';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import QueryLogs from 'src/components/QueryLogs/QueryLogs';
+import Screen from 'components/Screen/Screen';
+import Dashboard from 'components/Dashboard/Dashboard';
+import QueryLogs from 'components/QueryLogs/QueryLogs';
 
 import './HistoryScreen.scss';
 
