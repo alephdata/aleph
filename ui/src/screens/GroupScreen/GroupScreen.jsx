@@ -7,13 +7,13 @@ import {
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import Query from 'src/app/Query';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import Screen from 'src/components/Screen/Screen';
-import CollectionIndex from 'src/components/CollectionIndex/CollectionIndex';
-import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import { fetchRole, queryCollections } from 'src/actions';
-import { selectRole } from 'src/selectors';
+import Query from 'app/Query';
+import Dashboard from 'components/Dashboard/Dashboard';
+import Screen from 'components/Screen/Screen';
+import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
+import LoadingScreen from 'components/Screen/LoadingScreen';
+import { fetchRole, queryCollections } from 'actions';
+import { selectRole } from 'selectors';
 
 import './GroupScreen.scss';
 

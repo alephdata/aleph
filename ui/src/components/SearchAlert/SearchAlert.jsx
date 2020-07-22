@@ -5,8 +5,8 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { addAlert, deleteAlert, fetchAlerts } from 'src/actions';
-import { selectSession, selectAlerts } from 'src/selectors';
+import { addAlert, deleteAlert, fetchAlerts } from 'actions';
+import { selectSession, selectAlerts } from 'selectors';
 
 
 const messages = defineMessages({

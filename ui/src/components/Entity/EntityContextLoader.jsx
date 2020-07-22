@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
   fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
-} from 'src/actions';
+} from 'actions';
 import {
   selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
-} from 'src/selectors';
-import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
+} from 'selectors';
+import { queryEntitySimilar, queryFolderDocuments } from 'queries';
 
 
 class EntityContextLoader extends PureComponent {

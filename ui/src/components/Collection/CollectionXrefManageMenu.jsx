@@ -5,9 +5,9 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { AnchorButton, Button, ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
-import XrefContextDialog from 'src/dialogs/XrefContextDialog/XrefContextDialog';
-import { selectSession, selectTester } from 'src/selectors';
+import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
+import XrefContextDialog from 'dialogs/XrefContextDialog/XrefContextDialog';
+import { selectSession, selectTester } from 'selectors';
 
 
 const messages = defineMessages({

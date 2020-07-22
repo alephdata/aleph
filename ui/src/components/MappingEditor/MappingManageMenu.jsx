@@ -4,14 +4,14 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import YAML from 'yaml';
 
-import { showErrorToast, showInfoToast } from 'src/app/toast';
-import { createEntityMapping, flushEntityMapping, deleteEntityMapping, updateEntityMapping } from 'src/actions';
+import { showErrorToast, showInfoToast } from 'app/toast';
+import { createEntityMapping, flushEntityMapping, deleteEntityMapping, updateEntityMapping } from 'actions';
 
-import MappingCreateDialog from 'src/dialogs/MappingCreateDialog/MappingCreateDialog';
-import MappingFlushDialog from 'src/dialogs/MappingFlushDialog/MappingFlushDialog';
-import MappingSaveDialog from 'src/dialogs/MappingSaveDialog/MappingSaveDialog';
-import MappingDeleteDialog from 'src/dialogs/MappingDeleteDialog/MappingDeleteDialog';
-import { selectSession } from 'src/selectors';
+import MappingCreateDialog from 'dialogs/MappingCreateDialog/MappingCreateDialog';
+import MappingFlushDialog from 'dialogs/MappingFlushDialog/MappingFlushDialog';
+import MappingSaveDialog from 'dialogs/MappingSaveDialog/MappingSaveDialog';
+import MappingDeleteDialog from 'dialogs/MappingDeleteDialog/MappingDeleteDialog';
+import { selectSession } from 'selectors';
 
 const fileDownload = require('js-file-download');
 

@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 
-import * as actions from 'src/actions';
+import * as actions from 'actions';
 import { showWarningToast } from './toast';
 
 const errorActionTypes = [

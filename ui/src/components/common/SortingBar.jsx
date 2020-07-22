@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
-import SelectWrapper from 'src/components/common/SelectWrapper';
+import SelectWrapper from 'components/common/SelectWrapper';
 
 import './SortingBar.scss';
 

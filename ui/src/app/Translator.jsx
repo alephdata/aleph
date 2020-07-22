@@ -9,8 +9,8 @@ import { IntlProvider } from 'react-intl';
 // import es from 'react-intl/locale-data/es';
 // import ar from 'react-intl/locale-data/ar';
 
-import { selectLocale } from 'src/selectors';
-import translations from 'src/content/translations.json';
+import { selectLocale } from 'selectors';
+import translations from 'content/translations.json';
 
 // add locale data to react-intl
 // addLocaleData([...en, ...de, ...bs, ...es, ...ru, ...ar]);

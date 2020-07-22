@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, Collapse, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
-import SelectWrapper from 'src/components/common/SelectWrapper';
+import SelectWrapper from 'components/common/SelectWrapper';
 import { MappingLabel } from './util';
 
 import './MappingKeyAssign.scss';

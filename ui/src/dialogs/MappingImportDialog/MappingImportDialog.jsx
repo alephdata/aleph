@@ -5,9 +5,9 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import YAML from 'yaml';
 
-import MappingQueryLabel from 'src/dialogs/MappingImportDialog/MappingQueryLabel';
-import { FileImport } from 'src/components/common';
-import { showSuccessToast } from 'src/app/toast';
+import MappingQueryLabel from 'dialogs/MappingImportDialog/MappingQueryLabel';
+import { FileImport } from 'components/common';
+import { showSuccessToast } from 'app/toast';
 
 import './MappingImportDialog.scss';
 

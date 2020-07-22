@@ -5,11 +5,11 @@ import { withRouter } from 'react-router';
 import c from 'classnames';
 import { Entity as VLEntity } from '@alephdata/react-ftm';
 
-import EntitySelect from 'src/components/common/EntitySelect';
-import togglePreview from 'src/util/togglePreview';
-import { fetchEntity as fetchEntityAction } from 'src/actions';
-import { selectEntity } from 'src/selectors';
-import getEntityLink from 'src/util/getEntityLink';
+import EntitySelect from 'components/common/EntitySelect';
+import togglePreview from 'util/togglePreview';
+import { fetchEntity as fetchEntityAction } from 'actions';
+import { selectEntity } from 'selectors';
+import getEntityLink from 'util/getEntityLink';
 
 import './Entity.scss';
 

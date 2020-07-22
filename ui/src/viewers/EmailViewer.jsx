@@ -2,8 +2,8 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Pre } from '@blueprintjs/core';
 
-import { Property, SectionLoading } from 'src/components/common';
-import wordList from 'src/util/wordList';
+import { Property, SectionLoading } from 'components/common';
+import wordList from 'util/wordList';
 
 import './EmailViewer.scss';
 

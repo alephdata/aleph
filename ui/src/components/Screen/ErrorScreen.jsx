@@ -1,8 +1,8 @@
 import React from 'react';
 
-import SinglePane from 'src/components/common/SinglePane';
-import ErrorSection from 'src/components/common/ErrorSection';
-import Screen from 'src/components/Screen/Screen';
+import SinglePane from 'components/common/SinglePane';
+import ErrorSection from 'components/common/ErrorSection';
+import Screen from 'components/Screen/Screen';
 
 
 function ErrorScreen(props) {

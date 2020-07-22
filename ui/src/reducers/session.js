@@ -2,7 +2,7 @@ import jwtDecode from 'jwt-decode';
 import { createReducer } from 'redux-act';
 import { v4 as uuidv4 } from 'uuid';
 
-import { fetchMetadata, updateRole, fetchRole, loginWithToken, logout } from 'src/actions';
+import { fetchMetadata, updateRole, fetchRole, loginWithToken, logout } from 'actions';
 
 const initialState = {
   loggedIn: false,

@@ -23,7 +23,7 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "./tables.scss";
 @import "./layouts.scss";
 @import "./blueprint-overrides.scss";
-@import "src/app/mixins.scss";
+@import "app/mixins.scss";
 
 html {
   height: 100%;

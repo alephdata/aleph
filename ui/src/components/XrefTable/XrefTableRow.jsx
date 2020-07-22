@@ -5,8 +5,8 @@ import c from 'classnames';
 
 import {
   Collection, Entity, Property, Skeleton,
-} from 'src/components/common';
-import XrefDecisionButtons from 'src/components/XrefTable/XrefDecisionButtons';
+} from 'components/common';
+import XrefDecisionButtons from 'components/XrefTable/XrefDecisionButtons';
 
 
 class XrefTableRow extends Component {

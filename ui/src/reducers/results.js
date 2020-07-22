@@ -2,7 +2,7 @@ import { createReducer } from 'redux-act';
 
 import {
   resultLoadStart, resultLoadError, updateResults, updateExpandResults,
-} from 'src/reducers/util';
+} from 'reducers/util';
 
 import {
   queryCollections,
@@ -12,7 +12,7 @@ import {
   queryEntityExpand,
   queryNotifications,
   queryCollectionXref,
-} from 'src/actions';
+} from 'actions';
 
 const initialState = {};
 

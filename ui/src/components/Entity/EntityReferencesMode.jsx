@@ -10,14 +10,14 @@ import c from 'classnames';
 
 import {
   selectEntitiesResult, selectEntityReference, selectSchema,
-} from 'src/selectors';
+} from 'selectors';
 import {
   Entity, ErrorSection, Property, SectionLoading,
-} from 'src/components/common';
-import EntityProperties from 'src/components/Entity/EntityProperties';
-import ensureArray from 'src/util/ensureArray';
-import { queryEntities } from 'src/actions/index';
-import { queryEntityReference } from 'src/queries';
+} from 'components/common';
+import EntityProperties from 'components/Entity/EntityProperties';
+import ensureArray from 'util/ensureArray';
+import { queryEntities } from 'actions/index';
+import { queryEntityReference } from 'queries';
 
 const messages = defineMessages({
   no_relationships: {

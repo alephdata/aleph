@@ -4,10 +4,10 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Numeric } from 'src/components/common';
-import { triggerCollectionCancel, fetchCollectionStatus } from 'src/actions';
-import { selectCollectionStatus } from 'src/selectors';
-import timestamp from 'src/util/timestamp';
+import { Numeric } from 'components/common';
+import { triggerCollectionCancel, fetchCollectionStatus } from 'actions';
+import { selectCollectionStatus } from 'selectors';
+import timestamp from 'util/timestamp';
 
 import './CollectionStatus.scss';
 

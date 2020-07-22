@@ -6,9 +6,9 @@ import {
   defineMessages, FormattedNumber, FormattedMessage, injectIntl,
 } from 'react-intl';
 
-import { Tag, ErrorSection } from 'src/components/common';
-import { selectEntityTags, selectModel } from 'src/selectors';
-import getValueLink from 'src/util/getValueLink';
+import { Tag, ErrorSection } from 'components/common';
+import { selectEntityTags, selectModel } from 'selectors';
+import getValueLink from 'util/getValueLink';
 
 import './EntityTagsMode.scss';
 

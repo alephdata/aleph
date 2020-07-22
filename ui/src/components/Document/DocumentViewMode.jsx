@@ -2,14 +2,14 @@ import React, { lazy } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Query from 'src/app/Query';
-import DefaultViewer from 'src/viewers/DefaultViewer';
-import TableViewer from 'src/viewers/TableViewer';
-import TextViewer from 'src/viewers/TextViewer';
-import HtmlViewer from 'src/viewers/HtmlViewer';
-import ImageViewer from 'src/viewers/ImageViewer';
-import FolderViewer from 'src/viewers/FolderViewer';
-import EmailViewer from 'src/viewers/EmailViewer';
+import Query from 'app/Query';
+import DefaultViewer from 'viewers/DefaultViewer';
+import TableViewer from 'viewers/TableViewer';
+import TextViewer from 'viewers/TextViewer';
+import HtmlViewer from 'viewers/HtmlViewer';
+import ImageViewer from 'viewers/ImageViewer';
+import FolderViewer from 'viewers/FolderViewer';
+import EmailViewer from 'viewers/EmailViewer';
 
 import './DocumentViewMode.scss';
 

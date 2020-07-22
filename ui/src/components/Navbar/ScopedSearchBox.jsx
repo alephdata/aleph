@@ -4,9 +4,9 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { ControlGroup, InputGroup } from '@blueprintjs/core';
 
-import SearchAlert from 'src/components/SearchAlert/SearchAlert';
-import ScopeSelect from 'src/components/Navbar/ScopeSelect';
-import { selectSession } from 'src/selectors';
+import SearchAlert from 'components/SearchAlert/SearchAlert';
+import ScopeSelect from 'components/Navbar/ScopeSelect';
+import { selectSession } from 'selectors';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import './ScopedSearchBox.scss';

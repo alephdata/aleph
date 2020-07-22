@@ -4,7 +4,7 @@ import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import c from 'classnames';
-import getEntitySetLink from 'src/util/getEntitySetLink';
+import getEntitySetLink from 'util/getEntitySetLink';
 
 
 const ICONS = {

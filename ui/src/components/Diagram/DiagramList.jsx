@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
-import { ErrorSection } from 'src/components/common';
-import DiagramListItem from 'src/components/Diagram/DiagramListItem';
+import { ErrorSection } from 'components/common';
+import DiagramListItem from 'components/Diagram/DiagramListItem';
 
 import './DiagramList.scss';
 

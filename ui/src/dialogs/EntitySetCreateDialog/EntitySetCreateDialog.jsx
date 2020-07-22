@@ -4,14 +4,14 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import Query from 'src/app/Query';
-import { Collection, FileImport } from 'src/components/common';
-import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
-import FormDialog from 'src/dialogs/common/FormDialog';
-import { createEntitySet } from 'src/actions';
-import { showSuccessToast, showWarningToast } from 'src/app/toast';
-import getEntitySetLink from 'src/util/getEntitySetLink';
-import { processApiEntity } from 'src/components/EntitySet/util';
+import Query from 'app/Query';
+import { Collection, FileImport } from 'components/common';
+import CreateCaseDialog from 'dialogs/CreateCaseDialog/CreateCaseDialog';
+import FormDialog from 'dialogs/common/FormDialog';
+import { createEntitySet } from 'actions';
+import { showSuccessToast, showWarningToast } from 'app/toast';
+import getEntitySetLink from 'util/getEntitySetLink';
+import { processApiEntity } from 'components/EntitySet/util';
 
 
 const TYPES = ['generic', 'diagram','timeline'];

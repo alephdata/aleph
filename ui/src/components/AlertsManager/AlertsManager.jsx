@@ -5,8 +5,8 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { ErrorSection, SearchListings } from 'src/components/common';
-import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
+import { ErrorSection, SearchListings } from 'components/common';
+import { fetchAlerts, addAlert, deleteAlert } from 'actions';
 
 import './AlertsManager.scss';
 

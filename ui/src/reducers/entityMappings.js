@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import { fetchEntityMapping, createEntityMapping, deleteEntityMapping, updateEntityMapping } from 'src/actions';
-import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete } from 'src/reducers/util';
+import { fetchEntityMapping, createEntityMapping, deleteEntityMapping, updateEntityMapping } from 'actions';
+import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete } from 'reducers/util';
 
 const initialState = {};
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
-import MappingImportDialog from 'src/dialogs/MappingImportDialog/MappingImportDialog';
+import MappingImportDialog from 'dialogs/MappingImportDialog/MappingImportDialog';
 
 
 class MappingImportButton extends Component {

@@ -3,11 +3,11 @@ import { Redirect } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import Screen from 'src/components/Screen/Screen';
-import { endpoint } from 'src/app/api';
-import { loginWithPassword } from 'src/actions/sessionActions';
-import { showResponseToast } from 'src/app/toast';
-import { PasswordAuthActivate } from 'src/components/auth/PasswordAuth';
+import Screen from 'components/Screen/Screen';
+import { endpoint } from 'app/api';
+import { loginWithPassword } from 'actions/sessionActions';
+import { showResponseToast } from 'app/toast';
+import { PasswordAuthActivate } from 'components/auth/PasswordAuth';
 
 
 export class ActivateScreen extends Component {

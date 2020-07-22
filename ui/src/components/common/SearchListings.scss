@@ -1,6 +1,6 @@
 @import "~src/app/tables";
-@import "src/app/variables.scss";
-@import "src/app/mixins.scss";
+@import "app/variables.scss";
+@import "app/mixins.scss";
 
 .SearchListings {
   @extend .settings-table;
