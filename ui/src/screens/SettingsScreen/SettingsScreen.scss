@@ -1,5 +1,11 @@
+@import "app/variables.scss";
+
 .SettingsScreen {
   .settings-form {
     max-width: 750px;
+
+    &__submit {
+      margin-top: $aleph-grid-size;
+    }
   }
 }
