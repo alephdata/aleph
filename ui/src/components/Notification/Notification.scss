@@ -26,10 +26,6 @@ $notification-items-padding: 1px;
       @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
     }
 
-    .bp3-icon.left-icon {
-      @include rtlSupportInvertedProp(padding, right, 3px !important, null);
-    }
-
     & > * {
       padding: 0 $notification-items-padding;
       display: inline;
