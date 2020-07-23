@@ -14,22 +14,6 @@ import CollectionIndexItem from './CollectionIndexItem';
 import './CollectionIndex.scss';
 
 const messages = defineMessages({
-  sort_created_at: {
-    id: 'collection.index.sort.created_at',
-    defaultMessage: 'Creation Date',
-  },
-  sort_updated_at: {
-    id: 'collection.index.sort.updated_at',
-    defaultMessage: 'Update Date',
-  },
-  sort_count: {
-    id: 'collection.index.sort.count',
-    defaultMessage: 'Size',
-  },
-  sort_label: {
-    id: 'collection.index.sort.label',
-    defaultMessage: 'Title',
-  },
   no_results: {
     id: 'collection.index.no_results',
     defaultMessage: 'No datasets were found matching this search',
@@ -40,7 +24,6 @@ export class CollectionIndex extends Component {
   constructor(props) {
     super(props);
 
-    this.onSort = this.onSort.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -61,27 +44,11 @@ export class CollectionIndex extends Component {
     this.updateQuery(newQuery);
   }
 
-  onSort({ field, direction }) {
-    const { query, sortDirection, sortField } = this.props;
-    const newQuery = query.sortBy(field || sortField, direction || sortDirection);
-    this.updateQuery(newQuery);
-  }
-
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isPending && result.next && !result.isError) {
       this.props.queryCollections({ query, result, next: result.next });
     }
-  }
-
-  getSortingOptions() {
-    const { intl } = this.props;
-    return [
-      { field: 'created_at', label: intl.formatMessage(messages.sort_created_at) },
-      { field: 'count', label: intl.formatMessage(messages.sort_count) },
-      { field: 'label', label: intl.formatMessage(messages.sort_label) },
-      { field: 'updated_at', label: intl.formatMessage(messages.sort_updated_at) },
-    ];
   }
 
   updateQuery(newQuery) {
@@ -142,10 +109,7 @@ export class CollectionIndex extends Component {
   }
 
   render() {
-    const { placeholder, query, showQueryTags, sortField, sortDirection } = this.props;
-
-    const sortingOptions = this.getSortingOptions();
-    const activeSort = sortingOptions.filter(({ field }) => field === sortField);
+    const { placeholder, query, showQueryTags } = this.props;
 
     return (
       <div className="CollectionIndex">
@@ -157,10 +121,8 @@ export class CollectionIndex extends Component {
             inputProps={{ large: true, autoFocus: true }}
           />
           <SortingBar
-            sortingOptions={sortingOptions}
-            onSort={this.onSort}
-            activeSort={activeSort.length ? activeSort[0] : sortingOptions[0]}
-            activeDirection={sortDirection}
+            query={query}
+            updateQuery={this.updateQuery}
           />
           {showQueryTags && (
             <QueryTags query={query} updateQuery={this.updateQuery} />
@@ -174,11 +136,8 @@ export class CollectionIndex extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
-  const { field, direction } = query.getSort();
 
   return {
-    sortField: field,
-    sortDirection: direction,
     result: selectCollectionsResult(state, query),
   };
 };

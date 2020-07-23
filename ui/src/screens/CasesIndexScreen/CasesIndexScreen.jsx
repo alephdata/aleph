@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Query from 'app/Query';
 import { queryCollections } from 'actions';
+
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { Breadcrumbs } from 'components/common';
@@ -76,6 +77,7 @@ export class CasesIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
+
   const context = {
     'filter:category': 'casefile',
   };

@@ -3,10 +3,6 @@
 
 .CollectionIndex {
   &__controls {
-    .SortingBar {
-      margin-top: $aleph-grid-size;
-      @include rtl(text-align, right, left)
-    }
     .QueryTags {
       margin-top: $aleph-grid-size;
     }

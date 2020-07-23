@@ -1,11 +1,48 @@
-import React, { PureComponent } from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import React, { Component } from 'react';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
+
+import { selectCurrentRole } from 'selectors';
 import SelectWrapper from 'components/common/SelectWrapper';
 
 import './SortingBar.scss';
 
-class SortingBar extends PureComponent {
+const messages = defineMessages({
+  sort_created_at: {
+    id: 'collection.index.sort.created_at',
+    defaultMessage: 'Creation Date',
+  },
+  sort_updated_at: {
+    id: 'collection.index.sort.updated_at',
+    defaultMessage: 'Update Date',
+  },
+  sort_count: {
+    id: 'collection.index.sort.count',
+    defaultMessage: 'Size',
+  },
+  sort_label: {
+    id: 'collection.index.sort.label',
+    defaultMessage: 'Title',
+  },
+  show_mine: {
+    id: 'collection.index.filter.mine',
+    defaultMessage: 'Created by me',
+  },
+  show_all: {
+    id: 'collection.index.filter.all',
+    defaultMessage: 'All',
+  },
+});
+
+class SortingBar extends Component {
+  constructor(props) {
+    super(props);
+    this.onSort = this.onSort.bind(this);
+    this.toggleCreatedBy = this.toggleCreatedBy.bind(this);
+  }
+
   renderOption = (option, { handleClick }) => (
     <MenuItem
       key={option.field}
@@ -14,10 +51,55 @@ class SortingBar extends PureComponent {
     />
   )
 
+  getSortingOptions() {
+    const { intl } = this.props;
+    return [
+      { field: 'created_at', label: intl.formatMessage(messages.sort_created_at) },
+      { field: 'count', label: intl.formatMessage(messages.sort_count) },
+      { field: 'label', label: intl.formatMessage(messages.sort_label) },
+      { field: 'updated_at', label: intl.formatMessage(messages.sort_updated_at) },
+    ];
+  }
+
+  onSort({ field, direction }) {
+    const { query, sortDirection, sortField, updateQuery } = this.props;
+    const newQuery = query.sortBy(field || sortField, direction || sortDirection);
+    updateQuery(newQuery);
+  }
+
+  toggleCreatedBy() {
+    const { createdByFilter, query, role, updateQuery } = this.props;
+    const newQuery = createdByFilter.length ? query.clearFilter('creator_id') : query.setFilter('creator_id', role.id);
+    updateQuery(newQuery);
+  }
+
   render() {
-    const { activeDirection, activeSort, onSort, sortingOptions } = this.props;
+    const { createdByFilter, intl, sortDirection, sortField } = this.props;
+
+    const sortingOptions = this.getSortingOptions();
+    let activeSort = sortingOptions.filter(({ field }) => field === sortField);
+    activeSort = activeSort.length ? activeSort[0] : sortingOptions[0];
+
     return (
       <div className="SortingBar">
+        {true && (
+          <div className="SortingBar__item">
+            <span className="SortingBar__label">
+              <FormattedMessage
+                id="sorting.bar.label"
+                defaultMessage="Show:"
+              />
+            </span>
+            <div className="SortingBar__control">
+              <Button
+                text={intl.formatMessage(createdByFilter.length ? messages.show_mine : messages.show_all)}
+                onClick={this.toggleCreatedBy}
+                minimal
+                intent={Intent.PRIMARY}
+              />
+            </div>
+          </div>
+        )}
         <div className="SortingBar__item">
           <span className="SortingBar__label">
             <FormattedMessage
@@ -29,7 +111,7 @@ class SortingBar extends PureComponent {
             <SelectWrapper
               itemRenderer={this.renderOption}
               items={sortingOptions}
-              onItemSelect={onSort}
+              onItemSelect={this.onSort}
               activeItem={activeSort}
               popoverProps={{
                 minimal: true,
@@ -62,8 +144,8 @@ class SortingBar extends PureComponent {
           </span>
           <div className="SortingBar__control">
             <Button
-              icon={activeDirection === 'desc' ? 'arrow-down' : 'arrow-up'}
-              onClick={() => onSort({ direction: activeDirection === 'desc' ? 'asc' : 'desc' })}
+              icon={sortDirection === 'desc' ? 'arrow-down' : 'arrow-up'}
+              onClick={() => this.onSort({ direction: sortDirection === 'desc' ? 'asc' : 'desc' })}
               minimal
               intent={Intent.PRIMARY}
             />
@@ -74,4 +156,21 @@ class SortingBar extends PureComponent {
   }
 }
 
-export default injectIntl(SortingBar);
+const mapStateToProps = (state, ownProps) => {
+  const { query } = ownProps;
+  const { field, direction } = query.getSort();
+  const createdByFilter = query.getFilter('creator_id');
+  const role = selectCurrentRole(state);
+
+  return {
+    role,
+    sortField: field,
+    sortDirection: direction,
+    createdByFilter
+  };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  injectIntl,
+)(SortingBar);
