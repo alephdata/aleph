@@ -28,7 +28,7 @@
       & > * {
         display: block;
         margin-bottom: $aleph-grid-size/2;
-        white-space: normal;
+        @include breakText;
 
         &:last-child {
           margin: 0;
