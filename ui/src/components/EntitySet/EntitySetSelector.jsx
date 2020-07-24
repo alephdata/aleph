@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
 import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
-import { EntitySet } from 'components/common';
+import { EntitySet, SearchBox } from 'components/common';
 import EntitySetList from 'components/EntitySet/EntitySetList';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
@@ -22,7 +22,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'diagram.add_entities.title',
-    defaultMessage: 'Add entities to...',
+    defaultMessage: 'Add {count} {count, plural, one {entity} other {entities}} to...',
   },
   placeholder: {
     id: 'diagram.add_entities.select_placeholder',
@@ -45,6 +45,7 @@ class EntitySetSelector extends Component {
     this.state = { processing: false };
 
     this.onChangeLabel = this.onChangeLabel.bind(this);
+    this.onSearch = this.onSearch.bind(this);
     this.onCreate = this.onCreate.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
@@ -60,6 +61,10 @@ class EntitySetSelector extends Component {
     if (result && !result.isPending && !result.isError) {
       this.props.queryEntitySets({ query });
     }
+  }
+
+  onSearch(queryText) {
+    console.log('searching', queryText);
   }
 
   onCreate(e) {
@@ -129,6 +134,13 @@ class EntitySetSelector extends Component {
   render() {
     const { entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
     const { label, processing } = this.state;
+    // <p>
+    //   <FormattedMessage
+    //     id="diagram.add_entities.selected_count"
+    //     defaultMessage="You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a diagram."
+    //     values={{ count: <strong>{entities.length}</strong>, count_simple: entities.length }}
+    //   />
+    // </p>
 
     return (
       <Drawer
@@ -137,58 +149,73 @@ class EntitySetSelector extends Component {
         className="EntitySetSelector"
         size={Drawer.SIZE_SMALL}
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title)}
+        title={intl.formatMessage(messages.title, { count: entities.length })}
         transitionDuration={200}
         onClose={toggleDialog}
+        autoFocus={false}
+        enforceFocus={false}
+        canOutsideClickClose={false}
+        portalClassName="EntitySetSelector__overlay-container"
       >
         <div className="bp3-drawer-body">
-          <p>
-            <FormattedMessage
-              id="diagram.add_entities.selected_count"
-              defaultMessage="You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a diagram."
-              values={{ count: <strong>{entities.length}</strong>, count_simple: entities.length }}
+          <div className="EntitySetSelector__top-section">
+            <SearchBox
+              onSearch={this.onSearch}
+              placeholder={"testing"}
+              query={diagramsQuery}
             />
-          </p>
-          <Divider />
+          </div>
+
           <div className="EntitySetSelector__section">
-            <h1 className="EntitySetSelector__section__title">
+            <h5 className="EntitySetSelector__section__title bp3-heading">
               <FormattedMessage id="entityset.selector.lists" defaultMessage="Lists" />
-            </h1>
+            </h5>
             <div className="EntitySetSelector__section__content">
               <EntitySetList
                 query={listsQuery}
                 result={listsResult}
                 type="list"
-                showCollection
               />
             </div>
+            <form onSubmit={this.onCreate}>
+              <InputGroup
+                fill
+                leftIcon="graph"
+                placeholder={intl.formatMessage(messages.create_new)}
+                rightElement={
+                  <Button icon="arrow-right" minimal type="submit" />
+                }
+                onChange={this.onChangeLabel}
+                value={label}
+              />
+            </form>
+
           </div>
           <div className="EntitySetSelector__section">
-            <h1 className="EntitySetSelector__section__title">
+            <h5 className="EntitySetSelector__section__title bp3-heading">
               <FormattedMessage id="entityset.selector.diagrams" defaultMessage="Diagrams" />
-            </h1>
+            </h5>
             <div className="EntitySetSelector__section__content">
               <EntitySetList
                 query={diagramsQuery}
                 result={diagramsResult}
                 type="diagram"
-                showCollection
               />
             </div>
+            <form onSubmit={this.onCreate}>
+              <InputGroup
+                fill
+                leftIcon="graph"
+                placeholder={intl.formatMessage(messages.create_new)}
+                rightElement={
+                  <Button icon="arrow-right" minimal type="submit" />
+                }
+                onChange={this.onChangeLabel}
+                value={label}
+              />
+            </form>
           </div>
 
-          <form onSubmit={this.onCreate}>
-            <InputGroup
-              fill
-              leftIcon="graph"
-              placeholder={intl.formatMessage(messages.create_new)}
-              rightElement={
-                <Button icon="arrow-right" minimal type="submit" />
-              }
-              onChange={this.onChangeLabel}
-              value={label}
-            />
-          </form>
         </div>
       </Drawer>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { Classes, Icon, H4 } from '@blueprintjs/core';
+import { Classes, Icon, H6 } from '@blueprintjs/core';
 import getEntitySetLink from 'util/getEntitySetLink';
 import c from 'classnames';
 
@@ -32,35 +32,30 @@ const EntitySetListItem = ({ entitySet, isPending, showCollection }) => {
   }
 
   return (
-    <div className="EntitySetListItem" key={entitySet.id}>
-      <Link className="EntitySetListItem__link" to={getEntitySetLink(entitySet)}>
-        <div className="EntitySetListItem__content">
-          {showCollection && (
-            <div className="EntitySetListItem__collection">
-              <Collection.Label collection={entitySet.collection} className="bp3-text-muted" />
-            </div>
-          )}
-          <Icon className="EntitySetListItem__icon" icon="graph" iconSize={42} />
-          <H4>
-            <EntitySet.Link entitySet={entitySet} />
-          </H4>
-          {entitySet.summary && (
-            <Summary text={entitySet.summary} className="summary" truncate={2} />
-          )}
-          <p className="details">
-            <span className="details-item">
-              <Icon icon="time" iconSize={14} />
-              <FormattedMessage
-                id="entitySet.last_updated"
-                defaultMessage="Updated {date}"
-                values={{
-                  date: <Date value={entitySet.updated_at} />,
-                }}
-              />
-            </span>
-          </p>
+    <div className="EntitySetListItem">
+      <div className="EntitySetListItem__main">
+        <H6 className="EntitySetListItem__title">
+          <EntitySet.Link entitySet={entitySet} icon />
+        </H6>
+        <Summary text={entitySet.summary} className="summary" truncate={2} />
+      </div>
+      {showCollection && (
+        <div className="EntitySetListItem__collection">
+          <Collection.Link collection={entitySet.collection} className="bp3-text-muted" />
         </div>
-      </Link>
+      )}
+      <p className="details">
+        <span className="details-item">
+          <Icon icon="time" iconSize={14} />
+          <FormattedMessage
+            id="entitySet.last_updated"
+            defaultMessage="Updated {date}"
+            values={{
+              date: <Date value={entitySet.updated_at} />,
+            }}
+          />
+        </span>
+      </p>
     </div>
   );
 };
