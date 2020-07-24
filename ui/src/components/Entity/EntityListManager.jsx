@@ -11,7 +11,7 @@ import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { Count, ErrorSection } from 'components/common';
-import AddToEntitySetDialog from 'dialogs/AddToEntitySetDialog/AddToEntitySetDialog';
+import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'components/Entity/EntityActionBar';
 import { queryEntities } from 'actions';
@@ -56,7 +56,7 @@ export class EntityListManager extends Component {
     this.onDocSelected = this.onDocSelected.bind(this);
     this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
     this.toggleEdgeCreateDialog = this.toggleEdgeCreateDialog.bind(this);
-    this.toggleAddToEntitySetDialog = this.toggleAddToEntitySetDialog.bind(this);
+    this.toggleEntitySetSelector = this.toggleEntitySetSelector.bind(this);
   }
 
   componentDidMount() {
@@ -174,7 +174,7 @@ export class EntityListManager extends Component {
     }));
   }
 
-  toggleAddToEntitySetDialog() {
+  toggleEntitySetSelector() {
     this.setState(({ addToIsOpen }) => ({
       addToIsOpen: !addToIsOpen,
     }));
@@ -207,7 +207,7 @@ export class EntityListManager extends Component {
             </Button>
           )}
           {!schema.isEdge && (
-            <Button icon="send-to-graph" onClick={this.toggleAddToEntitySetDialog} disabled={selection.length < 1}>
+            <Button icon="add-to-artifact" onClick={this.toggleEntitySetSelector} disabled={selection.length < 1}>
               <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
               <Count count={selection.length || null} />
             </Button>
@@ -259,11 +259,11 @@ export class EntityListManager extends Component {
           getEntitySuggestions={entityManager.getEntitySuggestions}
           intl={intl}
         />
-        <AddToEntitySetDialog
+        <EntitySetSelector
           collection={collection}
           entities={selection}
           isOpen={this.state.addToIsOpen}
-          toggleDialog={this.toggleAddToEntitySetDialog}
+          toggleDialog={this.toggleEntitySetSelector}
         />
       </div>
     );

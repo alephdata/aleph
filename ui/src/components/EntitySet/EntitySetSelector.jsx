@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { Button, Divider, InputGroup } from '@blueprintjs/core';
+import { Button, Divider, Drawer, InputGroup } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import FormDialog from 'dialogs/common/FormDialog';
 import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
 import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { EntitySet } from 'components/common';
+import EntitySetList from 'components/EntitySet/EntitySetList';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
 
-import './AddToEntitySetDialog.scss';
+import './EntitySetSelector.scss';
 
 const messages = defineMessages({
   create_new: {
@@ -22,7 +22,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'diagram.add_entities.title',
-    defaultMessage: 'Add entities to a diagram',
+    defaultMessage: 'Add entities to...',
   },
   placeholder: {
     id: 'diagram.add_entities.select_placeholder',
@@ -39,7 +39,7 @@ const messages = defineMessages({
 });
 
 
-class AddToEntitySetDialog extends Component {
+class EntitySetSelector extends Component {
   constructor(props) {
     super(props);
     this.state = { processing: false };
@@ -127,19 +127,21 @@ class AddToEntitySetDialog extends Component {
   }
 
   render() {
-    const { entities, intl, isOpen, result, toggleDialog } = this.props;
+    const { entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
     const { label, processing } = this.state;
 
     return (
-      <FormDialog
-        icon="send-to-graph"
-        className="AddToEntitySetDialog"
-        processing={processing}
+      <Drawer
+        hasBackdrop={false}
+        icon="add-to-artifact"
+        className="EntitySetSelector"
+        size={Drawer.SIZE_SMALL}
         isOpen={isOpen}
         title={intl.formatMessage(messages.title)}
+        transitionDuration={200}
         onClose={toggleDialog}
       >
-        <div className="bp3-dialog-body">
+        <div className="bp3-drawer-body">
           <p>
             <FormattedMessage
               id="diagram.add_entities.selected_count"
@@ -148,19 +150,33 @@ class AddToEntitySetDialog extends Component {
             />
           </p>
           <Divider />
-          <EntitySet.Select
-            onSelect={this.onSelect}
-            items={result.results}
-            noResults={intl.formatMessage(messages.empty)}
-            buttonProps={{
-              icon: "send-to-graph",
-              disabled: result.isLoading || result.shouldLoad,
-              text: intl.formatMessage(messages.placeholder)
-            }}
-          />
-          <div className="FormDialog__spacer">
-            <FormattedMessage id="diagram.add.or" defaultMessage="or" />
+          <div className="EntitySetSelector__section">
+            <h1 className="EntitySetSelector__section__title">
+              <FormattedMessage id="entityset.selector.lists" defaultMessage="Lists" />
+            </h1>
+            <div className="EntitySetSelector__section__content">
+              <EntitySetList
+                query={listsQuery}
+                result={listsResult}
+                type="list"
+                showCollection
+              />
+            </div>
           </div>
+          <div className="EntitySetSelector__section">
+            <h1 className="EntitySetSelector__section__title">
+              <FormattedMessage id="entityset.selector.diagrams" defaultMessage="Diagrams" />
+            </h1>
+            <div className="EntitySetSelector__section__content">
+              <EntitySetList
+                query={diagramsQuery}
+                result={diagramsResult}
+                type="diagram"
+                showCollection
+              />
+            </div>
+          </div>
+
           <form onSubmit={this.onCreate}>
             <InputGroup
               fill
@@ -174,17 +190,21 @@ class AddToEntitySetDialog extends Component {
             />
           </form>
         </div>
-      </FormDialog>
+      </Drawer>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const query = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
+  const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
+  const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
+
   return {
-    query,
-    result: selectEntitySetsResult(state, query),
+    diagramsQuery,
+    diagramsResult: selectEntitySetsResult(state, diagramsQuery),
+    listsQuery,
+    listsResult: selectEntitySetsResult(state, listsQuery),
   };
 };
 
@@ -192,4 +212,4 @@ export default compose(
   withRouter,
   injectIntl,
   connect(mapStateToProps, { createEntitySet, queryEntitySets, updateEntitySet }),
-)(AddToEntitySetDialog);
+)(EntitySetSelector);

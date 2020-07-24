@@ -39,7 +39,6 @@ const messages = defineMessages({
 export class EntitySetIndexScreen extends Component {
   constructor(props) {
     super(props);
-    this.getMoreResults = this.getMoreResults.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
   }
 
@@ -49,13 +48,6 @@ export class EntitySetIndexScreen extends Component {
 
   componentDidUpdate() {
     this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryEntitySets({ query, next: result.next });
-    }
   }
 
   updateQuery(newQuery) {
@@ -104,7 +96,7 @@ export class EntitySetIndexScreen extends Component {
           <EntitySetList
             result={result}
             type={type}
-            getMoreItems={this.getMoreResults}
+            query={query}
             showCollection
           />
         </Dashboard>

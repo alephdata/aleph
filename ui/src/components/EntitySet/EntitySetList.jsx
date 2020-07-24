@@ -18,8 +18,21 @@ const messages = defineMessages({
 });
 
 class EntitySetList extends Component {
+  constructor(props) {
+    super(props);
+    this.getMoreResults = this.getMoreResults.bind(this);
+  }
+
+
+  getMoreResults() {
+    const { query, result } = this.props;
+    if (result && !result.isPending && result.next && !result.isError) {
+      this.props.queryEntitySets({ query, next: result.next });
+    }
+  }
+
   render() {
-    const { getMoreItems, intl, result, showCollection, type } = this.props;
+    const { intl, result, showCollection, type } = this.props;
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
@@ -45,7 +58,7 @@ class EntitySetList extends Component {
           ))}
         </div>
         <Waypoint
-          onEnter={getMoreItems}
+          onEnter={this.getMoreItems}
           bottomOffset="0"
           scrollableAncestor={window}
         />
