@@ -2,7 +2,7 @@
 banal==1.0.1
 urlnormalizer==1.2.5
 followthemoney==1.33.6
-followthemoney-store[postgresql]==2.1.7
+followthemoney-store[postgresql]==2.2.1
 fingerprints==1.0.1
 servicelayer[google,amazon]==1.13.4
 normality==2.1.1
