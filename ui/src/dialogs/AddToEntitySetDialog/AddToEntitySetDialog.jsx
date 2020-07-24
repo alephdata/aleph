@@ -9,11 +9,11 @@ import FormDialog from 'dialogs/common/FormDialog';
 import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
 import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
-import { Diagram } from 'components/common';
+import { EntitySet } from 'components/common';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
 
-import './AddToDiagramDialog.scss';
+import './AddToEntitySetDialog.scss';
 
 const messages = defineMessages({
   create_new: {
@@ -39,7 +39,7 @@ const messages = defineMessages({
 });
 
 
-class AddToDiagramDialog extends Component {
+class AddToEntitySetDialog extends Component {
   constructor(props) {
     super(props);
     this.state = { processing: false };
@@ -133,7 +133,7 @@ class AddToDiagramDialog extends Component {
     return (
       <FormDialog
         icon="send-to-graph"
-        className="AddToDiagramDialog"
+        className="AddToEntitySetDialog"
         processing={processing}
         isOpen={isOpen}
         title={intl.formatMessage(messages.title)}
@@ -148,7 +148,7 @@ class AddToDiagramDialog extends Component {
             />
           </p>
           <Divider />
-          <Diagram.Select
+          <EntitySet.Select
             onSelect={this.onSelect}
             items={result.results}
             noResults={intl.formatMessage(messages.empty)}
@@ -192,4 +192,4 @@ export default compose(
   withRouter,
   injectIntl,
   connect(mapStateToProps, { createEntitySet, queryEntitySets, updateEntitySet }),
-)(AddToDiagramDialog);
+)(AddToEntitySetDialog);

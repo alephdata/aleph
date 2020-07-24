@@ -10,43 +10,40 @@ import { fetchEntitySet } from 'actions';
 import { selectEntitySet } from 'selectors';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
-import DiagramEditor from 'components/Diagram/DiagramEditor';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, Diagram } from 'components/common';
+import { Breadcrumbs, Collection, EntitySet } from 'components/common';
 import updateStates from 'util/updateStates';
 
 const messages = defineMessages({
   status_success: {
-    id: 'diagram.status_success',
+    id: 'list.status_success',
     defaultMessage: 'Saved',
   },
   status_error: {
-    id: 'diagram.status_error',
+    id: 'list.status_error',
     defaultMessage: 'Error saving',
   },
   status_in_progress: {
-    id: 'diagram.status_in_progress',
+    id: 'list.status_in_progress',
     defaultMessage: 'Saving...',
   },
   error_warning: {
-    id: 'diagram.error_warning',
+    id: 'list.error_warning',
     defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
   },
   in_progress_warning: {
-    id: 'diagram.in_progress_warning',
+    id: 'list.in_progress_warning',
     defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
   },
 });
 
-export class DiagramScreen extends Component {
+export class ListScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      filterText: '',
       updateStatus: null,
-      downloadTriggered: false,
     };
 
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
@@ -61,10 +58,10 @@ export class DiagramScreen extends Component {
   }
 
   onCollectionSearch(queryText) {
-    const { history, diagram } = this.props;
+    const { history, list } = this.props;
     const query = {
       q: queryText,
-      'filter:collection_id': diagram.collection.id,
+      'filter:collection_id': list.collection.id,
     };
     history.push({
       pathname: '/search',
@@ -72,16 +69,8 @@ export class DiagramScreen extends Component {
     });
   }
 
-  onDiagramSearch(filterText) {
-    this.setState({ filterText });
-  }
-
-  onDiagramDownload() {
-    this.setState({ downloadTriggered: true });
-  }
-
-  onDownloadComplete() {
-    this.setState({ downloadTriggered: false });
+  onSearch(filterText) {
+    console.log('searching');
   }
 
   onStatusChange(updateStatus) {
@@ -89,11 +78,11 @@ export class DiagramScreen extends Component {
   }
 
   getSearchScopes() {
-    const { diagram } = this.props;
+    const { list } = this.props;
     const scopes = [
       {
-        listItem: <Collection.Label collection={diagram.collection} icon truncate={30} />,
-        label: diagram.collection.label,
+        listItem: <Collection.Label collection={list.collection} icon truncate={30} />,
+        label: list.collection.label,
         onSearch: this.onCollectionSearch,
       },
     ];
@@ -102,10 +91,10 @@ export class DiagramScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { diagram, diagramId } = this.props;
+    const { list, listId } = this.props;
 
-    if (diagram.shouldLoad || diagram.shallow) {
-      this.props.fetchEntitySet(diagramId);
+    if (list.shouldLoad || list.shallow) {
+      this.props.fetchEntitySet(listId);
     }
   }
 
@@ -124,26 +113,26 @@ export class DiagramScreen extends Component {
   }
 
   render() {
-    const { diagram, intl } = this.props;
+    const { list, intl } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
-    if (diagram.isError) {
-      return <ErrorScreen error={diagram.error} />;
+    if (list.isError) {
+      return <ErrorScreen error={list.error} />;
     }
 
-    if ((!diagram.id) || diagram.shallow) {
+    if ((!list.id) || list.shallow) {
       return <LoadingScreen />;
     }
 
     const operation = (
-      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch}/>
+      <EntitySetManageMenu entitySet={list} onSearch={this.onDiagramSearch}/>
     );
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation} status={this.formatStatus()}>
-        <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
+        <Breadcrumbs.Collection key="collection" collection={list.collection} />
         <Breadcrumbs.Text active>
-          <Diagram.Label diagram={diagram} icon />
+          <EntitySet.Label entitySet={list} icon />
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
@@ -159,19 +148,11 @@ export class DiagramScreen extends Component {
           message={intl.formatMessage(messages.error_warning)}
         />
         <Screen
-          title={diagram.label}
-          description={diagram.summary || ''}
+          title={list.label}
+          description={list.summary || ''}
           searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
-          <DiagramEditor
-            collection={diagram.collection}
-            onStatusChange={this.onStatusChange}
-            diagram={diagram}
-            downloadTriggered={downloadTriggered}
-            filterText={filterText}
-            onDownloadComplete={this.onDownloadComplete}
-          />
         </Screen>
       </>
     );
@@ -179,11 +160,11 @@ export class DiagramScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { diagramId } = ownProps.match.params;
+  const { listId } = ownProps.match.params;
 
   return {
-    diagramId,
-    diagram: selectEntitySet(state, diagramId),
+    listId,
+    list: selectEntitySet(state, listId),
   };
 };
 
@@ -192,4 +173,4 @@ export default compose(
   withRouter,
   injectIntl,
   connect(mapStateToProps, { fetchEntitySet }),
-)(DiagramScreen);
+)(ListScreen);
