@@ -14,7 +14,7 @@ import getEntitySetLink from 'util/getEntitySetLink';
 import { processApiEntity } from 'components/EntitySet/util';
 
 
-const TYPES = ['generic', 'diagram','timeline'];
+const TYPES = ['diagram', 'list', 'timeline'];
 
 
 const messages = defineMessages({
@@ -60,7 +60,7 @@ const messages = defineMessages({
 class EntitySetCreateDialog extends Component {
   constructor(props) {
     super(props);
-    const { entitySet, type = 'generic' } = this.props;
+    const { entitySet, type } = this.props;
 
     this.state = {
       type: entitySet.type || type,

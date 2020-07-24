@@ -15,15 +15,15 @@ class EntitySet(db.Model, SoftDeleteModel):
     __tablename__ = "entityset"
 
     # set types
-    GENERIC = "generic"
+    LIST = "list"
     DIAGRAM = "diagram"
     TIMELINE = "timeline"
 
-    TYPES = [GENERIC, DIAGRAM, TIMELINE]
+    TYPES = [LIST, DIAGRAM, TIMELINE]
 
     id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True)
     label = db.Column(db.Unicode)
-    type = db.Column(db.String(10), index=True, default=GENERIC)
+    type = db.Column(db.String(10), index=True, default=LIST)
     summary = db.Column(db.Unicode, nullable=True)
     layout = db.Column("layout", JSONB, nullable=True)
 

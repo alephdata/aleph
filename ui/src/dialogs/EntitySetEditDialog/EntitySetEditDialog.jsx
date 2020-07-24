@@ -37,7 +37,7 @@ class EntitySetEditDialog extends Component {
     const { entitySet } = this.props;
 
     this.state = {
-      type: entitySet.type || 'generic',
+      type: entitySet.type || 'list',
       label: entitySet.label || '',
       summary: entitySet.summary || '',
       processing: false,

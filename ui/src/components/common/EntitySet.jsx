@@ -10,11 +10,11 @@ import getEntitySetLink from 'util/getEntitySetLink';
 const ICONS = {
   diagram: 'graph',
   timeline: 'timeline-events',
-  generic: 'box'
+  list: 'list'
 }
 
 
-const getIcon = ({ type }) => ICONS[type] || ICONS.generic;
+const getIcon = ({ type }) => ICONS[type] || ICONS.list;
 
 
 class EntitySetLabel extends PureComponent {

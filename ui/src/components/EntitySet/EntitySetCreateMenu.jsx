@@ -29,21 +29,22 @@ class EntitySetCreateMenu extends Component {
   ));
 
   render() {
-    const { type = 'generic', collection, intl, session } = this.props;
-    const {
-      isOpen, importEnabled,
-    } = this.state;
+    const { type, collection, intl, session } = this.props;
+    const { isOpen, importEnabled } = this.state;
     const canAdd = session?.loggedIn;
-    const canImportVisDiagram = canAdd && type === 'diagram';
+    const canImportDiagram = type === 'diagram';
+    const icon = type === 'diagram' ? 'send-to-graph' : 'add-to-artifact';
 
     const buttonContent = (
       <ButtonGroup>
-        <Button onClick={() => this.toggleDialog(false)} icon="send-to-graph" intent={Intent.PRIMARY} disabled={!canAdd}>
+        <Button onClick={() => this.toggleDialog(false)} icon={icon} intent={Intent.PRIMARY} disabled={!canAdd}>
           <FormattedMessage id="entitysets.index.create" defaultMessage="New {type}" values={{ type }} />
         </Button>
-        <Button onClick={() => this.toggleDialog(true)} icon="import" disabled={!canImportVisDiagram}>
-          <FormattedMessage id="entitysets.index.import" defaultMessage="Import {type}" values={{ type }} />
-        </Button>
+        {canImportDiagram && (
+          <Button onClick={() => this.toggleDialog(true)} icon="import" disabled={!canAdd}>
+            <FormattedMessage id="entitysets.index.import" defaultMessage="Import {type}" values={{ type }} />
+          </Button>
+        )}
       </ButtonGroup>
     );
 

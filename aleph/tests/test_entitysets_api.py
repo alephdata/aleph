@@ -192,7 +192,7 @@ class EntitySetAPITest(TestCase):
     def test_create_empty(self):
         data = {
             "label": "hello",
-            "type": "generic",
+            "type": "list",
             "collection_id": str(self.col.id),
         }
         url = "/api/2/entitysets"
@@ -220,7 +220,7 @@ class EntitySetAPITest(TestCase):
     def test_delete_when_collection_deleted(self):
         data = {
             "label": "hello",
-            "type": "generic",
+            "type": "list",
             "collection_id": str(self.col.id),
         }
         url = "/api/2/entitysets"
@@ -240,7 +240,7 @@ class EntitySetAPITest(TestCase):
                 "collection_id": str(self.col.id),
             },
             {"label": "Diagram", "type": "diagram", "collection_id": str(self.col.id),},
-            {"label": "Generic", "type": "generic", "collection_id": str(self.col.id),},
+            {"label": "List", "type": "list", "collection_id": str(self.col.id),},
         )
         url = "/api/2/entitysets"
         for eset in entitysets:
@@ -252,7 +252,7 @@ class EntitySetAPITest(TestCase):
         validate(res.json, "QueryResponse")
         assert len(res.json["results"]) == 3
 
-        for qfilter in ("timeline", "diagram", "generic"):
+        for qfilter in ("timeline", "diagram", "list"):
             res = self.client.get(url + f"?filter:type={qfilter}", headers=self.headers)
             assert res.status_code == 200, res
             validate(res.json, "QueryResponse")
