@@ -27,6 +27,10 @@ const messages = defineMessages({
     id: 'cases.placeholder',
     defaultMessage: 'Search personal datasets...',
   },
+  empty: {
+    id: 'cases.empty',
+    defaultMessage: 'No personal datasets were found',
+  },
 });
 
 
@@ -68,6 +72,7 @@ export class CasesIndexScreen extends Component {
             query={query}
             placeholder={intl.formatMessage(messages.placeholder)}
             noResultsText={intl.formatMessage(messages.no_results_title)}
+            emptyText={intl.formatMessage(messages.empty)}
             showCreatedByFilter
           />
         </Dashboard>
