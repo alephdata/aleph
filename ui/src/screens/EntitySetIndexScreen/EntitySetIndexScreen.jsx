@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { queryEntitySets } from 'actions';
 import { selectEntitySetsResult } from 'selectors';
 import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
-import { Breadcrumbs } from 'components/common';
+import { Breadcrumbs, SortingBar } from 'components/common';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
 import EntitySetList from 'components/EntitySet/EntitySetList';
@@ -39,6 +40,7 @@ export class EntitySetIndexScreen extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.updateQuery = this.updateQuery.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +58,15 @@ export class EntitySetIndexScreen extends Component {
     }
   }
 
+  updateQuery(newQuery) {
+    const { history, location } = this.props;
+
+    history.push({
+      pathname: location.pathname,
+      search: newQuery.toLocation(),
+    });
+  }
+
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (result.shouldLoad) {
@@ -64,7 +75,7 @@ export class EntitySetIndexScreen extends Component {
   }
 
   render() {
-    const { intl, result, type } = this.props;
+    const { intl, query, result, type } = this.props;
     const title = intl.formatMessage(messages[`${type}_title`])
     const description = intl.formatMessage(messages[`${type}_description`])
 
@@ -86,6 +97,10 @@ export class EntitySetIndexScreen extends Component {
               <EntitySetCreateMenu type={type} />
             </div>
           </div>
+          <SortingBar
+            query={query}
+            updateQuery={this.updateQuery}
+          />
           <EntitySetList
             result={result}
             type={type}
@@ -104,8 +119,11 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'filter:type': type
   };
-  const query = Query.fromLocation('entitysets', location, context, 'entitySets')
-    .sortBy('updated_at', 'desc');
+  let query = Query.fromLocation('entitysets', location, context, 'entitySets');
+
+  if (!query.hasSort()) {
+    query = query.sortBy('created_at', 'desc');
+  }
 
   const result = selectEntitySetsResult(state, query);
 
@@ -118,6 +136,7 @@ const mapStateToProps = (state, ownProps) => {
 
 
 export default compose(
+  withRouter,
   connect(mapStateToProps, { queryEntitySets }),
   injectIntl,
 )(EntitySetIndexScreen);
