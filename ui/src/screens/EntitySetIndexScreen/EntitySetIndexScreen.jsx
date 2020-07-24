@@ -11,23 +11,31 @@ import Dashboard from 'components/Dashboard/Dashboard';
 import { Breadcrumbs } from 'components/common';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
-import DiagramList from 'components/Diagram/DiagramList';
+import EntitySetList from 'components/EntitySet/EntitySetList';
 
 
-import './DiagramIndexScreen.scss';
+import './EntitySetIndexScreen.scss';
 
 const messages = defineMessages({
-  title: {
+  diagram_title: {
     id: 'diagrams.title',
     defaultMessage: 'Network diagrams',
   },
-  no_results_title: {
-    id: 'diagrams.no_results_title',
-    defaultMessage: 'You do not have any network diagrams yet',
+  list_title: {
+    id: 'lists.title',
+    defaultMessage: 'Lists',
+  },
+  diagram_description: {
+    id: 'diagrams.description',
+    defaultMessage: 'Network diagrams let you visualize complex relationships within a dataset.',
+  },
+  list_description: {
+    id: 'lists.description',
+    defaultMessage: 'Lists let you organize and group related entities of interest.',
   },
 });
 
-export class DiagramIndexScreen extends Component {
+export class EntitySetIndexScreen extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -56,45 +64,31 @@ export class DiagramIndexScreen extends Component {
   }
 
   render() {
-    const { intl, result } = this.props;
+    const { intl, result, type } = this.props;
+    const title = intl.formatMessage(messages[`${type}_title`])
+    const description = intl.formatMessage(messages[`${type}_description`])
 
     if (result.isError) {
       return <ErrorScreen error={result.error} />;
     }
 
-    const breadcrumbs = (
-      <Breadcrumbs>
-        <li>
-          <FormattedMessage
-            id="diagrams.browser.breadcrumb"
-            defaultMessage="Diagrams"
-          />
-        </li>
-      </Breadcrumbs>
-    );
-
     return (
       <Screen
-        className="DiagramIndexScreen"
-        breadcrumbs={breadcrumbs}
-        title={intl.formatMessage(messages.title)}
+        className="EntitySetIndexScreen"
+        title={title}
         requireSession
       >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
-            <p className="Dashboard__subheading">
-              <FormattedMessage
-                id="diagram.description"
-                defaultMessage="Network diagrams let you visualize complex relationships within a dataset."
-              />
-            </p>
+            <h5 className="Dashboard__title">{title}</h5>
+            <p className="Dashboard__subheading">{description}</p>
             <div className="Dashboard__actions">
-              <EntitySetCreateMenu type='diagram' />
+              <EntitySetCreateMenu type={type} />
             </div>
           </div>
-          <DiagramList
+          <EntitySetList
             result={result}
+            type={type}
             getMoreItems={this.getMoreResults}
             showCollection
           />
@@ -106,8 +100,9 @@ export class DiagramIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
+  const type = location.pathname === '/diagrams' ? 'diagram' : 'list';
   const context = {
-    'filter:type': 'diagram'
+    'filter:type': type
   };
   const query = Query.fromLocation('entitysets', location, context, 'entitySets')
     .sortBy('updated_at', 'desc');
@@ -117,6 +112,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query,
     result,
+    type,
   };
 };
 
@@ -124,4 +120,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps, { queryEntitySets }),
   injectIntl,
-)(DiagramIndexScreen);
+)(EntitySetIndexScreen);

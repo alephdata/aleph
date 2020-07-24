@@ -1,7 +1,7 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-.DiagramList {
+.EntitySetList {
   @include rtlSupportInvertedProp(margin, right, 1px, null);
   &__items {
     display: grid;
