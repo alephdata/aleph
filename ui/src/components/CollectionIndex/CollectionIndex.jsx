@@ -109,7 +109,7 @@ export class CollectionIndex extends Component {
   }
 
   render() {
-    const { placeholder, query, showQueryTags } = this.props;
+    const { placeholder, query, showQueryTags, showCreatedByFilter } = this.props;
 
     return (
       <div className="CollectionIndex">
@@ -123,6 +123,7 @@ export class CollectionIndex extends Component {
           <SortingBar
             query={query}
             updateQuery={this.updateQuery}
+            showCreatedByFilter={showCreatedByFilter}
           />
           {showQueryTags && (
             <QueryTags query={query} updateQuery={this.updateQuery} />

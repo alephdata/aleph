@@ -68,13 +68,13 @@ class SortingBar extends Component {
   }
 
   toggleCreatedBy() {
-    const { createdByFilter, query, role, updateQuery } = this.props;
-    const newQuery = createdByFilter.length ? query.clearFilter('creator_id') : query.setFilter('creator_id', role.id);
+    const { createdByFilterVal, query, role, updateQuery } = this.props;
+    const newQuery = createdByFilterVal.length ? query.clearFilter('creator_id') : query.setFilter('creator_id', role.id);
     updateQuery(newQuery);
   }
 
   render() {
-    const { createdByFilter, intl, sortDirection, sortField } = this.props;
+    const { createdByFilterVal, intl, sortDirection, sortField, showCreatedByFilter } = this.props;
 
     const sortingOptions = this.getSortingOptions();
     let activeSort = sortingOptions.filter(({ field }) => field === sortField);
@@ -82,7 +82,7 @@ class SortingBar extends Component {
 
     return (
       <div className="SortingBar">
-        {true && (
+        {showCreatedByFilter && (
           <div className="SortingBar__item">
             <span className="SortingBar__label">
               <FormattedMessage
@@ -92,7 +92,7 @@ class SortingBar extends Component {
             </span>
             <div className="SortingBar__control">
               <Button
-                text={intl.formatMessage(createdByFilter.length ? messages.show_mine : messages.show_all)}
+                text={intl.formatMessage(createdByFilterVal.length ? messages.show_mine : messages.show_all)}
                 onClick={this.toggleCreatedBy}
                 minimal
                 intent={Intent.PRIMARY}
@@ -159,14 +159,14 @@ class SortingBar extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
   const { field, direction } = query.getSort();
-  const createdByFilter = query.getFilter('creator_id');
+  const createdByFilterVal = query.getFilter('creator_id');
   const role = selectCurrentRole(state);
 
   return {
     role,
     sortField: field,
     sortDirection: direction,
-    createdByFilter
+    createdByFilterVal
   };
 };
 
