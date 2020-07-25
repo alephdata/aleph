@@ -6,6 +6,8 @@ $font-size: $pt-font-size-small;
 .SortingBar {
   position: relative;
   white-space: nowrap;
+  margin-top: $aleph-grid-size;
+  @include rtl(text-align, right, left)
 
   &__item {
     display: inline-block;
