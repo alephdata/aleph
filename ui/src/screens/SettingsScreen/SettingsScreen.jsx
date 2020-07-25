@@ -324,6 +324,7 @@ export class SettingsScreen extends React.Component {
             {this.renderPassword()}
             <FormGroup>
               <Button
+                className="settings-form__submit"
                 intent={Intent.PRIMARY}
                 onClick={this.onSave}
                 disabled={!this.valid()}
