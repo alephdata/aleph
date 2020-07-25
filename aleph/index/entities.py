@@ -166,7 +166,7 @@ def format_proxy(proxy, collection):
     data = proxy.to_full_dict()
     data["schemata"] = list(proxy.schema.names)
 
-    names = ensure_list(data.get("names"))
+    names = data.get("names", [])
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
     data["fingerprints"] = [fp for fp in fps if fp is not None]

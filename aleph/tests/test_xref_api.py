@@ -22,11 +22,11 @@ class XrefApiTestCase(TestCase):
         )
 
         self.ent = self.create_entity(
-            {"schema": "Person", "properties": {"name": "Elim Garak",}}, self.residents
+            {"schema": "Person", "properties": {"name": "Elim Garak"}}, self.residents
         )
 
         self.ent2 = self.create_entity(
-            {"schema": "Person", "properties": {"name": "Leeta",}}, self.residents
+            {"schema": "Person", "properties": {"name": "Leeta"}}, self.residents
         )
 
         # Second public collection and entities
@@ -36,15 +36,15 @@ class XrefApiTestCase(TestCase):
         self.grant_publish(self.dabo)
 
         self.ent3 = self.create_entity(
-            {"schema": "Person", "properties": {"name": "MPella",}}, self.dabo
+            {"schema": "Person", "properties": {"name": "MPella"}}, self.dabo
         )
 
         self.ent4 = self.create_entity(
-            {"schema": "Person", "properties": {"name": "Leeta",}}, self.dabo
+            {"schema": "Person", "properties": {"name": "Leeta"}}, self.dabo
         )
 
         self.ent5 = self.create_entity(
-            {"schema": "Person", "properties": {"name": "Mardah",}}, self.dabo
+            {"schema": "Person", "properties": {"name": "Mardah"}}, self.dabo
         )
 
         # Private collection and entities
@@ -53,11 +53,11 @@ class XrefApiTestCase(TestCase):
         )
 
         self.ent6 = self.create_entity(
-            {"schema": "Person", "properties": {"name": "Elim Garak",}}, self.obsidian
+            {"schema": "Person", "properties": {"name": "Elim Garak"}}, self.obsidian
         )
 
         self.ent7 = self.create_entity(
-            {"schema": "Person", "properties": {"name": "Enabran Tain",}}, self.obsidian
+            {"schema": "Person", "properties": {"name": "Enabran Tain"}}, self.obsidian
         )
 
         db.session.commit()

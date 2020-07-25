@@ -207,7 +207,7 @@ def match():
       - Entity
     """
     entity = parse_request("EntityUpdate")
-    entity = model.get_proxy(entity)
+    entity = model.get_proxy(entity, cleaned=False)
     tag_request(schema=entity.schema.name, caption=entity.caption)
     collection_ids = request.args.getlist("collection_ids")
     result = MatchQuery.handle(request, entity=entity, collection_ids=collection_ids)
@@ -373,9 +373,7 @@ def references(entity_id):
     tag_request(collection_id=entity.get("collection_id"))
     results = []
     for prop, total in entity_references(entity, request.authz):
-        results.append(
-            {"count": total, "property": prop, "schema": prop.schema.name,}
-        )
+        results.append({"count": total, "property": prop, "schema": prop.schema.name})
     return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
@@ -418,10 +416,8 @@ def tags(entity_id):
     for (field, value, total) in entity_tags(entity, request.authz):
         qvalue = quote(value.encode("utf-8"))
         key = ("filter:%s" % field, qvalue)
-        results.append(
-            {"id": query_string([key]), "value": value, "field": field, "count": total,}
-        )
-
+        qid = query_string([key])
+        results.append({"id": qid, "value": value, "field": field, "count": total})
     results.sort(key=lambda p: p["count"], reverse=True)
     return jsonify({"status": "ok", "total": len(results), "results": results})
 
