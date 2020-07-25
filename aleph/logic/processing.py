@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from banal import is_mapping, ensure_list
+from banal import ensure_list
 from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
@@ -35,8 +35,6 @@ def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):
     writer = aggregator.bulk()
     entity_ids = set()
     for data in entities:
-        if not is_mapping(data):
-            raise InvalidData("Failed to read input data", errors=data)
         entity = model.get_proxy(data, cleaned=False)
         if entity.id is None:
             raise InvalidData("No ID for entity", errors=entity.to_dict())
