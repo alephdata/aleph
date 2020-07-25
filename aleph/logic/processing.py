@@ -37,7 +37,7 @@ def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):
     for data in entities:
         if not is_mapping(data):
             raise InvalidData("Failed to read input data", errors=data)
-        entity = model.get_proxy(data)
+        entity = model.get_proxy(data, cleaned=False)
         if entity.id is None:
             raise InvalidData("No ID for entity", errors=entity.to_dict())
         entity = collection.ns.apply(entity)

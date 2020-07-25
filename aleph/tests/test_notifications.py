@@ -26,9 +26,8 @@ class NotificationsTestCase(TestCase):
         assert 1 == notifications["total"]["value"], notifications
         not0 = notifications["hits"][0]["_source"]
         assert not0["event"] == event.name, not0["event"]
-        assert not0["params"]["collection"] == str(collection.id), not0[
-            "params"
-        ]  # noqa
+        params = not0["params"]
+        assert params["collection"] == str(collection.id), params
 
         with mail.record_messages() as outbox:
             assert len(outbox) == 0, outbox

@@ -1,15 +1,15 @@
 banal==1.0.1
 normality==2.1.1
 pantomime==0.4.0
-followthemoney==1.33.6
-followthemoney-store[postgresql]==2.1.7
+followthemoney==2.0.1
+followthemoney-store[postgresql]==2.2.1
 servicelayer[google,amazon]==1.13.4
 languagecodes==1.0.7
 countrytagger==0.1.2
 pyicu==2.5
 google-cloud-vision==1.0.0
 tesserocr==2.5.1
-spacy==2.3.0
+spacy==2.3.2
 fingerprints==1.0.1
 fasttext==0.9.2
 
@@ -23,16 +23,16 @@ pdflib==0.3.0
 pymediainfo==4.2.1
 python-magic==0.4.18
 pypdf2==1.26.0
-rarfile==3.1
+rarfile==3.2
 xlrd==1.2.0
 openpyxl==3.0.4
 odfpy==1.4.1
 cchardet==2.1.6
-lxml==4.5.1
+lxml==4.5.2
 olefile==0.46
 pillow==7.2.0
 vobject==0.9.6.1
 msglite==0.27.0
 
-cryptography==2.9.2
+cryptography==3.0
 requests[security]==2.24.0

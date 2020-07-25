@@ -180,8 +180,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
                 "secret": self.secret,
                 "xref": self.xref,
                 "restricted": self.restricted,
-                "countries": registry.country.normalize_set(self.countries),
-                "languages": registry.language.normalize_set(self.languages),
+                "countries": self.countries,
+                "languages": self.languages,
             }
         )
         return data

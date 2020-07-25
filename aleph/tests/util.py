@@ -41,7 +41,7 @@ def read_entities(file_name):
 
 
 def get_caption(entity):
-    proxy = model.get_proxy(entity)
+    proxy = model.get_proxy(entity, cleaned=False)
     return proxy.caption
 
 
@@ -170,8 +170,9 @@ class TestCase(unittest.TestCase):
             {
                 "schema": "Person",
                 "properties": {
-                    "name": ["Banana ba Nana"], "birthDate": "1969-05-21",
-                    "deathDate": "1972-04-23"
+                    "name": ["Banana ba Nana"],
+                    "birthDate": "1969-05-21",
+                    "deathDate": "1972-04-23",
                 },
             },
             self.private_coll,

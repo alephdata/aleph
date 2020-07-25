@@ -68,17 +68,16 @@ class Entity(db.Model, SoftDeleteModel):
         db.session.add(self)
 
     def to_proxy(self):
-        return model.get_proxy(
-            {
-                "id": self.id,
-                "schema": self.schema,
-                "properties": self.data,
-                "created_at": iso_text(self.created_at),
-                "updated_at": iso_text(self.updated_at),
-                "role_id": self.role_id,
-                "mutable": True,
-            }
-        )
+        data = {
+            "id": self.id,
+            "schema": self.schema,
+            "properties": self.data,
+            "created_at": iso_text(self.created_at),
+            "updated_at": iso_text(self.updated_at),
+            "role_id": self.role_id,
+            "mutable": True,
+        }
+        return model.get_proxy(data, cleaned=False)
 
     @classmethod
     def create(cls, data, collection, role_id=None, validate=True):
