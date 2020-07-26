@@ -12,9 +12,10 @@ from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.export import export_entities
+from aleph.logic.html import sanitize_html
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
+from aleph.views.util import jsonify, parse_request, get_flag
 from aleph.views.util import require, get_nested_collection
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer

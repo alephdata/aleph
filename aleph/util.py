@@ -9,13 +9,6 @@ from flask_babel.speaklater import LazyString
 log = logging.getLogger(__name__)
 
 
-def html_link(text, link):
-    text = text or "[untitled]"
-    if link is None:
-        return "<span class='reference'>%s</span>" % text
-    return "<a class='reference' href='%s'>%s</a>" % (link, text)
-
-
 def anonymize_email(name, email):
     """Generate a simple label with both the name and email of a user."""
     name = stringify(name)

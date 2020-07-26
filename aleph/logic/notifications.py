@@ -7,14 +7,14 @@ from followthemoney.util import get_entity_id
 
 from aleph.core import cache, es, settings
 from aleph.authz import Authz
-from aleph.mail import email_role
 from aleph.model import Collection, Entity, Role, Alert, EntitySet
 from aleph.model import Event, Events
+from aleph.logic.mail import email_role
+from aleph.logic.html import html_link
 from aleph.logic.util import collection_url, entity_url, ui_url, entityset_url
 from aleph.index.notifications import index_notification, delete_notifications
 from aleph.index.notifications import notifications_index
 from aleph.index.util import unpack_result
-from aleph.util import html_link
 
 log = logging.getLogger(__name__)
 GLOBAL = "Global"
