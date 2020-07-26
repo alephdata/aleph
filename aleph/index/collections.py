@@ -87,7 +87,7 @@ def index_collection(collection, sync=False):
         return
 
     log.info(
-        "[%s] Index: %s (%s entities)...",
+        "[%s] Index: %s (%s things)...",
         collection,
         data.get("label"),
         data.get("count"),

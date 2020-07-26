@@ -1,7 +1,7 @@
 import logging
-from datetime import datetime
 from banal import ensure_list
 from followthemoney import model
+from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
 
@@ -10,9 +10,10 @@ from aleph.logic.aggregator import get_aggregator
 from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
+BATCH_SIZE = 100
 
 
-def index_many(stage, collection, sync=False, entity_ids=None, batch=100):
+def index_many(stage, collection, sync=False, entity_ids=None, batch=BATCH_SIZE):
     """Project the contents of the collections aggregator into the index."""
     if entity_ids is not None:
         entity_ids = ensure_list(entity_ids)
@@ -27,10 +28,11 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=100):
     refresh_collection(collection.id)
 
 
-def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):
+def bulk_write(
+    collection, entities, safe=False, role_id=None, mutable=True, index=True
+):
     """Write a set of entities - given as dicts - to the index."""
     # This is called mainly by the /api/2/collections/X/_bulk API.
-    now = datetime.utcnow().isoformat()
     aggregator = get_aggregator(collection)
     writer = aggregator.bulk()
     entity_ids = set()
@@ -39,13 +41,15 @@ def bulk_write(collection, entities, unsafe=False, role_id=None, index=True):
         if entity.id is None:
             raise InvalidData("No ID for entity", errors=entity.to_dict())
         entity = collection.ns.apply(entity)
-        if not unsafe:
+        if safe:
             entity = remove_checksums(entity)
-        entity.context = {
-            "role_id": role_id,
-            "created_at": now,
-            "updated_at": now,
-        }
+        entity.context = {"role_id": role_id, "mutable": mutable}
+        for field in ("created_at", "updated_at"):
+            timestamp = data.get(field)
+            if timestamp is not None:
+                dt = registry.date.to_datetime(timestamp)
+                if dt is not None:
+                    entity.context[field] = dt.isoformat()
         writer.put(entity, origin="bulk")
         if index and len(entity_ids) < MAX_PAGE:
             entity_ids.add(entity.id)

@@ -244,8 +244,8 @@ class EntitySerializer(Serializer):
                 )
 
         obj["links"] = links
-        write = request.authz.WRITE
-        obj["writeable"] = request.authz.can(collection_id, write)
+        write = request.authz.can(collection_id, request.authz.WRITE)
+        obj["writeable"] = write and obj.get("mutable", False)
         obj["shallow"] = obj.get("shallow", True)
         return obj
 

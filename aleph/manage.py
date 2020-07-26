@@ -172,12 +172,12 @@ def xref(foreign_id, against=None):
 @click.argument("foreign_id")
 @click.option("-i", "--infile", type=click.File("r"), default="-")  # noqa
 @click.option(
-    "--unsafe",
-    is_flag=True,
-    default=False,
-    help="Allow loading references to archive hashes.",
-)  # noqa
-def load_entities(foreign_id, infile, unsafe=False):
+    "--safe/--unsafe", default=True, help="Allow references to archive hashes.",
+)
+@click.option(
+    "--mutable/--immutable", default=False, help="Mark entities mutable.",
+)
+def load_entities(foreign_id, infile, safe=False, mutable=False):
     """Load FtM entities from the specified iJSON file."""
     collection = ensure_collection(foreign_id, foreign_id)
 
@@ -193,7 +193,14 @@ def load_entities(foreign_id, infile, unsafe=False):
             yield json.loads(line)
 
     role = Role.load_cli_user()
-    bulk_write(collection, read_entities(), unsafe=unsafe, role_id=role.id, index=False)
+    bulk_write(
+        collection,
+        read_entities(),
+        safe=safe,
+        mutable=mutable,
+        role_id=role.id,
+        index=False,
+    )
     reindex_collection(collection)
 
 

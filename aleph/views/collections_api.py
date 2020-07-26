@@ -266,12 +266,8 @@ def reindex(collection_id):
     return ("", 202)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/_bulk", methods=["POST"]
-)  # noqa
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/bulk", methods=["POST"]
-)  # noqa
+@blueprint.route("/api/2/collections/<int:collection_id>/_bulk", methods=["POST"])
+@blueprint.route("/api/2/collections/<int:collection_id>/bulk", methods=["POST"])
 def bulk(collection_id):
     """
     ---
@@ -310,22 +306,25 @@ def bulk(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
+    entities = ensure_list(request.get_json(force=True))
 
     # This will disable checksum security measures in order to allow bulk
-    # loading of document data.
-    unsafe = get_flag("unsafe", default=False)
-    unsafe = unsafe and request.authz.is_admin
+    # loading of document data:
+    safe = get_flag("safe", default=True)
+    # Flag is only available for admins:
+    if not request.authz.is_admin:
+        safe = True
 
-    entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, unsafe=unsafe, role_id=request.authz.id)
+    # Let UI tools change the entities created by this:
+    mutable = get_flag("mutable", default=False)
+    role_id = request.authz.id
+    bulk_write(collection, entities, safe=safe, mutable=mutable, role_id=role_id)
     collection.touch()
     db.session.commit()
     return ("", 204)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/status", methods=["GET"]
-)  # noqa
+@blueprint.route("/api/2/collections/<int:collection_id>/status", methods=["GET"])
 def status(collection_id):
     """
     ---
