@@ -4,7 +4,7 @@ urlnormalizer==1.2.5
 followthemoney==2.0.1
 followthemoney-store[postgresql]==2.2.1
 fingerprints==1.0.1
-servicelayer[google,amazon]==1.13.4
+servicelayer[google,amazon]==1.13.5
 normality==2.1.1
 pantomime==0.4.0
 
