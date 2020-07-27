@@ -77,9 +77,8 @@ def sitemap():
     for collection in Collection.all_authz(Authz.from_role(None)):
         updated_at = collection.updated_at.date().isoformat()
         updated_at = max(settings.SITEMAP_FLOOR, updated_at)
-        collections.append(
-            {"url": collection_url(collection.id), "updated_at": updated_at}
-        )
+        url = collection_url(collection.id)
+        collections.append({"url": url, "updated_at": updated_at})
     return render_xml("sitemap.xml", collections=collections)
 
 

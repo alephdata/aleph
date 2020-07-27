@@ -11,6 +11,7 @@ from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
 from aleph.model import Alert, EntitySet
 from aleph.logic import resolver
+from aleph.logic.entities import check_write_entity
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
 
@@ -244,8 +245,7 @@ class EntitySerializer(Serializer):
                 )
 
         obj["links"] = links
-        write = request.authz.can(collection_id, request.authz.WRITE)
-        obj["writeable"] = write and obj.get("mutable", False)
+        obj["writeable"] = check_write_entity(obj, request.authz)
         obj["shallow"] = obj.get("shallow", True)
         return obj
 

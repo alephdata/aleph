@@ -224,7 +224,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             "schema": "Person",
             "collection_id": self.col_id,
-            "properties": {"name": "Osama bin Laden",},
+            "properties": {"name": "Osama bin Laden"},
         }
         res = self.client.post(
             url, data=json.dumps(data), headers=headers, content_type="application/json"
@@ -232,7 +232,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             "schema": "Person",
             "collection_id": self.col_id,
-            "properties": {"name": "Osama bin Laden",},
+            "properties": {"name": "Osama bin Laden"},
         }
         obj = self.client.post(
             url, data=json.dumps(data), headers=headers, content_type="application/json"
