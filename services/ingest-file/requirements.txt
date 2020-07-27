@@ -23,7 +23,7 @@ pdflib==0.3.0
 pymediainfo==4.2.1
 python-magic==0.4.18
 pypdf2==1.26.0
-rarfile==3.2
+rarfile==3.3
 xlrd==1.2.0
 openpyxl==3.0.4
 odfpy==1.4.1
