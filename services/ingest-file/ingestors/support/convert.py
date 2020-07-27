@@ -39,8 +39,8 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         """Converts an office document to PDF."""
         file_name = entity_filename(entity)
         mime_type = entity.first("mimeType")
-        log.info("Converting [%s] to PDF...", file_name)
         for attempt in count(1):
+            log.debug("Converting [%s] to PDF (attempt %d)...", entity, attempt)
             try:
                 with open(file_path, "rb") as fh:
                     files = {"file": (file_name, fh, mime_type)}
