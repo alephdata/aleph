@@ -10,7 +10,7 @@
     "@blueprintjs/icons": "3.19.0",
     "@blueprintjs/select": "^3.8.0",
     "@blueprintjs/table": "^3.7.1",
-    "@formatjs/cli": "^1.1.18",
+    "@formatjs/cli": "^2.0.0",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.1",
     "@types/react": "^16.9.25",
