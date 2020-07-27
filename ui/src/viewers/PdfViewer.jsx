@@ -41,13 +41,15 @@ export class PdfViewer extends Component {
     if (this.state.width === null) {
       this.onResize();
     }
-    if (this.props.activeMode !== prevProps.activeMode) {
+    if (this.props.activeMode !== prevProps.activeMode || this.props.pdfUrl !== prevProps.pdfUrl) {
       clearTimeout(this.resizeTimeout);
+      this.onResize();
       this.resizeTimeout = setTimeout(() => {
         this.onResize();
       }, 350);
     }
     if (!countQuery.sameAs(prevProps.countQuery)) {
+      this.onResize();
       this.fetchPage();
     }
   }
@@ -106,7 +108,7 @@ export class PdfViewer extends Component {
 
   renderPdf() {
     const {
-      document, page, rotate, numPages,
+      document, page, rotate, numPages, pdfUrl,
     } = this.props;
     const { width } = this.state;
     const { Document, Page } = this.state.components;
@@ -121,10 +123,10 @@ export class PdfViewer extends Component {
             numberOfPages={numPages}
           />
         )}
-        <div>
+        <div key={pdfUrl}>
           <Document
             renderAnnotations
-            file={document.links.pdf || document.links.file}
+            file={pdfUrl}
             loading={loading}
             onLoadSuccess={this.onDocumentLoad}
           >
@@ -133,13 +135,13 @@ export class PdfViewer extends Component {
                   This limits flashing / visible resizing when displaying page for the first time.
               */}
             {width !== null && numPages > 0 && (
-            <Page
-              pageNumber={page}
-              className="page"
-              width={width}
-              rotate={rotate}
-              loading={loading}
-            />
+              <Page
+                pageNumber={page}
+                className="page"
+                width={width}
+                rotate={rotate}
+                loading={loading}
+              />
             )}
           </Document>
         </div>
@@ -197,8 +199,10 @@ const mapStateToProps = (state, ownProps) => {
     .offset(0)
     .limit(0);
   const countResult = selectEntitiesResult(state, countQuery);
+  const pdfUrl = document.links?.pdf || document.links?.file;
   return {
     page,
+    pdfUrl,
     rotate,
     numPages: countResult.total,
     baseQuery,
