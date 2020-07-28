@@ -5,7 +5,7 @@ from flask_babel import lazy_gettext
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
-from aleph.model.role import Role
+from aleph.model import Role, Collection
 from aleph.model.common import IdModel, DatedModel
 
 log = logging.getLogger(__name__)
@@ -29,7 +29,13 @@ class Export(db.Model, IdModel, DatedModel):
     export_op = db.Column(db.Unicode)
 
     creator_id = db.Column(db.Integer, db.ForeignKey("role.id"))
-    creator = db.relationship(Role)
+    creator = db.relationship(Role, backref=db.backref("exports", lazy="dynamic"))
+    collection_id = db.Column(
+        db.Integer, db.ForeignKey("collection.id"), index=True, nullable=True
+    )
+    collection = db.relationship(
+        Collection, backref=db.backref("exports", lazy="dynamic")
+    )
 
     expires_at = db.Column(db.DateTime, default=None, nullable=True)
     deleted = db.Column(db.Boolean, default=False)
