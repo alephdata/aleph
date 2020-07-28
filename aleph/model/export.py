@@ -26,7 +26,7 @@ class Export(db.Model, IdModel, DatedModel):
 
     label = db.Column(db.Unicode)
 
-    export_op = db.Column(db.Unicode)
+    operation = db.Column(db.Unicode)
 
     creator_id = db.Column(db.Integer, db.ForeignKey("role.id"))
     creator = db.relationship(Role, backref=db.backref("exports", lazy="dynamic"))
