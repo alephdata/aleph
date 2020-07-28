@@ -234,12 +234,10 @@ export class EntityListManager extends Component {
               <FormattedMessage id="entity.viewer.add_link" defaultMessage="Create link" />
             </Button>
           )}
-          {!schema.isEdge && (
-            <Button icon="add-to-artifact" onClick={this.toggleEntitySetSelector} disabled={selection.length < 1}>
-              <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
-              <Count count={selection.length || null} />
-            </Button>
-          )}
+          <Button icon="add-to-artifact" onClick={this.toggleEntitySetSelector} disabled={selection.length < 1}>
+            <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
+            <Count count={selection.length || null} />
+          </Button>
         </EntityActionBar>
         <div className="EntityListManager__content">
           {showEmptyComponent && (
@@ -300,12 +298,10 @@ export class EntityListManager extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, collection, schema } = ownProps;
-  const query = queryCollectionEntities(location, collection.id, schema.name);
+  const { location, collection, query, schema } = ownProps;
   const sort = query.getSort();
 
   return {
-    query,
     sort: !_.isEmpty(sort) ? {
       field: sort.field.replace('properties.', ''),
       direction: sort.direction

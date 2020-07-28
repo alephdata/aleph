@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -7,13 +8,14 @@ import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
 import { fetchEntitySet } from 'actions';
-import { selectEntitySet } from 'selectors';
+import { selectEntitySet, selectModel } from 'selectors';
+import { queryEntitySetEntities } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntityListViews from 'components/Entity/EntityListViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet } from 'components/common';
+import { Breadcrumbs, Collection, EntitySet, SinglePane } from 'components/common';
 import updateStates from 'util/updateStates';
 
 const messages = defineMessages({
@@ -111,7 +113,7 @@ export class ListScreen extends Component {
   }
 
   render() {
-    const { collection, list, intl } = this.props;
+    const { collection, list, intl, activeType, activeSchema, query, selectableSchemata, schemaViews } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
     console.log('list', list);
@@ -153,11 +155,16 @@ export class ListScreen extends Component {
           searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
-          <EntityListViews
-            collection={list.collection}
-            selectableSchemata={[]}
-            schemaViews={[]}
-          />
+          <SinglePane>
+            <EntityListViews
+              activeType={activeType}
+              activeSchema={activeSchema}
+              collection={list.collection}
+              selectableSchemata={selectableSchemata}
+              schemaViews={schemaViews}
+              query={query}
+            />
+          </SinglePane>
         </Screen>
       </>
     );
@@ -168,12 +175,56 @@ const mapStateToProps = (state, ownProps) => {
   const { location, match } = ownProps;
   const { listId } = match.params;
 
-  const hashQuery = queryString.parse(location.hash);
-  const hashType = hashQuery.type;
+  const list = selectEntitySet(state, listId);
+
+  if (!list.isPending) {
+    const hashQuery = queryString.parse(location.hash);
+    const hashType = hashQuery.type;
+    const model = selectModel(state);
+    const schemata = model.getSchemata()
+      .filter((schema) => !schema.isDocument() && !schema.isA('Page'))
+      .map((schema) => schema.name);
+
+    const schemaCounts = _.groupBy(list.entities, 'schema');
+
+    console.log(schemaCounts)
+    const matching = [];
+    for (const key in schemaCounts) {
+      if (schemata.indexOf(key) !== -1) {
+        matching.push({
+          schema: key,
+          count: schemaCounts[key].length,
+        });
+      }
+    }
+
+    const schemaViews = _.reverse(_.sortBy(matching, ['count']));
+    console.log(schemaViews)
+    if (hashType && !schemaCounts.hasOwnProperty(hashType)) {
+      schemaViews.push({ schema: hashType, count: 0 });
+    }
+    if (!schemaViews.length) {
+      schemaViews.push({ schema: 'Person', count: 0 });
+    }
+
+    const activeType = hashType || schemaViews[0].schema;
+    const selectableSchemata = schemata
+      .filter((s) => !schemaViews.find((v) => v.schema === s));
+
+    return {
+      list,
+      listId,
+      activeType,
+      activeSchema: model.getSchema(activeType),
+      schemaViews,
+      selectableSchemata,
+      query: queryEntitySetEntities(location, listId, activeType),
+    };
+  }
 
   return {
     listId,
-    list: selectEntitySet(state, listId),
+    list,
   };
 };
 

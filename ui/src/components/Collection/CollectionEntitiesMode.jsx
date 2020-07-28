@@ -54,10 +54,10 @@ const mapStateToProps = (state, ownProps) => {
   const selectableSchemata = schemata
     .filter((s) => !schemaViews.find((v) => v.schema === s));
   return {
-    activeType: activeType,
+    activeType,
     activeSchema: model.getSchema(activeType),
-    schemaViews: schemaViews,
-    selectableSchemata: selectableSchemata,
+    schemaViews,
+    selectableSchemata,
     query: queryCollectionEntities(location, collection.id, activeType),
   };
 };
