@@ -1,10 +1,12 @@
 import logging
-from banal import ensure_list
+from banal import ensure_list, ensure_dict
 from pprint import pformat  # noqa
+from flask_babel import gettext
 from followthemoney import model
 from followthemoney.graph import Node
 from followthemoney.types import registry
 from followthemoney.helpers import inline_names
+from followthemoney.exc import InvalidData
 
 from aleph.core import db, cache
 from aleph.model import Entity, Document, Linkage, Mapping
@@ -18,7 +20,7 @@ from aleph.logic.graph import Graph
 log = logging.getLogger(__name__)
 
 
-def upsert_entity(data, collection, validate=True, authz=None, sync=False):
+def upsert_entity(data, collection, authz=None, sync=False):
     """Create or update an entity in the database. This has a side hustle
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
@@ -29,9 +31,9 @@ def upsert_entity(data, collection, validate=True, authz=None, sync=False):
         entity = Entity.by_id(entity_id, collection=collection, deleted=True)
     if entity is None:
         role_id = authz.id if authz is not None else None
-        entity = Entity.create(data, collection, role_id=role_id, validate=validate)
+        entity = Entity.create(data, collection, role_id=role_id)
     else:
-        entity.update(data, collection, validate=validate)
+        entity.update(data, collection)
 
     # Inline name properties from adjacent entities. See the
     # docstring on `inline_names` for a more detailed discussion.
@@ -46,6 +48,30 @@ def upsert_entity(data, collection, validate=True, authz=None, sync=False):
     index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(collection, entity.id)
     return entity.id
+
+
+def validate_entity(data):
+    """Check that there is a valid schema and all FtM conform to it."""
+    schema = model.get(data.get("schema"))
+    if schema is None:
+        raise InvalidData(gettext("No schema on entity"))
+    # This isn't strictly required because the proxy will contain
+    # only those values that can be inserted for each property,
+    # making it valid -- all this does, therefore, is to raise an
+    # exception that notifies the user.
+    schema.validate(data)
+
+
+def check_write_entity(entity, authz):
+    """Implement the cross-effects of mutable flag and the authz
+    system for serialisers and API."""
+    if authz.is_admin:
+        return True
+    collection_id = ensure_dict(entity.get("collection")).get("id")
+    collection_id = entity.get("collection_id", collection_id)
+    if not entity.get("mutable"):
+        return False
+    return authz.can(collection_id, authz.WRITE)
 
 
 def refresh_entity(collection, entity_id):

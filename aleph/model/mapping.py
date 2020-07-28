@@ -51,6 +51,7 @@ class Mapping(db.Model, SoftDeleteModel):
             "created_at": iso_text(self.created_at),
             "updated_at": iso_text(self.updated_at),
             "role_id": self.role_id,
+            "mutable": True,
         }
 
     def update(self, query=None, table_id=None):

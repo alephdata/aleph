@@ -44,17 +44,13 @@ class Entity(db.Model, SoftDeleteModel):
         self.deleted_at = None
         db.session.add(self)
 
-    def update(self, data, collection, validate=True):
+    def update(self, data, collection):
         proxy = model.get_proxy(data, cleaned=False)
-        if validate:
-            # This isn't strictly required because the proxy will contain
-            # only those values that can be inserted for each property,
-            # making it valid -- all this does, therefore, is to raise an
-            # exception that notifies the user.
-            proxy.schema.validate(data)
         proxy = collection.ns.apply(proxy)
         self.id = collection.ns.sign(self.id)
         self.schema = proxy.schema.name
+        self.updated_at = datetime.utcnow()
+        self.deleted_at = None
         previous = self.to_proxy()
         for prop in proxy.schema.properties.values():
             # Do not allow the user to overwrite hashes because this could
@@ -63,25 +59,22 @@ class Entity(db.Model, SoftDeleteModel):
                 prev = previous.get(prop)
                 proxy.set(prop, prev, cleaned=True, quiet=True)
         self.data = proxy.properties
-        self.updated_at = datetime.utcnow()
-        self.deleted_at = None
         db.session.add(self)
 
     def to_proxy(self):
-        return model.get_proxy(
-            {
-                "id": self.id,
-                "schema": self.schema,
-                "properties": self.data,
-                "created_at": iso_text(self.created_at),
-                "updated_at": iso_text(self.updated_at),
-                "role_id": self.role_id,
-                "mutable": True,
-            }
-        )
+        data = {
+            "id": self.id,
+            "schema": self.schema,
+            "properties": self.data,
+            "created_at": iso_text(self.created_at),
+            "updated_at": iso_text(self.updated_at),
+            "role_id": self.role_id,
+            "mutable": True,
+        }
+        return model.get_proxy(data, cleaned=False)
 
     @classmethod
-    def create(cls, data, collection, role_id=None, validate=True):
+    def create(cls, data, collection, role_id=None):
         entity = cls()
         entity_id = data.get("id") or make_textid()
         if not registry.entity.validate(entity_id):
@@ -89,7 +82,7 @@ class Entity(db.Model, SoftDeleteModel):
         entity.id = collection.ns.sign(entity_id)
         entity.collection_id = collection.id
         entity.role_id = role_id
-        entity.update(data, collection, validate=validate)
+        entity.update(data, collection)
         return entity
 
     @classmethod

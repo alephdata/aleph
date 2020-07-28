@@ -1,6 +1,5 @@
 import logging
 import fingerprints
-from datetime import datetime
 from pprint import pprint, pformat  # noqa
 from banal import ensure_list, first
 from followthemoney import model
@@ -9,7 +8,6 @@ from elasticsearch.helpers import scan
 
 from aleph.core import es, cache
 from aleph.model import Entity
-from aleph.model.common import iso_text
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, bulk_actions
@@ -18,7 +16,15 @@ from aleph.index.util import MAX_REQUEST_TIMEOUT, MAX_TIMEOUT
 
 
 log = logging.getLogger(__name__)
-PROXY_INCLUDES = ["schema", "properties", "collection_id"]
+PROXY_INCLUDES = [
+    "schema",
+    "properties",
+    "collection_id",
+    "role_id",
+    "mutable",
+    "created_at",
+    "updated_at",
+]
 
 
 def _source_spec(includes, excludes):
@@ -166,7 +172,7 @@ def format_proxy(proxy, collection):
     data = proxy.to_full_dict()
     data["schemata"] = list(proxy.schema.names)
 
-    names = ensure_list(data.get("names"))
+    names = data.get("names", [])
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
     data["fingerprints"] = [fp for fp in fps if fp is not None]
@@ -189,13 +195,13 @@ def format_proxy(proxy, collection):
     data["numeric"] = numeric
 
     # Context data - from aleph system, not followthemoney.
-    now = iso_text(datetime.utcnow())
-    data["created_at"] = min(ensure_list(data.get("created_at")), default=now)
-    data["updated_at"] = min(ensure_list(data.get("updated_at")), default=now)
     # FIXME: Can there ever really be multiple role_ids?
     data["role_id"] = first(data.get("role_id"))
     data["mutable"] = max(ensure_list(data.get("mutable")), default=False)
     data["origin"] = ensure_list(data.get("origin"))
+    created_at = data.get("created_at")
+    if created_at:
+        data["updated_at"] = data.get("updated_at", created_at)
     data["collection_id"] = collection.id
     # log.info("%s", pformat(data))
     entity_id = data.pop("id")

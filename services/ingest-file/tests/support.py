@@ -7,6 +7,7 @@ from tempfile import mkdtemp
 from servicelayer.cache import get_fakeredis
 from servicelayer.archive import init_archive
 from servicelayer.jobs import Job, Stage
+from servicelayer.tags import Tags
 from servicelayer.archive.util import ensure_path
 from servicelayer import settings as service_settings
 from ftmstore import settings as ftmstore_settings
@@ -37,6 +38,7 @@ class TestCase(unittest.TestCase):
         job = Job.create(conn, "test")
         stage = Stage(job, OP_INGEST)
         dataset = get_dataset(job.dataset.name, OP_INGEST)
+        Tags("ingest_cache").delete()
         self.manager = Manager(dataset, stage, {})
         self.manager.entities = []
         self.manager.emit_entity = types.MethodType(emit_entity, self.manager)

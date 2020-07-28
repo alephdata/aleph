@@ -19,7 +19,7 @@ def create_entityset(collection, data, authz):
     entity_ids = []
     for entity in data.pop("entities", []):
         old_id = entity.get("id")
-        new_id = upsert_entity(entity, collection, validate=False, sync=True)
+        new_id = upsert_entity(entity, collection, sync=True)
         old_to_new_id_map[old_id] = new_id
         entity_ids.append(new_id)
     data["entities"] = entity_ids

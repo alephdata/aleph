@@ -36,11 +36,15 @@ def configure_notifications():
 def index_notification(event, actor_id, params, channels, sync=False):
     """Index a notification."""
     params = params or {}
-    params = {n: get_entity_id(params.get(n)) for n in event.params.keys()}
+    data = {}
+    for param, value in params.items():
+        value = get_entity_id(value)
+        if value is not None:
+            data[param] = str(value)
     channels = list(set([c for c in channels if c is not None]))
     data = {
         "actor_id": actor_id,
-        "params": params,
+        "params": data,
         "event": event.name,
         "channels": channels,
         "created_at": datetime.utcnow(),

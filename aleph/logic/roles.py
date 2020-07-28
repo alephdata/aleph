@@ -4,10 +4,10 @@ from flask import render_template
 
 from aleph.core import db, settings, cache
 from aleph.authz import Authz
-from aleph.mail import email_role
 from aleph.model import Role, Alert, QueryLog, Permission, EntitySet
 from aleph.model import Collection, Document, Entity, Linkage, Mapping
 from aleph.model.role import membership
+from aleph.logic.mail import email_role
 from aleph.logic.notifications import get_role_channels
 
 log = logging.getLogger(__name__)

@@ -11,10 +11,12 @@ from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags, entity_expand
+from aleph.logic.entities import validate_entity, check_write_entity
 from aleph.logic.export import export_entities
+from aleph.logic.html import sanitize_html
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
+from aleph.views.util import jsonify, parse_request, get_flag
 from aleph.views.util import require, get_nested_collection
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
@@ -207,7 +209,7 @@ def match():
       - Entity
     """
     entity = parse_request("EntityUpdate")
-    entity = model.get_proxy(entity)
+    entity = model.get_proxy(entity, cleaned=False)
     tag_request(schema=entity.schema.name, caption=entity.caption)
     collection_ids = request.args.getlist("collection_ids")
     result = MatchQuery.handle(request, entity=entity, collection_ids=collection_ids)
@@ -244,12 +246,11 @@ def create():
     data = parse_request("EntityCreate")
     collection = get_nested_collection(data, request.authz.WRITE)
     data.pop("id", None)
-    validate = get_flag("validate", default=False)
-    entity_id = upsert_entity(
-        data, collection, validate=validate, authz=request.authz, sync=True
-    )
+    if get_flag("validate", default=False):
+        validate_entity(data)
+    entity_id = upsert_entity(data, collection, authz=request.authz, sync=True)
     db.session.commit()
-    tag_request(entity_id=entity_id, collection_id=str(collection.id))
+    tag_request(entity_id=entity_id, collection_id=collection.id)
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
 
@@ -279,9 +280,8 @@ def view(entity_id):
       - Entity
     """
     enable_cache()
-    entity = get_index_entity(
-        entity_id, request.authz.READ, excludes=["text", "numeric.*"]
-    )
+    excludes = ["text", "numeric.*"]
+    entity = get_index_entity(entity_id, request.authz.READ, excludes=excludes)
     tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
     html = proxy.first("bodyHtml", quiet=True)
@@ -373,9 +373,7 @@ def references(entity_id):
     tag_request(collection_id=entity.get("collection_id"))
     results = []
     for prop, total in entity_references(entity, request.authz):
-        results.append(
-            {"count": total, "property": prop, "schema": prop.schema.name,}
-        )
+        results.append({"count": total, "property": prop, "schema": prop.schema.name})
     return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
@@ -418,10 +416,8 @@ def tags(entity_id):
     for (field, value, total) in entity_tags(entity, request.authz):
         qvalue = quote(value.encode("utf-8"))
         key = ("filter:%s" % field, qvalue)
-        results.append(
-            {"id": query_string([key]), "value": value, "field": field, "count": total,}
-        )
-
+        qid = query_string([key])
+        results.append({"id": qid, "value": value, "field": field, "count": total})
     results.sort(key=lambda p: p["count"], reverse=True)
     return jsonify({"status": "ok", "total": len(results), "results": results})
 
@@ -461,16 +457,16 @@ def update(entity_id):
     data = parse_request("EntityUpdate")
     try:
         entity = get_index_entity(entity_id, request.authz.WRITE)
+        require(check_write_entity(entity, request.authz))
         collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
     except NotFound:
         collection = get_nested_collection(data, request.authz.WRITE)
     tag_request(collection_id=collection.id)
     data["id"] = entity_id
+    if get_flag("validate", default=False):
+        validate_entity(data)
     sync = get_flag("sync", default=True)
-    validate = get_flag("validate", default=False)
-    entity_id = upsert_entity(
-        data, collection, validate=validate, authz=request.authz, sync=sync
-    )
+    entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
     db.session.commit()
     return view(entity_id)
 
@@ -497,7 +493,8 @@ def delete(entity_id):
     entity = get_index_entity(entity_id, request.authz.WRITE)
     collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
     tag_request(collection_id=collection.id)
-    delete_entity(collection, entity, sync=get_flag("sync", True))
+    sync = get_flag("sync", default=True)
+    delete_entity(collection, entity, sync=sync)
     db.session.commit()
     return ("", 204)
 

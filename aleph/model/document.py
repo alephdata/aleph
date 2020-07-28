@@ -198,7 +198,7 @@ class Document(db.Model, DatedModel):
                 "created_at": iso_text(self.created_at),
                 "updated_at": iso_text(self.updated_at),
                 "role_id": self.role_id,
-                "mutable": True,
+                "mutable": False,
             }
         )
         meta = dict(self.meta)
