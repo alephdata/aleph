@@ -88,6 +88,10 @@ def load_mapping(stage, collection, mapping_id, sync=False):
         aggregator.close()
 
 
+def op_load_mapping_handler(collection, task):
+    load_mapping(task.stage, collection, **task.payload)
+
+
 def flush_mapping(stage, collection, mapping_id, sync=True):
     """Delete entities loaded by a mapping"""
     log.debug("Flushing entities for mapping: %s", mapping_id)
@@ -97,3 +101,8 @@ def flush_mapping(stage, collection, mapping_id, sync=True):
     aggregator.close()
     delete_entities(collection.id, origin=origin, sync=sync)
     update_collection(collection, sync=sync)
+
+
+def op_flush_mapping_handler(collection, task):
+    sync = task.context.get("sync", False)
+    flush_mapping(task.stage, collection, sync=sync, **task.payload)

@@ -28,6 +28,11 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=BATCH_SIZE)
     refresh_collection(collection.id)
 
 
+def op_index_handler(collection, task):
+    sync = task.context.get("sync", False)
+    index_many(task.stage, collection, sync=sync, **task.payload)
+
+
 def bulk_write(
     collection, entities, safe=False, role_id=None, mutable=True, index=True
 ):

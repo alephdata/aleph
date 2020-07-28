@@ -1,6 +1,7 @@
 import logging
 from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
+from servicelayer.extensions import get_entry_point
 
 from aleph.core import kv, db, create_app
 from aleph.model import Collection
@@ -9,12 +10,8 @@ from aleph.queues import OP_INDEX, OP_REINDEX, OP_REINGEST, OP_XREF
 from aleph.queues import OP_LOAD_MAPPING, OP_FLUSH_MAPPING
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
-from aleph.logic.collections import reindex_collection, reingest_collection
 from aleph.logic.notifications import generate_digest
-from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.roles import update_roles
-from aleph.logic.xref import xref_collection
-from aleph.logic.processing import index_many
 
 log = logging.getLogger(__name__)
 app = create_app()
@@ -61,22 +58,16 @@ class AlephWorker(Worker):
                 self.run_often()
 
     def dispatch_task(self, collection, task):
-        stage = task.stage
-        payload = task.payload
-        sync = task.context.get("sync", False)
-        if stage.stage == OP_INDEX:
-            index_many(stage, collection, sync=sync, **payload)
-        if stage.stage == OP_LOAD_MAPPING:
-            load_mapping(stage, collection, **payload)
-        if stage.stage == OP_FLUSH_MAPPING:
-            flush_mapping(stage, collection, sync=sync, **payload)
-        if stage.stage == OP_REINGEST:
-            reingest_collection(collection, job_id=stage.job.id, **payload)
-        if stage.stage == OP_REINDEX:
-            reindex_collection(collection, sync=sync, **payload)
-        if stage.stage == OP_XREF:
-            xref_collection(stage, collection)
-        log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
+        handler = get_entry_point("aleph.task_handlers", task.stage.stage)
+        if handler is not None:
+            handler(collection, task)
+            log.info("Task [%s]: %s (done)", task.job.dataset, task.stage.stage)  # noqa
+            return
+        log.warning(
+            "Task handler not found for task [%s]: %s",
+            task.job.dataset,
+            task.stage.stage,
+        )
 
     def handle(self, task):
         with app.app_context():
