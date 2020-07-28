@@ -132,7 +132,7 @@ class EntitySetSelector extends Component {
   }
 
   render() {
-    const { entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
+    const { entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog, onSelect } = this.props;
     const { label, processing } = this.state;
     // <p>
     //   <FormattedMessage
@@ -174,6 +174,7 @@ class EntitySetSelector extends Component {
               <EntitySetList
                 query={listsQuery}
                 result={listsResult}
+                onSelect={onSelect}
                 type="list"
               />
             </div>
@@ -199,6 +200,7 @@ class EntitySetSelector extends Component {
               <EntitySetList
                 query={diagramsQuery}
                 result={diagramsResult}
+                onSelect={onSelect}
                 type="diagram"
               />
             </div>

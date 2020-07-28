@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { Classes, Icon, H6 } from '@blueprintjs/core';
+import { Button, Classes, Icon, H6 } from '@blueprintjs/core';
 import getEntitySetLink from 'util/getEntitySetLink';
 import c from 'classnames';
 
@@ -11,7 +11,7 @@ import {
 
 import './EntitySetListItem.scss';
 
-const EntitySetListItem = ({ entitySet, isPending, showCollection }) => {
+const EntitySetListItem = ({ entitySet, isPending, onSelect, showCollection }) => {
   if (isPending) {
     return (
       <div className="EntitySetListItem">
@@ -31,11 +31,14 @@ const EntitySetListItem = ({ entitySet, isPending, showCollection }) => {
     );
   }
 
-  return (
-    <div className="EntitySetListItem">
+
+
+  const content = (
+    <>
       <div className="EntitySetListItem__main">
         <H6 className="EntitySetListItem__title">
-          <EntitySet.Link entitySet={entitySet} icon />
+          {!onSelect && <EntitySet.Link entitySet={entitySet} icon />}
+          {onSelect && <EntitySet.Label entitySet={entitySet} icon />}
         </H6>
         <Summary text={entitySet.summary} className="summary" truncate={2} />
       </div>
@@ -56,8 +59,19 @@ const EntitySetListItem = ({ entitySet, isPending, showCollection }) => {
           />
         </span>
       </p>
-    </div>
+    </>
   );
+  if (onSelect) {
+    return (
+      <Button minimal onClick={() => onSelect(entitySet)} className="EntitySetListItem">
+        {content}
+      </Button>
+    )
+  }
+  return <div className="EntitySetListItem">{content}</div>;
 };
+
+
+
 
 export default EntitySetListItem;

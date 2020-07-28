@@ -32,7 +32,7 @@ class EntitySetList extends Component {
   }
 
   render() {
-    const { intl, result, showCollection, type } = this.props;
+    const { intl, onSelect, result, showCollection, type } = this.props;
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
@@ -51,7 +51,7 @@ class EntitySetList extends Component {
       <div className="EntitySetList">
         <div className="EntitySetList__items">
           {result.results && result.results.map(entitySet => (
-            <EntitySetListItem key={entitySet.id} entitySet={entitySet} showCollection={showCollection} />
+            <EntitySetListItem key={entitySet.id} entitySet={entitySet} showCollection={showCollection} onSelect={onSelect} />
           ))}
           {isPending && skeletonItems.map(item => (
             <EntitySetListItem key={item} showCollection={showCollection} isPending />

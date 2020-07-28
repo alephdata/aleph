@@ -14,7 +14,7 @@ import { Count, ErrorSection } from 'components/common';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'components/Entity/EntityActionBar';
-import { queryEntities } from 'actions';
+import { queryEntities, updateEntitySet } from 'actions';
 import { queryCollectionEntities } from 'queries';
 import { selectEntitiesResult } from 'selectors';
 import { showErrorToast, showSuccessToast } from 'app/toast';
@@ -36,6 +36,10 @@ const messages = defineMessages({
     id: 'entity.manager.edge_create_success',
     defaultMessage: 'Successfully linked {source} and {target}',
   },
+  add_to_success: {
+    id: 'entity.manager.entity_set_add_success',
+    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
+  },
 });
 
 export class EntityListManager extends Component {
@@ -54,6 +58,7 @@ export class EntityListManager extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onEdgeCreate = this.onEdgeCreate.bind(this);
     this.onDocSelected = this.onDocSelected.bind(this);
+    this.onAddTo = this.onAddTo.bind(this);
     this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
     this.toggleEdgeCreateDialog = this.toggleEdgeCreateDialog.bind(this);
     this.toggleEntitySetSelector = this.toggleEntitySetSelector.bind(this);
@@ -162,6 +167,29 @@ export class EntityListManager extends Component {
     history.push({ pathname, hash: queryString.stringify({ mode: 'mapping', schema: schema.name }) });
   }
 
+  async onAddTo(entitySet) {
+    const { intl } = this.props;
+    const { selection } = this.state;
+
+    const entities = entitySet.entities ? [...entitySet.entities, ...selection] : selection;
+
+    const updatedEntitySet = {
+      ...entitySet,
+      entities: entities.map(e => e.id || e),
+    };
+
+    try {
+      await this.props.updateEntitySet(updatedEntitySet.id, updatedEntitySet);
+      showSuccessToast(
+        intl.formatMessage(messages.add_to_success, { count: selection.length, entitySet: entitySet.label })
+      );
+      this.setState({ selection: [] });
+      this.toggleEntitySetSelector();
+    } catch (e) {
+      showErrorToast(e);
+    }
+  }
+
   toggleDocumentSelectDialog() {
     this.setState(({ docSelectIsOpen }) => ({
       docSelectIsOpen: !docSelectIsOpen,
@@ -264,6 +292,7 @@ export class EntityListManager extends Component {
           entities={selection}
           isOpen={this.state.addToIsOpen}
           toggleDialog={this.toggleEntitySetSelector}
+          onSelect={this.onAddTo}
         />
       </div>
     );
@@ -288,6 +317,6 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   entityEditorWrapper,
-  connect(mapStateToProps, { queryEntities }),
+  connect(mapStateToProps, { queryEntities, updateEntitySet }),
   injectIntl,
 )(EntityListManager);
