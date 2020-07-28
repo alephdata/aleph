@@ -44,7 +44,6 @@ def upgrade():
     linkage_table = meta.tables["linkage"]
     entityset_table = meta.tables["entityset"]
     item_table = meta.tables["entityset_item"]
-
     q = sa.select([linkage_table]).order_by("profile_id")
     rp = bind.execute(q)
 

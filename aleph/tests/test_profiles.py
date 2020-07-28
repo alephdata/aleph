@@ -1,5 +1,5 @@
 from aleph.model import Judgement
-from aleph.logic.profiles import decide_xref, collection_profiles, consolidate_profile
+from aleph.logic.profiles import decide_xref, collection_profiles
 from aleph.tests.util import TestCase
 
 
@@ -81,58 +81,11 @@ class ProfileTestCase(TestCase):
 
         decide_xref(xref, judgement=Judgement.NEGATIVE, authz=w)
         result = list(
-            collection_profiles(coll.id, judgements=[Judgement.POSITIVE], most_recent=True)
+            collection_profiles(
+                coll.id, judgements=[Judgement.POSITIVE], most_recent=True
+            )
         )
         assert len(result) == 1, len(result)
         profile, items = result[0]
         assert len(items) == 1
         assert items[0].entity_id == "a1"
-
-    def test_decide_xref_merge(self):
-        w = self.create_user("user")
-        coll = self.create_collection()
-        N = 3
-        for prefix in "ab":
-            for i in range(N):
-                xref = {
-                    "entity_id": prefix,
-                    "collection_id": coll.id,
-                    "match_id": f"{prefix}{i}",
-                    "match_collection_id": coll.id,
-                }
-                decide_xref(xref, judgement=Judgement.POSITIVE, authz=w)
-
-        result = list(
-            collection_profiles(coll.id, judgements=[Judgement.POSITIVE], most_recent=True)
-        )
-        assert len(result) == 2, len(result)
-        assert all(len(items) == 1 + N for profile, items in result)
-        assert all(
-            len(set(i.entity_id[0] for i in items)) == 1 for profile, items in result
-        )
-
-        xref = {
-            "entity_id": "a0",
-            "collection_id": coll.id,
-            "match_id": "b0",
-            "match_collection_id": coll.id,
-        }
-        decide_xref(xref, judgement=Judgement.POSITIVE, authz=w)
-        result = list(
-            collection_profiles(coll.id, judgements=[Judgement.POSITIVE], most_recent=True)
-        )
-        assert len(result) == 1
-        profile, items = result[0]
-        assert len(items) == 2 * N + 2
-        assert len(set(i.entity_id[0] for i in items)) == 2
-
-        profile = decide_xref(xref, judgement=Judgement.NEGATIVE, authz=w)
-        cprofiles = consolidate_profile(profile, authz=w)
-        assert len(cprofiles) == 2
-        result = list(
-            collection_profiles(coll.id, judgements=[Judgement.POSITIVE], most_recent=True)
-        )
-        assert len(result) == 2, len(result)
-        assert all(
-            len(set(i.entity_id[0] for i in items)) == 1 for profile, items in result
-        )

@@ -19,6 +19,12 @@ class Judgement(Enum):
     UNSURE = "unsure"
     NO_JUDGEMENT = "no_judgement"
 
+    def __add__(self, other):
+        if self == other:
+            return self
+        else:
+            return Judgement.UNSURE
+
 
 class EntitySet(db.Model, SoftDeleteModel):
     __tablename__ = "entityset"
@@ -147,22 +153,10 @@ class EntitySet(db.Model, SoftDeleteModel):
         return pq.update({EntitySetItem.entityset_id: self.id})
 
     def profile(self, judgements=None, most_recent=True):
-        q = self.items()
-        if most_recent:
-            q = q.order_by(
-                EntitySetItem.entity_id, EntitySetItem.updated_at.desc()
-            ).distinct(EntitySetItem.entity_id)
+        q = self.items(not most_recent)
         if judgements is not None:
-            # If we also select most_recent, we need to use subqueries to
-            # ensure that the most_recent transform happens before we filter
-            # based on judgements.
-            if most_recent:
-                subq = q.subquery()
-                q = db.session.query(EntitySetItem).join(
-                    subq, subq.c.id == EntitySetItem.id
-                )
             q = q.filter(EntitySetItem.judgement.in_(judgements))
-        return q.all()
+        return q
 
     def update(self, data, collection):
         self.label = data.get("label", self.label)
