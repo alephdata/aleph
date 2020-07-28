@@ -16,6 +16,7 @@ import EntityViews from 'components/Entity/EntityViews';
 import EntityDeleteDialog from 'dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
+import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
@@ -35,11 +36,13 @@ class EntityScreen extends Component {
 
     this.state = {
       deleteIsOpen: false,
+      addToIsOpen: false,
     };
 
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.toggleDeleteDialog = this.toggleDeleteDialog.bind(this);
+    this.toggleEntitySetSelector = this.toggleEntitySetSelector.bind(this);
   }
 
   onCollectionSearch(queryText) {
@@ -135,6 +138,10 @@ class EntityScreen extends Component {
     this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
   }
 
+  toggleEntitySetSelector() {
+    this.setState(({ addToIsOpen }) => ({ addToIsOpen: !addToIsOpen }));
+  }
+
   render() {
     const {
       entity, entityId, activeMode, query, isDocument,
@@ -151,15 +158,20 @@ class EntityScreen extends Component {
     }
 
     const showDownloadButton = isDocument && entity && entity.links && entity.links.file;
-    const showDeleteButton = entity.collection.writeable;
+    const { writeable } = entity.collection;
 
     const operation = (
       <ButtonGroup>
         {showDownloadButton && <DownloadButton document={entity} /> }
-        {showDeleteButton && (
-          <Button icon="trash" onClick={this.toggleDeleteDialog}>
-            <FormattedMessage id="entity.delete" defaultMessage="Delete" />
-          </Button>
+        {writeable && (
+          <>
+            <Button icon="add-to-artifact" onClick={this.toggleEntitySetSelector}>
+              <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
+            </Button>
+            <Button icon="trash" onClick={this.toggleDeleteDialog}>
+              <FormattedMessage id="entity.delete" defaultMessage="Delete" />
+            </Button>
+          </>
         )}
       </ButtonGroup>
     );
@@ -195,6 +207,12 @@ class EntityScreen extends Component {
                 isOpen={this.state.deleteIsOpen}
                 toggleDialog={this.toggleDeleteDialog}
                 redirectOnSuccess
+              />
+              <EntitySetSelector
+                collection={entity.collection}
+                entities={[entity]}
+                isOpen={this.state.addToIsOpen}
+                toggleDialog={this.toggleEntitySetSelector}
               />
             </DualPane.ContentPane>
           </DualPane>

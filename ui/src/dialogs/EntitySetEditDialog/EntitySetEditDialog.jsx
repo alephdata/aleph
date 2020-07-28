@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { updateEntitySet } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
+import { EntitySet } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
 
 const messages = defineMessages({
@@ -95,11 +96,10 @@ class EntitySetEditDialog extends Component {
     const { type, label, processing, summary } = this.state;
     const disabled = !this.checkValid();
 
-
     return (
       <FormDialog
         processing={processing}
-        icon="graph"
+        icon={<EntitySet.Icon entitySet={{ type }} />}
         isOpen={isOpen}
         title={intl.formatMessage(messages.title_update)}
         onClose={toggleDialog}

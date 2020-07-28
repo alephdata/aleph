@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
   success_update: {
     id: 'diagram.add_entities.success',
-    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {diagram}',
+    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
   },
 });
 
@@ -57,9 +57,13 @@ class EntitySetSelector extends Component {
   }
 
   fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && !result.isError) {
-      this.props.queryEntitySets({ query });
+    const { listsQuery, diagramsQuery, listsResult, diagramsResult } = this.props;
+    console.log(listsResult, diagramsResult)
+    if (listsResult.shouldLoad) {
+      this.props.queryEntitySets({ query: listsQuery });
+    }
+    if (diagramsResult.shouldLoad) {
+      this.props.queryEntitySets({ query: diagramsQuery });
     }
   }
 
@@ -79,24 +83,25 @@ class EntitySetSelector extends Component {
     });
   }
 
-  onSelect(diagram) {
-    const { entities } = this.props;
-    const prevEntityCount = diagram.entities?.length;
-
-    const entityIds = entities.map(e => e.id);
-    const newDiagramData = {
-      ...diagram,
-      entities: diagram.entities ? [...diagram.entities, ...entityIds] : entityIds,
-    };
-
-    this.sendRequest(newDiagramData, prevEntityCount);
-  }
-
   onChangeLabel({ target }) {
     this.setState({ label: target.value });
   }
 
-  async sendRequest(diagram, prevEntityCount = 0) {
+  onSelect(entitySet) {
+    console.log('selected', entitySet)
+    const { entities, intl } = this.props;
+
+    const updatedEntities = entitySet.entities ? [...entitySet.entities, ...entities] : entities;
+
+    const updatedEntitySet = {
+      ...entitySet,
+      entities: updatedEntities.map(e => e.id || e),
+    };
+
+    this.sendRequest(updatedEntitySet, entitySet.entities?.length)
+  }
+
+  async sendRequest(entitySet, prevEntityCount = 0) {
     const { history, intl } = this.props;
     const { processing } = this.state;
 
@@ -105,25 +110,25 @@ class EntitySetSelector extends Component {
 
     try {
       let request;
-      if (diagram.id) {
-        request = this.props.updateEntitySet(diagram.id, diagram);
+      if (entitySet.id) {
+        request = this.props.updateEntitySet(entitySet.id, entitySet);
       } else {
-        request = this.props.createEntitySet(diagram);
+        request = this.props.createEntitySet(entitySet);
       }
 
-      request.then(updatedDiagram => {
+      request.then(updatedEntitySet => {
         this.setState({ processing: false });
         this.props.toggleDialog();
 
-        const newCount = updatedDiagram?.data?.entities?.length || 0;
+        const newCount = updatedEntitySet?.data?.entities?.length || 0;
         const updatedCount = newCount - prevEntityCount;
 
         showSuccessToast(
-          intl.formatMessage(messages.success_update, {count: updatedCount, diagram: diagram.label}),
+          intl.formatMessage(messages.success_update, {count: updatedCount, entitySet: entitySet.label}),
         );
-        history.push({
-          pathname: getEntitySetLink(updatedDiagram.data),
-        });
+        // history.push({
+        //   pathname: getEntitySetLink(updatedDiagram.data),
+        // });
       })
     } catch (e) {
       showWarningToast(e.message);
@@ -131,8 +136,9 @@ class EntitySetSelector extends Component {
     }
   }
 
+
   render() {
-    const { entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog, onSelect } = this.props;
+    const { entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
     const { label, processing } = this.state;
     // <p>
     //   <FormattedMessage
@@ -141,6 +147,8 @@ class EntitySetSelector extends Component {
     //     values={{ count: <strong>{entities.length}</strong>, count_simple: entities.length }}
     //   />
     // </p>
+
+    console.log('collection ', this.props.collection)
 
     return (
       <Drawer
@@ -174,7 +182,7 @@ class EntitySetSelector extends Component {
               <EntitySetList
                 query={listsQuery}
                 result={listsResult}
-                onSelect={onSelect}
+                onSelect={this.onSelect}
                 type="list"
               />
             </div>
@@ -200,7 +208,7 @@ class EntitySetSelector extends Component {
               <EntitySetList
                 query={diagramsQuery}
                 result={diagramsResult}
-                onSelect={onSelect}
+                onSelect={this.onSelect}
                 type="diagram"
               />
             </div>

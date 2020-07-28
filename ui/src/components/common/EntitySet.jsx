@@ -13,9 +13,11 @@ const ICONS = {
   list: 'list'
 }
 
-
 const getIcon = ({ type }) => ICONS[type] || ICONS.list;
 
+const EntitySetIcon = ({entitySet, className}) => (
+  <Icon icon={getIcon(entitySet)} className={className} />
+);
 
 class EntitySetLabel extends PureComponent {
   render() {
@@ -26,7 +28,7 @@ class EntitySetLabel extends PureComponent {
 
     return (
       <span className="EntitySetLabel" title={entitySet.label}>
-        {icon && <Icon icon={getIcon(entitySet)} className="left-icon" />}
+        {icon && <EntitySetIcon entitySet={entitySet} className="left-icon" />}
         <span>{entitySet.label}</span>
       </span>
     );
@@ -81,6 +83,8 @@ class EntitySetSelect extends PureComponent {
 }
 
 class EntitySet {
+  static Icon = EntitySetIcon;
+
   static Label = EntitySetLabel;
 
   static Link = withRouter(EntitySetLink);
