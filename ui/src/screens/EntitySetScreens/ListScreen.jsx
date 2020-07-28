@@ -9,6 +9,7 @@ import { Intent } from '@blueprintjs/core';
 import { fetchEntitySet } from 'actions';
 import { selectEntitySet } from 'selectors';
 import Screen from 'components/Screen/Screen';
+import EntityListViews from 'components/Entity/EntityListViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
@@ -47,9 +48,6 @@ export class ListScreen extends Component {
     };
 
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
-    this.onDiagramSearch = this.onDiagramSearch.bind(this);
-    this.onDiagramDownload = this.onDiagramDownload.bind(this);
-    this.onDownloadComplete = this.onDownloadComplete.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
   }
 
@@ -113,8 +111,10 @@ export class ListScreen extends Component {
   }
 
   render() {
-    const { list, intl } = this.props;
+    const { collection, list, intl } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
+
+    console.log('list', list);
 
     if (list.isError) {
       return <ErrorScreen error={list.error} />;
@@ -153,6 +153,11 @@ export class ListScreen extends Component {
           searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
+          <EntityListViews
+            collection={list.collection}
+            selectableSchemata={[]}
+            schemaViews={[]}
+          />
         </Screen>
       </>
     );
@@ -160,7 +165,11 @@ export class ListScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { listId } = ownProps.match.params;
+  const { location, match } = ownProps;
+  const { listId } = match.params;
+
+  const hashQuery = queryString.parse(location.hash);
+  const hashType = hashQuery.type;
 
   return {
     listId,
