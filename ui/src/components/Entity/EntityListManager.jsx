@@ -186,7 +186,7 @@ export class EntityListManager extends Component {
   }
 
   render() {
-    const { collection, entityManager, query, intl, result, schema, sort } = this.props;
+    const { collection, entityManager, query, intl, result, schema, showImport, sort, writeable } = this.props;
     const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
     const showEmptyComponent = result.total === 0 && query.hasQuery();
@@ -195,23 +195,27 @@ export class EntityListManager extends Component {
       <div className="EntityListManager">
         <EntityActionBar
           query={query}
-          writeable={collection.writeable}
+          writeable={writeable}
           selection={selection}
           resetSelection={() => this.setState({ selection: [] })}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >
-          <Button icon="import" onClick={this.toggleDocumentSelectDialog}>
-            <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
-          </Button>
-          <Divider />
+          {showImport && (
+            <>
+              <Button icon="import" onClick={this.toggleDocumentSelectDialog}>
+                <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
+              </Button>
+              <Divider />
+            </>
+          )}
           {!schema.isEdge && (
             <Button icon="new-link" onClick={this.toggleEdgeCreateDialog} disabled={selection.length < 1 || selection.length > 2}>
               <FormattedMessage id="entity.viewer.add_link" defaultMessage="Create link" />
             </Button>
           )}
-          <Button icon="add-to-artifact" onClick={this.toggleEntitySetSelector} disabled={selection.length < 1}>
+          <Button icon="add-to-artifact" onClick={() => this.toggleEntitySetSelector()} disabled={selection.length < 1}>
             <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
             <Count count={selection.length || null} />
           </Button>
@@ -233,7 +237,7 @@ export class EntityListManager extends Component {
                 sortColumn={this.onSortColumn}
                 selection={selection}
                 updateSelection={this.updateSelection}
-                writeable={collection.writeable}
+                writeable={writeable}
                 isPending={result.isPending}
                 visitEntity={visitEntity}
               />

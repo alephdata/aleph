@@ -70,7 +70,7 @@ class EntitySetEditDialog extends Component {
       this.props.toggleDialog();
 
       showSuccessToast(
-        intl.formatMessage({...messages.success_update, values: { type } }),
+        intl.formatMessage(messages.success_update, { type: EntitySet.getTypeLabel(intl, type, {}) }),
       );
     } catch (e) {
       showWarningToast(e.message);
@@ -96,6 +96,8 @@ class EntitySetEditDialog extends Component {
     const { type, label, processing, summary } = this.state;
     const disabled = !this.checkValid();
 
+    const typeLabel = EntitySet.getTypeLabel(intl, type, {});
+
     return (
       <FormDialog
         processing={processing}
@@ -115,7 +117,7 @@ class EntitySetEditDialog extends Component {
                     type="text"
                     className="bp3-input"
                     autoComplete="off"
-                    placeholder={intl.formatMessage(messages.label_placeholder, { type })}
+                    placeholder={intl.formatMessage(messages.label_placeholder, { type: typeLabel })}
                     onChange={this.onChangeLabel}
                     value={label}
                   />
@@ -132,7 +134,7 @@ class EntitySetEditDialog extends Component {
                   <textarea
                     id="summary"
                     className="bp3-input"
-                    placeholder={intl.formatMessage(messages.summary_placeholder, { type })}
+                    placeholder={intl.formatMessage(messages.summary_placeholder, { type: typeLabel })}
                     onChange={this.onChangeSummary}
                     value={summary}
                     rows={5}

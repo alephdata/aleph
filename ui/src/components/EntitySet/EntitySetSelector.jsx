@@ -10,30 +10,24 @@ import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { EntitySet, SearchBox } from 'components/common';
 import EntitySetList from 'components/EntitySet/EntitySetList';
+import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
+
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
 
 import './EntitySetSelector.scss';
 
 const messages = defineMessages({
-  create_new: {
-    id: 'diagram.add_entities.create_new',
-    defaultMessage: 'Create a new diagram',
-  },
   title: {
-    id: 'diagram.add_entities.title',
+    id: 'entityset.selector.title',
     defaultMessage: 'Add {count} {count, plural, one {entity} other {entities}} to...',
   },
   placeholder: {
-    id: 'diagram.add_entities.select_placeholder',
-    defaultMessage: 'Select an existing diagram',
-  },
-  empty: {
-    id: 'diagram.add_entities.select_empty',
-    defaultMessage: 'No existing diagrams',
+    id: 'entityset.selector.placeholder',
+    defaultMessage: 'Search existing',
   },
   success_update: {
-    id: 'diagram.add_entities.success',
+    id: 'entityset.selector.success',
     defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
   },
 });
@@ -42,33 +36,17 @@ const messages = defineMessages({
 class EntitySetSelector extends Component {
   constructor(props) {
     super(props);
-    this.state = { processing: false };
+    this.state = {
+      queryText: '',
+    };
 
-    this.onChangeLabel = this.onChangeLabel.bind(this);
-    this.onSearch = this.onSearch.bind(this);
     this.onCreate = this.onCreate.bind(this);
     this.onSelect = this.onSelect.bind(this);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.isOpen && this.props.isOpen) {
-      this.fetchIfNeeded()
-    }
-  }
-
-  fetchIfNeeded() {
-    const { listsQuery, diagramsQuery, listsResult, diagramsResult } = this.props;
-    console.log(listsResult, diagramsResult)
-    if (listsResult.shouldLoad) {
-      this.props.queryEntitySets({ query: listsQuery });
-    }
-    if (diagramsResult.shouldLoad) {
-      this.props.queryEntitySets({ query: diagramsQuery });
-    }
+    this.onSearch = this.onSearch.bind(this);
   }
 
   onSearch(queryText) {
-    console.log('searching', queryText);
+    this.setState({ queryText });
   }
 
   onCreate(e) {
@@ -83,12 +61,7 @@ class EntitySetSelector extends Component {
     });
   }
 
-  onChangeLabel({ target }) {
-    this.setState({ label: target.value });
-  }
-
   onSelect(entitySet) {
-    console.log('selected', entitySet)
     const { entities, intl } = this.props;
 
     const updatedEntities = entitySet.entities ? [...entitySet.entities, ...entities] : entities;
@@ -115,10 +88,10 @@ class EntitySetSelector extends Component {
       } else {
         request = this.props.createEntitySet(entitySet);
       }
+      this.props.toggleDialog(true);
 
       request.then(updatedEntitySet => {
         this.setState({ processing: false });
-        this.props.toggleDialog();
 
         const newCount = updatedEntitySet?.data?.entities?.length || 0;
         const updatedCount = newCount - prevEntityCount;
@@ -136,10 +109,9 @@ class EntitySetSelector extends Component {
     }
   }
 
-
   render() {
-    const { entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
-    const { label, processing } = this.state;
+    const { collection, entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
+    const { label, processing, queryText } = this.state;
     // <p>
     //   <FormattedMessage
     //     id="diagram.add_entities.selected_count"
@@ -148,7 +120,6 @@ class EntitySetSelector extends Component {
     //   />
     // </p>
 
-    console.log('collection ', this.props.collection)
 
     return (
       <Drawer
@@ -159,7 +130,7 @@ class EntitySetSelector extends Component {
         isOpen={isOpen}
         title={intl.formatMessage(messages.title, { count: entities.length })}
         transitionDuration={200}
-        onClose={toggleDialog}
+        onClose={() => toggleDialog()}
         autoFocus={false}
         enforceFocus={false}
         canOutsideClickClose={false}
@@ -169,84 +140,30 @@ class EntitySetSelector extends Component {
           <div className="EntitySetSelector__top-section">
             <SearchBox
               onSearch={this.onSearch}
-              placeholder={"testing"}
+              placeholder={intl.formatMessage(messages.placeholder)}
               query={diagramsQuery}
             />
           </div>
-
-          <div className="EntitySetSelector__section">
-            <h5 className="EntitySetSelector__section__title bp3-heading">
-              <FormattedMessage id="entityset.selector.lists" defaultMessage="Lists" />
-            </h5>
-            <div className="EntitySetSelector__section__content">
-              <EntitySetList
-                query={listsQuery}
-                result={listsResult}
-                onSelect={this.onSelect}
-                type="list"
-              />
-            </div>
-            <form onSubmit={this.onCreate}>
-              <InputGroup
-                fill
-                leftIcon="graph"
-                placeholder={intl.formatMessage(messages.create_new)}
-                rightElement={
-                  <Button icon="arrow-right" minimal type="submit" />
-                }
-                onChange={this.onChangeLabel}
-                value={label}
-              />
-            </form>
-
-          </div>
-          <div className="EntitySetSelector__section">
-            <h5 className="EntitySetSelector__section__title bp3-heading">
-              <FormattedMessage id="entityset.selector.diagrams" defaultMessage="Diagrams" />
-            </h5>
-            <div className="EntitySetSelector__section__content">
-              <EntitySetList
-                query={diagramsQuery}
-                result={diagramsResult}
-                onSelect={this.onSelect}
-                type="diagram"
-              />
-            </div>
-            <form onSubmit={this.onCreate}>
-              <InputGroup
-                fill
-                leftIcon="graph"
-                placeholder={intl.formatMessage(messages.create_new)}
-                rightElement={
-                  <Button icon="arrow-right" minimal type="submit" />
-                }
-                onChange={this.onChangeLabel}
-                value={label}
-              />
-            </form>
-          </div>
-
+          <EntitySetSelectorSection
+            type="list"
+            collection={collection}
+            onSelect={this.onSelect}
+            queryText={queryText}
+          />
+          <EntitySetSelectorSection
+            type="diagram"
+            collection={collection}
+            onSelect={this.onSelect}
+            queryText={queryText}
+          />
         </div>
       </Drawer>
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
-  const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
-
-  return {
-    diagramsQuery,
-    diagramsResult: selectEntitySetsResult(state, diagramsQuery),
-    listsQuery,
-    listsResult: selectEntitySetsResult(state, listsQuery),
-  };
-};
-
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { createEntitySet, queryEntitySets, updateEntitySet }),
+  connect(() => ({}), { createEntitySet, updateEntitySet }),
 )(EntitySetSelector);

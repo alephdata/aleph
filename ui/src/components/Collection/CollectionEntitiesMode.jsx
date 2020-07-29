@@ -58,6 +58,8 @@ const mapStateToProps = (state, ownProps) => {
     activeSchema: model.getSchema(activeType),
     schemaViews,
     selectableSchemata,
+    writeable: collection.writeable,
+    showImport: true,
     query: queryCollectionEntities(location, collection.id, activeType),
   };
 };

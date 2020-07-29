@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react';
+import _ from 'lodash';
+import { defineMessages } from 'react-intl';
 import { Button, Icon, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
@@ -6,6 +8,20 @@ import { withRouter } from 'react-router';
 import c from 'classnames';
 import getEntitySetLink from 'util/getEntitySetLink';
 
+const messages = defineMessages({
+  diagram: {
+    id: 'diagram',
+    defaultMessage: "{count, plural, one {diagram} other {diagrams}}",
+  },
+  timeline: {
+    id: 'timeline',
+    defaultMessage: "{count, plural, one {timeline} other {timelines}}",
+  },
+  list: {
+    id: 'list',
+    defaultMessage: "{count, plural, one {list} other {lists}}",
+  },
+});
 
 const ICONS = {
   diagram: 'graph',
@@ -14,6 +30,11 @@ const ICONS = {
 }
 
 const getIcon = ({ type }) => ICONS[type] || ICONS.list;
+
+const getTypeLabel = (intl, type, { capitalize, plural }) => {
+  const label = intl.formatMessage(messages[type], { count: plural ? 2 : 1 })
+  return capitalize ? _.capitalize(label) : label;
+}
 
 const EntitySetIcon = ({entitySet, className}) => (
   <Icon icon={getIcon(entitySet)} className={className} />
@@ -83,6 +104,8 @@ class EntitySetSelect extends PureComponent {
 }
 
 class EntitySet {
+  static getTypeLabel = getTypeLabel;
+
   static Icon = EntitySetIcon;
 
   static Label = EntitySetLabel;

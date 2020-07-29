@@ -5,16 +5,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import Query from 'app/Query';
-import { Collection, FileImport } from 'components/common';
+import { Collection, EntitySet, FileImport } from 'components/common';
 import CreateCaseDialog from 'dialogs/CreateCaseDialog/CreateCaseDialog';
 import FormDialog from 'dialogs/common/FormDialog';
 import { createEntitySet } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
 import { processApiEntity } from 'components/EntitySet/util';
-
-
-const TYPES = ['diagram', 'list', 'timeline'];
 
 
 const messages = defineMessages({
@@ -124,7 +121,7 @@ class EntitySetCreateDialog extends Component {
       });
 
       showSuccessToast(
-        intl.formatMessage(messages.success_create, { type }),
+        intl.formatMessage(messages.success_create, { type: EntitySet.getTypeLabel(intl, type, {}) }),
       );
     } catch (e) {
       showWarningToast(e.message);
@@ -172,8 +169,8 @@ class EntitySetCreateDialog extends Component {
   }
 
   checkValid() {
-    const { type, label, collection } = this.state;
-    return TYPES.includes(type) && collection && label?.length > 0;
+    const { label, collection } = this.state;
+    return collection && label?.length > 0;
   }
 
   render() {
@@ -185,13 +182,15 @@ class EntitySetCreateDialog extends Component {
     const showCollectionField = canChangeCollection && showTextFields;
     const canImportVisDiagram = importEnabled && type === 'diagram';
 
+    const typeLabel = EntitySet.getTypeLabel(intl, type, {});
+
     return (
       <FormDialog
         processing={processing}
-        icon="graph"
+        icon={<EntitySet.Icon entitySet={{ type }} />}
         className="EntitySetCreateDialog"
         isOpen={isOpen}
-        title={intl.formatMessage(canImportVisDiagram ? messages.title_diagram_import : messages.title_create, { type })}
+        title={intl.formatMessage(canImportVisDiagram ? messages.title_diagram_import : messages.title_create, { type: typeLabel })}
         onClose={toggleDialog}
       >
         <div className="bp3-dialog-body">
@@ -214,7 +213,7 @@ class EntitySetCreateDialog extends Component {
                       type="text"
                       className="bp3-input"
                       autoComplete="off"
-                      placeholder={intl.formatMessage(messages.label_placeholder, { type })}
+                      placeholder={intl.formatMessage(messages.label_placeholder, { type: typeLabel })}
                       onChange={this.onChangeLabel}
                       value={label}
                     />
@@ -231,7 +230,7 @@ class EntitySetCreateDialog extends Component {
                     <textarea
                       id="summary"
                       className="bp3-input"
-                      placeholder={intl.formatMessage(messages.summary_placeholder, { type })}
+                      placeholder={intl.formatMessage(messages.summary_placeholder, { type: typeLabel })}
                       onChange={this.onChangeSummary}
                       value={summary}
                       rows={5}

@@ -1,0 +1,26 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.EntitySetSelectorSection {
+  &__title {
+    &.bp3-button {
+      justify-content: flex-start;
+      background-color: $aleph-breadcrumbs-background !important;
+    }
+    padding: $aleph-grid-size/2;
+    position: relative;
+
+    .bp3-heading {
+      margin: 0;
+    }
+
+    .Count {
+      position: absolute;
+      @include rtl(right, $aleph-grid-size, initial);
+      @include rtl(left, initial, $aleph-grid-size);
+    }
+
+  }
+
+
+}

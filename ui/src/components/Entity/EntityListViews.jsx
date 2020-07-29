@@ -40,20 +40,21 @@ class EntityListViews extends React.PureComponent {
   }
 
   renderTable() {
-    const { collection, activeSchema, query } = this.props;
+    const { collection, activeSchema, query, showImport, writeable } = this.props;
     return <EntityListManager
       query={query}
       collection={collection}
       schema={activeSchema}
       onStatusChange={() => {}}
+      writeable={writeable}
+      showImport={showImport}
     />;
   }
 
   render() {
-    const { collection, activeType, schemaViews, selectableSchemata, intl } = this.props;
-    const showSchemaSelect = collection.writeable && selectableSchemata.length;
+    const { collection, activeType, schemaViews, selectableSchemata, intl, writeable } = this.props;
+    const showSchemaSelect = writeable && selectableSchemata.length;
 
-    console.log('in EntityListViews', activeType, schemaViews, selectableSchemata)
     return (
       <Tabs
         id="EntityListViewsTabs"
