@@ -5,19 +5,13 @@ Revises: 3174fef04825
 Create Date: 2020-07-21 13:42:06.509804
 
 """
-
-# revision identifiers, used by Alembic.
-revision = "9dcef7592cea"
-down_revision = "4c9e198c5b31"
-
 from itertools import groupby, takewhile
-from collections import namedtuple
-
-from aleph.model import Judgement
-
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
+
+
+revision = "9dcef7592cea"
+down_revision = "4c9e198c5b31"
 
 
 def upgrade():
@@ -44,6 +38,11 @@ def upgrade():
     linkage_table = meta.tables["linkage"]
     entityset_table = meta.tables["entityset"]
     item_table = meta.tables["entityset_item"]
+
+    q = sa.update(item_table)
+    q = q.values({"judgement": "POSITIVE"})
+    bind.execute(q)
+
     q = sa.select([linkage_table]).order_by("profile_id")
     rp = bind.execute(q)
 
@@ -52,11 +51,10 @@ def upgrade():
     )
 
     judgement_lookup = {
-        True: Judgement.POSITIVE,
-        False: Judgement.NEGATIVE,
-        None: Judgement.UNSURE,
+        True: "POSITIVE",
+        False: "NEGATIVE",
+        None: "UNSURE",
     }
-
     for profile_id, links in profiles:
         links = list(links)
         role_id = links[0].context_id
@@ -78,6 +76,7 @@ def upgrade():
         bind.execute(q)
 
         for link in links:
+            judgment = judgement_lookup[link.decision]
             q = sa.insert(item_table)
             q = q.values(
                 {
@@ -87,20 +86,14 @@ def upgrade():
                     "updated_at": link.updated_at,
                     "created_at": link.created_at,
                     "added_by_id": link.decider_id,
-                    "judgement": judgement_lookup[link.decision].name,
+                    "judgement": judgment,
                     "deleted_at": None,
                 }
             )
             bind.execute(q)
+
     op.drop_table("linkage")
 
 
 def downgrade():
-    op.drop_column("entityset_item", "compared_to_entity_id")
-    op.drop_column("entityset_item", "judgement")
-
-    judgement_enum = sa.Enum(
-        "POSITIVE", "NEGATIVE", "UNSURE", "NO_JUDGEMENT", name="judgement"
-    )
-    judgement_enum.drop(op.get_bind())
-    op.drop_column("entityset_item", "added_by_id")
+    pass
