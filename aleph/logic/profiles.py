@@ -42,10 +42,8 @@ def profile_add_entities(
     pq = db.session.query(EntitySetItem)
     pq = pq.filter(EntitySetItem.entityset_id == entityset.id)
     pq = pq.filter(EntitySetItem.entity_id == entity_id)
-    pq = pq.filter(EntitySetItem.deleted_at == None)
-    N = pq.update(
-        {EntitySetItem.deleted_at: datetime.utcnow()}, synchronize_session=False
-    )
+    pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
+    pq.update({EntitySetItem.deleted_at: datetime.utcnow()}, synchronize_session=False)
 
     esi = EntitySetItem(
         entityset=entityset,
@@ -59,15 +57,9 @@ def profile_add_entities(
     return esi
 
 
-def create_profile(collection_id, authz):
-    es = EntitySet(
-        id=make_textid(),
-        type=EntitySet.PROFILE,
-        collection_id=collection_id,
-        role_id=authz.id,
-    )
-    db.session.add(es)
-    return es
+def create_profile(collection, authz):
+    data = {"type": EntitySet.PROFILE}
+    return EntitySet.create(data, collection, authz)
 
 
 def merge_profiles(*profiles):
