@@ -46,29 +46,19 @@ class EntitySet(db.Model, SoftDeleteModel):
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), index=True)
     role = db.relationship(Role)
 
-    collection_id = db.Column(
-        db.Integer, db.ForeignKey("collection.id"), index=True
-    )  # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey("collection.id"), index=True)
     collection = db.relationship(Collection)
 
-    parent_id = db.Column(
-        db.String(ENTITY_ID_LEN), db.ForeignKey("entityset.id")
-    )  # noqa
+    parent_id = db.Column(db.String(ENTITY_ID_LEN), db.ForeignKey("entityset.id"))
     parent = db.relationship("EntitySet", backref="children", remote_side=[id])
 
     @property
     def entities(self):
         q = db.session.query(EntitySetItem.entity_id)
         q = q.filter(EntitySetItem.entityset_id == self.id)
+        q = q.filter(EntitySetItem.judgement == Judgement.POSITIVE)
         q = q.filter(EntitySetItem.deleted_at == None)  # noqa
         return [entity_id for entity_id, in q.all()]
-
-    @property
-    def root(self):
-        p = self
-        while p.parent_id is not None:
-            p = p.parent
-        return p
 
     @classmethod
     def create(cls, data, collection, authz):
@@ -137,11 +127,6 @@ class EntitySet(db.Model, SoftDeleteModel):
         q = q.filter(EntitySetItem.entityset_id == self.id)
         return q
 
-    def iter_descendants(self):
-        for c in self.children:
-            yield c
-            yield from c.iter_children()
-
     def take_items_from(self, other):
         """Moves EntitySetItems belonging to other EntitySet into this EntitySet
 
@@ -187,6 +172,7 @@ class EntitySet(db.Model, SoftDeleteModel):
             item.collection_id = self.collection_id
             item.entityset_id = self.id
             item.entity_id = entity_id
+            item.judgement = Judgement.POSITIVE
             item.updated_at = self.updated_at
             db.session.add(item)
 
@@ -231,11 +217,9 @@ class EntitySetItem(db.Model, SoftDeleteModel):
     id = db.Column(db.Integer, primary_key=True)
     entityset_id = db.Column(
         db.String(ENTITY_ID_LEN), db.ForeignKey("entityset.id"), index=True
-    )  # noqa
+    )
     entity_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
-    collection_id = db.Column(
-        db.Integer, db.ForeignKey("collection.id"), index=True
-    )  # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey("collection.id"), index=True)
 
     compared_to_entity_id = db.Column(db.String(ENTITY_ID_LEN))
     added_by_id = db.Column(db.Integer, db.ForeignKey("role.id"))
