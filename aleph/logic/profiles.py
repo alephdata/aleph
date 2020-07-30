@@ -1,23 +1,20 @@
 import logging
-from itertools import chain
 from datetime import datetime
-
 from sqlalchemy.orm import aliased
 
 from aleph.util import PairwiseDict
 from aleph.core import db
-from aleph.model import EntitySet, EntitySetItem, Judgement
-from aleph.model.common import make_textid
+from aleph.model import Collection, EntitySet, EntitySetItem, Judgement
 
 log = logging.getLogger(__name__)
 
 
-def collection_profiles(collection_id, judgements=None, most_recent=True):
+def collection_profiles(collection_id, judgements=None, deleted=False):
     if judgements is not None:
         judgements = list(map(Judgement, judgements))
     entity_sets = EntitySet.by_collection_id(collection_id, types=[EntitySet.PROFILE])
     for entity_set in entity_sets:
-        items = entity_set.profile(judgements=judgements, most_recent=most_recent).all()
+        items = entity_set.profile(judgements=judgements, deleted=deleted).all()
         if items:
             yield (entity_set, items)
 
@@ -86,11 +83,11 @@ def decide_xref(xref, judgement, authz):
         judgement = Judgement(judgement)
 
     entity_id = xref.get("entity_id")
-    collection_id = xref.get("collection_id")
+    collection = Collection.by_id(xref.get("collection_id"))
     entity_profile = EntitySet.by_entity_id(
         entity_id,
         judgements=[Judgement.POSITIVE],
-        collection_id=collection_id,
+        collection_id=collection.id,
         types=[EntitySet.PROFILE],
     ).first()
 
@@ -99,19 +96,19 @@ def decide_xref(xref, judgement, authz):
     match_profile = EntitySet.by_entity_id(
         match_id,
         judgements=[Judgement.POSITIVE],
-        collection_id=collection_id,
+        collection_id=collection.id,
         types=[EntitySet.PROFILE],
     ).first()
 
     # If we are undecided, and we stay undecided, not much to change.
     if entity_profile is None or match_profile is None:
-        if judgement is None:
+        if judgement == Judgement.NO_JUDGEMENT:
             return
 
     if entity_profile is None:
-        entity_profile = create_profile(collection_id, authz)
+        entity_profile = create_profile(collection, authz)
         profile_add_entities(
-            entity_profile, entity_id, collection_id, None, Judgement.POSITIVE, authz
+            entity_profile, entity_id, collection.id, None, Judgement.POSITIVE, authz
         )
 
     if judgement is Judgement.POSITIVE and match_profile is not None:

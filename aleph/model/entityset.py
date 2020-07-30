@@ -22,8 +22,9 @@ class Judgement(Enum):
     def __add__(self, other):
         if self == other:
             return self
-        else:
-            return Judgement.UNSURE
+        if Judgement.NEGATIVE in (self, other):
+            return Judgement.NEGATIVE
+        return Judgement.UNSURE
 
 
 class EntitySet(db.Model, SoftDeleteModel):
@@ -127,6 +128,12 @@ class EntitySet(db.Model, SoftDeleteModel):
         q = q.filter(EntitySetItem.entityset_id == self.id)
         return q
 
+    def profile(self, judgements=None, deleted=False):
+        q = self.items(deleted=deleted)
+        if judgements is not None:
+            q = q.filter(EntitySetItem.judgement.in_(judgements))
+        return q
+
     def take_items_from(self, other):
         """Moves EntitySetItems belonging to other EntitySet into this EntitySet
 
@@ -136,12 +143,6 @@ class EntitySet(db.Model, SoftDeleteModel):
         pq = pq.filter(EntitySetItem.entityset_id == other.id)
         pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
         return pq.update({EntitySetItem.entityset_id: self.id})
-
-    def profile(self, judgements=None, most_recent=True):
-        q = self.items(not most_recent)
-        if judgements is not None:
-            q = q.filter(EntitySetItem.judgement.in_(judgements))
-        return q
 
     def update(self, data, collection):
         self.label = data.get("label", self.label)

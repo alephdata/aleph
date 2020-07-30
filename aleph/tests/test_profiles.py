@@ -66,25 +66,21 @@ class ProfileTestCase(TestCase):
         }
         for judgement in Judgement:
             decide_xref(xref, judgement=judgement, authz=w)
-            result = list(collection_profiles(coll.id, most_recent=True))
+            result = list(collection_profiles(coll.id))
             assert len(result) == 1, len(result)
             profile, items = result[0]
             assert profile.collection_id == coll.id, profile.collection_id
             assert len(items) == 2, len(items)
             assert [r == judgement for r in items]
 
-        result = list(collection_profiles(coll.id, most_recent=False))
+        result = list(collection_profiles(coll.id, deleted=True))
         assert len(result) == 1, len(result)
         profile, items = result[0]
         assert profile.collection_id == coll.id, profile.collection_id
-        assert len(items) == 1 + len(Judgement), len(items)
+        assert len(items) == len(Judgement), len(items)
 
         decide_xref(xref, judgement=Judgement.NEGATIVE, authz=w)
-        result = list(
-            collection_profiles(
-                coll.id, judgements=[Judgement.POSITIVE], most_recent=True
-            )
-        )
+        result = list(collection_profiles(coll.id, judgements=[Judgement.POSITIVE]))
         assert len(result) == 1, len(result)
         profile, items = result[0]
         assert len(items) == 1
