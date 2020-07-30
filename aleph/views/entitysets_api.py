@@ -3,14 +3,15 @@ from banal import ensure_list
 from flask import Blueprint, request
 
 from aleph.core import db
-from aleph.model import EntitySet
+from aleph.model import EntitySet, EntitySetItem
 from aleph.logic.entitysets import create_entityset
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.context import tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
+from aleph.views.serializers import EntitySetItemSerializer
 from aleph.views.serializers import EntitySetIndexSerializer
-from aleph.views.util import get_nested_collection, get_db_collection
+from aleph.views.util import get_nested_collection, get_db_collection, get_index_entity
 from aleph.views.util import obj_or_404, parse_request
 
 
@@ -194,6 +195,52 @@ def update(entityset_id):
     eset.update(data, collection)
     db.session.commit()
     return EntitySetSerializer.jsonify(eset)
+
+
+@blueprint.route("/api/2/entitysets/<entityset_id>/item", methods=["POST", "PUT"])
+def entitysetitem_add(entityset_id):
+    """Add new item to the entityset with id `entityset_id`.
+    ---
+    post:
+      summary: Add item to an entityset
+      parameters:
+      - description: The entityset id.
+        in: path
+        name: entityset_id
+        required: true
+        schema:
+          type: string
+        example: 3a0d91ece2dce88ad3259594c7b642485235a048
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntitySetItemAdd'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitySetItem'
+          description: OK
+      tags:
+      - EntitySetItem
+    """
+    eset = obj_or_404(EntitySet.by_id(entityset_id))
+    get_db_collection(eset.collection_id, request.authz.WRITE)
+    data = parse_request("EntitySetItemAdd")
+    entity = get_index_entity(data["entity_id"], request.authz.READ)
+
+    esi = EntitySetItem.create(
+        collection_id=entity["collection_id"],
+        entityset_id=eset.id,
+        added_by_id=request.authz.id,
+        **data
+    )
+
+    db.session.add(esi)
+    db.session.commit()
+    return EntitySetItemSerializer.jsonify(esi)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["DELETE"])

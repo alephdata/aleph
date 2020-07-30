@@ -42,9 +42,6 @@ XrefResponse:
 XrefDecide:
   type: object
   properties:
-    context_id:
-      type: string
-      nullable: true
     decision:
-      type: boolean
-      nullable: true
+      allOf:
+        - $ref: '#/components/schemas/Judgement'
