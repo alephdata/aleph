@@ -93,10 +93,11 @@ def index_aggregator(collection, aggregator, entity_ids=None, sync=False):
     aggregator.close()
 
 
-def reingest_collection(collection, job_id=None, index=False):
+def reingest_collection(collection, job_id=None, index=False, flush=True):
     """Trigger a re-ingest for all documents in the collection."""
     job_id = job_id or Job.random_id()
-    ingest_flush(collection)
+    if flush:
+        ingest_flush(collection)
     for document in Document.by_collection(collection.id):
         proxy = document.to_proxy(ns=collection.ns)
         ingest_entity(collection, proxy, job_id=job_id, index=index)
