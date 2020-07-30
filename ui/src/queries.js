@@ -29,18 +29,14 @@ export function queryCollectionEntitySets(location, collectionId) {
   return Query.fromLocation('entitysets', location, context, 'entitySets');
 }
 
-export function queryCollectionXrefFacets(location, collectionId, contextId) {
+export function queryCollectionXrefFacets(location, collectionId) {
   const path = `collections/${collectionId}/xref`;
   let query = Query.fromLocation(path, location, {}, 'xref');
   query = query.defaultFacet('match_collection_id', true);
   query = query.defaultFacet('countries', false);
   query = query.defaultFacet('schema', false);
-  if (contextId) {
-    query = query.set('context_id', contextId);
-  } else {
-    // Show internal matches only in de-dupe mode.
-    query = query.set('exclude:match_collection_id', collectionId);
-  }
+  // Show no internal matches:
+  // query = query.set('exclude:match_collection_id', collectionId);
   return query;
 }
 

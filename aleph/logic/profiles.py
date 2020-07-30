@@ -55,7 +55,7 @@ def profile_add_entities(
 
 
 def create_profile(collection, authz):
-    data = {"type": EntitySet.PROFILE}
+    data = {"type": EntitySet.PROFILE, "label": "profile"}
     return EntitySet.create(data, collection, authz)
 
 

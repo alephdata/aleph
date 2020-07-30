@@ -134,7 +134,7 @@ def export(collection_id):
 
 @blueprint.route(
     "/api/2/collections/<int:collection_id>/xref/<xref_id>", methods=["POST"]
-)  # noqa
+)
 def decide(collection_id, xref_id):
     """
     ---
@@ -183,13 +183,8 @@ def decide(collection_id, xref_id):
     entity = get_index_entity(xref.get("entity_id"))
     match = get_index_entity(xref.get("match_id"))
     if entity is None and match is None:
-        # This will raise a InvalidData error if the two types are not compatable
-        try:
-            model.common_schema(entity.get("schema"), match.get("schema"))
-        except InvalidData:
-            raise BadRequest(
-                f'Invalid schemas for xref entities: {entity.get("schema")} / {match.get("schema")}'
-            )
+        # This will raise a InvalidData error if the two types are not compatible
+        model.common_schema(entity.get("schema"), match.get("schema"))
 
     decide_xref(xref, judgement=data.get("decision"), authz=request.authz)
     return jsonify({"status": "ok"}, status=204)

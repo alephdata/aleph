@@ -271,6 +271,9 @@ class XrefSerializer(Serializer):
         except AttributeError:
             obj["decision"] = None
 
+        collection_id = obj.get("collection_id")
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+
         if obj["entity"] and obj["match"]:
             return obj
 
@@ -378,12 +381,3 @@ class MappingSerializer(Serializer):
         obj["links"] = {}
         return obj
 
-
-class LinkageSerializer(Serializer):
-    def _collect(self, obj):
-        self.queue(Entity, obj.get("entity_id"))
-
-    def _serialize(self, obj):
-        entity_id = obj.get("entity_id")
-        obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
-        return obj
