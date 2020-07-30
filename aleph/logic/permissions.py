@@ -12,8 +12,12 @@ def update_permission(role, collection, read, write, editor_id=None):
     """Update a roles permission to access a given collection."""
     pre = Permission.by_collection_role(collection, role)
     post = Permission.grant(collection, role, read, write)
+    db.session.commit()
+    refresh_role(role)
+    if post is None:
+        return
     params = {"role": role, "collection": collection}
-    if (pre is None or not pre.read) and post.read:
+    if pre is None or not pre.read:
         if role.foreign_id == Role.SYSTEM_GUEST:
             publish(
                 Events.PUBLISH_COLLECTION,
@@ -28,6 +32,4 @@ def update_permission(role, collection, read, write, editor_id=None):
                 params=params,
                 channels=[role],
             )
-    db.session.commit()
-    refresh_role(role)
     return post

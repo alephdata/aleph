@@ -140,7 +140,7 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     if not keep_metadata:
         # Considering linkages metadata for now, might be wrong:
         Linkage.delete_by_collection(collection.id)
-        Permission.delete_by_collection(collection.id, deleted_at)
+        Permission.delete_by_collection(collection.id)
         collection.delete(deleted_at=deleted_at)
     db.session.commit()
     if not keep_metadata:

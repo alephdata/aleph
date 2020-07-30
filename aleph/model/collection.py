@@ -130,7 +130,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(perm.collection_id == self.id)
         q = q.filter(perm.read == True)  # noqa
         q = q.filter(role.deleted_at == None)  # noqa
-        q = q.filter(perm.deleted_at == None)  # noqa
         return [stringify(i) for (i,) in q.all()]
 
     @property
@@ -139,7 +138,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(Permission.role_id.in_(Role.public_roles()))
         q = q.filter(Permission.collection_id == self.id)
         q = q.filter(Permission.read == True)  # noqa
-        q = q.filter(Permission.deleted_at == None)  # noqa
         return q.count() < 1
 
     @property
@@ -201,7 +199,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     def _apply_authz(cls, q, authz):
         if authz is not None and not authz.is_admin:
             q = q.join(Permission, cls.id == Permission.collection_id)
-            q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.read == True)  # noqa
             q = q.filter(Permission.role_id.in_(authz.roles))
         return q
