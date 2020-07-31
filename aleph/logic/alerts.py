@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 
 def get_alert(alert_id):
-    alert = Alert.by_id(alert_id, deleted=True)
+    alert = Alert.by_id(alert_id)
     if alert is not None:
         return alert.to_dict()
 

@@ -48,7 +48,7 @@ class DatedModel(object):
             return
         return cls.all(deleted=deleted).filter_by(id=id).first()
 
-    def delete(self, deleted_at=None):
+    def delete(self):
         # hard delete
         db.session.delete(self)
 

@@ -116,7 +116,7 @@ class EntitySet(db.Model, SoftDeleteModel):
 
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at):
-        EntitySetItem.delete_by_collection(collection_id, deleted_at)
+        EntitySetItem.delete_by_collection(collection_id)
 
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
@@ -134,15 +134,46 @@ class EntitySet(db.Model, SoftDeleteModel):
             q = q.filter(EntitySetItem.judgement.in_(judgements))
         return q
 
-    def take_items_from(self, other):
-        """Moves EntitySetItems belonging to other EntitySet into this EntitySet
-
-        The other EntitySet will not be deleted, however it won't have any items
+    def merge(self, other, merged_by_id):
+        """Merge two entity_sets into each other. The older one is
+        retained. This tries to retain a state where there is only
+        one judgement between a set and an entity.
         """
-        pq = db.session.query(EntitySetItem)
-        pq = pq.filter(EntitySetItem.entityset_id == other.id)
-        pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
-        return pq.update({EntitySetItem.entityset_id: self.id})
+        if other.id == self.id:
+            return self
+        if other.created_at > self.created_at:
+            return other.merge(self, merged_by_id)
+
+        local_items = {i.entity_id: i for i in self.items()}
+        for remote in other.items():
+            local = local_items.get(remote.entity_id)
+            if local is None:
+                remote.entityset_id = self.id
+                remote.updated_at = datetime.utcnow()
+                db.session.add(remote)
+                continue
+            judgement = local.judgment + remote.judgement
+            if judgement == local.judgement:
+                remote.delete()
+                continue
+
+            origin = local.compared_to_entity_id or remote.compared_to_entity_id
+            combined = EntitySetItem(
+                entityset_id=self.id,
+                entity_id=local.entity_id,
+                collection_id=local.collection_id,
+                added_by_id=merged_by_id,
+                judgement=judgement,
+                compared_to_entity_id=origin,
+            )
+            db.session.add(combined)
+            local.delete()
+            remote.delete()
+        other.delete()
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.flush()
+        return self
 
     def update(self, data, collection):
         self.label = data.get("label", self.label)
@@ -237,17 +268,21 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         return cls(judgement=judgement, **data)
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at):
+    def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+        pq.delete(synchronize_session=False)
 
         pq = db.session.query(cls)
         pq = pq.filter(EntitySet.collection_id == collection_id)
         pq = pq.filter(EntitySet.id == cls.entityset_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+        pq.delete(synchronize_session=False)
+
+    @classmethod
+    def delete_by_entity(cls, entity_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.entity_id == entity_id)
+        pq.delete(synchronize_session=False)
 
     def to_dict(self):
         data = self.to_dict_dates()
