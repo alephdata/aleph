@@ -59,16 +59,6 @@ def create_profile(collection, authz):
     return EntitySet.create(data, collection, authz)
 
 
-def merge_profiles(*profiles):
-    idx = min(range(len(profiles)), key=lambda i: profiles[i].created_at)
-    master_profile = profiles[idx]
-    for profile in profiles:
-        if master_profile.id != profile.id:
-            master_profile.take_items_from(profile)
-            profile.delete()
-    return master_profile
-
-
 def decide_xref(xref, judgement, authz):
     """Store user feedback from an Xref result as an profile-type EntitySet
     The problem here is that we're trying to translate a single pair-wise
@@ -113,10 +103,7 @@ def decide_xref(xref, judgement, authz):
 
     if judgement is Judgement.POSITIVE and match_profile is not None:
         # Case 1: both entities have profiles and the match is positive
-        profile = merge_profiles(entity_profile, match_profile)
-        profile_add_entities(
-            profile, match_id, match_collection_id, entity_id, judgement, authz
-        )
+        entity_profile = entity_profile.merge(match_profile, authz.id)
     else:
         # Case 2: any other judgement
         # NOTE: Another case of NEGATIVE judgements triggering a
