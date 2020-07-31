@@ -8,7 +8,7 @@ from banal import ensure_list
 from aleph.core import db
 from aleph.model import Role, Collection
 from aleph.model.common import SoftDeleteModel
-from aleph.model.common import ENTITY_ID_LEN, make_textid
+from aleph.model.common import ENTITY_ID_LEN, make_textid, query_like
 
 log = logging.getLogger(__name__)
 
@@ -68,26 +68,25 @@ class EntitySet(db.Model, SoftDeleteModel):
         entityset.layout = {}
         entityset.role_id = authz.id
         entityset.collection_id = collection.id
-        entityset.update(data, collection)
+        entityset.update(data)
         return entityset
 
     @classmethod
-    def by_authz(cls, authz, types=None):
+    def by_authz(cls, authz, types=None, prefix=None):
         ids = authz.collections(authz.READ)
         q = cls.by_type(types)
         q = q.filter(cls.collection_id.in_(ids))
+        if prefix is not None:
+            q = q.filter(query_like(cls.label, prefix))
         return q
 
     @classmethod
     def by_type(cls, types):
         """Retuns EntitySets of a particular type"""
         q = EntitySet.all()
-        if types is not None:
-            types = ensure_list(types)
-            if not cls.TYPES.issuperset(types):
-                raise TypeError(f"Invalid value for types: {types}")
-            elif types != cls.TYPES:
-                q = q.filter(EntitySet.type.in_(types))
+        types = ensure_list(types)
+        if len(types) and types != cls.TYPES:
+            q = q.filter(EntitySet.type.in_(types))
         return q
 
     @classmethod
@@ -126,6 +125,7 @@ class EntitySet(db.Model, SoftDeleteModel):
     def items(self, deleted=False):
         q = EntitySetItem.all(deleted=deleted)
         q = q.filter(EntitySetItem.entityset_id == self.id)
+        q = q.order_by(EntitySetItem.created_at.asc())
         return q
 
     def profile(self, judgements=None, deleted=False):
@@ -175,7 +175,7 @@ class EntitySet(db.Model, SoftDeleteModel):
         db.session.flush()
         return self
 
-    def update(self, data, collection):
+    def update(self, data):
         self.label = data.get("label", self.label)
         self.type = data.get("type", self.type)
         self.summary = data.get("summary", self.summary)
@@ -262,10 +262,35 @@ class EntitySetItem(db.Model, SoftDeleteModel):
     added_by = db.relationship(Role)
 
     @classmethod
-    def create(cls, *, judgement=None, **data):
-        if judgement is not None:
+    def by_entity_id(cls, entityset, entity_id):
+        q = cls.all()
+        q = q.filter(cls.entityset_id == entityset.id)
+        q = q.filter(cls.entity_id == entity_id)
+        q = q.order_by(cls.created_at.desc())
+        return q.first()
+
+    @classmethod
+    def save(cls, entityset, entity_id, judgement=None, **data):
+        if judgement is None:
+            judgement = Judgement.POSITIVE
+        else:
             judgement = Judgement(judgement)
-        return cls(judgement=judgement, **data)
+        existing = cls.by_entity_id(entityset, entity_id)
+        if existing is not None:
+            if existing.judgement == judgement:
+                return existing
+            existing.delete()
+        if judgement == Judgement.NO_JUDGEMENT:
+            return
+        item = cls(
+            entityset_id=entityset.id,
+            entity_id=entity_id,
+            judgement=judgement,
+            compared_to_entity_id=data.get("compared_to_entity_id"),
+            added_by_id=data.get("added_by_id"),
+        )
+        db.session.add(item)
+        return item
 
     @classmethod
     def delete_by_collection(cls, collection_id):
@@ -288,15 +313,15 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         data = self.to_dict_dates()
         data.update(
             {
-                "id": stringify(self.id),
                 "entityset_id": self.entityset_id,
                 "entity_id": self.entity_id,
                 "collection_id": self.collection_id,
                 "added_by_id": self.added_by_id,
-                "judgement": getattr(self.judgement, "name", None),
                 "compared_to_entity_id": self.compared_to_entity_id,
             }
         )
+        if self.judgement:
+            data["judgement"] = self.judgement.value
         return data
 
     def __repr__(self):

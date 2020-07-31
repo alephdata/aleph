@@ -1,6 +1,7 @@
 import uuid
 import logging
 from datetime import datetime, date
+from sqlalchemy import false
 
 from aleph.core import db
 
@@ -16,6 +17,14 @@ def iso_text(obj):
     if isinstance(obj, (date, datetime)):
         return obj.isoformat()
     return obj
+
+
+def query_like(column, text):
+    if text is None or len(text) < 3:
+        return false()
+    text = text.replace("%", " ").replace("_", " ")
+    text = "%%%s%%" % text
+    return column.ilike(text)
 
 
 class IdModel(object):

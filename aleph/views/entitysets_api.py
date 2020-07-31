@@ -11,8 +11,8 @@ from aleph.views.context import tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
 from aleph.views.serializers import EntitySetIndexSerializer
-from aleph.views.util import get_nested_collection, get_db_collection, get_index_entity
-from aleph.views.util import obj_or_404, parse_request
+from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
+from aleph.views.util import parse_request
 
 
 blueprint = Blueprint("entitysets_api", __name__)
@@ -33,9 +33,13 @@ def index():
         schema:
           minimum: 1
           type: integer
-      - type: The type of the entitiyset
+      - description: The type of the entity set
         in: query
         name: 'filter:type'
+        required: false
+      - description: Quert string for searches
+        in: query
+        name: 'prefix'
         required: false
       responses:
         '200':
@@ -55,13 +59,11 @@ def index():
         - EntitySet
     """
     parser = QueryParser(request.args, request.authz)
-    q = EntitySet.by_authz(request.authz)
+    types = parser.filters.get("type")
+    q = EntitySet.by_authz(request.authz, types=types, prefix=parser.prefix)
     collection_ids = ensure_list(parser.filters.get("collection_id"))
     if len(collection_ids):
         q = q.filter(EntitySet.collection_id.in_(collection_ids))
-    types = ensure_list(parser.filters.get("type"))
-    if len(types):
-        q = q.filter(EntitySet.type.in_(types))
     result = DatabaseQueryResult(request, q, parser=parser)
     return EntitySetIndexSerializer.jsonify_result(result)
 
@@ -106,9 +108,8 @@ def view(entityset_id):
         name: entityset_id
         required: true
         schema:
-          minimum: 1
-          type: integer
-        example: 2
+          type: string
+        example: 3a0d91ece2dce88ad3259594c7b642485235a048
       responses:
         '200':
           content:
@@ -119,45 +120,8 @@ def view(entityset_id):
       tags:
       - EntitySet
     """
-    entityset = obj_or_404(EntitySet.by_id(entityset_id))
-    get_db_collection(entityset.collection_id, request.authz.READ)
+    entityset = get_entityset(entityset_id, request.authz.READ)
     return EntitySetSerializer.jsonify(entityset)
-
-
-@blueprint.route("/api/2/entitysets/<entityset_id>/entities", methods=["GET"])
-def entities(entityset_id):
-    """Search entities in the entity set with id `entityset_id`.
-    ---
-    get:
-      summary: Search entities in the entity set with id `entityset_id`
-      description: >
-        Supports all query filters and arguments present in the normal
-        entity search API, but all resulting entities will be members of
-        the set.
-      parameters:
-      - description: The entityset id.
-        in: path
-        name: entityset_id
-        required: true
-        schema:
-          type: string
-        example: 3a0d91ece2dce88ad3259594c7b642485235a048
-      responses:
-        '200':
-          description: Resturns a list of entities in result
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EntitiesResponse'
-      tags:
-      - EntitySet
-    """
-    entityset = obj_or_404(EntitySet.by_id(entityset_id))
-    get_db_collection(entityset.collection_id, request.authz.READ)
-    parser = SearchQueryParser(request.args, request.authz)
-    tag_request(query=parser.text, prefix=parser.prefix)
-    result = EntitySetItemsQuery.handle(request, parser=parser, entityset=entityset)
-    return EntitySerializer.jsonify_result(result)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["POST", "PUT"])
@@ -189,17 +153,112 @@ def update(entityset_id):
       tags:
       - EntitySet
     """
-    eset = obj_or_404(EntitySet.by_id(entityset_id))
-    collection = get_db_collection(eset.collection_id, request.authz.WRITE)
+    entityset = get_entityset(entityset_id, request.authz.WRITE)
     data = parse_request("EntitySetUpdate")
-    eset.update(data, collection)
+    entityset.update(data)
     db.session.commit()
-    return EntitySetSerializer.jsonify(eset)
+    return EntitySetSerializer.jsonify(entityset)
 
 
-@blueprint.route("/api/2/entitysets/<entityset_id>/item", methods=["POST", "PUT"])
-def entitysetitem_add(entityset_id):
-    """Add new item to the entityset with id `entityset_id`.
+@blueprint.route("/api/2/entitysets/<entityset_id>", methods=["DELETE"])
+def delete(entityset_id):
+    """Delete an entity set.
+    ---
+    delete:
+      summary: Delete an entity set
+      parameters:
+      - description: The entity set ID.
+        in: path
+        name: entityset_id
+        required: true
+        schema:
+          type: string
+        example: 3a0d91ece2dce88ad3259594c7b642485235a048
+      responses:
+        '204':
+          description: No Content
+      tags:
+      - EntitySet
+    """
+    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    entityset.delete()
+    db.session.commit()
+    return ("", 204)
+
+
+@blueprint.route("/api/2/entitysets/<entityset_id>/entities", methods=["GET"])
+def entities_index(entityset_id):
+    """Search entities in the entity set with id `entityset_id`.
+    ---
+    get:
+      summary: Search entities in the entity set with id `entityset_id`
+      description: >
+        Supports all query filters and arguments present in the normal
+        entity search API, but all resulting entities will be members of
+        the set.
+      parameters:
+      - description: The entityset id.
+        in: path
+        name: entityset_id
+        required: true
+        schema:
+          type: string
+        example: 3a0d91ece2dce88ad3259594c7b642485235a048
+      responses:
+        '200':
+          description: Resturns a list of entities in result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitiesResponse'
+      tags:
+      - EntitySet
+    """
+    entityset = get_entityset(entityset_id, request.authz.READ)
+    parser = SearchQueryParser(request.args, request.authz)
+    tag_request(query=parser.text, prefix=parser.prefix)
+    result = EntitySetItemsQuery.handle(request, parser=parser, entityset=entityset)
+    return EntitySerializer.jsonify_result(result)
+
+
+@blueprint.route("/api/2/entitysets/<entityset_id>/items", methods=["GET"])
+def item_index(entityset_id):
+    """See a list of all items in that are linked to this entity set.
+
+    This gives entities that are judged negative and unsure alongside the
+    positive matches returned by the subling `./entities` API.
+    ---
+    post:
+      summary: Get all items in the entity set.
+      parameters:
+      - description: The entityset id.
+        in: path
+        name: entityset_id
+        required: true
+        schema:
+          type: string
+        example: 3a0d91ece2dce88ad3259594c7b642485235a048
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitySetItemResponse'
+          description: OK
+      tags:
+      - EntitySetItem
+    """
+    entityset = get_entityset(entityset_id, request.authz.READ)
+    result = DatabaseQueryResult(request, entityset.items())
+    return EntitySetItemSerializer.jsonify_result(result)
+
+
+@blueprint.route("/api/2/entitysets/<entityset_id>/items", methods=["POST", "PUT"])
+def item_update(entityset_id):
+    """Add an item to the entity set with id `entityset_id`, or change
+    the items judgement.
+
+    To delete an item from the entity set, apply the judgement: `no_judgement`.
     ---
     post:
       summary: Add item to an entityset
@@ -215,7 +274,7 @@ def entitysetitem_add(entityset_id):
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EntitySetItemAdd'
+              $ref: '#/components/schemas/EntitySetItemUpdate'
       responses:
         '200':
           content:
@@ -223,49 +282,20 @@ def entitysetitem_add(entityset_id):
               schema:
                 $ref: '#/components/schemas/EntitySetItem'
           description: OK
+        '204':
+          description: Item removed
       tags:
       - EntitySetItem
     """
-    eset = obj_or_404(EntitySet.by_id(entityset_id))
-    get_db_collection(eset.collection_id, request.authz.WRITE)
-    data = parse_request("EntitySetItemAdd")
-    entity = get_index_entity(data["entity_id"], request.authz.READ)
-
-    esi = EntitySetItem.create(
-        collection_id=entity["collection_id"],
-        entityset_id=eset.id,
-        added_by_id=request.authz.id,
-        **data
-    )
-
-    db.session.add(esi)
+    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    data = parse_request("EntitySetItemUpdate")
+    entity = data.pop("entity", {})
+    entity_id = data.pop("entity_id", entity.get("id"))
+    entity = get_index_entity(entity_id, request.authz.READ)
+    data["collecton_id"] = entity["collection_id"]
+    data["added_by_id"] = request.authz.id
+    item = EntitySetItem.save(entityset, entity_id, **data)
     db.session.commit()
-    return EntitySetItemSerializer.jsonify(esi)
-
-
-@blueprint.route("/api/2/entitysets/<entityset_id>", methods=["DELETE"])
-def delete(entityset_id):
-    """Delete an entityset.
-    ---
-    delete:
-      summary: Delete an entityset
-      parameters:
-      - description: The entityset id.
-        in: path
-        name: entityset_id
-        required: true
-        schema:
-          type: string
-        example: 3a0d91ece2dce88ad3259594c7b642485235a048
-      responses:
-        '204':
-          description: No Content
-      tags:
-      - EntitySet
-    """
-    eset = obj_or_404(EntitySet.by_id(entityset_id))
-    collection = get_db_collection(eset.collection_id, request.authz.WRITE)
-    eset.delete()
-    collection.touch()
-    db.session.commit()
-    return ("", 204)
+    if item is None:
+        return ("", 204)
+    return EntitySetItemSerializer.jsonify(item)
