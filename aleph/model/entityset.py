@@ -116,7 +116,7 @@ class EntitySet(db.Model, SoftDeleteModel):
 
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at):
-        EntitySetItem.delete_by_collection(collection_id, deleted_at)
+        EntitySetItem.delete_by_collection(collection_id)
 
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
@@ -237,17 +237,21 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         return cls(judgement=judgement, **data)
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at):
+    def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+        pq.delete(synchronize_session=False)
 
         pq = db.session.query(cls)
         pq = pq.filter(EntitySet.collection_id == collection_id)
         pq = pq.filter(EntitySet.id == cls.entityset_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+        pq.delete(synchronize_session=False)
+
+    @classmethod
+    def delete_by_entity(cls, entity_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.entity_id == entity_id)
+        pq.delete(synchronize_session=False)
 
     def to_dict(self):
         data = self.to_dict_dates()

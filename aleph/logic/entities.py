@@ -9,7 +9,7 @@ from followthemoney.helpers import inline_names
 from followthemoney.exc import InvalidData
 
 from aleph.core import db, cache
-from aleph.model import Entity, Document, Linkage, Mapping
+from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
@@ -96,7 +96,7 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     if doc is not None:
         doc.delete(deleted_at=deleted_at)
     index.delete_entity(entity_id, sync=sync)
-    Linkage.delete_by_entity(entity_id)
+    EntitySetItem.delete_by_entity(entity_id)
     Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
     delete_aggregator_entity(collection, entity_id)

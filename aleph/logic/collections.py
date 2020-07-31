@@ -5,8 +5,8 @@ from servicelayer.jobs import Job
 from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
-from aleph.model import Collection, Entity, Document, EntitySet, Mapping
-from aleph.model import Permission, Events, Linkage
+from aleph.model import Collection, Entity, Document, Mapping
+from aleph.model import Permission, Events, EntitySet
 from aleph.index import collections as index
 from aleph.index import xref as xref_index
 from aleph.index import entities as entities_index
@@ -138,8 +138,6 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     Mapping.delete_by_collection(collection.id, deleted_at)
     Document.delete_by_collection(collection.id)
     if not keep_metadata:
-        # Considering linkages metadata for now, might be wrong:
-        Linkage.delete_by_collection(collection.id)
         Permission.delete_by_collection(collection.id)
         collection.delete(deleted_at=deleted_at)
     db.session.commit()

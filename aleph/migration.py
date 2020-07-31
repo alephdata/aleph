@@ -16,16 +16,12 @@ def upgrade_system():
 
 
 def cleanup_deleted():
-    from aleph.model import Alert, Entity, Collection
-    from aleph.model import Permission, Role, Document
+    from aleph.model import Entity, Collection, Role
     from aleph.model import EntitySet, EntitySetItem, Mapping
 
     Mapping.cleanup_deleted()
     EntitySetItem.cleanup_deleted()
     EntitySet.cleanup_deleted()
-    Document.cleanup_deleted()
-    Alert.cleanup_deleted()
-    Permission.cleanup_deleted()
     Entity.cleanup_deleted()
     Collection.cleanup_deleted()
     Role.cleanup_deleted()
