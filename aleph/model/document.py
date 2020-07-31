@@ -103,9 +103,6 @@ class Document(db.Model, DatedModel):
 
         flag_modified(self, "meta")
 
-    def delete(self, deleted_at=None):
-        db.session.delete(self)
-
     @classmethod
     def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
