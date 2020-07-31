@@ -134,7 +134,7 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     xref_index.delete_xref(collection, sync=sync)
     deleted_at = collection.deleted_at or datetime.utcnow()
     EntitySet.delete_by_collection(collection.id, deleted_at)
-    Mapping.delete_by_collection(collection.id, deleted_at)
+    Mapping.delete_by_collection(collection.id)
     Entity.delete_by_collection(collection.id)
     Document.delete_by_collection(collection.id)
     if not keep_metadata:
