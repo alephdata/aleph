@@ -188,6 +188,31 @@ class EntitySetAPITest(TestCase):
         validate(res.json, "EntitiesResponse")
         assert len(res.json["results"]) == 2, len(res.json["results"])
 
+    def test_entityset_entities_upsert(self):
+        url = "/api/2/entitysets"
+        res = self.client.post(url, json=self.input_data, headers=self.headers)
+        entityset_id = res.json["id"]
+        url = "/api/2/entitysets/%s/entities" % entityset_id
+        data = {
+            "schema": "Person",
+            "id": "deadbeef",
+            "properties": {"name": ["Test Person"]},
+        }
+        res = self.client.post(url, json=data)
+        assert res.status_code == 403, res
+        res = self.client.post(url, json=data, headers=self.headers)
+        assert res.status_code == 200, res
+        assert res.json["schema"] == "Person", res.json
+        assert res.json["id"] != data["id"], res.json
+        assert res.json["id"].startswith(data["id"]), res.json
+
+        data = dict(res.json)
+        data["properties"]["nationality"] = ["np"]
+        res2 = self.client.post(url, json=data, headers=self.headers)
+        assert res2.status_code == 200, res2
+        assert res2.json["id"] == res.json["id"], res2.json
+        assert "np" in res2.json["properties"]["nationality"], res2.json
+
     def test_entityset_items_query(self):
         url = "/api/2/entitysets"
         res = self.client.post(url, json=self.input_data, headers=self.headers)

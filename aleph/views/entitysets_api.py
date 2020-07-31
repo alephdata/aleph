@@ -1,18 +1,21 @@
 import logging
 from banal import ensure_list
 from flask import Blueprint, request
+from werkzeug.exceptions import NotFound
 
 from aleph.core import db
 from aleph.model import EntitySet, EntitySetItem
 from aleph.logic.entitysets import create_entityset
+from aleph.logic.entities import upsert_entity, validate_entity, check_write_entity
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.context import tag_request
+from aleph.views.entities_api import view as entity_view
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
 from aleph.views.serializers import EntitySetIndexSerializer
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
-from aleph.views.util import parse_request
+from aleph.views.util import parse_request, get_db_collection, get_flag, require
 
 
 blueprint = Blueprint("entitysets_api", __name__)
@@ -219,6 +222,62 @@ def entities_index(entityset_id):
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitySetItemsQuery.handle(request, parser=parser, entityset=entityset)
     return EntitySerializer.jsonify_result(result)
+
+
+@blueprint.route("/api/2/entitysets/<entityset_id>/entities", methods=["POST", "PUT"])
+def entities_update(entityset_id):
+    """
+    ---
+    post:
+      summary: Update an entity and add it to the entity set.
+      description: >
+        Update the entity with id `entity_id`. If it does not exist
+        it will be created. This is the same API as `/api/2/entities/<id>`,
+        but handles entity set membership transparently.
+
+        New entities are always created in the collection of the 
+        entity set.
+      parameters:
+      - description: The entityset id.
+        in: path
+        name: entityset_id
+        required: true
+        schema:
+          type: string
+        example: 3a0d91ece2dce88ad3259594c7b642485235a048
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityUpdate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+      tags:
+      - Entity
+    """
+    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    data = parse_request("EntityUpdate")
+    try:
+        entity = get_index_entity(data.get("id"), request.authz.WRITE)
+        require(check_write_entity(entity, request.authz))
+        collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
+    except NotFound:
+        collection = entityset.collection
+    tag_request(collection_id=entityset.collection_id)
+    if get_flag("validate", default=False):
+        validate_entity(data)
+    sync = get_flag("sync", default=True)
+    entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
+    EntitySetItem.save(
+        entityset, entity_id, collection_id=collection.id, added_by_id=request.authz.id,
+    )
+    db.session.commit()
+    return entity_view(entity_id)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>/items", methods=["GET"])
