@@ -5,6 +5,7 @@ from werkzeug.exceptions import NotFound
 
 from aleph.core import db
 from aleph.model import EntitySet, EntitySetItem
+from aleph.model.common import make_textid
 from aleph.logic.entitysets import create_entityset
 from aleph.logic.entities import upsert_entity, validate_entity, check_write_entity
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
@@ -15,7 +16,7 @@ from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
 from aleph.views.serializers import EntitySetIndexSerializer
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
-from aleph.views.util import parse_request, get_db_collection, get_flag, require
+from aleph.views.util import parse_request, get_db_collection, get_flag
 
 
 blueprint = Blueprint("entitysets_api", __name__)
@@ -231,12 +232,13 @@ def entities_update(entityset_id):
     post:
       summary: Update an entity and add it to the entity set.
       description: >
-        Update the entity with id `entity_id`. If it does not exist
-        it will be created. This is the same API as `/api/2/entities/<id>`,
-        but handles entity set membership transparently.
+        Update the entity with id `entity_id`. If it does not exist it will be
+        created. If the user cannot edit the given entity, it is merely added
+        to the entity set. New entities are always created in the collection of
+        the entity set.
 
-        New entities are always created in the collection of the 
-        entity set.
+        Aside from these idiosyncracies, this is the same as `/api/2/entities/<id>`,
+        but handles entity set membership transparently.
       parameters:
       - description: The entityset id.
         in: path
@@ -262,17 +264,19 @@ def entities_update(entityset_id):
     """
     entityset = get_entityset(entityset_id, request.authz.WRITE)
     data = parse_request("EntityUpdate")
+    entity_id = data.get("id", make_textid())
     try:
-        entity = get_index_entity(data.get("id"), request.authz.WRITE)
-        require(check_write_entity(entity, request.authz))
-        collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
+        entity = get_index_entity(entity_id, request.authz.READ)
+        collection = get_db_collection(entity.get("collection_id"), request.authz.READ)
     except NotFound:
+        entity = None
         collection = entityset.collection
     tag_request(collection_id=entityset.collection_id)
-    if get_flag("validate", default=False):
-        validate_entity(data)
-    sync = get_flag("sync", default=True)
-    entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
+    if entity is None or check_write_entity(entity, request.authz):
+        if get_flag("validate", default=False):
+            validate_entity(data)
+        sync = get_flag("sync", default=True)
+        entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
     EntitySetItem.save(
         entityset, entity_id, collection_id=collection.id, added_by_id=request.authz.id,
     )
