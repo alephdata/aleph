@@ -6,7 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db, settings
-from aleph.model.common import SoftDeleteModel, IdModel, make_textid
+from aleph.model.common import SoftDeleteModel, IdModel, make_textid, query_like
 from aleph.util import anonymize_email
 
 log = logging.getLogger(__name__)
@@ -211,15 +211,11 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         :param str pattern: Pattern to match.
         """
-        query = prefix.replace("%", " ").replace("_", " ")
-        query = "%%%s%%" % query
-        q = cls.all()
-        q = q.filter(Role.type == Role.USER)
-        q = q.filter(Role.is_blocked == False)  # noqa
+        q = cls.all_users()
         if len(exclude):
             q = q.filter(not_(Role.id.in_(exclude)))
         q = q.filter(
-            or_(func.lower(cls.email) == prefix.lower(), cls.name.ilike(query))
+            or_(func.lower(cls.email) == prefix.lower(), query_like(cls.name, prefix))
         )
         q = q.order_by(Role.id.asc())
         return q
@@ -236,7 +232,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def all_users(cls):
-        return cls.all().filter(Role.type == Role.USER)
+        q = cls.all().filter(Role.type == Role.USER)
+        q = q.filter(cls.is_blocked == False)  # noqa
+        return q
 
     @classmethod
     def all_system(cls):

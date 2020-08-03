@@ -6,6 +6,7 @@ import unittest
 from flask import json
 from pathlib import Path
 from tempfile import mkdtemp
+from datetime import datetime
 from ftmstore import settings as ftms
 from servicelayer import settings as sls
 from followthemoney import model
@@ -32,16 +33,18 @@ DB_URI = settings.DATABASE_URI + "_test"
 
 
 def read_entities(file_name):
+    now = datetime.utcnow().isoformat()
     with open(file_name) as fh:
         while True:
             entity = read_entity(fh)
             if entity is None:
                 break
+            entity.context["updated_at"] = now
             yield entity
 
 
 def get_caption(entity):
-    proxy = model.get_proxy(entity)
+    proxy = model.get_proxy(entity, cleaned=False)
     return proxy.caption
 
 
@@ -170,8 +173,9 @@ class TestCase(unittest.TestCase):
             {
                 "schema": "Person",
                 "properties": {
-                    "name": ["Banana ba Nana"], "birthDate": "1969-05-21",
-                    "deathDate": "1972-04-23"
+                    "name": ["Banana ba Nana"],
+                    "birthDate": "1969-05-21",
+                    "deathDate": "1972-04-23",
                 },
             },
             self.private_coll,

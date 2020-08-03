@@ -6,13 +6,13 @@ from flask_babel import lazy_gettext
 
 from aleph.core import db
 from aleph.model import Role, Collection
-from aleph.model.common import iso_text, SoftDeleteModel, ENTITY_ID_LEN
+from aleph.model.common import iso_text, DatedModel, ENTITY_ID_LEN
 
 
 log = logging.getLogger(__name__)
 
 
-class Mapping(db.Model, SoftDeleteModel):
+class Mapping(db.Model, DatedModel):
     """A mapping to load entities from a table"""
 
     __tablename__ = "mapping"
@@ -32,12 +32,10 @@ class Mapping(db.Model, SoftDeleteModel):
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), index=True)
     role = db.relationship(Role, backref=db.backref("mappings", lazy="dynamic"))  # noqa
 
-    collection_id = db.Column(
-        db.Integer, db.ForeignKey("collection.id"), index=True
-    )  # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey("collection.id"), index=True)
     collection = db.relationship(
         Collection, backref=db.backref("mappings", lazy="dynamic")
-    )  # noqa
+    )
 
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
@@ -51,6 +49,7 @@ class Mapping(db.Model, SoftDeleteModel):
             "created_at": iso_text(self.created_at),
             "updated_at": iso_text(self.updated_at),
             "role_id": self.role_id,
+            "mutable": True,
         }
 
     def update(self, query=None, table_id=None):
@@ -64,10 +63,6 @@ class Mapping(db.Model, SoftDeleteModel):
     def set_status(self, status, error=None):
         self.last_run_status = status
         self.last_run_err_msg = error
-        db.session.add(self)
-
-    def delete(self, deleted_at=None):
-        self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
 
     def to_dict(self):
@@ -94,11 +89,10 @@ class Mapping(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at):
+    def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+        pq.delete(synchronize_session=False)
 
     @classmethod
     def delete_by_table(cls, entity_id):

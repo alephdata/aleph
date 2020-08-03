@@ -49,7 +49,6 @@ def map_to_aggregator(collection, mapping, aggregator):
             log.info("[%s] Mapped %s rows ...", mapping.id, idx)
         for entity in mapper.map(record).values():
             entity.context = mapping.get_proxy_context()
-            entity.context["mutable"] = True
             if entity.schema.is_a("Thing"):
                 entity.add("proof", mapping.table_id)
             entity = collection.ns.apply(entity)

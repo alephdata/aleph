@@ -82,10 +82,16 @@ def index_collection(collection, sync=False):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
-    log.info("[%s] Index: %s...", collection, collection.label)
     data = get_collection(collection.id)
     if data is None:
         return
+
+    log.info(
+        "[%s] Index: %s (%s things)...",
+        collection,
+        data.get("label"),
+        data.get("count"),
+    )
     text = [data.get("label")]
     text.append(normalize(data.get("label")))
     text.append(normalize(data.get("foreign_id")))

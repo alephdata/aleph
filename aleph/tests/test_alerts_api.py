@@ -96,5 +96,5 @@ class AlertsApiTestCase(TestCase):
         assert res.status_code == 204, res.json
         new_count = Alert.all().count()
         real_count = db.session.query(Alert).count()
-        assert count == real_count, (count, real_count)
-        assert new_count == real_count - 1
+        assert new_count == real_count, (count, real_count)
+        assert new_count == (count - 1), (count, new_count)

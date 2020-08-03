@@ -8,13 +8,13 @@ from followthemoney.exc import InvalidData
 
 from aleph.core import db
 from aleph.model.collection import Collection
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import DatedModel
 from aleph.model.common import iso_text, make_textid, ENTITY_ID_LEN
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, SoftDeleteModel):
+class Entity(db.Model, DatedModel):
     THING = "Thing"
     LEGAL_ENTITY = "LegalEntity"
 
@@ -29,32 +29,21 @@ class Entity(db.Model, SoftDeleteModel):
     data = db.Column("data", JSONB)
 
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=True)  # noqa
-    collection_id = db.Column(
-        db.Integer, db.ForeignKey("collection.id"), index=True
-    )  # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey("collection.id"), index=True)
     collection = db.relationship(
         Collection, backref=db.backref("entities", lazy="dynamic")
-    )  # noqa
+    )
 
     @property
     def model(self):
         return model.get(self.schema)
 
-    def undelete(self):
-        self.deleted_at = None
-        db.session.add(self)
-
-    def update(self, data, collection, validate=True):
+    def update(self, data, collection):
         proxy = model.get_proxy(data, cleaned=False)
-        if validate:
-            # This isn't strictly required because the proxy will contain
-            # only those values that can be inserted for each property,
-            # making it valid -- all this does, therefore, is to raise an
-            # exception that notifies the user.
-            proxy.schema.validate(data)
         proxy = collection.ns.apply(proxy)
         self.id = collection.ns.sign(self.id)
         self.schema = proxy.schema.name
+        self.updated_at = datetime.utcnow()
         previous = self.to_proxy()
         for prop in proxy.schema.properties.values():
             # Do not allow the user to overwrite hashes because this could
@@ -63,25 +52,22 @@ class Entity(db.Model, SoftDeleteModel):
                 prev = previous.get(prop)
                 proxy.set(prop, prev, cleaned=True, quiet=True)
         self.data = proxy.properties
-        self.updated_at = datetime.utcnow()
-        self.deleted_at = None
         db.session.add(self)
 
     def to_proxy(self):
-        return model.get_proxy(
-            {
-                "id": self.id,
-                "schema": self.schema,
-                "properties": self.data,
-                "created_at": iso_text(self.created_at),
-                "updated_at": iso_text(self.updated_at),
-                "role_id": self.role_id,
-                "mutable": True,
-            }
-        )
+        data = {
+            "id": self.id,
+            "schema": self.schema,
+            "properties": self.data,
+            "created_at": iso_text(self.created_at),
+            "updated_at": iso_text(self.updated_at),
+            "role_id": self.role_id,
+            "mutable": True,
+        }
+        return model.get_proxy(data, cleaned=False)
 
     @classmethod
-    def create(cls, data, collection, role_id=None, validate=True):
+    def create(cls, data, collection, role_id=None):
         entity = cls()
         entity_id = data.get("id") or make_textid()
         if not registry.entity.validate(entity_id):
@@ -89,13 +75,12 @@ class Entity(db.Model, SoftDeleteModel):
         entity.id = collection.ns.sign(entity_id)
         entity.collection_id = collection.id
         entity.role_id = role_id
-        entity.update(data, collection, validate=validate)
+        entity.update(data, collection)
         return entity
 
     @classmethod
-    def by_id(cls, entity_id, collection=None, deleted=False):
-        q = cls.all(deleted=deleted)
-        q = q.filter(cls.id == entity_id)
+    def by_id(cls, entity_id, collection=None):
+        q = cls.all().filter(cls.id == entity_id)
         if collection is not None:
             q = q.filter(cls.collection_id == collection.id)
         return q.first()
@@ -108,11 +93,10 @@ class Entity(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at):
+    def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+        pq.delete(synchronize_session=False)
 
     def __repr__(self):
         return "<Entity(%r, %r)>" % (self.id, self.schema)

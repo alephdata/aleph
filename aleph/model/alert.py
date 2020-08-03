@@ -1,12 +1,12 @@
 from datetime import datetime
-from normality import stringify, normalize
+from normality import stringify
 
 from aleph.core import db
 from aleph.model.role import Role
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import DatedModel
 
 
-class Alert(db.Model, SoftDeleteModel):
+class Alert(db.Model, DatedModel):
     """A subscription to notifications on a given query."""
 
     __tablename__ = "alert"
@@ -18,26 +18,10 @@ class Alert(db.Model, SoftDeleteModel):
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), index=True)
     role = db.relationship(Role, backref=db.backref("alerts", lazy="dynamic"))  # noqa
 
-    @property
-    def normalized(self):
-        return normalize(self.query)
-
-    def delete(self, deleted_at=None):
-        self.deleted_at = deleted_at or datetime.utcnow()
-        db.session.add(self)
-        db.session.flush()
-
     def update(self):
         self.notified_at = datetime.utcnow()
         db.session.add(self)
         db.session.flush()
-
-    def is_same(self, other):
-        if other.role_id != self.role_id:
-            return False
-        if other.normalized != self.normalized:
-            return False
-        return True
 
     def to_dict(self):
         data = self.to_dict_dates()
@@ -45,7 +29,6 @@ class Alert(db.Model, SoftDeleteModel):
             {
                 "id": stringify(self.id),
                 "query": self.query,
-                "normalized": self.normalized,
                 "role_id": stringify(self.role_id),
                 "notified_at": self.notified_at,
             }
@@ -53,8 +36,8 @@ class Alert(db.Model, SoftDeleteModel):
         return data
 
     @classmethod
-    def by_id(cls, id, role_id=None, deleted=False):
-        q = cls.all(deleted=deleted).filter_by(id=id)
+    def by_id(cls, id, role_id=None):
+        q = cls.all().filter_by(id=id)
         if role_id is not None:
             q = q.filter(cls.role_id == role_id)
         return q.first()

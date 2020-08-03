@@ -1,7 +1,7 @@
 EntitiesResponse:
   type: object
   allOf:
-    - $ref: '#/components/schemas/QueryResponse'
+    - $ref: "#/components/schemas/QueryResponse"
   properties:
     links:
       properties:
@@ -10,16 +10,16 @@ EntitiesResponse:
       type: object
     results:
       items:
-        $ref: '#/components/schemas/Entity'
+        $ref: "#/components/schemas/Entity"
       type: array
 
 Entity:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     collection:
-      $ref: '#/components/schemas/Collection'
+      $ref: "#/components/schemas/Collection"
     countries:
       type: array
       items:
@@ -86,6 +86,8 @@ EntityUpdate:
   required: ["schema"]
   type: object
   properties:
+    id:
+      type: string
     collection_id:
       type: string
       nullable: true
@@ -98,13 +100,13 @@ EntityUpdate:
 EntityCreate:
   type: object
   allOf:
-    - $ref: '#/components/schemas/EntityUpdate'
+    - $ref: "#/components/schemas/EntityUpdate"
   # required: ["collection_id"]
   properties:
     collection_id:
       type: string
     collection:
-      $ref: '#/components/schemas/Collection'
+      $ref: "#/components/schemas/Collection"
     foreign_id:
       type: string
 
@@ -146,6 +148,6 @@ EntityExpand:
     count:
       type: integer
     entities:
-        type: array
-        items:
-          $ref: '#/components/schemas/Entity'
+      type: array
+      items:
+        $ref: "#/components/schemas/Entity"
