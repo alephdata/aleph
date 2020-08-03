@@ -11,7 +11,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from servicelayer.jobs import Job
 
 from aleph.authz import Authz
-from aleph.model import Collection
+from aleph.model import Collection, EntitySet
 from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
@@ -87,6 +87,12 @@ def get_db_collection(collection_id, action=Authz.READ):
     collection = obj_or_404(Collection.by_id(collection_id))
     require(request.authz.can(collection.id, action))
     return collection
+
+
+def get_entityset(entityset_id, action=Authz.READ):
+    eset = obj_or_404(EntitySet.by_id(entityset_id))
+    require(request.authz.can(eset.collection_id, action))
+    return eset
 
 
 def get_nested_collection(data, action=Authz.READ):

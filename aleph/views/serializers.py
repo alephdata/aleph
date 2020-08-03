@@ -291,16 +291,12 @@ class EntitySetSerializer(Serializer):
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
         entity_ids = obj.pop("entities", [])
-        obj.update(
-            {
-                "shallow": False,
-                "writeable": request.authz.can(collection_id, request.authz.WRITE),
-                "collection": self.resolve(
-                    Collection, collection_id, CollectionSerializer
-                ),  # noqa
-                "entities": [],
-            }
+        obj["shallow"] = False
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["collection"] = self.resolve(
+            Collection, collection_id, CollectionSerializer
         )
+        obj["entities"] = []
         for ent_id in entity_ids:
             entity = self.resolve(Entity, ent_id, EntitySerializer)
             if entity is not None:
@@ -315,17 +311,12 @@ class EntitySetItemSerializer(Serializer):
 
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
-        entity_id = obj.pop("entity_id", [])
-        obj.update(
-            {
-                "shallow": False,
-                "writeable": request.authz.can(collection_id, request.authz.WRITE),
-                "collection": self.resolve(
-                    Collection, collection_id, CollectionSerializer
-                ),  # noqa
-                "entity": self.resolve(Entity, entity_id, EntitySerializer),
-            }
+        entity_id = obj.pop("entity_id", None)
+        obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
+        obj["collection"] = self.resolve(
+            Collection, collection_id, CollectionSerializer
         )
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
         return obj
 
 
@@ -341,7 +332,7 @@ class EntitySetIndexSerializer(Serializer):
                 "writeable": request.authz.can(collection_id, request.authz.WRITE),
                 "collection": self.resolve(
                     Collection, collection_id, CollectionSerializer
-                ),  # noqa
+                ),
             }
         )
         return obj
@@ -380,4 +371,3 @@ class MappingSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {}
         return obj
-

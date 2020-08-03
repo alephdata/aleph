@@ -147,9 +147,9 @@ class EntitySetAPITest(TestCase):
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 404, res
 
-    def test_entityset_items_query(self):
+    def test_entityset_entities_query(self):
         url = "/api/2/entitysets"
-        res = self.client.post(url, json=self.input_data, headers=self.headers)  # noqa
+        res = self.client.post(url, json=self.input_data, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "EntitySet")
         ent_id = self.input_data["entities"][0]["id"]
@@ -158,13 +158,12 @@ class EntitySetAPITest(TestCase):
         entityset_id = res.json["id"]
 
         entityset2_data = self._load_data_for_import("royal-family-v2.vis")
-        res = self.client.post(url, json=entityset2_data, headers=self.headers)  # noqa
+        res = self.client.post(url, json=entityset2_data, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "EntitySet")
         entityset2_id = res.json["id"]
 
         query_url = "/api/2/entitysets/%s/entities?filter:schemata=%s"
-
         url = query_url % (entityset_id, "Thing")
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
@@ -188,6 +187,61 @@ class EntitySetAPITest(TestCase):
         assert res.status_code == 200, res
         validate(res.json, "EntitiesResponse")
         assert len(res.json["results"]) == 2, len(res.json["results"])
+
+    def test_entityset_entities_upsert(self):
+        url = "/api/2/entitysets"
+        res = self.client.post(url, json=self.input_data, headers=self.headers)
+        entityset_id = res.json["id"]
+        url = "/api/2/entitysets/%s/entities" % entityset_id
+        data = {
+            "schema": "Person",
+            "id": "deadbeef",
+            "properties": {"name": ["Test Person"]},
+        }
+        res = self.client.post(url, json=data)
+        assert res.status_code == 403, res
+        res = self.client.post(url, json=data, headers=self.headers)
+        assert res.status_code == 200, res
+        assert res.json["schema"] == "Person", res.json
+        assert res.json["id"] != data["id"], res.json
+        assert res.json["id"].startswith(data["id"]), res.json
+
+        data = dict(res.json)
+        data["properties"]["nationality"] = ["np"]
+        res2 = self.client.post(url, json=data, headers=self.headers)
+        assert res2.status_code == 200, res2
+        assert res2.json["id"] == res.json["id"], res2.json
+        assert "np" in res2.json["properties"]["nationality"], res2.json
+
+    def test_entityset_items_query(self):
+        url = "/api/2/entitysets"
+        res = self.client.post(url, json=self.input_data, headers=self.headers)
+        assert res.status_code == 200, res
+        entityset_id = res.json["id"]
+
+        url = "/api/2/entitysets/%s/items" % entityset_id
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        validate(res.json, "EntitySetItemResponse")
+        assert len(res.json["results"]) == 7, len(res.json["results"])
+
+        fst = res.json["results"][0]
+        fst["judgement"] = "negative"
+        res = self.client.post(url, json=fst)
+        assert res.status_code == 403, res
+        res = self.client.post(url, json=fst, headers=self.headers)
+        assert res.status_code == 200, res
+        assert res.json["judgement"] == "negative", res
+
+        res = self.client.get(url, headers=self.headers)
+        assert len(res.json["results"]) == 7, len(res.json["results"])
+
+        fst["judgement"] = "no_judgement"
+        res = self.client.post(url, json=fst, headers=self.headers)
+        assert res.status_code == 204, res
+
+        res = self.client.get(url, headers=self.headers)
+        assert len(res.json["results"]) == 6, len(res.json["results"])
 
     def test_create_empty(self):
         data = {
@@ -239,8 +293,8 @@ class EntitySetAPITest(TestCase):
                 "type": "timeline",
                 "collection_id": str(self.col.id),
             },
-            {"label": "Diagram", "type": "diagram", "collection_id": str(self.col.id),},
-            {"label": "Generic", "type": "generic", "collection_id": str(self.col.id),},
+            {"label": "Diagram", "type": "diagram", "collection_id": str(self.col.id)},
+            {"label": "Generic", "type": "generic", "collection_id": str(self.col.id)},
         )
         url = "/api/2/entitysets"
         for eset in entitysets:
