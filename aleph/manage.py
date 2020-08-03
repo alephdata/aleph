@@ -127,10 +127,11 @@ def reindex_casefiles(flush=False):
 @cli.command()
 @click.argument("foreign_id")
 @click.option("--index", is_flag=True, default=False)
-def reingest(foreign_id, index=False):
+@click.option("--flush/--no-flush", default=True)
+def reingest(foreign_id, index=False, flush=True):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
-    reingest_collection(collection, index=index)
+    reingest_collection(collection, index=index, flush=flush)
 
 
 @cli.command("reingest-casefiles")
@@ -159,7 +160,7 @@ def update():
 @click.argument("foreign_id")
 @click.option(
     "-a", "--against", multiple=True, help="foreign IDs of collections to xref against"
-)  # noqa
+)
 def xref(foreign_id, against=None):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
@@ -221,9 +222,35 @@ def status(foreign_id=None):
     if foreign_id is not None:
         collection = get_collection(foreign_id)
         status = get_status(collection)
+        status = {"datasets": {foreign_id: status}}
     else:
         status = get_active_collection_status()
-    pprint(status)
+    headers = ["Collection", "Job", "Stage", "Pending", "Running", "Finished"]
+    rows = []
+    for foreign_id, dataset in status.get("datasets").items():
+        rows.append(
+            [
+                foreign_id,
+                "",
+                "",
+                dataset["pending"],
+                dataset["running"],
+                dataset["finished"],
+            ]
+        )
+        for job in dataset.get("jobs"):
+            for stage in job.get("stages"):
+                rows.append(
+                    [
+                        foreign_id,
+                        stage["job_id"],
+                        stage["stage"],
+                        stage["pending"],
+                        stage["running"],
+                        stage["finished"],
+                    ]
+                )
+    print(tabulate(rows, headers))
 
 
 @cli.command()

@@ -8,13 +8,13 @@ from followthemoney.exc import InvalidData
 
 from aleph.core import db
 from aleph.model.collection import Collection
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import DatedModel
 from aleph.model.common import iso_text, make_textid, ENTITY_ID_LEN
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, SoftDeleteModel):
+class Entity(db.Model, DatedModel):
     THING = "Thing"
     LEGAL_ENTITY = "LegalEntity"
 
@@ -29,20 +29,14 @@ class Entity(db.Model, SoftDeleteModel):
     data = db.Column("data", JSONB)
 
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=True)  # noqa
-    collection_id = db.Column(
-        db.Integer, db.ForeignKey("collection.id"), index=True
-    )  # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey("collection.id"), index=True)
     collection = db.relationship(
         Collection, backref=db.backref("entities", lazy="dynamic")
-    )  # noqa
+    )
 
     @property
     def model(self):
         return model.get(self.schema)
-
-    def undelete(self):
-        self.deleted_at = None
-        db.session.add(self)
 
     def update(self, data, collection):
         proxy = model.get_proxy(data, cleaned=False)
@@ -50,7 +44,6 @@ class Entity(db.Model, SoftDeleteModel):
         self.id = collection.ns.sign(self.id)
         self.schema = proxy.schema.name
         self.updated_at = datetime.utcnow()
-        self.deleted_at = None
         previous = self.to_proxy()
         for prop in proxy.schema.properties.values():
             # Do not allow the user to overwrite hashes because this could
@@ -86,9 +79,8 @@ class Entity(db.Model, SoftDeleteModel):
         return entity
 
     @classmethod
-    def by_id(cls, entity_id, collection=None, deleted=False):
-        q = cls.all(deleted=deleted)
-        q = q.filter(cls.id == entity_id)
+    def by_id(cls, entity_id, collection=None):
+        q = cls.all().filter(cls.id == entity_id)
         if collection is not None:
             q = q.filter(cls.collection_id == collection.id)
         return q.first()
@@ -101,11 +93,10 @@ class Entity(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at):
+    def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+        pq.delete(synchronize_session=False)
 
     def __repr__(self):
         return "<Entity(%r, %r)>" % (self.id, self.schema)

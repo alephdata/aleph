@@ -130,7 +130,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(perm.collection_id == self.id)
         q = q.filter(perm.read == True)  # noqa
         q = q.filter(role.deleted_at == None)  # noqa
-        q = q.filter(perm.deleted_at == None)  # noqa
         return [stringify(i) for (i,) in q.all()]
 
     @property
@@ -139,7 +138,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(Permission.role_id.in_(Role.public_roles()))
         q = q.filter(Permission.collection_id == self.id)
         q = q.filter(Permission.read == True)  # noqa
-        q = q.filter(Permission.deleted_at == None)  # noqa
         return q.count() < 1
 
     @property
@@ -163,6 +161,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         data["frequency"] = self.DEFAULT_FREQUENCY
         if self.frequency in self.FREQUENCIES:
             data["frequency"] = self.frequency
+        countries = ensure_list(self.countries)
+        countries = [registry.country.clean(c) for c in countries]
+        data["countries"] = [c for c in countries if c is not None]
+        languages = ensure_list(self.languages)
+        languages = [registry.language.clean(l) for l in languages]
+        data["languages"] = [l for l in languages if l is not None]
         data.update(
             {
                 "id": stringify(self.id),
@@ -180,8 +184,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
                 "secret": self.secret,
                 "xref": self.xref,
                 "restricted": self.restricted,
-                "countries": self.countries,
-                "languages": self.languages,
             }
         )
         return data
@@ -197,7 +199,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     def _apply_authz(cls, q, authz):
         if authz is not None and not authz.is_admin:
             q = q.join(Permission, cls.id == Permission.collection_id)
-            q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.read == True)  # noqa
             q = q.filter(Permission.role_id.in_(authz.roles))
         return q

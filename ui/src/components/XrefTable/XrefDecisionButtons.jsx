@@ -14,11 +14,11 @@ class XrefDecisionButtons extends Component {
   }
 
   async onDecide(decision) {
-    const { xref, contextId } = this.props;
+    const { xref } = this.props;
     const data = { ...xref, decision: decision };
     this.setState({ blocking: true });
     try {
-      await this.props.decideCollectionXref(data, contextId);
+      await this.props.decideCollectionXref(data);
     } catch (e) {
       showWarningToast(e.message);
     }
@@ -26,28 +26,28 @@ class XrefDecisionButtons extends Component {
   }
 
   render() {
-    const { xref, contextId } = this.props;
+    const { xref } = this.props;
     const { blocking } = this.state;
 
-    if (!contextId) {
+    if (!xref.writeable) {
       return null;
     }
     return (
       <ButtonGroup className="XrefDecisionButtons" vertical>
         <Button icon="tick"
-                disabled={blocking}
-                intent={xref.decision === true ? Intent.SUCCESS : Intent.NONE}
-                active={xref.decision === true}
-                onClick={(e) => this.onDecide(true)} />
+          disabled={blocking}
+          intent={xref.decision === 'positive' ? Intent.SUCCESS : Intent.NONE}
+          active={xref.decision === 'positive'}
+          onClick={(e) => this.onDecide('positive')} />
         <Button icon="help"
-                disabled={blocking}
-                active={xref.decision === undefined}
-                onClick={(e) => this.onDecide(undefined)} />
+          disabled={blocking}
+          active={xref.decision === 'unsure'}
+          onClick={(e) => this.onDecide('unsure')} />
         <Button icon="cross"
-                disabled={blocking}
-                intent={xref.decision === false ? Intent.DANGER : Intent.NONE}
-                active={xref.decision === false}
-                onClick={(e) => this.onDecide(false)} />
+          disabled={blocking}
+          intent={xref.decision === 'negative' ? Intent.DANGER : Intent.NONE}
+          active={xref.decision === 'negative'}
+          onClick={(e) => this.onDecide('negative')} />
       </ButtonGroup>
     );
   }

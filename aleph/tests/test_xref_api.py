@@ -158,25 +158,26 @@ class XrefApiTestCase(TestCase):
         res = self.client.post(
             xref_url,
             headers=headers,
-            data=json.dumps({"decision": True}),
+            data=json.dumps({"decision": "positive"}),
             content_type="application/json",
         )
         assert res.status_code == 204, res.json
 
         res = self.client.get(url, headers=headers)
         assert res.json["total"] == 2, res.json
+        print(res.json)
         xref0 = res.json["results"][0]
         assert xref0["id"] == xref["id"], (xref0, xref)
-        assert xref0.get("decision") is True, xref0
+        assert xref0.get("decision") == "positive", xref0.get("decision")
 
         res = self.client.post(
             xref_url,
             headers=headers,
-            data=json.dumps({"decision": False}),
+            data=json.dumps({"decision": "negative"}),
             content_type="application/json",
         )
         assert res.status_code == 204, res.json
 
         res = self.client.get(url, headers=headers)
         xref0 = res.json["results"][0]
-        assert xref0.get("decision") is False, xref0
+        assert xref0.get("decision") == "negative", xref0.get("decision")

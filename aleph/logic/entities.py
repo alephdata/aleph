@@ -9,7 +9,7 @@ from followthemoney.helpers import inline_names
 from followthemoney.exc import InvalidData
 
 from aleph.core import db, cache
-from aleph.model import Entity, Document, Linkage, Mapping
+from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
@@ -28,7 +28,7 @@ def upsert_entity(data, collection, authz=None, sync=False):
     entity = None
     entity_id = collection.ns.sign(data.get("id"))
     if entity_id is not None:
-        entity = Entity.by_id(entity_id, collection=collection, deleted=True)
+        entity = Entity.by_id(entity_id, collection=collection)
     if entity is None:
         role_id = authz.id if authz is not None else None
         entity = Entity.create(data, collection, role_id=role_id)
@@ -91,12 +91,12 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     flush_notifications(entity_id, clazz=Entity)
     obj = Entity.by_id(entity_id, collection=collection)
     if obj is not None:
-        obj.delete(deleted_at=deleted_at)
+        obj.delete()
     doc = Document.by_id(entity_id, collection=collection)
     if doc is not None:
-        doc.delete(deleted_at=deleted_at)
+        doc.delete()
     index.delete_entity(entity_id, sync=sync)
-    Linkage.delete_by_entity(entity_id)
+    EntitySetItem.delete_by_entity(entity_id)
     Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
     delete_aggregator_entity(collection, entity_id)

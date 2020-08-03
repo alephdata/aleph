@@ -9,7 +9,7 @@ from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
-from aleph.model import Alert, EntitySet
+from aleph.model import Alert, EntitySet, EntitySetItem
 from aleph.logic import resolver
 from aleph.logic.entities import check_write_entity
 from aleph.logic.util import collection_url, entity_url, archive_url
@@ -266,6 +266,14 @@ class XrefSerializer(Serializer):
         obj["match_collection"] = self.resolve(
             Collection, match_collection_id, CollectionSerializer
         )
+        try:
+            obj["decision"] = str(obj["decision"].value)
+        except AttributeError:
+            obj["decision"] = None
+
+        collection_id = obj.get("collection_id")
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+
         if obj["entity"] and obj["match"]:
             return obj
 
@@ -283,20 +291,32 @@ class EntitySetSerializer(Serializer):
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
         entity_ids = obj.pop("entities", [])
-        obj.update(
-            {
-                "shallow": False,
-                "writeable": request.authz.can(collection_id, request.authz.WRITE),
-                "collection": self.resolve(
-                    Collection, collection_id, CollectionSerializer
-                ),  # noqa
-                "entities": [],
-            }
+        obj["shallow"] = False
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["collection"] = self.resolve(
+            Collection, collection_id, CollectionSerializer
         )
+        obj["entities"] = []
         for ent_id in entity_ids:
             entity = self.resolve(Entity, ent_id, EntitySerializer)
             if entity is not None:
                 obj["entities"].append(entity)
+        return obj
+
+
+class EntitySetItemSerializer(Serializer):
+    def _collect(self, obj):
+        self.queue(Collection, obj.get("collection_id"))
+        self.queue(Entity, obj.get("entity_id"))
+
+    def _serialize(self, obj):
+        collection_id = obj.pop("collection_id", None)
+        entity_id = obj.pop("entity_id", None)
+        obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
+        obj["collection"] = self.resolve(
+            Collection, collection_id, CollectionSerializer
+        )
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
         return obj
 
 
@@ -312,7 +332,7 @@ class EntitySetIndexSerializer(Serializer):
                 "writeable": request.authz.can(collection_id, request.authz.WRITE),
                 "collection": self.resolve(
                     Collection, collection_id, CollectionSerializer
-                ),  # noqa
+                ),
             }
         )
         return obj
@@ -324,6 +344,7 @@ class NotificationSerializer(Serializer):
         Entity: EntitySerializer,
         Collection: CollectionSerializer,
         EntitySet: EntitySetSerializer,
+        EntitySetItem: EntitySetItemSerializer,
         Role: RoleSerializer,
     }
 
@@ -349,14 +370,4 @@ class NotificationSerializer(Serializer):
 class MappingSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {}
-        return obj
-
-
-class LinkageSerializer(Serializer):
-    def _collect(self, obj):
-        self.queue(Entity, obj.get("entity_id"))
-
-    def _serialize(self, obj):
-        entity_id = obj.get("entity_id")
-        obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
         return obj
