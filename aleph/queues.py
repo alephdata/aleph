@@ -1,6 +1,7 @@
 import logging
 from servicelayer.rate_limit import RateLimit
 from servicelayer.jobs import Job, Dataset
+from servicelayer.cache import make_key
 
 from aleph.core import kv, settings
 
@@ -14,6 +15,9 @@ OP_REINGEST = "reingest"
 OP_REINDEX = "reindex"
 OP_LOAD_MAPPING = "loadmapping"
 OP_FLUSH_MAPPING = "flushmapping"
+OP_EXPORT_SEARCH_RESULTS = "exportsearch"
+
+ROLE_PREFIX = "role_id"
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
@@ -22,7 +26,12 @@ def get_rate_limit(resource, limit=100, interval=60, unit=1):
 
 def get_stage(collection, stage, job_id=None):
     job_id = job_id or Job.random_id()
-    job = Job(kv, collection.foreign_id, job_id)
+    # Handle role_id masquerading as collection
+    if isinstance(collection, str) and collection.startswith(ROLE_PREFIX):
+        foreign_id = collection
+    else:
+        foreign_id = collection.foreign_id
+    job = Job(kv, foreign_id, job_id)
     return job.get_stage(stage)
 
 
@@ -65,3 +74,8 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
         "pipeline": pipeline,
     }
     stage.queue(proxy.to_dict(), context)
+
+
+def sla_dataset_from_role(role_id):
+    """Fake servicelayer dataset from a role id"""
+    return make_key(ROLE_PREFIX, role_id)

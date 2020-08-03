@@ -1,10 +1,14 @@
 import logging
+from datetime import datetime, timedelta
+from pathlib import Path
 
-from normality import stringify
+from normality import stringify, safe_filename
 from flask_babel import lazy_gettext
 from sqlalchemy.dialects.postgresql import JSONB
+from servicelayer.archive.util import checksum, ensure_path
+from servicelayer.cache import make_key
 
-from aleph.core import db
+from aleph.core import db, archive
 from aleph.model import Role, Collection
 from aleph.model.common import IdModel, DatedModel
 
@@ -17,12 +21,16 @@ class Export(db.Model, IdModel, DatedModel):
     expires after a fixed duration and the exported data is deleted. """
 
     MAX_FILE_SIZE = 10 * 1024 * 1024 * 1024  # 10 GB
+    STATUS_PENDING = "pending"
+    STATUS_SUCCESSFUL = "successful"
+    STATUS_FAILED = "failed"
     EXPORT_STATUS = {
-        "pending": lazy_gettext("pending"),
-        "successful": lazy_gettext("successful"),
-        "failed": lazy_gettext("failed"),
+        STATUS_PENDING: lazy_gettext("pending"),
+        STATUS_SUCCESSFUL: lazy_gettext("successful"),
+        STATUS_FAILED: lazy_gettext("failed"),
     }
-    DEFAULT_STATUS = "pending"
+    DEFAULT_STATUS = STATUS_PENDING
+    DEFAULT_EXPIRATION = timedelta(days=30)  # After 30 days
 
     label = db.Column(db.Unicode)
 
@@ -44,6 +52,7 @@ class Export(db.Model, IdModel, DatedModel):
     content_hash = db.Column(db.Unicode(65), index=True)
     file_size = db.Column(db.BigInteger)  # In bytes
     file_name = db.Column(db.Unicode)
+    mime_type = db.Column(db.Unicode)
     meta = db.Column(JSONB, default={})
 
     def to_dict(self):
@@ -54,8 +63,9 @@ class Export(db.Model, IdModel, DatedModel):
             {
                 "id": stringify(self.id),
                 "label": self.label,
-                "export_op": self.export_op,
+                "operation": self.operation,
                 "creator_id": stringify(self.creator_id),
+                "collection_id": self.collection_id,
                 "expires_at": self.expires_at,
                 "deleted": self.deleted,
                 "export_status": self.export_status,
@@ -66,3 +76,75 @@ class Export(db.Model, IdModel, DatedModel):
             }
         )
         return data
+
+    @classmethod
+    def create(
+        cls,
+        operation,
+        file_path,
+        role_id,
+        expires_after,
+        label=None,
+        collection=None,
+        mime_type=None,
+    ):
+        file_path = ensure_path(file_path)
+        file_name = safe_filename(file_path)
+        file_size = file_path.stat().st_size
+
+        export = cls()
+        export.creator_id = role_id
+        export.operation = operation
+        if collection is not None:
+            export.collection_id = collection.id
+        export.label = label
+        export.mime_type = mime_type
+        export.file_name = file_name
+        export.file_size = file_size
+        export._file_path = file_path
+        export.content_hash = checksum(file_path)
+        export.expires_at = datetime.utcnow() + expires_after
+        db.session.add(export)
+        return export
+
+    @property
+    def namespace(self):
+        return make_key("role", self.creator_id)
+
+    def publish(self):
+        if not self._file_path:
+            raise RuntimeError("file path not present for export: %r", self)
+        # Use content has as filename to make to ensure uniqueness
+        path = Path(self._file_path.parent, self.content_hash)
+        self._file_path.rename(path)
+        try:
+            archive.publish(self.namespace, path, self.mime_type)
+            self.set_status(status=Export.STATUS_SUCCESSFUL)
+        except Exception as ex:
+            self.set_status(status=Export.STATUS_FAILED)
+            raise ex
+
+    def set_status(self, status):
+        if status in self.EXPORT_STATUS:
+            self.export_status = status
+            db.session.add(self)
+
+    def get_publication_url(self):
+        return archive.generate_publication_url(
+            self.namespace,
+            self.content_hash,
+            mime_type=None,
+            expire=None,
+            attachment_name=self.file_name,
+        )
+
+    @classmethod
+    def get_expired(cls, deleted=None):
+        now = datetime.utcnow()
+        q = cls.all().filter(cls.expires_at.isnot(None)).filter(cls.expires_at <= now)
+        if deleted is not None:
+            q = q.filter(deleted=deleted)
+        return q
+
+    def __repr__(self):
+        return "<Export(%r, %r)>" % (self.id, self.role_id)

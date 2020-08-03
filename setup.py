@@ -38,8 +38,9 @@ setup(
             "reindex = aleph.logic.collections:op_reindex_handler",
             "loadmapping = aleph.logic.mapping:op_load_mapping_handler",
             "flushmapping = aleph.logic.mapping:op_flush_mapping_handler",
+            "exportsearch = aleph.logic.export:op_export_search_results_handler",
         ],
-        "console_scripts": ["aleph = aleph.manage:cli",],
+        "console_scripts": ["aleph = aleph.manage:cli"],
     },
     tests_require=["coverage", "nose"],
 )

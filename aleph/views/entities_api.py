@@ -1,7 +1,7 @@
 import logging
 from urllib.parse import quote
 from urlnormalizer import query_string
-from flask import Blueprint, request, Response
+from flask import Blueprint, request
 from werkzeug.exceptions import NotFound
 from followthemoney import model
 
@@ -12,15 +12,15 @@ from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.entities import validate_entity, check_write_entity
-from aleph.logic.export import export_entities
 from aleph.logic.html import sanitize_html
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag
-from aleph.views.util import require, get_nested_collection
+from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
+from aleph.queues import queue_task, OP_EXPORT_SEARCH_RESULTS, sla_dataset_from_role
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)
@@ -170,11 +170,11 @@ def export():
     parser.limit = MAX_PAGE
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
-    stream = export_entities(request, result)
-    response = Response(stream, mimetype="application/zip")
-    disposition = "attachment; filename={}".format("Query_export.zip")
-    response.headers["Content-Disposition"] = disposition
-    return response
+    job_id = get_session_id()
+    payload = {"role_id": request.authz.id, "result": result.to_dict()}
+    dataset = sla_dataset_from_role(request.authz.id)
+    queue_task(dataset, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
+    return ("", 202)
 
 
 @blueprint.route("/api/2/match", methods=["POST"])
