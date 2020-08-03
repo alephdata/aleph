@@ -95,11 +95,8 @@ def publish_export(
     db.session.commit()
 
 
-def delete_published_export(export):
-    archive.delete_publication(export.namespace, export.file_name)
-
-
 def delete_expired_exports():
     expired_exports = Export.get_expired(deleted=False)
     for export in expired_exports:
-        delete_published_export(export)
+        export.delete_publication()
+    db.session.commit()

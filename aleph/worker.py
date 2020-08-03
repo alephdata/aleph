@@ -20,6 +20,7 @@ from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.roles import update_roles
+from aleph.logic.export import delete_expired_exports
 
 log = logging.getLogger(__name__)
 app = create_app()
@@ -52,6 +53,7 @@ class AlephWorker(Worker):
             self.hourly.update()
             log.info("Running hourly tasks...")
             check_alerts()
+            delete_expired_exports()
 
         if self.daily.check():
             self.daily.update()

@@ -138,6 +138,11 @@ class Export(db.Model, IdModel, DatedModel):
             attachment_name=self.file_name,
         )
 
+    def delete_publication(self):
+        archive.delete_publication(self.namespace, self.file_name)
+        self.deleted = True
+        db.session.add(self)
+
     @classmethod
     def get_expired(cls, deleted=None):
         now = datetime.utcnow()
