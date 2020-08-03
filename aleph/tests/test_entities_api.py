@@ -82,8 +82,7 @@ class EntitiesApiTestCase(TestCase):
 
         _, headers = self.login(is_admin=True)
         res = self.client.get(url, headers=headers)
-        assert res.status_code == 200, res
-        assert "application/zip" in res.headers.get("Content-Type")
+        assert res.status_code == 202, res
 
     def test_view(self):
         url = "/api/2/entities/%s" % self.id
