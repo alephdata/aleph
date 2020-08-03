@@ -6,7 +6,7 @@ import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'selectors';
-import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'actions';
+import { createEntity, entitySetCreateEntity, queryEntities, queryEntityExpand, updateEntity } from 'actions';
 import updateStates from 'util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
@@ -59,10 +59,14 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async createEntity(entity) {
-        const { collection, onStatusChange } = this.props;
+        const { collection, entitySetId, onStatusChange } = this.props;
         onStatusChange(updateStates.IN_PROGRESS);
         try {
-          await this.props.createEntity({ entity, collection_id: collection.id });
+          if (entitySetId) {
+            await this.props.entitySetCreateEntity({ entity, entitySetId });
+          } else {
+            await this.props.createEntity({ entity, collection_id: collection.id });
+          }
           onStatusChange(updateStates.SUCCESS);
         } catch {
           onStatusChange(updateStates.ERROR);
@@ -95,6 +99,7 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       render() {
+        console.log('in wrapper', this.props)
         // return editor component with entityManager
         return (
           <EditorComponent
@@ -111,27 +116,34 @@ const entityEditorWrapper = (EditorComponent) => {
   )(WrappedComponent);
 }
 
-const mapStateToProps = state => ({
-  model: selectModel(state),
-  locale: selectLocale(state),
-  selectQueryResults: (query) => {
-    let result;
+const mapStateToProps = (state, ownProps) => {
+  const { match } = ownProps;
+  const { entitySetId } = match.params;
 
-    if (query.queryName === 'expand') {
-      result = selectExpandResult(state, query);
-    } else {
-      result = selectEntitiesResult(state, query);
-    }
+  return ({
+    model: selectModel(state),
+    locale: selectLocale(state),
+    entitySetId,
+    selectQueryResults: (query) => {
+      let result;
 
-    if (!result.isPending && result.results) {
-      return result.results;
-    }
-    return null;
-  },
-});
+      if (query.queryName === 'expand') {
+        result = selectExpandResult(state, query);
+      } else {
+        result = selectEntitiesResult(state, query);
+      }
+
+      if (!result.isPending && result.results) {
+        return result.results;
+      }
+      return null;
+    },
+  });
+}
 
 const mapDispatchToProps = {
   createEntity,
+  entitySetCreateEntity,
   queryEntities,
   queryEntityExpand,
   updateEntity,

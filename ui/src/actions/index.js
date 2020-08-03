@@ -40,6 +40,7 @@ export {
 export {
   createEntitySet,
   deleteEntitySet,
+  entitySetCreateEntity,
   fetchEntitySet,
   queryEntitySets,
   updateEntitySet,

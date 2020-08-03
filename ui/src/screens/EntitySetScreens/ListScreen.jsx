@@ -81,10 +81,10 @@ export class ListScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { list, listId } = this.props;
+    const { list, entitySetId } = this.props;
 
     if (list.shouldLoad || list.shallow) {
-      this.props.fetchEntitySet(listId);
+      this.props.fetchEntitySet(entitySetId);
     }
   }
 
@@ -141,9 +141,9 @@ export class ListScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location, match } = ownProps;
-  const { listId } = match.params;
+  const { entitySetId } = match.params;
 
-  const list = selectEntitySet(state, listId);
+  const list = selectEntitySet(state, entitySetId);
 
   if (!list.isPending) {
     const hashQuery = queryString.parse(location.hash);
@@ -179,17 +179,17 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
       list,
-      listId,
+      entitySetId,
       activeType,
       activeSchema: model.getSchema(activeType),
       schemaViews,
       selectableSchemata,
-      query: queryEntitySetEntities(location, listId, activeType),
+      query: queryEntitySetEntities(location, entitySetId, activeType),
     };
   }
 
   return {
-    listId,
+    entitySetId,
     list,
   };
 };
