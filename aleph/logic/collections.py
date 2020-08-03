@@ -103,10 +103,6 @@ def reingest_collection(collection, job_id=None, index=False, flush=True):
         ingest_entity(collection, proxy, job_id=job_id, index=index)
 
 
-def op_reingest_handler(collection, task):
-    reingest_collection(collection, job_id=task.stage.job.id, **task.payload)
-
-
 def reindex_collection(collection, sync=False, flush=False):
     """Re-index all entities from the model, mappings and aggregator cache."""
     from aleph.logic.mapping import map_to_aggregator
@@ -124,11 +120,6 @@ def reindex_collection(collection, sync=False, flush=False):
     aggregate_model(collection, aggregator)
     index_aggregator(collection, aggregator, sync=sync)
     compute_collection(collection, force=True)
-
-
-def op_reindex_handler(collection, task):
-    sync = task.context.get("sync", False)
-    reindex_collection(collection, sync=sync, **task.payload)
 
 
 def delete_collection(collection, keep_metadata=False, sync=False):

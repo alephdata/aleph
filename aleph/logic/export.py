@@ -75,10 +75,6 @@ def export_entities(role_id, result):
         shutil.rmtree(export_dir)
 
 
-def op_export_search_results_handler(collection, task):
-    export_entities(**task.payload)
-
-
 def publish_export(
     operation,
     file_path,

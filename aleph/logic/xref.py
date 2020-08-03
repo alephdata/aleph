@@ -112,10 +112,6 @@ def _query_entities(collection):
         yield from _query_item(proxy)
 
 
-def op_xref_item_handler(collection, task):
-    xref_item(task.stage, collection, **task.payload)
-
-
 def xref_collection(stage, collection):
     """Cross-reference all the entities and documents in a collection."""
     delete_xref(collection, sync=True)
@@ -123,10 +119,6 @@ def xref_collection(stage, collection):
     index_matches(collection, _query_entities(collection))
     index_matches(collection, _query_mentions(collection))
     reindex_collection(collection, sync=False)
-
-
-def op_xref_handler(collection, task):
-    xref_collection(task.stage, collection)
 
 
 def _format_date(proxy):
