@@ -40,14 +40,14 @@ class EntityListViews extends React.PureComponent {
   }
 
   renderTable() {
-    const { collection, activeSchema, query, showImport, writeable } = this.props;
+    const { collection, activeSchema, query, isEntitySet, writeable } = this.props;
     return <EntityListManager
       query={query}
       collection={collection}
       schema={activeSchema}
       onStatusChange={() => {}}
       writeable={writeable}
-      showImport={showImport}
+      isEntitySet={isEntitySet}
     />;
   }
 

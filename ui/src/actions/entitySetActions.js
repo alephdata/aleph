@@ -36,3 +36,10 @@ export const entitySetCreateEntity = asyncActionCreator(({ entity, entitySetId }
   const response = await endpoint.put(`entitysets/${entitySetId}/entities`, payload, config);
   return { id: response.data.id, data: response.data };
 }, { name: 'CREATE_ENTITY' });
+
+export const entitySetDeleteEntity = asyncActionCreator(({ entityId, entitySetId }) => async () => {
+  const config = { params: { sync: true }};
+  const payload = {"entity_id": entityId, "judgement": "no_judgement"};
+  await endpoint.post(`entitysets/${entitySetId}/items`, payload, config);
+  return { id: entityId };
+}, { name: 'DELETE_ENTITY' });

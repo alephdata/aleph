@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Alert, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import c from 'classnames';
 
-import { deleteEntity } from 'actions';
 import { Entity } from 'components/common';
 import { showErrorToast, showSuccessToast } from 'app/toast';
 import getCollectionLink from 'util/getCollectionLink';
@@ -15,13 +13,13 @@ import getEntityLink from 'util/getEntityLink';
 import './EntityDeleteDialog.scss';
 
 const messages = defineMessages({
-  button_confirm: {
-    id: 'entity.delete.confirm',
-    defaultMessage: 'Delete',
-  },
-  button_cancel: {
+  cancel: {
     id: 'entity.delete.cancel',
     defaultMessage: 'Cancel',
+  },
+  delete_confirm: {
+    id: 'entity.delete.confirm',
+    defaultMessage: 'Delete',
   },
   delete_success: {
     id: 'entity.delete.success',
@@ -30,6 +28,36 @@ const messages = defineMessages({
   delete_error: {
     id: 'entity.delete.error',
     defaultMessage: 'An error occured while attempting to delete this entity.',
+  },
+  delete_progress: {
+    id: 'entity.delete.error',
+    defaultMessage: 'Deleting...',
+  },
+  delete_question: {
+    id: 'entity.delete.question.multiple',
+    defaultMessage: `Are you sure you want to delete the following
+    {count, plural, one {item} other {items}}?`,
+  },
+  remove_confirm: {
+    id: 'entity.remove.confirm',
+    defaultMessage: 'Remove',
+  },
+  remove_success: {
+    id: 'entity.remove.success',
+    defaultMessage: 'Successfully removed',
+  },
+  remove_error: {
+    id: 'entity.remove.error',
+    defaultMessage: 'An error occured while attempting to remove this entity.',
+  },
+  remove_progress: {
+    id: 'entity.remove.error',
+    defaultMessage: 'Removing...',
+  },
+  remove_question: {
+    id: 'entity.remove.question.multiple',
+    defaultMessage: `Are you sure you want to remove the following
+    {count, plural, one {item} other {items}}?`,
   },
 });
 
@@ -45,7 +73,7 @@ export class EntityDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { entities, history, intl, redirectOnSuccess, toggleDialog } = this.props;
+    const { actionType, deleteEntity, entities, history, intl, redirectOnSuccess, toggleDialog } = this.props;
     const { blocking } = this.state;
 
     if (!blocking) {
@@ -54,13 +82,13 @@ export class EntityDeleteDialog extends Component {
 
         for (const entity of entities) {
           this.setState({ processingEntity: entity.id });
-          await this.props.deleteEntity(entity.id);
+          await deleteEntity(entity.id);
           this.setState(({ deletedEntities }) => (
             { deletedEntities: [...deletedEntities, entity.id], processingEntity: null }
           ));
         }
 
-        showSuccessToast(intl.formatMessage(messages.delete_success));
+        showSuccessToast(intl.formatMessage(messages[`${actionType}_success`]));
         if (redirectOnSuccess) {
           const parent = entities[0]?.getFirst('parent');
           const collection = entities[0]?.collection;
@@ -69,9 +97,9 @@ export class EntityDeleteDialog extends Component {
           history.push({ pathname });
         }
         this.setState({ blocking: false });
-        toggleDialog();
+        toggleDialog(true);
       } catch (e) {
-        showErrorToast(intl.formatMessage(messages.delete_error));
+        showErrorToast(intl.formatMessage(messages[`${actionType}_error`]));
         this.setState({ blocking: false });
       }
     }
@@ -79,7 +107,7 @@ export class EntityDeleteDialog extends Component {
 
   render() {
     const { blocking, deletedEntities, processingEntity } = this.state;
-    const { entities, intl } = this.props;
+    const { actionType, entities, intl } = this.props;
 
     return (
       <Alert
@@ -87,27 +115,13 @@ export class EntityDeleteDialog extends Component {
         className={c('EntityDeleteDialog', { 'blocking': blocking })}
         icon="trash"
         intent={Intent.DANGER}
-        cancelButtonText={intl.formatMessage(messages.button_cancel)}
-        confirmButtonText={intl.formatMessage(messages.button_confirm)}
+        cancelButtonText={intl.formatMessage(messages.cancel)}
+        confirmButtonText={intl.formatMessage(messages[`${actionType}_confirm`])}
         onCancel={this.props.toggleDialog}
         onConfirm={this.onDelete}
       >
-        {!blocking && (
-          <FormattedMessage
-            id="entity.delete.question.multiple"
-            defaultMessage={
-              `Are you sure you want to delete the following
-              {count, plural, one {item} other {items}}?`
-            }
-            values={{count: entities.length}}
-          />
-        )}
-        {blocking && (
-          <FormattedMessage
-            id="entity.delete.progress"
-            defaultMessage="Deleting..."
-          />
-        )}
+        {!blocking && intl.formatMessage(messages[`${actionType}_question`], { count: entities.length})}
+        {blocking && intl.formatMessage(messages[`${actionType}_progress`])}
         <ul className="EntityDeleteDialog__file-list">
           {entities.map(entity => {
             const isProcessing = processingEntity === entity.id;
@@ -132,6 +146,5 @@ export class EntityDeleteDialog extends Component {
 
 export default compose(
   withRouter,
-  connect(null, { deleteEntity }),
   injectIntl,
 )(EntityDeleteDialog);

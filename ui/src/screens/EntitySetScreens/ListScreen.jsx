@@ -130,7 +130,7 @@ export class ListScreen extends Component {
               schemaViews={schemaViews}
               query={query}
               writeable={list.writeable}
-              showImport={false}
+              isEntitySet
             />
           </SinglePane>
         </Screen>

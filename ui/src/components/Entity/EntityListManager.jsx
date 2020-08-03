@@ -14,6 +14,7 @@ import { Count, ErrorSection } from 'components/common';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'components/Entity/EntityActionBar';
+import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import { queryEntities } from 'actions';
 import { queryCollectionEntities } from 'queries';
 import { selectEntitiesResult } from 'selectors';
@@ -186,23 +187,22 @@ export class EntityListManager extends Component {
   }
 
   render() {
-    const { collection, entityManager, query, intl, result, schema, showImport, sort, writeable } = this.props;
+    const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, writeable } = this.props;
     const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
     const showEmptyComponent = result.total === 0 && query.hasQuery();
+
 
     return (
       <div className="EntityListManager">
         <EntityActionBar
           query={query}
           writeable={writeable}
-          selection={selection}
-          resetSelection={() => this.setState({ selection: [] })}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >
-          {showImport && (
+          {!isEntitySet && (
             <>
               <Button icon="import" onClick={this.toggleDocumentSelectDialog}>
                 <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
@@ -219,6 +219,13 @@ export class EntityListManager extends Component {
             <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
             <Count count={selection.length || null} />
           </Button>
+          <EntityDeleteButton
+            entities={selection}
+            onSuccess={() => this.setState({ selection: [] })}
+            actionType={isEntitySet ? "remove" : "delete"}
+            deleteEntity={entityId => entityManager.deleteEntity(entityId)}
+            showCount
+          />
         </EntityActionBar>
         <div className="EntityListManager__content">
           {showEmptyComponent && (

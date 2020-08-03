@@ -13,13 +13,14 @@ import { connect } from 'react-redux';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityInfoMode from 'components/Entity/EntityInfoMode';
 import EntityViews from 'components/Entity/EntityViews';
-import EntityDeleteDialog from 'dialogs/EntityDeleteDialog/EntityDeleteDialog';
+import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
+import { deleteEntity } from 'actions';
 import { queryEntityReference } from 'queries';
 import {
   selectEntity, selectEntityReference, selectEntityView,
@@ -35,13 +36,11 @@ class EntityScreen extends Component {
     super(props);
 
     this.state = {
-      deleteIsOpen: false,
       addToIsOpen: false,
     };
 
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
-    this.toggleDeleteDialog = this.toggleDeleteDialog.bind(this);
     this.toggleEntitySetSelector = this.toggleEntitySetSelector.bind(this);
   }
 
@@ -134,10 +133,6 @@ class EntityScreen extends Component {
     return scopes.reverse();
   }
 
-  toggleDeleteDialog() {
-    this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
-  }
-
   toggleEntitySetSelector() {
     this.setState(({ addToIsOpen }) => ({ addToIsOpen: !addToIsOpen }));
   }
@@ -168,9 +163,12 @@ class EntityScreen extends Component {
             <Button icon="add-to-artifact" onClick={this.toggleEntitySetSelector}>
               <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
             </Button>
-            <Button icon="trash" onClick={this.toggleDeleteDialog}>
-              <FormattedMessage id="entity.delete" defaultMessage="Delete" />
-            </Button>
+            <EntityDeleteButton
+              entities={[entity]}
+              redirectOnSuccess
+              actionType="delete"
+              deleteEntity={this.props.deleteEntity}
+            />
           </>
         )}
       </ButtonGroup>
@@ -201,12 +199,6 @@ class EntityScreen extends Component {
                 entity={entity}
                 activeMode={activeMode}
                 isPreview={false}
-              />
-              <EntityDeleteDialog
-                entities={[entity]}
-                isOpen={this.state.deleteIsOpen}
-                toggleDialog={this.toggleDeleteDialog}
-                redirectOnSuccess
               />
               <EntitySetSelector
                 collection={entity.collection}
@@ -245,6 +237,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, { deleteEntity }),
   injectIntl,
 )(EntityScreen);

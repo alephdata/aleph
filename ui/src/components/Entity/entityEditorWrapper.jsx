@@ -6,7 +6,15 @@ import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'selectors';
-import { createEntity, entitySetCreateEntity, queryEntities, queryEntityExpand, updateEntity } from 'actions';
+import {
+  createEntity,
+  deleteEntity,
+  entitySetCreateEntity,
+  entitySetDeleteEntity,
+  queryEntities,
+  queryEntityExpand,
+  updateEntity
+} from 'actions';
 import updateStates from 'util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
@@ -19,6 +27,7 @@ const entityEditorWrapper = (EditorComponent) => {
           model: props.model,
           namespace: new Namespace(props.collection.foreign_id),
           createEntity: this.createEntity.bind(this),
+          deleteEntity: this.deleteEntity.bind(this),
           expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
@@ -98,8 +107,23 @@ const entityEditorWrapper = (EditorComponent) => {
         }
       }
 
+      async deleteEntity(entityId) {
+        const { entitySetId, onStatusChange } = this.props;
+        onStatusChange(updateStates.IN_PROGRESS);
+
+        try {
+          if (entitySetId) {
+            await this.props.entitySetDeleteEntity({ entityId, entitySetId });
+          } else {
+            await this.props.deleteEntity(entityId);
+          }
+          onStatusChange(updateStates.SUCCESS);
+        } catch {
+          onStatusChange(updateStates.ERROR);
+        }
+      }
+
       render() {
-        console.log('in wrapper', this.props)
         // return editor component with entityManager
         return (
           <EditorComponent
@@ -117,8 +141,7 @@ const entityEditorWrapper = (EditorComponent) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { match } = ownProps;
-  const { entitySetId } = match.params;
+  const { entitySetId } = ownProps.match.params;
 
   return ({
     model: selectModel(state),
@@ -143,7 +166,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   createEntity,
+  deleteEntity,
   entitySetCreateEntity,
+  entitySetDeleteEntity,
   queryEntities,
   queryEntityExpand,
   updateEntity,

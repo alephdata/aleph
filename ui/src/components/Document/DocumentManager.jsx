@@ -10,11 +10,12 @@ import queryString from 'query-string';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderButton from 'components/Toolbar/DocumentFolderButton';
 import EntityActionBar from 'components/Entity/EntityActionBar';
+import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'components/common';
 import getEntityLink from 'util/getEntityLink';
 import { selectEntitiesResult } from 'selectors';
-import { queryEntities } from 'actions';
+import { deleteEntity, queryEntities } from 'actions';
 
 import './DocumentManager.scss';
 
@@ -146,6 +147,13 @@ export class DocumentManager extends Component {
               <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
             </AnchorButton>
           </Tooltip>
+          <EntityDeleteButton
+            entities={selection}
+            onSuccess={() => this.setState({ selection: [] })}
+            actionType="delete"
+            deleteEntity={this.props.deleteEntity}
+            showCount
+          />
         </EntityActionBar>
         { hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">
@@ -194,6 +202,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryEntities }),
+  connect(mapStateToProps, { queryEntities, deleteEntity }),
   injectIntl,
 )(DocumentManager);
