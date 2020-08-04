@@ -9,7 +9,7 @@ import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
 import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { EntitySet, SearchBox } from 'components/common';
-import EntitySetList from 'components/EntitySet/EntitySetList';
+import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
 
 import { showSuccessToast, showWarningToast } from 'app/toast';

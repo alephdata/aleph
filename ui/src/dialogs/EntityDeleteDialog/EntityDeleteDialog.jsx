@@ -109,11 +109,13 @@ export class EntityDeleteDialog extends Component {
     const { blocking, deletedEntities, processingEntity } = this.state;
     const { actionType, entities, intl } = this.props;
 
+    const icon = actionType === 'remove' ? 'delete' : 'trash';
+
     return (
       <Alert
         isOpen={this.props.isOpen}
         className={c('EntityDeleteDialog', { 'blocking': blocking })}
-        icon="trash"
+        icon={icon}
         intent={Intent.DANGER}
         cancelButtonText={intl.formatMessage(messages.cancel)}
         confirmButtonText={intl.formatMessage(messages[`${actionType}_confirm`])}
@@ -128,10 +130,12 @@ export class EntityDeleteDialog extends Component {
             const isDeleted = deletedEntities.indexOf(entity.id) > -1;
             return (
               <li key={entity.id} className={c('EntityDeleteDialog__file-list__item', { 'deleted': isDeleted })}>
-                <span className="EntityDeleteDialog__file-list__item__icon">
-                  {isProcessing && <Spinner size={14} />}
-                  {isDeleted && <Icon icon="tick" />}
-                </span>
+                {(isProcessing || isDeleted) && (
+                  <span className="EntityDeleteDialog__file-list__item__icon">
+                    {isProcessing && <Spinner size={14} />}
+                    {isDeleted && <Icon icon="tick" />}
+                  </span>
+                )}
                 <span className="EntityDeleteDialog__file-list__item__main">
                   <Entity.Label entity={entity} truncate={30} icon />
                 </span>

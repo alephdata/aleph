@@ -91,7 +91,7 @@ export class CollectionIndex extends Component {
 
     return (
       <>
-        <ul className="results">
+        <ul className="index">
           {result.results !== undefined && result.results.map(
             res => <CollectionIndexItem key={res.id} collection={res} />,
           )}

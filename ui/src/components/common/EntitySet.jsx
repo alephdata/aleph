@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { defineMessages } from 'react-intl';
+import truncateText from 'truncate';
 import { Button, Icon, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
@@ -42,15 +43,20 @@ const EntitySetIcon = ({entitySet, className}) => (
 
 class EntitySetLabel extends PureComponent {
   render() {
-    const { entitySet, icon } = this.props;
+    const { entitySet, icon, truncate } = this.props;
     if (!entitySet || !entitySet.id) {
       return null;
+    }
+
+    let text = entitySet.label;
+    if (truncate) {
+      text = truncateText(text, truncate);
     }
 
     return (
       <span className="EntitySetLabel" title={entitySet.label}>
         {icon && <EntitySetIcon entitySet={entitySet} className="left-icon" />}
-        <span>{entitySet.label}</span>
+        <span>{text}</span>
       </span>
     );
   }

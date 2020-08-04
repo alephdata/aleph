@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
 import { ErrorSection } from 'components/common';
-import EntitySetListItem from 'components/EntitySet/EntitySetListItem';
+import EntitySetIndexItem from 'components/EntitySet/EntitySetIndexItem';
 
-import './EntitySetList.scss';
+import './EntitySetIndex.scss';
 
 const messages = defineMessages({
   no_diagram: {
@@ -17,7 +17,7 @@ const messages = defineMessages({
   },
 });
 
-class EntitySetList extends Component {
+class EntitySetIndex extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -48,15 +48,15 @@ class EntitySetList extends Component {
     }
 
     return (
-      <div className="EntitySetList">
-        <div className="EntitySetList__items">
+      <div className="EntitySetIndex">
+        <ul className="index">
           {result.results && result.results.map(entitySet => (
-            <EntitySetListItem key={entitySet.id} entitySet={entitySet} showCollection={showCollection} onSelect={onSelect} />
+            <EntitySetIndexItem key={entitySet.id} entitySet={entitySet} showCollection={showCollection} onSelect={onSelect} />
           ))}
           {isPending && skeletonItems.map(item => (
-            <EntitySetListItem key={item} showCollection={showCollection} isPending />
+            <EntitySetIndexItem key={item} showCollection={showCollection} isPending />
           ))}
-        </div>
+        </ul>
         <Waypoint
           onEnter={this.getMoreItems}
           bottomOffset="0"
@@ -67,4 +67,4 @@ class EntitySetList extends Component {
   }
 }
 
-export default injectIntl(EntitySetList);
+export default injectIntl(EntitySetIndex);

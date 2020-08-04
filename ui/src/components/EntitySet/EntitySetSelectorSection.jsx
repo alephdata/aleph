@@ -9,7 +9,7 @@ import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
 import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { Count, EntitySet, SearchBox } from 'components/common';
-import EntitySetList from 'components/EntitySet/EntitySetList';
+import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
 
@@ -122,7 +122,7 @@ class EntitySetSelectorSection extends Component {
                 />
               </form>
             )}
-            <EntitySetList
+            <EntitySetIndex
               query={query}
               result={result}
               onSelect={onSelect}

@@ -1,48 +1,50 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-.EntitySetListItem {
-  width: 100%;
-  display: table-row;
+$details-item-width: 175px;
+$vertical-padding: $aleph-grid-size/2;
 
-  & > * {
+.EntitySetIndexItem {
+  &.index-item {
+    padding: $aleph-grid-size/2 0;
     width: 100%;
-    display: table-cell;
-    padding: $aleph-content-padding/2 0;
-    border-bottom: 1px solid $aleph-border-color;
+  }
 
-    &:last-child {
-      text-align: right;
+  &__flex-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .index-item__title, .index-item__details {
+      // margin: $vertical-padding 0;
+    }
+
+    .index-item__title {
+      margin: $vertical-padding 0;
+      padding-right: $aleph-grid-size;
+    }
+
+    .index-item__details {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      &__item {
+        margin: $vertical-padding 0 !important;
+
+        width: $details-item-width;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        &:not(:last-child) {
+          margin-right: $aleph-grid-size !important;
+        }
+      }
     }
   }
-
-
-  &__title {
-    font-weight: bold;
-    color: $blue2;
-    text-decoration: none !important;
-    // white-space: nowrap;
-  }
-
-  &__link:hover {
-    text-decoration: none;
-  }
-
-  .summary {
-    font-size: $pt-font-size;
-  }
-
-  .details {
-    color: $aleph-greyed-text;
-    font-size: 12px;
-  }
-
-  .details-item {
-    display: inline-block;
-    min-width: 8em;
-
-    .bp3-icon {
-      @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
-    }
+  .index-item__summary {
+    margin-top: $vertical-padding;
   }
 }

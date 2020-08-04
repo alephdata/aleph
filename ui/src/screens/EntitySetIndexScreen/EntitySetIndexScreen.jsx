@@ -12,10 +12,8 @@ import Dashboard from 'components/Dashboard/Dashboard';
 import { Breadcrumbs, SortingBar } from 'components/common';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
-import EntitySetList from 'components/EntitySet/EntitySetList';
+import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 
-
-import './EntitySetIndexScreen.scss';
 
 const messages = defineMessages({
   diagram_title: {
@@ -89,11 +87,7 @@ export class EntitySetIndexScreen extends Component {
               <EntitySetCreateMenu type={type} />
             </div>
           </div>
-          <SortingBar
-            query={query}
-            updateQuery={this.updateQuery}
-          />
-          <EntitySetList
+          <EntitySetIndex
             result={result}
             type={type}
             query={query}

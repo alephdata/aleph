@@ -8,7 +8,7 @@ import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { ErrorSection } from 'components/common';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
-import EntitySetList from 'components/EntitySet/EntitySetList';
+import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 
 export class CollectionEntitySetsIndexMode extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ export class CollectionEntitySetsIndexMode extends Component {
         <div style={{ marginBottom: '10px' }}>
           <EntitySetCreateMenu collection={collection} type={type} />
         </div>
-        <EntitySetList
+        <EntitySetIndex
           result={result}
           getMoreItems={this.getMoreResults}
           showCollection={false}
