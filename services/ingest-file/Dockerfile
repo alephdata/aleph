@@ -3,70 +3,70 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
     && apt-get -qq -y install \
-        tesseract-ocr-eng \
-        tesseract-ocr-swa \
-        tesseract-ocr-swe \
-        # tesseract-ocr-tam \
-        # tesseract-ocr-tel \
-        tesseract-ocr-fil \
-        # tesseract-ocr-tha \
-        tesseract-ocr-tur \
-        tesseract-ocr-ukr \
-        # tesseract-ocr-vie \
-        tesseract-ocr-nld \
-        tesseract-ocr-nor \
-        tesseract-ocr-pol \
-        tesseract-ocr-por \
-        tesseract-ocr-ron \
-        tesseract-ocr-rus \
-        tesseract-ocr-slk \
-        tesseract-ocr-slv \
-        tesseract-ocr-spa \
-        # tesseract-ocr-spa_old \
-        tesseract-ocr-sqi \
-        tesseract-ocr-srp \
-        tesseract-ocr-ind \
-        tesseract-ocr-isl \
-        tesseract-ocr-ita \
-        # tesseract-ocr-ita_old \
-        # tesseract-ocr-jpn \
-        tesseract-ocr-kan \
-        # tesseract-ocr-kor \
-        tesseract-ocr-lav \
-        tesseract-ocr-lit \
-        # tesseract-ocr-mal \
-        tesseract-ocr-mkd \
-        tesseract-ocr-mlt \
-        tesseract-ocr-msa \
-        tesseract-ocr-est \
-        # tesseract-ocr-eus \
-        tesseract-ocr-fin \
-        tesseract-ocr-fra \
-        tesseract-ocr-frk \
-        # tesseract-ocr-frm \
-        # tesseract-ocr-glg \
-        # tesseract-ocr-grc \
-        tesseract-ocr-heb \
-        tesseract-ocr-hin \
-        tesseract-ocr-hrv \
-        tesseract-ocr-hun \
-        # tesseract-ocr-ben \
-        tesseract-ocr-bul \
-        tesseract-ocr-cat \
-        tesseract-ocr-ces \
-        # tesseract-ocr-chi_sim \
-        # tesseract-ocr-chi_tra \
-        # tesseract-ocr-chr \
-        tesseract-ocr-dan \
-        tesseract-ocr-deu \
-        tesseract-ocr-ell \
-        # tesseract-ocr-enm \
-        # tesseract-ocr-epo \
-        # tesseract-ocr-equ \
-        tesseract-ocr-afr \
-        tesseract-ocr-ara \
-        tesseract-ocr-aze \
-        tesseract-ocr-bel \
+    tesseract-ocr-eng \
+    tesseract-ocr-swa \
+    tesseract-ocr-swe \
+    # tesseract-ocr-tam \
+    # tesseract-ocr-tel \
+    tesseract-ocr-fil \
+    # tesseract-ocr-tha \
+    tesseract-ocr-tur \
+    tesseract-ocr-ukr \
+    # tesseract-ocr-vie \
+    tesseract-ocr-nld \
+    tesseract-ocr-nor \
+    tesseract-ocr-pol \
+    tesseract-ocr-por \
+    tesseract-ocr-ron \
+    tesseract-ocr-rus \
+    tesseract-ocr-slk \
+    tesseract-ocr-slv \
+    tesseract-ocr-spa \
+    # tesseract-ocr-spa_old \
+    tesseract-ocr-sqi \
+    tesseract-ocr-srp \
+    tesseract-ocr-ind \
+    tesseract-ocr-isl \
+    tesseract-ocr-ita \
+    # tesseract-ocr-ita_old \
+    # tesseract-ocr-jpn \
+    tesseract-ocr-kan \
+    # tesseract-ocr-kor \
+    tesseract-ocr-lav \
+    tesseract-ocr-lit \
+    # tesseract-ocr-mal \
+    tesseract-ocr-mkd \
+    tesseract-ocr-mlt \
+    tesseract-ocr-msa \
+    tesseract-ocr-est \
+    # tesseract-ocr-eus \
+    tesseract-ocr-fin \
+    tesseract-ocr-fra \
+    tesseract-ocr-frk \
+    # tesseract-ocr-frm \
+    # tesseract-ocr-glg \
+    # tesseract-ocr-grc \
+    tesseract-ocr-heb \
+    tesseract-ocr-hin \
+    tesseract-ocr-hrv \
+    tesseract-ocr-hun \
+    # tesseract-ocr-ben \
+    tesseract-ocr-bul \
+    tesseract-ocr-cat \
+    tesseract-ocr-ces \
+    # tesseract-ocr-chi_sim \
+    # tesseract-ocr-chi_tra \
+    # tesseract-ocr-chr \
+    tesseract-ocr-dan \
+    tesseract-ocr-deu \
+    tesseract-ocr-ell \
+    # tesseract-ocr-enm \
+    # tesseract-ocr-epo \
+    # tesseract-ocr-equ \
+    tesseract-ocr-afr \
+    tesseract-ocr-ara \
+    tesseract-ocr-aze \
+    tesseract-ocr-bel \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -75,23 +75,23 @@ RUN apt-get -qq -y update \
 # RUN echo "deb http://http.us.debian.org/debian stretch non-free" >/etc/apt/sources.list.d/nonfree.list
 RUN apt-get -qq -y update \
     && apt-get -qq -y install build-essential locales ca-certificates \
-        # python deps (mostly to install their dependencies)
-        python3-pip python3-dev python3-pil \
-        # tesseract
-        tesseract-ocr libtesseract-dev libleptonica-dev pkg-config\
-        # libraries
-        libxslt1-dev libpq-dev libldap2-dev libsasl2-dev \
-        zlib1g-dev libicu-dev libxml2-dev \
-        # package tools
-        unrar p7zip-full \
-        # audio & video metadata
-        libmediainfo-dev \
-        # image processing, djvu
-        imagemagick-common imagemagick mdbtools djvulibre-bin \
-        libtiff5-dev libjpeg-dev libfreetype6-dev libwebp-dev \
-        libtiff-tools ghostscript librsvg2-bin \
-        # pdf processing toolkit
-        poppler-utils poppler-data pst-utils \
+    # python deps (mostly to install their dependencies)
+    python3-pip python3-dev python3-pil \
+    # tesseract
+    tesseract-ocr libtesseract-dev libleptonica-dev pkg-config\
+    # libraries
+    libxslt1-dev libpq-dev libldap2-dev libsasl2-dev \
+    zlib1g-dev libicu-dev libxml2-dev \
+    # package tools
+    unrar p7zip-full \
+    # audio & video metadata
+    libmediainfo-dev \
+    # image processing, djvu
+    imagemagick-common imagemagick mdbtools djvulibre-bin \
+    libtiff5-dev libjpeg-dev libfreetype6-dev libwebp-dev \
+    libtiff-tools ghostscript librsvg2-bin \
+    # pdf processing toolkit
+    poppler-utils poppler-data pst-utils \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
@@ -100,7 +100,8 @@ RUN apt-get -qq -y update \
 # Set up the locale and make sure the system uses unicode for the file system.
 ENV LANG='en_US.UTF-8' \
     TZ='UTC' \
-    OMP_THREAD_LIMIT='1'
+    OMP_THREAD_LIMIT='1' \
+    OPENBLAS_NUM_THREADS='1'
 
 RUN groupadd -g 1000 -r app \
     && useradd -m -u 1000 -s /bin/false -g app app

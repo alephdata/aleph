@@ -10,7 +10,7 @@ TAG_IBAN = "ibanMentioned"
 TAG_LOCATION = "location"
 
 
-def text_chunks(texts, sep=" ", max_chunk=2000):
+def text_chunks(texts, sep=" ", max_chunk=25000):
     """Pre-chew text snippets for NLP and pattern matching."""
     for text in texts:
         text = collapse_spaces(text)

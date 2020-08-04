@@ -24,7 +24,7 @@ class Analyzer(object):
             return
         if not entity.schema.is_a("Analyzable"):
             return
-        # HACK: Tables will be mapped, don't try to tag them here.
+        # HACK: Tables should be mapped, don't try to tag them here.
         if entity.schema.is_a("Table"):
             return
 
