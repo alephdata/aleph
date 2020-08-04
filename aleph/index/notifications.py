@@ -6,7 +6,7 @@ from followthemoney.util import get_entity_id
 
 from aleph.core import settings
 from aleph.index.util import index_name, index_settings, configure_index
-from aleph.index.util import query_delete, index_safe, refresh_sync
+from aleph.index.util import query_delete, index_safe
 from aleph.index.util import KEYWORD
 
 log = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ def index_notification(event, actor_id, params, channels, sync=False):
     }
     index = notifications_index()
     id_ = hash_data((actor_id, event.name, channels, params))
-    return index_safe(index, id_, data, refresh=refresh_sync(sync))
+    return index_safe(index, id_, data, sync=sync)
 
 
 def delete_notifications(channel, sync=False):

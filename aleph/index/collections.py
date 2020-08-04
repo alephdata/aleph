@@ -7,7 +7,7 @@ from aleph.core import es, cache, settings
 from aleph.model import Collection, Entity
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import index_name, index_settings, configure_index
-from aleph.index.util import query_delete, index_safe, refresh_sync
+from aleph.index.util import query_delete, index_safe, delete_safe
 from aleph.index.util import KEYWORD_COPY, KEYWORD
 
 STATS_FACETS = [
@@ -98,9 +98,7 @@ def index_collection(collection, sync=False):
     text.append(normalize(data.get("summary")))
     data["text"] = text
     data.pop("id", None)
-    return index_safe(
-        collections_index(), collection.id, data, refresh=refresh_sync(sync)
-    )
+    return index_safe(collections_index(), collection.id, data, sync=sync)
 
 
 def get_collection(collection_id):
@@ -152,9 +150,8 @@ def update_collection_stats(collection_id, facets=STATS_FACETS):
         aggs[facet + ".total"] = {"cardinality": {"field": facet}}
     query = {"term": {"collection_id": collection_id}}
     query = {"size": 0, "query": query, "aggs": aggs}
-    result = es.search(
-        index=entities_read_index(), body=query, request_timeout=3600, timeout="20m"
-    )
+    index = entities_read_index()
+    result = es.search(index=index, body=query, request_timeout=3600, timeout="20m")
     results = result.get("aggregations", {})
     for facet in facets:
         buckets = results.get(facet + ".values").get("buckets", [])
@@ -180,12 +177,7 @@ def get_collection_things(collection_id):
 
 def delete_collection(collection_id, sync=False):
     """Delete all documents from a particular collection."""
-    es.delete(
-        collections_index(),
-        id=str(collection_id),
-        refresh=refresh_sync(sync),
-        ignore=[404],
-    )
+    delete_safe(collections_index(), collection_id)
 
 
 def delete_entities(collection_id, origin=None, schema=None, sync=False):
