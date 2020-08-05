@@ -9,7 +9,7 @@ from elasticsearch.helpers import scan
 from aleph.core import es, cache
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
-from aleph.index.util import unpack_result, refresh_sync
+from aleph.index.util import unpack_result, delete_safe
 from aleph.index.util import authz_query, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 from aleph.index.util import MAX_REQUEST_TIMEOUT, MAX_TIMEOUT
@@ -217,4 +217,4 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get("_index")
         if index == exclude:
             continue
-        es.delete(index=index, id=entity_id, ignore=[404], refresh=refresh_sync(sync))
+        delete_safe(index, entity_id)

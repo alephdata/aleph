@@ -178,11 +178,12 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     # log.debug("Bulk write: %.4fs", duration)
 
 
-def index_safe(index, id, body, **kwargs):
+def index_safe(index, id, body, sync=False, **kwargs):
     """Index a single document and retry until it has been stored."""
     for attempt in service_retries():
         try:
-            es.index(index=index, id=id, body=body, **kwargs)
+            refresh = refresh_sync(sync)
+            es.index(index=index, id=id, body=body, refresh=refresh, **kwargs)
             body["id"] = str(id)
             body.pop("text", None)
             return body
@@ -191,6 +192,10 @@ def index_safe(index, id, body, **kwargs):
                 raise
             log.warning("Index error [%s:%s]: %s", index, id, exc)
             backoff(failures=attempt)
+
+
+def delete_safe(index, id, sync=False):
+    es.delete(index=index, id=str(id), ignore=[404], refresh=refresh_sync(sync))
 
 
 def _check_response(index, res):
