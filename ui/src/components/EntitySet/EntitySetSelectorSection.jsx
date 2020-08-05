@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Collapse, Divider, Drawer, Icon, InputGroup, Intent, Tooltip } from '@blueprintjs/core';
+import { Button, ButtonGroup, Collapse, Divider, Drawer, Icon, InputGroup, Intent, Tooltip } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -54,8 +54,10 @@ class EntitySetSelectorSection extends Component {
     }
   }
 
-  onChangeLabel({ target }) {
-    this.setState({ label: target.value });
+  onChangeLabel(e) {
+    e.preventDefault();
+
+    this.setState({ label: e.target.value });
   }
 
   toggleCreate() {
@@ -66,8 +68,17 @@ class EntitySetSelectorSection extends Component {
 
   toggleExpand() {
     this.setState(({ expanded }) => ({
-      expanded: !expanded
+      expanded: !expanded,
+      createIsOpen: false
     }))
+  }
+
+  onCreate = (e) => {
+    const { onCreate, type } = this.props;
+    const { label } = this.state;
+    e.preventDefault();
+
+    onCreate(type, label);
   }
 
   render() {
@@ -78,50 +89,48 @@ class EntitySetSelectorSection extends Component {
 
     return (
       <div className="EntitySetSelectorSection">
-        <Button
+        <ButtonGroup
           minimal
           fill
-          onClick={this.toggleExpand}
-          icon={expanded ? 'chevron-down' : 'chevron-up'}
-          rightIcon={<Count count={result.total} />}
-          className="EntitySetSelectorSection__title"
+          className="EntitySetSelectorSection__title-container"
         >
-          <h5 className="bp3-heading">
-            {EntitySet.getTypeLabel(intl, type, { plural: true, capitalize: true })}
-          </h5>
-        </Button>
+          <Button
+            fill
+            onClick={this.toggleExpand}
+            rightIcon={<Count count={result.total} />}
+            className="EntitySetSelectorSection__title"
+          >
+            <h5 className="bp3-heading">
+              {EntitySet.getTypeLabel(intl, type, { plural: true, capitalize: true })}
+            </h5>
+          </Button>
+          <Tooltip
+            content={intl.formatMessage(messages.create, {type: typeLabel})}
+          >
+            <Button
+              icon="add"
+              onClick={this.toggleCreate}
+            />
+          </Tooltip>
+        </ButtonGroup>
+        <Collapse isOpen={createIsOpen}>
+          <div className="EntitySetSelectorSection__create">
+            <form onSubmit={this.onCreate}>
+              <InputGroup
+                fill
+                leftIcon={<EntitySet.Icon entitySet={{ type }} />}
+                placeholder={intl.formatMessage(messages.create, {type: typeLabel})}
+                rightElement={
+                  <Button icon="arrow-right" minimal type="submit" />
+                }
+                onChange={this.onChangeLabel}
+                value={label}
+              />
+            </form>
+          </div>
+        </Collapse>
         <Collapse isOpen={expanded}>
-          <div className="EntitySetSelector__section__content">
-            <Tooltip
-              content={intl.formatMessage(messages.create, {type: typeLabel})}
-            >
-              <Button
-                icon="add"
-                minimal
-                small
-                intent={Intent.PRIMARY}
-                onClick={this.toggleCreate}
-              >
-                <FormattedMessage
-                  id="entityset.selector.add_new"
-                  defaultMessage="Create new"
-                />
-              </Button>
-            </Tooltip>
-            {createIsOpen && (
-              <form onSubmit={this.onCreate}>
-                <InputGroup
-                  fill
-                  leftIcon="graph"
-                  placeholder={intl.formatMessage(messages.create, {type: typeLabel})}
-                  rightElement={
-                    <Button icon="arrow-right" minimal type="submit" />
-                  }
-                  onChange={this.onChangeLabel}
-                  value={label}
-                />
-              </form>
-            )}
+          <div className="EntitySetSelectorSection__content">
             <EntitySetIndex
               query={query}
               result={result}

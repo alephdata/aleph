@@ -162,6 +162,10 @@ a {
   padding: $aleph-grid-size*2.5 0;
   border-bottom: 1px solid $aleph-border-color;
 
+  &:last-child {
+    border: none;
+  }
+
   &__title {
     font-weight: bold;
 

@@ -57,6 +57,7 @@ class CollectionContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
+
   const entitySetsQuery = queryCollectionEntitySets(location, collectionId);
   const diagramsQuery = entitySetsQuery.setFilter('type', 'diagram');
   const listsQuery = entitySetsQuery.setFilter('type', 'list');

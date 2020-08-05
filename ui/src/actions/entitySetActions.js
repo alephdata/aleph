@@ -28,9 +28,9 @@ export const deleteEntitySet = asyncActionCreator((entitySetId) => async () => {
   return { entitySetId };
 }, { name: 'DELETE_ENTITYSET' });
 
-export const entitySetCreateEntity = asyncActionCreator(({ entity, entitySetId }) => async () => {
+export const entitySetAddEntity = asyncActionCreator(({ entity, entitySetId, sync }) => async () => {
   const config = {
-    params: { sync: true }
+    params: { sync }
   };
   const payload = entity.toJSON();
   const response = await endpoint.put(`entitysets/${entitySetId}/entities`, payload, config);

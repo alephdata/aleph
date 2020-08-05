@@ -30,7 +30,7 @@ class EntitySetDeleteDialog extends Component {
     const { entitySet, history } = this.props;
     await this.props.deleteEntitySet(entitySet.id);
     history.push({
-      pathname: `${getCollectionLink(entitySet.collection)}#mode=${entitySet.type}s`,
+      pathname: getCollectionLink(entitySet.collection),
     });
   }
 

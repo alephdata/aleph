@@ -96,7 +96,7 @@ export class ListScreen extends Component {
       return <ErrorScreen error={list.error} />;
     }
 
-    if ((!list.id) || list.shallow) {
+    if (!list.id) {
       return <LoadingScreen />;
     }
 

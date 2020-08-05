@@ -37,9 +37,13 @@ const getTypeLabel = (intl, type, { capitalize, plural }) => {
   return capitalize ? _.capitalize(label) : label;
 }
 
-const EntitySetIcon = ({entitySet, className}) => (
-  <Icon icon={getIcon(entitySet)} className={className} />
-);
+const EntitySetIcon = ({entitySet, className}) => {
+  if (!entitySet) return null;
+
+  return (
+    <Icon icon={getIcon(entitySet)} className={className} />
+  );
+}
 
 class EntitySetLabel extends PureComponent {
   render() {

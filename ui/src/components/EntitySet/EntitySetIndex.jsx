@@ -51,10 +51,20 @@ class EntitySetIndex extends Component {
       <div className="EntitySetIndex">
         <ul className="index">
           {result.results && result.results.map(entitySet => (
-            <EntitySetIndexItem key={entitySet.id} entitySet={entitySet} showCollection={showCollection} onSelect={onSelect} />
+            <EntitySetIndexItem
+              key={entitySet.id}
+              entitySet={entitySet}
+              showCollection={showCollection}
+              onSelect={onSelect}
+            />
           ))}
           {isPending && skeletonItems.map(item => (
-            <EntitySetIndexItem key={item} showCollection={showCollection} isPending />
+            <EntitySetIndexItem
+              key={item}
+              showCollection={showCollection}
+              onSelect={onSelect}
+              isPending
+            />
           ))}
         </ul>
         <Waypoint

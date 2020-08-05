@@ -10,7 +10,7 @@
 
   .bp3-drawer-body {
     width: 100%;
-    padding: $aleph-grid-size $aleph-grid-size*2;
+    padding: $aleph-grid-size;
   }
 
   &__top-section {
@@ -24,6 +24,4 @@
       margin: 0;
     }
   }
-
-
 }

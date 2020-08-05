@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
+import { createEntitySet, queryEntitySets, entitySetAddEntity } from 'actions';
 import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { EntitySet, SearchBox } from 'components/common';
@@ -49,77 +49,86 @@ class EntitySetSelector extends Component {
     this.setState({ queryText });
   }
 
-  onCreate(e) {
-    const { collection, entities } = this.props;
-    const { label } = this.state;
-    e.preventDefault();
-    this.sendRequest({
+  async onCreate(type, label) {
+    const { collection, entities, intl } = this.props;
+
+    const entitySet = {
       collection_id: collection.id,
       label,
       entities,
-      type: 'diagram',
-    });
+      type,
+    };
+
+    try {
+      await this.props.createEntitySet(entitySet);
+      showSuccessToast(
+        intl.formatMessage(messages.success_update, { count: entities.length, entitySet: label }),
+      );
+      this.props.toggleDialog(true);
+    } catch (e) {
+      showWarningToast(e.message);
+    }
+
   }
 
   onSelect(entitySet) {
     const { entities, intl } = this.props;
-
-    const updatedEntities = entitySet.entities ? [...entitySet.entities, ...entities] : entities;
-
-    const updatedEntitySet = {
-      ...entitySet,
-      entities: updatedEntities.map(e => e.id || e),
-    };
-
-    this.sendRequest(updatedEntitySet, entitySet.entities?.length)
-  }
-
-  async sendRequest(entitySet, prevEntityCount = 0) {
-    const { history, intl } = this.props;
-    const { processing } = this.state;
-
-    if (processing) return;
-    this.setState({ processing: true });
+    const entitySetId = entitySet.id;
 
     try {
-      let request;
-      if (entitySet.id) {
-        request = this.props.updateEntitySet(entitySet.id, entitySet);
-      } else {
-        request = this.props.createEntitySet(entitySet);
-      }
-      this.props.toggleDialog(true);
+      const promises = entities.map(entity => (
+        this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
+      ));
 
-      request.then(updatedEntitySet => {
-        this.setState({ processing: false });
-
-        const newCount = updatedEntitySet?.data?.entities?.length || 0;
-        const updatedCount = newCount - prevEntityCount;
-
+      Promise.all(promises).then(values => {
         showSuccessToast(
-          intl.formatMessage(messages.success_update, {count: updatedCount, entitySet: entitySet.label}),
+          intl.formatMessage(messages.success_update, {count: values.length, entitySet: entitySet.label}),
         );
-        // history.push({
-        //   pathname: getEntitySetLink(updatedDiagram.data),
-        // });
-      })
+        this.props.toggleDialog(true);
+      });
     } catch (e) {
       showWarningToast(e.message);
-      this.setState({ processing: false });
     }
   }
+
+  // async sendRequest(request) {
+  //   const { history, intl } = this.props;
+  //   const { processing } = this.state;
+  //
+  //   if (processing) return;
+  //   this.setState({ processing: true });
+  //
+  //   try {
+  //     let request;
+  //     if (entitySet.id) {
+  //       request = this.props.updateEntitySet(entitySet.id, entitySet);
+  //     } else {
+  //       request = this.props.createEntitySet(entitySet);
+  //     }
+  //     this.props.toggleDialog(true);
+  //
+  //     request.then(updatedEntitySet => {
+  //       this.setState({ processing: false });
+  //
+  //       const newCount = updatedEntitySet?.data?.entities?.length || 0;
+  //       const updatedCount = newCount - prevEntityCount;
+  //
+  //       showSuccessToast(
+  //         intl.formatMessage(messages.success_update, {count: updatedCount, entitySet: entitySet.label}),
+  //       );
+  //       // history.push({
+  //       //   pathname: getEntitySetLink(updatedDiagram.data),
+  //       // });
+  //     })
+  //   } catch (e) {
+  //     showWarningToast(e.message);
+  //     this.setState({ processing: false });
+  //   }
+  // }
 
   render() {
     const { collection, entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
     const { label, processing, queryText } = this.state;
-    // <p>
-    //   <FormattedMessage
-    //     id="diagram.add_entities.selected_count"
-    //     defaultMessage="You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a diagram."
-    //     values={{ count: <strong>{entities.length}</strong>, count_simple: entities.length }}
-    //   />
-    // </p>
-
 
     return (
       <Drawer
@@ -137,24 +146,17 @@ class EntitySetSelector extends Component {
         portalClassName="EntitySetSelector__overlay-container"
       >
         <div className="bp3-drawer-body">
-          <div className="EntitySetSelector__top-section">
-            <SearchBox
-              onSearch={this.onSearch}
-              placeholder={intl.formatMessage(messages.placeholder)}
-              query={diagramsQuery}
-            />
-          </div>
           <EntitySetSelectorSection
             type="list"
             collection={collection}
             onSelect={this.onSelect}
-            queryText={queryText}
+            onCreate={this.onCreate}
           />
           <EntitySetSelectorSection
             type="diagram"
             collection={collection}
             onSelect={this.onSelect}
-            queryText={queryText}
+            onCreate={this.onCreate}
           />
         </div>
       </Drawer>
@@ -165,5 +167,5 @@ class EntitySetSelector extends Component {
 export default compose(
   withRouter,
   injectIntl,
-  connect(() => ({}), { createEntitySet, updateEntitySet }),
+  connect(() => ({}), { createEntitySet, entitySetAddEntity }),
 )(EntitySetSelector);

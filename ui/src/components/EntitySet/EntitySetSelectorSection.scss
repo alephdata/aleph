@@ -2,6 +2,10 @@
 @import "app/mixins.scss";
 
 .EntitySetSelectorSection {
+  &__title-container {
+    margin-bottom: $aleph-grid-size/2;
+  }
+
   &__title {
     &.bp3-button {
       justify-content: flex-start;
@@ -19,8 +23,13 @@
       @include rtl(right, $aleph-grid-size, initial);
       @include rtl(left, initial, $aleph-grid-size);
     }
-
   }
 
+  &__content {
+    padding-bottom: $aleph-grid-size;
+  }
 
+  &__create {
+    padding: $aleph-grid-size 3px;
+  }
 }

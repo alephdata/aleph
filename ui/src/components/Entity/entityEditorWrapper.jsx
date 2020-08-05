@@ -9,7 +9,7 @@ import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } f
 import {
   createEntity,
   deleteEntity,
-  entitySetCreateEntity,
+  entitySetAddEntity,
   entitySetDeleteEntity,
   queryEntities,
   queryEntityExpand,
@@ -72,7 +72,7 @@ const entityEditorWrapper = (EditorComponent) => {
         onStatusChange(updateStates.IN_PROGRESS);
         try {
           if (entitySetId) {
-            await this.props.entitySetCreateEntity({ entity, entitySetId });
+            await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
           } else {
             await this.props.createEntity({ entity, collection_id: collection.id });
           }
@@ -167,7 +167,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   createEntity,
   deleteEntity,
-  entitySetCreateEntity,
+  entitySetAddEntity,
   entitySetDeleteEntity,
   queryEntities,
   queryEntityExpand,
