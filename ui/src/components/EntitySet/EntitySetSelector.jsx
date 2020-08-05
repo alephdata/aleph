@@ -26,6 +26,10 @@ const messages = defineMessages({
     id: 'entityset.selector.placeholder',
     defaultMessage: 'Search existing',
   },
+  success_button: {
+    id: 'entityset.selector.success_toast_button',
+    defaultMessage: 'View',
+  },
   success_update: {
     id: 'entityset.selector.success',
     defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
@@ -36,18 +40,19 @@ const messages = defineMessages({
 class EntitySetSelector extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      queryText: '',
-    };
+    // this.state = {
+    //   queryText: '',
+    // };
 
     this.onCreate = this.onCreate.bind(this);
     this.onSelect = this.onSelect.bind(this);
-    this.onSearch = this.onSearch.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
+    // this.onSearch = this.onSearch.bind(this);
   }
 
-  onSearch(queryText) {
-    this.setState({ queryText });
-  }
+  // onSearch(queryText) {
+  //   this.setState({ queryText });
+  // }
 
   async onCreate(type, label) {
     const { collection, entities, intl } = this.props;
@@ -60,11 +65,8 @@ class EntitySetSelector extends Component {
     };
 
     try {
-      await this.props.createEntitySet(entitySet);
-      showSuccessToast(
-        intl.formatMessage(messages.success_update, { count: entities.length, entitySet: label }),
-      );
-      this.props.toggleDialog(true);
+      const created = await this.props.createEntitySet(entitySet);
+      this.onSuccess(created.data);
     } catch (e) {
       showWarningToast(e.message);
     }
@@ -80,60 +82,33 @@ class EntitySetSelector extends Component {
         this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
       ));
 
-      Promise.all(promises).then(values => {
-        showSuccessToast(
-          intl.formatMessage(messages.success_update, {count: values.length, entitySet: entitySet.label}),
-        );
-        this.props.toggleDialog(true);
-      });
+      Promise.all(promises).then(values => this.onSuccess(entitySet));
     } catch (e) {
       showWarningToast(e.message);
     }
   }
 
-  // async sendRequest(request) {
-  //   const { history, intl } = this.props;
-  //   const { processing } = this.state;
-  //
-  //   if (processing) return;
-  //   this.setState({ processing: true });
-  //
-  //   try {
-  //     let request;
-  //     if (entitySet.id) {
-  //       request = this.props.updateEntitySet(entitySet.id, entitySet);
-  //     } else {
-  //       request = this.props.createEntitySet(entitySet);
-  //     }
-  //     this.props.toggleDialog(true);
-  //
-  //     request.then(updatedEntitySet => {
-  //       this.setState({ processing: false });
-  //
-  //       const newCount = updatedEntitySet?.data?.entities?.length || 0;
-  //       const updatedCount = newCount - prevEntityCount;
-  //
-  //       showSuccessToast(
-  //         intl.formatMessage(messages.success_update, {count: updatedCount, entitySet: entitySet.label}),
-  //       );
-  //       // history.push({
-  //       //   pathname: getEntitySetLink(updatedDiagram.data),
-  //       // });
-  //     })
-  //   } catch (e) {
-  //     showWarningToast(e.message);
-  //     this.setState({ processing: false });
-  //   }
-  // }
+  onSuccess(entitySet) {
+    const { entities, history, intl } = this.props;
+
+    showSuccessToast({
+      message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
+      action: {
+        small: true,
+        icon: 'share',
+        text: intl.formatMessage(messages.success_button),
+        onClick: () => history.push({ pathname: getEntitySetLink(entitySet) })
+      }
+    });
+    this.props.toggleDialog(true);
+  }
 
   render() {
     const { collection, entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
-    const { label, processing, queryText } = this.state;
 
     return (
       <Drawer
         hasBackdrop={false}
-        icon="add-to-artifact"
         className="EntitySetSelector"
         size={Drawer.SIZE_SMALL}
         isOpen={isOpen}

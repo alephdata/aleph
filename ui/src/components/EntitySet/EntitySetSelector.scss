@@ -8,6 +8,11 @@
     overflow: visible;
   }
 
+  .bp3-drawer-header {
+    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
+    @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
+  }
+
   .bp3-drawer-body {
     width: 100%;
     padding: $aleph-grid-size;
