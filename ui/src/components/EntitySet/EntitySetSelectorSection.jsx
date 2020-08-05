@@ -136,6 +136,7 @@ class EntitySetSelectorSection extends Component {
               result={result}
               onSelect={onSelect}
               type={type}
+              loadMoreOnScroll={false}
             />
           </div>
         </Collapse>
@@ -146,14 +147,20 @@ class EntitySetSelectorSection extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location, queryText, type } = ownProps;
+
+  const { entitySetId } = ownProps.match?.params;
+  console.log(entitySetId);
+
+
   const query = queryCollectionEntitySets(location, collection.id)
     .setFilter('type', type)
-    .limit(10)
-    .set('q', queryText)
+    .sortBy('label', 'asc')
+    .limit(10);
 
   return {
     query,
     result: selectEntitySetsResult(state, query),
+    excludeId: entitySetId
   };
 };
 

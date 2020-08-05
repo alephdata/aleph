@@ -92,6 +92,7 @@ export class EntitySetIndexScreen extends Component {
             type={type}
             query={query}
             showCollection
+            loadMoreOnScroll
           />
         </Dashboard>
       </Screen>
@@ -108,7 +109,7 @@ const mapStateToProps = (state, ownProps) => {
   let query = Query.fromLocation('entitysets', location, context, 'entitySets');
 
   if (!query.hasSort()) {
-    query = query.sortBy('created_at', 'desc');
+    query = query.sortBy('created_at', 'asc');
   }
 
   const result = selectEntitySetsResult(state, query);

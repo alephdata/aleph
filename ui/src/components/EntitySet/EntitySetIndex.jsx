@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { Waypoint } from 'react-waypoint';
+import { Button, Intent } from '@blueprintjs/core';
 import { ErrorSection } from 'components/common';
+import { queryEntitySets } from 'actions';
 import EntitySetIndexItem from 'components/EntitySet/EntitySetIndexItem';
 
 import './EntitySetIndex.scss';
@@ -23,7 +27,6 @@ class EntitySetIndex extends Component {
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
-
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isPending && result.next && !result.isError) {
@@ -32,11 +35,12 @@ class EntitySetIndex extends Component {
   }
 
   render() {
-    const { intl, onSelect, result, showCollection, type } = this.props;
+    const { intl, loadMoreOnScroll, onSelect, result, showCollection, type } = this.props;
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
     const icon = type === 'diagram' ? 'graph' : 'list';
+    const showLoadMoreButton = !loadMoreOnScroll && result.results && result.results.length < result.total;
 
     if (result.total === 0) {
       return (
@@ -67,14 +71,33 @@ class EntitySetIndex extends Component {
             />
           ))}
         </ul>
-        <Waypoint
-          onEnter={this.getMoreItems}
-          bottomOffset="0"
-          scrollableAncestor={window}
-        />
+        {loadMoreOnScroll && (
+          <Waypoint
+            onEnter={this.getMoreResults}
+            bottomOffset="0"
+            scrollableAncestor={window}
+          />
+        )}
+        {showLoadMoreButton && (
+          <Button
+            minimal
+            intent={Intent.PRIMARY}
+            onClick={this.getMoreResults}
+            className="EntitySetIndex__showMore"
+          >
+            <FormattedMessage
+              id="entitysets.load_more"
+              defaultMessage="Load more..."
+            />
+          </Button>
+        )}
+
       </div>
     );
   }
 }
 
-export default injectIntl(EntitySetIndex);
+export default compose(
+  injectIntl,
+  connect(null, { queryEntitySets }),
+)(EntitySetIndex);

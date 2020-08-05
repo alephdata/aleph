@@ -4,4 +4,9 @@
 .EntitySetIndex {
   // display: table;
   width: 100%;
+
+  &__showMore {
+    font-weight: bold;
+    margin: $aleph-grid-size/2 0 $aleph-grid-size;
+  }
 }
