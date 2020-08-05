@@ -9,25 +9,41 @@ import { EntitySet } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
 
 const messages = defineMessages({
-  label_placeholder: {
-    id: 'entityset.create.label_placeholder',
-    defaultMessage: 'Untitled {type}',
-  },
-  summary_placeholder: {
-    id: 'entityset.create.summary_placeholder',
-    defaultMessage: 'A brief description of the {type}',
-  },
-  title_update: {
-    id: 'entityset.update.title',
-    defaultMessage: 'Settings',
-  },
-  submit_update: {
+  save: {
     id: 'entityset.update.submit',
-    defaultMessage: 'Submit',
+    defaultMessage: 'Save changes',
   },
-  success_update: {
-    id: 'entityset.update.success',
-    defaultMessage: 'Your {type} has been successfully updated.',
+  list_title: {
+    id: 'list.update.title',
+    defaultMessage: 'List settings',
+  },
+  list_label_placeholder: {
+    id: 'list.update.label_placeholder',
+    defaultMessage: 'Untitled list',
+  },
+  list_summary_placeholder: {
+    id: 'list.update.summary_placeholder',
+    defaultMessage: 'A brief description of the list',
+  },
+  list_success: {
+    id: 'list.update.success',
+    defaultMessage: 'Your list has been updated successfully.',
+  },
+  diagram_title: {
+    id: 'diagram.update.title',
+    defaultMessage: 'Diagram settings',
+  },
+  diagram_label_placeholder: {
+    id: 'diagram.update.label_placeholder',
+    defaultMessage: 'Untitled diagram',
+  },
+  diagram_summary_placeholder: {
+    id: 'diagram.update.summary_placeholder',
+    defaultMessage: 'A brief description of the diagram',
+  },
+  diagram_success: {
+    id: 'diagram.update.success',
+    defaultMessage: 'Your diagram has been updated successfully.',
   },
 });
 
@@ -38,7 +54,6 @@ class EntitySetEditDialog extends Component {
     const { entitySet } = this.props;
 
     this.state = {
-      type: entitySet.type || 'list',
       label: entitySet.label || '',
       summary: entitySet.summary || '',
       processing: false,
@@ -53,13 +68,12 @@ class EntitySetEditDialog extends Component {
     this.setState({
       label: '',
       summary: '',
-      type: '',
     });
   }
 
   async onSubmit(event) {
-    const { entitySet, intl } = this.props;
-    const { type, label, processing, summary } = this.state;
+    const { entitySet, intl, type } = this.props;
+    const { label, processing, summary } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
     this.setState({ processing: true });
@@ -70,7 +84,7 @@ class EntitySetEditDialog extends Component {
       this.props.toggleDialog();
 
       showSuccessToast(
-        intl.formatMessage(messages.success_update, { type: EntitySet.getTypeLabel(intl, type, {}) }),
+        intl.formatMessage(messages[`${type}_success`]),
       );
     } catch (e) {
       showWarningToast(e.message);
@@ -92,18 +106,18 @@ class EntitySetEditDialog extends Component {
   }
 
   render() {
-    const { intl, isOpen, toggleDialog } = this.props;
-    const { type, label, processing, summary } = this.state;
+    const { entitySet, intl, isOpen, toggleDialog } = this.props;
+    const { label, processing, summary } = this.state;
     const disabled = !this.checkValid();
 
-    const typeLabel = EntitySet.getTypeLabel(intl, type, {});
+    const { type } = entitySet;
 
     return (
       <FormDialog
         processing={processing}
         icon={<EntitySet.Icon entitySet={{ type }} />}
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title_update)}
+        title={intl.formatMessage(messages[`${type}_title`])}
         onClose={toggleDialog}
       >
         <form onSubmit={this.onSubmit}>
@@ -117,7 +131,7 @@ class EntitySetEditDialog extends Component {
                     type="text"
                     className="bp3-input"
                     autoComplete="off"
-                    placeholder={intl.formatMessage(messages.label_placeholder, { type: typeLabel })}
+                    placeholder={intl.formatMessage(messages[`${type}_label_placeholder`])}
                     onChange={this.onChangeLabel}
                     value={label}
                   />
@@ -134,7 +148,7 @@ class EntitySetEditDialog extends Component {
                   <textarea
                     id="summary"
                     className="bp3-input"
-                    placeholder={intl.formatMessage(messages.summary_placeholder, { type: typeLabel })}
+                    placeholder={intl.formatMessage(messages[`${type}_summary_placeholder`])}
                     onChange={this.onChangeSummary}
                     value={summary}
                     rows={5}
@@ -149,9 +163,7 @@ class EntitySetEditDialog extends Component {
                 type="submit"
                 intent={Intent.PRIMARY}
                 disabled={disabled}
-                text={(
-                  intl.formatMessage(messages.submit_update)
-                )}
+                text={intl.formatMessage(messages.save)}
               />
             </div>
           </div>
@@ -161,7 +173,5 @@ class EntitySetEditDialog extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
-
 EntitySetEditDialog = injectIntl(EntitySetEditDialog);
-export default connect(mapStateToProps, { updateEntitySet })(EntitySetEditDialog);
+export default connect(null, { updateEntitySet })(EntitySetEditDialog);

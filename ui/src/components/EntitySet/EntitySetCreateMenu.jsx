@@ -8,9 +8,21 @@ import { selectSession } from 'selectors';
 import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
 
 const messages = defineMessages({
-  login: {
-    id: 'entityset.create.login',
-    defaultMessage: 'You must log in to create a {type}',
+  list_create: {
+    id: 'list.create.button',
+    defaultMessage: 'New list',
+  },
+  diagram_create: {
+    id: 'diagram.create.button',
+    defaultMessage: 'New diagram',
+  },
+  list_login: {
+    id: 'list.create.login',
+    defaultMessage: 'You must log in to create a list',
+  },
+  diagram_login: {
+    id: 'diagram.create.login',
+    defaultMessage: 'You must log in to create a diagram',
   },
 });
 
@@ -38,11 +50,11 @@ class EntitySetCreateMenu extends Component {
     const buttonContent = (
       <ButtonGroup>
         <Button onClick={() => this.toggleDialog(false)} icon={icon} intent={Intent.PRIMARY} disabled={!canAdd}>
-          <FormattedMessage id="entitysets.index.create" defaultMessage="New {type}" values={{ type }} />
+          {intl.formatMessage(messages[`${type}_create`])}
         </Button>
         {canImportDiagram && (
           <Button onClick={() => this.toggleDialog(true)} icon="import" disabled={!canAdd}>
-            <FormattedMessage id="entitysets.index.import" defaultMessage="Import {type}" values={{ type }} />
+            <FormattedMessage id="diagram.import.button" defaultMessage="Import diagram" />
           </Button>
         )}
       </ButtonGroup>
@@ -53,7 +65,7 @@ class EntitySetCreateMenu extends Component {
         {canAdd && buttonContent}
         {!canAdd && (
           <Tooltip
-            content={intl.formatMessage(messages.login, { type })}
+            content={intl.formatMessage(messages[`${type}_login`])}
             position={Position.BOTTOM}
           >
             {buttonContent}

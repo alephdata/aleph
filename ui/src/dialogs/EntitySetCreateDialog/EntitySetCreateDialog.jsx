@@ -15,41 +15,53 @@ import { processApiEntity } from 'components/EntitySet/util';
 
 
 const messages = defineMessages({
-  label_placeholder: {
-    id: 'entityset.create.label_placeholder',
-    defaultMessage: 'Untitled {type}',
-  },
-  summary_placeholder: {
-    id: 'entityset.create.summary_placeholder',
-    defaultMessage: 'A brief description of the {type}',
-  },
   save: {
     id: 'entityset.create.submit',
     defaultMessage: 'Create',
   },
-  title_create: {
-    id: 'entityset.create.title',
-    defaultMessage: 'Create a {type}',
-  },
-  submit_create: {
-    id: 'entityset.create.submit',
-    defaultMessage: 'Create',
-  },
-  success_create: {
-    id: 'entityset.create.success',
-    defaultMessage: 'Your {type} has been created successfully.',
-  },
-  title_diagram_import: {
-    id: 'diagram.import.title',
-    defaultMessage: 'Import a network diagram',
-  },
-  placeholder_diagram_import: {
-    id: 'diagram.import.placeholder',
-    defaultMessage: 'Drop a .vis file here or click to import an existing diagram layout',
-  },
   collection_select_placeholder: {
     id: 'entityset.create.collection.existing',
     defaultMessage: 'Select a dataset',
+  },
+  list_title: {
+    id: 'list.create.title',
+    defaultMessage: 'Create a list',
+  },
+  list_label_placeholder: {
+    id: 'list.create.label_placeholder',
+    defaultMessage: 'Untitled list',
+  },
+  list_summary_placeholder: {
+    id: 'list.create.summary_placeholder',
+    defaultMessage: 'A brief description of the list',
+  },
+  list_success: {
+    id: 'list.create.success',
+    defaultMessage: 'Your list has been created successfully.',
+  },
+  diagram_title: {
+    id: 'diagram.create.title',
+    defaultMessage: 'Create a diagram',
+  },
+  diagram_label_placeholder: {
+    id: 'diagram.create.label_placeholder',
+    defaultMessage: 'Untitled diagram',
+  },
+  diagram_summary_placeholder: {
+    id: 'diagram.create.summary_placeholder',
+    defaultMessage: 'A brief description of the diagram',
+  },
+  diagram_success: {
+    id: 'diagram.create.success',
+    defaultMessage: 'Your diagram has been created successfully.',
+  },
+  diagram_import_title: {
+    id: 'diagram.import.title',
+    defaultMessage: 'Import a network diagram',
+  },
+  diagram_import_placeholder: {
+    id: 'diagram.import.placeholder',
+    defaultMessage: 'Drop a .vis file here or click to import an existing diagram',
   },
 });
 
@@ -60,7 +72,6 @@ class EntitySetCreateDialog extends Component {
     const { entitySet, type } = this.props;
 
     this.state = {
-      type: entitySet.type || type,
       label: entitySet.label || '',
       summary: entitySet.summary || '',
       collection: entitySet.collection || '',
@@ -71,7 +82,6 @@ class EntitySetCreateDialog extends Component {
     };
 
     this.onSubmit = this.onSubmit.bind(this);
-    this.onChangeType = this.onChangeType.bind(this);
     this.onChangeLabel = this.onChangeLabel.bind(this);
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onChangeCollection = this.onChangeCollection.bind(this);
@@ -81,7 +91,6 @@ class EntitySetCreateDialog extends Component {
 
   componentWillUnmount() {
     this.setState({
-      type: '',
       label: '',
       summary: '',
       collection: '',
@@ -92,8 +101,8 @@ class EntitySetCreateDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { history, entitySet, intl } = this.props;
-    const { type, label, summary, collection, layout, processing } = this.state;
+    const { history, entitySet, intl, type } = this.props;
+    const { label, summary, collection, layout, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
     this.setState({ processing: true });
@@ -121,16 +130,12 @@ class EntitySetCreateDialog extends Component {
       });
 
       showSuccessToast(
-        intl.formatMessage(messages.success_create, { type: EntitySet.getTypeLabel(intl, type, {}) }),
+        intl.formatMessage(messages[`${type}_success`]),
       );
     } catch (e) {
       showWarningToast(e.message);
       this.setState({ processing: false });
     }
-  }
-
-  onChangeType({ target }) {
-    this.setState({ type: target.value });
   }
 
   onChangeLabel({ target }) {
@@ -174,15 +179,15 @@ class EntitySetCreateDialog extends Component {
   }
 
   render() {
-    const { canChangeCollection, importEnabled, intl, isOpen, toggleDialog } = this.props;
-    const { collection, collectionCreateIsOpen, importedFileName, label, summary, processing, layout, type } = this.state;
+    const { canChangeCollection, importEnabled, intl, isOpen, toggleDialog, type } = this.props;
+    const { collection, collectionCreateIsOpen, importedFileName, label, summary, processing, layout } = this.state;
     const disabled = processing || !this.checkValid();
 
     const showTextFields = (!importEnabled || (importEnabled && layout));
     const showCollectionField = canChangeCollection && showTextFields;
-    const canImportVisDiagram = importEnabled && type === 'diagram';
+    const canImport = importEnabled && type === 'diagram';
 
-    const typeLabel = EntitySet.getTypeLabel(intl, type, {});
+    const titleKey = canImport ? messages.diagram_import_title : messages[`${type}_title`];
 
     return (
       <FormDialog
@@ -190,14 +195,14 @@ class EntitySetCreateDialog extends Component {
         icon={<EntitySet.Icon entitySet={{ type }} />}
         className="EntitySetCreateDialog"
         isOpen={isOpen}
-        title={intl.formatMessage(canImportVisDiagram ? messages.title_diagram_import : messages.title_create, { type: typeLabel })}
+        title={intl.formatMessage(titleKey)}
         onClose={toggleDialog}
       >
         <div className="bp3-dialog-body">
-          {canImportVisDiagram && (
+          {canImport && (
             <FileImport
               accept=".vis"
-              placeholder={intl.formatMessage(messages.placeholder_diagram_import)}
+              placeholder={intl.formatMessage(messages.diagram_import_placeholder)}
               onImport={this.onImport}
               importedFile={importedFileName}
             />
@@ -213,7 +218,7 @@ class EntitySetCreateDialog extends Component {
                       type="text"
                       className="bp3-input"
                       autoComplete="off"
-                      placeholder={intl.formatMessage(messages.label_placeholder, { type: typeLabel })}
+                      placeholder={intl.formatMessage(messages[`${type}_label_placeholder`])}
                       onChange={this.onChangeLabel}
                       value={label}
                     />
@@ -230,7 +235,7 @@ class EntitySetCreateDialog extends Component {
                     <textarea
                       id="summary"
                       className="bp3-input"
-                      placeholder={intl.formatMessage(messages.summary_placeholder, { type: typeLabel })}
+                      placeholder={intl.formatMessage(messages[`${type}_summary_placeholder`])}
                       onChange={this.onChangeSummary}
                       value={summary}
                       rows={5}
@@ -295,7 +300,7 @@ class EntitySetCreateDialog extends Component {
               disabled={disabled}
               onClick={this.onSubmit}
               text={(
-                intl.formatMessage(messages.submit_create)
+                intl.formatMessage(messages.save)
               )}
             />
           </div>
@@ -306,10 +311,9 @@ class EntitySetCreateDialog extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
 
 EntitySetCreateDialog = injectIntl(EntitySetCreateDialog);
 EntitySetCreateDialog = withRouter(EntitySetCreateDialog);
-export default connect(mapStateToProps, {
+export default connect(null, {
   createEntitySet,
 })(EntitySetCreateDialog);

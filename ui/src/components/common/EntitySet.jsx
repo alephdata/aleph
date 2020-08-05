@@ -32,11 +32,6 @@ const ICONS = {
 
 const getIcon = ({ type }) => ICONS[type] || ICONS.list;
 
-const getTypeLabel = (intl, type, { capitalize, plural }) => {
-  const label = intl.formatMessage(messages[type], { count: plural ? 2 : 1 })
-  return capitalize ? _.capitalize(label) : label;
-}
-
 const EntitySetIcon = ({entitySet, className}) => {
   if (!entitySet) return null;
 
@@ -114,8 +109,6 @@ class EntitySetSelect extends PureComponent {
 }
 
 class EntitySet {
-  static getTypeLabel = getTypeLabel;
-
   static Icon = EntitySetIcon;
 
   static Label = EntitySetLabel;

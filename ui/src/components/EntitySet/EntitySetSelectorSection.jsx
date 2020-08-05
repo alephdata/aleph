@@ -16,13 +16,29 @@ import getEntitySetLink from 'util/getEntitySetLink';
 import './EntitySetSelectorSection.scss';
 
 const messages = defineMessages({
-  create: {
-    id: 'entityset.selector.create_new',
-    defaultMessage: 'Create a new {type}',
+  list: {
+    id: 'lists',
+    defaultMessage: 'Lists',
   },
-  empty: {
-    id: 'entityset.selector.select_empty',
-    defaultMessage: 'No existing {type}',
+  list_create: {
+    id: 'list.selector.create',
+    defaultMessage: 'Create a new list',
+  },
+  list_empty: {
+    id: 'list.selector.select_empty',
+    defaultMessage: 'No existing list',
+  },
+  diagram: {
+    id: 'diagrams',
+    defaultMessage: 'Diagrams',
+  },
+  diagram_create: {
+    id: 'diagram.selector.create',
+    defaultMessage: 'Create a new diagram',
+  },
+  diagram_empty: {
+    id: 'diagram.selector.select_empty',
+    defaultMessage: 'No existing diagram',
   },
 });
 
@@ -85,8 +101,6 @@ class EntitySetSelectorSection extends Component {
     const { query, intl, onSelect, result, type } = this.props;
     const { createIsOpen, expanded, label } = this.state;
 
-    const typeLabel = EntitySet.getTypeLabel(intl, type, {});
-
     return (
       <div className="EntitySetSelectorSection">
         <ButtonGroup
@@ -101,11 +115,11 @@ class EntitySetSelectorSection extends Component {
             className="EntitySetSelectorSection__title"
           >
             <h5 className="bp3-heading">
-              {EntitySet.getTypeLabel(intl, type, { plural: true, capitalize: true })}
+              {intl.formatMessage(messages[type])}
             </h5>
           </Button>
           <Tooltip
-            content={intl.formatMessage(messages.create, {type: typeLabel})}
+            content={intl.formatMessage(messages[`${type}_create`])}
           >
             <Button
               icon="add"
@@ -119,7 +133,7 @@ class EntitySetSelectorSection extends Component {
               <InputGroup
                 fill
                 leftIcon={<EntitySet.Icon entitySet={{ type }} />}
-                placeholder={intl.formatMessage(messages.create, {type: typeLabel})}
+                placeholder={intl.formatMessage(messages[`${type}_create`])}
                 rightElement={
                   <Button icon="arrow-right" minimal type="submit" />
                 }
