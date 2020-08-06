@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
-import { selectEntitySet, selectEntitySetEntitiesResult } from 'selectors';
+import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntityListViews from 'components/Entity/EntityListViews';
@@ -124,7 +124,7 @@ const mapStateToProps = (state, ownProps) => {
     .add('filter:schemata', 'Interval')
     .limit(0);
 
-  const countsResult = selectEntitySetEntitiesResult(state, countsQuery);
+  const countsResult = selectEntitiesResult(state, countsQuery);
   const querySchemaEntities = (schema) => (
     entitySetEntitiesQuery(location, entitySetId)
       .setFilter('schema', schema.name)

@@ -36,19 +36,10 @@ const messages = defineMessages({
 class EntitySetSelector extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   queryText: '',
-    // };
-
     this.onCreate = this.onCreate.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onSuccess = this.onSuccess.bind(this);
-    // this.onSearch = this.onSearch.bind(this);
   }
-
-  // onSearch(queryText) {
-  //   this.setState({ queryText });
-  // }
 
   async onCreate(type, label) {
     const { collection, entities } = this.props;

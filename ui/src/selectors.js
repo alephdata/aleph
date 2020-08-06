@@ -160,10 +160,6 @@ export function selectExpandResult(state, query) {
   };
 }
 
-export function selectEntitySetEntitiesResult(state, query) {
-  return selectResult(state, query, selectEntity);
-}
-
 export function selectNotificationsResult(state, query) {
   const model = selectModel(state);
   const result = selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
