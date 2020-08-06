@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -9,7 +9,6 @@ import { selectEntitySetsResult } from 'selectors';
 import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
-import { Breadcrumbs, SortingBar } from 'components/common';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
 import EntitySetIndex from 'components/EntitySet/EntitySetIndex';

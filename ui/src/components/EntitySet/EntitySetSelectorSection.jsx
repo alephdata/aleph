@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Collapse, Divider, Drawer, Icon, InputGroup, Intent, Tooltip } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { Button, ButtonGroup, Collapse, InputGroup, Tooltip } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
+import { queryEntitySets } from 'actions';
 import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
-import { Count, EntitySet, SearchBox } from 'components/common';
+import { Count, EntitySet } from 'components/common';
 import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
-import { showSuccessToast, showWarningToast } from 'app/toast';
-import getEntitySetLink from 'util/getEntitySetLink';
 
 import './EntitySetSelectorSection.scss';
 
@@ -56,7 +54,6 @@ class EntitySetSelectorSection extends Component {
     this.onChangeLabel = this.onChangeLabel.bind(this);
     this.toggleCreate = this.toggleCreate.bind(this);
     this.toggleExpand = this.toggleExpand.bind(this);
-
   }
 
   componentDidUpdate() {
@@ -72,7 +69,6 @@ class EntitySetSelectorSection extends Component {
 
   onChangeLabel(e) {
     e.preventDefault();
-
     this.setState({ label: e.target.value });
   }
 
@@ -160,7 +156,7 @@ class EntitySetSelectorSection extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location, queryText, type } = ownProps;
+  const { collection, location, type } = ownProps;
 
   const query = queryCollectionEntitySets(location, collection.id)
     .setFilter('type', type)

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
 import { Boundary, Button, ButtonGroup, ControlGroup, OverflowList, Popover } from '@blueprintjs/core';
 
-import { Count, SearchBox } from 'components/common';
+import { SearchBox } from 'components/common';
 
 import './EntityActionBar.scss';
 
@@ -23,7 +22,7 @@ class EntityActionBar extends Component {
   }
 
   render() {
-    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, selection, writeable } = this.props;
+    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, writeable } = this.props;
 
     return (
       <>
@@ -50,4 +49,4 @@ class EntityActionBar extends Component {
   }
 }
 
-export default injectIntl(EntityActionBar);
+export default EntityActionBar;

@@ -1,50 +1,22 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Prompt, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { Intent } from '@blueprintjs/core';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
-import { selectEntitySet, selectModel, selectEntitySetEntitiesResult } from 'selectors';
+import { selectEntitySet, selectEntitySetEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntityListViews from 'components/Entity/EntityListViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet, SinglePane } from 'components/common';
-import updateStates from 'util/updateStates';
-
-const messages = defineMessages({
-  status_success: {
-    id: 'list.status_success',
-    defaultMessage: 'Saved',
-  },
-  status_error: {
-    id: 'list.status_error',
-    defaultMessage: 'Error saving',
-  },
-  status_in_progress: {
-    id: 'list.status_in_progress',
-    defaultMessage: 'Saving...',
-  },
-  error_warning: {
-    id: 'list.error_warning',
-    defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
-  },
-  in_progress_warning: {
-    id: 'list.in_progress_warning',
-    defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
-  },
-});
+import { Breadcrumbs, Collection, EntitySet, SinglePane, Summary } from 'components/common';
 
 export class ListScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
   }
 
@@ -66,9 +38,6 @@ export class ListScreen extends Component {
       pathname: '/search',
       search: queryString.stringify(query),
     });
-  }
-
-  onSearch(filterText) {
   }
 
   getSearchScopes() {
@@ -96,8 +65,7 @@ export class ListScreen extends Component {
   }
 
   render() {
-    const { collection, countsResult, list, intl, querySchemaEntities } = this.props;
-    const { filterText, updateStatus } = this.state;
+    const { countsResult, list, querySchemaEntities } = this.props;
 
     if (list.isError) {
       return <ErrorScreen error={list.error} />;
@@ -108,7 +76,7 @@ export class ListScreen extends Component {
     }
 
     const operation = (
-      <EntitySetManageMenu entitySet={list} onSearch={this.onDiagramSearch}/>
+      <EntitySetManageMenu entitySet={list} />
     );
 
     const breadcrumbs = (
@@ -133,9 +101,7 @@ export class ListScreen extends Component {
               {list.label}
             </h1>
             {list.summary && (
-              <p className="">
-                {list.summary}
-              </p>
+              <Summary text={list.summary} />
             )}
             <EntityListViews
               collection={list.collection}
@@ -181,6 +147,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  injectIntl,
   connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
 )(ListScreen);

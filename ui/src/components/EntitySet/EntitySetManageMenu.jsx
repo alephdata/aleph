@@ -46,8 +46,9 @@ class EntitySetManageMenu extends Component {
   }
 
   render() {
-    const { entitySet, intl, onSearch } = this.props;
+    const { entitySet, intl, onSearch, triggerDownload } = this.props;
     const { editIsOpen, deleteIsOpen } = this.state;
+    const showMenu = triggerDownload !== undefined;
 
     return (
       <>
@@ -66,9 +67,16 @@ class EntitySetManageMenu extends Component {
               <Button icon="cog" onClick={this.toggleEdit}>
                 <FormattedMessage id="entityset.info.edit" defaultMessage="Settings" />
               </Button>
-              <Popover minimal content={this.renderMenu()}>
-                <Button rightIcon="caret-down" />
-              </Popover>
+              {!showMenu && (
+                <Button icon="trash" onClick={this.toggleDelete}>
+                  <FormattedMessage id="entityset.info.delete" defaultMessage="Delete" />
+                </Button>
+              )}
+              {showMenu && (
+                <Popover minimal content={this.renderMenu()}>
+                  <Button rightIcon="caret-down" />
+                </Popover>
+              )}
             </ButtonGroup>
           )}
         </ControlGroup>

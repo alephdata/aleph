@@ -1,15 +1,13 @@
-import _ from 'lodash';
 import React from 'react';
-import { Button, Classes, MenuDivider, Tabs, Tab } from '@blueprintjs/core';
+import { Button, MenuDivider, Tabs, Tab } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { Count, Schema, Skeleton } from 'components/common';
+import { Count, Schema, SectionLoading, Skeleton } from 'components/common';
 import EntityListManager from 'components/Entity/EntityListManager';
-import { queryCollectionEntities } from 'queries';
 import { selectModel } from 'selectors';
 
 import './EntityListViews.scss';
@@ -53,15 +51,19 @@ class EntityListViews extends React.PureComponent {
   }
 
   render() {
-    const { collection, activeSchema, schemaViews, selectableSchemata, intl, isPending, writeable } = this.props;
+    const { activeSchema, schemaViews, selectableSchemata, intl, isPending, writeable } = this.props;
     const showSchemaSelect = writeable && selectableSchemata.length;
+
+    if (isPending && !activeSchema) {
+      return <SectionLoading />
+    }
 
     return (
       <Tabs
         id="EntityListViewsTabs"
         className="EntityListViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={activeSchema?.name}
+        selectedTabId={activeSchema.name}
         renderActiveTabPanelOnly
         vertical
       >

@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Divider, Drawer, InputGroup } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { Drawer } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import { createEntitySet, queryEntitySets, entitySetAddEntity } from 'actions';
-import { queryCollectionEntitySets } from 'queries';
-import { selectEntitySetsResult } from 'selectors';
-import { EntitySet, SearchBox } from 'components/common';
-import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
+import { createEntitySet, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
 
 import { showSuccessToast, showWarningToast } from 'app/toast';
@@ -55,7 +51,7 @@ class EntitySetSelector extends Component {
   // }
 
   async onCreate(type, label) {
-    const { collection, entities, intl } = this.props;
+    const { collection, entities } = this.props;
 
     const entitySet = {
       collection_id: collection.id,
@@ -74,7 +70,7 @@ class EntitySetSelector extends Component {
   }
 
   onSelect(entitySet) {
-    const { entities, intl } = this.props;
+    const { entities } = this.props;
     const entitySetId = entitySet.id;
 
     try {
@@ -104,7 +100,7 @@ class EntitySetSelector extends Component {
   }
 
   render() {
-    const { collection, entities, intl, isOpen, diagramsQuery, diagramsResult, listsQuery, listsResult, toggleDialog } = this.props;
+    const { collection, entities, intl, isOpen, toggleDialog } = this.props;
 
     return (
       <Drawer

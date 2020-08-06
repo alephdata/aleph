@@ -16,7 +16,6 @@ import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDia
 import EntityActionBar from 'components/Entity/EntityActionBar';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import { queryEntities } from 'actions';
-import { queryCollectionEntities } from 'queries';
 import { selectEntitiesResult } from 'selectors';
 import { showErrorToast, showSuccessToast } from 'app/toast';
 import getEntityLink from 'util/getEntityLink';
@@ -285,10 +284,8 @@ export class EntityListManager extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, collection, query, schema } = ownProps;
+  const { query } = ownProps;
   const sort = query.getSort();
-
-  console.log(query);
 
   return {
     sort: !_.isEmpty(sort) ? {

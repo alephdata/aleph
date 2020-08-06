@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Alert, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { compose } from 'redux';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
 import { Entity } from 'components/common';

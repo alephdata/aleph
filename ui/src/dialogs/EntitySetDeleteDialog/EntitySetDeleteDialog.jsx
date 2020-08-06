@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteEntitySet } from 'actions';
+import { showSuccessToast } from 'app/toast';
 import getCollectionLink from 'util/getCollectionLink';
 
 
@@ -17,6 +18,10 @@ const messages = defineMessages({
     id: 'entityset.delete.cancel',
     defaultMessage: 'Cancel',
   },
+  success: {
+    id: 'entityset.delete.success',
+    defaultMessage: 'Successfully deleted {title}',
+  },
 });
 
 
@@ -26,9 +31,12 @@ class EntitySetDeleteDialog extends Component {
     this.onDelete = this.onDelete.bind(this);
   }
 
-  async onDelete() {
-    const { entitySet, history } = this.props;
-    await this.props.deleteEntitySet(entitySet.id);
+  onDelete() {
+    const { entitySet, history, intl } = this.props;
+    this.props.deleteEntitySet(entitySet.id).then(() => (
+      showSuccessToast(intl.formatMessage(messages.success, { title: entitySet.label }))
+    ));
+
     history.push({
       pathname: getCollectionLink(entitySet.collection),
     });
@@ -57,10 +65,8 @@ class EntitySetDeleteDialog extends Component {
   }
 }
 
-const mapDispatchToProps = { deleteEntitySet };
-
 export default compose(
   withRouter,
-  connect(null, mapDispatchToProps),
+  connect(null, { deleteEntitySet }),
   injectIntl,
 )(EntitySetDeleteDialog);

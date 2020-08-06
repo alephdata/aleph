@@ -1,6 +1,4 @@
 import React, { PureComponent } from 'react';
-import _ from 'lodash';
-import { defineMessages } from 'react-intl';
 import truncateText from 'truncate';
 import { Button, Icon, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
@@ -8,21 +6,6 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 import getEntitySetLink from 'util/getEntitySetLink';
-
-const messages = defineMessages({
-  diagram: {
-    id: 'diagram',
-    defaultMessage: "{count, plural, one {diagram} other {diagrams}}",
-  },
-  timeline: {
-    id: 'timeline',
-    defaultMessage: "{count, plural, one {timeline} other {timelines}}",
-  },
-  list: {
-    id: 'list',
-    defaultMessage: "{count, plural, one {list} other {lists}}",
-  },
-});
 
 const ICONS = {
   diagram: 'graph',

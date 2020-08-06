@@ -83,6 +83,8 @@ class EntitySetEditDialog extends Component {
       this.setState({ processing: false });
       this.props.toggleDialog();
 
+      console.log(`${type}_success`)
+
       showSuccessToast(
         intl.formatMessage(messages[`${type}_success`]),
       );

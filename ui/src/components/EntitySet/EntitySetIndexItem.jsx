@@ -1,10 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
-import { Alignment, Button, Classes, Icon, Intent, H6 } from '@blueprintjs/core';
-import getEntitySetLink from 'util/getEntitySetLink';
-import c from 'classnames';
-
+import { Alignment, Button, Icon, H6 } from '@blueprintjs/core';
 import {
   Collection, Date, EntitySet, Skeleton, Summary,
 } from 'components/common';
@@ -88,8 +84,7 @@ class EntitySetIndexItem extends React.PureComponent {
   }
 
   render() {
-    const { isPending, onSelect } = this.props;
-
+    const { onSelect } = this.props;
     const content = onSelect ? this.renderButton() : this.renderListItem();
 
     return (
@@ -97,7 +92,6 @@ class EntitySetIndexItem extends React.PureComponent {
         {content}
       </li>
     );
-
   }
 }
 

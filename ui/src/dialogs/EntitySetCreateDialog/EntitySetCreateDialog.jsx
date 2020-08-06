@@ -69,7 +69,7 @@ const messages = defineMessages({
 class EntitySetCreateDialog extends Component {
   constructor(props) {
     super(props);
-    const { entitySet, type } = this.props;
+    const { entitySet} = this.props;
 
     this.state = {
       label: entitySet.label || '',
