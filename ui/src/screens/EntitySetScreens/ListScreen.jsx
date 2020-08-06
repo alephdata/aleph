@@ -6,7 +6,7 @@ import queryString from 'query-string';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
-import { entitySetEntitiesQuery } from 'queries';
+import { entitySetSchemaCountsQuery, entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntityListViews from 'components/Entity/EntityListViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
@@ -118,17 +118,9 @@ const mapStateToProps = (state, ownProps) => {
   const { entitySetId } = match.params;
 
   const list = selectEntitySet(state, entitySetId);
-  const countsQuery = entitySetEntitiesQuery(location, entitySetId)
-    .add('facet', 'schema')
-    .add('filter:schemata', 'Thing')
-    .add('filter:schemata', 'Interval')
-    .limit(0);
-
+  const countsQuery = entitySetSchemaCountsQuery(entitySetId)
   const countsResult = selectEntitiesResult(state, countsQuery);
-  const querySchemaEntities = (schema) => (
-    entitySetEntitiesQuery(location, entitySetId)
-      .setFilter('schema', schema.name)
-  );
+  const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name);
 
   return {
     entitySetId,

@@ -22,8 +22,19 @@ export function queryCollectionEntities(location, collectionId, schema) {
   return Query.fromLocation('entities', location, context, 'entities').limit(200);
 }
 
-export function entitySetEntitiesQuery(location, entitySetId) {
-  return Query.fromLocation(`entitysets/${entitySetId}/entities`, location, {}, 'entitySetEntities');
+export function entitySetSchemaCountsQuery(entitySetId) {
+  return new Query(`entitysets/${entitySetId}/entities`, {}, {}, 'entitySetEntities')
+    .add('facet', 'schema')
+    .add('filter:schemata', 'Thing')
+    .add('filter:schemata', 'Interval')
+    .limit(0);
+}
+
+export function entitySetEntitiesQuery(location, entitySetId, schema) {
+  const context = {
+    'filter:schema': schema,
+  };
+  return Query.fromLocation(`entitysets/${entitySetId}/entities`, location, context, 'entitySetEntities');
 }
 
 export function queryCollectionEntitySets(location, collectionId) {
