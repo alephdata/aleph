@@ -7,10 +7,10 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import { Count, Schema, SectionLoading, Skeleton } from 'components/common';
-import EntityListManager from 'components/Entity/EntityListManager';
+import EntityTable from './EntityTable';
 import { selectModel } from 'selectors';
 
-import './EntityListViews.scss';
+import './EntityTableViews.scss';
 
 const messages = defineMessages({
   addSchemaPlaceholder: {
@@ -20,7 +20,7 @@ const messages = defineMessages({
 });
 
 
-class EntityListViews extends React.PureComponent {
+class EntityTableViews extends React.PureComponent {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -40,7 +40,7 @@ class EntityListViews extends React.PureComponent {
 
   renderTable() {
     const { collection, activeSchema, querySchemaEntities, isEntitySet, writeable } = this.props;
-    return <EntityListManager
+    return <EntityTable
       query={querySchemaEntities(activeSchema)}
       collection={collection}
       schema={activeSchema}
@@ -60,8 +60,8 @@ class EntityListViews extends React.PureComponent {
 
     return (
       <Tabs
-        id="EntityListViewsTabs"
-        className="EntityListViews__tabs info-tabs-padding"
+        id="EntityTableViewsTabs"
+        className="EntityTableViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
         selectedTabId={activeSchema.name}
         renderActiveTabPanelOnly
@@ -71,7 +71,7 @@ class EntityListViews extends React.PureComponent {
           <Tab
             id={ref.id}
             key={ref.id}
-            className="EntityListViews__tab"
+            className="EntityTableViews__tab"
             title={
               <>
                 {isPending && <Skeleton.Text type="span" length={15} />}
@@ -87,7 +87,7 @@ class EntityListViews extends React.PureComponent {
             id="new"
             key="new"
             disabled
-            className="EntityListViews__tab schema-add-tab"
+            className="EntityTableViews__tab schema-add-tab"
             title={
               <Schema.Select
                 onSelect={this.handleTabChange}
@@ -141,4 +141,4 @@ export default compose(
   withRouter,
   connect(mapStateToProps),
   injectIntl,
-)(EntityListViews);
+)(EntityTableViews);

@@ -4,14 +4,14 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import EntityListViews from 'components/Entity/EntityListViews';
+import EntityTableViews from 'components/EntityTable/EntityTableViews';
 import { queryCollectionEntities } from 'queries';
 
 class CollectionEntitiesMode extends React.PureComponent {
   render() {
     const { collection, querySchemaEntities, schemaCounts } = this.props;
     return (
-      <EntityListViews
+      <EntityTableViews
         collection={collection}
         writeable={collection.writeable}
         schemaCounts={schemaCounts}

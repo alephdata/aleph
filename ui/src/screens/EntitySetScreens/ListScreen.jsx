@@ -8,7 +8,7 @@ import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetSchemaCountsQuery, entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
-import EntityListViews from 'components/Entity/EntityListViews';
+import EntityTableViews from 'components/EntityTable/EntityTableViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
@@ -98,7 +98,7 @@ export class ListScreen extends Component {
         >
           {breadcrumbs}
           <SinglePane>
-            <EntityListViews
+            <EntityTableViews
               collection={list.collection}
               schemaCounts={countsResult?.facets?.schema?.values || []}
               querySchemaEntities={querySchemaEntities}
