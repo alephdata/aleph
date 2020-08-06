@@ -61,7 +61,7 @@ class EntityListViews extends React.PureComponent {
         id="EntityListViewsTabs"
         className="EntityListViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={activeSchema.name}
+        selectedTabId={activeSchema?.name}
         renderActiveTabPanelOnly
         vertical
       >
@@ -114,22 +114,22 @@ const mapStateToProps = (state, ownProps) => {
     .filter((schema) => !schema.isDocument() && !schema.isA('Page'))
     .map((schema) => schema.name);
 
-  const addedViews = [];
-
+  let addedView;
   if (hashType && !schemaCounts.find(obj => obj.id === hashType)) {
-    addedViews.push({ id: hashType, count: 0 });
+    addedView = { id: hashType, count: 0 };
+  } else if (!isPending && !schemaCounts.length) {
+    addedView = { id: 'Person', count: 0 };
   }
-  if (!isPending && !schemaCounts.length) {
-    addedViews.push({ id: 'Person', count: 0 });
-  }
-  const schemaViews = [...schemaCounts, ...addedViews];
 
-  const activeType = hashType || schemaViews[0].id;
+  const schemaViews = addedView ? [...schemaCounts, addedView] : schemaCounts;
+
+
+  const activeType = hashType || schemaViews[0]?.id;
   const selectableSchemata = schemata
     .filter((s) => !schemaViews.find((v) => v.id === s));
 
   return {
-    activeSchema: model.getSchema(activeType),
+    activeSchema: activeType ? model.getSchema(activeType) : null,
     schemaViews,
     selectableSchemata,
   }
