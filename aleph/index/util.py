@@ -23,7 +23,11 @@ MAX_REQUEST_TIMEOUT = 84600
 # Mapping shortcuts
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
-LATIN_TEXT = {"type": "text", "analyzer": "latin_index"}
+LATIN_TEXT = {
+    "type": "text",
+    "analyzer": "latin_index",
+    "search_analyzer": "latin_query",
+}
 KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 NUMERIC = {"type": "double"}
@@ -211,7 +215,7 @@ def rewrite_mapping_safe(pending, existing):
     """This re-writes mappings for ElasticSearch in such a way that
     immutable values are kept to their existing setting, while other
     fields are updated."""
-    IMMUTABLE = ("type", "analyzer", "normalizer", "index")
+    IMMUTABLE = ("type", "analyzer", "normalizer", "index", "store")
     # This is a pretty bad idea long-term. We need to make it easier
     # to use multiple index generations instead.
     if not isinstance(pending, dict) or not isinstance(existing, dict):
