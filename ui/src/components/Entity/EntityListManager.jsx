@@ -288,6 +288,8 @@ const mapStateToProps = (state, ownProps) => {
   const { location, collection, query, schema } = ownProps;
   const sort = query.getSort();
 
+  console.log(query);
+
   return {
     sort: !_.isEmpty(sort) ? {
       field: sort.field.replace('properties.', ''),

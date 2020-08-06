@@ -15,9 +15,13 @@ import { selectModel } from 'selectors';
 
 class CollectionEntitiesMode extends React.PureComponent {
   render() {
+    const { collection, querySchemaEntities, schemaCounts } = this.props;
     return (
       <EntityListViews
-        {...this.props}
+        collection={collection}
+        writeable={collection.writeable}
+        schemaCounts={schemaCounts}
+        querySchemaEntities={querySchemaEntities}
       />
     );
   }
@@ -25,42 +29,19 @@ class CollectionEntitiesMode extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { location, collection } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  const hashType = hashQuery.type;
-  const model = selectModel(state);
-  const schemata = model.getSchemata()
-    .filter((schema) => !schema.isDocument() && !schema.isA('Page'))
-    .map((schema) => schema.name);
-  const schemaCounts = collection?.statistics?.schema?.values || [];
-  const matching = [];
-  for (const key in schemaCounts) {
-    if (schemata.indexOf(key) !== -1) {
-      matching.push({
-        schema: key,
-        count: schemaCounts[key],
-      });
-    }
+
+  const rawCounts = collection?.statistics?.schema?.values || [];
+  const schemaCounts = [];
+  for (const key in rawCounts) {
+    schemaCounts.push({
+      id: key,
+      count: rawCounts[key],
+    });
   }
 
-  const schemaViews = _.reverse(_.sortBy(matching, ['count']));
-  if (hashType && !schemaCounts.hasOwnProperty(hashType)) {
-    schemaViews.push({ schema: hashType, count: 0 });
-  }
-  if (!schemaViews.length) {
-    schemaViews.push({ schema: 'Person', count: 0 });
-  }
-
-  const activeType = hashType || schemaViews[0].schema;
-  const selectableSchemata = schemata
-    .filter((s) => !schemaViews.find((v) => v.schema === s));
   return {
-    activeType,
-    activeSchema: model.getSchema(activeType),
-    schemaViews,
-    selectableSchemata,
-    writeable: collection.writeable,
-    showImport: true,
-    query: queryCollectionEntities(location, collection.id, activeType),
+    schemaCounts: _.reverse(_.sortBy(schemaCounts, ['count'])),
+    querySchemaEntities: (schema) => queryCollectionEntities(location, collection.id, schema.name),
   };
 };
 

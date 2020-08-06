@@ -7,9 +7,9 @@ import { Prompt, withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
-import { fetchEntitySet } from 'actions';
-import { selectEntitySet, selectModel } from 'selectors';
-import { queryEntitySetEntities } from 'queries';
+import { fetchEntitySet, queryEntitySetEntities } from 'actions';
+import { selectEntitySet, selectModel, selectEntitySetEntitiesResult } from 'selectors';
+import { entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntityListViews from 'components/Entity/EntityListViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
@@ -52,6 +52,10 @@ export class ListScreen extends Component {
     this.fetchIfNeeded();
   }
 
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
   onCollectionSearch(queryText) {
     const { history, list } = this.props;
     const query = {
@@ -81,15 +85,18 @@ export class ListScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { list, entitySetId } = this.props;
+    const { list, countsResult, countsQuery, entitySetId } = this.props;
 
     if (list.shouldLoad || list.shallow) {
       this.props.fetchEntitySet(entitySetId);
     }
+    if (countsResult.shouldLoad) {
+      this.props.queryEntitySetEntities({ query: countsQuery });
+    }
   }
 
   render() {
-    const { collection, list, intl, activeType, activeSchema, query, selectableSchemata, schemaViews } = this.props;
+    const { collection, countsResult, list, intl, querySchemaEntities } = this.props;
     const { filterText, updateStatus } = this.state;
 
     if (list.isError) {
@@ -122,14 +129,20 @@ export class ListScreen extends Component {
         >
           {breadcrumbs}
           <SinglePane>
+            <h1 className="">
+              {list.label}
+            </h1>
+            {list.summary && (
+              <p className="">
+                {list.summary}
+              </p>
+            )}
             <EntityListViews
-              activeType={activeType}
-              activeSchema={activeSchema}
               collection={list.collection}
-              selectableSchemata={selectableSchemata}
-              schemaViews={schemaViews}
-              query={query}
+              schemaCounts={countsResult?.facets?.schema?.values || []}
+              querySchemaEntities={querySchemaEntities}
               writeable={list.writeable}
+              isPending={countsResult.isPending}
               isEntitySet
             />
           </SinglePane>
@@ -144,53 +157,24 @@ const mapStateToProps = (state, ownProps) => {
   const { entitySetId } = match.params;
 
   const list = selectEntitySet(state, entitySetId);
+  const countsQuery = entitySetEntitiesQuery(location, entitySetId)
+    .add('facet', 'schema')
+    .add('filter:schemata', 'Thing')
+    .add('filter:schemata', 'Interval')
+    .limit(0);
 
-  if (!list.isPending) {
-    const hashQuery = queryString.parse(location.hash);
-    const hashType = hashQuery.type;
-    const model = selectModel(state);
-    const schemata = model.getSchemata()
-      .filter((schema) => !schema.isDocument() && !schema.isA('Page'))
-      .map((schema) => schema.name);
-
-    const schemaCounts = _.groupBy(list.entities, 'schema');
-
-    const matching = [];
-    for (const key in schemaCounts) {
-      if (schemata.indexOf(key) !== -1) {
-        matching.push({
-          schema: key,
-          count: schemaCounts[key].length,
-        });
-      }
-    }
-
-    const schemaViews = _.reverse(_.sortBy(matching, ['count']));
-    if (hashType && !schemaCounts.hasOwnProperty(hashType)) {
-      schemaViews.push({ schema: hashType, count: 0 });
-    }
-    if (!schemaViews.length) {
-      schemaViews.push({ schema: 'Person', count: 0 });
-    }
-
-    const activeType = hashType || schemaViews[0].schema;
-    const selectableSchemata = schemata
-      .filter((s) => !schemaViews.find((v) => v.schema === s));
-
-    return {
-      list,
-      entitySetId,
-      activeType,
-      activeSchema: model.getSchema(activeType),
-      schemaViews,
-      selectableSchemata,
-      query: queryEntitySetEntities(location, entitySetId, activeType),
-    };
-  }
+  const countsResult = selectEntitySetEntitiesResult(state, countsQuery);
+  const querySchemaEntities = (schema) => (
+    entitySetEntitiesQuery(location, entitySetId)
+      .setFilter('schema', schema.name)
+  );
 
   return {
     entitySetId,
     list,
+    countsQuery,
+    countsResult,
+    querySchemaEntities
   };
 };
 
@@ -198,5 +182,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { fetchEntitySet }),
+  connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
 )(ListScreen);

@@ -162,10 +162,6 @@ class EntitySetSelectorSection extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location, queryText, type } = ownProps;
 
-  const { entitySetId } = ownProps.match?.params;
-  console.log(entitySetId);
-
-
   const query = queryCollectionEntitySets(location, collection.id)
     .setFilter('type', type)
     .sortBy('label', 'asc')
@@ -174,7 +170,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query,
     result: selectEntitySetsResult(state, query),
-    excludeId: entitySetId
   };
 };
 

@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import React from 'react';
-import { Button, MenuDivider, Tabs, Tab } from '@blueprintjs/core';
+import { Button, Classes, MenuDivider, Tabs, Tab } from '@blueprintjs/core';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { Count, Schema } from 'components/common';
+import { Count, Schema, Skeleton } from 'components/common';
 import EntityListManager from 'components/Entity/EntityListManager';
 import { queryCollectionEntities } from 'queries';
 import { selectModel } from 'selectors';
@@ -40,9 +41,9 @@ class EntityListViews extends React.PureComponent {
   }
 
   renderTable() {
-    const { collection, activeSchema, query, isEntitySet, writeable } = this.props;
+    const { collection, activeSchema, querySchemaEntities, isEntitySet, writeable } = this.props;
     return <EntityListManager
-      query={query}
+      query={querySchemaEntities(activeSchema)}
       collection={collection}
       schema={activeSchema}
       onStatusChange={() => {}}
@@ -52,7 +53,7 @@ class EntityListViews extends React.PureComponent {
   }
 
   render() {
-    const { collection, activeType, schemaViews, selectableSchemata, intl, writeable } = this.props;
+    const { collection, activeSchema, schemaViews, selectableSchemata, intl, isPending, writeable } = this.props;
     const showSchemaSelect = writeable && selectableSchemata.length;
 
     return (
@@ -60,19 +61,20 @@ class EntityListViews extends React.PureComponent {
         id="EntityListViewsTabs"
         className="EntityListViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={activeType}
+        selectedTabId={activeSchema.name}
         renderActiveTabPanelOnly
         vertical
       >
         {schemaViews.map(ref => (
           <Tab
-            id={ref.schema}
-            key={ref.schema}
+            id={ref.id}
+            key={ref.id}
             className="EntityListViews__tab"
             title={
               <>
-                <Schema.Label schema={ref.schema} plural icon />
-                <Count count={ref.count} />
+                {isPending && <Skeleton.Text type="span" length={15} />}
+                {!isPending && <Schema.Label schema={ref.id} plural icon />}
+                <Count count={ref.count} isPending={isPending} />
               </>}
             panel={this.renderTable()}
           />
@@ -102,7 +104,39 @@ class EntityListViews extends React.PureComponent {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const { location, isPending, schemaCounts } = ownProps;
+
+  const model = selectModel(state);
+  const hashQuery = queryString.parse(location.hash);
+  const hashType = hashQuery.type;
+  const schemata = model.getSchemata()
+    .filter((schema) => !schema.isDocument() && !schema.isA('Page'))
+    .map((schema) => schema.name);
+
+  const addedViews = [];
+
+  if (hashType && !schemaCounts.find(obj => obj.id === hashType)) {
+    addedViews.push({ id: hashType, count: 0 });
+  }
+  if (!isPending && !schemaCounts.length) {
+    addedViews.push({ id: 'Person', count: 0 });
+  }
+  const schemaViews = [...schemaCounts, ...addedViews];
+
+  const activeType = hashType || schemaViews[0].id;
+  const selectableSchemata = schemata
+    .filter((s) => !schemaViews.find((v) => v.id === s));
+
+  return {
+    activeSchema: model.getSchema(activeType),
+    schemaViews,
+    selectableSchemata,
+  }
+};
+
 export default compose(
   withRouter,
+  connect(mapStateToProps),
   injectIntl,
 )(EntityListViews);
