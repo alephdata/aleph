@@ -48,7 +48,7 @@ class EntitySetManageMenu extends Component {
   render() {
     const { entitySet, intl, onSearch, triggerDownload } = this.props;
     const { editIsOpen, deleteIsOpen } = this.state;
-    const showMenu = triggerDownload !== undefined;
+    const showMenu = entitySet.type === 'diagram';
 
     return (
       <>

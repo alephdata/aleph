@@ -12,7 +12,8 @@ import EntityListViews from 'components/Entity/EntityListViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet, SinglePane, Summary } from 'components/common';
+import { Breadcrumbs, Collection, EntitySet, SinglePane } from 'components/common';
+
 
 export class ListScreen extends Component {
   constructor(props) {
@@ -97,18 +98,12 @@ export class ListScreen extends Component {
         >
           {breadcrumbs}
           <SinglePane>
-            <h1 className="">
-              {list.label}
-            </h1>
-            {list.summary && (
-              <Summary text={list.summary} />
-            )}
             <EntityListViews
               collection={list.collection}
               schemaCounts={countsResult?.facets?.schema?.values || []}
               querySchemaEntities={querySchemaEntities}
               writeable={list.writeable}
-              isPending={countsResult.isPending}
+              isPending={countsResult.total === undefined && countsResult.isPending}
               isEntitySet
             />
           </SinglePane>

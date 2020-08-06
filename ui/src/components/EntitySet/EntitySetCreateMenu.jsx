@@ -75,8 +75,7 @@ class EntitySetCreateMenu extends Component {
           importEnabled={importEnabled}
           isOpen={isOpen}
           toggleDialog={this.toggleDialog}
-          entitySet={{ collection }}
-          type={ type }
+          entitySet={{ collection, type }}
           canChangeCollection={!collection}
         />
       </>

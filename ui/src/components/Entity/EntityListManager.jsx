@@ -222,7 +222,7 @@ export class EntityListManager extends Component {
             entities={selection}
             onSuccess={() => this.setState({ selection: [] })}
             actionType={isEntitySet ? "remove" : "delete"}
-            deleteEntity={entityId => entityManager.deleteEntity(entityId)}
+            deleteEntity={entityManager.overload.deleteEntity}
             showCount
           />
         </EntityActionBar>

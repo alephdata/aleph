@@ -101,10 +101,11 @@ class EntitySetCreateDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { history, entitySet, intl, type } = this.props;
+    const { history, entitySet, intl } = this.props;
     const { label, summary, collection, layout, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
+    const { type } = entitySet;
     this.setState({ processing: true });
 
     try {
@@ -179,8 +180,9 @@ class EntitySetCreateDialog extends Component {
   }
 
   render() {
-    const { canChangeCollection, importEnabled, intl, isOpen, toggleDialog, type } = this.props;
+    const { canChangeCollection, entitySet, importEnabled, intl, isOpen, toggleDialog } = this.props;
     const { collection, collectionCreateIsOpen, importedFileName, label, summary, processing, layout } = this.state;
+    const { type } = entitySet;
     const disabled = processing || !this.checkValid();
 
     const showTextFields = (!importEnabled || (importEnabled && layout));

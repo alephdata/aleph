@@ -72,7 +72,7 @@ class EntitySetEditDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { entitySet, intl, type } = this.props;
+    const { entitySet, intl } = this.props;
     const { label, processing, summary } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
@@ -83,10 +83,8 @@ class EntitySetEditDialog extends Component {
       this.setState({ processing: false });
       this.props.toggleDialog();
 
-      console.log(`${type}_success`)
-
       showSuccessToast(
-        intl.formatMessage(messages[`${type}_success`]),
+        intl.formatMessage(messages[`${entitySet.type}_success`]),
       );
     } catch (e) {
       showWarningToast(e.message);
