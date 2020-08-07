@@ -47,7 +47,6 @@ class EntitySetSelectorSection extends Component {
     this.state = {
       processing: false,
       createIsOpen: false,
-      createLabel: '',
       expanded: true
     };
 
