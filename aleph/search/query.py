@@ -35,7 +35,6 @@ class Query(object):
     AUTHZ_FIELD = "collection_id"
     SORT_FIELDS = {
         "label": "label.kw",
-        "name": "name.kw",
         "score": "_score",
     }
     SORT_DEFAULT = ["_score"]

@@ -168,6 +168,7 @@ def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
     data = proxy.to_full_dict()
     data["schemata"] = list(proxy.schema.names)
+    data["caption"] = proxy.caption
 
     names = data.get("names", [])
     fps = set([fingerprints.generate(name) for name in names])

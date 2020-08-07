@@ -84,6 +84,7 @@ def configure_schema(schema, version):
         "dynamic": False,
         "_source": {"excludes": ["text", "fingerprints"]},
         "properties": {
+            "caption": KEYWORD,
             "schema": KEYWORD,
             "schemata": KEYWORD,
             registry.entity.group: KEYWORD,
