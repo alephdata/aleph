@@ -9,6 +9,7 @@ from followthemoney.helpers import entity_filename
 from ingestors.settings import CONVERT_URL, CONVERT_TIMEOUT
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
+from ingestors.util import explicit_resolve
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
@@ -45,7 +46,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                 with open(file_path, "rb") as fh:
                     files = {"file": (file_name, fh, mime_type)}
                     res = requests.post(
-                        CONVERT_URL,
+                        explicit_resolve(CONVERT_URL),
                         params={"timeout": CONVERT_TIMEOUT},
                         files=files,
                         timeout=CONVERT_TIMEOUT + 10,
