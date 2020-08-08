@@ -1,12 +1,11 @@
 import math
 import logging
 import requests
-from itertools import count
 from requests import RequestException, HTTPError
 from servicelayer.util import backoff
 from followthemoney.helpers import entity_filename
 
-from ingestors.settings import CONVERT_URL, CONVERT_TIMEOUT
+from ingestors.settings import CONVERT_URL, CONVERT_TIMEOUT, CONVERT_RETRIES
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.util import explicit_resolve
@@ -40,7 +39,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         """Converts an office document to PDF."""
         file_name = entity_filename(entity)
         mime_type = entity.first("mimeType")
-        for attempt in count(1):
+        for attempt in range(CONVERT_RETRIES):
             log.debug("Converting [%s] to PDF (attempt %d)...", entity, attempt)
             try:
                 with open(file_path, "rb") as fh:
@@ -70,8 +69,8 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                     raise ProcessingException(res.text)
                 msg = "Converter not available: %s (attempt: %s)"
                 log.info(msg, exc, attempt)
-                backoff(failures=math.sqrt(attempt))
             except RequestException as exc:
                 msg = "Converter not available: %s (attempt: %s)"
                 log.error(msg, exc, attempt)
-                backoff(failures=math.sqrt(attempt))
+            backoff(failures=math.sqrt(attempt))
+        raise ProcessingException("Could not be converted to PDF.")
