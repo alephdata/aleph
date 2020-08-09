@@ -113,7 +113,7 @@ class Serializer(object):
 class RoleSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {"self": url_for("roles_api.view", id=obj.get("id"))}
-        obj["writeable"] = request.authz.can_write_role(obj.get("id"))
+        obj["writeable"] = request.authz.can_write_role(int(obj.get("id")))
         if not obj["writeable"]:
             obj.pop("has_password", None)
             obj.pop("is_muted", None)
@@ -135,7 +135,7 @@ class AlertSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {"self": url_for("alerts_api.view", alert_id=obj.get("id"))}
         role_id = obj.pop("role_id", None)
-        obj["writeable"] = request.authz.can_write_role(role_id)
+        obj["writeable"] = request.authz.can_write_role(int(role_id))
         return obj
 
 
@@ -143,7 +143,7 @@ class CollectionSerializer(Serializer):
     def _collect(self, obj):
         self.queue(Role, obj.get("creator_id"))
         for role_id in ensure_list(obj.get("team_id")):
-            if request.authz.can_read_role(role_id):
+            if request.authz.can_read_role(int(role_id)):
                 self.queue(Role, role_id)
 
     def _serialize(self, obj):
@@ -167,7 +167,7 @@ class CollectionSerializer(Serializer):
         obj["creator"] = self.resolve(Role, creator_id, RoleSerializer)
         obj["team"] = []
         for role_id in ensure_list(obj.pop("team_id", [])):
-            if request.authz.can_read_role(role_id):
+            if request.authz.can_read_role(int(role_id)):
                 role = self.resolve(Role, role_id, RoleSerializer)
                 obj["team"].append(role)
         return obj
@@ -180,7 +180,7 @@ class PermissionSerializer(Serializer):
     def _serialize(self, obj):
         obj.pop("collection_id", None)
         role_id = obj.pop("role_id", None)
-        obj["writeable"] = request.authz.can_read_role(role_id)  # wat
+        obj["writeable"] = request.authz.can_read_role(int(role_id))  # wat
         obj["role"] = self.resolve(Role, role_id, RoleSerializer)
         return obj
 

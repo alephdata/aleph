@@ -59,7 +59,7 @@ def password_login():
     update_role(role)
     authz = Authz.from_role(role)
     request.authz = authz
-    return jsonify({"status": "ok", "token": authz.to_token(role=role)})
+    return jsonify({"status": "ok", "token": authz.to_token()})
 
 
 @blueprint.route("/api/2/sessions/oauth")
@@ -103,7 +103,7 @@ def oauth_callback():
     update_role(role)
     log.info("Logged in: %r", role)
     request.authz = Authz.from_role(role)
-    token = request.authz.to_token(role=role)
+    token = request.authz.to_token()
     token = token.decode("utf-8")
     next_path = get_url_path(request.args.get("state"))
     next_url = ui_url(settings.OAUTH_UI_CALLBACK, next=next_path)

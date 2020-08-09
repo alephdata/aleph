@@ -3,6 +3,8 @@ import time
 import logging
 import threading
 from pprint import pformat  # noqa
+
+import flask
 from banal import hash_data
 from datetime import datetime
 from flask_babel import get_locale
@@ -12,7 +14,7 @@ from werkzeug.exceptions import TooManyRequests
 from aleph import __version__
 from aleph.queues import get_rate_limit
 from aleph.core import settings
-from aleph.authz import Authz
+from aleph.authz import Authz, InvalidJwtToken
 from aleph.model import Role
 
 log = logging.getLogger(__name__)
@@ -68,32 +70,67 @@ def _get_remote_ip():
     return request.remote_addr
 
 
-def _get_credential_authz(credential):
-    if credential is None or not len(credential):
-        return
-    if " " in credential:
-        _, credential = credential.split(" ", 1)
-    authz = Authz.from_token(credential, scope=request.path)
-    if authz is not None:
-        return authz
-
-    role = Role.by_api_key(credential)
-    if role is not None:
-        return Authz.from_role(role=role)
+class InvalidApiKey(Exception):
+    pass
 
 
-def enable_authz(request):
-    authz = None
+def _authenticate_via_api_key(supplied_api_key: str) -> Authz:
+    role = Role.by_api_key(supplied_api_key)
+    if not role:
+        raise InvalidApiKey()
+    return Authz.from_role(role=role)
 
-    if "Authorization" in request.headers:
-        credential = request.headers.get("Authorization")
-        authz = _get_credential_authz(credential)
 
-    if authz is None and "api_key" in request.args:
-        authz = _get_credential_authz(request.args.get("api_key"))
+def _authenticate_via_jwt_token(supplied_token: str, request_path: str) -> Authz:
+    return Authz.from_token(supplied_token, request_path=request_path)
 
-    authz = authz or Authz.from_role(role=None)
-    request.authz = authz
+
+def _authenticate_request(request: flask.Request) -> Authz:
+    # An API Key OR a JWT token can be supplied via the Authorization header
+    authorization_header = request.headers.get("Authorization")
+    if authorization_header:
+        # TODO(AD): It is a bit dangerous to have to figure out what kind of credentials we received
+        # An improvement would be to require the type of credential to be clearly stated in the Auth header
+        # for example "ApiKey" VS "JwtToken"
+        if " " in authorization_header:
+            _, received_auth_string = authorization_header.split(" ", 1)
+        else:
+            received_auth_string = authorization_header
+
+        # Is it a JWT token?
+        try:
+            auth_info = _authenticate_via_jwt_token(received_auth_string, request.path)
+        except InvalidJwtToken:
+            # It's not - is it an API key then?
+            try:
+                auth_info = _authenticate_via_api_key(received_auth_string)
+            except InvalidApiKey:
+                # It's not a valid API key either; log the incident
+                log.warning(
+                    f'Received an invalid Auth header "{received_auth_string}" to access {request.path}'
+                    f" from {_get_remote_ip()}"
+                )
+                auth_info = Authz.from_role(role=None)
+
+        return auth_info
+
+    # Alternatively, an API key can be supplied via the api_key GET parameter
+    api_key_in_url = request.args.get("api_key", type=str)
+    if api_key_in_url:
+        try:
+            auth_info = _authenticate_via_api_key(api_key_in_url)
+        except InvalidApiKey:
+            # It's not a valid API key; log the incident
+            log.warning(
+                f'Received an invalid API Key param "{api_key_in_url}\ to access {request.path}'
+                f" from {_get_remote_ip()}"
+            )
+            auth_info = Authz.from_role(role=None)
+
+        return auth_info
+
+    # If we get here, no authentication info was supplied in the request
+    return Authz.from_role(role=None)
 
 
 def enable_rate_limit(request):
@@ -120,7 +157,7 @@ def setup_request():
     request._http_etag = None
     request._log_tags = {}
 
-    enable_authz(request)
+    request.authz = _authenticate_request(request)
     enable_rate_limit(request)
 
 
