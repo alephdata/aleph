@@ -122,7 +122,7 @@ def _authenticate_request(request: flask.Request) -> Authz:
         except InvalidApiKey:
             # It's not a valid API key; log the incident
             log.warning(
-                f'Received an invalid API Key param "{api_key_in_url}\ to access {request.path}'
+                f'Received an invalid API Key param \"{api_key_in_url}\" to access {request.path}'
                 f" from {_get_remote_ip()}"
             )
             auth_info = Authz.from_role(role=None)
