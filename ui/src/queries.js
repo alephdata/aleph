@@ -101,7 +101,7 @@ export function queryEntitySuggest(location, collection, schemaName, queryText) 
 
   return Query.fromLocation('entities', location, context, 'entities')
     .limit(30)
-    .sortBy('name', 'asc');
+    .sortBy('caption', 'asc');
 }
 
 export function queryExpand(location, entityId, properties, limit = 200) {

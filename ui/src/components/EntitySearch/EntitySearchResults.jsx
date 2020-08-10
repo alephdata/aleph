@@ -11,8 +11,8 @@ import { ErrorSection } from 'components/common';
 import './EntitySearchResults.scss';
 
 const messages = defineMessages({
-  column_name: {
-    id: 'entity.column.name',
+  column_caption: {
+    id: 'entity.column.caption',
     defaultMessage: 'Name',
   },
   column_collection_id: {
@@ -90,7 +90,7 @@ class EntitySearchResults extends Component {
         <thead>
           <tr>
             {updateSelection && (<th className="select" />)}
-            <TH field="name" className="wide" sortable />
+            <TH field="caption" className="wide" sortable />
             {!hideCollection && (
               <TH field="collection_id" className="wide" />
             )}

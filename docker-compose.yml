@@ -20,12 +20,12 @@ services:
 
   redis:
     image: redis:alpine
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ["redis-server", "--save", "3600", "10"]
     volumes:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:97345b8f91007ba227fbf995257e8b65389358ff
+    image: alephdata/convert-document:58d74ecccb4ce475668a7d72c3b4432044dcd14d
     read_only: true
     restart: on-failure
     tmpfs: /tmp
