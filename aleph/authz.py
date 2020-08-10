@@ -184,10 +184,13 @@ class _JtwToken:
     @classmethod
     def from_str(cls, token_as_str: str) -> "_JtwToken":
         try:
-            data = jwt.decode(token_as_str, key=settings.SECRET_KEY, verify=True)
-            return cls(**data)
+            token_as_dict = jwt.decode(token_as_str, key=settings.SECRET_KEY, verify=True)
+            # TODO(AD): Validate the type of each field at runtime as this is attacker-controlled data, or consider
+            # using pydantic?
+            token = cls(**token_as_dict)
+            return token
+
         except (jwt.InvalidTokenError, TypeError):
-            log.exception("LOL")
             raise InvalidJwtToken()
 
     def to_bytes(self) -> bytes:
