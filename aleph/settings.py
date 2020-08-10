@@ -156,6 +156,17 @@ ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 30)
 # (e.g. analyzers/<package-id>)
 ELASTICSEARCH_SYNONAMES_PATH = env.get("ELASTICSEARCH_SYNONAMES_PATH", "synonames.txt")
 ELASTICSEARCH_REPLICAS = env.get("ELASTICSEARCH_REPLICAS", 2)
+# Custom shard weights to use for various indices. The format is
+#   <schema-name-1>:<shard-weight-1>;<schema-name-2>:<shard-weight-2>;...;<schema-name-N>:<shard-weight-N>
+#
+# where <schema-name-*> matches the schema name from the Follow the Money schema and <shard-weight-*> is
+# the number of shards that the index should have.
+#
+# The shard weight for an index is determined in the following order of precedence:
+#  1. Custom
+#  2. aleph/index/util.py SHARD_WEIGHTS
+#  3. Default shard weight 5
+ELASTICSEARCH_CUSTOM_SHARD_WEIGHTS = env.get("ELASTICSEARCH_CUSTOM_SHARD_WEIGHTS", "")
 
 INDEX_PREFIX = env.get("ALEPH_INDEX_PREFIX", APP_NAME)
 INDEX_WRITE = env.get("ALEPH_INDEX_WRITE", "v1")

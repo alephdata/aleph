@@ -1,3 +1,4 @@
+import re
 import logging
 from pprint import pprint  # noqa
 from banal import ensure_list
@@ -50,10 +51,41 @@ SHARD_WEIGHTS = {
     "Table": SHARDS_HEAVY,
 }
 
+CUSTOM_SHARD_WEIGHTS = None
+
+
+def load_custom_shard_weights():
+    global CUSTOM_SHARD_WEIGHTS
+    if CUSTOM_SHARD_WEIGHTS:
+        # Already loaded
+        return
+
+    weights = {}
+    weight_re = re.compile(r"(.+):(\d+)")
+    if settings.ELASTICSEARCH_CUSTOM_SHARD_WEIGHTS:
+        for iw in settings.ELASTICSEARCH_CUSTOM_SHARD_WEIGHTS.split(';'):
+            iw = iw.strip()
+            if not len(iw):
+                continue
+
+            m = weight_re.search(iw)
+            if m:
+                weights[m.group(1)] = m.group(2)
+            else:
+                log.warning(f"Custom shard weight '{iw}' format is invalid.")
+
+    CUSTOM_SHARD_WEIGHTS = weights
+
 
 def get_shard_weight(schema):
     if settings.TESTING:
         return 1
+
+    load_custom_shard_weights()
+    if schema.name in CUSTOM_SHARD_WEIGHTS.keys():
+        log.debug(f"Using custom shard weight {CUSTOM_SHARD_WEIGHTS[schema.name]} for schema '{schema.name}'.")
+        return CUSTOM_SHARD_WEIGHTS[schema.name]
+
     return SHARD_WEIGHTS.get(schema.name, SHARDS_DEFAULT)
 
 
