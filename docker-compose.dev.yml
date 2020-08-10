@@ -5,9 +5,9 @@ services:
     image: postgres:10.0
     hostname: postgres
     ports:
-    - "127.0.0.1:15432:5432"
+      - "127.0.0.1:15432:5432"
     volumes:
-    - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: aleph
       POSTGRES_PASSWORD: aleph
@@ -19,21 +19,21 @@ services:
     image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
     hostname: elasticsearch
     environment:
-    - discovery.type=single-node
-    - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ports:
-    - "127.0.0.1:19200:9200"
+      - "127.0.0.1:19200:9200"
     volumes:
-    - elasticsearch-data:/usr/share/elasticsearch/data
+      - elasticsearch-data:/usr/share/elasticsearch/data
 
   redis:
     image: redis:alpine
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
-    - redis-data:/data
+      - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:c48bb70a4553809d3c6dcace37eceaa355e16ba7
+    image: alephdata/convert-document:97345b8f91007ba227fbf995257e8b65389358ff
     read_only: true
     restart: on-failure
     user: app
@@ -46,19 +46,19 @@ services:
     hostname: ingest
     tmpfs: /tmp
     volumes:
-    - archive-data:/data
-    - "./services/ingest-file/ingestors:/ingestors/ingestors"
-    - "./services/ingest-file/tests:/ingestors/tests"
-    - "./services/ingest-file/data:/ingestors/data"
-    - "./services/ingest-file/requirements.txt:/ingestors/requirements.txt"
-    - "/:/host"
-    links:
-    - postgres
-    - redis
-    - convert-document
+      - archive-data:/data
+      - "./services/ingest-file/ingestors:/ingestors/ingestors"
+      - "./services/ingest-file/tests:/ingestors/tests"
+      - "./services/ingest-file/data:/ingestors/data"
+      - "./services/ingest-file/requirements.txt:/ingestors/requirements.txt"
+      - "/:/host"
+    depends_on:
+      - postgres
+      - redis
+      - convert-document
     restart: on-failure
     env_file:
-    - aleph.env
+      - aleph.env
 
   # translate:
   #   build:
@@ -81,27 +81,27 @@ services:
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     hostname: aleph
     command: /bin/bash
-    links:
-    - postgres
-    - elasticsearch
-    - redis
-    # - translate
-    - ingest-file
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      # - translate
+      - ingest-file
     tmpfs: /tmp
     volumes:
-    - archive-data:/data
-    - "./aleph:/aleph/aleph"
-    - "./site:/aleph/site"
-    - "./contrib:/aleph/contrib"
-    - "./mappings:/aleph/mappings"
-    - "/:/host"
+      - archive-data:/data
+      - "./aleph:/aleph/aleph"
+      - "./site:/aleph/site"
+      - "./contrib:/aleph/contrib"
+      - "./mappings:/aleph/mappings"
+      - "/:/host"
     cap_add:
-    - SYS_PTRACE
+      - SYS_PTRACE
     environment:
-      ALEPH_DEBUG: 'true'
-      ALEPH_SECRET_KEY: 'development'
+      ALEPH_DEBUG: "true"
+      ALEPH_SECRET_KEY: "development"
     env_file:
-    - aleph.env
+      - aleph.env
 
   api:
     build:
@@ -109,43 +109,43 @@ services:
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
-    - "127.0.0.1:5000:5000"
+      - "127.0.0.1:5000:5000"
     restart: on-failure
-    links:
-    - postgres
-    - elasticsearch
-    - redis
-    - ingest-file
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
     tmpfs: /tmp
     volumes:
-    - archive-data:/data
-    - "./aleph:/aleph/aleph"
-    - "./site:/aleph/site"
+      - archive-data:/data
+      - "./aleph:/aleph/aleph"
+      - "./site:/aleph/site"
     environment:
-      ALEPH_DEBUG: 'true'
-      ALEPH_PROFILE: 'false'
-      ALEPH_SECRET_KEY: 'development'
+      ALEPH_DEBUG: "true"
+      ALEPH_PROFILE: "false"
+      ALEPH_SECRET_KEY: "development"
     env_file:
-    - aleph.env
+      - aleph.env
 
   ui:
     build:
       context: ui
     image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
-    links:
-    - api
+    depends_on:
+      - api
     command: npm run start
     ports:
-    - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8080:8080"
     volumes:
-    - "./ui/src:/alephui/src:delegated"
-    - "./ui/public:/alephui/public:delegated"
-    - "./ui/package.json:/alephui/package.json:delegated"
+      - "./ui/src:/alephui/src:delegated"
+      - "./ui/public:/alephui/public:delegated"
+      - "./ui/package.json:/alephui/package.json:delegated"
     environment:
-      PORT: '8080'
-      CI: 'true'
+      PORT: "8080"
+      CI: "true"
     env_file:
-    - aleph.env
+      - aleph.env
 
 volumes:
   archive-data: {}
