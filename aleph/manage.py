@@ -115,6 +115,15 @@ def reindex(foreign_id, flush=False):
     reindex_collection(collection, flush=flush)
 
 
+@cli.command("reindex-full")
+@click.option("--flush", is_flag=True, default=False)
+def reindex_full(flush=False):
+    """Re-index all collections."""
+    for collection in Collection.all():
+        log.info("[%s] Starting to re-index", collection)
+        reindex_collection(collection, flush=flush)
+
+
 @cli.command("reindex-casefiles")
 @click.option("--flush", is_flag=True, default=False)
 def reindex_casefiles(flush=False):

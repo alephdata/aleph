@@ -1,7 +1,10 @@
 import shutil
 import locale
+import socket
+import random
 from pathlib import Path
 from normality import stringify
+from urllib.parse import urlparse
 from contextlib import contextmanager
 
 
@@ -36,6 +39,21 @@ def path_string(path):
     if isinstance(path, Path):
         return path.as_posix()
     return path
+
+
+def explicit_resolve(url):
+    """Explicitly resolve round-robin DNS names into a random IP address.
+
+    This is a weird mitigation for the fact that docker-compose and Python
+    requests don't seem to do DNS round robin correctly between them. It
+    seems nicer than messing with the urllib3 connection pool, but it would
+    break if a deployment used a proxy with host-based resolution between
+    the ingestors and the convert-doc service. So... don't do that.
+    """
+    parsed = urlparse(url)
+    _, _, ips = socket.gethostbyname_ex(parsed.hostname)
+    netloc = "{}:{}".format(random.choice(ips), parsed.port)
+    return parsed._replace(netloc=netloc).geturl()
 
 
 @contextmanager

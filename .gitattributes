@@ -1,0 +1,5 @@
+# Ensure bash scripts to be run in Docker have UNIX-style line endings.
+# Without this, the bash scripts will fail to run in Docker on Windows
+# as the COPY step in the Dockerfile will keep Windows-style line endings.
+services/**/*.sh text eol=lf
+contrib/**/*.sh text eol=lf

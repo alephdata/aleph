@@ -168,6 +168,7 @@ def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
     data = proxy.to_full_dict()
     data["schemata"] = list(proxy.schema.names)
+    data["caption"] = proxy.caption
 
     names = data.get("names", [])
     fps = set([fingerprints.generate(name) for name in names])
@@ -177,9 +178,7 @@ def format_proxy(proxy, collection):
     # Slight hack: a magic property in followthemoney that gets taken out
     # of the properties and added straight to the index text.
     properties = data.get("properties")
-    text = properties.pop("indexText", [])
-    text.extend(fps)
-    data["text"] = text
+    data["text"] = properties.pop("indexText", [])
 
     # integer casting
     numeric = {}

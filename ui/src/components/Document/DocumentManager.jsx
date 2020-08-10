@@ -100,7 +100,7 @@ export class DocumentManager extends Component {
     const { history } = this.props;
     const { selection } = this.state;
     const pathname = getEntityLink(selection[0]);
-    history.push({ pathname, hash: queryString.stringify({mode: 'mapping'}) });
+    history.push({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
   }
 
   render() {
@@ -130,12 +130,12 @@ export class DocumentManager extends Component {
           query={query}
           writeable={showActions}
           selection={selection}
-          resetSelection={() => this.setState({ selection: []})}
+          resetSelection={() => this.setState({ selection: [] })}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >
-          { canUpload && (
+          {canUpload && (
             <Button icon="upload" onClick={this.toggleUpload}>
               <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
             </Button>
@@ -155,7 +155,7 @@ export class DocumentManager extends Component {
             showCount
           />
         </EntityActionBar>
-        { hasPending && (
+        {hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">
             <FormattedMessage
               id="refresh.callout_message"
@@ -191,7 +191,7 @@ const mapStateToProps = (state, ownProps) => {
   let { query } = ownProps;
   const { collection } = ownProps;
   if (!query.hasSort()) {
-    query = query.sortBy('name', 'asc');
+    query = query.sortBy('caption', 'asc');
   }
   if (collection.writeable) {
     query = query.set('cache', 'false');
