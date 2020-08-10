@@ -1,7 +1,6 @@
 import {
   defineMessages,
 } from 'react-intl';
-'zero', 'one', 'two', 'few', 'many', 'other']
 
 const messages = defineMessages({
   facet_schema: {
