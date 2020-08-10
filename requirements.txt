@@ -48,4 +48,4 @@ coveralls
 
 # Tracing and logging libraries
 python-json-logger==0.1.11
-google-cloud-logging==1.15.0
+google-cloud-logging==1.15.1
