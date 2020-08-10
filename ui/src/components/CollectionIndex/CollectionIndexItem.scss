@@ -1,5 +1,5 @@
-@import "src/app/variables.scss";
-@import "src/app/mixins.scss";
+@import "app/variables.scss";
+@import "app/mixins.scss";
 
 .CollectionIndexItem {
     padding: $aleph-grid-size*2.5 0;
@@ -36,10 +36,15 @@
     .details-item {
         display: inline-block;
         min-width: 8em;
+        margin: $aleph-grid-size/2 0;
         @include rtlSupportInvertedProp(margin, right, 2em, null);
 
         .bp3-icon {
           @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
+        }
+
+        .bp3-tag {
+          vertical-align: middle;
         }
     }
 

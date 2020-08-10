@@ -1,5 +1,5 @@
-@import "src/app/variables.scss";
-@import "src/app/mixins.scss";
+@import "app/variables.scss";
+@import "app/mixins.scss";
 
 .CollectionInfo {
   &__item {
@@ -28,11 +28,15 @@
       & > * {
         display: block;
         margin-bottom: $aleph-grid-size/2;
-        white-space: normal;
+        @include breakText;
 
         &:last-child {
           margin: 0;
         }
+      }
+
+      .separator {
+        display: none;
       }
     }
   }

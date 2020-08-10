@@ -7,14 +7,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import DocumentUploadDialog from 'src/dialogs/DocumentUploadDialog/DocumentUploadDialog';
-import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
-import EntityActionBar from 'src/components/Entity/EntityActionBar';
-import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { ErrorSection } from 'src/components/common';
-import getEntityLink from 'src/util/getEntityLink';
-import { selectEntitiesResult } from 'src/selectors';
-import { queryEntities } from 'src/actions';
+import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
+import DocumentFolderButton from 'components/Toolbar/DocumentFolderButton';
+import EntityActionBar from 'components/Entity/EntityActionBar';
+import EntitySearch from 'components/EntitySearch/EntitySearch';
+import { ErrorSection } from 'components/common';
+import getEntityLink from 'util/getEntityLink';
+import { selectEntitiesResult } from 'selectors';
+import { queryEntities } from 'actions';
 
 import './DocumentManager.scss';
 

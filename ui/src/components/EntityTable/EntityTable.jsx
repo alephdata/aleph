@@ -4,9 +4,9 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import { SortableTH } from 'src/components/common';
+import { SortableTH } from 'components/common';
 import EntityTableViewerRow from './EntityTableViewerRow';
-import { ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'components/common';
 
 import './EntityTable.scss';
 

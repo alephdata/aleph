@@ -13,12 +13,12 @@ EntitySetBase:
     layout:
       type: object
       allOf:
-      - $ref: '#/components/schemas/DiagramLayout'
+        - $ref: "#/components/schemas/DiagramLayout"
 
 EntitySetUpdate:
   type: object
   allOf:
-  - $ref: '#/components/schemas/EntitySetBase'
+    - $ref: "#/components/schemas/EntitySetBase"
   properties:
     entities:
       type: array
@@ -29,7 +29,7 @@ EntitySetUpdate:
 EntitySetCreate:
   type: object
   allOf:
-  - $ref: '#/components/schemas/EntitySetBase'
+    - $ref: "#/components/schemas/EntitySetBase"
   properties:
     collection_id:
       type: string
@@ -38,24 +38,24 @@ EntitySetCreate:
       items:
         type: object
         allOf:
-        - $ref: '#/components/schemas/EntityUpdate'
+          - $ref: "#/components/schemas/EntityUpdate"
         properties:
           id:
             type: string
             format: entity_id
-        required: ['id', 'schema', 'properties']
-  required: ['label', 'type', 'collection_id']
+        required: ["id", "schema", "properties"]
+  required: ["label", "type", "collection_id"]
 
 EntitySet:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
-  - $ref: '#/components/schemas/EntitySetBase'
+    - $ref: "#/components/schemas/DatedModel"
+    - $ref: "#/components/schemas/EntitySetBase"
   properties:
     collection:
       type: object
       allOf:
-      - $ref: '#/components/schemas/Collection'
+        - $ref: "#/components/schemas/Collection"
     role_id:
       type: string
       readOnly: true
@@ -64,15 +64,69 @@ EntitySet:
       items:
         type: object
         allOf:
-        - $ref: '#/components/schemas/EntityUpdate'
+          - $ref: "#/components/schemas/EntityUpdate"
         properties:
           id:
             type: string
             format: entity_id
-        required: ['id', 'schema']
+        required: ["id", "schema"]
     writeable:
       type: boolean
       readOnly: true
-  required: ['collection', 'role_id', 'label', 'type', 'writeable']
+  required: ["collection", "role_id", "label", "type", "writeable"]
 
+Judgement:
+  type: string
+  enum: ["positive", "negative", "unsure", "no_judgement"]
 
+EntitySetItemUpdate:
+  type: object
+  properties:
+    entity_id:
+      type: string
+    entity:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Entity"
+    compared_to_entity_id:
+      type: string
+    judgement:
+      type: string
+      allOf:
+        - $ref: "#/components/schemas/Judgement"
+
+EntitySetItem:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/DatedModel"
+  properties:
+    entityset_id:
+      type: string
+    collection_id:
+      type: string
+    entity:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Entity"
+    compared_to_entity_id:
+      type: string
+    judgement:
+      type: string
+      allOf:
+        - $ref: "#/components/schemas/Judgement"
+  required: ["entityset_id", "entity"]
+
+EntitySetItemResponse:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/QueryResponse"
+  properties:
+    links:
+      properties:
+        export:
+          type: string
+      type: object
+    results:
+      items:
+        $ref: "#/components/schemas/EntitySetItem"
+      type: array

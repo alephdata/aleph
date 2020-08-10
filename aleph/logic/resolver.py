@@ -8,10 +8,10 @@ from normality import stringify
 from collections import defaultdict
 
 from aleph.core import cache
-from aleph.model import Role, Collection, Alert, Entity, EntitySet
+from aleph.model import Role, Collection, Alert, Entity, EntitySet, EntitySetItem
 from aleph.logic.roles import get_role
 from aleph.logic.alerts import get_alert
-from aleph.logic.entitysets import get_entityset
+from aleph.logic.entitysets import get_entityset, get_entitysetitem
 from aleph.index.collections import get_collection
 from aleph.index.entities import entities_by_ids
 
@@ -21,6 +21,7 @@ LOADERS = {
     Collection: get_collection,
     Alert: get_alert,
     EntitySet: get_entityset,
+    EntitySetItem: get_entitysetitem,
 }
 
 

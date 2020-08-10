@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
-import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
-import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
-import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
+import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
+import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAccessDialog';
+import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionReingestAlert from './CollectionReingestAlert';
 import CollectionReindexAlert from './CollectionReindexAlert';
 

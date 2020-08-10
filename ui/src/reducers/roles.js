@@ -1,8 +1,8 @@
 import jwtDecode from 'jwt-decode';
 import { createReducer } from 'redux-act';
 
-import { loginWithToken } from 'src/actions/sessionActions';
-import { queryRoles, fetchRole, updateRole } from 'src/actions';
+import { loginWithToken } from 'actions/sessionActions';
+import { queryRoles, fetchRole, updateRole } from 'actions';
 import { resultObjects, objectLoadStart, objectLoadError, objectLoadComplete } from './util';
 
 const initialState = {};

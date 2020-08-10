@@ -1,4 +1,4 @@
-import { endpoint } from 'src/app/api';
+import { endpoint } from 'app/api';
 import asyncActionCreator from './asyncActionCreator';
 import { queryEndpoint } from './util';
 
@@ -53,10 +53,10 @@ export const triggerCollectionXref = asyncActionCreator((id) => async () => {
   return { data: response.data };
 }, { name: 'TRIGGER_XREF' });
 
-export const decideCollectionXref = asyncActionCreator((xref, contextId) => async () => {
+export const decideCollectionXref = asyncActionCreator((xref) => async () => {
   const { id, collection_id, decision } = xref;
   const url = `collections/${collection_id}/xref/${id}`
-  const data = {decision: decision, context_id: contextId};
+  const data = { decision: decision };
   await endpoint.post(url, data);
   return { id, data: xref };
 }, { name: 'DECIDE_XREF' });

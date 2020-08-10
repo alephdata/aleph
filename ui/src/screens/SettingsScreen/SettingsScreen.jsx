@@ -4,13 +4,13 @@ import { Button, Intent, FormGroup, InputGroup, Checkbox, Alignment, MenuItem, C
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { showSuccessToast } from 'src/app/toast';
-import Screen from 'src/components/Screen/Screen';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import ClipboardInput from 'src/components/common/ClipboardInput';
-import { updateRole, fetchRole } from 'src/actions';
-import { selectMetadata, selectLocale, selectCurrentRole } from 'src/selectors';
-import SelectWrapper from 'src/components/common/SelectWrapper';
+import { showSuccessToast } from 'app/toast';
+import Screen from 'components/Screen/Screen';
+import Dashboard from 'components/Dashboard/Dashboard';
+import ClipboardInput from 'components/common/ClipboardInput';
+import { updateRole, fetchRole } from 'actions';
+import { selectMetadata, selectLocale, selectCurrentRole } from 'selectors';
+import SelectWrapper from 'components/common/SelectWrapper';
 
 import './SettingsScreen.scss';
 
@@ -324,6 +324,7 @@ export class SettingsScreen extends React.Component {
             {this.renderPassword()}
             <FormGroup>
               <Button
+                className="settings-form__submit"
                 intent={Intent.PRIMARY}
                 onClick={this.onSave}
                 disabled={!this.valid()}

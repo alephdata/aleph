@@ -2,12 +2,12 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Card, Classes, Icon, H4 } from '@blueprintjs/core';
-import getEntitySetLink from 'src/util/getEntitySetLink';
+import getEntitySetLink from 'util/getEntitySetLink';
 import c from 'classnames';
 
 import {
   Collection, Date, Diagram, Skeleton, Summary,
-} from 'src/components/common';
+} from 'components/common';
 
 import './DiagramListItem.scss';
 

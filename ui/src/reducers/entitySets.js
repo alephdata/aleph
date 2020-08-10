@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import { queryEntitySets, fetchEntitySet, updateEntitySet, createEntitySet, deleteEntitySet } from 'src/actions';
-import { objectLoadComplete, objectLoadError, objectDelete, resultObjects } from 'src/reducers/util';
+import { queryEntitySets, fetchEntitySet, updateEntitySet, createEntitySet, deleteEntitySet } from 'actions';
+import { objectLoadComplete, objectLoadError, objectDelete, resultObjects } from 'reducers/util';
 
 const initialState = {};
 

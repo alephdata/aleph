@@ -7,17 +7,17 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
-} from 'src/components/common';
-import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
+} from 'components/common';
+import { queryEntitySimilar, queryFolderDocuments } from 'queries';
 import {
   selectEntitiesResult, selectEntityReferences, selectEntityTags,
-} from 'src/selectors';
-import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
-import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
-import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import EntityMappingMode from 'src/components/Entity/EntityMappingMode';
-import DocumentViewMode from 'src/components/Document/DocumentViewMode';
+} from 'selectors';
+import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
+import EntityTagsMode from 'components/Entity/EntityTagsMode';
+import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
+import EntityInfoMode from 'components/Entity/EntityInfoMode';
+import EntityMappingMode from 'components/Entity/EntityMappingMode';
+import DocumentViewMode from 'components/Document/DocumentViewMode';
 
 
 class EntityViews extends React.Component {
@@ -54,10 +54,10 @@ class EntityViews extends React.Component {
     const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
-    const translatedText = entity.getProperty('altBodyText');
+    const translatedText = entity.getProperty('translatedText');
     const hasTextTranslation= translatedText && translatedText.length > 0;
-    const hasAltBodyText = entity.getProperty('hasAltBodyText');
-    const hasPageTranslation = hasAltBodyText && hasAltBodyText.length > 0;
+    const hasTranslatedText = entity.getProperty('hasTranslatedText');
+    const hasPageTranslation = hasTranslatedText && hasTranslatedText.length > 0;
     const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
     const processingError = entity.getProperty('processingError');
 

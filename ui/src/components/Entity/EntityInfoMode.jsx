@@ -2,8 +2,8 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Card } from '@blueprintjs/core';
 
-import { Count, Collection, Summary } from 'src/components/common';
-import EntityProperties from 'src/components/Entity/EntityProperties';
+import { Count, Collection, Summary } from 'components/common';
+import EntityProperties from 'components/Entity/EntityProperties';
 
 import './EntityInfoMode.scss';
 

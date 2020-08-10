@@ -49,7 +49,7 @@ class PDFSupport(DocumentConvertSupport, OCRSupport, TranslateSupport):
         if translated_text and len(translated_text):
             text = text + "\n" + "\n".join(translated_text)
             # At least one page has translated text, so mark it as so on the parent document
-            document.set("hasAltBodyText", 1)
+            document.set("hasTranslatedText", 1)
         
         self.manager.apply_context(entity, document)
         self.manager.emit_entity(entity)

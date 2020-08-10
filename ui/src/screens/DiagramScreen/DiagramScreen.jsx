@@ -6,15 +6,15 @@ import { Prompt, withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
-import { fetchEntitySet } from 'src/actions';
-import { selectEntitySet } from 'src/selectors';
-import Screen from 'src/components/Screen/Screen';
-import EntitySetManageMenu from 'src/components/EntitySet/EntitySetManageMenu';
-import DiagramEditor from 'src/components/Diagram/DiagramEditor';
-import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, Diagram } from 'src/components/common';
-import updateStates from 'src/util/updateStates';
+import { fetchEntitySet } from 'actions';
+import { selectEntitySet } from 'selectors';
+import Screen from 'components/Screen/Screen';
+import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
+import DiagramEditor from 'components/Diagram/DiagramEditor';
+import LoadingScreen from 'components/Screen/LoadingScreen';
+import ErrorScreen from 'components/Screen/ErrorScreen';
+import { Breadcrumbs, Collection, Diagram } from 'components/common';
+import updateStates from 'util/updateStates';
 
 const messages = defineMessages({
   status_success: {

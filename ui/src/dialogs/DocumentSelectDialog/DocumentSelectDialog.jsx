@@ -6,10 +6,10 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { Entity, Schema } from 'src/components/common';
-import { queryEntitySuggest } from 'src/queries';
-import { queryEntities } from 'src/actions';
-import getCollectionLink from 'src/util/getCollectionLink';
+import { Entity, Schema } from 'components/common';
+import { queryEntitySuggest } from 'queries';
+import { queryEntities } from 'actions';
+import getCollectionLink from 'util/getCollectionLink';
 
 
 import './DocumentSelectDialog.scss';

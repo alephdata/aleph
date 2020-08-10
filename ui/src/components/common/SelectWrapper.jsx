@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { isLangRtl } from '@alephdata/react-ftm';
 import { Position } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { selectLocale } from 'src/selectors';
+import { selectLocale } from 'selectors';
 
 const SelectWrapper = ({ locale, ...rest }) => (
   <Select

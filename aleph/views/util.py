@@ -5,16 +5,13 @@ from banal import as_bool, ensure_dict
 from normality import stringify
 from flask import Response, request, render_template
 from flask_babel import gettext
-from werkzeug.urls import url_parse, url_join
+from werkzeug.urls import url_parse
 from werkzeug.exceptions import Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
-from lxml.etree import tostring
-from lxml import html
-from lxml.html.clean import Cleaner
 from servicelayer.jobs import Job
 
 from aleph.authz import Authz
-from aleph.model import Collection
+from aleph.model import Collection, EntitySet
 from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
@@ -92,6 +89,12 @@ def get_db_collection(collection_id, action=Authz.READ):
     return collection
 
 
+def get_entityset(entityset_id, action=Authz.READ):
+    eset = obj_or_404(EntitySet.by_id(entityset_id))
+    require(request.authz.can(eset.collection_id, action))
+    return eset
+
+
 def get_nested_collection(data, action=Authz.READ):
     collection = ensure_dict(data.get("collection"))
     collection_id = data.get("collection_id", collection.get("id"))
@@ -109,76 +112,6 @@ def get_url_path(url):
         return url_parse(url).replace(netloc="", scheme="").to_url() or "/"
     except Exception:
         return "/"
-
-
-CLEANER = Cleaner(
-    style=True,
-    meta=True,
-    links=False,
-    remove_tags=["body", "form"],
-    kill_tags=[
-        "area",
-        "audio",
-        "base",
-        "bgsound",
-        "embed",
-        "frame",
-        "frameset",
-        "head",
-        "img",
-        "iframe",
-        "input",
-        "link",
-        "map",
-        "meta",
-        "nav",
-        "object",
-        "plaintext",
-        "track",
-        "video",
-    ],
-)
-
-
-def sanitize_html(html_text, base_url, encoding=None):
-    """Remove anything from the given HTML that must not show up in the UI."""
-    if html_text is None or not len(html_text.strip()):
-        return
-    try:
-        cleaned = CLEANER.clean_html(html_text)
-        encoding = encoding or "utf-8"
-        parser = html.HTMLParser(encoding=encoding)
-        data = cleaned.encode(encoding, "replace")
-        doc = html.document_fromstring(data, parser=parser)
-        for (el, attr, href, _) in doc.iterlinks():
-            href = normalize_href(href, base_url)
-            if href is not None:
-                el.set(attr, href)
-            if el.tag == "a":
-                el.set("target", "_blank")
-                rel = set(el.get("rel", "").lower().split())
-                rel.update(["nofollow", "noreferrer", "external", "noopener"])
-                el.set("rel", " ".join(rel))
-        return tostring(doc)
-    except Exception as exc:
-        log.warning("HTML sanitizer failure [%s]: %s", type(exc), exc)
-        return gettext("[HTML removed: could not be sanitized]")
-
-
-def normalize_href(href, base_url):
-    # Make links relative to the source_url
-    href = stringify(href)
-    if href is None:
-        return
-    if base_url is not None:
-        return url_join(base_url, href)
-    try:
-        parsed = url_parse(href)
-        if not parsed.netloc:
-            return None
-        return href
-    except ValueError:
-        return None
 
 
 def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):

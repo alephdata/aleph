@@ -5,15 +5,15 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import { Count, ResultCount } from 'src/components/common';
-import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
-import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
-import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
-import CollectionXrefMode from 'src/components/Collection/CollectionXrefMode';
-import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
-import collectionViewIds from 'src/components/Collection/collectionViewIds';
-import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'src/queries';
-import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'src/selectors';
+import { Count, ResultCount } from 'components/common';
+import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
+import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
+import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
+import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
+import CollectionDiagramsIndexMode from 'components/Collection/CollectionDiagramsIndexMode';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
+import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
 
 import './CollectionViews.scss';
 

@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedNumber } from 'react-intl';
-import { Button } from '@blueprintjs/core';
-import c from 'classnames';
 
 import {
   Collection, Entity, Property, Skeleton,
-} from 'src/components/common';
-import XrefDecisionButtons from 'src/components/XrefTable/XrefDecisionButtons';
+} from 'components/common';
+import XrefDecisionButtons from 'components/XrefTable/XrefDecisionButtons';
 
 
 class XrefTableRow extends Component {
   renderSkeleton() {
     return (
       <tr>
-        <td className="expand" />
+        <td className="decision" />
         <td className="entity bordered">
           <Skeleton.Text type="span" length={15} />
         </td>
@@ -31,16 +29,18 @@ class XrefTableRow extends Component {
   }
 
   getCommonProperties() {
-    const { xref } = this.props;
-    const properties = [...xref.entity.schema.getFeaturedProperties()];
+    const { entity, match } = this.props.xref;
+    const properties = [...entity.schema.getFeaturedProperties()];
 
-    xref.match.schema.getFeaturedProperties().forEach((prop) => {
+    match.schema.getFeaturedProperties().forEach((prop) => {
       if (properties.indexOf(prop) === -1) {
         properties.push(prop);
       }
     });
 
-    return properties;
+    return properties.filter((prop) => {
+      return entity.hasProperty(prop) || match.hasProperty(prop);
+    });
   }
 
   renderProperties(entity) {
@@ -63,7 +63,7 @@ class XrefTableRow extends Component {
   }
 
   render() {
-    const { isExpanded, isPending, contextId, xref } = this.props;
+    const { isPending, xref } = this.props;
 
     if (isPending) {
       return this.renderSkeleton();
@@ -72,34 +72,26 @@ class XrefTableRow extends Component {
     if (!xref.entity || !xref.match) {
       return null;
     }
-    const showDetail = isExpanded || contextId;
-    const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
     return (
       <tr className="XrefTableRow">
-        <td className={c({'expand': !contextId, 'numeric narrow': contextId})}>
-          {!contextId && (
-            <Button onClick={() => this.props.toggleExpand(xref)} small minimal icon={expandIcon} />
-          )}
-          {contextId && (
-            <XrefDecisionButtons xref={xref} contextId={contextId} />
-          )}
+        <td className="numeric narrow">
+          <XrefDecisionButtons xref={xref} />
         </td>
         <td className="entity bordered">
           <Entity.Link entity={xref.entity} preview icon />
-          {showDetail && this.renderProperties(xref.entity)}
+          {this.renderProperties(xref.entity)}
         </td>
         <td className="entity">
           <Entity.Link entity={xref.match} preview icon />
-          {showDetail && this.renderProperties(xref.match)}
+          {this.renderProperties(xref.match)}
         </td>
         <td className="numeric narrow">
           <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
         </td>
         <td className="collection">
           <Collection.Link preview collection={xref.match_collection} icon />
-
         </td>
-      </tr>
+      </tr >
     );
   }
 }

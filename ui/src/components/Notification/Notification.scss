@@ -1,5 +1,5 @@
-@import "src/app/variables.scss";
-@import "src/app/mixins.scss";
+@import "app/variables.scss";
+@import "app/mixins.scss";
 
 $notification-items-padding: 1px;
 
@@ -24,10 +24,6 @@ $notification-items-padding: 1px;
     }
     .token {
       @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
-    }
-
-    .bp3-icon.left-icon {
-      @include rtlSupportInvertedProp(padding, right, 3px !important, null);
     }
 
     & > * {

@@ -6,10 +6,10 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 
-import { csvContextLoader, SectionLoading } from 'src/components/common';
-import { fetchEntityMapping } from 'src/actions';
-import { selectEntityMapping } from 'src/selectors';
-import { MappingEditor, MappingImportButton, MappingStatus } from 'src/components/MappingEditor/.';
+import { csvContextLoader, SectionLoading } from 'components/common';
+import { fetchEntityMapping } from 'actions';
+import { selectEntityMapping } from 'selectors';
+import { MappingEditor, MappingImportButton, MappingStatus } from 'components/MappingEditor/.';
 
 import './EntityMappingMode.scss';
 

@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import FormDialog from 'src/dialogs/common/FormDialog';
-import { createEntitySet, queryEntitySets, updateEntitySet } from 'src/actions';
-import { queryCollectionEntitySets } from 'src/queries';
-import { selectEntitySetsResult } from 'src/selectors';
-import { Diagram } from 'src/components/common';
-import { showSuccessToast, showWarningToast } from 'src/app/toast';
-import getEntitySetLink from 'src/util/getEntitySetLink';
+import FormDialog from 'dialogs/common/FormDialog';
+import { createEntitySet, queryEntitySets, updateEntitySet } from 'actions';
+import { queryCollectionEntitySets } from 'queries';
+import { selectEntitySetsResult } from 'selectors';
+import { Diagram } from 'components/common';
+import { showSuccessToast, showWarningToast } from 'app/toast';
+import getEntitySetLink from 'util/getEntitySetLink';
 
 import './AddToDiagramDialog.scss';
 

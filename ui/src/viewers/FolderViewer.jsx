@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import DocumentDropzone from 'src/components/Document/DocumentDropzone';
-import DocumentManager from 'src/components/Document/DocumentManager';
-import { queryFolderDocuments } from 'src/queries';
+import DocumentDropzone from 'components/Document/DocumentDropzone';
+import DocumentManager from 'components/Document/DocumentManager';
+import { queryFolderDocuments } from 'queries';
 
 import './FolderViewer.scss';
 

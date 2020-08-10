@@ -43,12 +43,12 @@ def map_to_aggregator(collection, mapping, aggregator):
     origin = mapping_origin(mapping.id)
     aggregator.delete(origin=origin)
     writer = aggregator.bulk()
+    idx = 0
     for idx, record in enumerate(mapper.source.records, 1):
         if idx > 0 and idx % 1000 == 0:
             log.info("[%s] Mapped %s rows ...", mapping.id, idx)
         for entity in mapper.map(record).values():
             entity.context = mapping.get_proxy_context()
-            entity.context["mutable"] = True
             if entity.schema.is_a("Thing"):
                 entity.add("proof", mapping.table_id)
             entity = collection.ns.apply(entity)

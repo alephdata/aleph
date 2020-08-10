@@ -108,12 +108,12 @@ class CollectionsApiTestCase(TestCase):
                 {
                     "id": "4345800498380953840",
                     "schema": "Person",
-                    "properties": {"name": "Osama bin Laden",},
+                    "properties": {"name": "Osama bin Laden"},
                 },
                 {
                     "id": "7598743983789743598",
                     "schema": "Person",
-                    "properties": {"name": "Osama bin Laden",},
+                    "properties": {"name": "Osama bin Laden"},
                 },
             ]
         )
@@ -126,7 +126,7 @@ class CollectionsApiTestCase(TestCase):
         query = query % self.col.id
         res = self.client.get(query, headers=headers)
         assert res.json["total"] == 2, res.json
-        data = [{"schema": "Person", "properties": {"name": "Osama bin Laden",}}]
+        data = [{"schema": "Person", "properties": {"name": "Osama bin Laden"}}]
         res = self.client.post(url, headers=headers, data=json.dumps(data))
         assert res.status_code == 400, res
         res = self.client.get(query, headers=headers)
@@ -135,7 +135,7 @@ class CollectionsApiTestCase(TestCase):
             {
                 "id": "7598743983789743598",
                 "schema": "Lollipop",
-                "properties": {"name": "Osama bin Laden",},
+                "properties": {"name": "Osama bin Laden"},
             }
         ]
         res = self.client.post(url, headers=headers, data=json.dumps(data))

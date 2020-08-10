@@ -5,8 +5,8 @@ import { Callout } from '@blueprintjs/core';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
-import { selectSession, selectMetadata } from 'src/selectors';
+import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
+import { selectSession, selectMetadata } from 'selectors';
 
 import './SignInCallout.scss';
 

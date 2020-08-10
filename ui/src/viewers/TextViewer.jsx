@@ -1,14 +1,14 @@
 import React from 'react';
 import { Pre } from '@blueprintjs/core';
 
-import { Skeleton } from 'src/components/common';
+import { Skeleton } from 'components/common';
 
 import './TextViewer.scss';
 
 class TextViewer extends React.Component {
   render() {
     const { document, noStyle, showTranslation } = this.props;
-    const bodyText = showTranslation ? document.getProperty('altBodyText') : document.getFirst('bodyText');
+    const bodyText = showTranslation ? document.getProperty('translatedText') : document.getFirst('bodyText');
     const text = document.isPending
       ? <Skeleton.Text type="pre" length={4000} />
       : <Pre>{bodyText}</Pre>;

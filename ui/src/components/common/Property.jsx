@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Property as VLProperty } from '@alephdata/react-ftm';
-import { Entity } from 'src/components/common';
+import { Entity } from 'components/common';
 
-import { selectLocale } from 'src/selectors';
+import { selectLocale } from 'selectors';
 
 import './Property.scss';
 

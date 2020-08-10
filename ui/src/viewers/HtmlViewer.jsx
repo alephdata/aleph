@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Skeleton } from 'src/components/common';
+import { Skeleton } from 'components/common';
 
 import './HtmlViewer.scss';
 

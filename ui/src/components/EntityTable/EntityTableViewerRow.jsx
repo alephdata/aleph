@@ -6,7 +6,7 @@ import c from 'classnames';
 
 import {
   Country, Collection, Entity, FileSize, Date, Skeleton,
-} from 'src/components/common';
+} from 'components/common';
 /* eslint-disable */
 
 class EntityTableViewerRow extends Component {
@@ -14,7 +14,7 @@ class EntityTableViewerRow extends Component {
     const { hideCollection, documentMode, updateSelection } = this.props;
 
     return (
-      <tr className={c('EntityTableViewerRow', 'nowrap')}>
+      <tr className={c('EntityTableViewerRow', 'nowrap')} key="skeleton">
         {updateSelection && (
           <td className="select">
             <Skeleton.Text type="span" length={2} />
@@ -78,11 +78,11 @@ class EntityTableViewerRow extends Component {
       <>
         <tr key={entity.id} className={resultClass}>
           {updateSelection && (
-            <td className="select">
+            <td key="select" className="select">
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
             </td>
           )}
-          <td className="entity">
+          <td key="entity" className="entity">
             <Entity.Link
               preview={showPreview}
               documentMode={documentMode}
@@ -92,37 +92,37 @@ class EntityTableViewerRow extends Component {
           </td>
           {!hideCollection
             && (
-            <td className="collection">
-              <Collection.Link preview collection={entity.collection} icon />
-            </td>
+              <td key="collection" className="collection">
+                <Collection.Link preview collection={entity.collection} icon />
+              </td>
             )
           }
           {!documentMode && (
-            <td className="country">
+            <td key="country" className="country">
               <Country.List codes={entity.getTypeValues('country')} />
             </td>
           )}
-          <td className="date">
+          <td key="date" className="date">
             <Date.Earliest values={entity.getTypeValues('date')} />
           </td>
           {documentMode && (
-            <td className="file-size">
+            <td key="file-size" className="file-size">
               <FileSize value={entity.getFirst('fileSize')} />
             </td>
           )}
         </tr>
         {!!highlights.length
           && (
-          <tr key={`${entity.id}-hl`} className={highlightsClass}>
-            <td colSpan="5" className="highlights">
-              {highlights.map((phrase, index) => (
-                <span key={index}>
-                  <span dangerouslySetInnerHTML={{ __html: phrase }} />
+            <tr key={`${entity.id}-hl`} className={highlightsClass}>
+              <td colSpan="5" className="highlights">
+                {highlights.map((phrase, index) => (
+                  <span key={index}>
+                    <span dangerouslySetInnerHTML={{ __html: phrase }} />
 …
-                </span>
-              ))}
-            </td>
-          </tr>
+                  </span>
+                ))}
+              </td>
+            </tr>
           )
         }
       </>

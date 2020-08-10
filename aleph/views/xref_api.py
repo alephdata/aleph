@@ -1,14 +1,16 @@
 import logging
 from flask import Blueprint, request, send_file
+from followthemoney import model
+from followthemoney.exc import InvalidData
+from werkzeug.exceptions import BadRequest
 
-from aleph.model import Linkage
 from aleph.search import XrefQuery
 from aleph.index.xref import get_xref
 from aleph.logic.xref import export_matches
-from aleph.logic.linkages import decide_xref
+from aleph.logic.profiles import decide_xref, pairwise_decisions
 from aleph.views.serializers import XrefSerializer
 from aleph.queues import queue_task, OP_XREF
-from aleph.views.util import get_db_collection, get_index_collection
+from aleph.views.util import get_db_collection, get_index_collection, get_index_entity
 from aleph.views.util import parse_request, require, jsonify, obj_or_404
 
 XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  # noqa
@@ -51,16 +53,14 @@ def index(collection_id):
     """
     get_index_collection(collection_id)
     result = XrefQuery.handle(request, collection_id=collection_id)
-    context_id = result.parser.getint("context_id", request.authz.id)
-    if context_id is not None:
-        require(request.authz.can_read_role(context_id))
-        pairs = []
-        for xref in result.results:
-            pairs.append((xref.get("entity_id"), xref.get("match_id")))
-        decisions = Linkage.decisions(pairs, context_id)
-        for xref in result.results:
-            key = (xref.get("entity_id"), xref.get("match_id"))
-            xref["decision"] = decisions.get(key)
+    require(request.authz.can(collection_id, request.authz.READ))
+    pairs = []
+    for xref in result.results:
+        pairs.append((xref.get("entity_id"), xref.get("match_id")))
+    decisions = pairwise_decisions(pairs, collection_id)
+    for xref in result.results:
+        key = (xref.get("entity_id"), xref.get("match_id"))
+        xref["decision"] = decisions.get(key)
     return XrefSerializer.jsonify_result(result)
 
 
@@ -134,7 +134,7 @@ def export(collection_id):
 
 @blueprint.route(
     "/api/2/collections/<int:collection_id>/xref/<xref_id>", methods=["POST"]
-)  # noqa
+)
 def decide(collection_id, xref_id):
     """
     ---
@@ -173,16 +173,18 @@ def decide(collection_id, xref_id):
           description: Accepted
       tags:
       - Xref
-      - Linkage
+      - Profiles
+      - EntitySet
     """
     data = parse_request("XrefDecide")
     xref = obj_or_404(get_xref(xref_id, collection_id=collection_id))
-    context_id = int(data.get("context_id", request.authz.id))
-    require(request.authz.can_write_role(context_id))
-    decide_xref(
-        xref,
-        decision=data.get("decision"),
-        context_id=context_id,
-        decider_id=request.authz.id,
-    )
+    require(request.authz.can(collection_id, request.authz.WRITE))
+
+    entity = get_index_entity(xref.get("entity_id"))
+    match = get_index_entity(xref.get("match_id"))
+    if entity is None and match is None:
+        # This will raise a InvalidData error if the two types are not compatible
+        model.common_schema(entity.get("schema"), match.get("schema"))
+
+    decide_xref(xref, judgement=data.get("decision"), authz=request.authz)
     return jsonify({"status": "ok"}, status=204)

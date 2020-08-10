@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Icon, H4 } from '@blueprintjs/core';
 import {
   Date, Role, Category, Count, Country, Collection, Summary, Skeleton, Frequency,
-} from 'src/components/common';
+} from 'components/common';
 
 import './CollectionIndexItem.scss';
 

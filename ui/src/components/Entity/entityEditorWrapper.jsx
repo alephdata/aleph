@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
-import { queryExpand, queryEntitySuggest } from 'src/queries';
-import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'src/selectors';
-import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'src/actions';
-import updateStates from 'src/util/updateStates';
+import { queryExpand, queryEntitySuggest } from 'queries';
+import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'selectors';
+import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'actions';
+import updateStates from 'util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
   const WrappedComponent = (

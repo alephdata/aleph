@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
-import { fetchMetadata } from 'src/actions';
-import { loadState, loadStart, loadError, loadComplete } from 'src/reducers/util';
+import { fetchMetadata } from 'actions';
+import { loadState, loadStart, loadError, loadComplete } from 'reducers/util';
 
 const initialState = loadState();
 

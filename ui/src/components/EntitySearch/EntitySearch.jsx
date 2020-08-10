@@ -7,10 +7,10 @@ import { withRouter } from 'react-router';
 import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
-import EntityTable from 'src/components/EntityTable/EntityTable';
-import { ErrorSection } from 'src/components/common';
+import { queryEntities } from 'actions';
+import { selectEntitiesResult } from 'selectors';
+import EntityTable from 'components/EntityTable/EntityTable';
+import { ErrorSection } from 'components/common';
 
 import './EntitySearch.scss';
 

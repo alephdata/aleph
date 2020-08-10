@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Entity, Schema } from 'src/components/common';
+import { Entity, Schema } from 'components/common';
 
-import 'src/components/common/ItemOverview.scss';
+import 'components/common/ItemOverview.scss';
 
 
 class EntityHeading extends React.PureComponent {

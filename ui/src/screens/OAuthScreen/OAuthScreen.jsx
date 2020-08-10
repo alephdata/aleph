@@ -1,7 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 import { Redirect } from 'react-router-dom';
-import { loginWithToken } from 'src/actions/sessionActions';
+import { loginWithToken } from 'actions/sessionActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

@@ -1,6 +1,6 @@
 import logging
 
-from aleph.model import EntitySet, Events
+from aleph.model import EntitySet, EntitySetItem, Events
 from aleph.logic.entities import upsert_entity
 from aleph.logic.notifications import publish
 
@@ -11,6 +11,10 @@ def get_entityset(entityset_id):
     return EntitySet.by_id(entityset_id)
 
 
+def get_entitysetitem(entitysetitem_id):
+    return EntitySetItem.by_id(entitysetitem_id)
+
+
 def create_entityset(collection, data, authz):
     """Create an entity set. This will create or update any entities
     that already exist in the entityset and sign their IDs into the collection.
@@ -19,7 +23,7 @@ def create_entityset(collection, data, authz):
     entity_ids = []
     for entity in data.pop("entities", []):
         old_id = entity.get("id")
-        new_id = upsert_entity(entity, collection, validate=False, sync=True)
+        new_id = upsert_entity(entity, collection, sync=True)
         old_to_new_id_map[old_id] = new_id
         entity_ids.append(new_id)
     data["entities"] = entity_ids

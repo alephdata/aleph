@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SectionLoading } from 'src/components/common';
-import { PagingButtons } from 'src/components/Toolbar';
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
-import TextViewer from 'src/viewers/TextViewer';
+import { SectionLoading } from 'components/common';
+import { PagingButtons } from 'components/Toolbar';
+import { queryEntities } from 'actions';
+import { selectEntitiesResult } from 'selectors';
+import TextViewer from 'viewers/TextViewer';
 
 
 class PdfViewerPage extends Component {

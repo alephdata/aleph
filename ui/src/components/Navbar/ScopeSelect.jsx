@@ -1,7 +1,7 @@
 import React from 'react';
 import c from 'classnames';
 import { Button, MenuItem } from '@blueprintjs/core';
-import SelectWrapper from 'src/components/common/SelectWrapper';
+import SelectWrapper from 'components/common/SelectWrapper';
 
 import './ScopeSelect.scss';
 

@@ -5,10 +5,10 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
-import { SearchListings } from 'src/components/common';
-import { selectQueryLog } from 'src/selectors';
-import Query from 'src/app/Query';
+import { deleteQueryLog, fetchQueryLogs } from 'actions/queryLogsActions';
+import { SearchListings } from 'components/common';
+import { selectQueryLog } from 'selectors';
+import Query from 'app/Query';
 
 import './QueryLogs.scss';
 

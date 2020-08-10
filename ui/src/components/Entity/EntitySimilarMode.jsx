@@ -3,9 +3,9 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { ErrorSection } from 'src/components/common';
-import { queryEntitySimilar } from 'src/queries';
+import EntitySearch from 'components/EntitySearch/EntitySearch';
+import { ErrorSection } from 'components/common';
+import { queryEntitySimilar } from 'queries';
 
 const messages = defineMessages({
   empty: {

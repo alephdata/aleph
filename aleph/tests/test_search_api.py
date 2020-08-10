@@ -83,8 +83,8 @@ class SearchApiTestCase(TestCase):
         assert res.json["total"] == 1, res.json
 
         res = self.client.get(
-            self.url + "&filter:gte:properties.birthDate=1970-05-08"  # noqa
-            "&filter:lt:properties.birthDate=1971-01-01",
+            self.url + "&filter:gte:dates=1970||/y"  # noqa
+            "&filter:lte:dates=1970||/y",
             headers=headers,
         )
         assert res.status_code == 200, res
@@ -103,19 +103,15 @@ class SearchApiTestCase(TestCase):
         assert res.json["total"] == 3, res.json
         facets = res.json["facets"]["properties.birthDate"]["intervals"]
         assert facets[0]["label"].startswith("1969"), facets
-        assert facets[0]["count"] == 0, facets
-        assert facets[1]["count"] == 3, facets
+        assert facets[0]["count"] == 1, facets
+        assert facets[1]["count"] == 2, facets
         assert len(facets) == 3, facets
 
     def test_boolean_query(self):
         _, headers = self.login(is_admin=True)
-        res = self.client.get(
-            self.url + "&q=banana OR kwazulu", headers=headers
-        )
+        res = self.client.get(self.url + "&q=banana OR kwazulu", headers=headers)
         assert res.status_code == 200, res
         assert res.json["total"] == 4, res.json
-        res = self.client.get(
-            self.url + "&q=banana AND nana", headers=headers
-        )
+        res = self.client.get(self.url + "&q=banana AND nana", headers=headers)
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json

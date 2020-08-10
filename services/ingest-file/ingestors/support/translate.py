@@ -41,8 +41,8 @@ def should_translate(language_ids):
 
 
 class TranslateSupport(object):
-    def translate_text(self, entity, text, language_ids=[], alt_body_text_prop="altBodyText", detected_language_prop="altTextSrcLanguage",
-                       target_language_prop="altTextLanguage", quiet=True):
+    def translate_text(self, entity, text, language_ids=[], translated_text_prop="translatedText", detected_language_prop="translatedTextSrcLanguage",
+                       target_language_prop="translatedTextLanguage", quiet=True):
         try:
             if settings.TRANSLATION_API:
                 if not language_ids or not len(language_ids):
@@ -62,7 +62,7 @@ class TranslateSupport(object):
                 if translated_text and len(translated_text):
                     log.debug("--------------- Translated Text ---------------")
                     log.debug("%s", translated_text)
-                    entity.add(alt_body_text_prop, translated_text, quiet=quiet)
+                    entity.add(translated_text_prop, translated_text, quiet=quiet)
                     
                     language = translation["detected_language"]
                     if language:

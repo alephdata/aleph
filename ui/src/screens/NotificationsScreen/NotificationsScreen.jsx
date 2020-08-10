@@ -4,12 +4,12 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import Query from 'src/app/Query';
-import NotificationList from 'src/components/Notification/NotificationList';
-import Screen from 'src/components/Screen/Screen';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import { selectNotificationsResult, selectCurrentRole } from 'src/selectors';
+import Query from 'app/Query';
+import NotificationList from 'components/Notification/NotificationList';
+import Screen from 'components/Screen/Screen';
+import ErrorScreen from 'components/Screen/ErrorScreen';
+import Dashboard from 'components/Dashboard/Dashboard';
+import { selectNotificationsResult, selectCurrentRole } from 'selectors';
 
 import './NotificationsScreen.scss';
 

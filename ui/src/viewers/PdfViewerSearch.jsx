@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
-import getEntityLink from 'src/util/getEntityLink';
-import { SectionLoading } from 'src/components/common';
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
+import getEntityLink from 'util/getEntityLink';
+import { SectionLoading } from 'components/common';
+import { queryEntities } from 'actions';
+import { selectEntitiesResult } from 'selectors';
 
 
 class PdfViewerSearch extends Component {

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Category, Collection, Skeleton } from 'src/components/common';
+import { Category, Collection, Skeleton } from 'components/common';
 
 import './CollectionHeading.scss';
 

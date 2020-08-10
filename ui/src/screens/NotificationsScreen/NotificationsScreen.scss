@@ -1,4 +1,4 @@
-@import "src/app/mixins.scss";
+@import "app/mixins.scss";
 
 .NotificationsScreen {
   flex-grow: 1;
@@ -6,7 +6,7 @@
   flex-flow: row nowrap;
   align-content: stretch;
   align-items: stretch;
-  
+
   .dummy-pane {
     border: none !important;
     box-shadow: none !important;

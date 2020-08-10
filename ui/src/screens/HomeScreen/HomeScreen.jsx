@@ -5,13 +5,13 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { SearchBox } from 'src/components/common';
-import { fetchStatistics } from 'src/actions/index';
-import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
-import Screen from 'src/components/Screen/Screen';
-import StatisticsGroup from 'src/components/StatisticsGroup/StatisticsGroup';
+import { SearchBox } from 'components/common';
+import { fetchStatistics } from 'actions/index';
+import { selectMetadata, selectSession, selectStatistics } from 'selectors';
+import Screen from 'components/Screen/Screen';
+import StatisticsGroup from 'components/StatisticsGroup/StatisticsGroup';
 
-import wordList from 'src/util/wordList';
+import wordList from 'util/wordList';
 
 import './HomeScreen.scss';
 

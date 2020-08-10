@@ -1,5 +1,5 @@
 @import "~src/app/tables";
-@import "src/app/mixins.scss";
+@import "app/mixins.scss";
 
 .StatusTable {
   @extend .data-table;

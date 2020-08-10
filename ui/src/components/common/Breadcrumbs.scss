@@ -1,5 +1,5 @@
-@import "src/app/variables.scss";
-@import "src/app/mixins.scss";
+@import "app/variables.scss";
+@import "app/mixins.scss";
 
 .Breadcrumbs {
   z-index: 1;
@@ -23,15 +23,16 @@
 
   .bp3-breadcrumbs {
     height: auto;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-
+    margin: 1px 0;
+    
     & > li {
       margin: 5px 0;
       &::after {
         margin: 0 10px;
       }
+    }
+    .bp3-popover-target {
+      display: flex;
     }
   }
 

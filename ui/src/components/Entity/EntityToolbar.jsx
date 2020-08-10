@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { ButtonGroup, Icon } from '@blueprintjs/core';
 
-import { DownloadButton } from 'src/components/Toolbar';
-import getEntityLink from 'src/util/getEntityLink';
+import { DownloadButton } from 'components/Toolbar';
+import getEntityLink from 'util/getEntityLink';
 
 import './EntityToolbar.scss';
 

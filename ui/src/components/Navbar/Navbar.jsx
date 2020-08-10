@@ -8,10 +8,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
-import AuthButtons from 'src/components/AuthButtons/AuthButtons';
-import { selectSession, selectPages } from 'src/selectors';
-import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
-import getPageLink from 'src/util/getPageLink';
+import AuthButtons from 'components/AuthButtons/AuthButtons';
+import { selectSession, selectPages } from 'selectors';
+import ScopedSearchBox from 'components/Navbar/ScopedSearchBox';
+import getPageLink from 'util/getPageLink';
 
 import './Navbar.scss';
 

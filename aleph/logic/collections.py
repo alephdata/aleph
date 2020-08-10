@@ -5,8 +5,8 @@ from servicelayer.jobs import Job
 from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
-from aleph.model import Collection, Entity, Document, EntitySet, Mapping
-from aleph.model import Permission, Events, Linkage
+from aleph.model import Collection, Entity, Document, Mapping
+from aleph.model import Permission, Events, EntitySet
 from aleph.index import collections as index
 from aleph.index import xref as xref_index
 from aleph.index import entities as entities_index
@@ -93,10 +93,11 @@ def index_aggregator(collection, aggregator, entity_ids=None, sync=False):
     aggregator.close()
 
 
-def reingest_collection(collection, job_id=None, index=False):
+def reingest_collection(collection, job_id=None, index=False, flush=True):
     """Trigger a re-ingest for all documents in the collection."""
     job_id = job_id or Job.random_id()
-    ingest_flush(collection)
+    if flush:
+        ingest_flush(collection)
     for document in Document.by_collection(collection.id):
         proxy = document.to_proxy(ns=collection.ns)
         ingest_entity(collection, proxy, job_id=job_id, index=index)
@@ -132,14 +133,12 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)
     deleted_at = collection.deleted_at or datetime.utcnow()
-    Entity.delete_by_collection(collection.id, deleted_at)
     EntitySet.delete_by_collection(collection.id, deleted_at)
-    Mapping.delete_by_collection(collection.id, deleted_at)
+    Mapping.delete_by_collection(collection.id)
+    Entity.delete_by_collection(collection.id)
     Document.delete_by_collection(collection.id)
     if not keep_metadata:
-        # Considering linkages metadata for now, might be wrong:
-        Linkage.delete_by_collection(collection.id)
-        Permission.delete_by_collection(collection.id, deleted_at)
+        Permission.delete_by_collection(collection.id)
         collection.delete(deleted_at=deleted_at)
     db.session.commit()
     if not keep_metadata:

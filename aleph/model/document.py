@@ -103,9 +103,6 @@ class Document(db.Model, DatedModel):
 
         flag_modified(self, "meta")
 
-    def delete(self, deleted_at=None):
-        db.session.delete(self)
-
     @classmethod
     def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
@@ -179,15 +176,6 @@ class Document(db.Model, DatedModel):
         q = q.yield_per(5000)
         return q
 
-    @classmethod
-    def cleanup_deleted(cls):
-        q = db.session.query(Collection.id)
-        q = q.filter(Collection.deleted_at != None)  # noqa
-        collection_ids = [c for (c,) in q.all()]
-        pq = db.session.query(cls)
-        pq = pq.filter(cls.collection_id.in_(collection_ids))
-        pq.delete(synchronize_session=False)
-
     def to_proxy(self, ns=None):
         ns = ns or self.collection.ns
         proxy = model.get_proxy(
@@ -198,7 +186,7 @@ class Document(db.Model, DatedModel):
                 "created_at": iso_text(self.created_at),
                 "updated_at": iso_text(self.updated_at),
                 "role_id": self.role_id,
-                "mutable": True,
+                "mutable": False,
             }
         )
         meta = dict(self.meta)

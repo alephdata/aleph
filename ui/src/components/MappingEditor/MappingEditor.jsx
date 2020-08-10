@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 
-import { selectModel } from 'src/selectors';
-import { Schema } from 'src/components/common';
-import MappingList from 'src/components/MappingEditor/MappingList';
-import MappingKeyAssign from 'src/components/MappingEditor/MappingKeyAssign';
-import MappingManageMenu from 'src/components/MappingEditor/MappingManageMenu';
-import MappingPropertyAssign from 'src/components/MappingEditor/MappingPropertyAssign';
-import MappingSplitSection from 'src/components/MappingEditor/MappingSplitSection';
-import MappingVerify from 'src/components/MappingEditor/MappingVerify';
+import { selectModel } from 'selectors';
+import { Schema } from 'components/common';
+import MappingList from 'components/MappingEditor/MappingList';
+import MappingKeyAssign from 'components/MappingEditor/MappingKeyAssign';
+import MappingManageMenu from 'components/MappingEditor/MappingManageMenu';
+import MappingPropertyAssign from 'components/MappingEditor/MappingPropertyAssign';
+import MappingSplitSection from 'components/MappingEditor/MappingSplitSection';
+import MappingVerify from 'components/MappingEditor/MappingVerify';
 
 import './MappingEditor.scss';
 

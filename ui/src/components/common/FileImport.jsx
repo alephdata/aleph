@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import Dropzone from 'react-dropzone';
-import { showWarningToast } from 'src/app/toast';
+import { showWarningToast } from 'app/toast';
 
 import './FileImport.scss';
 

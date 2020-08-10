@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Icon, Tag as TagWidget } from '@blueprintjs/core';
-import { cleanDateQParam } from 'src/components/Facet/util';
+import { cleanDateQParam } from 'components/Facet/util';
 
 import {
   Schema, Tag, Country, Language, Category, Collection, Date, Entity,
-} from 'src/components/common';
+} from 'components/common';
 
 import './QueryFilterTag.scss';
 

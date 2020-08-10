@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Button, AnchorButton, Intent, Tooltip, Position } from '@blueprintjs/core';
 
-import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
-import { selectSession } from 'src/selectors';
+import CreateCaseDialog from 'dialogs/CreateCaseDialog/CreateCaseDialog';
+import { selectSession } from 'selectors';
 
 const messages = defineMessages({
   login: {

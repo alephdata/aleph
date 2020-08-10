@@ -4,16 +4,10 @@ import logging
 from normality import stringify
 from datetime import datetime, date
 from flask_babel.speaklater import LazyString
+from collections import abc
 
 
 log = logging.getLogger(__name__)
-
-
-def html_link(text, link):
-    text = text or "[untitled]"
-    if link is None:
-        return "<span class='reference'>%s</span>" % text
-    return "<a class='reference' href='%s'>%s</a>" % (link, text)
 
 
 def anonymize_email(name, email):
@@ -49,3 +43,29 @@ class JSONEncoder(json.JSONEncoder):
         if hasattr(obj, "to_dict"):
             return obj.to_dict()
         return json.JSONEncoder.default(self, obj)
+
+
+class PairwiseDict(abc.MutableMapping):
+    """A dictionary which sorts it's keys so that getting key (a, b) is the same as (b, a)"""
+
+    def __init__(self, *args, **kwargs):
+        self.store = dict()
+        self.update(dict(*args, **kwargs))
+
+    def __getitem__(self, key):
+        return self.store[self.__keytransform__(key)]
+
+    def __setitem__(self, key, value):
+        self.store[self.__keytransform__(key)] = value
+
+    def __delitem__(self, key):
+        del self.store[self.__keytransform__(key)]
+
+    def __iter__(self):
+        return iter(self.store)
+
+    def __len__(self):
+        return len(self.store)
+
+    def __keytransform__(self, key):
+        return tuple(sorted(key))

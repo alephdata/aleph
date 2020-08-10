@@ -7,11 +7,11 @@ import { withRouter } from 'react-router';
 import {
   createCollection,
   updateCollectionPermissions,
-} from 'src/actions';
-import { showWarningToast } from 'src/app/toast';
-import { Language, Role } from 'src/components/common';
-import FormDialog from 'src/dialogs/common/FormDialog';
-import getCollectionLink from 'src/util/getCollectionLink';
+} from 'actions';
+import { showWarningToast } from 'app/toast';
+import { Language, Role } from 'components/common';
+import FormDialog from 'dialogs/common/FormDialog';
+import getCollectionLink from 'util/getCollectionLink';
 
 const messages = defineMessages({
   label_placeholder: {

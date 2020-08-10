@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Tag } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 
-import { selectMetadata } from 'src/selectors';
+import { selectMetadata } from 'selectors';
 
 
 class FrequencyLabel extends PureComponent {

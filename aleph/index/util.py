@@ -129,15 +129,16 @@ def field_filter_query(field, values):
         return {"ids": {"values": values}}
     if field in ["names"]:
         field = "fingerprints"
-    if field.startswith(("gt:", "gte:", "lt:", "lte:")):
-        op, field = field.split(":", 1)
-        return {"range": {field: {op: values[0]}}}
     if len(values) == 1:
         # if field in ['addresses']:
         #     field = '%s.text' % field
         #     return {'match_phrase': {field: values[0]}}
         return {"term": {field: values[0]}}
     return {"terms": {field: values}}
+
+
+def range_filter_query(field, ops):
+    return {"range": {field: ops}}
 
 
 def query_delete(index, query, sync=False, **kwargs):

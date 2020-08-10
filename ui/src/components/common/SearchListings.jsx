@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Button, Icon, Tooltip } from '@blueprintjs/core';
-import SearchAlert from 'src/components/SearchAlert/SearchAlert';
+import SearchAlert from 'components/SearchAlert/SearchAlert';
 // import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Date, QueryText, Skeleton } from 'src/components/common';
+import { Date, QueryText, Skeleton } from 'components/common';
 
 import './SearchListings.scss';
 

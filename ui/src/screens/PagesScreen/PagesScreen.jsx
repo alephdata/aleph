@@ -6,10 +6,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import Screen from 'src/components/Screen/Screen';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { AppItem } from 'src/components/common';
-import { selectPages, selectPage } from 'src/selectors';
+import Screen from 'components/Screen/Screen';
+import ErrorScreen from 'components/Screen/ErrorScreen';
+import { AppItem } from 'components/common';
+import { selectPages, selectPage } from 'selectors';
 
 import './PagesScreen.scss';
 import getPageLink from '../../util/getPageLink';

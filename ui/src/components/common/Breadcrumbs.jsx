@@ -2,7 +2,7 @@ import React, { PureComponent, Component } from 'react';
 import { Divider, Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Category, Collection, Entity, Skeleton, Restricted } from 'src/components/common';
+import { Category, Collection, Entity, Skeleton, Restricted } from 'components/common';
 
 import './Breadcrumbs.scss';
 

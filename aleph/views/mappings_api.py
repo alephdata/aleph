@@ -256,7 +256,7 @@ def delete(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/trigger",  # noqa
+    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/trigger",
     methods=["POST", "PUT"],
 )
 def trigger(collection_id, mapping_id):
@@ -300,7 +300,7 @@ def trigger(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush",  # noqa
+    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush",
     methods=["POST", "PUT"],
 )
 def flush(collection_id, mapping_id):

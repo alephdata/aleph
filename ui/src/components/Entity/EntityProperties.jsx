@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { Mention, Property } from 'src/components/common';
+import { Mention, Property } from 'components/common';
 
 class EntityProperties extends React.Component {
   render() {

@@ -211,32 +211,28 @@ def handle_authz_error(err):
 
 @blueprint.app_errorhandler(404)
 def handle_not_found_error(err):
-    return jsonify(
-        {"status": "error", "message": gettext("This path does not exist.")}, status=404
-    )
+    msg = gettext("This path does not exist.")
+    return jsonify({"status": "error", "message": msg}, status=404)
 
 
 @blueprint.app_errorhandler(500)
 def handle_server_error(err):
     log.exception("%s: %s", type(err).__name__, err)
-    return jsonify(
-        {"status": "error", "message": gettext("Internal server error.")}, status=500
-    )
+    msg = gettext("Internal server error.")
+    return jsonify({"status": "error", "message": msg}, status=500)
 
 
 @blueprint.app_errorhandler(InvalidData)
 def handle_invalid_data(err):
-    return jsonify(
-        {"status": "error", "message": str(err), "errors": err.errors}, status=400
-    )
+    data = {"status": "error", "message": str(err), "errors": err.errors}
+    return jsonify(data, status=400)
 
 
 @blueprint.app_errorhandler(DecodeError)
 @blueprint.app_errorhandler(ExpiredSignatureError)
 def handle_jwt_expired(err):
-    return jsonify(
-        {"status": "error", "errors": gettext("Access token is invalid.")}, status=401
-    )
+    data = {"status": "error", "errors": gettext("Access token is invalid.")}
+    return jsonify(data, status=401)
 
 
 @blueprint.app_errorhandler(TransportError)

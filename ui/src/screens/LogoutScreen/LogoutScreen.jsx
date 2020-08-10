@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { logout } from 'src/actions/sessionActions';
-import { showSuccessToast } from 'src/app/toast';
+import { logout } from 'actions/sessionActions';
+import { showSuccessToast } from 'app/toast';
 
 const messages = defineMessages({
   success: {

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
-import c from 'classnames';
 
-import { ErrorSection } from 'src/components/common';
+import { ErrorSection } from 'components/common';
 import XrefTableRow from './XrefTableRow';
 
 import './XrefTable.scss';
@@ -17,10 +16,10 @@ const messages = defineMessages({
 
 
 class XrefTable extends Component {
-  renderHeader = (contextId) => (
+  renderHeader = () => (
     <thead>
       <tr>
-        <th className={c({'expand': !contextId, 'numeric narrow': contextId})} />
+        <th className="numeric narrow" />
         <th className="entity bordered">
           <span className="value">
             <FormattedMessage
@@ -58,7 +57,7 @@ class XrefTable extends Component {
   )
 
   render() {
-    const { expandedId, contextId, intl, result, toggleExpand } = this.props;
+    const { intl, result } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
     if (result.isError) {
@@ -75,15 +74,12 @@ class XrefTable extends Component {
 
     return (
       <table className="XrefTable data-table">
-        {this.renderHeader(contextId)}
+        {this.renderHeader()}
         <tbody>
           {result.results.map(xref => (
             <XrefTableRow
               key={xref?.id}
               xref={xref}
-              contextId={contextId}
-              isExpanded={xref?.id === expandedId}
-              toggleExpand={toggleExpand}
             />
           ))}
           {result.isPending && skeletonItems.map(item => (
