@@ -7,6 +7,7 @@ import {
 import {
   queryCollections,
   queryEntitySets,
+  queryEntitySetEntities,
   queryRoles,
   queryEntities,
   queryEntityExpand,
@@ -45,6 +46,13 @@ export default createReducer({
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryNotifications.COMPLETE]: updateResults,
+
+  [queryEntitySetEntities.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryEntitySetEntities.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
+
+  [queryEntitySetEntities.COMPLETE]: updateResults,
 
   [queryEntitySets.START]: (state, { query }) => resultLoadStart(state, query),
 

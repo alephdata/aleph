@@ -1,0 +1,33 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.EntitySetSelector {
+  &__overlay-container .bp3-overlay.bp3-overlay-container {
+    @include rtl(right, 0, auto);
+    @include rtl(left, auto, 0);
+    overflow: visible;
+  }
+
+  .bp3-drawer-header {
+    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
+    @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
+    z-index: 1;
+  }
+
+  .bp3-drawer-body {
+    width: 100%;
+    padding: $aleph-grid-size;
+  }
+
+  &__top-section {
+    padding: $aleph-grid-size 0;
+  }
+
+  &__section {
+    padding: $aleph-grid-size 0;
+
+    &__title.bp3-heading {
+      margin: 0;
+    }
+  }
+}

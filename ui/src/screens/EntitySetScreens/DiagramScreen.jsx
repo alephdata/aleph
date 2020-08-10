@@ -13,7 +13,7 @@ import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, Diagram } from 'components/common';
+import { Breadcrumbs, Collection, EntitySet } from 'components/common';
 import updateStates from 'util/updateStates';
 
 const messages = defineMessages({
@@ -102,10 +102,10 @@ export class DiagramScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { diagram, diagramId } = this.props;
+    const { diagram, entitySetId } = this.props;
 
     if (diagram.shouldLoad || diagram.shallow) {
-      this.props.fetchEntitySet(diagramId);
+      this.props.fetchEntitySet(entitySetId);
     }
   }
 
@@ -143,7 +143,7 @@ export class DiagramScreen extends Component {
       <Breadcrumbs operation={operation} status={this.formatStatus()}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.Text active>
-          <Diagram.Label diagram={diagram} icon />
+          <EntitySet.Label entitySet={diagram} icon />
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
@@ -179,11 +179,11 @@ export class DiagramScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { diagramId } = ownProps.match.params;
+  const { entitySetId } = ownProps.match.params;
 
   return {
-    diagramId,
-    diagram: selectEntitySet(state, diagramId),
+    entitySetId,
+    diagram: selectEntitySet(state, entitySetId),
   };
 };
 

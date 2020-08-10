@@ -6,7 +6,15 @@ import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'selectors';
-import { createEntity, queryEntities, queryEntityExpand, updateEntity } from 'actions';
+import {
+  createEntity,
+  deleteEntity,
+  entitySetAddEntity,
+  entitySetDeleteEntity,
+  queryEntities,
+  queryEntityExpand,
+  updateEntity
+} from 'actions';
 import updateStates from 'util/updateStates';
 
 const entityEditorWrapper = (EditorComponent) => {
@@ -19,6 +27,7 @@ const entityEditorWrapper = (EditorComponent) => {
           model: props.model,
           namespace: new Namespace(props.collection.foreign_id),
           createEntity: this.createEntity.bind(this),
+          deleteEntity: this.deleteEntity.bind(this),
           expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
@@ -59,10 +68,14 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async createEntity(entity) {
-        const { collection, onStatusChange } = this.props;
+        const { collection, entitySetId, onStatusChange } = this.props;
         onStatusChange(updateStates.IN_PROGRESS);
         try {
-          await this.props.createEntity({ entity, collection_id: collection.id });
+          if (entitySetId) {
+            await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
+          } else {
+            await this.props.createEntity({ entity, collection_id: collection.id });
+          }
           onStatusChange(updateStates.SUCCESS);
         } catch {
           onStatusChange(updateStates.ERROR);
@@ -94,6 +107,22 @@ const entityEditorWrapper = (EditorComponent) => {
         }
       }
 
+      async deleteEntity(entityId) {
+        const { entitySetId, onStatusChange } = this.props;
+        onStatusChange(updateStates.IN_PROGRESS);
+
+        try {
+          if (entitySetId) {
+            await this.props.entitySetDeleteEntity({ entityId, entitySetId });
+          } else {
+            await this.props.deleteEntity(entityId);
+          }
+          onStatusChange(updateStates.SUCCESS);
+        } catch {
+          onStatusChange(updateStates.ERROR);
+        }
+      }
+
       render() {
         // return editor component with entityManager
         return (
@@ -111,27 +140,35 @@ const entityEditorWrapper = (EditorComponent) => {
   )(WrappedComponent);
 }
 
-const mapStateToProps = state => ({
-  model: selectModel(state),
-  locale: selectLocale(state),
-  selectQueryResults: (query) => {
-    let result;
+const mapStateToProps = (state, ownProps) => {
+  const { entitySetId } = ownProps.match.params;
 
-    if (query.queryName === 'expand') {
-      result = selectExpandResult(state, query);
-    } else {
-      result = selectEntitiesResult(state, query);
-    }
+  return ({
+    model: selectModel(state),
+    locale: selectLocale(state),
+    entitySetId,
+    selectQueryResults: (query) => {
+      let result;
 
-    if (!result.isPending && result.results) {
-      return result.results;
-    }
-    return null;
-  },
-});
+      if (query.queryName === 'expand') {
+        result = selectExpandResult(state, query);
+      } else {
+        result = selectEntitiesResult(state, query);
+      }
+
+      if (!result.isPending && result.results) {
+        return result.results;
+      }
+      return null;
+    },
+  });
+}
 
 const mapDispatchToProps = {
   createEntity,
+  deleteEntity,
+  entitySetAddEntity,
+  entitySetDeleteEntity,
   queryEntities,
   queryEntityExpand,
   updateEntity,

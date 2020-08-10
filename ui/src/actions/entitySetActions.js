@@ -4,6 +4,7 @@ import { queryEndpoint } from './util';
 
 
 export const queryEntitySets = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITYSETS' });
+export const queryEntitySetEntities = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITYSET_ENTITIES' });
 
 export const fetchEntitySet = asyncActionCreator((entitySetId) => async () => {
   const response = await endpoint.get(`entitysets/${entitySetId}`);
@@ -27,3 +28,19 @@ export const deleteEntitySet = asyncActionCreator((entitySetId) => async () => {
   await endpoint.delete(`entitysets/${entitySetId}`);
   return { entitySetId };
 }, { name: 'DELETE_ENTITYSET' });
+
+export const entitySetAddEntity = asyncActionCreator(({ entity, entitySetId, sync }) => async () => {
+  const config = {
+    params: { sync }
+  };
+  const payload = entity.toJSON();
+  const response = await endpoint.put(`entitysets/${entitySetId}/entities`, payload, config);
+  return { id: response.data.id, data: response.data };
+}, { name: 'CREATE_ENTITY' });
+
+export const entitySetDeleteEntity = asyncActionCreator(({ entityId, entitySetId }) => async () => {
+  const config = { params: { sync: true }};
+  const payload = {"entity_id": entityId, "judgement": "no_judgement"};
+  await endpoint.post(`entitysets/${entitySetId}/items`, payload, config);
+  return { id: entityId };
+}, { name: 'DELETE_ENTITY' });

@@ -1,31 +1,11 @@
 import React, { Component } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
 import { Boundary, Button, ButtonGroup, ControlGroup, OverflowList, Popover } from '@blueprintjs/core';
 
-import { Count, SearchBox } from 'components/common';
-import EntityDeleteDialog from 'dialogs/EntityDeleteDialog/EntityDeleteDialog';
+import { SearchBox } from 'components/common';
 
 import './EntityActionBar.scss';
 
 class EntityActionBar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      deleteIsOpen: false,
-    };
-
-    this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
-  }
-
-  toggleDeleteSelection() {
-    const { resetSelection } = this.props;
-    const { deleteIsOpen } = this.state;
-    if (deleteIsOpen) {
-      resetSelection();
-    }
-    this.setState(({ deleteIsOpen: !deleteIsOpen }));
-  }
-
   overflowListRenderer = (overflowItems) => {
     const menuContent = overflowItems.map((item, i) => <React.Fragment key={i}>{item}</React.Fragment>);
     return (
@@ -42,23 +22,14 @@ class EntityActionBar extends Component {
   }
 
   render() {
-    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, selection, writeable } = this.props;
-
-    const deleteButton = (
-      <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length} className="EntityActionBar__delete">
-        <span className="align-middle">
-          <FormattedMessage id="entity.viewer.delete" defaultMessage="Delete" />
-        </span>
-        <Count count={selection.length || null} />
-      </Button>
-    );
+    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, writeable } = this.props;
 
     return (
       <>
         <ControlGroup className="EntityActionBar">
           {writeable && (
             <OverflowList
-              items={[...children, deleteButton]}
+              items={children}
               collapseFrom={Boundary.END}
               visibleItemRenderer={(item, i) => <React.Fragment key={i}>{item}</React.Fragment>}
               overflowRenderer={this.overflowListRenderer}
@@ -73,16 +44,9 @@ class EntityActionBar extends Component {
             inputProps={{ disabled: searchDisabled }}
           />
         </ControlGroup>
-        {writeable && selection && (
-          <EntityDeleteDialog
-            entities={selection}
-            isOpen={this.state.deleteIsOpen}
-            toggleDialog={this.toggleDeleteSelection}
-          />
-        )}
       </>
     );
   }
 }
 
-export default injectIntl(EntityActionBar);
+export default EntityActionBar;

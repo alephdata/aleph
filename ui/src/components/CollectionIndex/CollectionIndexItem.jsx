@@ -5,21 +5,21 @@ import {
   Date, Role, Category, Count, Country, Collection, Summary, Skeleton, Frequency,
 } from 'components/common';
 
-import './CollectionIndexItem.scss';
-
 
 class CollectionIndexItem extends PureComponent {
   renderSkeleton = () => (
-    <li className="CollectionIndexItem">
-      <H4>
+    <li className="index-item">
+      <div className="index-item__count">
         <Count className='bp3-intent-primary' full isPending />
+      </div>
+      <H4 className="index-item__title">
         <Skeleton.Text type="span" length={20} />
       </H4>
-      <Skeleton.Text className="summary" type="p" length={200} />
-      <p className="details">
-        <Skeleton.Text className="details-item" type="span" length={20} />
-        <Skeleton.Text className="details-item" type="span" length={20} />
-        <Skeleton.Text className="details-item" type="span" length={20} />
+      <Skeleton.Text className="index-item__summary" type="p" length={200} />
+      <p className="index-item__details">
+        <Skeleton.Text className="index-item__details__item" type="span" length={20} />
+        <Skeleton.Text className="index-item__details__item" type="span" length={20} />
+        <Skeleton.Text className="index-item__details__item" type="span" length={20} />
       </p>
     </li>
   )
@@ -36,19 +36,21 @@ class CollectionIndexItem extends PureComponent {
     }
 
     return (
-      <li className="CollectionIndexItem" key={collection.id}>
-        <H4>
+      <li className="index-item" key={collection.id}>
+        <div className="index-item__count">
           <Count className="bp3-intent-primary" count={collection.count} full />
-          <Collection.Link preview={preview} collection={collection} icon />
+        </div>
+        <H4 className="index-item__title">
+          <Collection.Link className="index-item__title__text" preview={preview} collection={collection} icon />
         </H4>
         {collection.summary && (
-          <Summary text={collection.summary} className="summary" truncate={2} />
+          <Summary text={collection.summary} className="index-item__description" truncate={2} />
         )}
-        <p className="details">
-          <span className="details-item">
+        <p className="index-item__details">
+          <span className="index-item__details__item">
             <Category.Label category={collection.category} icon />
           </span>
-          <span className="details-item">
+          <span className="index-item__details__item">
             <Icon icon="time" />
             <FormattedMessage
               id="collection.last_updated"
@@ -62,13 +64,13 @@ class CollectionIndexItem extends PureComponent {
             )}
           </span>
           { collection.countries && collection.countries.length > 0 && (
-            <span className="details-item">
+            <span className="index-item__details__item">
               <Icon icon="globe" />
               <Country.List codes={collection.countries} truncate={3} />
             </span>
           )}
           { collection.casefile && (
-            <span className="details-item">
+            <span className="index-item__details__item">
               <Icon icon="social-media" />
               <Role.List roles={collection.team} icon={false} truncate={3} separateItems />
             </span>

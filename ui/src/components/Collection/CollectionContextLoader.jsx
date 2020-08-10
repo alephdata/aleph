@@ -42,6 +42,11 @@ class CollectionContextLoader extends PureComponent {
     if (diagramsResult.shouldLoad) {
       this.props.queryEntitySets({ query: diagramsQuery });
     }
+
+    const { listsQuery, listsResult } = this.props;
+    if (listsResult.shouldLoad) {
+      this.props.queryEntitySets({ query: listsQuery });
+    }
   }
 
   render() {
@@ -52,8 +57,10 @@ class CollectionContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
+
   const entitySetsQuery = queryCollectionEntitySets(location, collectionId);
   const diagramsQuery = entitySetsQuery.setFilter('type', 'diagram');
+  const listsQuery = entitySetsQuery.setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collectionId);
   return {
     collection: selectCollection(state, collectionId),
@@ -62,6 +69,8 @@ const mapStateToProps = (state, ownProps) => {
     xrefResult: selectCollectionXrefResult(state, xrefQuery),
     diagramsQuery,
     diagramsResult: selectEntitySetsResult(state, diagramsQuery),
+    listsQuery,
+    listsResult: selectEntitySetsResult(state, listsQuery),
   };
 };
 

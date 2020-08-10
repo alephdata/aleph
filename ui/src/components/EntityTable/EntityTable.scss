@@ -2,49 +2,19 @@
 @import "app/mixins.scss";
 
 .EntityTable {
-  border-color: $aleph-border-color;
-  .schema {
-    max-width: 8em;
-    @media screen and (max-width: $aleph-screen-md-max-width) {
-      display: none;
-    }
+  .bp3-button-group {
+    margin-bottom: $aleph-content-padding;
   }
 
-  .updating {
-    opacity: 0.4;
+  .align-middle {
+    vertical-align: middle;
   }
 
-  .bp3-control {
-    margin-bottom: 0 !important;
-  }
-}
-
-.EntityTableViewerRow {
-  &.active {
-    em {
-      background: inherit;
-    }
+  .Count {
+    @include rtlSupportInvertedProp(margin, left, 5px, null);
   }
 
-  em {
-    background: $aleph-text-highlight-color;
-    font-style: normal;
-  }
-
-  .bp3-skeleton {
-    height: 42px;
-  }
-}
-
-//medium and small screen
-@media screen and (max-width: $aleph-screen-md-max-width) {
-  .EntityTableViewer {
-    .header-country, .header-dates, .header-size {
-      display: none;
-    }
-
-    .country, .date, .file-size {
-      display: none;
-    }
+  .data-grid-container {
+    min-height: 300px;
   }
 }

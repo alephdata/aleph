@@ -11,11 +11,7 @@ $font-size: $pt-font-size-small;
 
   &__item {
     display: inline-block;
-    margin: 0 10px;
-
-    &:last-child {
-      margin: 0;
-    }
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
 
     &__popover {
       font-size: $font-size;
