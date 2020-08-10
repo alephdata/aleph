@@ -25,9 +25,8 @@ imports, please check the documentation at:
 Support
 -------
 
-Aleph is used and developed by multiple organisations and interested individuals. For coordination, please join the Aleph slack workspace: `alephdata <http://slack.alephdata.org/>`_
+Aleph is used and developed by multiple organisations and interested individuals. If you're
+interested in participating in this process, please read the support policy (`SUPPORT.md`)
+and the contribution rules (`CONTRIBUTING.md`) and then get in touch:
 
-If you find any errors or issues using Aleph please
-`file an issue on GitHub <https://github.com/alephdata/aleph/issues/new>`_ or
-contact the mailing list.
-
+* https://docs.alephdata.org/get-in-touch
