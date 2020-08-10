@@ -31,7 +31,9 @@ class Authz:
     WRITE = "write"
 
     PREFIX = "aauthz"
+
     _JWT_TOKENS_VALIDITY_DURATION = timedelta(days=1)
+    _JWT_TOKENS_ALGORITHM = "HS256"
 
     def __init__(self, role_id: Optional[int], roles: Set[int], is_admin: bool = False, is_blocked: bool = False):
         self.id = role_id
@@ -121,7 +123,7 @@ class Authz:
             return set()
         return self.roles.difference(Role.public_roles())
 
-    def to_token(self, scope: Optional[str] = None) -> bytes:
+    def to_token(self, scope: Optional[str] = None) -> str:
         if self.id is None:
             raise ValueError("Cannot create a JWT token for a None role_id")
 
@@ -133,7 +135,7 @@ class Authz:
             b=self.is_blocked,
             s=scope,
         )
-        return token.to_bytes()
+        return token.to_str()
 
     @classmethod
     def from_token(cls, jwt_token: str, request_path: str) -> "Authz":
@@ -184,14 +186,19 @@ class _JtwToken:
     @classmethod
     def from_str(cls, token_as_str: str) -> "_JtwToken":
         try:
-            token_as_dict = jwt.decode(jwt=token_as_str, key=settings.SECRET_KEY, verify=True, algorithms=["H256"])
+            token_as_dict = jwt.decode(
+                jwt=token_as_str, key=settings.SECRET_KEY, verify=True, algorithms=[Authz._JWT_TOKENS_ALGORITHM]
+            )
             # TODO(AD): Validate the type of each field at runtime as this is attacker-controlled data, or consider
             # using pydantic?
             token = cls(**token_as_dict)
             return token
 
         except (jwt.InvalidTokenError, TypeError):
+            #raise
             raise InvalidJwtToken()
 
-    def to_bytes(self) -> bytes:
-        return jwt.encode(payload=asdict(self), key=settings.SECRET_KEY, algorithm="H256")
+    def to_str(self) -> str:
+        return jwt.encode(
+            payload=asdict(self), key=settings.SECRET_KEY, algorithm=Authz._JWT_TOKENS_ALGORITHM
+        ).decode("utf-8")
