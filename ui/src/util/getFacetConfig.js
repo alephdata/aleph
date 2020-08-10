@@ -1,51 +1,52 @@
 import {
   defineMessages,
 } from 'react-intl';
+'zero', 'one', 'two', 'few', 'many', 'other']
 
 const messages = defineMessages({
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: '{count, plural, one {Type} other {Types}}',
+    defaultMessage: '{count, plural, zero {Types} one {Type} two {Types} few {Types} many {Types} other {Types}}',
   },
   facet_collection_id: {
     id: 'facet.collection_id',
-    defaultMessage: '{count, plural, one {Dataset} other {Datasets}}',
+    defaultMessage: '{count, plural, zero {Datasets} one {Dataset} two {Datasets} few {Datasets} many {Datasets} other {Datasets}}',
   },
   facet_ibans: {
     id: 'facet.ibans',
-    defaultMessage: '{count, plural, one {IBAN} other {IBANs}}',
+    defaultMessage: '{count, plural, zero {IBANs} one {IBAN} two {IBANs} few {IBANs} many {IBANs} other {IBANs}}',
   },
   facet_languages: {
     id: 'facet.languages',
-    defaultMessage: '{count, plural, one {Language} other {Languages}}',
+    defaultMessage: '{count, plural, zero {Languages} one {Language} two {Languages} few {Languages} many {Languages} other {Languages}}',
   },
   facet_emails: {
     id: 'facet.emails',
-    defaultMessage: '{count, plural, one {E-Mail} other {E-Mails}}',
+    defaultMessage: '{count, plural, zero {E-Mails} one {E-Mail} two {E-Mails} few {E-Mails} many {E-Mails} other {E-Mails}}',
   },
   facet_phones: {
     id: 'facet.phones',
-    defaultMessage: '{count, plural, one {Phone number} other {Phone numbers}}',
+    defaultMessage: '{count, plural, zero {Phone numbers} one {Phone number} two {Phone numbers} few {Phone numbers} many {Phone numbers} other {Phone numbers}}',
   },
   facet_countries: {
     id: 'facet.countries',
-    defaultMessage: '{count, plural, one {Country} other {Countries}}',
+    defaultMessage: '{count, plural, zero {Countries} one {Country} two {Countries} few {Countries} many {Countries} other {Countries}}',
   },
   facet_names: {
     id: 'facet.names',
-    defaultMessage: '{count, plural, one {Name} other {Names}}',
+    defaultMessage: '{count, plural, zero {Names} one {Name} two {Names} few {Names} many {Names} other {Names}}',
   },
   facet_addresses: {
     id: 'facet.addresses',
-    defaultMessage: '{count, plural, one {Address} other {Addresses}}',
+    defaultMessage: '{count, plural, zero {Addresses} one {Address} two {Addresses} few {Addresses} many {Addresses} other {Addresses}}',
   },
   facet_mime_type: {
     id: 'facet.mimetypes',
-    defaultMessage: '{count, plural, one {File type} other {File types}}',
+    defaultMessage: '{count, plural, zero {File types} one {File type} two {File types} few {File types} many {File types} other {File types}}',
   },
   facet_category: {
     id: 'facet.category',
-    defaultMessage: '{count, plural, one {Category} other {Categories}}',
+    defaultMessage: '{count, plural, zero {Categories} one {Category} two {Categories} few {Categories} many {Categories} other {Categories}}',
   },
 });
 
