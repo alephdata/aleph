@@ -1,6 +1,7 @@
 from dataclasses import dataclass, asdict
 from enum import Enum
 from typing import List, Set, Dict, Optional
+import pydantic
 
 import jwt
 import json
@@ -124,9 +125,6 @@ class Authz:
         return self.roles.difference(Role.public_roles())
 
     def to_token(self, scope: Optional[str] = None) -> str:
-        if self.id is None:
-            raise ValueError("Cannot create a JWT token for a None role_id")
-
         token = _JtwToken(
             u=self.id,
             exp=datetime.utcnow() + self._JWT_TOKENS_VALIDITY_DURATION,
@@ -143,7 +141,7 @@ class Authz:
         if parsed_token.s and parsed_token.s != request_path:
             raise Unauthorized()
 
-        return cls(role_id=parsed_token.u, roles=parsed_token.r, is_admin=parsed_token.a, is_blocked=parsed_token.b,)
+        return cls(role_id=parsed_token.u, roles=set(parsed_token.r), is_admin=parsed_token.a, is_blocked=parsed_token.b,)
 
     def __repr__(self) -> str:
         return "<Authz(%s)>" % self.id
@@ -174,31 +172,36 @@ class InvalidJwtToken(Exception):
     pass
 
 
-@dataclass(frozen=True)
-class _JtwToken:
+class _JtwToken(pydantic.BaseModel):
+    """A JWT token as used in the aleph API.
+    """
     u: int  # role ID
-    r: Set[int]  # role IDs  # TODO(AD): Is this required or optional?
-    exp: datetime  # Expiration date; automatically checked by the JWT library but must be present here
+    r: List[int]  # role IDs  # TODO(AD): Is this required or optional?
+    exp: datetime  # Expiration date; automatically checked by the JWT library but ONLY if present here
     a: bool = False  # is_admin
     b: bool = False  # is_blocked
     s: Optional[str] = None  # Scope ie. request path the token is valid for; None means all paths are authorized
 
     @classmethod
     def from_str(cls, token_as_str: str) -> "_JtwToken":
+        # First validate the token's signature and extract its payload
         try:
             token_as_dict = jwt.decode(
                 jwt=token_as_str, key=settings.SECRET_KEY, verify=True, algorithms=[Authz._JWT_TOKENS_ALGORITHM]
             )
-            # TODO(AD): Validate the type of each field at runtime as this is attacker-controlled data, or consider
-            # using pydantic?
-            token = cls(**token_as_dict)
-            return token
-
-        except (jwt.InvalidTokenError, TypeError):
-            #raise
+        except jwt.InvalidTokenError:
             raise InvalidJwtToken()
 
+        # Then validate the content of the payload
+        try:
+            token = cls(**token_as_dict)
+        except pydantic.ValidationError:
+            raise InvalidJwtToken()
+
+        return token
+
     def to_str(self) -> str:
+        token_as_dict = self.dict(exclude_none=True)
         return jwt.encode(
-            payload=asdict(self), key=settings.SECRET_KEY, algorithm=Authz._JWT_TOKENS_ALGORITHM
+            payload=token_as_dict, key=settings.SECRET_KEY, algorithm=Authz._JWT_TOKENS_ALGORITHM
         ).decode("utf-8")
