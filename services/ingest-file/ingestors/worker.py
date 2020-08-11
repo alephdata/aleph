@@ -45,7 +45,7 @@ class IngestWorker(Worker):
                 if analyzer is not None:
                     entity_ids.update(analyzer.flush())
                 # log.debug("Analyze: %r", entity)
-                analyzer = Analyzer(dataset, entity)
+                analyzer = Analyzer(dataset, entity, task.context)
             analyzer.feed(entity)
         if analyzer is not None:
             entity_ids.update(analyzer.flush())

@@ -90,7 +90,7 @@ def analyze(dataset):
             if analyzer is not None:
                 analyzer.flush()
             # log.debug("Analyze: %r", entity)
-            analyzer = Analyzer(db, entity)
+            analyzer = Analyzer(db, entity, {})
         analyzer.feed(entity)
     if analyzer is not None:
         analyzer.flush()

@@ -3,6 +3,7 @@ from pprint import pprint  # noqa
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.util import make_entity_id
+from followthemoney.namespace import Namespace
 
 from ingestors import settings
 from ingestors.analysis.aggregate import TagAggregator
@@ -18,8 +19,9 @@ log = logging.getLogger(__name__)
 class Analyzer(object):
     MENTIONS = {TAG_COMPANY: "Organization", TAG_PERSON: "Person"}
 
-    def __init__(self, dataset, entity):
+    def __init__(self, dataset, entity, context):
         self.dataset = dataset
+        self.ns = Namespace(context.get("namespace", dataset.name))
         self.entity = model.make_entity(entity.schema)
         self.entity.id = entity.id
         self.aggregator = TagAggregator()
@@ -65,6 +67,7 @@ class Analyzer(object):
                 mention.add("name", values)
                 mention.add("detectedSchema", schema)
                 mention.add("contextCountry", countries)
+                mention = self.ns.apply(mention)
                 writer.put(mention)
                 # pprint(mention.to_dict())
 
