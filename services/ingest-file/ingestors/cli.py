@@ -10,6 +10,7 @@ from ingestors import settings
 from ingestors.store import get_dataset
 from ingestors.manager import Manager
 from ingestors.directory import DirectoryIngestor
+from ingestors.analysis import Analyzer
 from ingestors.worker import IngestWorker, OP_ANALYZE, OP_INGEST
 
 log = logging.getLogger(__name__)
@@ -77,6 +78,22 @@ def ingest(path, dataset, languages=None):
     conn = get_redis()
     db = get_dataset(dataset, OP_INGEST)
     _ingest_path(db, conn, dataset, path, languages=languages)
+
+
+@cli.command()
+@click.option("--dataset", required=True, help="Name of the dataset")
+def analyze(dataset):
+    db = get_dataset(dataset, OP_ANALYZE)
+    analyzer = None
+    for entity in db.partials():
+        if analyzer is None or analyzer.entity.id != entity.id:
+            if analyzer is not None:
+                analyzer.flush()
+            # log.debug("Analyze: %r", entity)
+            analyzer = Analyzer(db, entity)
+        analyzer.feed(entity)
+    if analyzer is not None:
+        analyzer.flush()
 
 
 @cli.command()

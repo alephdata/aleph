@@ -1,6 +1,5 @@
 import logging
 from collections import defaultdict
-from followthemoney.types import registry
 
 from ingestors.analysis.util import tag_key
 from ingestors.analysis.util import TAG_COUNTRY, TAG_PHONE
@@ -13,8 +12,8 @@ class TagAggregator(object):
     MAX_TAGS = 10000
     CUTOFFS = {
         TAG_COUNTRY: 0.3,
-        TAG_PERSON: 0.003,
-        TAG_COMPANY: 0.003,
+        TAG_PERSON: 0.03,
+        TAG_COMPANY: 0.03,
         TAG_PHONE: 0.05,
     }
 
@@ -37,18 +36,13 @@ class TagAggregator(object):
         freq = self.CUTOFFS.get(prop, 0)
         return self.types.get(prop, 0) * freq
 
-    @property
-    def entities(self):
-        for (_, prop), tags in self.values.items():
+    def results(self):
+        for (key, prop), values in self.values.items():
             # skip entities that do not meet a threshold of relevance:
             cutoff = self.prop_cutoff(prop)
-            if len(tags) < cutoff:
+            if len(values) < cutoff:
                 continue
-
-            label = tags[0]
-            if prop in (TAG_COMPANY, TAG_PERSON):
-                label = registry.name.pick(tags)
-            yield label, prop
+            yield (key, prop, values)
 
     def __len__(self):
         return len(self.values)
