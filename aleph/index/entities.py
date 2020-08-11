@@ -61,12 +61,17 @@ def iter_entities(
     includes=PROXY_INCLUDES,
     excludes=None,
     filters=None,
+    sort=None,
 ):
     """Scan all entities matching the given criteria."""
     query = {
         "query": _entities_query(filters, authz, collection_id, schemata),
         "_source": _source_spec(includes, excludes),
     }
+    preserve_order = False
+    if sort is not None:
+        query["sort"] = ensure_list(sort)
+        preserve_order = True
     index = entities_read_index(schema=schemata)
     for res in scan(
         es,
@@ -74,6 +79,7 @@ def iter_entities(
         query=query,
         timeout=MAX_TIMEOUT,
         request_timeout=MAX_REQUEST_TIMEOUT,
+        preserve_order=preserve_order,
     ):
         entity = unpack_result(res)
         if entity is not None:

@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 SCORE_CUTOFF = 0.3
 
 
-def _query_item(collection, entity):
+def _query_item(entity):
     """Cross-reference an entity or document, given as an indexed document."""
     query = match_query(entity)
     if query == none_query():
@@ -48,7 +48,7 @@ def _query_matches(collection, entity_ids):
     """Generate matches for indexing."""
     for data in entities_by_ids(entity_ids):
         entity = model.get_proxy(data)
-        yield from _query_item(collection, entity)
+        yield from _query_item(entity)
 
 
 def xref_item(stage, collection, entity_id=None, batch=50):

@@ -167,15 +167,19 @@ def update():
 
 @cli.command()
 @click.argument("foreign_id")
-@click.option(
-    "-a", "--against", multiple=True, help="foreign IDs of collections to xref against"
-)
-def xref(foreign_id, against=None):
+def xref(foreign_id):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
-    against = [get_collection(c).id for c in ensure_list(against)]
-    against = {"against_collection_ids": against}
-    queue_task(collection, OP_XREF, payload=against)
+    queue_task(collection, OP_XREF)
+
+
+@cli.command()
+@click.argument("foreign_id")
+def mref(foreign_id):
+    collection = get_collection(foreign_id)
+    from aleph.logic.mref import collection_mentions
+
+    collection_mentions(collection)
 
 
 @cli.command("load-entities")
@@ -220,7 +224,7 @@ def load_entities(foreign_id, infile, safe=False, mutable=False):
 def dump_entities(foreign_id, outfile):
     """Export FtM entities for the given collection."""
     collection = get_collection(foreign_id)
-    for entity in iter_proxies(collection_id=collection.id, excludes=["text"]):
+    for entity in iter_proxies(collection_id=collection.id):
         write_object(outfile, entity)
 
 
