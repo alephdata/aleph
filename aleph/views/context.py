@@ -97,15 +97,15 @@ def _authenticate_request(request: flask.Request) -> Authz:
         else:
             received_auth_string = authorization_header
 
-        # Is it a JWT token?
+        # Is it an API key?
         try:
-            auth_info = _authenticate_via_jwt_token(received_auth_string, request.path)
-        except InvalidJwtToken:
-            # It's not - is it an API key then?
+            auth_info = _authenticate_via_api_key(received_auth_string)
+        except InvalidApiKey:
+            # It's not - is it a JWT token then?
             try:
-                auth_info = _authenticate_via_api_key(received_auth_string)
-            except InvalidApiKey:
-                # It's not a valid API key either; log the incident
+                auth_info = _authenticate_via_jwt_token(received_auth_string, request.path)
+            except InvalidJwtToken :
+                # It's not a valid JWT token either; log the incident
                 log.warning(
                     f'Received an invalid Auth header "{received_auth_string}" to access {request.path}'
                     f" from {_get_remote_ip()}"

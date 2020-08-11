@@ -141,6 +141,7 @@ class Authz:
         if parsed_token.s and parsed_token.s != request_path:
             raise Unauthorized()
 
+        # TODO(AD): is_admin and is_blocked are already in the DB so it seems dangerous to take them from a JWT token
         return cls(role_id=parsed_token.u, roles=set(parsed_token.r), is_admin=parsed_token.a, is_blocked=parsed_token.b,)
 
     def __repr__(self) -> str:
@@ -173,8 +174,6 @@ class InvalidJwtToken(Exception):
 
 
 class _JtwToken(pydantic.BaseModel):
-    """A JWT token as used in the aleph API.
-    """
     u: int  # role ID
     r: List[int]  # role IDs  # TODO(AD): Is this required or optional?
     exp: datetime  # Expiration date; automatically checked by the JWT library but ONLY if present here
@@ -189,13 +188,15 @@ class _JtwToken(pydantic.BaseModel):
             token_as_dict = jwt.decode(
                 jwt=token_as_str, key=settings.SECRET_KEY, verify=True, algorithms=[Authz._JWT_TOKENS_ALGORITHM]
             )
-        except jwt.InvalidTokenError:
+        except jwt.InvalidTokenError as e:
+            logging.warning(e, exc_info=True)
             raise InvalidJwtToken()
 
         # Then validate the content of the payload
         try:
             token = cls(**token_as_dict)
-        except pydantic.ValidationError:
+        except pydantic.ValidationError as e:
+            logging.warning(e, exc_info=True)
             raise InvalidJwtToken()
 
         return token
