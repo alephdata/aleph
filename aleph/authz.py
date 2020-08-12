@@ -142,7 +142,9 @@ class Authz:
             raise Unauthorized()
 
         # TODO(AD): is_admin and is_blocked are already in the DB so it seems dangerous to take them from a JWT token
-        return cls(role_id=parsed_token.u, roles=set(parsed_token.r), is_admin=parsed_token.a, is_blocked=parsed_token.b,)
+        return cls(
+            role_id=parsed_token.u, roles=set(parsed_token.r), is_admin=parsed_token.a, is_blocked=parsed_token.b,
+        )
 
     def __repr__(self) -> str:
         return "<Authz(%s)>" % self.id
@@ -203,6 +205,6 @@ class _JtwToken(pydantic.BaseModel):
 
     def to_str(self) -> str:
         token_as_dict = self.dict(exclude_none=True)
-        return jwt.encode(
-            payload=token_as_dict, key=settings.SECRET_KEY, algorithm=Authz._JWT_TOKENS_ALGORITHM
-        ).decode("utf-8")
+        return jwt.encode(payload=token_as_dict, key=settings.SECRET_KEY, algorithm=Authz._JWT_TOKENS_ALGORITHM).decode(
+            "utf-8"
+        )

@@ -157,7 +157,7 @@ def url_for(*a, **kw):
         authorize = kw.pop("_authorize", False)
         relative = kw.pop("_relative", False)
         path = flask_url_for(*a, **kw)
-        if authorize is True and hasattr(request, "authz"):
+        if authorize is True and hasattr(request, "authz") and request.authz.logged_in:
             token = request.authz.to_token(scope=path)
             query = list(ensure_list(query))
             query.append(("api_key", token))

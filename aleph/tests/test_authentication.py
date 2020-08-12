@@ -34,16 +34,23 @@ class _MockFlaskRequest:
 
 
 def create_jwt_token(
-    key: Optional[str],
+    key: Optional[str] = None,
     payload: Optional[Dict[str, Any]] = None,
     algorithm: str = Authz._JWT_TOKENS_ALGORITHM,
     expiration_date: Optional[datetime] = datetime.utcnow() + Authz._JWT_TOKENS_VALIDITY_DURATION,
 ) -> str:
+    # Use the default/valid key unless the algorithm is None or a key was supplied by the caller
+    final_key: Optional[str]
+    if key is None:
+        final_key = None if algorithm == "none" else settings.SECRET_KEY
+    else:
+        final_key = key
+
     final_payload = payload.copy() if payload else {"u": 1, "r": [2, 3]}
     if expiration_date:
         final_payload["exp"] = expiration_date
 
-    return jwt.encode(payload=final_payload, key=key, algorithm=algorithm).decode("utf-8")
+    return jwt.encode(payload=final_payload, key=final_key, algorithm=algorithm).decode("utf-8")
 
 
 class AuthenticationTestCase(TestCase):
@@ -51,7 +58,7 @@ class AuthenticationTestCase(TestCase):
         # Given a request with a valid JWT token passed via the Authorization header
         role = RoleFactory.create()
         db.session.commit()
-        token = create_jwt_token(key=settings.SECRET_KEY, payload={"u": role.id, "r": []})
+        token = create_jwt_token(payload={"u": role.id, "r": []})
         request = _MockFlaskRequest(authorization_header=f"JwtToken {token}")
 
         # When authenticating the request
@@ -59,6 +66,7 @@ class AuthenticationTestCase(TestCase):
 
         # It succeeds and it gets authenticated as the corresponding role
         assert auth_info.role.id == role.id
+        assert auth_info.logged_in
 
     def test_invalid_jwt_token(self):
         # Given a request with an invalid JWT token passed via the Authorization header
@@ -71,13 +79,13 @@ class AuthenticationTestCase(TestCase):
 
         # It gets authenticated as the unauthenticated role
         assert auth_info.role is None
+        assert not auth_info.logged_in
 
     def test_valid_jwt_token_with_scope(self):
         # Given a request with a valid JWT token passed via the Authorization header
         role = RoleFactory.create()
         db.session.commit()
         token = create_jwt_token(
-            key=settings.SECRET_KEY,
             payload={
                 "u": role.id,
                 "r": [],
@@ -102,7 +110,6 @@ class AuthenticationTestCase(TestCase):
         role = RoleFactory.create()
         db.session.commit()
         token = create_jwt_token(
-            key=settings.SECRET_KEY,
             payload={
                 "u": role.id,
                 "r": [],
@@ -159,11 +166,17 @@ class AuthenticationTestCase(TestCase):
 
 class JwtTokenTestCase(unittest.TestCase):
 
-    _SECRET_KEY = "test_suite_secret"
+    _PREVIOUS_SECRET_KEY = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls._PREVIOUS_SECRET_KEY = settings.SECRET_KEY
+        # Configure a secret key for the tests as this test case does not setup the whole Docker environment
+        settings.SECRET_KEY = "test_suite_secret"
 
     def test_from_str(self):
         # Given a valid token
-        token = create_jwt_token(key=self._SECRET_KEY)
+        token = create_jwt_token()
 
         # When parsing the token
         parsed_token = _JtwToken.from_str(token)
@@ -179,7 +192,6 @@ class JwtTokenTestCase(unittest.TestCase):
     def test_to_str(self):
         # Given a valid token that's already parsed
         token = create_jwt_token(
-            key=self._SECRET_KEY,
             payload={
                 # The order here must match the order of the field in _JtwToken for this test to work
                 "u": 1,
@@ -212,7 +224,7 @@ class JwtTokenTestCase(unittest.TestCase):
 
     def test_from_str_invalid_type_in_token(self):
         # Given a token with a field that has an invalid type
-        token = create_jwt_token(key=self._SECRET_KEY, payload={"u": "not an int", "r": [2, 3]})
+        token = create_jwt_token(payload={"u": "not an int", "r": [2, 3]})
 
         # When parsing the token, it fails
         with self.assertRaises(InvalidJwtToken):
@@ -220,8 +232,13 @@ class JwtTokenTestCase(unittest.TestCase):
 
     def test_from_str_missing_expiration(self):
         # Given a token generated that's missing an expiration date
-        token = create_jwt_token(key=self._SECRET_KEY, expiration_date=None)
+        token = create_jwt_token(expiration_date=None)
 
         # When parsing the token, it fails
         with self.assertRaises(InvalidJwtToken):
             _JtwToken.from_str(token)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Put back the original secret key
+        settings.SECRET_KEY = cls._PREVIOUS_SECRET_KEY
