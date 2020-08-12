@@ -9,14 +9,12 @@ from followthemoney.helpers import name_entity
 
 from aleph.core import es
 from aleph.model import Collection, Entity
-
-# from aleph.queues import queue_task, OP_REINDEX
 from aleph.logic import resolver
 from aleph.logic.collections import reindex_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
-from aleph.index import xref as index
+from aleph.index.xref import index_matches, delete_xref
 from aleph.index.entities import iter_proxies, entities_by_ids
 from aleph.index.entities import PROXY_INCLUDES
 from aleph.index.indexes import entities_read_index
@@ -26,11 +24,11 @@ from aleph.index.util import BULK_PAGE
 
 
 log = logging.getLogger(__name__)
-SCORE_CUTOFF = 0.3
+SCORE_CUTOFF = 0.35
 ORIGIN = "xref"
 
 
-def apply_schemata(proxy, schemata):
+def _merge_schemata(proxy, schemata):
     for other in schemata:
         try:
             other = model.get(other)
@@ -73,14 +71,14 @@ def _iter_mentions(collection):
                 yield proxy
             proxy = model.make_entity(Entity.LEGAL_ENTITY)
             proxy.id = mention.first("resolved")
-        apply_schemata(proxy, mention.get("detectedSchema"))
+        _merge_schemata(proxy, mention.get("detectedSchema"))
         proxy.add("name", mention.get("name"))
         proxy.add("country", mention.get("contextCountry"))
     if proxy.id is not None:
         yield proxy
 
 
-def _generate_matches(collection):
+def _query_mentions(collection):
     aggregator = get_aggregator(collection, origin=ORIGIN)
     writer = aggregator.bulk()
     for proxy in _iter_mentions(collection):
@@ -96,7 +94,7 @@ def _generate_matches(collection):
             countries = countries.intersection(proxy.get("country"))
             proxy.set("country", countries)
             # Try to be more specific about schema:
-            apply_schemata(proxy, schemata)
+            _merge_schemata(proxy, schemata)
             # Pick a principal name:
             proxy = name_entity(proxy)
             proxy.context["mutable"] = True
@@ -107,7 +105,7 @@ def _generate_matches(collection):
     aggregator.close()
 
 
-def _query_matches(collection):
+def _query_entities(collection):
     """Generate matches for indexing."""
     matchable = [s.name for s in model if s.matchable]
     for proxy in iter_proxies(collection_id=collection.id, schemata=matchable):
@@ -116,10 +114,10 @@ def _query_matches(collection):
 
 def xref_collection(stage, collection):
     """Cross-reference all the entities and documents in a collection."""
-    index.delete_xref(collection, sync=True)
+    delete_xref(collection, sync=True)
     delete_entities(collection.id, origin=ORIGIN, sync=True)
-    index.index_matches(collection, _query_matches(collection))
-    index.index_matches(collection, _generate_matches(collection))
+    index_matches(collection, _query_entities(collection))
+    index_matches(collection, _query_mentions(collection))
     reindex_collection(collection, sync=False)
 
 
