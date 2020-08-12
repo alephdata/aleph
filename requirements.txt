@@ -39,6 +39,7 @@ networkx==2.4
 zipstream==1.1.4
 tabulate==0.8.7
 pydantic==1.6.1
+lxml
 
 # Testing dependencies
 factory-boy==2.12.0
