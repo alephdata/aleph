@@ -24,7 +24,7 @@ class _MockFlaskRequest:
     ) -> None:
         self.path = path
         self.headers = {}
-        self.args = TypeConversionDict()
+        self.args: Dict[str, str] = TypeConversionDict()
 
         if authorization_header:
             self.headers["Authorization"] = authorization_header
@@ -50,7 +50,7 @@ def create_jwt_token(
     if expiration_date:
         final_payload["exp"] = expiration_date
 
-    return jwt.encode(payload=final_payload, key=final_key, algorithm=algorithm).decode("utf-8")
+    return jwt.encode(payload=final_payload, key=final_key, algorithm=algorithm).decode("utf-8")  # type: ignore
 
 
 class AuthenticationTestCase(TestCase):

@@ -1,4 +1,6 @@
 import logging
+from typing import ClassVar, List, Union, Dict
+
 from flask_babel import gettext
 from werkzeug.exceptions import BadRequest
 
@@ -37,7 +39,7 @@ class EntitiesQuery(Query):
     PREFIX_FIELD = "names.text"
     SKIP_FILTERS = ["schema", "schemata"]
     INCLUDE_FIELDS = PROXY_INCLUDES
-    SORT_DEFAULT = []
+    SORT_DEFAULT: ClassVar[List[Union[str, Dict[str, str]]]] = []
 
     def get_index(self):
         schemata = self.parser.getlist("filter:schema")

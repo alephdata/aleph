@@ -5,7 +5,7 @@ from pkg_resources import get_distribution
 
 __version__ = get_distribution("aleph").version
 
-from yaml import YAMLLoadWarning
+from yaml import YAMLLoadWarning  # type: ignore
 
 warnings.filterwarnings("ignore", category=YAMLLoadWarning)
 

@@ -27,7 +27,7 @@ from aleph.oauth import configure_oauth
 NONE = "'none'"
 log = logging.getLogger(__name__)
 
-db = SQLAlchemy()
+db: SQLAlchemy = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 babel = Babel()

@@ -1,5 +1,7 @@
 import logging
 from pprint import pprint, pformat  # noqa
+from typing import List, Union, Dict, ClassVar, Optional
+
 from followthemoney.types import registry
 from banal import ensure_list
 
@@ -27,18 +29,18 @@ def convert_filters(filters):
 
 class Query(object):
     RESULT_CLASS = SearchQueryResult
-    INCLUDE_FIELDS = None
+    INCLUDE_FIELDS: ClassVar[Optional[List[str]]] = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ["text"]
     PREFIX_FIELD = "name"
-    SKIP_FILTERS = []
+    SKIP_FILTERS: ClassVar[List[str]] = []
     AUTHZ_FIELD = "collection_id"
     SORT_FIELDS = {
         "label": "label.kw",
         "name": "name.kw",
         "score": "_score",
     }
-    SORT_DEFAULT = ["_score"]
+    SORT_DEFAULT: ClassVar[List[Union[str, Dict[str, str]]]] = ["_score"]
 
     def __init__(self, parser):
         self.parser = parser
