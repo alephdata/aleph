@@ -14,7 +14,7 @@ from aleph.logic.collections import reindex_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
-from aleph.index.xref import index_matches, delete_xref
+from aleph.index.xref import index_matches, delete_xref, iter_matches
 from aleph.index.entities import iter_proxies, entities_by_ids
 from aleph.index.entities import PROXY_INCLUDES
 from aleph.index.indexes import entities_read_index
@@ -188,7 +188,7 @@ def export_matches(collection, authz):
     ]
     sheet = excel.make_sheet("Cross-reference", headers)
     batch = []
-    for match in index.iter_matches(collection, authz):
+    for match in iter_matches(collection, authz):
         batch.append(match)
         if len(batch) >= BULK_PAGE:
             _iter_match_batch(excel, sheet, batch)

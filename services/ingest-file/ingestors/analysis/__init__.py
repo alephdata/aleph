@@ -61,7 +61,7 @@ class Analyzer(object):
                 mention = model.make_entity("Mention")
                 mention.make_id("mention", self.entity.id, prop, key)
                 mention_ids.add(mention.id)
-                resolved_id = make_entity_id("ner", key)
+                resolved_id = make_entity_id("ner:", key)
                 mention.add("resolved", resolved_id)
                 mention.add("document", self.entity.id)
                 mention.add("name", values)
