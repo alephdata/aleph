@@ -4,6 +4,7 @@ from followthemoney import model
 from followthemoney.exc import InvalidData
 from werkzeug.exceptions import BadRequest
 
+from aleph.authz import ActionEnum
 from aleph.search import XrefQuery
 from aleph.index.xref import get_xref
 from aleph.logic.xref import export_matches
@@ -53,7 +54,7 @@ def index(collection_id):
     """
     get_index_collection(collection_id)
     result = XrefQuery.handle(request, collection_id=collection_id)
-    require(request.authz.can(collection_id, request.authz.READ))
+    require(request.authz.can(collection_id, ActionEnum.READ))
     pairs = []
     for xref in result.results:
         pairs.append((xref.get("entity_id"), xref.get("match_id")))
@@ -124,7 +125,7 @@ def export(collection_id):
       - Xref
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.READ)
+    collection = get_db_collection(collection_id, ActionEnum.READ)
     buffer = export_matches(collection, request.authz)
     file_name = "%s - Crossreference.xlsx" % collection.label
     return send_file(

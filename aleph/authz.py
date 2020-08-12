@@ -27,10 +27,6 @@ class Authz:
     e.g. in the context of notifications.
     """
 
-    # TODO(AD): Remove after switching all code to ActionEnum
-    READ = "read"
-    WRITE = "write"
-
     PREFIX = "aauthz"
 
     _JWT_TOKENS_VALIDITY_DURATION = timedelta(days=1)

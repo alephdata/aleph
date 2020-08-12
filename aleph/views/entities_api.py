@@ -5,6 +5,7 @@ from flask import Blueprint, request, Response
 from werkzeug.exceptions import NotFound
 from followthemoney import model
 
+from aleph.authz import ActionEnum
 from aleph.core import db, url_for
 from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery
@@ -251,7 +252,7 @@ def create():
     entity_id = upsert_entity(data, collection, authz=request.authz, sync=True)
     db.session.commit()
     tag_request(entity_id=entity_id, collection_id=collection.id)
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     return EntitySerializer.jsonify(entity)
 
 
@@ -281,7 +282,7 @@ def view(entity_id):
     """
     enable_cache()
     excludes = ["text", "numeric.*"]
-    entity = get_index_entity(entity_id, request.authz.READ, excludes=excludes)
+    entity = get_index_entity(entity_id, ActionEnum.READ, excludes=excludes)
     tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
     html = proxy.first("bodyHtml", quiet=True)
@@ -329,7 +330,7 @@ def similar(entity_id):
       - Entity
     """
     enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     tag_request(collection_id=entity.get("collection_id"))
     entity = model.get_proxy(entity)
     result = MatchQuery.handle(request, entity=entity)
@@ -369,7 +370,7 @@ def references(entity_id):
       - Entity
     """
     enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     tag_request(collection_id=entity.get("collection_id"))
     results = []
     for prop, total in entity_references(entity, request.authz):
@@ -410,7 +411,7 @@ def tags(entity_id):
       - Entity
     """
     enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     tag_request(collection_id=entity.get("collection_id"))
     results = []
     for (field, value, total) in entity_tags(entity, request.authz):
@@ -547,7 +548,7 @@ def expand(entity_id):
       tags:
       - Entity
     """
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     edge_types = request.args.getlist("edge_types")
     collection_id = entity.get("collection_id")
     tag_request(collection_id=collection_id)

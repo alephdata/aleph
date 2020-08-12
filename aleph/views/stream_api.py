@@ -2,6 +2,7 @@ import logging
 from banal import ensure_list
 from flask import Blueprint, request
 
+from aleph.authz import ActionEnum
 from aleph.index.entities import iter_entities, PROXY_INCLUDES
 from aleph.views.util import get_db_collection
 from aleph.views.util import require, stream_ijson
@@ -46,7 +47,7 @@ def entities(collection_id=None):
     includes = ensure_list(request.args.getlist("include"))
     includes = includes or PROXY_INCLUDES
     if collection_id is not None:
-        get_db_collection(collection_id, request.authz.READ)
+        get_db_collection(collection_id, ActionEnum.READ)
     entities = iter_entities(
         authz=request.authz,
         collection_id=collection_id,

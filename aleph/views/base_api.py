@@ -11,7 +11,7 @@ from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
 from aleph.core import settings, url_for
-from aleph.authz import Authz
+from aleph.authz import Authz, ActionEnum
 from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.logic.pages import load_pages
@@ -125,7 +125,7 @@ def statistics():
       - System
     """
     enable_cache()
-    collections = request.authz.collections(request.authz.READ)
+    collections = request.authz.collections(ActionEnum.READ)
     for collection_id in collections:
         resolver.queue(request, Collection, collection_id)
     resolver.resolve(request)

@@ -4,6 +4,7 @@ from followthemoney import model
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
+from aleph.authz import ActionEnum
 from aleph.core import db
 from aleph.model import Mapping
 from aleph.search import QueryParser, DatabaseQueryResult
@@ -113,7 +114,7 @@ def create(collection_id):
     data = parse_request("MappingCreate")
     entity_id = data.get("table_id")
     query = load_query()
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     mapping = Mapping.create(
         query, entity.get("id"), collection, request.authz.id
     )  # noqa
@@ -209,7 +210,7 @@ def update(collection_id, mapping_id):
     data = parse_request("MappingCreate")
     entity_id = data.get("table_id")
     query = load_query()
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     mapping.update(query=query, table_id=entity.get("id"))
     db.session.commit()
     return MappingSerializer.jsonify(mapping)

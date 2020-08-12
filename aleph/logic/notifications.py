@@ -6,7 +6,7 @@ from followthemoney import model
 from followthemoney.util import get_entity_id
 
 from aleph.core import cache, es, settings
-from aleph.authz import Authz
+from aleph.authz import Authz, ActionEnum
 from aleph.model import Collection, Entity, Role, Alert, EntitySet
 from aleph.model import Event, Events
 from aleph.logic.mail import email_role
@@ -55,7 +55,7 @@ def get_role_channels(role):
         authz = Authz.from_role(role)
         for role_id in authz.roles:
             channels.append(channel_tag(role_id, Role))
-        for coll_id in authz.collections(authz.READ):
+        for coll_id in authz.collections(ActionEnum.READ):
             channels.append(channel_tag(coll_id, Collection))
     cache.set_list(key, channels, expires=3600 * 2)
     return channels

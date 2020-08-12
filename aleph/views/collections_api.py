@@ -2,7 +2,7 @@ from banal import ensure_list
 from flask import Blueprint, request
 
 from aleph.core import db, settings
-from aleph.authz import Authz
+from aleph.authz import Authz, ActionEnum
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
@@ -349,7 +349,7 @@ def status(collection_id):
       tags:
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.READ)
+    collection = get_db_collection(collection_id, ActionEnum.READ)
     request.rate_limit = None
     return jsonify(get_status(collection))
 

@@ -3,6 +3,7 @@ from banal import ensure_list
 from flask import Blueprint, request
 from werkzeug.exceptions import NotFound
 
+from aleph.authz import ActionEnum
 from aleph.core import db
 from aleph.model import EntitySet, EntitySetItem
 from aleph.model.common import make_textid
@@ -124,7 +125,7 @@ def view(entityset_id):
       tags:
       - EntitySet
     """
-    entityset = get_entityset(entityset_id, request.authz.READ)
+    entityset = get_entityset(entityset_id, ActionEnum.READ)
     return EntitySetSerializer.jsonify(entityset)
 
 
@@ -218,7 +219,7 @@ def entities_index(entityset_id):
       tags:
       - EntitySet
     """
-    entityset = get_entityset(entityset_id, request.authz.READ)
+    entityset = get_entityset(entityset_id, ActionEnum.READ)
     parser = SearchQueryParser(request.args, request.authz)
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitySetItemsQuery.handle(request, parser=parser, entityset=entityset)
@@ -266,8 +267,8 @@ def entities_update(entityset_id):
     data = parse_request("EntityUpdate")
     entity_id = data.get("id", make_textid())
     try:
-        entity = get_index_entity(entity_id, request.authz.READ)
-        collection = get_db_collection(entity.get("collection_id"), request.authz.READ)
+        entity = get_index_entity(entity_id, ActionEnum.READ)
+        collection = get_db_collection(entity.get("collection_id"), ActionEnum.READ)
     except NotFound:
         entity = None
         collection = entityset.collection
@@ -311,7 +312,7 @@ def item_index(entityset_id):
       tags:
       - EntitySetItem
     """
-    entityset = get_entityset(entityset_id, request.authz.READ)
+    entityset = get_entityset(entityset_id, ActionEnum.READ)
     result = DatabaseQueryResult(request, entityset.items())
     return EntitySetItemSerializer.jsonify_result(result)
 
@@ -354,7 +355,7 @@ def item_update(entityset_id):
     data = parse_request("EntitySetItemUpdate")
     entity = data.pop("entity", {})
     entity_id = data.pop("entity_id", entity.get("id"))
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, ActionEnum.READ)
     data["collecton_id"] = entity["collection_id"]
     data["added_by_id"] = request.authz.id
     item = EntitySetItem.save(entityset, entity_id, **data)

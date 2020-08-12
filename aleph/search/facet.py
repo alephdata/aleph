@@ -1,6 +1,7 @@
 from followthemoney import model
 from followthemoney.types import registry
 
+from aleph.authz import ActionEnum
 from aleph.model import Collection
 from aleph.logic import resolver
 
@@ -95,7 +96,7 @@ class CategoryFacet(Facet):
 class CollectionFacet(Facet):
     def expand(self, keys):
         for key in keys:
-            if self.parser.authz.can(key, self.parser.authz.READ):
+            if self.parser.authz.can(key, ActionEnum.READ):
                 resolver.queue(self.parser, Collection, key)
         resolver.resolve(self.parser)
 

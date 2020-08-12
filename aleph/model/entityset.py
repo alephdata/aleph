@@ -5,6 +5,7 @@ from normality import stringify
 from sqlalchemy.dialects.postgresql import JSONB
 from banal import ensure_list
 
+from aleph.authz import ActionEnum
 from aleph.core import db
 from aleph.model import Role, Collection
 from aleph.model.common import SoftDeleteModel
@@ -73,7 +74,7 @@ class EntitySet(db.Model, SoftDeleteModel):
 
     @classmethod
     def by_authz(cls, authz, types=None, prefix=None):
-        ids = authz.collections(authz.READ)
+        ids = authz.collections(ActionEnum.READ)
         q = cls.by_type(types)
         q = q.filter(cls.collection_id.in_(ids))
         if prefix is not None:

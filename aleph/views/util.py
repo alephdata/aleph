@@ -10,7 +10,7 @@ from werkzeug.exceptions import Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
 from servicelayer.jobs import Job
 
-from aleph.authz import Authz
+from aleph.authz import Authz, ActionEnum
 from aleph.model import Collection, EntitySet
 from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
@@ -77,33 +77,33 @@ def validate(data, schema):
     raise BadRequest(response=resp)
 
 
-def get_index_entity(entity_id, action=Authz.READ, **kwargs):
+def get_index_entity(entity_id, action: ActionEnum = ActionEnum.READ, **kwargs):
     entity = obj_or_404(_get_index_entity(entity_id, **kwargs))
-    require(request.authz.can(entity["collection_id"], action))
+    require(request.authz.can(entity["collection_id"], action))  # type: ignore
     return entity
 
 
-def get_db_collection(collection_id, action=Authz.READ):
+def get_db_collection(collection_id, action: ActionEnum = ActionEnum.READ):
     collection = obj_or_404(Collection.by_id(collection_id))
-    require(request.authz.can(collection.id, action))
+    require(request.authz.can(collection.id, action))  # type: ignore
     return collection
 
 
-def get_entityset(entityset_id, action=Authz.READ):
+def get_entityset(entityset_id, action: ActionEnum = ActionEnum.READ):
     eset = obj_or_404(EntitySet.by_id(entityset_id))
-    require(request.authz.can(eset.collection_id, action))
+    require(request.authz.can(eset.collection_id, action))  # type: ignore
     return eset
 
 
-def get_nested_collection(data, action=Authz.READ):
+def get_nested_collection(data, action: ActionEnum = ActionEnum.READ):
     collection = ensure_dict(data.get("collection"))
     collection_id = data.get("collection_id", collection.get("id"))
     return get_db_collection(collection_id, action)
 
 
-def get_index_collection(collection_id, action=Authz.READ):
+def get_index_collection(collection_id, action: ActionEnum =ActionEnum.READ):
     collection = obj_or_404(_get_index_collection(collection_id))
-    require(request.authz.can(collection["id"], action))
+    require(request.authz.can(collection["id"], action))  # type: ignore
     return collection
 
 

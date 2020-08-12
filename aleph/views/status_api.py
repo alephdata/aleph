@@ -1,6 +1,7 @@
 import logging
 from flask import Blueprint, request
 
+from aleph.authz import ActionEnum
 from aleph.model import Collection
 from aleph.queues import get_active_collection_status
 from aleph.views.serializers import CollectionSerializer
@@ -33,7 +34,7 @@ def status():
     status = get_active_collection_status()
     active_collections = status.pop("datasets", [])
     active_foreign_ids = set(active_collections.keys())
-    collections = request.authz.collections(request.authz.READ)
+    collections = request.authz.collections(ActionEnum.READ)
     serializer = CollectionSerializer(reference=True)
     results = []
     for fid in sorted(active_foreign_ids):

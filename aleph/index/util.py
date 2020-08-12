@@ -6,6 +6,7 @@ from elasticsearch.helpers import streaming_bulk
 from followthemoney.types import registry
 from servicelayer.util import backoff, service_retries
 
+from aleph.authz import ActionEnum
 from aleph.core import es, settings
 
 log = logging.getLogger(__name__)
@@ -95,7 +96,7 @@ def authz_query(authz, field="collection_id"):
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
         return {"match_all": {}}
-    collections = authz.collections(authz.READ)
+    collections = authz.collections(ActionEnum.READ)
     if not len(collections):
         return {"match_none": {}}
     return {"terms": {field: collections}}
