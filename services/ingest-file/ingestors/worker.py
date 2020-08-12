@@ -49,7 +49,7 @@ class IngestWorker(Worker):
             analyzer.feed(entity)
         if analyzer is not None:
             entity_ids.update(analyzer.flush())
-        return entity_ids
+        return list(entity_ids)
 
     def handle(self, task):
         name = task.context.get("ftmstore", task.job.dataset.name)

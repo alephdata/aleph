@@ -5,7 +5,6 @@ import logging
 from pathlib import Path
 from pprint import pprint  # noqa
 from itertools import count
-from banal import ensure_list
 from normality import slugify
 from tabulate import tabulate
 from flask.cli import FlaskGroup
@@ -16,7 +15,7 @@ from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
-from aleph.queues import get_status, queue_task, cancel_queue
+from aleph.queues import get_status, get_stage, cancel_queue
 from aleph.queues import get_active_collection_status, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
@@ -25,6 +24,7 @@ from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
+from aleph.logic.xref import xref_collection
 from aleph.logic.roles import create_user, update_roles, delete_role
 from aleph.logic.permissions import update_permission
 
@@ -170,16 +170,8 @@ def update():
 def xref(foreign_id):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
-    queue_task(collection, OP_XREF)
-
-
-@cli.command()
-@click.argument("foreign_id")
-def mref(foreign_id):
-    collection = get_collection(foreign_id)
-    from aleph.logic.mref import collection_mentions
-
-    collection_mentions(collection)
+    stage = get_stage(collection, OP_XREF)
+    xref_collection(stage, collection)
 
 
 @cli.command("load-entities")

@@ -10,7 +10,7 @@ from .support import TestCase
 
 class TestAnalysis(TestCase):
     def _tagged_entity(self, entity):
-        a = Analyzer(self.manager.dataset, entity)
+        a = Analyzer(self.manager.dataset, entity, {})
         a.feed(entity)
         a.flush()
         return self.get_emitted_by_id(entity.id)
