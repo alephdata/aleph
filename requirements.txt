@@ -46,6 +46,7 @@ Faker==4.1.1
 nose
 coverage
 coveralls
+mypy
 
 # Tracing and logging libraries
 python-json-logger==0.1.11
