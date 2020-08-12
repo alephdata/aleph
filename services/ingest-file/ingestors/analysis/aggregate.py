@@ -1,7 +1,6 @@
 import logging
 from collections import defaultdict
 
-from ingestors.analysis.util import tag_key
 from ingestors.analysis.util import TAG_COUNTRY, TAG_PHONE
 from ingestors.analysis.util import TAG_PERSON, TAG_COMPANY
 
@@ -22,7 +21,7 @@ class TagAggregator(object):
         self.types = defaultdict(int)
 
     def add(self, prop, value):
-        key = tag_key(value)
+        key = prop.type.node_id_safe(value)
         if key is None:
             return
 
