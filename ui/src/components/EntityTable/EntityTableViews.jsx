@@ -44,7 +44,7 @@ class EntityTableViews extends React.PureComponent {
       query={querySchemaEntities(activeSchema)}
       collection={collection}
       schema={activeSchema}
-      onStatusChange={() => {}}
+      onStatusChange={() => { }}
       writeable={writeable}
       isEntitySet={isEntitySet}
     />;
@@ -113,19 +113,19 @@ const mapStateToProps = (state, ownProps) => {
   const hashQuery = queryString.parse(location.hash);
   const hashType = hashQuery.type;
   const schemata = model.getSchemata()
-    .filter((schema) => !schema.isDocument() && !schema.isA('Page'))
+    .filter((schema) => !schema.isDocument() && !schema.hidden)
     .map((schema) => schema.name);
+  const visibleCounts = schemaCounts
+    .filter((c) => !model.getSchema(c.id).hidden);
 
   let addedView;
-  if (hashType && !schemaCounts.find(obj => obj.id === hashType)) {
+  if (hashType && !visibleCounts.find(obj => obj.id === hashType)) {
     addedView = { id: hashType, count: 0 };
-  } else if (!isPending && !schemaCounts.length) {
+  } else if (!isPending && !visibleCounts.length) {
     addedView = { id: 'Person', count: 0 };
   }
 
-  const schemaViews = addedView ? [...schemaCounts, addedView] : schemaCounts;
-
-
+  const schemaViews = addedView ? [...visibleCounts, addedView] : visibleCounts;
   const activeType = hashType || schemaViews[0]?.id;
   const selectableSchemata = schemata
     .filter((s) => !schemaViews.find((v) => v.id === s));
