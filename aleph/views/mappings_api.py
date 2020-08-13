@@ -343,6 +343,6 @@ def flush(collection_id, mapping_id):
         collection,
         OP_FLUSH_MAPPING,
         job_id=get_session_id(),
-        payload={"mapping_id": mapping.id},
+        payload={"mapping_id": mapping_id},
     )
     return ("", 202)
