@@ -4,25 +4,40 @@ from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.compare import compare
 from followthemoney.export.excel import ExcelWriter
+from followthemoney.exc import InvalidData
+from followthemoney.helpers import name_entity
 
 from aleph.core import es
-from aleph.model import Collection
+from aleph.model import Collection, Entity
 from aleph.logic import resolver
-from aleph.queues import queue_task, OP_XREF_ITEM
-from aleph.index import xref as index
-from aleph.index.entities import iter_entities, entities_by_ids
-from aleph.index.entities import PROXY_INCLUDES
-from aleph.index.indexes import entities_read_index
-from aleph.index.util import unpack_result, none_query
-from aleph.index.util import BULK_PAGE
+from aleph.logic.collections import reindex_collection
+from aleph.logic.aggregator import get_aggregator
 from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
+from aleph.index.xref import index_matches, delete_xref, iter_matches
+from aleph.index.entities import iter_proxies, entities_by_ids
+from aleph.index.entities import PROXY_INCLUDES
+from aleph.index.indexes import entities_read_index
+from aleph.index.collections import delete_entities
+from aleph.index.util import unpack_result, none_query
+from aleph.index.util import BULK_PAGE
+
 
 log = logging.getLogger(__name__)
-SCORE_CUTOFF = 0.3
+SCORE_CUTOFF = 0.35
+ORIGIN = "xref"
 
 
-def _query_item(collection, entity):
+def _merge_schemata(proxy, schemata):
+    for other in schemata:
+        try:
+            other = model.get(other)
+            proxy.schema = model.common_schema(proxy.schema, other)
+        except InvalidData:
+            proxy.schema = model.get(Entity.LEGAL_ENTITY)
+
+
+def _query_item(entity):
     """Cross-reference an entity or document, given as an indexed document."""
     query = match_query(entity)
     if query == none_query():
@@ -39,43 +54,71 @@ def _query_item(collection, entity):
         match = model.get_proxy(result)
         score = compare(model, entity, match)
         if score >= SCORE_CUTOFF:
-            # log.debug('Match: %r <-[%.3f]-> %r',
-            #           entity.caption, score, match.caption)
+            log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
             yield score, entity, result.get("collection_id"), match
 
 
-def _query_matches(collection, entity_ids):
+def _iter_mentions(collection):
+    """Combine mentions into pseudo-entities used for xref."""
+    proxy = model.make_entity(Entity.LEGAL_ENTITY)
+    for mention in iter_proxies(
+        collection_id=collection.id,
+        schemata=["Mention"],
+        sort={"properties.resolved": "desc"},
+    ):
+        if mention.first("resolved") != proxy.id:
+            if proxy.id is not None:
+                yield proxy
+            proxy = model.make_entity(Entity.LEGAL_ENTITY)
+            proxy.id = mention.first("resolved")
+        _merge_schemata(proxy, mention.get("detectedSchema"))
+        proxy.add("name", mention.get("name"))
+        proxy.add("country", mention.get("contextCountry"))
+    if proxy.id is not None:
+        yield proxy
+
+
+def _query_mentions(collection):
+    aggregator = get_aggregator(collection, origin=ORIGIN)
+    writer = aggregator.bulk()
+    for proxy in _iter_mentions(collection):
+        schemata = set()
+        countries = set()
+        for score, _, collection_id, match in _query_item(proxy):
+            schemata.add(match.schema)
+            countries.update(match.get_type_values(registry.country))
+            yield score, proxy, collection_id, match
+        if len(schemata):
+            # Assign only those countries that are backed by one of
+            # the matches:
+            countries = countries.intersection(proxy.get("country"))
+            proxy.set("country", countries)
+            # Try to be more specific about schema:
+            _merge_schemata(proxy, schemata)
+            # Pick a principal name:
+            proxy = name_entity(proxy)
+            proxy.context["mutable"] = True
+            log.debug("Reifying [%s]: %s", proxy.schema.name, proxy)
+            writer.put(proxy, fragment="mention")
+            # pprint(proxy.to_dict())
+    writer.flush()
+    aggregator.close()
+
+
+def _query_entities(collection):
     """Generate matches for indexing."""
-    for data in entities_by_ids(entity_ids):
-        entity = model.get_proxy(data)
-        yield from _query_item(collection, entity)
-
-
-def xref_item(stage, collection, entity_id=None, batch=50):
-    "Cross-reference an entity against others to generate potential matches."
-    entity_ids = [entity_id]
-    # This is running as a background job. In order to avoid running each
-    # entity one by one, we do it 101 at a time. This avoids sending redudant
-    # queries to the database and elasticsearch, making cross-ref much faster.
-    for task in stage.get_tasks(limit=batch):
-        entity_ids.append(task.payload.get("entity_id"))
-    matches = _query_matches(collection, entity_ids)
-    index.index_matches(collection, matches, sync=False)
-    stage.mark_done(len(entity_ids) - 1)
+    matchable = [s.name for s in model if s.matchable]
+    for proxy in iter_proxies(collection_id=collection.id, schemata=matchable):
+        yield from _query_item(proxy)
 
 
 def xref_collection(stage, collection):
     """Cross-reference all the entities and documents in a collection."""
-    index.delete_xref(collection, sync=True)
-    matchable = [s.name for s in model if s.matchable]
-    entities = iter_entities(collection_id=collection.id, schemata=matchable)
-    for entity in entities:
-        queue_task(
-            collection,
-            OP_XREF_ITEM,
-            job_id=stage.job.id,
-            payload={"entity_id": entity.get("id")},
-        )
+    delete_xref(collection, sync=True)
+    delete_entities(collection.id, origin=ORIGIN, sync=True)
+    index_matches(collection, _query_entities(collection))
+    index_matches(collection, _query_mentions(collection))
+    reindex_collection(collection, sync=False)
 
 
 def _format_date(proxy):
@@ -145,7 +188,7 @@ def export_matches(collection, authz):
     ]
     sheet = excel.make_sheet("Cross-reference", headers)
     batch = []
-    for match in index.iter_matches(collection, authz):
+    for match in iter_matches(collection, authz):
         batch.append(match)
         if len(batch) >= BULK_PAGE:
             _iter_match_batch(excel, sheet, batch)

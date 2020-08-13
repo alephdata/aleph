@@ -36,8 +36,10 @@ class EmailIdentity(object):
             self.label = self.name
 
         self.entity = None
-        if self.email is not None:
-            key = self.email.lower().strip()
+        key = registry.email.node_id_safe(self.email)
+        if self.name is not None and len(self.name) > 10:
+            key = key or registry.name.node_id_safe(self.name)
+        if key is not None:
             fragment = safe_fragment(self.label)
             self.entity = manager.make_entity("Person")
             self.entity.context = {"mutable": False}
