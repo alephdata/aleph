@@ -1,6 +1,4 @@
 const fs = require('fs');
-const jq = require('node-jq');
-
 const READ_DIR = './i18n/translations/';
 const WRITE_DIR = './src/content/';
 
@@ -8,15 +6,13 @@ fs.readdir(READ_DIR, (err, filenames) => {
   if (err) {
     throw err;
   }
-  const filepaths = filenames.map(filename => READ_DIR + filename)
-  const first = filenames[0].replace(READ_DIR, '').replace('.json', '');
-  const filter = `reduce inputs as $s ({${first}: .}; (.[input_filename|ltrimstr("${READ_DIR}")|rtrimstr(".json")]) += $s)`;
+  const output = {};
+  filenames.forEach(filename => {
+    const fileKey = filename.replace(/\.[^/.]+$/, "");
+    const contents = fs.readFileSync(READ_DIR + filename);
+    output[fileKey] = JSON.parse(contents)
+  })
 
-  jq.run(filter, filepaths, { output: 'compact' })
-    .then((output) => {
-      fs.writeFile(WRITE_DIR + 'translations.json', output, 'utf8', () => console.log('finished concatenating translations!'));
-    })
-    .catch((err) => {
-      throw err;
-    })
+  const outputJSON = JSON.stringify(output);
+  fs.writeFile(WRITE_DIR + 'translations.json', outputJSON, 'utf8', () => console.log('finished concatenating translations'));
 });

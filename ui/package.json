@@ -23,7 +23,6 @@
     "js-file-download": "^0.4.9",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
-    "node-jq": "^1.11.1",
     "node-sass": "^4.13.1",
     "numeral": "^2.0.6",
     "papaparse": "^5.1.0",
