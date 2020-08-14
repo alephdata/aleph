@@ -1,4 +1,6 @@
 const fs = require('fs');
+const path = require('path');
+
 const READ_DIR = './i18n/translations/';
 const WRITE_DIR = './src/content/';
 
@@ -8,9 +10,11 @@ fs.readdir(READ_DIR, (err, filenames) => {
   }
   const output = {};
   filenames.forEach(filename => {
-    const fileKey = filename.replace(/\.[^/.]+$/, "");
-    const contents = fs.readFileSync(READ_DIR + filename);
-    output[fileKey] = JSON.parse(contents)
+    const { ext, name } = path.parse(filename)
+    if (ext === '.json') {
+      const contents = fs.readFileSync(READ_DIR + filename);
+      output[name] = JSON.parse(contents)
+    }
   })
 
   const outputJSON = JSON.stringify(output);
