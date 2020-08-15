@@ -8,6 +8,7 @@ from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 from servicelayer.archive.util import ensure_path
 
+from aleph.authz import ActionEnum
 from aleph.core import db, archive
 from aleph.model import Document, Entity, Events
 from aleph.queues import ingest_entity
