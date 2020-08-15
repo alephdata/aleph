@@ -35,12 +35,12 @@ header:
 
 ```Authorization: ApiKey 363af1e2b03b41c6b3adc604956e2f66```
 
-Alternatively, the API key can also be sent as a query parameter under the
-`api_key` key.
-
 Similarly, a JWT can be sent in the Authorization header, after it has been
 returned by the login and/or OAuth processes. Aleph does not use session
 cookies or any other type of stateful API.
+
+Alternatively, an API key or JWT token can also be sent as a query parameter
+under the `api_key` key.
 """
 
 spec_info = {
