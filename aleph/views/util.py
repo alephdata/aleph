@@ -89,7 +89,7 @@ def get_db_collection(collection_id, action: ActionEnum = ActionEnum.READ):
     return collection
 
 
-def get_entityset(entityset_id, action: ActionEnum = ActionEnum.READ):
+def get_entityset(entityset_id, action: ActionEnum = ActionEnum.READ) -> EntitySet:
     eset = obj_or_404(EntitySet.by_id(entityset_id))
     require(request.authz.can(eset.collection_id, action))  # type: ignore
     return eset

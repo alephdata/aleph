@@ -245,7 +245,7 @@ def create():
         - Entity
     """
     data = parse_request("EntityCreate")
-    collection = get_nested_collection(data, request.authz.WRITE)
+    collection = get_nested_collection(data, ActionEnum.WRITE)
     data.pop("id", None)
     if get_flag("validate", default=False):
         validate_entity(data)
@@ -457,11 +457,11 @@ def update(entity_id):
     """
     data = parse_request("EntityUpdate")
     try:
-        entity = get_index_entity(entity_id, request.authz.WRITE)
+        entity = get_index_entity(entity_id, ActionEnum.WRITE)
         require(check_write_entity(entity, request.authz))
-        collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
+        collection = get_db_collection(entity.get("collection_id"), ActionEnum.WRITE)
     except NotFound:
-        collection = get_nested_collection(data, request.authz.WRITE)
+        collection = get_nested_collection(data, ActionEnum.WRITE)
     tag_request(collection_id=collection.id)
     data["id"] = entity_id
     if get_flag("validate", default=False):
@@ -491,8 +491,8 @@ def delete(entity_id):
       tags:
       - Entity
     """
-    entity = get_index_entity(entity_id, request.authz.WRITE)
-    collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
+    entity = get_index_entity(entity_id, ActionEnum.WRITE)
+    collection = get_db_collection(entity.get("collection_id"), ActionEnum.WRITE)
     tag_request(collection_id=collection.id)
     sync = get_flag("sync", default=True)
     delete_entity(collection, entity, sync=sync)

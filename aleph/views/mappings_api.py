@@ -110,7 +110,7 @@ def create(collection_id):
       - Collection
       - Mapping
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     data = parse_request("MappingCreate")
     entity_id = data.get("table_id")
     query = load_query()
@@ -158,7 +158,7 @@ def view(collection_id, mapping_id):
       - Collection
       - Mapping
     """
-    get_db_collection(collection_id, request.authz.WRITE)
+    get_db_collection(collection_id, ActionEnum.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping)
 
@@ -205,7 +205,7 @@ def update(collection_id, mapping_id):
       - Collection
       - Mapping
     """
-    get_db_collection(collection_id, request.authz.WRITE)
+    get_db_collection(collection_id, ActionEnum.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     data = parse_request("MappingCreate")
     entity_id = data.get("table_id")
@@ -249,7 +249,7 @@ def delete(collection_id, mapping_id):
       - Collection
       - Mapping
     """
-    get_db_collection(collection_id, request.authz.WRITE)
+    get_db_collection(collection_id, ActionEnum.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
     db.session.commit()
@@ -290,7 +290,7 @@ def trigger(collection_id, mapping_id):
       - Collection
       - Mapping
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.disabled = False
     mapping.set_status(Mapping.PENDING)
@@ -333,7 +333,7 @@ def flush(collection_id, mapping_id):
       - Collection
       - Mapping
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.disabled = True
     mapping.last_run_status = None

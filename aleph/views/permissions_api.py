@@ -44,7 +44,7 @@ def index(collection_id):
       - Permission
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     roles = Role.all_groups(request.authz).all()
     if request.authz.is_admin:
         roles.extend(Role.all_system())
@@ -116,7 +116,7 @@ def update(collection_id):
       - Permission
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     for permission in parse_request("PermissionUpdateList"):
         role_obj = ensure_dict(permission.get("role"))
         role_id = permission.get("role_id", role_obj.get("id"))

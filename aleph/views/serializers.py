@@ -7,6 +7,7 @@ from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.helpers import entity_filename
 
+from aleph.authz import ActionEnum
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
 from aleph.model import Alert, EntitySet, EntitySetItem
@@ -162,7 +163,7 @@ class CollectionSerializer(Serializer):
             "ui": collection_url(pk),
         }
         obj["shallow"] = obj.get("shallow", True)
-        obj["writeable"] = request.authz.can(pk, request.authz.WRITE)
+        obj["writeable"] = request.authz.can(pk, ActionEnum.WRITE)
         creator_id = obj.pop("creator_id", None)
         obj["creator"] = self.resolve(Role, creator_id, RoleSerializer)
         obj["team"] = []
@@ -272,7 +273,7 @@ class XrefSerializer(Serializer):
             obj["decision"] = None
 
         collection_id = obj.get("collection_id")
-        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["writeable"] = request.authz.can(collection_id, ActionEnum.WRITE)
 
         if obj["entity"] and obj["match"]:
             return obj
@@ -292,7 +293,7 @@ class EntitySetSerializer(Serializer):
         collection_id = obj.pop("collection_id", None)
         entity_ids = obj.pop("entities", [])
         obj["shallow"] = False
-        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["writeable"] = request.authz.can(collection_id, ActionEnum.WRITE)
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )
@@ -316,7 +317,7 @@ class EntitySetItemSerializer(Serializer):
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )
-        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["writeable"] = request.authz.can(collection_id, ActionEnum.WRITE)
         return obj
 
 
@@ -329,7 +330,7 @@ class EntitySetIndexSerializer(Serializer):
         obj.update(
             {
                 "shallow": True,
-                "writeable": request.authz.can(collection_id, request.authz.WRITE),
+                "writeable": request.authz.can(collection_id, ActionEnum.WRITE),
                 "collection": self.resolve(
                     Collection, collection_id, CollectionSerializer
                 ),

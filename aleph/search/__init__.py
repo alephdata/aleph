@@ -4,6 +4,7 @@ from typing import ClassVar, List, Union, Dict
 from flask_babel import gettext
 from werkzeug.exceptions import BadRequest
 
+from aleph.authz import ActionEnum
 from aleph.index.indexes import entities_read_index
 from aleph.index.collections import collections_index
 from aleph.index.xref import xref_index
@@ -26,7 +27,7 @@ class CollectionsQuery(Query):
     def get_filters(self):
         filters = super(CollectionsQuery, self).get_filters()
         if self.parser.getbool("filter:writeable"):
-            ids = self.parser.authz.collections(self.parser.authz.WRITE)
+            ids = self.parser.authz.collections(ActionEnum.WRITE)
             filters.append({"ids": {"values": ids}})
         return filters
 

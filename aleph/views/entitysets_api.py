@@ -95,7 +95,7 @@ def create():
       - EntitySet
     """
     data = parse_request("EntitySetCreate")
-    collection = get_nested_collection(data, request.authz.WRITE)
+    collection = get_nested_collection(data, ActionEnum.WRITE)
     entityset = create_entityset(collection, data, request.authz)
     db.session.commit()
     return EntitySetSerializer.jsonify(entityset)
@@ -158,7 +158,7 @@ def update(entityset_id):
       tags:
       - EntitySet
     """
-    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    entityset = get_entityset(entityset_id, ActionEnum.WRITE)
     data = parse_request("EntitySetUpdate")
     entityset.update(data)
     db.session.commit()
@@ -185,7 +185,7 @@ def delete(entityset_id):
       tags:
       - EntitySet
     """
-    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    entityset = get_entityset(entityset_id, ActionEnum.WRITE)
     entityset.delete()
     db.session.commit()
     return ("", 204)
@@ -263,7 +263,7 @@ def entities_update(entityset_id):
       tags:
       - Entity
     """
-    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    entityset = get_entityset(entityset_id, ActionEnum.WRITE)
     data = parse_request("EntityUpdate")
     entity_id = data.get("id", make_textid())
     try:
@@ -351,7 +351,7 @@ def item_update(entityset_id):
       tags:
       - EntitySetItem
     """
-    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    entityset = get_entityset(entityset_id, ActionEnum.WRITE)
     data = parse_request("EntitySetItemUpdate")
     entity = data.pop("entity", {})
     entity_id = data.pop("entity_id", entity.get("id"))

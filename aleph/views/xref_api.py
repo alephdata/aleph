@@ -96,7 +96,7 @@ def generate(collection_id):
       - Xref
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     queue_task(collection, OP_XREF)
     return jsonify({"status": "accepted"}, status=202)
 
@@ -179,7 +179,7 @@ def decide(collection_id, xref_id):
     """
     data = parse_request("XrefDecide")
     xref = obj_or_404(get_xref(xref_id, collection_id=collection_id))
-    require(request.authz.can(collection_id, request.authz.WRITE))
+    require(request.authz.can(collection_id, ActionEnum.WRITE))
 
     entity = get_index_entity(xref.get("entity_id"))
     match = get_index_entity(xref.get("match_id"))

@@ -183,7 +183,7 @@ def update(collection_id):
               schema:
                 $ref: '#/components/schemas/Collection'
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     data = parse_request("CollectionUpdate")
     sync = get_flag("sync")
     collection.update(data, request.authz)
@@ -222,7 +222,7 @@ def reingest(collection_id):
       tags:
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     job_id = get_session_id()
     data = {"index": get_flag("index", False)}
     queue_task(collection, OP_REINGEST, job_id=job_id, payload=data)
@@ -258,7 +258,7 @@ def reindex(collection_id):
       tags:
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     job_id = get_session_id()
     data = {"flush": get_flag("flush", False)}
     queue_task(collection, OP_REINDEX, job_id=job_id, payload=data)
@@ -303,7 +303,7 @@ def bulk(collection_id):
       tags:
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     require(request.authz.can_bulk_import())
     entities = ensure_list(request.get_json(force=True))
 
@@ -382,7 +382,7 @@ def cancel(collection_id):
       tags:
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     cancel_queue(collection)
     refresh_collection(collection_id)
     return ("", 204)
@@ -419,7 +419,7 @@ def delete(collection_id):
       tags:
         - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     keep_metadata = get_flag("keep_metadata", default=False)
     sync = get_flag("sync", default=True)
     delete_collection(collection, keep_metadata=keep_metadata, sync=sync)

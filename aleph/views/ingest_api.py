@@ -118,7 +118,7 @@ def ingest_upload(collection_id):
       - Ingest
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, ActionEnum.WRITE)
     job_id = get_session_id()
     sync = get_flag("sync", default=False)
     index = get_flag("index", default=True)

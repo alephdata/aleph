@@ -8,6 +8,7 @@ from followthemoney.types import registry
 from followthemoney.helpers import inline_names
 from followthemoney.exc import InvalidData
 
+from aleph.authz import ActionEnum
 from aleph.core import db, cache
 from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
@@ -71,7 +72,7 @@ def check_write_entity(entity, authz):
     collection_id = entity.get("collection_id", collection_id)
     if not entity.get("mutable"):
         return False
-    return authz.can(collection_id, authz.WRITE)
+    return authz.can(collection_id, ActionEnum.WRITE)
 
 
 def refresh_entity(collection, entity_id):
