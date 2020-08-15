@@ -85,49 +85,43 @@ def _authenticate_via_jwt_token(supplied_token: str, request_path: str) -> Authz
     return Authz.from_token(supplied_token, request_path=request_path)
 
 
+def _validate_authentication_token(received_auth_string: str) -> Authz:
+    # TODO(AD): It is a bit dangerous to have to figure out what kind of credentials we received
+    # An improvement would be to require the type of credential to be clearly stated in the Auth header and URLs
+    # for example "ApiKey" VS "JwtToken"
+
+    # Is the data an API key?
+    try:
+        auth_info = _authenticate_via_api_key(received_auth_string)
+    except InvalidApiKey:
+        # It's not - is it a JWT token then?
+        try:
+            auth_info = _authenticate_via_jwt_token(received_auth_string, request.path)
+        except InvalidJwtToken:
+            # It's not a valid JWT token either; log the incident
+            log.warning(
+                f'Received an invalid Auth header "{received_auth_string}" to access {request.path}'
+                f" from {_get_remote_ip()}"
+            )
+            auth_info = Authz.from_role(role=None)
+    return auth_info
+
+
 def _authenticate_request(request: flask.Request) -> Authz:
     # An API Key OR a JWT token can be supplied via the Authorization header
     authorization_header = request.headers.get("Authorization")
     if authorization_header:
-        # TODO(AD): It is a bit dangerous to have to figure out what kind of credentials we received
-        # An improvement would be to require the type of credential to be clearly stated in the Auth header
-        # for example "ApiKey" VS "JwtToken"
         if " " in authorization_header:
-            _, received_auth_string = authorization_header.split(" ", 1)
+            _, auth_data_in_header = authorization_header.split(" ", 1)
         else:
-            received_auth_string = authorization_header
+            auth_data_in_header = authorization_header
 
-        # Is it an API key?
-        try:
-            auth_info = _authenticate_via_api_key(received_auth_string)
-        except InvalidApiKey:
-            # It's not - is it a JWT token then?
-            try:
-                auth_info = _authenticate_via_jwt_token(received_auth_string, request.path)
-            except InvalidJwtToken :
-                # It's not a valid JWT token either; log the incident
-                log.warning(
-                    f'Received an invalid Auth header "{received_auth_string}" to access {request.path}'
-                    f" from {_get_remote_ip()}"
-                )
-                auth_info = Authz.from_role(role=None)
+        return _validate_authentication_token(auth_data_in_header)
 
-        return auth_info
-
-    # Alternatively, an API key can be supplied via the api_key GET parameter
-    api_key_in_url = request.args.get("api_key", type=str)
-    if api_key_in_url:
-        try:
-            auth_info = _authenticate_via_api_key(api_key_in_url)
-        except InvalidApiKey:
-            # It's not a valid API key; log the incident
-            log.warning(
-                f'Received an invalid API Key param \"{api_key_in_url}\" to access {request.path}'
-                f" from {_get_remote_ip()}"
-            )
-            auth_info = Authz.from_role(role=None)
-
-        return auth_info
+    # Alternatively, an they can be supplied via the api_key GET parameter
+    auth_data_in_url = request.args.get("api_key", type=str)
+    if auth_data_in_url:
+        return _validate_authentication_token(auth_data_in_url)
 
     # If we get here, no authentication info was supplied in the request
     return Authz.from_role(role=None)

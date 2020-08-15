@@ -68,12 +68,26 @@ def create_jwt_token(
 
 
 class AuthenticationTestCase(TestCase):
-    def test_valid_jwt_token(self):
+    def test_valid_jwt_token_in_header(self):
         # Given a request with a valid JWT token passed via the Authorization header
         role = RoleFactory.create()
         db.session.commit()
         token = create_jwt_token(payload={"u": role.id, "r": []})
         request = _MockFlaskRequest(authorization_header=f"JwtToken {token}")
+
+        # When authenticating the request
+        auth_info = _authenticate_request(request)
+
+        # It succeeds and it gets authenticated as the corresponding role
+        assert auth_info.role.id == role.id
+        assert auth_info.logged_in
+
+    def test_valid_jwt_token_in_url(self):
+        # Given a request with a valid JWT token passed via the URL
+        role = RoleFactory.create()
+        db.session.commit()
+        token = create_jwt_token(payload={"u": role.id, "r": []})
+        request = _MockFlaskRequest(api_key_in_url=token)
 
         # When authenticating the request
         auth_info = _authenticate_request(request)
