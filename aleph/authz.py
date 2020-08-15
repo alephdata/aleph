@@ -128,6 +128,7 @@ class Authz:
             a=self.is_admin,
             b=self.is_blocked,
             s=scope,
+            role=self.role.to_dict(),
         )
         return token.to_str()
 
@@ -171,6 +172,19 @@ class InvalidJwtToken(Exception):
     pass
 
 
+class _RoleField(pydantic.BaseModel):
+    id: int
+    type: str
+    name: str
+    label: str
+    email: Optional[str]
+    locale: Optional[str]
+    is_admin: bool
+    is_muted: bool
+    is_tester: bool
+    has_password: bool
+
+
 class _JtwToken(pydantic.BaseModel):
     u: int  # role ID
     r: List[int]  # role IDs  # TODO(AD): Is this required or optional?
@@ -178,6 +192,7 @@ class _JtwToken(pydantic.BaseModel):
     a: bool = False  # is_admin
     b: bool = False  # is_blocked
     s: Optional[str] = None  # Scope ie. request path the token is valid for; None means all paths are authorized
+    role: _RoleField
 
     @classmethod
     def from_str(cls, token_as_str: str) -> "_JtwToken":

@@ -1,6 +1,8 @@
 # coding: utf-8
 import json
 import logging
+from typing import Optional
+
 from normality import stringify
 from datetime import datetime, date
 from flask_babel.speaklater import LazyString
@@ -10,10 +12,8 @@ from collections import abc
 log = logging.getLogger(__name__)
 
 
-def anonymize_email(name, email):
+def anonymize_email(name: str, email: Optional[str]) -> str:
     """Generate a simple label with both the name and email of a user."""
-    name = stringify(name)
-    email = stringify(email)
     if email is None:
         return name
     if "@" in email:

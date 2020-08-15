@@ -46,9 +46,23 @@ def create_jwt_token(
     else:
         final_key = key
 
-    final_payload = payload.copy() if payload else {"u": 1, "r": [2, 3]}
+    role_id = 1
+    final_payload = payload.copy() if payload else {"u": role_id, "r": [2, 3]}
     if expiration_date:
         final_payload["exp"] = expiration_date
+
+    final_payload["role"] = {
+        "id": role_id,
+        "type": "user",
+        "name": "A",
+        "label": "B",
+        "email": "a@b.com",
+        "locale": None,
+        "is_admin": False,
+        "is_muted": False,
+        "is_tester": False,
+        "has_password": False,
+    }
 
     return jwt.encode(payload=final_payload, key=final_key, algorithm=algorithm).decode("utf-8")  # type: ignore
 
@@ -163,6 +177,16 @@ class AuthenticationTestCase(TestCase):
         # It gets authenticated as the unauthenticated role
         assert auth_info.role is None
 
+    def test_to_token(self):
+        # Given an auth object for a role
+        role = RoleFactory.create()
+        db.session.commit()
+        auth_info = Authz.from_role(role=role)
+
+        # When generating a JWT token for it, it succeeds
+        token = auth_info.to_token()
+        assert token
+
 
 class JwtTokenTestCase(unittest.TestCase):
 
@@ -188,23 +212,6 @@ class JwtTokenTestCase(unittest.TestCase):
         assert parsed_token.a is False
         assert parsed_token.b is False
         assert parsed_token.s is None
-
-    def test_to_str(self):
-        # Given a valid token that's already parsed
-        token = create_jwt_token(
-            payload={
-                # The order here must match the order of the field in _JtwToken for this test to work
-                "u": 1,
-                "r": [2, 3],
-                "exp": 1000000000,
-                "a": False,
-                "b": True,
-            },
-        )
-        parsed_token = _JtwToken.from_str(token)
-
-        # When serializing it to a string, it succeeds and the right value is returned
-        assert token == parsed_token.to_str()
 
     def test_from_str_none_algoritm(self):
         # Given a token generated with the insecure "none" algorithm

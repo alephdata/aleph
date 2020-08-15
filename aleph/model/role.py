@@ -75,7 +75,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return True
 
     @property
-    def label(self):
+    def label(self) -> str:
         return anonymize_email(self.name, self.email)
 
     def update(self, data):
