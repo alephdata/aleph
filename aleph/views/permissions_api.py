@@ -1,6 +1,7 @@
 from banal import ensure_dict
 from flask import Blueprint, request
 
+from aleph.authz import ActionEnum
 from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible
 from aleph.logic.permissions import update_permission
