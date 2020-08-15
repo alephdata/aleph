@@ -1,6 +1,6 @@
 from dataclasses import dataclass, asdict
 from enum import Enum
-from typing import List, Set, Dict, Optional
+from typing import List, Set, Dict, Optional, Union
 import pydantic
 
 import jwt
@@ -98,17 +98,17 @@ class Authz:
             return False
         return self.logged_in
 
-    def can_write_role(self, role_id: int) -> bool:
+    def can_write_role(self, role_id: Union[int, str]) -> bool:
         if not self.session_write:
             return False
         if self.is_admin:
             return True
-        return role_id in self.private_roles
+        return int(role_id) in self.private_roles
 
-    def can_read_role(self, role_id: int) -> bool:
+    def can_read_role(self, role_id: Union[int, str]) -> bool:
         if self.is_admin:
             return True
-        return role_id in self.roles
+        return int(role_id) in self.roles
 
     @property
     def role(self) -> Role:
