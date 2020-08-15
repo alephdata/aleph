@@ -46,11 +46,11 @@ def create_jwt_token(
     else:
         final_key = key
 
-    role_id = 1
-    final_payload = payload.copy() if payload else {"u": role_id, "r": [2, 3]}
+    final_payload = payload.copy() if payload else {"u": 1, "r": [2, 3]}
     if expiration_date:
         final_payload["exp"] = expiration_date
 
+    role_id = final_payload["u"]
     final_payload["role"] = {
         "id": role_id,
         "type": "user",

@@ -74,33 +74,35 @@ class InvalidApiKey(Exception):
     pass
 
 
-def _authenticate_via_api_key(supplied_api_key: str) -> Authz:
+def _validate_api_key(supplied_api_key: str) -> Authz:
     role = Role.by_api_key(supplied_api_key)
     if not role:
         raise InvalidApiKey()
     return Authz.from_role(role=role)
 
 
-def _authenticate_via_jwt_token(supplied_token: str, request_path: str) -> Authz:
+def _validate_jwt_token(supplied_token: str, request_path: str) -> Authz:
     return Authz.from_token(supplied_token, request_path=request_path)
 
 
-def _validate_authentication_token(received_auth_string: str) -> Authz:
+def _validate_authentication_data(received_auth_data: str, request_path: str) -> Authz:
+    """Check the authentication data in the request to figure out if it's a valid API key, JWT token or if it's invalid.
+     """
     # TODO(AD): It is a bit dangerous to have to figure out what kind of credentials we received
     # An improvement would be to require the type of credential to be clearly stated in the Auth header and URLs
     # for example "ApiKey" VS "JwtToken"
 
     # Is the data an API key?
     try:
-        auth_info = _authenticate_via_api_key(received_auth_string)
+        auth_info = _validate_api_key(received_auth_data)
     except InvalidApiKey:
         # It's not - is it a JWT token then?
         try:
-            auth_info = _authenticate_via_jwt_token(received_auth_string, request.path)
+            auth_info = _validate_jwt_token(received_auth_data, request_path)
         except InvalidJwtToken:
             # It's not a valid JWT token either; log the incident
             log.warning(
-                f'Received an invalid Auth header "{received_auth_string}" to access {request.path}'
+                f'Received an invalid Auth header "{received_auth_data}" to access {request.path}'
                 f" from {_get_remote_ip()}"
             )
             auth_info = Authz.from_role(role=None)
@@ -116,12 +118,12 @@ def _authenticate_request(request: flask.Request) -> Authz:
         else:
             auth_data_in_header = authorization_header
 
-        return _validate_authentication_token(auth_data_in_header)
+        return _validate_authentication_data(auth_data_in_header, request.path)
 
     # Alternatively, an they can be supplied via the api_key GET parameter
     auth_data_in_url = request.args.get("api_key", type=str)
     if auth_data_in_url:
-        return _validate_authentication_token(auth_data_in_url)
+        return _validate_authentication_data(auth_data_in_url, request.path)
 
     # If we get here, no authentication info was supplied in the request
     return Authz.from_role(role=None)
