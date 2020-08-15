@@ -59,4 +59,5 @@ class SessionsApiTestCase(TestCase):
         res = self.client.post("/api/2/sessions/login", data=data)
         assert res.status_code == 200, res
         data = jwt.decode(res.json["token"], verify=False)
+        assert data["role"]["id"] == self.role.id, res
         assert data["u"] == self.role.id, res
