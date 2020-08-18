@@ -2,7 +2,7 @@
 @import "app/mixins.scss";
 
 .EntitySetSelector {
-  &__overlay-container .bp3-overlay.bp3-overlay-container {
+  &__portal-container .bp3-overlay.bp3-overlay-container {
     @include rtl(right, 0, auto);
     @include rtl(left, auto, 0);
     overflow: visible;
@@ -20,6 +20,21 @@
   .bp3-drawer-body {
     width: 100%;
     padding: $aleph-grid-size;
+
+    &.blocking {
+      pointer-events: none;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: $light-gray5;
+    opacity: .7;
+    z-index: 5;
   }
 
   &__top-section {

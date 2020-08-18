@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Drawer } from '@blueprintjs/core';
+import { Drawer, Spinner } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
+import c from 'classnames';
 
 import { createEntitySet, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
@@ -40,13 +41,20 @@ const messages = defineMessages({
 class EntitySetSelector extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      processing: false,
+    };
     this.onCreate = this.onCreate.bind(this);
+    this.onError = this.onError.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onSuccess = this.onSuccess.bind(this);
   }
 
   async onCreate(type, label) {
     const { collection, entities } = this.props;
+    const { processing } = this.state;
+
+    if (processing) { return; }
 
     const entitySet = {
       collection_id: collection.id,
@@ -56,31 +64,38 @@ class EntitySetSelector extends Component {
     };
 
     try {
+      this.setState({ processing: true });
       const created = await this.props.createEntitySet(entitySet);
       this.onSuccess(created.data);
     } catch (e) {
-      showWarningToast(e.message);
+      this.onError(e);
     }
 
   }
 
   onSelect(entitySet) {
     const { entities } = this.props;
+    const { processing } = this.state;
+
+    if (processing) { return; }
+
     const entitySetId = entitySet.id;
 
     try {
+      this.setState({ processing: true });
       const promises = entities.map(entity => (
         this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
       ));
 
       Promise.all(promises).then(values => this.onSuccess(entitySet));
     } catch (e) {
-      showWarningToast(e.message);
+      this.onError(e);
     }
   }
 
   onSuccess(entitySet) {
     const { entities, history, intl } = this.props;
+    this.setState({ processing: false });
 
     showSuccessToast({
       message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
@@ -94,6 +109,11 @@ class EntitySetSelector extends Component {
     this.props.toggleDialog(true);
   }
 
+  onError(e) {
+    this.setState({ processing: false });
+    showWarningToast(e.message);
+  }
+
   getTitle() {
     const { entities, intl } = this.props;
     const entLength = entities.length;
@@ -104,6 +124,7 @@ class EntitySetSelector extends Component {
 
   render() {
     const { collection, entities, intl, isOpen, toggleDialog } = this.props;
+    const { processing } = this.state;
 
     if (!entities.length) {
       return null;
@@ -121,9 +142,14 @@ class EntitySetSelector extends Component {
         autoFocus={false}
         enforceFocus={false}
         canOutsideClickClose={false}
-        portalClassName="EntitySetSelector__overlay-container"
+        portalClassName="EntitySetSelector__portal-container"
       >
-        <div className="bp3-drawer-body">
+        <div className={c("bp3-drawer-body", { "blocking": processing })}>
+          {processing && (
+            <div className="EntitySetSelector__overlay">
+              <Spinner className="FormDialog__spinner bp3-large" />
+            </div>
+          )}
           <EntitySetSelectorSection
             type="list"
             collection={collection}
