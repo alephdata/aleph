@@ -16,7 +16,11 @@ import './EntitySetSelector.scss';
 const messages = defineMessages({
   title: {
     id: 'entityset.selector.title',
-    defaultMessage: 'Add {count} {count, plural, one {entity} other {entities}} to...',
+    defaultMessage: 'Add {firstCaption} {titleSecondary} to...',
+  },
+  title_secondary: {
+    id: 'entityset.selector.title_other',
+    defaultMessage: 'and {count} other {count, plural, one {entity} other {entities}}',
   },
   placeholder: {
     id: 'entityset.selector.placeholder',
@@ -90,8 +94,20 @@ class EntitySetSelector extends Component {
     this.props.toggleDialog(true);
   }
 
+  getTitle() {
+    const { entities, intl } = this.props;
+    const entLength = entities.length;
+    const firstCaption = entities[0]?.getCaption();
+    const titleSecondary = entLength === 1 ? "" : intl.formatMessage(messages.title_secondary, { count: entLength - 1 })
+    return intl.formatMessage(messages.title, { firstCaption, titleSecondary });
+  }
+
   render() {
     const { collection, entities, intl, isOpen, toggleDialog } = this.props;
+
+    if (!entities.length) {
+      return null;
+    }
 
     return (
       <Drawer
@@ -99,7 +115,7 @@ class EntitySetSelector extends Component {
         className="EntitySetSelector"
         size={Drawer.SIZE_SMALL}
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title, { count: entities.length })}
+        title={this.getTitle()}
         transitionDuration={200}
         onClose={() => toggleDialog()}
         autoFocus={false}

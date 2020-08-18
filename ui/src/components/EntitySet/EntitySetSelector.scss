@@ -12,6 +12,9 @@
     @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
     @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
     z-index: 1;
+    .bp3-heading {
+      font-size: 16px;
+    }
   }
 
   .bp3-drawer-body {
@@ -28,6 +31,7 @@
 
     &__title.bp3-heading {
       margin: 0;
+      font-size: 14px;
     }
   }
 }
