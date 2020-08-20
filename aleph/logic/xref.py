@@ -10,6 +10,7 @@ from followthemoney.export.excel import ExcelWriter
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import name_entity
 from servicelayer.archive.util import ensure_path
+from pantomime.types import EXCEL
 
 from aleph.core import es
 from aleph.model import Collection, Entity, Role
@@ -33,7 +34,6 @@ from aleph.logic.export import publish_export
 log = logging.getLogger(__name__)
 SCORE_CUTOFF = 0.35
 ORIGIN = "xref"
-XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
 def _merge_schemata(proxy, schemata):
@@ -219,11 +219,7 @@ def export_matches(collection_id, role_id):
 
         label = "%s - Crossreference results" % collection.label
         publish_export(
-            OP_EXPORT_XREF_RESULTS,
-            file_path,
-            role_id,
-            label=label,
-            mime_type=XLSX_MIME,
+            OP_EXPORT_XREF_RESULTS, file_path, role_id, label=label, mime_type=EXCEL
         )
     finally:
         shutil.rmtree(export_dir)
