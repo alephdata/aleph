@@ -124,8 +124,8 @@ def render_notification(stub, notification):
             title = data.label
             link = entityset_url(data.id)
         elif clazz == Export:
-            title = data.label
-            link = url_for("exports_api.download", export_id=data.id)
+            title = data.get("label")
+            link = url_for("exports_api.download", export_id=data.get("id"))
 
         template = "{{%s}}" % name
         html = html.replace(template, html_link(title, link))
