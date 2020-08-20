@@ -42,7 +42,8 @@ class Export extends PureComponent {
         <td className="export-label wide">
           <ExportLink export_={export_} />
         </td>
-        <td className="filesize">{export_.file_size} bytes</td>
+        <td className="export-filesize">{export_.file_size || 0} bytes</td>
+        <td className="export-status">{export_.export_status}</td>
         <td className="timestamp">
           <FormattedRelativeTime
             value={value}

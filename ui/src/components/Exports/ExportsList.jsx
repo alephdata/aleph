@@ -27,10 +27,7 @@ class ExportsList extends Component {
   }
 
   componentDidMount() {
-    const { exports } = this.props;
-    if (exports.total === undefined) {
-      this.props.fetchExports();
-    }
+    this.props.fetchExports();
   }
 
   render() {
@@ -53,6 +50,7 @@ class ExportsList extends Component {
             <tr>
               <th className="wide">Name</th>
               <th>Size</th>
+              <th>Status</th>
               <th>Expiration</th>
             </tr>
           </thead>
