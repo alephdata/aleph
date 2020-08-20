@@ -9,7 +9,7 @@ from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
-from aleph.model import Alert, EntitySet, EntitySetItem
+from aleph.model import Alert, EntitySet, EntitySetItem, Export
 from aleph.logic import resolver
 from aleph.logic.entities import check_write_entity
 from aleph.logic.util import collection_url, entity_url, archive_url
@@ -282,6 +282,16 @@ class QueryLogSerializer(Serializer):
     pass
 
 
+class ExportSerializer(Serializer):
+    def _serialize(self, obj):
+        obj["links"] = {
+            "download": url_for(
+                "exports_api.download", export_id=obj.get("id"), _authorize=True
+            )
+        }
+        return obj
+
+
 class EntitySetSerializer(Serializer):
     def _collect(self, obj):
         self.queue(Collection, obj.get("collection_id"))
@@ -346,6 +356,7 @@ class NotificationSerializer(Serializer):
         EntitySet: EntitySetSerializer,
         EntitySetItem: EntitySetItemSerializer,
         Role: RoleSerializer,
+        Export: ExportSerializer,
     }
 
     def _collect(self, obj):

@@ -155,13 +155,8 @@ def export():
 
         Supports the same query parameters as the search API.
       responses:
-        '200':
-          content:
-            application/zip:
-              schema:
-                format: binary
-                type: string
-          description: OK
+        '202':
+          description: Accepted
       tags:
       - Entity
     """
@@ -171,7 +166,11 @@ def export():
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
     job_id = get_session_id()
-    payload = {"role_id": request.authz.id, "result": result.to_dict()}
+    payload = {
+        "role_id": request.authz.id,
+        "result": result.to_dict(),
+        "query": parser.text,
+    }
     dataset = sla_dataset_from_role(request.authz.id)
     queue_task(dataset, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
     return ("", 202)

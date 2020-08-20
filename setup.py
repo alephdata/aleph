@@ -39,6 +39,7 @@ setup(
             "loadmapping = aleph.task_handlers:op_load_mapping_handler",
             "flushmapping = aleph.task_handlers:op_flush_mapping_handler",
             "exportsearch = aleph.task_handlers:op_export_search_results_handler",
+            "exportxref = aleph.task_handlers:op_export_xref_results_handler",
         ],
         "console_scripts": ["aleph = aleph.manage:cli"],
     },

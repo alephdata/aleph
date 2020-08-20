@@ -16,6 +16,7 @@ OP_REINDEX = "reindex"
 OP_LOAD_MAPPING = "loadmapping"
 OP_FLUSH_MAPPING = "flushmapping"
 OP_EXPORT_SEARCH_RESULTS = "exportsearch"
+OP_EXPORT_XREF_RESULTS = "exportxref"
 
 ROLE_PREFIX = "role_id"
 

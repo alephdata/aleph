@@ -3,6 +3,7 @@ import logging
 from tempfile import mkdtemp
 import shutil
 import types
+from pprint import pformat  # noqa
 
 import zipstream
 import requests
@@ -10,14 +11,29 @@ from followthemoney import model
 from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import ensure_path
 
-from aleph.core import archive, db
-from aleph.logic import resolver
-from aleph.model import Collection, Export
+from aleph.core import archive, db, cache
+from aleph.model import Collection, Export, Events, Role
 from aleph.logic.util import entity_url
+from aleph.logic.notifications import publish
 from aleph.queues import OP_EXPORT_SEARCH_RESULTS
 
 log = logging.getLogger(__name__)
 EXTRA_HEADERS = ["url", "collection"]
+
+
+def get_export(export_id):
+    if export_id is None:
+        return
+    key = cache.object_key(Export, export_id)
+    data = cache.get_complex(key)
+    if data is None:
+        export = Export.by_id(export_id)
+        if export is None:
+            return
+        log.debug("Export cache refresh: %r", export)
+        data = export.to_dict()
+        cache.set_complex(key, data, expires=cache.EXPIRE)
+    return data
 
 
 def write_document(zip_archive, collection, entity):
@@ -37,17 +53,19 @@ def write_document(zip_archive, collection, entity):
             zip_archive.write(local_path, arcname=path)
 
 
-def export_entities(role_id, result):
-    try:
-        entities = []
-        stub = types.SimpleNamespace(result=result)
-        for entity in result["results"]:
-            resolver.queue(stub, Collection, entity.get("collection_id"))
-            entities.append(model.get_proxy(entity))
-        resolver.resolve(stub)
-        export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
-        file_path = export_dir.joinpath("query-export.zip")
+def export_entities(role_id, result, query):
+    from aleph.logic import resolver
 
+    entities = []
+    stub = types.SimpleNamespace(result=result)
+    for entity in result["results"]:
+        resolver.queue(stub, Collection, entity.get("collection_id"))
+        entities.append(model.get_proxy(entity))
+    resolver.resolve(stub)
+    export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
+    file_path = export_dir.joinpath("query-export.zip")
+
+    try:
         zip_archive = zipstream.ZipFile()
         exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
         for entity in entities:
@@ -63,7 +81,7 @@ def export_entities(role_id, result):
             for data in zip_archive:
                 zf.write(data)
 
-        label = "Search results"
+        label = "Search results for query: %s" % query
         publish_export(
             OP_EXPORT_SEARCH_RESULTS,
             file_path,
@@ -89,6 +107,11 @@ def publish_export(
     )
     export.publish()
     db.session.commit()
+    params = {"export": export}
+    role = Role.by_id(role_id)
+    publish(
+        Events.PUBLISH_EXPORT, params=params, channels=[role],
+    )
 
 
 def delete_expired_exports():

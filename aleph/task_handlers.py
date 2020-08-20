@@ -1,5 +1,5 @@
 from aleph.logic.processing import index_many
-from aleph.logic.xref import xref_item, xref_collection
+from aleph.logic.xref import xref_item, xref_collection, export_matches
 from aleph.logic.collections import reingest_collection, reindex_collection
 from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.export import export_entities
@@ -36,5 +36,9 @@ def op_flush_mapping_handler(collection, task):
     flush_mapping(collection, sync=sync, **task.payload)
 
 
-def op_export_search_results_handler(collection, task):
+def op_export_search_results_handler(_, task):
     export_entities(**task.payload)
+
+
+def op_export_xref_results_handler(_, task):
+    export_matches(**task.payload)

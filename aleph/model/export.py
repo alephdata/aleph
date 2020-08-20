@@ -133,8 +133,8 @@ class Export(db.Model, IdModel, DatedModel):
         return archive.generate_publication_url(
             self.namespace,
             self.content_hash,
-            mime_type=None,
-            expire=None,
+            mime_type=self.mime_type,
+            expire=self.expires_at,
             attachment_name=self.file_name,
         )
 
@@ -148,8 +148,22 @@ class Export(db.Model, IdModel, DatedModel):
         now = datetime.utcnow()
         q = cls.all().filter(cls.expires_at.isnot(None)).filter(cls.expires_at <= now)
         if deleted is not None:
-            q = q.filter(deleted=deleted)
+            q = q.filter(cls.deleted == deleted)
+        return q
+
+    @classmethod
+    def by_id(cls, id, role_id=None, deleted=False):
+        q = cls.all(deleted=deleted).filter_by(id=id)
+        if role_id is not None:
+            q = q.filter(cls.creator_id == role_id)
+        return q.first()
+
+    @classmethod
+    def by_role_id(cls, role_id):
+        q = cls.all()
+        q = q.filter(cls.creator_id == role_id)
+        q = q.order_by(cls.created_at.desc())
         return q
 
     def __repr__(self):
-        return "<Export(%r, %r)>" % (self.id, self.role_id)
+        return "<Export(%r, %r)>" % (self.id, self.creator_id)

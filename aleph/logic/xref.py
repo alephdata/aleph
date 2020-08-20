@@ -1,15 +1,21 @@
 import logging
 from pprint import pprint  # noqa
+from tempfile import mkdtemp
+import shutil
+
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.compare import compare
 from followthemoney.export.excel import ExcelWriter
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import name_entity
+from servicelayer.archive.util import ensure_path
 
 from aleph.core import es
-from aleph.model import Collection, Entity
+from aleph.model import Collection, Entity, Role
+from aleph.authz import Authz
 from aleph.logic import resolver
+from aleph.queues import OP_EXPORT_XREF_RESULTS
 from aleph.logic.collections import reindex_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.logic.matching import match_query
@@ -21,11 +27,13 @@ from aleph.index.indexes import entities_read_index
 from aleph.index.collections import delete_entities
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
+from aleph.logic.export import publish_export
 
 
 log = logging.getLogger(__name__)
 SCORE_CUTOFF = 0.35
 ORIGIN = "xref"
+XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
 def _merge_schemata(proxy, schemata):
@@ -170,29 +178,52 @@ def _iter_match_batch(stub, sheet, batch):
         )
 
 
-def export_matches(collection, authz):
+def export_matches(collection_id, role_id):
     """Export the top N matches of cross-referencing for the given collection
     to an Excel formatted export."""
-    excel = ExcelWriter()
-    headers = [
-        "Score",
-        "Entity Name",
-        "Entity Date",
-        "Entity Countries",
-        "Candidate Collection",
-        "Candidate Name",
-        "Candidate Date",
-        "Candidate Countries",
-        "Entity Link",
-        "Candidate Link",
-    ]
-    sheet = excel.make_sheet("Cross-reference", headers)
-    batch = []
-    for match in iter_matches(collection, authz):
-        batch.append(match)
-        if len(batch) >= BULK_PAGE:
+    role = Role.by_id(role_id)
+    authz = Authz.from_role(role)
+    collection = Collection.by_id(collection_id)
+    export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
+    file_name = "%s - Crossreference.xlsx" % collection.label
+    file_path = export_dir.joinpath(file_name)
+    try:
+        excel = ExcelWriter()
+        headers = [
+            "Score",
+            "Entity Name",
+            "Entity Date",
+            "Entity Countries",
+            "Candidate Collection",
+            "Candidate Name",
+            "Candidate Date",
+            "Candidate Countries",
+            "Entity Link",
+            "Candidate Link",
+        ]
+        sheet = excel.make_sheet("Cross-reference", headers)
+        batch = []
+
+        for match in iter_matches(collection, authz):
+            batch.append(match)
+            if len(batch) >= BULK_PAGE:
+                _iter_match_batch(excel, sheet, batch)
+                batch = []
+        if len(batch):
             _iter_match_batch(excel, sheet, batch)
-            batch = []
-    if len(batch):
-        _iter_match_batch(excel, sheet, batch)
-    return excel.get_bytesio()
+
+        with open(file_path, "wb") as fp:
+            buffer = excel.get_bytesio()
+            for data in buffer:
+                fp.write(data)
+
+        label = "%s - Crossreference results" % collection.label
+        publish_export(
+            OP_EXPORT_XREF_RESULTS,
+            file_path,
+            role_id,
+            label=label,
+            mime_type=XLSX_MIME,
+        )
+    finally:
+        shutil.rmtree(export_dir)
