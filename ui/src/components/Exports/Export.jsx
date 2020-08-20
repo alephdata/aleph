@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { selectUnit } from "@formatjs/intl-utils";
 import { FormattedRelativeTime } from "react-intl";
 
-import { Skeleton, ExportLink } from "src/components/common";
+import { Skeleton, ExportLink, FileSize } from "src/components/common";
 
 import "./Export.scss";
 
@@ -42,7 +42,9 @@ class Export extends PureComponent {
         <td className="export-label wide">
           <ExportLink export_={export_} />
         </td>
-        <td className="export-filesize">{export_.file_size || 0} bytes</td>
+        <td className="export-filesize">
+          <FileSize value={export_.file_size} />
+        </td>
         <td className="export-status">{export_.export_status}</td>
         <td className="timestamp">
           <FormattedRelativeTime
