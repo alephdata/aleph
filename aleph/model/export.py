@@ -49,9 +49,9 @@ class Export(db.Model, IdModel, DatedModel):
     deleted = db.Column(db.Boolean, default=False)
     export_status = db.Column(db.Unicode, default=DEFAULT_STATUS)
 
-    content_hash = db.Column(db.Unicode(65), index=True)
-    file_size = db.Column(db.BigInteger)  # In bytes
-    file_name = db.Column(db.Unicode)
+    content_hash = db.Column(db.Unicode(65), index=True, nullable=True)
+    file_size = db.Column(db.BigInteger, nullable=True)  # In bytes
+    file_name = db.Column(db.Unicode, nullable=True)
     mime_type = db.Column(db.Unicode)
     meta = db.Column(JSONB, default={})
 
@@ -81,29 +81,25 @@ class Export(db.Model, IdModel, DatedModel):
     def create(
         cls,
         operation,
-        file_path,
         role_id,
-        expires_after,
-        label=None,
+        label,
+        file_path=None,
+        expires_after=None,
         collection=None,
         mime_type=None,
     ):
-        file_path = ensure_path(file_path)
-        file_name = safe_filename(file_path)
-        file_size = file_path.stat().st_size
-
         export = cls()
         export.creator_id = role_id
         export.operation = operation
+        export.label = label
+        if file_path is not None:
+            export.set_filepath(file_path)
         if collection is not None:
             export.collection_id = collection.id
-        export.label = label
         export.mime_type = mime_type
-        export.file_name = file_name
-        export.file_size = file_size
-        export._file_path = file_path
-        export.content_hash = checksum(file_path)
-        export.expires_at = datetime.utcnow() + expires_after
+        export.expires_at = datetime.utcnow() + (
+            expires_after or cls.DEFAULT_EXPIRATION
+        )
         db.session.add(export)
         return export
 
@@ -123,6 +119,15 @@ class Export(db.Model, IdModel, DatedModel):
         except Exception as ex:
             self.set_status(status=Export.STATUS_FAILED)
             raise ex
+
+    def set_filepath(self, file_path):
+        file_path = ensure_path(file_path)
+        file_name = safe_filename(file_path)
+        file_size = file_path.stat().st_size
+        self.file_name = file_name
+        self.file_size = file_size
+        self._file_path = file_path
+        self.content_hash = checksum(file_path)
 
     def set_status(self, status):
         if status in self.EXPORT_STATUS:

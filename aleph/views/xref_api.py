@@ -1,10 +1,13 @@
 import logging
 from flask import Blueprint, request
 from followthemoney import model
+from pantomime.types import EXCEL
 
+from aleph.model import Export
 from aleph.search import XrefQuery
 from aleph.index.xref import get_xref
 from aleph.logic.profiles import decide_xref, pairwise_decisions
+from aleph.logic.export import create_export
 from aleph.views.serializers import XrefSerializer
 from aleph.queues import (
     queue_task,
@@ -129,9 +132,22 @@ def export(collection_id):
       - Xref
       - Collection
     """
-    get_db_collection(collection_id, request.authz.READ)
+    collection = get_db_collection(collection_id, request.authz.READ)
+    label = "%s - Crossreference results" % collection.label
+    export = create_export(
+        operation=OP_EXPORT_XREF_RESULTS,
+        role_id=request.authz.id,
+        label=label,
+        file_path=None,
+        expires_after=Export.DEFAULT_EXPIRATION,
+        collection=collection,
+        mime_type=EXCEL,
+    )
     job_id = get_session_id()
-    payload = {"role_id": request.authz.id, "collection_id": collection_id}
+    payload = {
+        "collection_id": collection_id,
+        "export_id": export.id,
+    }
     dataset = sla_dataset_from_role(request.authz.id)
     queue_task(dataset, OP_EXPORT_XREF_RESULTS, job_id=job_id, payload=payload)
     return ("", 202)

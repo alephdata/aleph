@@ -15,7 +15,6 @@ from aleph.core import archive, db, cache
 from aleph.model import Collection, Export, Events, Role
 from aleph.logic.util import entity_url
 from aleph.logic.notifications import publish
-from aleph.queues import OP_EXPORT_SEARCH_RESULTS
 
 log = logging.getLogger(__name__)
 EXTRA_HEADERS = ["url", "collection"]
@@ -53,7 +52,7 @@ def write_document(zip_archive, collection, entity):
             zip_archive.write(local_path, arcname=path)
 
 
-def export_entities(role_id, result, query):
+def export_entities(export_id, result):
     from aleph.logic import resolver
 
     entities = []
@@ -81,34 +80,35 @@ def export_entities(role_id, result, query):
             for data in zip_archive:
                 zf.write(data)
 
-        label = "Search results for query: %s" % query
-        publish_export(
-            OP_EXPORT_SEARCH_RESULTS,
-            file_path,
-            role_id,
-            label=label,
-            mime_type="application/zip",
-        )
+        publish_export(export_id, file_path)
     finally:
         shutil.rmtree(export_dir)
 
 
-def publish_export(
+def create_export(
     operation,
-    file_path,
     role_id,
+    label,
+    file_path=None,
     expires_after=Export.DEFAULT_EXPIRATION,
-    label=None,
     collection=None,
     mime_type=None,
 ):
     export = Export.create(
-        operation, file_path, role_id, expires_after, label, collection, mime_type
+        operation, role_id, label, file_path, expires_after, collection, mime_type
     )
+    db.session.commit()
+    return export
+
+
+def publish_export(export_id, file_path=None):
+    export = Export.by_id(export_id)
+    if file_path:
+        export.set_filepath(file_path)
     export.publish()
     db.session.commit()
     params = {"export": export}
-    role = Role.by_id(role_id)
+    role = Role.by_id(export.creator_id)
     publish(
         Events.PUBLISH_EXPORT, params=params, channels=[role],
     )

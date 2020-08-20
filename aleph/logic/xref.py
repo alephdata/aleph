@@ -10,13 +10,11 @@ from followthemoney.export.excel import ExcelWriter
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import name_entity
 from servicelayer.archive.util import ensure_path
-from pantomime.types import EXCEL
 
 from aleph.core import es
-from aleph.model import Collection, Entity, Role
+from aleph.model import Collection, Entity, Role, Export
 from aleph.authz import Authz
 from aleph.logic import resolver
-from aleph.queues import OP_EXPORT_XREF_RESULTS
 from aleph.logic.collections import reindex_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.logic.matching import match_query
@@ -178,10 +176,11 @@ def _iter_match_batch(stub, sheet, batch):
         )
 
 
-def export_matches(collection_id, role_id):
+def export_matches(collection_id, export_id):
     """Export the top N matches of cross-referencing for the given collection
     to an Excel formatted export."""
-    role = Role.by_id(role_id)
+    export = Export.by_id(export_id)
+    role = Role.by_id(export.creator_id)
     authz = Authz.from_role(role)
     collection = Collection.by_id(collection_id)
     export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
@@ -217,9 +216,6 @@ def export_matches(collection_id, role_id):
             for data in buffer:
                 fp.write(data)
 
-        label = "%s - Crossreference results" % collection.label
-        publish_export(
-            OP_EXPORT_XREF_RESULTS, file_path, role_id, label=label, mime_type=EXCEL
-        )
+        publish_export(export_id, file_path)
     finally:
         shutil.rmtree(export_dir)
