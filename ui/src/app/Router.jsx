@@ -26,6 +26,7 @@ import EntitySetIndexScreen from 'screens/EntitySetIndexScreen/EntitySetIndexScr
 import DiagramScreen from 'screens/EntitySetScreens/DiagramScreen';
 import ListScreen from 'screens/EntitySetScreens/ListScreen';
 import EntityScreen from 'screens/EntityScreen/EntityScreen';
+import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
 
 import './Router.scss';
 
@@ -86,6 +87,7 @@ class Router extends Component {
           <Route path="/notifications" exact component={NotificationsScreen} />
           <Route path="/history" exact component={HistoryScreen} />
           <Route path="/alerts" exact component={AlertsScreen} />
+          <Route path="/exports" exact component={ExportsScreen} />
           <Route path="/settings" exact component={SettingsScreen} />
           <Route path="/status" exact component={SystemStatusScreen} />
           <Route path="/groups/:groupId" exact component={GroupScreen} />

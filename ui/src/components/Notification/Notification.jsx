@@ -3,8 +3,8 @@ import { selectUnit } from '@formatjs/intl-utils';
 import { FormattedRelativeTime } from 'react-intl';
 
 import {
-  Collection, EntitySet, Entity, QueryText, Role, Skeleton,
-} from 'components/common';
+  Collection, EntitySet, Entity, QueryText, Role, Skeleton, ExportLink
+} from 'src/components/common';
 
 import './Notification.scss';
 
@@ -28,6 +28,9 @@ class Notification extends PureComponent {
     }
     if (type === 'role') {
       return <Role.Label role={object} />;
+    }
+    if (type === 'export') {
+      return object ? <ExportLink export_={object} /> : null;
     }
     return undefined;
   }

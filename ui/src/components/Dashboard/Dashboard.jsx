@@ -26,6 +26,10 @@ const messages = defineMessages({
     id: 'dashboard.alerts',
     defaultMessage: 'Alerts',
   },
+  exports: {
+    id: 'dashboard.exports',
+    defaultMessage: 'Exports',
+  },
   cases: {
     id: 'dashboard.cases',
     defaultMessage: 'Personal datasets',
@@ -116,6 +120,12 @@ class Dashboard extends React.Component {
               label={<ResultCount result={alerts} />}
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
+            />
+            <MenuItem
+              icon="download"
+              text={intl.formatMessage(messages.exports)}
+              onClick={() => this.navigate('/exports')}
+              active={current === '/exports'}
             />
             <MenuDivider />
             <li className="bp3-menu-header">
