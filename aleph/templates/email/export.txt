@@ -1,0 +1,14 @@
+{% extends "email/layout.txt" %}
+
+{% block content -%}
+{% trans -%}
+The following export is ready for download:
+{%- endtrans %}
+* {{export_label}} [{{download_url}}]
+
+{% trans -%}
+This download link will expire on {{expiration_date}}.
+Browse all of your available exports here:
+{%- endtrans %}
+{{exports_url}}
+{%- endblock %}

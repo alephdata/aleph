@@ -3,7 +3,7 @@ from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
 from servicelayer.extensions import get_entry_point
 
-from aleph.core import kv, db, create_app
+from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.queues import (
@@ -24,7 +24,7 @@ from aleph.logic.roles import update_roles
 from aleph.logic.export import delete_expired_exports
 
 log = logging.getLogger(__name__)
-app = create_app()
+app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.

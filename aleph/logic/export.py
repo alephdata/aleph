@@ -7,14 +7,17 @@ from pprint import pformat  # noqa
 
 import zipstream
 import requests
+from flask import render_template
 from followthemoney import model
 from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import ensure_path
 
-from aleph.core import archive, db, cache
+from aleph.core import archive, db, cache, url_for, settings
 from aleph.model import Collection, Export, Events, Role
-from aleph.logic.util import entity_url
+from aleph.logic.util import entity_url, ui_url
 from aleph.logic.notifications import publish
+from aleph.logic.mail import email_role
+
 
 log = logging.getLogger(__name__)
 EXTRA_HEADERS = ["url", "collection"]
@@ -112,6 +115,7 @@ def publish_export(export_id, file_path=None):
     publish(
         Events.PUBLISH_EXPORT, params=params, channels=[role],
     )
+    send_export_notification(export)
 
 
 def delete_expired_exports():
@@ -119,3 +123,22 @@ def delete_expired_exports():
     for export in expired_exports:
         export.delete_publication()
     db.session.commit()
+
+
+def send_export_notification(export):
+    role = Role.by_id(export.creator_id)
+    download_url = url_for("exports_api.download", export_id=export.id)
+    params = dict(
+        role=role,
+        export_label=export.label,
+        download_url=download_url,
+        expiration_date=export.expires_at.strftime("%Y-%m-%d"),
+        exports_url=ui_url("exports"),
+        ui_url=settings.APP_UI_URL,
+        app_title=settings.APP_TITLE,
+    )
+    plain = render_template("email/export.txt", **params)
+    html = render_template("email/export.html", **params)
+    log.info("Notification: %s", plain)
+    subject = "Export ready for download"
+    email_role(role, subject, html=html, plain=plain)
