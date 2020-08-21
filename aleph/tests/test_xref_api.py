@@ -78,7 +78,7 @@ class XrefApiTestCase(TestCase):
 
         _, headers = self.login(foreign_id="creator")
         res = self.client.get(url, headers=headers)
-        assert res.status_code == 200, res
+        assert res.status_code == 202, res
 
     def test_matches(self):
         xref.xref_collection(self.stage, self.residents)

@@ -110,7 +110,7 @@ class Export(db.Model, IdModel, DatedModel):
     def publish(self):
         if not self._file_path:
             raise RuntimeError("file path not present for export: %r", self)
-        # Use content has as filename to make to ensure uniqueness
+        # Use contenthash as filename to make to ensure uniqueness
         path = Path(self._file_path.parent, self.content_hash)
         self._file_path.rename(path)
         try:
@@ -144,12 +144,26 @@ class Export(db.Model, IdModel, DatedModel):
         )
 
     def delete_publication(self):
-        archive.delete_publication(self.namespace, self.file_name)
+        if self._should_delete_publication():
+            archive.delete_publication(self.namespace, self.content_hash)
         self.deleted = True
         db.session.add(self)
 
+    def _should_delete_publication(self):
+        """Check whether the published export should be deleted from the archive
+
+        Since we store exports by contenthash, there may be other non-expired exports
+        that point to the same file in the archive"""
+        q = (
+            Export.all()
+            .filter(Export.content_hash == self.content_hash)
+            .filter(Export.deleted.isnot(True))
+            .filter(Export.id != self.id)
+        )
+        return q.first() is None
+
     @classmethod
-    def get_expired(cls, deleted=None):
+    def get_expired(cls, deleted=False):
         now = datetime.utcnow()
         q = cls.all().filter(cls.expires_at.isnot(None)).filter(cls.expires_at <= now)
         if deleted is not None:
@@ -158,15 +172,19 @@ class Export(db.Model, IdModel, DatedModel):
 
     @classmethod
     def by_id(cls, id, role_id=None, deleted=False):
-        q = cls.all(deleted=deleted).filter_by(id=id)
+        q = cls.all().filter_by(id=id)
         if role_id is not None:
             q = q.filter(cls.creator_id == role_id)
+        if deleted is not None:
+            q = q.filter(cls.deleted == deleted)
         return q.first()
 
     @classmethod
-    def by_role_id(cls, role_id):
+    def by_role_id(cls, role_id, deleted=False):
         q = cls.all()
         q = q.filter(cls.creator_id == role_id)
+        if deleted is not None:
+            q = q.filter(cls.deleted == deleted)
         q = q.order_by(cls.created_at.desc())
         return q
 
