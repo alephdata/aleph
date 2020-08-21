@@ -33,7 +33,6 @@ setup(
         "aleph.task_handlers": [
             "index = aleph.task_handlers:op_index_handler",
             "xref = aleph.task_handlers:op_xref_handler",
-            "xitem = aleph.task_handlers:op_xref_item_handler",
             "reingest = aleph.task_handlers:op_reingest_handler",
             "reindex = aleph.task_handlers:op_reindex_handler",
             "loadmapping = aleph.task_handlers:op_load_mapping_handler",

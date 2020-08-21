@@ -1,5 +1,5 @@
 from aleph.logic.processing import index_many
-from aleph.logic.xref import xref_item, xref_collection, export_matches
+from aleph.logic.xref import xref_collection, export_matches
 from aleph.logic.collections import reingest_collection, reindex_collection
 from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.export import export_entities
@@ -8,10 +8,6 @@ from aleph.logic.export import export_entities
 def op_index_handler(collection, task):
     sync = task.context.get("sync", False)
     index_many(task.stage, collection, sync=sync, **task.payload)
-
-
-def op_xref_item_handler(collection, task):
-    xref_item(task.stage, collection, **task.payload)
 
 
 def op_xref_handler(collection, task):
