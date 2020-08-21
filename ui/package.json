@@ -11,6 +11,7 @@
     "@blueprintjs/select": "^3.8.0",
     "@blueprintjs/table": "^3.7.1",
     "@formatjs/cli": "^2.0.0",
+    "@formatjs/intl-utils": "^3.8.4",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.1",
     "@types/react": "^16.9.25",
