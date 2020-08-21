@@ -50,7 +50,7 @@ export {
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';
-export { fetchExports } from './exportActions';
+export { fetchExports, triggerQueryExport } from './exportActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

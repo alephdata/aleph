@@ -10,3 +10,8 @@ export const fetchExports = asyncActionCreator(
   },
   { name: "FETCH_EXPORTS" }
 );
+
+export const triggerQueryExport = asyncActionCreator(exportLink => async () => {
+  const response = await endpoint.post(exportLink, {}, {});
+  return { data: response.data };
+}, { name: 'TRIGGER_QUERY_EXPORT' });

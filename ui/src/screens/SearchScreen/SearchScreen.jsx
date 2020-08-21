@@ -9,8 +9,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
+import { triggerQueryExport } from 'src/actions';
 import {
-  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
+  Collection, DualPane, SignInCallout, ErrorSection, ExportButton, Breadcrumbs, ResultText,
 } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import SearchFacets from 'components/Facet/SearchFacets';
@@ -34,6 +35,10 @@ const messages = defineMessages({
   page_title: {
     id: 'search.title',
     defaultMessage: 'Search',
+  },
+  export: {
+    id: 'search.screen.export',
+    defaultMessage: 'Export',
   },
   alert_export_disabled: {
     id: 'search.screen.export_disabled',
@@ -176,9 +181,11 @@ export class SearchScreen extends React.Component {
     const operation = (
       <ButtonGroup>
         <Tooltip content={tooltip} disabled={exportLink}>
-          <AnchorButton className="bp3-intent-primary" icon="download" disabled={!exportLink} href={exportLink}>
-            <FormattedMessage id="search.screen.export" defaultMessage="Export" />
-          </AnchorButton>
+        <ExportButton
+          text={intl.formatMessage(messages.export)}
+          disabled={!exportLink}
+          onExport={() => this.props.triggerQueryExport(exportLink)}
+        />
         </Tooltip>
       </ButtonGroup>
     );
@@ -303,6 +310,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, { triggerQueryExport }),
   injectIntl,
 )(SearchScreen);
