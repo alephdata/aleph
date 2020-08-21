@@ -143,11 +143,11 @@ def index():
     return EntitySerializer.jsonify_result(result, extra={"links": links})
 
 
-@blueprint.route("/api/2/search/export", methods=["GET"])  # noqa
+@blueprint.route("/api/2/search/export", methods=["POST"])  # noqa
 def export():
     """
     ---
-    get:
+    post:
       summary: Download the results of a search
       description: >-
         Downloads all the results of a search as a zip archive; upto a max of

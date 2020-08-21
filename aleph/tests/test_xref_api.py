@@ -73,11 +73,11 @@ class XrefApiTestCase(TestCase):
     def test_export(self):
         xref.xref_collection(self.stage, self.residents)
         url = "/api/2/collections/%s/xref.xlsx" % self.obsidian.id
-        res = self.client.get(url)
+        res = self.client.post(url)
         assert res.status_code == 403, res
 
         _, headers = self.login(foreign_id="creator")
-        res = self.client.get(url, headers=headers)
+        res = self.client.post(url, headers=headers)
         assert res.status_code == 202, res
 
     def test_matches(self):

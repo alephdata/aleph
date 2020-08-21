@@ -112,11 +112,11 @@ def generate(collection_id):
     return jsonify({"status": "accepted"}, status=202)
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>/xref.xlsx")
+@blueprint.route("/api/2/collections/<int:collection_id>/xref.xlsx", methods=["POST"])
 def export(collection_id):
     """
     ---
-    get:
+    post:
       summary: Download cross-reference results
       description: Download results of cross-referencing as an Excel file
       parameters:
