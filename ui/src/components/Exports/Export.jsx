@@ -8,12 +8,20 @@ import "./Export.scss";
 
 class Export extends PureComponent {
   renderSkeleton = () => (
-    <li className="Export">
-      <div className="timestamp">
+    <tr className="ExportRow nowrap">
+      <td className="export-label wide">
+        <Skeleton.Text type="span" length={20} />
+      </td>
+      <td className="export-filesize">
+        <Skeleton.Text type="span" length={5} />
+      </td>
+      <td className="export-status">
+        <Skeleton.Text type="span" length={5} />
+      </td>
+      <td className="timestamp">
         <Skeleton.Text type="span" length={15} />
-      </div>
-      <Skeleton.Text type="span" length={50} />
-    </li>
+      </td>
+    </tr>
   );
 
   convertUTCDateToLocalDate = (date) => {
