@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { selectUnit } from "@formatjs/intl-utils";
 import { FormattedRelativeTime } from "react-intl";
+import c from 'classnames';
 
 import { Skeleton, ExportLink, FileSize } from "src/components/common";
 
@@ -8,9 +9,9 @@ import "./Export.scss";
 
 class Export extends PureComponent {
   renderSkeleton = () => (
-    <tr className="ExportRow nowrap">
+    <tr className="Export nowrap">
       <td className="export-label wide">
-        <Skeleton.Text type="span" length={20} />
+        <Skeleton.Text type="span" length={15} />
       </td>
       <td className="export-filesize">
         <Skeleton.Text type="span" length={5} />
@@ -41,14 +42,14 @@ class Export extends PureComponent {
       return this.renderSkeleton();
     }
 
-    const { label, id, expires_at: expiresAt } = export_;
+    const { id, expires_at: expiresAt, export_status: status } = export_;
 
     const expiryDate = this.convertUTCDateToLocalDate(new Date(expiresAt));
     const { value, unit } = selectUnit(expiryDate);
     return (
-      <tr key={id} className="ExportRow nowrap">
+      <tr key={id} className={c("Export nowrap", status)}>
         <td className="export-label wide">
-          <ExportLink export_={export_} />
+          <ExportLink export_={export_} icon="package" />
         </td>
         <td className="export-filesize">
           <FileSize value={export_.file_size} />

@@ -1,9 +1,16 @@
-.ExportRow {
+@import "app/variables.scss";
+
+.Export {
   .ExportLink {
     font-weight: bold;
   }
 
-  .bp3-icon {
-    margin-right: 3px;
+  &.pending {
+    opacity: .5;
+  }
+  &.error {
+    * {
+      color: $aleph-error-highlight-color;
+    }
   }
 }

@@ -10,6 +10,7 @@ import AppItem from './AppItem';
 import csvContextLoader from './csvContextLoader';
 import EntitySet from './EntitySet';
 import DualPane from './DualPane';
+import ExportButton from './ExportButton';
 import Entity from './Entity';
 import Facet from './Facet';
 import FileImport from './FileImport';
@@ -47,6 +48,7 @@ export {
   EntitySet,
   DualPane,
   Entity,
+  ExportButton,
   AppItem,
   Facet,
   FileImport,

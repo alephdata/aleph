@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
-import { Icon, Button, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
+import { Icon, Button, ButtonGroup, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import { Button, AnchorButton, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { injectIntl } from 'react-intl';
+import { Button } from '@blueprintjs/core';
 
 import ExportDialog from 'src/dialogs/ExportDialog/ExportDialog';
 import { selectSession } from 'src/selectors';
@@ -29,7 +29,7 @@ class ExportButton extends React.Component {
       <>
         <Button
           className="bp3-intent-primary"
-          icon="download"
+          icon="export"
           disabled={disabled}
           text={text}
           onClick={this.toggle}

@@ -113,7 +113,7 @@ export class AuthButtons extends Component {
                   </div>
                 </Link>
                 <Link to="/exports" className="bp3-menu-item">
-                  <Icon icon="download" />
+                  <Icon icon="export" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.exports)}
                   </div>

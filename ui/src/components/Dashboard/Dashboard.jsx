@@ -125,7 +125,7 @@ class Dashboard extends React.Component {
               active={current === '/alerts'}
             />
             <MenuItem
-              icon="download"
+              icon="export"
               text={intl.formatMessage(messages.exports)}
               label={<ResultCount result={exports} />}
               onClick={() => this.navigate('/exports')}

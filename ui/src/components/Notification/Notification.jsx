@@ -30,7 +30,7 @@ class Notification extends PureComponent {
       return <Role.Label role={object} />;
     }
     if (type === 'export') {
-      return object ? <ExportLink export_={object} /> : null;
+      return object ? <ExportLink export_={object} icon="export" /> : null;
     }
     return undefined;
   }

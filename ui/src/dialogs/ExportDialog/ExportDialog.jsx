@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { Alert, Icon, Intent, Spinner } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import c from 'classnames';
 
 import { deleteEntity } from 'src/actions';
-import { Entity } from 'src/components/common';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
-import getCollectionLink from 'src/util/getCollectionLink';
-import getEntityLink from 'src/util/getEntityLink';
-
-// import './ExportDialog.scss';
 
 const messages = defineMessages({
   button_confirm: {
@@ -22,10 +16,6 @@ const messages = defineMessages({
   button_cancel: {
     id: 'exports.dialog.cancel',
     defaultMessage: 'Cancel',
-  },
-  export_success: {
-    id: 'exports.dialog.success',
-    defaultMessage: 'Your export has begun.',
   },
   export_success: {
     id: 'exports.dialog.success',
@@ -53,7 +43,7 @@ export class ExportDialog extends Component {
           small: true,
           icon: 'share',
           text: intl.formatMessage(messages.dashboard_link),
-          onClick: () => history.push('')
+          onClick: () => history.push('/exports')
         }
       });
       toggleDialog();
@@ -64,13 +54,13 @@ export class ExportDialog extends Component {
   }
 
   render() {
-    const { exportLink, intl, isOpen, toggleDialog } = this.props;
+    const { intl, isOpen, toggleDialog } = this.props;
 
     return (
       <Alert
         isOpen={isOpen}
         className="ExportDialog"
-        icon="download"
+        icon="export"
         intent={Intent.PRIMARY}
         cancelButtonText={intl.formatMessage(messages.button_cancel)}
         confirmButtonText={intl.formatMessage(messages.button_confirm)}
@@ -79,15 +69,16 @@ export class ExportDialog extends Component {
       >
         <FormattedMessage
           id="export.dialog.text"
-          defaultMessage={`Click the button below to initiate your export.
+          defaultMessage={`<bold>Click the button below to initiate your export.</bold>
             {br}{br}
             Exports may take some time to generate, so you will receive a notification and an email with a download link once it is ready.
             {br}{br}
             In the meantime, please refrain from attempting to repeat this export request.
           `}
           values={{
+            bold: (...chunks) => <b>{chunks}</b>,
             br: <br/>
-           }}
+          }}
         />
       </Alert>
     );

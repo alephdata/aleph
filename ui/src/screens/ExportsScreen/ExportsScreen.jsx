@@ -13,10 +13,6 @@ const messages = defineMessages({
 });
 
 export class ExportsScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { intl } = this.props;
     return (

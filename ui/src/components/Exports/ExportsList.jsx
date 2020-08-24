@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { defineMessages, injectIntl } from "react-intl";
+import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-import { Waypoint } from "react-waypoint";
 import { ErrorSection } from "src/components/common";
-import { fetchExports } from "src/actions";
 import { selectExports } from 'selectors';
 import Export from "src/components/Exports/Export";
 
@@ -26,7 +24,7 @@ class ExportsList extends Component {
     if (exports.total === 0) {
       return (
         <ErrorSection
-          icon="download"
+          icon="export"
           title={intl.formatMessage(messages.no_exports)}
         />
       );
@@ -37,10 +35,18 @@ class ExportsList extends Component {
         <table className="ExportsTable data-table">
           <thead>
             <tr>
-              <th className="wide">Name</th>
-              <th>Size</th>
-              <th>Status</th>
-              <th>Expiration</th>
+              <th className="wide">
+                <FormattedMessage id="exports.name" defaultMessage="Name" />
+              </th>
+              <th>
+                <FormattedMessage id="exports.size" defaultMessage="Size" />
+              </th>
+              <th>
+                <FormattedMessage id="exports.status" defaultMessage="Status" />
+              </th>
+              <th>
+                <FormattedMessage id="exports.expiration" defaultMessage="Expiration" />
+              </th>
             </tr>
           </thead>
           <tbody>

@@ -5,25 +5,25 @@ import "./ExportLink.scss";
 
 class ExportLink extends PureComponent {
   render() {
-    const { export_ } = this.props;
+    const { export_, icon } = this.props;
     const exportSuccess = "successful";
+
+    console.log(export_.export_status);
+    const label = (
+      <span className="ExportLink">
+        <Icon icon={icon} className="left-icon" />
+        {export_.label}
+      </span>
+    );
+
     if (export_.export_status === exportSuccess) {
       return (
-        <span className="ExportLink">
-          <a href={export_.links.download}>
-            <Icon icon={"package"} />
-            {export_.label}
-          </a>
-        </span>
-      );
-    } else {
-      return (
-        <span className="ExportLink">
-          <Icon icon={"package"} />
-          {export_.label}
-        </span>
+        <a href={export_.links.download}>
+          {label}
+        </a>
       );
     }
+    return label;
   }
 }
 
