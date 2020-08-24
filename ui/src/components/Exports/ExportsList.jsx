@@ -6,6 +6,7 @@ import { withRouter } from "react-router";
 import { Waypoint } from "react-waypoint";
 import { ErrorSection } from "src/components/common";
 import { fetchExports } from "src/actions";
+import { selectExports } from 'selectors';
 import Export from "src/components/Exports/Export";
 
 import "./ExportsList.scss";
@@ -18,18 +19,6 @@ const messages = defineMessages({
 });
 
 class ExportsList extends Component {
-  constructor(props) {
-    super(props);
-    const { exports } = this.props;
-    if (exports.total === undefined) {
-      this.props.fetchExports();
-    }
-  }
-
-  componentDidMount() {
-    this.props.fetchExports();
-  }
-
   render() {
     const { exports, intl } = this.props;
     const skeletonItems = [...Array(15).keys()];
@@ -63,26 +52,17 @@ class ExportsList extends Component {
               skeletonItems.map((item) => <Export key={item} isPending />)}
           </tbody>
         </table>
-        <Waypoint
-          onEnter={this.getMoreResults}
-          bottomOffset="-300px"
-          scrollableAncestor={window}
-        />
       </>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  exports: state.exports,
+  exports: selectExports(state),
 });
-
-const mapDispatchToProps = {
-  fetchExports,
-};
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps),
   injectIntl
 )(ExportsList);
