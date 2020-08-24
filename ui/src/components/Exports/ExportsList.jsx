@@ -7,7 +7,6 @@ import { ErrorSection } from "src/components/common";
 import { selectExports } from 'selectors';
 import Export from "src/components/Exports/Export";
 
-import "./ExportsList.scss";
 
 const messages = defineMessages({
   no_exports: {
