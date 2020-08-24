@@ -44,6 +44,10 @@ const messages = defineMessages({
     id: 'search.screen.export_disabled',
     defaultMessage: 'Cannot export more than 10,000 results at a time',
   },
+  alert_export_disabled_empty: {
+    id: 'search.screen.export_disabled_empty',
+    defaultMessage: 'No results to export.',
+  },
   date_facet_show: {
     id: 'search.screen.show_dates',
     defaultMessage: 'Show date filter',
@@ -173,9 +177,9 @@ export class SearchScreen extends React.Component {
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
-    const hasExportLink = result && result.links && result.links.export;
+    const hasExportLink = result && result.total > 0 && result.links && result.links.export;
     const exportLink = !hasExportLink ? null : result.links.export;
-    const tooltip = intl.formatMessage(messages.alert_export_disabled);
+    const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
     const dateFacetDisabled = dateFacetIntervals && (!result.total || dateFacetIntervals.length <= 1);
 
     const operation = (
