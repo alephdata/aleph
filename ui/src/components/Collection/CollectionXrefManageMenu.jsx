@@ -5,7 +5,9 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { AnchorButton, Button, ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
+import { ExportButton } from 'components/common';
 import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
+import { triggerCollectionXrefDownload } from 'actions';
 import { selectSession } from 'selectors';
 
 
@@ -18,6 +20,10 @@ const messages = defineMessages({
     id: 'xref.recompute',
     defaultMessage: 'Re-compute',
   },
+  export: {
+    id:'xref.download',
+    defaultMessage:'Export results',
+  }
 });
 
 class CollectionXrefManageMenu extends Component {
@@ -56,12 +62,10 @@ class CollectionXrefManageMenu extends Component {
             {xrefButtonText}
           </Button>
           {showDownload && (
-            <AnchorButton icon="download" href={downloadLink} download>
-              <FormattedMessage
-                id="xref.download"
-                defaultMessage="Download Excel"
-              />
-            </AnchorButton>
+            <ExportButton
+              text={intl.formatMessage(messages.export)}
+              onExport={() => this.props.triggerCollectionXrefDownload(collection.id)}
+            />
           )}
         </ButtonGroup>
         <CollectionXrefDialog
@@ -79,6 +83,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, { triggerCollectionXrefDownload }),
   injectIntl,
 )(CollectionXrefManageMenu);

@@ -13,6 +13,7 @@ export {
   queryCollections,
   queryCollectionXref,
   triggerCollectionXref,
+  triggerCollectionXrefDownload,
   decideCollectionXref,
   triggerCollectionReingest,
   triggerCollectionReindex,

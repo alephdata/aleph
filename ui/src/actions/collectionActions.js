@@ -53,6 +53,11 @@ export const triggerCollectionXref = asyncActionCreator((id) => async () => {
   return { data: response.data };
 }, { name: 'TRIGGER_XREF' });
 
+export const triggerCollectionXrefDownload = asyncActionCreator((id) => async () => {
+  const response = await endpoint.post(`collections/${id}/xref.xlsx`, {});
+  return { data: response.data };
+}, { name: 'TRIGGER_XREF_DOWNLOAD' });
+
 export const decideCollectionXref = asyncActionCreator((xref) => async () => {
   const { id, collection_id, decision } = xref;
   const url = `collections/${collection_id}/xref/${id}`
