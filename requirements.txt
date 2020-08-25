@@ -1,7 +1,7 @@
 # Dependencies maintained by OCCRP
 banal==1.0.1
 urlnormalizer==1.2.5
-followthemoney==2.1.4
+followthemoney==2.1.7
 followthemoney-store[postgresql]==2.2.2
 fingerprints==1.0.1
 servicelayer[google,amazon]==1.13.5
@@ -32,10 +32,8 @@ PyYAML==5.3.1
 python-frontmatter==0.5.0
 pyjwt==1.7.1
 cryptography==3.0
-rdflib==5.0.0
 requests[security]==2.24.0
 urllib3==1.25.10
-networkx==2.4
 zipstream==1.1.4
 tabulate==0.8.7
 
