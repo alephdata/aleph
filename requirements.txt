@@ -41,7 +41,7 @@ tabulate==0.8.7
 
 # Testing dependencies
 factory-boy==3.0.1
-Faker==4.1.1
+Faker==4.1.2
 nose
 coverage
 coveralls
