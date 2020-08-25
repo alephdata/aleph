@@ -1,3 +1,4 @@
+import AnimatedCount from './AnimatedCount';
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import Category from './Category';
@@ -35,6 +36,7 @@ import SelectWrapper from './SelectWrapper';
 
 
 export {
+  AnimatedCount,
   Breadcrumbs,
   SignInCallout,
   Category,
