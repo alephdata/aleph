@@ -86,7 +86,7 @@ class SortingBar extends Component {
           <div className="SortingBar__item">
             <span className="SortingBar__label">
               <FormattedMessage
-                id="sorting.bar.label"
+                id="sorting.bar.created_by"
                 defaultMessage="Show:"
               />
             </span>
@@ -103,7 +103,7 @@ class SortingBar extends Component {
         <div className="SortingBar__item">
           <span className="SortingBar__label">
             <FormattedMessage
-              id="sorting.bar.label"
+              id="sorting.bar.sort"
               defaultMessage="Sort by:"
             />
           </span>
