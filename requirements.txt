@@ -35,7 +35,7 @@ cryptography==3.0
 rdflib==5.0.0
 requests[security]==2.24.0
 urllib3==1.25.10
-networkx==2.4
+networkx==2.5
 zipstream==1.1.4
 tabulate==0.8.7
 
