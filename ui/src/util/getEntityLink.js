@@ -1,3 +1,4 @@
 export default function getEntityLink(entity) {
-  return (entity && entity.id) ? `/entities/${entity.id}` : null;
+  const entityId = typeof entity === "string" ? entity : entity?.id;
+  return entityId ? `/entities/${entityId}` : null;
 }
