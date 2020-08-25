@@ -17,7 +17,7 @@ $vertical-spacing: $aleph-grid-size*5;
     }
 
     &__content {
-      max-width: 800px;
+      max-width: 1000px;
       margin: auto;
       padding: 70px 30px;
       vertical-align: middle;
@@ -36,5 +36,14 @@ $vertical-spacing: $aleph-grid-size*5;
   &__description {
     font-size: 16px;
     margin: $vertical-spacing/2 0;
+  }
+
+  &__thirds {
+    display: flex;
+    justify-content: space-between;
+    & > * {
+      flex: 0 0 33%;
+      padding: 0 20px;
+    }
   }
 }
