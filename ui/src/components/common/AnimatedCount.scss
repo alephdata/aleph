@@ -1,0 +1,16 @@
+@import "app/variables.scss";
+
+.AnimatedCount {
+
+
+  &__count {
+    color: $blue1;
+    font-weight: 600;
+  }
+
+  &__label {
+    margin-top: $aleph-grid-size;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}

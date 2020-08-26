@@ -2,10 +2,12 @@ import React from 'react';
 import CountUp from 'react-countup';
 // import Count from 'components/common/Count';
 
+import './AnimatedCount.scss';
+
 const AnimatedCount = ({ count, isPending, label}) => (
-  <>
-    <CountUp end={count} />
-    <h5>{label}</h5>
-  </>
+  <div className="AnimatedCount">
+    <CountUp className="AnimatedCount__count" end={count} separator="," />
+    <p className="AnimatedCount__label">{label}</p>
+  </div>
 )
 export default AnimatedCount;
