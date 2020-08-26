@@ -3,10 +3,8 @@ import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 
-import { Country, Facet, Numeric, Schema } from 'components/common';
-import Statistics from 'components/StatisticsGroup/Statistics';
+import { Country, Facet, Numeric, Schema, Statistics } from 'components/common';
 import { selectModel } from 'selectors';
 import getStatLink from 'util/getStatLink';
 
@@ -17,7 +15,7 @@ class CollectionStatistics extends PureComponent {
   constructor(props) {
     super(props);
     this.filterValues = this.filterValues.bind(this);
-    this.renderItem = this.renderItem.bind(this);
+    this.getLabel = this.getLabel.bind(this);
   }
 
   filterValues(count, value) {
@@ -29,31 +27,20 @@ class CollectionStatistics extends PureComponent {
     return true;
   }
 
-  renderItem({ name, count }) {
-    const { collection, field } = this.props;
-    const link = getStatLink(collection, field, name);
-    let label = name;
+  getLabel(name) {
+    const { field } = this.props;
 
     if (field === 'schema') {
-      label = <Schema.Label schema={name} plural icon />;
+      return <Schema.Label schema={name} plural icon />;
     } else if (field === 'countries') {
-      label = <Country.Name code={name} />;
+      return <Country.Name code={name} />;
+    } else {
+      return name;
     }
-
-    return (
-      <Link to={link}>
-        <div className="inner-container">
-          <span className="label">{label}</span>
-          <span className="value">
-            <Numeric num={count} />
-          </span>
-        </div>
-      </Link>
-    );
   }
 
   render() {
-    const { field, total, values } = this.props;
+    const { collection, field, total, values } = this.props;
     const filteredValues = _.pickBy(values, this.filterValues);
     const filteredTotal = field === 'schema' ? Object.keys(filteredValues).length : total;
 
@@ -76,6 +63,8 @@ class CollectionStatistics extends PureComponent {
           )}
           statistic={filteredValues}
           isPending={!values}
+          itemLink={name => getStatLink(collection, field, name)}
+          itemLabel={this.getLabel}
           ItemContentContainer={this.renderItem}
           styleType="dark"
         />

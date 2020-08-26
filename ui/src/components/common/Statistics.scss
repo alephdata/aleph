@@ -30,14 +30,14 @@
 
 
   &__list-item {
+    margin: 7px 0;
     display: flex;
-    justify-content: space-between;
+
 
     a, .bp3-button {
       color: $aleph-content-background !important;
       width: 100%;
       @include rtl(text-align, left, right);
-      padding: 3px;
       transition: background-color .1s ease-out;
 
       &:hover {
@@ -74,7 +74,6 @@
     }
 
     .label {
-      flex: 1 1 auto;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

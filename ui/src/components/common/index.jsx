@@ -28,6 +28,7 @@ import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
 import SortingBar from './SortingBar';
+import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
@@ -60,6 +61,7 @@ export {
   ErrorSection,
   SinglePane,
   SortableTH,
+  Statistics,
   Summary,
   Count,
   Tag,
