@@ -7,7 +7,7 @@ from aleph.model import Mapping, Events
 from aleph.index.entities import get_entity
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.collections import delete_entities
-from aleph.logic.collections import update_collection, reindex_collection
+from aleph.logic.collections import update_collection, index_aggregator
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -77,9 +77,10 @@ def load_mapping(stage, collection, mapping_id, sync=False):
     )
     try:
         map_to_aggregator(collection, mapping, aggregator)
+        # FIXME: this doesn't re-overwrite entities....
+        index_aggregator(collection, aggregator, sync=sync)
         mapping.set_status(status=Mapping.SUCCESS)
         db.session.commit()
-        reindex_collection(collection, sync=sync)
     except Exception as exc:
         mapping.set_status(status=Mapping.FAILED, error=str(exc))
         db.session.commit()
