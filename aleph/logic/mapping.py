@@ -78,10 +78,11 @@ def load_mapping(stage, collection, mapping_id, sync=False):
     try:
         map_to_aggregator(collection, mapping, aggregator)
         # FIXME: this doesn't re-overwrite entities....
-        index_aggregator(collection, aggregator, sync=sync)
         mapping.set_status(status=Mapping.SUCCESS)
         db.session.commit()
+        index_aggregator(collection, aggregator, sync=sync)
     except Exception as exc:
+        mapping = Mapping.by_id(mapping_id)
         mapping.set_status(status=Mapping.FAILED, error=str(exc))
         db.session.commit()
         aggregator.delete(origin=origin)
