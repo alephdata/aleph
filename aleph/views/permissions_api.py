@@ -11,7 +11,7 @@ from aleph.views.util import get_db_collection, jsonify, parse_request
 blueprint = Blueprint("permissions_api", __name__)
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>/permissions")
+@blueprint.route("/<int:collection_id>/permissions")
 def index(collection_id):
     """
     ---
@@ -77,9 +77,7 @@ def index(collection_id):
     return jsonify({"total": len(permissions), "results": permissions})
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/permissions", methods=["POST", "PUT"]
-)
+@blueprint.route("/<int:collection_id>/permissions", methods=["POST", "PUT"])
 def update(collection_id):
     """
     ---

@@ -74,9 +74,7 @@ def _notify(collection, document_id):
     )
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/ingest", methods=["POST", "PUT"]
-)
+@blueprint.route("/<int:collection_id>/ingest", methods=["POST", "PUT"])
 def ingest_upload(collection_id):
     """
     ---
