@@ -3,15 +3,16 @@ from flask import Blueprint, request
 
 from aleph.core import db
 from aleph.search import CollectionsQuery
+from aleph.model import EntitySetItem
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_REINGEST, OP_REINDEX
+from aleph.queues import OP_REINGEST, OP_REINDEX, OP_INDEX
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, refresh_collection
 from aleph.index.collections import update_collection_stats
 from aleph.logic.processing import bulk_write
 from aleph.views.serializers import CollectionSerializer
-from aleph.views.util import get_db_collection, get_index_collection
+from aleph.views.util import get_db_collection, get_index_collection, get_entityset
 from aleph.views.util import require, parse_request, jsonify
 from aleph.views.util import get_flag, get_session_id
 
@@ -265,7 +266,10 @@ def bulk(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
-    entities = ensure_list(request.get_json(force=True))
+    job_id = get_session_id()
+    entityset = request.args.get("entityset_id")
+    if entityset is not None:
+        entityset = get_entityset(entityset, request.authz.WRITE)
 
     # This will disable checksum security measures in order to allow bulk
     # loading of document data:
@@ -277,9 +281,23 @@ def bulk(collection_id):
     # Let UI tools change the entities created by this:
     mutable = get_flag("mutable", default=False)
     role_id = request.authz.id
-    bulk_write(collection, entities, safe=safe, mutable=mutable, role_id=role_id)
+    entities = ensure_list(request.get_json(force=True))
+    entity_ids = list()
+    for entity_id in bulk_write(
+        collection, entities, safe=safe, mutable=mutable, role_id=role_id
+    ):
+        entity_ids.append(entity_id)
+        if entityset is not None:
+            EntitySetItem.save(
+                entityset,
+                entity_id,
+                collection_id=collection.id,
+                added_by_id=request.authz.id,
+            )
     collection.touch()
     db.session.commit()
+    data = {"entity_ids": entity_ids}
+    queue_task(collection, OP_INDEX, job_id=job_id, payload=data)
     return ("", 204)
 
 
