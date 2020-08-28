@@ -9,7 +9,7 @@ from aleph.model import Mapping
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
-from aleph.views.util import get_db_collection, parse_request
+from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
 from aleph.views.util import get_index_entity, get_session_id, obj_or_404
 
 
@@ -26,6 +26,17 @@ def load_query():
         log.exception("Validation error: %s", request.json)
         raise BadRequest(str(ex))
     return query
+
+
+def get_table_id(data):
+    return get_index_entity(data.get("table_id"), request.authz.READ).get("id")
+
+
+def get_entityset_id(data):
+    entityset_id = get_nested(data, "entityset", "entityset_id")
+    if entityset_id is not None:
+        get_entityset(entityset_id, request.authz.WRITE)
+        return entityset_id
 
 
 @blueprint.route("/<int:collection_id>/mappings", methods=["GET"])
@@ -107,10 +118,13 @@ def create(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request("MappingCreate")
-    entity_id = data.get("table_id")
-    query = load_query()
-    entity = get_index_entity(entity_id, request.authz.READ)
-    mapping = Mapping.create(query, entity.get("id"), collection, request.authz.id)
+    mapping = Mapping.create(
+        load_query(),
+        get_table_id(data),
+        collection,
+        request.authz.id,
+        entityset_id=get_entityset_id(data),
+    )
     db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
@@ -198,10 +212,11 @@ def update(collection_id, mapping_id):
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     data = parse_request("MappingCreate")
-    entity_id = data.get("table_id")
-    query = load_query()
-    entity = get_index_entity(entity_id, request.authz.READ)
-    mapping.update(query=query, table_id=entity.get("id"))
+    mapping.update(
+        query=load_query(),
+        table_id=get_table_id(data),
+        entityset_id=get_entityset_id(data),
+    )
     db.session.commit()
     return MappingSerializer.jsonify(mapping)
 

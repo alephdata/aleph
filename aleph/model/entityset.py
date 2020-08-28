@@ -220,6 +220,10 @@ class EntitySet(db.Model, SoftDeleteModel):
         pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
         pq.update({EntitySetItem.deleted_at: deleted_at}, synchronize_session=False)
 
+        for mapping in self.mappings:
+            mapping.entityset_id = None
+            db.session.add(mapping)
+
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
 
@@ -287,6 +291,7 @@ class EntitySetItem(db.Model, SoftDeleteModel):
             entity_id=entity_id,
             judgement=judgement,
             compared_to_entity_id=data.get("compared_to_entity_id"),
+            collection_id=data.get("collection_id"),
             added_by_id=data.get("added_by_id"),
         )
         db.session.add(item)

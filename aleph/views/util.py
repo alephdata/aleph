@@ -95,9 +95,13 @@ def get_entityset(entityset_id, action=Authz.READ):
     return eset
 
 
+def get_nested(data, obj_field, id_field):
+    collection = ensure_dict(data.get(obj_field))
+    return data.get(id_field, collection.get("id"))
+
+
 def get_nested_collection(data, action=Authz.READ):
-    collection = ensure_dict(data.get("collection"))
-    collection_id = data.get("collection_id", collection.get("id"))
+    collection_id = get_nested(data, "collection", "collection_id")
     return get_db_collection(collection_id, action)
 
 
