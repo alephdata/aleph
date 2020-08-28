@@ -28,7 +28,7 @@ def load_query():
     return query
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>/mappings", methods=["GET"])
+@blueprint.route("/<int:collection_id>/mappings", methods=["GET"])
 def index(collection_id):
     """Returns a list of mappings for the collection and table.
     ---
@@ -74,9 +74,7 @@ def index(collection_id):
     return MappingSerializer.jsonify_result(result)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings", methods=["POST", "PUT"]
-)
+@blueprint.route("/<int:collection_id>/mappings", methods=["POST", "PUT"])
 def create(collection_id):
     """Create a mapping.
     ---
@@ -117,9 +115,7 @@ def create(collection_id):
     return MappingSerializer.jsonify(mapping)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>", methods=["GET"]
-)
+@blueprint.route("/<int:collection_id>/mappings/<int:mapping_id>", methods=["GET"])
 def view(collection_id, mapping_id):
     """Return the mapping with id `mapping_id`.
     ---
@@ -159,8 +155,7 @@ def view(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
-    methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>", methods=["POST", "PUT"],
 )
 def update(collection_id, mapping_id):
     """Update the mapping with id `mapping_id`.
@@ -212,8 +207,7 @@ def update(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
-    methods=["DELETE"],
+    "/<int:collection_id>/mappings/<int:mapping_id>", methods=["DELETE"],
 )
 def delete(collection_id, mapping_id):
     """Delete a mapping.
@@ -252,8 +246,7 @@ def delete(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/trigger",
-    methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>/trigger", methods=["POST", "PUT"],
 )
 def trigger(collection_id, mapping_id):
     """Load entities by running the mapping with id `mapping_id`. Flushes
@@ -298,8 +291,7 @@ def trigger(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush",
-    methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>/flush", methods=["POST", "PUT"],
 )
 def flush(collection_id, mapping_id):
     """Flush all entities loaded by mapping with id `mapping_id`.

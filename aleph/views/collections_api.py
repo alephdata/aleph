@@ -1,9 +1,7 @@
 from banal import ensure_list
 from flask import Blueprint, request
 
-from aleph.core import db, settings
-from aleph.authz import Authz
-from aleph.model import Collection
+from aleph.core import db
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
 from aleph.queues import OP_REINGEST, OP_REINDEX
@@ -12,17 +10,15 @@ from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, refresh_collection
 from aleph.index.collections import update_collection_stats
 from aleph.logic.processing import bulk_write
-from aleph.logic.util import collection_url
-from aleph.views.context import enable_cache
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, parse_request, jsonify
-from aleph.views.util import render_xml, get_flag, get_session_id
+from aleph.views.util import get_flag, get_session_id
 
 blueprint = Blueprint("collections_api", __name__)
 
 
-@blueprint.route("/api/2/collections", methods=["GET"])
+@blueprint.route("", methods=["GET"])
 def index():
     """
     ---
@@ -52,37 +48,7 @@ def index():
     return CollectionSerializer.jsonify_result(result)
 
 
-@blueprint.route("/api/2/sitemap.xml")
-def sitemap():
-    """
-    ---
-    get:
-      summary: Get a sitemap
-      description: >-
-        Returns a site map for search engine robots. This lists each
-        published collection on the current instance.
-      responses:
-        '200':
-          description: OK
-          content:
-            text/xml:
-              schema:
-                type: object
-      tags:
-      - System
-    """
-    enable_cache(vary_user=False)
-    request.rate_limit = None
-    collections = []
-    for collection in Collection.all_authz(Authz.from_role(None)):
-        updated_at = collection.updated_at.date().isoformat()
-        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
-        url = collection_url(collection.id)
-        collections.append({"url": url, "updated_at": updated_at})
-    return render_xml("sitemap.xml", collections=collections)
-
-
-@blueprint.route("/api/2/collections", methods=["POST", "PUT"])
+@blueprint.route("", methods=["POST", "PUT"])
 def create():
     """
     ---
@@ -111,7 +77,7 @@ def create():
     return view(collection.get("id"))
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>", methods=["GET"])
+@blueprint.route("/<int:collection_id>", methods=["GET"])
 def view(collection_id):
     """
     ---
@@ -150,9 +116,7 @@ def view(collection_id):
     return CollectionSerializer.jsonify(data)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>", methods=["POST", "PUT"]
-)  # noqa
+@blueprint.route("/<int:collection_id>", methods=["POST", "PUT"])
 def update(collection_id):
     """
     ---
@@ -192,9 +156,7 @@ def update(collection_id):
     return CollectionSerializer.jsonify(data)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/reingest", methods=["POST", "PUT"]
-)  # noqa
+@blueprint.route("/<int:collection_id>/reingest", methods=["POST", "PUT"])
 def reingest(collection_id):
     """
     ---
@@ -229,9 +191,7 @@ def reingest(collection_id):
     return ("", 202)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/reindex", methods=["POST", "PUT"]
-)  # noqa
+@blueprint.route("/<int:collection_id>/reindex", methods=["POST", "PUT"])
 def reindex(collection_id):
     """
     ---
@@ -265,8 +225,8 @@ def reindex(collection_id):
     return ("", 202)
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>/_bulk", methods=["POST"])
-@blueprint.route("/api/2/collections/<int:collection_id>/bulk", methods=["POST"])
+@blueprint.route("/<int:collection_id>/_bulk", methods=["POST"])
+@blueprint.route("/<int:collection_id>/bulk", methods=["POST"])
 def bulk(collection_id):
     """
     ---
@@ -323,7 +283,7 @@ def bulk(collection_id):
     return ("", 204)
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>/status", methods=["GET"])
+@blueprint.route("/<int:collection_id>/status", methods=["GET"])
 def status(collection_id):
     """
     ---
@@ -354,9 +314,7 @@ def status(collection_id):
     return jsonify(get_status(collection))
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/status", methods=["DELETE"]
-)  # noqa
+@blueprint.route("/<int:collection_id>/status", methods=["DELETE"])
 def cancel(collection_id):
     """
     ---
@@ -388,7 +346,7 @@ def cancel(collection_id):
     return ("", 204)
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>", methods=["DELETE"])
+@blueprint.route("/<int:collection_id>", methods=["DELETE"])
 def delete(collection_id):
     """
     ---
