@@ -205,14 +205,10 @@ def load_entities(foreign_id, infile, safe=False, mutable=False):
             yield json.loads(line)
 
     role = Role.load_cli_user()
-    bulk_write(
-        collection,
-        read_entities(),
-        safe=safe,
-        mutable=mutable,
-        role_id=role.id,
-        index=False,
-    )
+    for _ in bulk_write(
+        collection, read_entities(), safe=safe, mutable=mutable, role_id=role.id
+    ):
+        pass
     reindex_collection(collection)
 
 

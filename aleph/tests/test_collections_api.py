@@ -1,6 +1,8 @@
 import json
 
 from aleph.core import db
+from aleph.authz import Authz
+from aleph.model import EntitySet
 from aleph.logic.collections import compute_collection
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
@@ -140,6 +142,34 @@ class CollectionsApiTestCase(TestCase):
         ]
         res = self.client.post(url, headers=headers, data=json.dumps(data))
         assert res.status_code == 400, res
+
+    def test_bulk_entitysets_api(self):
+        role, headers = self.login(is_admin=True)
+        authz = Authz.from_role(role)
+        data = {"type": EntitySet.LIST, "label": "Foo"}
+        eset = EntitySet.create(data, self.col, authz)
+        db.session.commit()
+        eset_id = eset.id
+        data = json.dumps(
+            [
+                {
+                    "id": "4345800498380953840",
+                    "schema": "Person",
+                    "properties": {"name": "Osama bin Laden"},
+                },
+                {
+                    "id": "7598743983789743598",
+                    "schema": "Person",
+                    "properties": {"name": "Osama bin Laden"},
+                },
+            ]
+        )
+        url = "/api/2/collections/%s/_bulk?entityset_id=%s" % (self.col.id, eset_id)
+        res = self.client.post(url, headers=headers, data=data)
+        assert res.status_code == 204, res
+        query = "/api/2/entitysets/%s/entities?filter:schema=Person" % eset_id
+        res = self.client.get(query, headers=headers)
+        assert res.json["total"] == 2, res.json
 
     def test_statistics(self):
         self.load_fixtures()
