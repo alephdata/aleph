@@ -130,7 +130,10 @@ def reindex_casefiles(flush=False):
     """Re-index all the casefile collections."""
     for collection in Collection.all_casefiles():
         log.info("[%s] Starting to re-index", collection)
-        reindex_collection(collection, flush=flush)
+        try:
+            reindex_collection(collection, flush=flush)
+        except Exception:
+            log.exception("Failed to re-index: %s", collection)
 
 
 @cli.command()
