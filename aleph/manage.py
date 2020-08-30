@@ -106,13 +106,21 @@ def delete(foreign_id, keep_metadata=False):
     delete_collection(collection, keep_metadata=keep_metadata)
 
 
+def _reindex_collection(collection, flush=False):
+    log.info("[%s] Starting to re-index", collection)
+    try:
+        reindex_collection(collection, flush=flush)
+    except Exception:
+        log.exception("Failed to re-index: %s", collection)
+
+
 @cli.command()
 @click.argument("foreign_id")
 @click.option("--flush", is_flag=True, default=False)
 def reindex(foreign_id, flush=False):
     """Index all the aggregator contents for a collection."""
     collection = get_collection(foreign_id)
-    reindex_collection(collection, flush=flush)
+    _reindex_collection(collection, flush=flush)
 
 
 @cli.command("reindex-full")
@@ -120,8 +128,7 @@ def reindex(foreign_id, flush=False):
 def reindex_full(flush=False):
     """Re-index all collections."""
     for collection in Collection.all():
-        log.info("[%s] Starting to re-index", collection)
-        reindex_collection(collection, flush=flush)
+        _reindex_collection(collection, flush=flush)
 
 
 @cli.command("reindex-casefiles")
@@ -129,11 +136,7 @@ def reindex_full(flush=False):
 def reindex_casefiles(flush=False):
     """Re-index all the casefile collections."""
     for collection in Collection.all_casefiles():
-        log.info("[%s] Starting to re-index", collection)
-        try:
-            reindex_collection(collection, flush=flush)
-        except Exception:
-            log.exception("Failed to re-index: %s", collection)
+        _reindex_collection(collection, flush=flush)
 
 
 @cli.command()
