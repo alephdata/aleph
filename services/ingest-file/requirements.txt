@@ -3,7 +3,7 @@ normality==2.1.1
 pantomime==0.4.1
 followthemoney==2.1.7
 followthemoney-store[postgresql]==2.2.2
-servicelayer[google,amazon]==1.13.5
+servicelayer[google,amazon]==1.14.0
 languagecodes==1.0.7
 countrytagger==0.1.2
 pyicu==2.5
@@ -18,7 +18,7 @@ nose==1.3.7
 click==7.1.2
 
 # File format support
-dbf==0.98.3
+dbf==0.99.0
 pdflib==0.3.0
 pymediainfo==4.2.1
 python-magic==0.4.18
