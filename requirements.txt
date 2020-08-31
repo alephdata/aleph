@@ -6,7 +6,7 @@ followthemoney-store[postgresql]==2.2.2
 fingerprints==1.0.1
 servicelayer[google,amazon]==1.13.5
 normality==2.1.1
-pantomime==0.4.0
+pantomime==0.4.1
 
 # Flask ecosystem
 Flask==1.1.2
