@@ -1,6 +1,6 @@
 banal==1.0.1
 normality==2.1.1
-pantomime==0.4.0
+pantomime==0.4.1
 followthemoney==2.1.7
 followthemoney-store[postgresql]==2.2.2
 servicelayer[google,amazon]==1.13.5
@@ -25,7 +25,7 @@ python-magic==0.4.18
 pypdf2==1.26.0
 rarfile==4.0
 xlrd==1.2.0
-openpyxl==3.0.4
+openpyxl==3.0.5
 odfpy==1.4.1
 cchardet==2.1.6
 lxml==4.5.2
@@ -34,5 +34,5 @@ pillow==7.2.0
 vobject==0.9.6.1
 msglite==0.27.0
 
-cryptography==3.0
+cryptography==3.1
 requests[security]==2.24.0
