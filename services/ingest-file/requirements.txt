@@ -18,7 +18,7 @@ nose==1.3.7
 click==7.1.2
 
 # File format support
-dbf==0.98.3
+dbf==0.99.0
 pdflib==0.3.0
 pymediainfo==4.2.1
 python-magic==0.4.18
