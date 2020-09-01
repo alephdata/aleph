@@ -34,6 +34,10 @@ const messages = defineMessages({
     id: 'dashboard.diagrams',
     defaultMessage: 'Network diagrams',
   },
+  lists: {
+    id: 'dashboard.lists',
+    defaultMessage: 'Lists',
+  },
   settings: {
     id: 'dashboard.settings',
     defaultMessage: 'Settings',
@@ -60,7 +64,9 @@ class Dashboard extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { groupsQuery, groupsResult, casesCountQuery, casesCountResult, diagramsCountQuery, diagramsCountResult } = this.props;
+    const { groupsQuery, groupsResult, casesCountQuery, casesCountResult, diagramsCountQuery,
+      diagramsCountResult, listsCountQuery, listsCountResult } = this.props;
+
     if (groupsResult.shouldLoad) {
       this.props.queryRoles({query: groupsQuery});
     }
@@ -70,6 +76,9 @@ class Dashboard extends React.Component {
     if (diagramsCountResult.shouldLoad) {
       this.props.queryEntitySets({query: diagramsCountQuery});
     }
+    if (listsCountResult.shouldLoad) {
+      this.props.queryEntitySets({query: listsCountQuery});
+    }
   }
 
   navigate(path) {
@@ -77,7 +86,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, casesCountResult, diagramsCountResult, intl, location, groupsResult } = this.props;
+    const { alerts, casesCountResult, diagramsCountResult, listsCountResult, intl, location, groupsResult } = this.props;
     const current = location.pathname;
 
     return (
@@ -127,6 +136,13 @@ class Dashboard extends React.Component {
               label={<ResultCount result={diagramsCountResult} />}
               onClick={() => this.navigate('/diagrams')}
               active={current === '/diagrams'}
+            />
+            <MenuItem
+              icon="list"
+              text={intl.formatMessage(messages.lists)}
+              label={<ResultCount result={listsCountResult} />}
+              onClick={() => this.navigate('/lists')}
+              active={current === '/lists'}
             />
             {(groupsResult.total === undefined || groupsResult.total > 0) && (
               <>
@@ -186,6 +202,10 @@ const mapStateToProps = (state, ownProps) => {
     .setFilter('type', 'diagram')
     .limit(0);
 
+  const listsCountQuery = new Query('entitysets', {}, {}, 'entitySets')
+    .setFilter('type', 'list')
+    .limit(0);
+
   return {
     groupsQuery,
     groupsResult: selectRolesResult(state, groupsQuery),
@@ -193,6 +213,8 @@ const mapStateToProps = (state, ownProps) => {
     casesCountResult: selectCollectionsResult(state, casesCountQuery),
     diagramsCountQuery,
     diagramsCountResult: selectEntitySetsResult(state, diagramsCountQuery),
+    listsCountQuery,
+    listsCountResult: selectEntitySetsResult(state, listsCountQuery),
     alerts: selectAlerts(state),
   };
 };

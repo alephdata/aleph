@@ -9,7 +9,7 @@ from elasticsearch.helpers import scan
 from aleph.core import es, cache
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
-from aleph.index.util import unpack_result, refresh_sync
+from aleph.index.util import unpack_result, delete_safe
 from aleph.index.util import authz_query, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 from aleph.index.util import MAX_REQUEST_TIMEOUT, MAX_TIMEOUT
@@ -61,12 +61,17 @@ def iter_entities(
     includes=PROXY_INCLUDES,
     excludes=None,
     filters=None,
+    sort=None,
 ):
     """Scan all entities matching the given criteria."""
     query = {
         "query": _entities_query(filters, authz, collection_id, schemata),
         "_source": _source_spec(includes, excludes),
     }
+    preserve_order = False
+    if sort is not None:
+        query["sort"] = ensure_list(sort)
+        preserve_order = True
     index = entities_read_index(schema=schemata)
     for res in scan(
         es,
@@ -74,6 +79,7 @@ def iter_entities(
         query=query,
         timeout=MAX_TIMEOUT,
         request_timeout=MAX_REQUEST_TIMEOUT,
+        preserve_order=preserve_order,
     ):
         entity = unpack_result(res)
         if entity is not None:
@@ -168,6 +174,7 @@ def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
     data = proxy.to_full_dict()
     data["schemata"] = list(proxy.schema.names)
+    data["caption"] = proxy.caption
 
     names = data.get("names", [])
     fps = set([fingerprints.generate(name) for name in names])
@@ -177,9 +184,7 @@ def format_proxy(proxy, collection):
     # Slight hack: a magic property in followthemoney that gets taken out
     # of the properties and added straight to the index text.
     properties = data.get("properties")
-    text = properties.pop("indexText", [])
-    text.extend(fps)
-    data["text"] = text
+    data["text"] = properties.pop("indexText", [])
 
     # integer casting
     numeric = {}
@@ -204,7 +209,7 @@ def format_proxy(proxy, collection):
     entity_id = data.pop("id")
     return {
         "_id": entity_id,
-        "_index": entities_write_index(data.get("schema")),
+        "_index": entities_write_index(proxy.schema),
         "_source": data,
     }
 
@@ -217,4 +222,4 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get("_index")
         if index == exclude:
             continue
-        es.delete(index=index, id=entity_id, ignore=[404], refresh=refresh_sync(sync))
+        delete_safe(index, entity_id)

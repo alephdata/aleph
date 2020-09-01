@@ -10,11 +10,12 @@ import queryString from 'query-string';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderButton from 'components/Toolbar/DocumentFolderButton';
 import EntityActionBar from 'components/Entity/EntityActionBar';
+import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'components/common';
 import getEntityLink from 'util/getEntityLink';
 import { selectEntitiesResult } from 'selectors';
-import { queryEntities } from 'actions';
+import { deleteEntity, queryEntities } from 'actions';
 
 import './DocumentManager.scss';
 
@@ -99,7 +100,7 @@ export class DocumentManager extends Component {
     const { history } = this.props;
     const { selection } = this.state;
     const pathname = getEntityLink(selection[0]);
-    history.push({ pathname, hash: queryString.stringify({mode: 'mapping'}) });
+    history.push({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
   }
 
   render() {
@@ -129,12 +130,12 @@ export class DocumentManager extends Component {
           query={query}
           writeable={showActions}
           selection={selection}
-          resetSelection={() => this.setState({ selection: []})}
+          resetSelection={() => this.setState({ selection: [] })}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >
-          { canUpload && (
+          {canUpload && (
             <Button icon="upload" onClick={this.toggleUpload}>
               <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
             </Button>
@@ -146,8 +147,15 @@ export class DocumentManager extends Component {
               <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
             </AnchorButton>
           </Tooltip>
+          <EntityDeleteButton
+            entities={selection}
+            onSuccess={() => this.setState({ selection: [] })}
+            actionType="delete"
+            deleteEntity={this.props.deleteEntity}
+            showCount
+          />
         </EntityActionBar>
-        { hasPending && (
+        {hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">
             <FormattedMessage
               id="refresh.callout_message"
@@ -183,7 +191,7 @@ const mapStateToProps = (state, ownProps) => {
   let { query } = ownProps;
   const { collection } = ownProps;
   if (!query.hasSort()) {
-    query = query.sortBy('name', 'asc');
+    query = query.sortBy('caption', 'asc');
   }
   if (collection.writeable) {
     query = query.set('cache', 'false');
@@ -194,6 +202,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryEntities }),
+  connect(mapStateToProps, { queryEntities, deleteEntity }),
   injectIntl,
 )(DocumentManager);

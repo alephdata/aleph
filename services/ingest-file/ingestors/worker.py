@@ -38,18 +38,18 @@ class IngestWorker(Worker):
         return manager.emitted
 
     def _analyze(self, dataset, task):
-        entity_ids = task.payload.get("entity_ids")
+        entity_ids = set(task.payload.get("entity_ids"))
         analyzer = None
         for entity in dataset.partials(entity_id=entity_ids):
             if analyzer is None or analyzer.entity.id != entity.id:
                 if analyzer is not None:
-                    analyzer.flush()
+                    entity_ids.update(analyzer.flush())
                 # log.debug("Analyze: %r", entity)
-                analyzer = Analyzer(dataset, entity)
+                analyzer = Analyzer(dataset, entity, task.context)
             analyzer.feed(entity)
         if analyzer is not None:
-            analyzer.flush()
-        return entity_ids
+            entity_ids.update(analyzer.flush())
+        return list(entity_ids)
 
     def handle(self, task):
         name = task.context.get("ftmstore", task.job.dataset.name)

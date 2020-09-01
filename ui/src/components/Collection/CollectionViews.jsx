@@ -10,7 +10,7 @@ import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
-import CollectionDiagramsIndexMode from 'components/Collection/CollectionDiagramsIndexMode';
+import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
@@ -45,8 +45,8 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, xref,
-      showDiagramsTab, showEntitiesTab, showDocumentsTab,
+      collection, activeMode, diagrams, lists, xref,
+      isCasefile, showDocumentsTab,
       documentTabCount, entitiesTabCount
     } = this.props;
 
@@ -81,7 +81,7 @@ class CollectionViews extends React.Component {
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
-        {showEntitiesTab && (
+        {isCasefile && (
           <Tab
             id={collectionViewIds.ENTITIES}
             className="CollectionViews__tab"
@@ -94,7 +94,7 @@ class CollectionViews extends React.Component {
             panel={<CollectionEntitiesMode collection={collection} />}
           />
         )}
-        {showDiagramsTab && (
+        {isCasefile && (
           <Tab
             id={collectionViewIds.DIAGRAMS}
             className="CollectionViews__tab"
@@ -105,7 +105,21 @@ class CollectionViews extends React.Component {
                 <ResultCount result={diagrams} />
               </>
             }
-            panel={<CollectionDiagramsIndexMode collection={collection} />}
+            panel={<CollectionEntitySetsIndexMode collection={collection} type="diagram" />}
+          />
+        )}
+        {isCasefile && (
+          <Tab
+            id={collectionViewIds.LISTS}
+            className="CollectionViews__tab"
+            title={
+              <>
+                <Icon className="left-icon" icon="list" />
+                <FormattedMessage id="collection.info.lists" defaultMessage="Lists" />
+                <ResultCount result={lists} />
+              </>
+            }
+            panel={<CollectionEntitySetsIndexMode collection={collection} type="list" />}
           />
         )}
         <Tab
@@ -129,6 +143,7 @@ const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const model = selectModel(state);
   const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
+  const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
   const schemata = collection?.statistics?.schema?.values;
   let documentTabCount, entitiesTabCount;
@@ -142,7 +157,7 @@ const mapStateToProps = (state, ownProps) => {
       if (schema.isDocument()) {
         documentTabCount += schemata[key];
       }
-      if (!(schema.isDocument() || schema.isA('Page'))) {
+      if (!(schema.isDocument() || schema.hidden)) {
         entitiesTabCount += schemata[key];
       }
     }
@@ -151,11 +166,11 @@ const mapStateToProps = (state, ownProps) => {
   return {
     entitiesTabCount: entitiesTabCount,
     documentTabCount: documentTabCount,
-    showDiagramsTab: collection.casefile,
-    showEntitiesTab: collection.casefile,
+    isCasefile: collection.casefile,
     showDocumentsTab: (documentTabCount > 0 || collection.writeable),
     xref: selectCollectionXrefResult(state, xrefQuery),
     diagrams: selectEntitySetsResult(state, diagramsQuery),
+    lists: selectEntitySetsResult(state, listsQuery),
   };
 };
 

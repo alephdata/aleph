@@ -8,10 +8,9 @@ source_file = aleph/translations/messages.pot
 source_lang = en
 type = PO
 
-[aleph-ui.messages-pot]
-file_filter = ui/i18n/translations/<lang>.po
+[aleph-ui.messages-json]
+file_filter = ui/i18n/translations/<lang>.json
 minimum_perc = 0
-source_file = ui/i18n/messages.pot
+source_file = ui/i18n/messages.json
 source_lang = en
-type = PO
-
+type = JSON

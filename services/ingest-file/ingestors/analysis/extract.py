@@ -59,13 +59,15 @@ def get_models(entity):
 
 def extract_entities(entity, text):
     for model in get_models(entity):
-        log.debug("NER tagging %d chars (%s)", len(text), model.lang)
+        # log.debug("NER tagging %d chars (%s)", len(text), model.lang)
         doc = model(text)
         for ent in doc.ents:
-            prop_name = SPACY_TYPES.get(ent.label_)
-            if prop_name in (TAG_COMPANY, TAG_PERSON):
+            prop = SPACY_TYPES.get(ent.label_)
+            if prop is None:
+                continue
+            if prop in (TAG_COMPANY, TAG_PERSON):
                 name = clean_name(ent.text)
-                yield (prop_name, name)
-            if prop_name == TAG_LOCATION:
+                yield (prop, name)
+            if prop == TAG_LOCATION:
                 for country in location_country(ent.text):
                     yield (TAG_COUNTRY, country)

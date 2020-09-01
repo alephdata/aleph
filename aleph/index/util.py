@@ -23,7 +23,11 @@ MAX_REQUEST_TIMEOUT = 84600
 # Mapping shortcuts
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
-LATIN_TEXT = {"type": "text", "analyzer": "latin_index"}
+LATIN_TEXT = {
+    "type": "text",
+    "analyzer": "latin_index",
+    "search_analyzer": "latin_query",
+}
 KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 NUMERIC = {"type": "double"}
@@ -178,11 +182,12 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     # log.debug("Bulk write: %.4fs", duration)
 
 
-def index_safe(index, id, body, **kwargs):
+def index_safe(index, id, body, sync=False, **kwargs):
     """Index a single document and retry until it has been stored."""
     for attempt in service_retries():
         try:
-            es.index(index=index, id=id, body=body, **kwargs)
+            refresh = refresh_sync(sync)
+            es.index(index=index, id=id, body=body, refresh=refresh, **kwargs)
             body["id"] = str(id)
             body.pop("text", None)
             return body
@@ -191,6 +196,10 @@ def index_safe(index, id, body, **kwargs):
                 raise
             log.warning("Index error [%s:%s]: %s", index, id, exc)
             backoff(failures=attempt)
+
+
+def delete_safe(index, id, sync=False):
+    es.delete(index=index, id=str(id), ignore=[404], refresh=refresh_sync(sync))
 
 
 def _check_response(index, res):
@@ -206,7 +215,7 @@ def rewrite_mapping_safe(pending, existing):
     """This re-writes mappings for ElasticSearch in such a way that
     immutable values are kept to their existing setting, while other
     fields are updated."""
-    IMMUTABLE = ("type", "analyzer", "normalizer", "index")
+    IMMUTABLE = ("type", "analyzer", "normalizer", "index", "store")
     # This is a pretty bad idea long-term. We need to make it easier
     # to use multiple index generations instead.
     if not isinstance(pending, dict) or not isinstance(existing, dict):

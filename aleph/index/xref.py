@@ -38,34 +38,32 @@ def configure_xref():
     return configure_index(xref_index(), mapping, settings)
 
 
-def index_matches(collection, matches, sync=False):
-    """Index cross-referencing matches."""
-    actions = []
+def _index_form(collection, matches):
+    now = datetime.utcnow().isoformat()
     for (score, entity, match_collection_id, match) in matches:
         xref_id = hash_data((entity.id, collection.id, match.id))
         text = ensure_list(entity.get_type_values(registry.name))
         text.extend(match.get_type_values(registry.name))
-        actions.append(
-            {
-                "_id": xref_id,
-                "_index": xref_index(),
-                "_source": {
-                    "score": score,
-                    "entity_id": entity.id,
-                    "collection_id": collection.id,
-                    "match_id": match.id,
-                    "match_collection_id": match_collection_id,
-                    "countries": match.get_type_values(registry.country),
-                    "schema": match.schema.name,
-                    "text": text,
-                    "created_at": datetime.utcnow(),
-                },
-            }
-        )
+        yield {
+            "_id": xref_id,
+            "_index": xref_index(),
+            "_source": {
+                "score": score,
+                "entity_id": entity.id,
+                "collection_id": collection.id,
+                "match_id": match.id,
+                "match_collection_id": match_collection_id,
+                "countries": match.get_type_values(registry.country),
+                "schema": match.schema.name,
+                "text": text,
+                "created_at": now,
+            },
+        }
 
-    if len(actions):
-        log.info("Indexing %d xref matches...", len(actions))
-        bulk_actions(actions, sync=sync)
+
+def index_matches(collection, matches, sync=False):
+    """Index cross-referencing matches."""
+    bulk_actions(_index_form(collection, matches), sync=sync)
 
 
 def iter_matches(collection, authz):

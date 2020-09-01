@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import truncateText from 'truncate';
 import { Button, Icon, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
@@ -6,28 +7,38 @@ import { withRouter } from 'react-router';
 import c from 'classnames';
 import getEntitySetLink from 'util/getEntitySetLink';
 
-
 const ICONS = {
   diagram: 'graph',
   timeline: 'timeline-events',
-  generic: 'box'
+  list: 'list'
 }
 
+const getIcon = ({ type }) => ICONS[type] || ICONS.list;
 
-const getIcon = ({ type }) => ICONS[type] || ICONS.generic;
+const EntitySetIcon = ({entitySet, className}) => {
+  if (!entitySet) return null;
 
+  return (
+    <Icon icon={getIcon(entitySet)} className={className} />
+  );
+}
 
 class EntitySetLabel extends PureComponent {
   render() {
-    const { entitySet, icon } = this.props;
+    const { entitySet, icon, truncate } = this.props;
     if (!entitySet || !entitySet.id) {
       return null;
     }
 
+    let text = entitySet.label;
+    if (truncate) {
+      text = truncateText(text, truncate);
+    }
+
     return (
       <span className="EntitySetLabel" title={entitySet.label}>
-        {icon && <Icon icon={getIcon(entitySet)} className="left-icon" />}
-        <span>{entitySet.label}</span>
+        {icon && <EntitySetIcon entitySet={entitySet} className="left-icon" />}
+        <span>{text}</span>
       </span>
     );
   }
@@ -81,6 +92,8 @@ class EntitySetSelect extends PureComponent {
 }
 
 class EntitySet {
+  static Icon = EntitySetIcon;
+
   static Label = EntitySetLabel;
 
   static Link = withRouter(EntitySetLink);

@@ -40,8 +40,11 @@ export {
 export {
   createEntitySet,
   deleteEntitySet,
+  entitySetAddEntity,
+  entitySetDeleteEntity,
   fetchEntitySet,
   queryEntitySets,
+  queryEntitySetEntities,
   updateEntitySet,
 } from './entitySetActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';

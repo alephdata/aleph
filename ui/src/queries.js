@@ -22,6 +22,21 @@ export function queryCollectionEntities(location, collectionId, schema) {
   return Query.fromLocation('entities', location, context, 'entities').limit(200);
 }
 
+export function entitySetSchemaCountsQuery(entitySetId) {
+  return new Query(`entitysets/${entitySetId}/entities`, {}, {}, 'entitySetEntities')
+    .add('facet', 'schema')
+    .add('filter:schemata', 'Thing')
+    .add('filter:schemata', 'Interval')
+    .limit(0);
+}
+
+export function entitySetEntitiesQuery(location, entitySetId, schema) {
+  const context = {
+    'filter:schema': schema,
+  };
+  return Query.fromLocation(`entitysets/${entitySetId}/entities`, location, context, 'entitySetEntities');
+}
+
 export function queryCollectionEntitySets(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
@@ -86,7 +101,7 @@ export function queryEntitySuggest(location, collection, schemaName, queryText) 
 
   return Query.fromLocation('entities', location, context, 'entities')
     .limit(30)
-    .sortBy('name', 'asc');
+    .sortBy('caption', 'asc');
 }
 
 export function queryExpand(location, entityId, properties, limit = 200) {

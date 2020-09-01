@@ -5,7 +5,7 @@ import logging
 from followthemoney import model
 from followthemoney.proxy import EntityProxy
 
-from aleph.core import archive
+from aleph.core import archive, db
 from aleph.index.entities import index_proxy
 from aleph.logic.aggregator import get_aggregator
 from aleph.views.util import validate
@@ -64,17 +64,15 @@ class MappingAPITest(TestCase):
         index_proxy(self.col, ent)
 
     def test_mapping(self):
-        url = "/api/2/collections/%s/mappings" % self.col.id
+        col_id = self.col.id
+        url = "/api/2/collections/%s/mappings" % col_id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "QueryResponse")
         res = self.client.get(url, headers=self.headers_x)
         assert res.status_code == 403, res
 
-        url = "/api/2/collections/%s/mappings?filter:table=%s" % (
-            self.col.id,
-            self.ent.id,
-        )  # noqa
+        url = "/api/2/collections/%s/mappings?filter:table=%s" % (col_id, self.ent.id)
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "QueryResponse")
@@ -102,18 +100,18 @@ class MappingAPITest(TestCase):
         index_url = (
             "/api/2/entities?filter:collection_id=%s&filter:schemata=LegalEntity"
         )
-        index_url = index_url % self.col.id
+        index_url = index_url % col_id
         res = self.client.get(index_url, headers=self.headers)
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json
 
-        url = "/api/2/collections/%s/mappings/%s/trigger" % (self.col.id, mapping_id,)
+        url = "/api/2/collections/%s/mappings/%s/trigger" % (col_id, mapping_id,)
         res = self.client.post(url, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.post(url, headers=self.headers)
         assert res.status_code == 202, res
 
-        url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
+        url = "/api/2/collections/%s/mappings/%s" % (col_id, mapping_id)
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "Mapping")
@@ -123,7 +121,7 @@ class MappingAPITest(TestCase):
         origin = "mapping%%3A%s" % mapping_id
         url = (
             "/api/2/entities?filter:collection_id=%s&filter:schema=Person&filter:origin=%s"
-            % (self.col.id, origin)
+            % (col_id, origin)
         )
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res.json
@@ -132,7 +130,7 @@ class MappingAPITest(TestCase):
         assert person.get("proof")[0].get("id") == self.ent.id, person
 
         # test deleting loaded entities
-        url = "/api/2/collections/%s/mappings/%s/flush" % (self.col.id, mapping_id,)
+        url = "/api/2/collections/%s/mappings/%s/flush" % (col_id, mapping_id,)
         res = self.client.post(url, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.post(url, headers=self.headers)
@@ -156,11 +154,11 @@ class MappingAPITest(TestCase):
                 }
             },
         }
-        url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
+        url = "/api/2/collections/%s/mappings/%s" % (col_id, mapping_id)
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         assert "gender" not in json.dumps(res.json["query"]), res.json
-        url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
+        url = "/api/2/collections/%s/mappings/%s" % (col_id, mapping_id)
         res = self.client.post(url, json=data, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.post(url, json=data, headers=self.headers)
@@ -171,12 +169,12 @@ class MappingAPITest(TestCase):
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json
 
-        url = "/api/2/collections/%s/mappings/%s/trigger" % (self.col.id, mapping_id,)
+        url = "/api/2/collections/%s/mappings/%s/trigger" % (col_id, mapping_id,)
         res = self.client.post(url, headers=self.headers)
         res = self.client.get(index_url, headers=self.headers)
         assert res.json["total"] == 15, res.json
 
-        url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
+        url = "/api/2/collections/%s/mappings/%s" % (col_id, mapping_id)
         res = self.client.delete(url, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.delete(url, headers=self.headers)

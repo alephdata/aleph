@@ -26,6 +26,10 @@ const messages = defineMessages({
     id: 'nav.diagrams',
     defaultMessage: 'Network diagrams',
   },
+  lists: {
+    id: 'nav.lists',
+    defaultMessage: 'Lists',
+  },
   settings: {
     id: 'nav.settings',
     defaultMessage: 'Settings',
@@ -115,6 +119,12 @@ export class AuthButtons extends Component {
                   <Icon icon="graph" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.diagrams)}
+                  </div>
+                </Link>
+                <Link to="/lists" className="bp3-menu-item">
+                  <Icon icon="list" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.lists)}
                   </div>
                 </Link>
                 <MenuDivider />

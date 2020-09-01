@@ -22,17 +22,11 @@
     .bp3-icon {
       @include rtl(float, right, left);
     }
-    
+
     p.description-explanation {
       margin-bottom: $aleph-grid-size * 2;
       line-height: 1.5em;
       font-size: 1.1em;
     }
-  }
-
-  ul.results {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
   }
 }

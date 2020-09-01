@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:10.0
     volumes:
-    - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: aleph
       POSTGRES_PASSWORD: aleph
@@ -14,18 +14,18 @@ services:
     image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-3.8.9}
     hostname: elasticsearch
     environment:
-    - discovery.type=single-node
+      - discovery.type=single-node
     volumes:
-    - elasticsearch-data:/usr/share/elasticsearch/data
+      - elasticsearch-data:/usr/share/elasticsearch/data
 
   redis:
     image: redis:alpine
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ["redis-server", "--save", "3600", "10"]
     volumes:
-    - redis-data:/data
+      - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:c48bb70a4553809d3c6dcace37eceaa355e16ba7
+    image: alephdata/convert-document:58d74ecccb4ce475668a7d72c3b4432044dcd14d
     read_only: true
     restart: on-failure
     tmpfs: /tmp
@@ -33,75 +33,75 @@ services:
   ingest-file:
     image: alephdata/ingest-file:${ALEPH_TAG:-3.8.9}
     tmpfs:
-    - /tmp:mode=777
+      - /tmp:mode=777
     volumes:
-    - archive-data:/data
-    links:
-    - postgres
-    - redis
-    - convert-document
+      - archive-data:/data
+    depends_on:
+      - postgres
+      - redis
+      - convert-document
     restart: on-failure
     env_file:
-    - aleph.env
+      - aleph.env
 
   worker:
     image: alephdata/aleph:${ALEPH_TAG:-3.8.9}
     command: aleph worker
     restart: on-failure
-    links:
-    - postgres
-    - elasticsearch
-    - redis
-    - ingest-file
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
     tmpfs:
-    - /tmp
+      - /tmp
     volumes:
-    - archive-data:/data
+      - archive-data:/data
     env_file:
-    - aleph.env
+      - aleph.env
 
   shell:
     image: alephdata/aleph:${ALEPH_TAG:-3.8.9}
     command: /bin/bash
-    links:
-    - postgres
-    - elasticsearch
-    - redis
-    - ingest-file
-    - worker
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+      - worker
     tmpfs:
-    - /tmp
+      - /tmp
     volumes:
-    - archive-data:/data
-    - "./mappings:/aleph/mappings"
-    - "/:/host"
+      - archive-data:/data
+      - "./mappings:/aleph/mappings"
+      - "/:/host"
     env_file:
-    - aleph.env
+      - aleph.env
 
   api:
     image: alephdata/aleph:${ALEPH_TAG:-3.8.9}
     command: gunicorn -w 6 -b 0.0.0.0:8000 --log-level debug --log-file - aleph.wsgi:app
     expose:
-    - 8000
-    links:
-    - postgres
-    - elasticsearch
-    - redis
-    - worker
-    - ingest-file
+      - 8000
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - worker
+      - ingest-file
     tmpfs:
-    - /tmp
+      - /tmp
     volumes:
-    - archive-data:/data
+      - archive-data:/data
     env_file:
-    - aleph.env
+      - aleph.env
 
   ui:
     image: alephdata/aleph-ui-production:${ALEPH_TAG:-3.8.9}
-    links:
-    - api
+    depends_on:
+      - api
     ports:
-    - "8080:8080"
+      - "8080:8080"
 
 volumes:
   archive-data: {}

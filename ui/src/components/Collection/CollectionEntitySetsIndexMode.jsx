@@ -8,9 +8,9 @@ import { queryCollectionEntitySets } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { ErrorSection } from 'components/common';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
-import DiagramList from 'components/Diagram/DiagramList';
+import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 
-export class CollectionDiagramsIndexMode extends Component {
+export class CollectionEntitySetsIndexMode extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -24,7 +24,7 @@ export class CollectionDiagramsIndexMode extends Component {
   }
 
   render() {
-    const { collection, result } = this.props;
+    const { collection, result, type } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -33,12 +33,14 @@ export class CollectionDiagramsIndexMode extends Component {
     return (
       <div>
         <div style={{ marginBottom: '10px' }}>
-          <EntitySetCreateMenu collection={collection} type='diagram' />
+          <EntitySetCreateMenu collection={collection} type={type} />
         </div>
-        <DiagramList
+        <EntitySetIndex
           result={result}
           getMoreItems={this.getMoreResults}
           showCollection={false}
+          type={type}
+          loadMoreOnScroll
         />
       </div>
     );
@@ -46,8 +48,8 @@ export class CollectionDiagramsIndexMode extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const query = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
+  const { collection, location, type } = ownProps;
+  const query = queryCollectionEntitySets(location, collection.id).setFilter('type', type);
   return {
     query,
     result: selectEntitySetsResult(state, query),
@@ -58,4 +60,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntitySets }),
-)(CollectionDiagramsIndexMode);
+)(CollectionEntitySetsIndexMode);

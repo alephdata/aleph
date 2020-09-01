@@ -6,14 +6,14 @@ from aleph.core import kv, db, create_app
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.queues import OP_INDEX, OP_REINDEX, OP_REINGEST, OP_XREF
-from aleph.queues import OP_XREF_ITEM, OP_LOAD_MAPPING, OP_FLUSH_MAPPING
+from aleph.queues import OP_LOAD_MAPPING, OP_FLUSH_MAPPING
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
 from aleph.logic.collections import reindex_collection, reingest_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.roles import update_roles
-from aleph.logic.xref import xref_collection, xref_item
+from aleph.logic.xref import xref_collection
 from aleph.logic.processing import index_many
 
 log = logging.getLogger(__name__)
@@ -26,7 +26,6 @@ OPERATIONS = (
     OP_XREF,
     OP_REINGEST,
     OP_REINDEX,
-    OP_XREF_ITEM,
     OP_LOAD_MAPPING,
     OP_FLUSH_MAPPING,
 )
@@ -77,8 +76,6 @@ class AlephWorker(Worker):
             reindex_collection(collection, sync=sync, **payload)
         if stage.stage == OP_XREF:
             xref_collection(stage, collection)
-        if stage.stage == OP_XREF_ITEM:
-            xref_item(stage, collection, **payload)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
     def handle(self, task):

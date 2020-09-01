@@ -9,12 +9,12 @@ import {
 } from 'components/common';
 /* eslint-disable */
 
-class EntityTableViewerRow extends Component {
+class EntitySearchResultsRow extends Component {
   renderSkeleton() {
     const { hideCollection, documentMode, updateSelection } = this.props;
 
     return (
-      <tr className={c('EntityTableViewerRow', 'nowrap')} key="skeleton">
+      <tr className={c('EntitySearchResultsRow', 'nowrap')} key="skeleton">
         {updateSelection && (
           <td className="select">
             <Skeleton.Text type="span" length={2} />
@@ -72,8 +72,8 @@ class EntityTableViewerRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    const resultClass = c('EntityTableViewerRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
-    const highlightsClass = c('EntityTableViewerRow', { active: isActive });
+    const resultClass = c('EntitySearchResultsRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
+    const highlightsClass = c('EntitySearchResultsRow', { active: isActive });
     return (
       <>
         <tr key={entity.id} className={resultClass}>
@@ -130,4 +130,4 @@ class EntityTableViewerRow extends Component {
   }
 }
 
-export default EntityTableViewerRow;
+export default EntitySearchResultsRow;

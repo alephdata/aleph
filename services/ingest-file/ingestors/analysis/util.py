@@ -1,16 +1,19 @@
-from normality import normalize, collapse_spaces
-
-TAG_PERSON = "peopleMentioned"
-TAG_COMPANY = "companiesMentioned"
-TAG_LANGUAGE = "detectedLanguage"
-TAG_COUNTRY = "detectedCountry"
-TAG_EMAIL = "emailMentioned"
-TAG_PHONE = "phoneMentioned"
-TAG_IBAN = "ibanMentioned"
-TAG_LOCATION = "location"
+from followthemoney import model
+from normality import collapse_spaces
 
 
-def text_chunks(texts, sep=" ", max_chunk=2000):
+ANALYZABLE = model.get("Analyzable")
+TAG_PERSON = ANALYZABLE.get("peopleMentioned")
+TAG_COMPANY = ANALYZABLE.get("companiesMentioned")
+TAG_LANGUAGE = ANALYZABLE.get("detectedLanguage")
+TAG_COUNTRY = ANALYZABLE.get("detectedCountry")
+TAG_EMAIL = ANALYZABLE.get("emailMentioned")
+TAG_PHONE = ANALYZABLE.get("phoneMentioned")
+TAG_IBAN = ANALYZABLE.get("ibanMentioned")
+TAG_LOCATION = ANALYZABLE.get("location")
+
+
+def text_chunks(texts, sep=" ", max_chunk=25000):
     """Pre-chew text snippets for NLP and pattern matching."""
     for text in texts:
         text = collapse_spaces(text)
@@ -22,7 +25,3 @@ def text_chunks(texts, sep=" ", max_chunk=2000):
         # something weird is happening in the first place.
         for idx in range(0, len(text), max_chunk):
             yield text[idx : idx + max_chunk]
-
-
-def tag_key(label):
-    return normalize(label, lowercase=True, ascii=True)

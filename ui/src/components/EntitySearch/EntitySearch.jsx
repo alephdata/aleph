@@ -9,7 +9,7 @@ import c from 'classnames';
 
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
-import EntityTable from 'components/EntityTable/EntityTable';
+import EntitySearchResults from './EntitySearchResults';
 import { ErrorSection } from 'components/common';
 
 import './EntitySearch.scss';
@@ -114,7 +114,7 @@ export class EntitySearch extends Component {
           </section>
         )}
         {foundText}
-        <EntityTable
+        <EntitySearchResults
           query={query}
           result={result}
           documentMode={documentMode}
