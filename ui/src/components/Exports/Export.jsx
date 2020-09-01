@@ -4,6 +4,7 @@ import { FormattedRelativeTime } from "react-intl";
 import c from 'classnames';
 
 import { Skeleton, ExportLink, FileSize } from "src/components/common";
+import convertUTCDateToLocalDate from "util/convertUTCDateToLocalDate";
 
 import "./Export.scss";
 
@@ -25,16 +26,6 @@ class Export extends PureComponent {
     </tr>
   );
 
-  convertUTCDateToLocalDate = (date) => {
-    const newDate = new Date(
-      date.getTime() + date.getTimezoneOffset() * 60 * 1000
-    );
-    const offset = date.getTimezoneOffset() / 60;
-    const hours = date.getHours();
-    newDate.setHours(hours - offset);
-    return newDate;
-  };
-
   render() {
     const { isPending, export_ } = this.props;
 
@@ -44,7 +35,7 @@ class Export extends PureComponent {
 
     const { id, expires_at: expiresAt, export_status: status } = export_;
 
-    const expiryDate = this.convertUTCDateToLocalDate(new Date(expiresAt));
+    const expiryDate = convertUTCDateToLocalDate(new Date(expiresAt));
     const { value, unit } = selectUnit(expiryDate);
     return (
       <tr key={id} className={c("Export nowrap", status)}>

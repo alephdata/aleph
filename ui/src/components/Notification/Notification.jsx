@@ -5,6 +5,7 @@ import { FormattedRelativeTime } from 'react-intl';
 import {
   Collection, EntitySet, Entity, QueryText, Role, Skeleton, ExportLink
 } from 'src/components/common';
+import convertUTCDateToLocalDate from "util/convertUTCDateToLocalDate";
 
 import './Notification.scss';
 
@@ -44,14 +45,6 @@ class Notification extends PureComponent {
     </li>
   )
 
-  convertUTCDateToLocalDate = (date) => {
-    const newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-    const offset = date.getTimezoneOffset() / 60;
-    const hours = date.getHours();
-    newDate.setHours(hours - offset);
-    return newDate;
-  }
-
   render() {
     const { isPending, notification } = this.props;
 
@@ -80,7 +73,7 @@ class Notification extends PureComponent {
       }
     });
 
-    const createdDate = this.convertUTCDateToLocalDate(new Date(createdAt));
+    const createdDate = convertUTCDateToLocalDate(new Date(createdAt));
     const { value, unit } = selectUnit(createdDate, Date.now());
     return (
       <li key={id} className="Notification">
