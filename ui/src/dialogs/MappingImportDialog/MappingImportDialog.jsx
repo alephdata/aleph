@@ -111,7 +111,7 @@ class MappingImportDialog extends Component {
                     {mappingQueries.map((query, i) => (
                       <Radio
                         value={`${i}`}
-                        key={query.csv_url || query.csv_urls[0]}
+                        key={i}
                         label={<MappingQueryLabel query={query} />}
                       />
                     ))}

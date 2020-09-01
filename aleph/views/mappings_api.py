@@ -28,9 +28,7 @@ def load_query():
     return query
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings", methods=["GET"]
-)  # noqa
+@blueprint.route("/api/2/collections/<int:collection_id>/mappings", methods=["GET"])
 def index(collection_id):
     """Returns a list of mappings for the collection and table.
     ---
@@ -78,7 +76,7 @@ def index(collection_id):
 
 @blueprint.route(
     "/api/2/collections/<int:collection_id>/mappings", methods=["POST", "PUT"]
-)  # noqa
+)
 def create(collection_id):
     """Create a mapping.
     ---
@@ -114,16 +112,14 @@ def create(collection_id):
     entity_id = data.get("table_id")
     query = load_query()
     entity = get_index_entity(entity_id, request.authz.READ)
-    mapping = Mapping.create(
-        query, entity.get("id"), collection, request.authz.id
-    )  # noqa
+    mapping = Mapping.create(query, entity.get("id"), collection, request.authz.id)
     db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
 
 @blueprint.route(
     "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>", methods=["GET"]
-)  # noqa
+)
 def view(collection_id, mapping_id):
     """Return the mapping with id `mapping_id`.
     ---
@@ -165,7 +161,7 @@ def view(collection_id, mapping_id):
 @blueprint.route(
     "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
     methods=["POST", "PUT"],
-)  # noqa
+)
 def update(collection_id, mapping_id):
     """Update the mapping with id `mapping_id`.
     ---
@@ -218,7 +214,7 @@ def update(collection_id, mapping_id):
 @blueprint.route(
     "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
     methods=["DELETE"],
-)  # noqa
+)
 def delete(collection_id, mapping_id):
     """Delete a mapping.
     ---
@@ -293,9 +289,11 @@ def trigger(collection_id, mapping_id):
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.disabled = False
     mapping.set_status(Mapping.PENDING)
+    db.session.commit()
     job_id = get_session_id()
     payload = {"mapping_id": mapping.id}
     queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
+    mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping, status=202)
 
 
