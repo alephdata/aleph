@@ -209,7 +209,7 @@ def format_proxy(proxy, collection):
     entity_id = data.pop("id")
     return {
         "_id": entity_id,
-        "_index": entities_write_index(data.get("schema")),
+        "_index": entities_write_index(proxy.schema),
         "_source": data,
     }
 
