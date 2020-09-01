@@ -102,7 +102,7 @@ export class PdfViewer extends Component {
   }
 
   fetchComponents() {
-    import(/* webpackChunkName:'pdf-lib' */'react-pdf/dist/entry.webpack')
+    import(/* webpackChunkName:'pdf-lib' */'react-pdf/dist/esm/entry.webpack')
       .then((components) => this.setState({ components }));
   }
 
