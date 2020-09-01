@@ -16,7 +16,7 @@ from aleph.queues import (
     OP_LOAD_MAPPING,
     OP_FLUSH_MAPPING,
 )
-from aleph.queues import ROLE_PREFIX
+from aleph.queues import ROLE_PREFIX, COLLECTION_PREFIX
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
 from aleph.logic.notifications import generate_digest
@@ -85,13 +85,18 @@ class AlephWorker(Worker):
     def handle(self, task):
         with app.app_context():
             if task.job.dataset.name.startswith(ROLE_PREFIX):
-                collection = None
-            else:
-                collection = Collection.by_foreign_id(task.job.dataset.name)
+                self.dispatch_task(None, task)
+            elif task.job.dataset.name.startswith(COLLECTION_PREFIX):
+                # strip the prefix
+                foreign_id = task.job.dataset.name.split(COLLECTION_PREFIX, 1)[1][1:]
+                collection = Collection.by_foreign_id(foreign_id)
                 if collection is None:
                     log.error("Collection not found: %s", task.job.dataset)
                     return
-            self.dispatch_task(collection, task)
+                self.dispatch_task(collection, task)
+            else:
+                log.error("Unknown dataset type: %s", task.job.dataset)
+                return
 
     def cleanup_job(self, job):
         if job.is_done():
