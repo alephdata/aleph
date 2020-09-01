@@ -1,11 +1,16 @@
+import logging
+
 from flask import Blueprint, request, redirect, send_file, Response
+from werkzeug.exceptions import NotFound
 
 from aleph.core import archive
 from aleph.model import Export
 from aleph.search import DatabaseQueryResult
 from aleph.views.serializers import ExportSerializer
 from aleph.views.util import require, obj_or_404
+from aleph.logic.export import export_claim
 
+log = logging.getLogger(__name__)
 blueprint = Blueprint("exports_api", __name__)
 
 
@@ -48,8 +53,16 @@ def download(export_id):
       - description: export id
         in: path
         name: export_id
+        required: true
         schema:
           type: string
+      - description: Authorization token for an export
+        in: query
+        name: claim
+        required: false
+        schema:
+          type: string
+          description: A signed JWT with the object hash.
       responses:
         '200':
           description: OK
@@ -60,8 +73,15 @@ def download(export_id):
       tags:
       - Export
     """
-    require(request.authz.logged_in)
-    export = obj_or_404(Export.by_id(export_id, role_id=request.authz.id))
+    claim = request.args.get("claim")
+    if claim:
+        export_id_, role_id = export_claim(claim)
+        if str(export_id_) != export_id:
+            raise NotFound()
+    else:
+        require(request.authz.logged_in)
+        role_id = request.authz.id
+    export = obj_or_404(Export.by_id(export_id, role_id=role_id))
     url = export.get_publication_url()
     if url is not None:
         return redirect(url)

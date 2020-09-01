@@ -7,6 +7,7 @@ from pprint import pformat  # noqa
 
 import zipstream
 import requests
+import jwt
 from flask import render_template
 from followthemoney import model
 from followthemoney.export.excel import ExcelExporter
@@ -127,7 +128,7 @@ def delete_expired_exports():
 
 def send_export_notification(export):
     role = Role.by_id(export.creator_id)
-    download_url = url_for("exports_api.download", export_id=export.id)
+    download_url = export_url(export.id, role.id)
     params = dict(
         role=role,
         export_label=export.label,
@@ -142,3 +143,18 @@ def send_export_notification(export):
     log.info("Notification: %s", plain)
     subject = "Export ready for download"
     email_role(role, subject, html=html, plain=plain)
+
+
+def export_url(export_id, role_id):
+    """Create an access authorization link for an export."""
+    payload = dict(r=role_id, e=export_id)
+    claim = jwt.encode(payload, settings.SECRET_KEY).decode("utf-8")
+    return url_for(
+        "exports_api.download", export_id=export_id, _query=[("claim", claim)],
+    )
+
+
+def export_claim(claim):
+    """Unpack an access authorization token for an export."""
+    data = jwt.decode(claim, key=settings.SECRET_KEY, verify=True)
+    return data.get("e"), data.get("r")
