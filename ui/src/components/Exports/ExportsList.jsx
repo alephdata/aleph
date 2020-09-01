@@ -4,9 +4,9 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { ErrorSection } from "src/components/common";
-import { selectExports } from 'selectors';
+import { selectExports } from "selectors";
+import { fetchExports } from "src/actions";
 import Export from "src/components/Exports/Export";
-
 
 const messages = defineMessages({
   no_exports: {
@@ -16,6 +16,11 @@ const messages = defineMessages({
 });
 
 class ExportsList extends Component {
+  componentDidMount() {
+    // fetch new export on every mount so that we can show recently created
+    // exports without needing a reload
+    this.props.fetchExports();
+  }
   render() {
     const { exports, intl } = this.props;
     const skeletonItems = [...Array(15).keys()];
@@ -44,7 +49,10 @@ class ExportsList extends Component {
                 <FormattedMessage id="exports.status" defaultMessage="Status" />
               </th>
               <th>
-                <FormattedMessage id="exports.expiration" defaultMessage="Expiration" />
+                <FormattedMessage
+                  id="exports.expiration"
+                  defaultMessage="Expiration"
+                />
               </th>
             </tr>
           </thead>
@@ -66,8 +74,12 @@ const mapStateToProps = (state) => ({
   exports: selectExports(state),
 });
 
+const mapDispatchToProps = {
+  fetchExports,
+};
+
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(ExportsList);
