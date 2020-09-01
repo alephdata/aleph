@@ -116,7 +116,7 @@ class Events(object, metaclass=EventsRegistry):
     )
 
     # EXPORT PUBLISHED
-    PUBLISH_EXPORT = Event(
+    COMPLETE_EXPORT = Event(
         template=lazy_gettext("{{export}} is ready for download"),
         params={"export": Export},
         link_to="export",

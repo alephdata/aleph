@@ -84,7 +84,7 @@ def export_entities(export_id, result):
             for data in zip_archive:
                 zf.write(data)
 
-        publish_export(export_id, file_path)
+        complete_export(export_id, file_path)
     finally:
         shutil.rmtree(export_dir)
 
@@ -105,7 +105,7 @@ def create_export(
     return export
 
 
-def publish_export(export_id, file_path=None):
+def complete_export(export_id, file_path=None):
     export = Export.by_id(export_id)
     if file_path:
         export.set_filepath(file_path)
@@ -114,7 +114,7 @@ def publish_export(export_id, file_path=None):
     params = {"export": export}
     role = Role.by_id(export.creator_id)
     publish(
-        Events.PUBLISH_EXPORT, params=params, channels=[role],
+        Events.COMPLETE_EXPORT, params=params, channels=[role],
     )
     send_export_notification(export)
 

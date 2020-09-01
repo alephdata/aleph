@@ -26,7 +26,7 @@ from aleph.index.indexes import entities_read_index
 from aleph.index.collections import delete_entities
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
-from aleph.logic.export import publish_export
+from aleph.logic.export import complete_export
 
 
 log = logging.getLogger(__name__)
@@ -216,6 +216,6 @@ def export_matches(collection_id, export_id):
             for data in buffer:
                 fp.write(data)
 
-        publish_export(export_id, file_path)
+        complete_export(export_id, file_path)
     finally:
         shutil.rmtree(export_dir)

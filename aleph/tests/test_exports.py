@@ -5,7 +5,7 @@ import os
 
 from aleph.core import db, archive
 from aleph.model import Export
-from aleph.logic.export import create_export, delete_expired_exports, publish_export
+from aleph.logic.export import create_export, delete_expired_exports, complete_export
 from aleph.logic.notifications import get_notifications
 from aleph.tests.util import TestCase
 
@@ -22,13 +22,13 @@ class ExportsTestCase(TestCase):
         self.export1 = create_export(
             "TEST", self.role_email.id, "test1", expires_after=Export.DEFAULT_EXPIRATION
         )
-        publish_export(self.export1.id, temp_path)
+        complete_export(self.export1.id, temp_path)
 
         temp_path = self._create_temporary_copy(csv_path, "experts.csv")
         self.export2 = create_export(
             "TEST", self.role_email.id, "test2", expires_after=timedelta(days=-1)
         )
-        publish_export(self.export2.id, temp_path)
+        complete_export(self.export2.id, temp_path)
 
     def _create_temporary_copy(self, path, name):
         temp_dir = tempfile.gettempdir()
