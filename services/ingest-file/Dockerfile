@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
@@ -106,7 +106,7 @@ ENV LANG='en_US.UTF-8' \
 RUN groupadd -g 1000 -r app \
     && useradd -m -u 1000 -s /bin/false -g app app
 
-RUN pip3 install --no-cache-dir -U pip setuptools!=50
+RUN pip3 install --no-cache-dir -U pip "setuptools<50"
 COPY requirements.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
