@@ -1,7 +1,7 @@
 """Introduce Export model
 
-Revision ID: ad3b9bb23755
-Revises: 4c9e198c5b31
+Revision ID: 5b681871c1ab
+Revises: aa486b9e627e
 Create Date: 2020-07-28 11:26:26.392701
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = "ad3b9bb23755"
+revision = "5b681871c1ab"
 down_revision = "aa486b9e627e"
 
 
@@ -22,7 +22,7 @@ def upgrade():
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("label", sa.Unicode(), nullable=True),
-        sa.Column("export_op", sa.Unicode(), nullable=True),
+        sa.Column("operation", sa.Unicode(), nullable=True),
         sa.Column("creator_id", sa.Integer(), nullable=True),
         sa.Column("collection_id", sa.Integer(), nullable=True),
         sa.Column("expires_at", sa.DateTime(), nullable=True),
@@ -31,6 +31,7 @@ def upgrade():
         sa.Column("content_hash", sa.Unicode(length=65), nullable=True),
         sa.Column("file_size", sa.BigInteger(), nullable=True),
         sa.Column("file_name", sa.Unicode(), nullable=True),
+        sa.Column("mime_type", sa.Unicode(), nullable=True),
         sa.Column("meta", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
         sa.ForeignKeyConstraint(["collection_id"], ["collection.id"],),
         sa.ForeignKeyConstraint(["creator_id"], ["role.id"],),
