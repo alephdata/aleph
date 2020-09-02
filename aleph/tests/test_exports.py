@@ -1,7 +1,4 @@
 from datetime import timedelta, datetime
-import tempfile
-import shutil
-import os
 
 from aleph.core import db, archive
 from aleph.model import Export
@@ -29,12 +26,6 @@ class ExportsTestCase(TestCase):
             "TEST", self.role_email.id, "test2", expires_after=timedelta(days=-1)
         )
         complete_export(self.export2.id, temp_path)
-
-    def _create_temporary_copy(self, path, name):
-        temp_dir = tempfile.gettempdir()
-        temp_path = os.path.join(temp_dir, name)
-        shutil.copy2(path, temp_path)
-        return temp_path
 
     def test_create(self):
         assert self.export1.content_hash is not None
