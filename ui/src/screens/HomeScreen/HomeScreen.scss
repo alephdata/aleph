@@ -3,6 +3,7 @@
 $vertical-spacing: $aleph-grid-size*5;
 
 .HomeScreen {
+  font-family: "Open Sans", sans-serif;
   &__section {
     text-align: center;
     background: none;
@@ -10,17 +11,18 @@ $vertical-spacing: $aleph-grid-size*5;
 
     &.title-section {
       min-height: 500px;
-      height: 90vh;
+      max-height: 900px;
+      // height: 90vh;
       position: relative;
+      background-color: white !important;
       &::after {
-        // style={{ background: 'url("/static/background.jpg")'}}
         background-image: url("/static/background.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         background-position: 50% 50%;
         position: absolute;
         content: "";
-        opacity: 0.06;
+        opacity: 0.12;
         top: 0;
         left: 0;
         bottom: 0;
@@ -33,7 +35,7 @@ $vertical-spacing: $aleph-grid-size*5;
     &__content {
       max-width: 1100px;
       margin: auto;
-      padding: $aleph-grid-size*7.5 30px;
+      padding: $aleph-grid-size*8 $aleph-grid-size*3;
       vertical-align: middle;
 
       .title-section & {
@@ -46,6 +48,13 @@ $vertical-spacing: $aleph-grid-size*5;
     }
 
     &:nth-child(even) {
+      background-color: $dark-gray2;
+      color: white;
+      .HomeScreen__title {
+        color: white;
+      }
+    }
+    &:nth-child(odd) {
       background-color: $light-gray5;
     }
   }
@@ -55,9 +64,10 @@ $vertical-spacing: $aleph-grid-size*5;
   }
 
   &__app-title {
-    font-size: 42px;
+    font-size: 50px;
     margin: $vertical-spacing/2 0;
     color: $dark-gray3;
+    line-height: 1;
   }
 
   &__title {
@@ -111,7 +121,7 @@ $vertical-spacing: $aleph-grid-size*5;
 
     & > * {
       flex: 0 0;
-      padding: 0 3%;
+      padding: 0 1%;
     }
   }
 
@@ -129,22 +139,32 @@ $vertical-spacing: $aleph-grid-size*5;
   &__feature-block {
     max-width: 400px;
     margin: 0 auto;
-    img {
-      background: white;
-      border-radius: 10px;
-    }
-    p {
-      margin: auto;
-      margin-top: $aleph-grid-size*2;
-      font-weight: bolder;
-      text-align: center;
-      line-height: 1.5;
-      font-size: 14px;
-      width: 90%;
-    }
 
-    b {
-      color: $blue1;
+
+    &__content {
+      margin: 0 10px;
+      border-radius: 10px;
+      padding: 25px;
+      background-color: rgba(255, 255, 255, .15);
+      height: 100%;
+
+      img {
+        background: white;
+        border-radius: 10px;
+      }
+      p {
+        margin: auto;
+        margin-top: $aleph-grid-size*2;
+        font-weight: bolder;
+        text-align: center;
+        line-height: 1.5;
+        font-size: 14px;
+        width: 90%;
+      }
+
+      b {
+        // color: $blue1;
+      }
     }
   }
 
@@ -162,5 +182,14 @@ $vertical-spacing: $aleph-grid-size*5;
     &__label {
       font-size: 16px;
     }
+  }
+
+  .Statistics.bp3-callout {
+    border: 1px solid $aleph-border-color;
+  }
+  .Statistics__headline.bp3-heading {
+    padding-bottom: $aleph-grid-size;
+    margin-top: $aleph-grid-size/2;
+    border-bottom: 1px solid;
   }
 }

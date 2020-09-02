@@ -63,7 +63,7 @@ export class HomeScreen extends Component {
   render() {
     const { intl, metadata, statistics = {}, session } = this.props;
     if (session.loggedIn) {
-      return <Redirect to="/notifications" />;
+      // return <Redirect to="/notifications" />;
     }
 
     const appDescription = metadata.app.description;
@@ -133,7 +133,7 @@ export class HomeScreen extends Component {
                     headline={(
                       <FormattedMessage
                         id="home.statistics.schemata"
-                        defaultMessage="...by entity type"
+                        defaultMessage="Entity types"
                       />
                     )}
                     statistic={statistics.schemata}
@@ -148,7 +148,7 @@ export class HomeScreen extends Component {
                     headline={(
                       <FormattedMessage
                         id="home.statistics.categories"
-                        defaultMessage="...by dataset category"
+                        defaultMessage="Dataset categories"
                       />
                     )}
                     statistic={statistics.categories}
@@ -163,7 +163,7 @@ export class HomeScreen extends Component {
                     headline={(
                       <FormattedMessage
                         id="home.statistics.countries"
-                        defaultMessage="...by country or territory"
+                        defaultMessage="Countries and territories"
                       />
                     )}
                     statistic={statistics.countries}
@@ -175,11 +175,7 @@ export class HomeScreen extends Component {
               </div>
             </div>
           </section>
-          <section className="HomeScreen__section">
-            <div className="HomeScreen__section__content">
-            {/* Aleph technical details: version, link to docs, github, etc. */}
-            </div>
-          </section>
+          {/* Aleph technical details: version, link to docs, github, etc. */}
         </div>
       </Screen>
     );
