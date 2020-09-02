@@ -14,9 +14,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    build:
-      context: services/elasticsearch
-    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph-elasticsearch:fc76f89bb369132171af4629cc12cd7f57098ba6
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
