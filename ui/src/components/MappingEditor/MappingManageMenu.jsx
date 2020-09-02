@@ -129,9 +129,10 @@ class MappingManageMenu extends Component {
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   formatMappings() {
-    const { document, mappings } = this.props;
+    const { document, entitySet, mappings } = this.props;
 
     return {
+      entityset_id: entitySet?.id,
       table_id: document.id,
       mapping_query: mappings.toApiFormat(),
     };

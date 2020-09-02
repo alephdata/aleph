@@ -11,6 +11,10 @@ $vertical-spacing: 50px;
       margin-bottom: 25px;
       font-size: 18px;
     }
+
+    &__description {
+      margin-bottom: $aleph-grid-size*2;
+    }
   }
 
   &__preview {

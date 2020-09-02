@@ -15,6 +15,10 @@ import getEntitySetLink from 'util/getEntitySetLink';
 import './EntitySetSelector.scss';
 
 const messages = defineMessages({
+  title_default: {
+    id: 'entityset.selector.title_default',
+    defaultMessage: 'Add entities to...',
+  },
   title: {
     id: 'entityset.selector.title',
     defaultMessage: 'Add {firstCaption} {titleSecondary} to...',
@@ -56,6 +60,7 @@ class EntitySetSelector extends Component {
 
     if (processing) { return; }
 
+
     const entitySet = {
       collection_id: collection.id,
       label,
@@ -81,31 +86,40 @@ class EntitySetSelector extends Component {
 
     const entitySetId = entitySet.id;
 
+
     try {
       this.setState({ processing: true });
-      const promises = entities.map(entity => (
-        this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
-      ));
+      if (entities) {
+        const promises = entities.map(entity => (
+          this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
+        ));
 
-      Promise.all(promises).then(values => this.onSuccess(entitySet));
+        Promise.all(promises).then(values => this.onSuccess(entitySet));
+      } else {
+        this.onSuccess(entitySet);
+      }
     } catch (e) {
       this.onError(e);
     }
   }
 
   onSuccess(entitySet) {
-    const { entities, history, intl } = this.props;
+    const { entities, history, intl, onSuccess } = this.props;
     this.setState({ processing: false });
 
-    showSuccessToast({
-      message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
-      action: {
-        small: true,
-        icon: 'share',
-        text: intl.formatMessage(messages.success_button),
-        onClick: () => history.push({ pathname: getEntitySetLink(entitySet) })
-      }
-    });
+    if (onSuccess) {
+      onSuccess(entitySet);
+    } else {
+      showSuccessToast({
+        message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
+        action: {
+          small: true,
+          icon: 'share',
+          text: intl.formatMessage(messages.success_button),
+          onClick: () => history.push({ pathname: getEntitySetLink(entitySet) })
+        }
+      });
+    }
     this.props.toggleDialog(true);
   }
 
@@ -116,6 +130,9 @@ class EntitySetSelector extends Component {
 
   getTitle() {
     const { entities, intl } = this.props;
+    if (!entities) {
+      return intl.formatMessage(messages.title_default);
+    }
     const entLength = entities.length;
     const firstCaption = entities[0]?.getCaption();
     const titleSecondary = entLength === 1 ? "" : intl.formatMessage(messages.title_secondary, { count: entLength - 1 })
@@ -123,12 +140,8 @@ class EntitySetSelector extends Component {
   }
 
   render() {
-    const { collection, entities, intl, isOpen, toggleDialog } = this.props;
+    const { collection, isOpen, toggleDialog } = this.props;
     const { processing } = this.state;
-
-    if (!entities.length) {
-      return null;
-    }
 
     return (
       <Drawer
