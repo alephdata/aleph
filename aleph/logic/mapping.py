@@ -3,11 +3,11 @@ from followthemoney import model
 from followthemoney.helpers import remove_checksums
 
 from aleph.core import db, archive
-from aleph.model import Mapping, Events
+from aleph.model import Mapping, Events, EntitySetItem
 from aleph.index.entities import get_entity
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.collections import delete_entities
-from aleph.logic.collections import update_collection, reindex_collection
+from aleph.logic.collections import update_collection, index_aggregator, aggregate_model
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -54,6 +54,13 @@ def map_to_aggregator(collection, mapping, aggregator):
             entity = collection.ns.apply(entity)
             entity = remove_checksums(entity)
             writer.put(entity, fragment=idx, origin=origin)
+            if mapping.entityset is not None:
+                EntitySetItem.save(
+                    mapping.entityset,
+                    entity.id,
+                    collection_id=collection.id,
+                    added_by_id=mapping.role_id,
+                )
     writer.flush()
     log.info("[%s] Mapping done (%s rows)", mapping.id, idx)
 
@@ -77,9 +84,10 @@ def load_mapping(stage, collection, mapping_id, sync=False):
     )
     try:
         map_to_aggregator(collection, mapping, aggregator)
+        aggregate_model(collection, aggregator)
+        index_aggregator(collection, aggregator, sync=sync)
         mapping.set_status(status=Mapping.SUCCESS)
         db.session.commit()
-        reindex_collection(collection, sync=sync)
     except Exception as exc:
         mapping.set_status(status=Mapping.FAILED, error=str(exc))
         db.session.commit()

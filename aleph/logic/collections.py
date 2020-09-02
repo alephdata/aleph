@@ -112,6 +112,8 @@ def reindex_collection(collection, sync=False, flush=False):
         index.delete_entities(collection.id, sync=True)
     aggregator = get_aggregator(collection)
     for mapping in collection.mappings:
+        if mapping.disabled:
+            continue
         try:
             map_to_aggregator(collection, mapping, aggregator)
         except Exception as ex:
@@ -133,8 +135,8 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)
     deleted_at = collection.deleted_at or datetime.utcnow()
-    EntitySet.delete_by_collection(collection.id, deleted_at)
     Mapping.delete_by_collection(collection.id)
+    EntitySet.delete_by_collection(collection.id, deleted_at)
     Entity.delete_by_collection(collection.id)
     Document.delete_by_collection(collection.id)
     if not keep_metadata:

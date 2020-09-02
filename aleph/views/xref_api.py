@@ -1,8 +1,7 @@
 import logging
 from flask import Blueprint, request, send_file
 from followthemoney import model
-from followthemoney.exc import InvalidData
-from werkzeug.exceptions import BadRequest
+from pantomime.types import XLSX
 
 from aleph.search import XrefQuery
 from aleph.index.xref import get_xref
@@ -13,7 +12,6 @@ from aleph.queues import queue_task, OP_XREF
 from aleph.views.util import get_db_collection, get_index_collection, get_index_entity
 from aleph.views.util import parse_request, require, jsonify, obj_or_404
 
-XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  # noqa
 blueprint = Blueprint("xref_api", __name__)
 log = logging.getLogger(__name__)
 
@@ -128,7 +126,7 @@ def export(collection_id):
     buffer = export_matches(collection, request.authz)
     file_name = "%s - Crossreference.xlsx" % collection.label
     return send_file(
-        buffer, mimetype=XLSX_MIME, as_attachment=True, attachment_filename=file_name
+        buffer, mimetype=XLSX, as_attachment=True, attachment_filename=file_name
     )
 
 

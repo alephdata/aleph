@@ -6,6 +6,7 @@ from flask_babel import lazy_gettext
 
 from aleph.core import db
 from aleph.model import Role, Collection
+from aleph.model.entityset import EntitySet
 from aleph.model.common import iso_text, DatedModel, ENTITY_ID_LEN
 
 
@@ -37,6 +38,13 @@ class Mapping(db.Model, DatedModel):
         Collection, backref=db.backref("mappings", lazy="dynamic")
     )
 
+    entityset_id = db.Column(
+        db.String(ENTITY_ID_LEN), db.ForeignKey("entityset.id"), nullable=True
+    )
+    entityset = db.relationship(
+        EntitySet, backref=db.backref("mappings", lazy="dynamic")
+    )
+
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
     disabled = db.Column(db.Boolean, nullable=True)
@@ -52,12 +60,13 @@ class Mapping(db.Model, DatedModel):
             "mutable": True,
         }
 
-    def update(self, query=None, table_id=None):
+    def update(self, query=None, table_id=None, entityset_id=None):
         self.updated_at = datetime.utcnow()
         if query:
             self.query = query
         if table_id:
             self.table_id = table_id
+        self.entityset_id = entityset_id
         db.session.add(self)
 
     def set_status(self, status, error=None):
@@ -101,13 +110,11 @@ class Mapping(db.Model, DatedModel):
         pq.delete(synchronize_session=False)
 
     @classmethod
-    def create(cls, query, table_id, collection, role_id):
+    def create(cls, query, table_id, collection, role_id, entityset_id=None):
         mapping = cls()
         mapping.role_id = role_id
-        mapping.query = query
         mapping.collection_id = collection.id
-        mapping.table_id = table_id
-        mapping.update()
+        mapping.update(query, table_id, entityset_id)
         return mapping
 
     def __repr__(self):

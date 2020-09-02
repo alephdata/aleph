@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Drawer } from '@blueprintjs/core';
+import { Drawer, Spinner } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
+import c from 'classnames';
 
 import { createEntitySet, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
@@ -14,9 +15,17 @@ import getEntitySetLink from 'util/getEntitySetLink';
 import './EntitySetSelector.scss';
 
 const messages = defineMessages({
+  title_default: {
+    id: 'entityset.selector.title_default',
+    defaultMessage: 'Add entities to...',
+  },
   title: {
     id: 'entityset.selector.title',
-    defaultMessage: 'Add {count} {count, plural, one {entity} other {entities}} to...',
+    defaultMessage: 'Add {firstCaption} {titleSecondary} to...',
+  },
+  title_secondary: {
+    id: 'entityset.selector.title_other',
+    defaultMessage: 'and {count} other {count, plural, one {entity} other {entities}}',
   },
   placeholder: {
     id: 'entityset.selector.placeholder',
@@ -36,13 +45,21 @@ const messages = defineMessages({
 class EntitySetSelector extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      processing: false,
+    };
     this.onCreate = this.onCreate.bind(this);
+    this.onError = this.onError.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onSuccess = this.onSuccess.bind(this);
   }
 
   async onCreate(type, label) {
     const { collection, entities } = this.props;
+    const { processing } = this.state;
+
+    if (processing) { return; }
+
 
     const entitySet = {
       collection_id: collection.id,
@@ -52,46 +69,79 @@ class EntitySetSelector extends Component {
     };
 
     try {
+      this.setState({ processing: true });
       const created = await this.props.createEntitySet(entitySet);
       this.onSuccess(created.data);
     } catch (e) {
-      showWarningToast(e.message);
+      this.onError(e);
     }
 
   }
 
   onSelect(entitySet) {
     const { entities } = this.props;
+    const { processing } = this.state;
+
+    if (processing) { return; }
+
     const entitySetId = entitySet.id;
 
-    try {
-      const promises = entities.map(entity => (
-        this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
-      ));
 
-      Promise.all(promises).then(values => this.onSuccess(entitySet));
+    try {
+      this.setState({ processing: true });
+      if (entities) {
+        const promises = entities.map(entity => (
+          this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
+        ));
+
+        Promise.all(promises).then(values => this.onSuccess(entitySet));
+      } else {
+        this.onSuccess(entitySet);
+      }
     } catch (e) {
-      showWarningToast(e.message);
+      this.onError(e);
     }
   }
 
   onSuccess(entitySet) {
-    const { entities, history, intl } = this.props;
+    const { entities, history, intl, onSuccess } = this.props;
+    this.setState({ processing: false });
 
-    showSuccessToast({
-      message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
-      action: {
-        small: true,
-        icon: 'share',
-        text: intl.formatMessage(messages.success_button),
-        onClick: () => history.push({ pathname: getEntitySetLink(entitySet) })
-      }
-    });
+    if (onSuccess) {
+      onSuccess(entitySet);
+    } else {
+      showSuccessToast({
+        message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
+        action: {
+          small: true,
+          icon: 'share',
+          text: intl.formatMessage(messages.success_button),
+          onClick: () => history.push({ pathname: getEntitySetLink(entitySet) })
+        }
+      });
+    }
     this.props.toggleDialog(true);
   }
 
+  onError(e) {
+    this.setState({ processing: false });
+    showWarningToast(e.message);
+  }
+
+  getTitle() {
+    const { entities, intl } = this.props;
+    if (!entities) {
+      return intl.formatMessage(messages.title_default);
+    }
+    const entLength = entities.length;
+    const firstCaption = entities[0]?.getCaption();
+    const titleSecondary = entLength === 1 ? "" : intl.formatMessage(messages.title_secondary, { count: entLength - 1 })
+    return intl.formatMessage(messages.title, { firstCaption, titleSecondary });
+  }
+
   render() {
-    const { collection, entities, intl, isOpen, toggleDialog } = this.props;
+    const { collection, isOpen, toggleDialog } = this.props;
+    const { processing } = this.state;
 
     return (
       <Drawer
@@ -99,15 +149,20 @@ class EntitySetSelector extends Component {
         className="EntitySetSelector"
         size={Drawer.SIZE_SMALL}
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title, { count: entities.length })}
+        title={this.getTitle()}
         transitionDuration={200}
         onClose={() => toggleDialog()}
         autoFocus={false}
         enforceFocus={false}
         canOutsideClickClose={false}
-        portalClassName="EntitySetSelector__overlay-container"
+        portalClassName="EntitySetSelector__portal-container"
       >
-        <div className="bp3-drawer-body">
+        <div className={c("bp3-drawer-body", { "blocking": processing })}>
+          {processing && (
+            <div className="EntitySetSelector__overlay">
+              <Spinner className="FormDialog__spinner bp3-large" />
+            </div>
+          )}
           <EntitySetSelectorSection
             type="list"
             collection={collection}

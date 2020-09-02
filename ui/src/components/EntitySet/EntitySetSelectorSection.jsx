@@ -88,6 +88,7 @@ class EntitySetSelectorSection extends Component {
     const { onCreate, type } = this.props;
     const { label } = this.state;
     e.preventDefault();
+    e.stopPropagation();
 
     onCreate(type, label);
   }

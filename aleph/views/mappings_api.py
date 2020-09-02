@@ -9,7 +9,7 @@ from aleph.model import Mapping
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
-from aleph.views.util import get_db_collection, parse_request
+from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
 from aleph.views.util import get_index_entity, get_session_id, obj_or_404
 
 
@@ -28,9 +28,18 @@ def load_query():
     return query
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings", methods=["GET"]
-)  # noqa
+def get_table_id(data):
+    return get_index_entity(data.get("table_id"), request.authz.READ).get("id")
+
+
+def get_entityset_id(data):
+    entityset_id = get_nested(data, "entityset", "entityset_id")
+    if entityset_id is not None:
+        get_entityset(entityset_id, request.authz.WRITE)
+        return entityset_id
+
+
+@blueprint.route("/<int:collection_id>/mappings", methods=["GET"])
 def index(collection_id):
     """Returns a list of mappings for the collection and table.
     ---
@@ -76,9 +85,7 @@ def index(collection_id):
     return MappingSerializer.jsonify_result(result)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings", methods=["POST", "PUT"]
-)  # noqa
+@blueprint.route("/<int:collection_id>/mappings", methods=["POST", "PUT"])
 def create(collection_id):
     """Create a mapping.
     ---
@@ -111,19 +118,18 @@ def create(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request("MappingCreate")
-    entity_id = data.get("table_id")
-    query = load_query()
-    entity = get_index_entity(entity_id, request.authz.READ)
     mapping = Mapping.create(
-        query, entity.get("id"), collection, request.authz.id
-    )  # noqa
+        load_query(),
+        get_table_id(data),
+        collection,
+        request.authz.id,
+        entityset_id=get_entityset_id(data),
+    )
     db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>", methods=["GET"]
-)  # noqa
+@blueprint.route("/<int:collection_id>/mappings/<int:mapping_id>", methods=["GET"])
 def view(collection_id, mapping_id):
     """Return the mapping with id `mapping_id`.
     ---
@@ -163,9 +169,8 @@ def view(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
-    methods=["POST", "PUT"],
-)  # noqa
+    "/<int:collection_id>/mappings/<int:mapping_id>", methods=["POST", "PUT"],
+)
 def update(collection_id, mapping_id):
     """Update the mapping with id `mapping_id`.
     ---
@@ -207,18 +212,18 @@ def update(collection_id, mapping_id):
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     data = parse_request("MappingCreate")
-    entity_id = data.get("table_id")
-    query = load_query()
-    entity = get_index_entity(entity_id, request.authz.READ)
-    mapping.update(query=query, table_id=entity.get("id"))
+    mapping.update(
+        query=load_query(),
+        table_id=get_table_id(data),
+        entityset_id=get_entityset_id(data),
+    )
     db.session.commit()
     return MappingSerializer.jsonify(mapping)
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>",
-    methods=["DELETE"],
-)  # noqa
+    "/<int:collection_id>/mappings/<int:mapping_id>", methods=["DELETE"],
+)
 def delete(collection_id, mapping_id):
     """Delete a mapping.
     ---
@@ -256,8 +261,7 @@ def delete(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/trigger",
-    methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>/trigger", methods=["POST", "PUT"],
 )
 def trigger(collection_id, mapping_id):
     """Load entities by running the mapping with id `mapping_id`. Flushes
@@ -293,15 +297,16 @@ def trigger(collection_id, mapping_id):
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.disabled = False
     mapping.set_status(Mapping.PENDING)
+    db.session.commit()
     job_id = get_session_id()
     payload = {"mapping_id": mapping.id}
     queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
+    mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping, status=202)
 
 
 @blueprint.route(
-    "/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush",
-    methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>/flush", methods=["POST", "PUT"],
 )
 def flush(collection_id, mapping_id):
     """Flush all entities loaded by mapping with id `mapping_id`.

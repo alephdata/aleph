@@ -7,7 +7,6 @@ from followthemoney.helpers import remove_checksums
 
 from aleph.logic.collections import index_aggregator, refresh_collection
 from aleph.logic.aggregator import get_aggregator
-from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
 BATCH_SIZE = 100
@@ -28,14 +27,11 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=BATCH_SIZE)
     refresh_collection(collection.id)
 
 
-def bulk_write(
-    collection, entities, safe=False, role_id=None, mutable=True, index=True
-):
+def bulk_write(collection, entities, safe=False, role_id=None, mutable=True):
     """Write a set of entities - given as dicts - to the index."""
     # This is called mainly by the /api/2/collections/X/_bulk API.
     aggregator = get_aggregator(collection)
     writer = aggregator.bulk()
-    entity_ids = set()
     for data in entities:
         entity = model.get_proxy(data, cleaned=False)
         if entity.id is None:
@@ -51,11 +47,5 @@ def bulk_write(
                 if dt is not None:
                     entity.context[field] = dt.isoformat()
         writer.put(entity, origin="bulk")
-        if index and len(entity_ids) < MAX_PAGE:
-            entity_ids.add(entity.id)
+        yield entity.id
     writer.flush()
-    if index:
-        if len(entity_ids) >= MAX_PAGE:
-            entity_ids = None
-        index_aggregator(collection, aggregator, entity_ids=entity_ids)
-        refresh_collection(collection.id)

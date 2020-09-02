@@ -355,7 +355,7 @@ def item_update(entityset_id):
     entity = data.pop("entity", {})
     entity_id = data.pop("entity_id", entity.get("id"))
     entity = get_index_entity(entity_id, request.authz.READ)
-    data["collecton_id"] = entity["collection_id"]
+    data["collection_id"] = entity["collection_id"]
     data["added_by_id"] = request.authz.id
     item = EntitySetItem.save(entityset, entity_id, **data)
     db.session.commit()

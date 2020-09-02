@@ -21,7 +21,7 @@ class Notification extends PureComponent {
       return <Entity.Link entity={object} preview icon />;
     }
     if (type === 'entityset') {
-      return <EntitySet.Link entitySet={object} />;
+      return <EntitySet.Link entitySet={object} icon />;
     }
     if (type === 'alert') {
       return object ? <QueryText query={object.query} /> : null;
