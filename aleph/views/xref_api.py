@@ -141,7 +141,7 @@ def export(collection_id):
         file_path=None,
         expires_after=Export.DEFAULT_EXPIRATION,
         collection=collection,
-        mime_type=EXCEL,
+        mime_type=XLSX,
     )
     job_id = get_session_id()
     payload = {

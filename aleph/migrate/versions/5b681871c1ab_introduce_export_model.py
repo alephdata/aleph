@@ -1,7 +1,7 @@
 """Introduce Export model
 
 Revision ID: 5b681871c1ab
-Revises: aa486b9e627e
+Revises: 18f53aae83ae
 Create Date: 2020-07-28 11:26:26.392701
 
 """
@@ -12,7 +12,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = "5b681871c1ab"
-down_revision = "aa486b9e627e"
+down_revision = "18f53aae83ae"
 
 
 def upgrade():
