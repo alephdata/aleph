@@ -116,9 +116,9 @@ def reindex_collection(collection, sync=False, flush=False):
             continue
         try:
             map_to_aggregator(collection, mapping, aggregator)
-        except Exception as ex:
+        except Exception:
             # More or less ignore broken models.
-            log.warn("Failed mapping [%s]: %s", mapping.id, ex)
+            log.exception("Failed mapping: %r", mapping)
     aggregate_model(collection, aggregator)
     index_aggregator(collection, aggregator, sync=sync)
     compute_collection(collection, force=True)
