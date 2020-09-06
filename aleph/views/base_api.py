@@ -15,10 +15,11 @@ from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.logic.pages import load_pages
+from aleph.logic.util import collection_url
 from aleph.index.collections import get_collection_things
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
-from aleph.views.util import jsonify
+from aleph.views.util import jsonify, render_xml
 
 blueprint = Blueprint("base_api", __name__)
 log = logging.getLogger(__name__)
@@ -85,6 +86,7 @@ def metadata():
       tags:
       - System
     """
+    request.rate_limit = None
     locale = str(get_locale())
     return _metadata_locale(locale)
 
@@ -156,6 +158,36 @@ def statistics():
             "things": sum(schemata.values()),
         }
     )
+
+
+@blueprint.route("/api/2/sitemap.xml")
+def sitemap():
+    """
+    ---
+    get:
+      summary: Get a sitemap
+      description: >-
+        Returns a site map for search engine robots. This lists each
+        published collection on the current instance.
+      responses:
+        '200':
+          description: OK
+          content:
+            text/xml:
+              schema:
+                type: object
+      tags:
+      - System
+    """
+    enable_cache(vary_user=False)
+    request.rate_limit = None
+    collections = []
+    for collection in Collection.all_authz(Authz.from_role(None)):
+        updated_at = collection.updated_at.date().isoformat()
+        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
+        url = collection_url(collection.id)
+        collections.append({"url": url, "updated_at": updated_at})
+    return render_xml("sitemap.xml", collections=collections)
 
 
 @blueprint.route("/healthz")

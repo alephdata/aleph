@@ -4,13 +4,19 @@ MappingCreate:
   properties:
     table_id:
       type: string
+    entityset_id:
+      type: string
+      nullable: true
+    entityset:
+      $ref: "#/components/schemas/DatedModel"
+      nullable: true
     mapping_query:
       type: object
 
 Mapping:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     collection_id:
       type: string
@@ -18,6 +24,9 @@ Mapping:
       type: string
     table_id:
       type: string
+    entityset:
+      $ref: "#/components/schemas/EntitySet"
+      nullable: true
     last_run_err_msg:
       type: string
       readOnly: true

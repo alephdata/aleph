@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, request
 from followthemoney import model
-from pantomime.types import EXCEL
+from pantomime.types import XLSX
 
 from aleph.model import Export
 from aleph.search import XrefQuery

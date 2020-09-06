@@ -3,7 +3,7 @@ from followthemoney import model
 from followthemoney.helpers import remove_checksums
 
 from aleph.core import db, archive
-from aleph.model import Mapping, Events
+from aleph.model import Mapping, Events, EntitySetItem
 from aleph.index.entities import get_entity
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.collections import delete_entities
@@ -54,6 +54,13 @@ def map_to_aggregator(collection, mapping, aggregator):
             entity = collection.ns.apply(entity)
             entity = remove_checksums(entity)
             writer.put(entity, fragment=idx, origin=origin)
+            if mapping.entityset is not None:
+                EntitySetItem.save(
+                    mapping.entityset,
+                    entity.id,
+                    collection_id=collection.id,
+                    added_by_id=mapping.role_id,
+                )
     writer.flush()
     log.info("[%s] Mapping done (%s rows)", mapping.id, idx)
 
