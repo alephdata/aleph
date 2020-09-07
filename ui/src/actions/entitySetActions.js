@@ -11,11 +11,14 @@ export const fetchEntitySet = asyncActionCreator((entitySetId) => async () => {
   return { entitySetId, data: response.data };
 }, { name: 'FETCH_ENTITYSET' });
 
-export const createEntitySet = asyncActionCreator((entitySet) => async () => {
+const createEntitySet = (entitySet) => async () => {
   const response = await endpoint.post('entitysets', entitySet);
   const entitySetId = response.data.id;
   return { entitySetId, data: response.data };
-}, { name: 'CREATE_ENTITYSET' });
+};
+
+export const createEntitySetMutate = asyncActionCreator(createEntitySet, { name: 'CREATE_ENTITYSET_MUTATE' });
+export const createEntitySetNoMutate = asyncActionCreator(createEntitySet, { name: 'CREATE_ENTITYSET_NO_MUTATE' });
 
 export const updateEntitySet = (
   asyncActionCreator((entitySetId, entitySet) => async () => {

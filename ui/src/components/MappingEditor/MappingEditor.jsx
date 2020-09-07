@@ -256,6 +256,7 @@ export class MappingEditor extends Component {
           isOpen={this.state.entitySetSelectorIsOpen}
           toggleDialog={this.toggleEntitySetSelector}
           onSuccess={this.onEntitySetAdd}
+          triggerMutationOnCreate={false}
         />
       </>
     );

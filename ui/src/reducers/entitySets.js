@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { queryEntitySets, fetchEntitySet, updateEntitySet, createEntitySet, deleteEntitySet } from 'actions';
+import { queryEntitySets, fetchEntitySet, updateEntitySet, createEntitySetMutate, createEntitySetNoMutate, deleteEntitySet } from 'actions';
 import { objectLoadComplete, objectLoadError, objectDelete, resultObjects } from 'reducers/util';
 
 const initialState = {};
@@ -16,7 +16,11 @@ export default createReducer({
     entitySetId, data,
   }) => objectLoadComplete(state, entitySetId, data),
 
-  [createEntitySet.COMPLETE]: (state, {
+  [createEntitySetMutate.COMPLETE]: (state, {
+    entitySetId, data,
+  }) => objectLoadComplete(state, entitySetId, data),
+
+  [createEntitySetNoMutate.COMPLETE]: (state, {
     entitySetId, data,
   }) => objectLoadComplete(state, entitySetId, data),
 
