@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Tooltip } from '@blueprintjs/core';
 
 import { selectModel } from 'selectors';
 import { Collection, EntitySet, Schema } from 'components/common';
@@ -42,6 +42,10 @@ const messages = defineMessages({
     id: 'schemaSelect.button.relationship',
     defaultMessage: 'Add a new relationship',
   },
+  entityset_remove: {
+    id: 'mapping.entityset.remove',
+    defaultMessage: 'Remove',
+  }
 });
 
 export class MappingEditor extends Component {
@@ -211,12 +215,16 @@ export class MappingEditor extends Component {
                       >
                         <EntitySet.Label entitySet={entitySet} icon />
                       </Button>
-                      <Button
-                        onClick={this.onEntitySetRemove}
-                        intent={Intent.DANGER}
-                        minimal
-                        icon="remove"
-                      />
+                      <Tooltip
+                        content={intl.formatMessage(messages.entityset_remove)}
+                      >
+                        <Button
+                          onClick={this.onEntitySetRemove}
+                          intent={Intent.DANGER}
+                          minimal
+                          icon="remove"
+                        />
+                      </Tooltip>
                     </>
                   )}
                   {!entitySet && (
