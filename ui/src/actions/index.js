@@ -38,7 +38,8 @@ export {
   updateEntityMapping,
 } from './entityMappingActions';
 export {
-  createEntitySet,
+  createEntitySetMutate,
+  createEntitySetNoMutate,
   deleteEntitySet,
   entitySetAddEntity,
   entitySetDeleteEntity,
