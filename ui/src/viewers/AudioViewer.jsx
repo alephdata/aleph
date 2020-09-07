@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './AudioViewer.scss';
+
 const AudioViewer = ({ document }) => {
   const src = document?.links?.file;
 
@@ -11,7 +13,6 @@ const AudioViewer = ({ document }) => {
     <div className="AudioViewer">
       <audio
         controls
-        style={{ width: '100%' }}
         src={src}
       />
     </div>
