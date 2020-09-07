@@ -50,7 +50,7 @@ export class MappingEditor extends Component {
 
     this.state = {
       mappings: new MappingList(props.model),
-      entitySet: props.existingMappingMetadata?.entity_set_id,
+      entitySet: props.existingMappingMetadata?.entityset,
       entitySetSelectorIsOpen: false,
     };
 
