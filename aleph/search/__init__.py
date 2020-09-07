@@ -94,6 +94,7 @@ class XrefQuery(Query):
 
 
 class NotificationsQuery(Query):
+    AUTHZ_FIELD = None
     TEXT_FIELDS = ["text"]
     SORT_DEFAULT = [{"created_at": {"order": "desc"}}]
 
