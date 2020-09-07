@@ -134,15 +134,6 @@ class Export(db.Model, IdModel, DatedModel):
             self.export_status = status
             db.session.add(self)
 
-    def get_publication_url(self):
-        return archive.generate_publication_url(
-            self.namespace,
-            self.content_hash,
-            mime_type=self.mime_type,
-            expire=self.expires_at,
-            attachment_name=self.file_name,
-        )
-
     def delete_publication(self):
         if self._should_delete_publication():
             archive.delete_publication(self.namespace, self.content_hash)
@@ -175,16 +166,16 @@ class Export(db.Model, IdModel, DatedModel):
         q = cls.all().filter_by(id=id)
         if role_id is not None:
             q = q.filter(cls.creator_id == role_id)
-        if deleted is not None:
-            q = q.filter(cls.deleted == deleted)
+        if not deleted:
+            q = q.filter(cls.deleted == False)
         return q.first()
 
     @classmethod
     def by_role_id(cls, role_id, deleted=False):
         q = cls.all()
         q = q.filter(cls.creator_id == role_id)
-        if deleted is not None:
-            q = q.filter(cls.deleted == deleted)
+        if not deleted:
+            q = q.filter(cls.deleted == False)
         q = q.order_by(cls.created_at.desc())
         return q
 

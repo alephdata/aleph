@@ -3,7 +3,6 @@ from datetime import timedelta
 from aleph.logic.export import (
     create_export,
     complete_export,
-    export_url,
 )
 from aleph.model import Export
 from aleph.tests.util import TestCase
@@ -45,20 +44,13 @@ class ExportApiTestCase(TestCase):
         results = res.json["results"]
         validate(results[0], "Export")
 
-    def test_invalid_claim(self):
-        res = self.client.get("/api/2/exports/1/download?claim=banana")
-        assert res.status_code == 401, res
+    def test_invalid_authz(self):
+        res = self.client.get("/api/2/exports/1/download")
+        assert res.status_code == 403, res
         res = self.client.get(
-            "/api/2/exports/1/download?claim=banana", headers=self.headers
+            "/api/2/exports/1/download", headers=self.headers
         )
-        assert res.status_code == 401, res
-
-    def test_anon_claim(self):
-        claim_url = export_url(2, self.role_email.id)
-        res = self.client.get(claim_url)
-        assert res.status_code == 200, res.status_code
-        disposition = res.headers.get("Content-Disposition")
-        assert "attachment; filename=experts.csv" in disposition, res.headers
+        assert res.status_code == 200, res
 
     def test_no_claim(self):
         res = self.client.get("/api/2/exports/1/download")

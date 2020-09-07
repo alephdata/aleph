@@ -148,16 +148,17 @@ class CollectionSerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get("id")
+        authz = request.authz if obj.get('secret') else None
         obj["links"] = {
             "self": url_for("collections_api.view", collection_id=pk),
             "xref": url_for("xref_api.index", collection_id=pk),
             "xref_export": url_for(
-                "xref_api.export", collection_id=pk, _authorize=obj.get("secret")
+                "xref_api.export", collection_id=pk, _authz=authz
             ),
             "reconcile": url_for(
                 "reconcile_api.reconcile",
                 collection_id=pk,
-                _authorize=obj.get("secret"),
+                _authz=authz,
             ),
             "ui": collection_url(pk),
         }
@@ -228,20 +229,20 @@ class EntitySerializer(Serializer):
                 name = entity_filename(proxy)
                 mime_type = first(properties.get("mimeType"))
                 links["file"] = archive_url(
-                    request.authz.id, content_hash, file_name=name, mime_type=mime_type
+                    request.authz, content_hash, file_name=name, mime_type=mime_type
                 )
 
             pdf_hash = first(properties.get("pdfHash"))
             if pdf_hash:
                 name = entity_filename(proxy, extension="pdf")
                 links["pdf"] = archive_url(
-                    request.authz.id, pdf_hash, file_name=name, mime_type=PDF
+                    request.authz, pdf_hash, file_name=name, mime_type=PDF
                 )
             csv_hash = first(properties.get("csvHash"))
             if csv_hash:
                 name = entity_filename(proxy, extension="csv")
                 links["csv"] = archive_url(
-                    request.authz.id, csv_hash, file_name=name, mime_type=CSV
+                    request.authz, csv_hash, file_name=name, mime_type=CSV
                 )
 
         obj["links"] = links
@@ -286,7 +287,7 @@ class ExportSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {
             "download": url_for(
-                "exports_api.download", export_id=obj.get("id"), _authorize=True
+                "exports_api.download", export_id=obj.get("id"), _authz=request.authz
             )
         }
         return obj
