@@ -351,12 +351,15 @@ class NotificationSerializer(Serializer):
     def _collect(self, obj):
         self.queue(Role, obj.get("actor_id"))
         event = Events.get(obj.get("event"))
-        for name, clazz in event.params.items():
-            key = obj.get("params", {}).get(name)
-            self.queue(clazz, key, Entity.THING)
+        if event is not None:
+            for name, clazz in event.params.items():
+                key = obj.get("params", {}).get(name)
+                self.queue(clazz, key, Entity.THING)
 
     def _serialize(self, obj):
         event = Events.get(obj.get("event"))
+        if event is None:
+            return None
         params = {"actor": self.resolve(Role, obj.get("actor_id"), RoleSerializer)}
         for name, clazz in event.params.items():
             key = obj.get("params", {}).get(name)

@@ -31,8 +31,8 @@ def channel_tag(obj, clazz=None):
 
 
 def publish(event, actor_id=None, params=None, channels=None):
-    """ Publish a notification to the given channels, while storing
-    the parameters and initiating actor for the event. """
+    """Publish a notification to the given channels, while storing
+    the parameters and initiating actor for the event."""
     assert isinstance(event, Event), event
     channels = [channel_tag(c) for c in ensure_list(channels)]
     index_notification(event, actor_id, params, channels)
@@ -61,7 +61,7 @@ def get_role_channels(role):
     return channels
 
 
-def get_notifications(role, since=None, parser=None):
+def get_notifications(role, since=None):
     """Fetch a stream of notifications for the given role."""
     channels = get_role_channels(role)
     filters = [{"terms": {"channels": channels}}]
@@ -73,9 +73,6 @@ def get_notifications(role, since=None, parser=None):
         "query": {"bool": {"filter": filters, "must_not": must_not}},
         "sort": [{"created_at": {"order": "desc"}}],
     }
-    if parser is not None:
-        query["size"] = parser.limit
-        query["from"] = parser.offset
     return es.search(index=notifications_index(), body=query)
 
 

@@ -5,8 +5,10 @@ from werkzeug.exceptions import BadRequest
 from aleph.index.indexes import entities_read_index
 from aleph.index.collections import collections_index
 from aleph.index.xref import xref_index
+from aleph.index.notifications import notifications_index
 from aleph.index.entities import PROXY_INCLUDES
 from aleph.logic.matching import match_query
+from aleph.logic.notifications import get_role_channels
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -89,6 +91,26 @@ class XrefQuery(Query):
 
     def get_index(self):
         return xref_index()
+
+
+class NotificationsQuery(Query):
+    TEXT_FIELDS = ["text"]
+    SORT_DEFAULT = [{"created_at": {"order": "desc"}}]
+
+    def get_text_query(self):
+        return [{"match_all": {}}]
+
+    def get_filters(self):
+        channels = get_role_channels(self.parser.authz.role)
+        filters = super(NotificationsQuery, self).get_filters()
+        filters.append({"terms": {"channels": channels}})
+        return filters
+
+    def get_negative_filters(self):
+        return [{"term": {"actor_id": self.parser.authz.role.id}}]
+
+    def get_index(self):
+        return notifications_index()
 
 
 class EntitySetItemsQuery(EntitiesQuery):

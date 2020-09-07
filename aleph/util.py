@@ -28,8 +28,8 @@ def anonymize_email(name, email):
 
 
 class JSONEncoder(json.JSONEncoder):
-    """ This encoder will serialize all entities that have a to_dict
-    method by calling that method and serializing the result. """
+    """This encoder will serialize all entities that have a to_dict
+    method by calling that method and serializing the result."""
 
     def default(self, obj):
         if isinstance(obj, (datetime, date)):

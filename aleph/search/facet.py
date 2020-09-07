@@ -1,7 +1,7 @@
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.model import Collection
+from aleph.model import Collection, Events
 from aleph.logic import resolver
 
 
@@ -80,6 +80,12 @@ class SchemaFacet(Facet):
 class CountryFacet(Facet):
     def update(self, result, key):
         result["label"] = registry.country.names.get(key, key)
+
+
+class EventFacet(Facet):
+    def update(self, result, key):
+        event = Events.get(key)
+        result["label"] = key if event is None else event.title
 
 
 class LanguageFacet(Facet):
