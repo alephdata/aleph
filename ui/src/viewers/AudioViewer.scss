@@ -1,0 +1,8 @@
+@import "app/variables.scss";
+
+.AudioViewer {
+  audio {
+    width: 100%;
+    padding: $aleph-grid-size 0;
+  }
+}

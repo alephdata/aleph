@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'app/Query';
+import AudioViewer from 'viewers/AudioViewer';
 import DefaultViewer from 'viewers/DefaultViewer';
 import TableViewer from 'viewers/TableViewer';
 import TextViewer from 'viewers/TextViewer';
@@ -10,6 +11,8 @@ import HtmlViewer from 'viewers/HtmlViewer';
 import ImageViewer from 'viewers/ImageViewer';
 import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
+import VideoViewer from 'viewers/VideoViewer';
+
 
 import './DocumentViewMode.scss';
 
@@ -49,6 +52,18 @@ export class DocumentViewMode extends React.Component {
         />
       );
     }
+    if (document.schema.isA('Audio')) {
+      return (
+        <AudioViewer document={document} />
+      );
+    }
+
+    if (document.schema.isA('Video')) {
+      return (
+        <VideoViewer document={document} />
+      );
+    }
+
     if (document.schema.isA('Table')) {
       return (
         <TableViewer document={document} queryText={queryText} />
@@ -78,6 +93,7 @@ export class DocumentViewMode extends React.Component {
         <FolderViewer document={document} queryText={queryText} />
       );
     }
+
     return <DefaultViewer document={document} queryText={queryText} />;
   }
 
