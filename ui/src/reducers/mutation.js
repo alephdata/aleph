@@ -44,7 +44,6 @@ export default createReducer({
   [triggerCollectionCancel.COMPLETE]: update,
   [updateCollectionPermissions.COMPLETE]: update,
   [createEntity.COMPLETE]: update,
-  [createEntitySet.COMPLETE]: update,
   [deleteEntity.COMPLETE]: update,
   [deleteEntitySet.COMPLETE]: update,
   [ingestDocument.COMPLETE]: update,
