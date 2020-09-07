@@ -69,15 +69,15 @@ export class ExportDialog extends Component {
       >
         <FormattedMessage
           id="export.dialog.text"
-          defaultMessage={`<bold>Click the button below to initiate your export.</bold>
+          defaultMessage={`<bold>Initiate your export.</bold>
             {br}{br}
-            Exports may take some time to generate, so you will receive a notification and an email with a download link once it is ready.
+            Exports take some time to generate. You will receive an email once the data is ready.
             {br}{br}
-            In the meantime, please refrain from attempting to repeat this export request.
+            Please trigger this export only once.
           `}
           values={{
             bold: (...chunks) => <b>{chunks}</b>,
-            br: <br/>
+            br: <br />
           }}
         />
       </Alert>
