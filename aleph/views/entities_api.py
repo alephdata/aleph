@@ -1,26 +1,28 @@
 import logging
 from urllib.parse import quote
 from urlnormalizer import query_string
-from flask import Blueprint, request, Response
+from flask import Blueprint, request
 from werkzeug.exceptions import NotFound
 from followthemoney import model
+from pantomime.types import ZIP
 
 from aleph.core import db, url_for
-from aleph.model import QueryLog
+from aleph.model import QueryLog, Export
 from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.entities import validate_entity, check_write_entity
-from aleph.logic.export import export_entities
 from aleph.logic.html import sanitize_html
+from aleph.logic.export import create_export
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag
-from aleph.views.util import require, get_nested_collection
+from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
+from aleph.queues import queue_task, OP_EXPORT_SEARCH_RESULTS, sla_dataset_from_role
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)
@@ -137,15 +139,15 @@ def index():
     links = {}
     if request.authz.logged_in and result.total <= MAX_PAGE:
         query = list(request.args.items(multi=True))
-        links["export"] = url_for("entities_api.export", _authorize=True, _query=query)
+        links["export"] = url_for("entities_api.export", _authz=request.authz, _query=query)
     return EntitySerializer.jsonify_result(result, extra={"links": links})
 
 
-@blueprint.route("/api/2/search/export", methods=["GET"])  # noqa
+@blueprint.route("/api/2/search/export", methods=["POST"])  # noqa
 def export():
     """
     ---
-    get:
+    post:
       summary: Download the results of a search
       description: >-
         Downloads all the results of a search as a zip archive; upto a max of
@@ -155,13 +157,8 @@ def export():
 
         Supports the same query parameters as the search API.
       responses:
-        '200':
-          content:
-            application/zip:
-              schema:
-                format: binary
-                type: string
-          description: OK
+        '202':
+          description: Accepted
       tags:
       - Entity
     """
@@ -170,11 +167,24 @@ def export():
     parser.limit = MAX_PAGE
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
-    stream = export_entities(request, result)
-    response = Response(stream, mimetype="application/zip")
-    disposition = "attachment; filename={}".format("Query_export.zip")
-    response.headers["Content-Disposition"] = disposition
-    return response
+    label = "Search results for query: %s" % parser.text
+    export = create_export(
+        operation=OP_EXPORT_SEARCH_RESULTS,
+        role_id=request.authz.id,
+        label=label,
+        file_path=None,
+        expires_after=Export.DEFAULT_EXPIRATION,
+        collection=None,
+        mime_type=ZIP,
+    )
+    job_id = get_session_id()
+    payload = {
+        "export_id": export.id,
+        "result": result.to_dict(),
+    }
+    dataset = sla_dataset_from_role(request.authz.id)
+    queue_task(dataset, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
+    return ("", 202)
 
 
 @blueprint.route("/api/2/match", methods=["POST"])

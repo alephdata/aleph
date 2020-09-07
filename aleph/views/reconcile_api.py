@@ -75,7 +75,7 @@ def reconcile_index(collection=None):
                     "service_path": url_for(
                         "reconcile_api.suggest_entity",
                         _query=suggest_query,
-                        _authorize=True,
+                        _authz=request.authz,
                         _relative=True,
                     ),
                 },

@@ -77,13 +77,12 @@ class EntitiesApiTestCase(TestCase):
     def test_export(self):
         self.load_fixtures()
         url = "/api/2/search/export?filter:schemata=Thing&q=pakistan"
-        res = self.client.get(url)
+        res = self.client.post(url)
         assert res.status_code == 403, res
 
         _, headers = self.login(is_admin=True)
-        res = self.client.get(url, headers=headers)
-        assert res.status_code == 200, res
-        assert "application/zip" in res.headers.get("Content-Type")
+        res = self.client.post(url, headers=headers)
+        assert res.status_code == 202, res
 
     def test_view(self):
         url = "/api/2/entities/%s" % self.id

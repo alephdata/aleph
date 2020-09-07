@@ -5,6 +5,7 @@ from aleph.model.alert import Alert
 from aleph.model.entity import Entity
 from aleph.model.entityset import EntitySet
 from aleph.model.collection import Collection
+from aleph.model.export import Export
 
 
 class Event(object):
@@ -111,4 +112,11 @@ class Events(object, metaclass=EventsRegistry):
         template=lazy_gettext("{{actor}} published {{collection}}"),
         params={"collection": Collection},
         link_to="collection",
+    )
+
+    # EXPORT PUBLISHED
+    COMPLETE_EXPORT = Event(
+        template=lazy_gettext("{{export}} is ready for download"),
+        params={"export": Export},
+        link_to="export",
     )

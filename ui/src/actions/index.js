@@ -13,6 +13,7 @@ export {
   queryCollections,
   queryCollectionXref,
   triggerCollectionXref,
+  triggerCollectionXrefDownload,
   decideCollectionXref,
   triggerCollectionReingest,
   triggerCollectionReindex,
@@ -50,6 +51,7 @@ export {
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';
+export { fetchExports, triggerQueryExport } from './exportActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 from followthemoney import model
 from followthemoney.util import get_entity_id
 
-from aleph.core import cache, es, settings
+from aleph.core import cache, es, settings, url_for
 from aleph.authz import Authz
-from aleph.model import Collection, Entity, Role, Alert, EntitySet
+from aleph.model import Collection, Entity, Role, Alert, EntitySet, Export
 from aleph.model import Event, Events
 from aleph.logic.mail import email_role
 from aleph.logic.html import html_link
@@ -120,6 +120,9 @@ def render_notification(stub, notification):
         elif clazz == EntitySet:
             title = data.label
             link = entityset_url(data.id)
+        elif clazz == Export:
+            title = data.get("label")
+            link = url_for("exports_api.download", export_id=data.get("id"))
 
         template = "{{%s}}" % name
         html = html.replace(template, html_link(title, link))

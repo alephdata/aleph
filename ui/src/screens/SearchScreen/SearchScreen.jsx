@@ -3,14 +3,15 @@ import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
-import { Icon, Button, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
+import { Icon, Button, ButtonGroup, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
+import { triggerQueryExport } from 'src/actions';
 import {
-  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
+  Collection, DualPane, SignInCallout, ErrorSection, ExportButton, Breadcrumbs, ResultText,
 } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import SearchFacets from 'components/Facet/SearchFacets';
@@ -35,9 +36,17 @@ const messages = defineMessages({
     id: 'search.title',
     defaultMessage: 'Search',
   },
+  export: {
+    id: 'search.screen.export',
+    defaultMessage: 'Export',
+  },
   alert_export_disabled: {
     id: 'search.screen.export_disabled',
     defaultMessage: 'Cannot export more than 10,000 results at a time',
+  },
+  alert_export_disabled_empty: {
+    id: 'search.screen.export_disabled_empty',
+    defaultMessage: 'No results to export.',
   },
   date_facet_show: {
     id: 'search.screen.show_dates',
@@ -168,17 +177,19 @@ export class SearchScreen extends React.Component {
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
-    const hasExportLink = result && result.links && result.links.export;
+    const hasExportLink = result && result.total > 0 && result.links && result.links.export;
     const exportLink = !hasExportLink ? null : result.links.export;
-    const tooltip = intl.formatMessage(messages.alert_export_disabled);
+    const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
     const dateFacetDisabled = dateFacetIntervals && (!result.total || dateFacetIntervals.length <= 1);
 
     const operation = (
       <ButtonGroup>
         <Tooltip content={tooltip} disabled={exportLink}>
-          <AnchorButton className="bp3-intent-primary" icon="download" disabled={!exportLink} href={exportLink}>
-            <FormattedMessage id="search.screen.export" defaultMessage="Export" />
-          </AnchorButton>
+        <ExportButton
+          text={intl.formatMessage(messages.export)}
+          disabled={!exportLink}
+          onExport={() => this.props.triggerQueryExport(exportLink)}
+        />
         </Tooltip>
       </ButtonGroup>
     );
@@ -303,6 +314,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, { triggerQueryExport }),
   injectIntl,
 )(SearchScreen);

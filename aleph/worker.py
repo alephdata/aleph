@@ -1,23 +1,30 @@
 import logging
 from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
+from servicelayer.extensions import get_entry_point
 
-from aleph.core import kv, db, create_app
+from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
-from aleph.queues import OP_INDEX, OP_REINDEX, OP_REINGEST, OP_XREF
-from aleph.queues import OP_LOAD_MAPPING, OP_FLUSH_MAPPING
+from aleph.queues import (
+    OP_INDEX,
+    OP_REINDEX,
+    OP_REINGEST,
+    OP_XREF,
+    OP_EXPORT_SEARCH_RESULTS,
+    OP_EXPORT_XREF_RESULTS,
+    OP_LOAD_MAPPING,
+    OP_FLUSH_MAPPING,
+)
+from aleph.queues import ROLE_PREFIX, COLLECTION_PREFIX
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
-from aleph.logic.collections import reindex_collection, reingest_collection
 from aleph.logic.notifications import generate_digest
-from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.roles import update_roles
-from aleph.logic.xref import xref_collection
-from aleph.logic.processing import index_many
+from aleph.logic.export import delete_expired_exports
 
 log = logging.getLogger(__name__)
-app = create_app()
+app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
@@ -28,6 +35,8 @@ OPERATIONS = (
     OP_REINDEX,
     OP_LOAD_MAPPING,
     OP_FLUSH_MAPPING,
+    OP_EXPORT_SEARCH_RESULTS,
+    OP_EXPORT_XREF_RESULTS,
 )
 
 
@@ -46,6 +55,7 @@ class AlephWorker(Worker):
             self.hourly.update()
             log.info("Running hourly tasks...")
             check_alerts()
+            delete_expired_exports()
 
         if self.daily.check():
             self.daily.update()
@@ -61,30 +71,32 @@ class AlephWorker(Worker):
                 self.run_often()
 
     def dispatch_task(self, collection, task):
-        stage = task.stage
-        payload = task.payload
-        sync = task.context.get("sync", False)
-        if stage.stage == OP_INDEX:
-            index_many(stage, collection, sync=sync, **payload)
-        if stage.stage == OP_LOAD_MAPPING:
-            load_mapping(stage, collection, **payload)
-        if stage.stage == OP_FLUSH_MAPPING:
-            flush_mapping(stage, collection, sync=sync, **payload)
-        if stage.stage == OP_REINGEST:
-            reingest_collection(collection, job_id=stage.job.id, **payload)
-        if stage.stage == OP_REINDEX:
-            reindex_collection(collection, sync=sync, **payload)
-        if stage.stage == OP_XREF:
-            xref_collection(stage, collection)
-        log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
+        handler = get_entry_point("aleph.task_handlers", task.stage.stage)
+        if handler is not None:
+            handler(collection, task)
+            log.info("Task [%s]: %s (done)", task.job.dataset, task.stage.stage)  # noqa
+            return
+        log.warning(
+            "Task handler not found for task [%s]: %s",
+            task.job.dataset,
+            task.stage.stage,
+        )
 
     def handle(self, task):
         with app.app_context():
-            collection = Collection.by_foreign_id(task.job.dataset.name)
-            if collection is None:
-                log.error("Collection not found: %s", task.job.dataset)
+            if task.job.dataset.name.startswith(ROLE_PREFIX):
+                self.dispatch_task(None, task)
+            elif task.job.dataset.name.startswith(COLLECTION_PREFIX):
+                # strip the prefix
+                foreign_id = task.job.dataset.name.split(COLLECTION_PREFIX, 1)[1][1:]
+                collection = Collection.by_foreign_id(foreign_id)
+                if collection is None:
+                    log.error("Collection not found: %s", task.job.dataset)
+                    return
+                self.dispatch_task(collection, task)
+            else:
+                log.error("Unknown dataset type: %s", task.job.dataset)
                 return
-            self.dispatch_task(collection, task)
 
     def cleanup_job(self, job):
         if job.is_done():

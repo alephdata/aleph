@@ -21,6 +21,7 @@ import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
 import queryLogs from './queryLogs';
+import exports from './exports';
 
 
 const rootReducer = combineReducers({
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   queryLogs,
   results,
   systemStatus,
+  exports,
 });
 
 export default rootReducer;

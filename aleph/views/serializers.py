@@ -9,7 +9,7 @@ from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
-from aleph.model import Alert, EntitySet, EntitySetItem
+from aleph.model import Alert, EntitySet, EntitySetItem, Export
 from aleph.logic import resolver
 from aleph.logic.entities import check_write_entity
 from aleph.logic.util import collection_url, entity_url, archive_url
@@ -148,16 +148,17 @@ class CollectionSerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get("id")
+        authz = request.authz if obj.get('secret') else None
         obj["links"] = {
             "self": url_for("collections_api.view", collection_id=pk),
             "xref": url_for("xref_api.index", collection_id=pk),
             "xref_export": url_for(
-                "xref_api.export", collection_id=pk, _authorize=obj.get("secret")
+                "xref_api.export", collection_id=pk, _authz=authz
             ),
             "reconcile": url_for(
                 "reconcile_api.reconcile",
                 collection_id=pk,
-                _authorize=obj.get("secret"),
+                _authz=authz,
             ),
             "ui": collection_url(pk),
         }
@@ -228,20 +229,20 @@ class EntitySerializer(Serializer):
                 name = entity_filename(proxy)
                 mime_type = first(properties.get("mimeType"))
                 links["file"] = archive_url(
-                    request.authz.id, content_hash, file_name=name, mime_type=mime_type
+                    request.authz, content_hash, file_name=name, mime_type=mime_type
                 )
 
             pdf_hash = first(properties.get("pdfHash"))
             if pdf_hash:
                 name = entity_filename(proxy, extension="pdf")
                 links["pdf"] = archive_url(
-                    request.authz.id, pdf_hash, file_name=name, mime_type=PDF
+                    request.authz, pdf_hash, file_name=name, mime_type=PDF
                 )
             csv_hash = first(properties.get("csvHash"))
             if csv_hash:
                 name = entity_filename(proxy, extension="csv")
                 links["csv"] = archive_url(
-                    request.authz.id, csv_hash, file_name=name, mime_type=CSV
+                    request.authz, csv_hash, file_name=name, mime_type=CSV
                 )
 
         obj["links"] = links
@@ -280,6 +281,16 @@ class XrefSerializer(Serializer):
 
 class QueryLogSerializer(Serializer):
     pass
+
+
+class ExportSerializer(Serializer):
+    def _serialize(self, obj):
+        obj["links"] = {
+            "download": url_for(
+                "exports_api.download", export_id=obj.get("id"), _authz=request.authz
+            )
+        }
+        return obj
 
 
 class EntitySetSerializer(Serializer):
@@ -346,6 +357,7 @@ class NotificationSerializer(Serializer):
         EntitySet: EntitySetSerializer,
         EntitySetItem: EntitySetItemSerializer,
         Role: RoleSerializer,
+        Export: ExportSerializer,
     }
 
     def _collect(self, obj):

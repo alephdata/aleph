@@ -17,6 +17,7 @@ from aleph.views.archive_api import blueprint as archive_api
 from aleph.views.status_api import blueprint as status_api
 from aleph.views.mappings_api import blueprint as mappings_api
 from aleph.views.entitysets_api import blueprint as entitysets_api
+from aleph.views.exports_api import blueprint as exports_api
 
 
 def mount_app_blueprints(app):
@@ -39,3 +40,4 @@ def mount_app_blueprints(app):
     app.register_blueprint(status_api)
     app.register_blueprint(mappings_api, url_prefix="/api/2/collections")
     app.register_blueprint(entitysets_api)
+    app.register_blueprint(exports_api)

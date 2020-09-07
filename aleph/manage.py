@@ -16,7 +16,7 @@ from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
 from aleph.queues import get_status, get_stage, cancel_queue
-from aleph.queues import get_active_collection_status, OP_XREF
+from aleph.queues import get_active_dataset_status, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
 from aleph.logic.collections import create_collection, update_collection
@@ -231,7 +231,7 @@ def status(foreign_id=None):
         status = get_status(collection)
         status = {"datasets": {foreign_id: status}}
     else:
-        status = get_active_collection_status()
+        status = get_active_dataset_status()
     headers = ["Collection", "Job", "Stage", "Pending", "Running", "Finished"]
     rows = []
     for foreign_id, dataset in status.get("datasets").items():
