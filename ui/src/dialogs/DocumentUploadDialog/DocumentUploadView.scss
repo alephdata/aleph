@@ -4,6 +4,8 @@
 .DocumentUploadView {
   &__content {
     margin-bottom: $aleph-grid-size*2;
+    max-height: 60vh;
+    overflow: auto;
   }
   &__folder {
     padding-top: 5px;
