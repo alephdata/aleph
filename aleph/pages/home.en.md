@@ -1,7 +1,9 @@
 ---
 home: true
+title: 'Aleph'
+description: 'Search documents, companies and people'
 html: true
-
+samples: ["Vladimir Putin", "TeliaSonera"]
 ---
 
 <section className="HomeScreen__section">

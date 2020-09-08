@@ -67,12 +67,11 @@ export class HomeScreen extends Component {
       // return <Redirect to="/notifications" />;
     }
 
-    const appDescription = metadata.app.description;
     const appHomePage = metadata.pages.find(page => page.home);
-    const isHtml = appHomePage?.html;
-    const samples = wordList(metadata.app.samples, ', ').join('');
-
-    console.log(statistics);
+    console.log(metadata);
+    const { description, html, samples, title } = appHomePage;
+    const samplesList = wordList(samples, ', ').join('');
+    console.log('samples are', samples);
 
     return (
       <Screen
@@ -83,14 +82,14 @@ export class HomeScreen extends Component {
         <div className="HomeScreen">
           <section className="HomeScreen__section title-section">
             <div className="HomeScreen__section__content">
-              <h1 className="HomeScreen__app-title">{metadata.app.title}</h1>
-              {appDescription && (
-                <p className="HomeScreen__description">{appDescription}</p>
+              <h1 className="HomeScreen__app-title">{title}</h1>
+              {description && (
+                <p className="HomeScreen__description">{description}</p>
               )}
               <div className="HomeScreen__search">
                 <SearchBox
                   onSearch={this.onSubmit}
-                  placeholder={intl.formatMessage(messages.placeholder, { samples })}
+                  placeholder={intl.formatMessage(messages.placeholder, { samples: samplesList })}
                   inputProps={{ large: true, autoFocus: true }}
                 />
                 <div className="HomeScreen__thirds no-wrap">
@@ -116,7 +115,7 @@ export class HomeScreen extends Component {
           </section>
           {appHomePage?.content && (
             <ReactMarkdown
-              escapeHtml={!isHtml}
+              escapeHtml={!html}
             >
               {appHomePage.content}
             </ReactMarkdown>

@@ -9,6 +9,10 @@ $vertical-spacing: $aleph-grid-size*5;
     font-size: 14px;
   }
 
+  b {
+    color: $blue1;
+  }
+
   &__section {
     text-align: center;
     background: none;
@@ -58,6 +62,10 @@ $vertical-spacing: $aleph-grid-size*5;
       .HomeScreen__title {
         color: white;
       }
+
+      b {
+        color: white;
+      }
     }
     &:nth-child(odd) {
       background-color: $light-gray5;
@@ -99,10 +107,6 @@ $vertical-spacing: $aleph-grid-size*5;
     margin: 0 0 $vertical-spacing/2;
     text-align: left;
     line-height: 1.5;
-
-    b {
-      color: $blue1;
-    }
   }
 
   &__search {
@@ -165,6 +169,10 @@ $vertical-spacing: $aleph-grid-size*5;
         line-height: 1.5;
         width: 90%;
       }
+
+      b {
+
+      }
     }
   }
 
@@ -172,6 +180,10 @@ $vertical-spacing: $aleph-grid-size*5;
     &:hover {
       opacity: .8;
     }
+  }
+
+  .bp3-button b {
+    color: white;
   }
 
   .Statistics.bp3-callout {

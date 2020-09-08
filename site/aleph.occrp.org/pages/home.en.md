@@ -1,6 +1,11 @@
 ---
 home: true
+title: 'OCCRP Aleph'
+description: 'The global archive of research material for investigative reporting.'
 html: true
+samples:
+- "Vladimir Putin"
+- "TeliaSonera"
 ---
 
 <section className="HomeScreen__section">
