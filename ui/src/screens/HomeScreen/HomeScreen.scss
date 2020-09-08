@@ -4,6 +4,11 @@ $vertical-spacing: $aleph-grid-size*5;
 
 .HomeScreen {
   font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    font-size: 14px;
+  }
+
   &__section {
     text-align: center;
     background: none;
@@ -33,7 +38,7 @@ $vertical-spacing: $aleph-grid-size*5;
     }
 
     &__content {
-      max-width: 1100px;
+      max-width: 1150px;
       margin: auto;
       padding: $aleph-grid-size*8 $aleph-grid-size*3;
       vertical-align: middle;
@@ -64,15 +69,15 @@ $vertical-spacing: $aleph-grid-size*5;
   }
 
   &__app-title {
-    font-size: 50px;
+    font-size: 3em;
     margin: $vertical-spacing/2 0;
     color: $dark-gray3;
     line-height: 1;
   }
 
   &__title {
-    font-size: 30px;
-    margin: 0 0 $aleph-grid-size*5;
+    font-size: 2em;
+    margin: 0 0 $aleph-grid-size*6;
     font-weight: 700;
     color: $dark-gray3;
   }
@@ -86,13 +91,12 @@ $vertical-spacing: $aleph-grid-size*5;
   }
 
   &__description {
-    font-size: 16px;
+    font-size: 1em;
     margin: $aleph-grid-size*3 0;
   }
 
   &__paragraph {
     margin: 0 0 $vertical-spacing/2;
-    font-weight: bolder;
     text-align: left;
     line-height: 1.5;
 
@@ -112,16 +116,19 @@ $vertical-spacing: $aleph-grid-size*5;
   &__thirds, &__halves {
     display: flex;
     justify-content: space-between;
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      display: block;
-      & > * {
-        margin-bottom: $vertical-spacing/2;
+
+    &:not(.no-wrap) {
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        display: block;
+        & > * {
+          margin-bottom: $vertical-spacing/2;
+        }
       }
     }
 
     & > * {
       flex: 0 0;
-      padding: 0 1%;
+      padding: 0 1.5%;
     }
   }
 
@@ -140,12 +147,11 @@ $vertical-spacing: $aleph-grid-size*5;
     max-width: 400px;
     margin: 0 auto;
 
-
     &__content {
-      margin: 0 10px;
-      border-radius: 10px;
-      padding: 25px;
-      background-color: rgba(255, 255, 255, .15);
+      margin: 0 $aleph-grid-size;
+      border-radius: $aleph-grid-size;
+      padding: $aleph-grid-size*2.5;
+      background-color: rgba(white, .2);
       height: 100%;
 
       img {
@@ -155,32 +161,16 @@ $vertical-spacing: $aleph-grid-size*5;
       p {
         margin: auto;
         margin-top: $aleph-grid-size*2;
-        font-weight: bolder;
         text-align: center;
         line-height: 1.5;
-        font-size: 14px;
         width: 90%;
       }
-
-      b {
-        // color: $blue1;
-      }
     }
   }
 
-  &__divider {
-    width: 70%;
-    height: 0;
-    border-top: 1px solid $gray5;
-    margin: $aleph-grid-size auto;
-  }
-
-  .AnimatedCount {
-    &__count {
-      font-size: 40px;
-    }
-    &__label {
-      font-size: 16px;
+  &__imageLink {
+    &:hover {
+      opacity: .8;
     }
   }
 

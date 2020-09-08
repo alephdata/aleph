@@ -1,12 +1,13 @@
 import React from 'react';
 import CountUp from 'react-countup';
-// import Count from 'components/common/Count';
+import { Skeleton } from 'components/common';
 
 import './AnimatedCount.scss';
 
 const AnimatedCount = ({ count, isPending, label}) => (
   <div className="AnimatedCount">
-    <CountUp className="AnimatedCount__count" end={count} separator="," />
+    {isPending && <Skeleton.Text className="AnimatedCount__count" type="span" length="3" />}
+    {!isPending && <CountUp className="AnimatedCount__count" end={count} separator="," />}
     <p className="AnimatedCount__label">{label}</p>
   </div>
 )

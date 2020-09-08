@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown/with-html';
 import { Redirect } from 'react-router-dom';
@@ -68,8 +69,10 @@ export class HomeScreen extends Component {
 
     const appDescription = metadata.app.description;
     const appHomePage = metadata.pages.find(page => page.home);
-    const isHtml = appHomePage.html;
+    const isHtml = appHomePage?.html;
     const samples = wordList(metadata.app.samples, ', ').join('');
+
+    console.log(statistics);
 
     return (
       <Screen
@@ -90,19 +93,19 @@ export class HomeScreen extends Component {
                   placeholder={intl.formatMessage(messages.placeholder, { samples })}
                   inputProps={{ large: true, autoFocus: true }}
                 />
-                <div className="HomeScreen__thirds">
+                <div className="HomeScreen__thirds no-wrap">
                   <AnimatedCount
-                    count={12120}
+                    count={statistics?.things}
                     isPending={statistics.isPending}
                     label={intl.formatMessage(messages.count_entities)}
                   />
                   <AnimatedCount
-                    count={209}
+                    count={statistics?.collections}
                     isPending={statistics.isPending}
                     label={intl.formatMessage(messages.count_datasets)}
                   />
                   <AnimatedCount
-                    count={212}
+                    count={_.size(statistics?.countries)}
                     isPending={statistics.isPending}
                     label={intl.formatMessage(messages.count_countries)}
                   />
@@ -111,7 +114,7 @@ export class HomeScreen extends Component {
               </div>
             </div>
           </section>
-          {appHomePage.content && (
+          {appHomePage?.content && (
             <ReactMarkdown
               escapeHtml={!isHtml}
             >
@@ -175,7 +178,6 @@ export class HomeScreen extends Component {
               </div>
             </div>
           </section>
-          {/* Aleph technical details: version, link to docs, github, etc. */}
         </div>
       </Screen>
     );

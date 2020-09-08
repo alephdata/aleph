@@ -33,7 +33,9 @@ html: true
   <div className="HomeScreen__section__content">
     <div className="HomeScreen__halves">
       <div>
-        <img src="/static/logo.png" style="max-width: 60%;"/>
+        <a className="HomeScreen__imageLink" href="https://aleph.occrp.org/">
+          <img src="/static/logo.png" style="max-width: 60%;"/>
+        </a>
       </div>
       <div>
         <h1 className="HomeScreen__title">About the project</h1>

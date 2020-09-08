@@ -25,7 +25,7 @@ blueprint = Blueprint("base_api", __name__)
 log = logging.getLogger(__name__)
 
 
-@lru_cache(maxsize=None)
+# @lru_cache(maxsize=None)
 def _metadata_locale(locale):
     # This is cached in part because latency on this endpoint is
     # particularly relevant to the first render being shown to a
