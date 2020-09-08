@@ -64,14 +64,12 @@ export class HomeScreen extends Component {
   render() {
     const { intl, metadata, statistics = {}, session } = this.props;
     if (session.loggedIn) {
-      // return <Redirect to="/notifications" />;
+      return <Redirect to="/notifications" />;
     }
 
     const appHomePage = metadata.pages.find(page => page.home);
-    console.log(metadata);
     const { description, html, samples, title } = appHomePage;
     const samplesList = wordList(samples, ', ').join('');
-    console.log('samples are', samples);
 
     return (
       <Screen

@@ -16,12 +16,12 @@ $vertical-spacing: $aleph-grid-size*5;
   &__section {
     text-align: center;
     background: none;
+    position: relative;
     z-index: 1;
 
     &.title-section {
       min-height: 500px;
       max-height: 900px;
-      // height: 90vh;
       position: relative;
       background-color: white !important;
       &::after {
@@ -31,7 +31,7 @@ $vertical-spacing: $aleph-grid-size*5;
         background-position: 50% 50%;
         position: absolute;
         content: "";
-        opacity: 0.12;
+        opacity: 0.09;
         top: 0;
         left: 0;
         bottom: 0;
@@ -59,6 +59,7 @@ $vertical-spacing: $aleph-grid-size*5;
     &:nth-child(even) {
       background-color: $dark-gray2;
       color: white;
+
       .HomeScreen__title {
         color: white;
       }
@@ -125,7 +126,7 @@ $vertical-spacing: $aleph-grid-size*5;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
         display: block;
         & > * {
-          margin-bottom: $vertical-spacing/2;
+          margin-bottom: $vertical-spacing;
         }
       }
     }
@@ -168,10 +169,6 @@ $vertical-spacing: $aleph-grid-size*5;
         text-align: center;
         line-height: 1.5;
         width: 90%;
-      }
-
-      b {
-
       }
     }
   }
