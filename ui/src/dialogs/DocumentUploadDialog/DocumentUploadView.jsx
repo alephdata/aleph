@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Button, Checkbox, Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
+import { FileSize } from '@alephdata/react-ftm';
 
 import convertPathsToTree from 'util/convertPathsToTree';
 
@@ -11,6 +12,10 @@ const messages = defineMessages({
     id: 'document.upload.save',
     defaultMessage: 'Upload',
   },
+  summary: {
+    id: 'document.upload.summary',
+    defaultMessage: '{numberOfFiles, number} files, {totalSize}'
+  }
 });
 
 export class DocumentUploadView extends PureComponent {
@@ -72,14 +77,20 @@ export class DocumentUploadView extends PureComponent {
 
   render() {
     const { files, intl } = this.props;
+    const { filesToUpload } = this.state;
 
     const fileTree = convertPathsToTree(files);
+    const totalFileSize = files.reduce((totalSize, file) => totalSize + file.size, 0);
 
     return (
       <div className="DocumentUploadView">
         <div className="DocumentUploadView__content">
           {this.renderFolder(fileTree)}
         </div>
+        <p>{intl.formatMessage(messages.summary, {
+          numberOfFiles: filesToUpload.length,
+          totalSize: <FileSize value={totalFileSize} />
+        })}</p>
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
             <Button
