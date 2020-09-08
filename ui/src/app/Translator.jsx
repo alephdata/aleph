@@ -17,9 +17,15 @@ import translations from 'content/translations.json';
 
 class Translator extends React.PureComponent {
   render() {
-    const { locale, children } = this.props;
+    const { children } = this.props;
+    let { locale } = this.props;
+
+    //  override arabic locale to marocan version 
+    /// We want all dates and numbers in latin version and not use eastern digits 
+    locale = locale === "ar" ? "ar-ma" : locale
+
     return (
-      <IntlProvider key={locale} locale={locale} messages={translations[locale]}>
+      <IntlProvider key={locale} locale={locale || "en"} messages={translations[locale]}>
         {children}
       </IntlProvider>
     );
