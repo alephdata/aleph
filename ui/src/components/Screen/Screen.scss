@@ -8,7 +8,7 @@
 
   .main-homepage {
     flex-grow: 1;
-    display:block;
+    display: flex;
     flex-flow: column nowrap;
     // background-color: $aleph-content-background;
     align-items: stretch;

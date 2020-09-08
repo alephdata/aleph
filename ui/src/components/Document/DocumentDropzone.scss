@@ -2,7 +2,9 @@
 @import "app/mixins.scss";
 
 .DocumentDropzone {
+  flex-grow: 1;
   &__content {
+    min-height: 100%;
     &.active {
       position: relative;
       &:after {
