@@ -1,6 +1,7 @@
 ---
 home: true
 html: true
+
 ---
 
 <section className="HomeScreen__section">
@@ -25,30 +26,6 @@ html: true
           <img src="/static/home_alerts.svg" />
           <p><b>Get notified</b> when new data you’re interested in is added.</p>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-<section className="HomeScreen__section">
-  <div className="HomeScreen__section__content">
-    <div className="HomeScreen__halves">
-      <div>
-        <a className="HomeScreen__imageLink" href="https://aleph.occrp.org/">
-          <img src="/static/logo.png" style="max-width: 60%;"/>
-        </a>
-      </div>
-      <div>
-        <h1 className="HomeScreen__title">About the project</h1>
-        <div className="HomeScreen__paragraph">
-          <p><b>OCCRP reporters follow the money to hold those in power to account.</b> The Aleph data platform brings together a vast archive of current and historic databases, documents, leaks and investigations.</p>
-        </div>
-        <div className="HomeScreen__paragraph">
-          <p>This web of evidence helps us to see connections, find stolen funds, spot political influence and to unveil corruption in countries across the world.</p>
-        </div>
-        <div className="HomeScreen__paragraph">
-          <p>As part of Aleph, we periodically fetch public records from over 230 online sources, and provide search access to an archive of leaked evidence.</p>
-        </div>
-        <a className="bp3-button bp3-intent-primary bp3-align-left" href="pages/about"><b>Learn more</b></a>
       </div>
     </div>
   </div>
