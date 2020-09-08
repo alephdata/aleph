@@ -1,16 +1,30 @@
 import logging
-from flask import Blueprint, request, send_file
+from flask import Blueprint, request
 from followthemoney import model
 from pantomime.types import XLSX
 
+from aleph.model import Export
 from aleph.search import XrefQuery
 from aleph.index.xref import get_xref
-from aleph.logic.xref import export_matches
 from aleph.logic.profiles import decide_xref, pairwise_decisions
+from aleph.logic.export import create_export
 from aleph.views.serializers import XrefSerializer
-from aleph.queues import queue_task, OP_XREF
-from aleph.views.util import get_db_collection, get_index_collection, get_index_entity
-from aleph.views.util import parse_request, require, jsonify, obj_or_404
+from aleph.queues import (
+    queue_task,
+    sla_dataset_from_role,
+    OP_XREF,
+    OP_EXPORT_XREF_RESULTS,
+)
+from aleph.views.util import (
+    get_db_collection,
+    get_index_collection,
+    get_index_entity,
+    get_session_id,
+    parse_request,
+    require,
+    jsonify,
+    obj_or_404,
+)
 
 blueprint = Blueprint("xref_api", __name__)
 log = logging.getLogger(__name__)
@@ -98,11 +112,11 @@ def generate(collection_id):
     return jsonify({"status": "accepted"}, status=202)
 
 
-@blueprint.route("/api/2/collections/<int:collection_id>/xref.xlsx")
+@blueprint.route("/api/2/collections/<int:collection_id>/xref.xlsx", methods=["POST"])
 def export(collection_id):
     """
     ---
-    get:
+    post:
       summary: Download cross-reference results
       description: Download results of cross-referencing as an Excel file
       parameters:
@@ -112,22 +126,31 @@ def export(collection_id):
         schema:
           type: integer
       responses:
-        '200':
-          description: OK
-          content:
-            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
-              schema:
-                type: object
+        '202':
+          description: Accepted
       tags:
       - Xref
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.READ)
-    buffer = export_matches(collection, request.authz)
-    file_name = "%s - Crossreference.xlsx" % collection.label
-    return send_file(
-        buffer, mimetype=XLSX, as_attachment=True, attachment_filename=file_name
+    label = "%s - Crossreference results" % collection.label
+    export = create_export(
+        operation=OP_EXPORT_XREF_RESULTS,
+        role_id=request.authz.id,
+        label=label,
+        file_path=None,
+        expires_after=Export.DEFAULT_EXPIRATION,
+        collection=collection,
+        mime_type=XLSX,
     )
+    job_id = get_session_id()
+    payload = {
+        "collection_id": collection_id,
+        "export_id": export.id,
+    }
+    dataset = sla_dataset_from_role(request.authz.id)
+    queue_task(dataset, OP_EXPORT_XREF_RESULTS, job_id=job_id, payload=payload)
+    return ("", 202)
 
 
 @blueprint.route(

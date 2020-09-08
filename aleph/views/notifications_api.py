@@ -1,8 +1,6 @@
 from flask import Blueprint, request
 
-from aleph.model import Role
-from aleph.search import SearchQueryResult, SearchQueryParser
-from aleph.logic.notifications import get_notifications
+from aleph.search import NotificationsQuery
 from aleph.views.serializers import NotificationSerializer
 from aleph.views.util import require
 
@@ -35,8 +33,5 @@ def index():
       - Notification
     """
     require(request.authz.logged_in)
-    role = Role.by_id(request.authz.id)
-    parser = SearchQueryParser(request.args, request.authz)
-    result = get_notifications(role, parser=parser)
-    result = SearchQueryResult(request, parser, result)
+    result = NotificationsQuery.handle(request)
     return NotificationSerializer.jsonify_result(result)

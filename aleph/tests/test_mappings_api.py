@@ -5,7 +5,7 @@ import logging
 from followthemoney import model
 from followthemoney.proxy import EntityProxy
 
-from aleph.core import archive, db
+from aleph.core import archive
 from aleph.index.entities import index_proxy
 from aleph.logic.aggregator import get_aggregator
 from aleph.views.util import validate

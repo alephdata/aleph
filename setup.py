@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aleph",
-    version="3.8.9",
+    version="3.9.0",
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
@@ -30,7 +30,17 @@ setup(
             "cognito = aleph.oauth:handle_cognito_oauth",
             "adfs = aleph.oauth:handle_adfs_oauth",
         ],
-        "console_scripts": ["aleph = aleph.manage:cli",],
+        "aleph.task_handlers": [
+            "index = aleph.task_handlers:op_index_handler",
+            "xref = aleph.task_handlers:op_xref_handler",
+            "reingest = aleph.task_handlers:op_reingest_handler",
+            "reindex = aleph.task_handlers:op_reindex_handler",
+            "loadmapping = aleph.task_handlers:op_load_mapping_handler",
+            "flushmapping = aleph.task_handlers:op_flush_mapping_handler",
+            "exportsearch = aleph.task_handlers:op_export_search_results_handler",
+            "exportxref = aleph.task_handlers:op_export_xref_results_handler",
+        ],
+        "console_scripts": ["aleph = aleph.manage:cli"],
     },
     tests_require=["coverage", "nose"],
 )

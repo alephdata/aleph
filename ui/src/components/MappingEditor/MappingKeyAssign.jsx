@@ -128,6 +128,7 @@ export class MappingKeyAssignItem extends Component {
           itemPredicate={(query, item) => item.includes(query.toLowerCase())}
           placeholder={intl.formatMessage(messages.keyAssignPlaceholder)}
           fill
+          resetOnSelect
           tagInputProps={{
             tagProps: { minimal: true },
             onRemove: item => onKeyRemove(id, item),

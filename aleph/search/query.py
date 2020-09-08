@@ -67,12 +67,13 @@ class Query(object):
     def get_filters(self):
         """Apply query filters from the user interface."""
         filters = []
-        # This enforces the authorization (access control) rules on
-        # a particular query by comparing the collections a user is
-        # authorized for with the one on the document.
-        if self.parser.authz and not self.parser.authz.is_admin:
-            authz = authz_query(self.parser.authz, field=self.AUTHZ_FIELD)
-            filters.append(authz)
+        if self.AUTHZ_FIELD is not None:
+            # This enforces the authorization (access control) rules on
+            # a particular query by comparing the collections a user is
+            # authorized for with the one on the document.
+            if self.parser.authz and not self.parser.authz.is_admin:
+                authz = authz_query(self.parser.authz, field=self.AUTHZ_FIELD)
+                filters.append(authz)
 
         range_filters = dict()
         for field, values in self.parser.filters.items():

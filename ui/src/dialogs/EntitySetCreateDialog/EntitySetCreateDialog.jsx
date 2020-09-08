@@ -8,7 +8,7 @@ import Query from 'app/Query';
 import { Collection, EntitySet, FileImport } from 'components/common';
 import CreateCaseDialog from 'dialogs/CreateCaseDialog/CreateCaseDialog';
 import FormDialog from 'dialogs/common/FormDialog';
-import { createEntitySet } from 'actions';
+import { createEntitySetMutate as createEntitySet } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
 import { processApiEntity } from 'components/EntitySet/util';

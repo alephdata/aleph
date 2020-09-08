@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 from followthemoney import model
 from followthemoney.util import get_entity_id
 
-from aleph.core import cache, es, settings
+from aleph.core import cache, es, settings, url_for
 from aleph.authz import Authz
-from aleph.model import Collection, Entity, Role, Alert, EntitySet
+from aleph.model import Collection, Entity, Role, Alert, EntitySet, Export
 from aleph.model import Event, Events
 from aleph.logic.mail import email_role
 from aleph.logic.html import html_link
@@ -31,8 +31,8 @@ def channel_tag(obj, clazz=None):
 
 
 def publish(event, actor_id=None, params=None, channels=None):
-    """ Publish a notification to the given channels, while storing
-    the parameters and initiating actor for the event. """
+    """Publish a notification to the given channels, while storing
+    the parameters and initiating actor for the event."""
     assert isinstance(event, Event), event
     channels = [channel_tag(c) for c in ensure_list(channels)]
     index_notification(event, actor_id, params, channels)
@@ -61,7 +61,7 @@ def get_role_channels(role):
     return channels
 
 
-def get_notifications(role, since=None, parser=None):
+def get_notifications(role, since=None):
     """Fetch a stream of notifications for the given role."""
     channels = get_role_channels(role)
     filters = [{"terms": {"channels": channels}}]
@@ -73,9 +73,6 @@ def get_notifications(role, since=None, parser=None):
         "query": {"bool": {"filter": filters, "must_not": must_not}},
         "sort": [{"created_at": {"order": "desc"}}],
     }
-    if parser is not None:
-        query["size"] = parser.limit
-        query["from"] = parser.offset
     return es.search(index=notifications_index(), body=query)
 
 
@@ -123,6 +120,9 @@ def render_notification(stub, notification):
         elif clazz == EntitySet:
             title = data.label
             link = entityset_url(data.id)
+        elif clazz == Export:
+            title = data.get("label")
+            link = url_for("exports_api.download", export_id=data.get("id"))
 
         template = "{{%s}}" % name
         html = html.replace(template, html_link(title, link))

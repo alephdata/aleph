@@ -7,9 +7,9 @@ import { ResultCount, Skeleton, AppItem } from 'components/common';
 import c from 'classnames';
 
 import Query from 'app/Query';
-import { queryCollections, queryEntitySets, queryRoles} from 'actions';
+import { fetchExports, queryCollections, queryEntitySets, queryRoles} from 'actions';
 import { queryGroups } from 'queries';
-import { selectAlerts, selectCollectionsResult, selectEntitySetsResult, selectRolesResult } from 'selectors';
+import { selectAlerts, selectCollectionsResult, selectEntitySetsResult, selectExports, selectRolesResult } from 'selectors';
 
 import './Dashboard.scss';
 
@@ -25,6 +25,10 @@ const messages = defineMessages({
   alerts: {
     id: 'dashboard.alerts',
     defaultMessage: 'Alerts',
+  },
+  exports: {
+    id: 'dashboard.exports',
+    defaultMessage: 'Exports',
   },
   cases: {
     id: 'dashboard.cases',
@@ -64,7 +68,7 @@ class Dashboard extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { groupsQuery, groupsResult, casesCountQuery, casesCountResult, diagramsCountQuery,
+    const { exports, groupsQuery, groupsResult, casesCountQuery, casesCountResult, diagramsCountQuery,
       diagramsCountResult, listsCountQuery, listsCountResult } = this.props;
 
     if (groupsResult.shouldLoad) {
@@ -79,6 +83,9 @@ class Dashboard extends React.Component {
     if (listsCountResult.shouldLoad) {
       this.props.queryEntitySets({query: listsCountQuery});
     }
+    if (exports.shouldLoad) {
+      this.props.fetchExports();
+    }
   }
 
   navigate(path) {
@@ -86,7 +93,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, casesCountResult, diagramsCountResult, listsCountResult, intl, location, groupsResult } = this.props;
+    const { alerts, casesCountResult, diagramsCountResult, exports, listsCountResult, intl, location, groupsResult } = this.props;
     const current = location.pathname;
 
     return (
@@ -116,6 +123,13 @@ class Dashboard extends React.Component {
               label={<ResultCount result={alerts} />}
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
+            />
+            <MenuItem
+              icon="export"
+              text={intl.formatMessage(messages.exports)}
+              label={<ResultCount result={exports} />}
+              onClick={() => this.navigate('/exports')}
+              active={current === '/exports'}
             />
             <MenuDivider />
             <li className="bp3-menu-header">
@@ -215,11 +229,12 @@ const mapStateToProps = (state, ownProps) => {
     diagramsCountResult: selectEntitySetsResult(state, diagramsCountQuery),
     listsCountQuery,
     listsCountResult: selectEntitySetsResult(state, listsCountQuery),
+    exports: selectExports(state),
     alerts: selectAlerts(state),
   };
 };
 
 Dashboard = injectIntl(Dashboard);
-Dashboard = connect(mapStateToProps, { queryRoles, queryCollections, queryEntitySets })(Dashboard);
+Dashboard = connect(mapStateToProps, { fetchExports, queryRoles, queryCollections, queryEntitySets })(Dashboard);
 Dashboard = withRouter(Dashboard);
 export default Dashboard;

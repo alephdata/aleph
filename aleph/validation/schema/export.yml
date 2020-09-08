@@ -1,0 +1,35 @@
+Export:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/DatedModel"
+  properties:
+    label:
+      type: string
+      readOnly: true
+    operation:
+      type: string
+      readOnly: true
+    creator_id:
+      type: string
+      readOnly: true
+    collection_id:
+      type: string
+      readOnly: true
+    expires_at:
+      type: string
+      readOnly: true
+    deleted:
+      type: boolean
+      readOnly: true
+    export_status:
+      type: string
+      readOnly: true
+    file_name:
+      type: string
+      readOnly: true
+    file_size:
+      type: number
+      readOnly: true
+    meta:
+      type: object
+      readOnly: true

@@ -3,6 +3,7 @@ import gc
 import shutil
 import logging
 import unittest
+import tempfile
 from flask import json
 from pathlib import Path
 from tempfile import mkdtemp
@@ -287,3 +288,9 @@ class TestCase(unittest.TestCase):
             del self.client
 
         gc.collect()
+
+    def _create_temporary_copy(self, path, name):
+        temp_dir = tempfile.gettempdir()
+        temp_path = os.path.join(temp_dir, name)
+        shutil.copy2(path, temp_path)
+        return temp_path

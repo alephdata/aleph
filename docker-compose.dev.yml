@@ -14,9 +14,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    build:
-      context: services/elasticsearch
-    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph-elasticsearch:fc76f89bb369132171af4629cc12cd7f57098ba6
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -33,7 +31,7 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:58d74ecccb4ce475668a7d72c3b4432044dcd14d
+    image: alephdata/convert-document:d1ce0b9618d588a6600eb0a81ceec1c62172b1ac
     read_only: true
     restart: on-failure
     user: app

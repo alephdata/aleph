@@ -83,6 +83,7 @@ class Mapping(db.Model, DatedModel):
                 "query": dict(self.query),
                 "role_id": stringify(self.role_id),
                 "collection_id": stringify(self.collection_id),
+                "entityset_id": stringify(self.entityset_id),
                 "table_id": self.table_id,
                 "last_run_status": status,
                 "last_run_err_msg": self.last_run_err_msg,

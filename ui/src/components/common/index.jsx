@@ -11,6 +11,7 @@ import AppItem from './AppItem';
 import csvContextLoader from './csvContextLoader';
 import EntitySet from './EntitySet';
 import DualPane from './DualPane';
+import ExportButton from './ExportButton';
 import Entity from './Entity';
 import Facet from './Facet';
 import FileImport from './FileImport';
@@ -34,6 +35,7 @@ import QueryText from './QueryText';
 import ResultCount from './ResultCount';
 import ResultText from './ResultText';
 import SelectWrapper from './SelectWrapper';
+import ExportLink from './ExportLink';
 
 
 export {
@@ -49,6 +51,7 @@ export {
   EntitySet,
   DualPane,
   Entity,
+  ExportButton,
   AppItem,
   Facet,
   FileImport,
@@ -73,6 +76,7 @@ export {
   ResultCount,
   ResultText,
   SelectWrapper,
+  ExportLink,
 };
 
 export * from './types';

@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
-import { createEntitySet, entitySetAddEntity } from 'actions';
+import { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
 
 import { showSuccessToast, showWarningToast } from 'app/toast';
@@ -55,7 +55,7 @@ class EntitySetSelector extends Component {
   }
 
   async onCreate(type, label) {
-    const { collection, entities } = this.props;
+    const { collection, entities, triggerMutationOnCreate = true } = this.props;
     const { processing } = this.state;
 
     if (processing) { return; }
@@ -70,7 +70,9 @@ class EntitySetSelector extends Component {
 
     try {
       this.setState({ processing: true });
-      const created = await this.props.createEntitySet(entitySet);
+      const created = triggerMutationOnCreate
+        ? await this.props.createEntitySetMutate(entitySet)
+        : await this.props.createEntitySetNoMutate(entitySet);
       this.onSuccess(created.data);
     } catch (e) {
       this.onError(e);
@@ -184,5 +186,5 @@ class EntitySetSelector extends Component {
 export default compose(
   withRouter,
   injectIntl,
-  connect(() => ({}), { createEntitySet, entitySetAddEntity }),
+  connect(() => ({}), { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
 )(EntitySetSelector);

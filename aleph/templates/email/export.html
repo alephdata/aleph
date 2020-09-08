@@ -1,0 +1,19 @@
+{% extends "email/layout.html" %}
+
+{% block content %}
+  <p>
+    {% trans %}
+    The following export is ready for download:
+    {% endtrans %}
+  </p>
+  <ul>
+    <li><a href="{{download_url}}">{{export_label}}</a></li>
+  </ul>
+  <p>
+    {% trans %}
+    This download link will expire on {{expiration_date}}.
+    Browse all of your available exports here:
+    {% endtrans %}
+    <a href="{{exports_url}}">{{exports_url}}</a>
+  </p>
+{% endblock %}

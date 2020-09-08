@@ -6,7 +6,7 @@ from aleph.core import url_external
 from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
-from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
+from aleph.search.facet import LanguageFacet, SchemaFacet, EventFacet, Facet
 
 log = logging.getLogger(__name__)
 
@@ -70,6 +70,7 @@ class SearchQueryResult(QueryResult):
         "category": CategoryFacet,
         "schema": SchemaFacet,
         "schemata": SchemaFacet,
+        "event": EventFacet,
     }
 
     def __init__(self, request, parser, result):
