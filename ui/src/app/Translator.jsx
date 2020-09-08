@@ -21,8 +21,8 @@ class Translator extends React.PureComponent {
     let { locale } = this.props;
 
     //  override arabic locale to marocan version 
-    /// We want all dates and numbers in latin version and not use eastern digits 
-    locale = locale === "ar" ? "ar-ma" : locale
+    // We want all dates and numbers in latin version and not use eastern digits 
+    locale = locale === "ar" ? "ar-ma" : locale;
 
     return (
       <IntlProvider key={locale} locale={locale || "en"} messages={translations[locale]}>
