@@ -122,8 +122,9 @@ class Authz(object):
             return set()
         return self.roles.difference(Role.public_roles())
 
-    def to_token(self, scope=None, role=None):
-        exp = datetime.utcnow() + timedelta(days=1)
+    def to_token(self, scope=None, role=None, exp=None):
+        if exp is None:
+            exp = datetime.utcnow() + timedelta(days=1)
         payload = {
             "u": self.id,
             "exp": exp,
