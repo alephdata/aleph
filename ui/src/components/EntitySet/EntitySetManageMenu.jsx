@@ -54,14 +54,12 @@ class EntitySetManageMenu extends Component {
       <>
         <ControlGroup className="EntitySetManageMenu">
           {onSearch && (
-            <>
-              <SearchBox
-                onSearch={onSearch}
-                placeholder={intl.formatMessage(messages.placeholder, { set_name: entitySet.label })}
-              />
-              <Divider />
-            </>
+            <SearchBox
+              onSearch={onSearch}
+              placeholder={intl.formatMessage(messages.placeholder, { set_name: entitySet.label })}
+            />
           )}
+          {onSearch && entitySet.writeable && <Divider />}
           {entitySet.writeable && (
             <ButtonGroup>
               <Button icon="cog" onClick={this.toggleEdit}>
