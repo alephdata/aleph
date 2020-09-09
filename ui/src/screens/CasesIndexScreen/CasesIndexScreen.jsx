@@ -73,7 +73,6 @@ export class CasesIndexScreen extends Component {
             placeholder={intl.formatMessage(messages.placeholder)}
             noResultsText={intl.formatMessage(messages.no_results)}
             emptyText={intl.formatMessage(messages.empty)}
-            showCreatedByFilter
           />
         </Dashboard>
       </Screen>
