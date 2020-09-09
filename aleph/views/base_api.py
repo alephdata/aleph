@@ -10,7 +10,7 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
-from aleph.core import settings, url_for
+from aleph.core import settings, url_for, cache
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic import resolver
@@ -38,9 +38,9 @@ def _metadata_locale(locale):
         auth["oauth_uri"] = url_for("sessions_api.oauth_init")
 
     locales = settings.UI_LANGUAGES
-    locales = {l: Locale(l).get_language_name(l) for l in locales}
+    locales = {loc: Locale(loc).get_language_name(loc) for loc in locales}
 
-    data = {
+    return {
         "status": "ok",
         "maintenance": request.authz.in_maintenance,
         "app": {
@@ -63,12 +63,6 @@ def _metadata_locale(locale):
         "auth": auth,
     }
 
-    if settings.SINGLE_USER:
-        role = Role.load_cli_user()
-        authz = Authz.from_role(role)
-        data["token"] = authz.to_token(role=role)
-    return jsonify(data)
-
 
 @blueprint.route("/api/2/metadata")
 def metadata():
@@ -88,12 +82,18 @@ def metadata():
     """
     request.rate_limit = None
     locale = str(get_locale())
-    return _metadata_locale(locale)
+    data = _metadata_locale(locale)
+    if settings.SINGLE_USER:
+        role = Role.load_cli_user()
+        authz = Authz.from_role(role)
+        data["token"] = authz.to_token(role=role)
+    return jsonify(data)
 
 
 @blueprint.route("/api/openapi.json")
 def openapi():
     """Generate an OpenAPI 3.0 documentation JSON file for the API."""
+    enable_cache(vary_user=False)
     spec = get_openapi_spec(current_app)
     for name, view in current_app.view_functions.items():
         if name in (
@@ -110,12 +110,14 @@ def openapi():
 
 @blueprint.route("/api/2/statistics")
 def statistics():
-    """Get a summary of the data acessible to the current user.
+    """Get a summary of the data acessible to an anonymous user.
+
+    Changed [3.9]: Previously, this would return user-specific stats.
     ---
     get:
       summary: System-wide user statistics.
       description: >
-        Get a summary of the data acessible to the current user.
+        Get a summary of the data acessible to an anonymous user.
       responses:
         '200':
           description: OK
@@ -126,8 +128,13 @@ def statistics():
       tags:
       - System
     """
-    enable_cache()
-    collections = request.authz.collections(request.authz.READ)
+    enable_cache(vary_user=False)
+    key = "global_stats"
+    cached = cache.get_complex(key)
+    if cached is not None:
+        return jsonify(cached)
+    authz = Authz.from_role(None)
+    collections = authz.collections(request.authz.READ)
     for collection_id in collections:
         resolver.queue(request, Collection, collection_id)
     resolver.resolve(request)
@@ -149,15 +156,15 @@ def statistics():
         for country in data.get("countries", []):
             countries[country] += 1
 
-    return jsonify(
-        {
-            "collections": len(collections),
-            "schemata": dict(schemata),
-            "countries": dict(countries),
-            "categories": dict(categories),
-            "things": sum(schemata.values()),
-        }
-    )
+    data = {
+        "collections": len(collections),
+        "schemata": dict(schemata),
+        "countries": dict(countries),
+        "categories": dict(categories),
+        "things": sum(schemata.values()),
+    }
+    cache.set_complex(key, data, expires=3600)
+    return jsonify(data)
 
 
 @blueprint.route("/api/2/sitemap.xml")
