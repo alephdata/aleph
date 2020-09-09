@@ -29,7 +29,7 @@ const messages = defineMessages({
   },
   no_results: {
     id: 'cases.no_results',
-    defaultMessage: 'No personal datasets were found.',
+    defaultMessage: 'No personal datasets were found matching this query.',
   },
 });
 
@@ -70,6 +70,7 @@ export class CasesIndexScreen extends Component {
           </div>
           <CollectionIndex
             query={query}
+            icon="briefcase"
             placeholder={intl.formatMessage(messages.placeholder)}
             noResultsText={intl.formatMessage(messages.no_results)}
             emptyText={intl.formatMessage(messages.empty)}

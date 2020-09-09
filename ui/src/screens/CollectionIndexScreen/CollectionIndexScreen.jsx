@@ -102,6 +102,7 @@ export class CollectionIndexScreen extends Component {
             <CollectionIndex
               query={query}
               showQueryTags
+              icon="database"
               placeholder={intl.formatMessage(messages.placeholder)}
               emptyText={intl.formatMessage(messages.empty)}
               noResultsText={intl.formatMessage(messages.no_results)}
