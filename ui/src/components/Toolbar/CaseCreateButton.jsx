@@ -29,23 +29,19 @@ class CaseCreateButton extends React.Component {
 
   render() {
     const { intl, session } = this.props;
-    if (!session.loggedIn) {
-      return (
+    const buttonDisabled = !session.loggedIn;
+
+    return (
+      <>
         <Tooltip
           content={intl.formatMessage(messages.login)}
           position={Position.BOTTOM}
+          disabled={!buttonDisabled}
         >
-          <AnchorButton icon="folder-new" intent={Intent.PRIMARY} disabled>
-            <FormattedMessage id="cases.index.create" defaultMessage="New dataset" />
-          </AnchorButton>
+          <Button onClick={this.toggle} icon="briefcase" intent={Intent.PRIMARY} disabled={buttonDisabled}>
+            <FormattedMessage id="cases.index.create" defaultMessage="New personal dataset" />
+          </Button>
         </Tooltip>
-      );
-    }
-    return (
-      <>
-        <Button onClick={this.toggle} icon="folder-new" intent={Intent.PRIMARY}>
-          <FormattedMessage id="cases.index.create" defaultMessage="New dataset" />
-        </Button>
         <CreateCaseDialog
           isOpen={this.state.isOpen}
           toggleDialog={this.toggle}
