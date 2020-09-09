@@ -158,7 +158,8 @@ def url_for(*a, **kw):
         relative = kw.pop("_relative", False)
         path = flask_url_for(*a, **kw)
         if authz is not None and authz.id is not None:
-            token = authz.to_token(scope=path)
+            exp = kw.pop("_exp", None)
+            token = authz.to_token(scope=path, exp=exp)
             query = list(ensure_list(query))
             query.append(("api_key", token))
         return url_external(path, query, relative=relative)

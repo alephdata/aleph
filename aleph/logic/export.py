@@ -131,7 +131,10 @@ def send_export_notification(export):
     role = Role.by_id(export.creator_id)
     authz = Authz.from_role(role)
     download_url = url_for(
-        "exports_api.download", export_id=export.id, _authz=authz,
+        "exports_api.download",
+        export_id=export.id,
+        _authz=authz,
+        _exp=export.expires_at
     )
     params = dict(
         role=role,
