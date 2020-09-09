@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 from normality import normalize
 from followthemoney import model
 
-from aleph.core import es, cache, settings
+from aleph.core import es, cache
 from aleph.model import Collection, Entity
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import index_name, index_settings, configure_index
@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 def collections_index():
     """Combined index to run all queries against."""
-    return index_name("collection", settings.INDEX_WRITE)
+    return index_name("collection", "v1")
 
 
 def configure_collections():

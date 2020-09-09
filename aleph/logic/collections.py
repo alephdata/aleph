@@ -184,3 +184,5 @@ def upgrade_collections():
             delete_collection(collection, keep_metadata=True, sync=True)
         else:
             compute_collection(collection, force=True)
+    # update global cache:
+    compute_collections()

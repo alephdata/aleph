@@ -5,7 +5,7 @@ from datetime import datetime
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
-from aleph.core import settings, es
+from aleph.core import es
 from aleph.index.util import index_name, index_settings, configure_index
 from aleph.index.util import query_delete, bulk_actions, unpack_result
 from aleph.index.util import authz_query
@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 
 def xref_index():
-    return index_name("xref", settings.INDEX_WRITE)
+    return index_name("xref", "v1")
 
 
 def configure_xref():

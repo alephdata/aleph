@@ -4,7 +4,6 @@ from banal import hash_data
 from datetime import datetime
 from followthemoney.util import get_entity_id
 
-from aleph.core import settings
 from aleph.index.util import index_name, index_settings, configure_index
 from aleph.index.util import query_delete, index_safe
 from aleph.index.util import KEYWORD
@@ -13,7 +12,7 @@ log = logging.getLogger(__name__)
 
 
 def notifications_index():
-    return index_name("notifications", settings.INDEX_WRITE)
+    return index_name("notifications", "v1")
 
 
 def configure_notifications():
