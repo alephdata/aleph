@@ -8,6 +8,7 @@ import { ErrorSection } from 'components/common';
 import { queryNotifications } from 'actions';
 import { selectNotificationsResult } from 'selectors';
 import Notification from 'components/Notification/Notification';
+import NotificationListFilter from 'components/Notification/NotificationListFilter';
 
 import './NotificationList.scss';
 
@@ -23,6 +24,7 @@ class NotificationList extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.updateQuery = this.updateQuery.bind(this);
   }
 
   componentDidMount() {
@@ -40,6 +42,15 @@ class NotificationList extends Component {
     }
   }
 
+  updateQuery(newQuery) {
+    const { history, location } = this.props;
+
+    history.push({
+      pathname: location.pathname,
+      search: newQuery.toLocation(),
+    });
+  }
+
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (result.shouldLoad) {
@@ -48,7 +59,7 @@ class NotificationList extends Component {
   }
 
   render() {
-    const { result, intl } = this.props;
+    const { query, result, intl } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
     if (result.total === 0) {
@@ -62,6 +73,7 @@ class NotificationList extends Component {
 
     return (
       <>
+        <NotificationListFilter query={query} updateQuery={this.updateQuery} result={result} />
         <ul className="NotificationList">
           {result.results && result.results.map(
             notif => <Notification key={notif.id} notification={notif} />,
