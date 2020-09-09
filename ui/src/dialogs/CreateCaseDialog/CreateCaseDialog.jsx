@@ -141,102 +141,101 @@ class CreateCaseDialog extends Component {
         enforceFocus={false}
         autoFocus={false}
       >
-        <form onSubmit={this.onAddCase}>
-          <div className="bp3-dialog-body">
-            <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="label">
-                <FormattedMessage id="case.choose.name" defaultMessage="Title" />
-                <div className="bp3-input-group bp3-fill">
-                  <input
-                    id="label"
-                    type="text"
-                    className="bp3-input"
-                    autoComplete="off"
-                    placeholder={intl.formatMessage(messages.label_placeholder)}
-                    onChange={this.onChangeLabel}
-                    value={collection.label}
-                  />
-                </div>
-              </label>
-            </div>
-            <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="summary">
-                <FormattedMessage
-                  id="case.choose.summary"
-                  defaultMessage="Summary"
-                />
-                <div className="bp3-input-group bp3-fill">
-                  <textarea
-                    id="summary"
-                    className="bp3-input"
-                    placeholder={intl.formatMessage(messages.summary_placeholder)}
-                    onChange={this.onChangeSummary}
-                    value={collection.summary}
-                  />
-                </div>
-              </label>
-            </div>
-            <div className="bp3-form-group">
-              <label className="bp3-label">
-                <FormattedMessage id="case.chose.languages" defaultMessage="Languages" />
-              </label>
-              <Language.MultiSelect
-                onSubmit={this.onSelectLanguages}
-                values={collection.languages || []}
-                inputProps={{
-                  inputRef: null,
-                  placeholder: intl.formatMessage(messages.language_placeholder),
-                }}
-              />
-              <div className="bp3-form-helper-text">
-                <FormattedMessage
-                  id="case.languages.helper"
-                  defaultMessage="Used for optical text recognition in non-Latin alphabets."
+        <div className="bp3-dialog-body">
+          <div className="bp3-form-group">
+            <label className="bp3-label" htmlFor="label">
+              <FormattedMessage id="case.choose.name" defaultMessage="Title" />
+              <div className="bp3-input-group bp3-fill">
+                <input
+                  id="label"
+                  type="text"
+                  className="bp3-input"
+                  autoComplete="off"
+                  placeholder={intl.formatMessage(messages.label_placeholder)}
+                  onChange={this.onChangeLabel}
+                  value={collection.label}
                 />
               </div>
-            </div>
-            <div className="bp3-form-group">
-              <label className="bp3-label">
-                <FormattedMessage
-                  id="case.share.with"
-                  defaultMessage="Share with"
-                />
-                <Role.Select onSelect={this.onAddRole} exclude={exclude} />
-              </label>
-            </div>
-            {permissions.length !== 0 && (
-              <table className="settings-table">
-                <tbody>
-                  {permissions.map(permission => (
-                    <tr key={permission.role.id + 1}>
-                      <td>
-                        <Role.Label role={permission.role} icon={false} long />
-                      </td>
-                      <td>
-                        <Button
-                          onClick={e => this.onDeleteRole(permission, e)}
-                          small
-                          minimal
-                          icon="remove"
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+            </label>
           </div>
-          <div className="bp3-dialog-footer">
-            <div className="bp3-dialog-footer-actions">
-              <Button
-                type="submit"
-                intent={Intent.PRIMARY}
-                disabled={disabled}
-                text={intl.formatMessage(messages.save)}
+          <div className="bp3-form-group">
+            <label className="bp3-label" htmlFor="summary">
+              <FormattedMessage
+                id="case.choose.summary"
+                defaultMessage="Summary"
+              />
+              <div className="bp3-input-group bp3-fill">
+                <textarea
+                  id="summary"
+                  className="bp3-input"
+                  placeholder={intl.formatMessage(messages.summary_placeholder)}
+                  onChange={this.onChangeSummary}
+                  value={collection.summary}
+                />
+              </div>
+            </label>
+          </div>
+          <div className="bp3-form-group">
+            <label className="bp3-label">
+              <FormattedMessage id="case.chose.languages" defaultMessage="Languages" />
+            </label>
+            <Language.MultiSelect
+              onSubmit={this.onSelectLanguages}
+              values={collection.languages || []}
+              inputProps={{
+                inputRef: null,
+                placeholder: intl.formatMessage(messages.language_placeholder),
+              }}
+            />
+            <div className="bp3-form-helper-text">
+              <FormattedMessage
+                id="case.languages.helper"
+                defaultMessage="Used for optical text recognition in non-Latin alphabets."
               />
             </div>
           </div>
-        </form>
+          <div className="bp3-form-group">
+            <label className="bp3-label">
+              <FormattedMessage
+                id="case.share.with"
+                defaultMessage="Share with"
+              />
+              <Role.Select onSelect={this.onAddRole} exclude={exclude} />
+            </label>
+          </div>
+          {permissions.length !== 0 && (
+            <table className="settings-table">
+              <tbody>
+                {permissions.map(permission => (
+                  <tr key={permission.role.id + 1}>
+                    <td>
+                      <Role.Label role={permission.role} icon={false} long />
+                    </td>
+                    <td>
+                      <Button
+                        onClick={e => this.onDeleteRole(permission, e)}
+                        small
+                        minimal
+                        icon="remove"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
+            <Button
+              type="submit"
+              intent={Intent.PRIMARY}
+              onClick={this.onAddCase}
+              disabled={disabled}
+              text={intl.formatMessage(messages.save)}
+            />
+          </div>
+        </div>
       </FormDialog>
     );
   }
