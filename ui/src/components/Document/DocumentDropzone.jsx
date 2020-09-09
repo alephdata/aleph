@@ -46,7 +46,7 @@ class DocumentDropzone extends Component {
           )}
         >
           {({ getRootProps, getInputProps, isDragActive }) => (
-            <div {...getRootProps()}>
+            <div {...getRootProps()} className={'DocumentDropzone'}>
               <input
                 {...getInputProps()}
                 onClick={e => { e.preventDefault(); e.stopPropagation(); }}
