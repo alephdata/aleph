@@ -1,0 +1,25 @@
+@import "app/variables.scss";
+
+.AnimatedCount {
+  border-right: 1px solid $aleph-border-color;
+  color: $blue1;
+
+  &:last-child {
+    border: none;
+  }
+
+  &__count {
+    font-size: 40px;
+    font-weight: 600;
+  }
+
+  &__label {
+    margin-top: $aleph-grid-size/2;
+    font-size: 16px;
+    font-weight: 500;
+
+    @media screen and (min-width: $aleph-screen-sm-max-width) {
+      white-space: nowrap;
+    }
+  }
+}

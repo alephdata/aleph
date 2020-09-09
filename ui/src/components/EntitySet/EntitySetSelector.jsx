@@ -60,6 +60,7 @@ class EntitySetSelector extends Component {
 
     if (processing) { return; }
 
+
     const entitySet = {
       collection_id: collection.id,
       label,

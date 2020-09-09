@@ -3,24 +3,73 @@
 $vertical-spacing: $aleph-grid-size*5;
 
 .HomeScreen {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    font-size: 14px;
+  }
+
+  b {
+    color: $blue1;
+  }
+
   &__section {
     text-align: center;
+    background: none;
+    position: relative;
+    z-index: 1;
 
     &.title-section {
-      min-height: 100vh;
-      background-color: black;
-      background-image: url("../../assets/europe_asia_dark.jpg");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: 50% 50%;
-      color: white;
+      min-height: 500px;
+      max-height: 900px;
+      position: relative;
+      background-color: white !important;
+      &::after {
+        background-image: url("/static/background.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        position: absolute;
+        content: "";
+        opacity: 0.09;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;
+      }
     }
 
     &__content {
-      max-width: 800px;
+      max-width: 1150px;
       margin: auto;
-      padding: 70px 30px;
+      padding: $aleph-grid-size*8 $aleph-grid-size*3;
       vertical-align: middle;
+
+      .title-section & {
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    &:nth-child(even) {
+      background-color: $dark-gray2;
+      color: white;
+
+      .HomeScreen__title {
+        color: white;
+      }
+
+      b {
+        color: white;
+      }
+    }
+    &:nth-child(odd) {
+      background-color: $light-gray5;
     }
   }
 
@@ -28,13 +77,118 @@ $vertical-spacing: $aleph-grid-size*5;
     margin: 0 0 $vertical-spacing;
   }
 
+  &__app-title {
+    font-size: 3em;
+    margin: $vertical-spacing/2 0;
+    color: $dark-gray3;
+    line-height: 1;
+  }
+
   &__title {
-    font-size: 42px;
-    margin: 0;
+    font-size: 2em;
+    margin: 0 0 $aleph-grid-size*6;
+    font-weight: 700;
+    color: $dark-gray3;
+  }
+
+  &__title-divider {
+    width: 20%;
+    margin: $aleph-grid-size*4 auto $aleph-grid-size*5;
+    border-bottom: 2px solid $blue1;
+    -webkit-border-image: -webkit-linear-gradient(left, white, black);
+    display: none;
   }
 
   &__description {
-    font-size: 16px;
-    margin: $vertical-spacing/2 0;
+    font-size: 1em;
+    margin: $aleph-grid-size*3 0;
+  }
+
+  &__paragraph {
+    margin: 0 0 $vertical-spacing/2;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  &__search {
+    max-width: 600px;
+    margin: auto;
+    .search-box {
+      margin-bottom: $vertical-spacing/2;
+    }
+  }
+
+  &__thirds, &__halves {
+    display: flex;
+    justify-content: space-between;
+
+    &:not(.no-wrap) {
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        display: block;
+        & > * {
+          margin-bottom: $vertical-spacing;
+        }
+      }
+    }
+
+    & > * {
+      flex: 0 0;
+      padding: 0 1.5%;
+    }
+  }
+
+  &__halves {
+    align-items: center;
+    & > * {
+      flex-basis: 50%;
+    }
+  }
+
+  &__thirds > * {
+    flex-basis: 33.33%;
+  }
+
+  &__feature-block {
+    max-width: 400px;
+    margin: 0 auto;
+
+    &__content {
+      margin: 0 $aleph-grid-size;
+      border-radius: $aleph-grid-size;
+      padding: $aleph-grid-size*2.5;
+      background-color: rgba(white, .2);
+      height: 100%;
+
+      img {
+        background: white;
+        border-radius: 10px;
+      }
+      p {
+        margin: auto;
+        margin-top: $aleph-grid-size*2;
+        text-align: center;
+        line-height: 1.5;
+        width: 90%;
+      }
+    }
+  }
+
+  &__imageLink {
+    &:hover {
+      opacity: .8;
+    }
+  }
+
+  .bp3-button b {
+    color: white;
+  }
+
+  .Statistics.bp3-callout {
+    border: 1px solid $aleph-border-color;
+  }
+  .Statistics__headline.bp3-heading {
+    padding-bottom: $aleph-grid-size;
+    margin-top: $aleph-grid-size/2;
+    border-bottom: 1px solid;
   }
 }

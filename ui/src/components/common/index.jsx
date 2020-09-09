@@ -1,3 +1,4 @@
+import AnimatedCount from './AnimatedCount';
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import Category from './Category';
@@ -28,6 +29,7 @@ import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
 import SortingBar from './SortingBar';
+import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
@@ -37,6 +39,7 @@ import ExportLink from './ExportLink';
 
 
 export {
+  AnimatedCount,
   Breadcrumbs,
   SignInCallout,
   Category,
@@ -61,6 +64,7 @@ export {
   ErrorSection,
   SinglePane,
   SortableTH,
+  Statistics,
   Summary,
   Count,
   Tag,
