@@ -4,6 +4,7 @@
 .CollectionInfo {
   &__item {
     margin-bottom: 15px;
+    overflow: hidden;
     display: flex;
 
     &:last-child {
