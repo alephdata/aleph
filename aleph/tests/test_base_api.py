@@ -1,4 +1,4 @@
-from aleph.logic.collections import compute_collection
+from aleph.logic.collections import compute_collections
 from aleph.tests.util import TestCase
 
 
@@ -22,13 +22,10 @@ class BaseApiTestCase(TestCase):
     def test_statistics(self):
         res = self.client.get("/api/2/statistics")
         assert res.status_code == 200, res
-        assert "things" in res.json, res.json
-        assert res.json["collections"] == 0, res.json
-        assert res.json["things"] == 0, res.json
+        assert "things" not in res.json, res.json
 
         self.load_fixtures()
-        compute_collection(self.private_coll, sync=True)
-        compute_collection(self.public_coll, sync=True)
+        compute_collections()
         res = self.client.get("/api/2/statistics")
         assert res.status_code == 200, res
         assert res.json["collections"] == 1, res.json
@@ -37,5 +34,5 @@ class BaseApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         res = self.client.get("/api/2/statistics", headers=headers)
         assert res.status_code == 200, res
-        assert res.json["collections"] == 2, res.json
-        assert res.json["things"] == 23, res.json
+        assert res.json["collections"] == 1, res.json
+        assert res.json["things"] == 1, res.json

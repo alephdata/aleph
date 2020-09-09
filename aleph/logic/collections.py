@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from collections import defaultdict
 from servicelayer.jobs import Job
 
 from aleph.core import db, cache
@@ -49,8 +50,33 @@ def refresh_collection(collection_id):
 
 
 def compute_collections():
+    """Update collection caches, including the global stats cache."""
+    authz = Authz.from_role(None)
+    schemata = defaultdict(int)
+    countries = defaultdict(int)
+    categories = defaultdict(int)
+
     for collection in Collection.all():
         compute_collection(collection)
+
+        if authz.can(collection.id, authz.READ):
+            categories[collection.category] += 1
+            things = index.get_collection_things(collection.id)
+            for schema, count in things.items():
+                schemata[schema] += count
+            for country in collection.countries:
+                countries[country] += 1
+
+    log.info("Updating global statistics cache...")
+    data = {
+        "collections": sum(categories.values()),
+        "schemata": dict(schemata),
+        "countries": dict(countries),
+        "categories": dict(categories),
+        "things": sum(schemata.values()),
+    }
+    key = cache.key(cache.STATISTICS)
+    cache.set_complex(key, data, expires=cache.EXPIRE)
 
 
 def compute_collection(collection, force=False, sync=False):

@@ -1,7 +1,6 @@
 import logging
 from babel import Locale
 from functools import lru_cache
-from collections import defaultdict
 from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
@@ -13,10 +12,8 @@ from aleph import __version__
 from aleph.core import settings, url_for, cache
 from aleph.authz import Authz
 from aleph.model import Collection, Role
-from aleph.logic import resolver
 from aleph.logic.pages import load_pages
 from aleph.logic.util import collection_url
-from aleph.index.collections import get_collection_things
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify, render_xml
@@ -129,41 +126,9 @@ def statistics():
       - System
     """
     enable_cache(vary_user=False)
-    key = "global_stats"
-    cached = cache.get_complex(key)
-    if cached is not None:
-        return jsonify(cached)
-    authz = Authz.from_role(None)
-    collections = authz.collections(request.authz.READ)
-    for collection_id in collections:
-        resolver.queue(request, Collection, collection_id)
-    resolver.resolve(request)
-
-    # Summarise stats. This is meant for display, so the counting is a bit
-    # inconsistent between counting all collections, and source collections
-    # only.
-    schemata = defaultdict(int)
-    countries = defaultdict(int)
-    categories = defaultdict(int)
-    for collection_id in collections:
-        data = resolver.get(request, Collection, collection_id)
-        if data is None or data.get("casefile"):
-            continue
-        categories[data.get("category")] += 1
-        things = get_collection_things(collection_id)
-        for schema, count in things.items():
-            schemata[schema] += count
-        for country in data.get("countries", []):
-            countries[country] += 1
-
-    data = {
-        "collections": len(collections),
-        "schemata": dict(schemata),
-        "countries": dict(countries),
-        "categories": dict(categories),
-        "things": sum(schemata.values()),
-    }
-    cache.set_complex(key, data, expires=3600)
+    key = cache.key(cache.STATISTICS)
+    data = {"countries": [], "schemata": [], "categories": []}
+    data = cache.get_complex(key) or data
     return jsonify(data)
 
 
