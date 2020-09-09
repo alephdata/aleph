@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
-import { Icon, Button, ButtonGroup, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, Icon, Button, ButtonGroup, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -54,6 +54,10 @@ const messages = defineMessages({
   date_facet_hide: {
     id: 'search.screen.hide_dates',
     defaultMessage: 'Hide date filter',
+  },
+  date_facet_disabled: {
+    id: 'search.screen.dates_disabled',
+    defaultMessage: 'No dates available',
   },
 });
 
@@ -265,10 +269,13 @@ export class SearchScreen extends React.Component {
                 {!noResults && (
                   <div className="SearchScreen__control-bar__button">
                     <Tooltip
-                      content={intl.formatMessage(dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show)}
-                      disabled={dateFacetDisabled}
+                      content={intl.formatMessage(
+                        dateFacetDisabled ? messages.date_facet_disabled : (
+                          dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
+                        )
+                      )}
                     >
-                      <Button
+                      <AnchorButton
                         outlined
                         icon="calendar"
                         onClick={this.toggleDateFacet}
