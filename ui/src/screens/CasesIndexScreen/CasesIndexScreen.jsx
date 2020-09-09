@@ -19,17 +19,17 @@ const messages = defineMessages({
     id: 'cases.title',
     defaultMessage: 'Personal datasets',
   },
-  no_results_title: {
-    id: 'cases.no_results_title',
+  empty: {
+    id: 'cases.empty',
     defaultMessage: 'You do not have any personal datasets yet.',
   },
   placeholder: {
     id: 'cases.placeholder',
     defaultMessage: 'Search personal datasets...',
   },
-  empty: {
-    id: 'cases.empty',
-    defaultMessage: 'No personal datasets were found',
+  no_results: {
+    id: 'cases.no_results',
+    defaultMessage: 'No personal datasets were found.',
   },
 });
 
@@ -71,7 +71,7 @@ export class CasesIndexScreen extends Component {
           <CollectionIndex
             query={query}
             placeholder={intl.formatMessage(messages.placeholder)}
-            noResultsText={intl.formatMessage(messages.no_results_title)}
+            noResultsText={intl.formatMessage(messages.no_results)}
             emptyText={intl.formatMessage(messages.empty)}
             showCreatedByFilter
           />

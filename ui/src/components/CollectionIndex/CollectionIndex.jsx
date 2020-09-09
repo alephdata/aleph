@@ -68,18 +68,16 @@ export class CollectionIndex extends Component {
   }
 
   renderErrors() {
-    const { emptyText, intl, query, result } = this.props;
-    const hasQuery = query.hasQuery();
+    const { emptyText, noResultsText, intl, query, result } = this.props;
+    const hasQuery = query.hasQuery() || query.hasFilter('creator_id');
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
     }
     if (result.total === 0) {
-      if (hasQuery) {
-        return <ErrorSection icon="shield" title={intl.formatMessage(messages.no_results)} />;
-      }
+      const message = hasQuery ? noResultsText : emptyText;
 
-      return <ErrorSection icon="shield" title={emptyText} />;
+      return <ErrorSection icon="shield" title={message} />;
     }
 
     return null;

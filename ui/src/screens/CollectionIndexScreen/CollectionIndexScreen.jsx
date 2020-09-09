@@ -31,7 +31,11 @@ const messages = defineMessages({
   },
   empty: {
     id: 'collection.index.empty',
-    defaultMessage: 'No datasets were found',
+    defaultMessage: 'No datasets were found.',
+  },
+  no_results: {
+    id: 'collection.index.no_results',
+    defaultMessage: 'No datasets were found matching this query.',
   },
 });
 
@@ -100,6 +104,7 @@ export class CollectionIndexScreen extends Component {
               showQueryTags
               placeholder={intl.formatMessage(messages.placeholder)}
               emptyText={intl.formatMessage(messages.empty)}
+              noResultsText={intl.formatMessage(messages.no_results)}
             />
           </DualPane.ContentPane>
         </DualPane>
