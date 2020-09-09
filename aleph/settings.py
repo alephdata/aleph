@@ -46,7 +46,7 @@ SAMPLE_SEARCHES = env.to_list("ALEPH_SAMPLE_SEARCHES", SAMPLE_SEARCHES)
 FORCE_HTTPS = env.to_bool("ALEPH_FORCE_HTTPS", False)
 
 # Content security policy:
-CONTENT_POLICY = "default-src: 'self' 'unsafe-inline' 'unsafe-eval' data: *"  # noqa
+CONTENT_POLICY = "default-src: 'self' 'unsafe-inline' 'unsafe-eval' data: *"
 CONTENT_POLICY = env.get("ALEPH_CONTENT_POLICY", CONTENT_POLICY)
 
 # Cross-origin resource sharing
@@ -104,7 +104,7 @@ DEFAULT_LANGUAGE = env.get("ALEPH_DEFAULT_LANGUAGE", "en")
 # User interface
 UI_LANGUAGES = ["ru", "es", "de", "en", "ar"]
 UI_LANGUAGES = env.to_list("ALEPH_UI_LANGUAGES", UI_LANGUAGES)
-UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
+UI_LANGUAGES = [lang.lower().strip() for lang in UI_LANGUAGES]
 
 # Document processing pipeline
 INGEST_PIPELINE = env.to_list("ALEPH_INGEST_PIPELINE", ["analyze"])
@@ -153,6 +153,8 @@ ALEMBIC_DIR = os.path.join(APP_DIR, "migrate")
 ELASTICSEARCH_URL = env.get("ALEPH_ELASTICSEARCH_URI", "http://localhost:9200")
 ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 30)
 
+# Number of replicas to maintain. '2' means 3 overall copies.
+INDEX_REPLICAS = env.to_int("ALEPH_INDEX_REPLICAS", 0)
 INDEX_PREFIX = env.get("ALEPH_INDEX_PREFIX", APP_NAME)
 INDEX_WRITE = env.get("ALEPH_INDEX_WRITE", "v1")
 INDEX_READ = env.to_list("ALEPH_INDEX_READ", [INDEX_WRITE])

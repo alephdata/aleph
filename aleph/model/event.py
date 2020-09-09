@@ -82,7 +82,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # CREATE ENTITYSET
     CREATE_ENTITYSET = Event(
-        title=lazy_gettext("New list"),
+        title=lazy_gettext("New diagram or list"),
         template=lazy_gettext("{{actor}} created {{entityset}} in {{collection}}"),
         params={"entityset": EntitySet, "collection": Collection},
         link_to="table",

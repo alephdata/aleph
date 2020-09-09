@@ -177,7 +177,7 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     for _, details in stream:
         if details.get("delete", {}).get("status") == 404:
             continue
-        log.warning("Error during index: %r", details)
+        log.warning("Bulk index error: %r", details)
     # duration = (time() - start_time)
     # log.debug("Bulk write: %.4fs", duration)
 
@@ -272,12 +272,17 @@ def configure_index(index, mapping, settings):
     else:
         log.info("Creating index: %s...", index)
         body = {"settings": settings, "mappings": mapping}
-        res = es.indices.create(index, body=body, ignore=[400])
+        res = es.indices.create(index, body=body)
+        if not _check_response(index, res):
+            return False
         return True
 
 
-def index_settings(shards=5, replicas=2):
+def index_settings(shards=5, replicas=settings.INDEX_REPLICAS):
     """Configure an index in ES with support for text transliteration."""
+    if settings.TESTING:
+        shards = 1
+        replicas = 0
     return {
         "index": {
             "number_of_shards": str(shards),

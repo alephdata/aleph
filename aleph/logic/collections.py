@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from collections import defaultdict
 from servicelayer.jobs import Job
 
 from aleph.core import db, cache
@@ -49,8 +50,33 @@ def refresh_collection(collection_id):
 
 
 def compute_collections():
+    """Update collection caches, including the global stats cache."""
+    authz = Authz.from_role(None)
+    schemata = defaultdict(int)
+    countries = defaultdict(int)
+    categories = defaultdict(int)
+
     for collection in Collection.all():
         compute_collection(collection)
+
+        if authz.can(collection.id, authz.READ):
+            categories[collection.category] += 1
+            things = index.get_collection_things(collection.id)
+            for schema, count in things.items():
+                schemata[schema] += count
+            for country in collection.countries:
+                countries[country] += 1
+
+    log.info("Updating global statistics cache...")
+    data = {
+        "collections": sum(categories.values()),
+        "schemata": dict(schemata),
+        "countries": dict(countries),
+        "categories": dict(categories),
+        "things": sum(schemata.values()),
+    }
+    key = cache.key(cache.STATISTICS)
+    cache.set_complex(key, data, expires=cache.EXPIRE)
 
 
 def compute_collection(collection, force=False, sync=False):
@@ -79,10 +105,12 @@ def aggregate_model(collection, aggregator):
     writer.flush()
 
 
-def index_aggregator(collection, aggregator, entity_ids=None, sync=False):
+def index_aggregator(
+    collection, aggregator, entity_ids=None, skip_errors=False, sync=False
+):
     def _generate():
         idx = 0
-        entities = aggregator.iterate(entity_id=entity_ids)
+        entities = aggregator.iterate(entity_id=entity_ids, skip_errors=skip_errors)
         for idx, proxy in enumerate(entities):
             if idx > 0 and idx % 1000 == 0:
                 log.debug("[%s] Index: %s...", collection, idx)
@@ -103,16 +131,14 @@ def reingest_collection(collection, job_id=None, index=False, flush=True):
         ingest_entity(collection, proxy, job_id=job_id, index=index)
 
 
-def reindex_collection(collection, sync=False, flush=False):
+def reindex_collection(collection, skip_errors=True, sync=False, flush=False):
     """Re-index all entities from the model, mappings and aggregator cache."""
     from aleph.logic.mapping import map_to_aggregator
 
-    if flush:
-        log.debug("[%s] Flushing...", collection)
-        index.delete_entities(collection.id, sync=True)
     aggregator = get_aggregator(collection)
     for mapping in collection.mappings:
         if mapping.disabled:
+            log.debug("[%s] Skip mapping: %r", collection, mapping)
             continue
         try:
             map_to_aggregator(collection, mapping, aggregator)
@@ -120,7 +146,10 @@ def reindex_collection(collection, sync=False, flush=False):
             # More or less ignore broken models.
             log.exception("Failed mapping: %r", mapping)
     aggregate_model(collection, aggregator)
-    index_aggregator(collection, aggregator, sync=sync)
+    if flush:
+        log.debug("[%s] Flushing...", collection)
+        index.delete_entities(collection.id, sync=True)
+    index_aggregator(collection, aggregator, skip_errors=skip_errors, sync=sync)
     compute_collection(collection, force=True)
 
 
@@ -155,3 +184,5 @@ def upgrade_collections():
             delete_collection(collection, keep_metadata=True, sync=True)
         else:
             compute_collection(collection, force=True)
+    # update global cache:
+    compute_collections()

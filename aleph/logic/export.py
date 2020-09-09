@@ -4,10 +4,8 @@ from tempfile import mkdtemp
 import shutil
 import types
 from pprint import pformat  # noqa
-
-import zipstream
 import requests
-import jwt
+import zipstream
 from flask import render_template
 from followthemoney import model
 from followthemoney.export.excel import ExcelExporter
@@ -115,7 +113,9 @@ def complete_export(export_id, file_path=None):
     params = {"export": export}
     role = Role.by_id(export.creator_id)
     publish(
-        Events.COMPLETE_EXPORT, params=params, channels=[role],
+        Events.COMPLETE_EXPORT,
+        params=params,
+        channels=[role],
     )
     send_export_notification(export)
 
@@ -134,7 +134,7 @@ def send_export_notification(export):
         "exports_api.download",
         export_id=export.id,
         _authz=authz,
-        _exp=export.expires_at
+        _expire=export.expires_at,
     )
     params = dict(
         role=role,

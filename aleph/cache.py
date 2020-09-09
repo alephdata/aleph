@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 
 class Cache(object):
     EXPIRE = settings.REDIS_EXPIRE
+    STATISTICS = "statistics"
 
     def __init__(self, kv, expires=None, prefix=None):
         self.kv = kv

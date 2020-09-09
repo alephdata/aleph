@@ -1,7 +1,6 @@
 import logging
 from babel import Locale
 from functools import lru_cache
-from collections import defaultdict
 from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
@@ -10,13 +9,11 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
-from aleph.core import settings, url_for
+from aleph.core import settings, url_for, cache
 from aleph.authz import Authz
 from aleph.model import Collection, Role
-from aleph.logic import resolver
 from aleph.logic.pages import load_pages
 from aleph.logic.util import collection_url
-from aleph.index.collections import get_collection_things
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify, render_xml
@@ -38,9 +35,9 @@ def _metadata_locale(locale):
         auth["oauth_uri"] = url_for("sessions_api.oauth_init")
 
     locales = settings.UI_LANGUAGES
-    locales = {l: Locale(l).get_language_name(l) for l in locales}
+    locales = {loc: Locale(loc).get_language_name(loc) for loc in locales}
 
-    data = {
+    return {
         "status": "ok",
         "maintenance": request.authz.in_maintenance,
         "app": {
@@ -63,12 +60,6 @@ def _metadata_locale(locale):
         "auth": auth,
     }
 
-    if settings.SINGLE_USER:
-        role = Role.load_cli_user()
-        authz = Authz.from_role(role)
-        data["token"] = authz.to_token(role=role)
-    return jsonify(data)
-
 
 @blueprint.route("/api/2/metadata")
 def metadata():
@@ -88,12 +79,18 @@ def metadata():
     """
     request.rate_limit = None
     locale = str(get_locale())
-    return _metadata_locale(locale)
+    data = _metadata_locale(locale)
+    if settings.SINGLE_USER:
+        role = Role.load_cli_user()
+        authz = Authz.from_role(role)
+        data["token"] = authz.to_token(role=role)
+    return jsonify(data)
 
 
 @blueprint.route("/api/openapi.json")
 def openapi():
     """Generate an OpenAPI 3.0 documentation JSON file for the API."""
+    enable_cache(vary_user=False)
     spec = get_openapi_spec(current_app)
     for name, view in current_app.view_functions.items():
         if name in (
@@ -110,12 +107,14 @@ def openapi():
 
 @blueprint.route("/api/2/statistics")
 def statistics():
-    """Get a summary of the data acessible to the current user.
+    """Get a summary of the data acessible to an anonymous user.
+
+    Changed [3.9]: Previously, this would return user-specific stats.
     ---
     get:
       summary: System-wide user statistics.
       description: >
-        Get a summary of the data acessible to the current user.
+        Get a summary of the data acessible to an anonymous user.
       responses:
         '200':
           description: OK
@@ -126,38 +125,11 @@ def statistics():
       tags:
       - System
     """
-    enable_cache()
-    collections = request.authz.collections(request.authz.READ)
-    for collection_id in collections:
-        resolver.queue(request, Collection, collection_id)
-    resolver.resolve(request)
-
-    # Summarise stats. This is meant for display, so the counting is a bit
-    # inconsistent between counting all collections, and source collections
-    # only.
-    schemata = defaultdict(int)
-    countries = defaultdict(int)
-    categories = defaultdict(int)
-    for collection_id in collections:
-        data = resolver.get(request, Collection, collection_id)
-        if data is None or data.get("casefile"):
-            continue
-        categories[data.get("category")] += 1
-        things = get_collection_things(collection_id)
-        for schema, count in things.items():
-            schemata[schema] += count
-        for country in data.get("countries", []):
-            countries[country] += 1
-
-    return jsonify(
-        {
-            "collections": len(collections),
-            "schemata": dict(schemata),
-            "countries": dict(countries),
-            "categories": dict(categories),
-            "things": sum(schemata.values()),
-        }
-    )
+    enable_cache(vary_user=False)
+    key = cache.key(cache.STATISTICS)
+    data = {"countries": [], "schemata": [], "categories": []}
+    data = cache.get_complex(key) or data
+    return jsonify(data)
 
 
 @blueprint.route("/api/2/sitemap.xml")
