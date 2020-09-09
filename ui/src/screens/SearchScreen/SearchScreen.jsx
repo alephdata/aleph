@@ -17,7 +17,6 @@ import EntitySearch from 'components/EntitySearch/EntitySearch';
 import SearchFacets from 'components/Facet/SearchFacets';
 import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
-import SuggestAlert from 'components/SuggestAlert/SuggestAlert';
 import Screen from 'components/Screen/Screen';
 import togglePreview from 'util/togglePreview';
 
@@ -207,7 +206,6 @@ export class SearchScreen extends React.Component {
       <ErrorSection
         icon="search"
         title={intl.formatMessage(messages.no_results_title)}
-        resolver={<SuggestAlert queryText={query.state.q} />}
         description={intl.formatMessage(messages.no_results_description)}
       />
     );

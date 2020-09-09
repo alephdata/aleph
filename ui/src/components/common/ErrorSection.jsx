@@ -31,7 +31,7 @@ export class ErrorSection extends PureComponent {
     const { error, metadata } = this.props;
     const { isOpen } = this.state;
     const {
-      title = '', description = '', icon = 'error', resolver,
+      title = '', description = '', icon = 'error',
     } = this.props;
     const message = error === undefined ? title : error.message;
 
@@ -46,7 +46,6 @@ export class ErrorSection extends PureComponent {
         <div className="ErrorSection">
           <div className="inner-div">
             <NonIdealState
-              action={resolver}
               icon={icon}
               title={message}
               description={description}
