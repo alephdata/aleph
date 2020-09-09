@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import { Button, AnchorButton, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Button, Intent, Tooltip, Position } from '@blueprintjs/core';
 
 import CreateCaseDialog from 'dialogs/CreateCaseDialog/CreateCaseDialog';
 import { selectSession } from 'selectors';
@@ -12,7 +12,6 @@ const messages = defineMessages({
     defaultMessage: 'You must sign in to upload your own data.',
   },
 });
-
 
 class CaseCreateButton extends React.Component {
   constructor(props) {

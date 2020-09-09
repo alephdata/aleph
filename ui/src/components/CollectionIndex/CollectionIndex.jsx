@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -12,13 +11,6 @@ import QueryTags from 'components/QueryTags/QueryTags';
 import CollectionIndexItem from './CollectionIndexItem';
 
 import './CollectionIndex.scss';
-
-const messages = defineMessages({
-  no_results: {
-    id: 'collection.index.no_results',
-    defaultMessage: 'No datasets were found matching this search',
-  },
-});
 
 export class CollectionIndex extends Component {
   constructor(props) {
@@ -68,7 +60,7 @@ export class CollectionIndex extends Component {
   }
 
   renderErrors() {
-    const { emptyText, icon, noResultsText, intl, query, result } = this.props;
+    const { emptyText, icon, noResultsText, query, result } = this.props;
     const hasQuery = query.hasQuery() || query.hasFilter('creator_id');
 
     if (result.isError) {
@@ -144,5 +136,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryCollections }),
-  injectIntl,
 )(CollectionIndex);

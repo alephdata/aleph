@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { AnchorButton, Button, ButtonGroup, Classes } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { ExportButton } from 'components/common';
