@@ -179,7 +179,8 @@ export class SearchScreen extends React.Component {
     const hasExportLink = result && result.total > 0 && result.links && result.links.export;
     const exportLink = !hasExportLink ? null : result.links.export;
     const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
-    const dateFacetDisabled = dateFacetIntervals && (!result.total || dateFacetIntervals.length <= 1);
+    const noResults = !result.isPending && result.total === 0;
+    const dateFacetDisabled = dateFacetIntervals && (noResults || dateFacetIntervals.length <= 1);
 
     const operation = (
       <ButtonGroup>
@@ -261,20 +262,22 @@ export class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             <SignInCallout />
             <div className="SearchScreen__control-bar">
-               <div className="SearchScreen__control-bar__button">
-                <Tooltip
-                  content={intl.formatMessage(dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show)}
-                  disabled={dateFacetDisabled}
-                >
-                  <Button
-                    outlined
-                    icon="calendar"
-                    onClick={this.toggleDateFacet}
-                    disabled={dateFacetDisabled}
-                    active={dateFacetIsOpen}
-                  />
-                </Tooltip>
-               </div>
+                {!noResults && (
+                  <div className="SearchScreen__control-bar__button">
+                    <Tooltip
+                      content={intl.formatMessage(dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show)}
+                      disabled={dateFacetDisabled}
+                    >
+                      <Button
+                        outlined
+                        icon="calendar"
+                        onClick={this.toggleDateFacet}
+                        disabled={dateFacetDisabled}
+                        active={dateFacetIsOpen}
+                      />
+                    </Tooltip>
+                  </div>
+                )}
                <QueryTags query={query} updateQuery={this.updateQuery} />
             </div>
             <DateFacet
