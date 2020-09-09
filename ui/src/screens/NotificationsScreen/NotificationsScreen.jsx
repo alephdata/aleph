@@ -55,10 +55,12 @@ export class NotificationsScreen extends React.Component {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('notifications', location, {}, 'notifications').limit(40);
+
+  const query = Query.fromLocation('notifications', location, {'facet': 'event'}, 'notifications')
+    .limit(40);
+
   return {
     query,
     result: selectNotificationsResult(state, query),

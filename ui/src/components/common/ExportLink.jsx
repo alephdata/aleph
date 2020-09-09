@@ -8,7 +8,6 @@ class ExportLink extends PureComponent {
     const { export_, icon } = this.props;
     const exportSuccess = "successful";
 
-    console.log(export_.export_status);
     const label = (
       <span className="ExportLink">
         <Icon icon={icon} className="left-icon" />
