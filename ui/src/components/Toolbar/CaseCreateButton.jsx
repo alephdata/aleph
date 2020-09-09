@@ -28,7 +28,7 @@ class CaseCreateButton extends React.Component {
   }
 
   render() {
-    const { intl, session } = this.props;
+    const { icon, intl, session, text } = this.props;
     const buttonDisabled = !session.loggedIn;
 
     return (
@@ -38,9 +38,13 @@ class CaseCreateButton extends React.Component {
           position={Position.BOTTOM}
           disabled={!buttonDisabled}
         >
-          <Button onClick={this.toggle} icon="briefcase" intent={Intent.PRIMARY} disabled={buttonDisabled}>
-            <FormattedMessage id="cases.index.create" defaultMessage="New personal dataset" />
-          </Button>
+          <Button
+            onClick={this.toggle}
+            icon={icon}
+            text={text}
+            intent={Intent.PRIMARY}
+            disabled={buttonDisabled}
+          />
         </Tooltip>
         <CreateCaseDialog
           isOpen={this.state.isOpen}

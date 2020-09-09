@@ -33,6 +33,10 @@ const messages = defineMessages({
     id: 'collection.index.empty',
     defaultMessage: 'No datasets were found.',
   },
+  create: {
+    id: 'collection.index.create',
+    defaultMessage: 'New dataset',
+  },
   no_results: {
     id: 'collection.index.no_results',
     defaultMessage: 'No datasets were found matching this query.',
@@ -65,7 +69,10 @@ export class CollectionIndexScreen extends Component {
     const { result, query, intl } = this.props;
     const operation = (
       <ButtonGroup>
-        <CaseCreateButton />
+        <CaseCreateButton
+          icon="database"
+          text={intl.formatMessage(messages.create)}
+        />
       </ButtonGroup>
     );
     const breadcrumbs = (

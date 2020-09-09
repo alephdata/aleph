@@ -23,6 +23,10 @@ const messages = defineMessages({
     id: 'cases.empty',
     defaultMessage: 'You do not have any personal datasets yet.',
   },
+  create: {
+    id: 'cases.create',
+    defaultMessage: 'New personal dataset',
+  },
   placeholder: {
     id: 'cases.placeholder',
     defaultMessage: 'Search personal datasets...',
@@ -65,7 +69,10 @@ export class CasesIndexScreen extends Component {
               />
             </p>
             <div className="Dashboard__actions">
-              <CaseCreateButton />
+              <CaseCreateButton
+                icon="briefcase"
+                text={intl.formatMessage(messages.create)}
+              />
             </div>
           </div>
           <CollectionIndex
