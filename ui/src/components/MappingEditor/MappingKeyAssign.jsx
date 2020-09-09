@@ -125,7 +125,7 @@ export class MappingKeyAssignItem extends Component {
           tagRenderer={item => item}
           onItemSelect={item => onKeyAdd(id, item)}
           selectedItems={keys}
-          itemPredicate={(query, item) => item.includes(query.toLowerCase())}
+          itemPredicate={(query, item) => item.toLowerCase().includes(query.toLowerCase())}
           placeholder={intl.formatMessage(messages.keyAssignPlaceholder)}
           fill
           resetOnSelect

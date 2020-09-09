@@ -19,17 +19,21 @@ const messages = defineMessages({
     id: 'cases.title',
     defaultMessage: 'Personal datasets',
   },
-  no_results_title: {
-    id: 'cases.no_results_title',
+  empty: {
+    id: 'cases.empty',
     defaultMessage: 'You do not have any personal datasets yet.',
+  },
+  create: {
+    id: 'cases.create',
+    defaultMessage: 'New personal dataset',
   },
   placeholder: {
     id: 'cases.placeholder',
     defaultMessage: 'Search personal datasets...',
   },
-  empty: {
-    id: 'cases.empty',
-    defaultMessage: 'No personal datasets were found',
+  no_results: {
+    id: 'cases.no_results',
+    defaultMessage: 'No personal datasets were found matching this query.',
   },
 });
 
@@ -65,15 +69,18 @@ export class CasesIndexScreen extends Component {
               />
             </p>
             <div className="Dashboard__actions">
-              <CaseCreateButton />
+              <CaseCreateButton
+                icon="briefcase"
+                text={intl.formatMessage(messages.create)}
+              />
             </div>
           </div>
           <CollectionIndex
             query={query}
+            icon="briefcase"
             placeholder={intl.formatMessage(messages.placeholder)}
-            noResultsText={intl.formatMessage(messages.no_results_title)}
+            noResultsText={intl.formatMessage(messages.no_results)}
             emptyText={intl.formatMessage(messages.empty)}
-            showCreatedByFilter
           />
         </Dashboard>
       </Screen>

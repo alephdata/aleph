@@ -1,17 +1,23 @@
 import React, { PureComponent } from 'react';
 import { Waypoint } from 'react-waypoint';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteQueryLog, fetchQueryLogs } from 'actions/queryLogsActions';
-import { SearchListings } from 'components/common';
+import { ErrorSection, SearchListings } from 'components/common';
 import { selectQueryLog } from 'selectors';
 import Query from 'app/Query';
 
 import './QueryLogs.scss';
 
+const messages = defineMessages({
+  no_history: {
+    id: 'history.no_history',
+    defaultMessage: 'Your search history is empty.',
+  },
+});
 
 export class QueryLogs extends PureComponent {
   componentDidMount() {
@@ -50,10 +56,16 @@ export class QueryLogs extends PureComponent {
   }
 
   render() {
-    const { result } = this.props;
+    const { intl, result } = this.props;
 
     return (
       <div className="QueryLogs">
+        {!result.isPending && !result.total && (
+          <ErrorSection
+            icon="history"
+            title={intl.formatMessage(messages.no_history)}
+          />
+        )}
         <SearchListings
           listType="search history"
           result={result}

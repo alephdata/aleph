@@ -60,6 +60,10 @@ export class DiagramScreen extends Component {
     this.fetchIfNeeded();
   }
 
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
   onCollectionSearch(queryText) {
     const { history, diagram } = this.props;
     const query = {

@@ -32,7 +32,7 @@ export class CollectionEntitySetsIndexMode extends Component {
 
     return (
       <div>
-        <div style={{ marginBottom: '10px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <EntitySetCreateMenu collection={collection} type={type} />
         </div>
         <EntitySetIndex

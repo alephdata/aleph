@@ -38,10 +38,12 @@ class Notification extends PureComponent {
 
   renderSkeleton = () => (
     <li className="Notification">
+      <div className="notification-action">
+        <Skeleton.Text type="span" length={50} />
+      </div>
       <div className="timestamp">
         <Skeleton.Text type="span" length={15} />
       </div>
-      <Skeleton.Text type="span" length={50} />
     </li>
   )
 

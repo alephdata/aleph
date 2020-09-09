@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -12,13 +11,6 @@ import QueryTags from 'components/QueryTags/QueryTags';
 import CollectionIndexItem from './CollectionIndexItem';
 
 import './CollectionIndex.scss';
-
-const messages = defineMessages({
-  no_results: {
-    id: 'collection.index.no_results',
-    defaultMessage: 'No datasets were found matching this search',
-  },
-});
 
 export class CollectionIndex extends Component {
   constructor(props) {
@@ -68,18 +60,16 @@ export class CollectionIndex extends Component {
   }
 
   renderErrors() {
-    const { emptyText, intl, query, result } = this.props;
-    const hasQuery = query.hasQuery();
+    const { emptyText, icon, noResultsText, query, result } = this.props;
+    const hasQuery = query.hasQuery() || query.hasFilter('creator_id');
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
     }
     if (result.total === 0) {
-      if (hasQuery) {
-        return <ErrorSection icon="shield" title={intl.formatMessage(messages.no_results)} />;
-      }
+      const message = hasQuery ? noResultsText : emptyText;
 
-      return <ErrorSection icon="shield" title={emptyText} />;
+      return <ErrorSection icon={icon} title={message} />;
     }
 
     return null;
@@ -109,7 +99,7 @@ export class CollectionIndex extends Component {
   }
 
   render() {
-    const { placeholder, query, showQueryTags, showCreatedByFilter } = this.props;
+    const { placeholder, query, showQueryTags } = this.props;
 
     return (
       <div className="CollectionIndex">
@@ -123,7 +113,7 @@ export class CollectionIndex extends Component {
           <SortingBar
             query={query}
             updateQuery={this.updateQuery}
-            showCreatedByFilter={showCreatedByFilter}
+            showCreatedByFilter
           />
           {showQueryTags && (
             <QueryTags query={query} updateQuery={this.updateQuery} />
@@ -146,5 +136,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryCollections }),
-  injectIntl,
 )(CollectionIndex);
