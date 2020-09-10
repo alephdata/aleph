@@ -8,8 +8,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build development image
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
-          docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
+          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/aleph-ui:latest -t alephdata/aleph-ui:${GITHUB_SHA} ui
           docker tag alephdata/aleph-ui:${GITHUB_SHA} alephdata/aleph-ui:latest
       - name: Build production image
         run: |
@@ -23,8 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build docker image
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
-          docker build -t alephdata/ingest-file:${GITHUB_SHA} services/ingest-file
+          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/ingest-file:latest -t alephdata/ingest-file:${GITHUB_SHA} services/ingest-file
           docker tag alephdata/ingest-file:${GITHUB_SHA} alephdata/ingest-file:latest
       - name: Push docker image (hash)
         run: |
@@ -35,8 +39,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build docker image
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
-          docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:${GITHUB_SHA} .
+          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/aleph:latest -t alephdata/aleph:${GITHUB_SHA} .
           docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
       - name: Push docker image (hash)
         run: |
