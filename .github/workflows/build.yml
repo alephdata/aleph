@@ -15,7 +15,7 @@ jobs:
           docker tag alephdata/aleph-ui:${GITHUB_SHA} alephdata/aleph-ui:latest
       - name: Build production image
         run: |
-          docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
+          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/aleph-ui:latest -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
       - name: Push docker image (hash)
         run: |
           docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
