@@ -46,7 +46,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # CREATE COLLECTION
     CREATE_COLLECTION = Event(
-        title=lazy_gettext("New dataset"),
+        title=lazy_gettext("New datasets"),
         template=lazy_gettext("{{actor}} created {{collection}}"),
         params={"collection": Collection},
         link_to="collection",
@@ -54,7 +54,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # UPLOAD DOCUMENT
     INGEST_DOCUMENT = Event(
-        title=lazy_gettext("Document upload"),
+        title=lazy_gettext("Document uploads"),
         template=lazy_gettext("{{actor}} added {{document}} to {{collection}}"),
         params={"document": Entity, "collection": Collection},
         link_to="document",
@@ -82,7 +82,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # CREATE ENTITYSET
     CREATE_ENTITYSET = Event(
-        title=lazy_gettext("New diagram or list"),
+        title=lazy_gettext("New diagrams and lists"),
         template=lazy_gettext("{{actor}} created {{entityset}} in {{collection}}"),
         params={"entityset": EntitySet, "collection": Collection},
         link_to="table",
@@ -90,7 +90,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # ALERT MATCH
     MATCH_ALERT = Event(
-        title=lazy_gettext("Search alert notification"),
+        title=lazy_gettext("Alert notifications"),
         template=lazy_gettext("{{entity}} matches your alert for {{alert}}"),  # noqa
         params={"entity": Entity, "alert": Alert, "role": Role},
         link_to="entity",
