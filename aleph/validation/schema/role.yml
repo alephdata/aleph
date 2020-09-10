@@ -51,7 +51,7 @@ RoleUpdate:
 Role:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     name:
       type: string
@@ -81,9 +81,9 @@ Role:
       format: locale
     type:
       enum:
-      - user
-      - group
-      - system
+        - user
+        - group
+        - system
       type: string
       readOnly: true
     writeable:

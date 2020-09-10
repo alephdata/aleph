@@ -8,7 +8,6 @@ Login:
       example: user@example.org
     password:
       type: string
-      minLength: 3
 
 SystemStatusResponse:
   type: object
@@ -20,18 +19,17 @@ SystemStatusResponse:
       items:
         type: object
         allOf:
-        - $ref: '#/components/schemas/CollectionStatus'
+          - $ref: "#/components/schemas/CollectionStatus"
         properties:
           id:
             type: string
           collection:
-            $ref: '#/components/schemas/Collection'
-
+            $ref: "#/components/schemas/Collection"
 
 Notification:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     actor_id:
       type: integer
