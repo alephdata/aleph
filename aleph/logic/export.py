@@ -45,14 +45,12 @@ def write_document(zip_archive, collection, entity):
     name = "{0}-{1}".format(entity.id, name)
     path = os.path.join(collection.get("label"), name)
     content_hash = entity.first("contentHash")
-    url = archive.generate_url(content_hash)
-    if url is not None:
-        stream = requests.get(url, stream=True)
-        zip_archive.write_iter(path, stream.iter_content())
-    else:
+    try:
         local_path = archive.load_file(content_hash)
         if local_path is not None:
             zip_archive.write(local_path, arcname=path)
+    finally:
+        archive.cleanup_file(content_hash)
 
 
 def export_entities(export_id, result):
@@ -113,9 +111,7 @@ def complete_export(export_id, file_path=None):
     params = {"export": export}
     role = Role.by_id(export.creator_id)
     publish(
-        Events.COMPLETE_EXPORT,
-        params=params,
-        channels=[role],
+        Events.COMPLETE_EXPORT, params=params, channels=[role],
     )
     send_export_notification(export)
 
