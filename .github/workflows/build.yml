@@ -7,6 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+        with:
+          key: aleph-ui-docker-cache-${GITHUB_REF}-{hash}
+          restore-keys: |
+            aleph-ui-docker-cache-${GITHUB_REF}-
+            aleph-ui-docker-cache-
       - name: Build development image
         run: |
           docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
