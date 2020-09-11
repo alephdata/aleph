@@ -8,14 +8,12 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build development image
-        env:
-          DOCKER_BUILDKIT: 1
         run: |
-          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/aleph-ui:latest -t alephdata/aleph-ui:${GITHUB_SHA} ui
+          docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
           docker tag alephdata/aleph-ui:${GITHUB_SHA} alephdata/aleph-ui:latest
       - name: Build production image
         run: |
-          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/aleph-ui:latest -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
+          docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
       - name: Push docker image (hash)
         run: |
           docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
@@ -45,10 +43,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build docker image
-        env:
-          DOCKER_BUILDKIT: 1
         run: |
-          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/aleph:latest -t alephdata/aleph:${GITHUB_SHA} .
+          docker build -t alephdata/aleph:${GITHUB_SHA} .
           docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
       - name: Push docker image (hash)
         run: |
