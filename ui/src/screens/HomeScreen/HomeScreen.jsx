@@ -75,7 +75,7 @@ export class HomeScreen extends Component {
       <Screen
         isHomepage
         title={intl.formatMessage(messages.title)}
-        description={metadata.app.description}
+        description={description}
       >
         <div className="HomeScreen">
           <section className="HomeScreen__section title-section">

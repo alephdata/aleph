@@ -29,7 +29,6 @@ TESTING = False
 # General instance information
 
 APP_TITLE = env.get("ALEPH_APP_TITLE", lazy_gettext("Aleph"))
-APP_DESCRIPTION = env.get("ALEPH_APP_DESCRIPTION", "The global archive of material for investigative reporting.")
 APP_NAME = env.get("ALEPH_APP_NAME", "aleph")
 APP_UI_URL = env.get("ALEPH_UI_URL", "http://localhost:8080/")
 APP_LOGO = env.get("ALEPH_LOGO", "/static/logo.png")
@@ -37,10 +36,6 @@ APP_FAVICON = env.get("ALEPH_FAVICON", "/static/favicon.png")
 
 # Show a system-wide banner in the user interface.
 APP_BANNER = env.get("ALEPH_APP_BANNER")
-
-# Shown on the home page as a few sample queries:
-SAMPLE_SEARCHES = [lazy_gettext("TeliaSonera"), lazy_gettext("Vladimir Putin")]
-SAMPLE_SEARCHES = env.to_list("ALEPH_SAMPLE_SEARCHES", SAMPLE_SEARCHES)
 
 # Force HTTPS here:
 FORCE_HTTPS = env.to_bool("ALEPH_FORCE_HTTPS", False)
