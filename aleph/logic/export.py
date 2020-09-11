@@ -1,10 +1,10 @@
 import os
-import logging
-from tempfile import mkdtemp
-import shutil
 import types
+import shutil
+import logging
+import zipfile
 from pprint import pformat  # noqa
-import zipstream
+from tempfile import mkdtemp
 from flask import render_template
 from followthemoney import model
 from followthemoney.helpers import entity_filename
@@ -38,7 +38,7 @@ def get_export(export_id):
     return data
 
 
-def write_document(export_dir, zip_archive, collection, entity):
+def write_document(export_dir, zf, collection, entity):
     content_hash = entity.first("contentHash", quiet=True)
     if content_hash is None:
         return
@@ -48,7 +48,7 @@ def write_document(export_dir, zip_archive, collection, entity):
     try:
         local_path = archive.load_file(content_hash, temp_path=export_dir)
         if local_path is not None and os.path.exists(local_path):
-            zip_archive.write(local_path, arcname=arcname)
+            zf.write(local_path, arcname=arcname)
     finally:
         archive.cleanup_file(content_hash, temp_path=export_dir)
 
@@ -66,21 +66,17 @@ def export_entities(export_id, result):
         resolver.resolve(stub)
 
         file_path = export_dir.joinpath("query-export.zip")
-        zip_archive = zipstream.ZipFile()
+        zf = zipfile.ZipFile(file_path, "w")
         exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
         for entity in entities:
             collection_id = entity.context.get("collection_id")
             collection = resolver.get(stub, Collection, collection_id)
             extra = [entity_url(entity.id), collection.get("label")]
             exporter.write(entity, extra=extra)
-            write_document(export_dir, zip_archive, collection, entity)
-        content = exporter.get_bytesio()
-        zip_archive.write_iter("Export.xlsx", content)
-
-        with open(file_path, "wb") as zf:
-            for data in zip_archive:
-                zf.write(data)
-
+            write_document(export_dir, zf, collection, entity)
+        content = exporter.get_bytesio().getvalue()
+        zf.writestr("Export.xlsx", content)
+        zf.close()
         complete_export(export_id, file_path)
     except Exception:
         log.exception("Failed to process export [%s]", export_id)
