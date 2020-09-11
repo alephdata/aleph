@@ -24,11 +24,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+        with:
+          key: ingest-file-docker-cache-${GITHUB_REF}-{hash}
+          restore-keys: |
+            ingest-file-docker-cache-${GITHUB_REF}-
+            ingest-file-docker-cache-
       - name: Build docker image
-        env:
-          DOCKER_BUILDKIT: 1
         run: |
-          docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from alephdata/ingest-file:latest -t alephdata/ingest-file:${GITHUB_SHA} services/ingest-file
+          docker build -t alephdata/ingest-file:${GITHUB_SHA} services/ingest-file
           docker tag alephdata/ingest-file:${GITHUB_SHA} alephdata/ingest-file:latest
       - name: Push docker image (hash)
         run: |
