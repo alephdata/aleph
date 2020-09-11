@@ -11,7 +11,7 @@ from followthemoney.exc import InvalidData
 from followthemoney.helpers import name_entity
 from servicelayer.archive.util import ensure_path
 
-from aleph.core import es
+from aleph.core import es, db
 from aleph.model import Collection, Entity, Role, Export
 from aleph.authz import Authz
 from aleph.logic import resolver
@@ -180,42 +180,47 @@ def export_matches(collection_id, export_id):
     """Export the top N matches of cross-referencing for the given collection
     to an Excel formatted export."""
     export = Export.by_id(export_id)
-    role = Role.by_id(export.creator_id)
-    authz = Authz.from_role(role)
-    collection = Collection.by_id(collection_id)
-    export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
-    file_name = "%s - Crossreference.xlsx" % collection.label
-    file_path = export_dir.joinpath(file_name)
     try:
-        excel = ExcelWriter()
-        headers = [
-            "Score",
-            "Entity Name",
-            "Entity Date",
-            "Entity Countries",
-            "Candidate Collection",
-            "Candidate Name",
-            "Candidate Date",
-            "Candidate Countries",
-            "Entity Link",
-            "Candidate Link",
-        ]
-        sheet = excel.make_sheet("Cross-reference", headers)
-        batch = []
+        role = Role.by_id(export.creator_id)
+        authz = Authz.from_role(role)
+        collection = Collection.by_id(collection_id)
+        export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
+        file_name = "%s - Crossreference.xlsx" % collection.label
+        file_path = export_dir.joinpath(file_name)
+        try:
+            excel = ExcelWriter()
+            headers = [
+                "Score",
+                "Entity Name",
+                "Entity Date",
+                "Entity Countries",
+                "Candidate Collection",
+                "Candidate Name",
+                "Candidate Date",
+                "Candidate Countries",
+                "Entity Link",
+                "Candidate Link",
+            ]
+            sheet = excel.make_sheet("Cross-reference", headers)
+            batch = []
 
-        for match in iter_matches(collection, authz):
-            batch.append(match)
-            if len(batch) >= BULK_PAGE:
+            for match in iter_matches(collection, authz):
+                batch.append(match)
+                if len(batch) >= BULK_PAGE:
+                    _iter_match_batch(excel, sheet, batch)
+                    batch = []
+            if len(batch):
                 _iter_match_batch(excel, sheet, batch)
-                batch = []
-        if len(batch):
-            _iter_match_batch(excel, sheet, batch)
 
-        with open(file_path, "wb") as fp:
-            buffer = excel.get_bytesio()
-            for data in buffer:
-                fp.write(data)
+            with open(file_path, "wb") as fp:
+                buffer = excel.get_bytesio()
+                for data in buffer:
+                    fp.write(data)
 
-        complete_export(export_id, file_path)
-    finally:
-        shutil.rmtree(export_dir)
+            complete_export(export_id, file_path)
+        finally:
+            shutil.rmtree(export_dir)
+    except Exception:
+        export = Export.by_id(export_id)
+        export.set_status(status=Export.STATUS_FAILED)
+        db.session.commit()
