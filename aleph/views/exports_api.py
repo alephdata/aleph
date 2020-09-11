@@ -1,7 +1,8 @@
+from datetime import datetime
 import logging
 
-from flask import Blueprint, request, redirect, send_file, Response
-from werkzeug.exceptions import NotFound, Forbidden
+from flask import Blueprint, request, redirect, send_file
+from werkzeug.exceptions import NotFound
 
 from aleph.core import archive
 from aleph.model import Export
@@ -74,13 +75,14 @@ def download(export_id):
     """
     require(request.authz.logged_in)
     export = obj_or_404(Export.by_id(export_id, role_id=request.authz.id))
+    expires_after = export.expires_at - datetime.utcnow()
     url = archive.generate_publication_url(
-            export.namespace,
-            export.content_hash,
-            mime_type=export.mime_type,
-            expire=export.expires_at,
-            attachment_name=export.file_name,
-        )
+        export.namespace,
+        export.content_hash,
+        mime_type=export.mime_type,
+        expire=expires_after.total_seconds(),
+        attachment_name=export.file_name,
+    )
     if url is not None:
         return redirect(url)
     local_path = archive.load_publication(export.namespace, export.content_hash)
