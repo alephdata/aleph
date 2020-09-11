@@ -7,6 +7,7 @@ from pprint import pformat  # noqa
 import zipstream
 from flask import render_template
 from followthemoney import model
+from followthemoney.helpers import entity_filename
 from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import ensure_path
 
@@ -37,19 +38,19 @@ def get_export(export_id):
     return data
 
 
-def write_document(zip_archive, collection, entity):
-    if not entity.has("contentHash", quiet=True):
+def write_document(export_dir, zip_archive, collection, entity):
+    content_hash = entity.first("contentHash", quiet=True)
+    if content_hash is None:
         return
-    name = entity.first("fileName") or entity.caption
-    name = "{0}-{1}".format(entity.id, name)
-    path = os.path.join(collection.get("label"), name)
-    content_hash = entity.first("contentHash")
+    file_name = entity_filename(entity)
+    arcname = "{0}-{1}".format(entity.id, file_name)
+    arcname = os.path.join(collection.get("label"), arcname)
     try:
-        local_path = archive.load_file(content_hash)
-        if local_path is not None:
-            zip_archive.write(local_path, arcname=path)
+        local_path = archive.load_file(content_hash, temp_path=export_dir)
+        if local_path is not None and os.path.exists(local_path):
+            zip_archive.write(local_path, arcname=arcname)
     finally:
-        archive.cleanup_file(content_hash)
+        archive.cleanup_file(content_hash, temp_path=export_dir)
 
 
 def export_entities(export_id, result):
@@ -72,7 +73,7 @@ def export_entities(export_id, result):
             collection = resolver.get(stub, Collection, collection_id)
             extra = [entity_url(entity.id), collection.get("label")]
             exporter.write(entity, extra=extra)
-            write_document(zip_archive, collection, entity)
+            write_document(export_dir, zip_archive, collection, entity)
         content = exporter.get_bytesio()
         zip_archive.write_iter("Export.xlsx", content)
 
