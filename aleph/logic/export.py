@@ -84,10 +84,12 @@ def export_entities(export_id, result):
             complete_export(export_id, file_path)
         finally:
             shutil.rmtree(export_dir)
-    except Exception:
+    except Exception as exc:
         export = Export.by_id(export_id)
         export.set_status(status=Export.STATUS_FAILED)
         db.session.commit()
+        log.error("Failed to process export [%s]: %s", export_id, exc)
+        raise exc
 
 
 def create_export(
