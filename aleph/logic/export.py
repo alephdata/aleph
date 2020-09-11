@@ -53,43 +53,41 @@ def write_document(zip_archive, collection, entity):
 
 
 def export_entities(export_id, result):
-    try:
-        from aleph.logic import resolver
+    from aleph.logic import resolver
 
+    export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
+    try:
         entities = []
         stub = types.SimpleNamespace(result=result)
         for entity in result["results"]:
             resolver.queue(stub, Collection, entity.get("collection_id"))
             entities.append(model.get_proxy(entity))
         resolver.resolve(stub)
-        export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
+
         file_path = export_dir.joinpath("query-export.zip")
+        zip_archive = zipstream.ZipFile()
+        exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
+        for entity in entities:
+            collection_id = entity.context.get("collection_id")
+            collection = resolver.get(stub, Collection, collection_id)
+            extra = [entity_url(entity.id), collection.get("label")]
+            exporter.write(entity, extra=extra)
+            write_document(zip_archive, collection, entity)
+        content = exporter.get_bytesio()
+        zip_archive.write_iter("Export.xlsx", content)
 
-        try:
-            zip_archive = zipstream.ZipFile()
-            exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
-            for entity in entities:
-                collection_id = entity.context.get("collection_id")
-                collection = resolver.get(stub, Collection, collection_id)
-                extra = [entity_url(entity.id), collection.get("label")]
-                exporter.write(entity, extra=extra)
-                write_document(zip_archive, collection, entity)
-            content = exporter.get_bytesio()
-            zip_archive.write_iter("Export.xlsx", content)
+        with open(file_path, "wb") as zf:
+            for data in zip_archive:
+                zf.write(data)
 
-            with open(file_path, "wb") as zf:
-                for data in zip_archive:
-                    zf.write(data)
-
-            complete_export(export_id, file_path)
-        finally:
-            shutil.rmtree(export_dir)
-    except Exception as exc:
+        complete_export(export_id, file_path)
+    except Exception:
+        log.exception("Failed to process export [%s]", export_id)
         export = Export.by_id(export_id)
         export.set_status(status=Export.STATUS_FAILED)
         db.session.commit()
-        log.error("Failed to process export [%s]: %s", export_id, exc)
-        raise exc
+    finally:
+        shutil.rmtree(export_dir)
 
 
 def create_export(
@@ -117,7 +115,9 @@ def complete_export(export_id, file_path=None):
     params = {"export": export}
     role = Role.by_id(export.creator_id)
     publish(
-        Events.COMPLETE_EXPORT, params=params, channels=[role],
+        Events.COMPLETE_EXPORT,
+        params=params,
+        channels=[role],
     )
     send_export_notification(export)
 
