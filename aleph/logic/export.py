@@ -4,7 +4,6 @@ from tempfile import mkdtemp
 import shutil
 import types
 from pprint import pformat  # noqa
-import requests
 import zipstream
 from flask import render_template
 from followthemoney import model
@@ -54,36 +53,41 @@ def write_document(zip_archive, collection, entity):
 
 
 def export_entities(export_id, result):
-    from aleph.logic import resolver
-
-    entities = []
-    stub = types.SimpleNamespace(result=result)
-    for entity in result["results"]:
-        resolver.queue(stub, Collection, entity.get("collection_id"))
-        entities.append(model.get_proxy(entity))
-    resolver.resolve(stub)
-    export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
-    file_path = export_dir.joinpath("query-export.zip")
-
     try:
-        zip_archive = zipstream.ZipFile()
-        exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
-        for entity in entities:
-            collection_id = entity.context.get("collection_id")
-            collection = resolver.get(stub, Collection, collection_id)
-            extra = [entity_url(entity.id), collection.get("label")]
-            exporter.write(entity, extra=extra)
-            write_document(zip_archive, collection, entity)
-        content = exporter.get_bytesio()
-        zip_archive.write_iter("Export.xlsx", content)
+        from aleph.logic import resolver
 
-        with open(file_path, "wb") as zf:
-            for data in zip_archive:
-                zf.write(data)
+        entities = []
+        stub = types.SimpleNamespace(result=result)
+        for entity in result["results"]:
+            resolver.queue(stub, Collection, entity.get("collection_id"))
+            entities.append(model.get_proxy(entity))
+        resolver.resolve(stub)
+        export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
+        file_path = export_dir.joinpath("query-export.zip")
 
-        complete_export(export_id, file_path)
-    finally:
-        shutil.rmtree(export_dir)
+        try:
+            zip_archive = zipstream.ZipFile()
+            exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
+            for entity in entities:
+                collection_id = entity.context.get("collection_id")
+                collection = resolver.get(stub, Collection, collection_id)
+                extra = [entity_url(entity.id), collection.get("label")]
+                exporter.write(entity, extra=extra)
+                write_document(zip_archive, collection, entity)
+            content = exporter.get_bytesio()
+            zip_archive.write_iter("Export.xlsx", content)
+
+            with open(file_path, "wb") as zf:
+                for data in zip_archive:
+                    zf.write(data)
+
+            complete_export(export_id, file_path)
+        finally:
+            shutil.rmtree(export_dir)
+    except Exception:
+        export = Export.by_id(export_id)
+        export.set_status(status=Export.STATUS_FAILED)
+        db.session.commit()
 
 
 def create_export(
