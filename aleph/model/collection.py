@@ -165,8 +165,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         countries = [registry.country.clean(c) for c in countries]
         data["countries"] = [c for c in countries if c is not None]
         languages = ensure_list(self.languages)
-        languages = [registry.language.clean(l) for l in languages]
-        data["languages"] = [l for l in languages if l is not None]
+        languages = [registry.language.clean(c) for c in languages]
+        data["languages"] = [c for c in languages if c is not None]
         data.update(
             {
                 "id": stringify(self.id),

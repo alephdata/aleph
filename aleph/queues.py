@@ -2,11 +2,8 @@ import logging
 
 from servicelayer.rate_limit import RateLimit
 from servicelayer.jobs import Job, Dataset
-from servicelayer.cache import make_key
 
 from aleph.core import kv, settings
-from aleph.model import Collection
-from aleph.authz import Authz
 
 log = logging.getLogger(__name__)
 
@@ -21,19 +18,29 @@ OP_FLUSH_MAPPING = "flushmapping"
 OP_EXPORT_SEARCH_RESULTS = "exportsearch"
 OP_EXPORT_XREF_RESULTS = "exportxref"
 
-ROLE_PREFIX = "role_id"
-COLLECTION_PREFIX = "collection"
+NO_COLLECTION = "null"
+
+
+def dataset_from_collection(collection):
+    """servicelayer dataset from a collection"""
+    if collection is None:
+        return NO_COLLECTION
+    return str(collection.id)
+
+
+def get_dataset_collection_id(dataset):
+    """Invert the servicelayer dataset into a collection ID"""
+    if dataset == NO_COLLECTION:
+        return None
+    return int(dataset)
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
 
 
-def get_stage(dataset, stage, job_id=None):
-    if isinstance(dataset, Collection):
-        dataset = sla_dataset_from_collection(dataset)
-    elif isinstance(dataset, Authz):
-        dataset = sla_dataset_from_role(dataset.id)
+def get_stage(collection, stage, job_id=None):
+    dataset = dataset_from_collection(collection)
     job_id = job_id or Job.random_id()
     job = Job(kv, dataset, job_id)
     return job.get_stage(stage)
@@ -50,7 +57,7 @@ def queue_task(dataset, stage, job_id=None, payload=None, context=None):
 
 
 def get_status(collection):
-    dataset = sla_dataset_from_collection(collection)
+    dataset = dataset_from_collection(collection)
     return Dataset(kv, dataset).get_status()
 
 
@@ -60,7 +67,7 @@ def get_active_dataset_status():
 
 
 def cancel_queue(collection):
-    dataset = sla_dataset_from_collection(collection)
+    dataset = dataset_from_collection(collection)
     Dataset(kv, dataset).cancel()
 
 
@@ -80,13 +87,3 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
         "pipeline": pipeline,
     }
     stage.queue(proxy.to_dict(), context)
-
-
-def sla_dataset_from_role(role_id):
-    """servicelayer dataset from role_id"""
-    return make_key(ROLE_PREFIX, role_id)
-
-
-def sla_dataset_from_collection(collection):
-    """servicelayer dataset from a collection"""
-    return make_key(COLLECTION_PREFIX, collection.foreign_id)

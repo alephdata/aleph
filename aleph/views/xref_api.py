@@ -9,12 +9,7 @@ from aleph.index.xref import get_xref
 from aleph.logic.profiles import decide_xref, pairwise_decisions
 from aleph.logic.export import create_export
 from aleph.views.serializers import XrefSerializer
-from aleph.queues import (
-    queue_task,
-    sla_dataset_from_role,
-    OP_XREF,
-    OP_EXPORT_XREF_RESULTS,
-)
+from aleph.queues import queue_task, OP_XREF, OP_EXPORT_XREF_RESULTS
 from aleph.views.util import (
     get_db_collection,
     get_index_collection,
@@ -148,8 +143,7 @@ def export(collection_id):
         "collection_id": collection_id,
         "export_id": export.id,
     }
-    dataset = sla_dataset_from_role(request.authz.id)
-    queue_task(dataset, OP_EXPORT_XREF_RESULTS, job_id=job_id, payload=payload)
+    queue_task(None, OP_EXPORT_XREF_RESULTS, job_id=job_id, payload=payload)
     return ("", 202)
 
 

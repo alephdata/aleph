@@ -22,7 +22,7 @@ from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
-from aleph.queues import queue_task, OP_EXPORT_SEARCH_RESULTS, sla_dataset_from_role
+from aleph.queues import queue_task, OP_EXPORT_SEARCH_RESULTS
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)
@@ -139,7 +139,9 @@ def index():
     links = {}
     if request.authz.logged_in and result.total <= MAX_PAGE:
         query = list(request.args.items(multi=True))
-        links["export"] = url_for("entities_api.export", _authz=request.authz, _query=query)
+        links["export"] = url_for(
+            "entities_api.export", _authz=request.authz, _query=query
+        )
     return EntitySerializer.jsonify_result(result, extra={"links": links})
 
 
@@ -182,8 +184,7 @@ def export():
         "export_id": export.id,
         "result": result.to_dict(),
     }
-    dataset = sla_dataset_from_role(request.authz.id)
-    queue_task(dataset, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
+    queue_task(None, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
     return ("", 202)
 
 

@@ -2,7 +2,7 @@ import logging
 from flask import Blueprint, request
 
 from aleph.model import Collection
-from aleph.queues import get_active_dataset_status
+from aleph.queues import get_active_dataset_status, get_dataset_collection_id
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import jsonify, require
 
@@ -31,18 +31,19 @@ def status():
     require(request.authz.logged_in)
     request.rate_limit = None
     status = get_active_dataset_status()
-    active_collections = status.pop("datasets", {})
-    active_foreign_ids = set(active_collections.keys())
-    collections = request.authz.collections(request.authz.READ)
+    datasets = status.pop("datasets", {})
+    collections = (get_dataset_collection_id(d) for d in datasets.keys())
+    collections = (c for c in collections if c is not None)
+    collections = Collection.all_by_ids(collections, deleted=True).all()
+    collections = {c.id: c for c in collections}
     serializer = CollectionSerializer(reference=True)
     results = []
-    for fid in sorted(active_foreign_ids):
-        collection = Collection.by_foreign_id(fid)
-        if collection is None:
+    for dataset, status in sorted(datasets.items()):
+        collection_id = get_dataset_collection_id(dataset)
+        if not request.authz.can(collection_id, request.authz.READ):
             continue
-        if collection.id in collections:
-            result = active_collections[fid]
-            result["collection"] = serializer.serialize(collection.to_dict())
-            result["id"] = fid
-            results.append(result)
+        collection = collections.get(collection_id)
+        if collection is not None:
+            status["collection"] = serializer.serialize(collection.to_dict())
+        results.append(status)
     return jsonify({"results": results, "total": len(results)})

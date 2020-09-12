@@ -5,7 +5,7 @@ from servicelayer.extensions import get_entry_point
 
 from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
-from aleph.queues import get_rate_limit
+from aleph.queues import get_rate_limit, get_dataset_collection_id
 from aleph.queues import (
     OP_INDEX,
     OP_REINDEX,
@@ -16,7 +16,6 @@ from aleph.queues import (
     OP_LOAD_MAPPING,
     OP_FLUSH_MAPPING,
 )
-from aleph.queues import ROLE_PREFIX, COLLECTION_PREFIX
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
 from aleph.logic.notifications import generate_digest
@@ -72,31 +71,22 @@ class AlephWorker(Worker):
 
     def dispatch_task(self, collection, task):
         handler = get_entry_point("aleph.task_handlers", task.stage.stage)
-        if handler is not None:
-            handler(collection, task)
-            log.info("Task [%s]: %s (done)", task.job.dataset, task.stage.stage)  # noqa
+        if handler is None:
+            log.warning(
+                "Task handler not found for task [%s]: %s",
+                task.job.dataset,
+                task.stage.stage,
+            )
             return
-        log.warning(
-            "Task handler not found for task [%s]: %s",
-            task.job.dataset,
-            task.stage.stage,
-        )
+        handler(collection, task)
+        log.info("Task [%s]: %s (done)", task.job.dataset, task.stage.stage)
 
     def handle(self, task):
         with app.app_context():
-            if task.job.dataset.name.startswith(ROLE_PREFIX):
-                self.dispatch_task(None, task)
-            elif task.job.dataset.name.startswith(COLLECTION_PREFIX):
-                # strip the prefix
-                foreign_id = task.job.dataset.name.split(COLLECTION_PREFIX, 1)[1][1:]
-                collection = Collection.by_foreign_id(foreign_id)
-                if collection is None:
-                    log.error("Collection not found: %s", task.job.dataset)
-                    return
-                self.dispatch_task(collection, task)
-            else:
-                log.error("Unknown dataset type: %s", task.job.dataset)
-                return
+            collection = get_dataset_collection_id(task.job.dataset.name)
+            if collection is not None:
+                collection = Collection.by_id(collection, deleted=True)
+            self.dispatch_task(collection, task)
 
     def cleanup_job(self, job):
         if job.is_done():
