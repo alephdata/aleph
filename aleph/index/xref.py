@@ -32,6 +32,7 @@ def configure_xref():
             "match_collection_id": KEYWORD,
             registry.country.group: KEYWORD,
             "schema": KEYWORD,
+            "method": KEYWORD,
             "text": {"type": "text", "analyzer": "latin_index"},
             "created_at": {"type": "date"},
         },
@@ -42,7 +43,9 @@ def configure_xref():
 
 def _index_form(collection, matches):
     now = datetime.utcnow().isoformat()
-    for (score, entity, match_collection_id, match) in matches:
+    for result in matches:
+        entity = result.entity
+        match = result.match
         xref_id = hash_data((entity.id, collection.id, match.id))
         text = set([entity.caption, match.caption])
         text.update(entity.get_type_values(registry.name)[:MAX_NAMES])
@@ -53,12 +56,13 @@ def _index_form(collection, matches):
             "_id": xref_id,
             "_index": xref_index(),
             "_source": {
-                "score": score,
+                "score": result.score,
                 "entity_id": entity.id,
                 "schema": match.schema.name,
                 "collection_id": collection.id,
                 "match_id": match.id,
-                "match_collection_id": match_collection_id,
+                "match_collection_id": result.match_collection_id,
+                "method": result.method,
                 "countries": list(countries),
                 "text": list(text),
                 "created_at": now,

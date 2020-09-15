@@ -122,6 +122,9 @@ API_RATE_WINDOW = 15  # minutes
 PAGES_PATH = os.path.join(APP_DIR, "pages")
 PAGES_PATH = env.get("ALEPH_PAGES_PATH", PAGES_PATH)
 
+# followthemoney-predict settings
+FOLLOWTHEMONEY_PREDICT_MODEL = "/model.pkl"
+
 ##############################################################################
 # E-mail settings
 

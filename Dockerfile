@@ -1,5 +1,6 @@
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
+ARG FTM_PREDICT_MODEL=https://public.data.occrp.org/develop/models/xref/model.xgboost.58c81d5.pkl
 
 # build-essential 
 RUN apt-get -qq -y update \
@@ -36,6 +37,8 @@ ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
     REDIS_URL=redis://redis:6379/0 \
     ARCHIVE_TYPE=file \
     ARCHIVE_PATH=/data
+
+ADD ${FTM_PREDICT_MODEL} /model.pkl
 
 # Run the green unicorn
 CMD gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file - aleph.manage:app

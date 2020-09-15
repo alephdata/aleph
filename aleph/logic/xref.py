@@ -1,14 +1,16 @@
 import shutil
+from dataclasses import dataclass
 import logging
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
 
-from followthemoney import model
+from followthemoney import model, compare
 from followthemoney.types import registry
-from followthemoney.compare import compare
 from followthemoney.export.excel import ExcelWriter
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import name_entity
+from followthemoney.proxy import EntityProxy
+from followthemoney_predict import xref
 from servicelayer.archive.util import ensure_path
 
 from aleph.core import es, db
@@ -27,11 +29,38 @@ from aleph.index.collections import delete_entities
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
 from aleph.logic.export import complete_export
+from aleph import settings
 
 
 log = logging.getLogger(__name__)
-SCORE_CUTOFF = 0.35
+COMPARE_SCORE_CUTOFF = 0.35
+COMPARE_MODEL = None
+COMPARE_MODEL_NAME = None
 ORIGIN = "xref"
+
+
+@dataclass
+class XrefResult:
+    score: float
+    entity: EntityProxy
+    match_collection_id: str
+    match: EntityProxy
+    method: str
+
+
+def _load_compare_model():
+    global COMPARE_MODEL, COMPARE_MODEL_NAME, COMPARE_SCORE_CUTOFF
+    if COMPARE_MODEL is None:
+        model_name = settings.FOLLOWTHEMONEY_PREDICT_MODEL
+        if model_name is None:
+            COMPARE_MODEL = compare
+            COMPARE_SCORE_CUTOFF = 0.35
+            COMPARE_MODEL_NAME = "ftm.compare"
+        else:
+            model = COMPARE_MODEL = xref.XrefModel.load(model_name)
+            COMPARE_SCORE_CUTOFF = 0.5
+            COMPARE_MODEL_NAME = str(model)
+    return COMPARE_MODEL, COMPARE_MODEL_NAME, COMPARE_SCORE_CUTOFF
 
 
 def _merge_schemata(proxy, schemata):
@@ -53,15 +82,31 @@ def _query_item(entity):
     query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
     index = entities_read_index(schema=list(entity.schema.matchable_schemata))
     result = es.search(index=index, body=query)
+    compare_model, compare_model_name, compare_cutoff = _load_compare_model()
     for result in result.get("hits").get("hits"):
         result = unpack_result(result)
         if result is None:
             continue
         match = model.get_proxy(result)
-        score = compare(model, entity, match)
-        if score >= SCORE_CUTOFF:
-            log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
-            yield score, entity, result.get("collection_id"), match
+        try:
+            score = compare_model.compare(model, entity, match)
+        except InvalidData:
+            continue
+        if score >= compare_cutoff:
+            log.debug(
+                "Match: [%s] %s <[%.2f]> %s",
+                compare_model,
+                entity.caption,
+                score,
+                match.caption,
+            )
+            yield XrefResult(
+                score=score,
+                entity=entity,
+                match_collection_id=result.get("collection_id"),
+                match=match,
+                method=compare_model_name,
+            )
 
 
 def _iter_mentions(collection):
@@ -93,10 +138,10 @@ def _query_mentions(collection):
     for proxy in _iter_mentions(collection):
         schemata = set()
         countries = set()
-        for score, _, collection_id, match in _query_item(proxy):
-            schemata.add(match.schema)
-            countries.update(match.get_type_values(registry.country))
-            yield score, proxy, collection_id, match
+        for result in _query_item(proxy):
+            schemata.add(result.match.schema)
+            countries.update(result.match.get_type_values(registry.country))
+            yield result
         if len(schemata):
             # Assign only those countries that are backed by one of
             # the matches:
