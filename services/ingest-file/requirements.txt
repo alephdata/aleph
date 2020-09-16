@@ -33,7 +33,7 @@ lxml==4.5.2
 olefile==0.46
 pillow==7.2.0
 vobject==0.9.6.1
-msglite==0.27.0
+msglite==0.29.0
 
 cryptography==3.1
 requests[security]==2.24.0

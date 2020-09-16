@@ -34,8 +34,10 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
             msg = "Cannot open message file: %s" % exc
             raise ProcessingException(msg) from exc
 
-        self.extract_olefileio_metadata(msg, entity)
+        self.extract_olefileio_metadata(msg.ole, entity)
+        self.ingest_message(msg, entity)
 
+    def ingest_message(self, msg, entity):
         try:
             self.extract_msg_headers(entity, msg.header)
         except Exception:
@@ -81,11 +83,18 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
 
         self.resolve_message_ids(entity)
         for attachment in msg.attachments:
-            if attachment.type != "data":
-                continue
-            name = stringify(attachment.longFilename)
-            name = name or stringify(attachment.shortFilename)
-            self.ingest_attachment(entity, name, attachment.type, attachment.data)
+            if attachment.type == "msg":
+                child = self.manager.make_entity("Email", parent=entity)
+                child.make_id(entity.id, attachment.data.prefix)
+                child.add("fileName", attachment.longFilename)
+                child.add("fileName", attachment.shortFilename)
+                child.add("mimeType", "application/vnd.ms-outlook")
+                self.ingest_message(attachment.data, child)
+                self.manager.emit_entity(child, fragment=attachment.data.prefix)
+            if attachment.type == "data":
+                name = stringify(attachment.longFilename)
+                name = name or stringify(attachment.shortFilename)
+                self.ingest_attachment(entity, name, attachment.type, attachment.data)
 
     @classmethod
     def match(cls, file_path, entity):
