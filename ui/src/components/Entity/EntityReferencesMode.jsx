@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -115,7 +116,7 @@ class EntityReferencesMode extends React.Component {
       return <ErrorSection icon="graph" title={intl.formatMessage(messages.no_relationships)} />;
     }
     const { property } = reference;
-    const results = ensureArray(result.results);
+    const results = _.uniqBy(ensureArray(result.results), 'id');
     const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
     return (
       <section className="EntityReferencesTable">
