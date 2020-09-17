@@ -168,12 +168,14 @@ a {
 
   &__title {
     font-weight: bold;
+    margin-right: $aleph-grid-size*3;
+    max-width: $aleph-content-width-limit;
 
     &__text {
       display: inline-flex;
 
       .bp3-icon {
-        align-self: center;
+        margin-top: 2px;
       }
     }
   }
@@ -187,6 +189,7 @@ a {
   &__count {
     @include rtl(float, right, left);
     display: block;
+    margin-top: 2px;
   }
 
   &__details {

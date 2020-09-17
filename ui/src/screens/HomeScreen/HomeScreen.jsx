@@ -90,7 +90,7 @@ export class HomeScreen extends Component {
                   placeholder={intl.formatMessage(messages.placeholder, { samples: samplesList })}
                   inputProps={{ large: true, autoFocus: true }}
                 />
-                <div className="HomeScreen__thirds no-wrap">
+                <div className="HomeScreen__thirds">
                   <AnimatedCount
                     count={statistics?.things}
                     isPending={statistics.isPending}
