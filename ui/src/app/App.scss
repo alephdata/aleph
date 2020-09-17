@@ -169,6 +169,7 @@ a {
   &__title {
     font-weight: bold;
     margin-right: $aleph-grid-size*3;
+    max-width: $aleph-content-width-limit;
 
     &__text {
       display: inline-flex;
