@@ -38,13 +38,13 @@ export class DocumentUploadDialog extends Component {
 
     this.state = {
       files: props.filesToUpload || [],
-      uploadCount: 0,
-      currUploading: null,
+      currUploading: false,
+      totalUploadSize: 0,
+      uploadTraces: []
     };
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFilesChange = this.onFilesChange.bind(this);
-    this.incrementProgress = this.incrementProgress.bind(this);
   }
 
   onFilesChange(files) {
@@ -57,21 +57,30 @@ export class DocumentUploadDialog extends Component {
     } = this.props;
 
     const fileTree = convertPathsToTree(files);
+    this.setState({
+      currUploading: true,
+      totalUploadSize: files.reduce((result, file) => result + file.size, 0),
+      uploadTraces: []
+    })
 
     try {
       await this.traverseFileTree(fileTree, parent);
+      this.setState({
+        currUploading: false,
+        files: []
+      });
       showSuccessToast(intl.formatMessage(messages.success));
-      if (onUploadSuccess) onUploadSuccess();
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
     } catch (e) {
+      console.trace(e);
+      this.setState({
+        currUploading: false
+      });
       showErrorToast(intl.formatMessage(messages.error));
     }
-  }
 
-  incrementProgress(file) {
-    this.setState(({ uploadCount }) => ({
-      currUploading: file,
-      uploadCount: uploadCount + 1,
-    }));
   }
 
   async traverseFileTree(tree, parent) {
@@ -82,25 +91,67 @@ export class DocumentUploadDialog extends Component {
           return this.uploadFile(value, parent);
         }
         // recursive case
-        return new Promise((resolve, reject) => {
-          this.uploadFolder(key, parent)
-            .then(async ({ id }) => {
-              if (id) {
-                await this.traverseFileTree(value, { id, foreign_id: key });
-                resolve();
-                return;
-              }
-              reject();
-            });
-        });
+        return this.uploadFolder(key, parent)
+          .then(({ id }) => {
+            if (id) { // id is not existent when folder upload failed
+              return this.traverseFileTree(value, { id, foreign_id: key });
+            }
+          });
       });
 
     await Promise.all(filePromises);
   }
 
-  uploadFile(file, parent) {
+  updateUploadTraces() {
+    this.setState(({ uploadTraces }) => ({
+      uploadTraces: [...uploadTraces]
+    }));
+  }
+
+  addUploadTrace(uploadTrace) {
+    this.setState(({ uploadTraces }) => {
+      const _uploadTraces = [...uploadTraces];
+      _uploadTraces.push(uploadTrace);
+      return {
+        uploadTraces: _uploadTraces
+      }
+    });
+  }
+
+  onFileProgress(uploadTrace, progressEvent) {
+    if (progressEvent.lengthComputable) {
+      uploadTrace.uploaded = progressEvent.loaded;
+      uploadTrace.total = progressEvent.total;
+      this.updateUploadTraces();
+    }
+  }
+
+  doTracedIngest(metadata, file, uploadTrace) {
     const { collection, ingestDocument } = this.props;
-    this.incrementProgress(file.name);
+
+    this.addUploadTrace(uploadTrace);
+    return ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev))
+      .then((result) => {
+        uploadTrace.status = 'done';
+        this.updateUploadTraces();
+        return result;
+      })
+      .catch((e) => {
+        console.error(`failure uploading ${uploadTrace.name}`, e);
+        uploadTrace.status = 'error';
+        this.updateUploadTraces();
+        throw e;
+      });
+  }
+
+  uploadFile(file, parent) {
+    const uploadTrace = {
+      name: file.name,
+      size: file.size,
+      uploaded: 0,
+      total: file.size,
+      status: 'pending'
+    };
 
     const metadata = {
       file_name: file.name,
@@ -109,11 +160,15 @@ export class DocumentUploadDialog extends Component {
     if (parent?.id) {
       metadata.parent_id = parent.id;
     }
-    return ingestDocument(collection.id, metadata, file);
+
+    return this.doTracedIngest(metadata, file, uploadTrace);
   }
 
   uploadFolder(title, parent) {
-    const { collection, ingestDocument } = this.props;
+    const uploadTrace = {
+      name: title,
+      status: 'pending'
+    };
 
     const metadata = {
       file_name: title,
@@ -124,26 +179,23 @@ export class DocumentUploadDialog extends Component {
       metadata.parent_id = parent.id;
     }
 
-    return ingestDocument(collection.id, metadata, null);
+    return this.doTracedIngest(metadata, null, uploadTrace);
   }
 
 
   renderContent() {
-    const { files, uploadCount, currUploading } = this.state;
+    const { files, currUploading, uploadTraces, totalUploadSize } = this.state;
 
     if (currUploading) {
       return (
-        <DocumentUploadStatus
-          percentCompleted={uploadCount / files.length}
-          uploading={currUploading}
-        />
+        <DocumentUploadStatus uploadTraces={uploadTraces} totalUploadSize={totalUploadSize}/>
       );
     }
     if (files && files.length) {
-      return <DocumentUploadView files={files} onSubmit={this.onFormSubmit} />;
+      return <DocumentUploadView files={files} onSubmit={this.onFormSubmit}/>;
     }
 
-    return <DocumentUploadForm onFilesChange={this.onFilesChange} />;
+    return <DocumentUploadForm onFilesChange={this.onFilesChange}/>;
   }
 
   render() {
@@ -164,6 +216,7 @@ export class DocumentUploadDialog extends Component {
     );
   }
 }
+
 const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
 
 export default compose(
