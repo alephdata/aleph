@@ -59,7 +59,8 @@ class RoleList extends PureComponent {
     const { roles, separateItems, truncate = Infinity, truncateItem } = this.props;
     if (!roles) return null;
 
-    let names = roles.map(role => <RoleLink key={role.id} role={role} truncate={truncateItem} {...this.props} />);
+
+    let names = roles.map(role => <RoleLink key={role.id} role={role} truncate={truncateItem} />);
 
     // Truncate if too long
     if (names.length > truncate) {
