@@ -31,7 +31,7 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:d1ce0b9618d588a6600eb0a81ceec1c62172b1ac
+    image: alephdata/convert-document:8b59ebd2737e54e80b8a622580dc02c412dc910d
     read_only: true
     restart: on-failure
     user: app
