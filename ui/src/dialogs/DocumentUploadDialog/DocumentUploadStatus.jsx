@@ -39,12 +39,16 @@ const messages = defineMessages({
   close: {
     id: 'document.upload.close',
     defaultMessage: 'Close',
+  },
+  retry: {
+    id: 'document.upload.retry',
+    defaultMessage: 'Retry',
   }
 });
 
 export class DocumentUploadStatus extends PureComponent {
   render() {
-    const { uploadTraces, uploadMeta, onClose, intl } = this.props;
+    const { uploadTraces, uploadMeta, onClose, onRetry, intl } = this.props;
     const stats = {
       errors: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.ERROR).length,
       filesDone: uploadTraces.filter(trace => trace.type === 'file' && trace.status !== UPLOAD_STATUS.PENDING).length
@@ -81,9 +85,16 @@ export class DocumentUploadStatus extends PureComponent {
             />
           </p>
           <div className="bp3-dialog-footer-actions">
+            {stats.errors > 0 && <Button
+              type="button"
+              intent={Intent.PRIMARY}
+              icon={"repeat"}
+              text={intl.formatMessage(messages.retry)}
+              onClick={onRetry}
+            />}
             <Button
               type="submit"
-              intent={Intent.PRIMARY}
+              intent={stats.errors <= 0 ? Intent.PRIMARY : Intent.NONE}
               icon={"tick"}
               text={intl.formatMessage(messages.close)}
               onClick={onClose}

@@ -32,6 +32,7 @@ export class DocumentUploadDialog extends Component {
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFilesChange = this.onFilesChange.bind(this);
     this.onClose = this.onClose.bind(this);
+    this.onRetry = this.onRetry.bind(this);
   }
 
   onFilesChange(files) {
@@ -54,12 +55,7 @@ export class DocumentUploadDialog extends Component {
     })
 
     await this.traverseFileTree(fileTree, parent);
-
-    this.setState(({ uploadMeta, uploadTraces }) => ({
-      uploadMeta: Object.assign({}, uploadMeta, {
-        status: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.SUCCESS).length > 0 ? UPLOAD_STATUS.SUCCESS : UPLOAD_STATUS.ERROR
-      })
-    }));
+    this.onUploadDone();
   }
 
   onClose() {
@@ -80,6 +76,27 @@ export class DocumentUploadDialog extends Component {
     }
   }
 
+  onRetry() {
+    const { uploadTraces, uploadMeta } = this.state;
+    const errorTraces = uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.ERROR);
+    this.setState({
+      uploadMeta: Object.assign({}, uploadMeta, {
+        status: UPLOAD_STATUS.PENDING
+      }),
+      uploadTraces: uploadTraces.filter(trace => trace.status !== UPLOAD_STATUS.ERROR)
+    });
+    Promise.all(errorTraces.map(trace => trace.retryFn()))
+      .then(() => this.onUploadDone());
+  }
+
+  onUploadDone() {
+    this.setState(({ uploadMeta, uploadTraces }) => ({
+      uploadMeta: Object.assign({}, uploadMeta, {
+        status: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.SUCCESS).length > 0 ? UPLOAD_STATUS.SUCCESS : UPLOAD_STATUS.ERROR
+      })
+    }));
+  }
+
   async traverseFileTree(tree, parent) {
     const filePromises = Object.entries(tree)
       .map(([key, value]) => {
@@ -88,12 +105,7 @@ export class DocumentUploadDialog extends Component {
           return this.uploadFile(value, parent);
         }
         // recursive case
-        return this.uploadFolder(key, parent)
-          .then(result => {
-            if (result?.id) { // id is not existent when folder upload failed
-              return this.traverseFileTree(value, { id: result.id, foreign_id: key });
-            }
-          });
+        return this.uploadFolderRecursive(key, parent, value);
       });
 
     await Promise.all(filePromises);
@@ -123,7 +135,7 @@ export class DocumentUploadDialog extends Component {
     }
   }
 
-  doTracedIngest(metadata, file, uploadTrace) {
+  doTracedIngest(metadata, file, uploadTrace, retryFn) {
     const { collection, ingestDocument } = this.props;
 
     this.addUploadTrace(uploadTrace);
@@ -136,6 +148,7 @@ export class DocumentUploadDialog extends Component {
       .catch((e) => {
         console.error(`failure uploading ${uploadTrace.name}`, e);
         uploadTrace.status = UPLOAD_STATUS.ERROR;
+        uploadTrace.retryFn = retryFn;
         this.updateUploadTraces();
       });
   }
@@ -158,10 +171,11 @@ export class DocumentUploadDialog extends Component {
       metadata.parent_id = parent.id;
     }
 
-    return this.doTracedIngest(metadata, file, uploadTrace);
+    const retryFn = () => this.uploadFile(file, parent);
+    return this.doTracedIngest(metadata, file, uploadTrace, retryFn);
   }
 
-  uploadFolder(title, parent) {
+  uploadFolder(title, parent, retryFn) {
     const uploadTrace = {
       name: title,
       type: 'directory',
@@ -177,16 +191,26 @@ export class DocumentUploadDialog extends Component {
       metadata.parent_id = parent.id;
     }
 
-    return this.doTracedIngest(metadata, null, uploadTrace);
+    return this.doTracedIngest(metadata, null, uploadTrace, retryFn);
   }
 
+  uploadFolderRecursive(title, parent, childTree) {
+    const retryFn = () => this.uploadFolderRecursive(title, parent, childTree);
+    return this.uploadFolder(title, parent, retryFn)
+      .then(result => {
+        if (result?.id) { // id is not existent when folder upload failed
+          return this.traverseFileTree(childTree, { id: result.id, foreign_id: title });
+        }
+      });
+  }
 
   renderContent() {
     const { files, uploadTraces, uploadMeta } = this.state;
 
     if (uploadMeta) {
       return (
-        <DocumentUploadStatus uploadTraces={uploadTraces} uploadMeta={uploadMeta} onClose={this.onClose} />
+        <DocumentUploadStatus uploadTraces={uploadTraces} uploadMeta={uploadMeta} onClose={this.onClose}
+                              onRetry={this.onRetry}/>
       );
     }
     if (files && files.length) {
