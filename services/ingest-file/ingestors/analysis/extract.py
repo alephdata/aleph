@@ -48,6 +48,9 @@ def _load_model(lang):
 def get_models(entity):
     """Iterate over the NER models applicable to the given entity."""
     languages = entity.get_type_values(registry.language)
+    if settings.NER_DISABLE.intersection(languages):
+        log.debug("NER disabled for: %r", languages)
+        return []
     models = []
     for lang in languages:
         if lang in settings.NER_MODELS:
