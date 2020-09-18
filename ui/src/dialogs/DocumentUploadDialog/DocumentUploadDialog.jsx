@@ -6,12 +6,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { ingestDocument as ingestDocumentAction } from 'actions';
-import { showErrorToast, showSuccessToast } from 'app/toast';
 import convertPathsToTree from 'util/convertPathsToTree';
 import DocumentUploadForm from './DocumentUploadForm';
-import DocumentUploadStatus from './DocumentUploadStatus';
+import DocumentUploadStatus, { UPLOAD_STATUS } from './DocumentUploadStatus';
 import DocumentUploadView from './DocumentUploadView';
-
 
 import './DocumentUploadDialog.scss';
 
@@ -20,31 +18,20 @@ const messages = defineMessages({
   title: {
     id: 'document.upload.title',
     defaultMessage: 'Upload Documents',
-  },
-  success: {
-    id: 'document.upload.success',
-    defaultMessage: 'Documents are being processed...',
-  },
-  error: {
-    id: 'document.upload.error',
-    defaultMessage: 'There was an error while uploading the file.',
-  },
+  }
 });
-
 
 export class DocumentUploadDialog extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       files: props.filesToUpload || [],
-      currUploading: false,
-      totalUploadSize: 0,
+      uploadMeta: null,
       uploadTraces: []
     };
-
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFilesChange = this.onFilesChange.bind(this);
+    this.onClose = this.onClose.bind(this);
   }
 
   onFilesChange(files) {
@@ -53,34 +40,44 @@ export class DocumentUploadDialog extends Component {
 
   async onFormSubmit(files) {
     const {
-      intl, onUploadSuccess, parent,
+      parent,
     } = this.props;
 
     const fileTree = convertPathsToTree(files);
     this.setState({
-      currUploading: true,
-      totalUploadSize: files.reduce((result, file) => result + file.size, 0),
+      uploadMeta: {
+        totalUploadSize: files.reduce((result, file) => result + file.size, 0),
+        totalFiles: files.length,
+        status: UPLOAD_STATUS.PENDING
+      },
       uploadTraces: []
     })
 
-    try {
-      await this.traverseFileTree(fileTree, parent);
-      this.setState({
-        currUploading: false,
-        files: []
-      });
-      showSuccessToast(intl.formatMessage(messages.success));
-      if (onUploadSuccess) {
-        onUploadSuccess();
-      }
-    } catch (e) {
-      console.trace(e);
-      this.setState({
-        currUploading: false
-      });
-      showErrorToast(intl.formatMessage(messages.error));
-    }
+    await this.traverseFileTree(fileTree, parent);
 
+    this.setState(({ uploadMeta, uploadTraces }) => ({
+      uploadMeta: Object.assign({}, uploadMeta, {
+        status: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.SUCCESS).length > 0 ? UPLOAD_STATUS.SUCCESS : UPLOAD_STATUS.ERROR
+      })
+    }));
+  }
+
+  onClose() {
+    const { toggleDialog, isOpen, onUploadSuccess } = this.props;
+    const { uploadDone } = this.state;
+
+    this.setState({
+      files: [],
+      uploadTraces: [],
+      uploadMeta: null
+    });
+
+    if (uploadDone) {
+      onUploadSuccess();
+    }
+    else if (isOpen) {
+      toggleDialog();
+    }
   }
 
   async traverseFileTree(tree, parent) {
@@ -92,9 +89,9 @@ export class DocumentUploadDialog extends Component {
         }
         // recursive case
         return this.uploadFolder(key, parent)
-          .then(({ id }) => {
-            if (id) { // id is not existent when folder upload failed
-              return this.traverseFileTree(value, { id, foreign_id: key });
+          .then(result => {
+            if (result?.id) { // id is not existent when folder upload failed
+              return this.traverseFileTree(value, { id: result.id, foreign_id: key });
             }
           });
       });
@@ -132,15 +129,14 @@ export class DocumentUploadDialog extends Component {
     this.addUploadTrace(uploadTrace);
     return ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev))
       .then((result) => {
-        uploadTrace.status = 'done';
+        uploadTrace.status = UPLOAD_STATUS.SUCCESS;
         this.updateUploadTraces();
         return result;
       })
       .catch((e) => {
         console.error(`failure uploading ${uploadTrace.name}`, e);
-        uploadTrace.status = 'error';
+        uploadTrace.status = UPLOAD_STATUS.ERROR;
         this.updateUploadTraces();
-        throw e;
       });
   }
 
@@ -148,9 +144,10 @@ export class DocumentUploadDialog extends Component {
     const uploadTrace = {
       name: file.name,
       size: file.size,
+      type: 'file',
       uploaded: 0,
       total: file.size,
-      status: 'pending'
+      status: UPLOAD_STATUS.PENDING
     };
 
     const metadata = {
@@ -167,7 +164,8 @@ export class DocumentUploadDialog extends Component {
   uploadFolder(title, parent) {
     const uploadTrace = {
       name: title,
-      status: 'pending'
+      type: 'directory',
+      status: UPLOAD_STATUS.PENDING
     };
 
     const metadata = {
@@ -184,11 +182,11 @@ export class DocumentUploadDialog extends Component {
 
 
   renderContent() {
-    const { files, currUploading, uploadTraces, totalUploadSize } = this.state;
+    const { files, uploadTraces, uploadMeta } = this.state;
 
-    if (currUploading) {
+    if (uploadMeta) {
       return (
-        <DocumentUploadStatus uploadTraces={uploadTraces} totalUploadSize={totalUploadSize}/>
+        <DocumentUploadStatus uploadTraces={uploadTraces} uploadMeta={uploadMeta} onClose={this.onClose} />
       );
     }
     if (files && files.length) {
@@ -199,7 +197,7 @@ export class DocumentUploadDialog extends Component {
   }
 
   render() {
-    const { intl, toggleDialog, isOpen } = this.props;
+    const { intl, isOpen } = this.props;
 
     return (
       <Dialog
@@ -207,7 +205,7 @@ export class DocumentUploadDialog extends Component {
         className="DocumentUploadDialog"
         isOpen={isOpen}
         title={intl.formatMessage(messages.title)}
-        onClose={toggleDialog}
+        onClose={this.onClose}
       >
         <div className={Classes.DIALOG_BODY}>
           {this.renderContent()}
