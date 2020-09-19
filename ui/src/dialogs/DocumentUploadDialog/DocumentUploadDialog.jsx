@@ -101,11 +101,15 @@ export class DocumentUploadDialog extends Component {
   }
 
   onUploadDone() {
-    this.setState(({ uploadMeta, uploadTraces }) => ({
-      uploadMeta: Object.assign({}, uploadMeta, {
-        status: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.SUCCESS).length > 0 ? UPLOAD_STATUS.SUCCESS : UPLOAD_STATUS.ERROR
-      })
-    }));
+    this.setState(({ uploadMeta, uploadTraces }) => {
+      if (uploadMeta) { // on cancellation uploadMeta could be none, as it takes a while to cancel all requests
+        return {
+          uploadMeta: Object.assign({}, uploadMeta, {
+            status: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.SUCCESS).length > 0 ? UPLOAD_STATUS.SUCCESS : UPLOAD_STATUS.ERROR
+          })
+        }
+      }
+    });
   }
 
   async traverseFileTree(tree, parent) {
