@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import {
   Classes, Dialog,
 } from '@blueprintjs/core';
@@ -45,11 +46,12 @@ export class DocumentUploadDialog extends Component {
     } = this.props;
 
     const fileTree = convertPathsToTree(files);
-    this.setState({
+    await this.setState({
       uploadMeta: {
         totalUploadSize: files.reduce((result, file) => result + file.size, 0),
         totalFiles: files.length,
-        status: UPLOAD_STATUS.PENDING
+        status: UPLOAD_STATUS.PENDING,
+        cancelSource: axios.CancelToken.source()
       },
       uploadTraces: []
     })
@@ -61,6 +63,10 @@ export class DocumentUploadDialog extends Component {
   onClose() {
     const { toggleDialog, isOpen, onUploadSuccess } = this.props;
     const { uploadMeta } = this.state;
+
+    if (uploadMeta?.status === UPLOAD_STATUS.PENDING) {
+      this.onCancel();
+    }
 
     if (uploadMeta && uploadMeta.status !== UPLOAD_STATUS.PENDING) {
       onUploadSuccess();
@@ -76,17 +82,22 @@ export class DocumentUploadDialog extends Component {
     });
   }
 
-  onRetry() {
+  async onRetry() {
     const { uploadTraces, uploadMeta } = this.state;
     const errorTraces = uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.ERROR);
-    this.setState({
+    await this.setState({
       uploadMeta: Object.assign({}, uploadMeta, {
         status: UPLOAD_STATUS.PENDING
       }),
       uploadTraces: uploadTraces.filter(trace => trace.status !== UPLOAD_STATUS.ERROR)
     });
-    Promise.all(errorTraces.map(trace => trace.retryFn()))
+    return Promise.all(errorTraces.map(trace => trace.retryFn()))
       .then(() => this.onUploadDone());
+  }
+
+  onCancel() {
+    const { uploadMeta } = this.state;
+    uploadMeta.cancelSource.cancel();
   }
 
   onUploadDone() {
@@ -137,9 +148,10 @@ export class DocumentUploadDialog extends Component {
 
   doTracedIngest(metadata, file, uploadTrace, retryFn) {
     const { collection, ingestDocument } = this.props;
+    const { uploadMeta } = this.state;
 
     this.addUploadTrace(uploadTrace);
-    return ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev))
+    return ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev), uploadMeta.cancelSource.token)
       .then((result) => {
         uploadTrace.status = UPLOAD_STATUS.SUCCESS;
         this.updateUploadTraces();

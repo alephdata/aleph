@@ -3,7 +3,7 @@ import asyncActionCreator from './asyncActionCreator';
 
 
 export const ingestDocument = asyncActionCreator(
-  (collectionId, metadata, file, onUploadProgress) => async () => {
+  (collectionId, metadata, file, onUploadProgress, cancelToken) => async () => {
     const formData = new FormData();
     if (file) {
       formData.append('file', file);
@@ -15,6 +15,7 @@ export const ingestDocument = asyncActionCreator(
         'content-type': 'multipart/form-data',
       },
       params: { sync: true },
+      cancelToken
     };
     const response = await endpoint.post(`collections/${collectionId}/ingest`, formData, config);
     return { ...response.data };
