@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Intent, ProgressBar } from '@blueprintjs/core';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { ProgressBar } from '@blueprintjs/core';
 import DocumentUploadTrace from './DocumentUploadTrace';
 
 import './DocumentUploadStatus.scss';
+import DocumentUploadActionsDone from "./DocumentUploadActionsDone";
+import DocumentUploadActionsPending from "./DocumentUploadActionsPending";
 
 export const UPLOAD_STATUS = {
   "PENDING": 1,
@@ -35,20 +37,9 @@ function computePercentCompleted(uploadTraces, uploadMeta) {
   }, 0);
 }
 
-const messages = defineMessages({
-  close: {
-    id: 'document.upload.close',
-    defaultMessage: 'Close',
-  },
-  retry: {
-    id: 'document.upload.retry',
-    defaultMessage: 'Retry',
-  }
-});
-
 export class DocumentUploadStatus extends PureComponent {
   render() {
-    const { uploadTraces, uploadMeta, onClose, onRetry, intl } = this.props;
+    const { uploadTraces, uploadMeta, onClose, onRetry } = this.props;
     const stats = {
       errors: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.ERROR).length,
       filesDone: uploadTraces.filter(trace => trace.type === 'file' && trace.status !== UPLOAD_STATUS.PENDING).length
@@ -75,32 +66,11 @@ export class DocumentUploadStatus extends PureComponent {
           />
         </p>
         <ul className={"bp3-list-unstyled DocumentUploadStatus__list"}>
-          {uploadTraces.map((trace, index) => <DocumentUploadTrace trace={trace} key={index} />)}
+          {uploadTraces.map((trace, index) => <DocumentUploadTrace trace={trace} key={index}/>)}
         </ul>
-        {uploadMeta.status !== UPLOAD_STATUS.PENDING && <section>
-          <p>
-            <FormattedMessage
-              id="document.upload.notice"
-              defaultMessage="The upload is complete. It will take a few moments for the documents to be processed and become searchable."
-            />
-          </p>
-          <div className="bp3-dialog-footer-actions">
-            {stats.errors > 0 && <Button
-              type="button"
-              intent={Intent.PRIMARY}
-              icon={"repeat"}
-              text={intl.formatMessage(messages.retry)}
-              onClick={onRetry}
-            />}
-            <Button
-              type="submit"
-              intent={stats.errors <= 0 ? Intent.PRIMARY : Intent.NONE}
-              icon={"tick"}
-              text={intl.formatMessage(messages.close)}
-              onClick={onClose}
-            />
-          </div>
-        </section>}
+
+        {uploadMeta.status === UPLOAD_STATUS.PENDING && <DocumentUploadActionsPending onClose={onClose} />}
+        {uploadMeta.status !== UPLOAD_STATUS.PENDING && <DocumentUploadActionsDone stats={stats} onRetry={onRetry} onClose={onClose} />}
       </div>
     );
   }

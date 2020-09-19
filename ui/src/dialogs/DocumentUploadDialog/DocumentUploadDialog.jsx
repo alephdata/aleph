@@ -60,20 +60,20 @@ export class DocumentUploadDialog extends Component {
 
   onClose() {
     const { toggleDialog, isOpen, onUploadSuccess } = this.props;
-    const { uploadDone } = this.state;
+    const { uploadMeta } = this.state;
+
+    if (uploadMeta && uploadMeta.status !== UPLOAD_STATUS.PENDING) {
+      onUploadSuccess();
+    }
+    else if (isOpen) {
+      toggleDialog();
+    }
 
     this.setState({
       files: [],
       uploadTraces: [],
       uploadMeta: null
     });
-
-    if (uploadDone) {
-      onUploadSuccess();
-    }
-    else if (isOpen) {
-      toggleDialog();
-    }
   }
 
   onRetry() {
@@ -222,12 +222,17 @@ export class DocumentUploadDialog extends Component {
 
   render() {
     const { intl, isOpen } = this.props;
+    const { uploadMeta } = this.state;
+    const closeable = uploadMeta?.status !== UPLOAD_STATUS.PENDING;
 
     return (
       <Dialog
         icon="upload"
         className="DocumentUploadDialog"
         isOpen={isOpen}
+        canEscapeKeyClose={closeable}
+        canOutsideClickClose={closeable}
+        isCloseButtonShown={closeable}
         title={intl.formatMessage(messages.title)}
         onClose={this.onClose}
       >

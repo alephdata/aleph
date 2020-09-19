@@ -2,9 +2,7 @@ import React from 'react';
 import { Spinner, Icon } from "@blueprintjs/core";
 import { UPLOAD_STATUS } from "./DocumentUploadStatus";
 
-export default function DocumentUploadTrace(props) {
-  const { trace } = props;
-
+export default function DocumentUploadTrace({ trace }) {
   const renderStatus = () => {
     if (trace.status === UPLOAD_STATUS.PENDING) {
       if (trace.uploaded > 0) {
