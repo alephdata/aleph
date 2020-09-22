@@ -35,6 +35,7 @@ cryptography==3.1
 requests[security]==2.24.0
 urllib3==1.25.10
 tabulate==0.8.7
+zipstream-new==1.1.8
 
 # Testing dependencies
 factory-boy==3.0.1

@@ -2,7 +2,7 @@ import os
 import types
 import shutil
 import logging
-import zipfile
+import zipstream
 from pprint import pformat  # noqa
 from tempfile import mkdtemp
 from flask import render_template
@@ -38,7 +38,7 @@ def get_export(export_id):
     return data
 
 
-def write_document(export_dir, zf, collection, entity):
+def write_document(export_dir, zf, collection, entity, fp):
     content_hash = entity.first("contentHash", quiet=True)
     if content_hash is None:
         return
@@ -49,6 +49,8 @@ def write_document(export_dir, zf, collection, entity):
         local_path = archive.load_file(content_hash, temp_path=export_dir)
         if local_path is not None and os.path.exists(local_path):
             zf.write(local_path, arcname=arcname)
+            for data in zf.flush():
+                fp.write(data)
     finally:
         archive.cleanup_file(content_hash, temp_path=export_dir)
 
@@ -66,17 +68,20 @@ def export_entities(export_id, result):
         resolver.resolve(stub)
 
         file_path = export_dir.joinpath("query-export.zip")
-        zf = zipfile.ZipFile(file_path, "w")
-        exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
-        for entity in entities:
-            collection_id = entity.context.get("collection_id")
-            collection = resolver.get(stub, Collection, collection_id)
-            extra = [entity_url(entity.id), collection.get("label")]
-            exporter.write(entity, extra=extra)
-            write_document(export_dir, zf, collection, entity)
-        content = exporter.get_bytesio().getvalue()
-        zf.writestr("Export.xlsx", content)
-        zf.close()
+        with open(file_path, "wb") as fp:
+            zf = zipstream.ZipFile(mode="w")
+            exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
+            for entity in entities:
+                collection_id = entity.context.get("collection_id")
+                collection = resolver.get(stub, Collection, collection_id)
+                extra = [entity_url(entity.id), collection.get("label")]
+                exporter.write(entity, extra=extra)
+                write_document(export_dir, zf, collection, entity, fp)
+
+            content = exporter.get_bytesio()
+            zf.write_iter("Export.xlsx", content)
+            for data in zf:
+                fp.write(data)
         complete_export(export_id, file_path)
     except Exception:
         log.exception("Failed to process export [%s]", export_id)
@@ -112,9 +117,7 @@ def complete_export(export_id, file_path=None):
     params = {"export": export}
     role = Role.by_id(export.creator_id)
     publish(
-        Events.COMPLETE_EXPORT,
-        params=params,
-        channels=[role],
+        Events.COMPLETE_EXPORT, params=params, channels=[role],
     )
     send_export_notification(export)
 
