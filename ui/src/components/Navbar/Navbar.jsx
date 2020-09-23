@@ -81,7 +81,7 @@ export class Navbar extends React.Component {
                     className="Navbar__search-container__search-tips bp3-fixed"
                     icon="help"
                     minimal
-                    onClick={this.props.onToggleSearchTips}
+                    onClick={this.props.onToggleAdvancedSearch}
                   />
                 </div>
               </div>
