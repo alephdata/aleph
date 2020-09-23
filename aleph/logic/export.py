@@ -13,7 +13,7 @@ from servicelayer.archive.util import ensure_path
 
 from aleph.core import archive, db, cache, url_for, settings
 from aleph.authz import Authz
-from aleph.model import Collection, Export, Events, Role
+from aleph.model import Collection, Export, Events, Role, Status
 from aleph.logic.util import entity_url, ui_url
 from aleph.logic.notifications import publish
 from aleph.logic.mail import email_role
@@ -86,7 +86,7 @@ def export_entities(export_id, result):
     except Exception:
         log.exception("Failed to process export [%s]", export_id)
         export = Export.by_id(export_id)
-        export.set_status(status=Export.STATUS_FAILED)
+        export.set_status(status=Status.FAILED)
         db.session.commit()
     finally:
         shutil.rmtree(export_dir)
@@ -108,16 +108,17 @@ def create_export(
     return export
 
 
-def complete_export(export_id, file_path=None):
+def complete_export(export_id, file_path):
     export = Export.by_id(export_id)
-    if file_path:
-        export.set_filepath(file_path)
+    export.set_filepath(file_path)
     export.publish()
     db.session.commit()
     params = {"export": export}
     role = Role.by_id(export.creator_id)
     publish(
-        Events.COMPLETE_EXPORT, params=params, channels=[role],
+        Events.COMPLETE_EXPORT,
+        params=params,
+        channels=[role],
     )
     send_export_notification(export)
 

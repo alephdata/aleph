@@ -3,14 +3,13 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from normality import stringify, safe_filename
-from flask_babel import lazy_gettext
 from sqlalchemy.dialects.postgresql import JSONB
 from servicelayer.archive.util import checksum, ensure_path
 from servicelayer.cache import make_key
 
 from aleph.core import db, archive
 from aleph.model import Role, Collection
-from aleph.model.common import IdModel, DatedModel
+from aleph.model.common import IdModel, DatedModel, Status
 
 log = logging.getLogger(__name__)
 
@@ -18,24 +17,13 @@ log = logging.getLogger(__name__)
 class Export(db.Model, IdModel, DatedModel):
     """A data export run in the background. The data is stored in a cloud
     storage bucket and the user is given a link to download the data. The link
-    expires after a fixed duration and the exported data is deleted. """
+    expires after a fixed duration and the exported data is deleted."""
 
     MAX_FILE_SIZE = 10 * 1024 * 1024 * 1024  # 10 GB
-    STATUS_PENDING = "pending"
-    STATUS_SUCCESSFUL = "successful"
-    STATUS_FAILED = "failed"
-    EXPORT_STATUS = {
-        STATUS_PENDING: lazy_gettext("pending"),
-        STATUS_SUCCESSFUL: lazy_gettext("successful"),
-        STATUS_FAILED: lazy_gettext("failed"),
-    }
-    DEFAULT_STATUS = STATUS_PENDING
     DEFAULT_EXPIRATION = timedelta(days=30)  # After 30 days
 
     label = db.Column(db.Unicode)
-
     operation = db.Column(db.Unicode)
-
     creator_id = db.Column(db.Integer, db.ForeignKey("role.id"))
     creator = db.relationship(Role, backref=db.backref("exports", lazy="dynamic"))
     collection_id = db.Column(
@@ -47,7 +35,7 @@ class Export(db.Model, IdModel, DatedModel):
 
     expires_at = db.Column(db.DateTime, default=None, nullable=True)
     deleted = db.Column(db.Boolean, default=False)
-    export_status = db.Column(db.Unicode, default=DEFAULT_STATUS)
+    status = db.Column("export_status", db.Unicode, default=Status.DEFAULT)
 
     content_hash = db.Column(db.Unicode(65), index=True, nullable=True)
     file_size = db.Column(db.BigInteger, nullable=True)  # In bytes
@@ -57,8 +45,6 @@ class Export(db.Model, IdModel, DatedModel):
 
     def to_dict(self):
         data = self.to_dict_dates()
-        if self.export_status in self.EXPORT_STATUS:
-            data["export_status"] = self.EXPORT_STATUS.get(self.export_status)
         data.update(
             {
                 "id": stringify(self.id),
@@ -68,7 +54,7 @@ class Export(db.Model, IdModel, DatedModel):
                 "collection_id": self.collection_id,
                 "expires_at": self.expires_at,
                 "deleted": self.deleted,
-                "export_status": self.export_status,
+                "status": Status.LABEL.get(self.status),
                 "content_hash": self.content_hash,
                 "file_size": self.file_size,
                 "file_name": self.file_name,
@@ -115,9 +101,9 @@ class Export(db.Model, IdModel, DatedModel):
         self._file_path.rename(path)
         try:
             archive.publish(self.namespace, path, self.mime_type)
-            self.set_status(status=Export.STATUS_SUCCESSFUL)
+            self.set_status(status=Status.SUCCESS)
         except Exception as ex:
-            self.set_status(status=Export.STATUS_FAILED)
+            self.set_status(status=Status.FAILED)
             raise ex
 
     def set_filepath(self, file_path):
@@ -130,9 +116,8 @@ class Export(db.Model, IdModel, DatedModel):
         self.content_hash = checksum(file_path)
 
     def set_status(self, status):
-        if status in self.EXPORT_STATUS:
-            self.export_status = status
-            db.session.add(self)
+        self.status = status
+        db.session.add(self)
 
     def delete_publication(self):
         if self._should_delete_publication():
@@ -167,7 +152,7 @@ class Export(db.Model, IdModel, DatedModel):
         if role_id is not None:
             q = q.filter(cls.creator_id == role_id)
         if not deleted:
-            q = q.filter(cls.deleted == False)
+            q = q.filter(cls.deleted == False)  # noqa
         return q.first()
 
     @classmethod
@@ -175,7 +160,7 @@ class Export(db.Model, IdModel, DatedModel):
         q = cls.all()
         q = q.filter(cls.creator_id == role_id)
         if not deleted:
-            q = q.filter(cls.deleted == False)
+            q = q.filter(cls.deleted == False)  # noqa
         q = q.order_by(cls.created_at.desc())
         return q
 

@@ -105,7 +105,10 @@ class MappingAPITest(TestCase):
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json
 
-        url = "/api/2/collections/%s/mappings/%s/trigger" % (col_id, mapping_id,)
+        url = "/api/2/collections/%s/mappings/%s/trigger" % (
+            col_id,
+            mapping_id,
+        )
         res = self.client.post(url, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.post(url, headers=self.headers)
@@ -115,7 +118,7 @@ class MappingAPITest(TestCase):
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "Mapping")
-        assert res.json["last_run_status"] == "success", res.json
+        assert res.json["last_run_status"] == "successful", res.json
         assert "last_run_err_msg" not in res.json, res.json
 
         origin = "mapping%%3A%s" % mapping_id
@@ -130,7 +133,10 @@ class MappingAPITest(TestCase):
         assert person.get("proof")[0].get("id") == self.ent.id, person
 
         # test deleting loaded entities
-        url = "/api/2/collections/%s/mappings/%s/flush" % (col_id, mapping_id,)
+        url = "/api/2/collections/%s/mappings/%s/flush" % (
+            col_id,
+            mapping_id,
+        )
         res = self.client.post(url, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.post(url, headers=self.headers)
@@ -169,7 +175,10 @@ class MappingAPITest(TestCase):
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json
 
-        url = "/api/2/collections/%s/mappings/%s/trigger" % (col_id, mapping_id,)
+        url = "/api/2/collections/%s/mappings/%s/trigger" % (
+            col_id,
+            mapping_id,
+        )
         res = self.client.post(url, headers=self.headers)
         res = self.client.get(index_url, headers=self.headers)
         assert res.json["total"] == 15, res.json

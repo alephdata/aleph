@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
 from aleph.core import db
-from aleph.model import Mapping
+from aleph.model import Mapping, Status
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
@@ -169,7 +169,8 @@ def view(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/<int:collection_id>/mappings/<int:mapping_id>", methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>",
+    methods=["POST", "PUT"],
 )
 def update(collection_id, mapping_id):
     """Update the mapping with id `mapping_id`.
@@ -222,7 +223,8 @@ def update(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/<int:collection_id>/mappings/<int:mapping_id>", methods=["DELETE"],
+    "/<int:collection_id>/mappings/<int:mapping_id>",
+    methods=["DELETE"],
 )
 def delete(collection_id, mapping_id):
     """Delete a mapping.
@@ -261,7 +263,8 @@ def delete(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/<int:collection_id>/mappings/<int:mapping_id>/trigger", methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>/trigger",
+    methods=["POST", "PUT"],
 )
 def trigger(collection_id, mapping_id):
     """Load entities by running the mapping with id `mapping_id`. Flushes
@@ -296,7 +299,7 @@ def trigger(collection_id, mapping_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.disabled = False
-    mapping.set_status(Mapping.PENDING)
+    mapping.set_status(Status.PENDING)
     db.session.commit()
     job_id = get_session_id()
     payload = {"mapping_id": mapping.id}
@@ -306,7 +309,8 @@ def trigger(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/<int:collection_id>/mappings/<int:mapping_id>/flush", methods=["POST", "PUT"],
+    "/<int:collection_id>/mappings/<int:mapping_id>/flush",
+    methods=["POST", "PUT"],
 )
 def flush(collection_id, mapping_id):
     """Flush all entities loaded by mapping with id `mapping_id`.

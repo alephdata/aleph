@@ -12,7 +12,7 @@ from followthemoney.helpers import name_entity
 from servicelayer.archive.util import ensure_path
 
 from aleph.core import es, db
-from aleph.model import Collection, Entity, Role, Export
+from aleph.model import Collection, Entity, Role, Export, Status
 from aleph.authz import Authz
 from aleph.logic import resolver
 from aleph.logic.collections import reindex_collection
@@ -220,7 +220,7 @@ def export_matches(collection_id, export_id):
     except Exception:
         log.exception("Failed to process export [%s]", export_id)
         export = Export.by_id(export_id)
-        export.set_status(status=Export.STATUS_FAILED)
+        export.set_status(status=Status.FAILED)
         db.session.commit()
     finally:
         shutil.rmtree(export_dir)

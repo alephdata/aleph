@@ -1,7 +1,8 @@
 import uuid
 import logging
-from datetime import datetime, date
 from sqlalchemy import false
+from datetime import datetime, date
+from flask_babel import lazy_gettext
 
 from aleph.core import db
 
@@ -98,3 +99,16 @@ class SoftDeleteModel(DatedModel):
         pq = pq.filter(cls.deleted_at != None)  # noqa
         log.info("[%s]: %d deleted objects", cls.__name__, pq.count())
         pq.delete(synchronize_session=False)
+
+
+class Status(object):
+    PENDING = "pending"
+    SUCCESS = "success"
+    FAILED = "failed"
+    DEFAULT = PENDING
+
+    LABEL = {
+        PENDING: lazy_gettext("pending"),
+        SUCCESS: lazy_gettext("successful"),
+        FAILED: lazy_gettext("failed"),
+    }

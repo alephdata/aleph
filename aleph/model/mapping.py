@@ -2,12 +2,12 @@ import logging
 from datetime import datetime
 from normality import stringify
 from sqlalchemy.dialects.postgresql import JSONB
-from flask_babel import lazy_gettext
 
 from aleph.core import db
 from aleph.model import Role, Collection
 from aleph.model.entityset import EntitySet
-from aleph.model.common import iso_text, DatedModel, ENTITY_ID_LEN
+from aleph.model.common import iso_text, DatedModel, Status
+from aleph.model.common import ENTITY_ID_LEN
 
 
 log = logging.getLogger(__name__)
@@ -17,15 +17,6 @@ class Mapping(db.Model, DatedModel):
     """A mapping to load entities from a table"""
 
     __tablename__ = "mapping"
-
-    FAILED = "failed"
-    SUCCESS = "success"
-    PENDING = "pending"
-    STATUS = {
-        SUCCESS: lazy_gettext("success"),
-        FAILED: lazy_gettext("failed"),
-        PENDING: lazy_gettext("pending"),
-    }
 
     id = db.Column(db.Integer, primary_key=True)
     query = db.Column("query", JSONB)
@@ -48,7 +39,7 @@ class Mapping(db.Model, DatedModel):
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
     disabled = db.Column(db.Boolean, nullable=True)
-    last_run_status = db.Column(db.Unicode, nullable=True)
+    last_run_status = db.Column(db.Unicode, nullable=True, default=Status.DEFAULT)
     last_run_err_msg = db.Column(db.Unicode, nullable=True)
 
     def get_proxy_context(self):
@@ -76,7 +67,6 @@ class Mapping(db.Model, DatedModel):
 
     def to_dict(self):
         data = self.to_dict_dates()
-        status = self.STATUS.get(self.last_run_status)
         data.update(
             {
                 "id": stringify(self.id),
@@ -85,7 +75,7 @@ class Mapping(db.Model, DatedModel):
                 "collection_id": stringify(self.collection_id),
                 "entityset_id": stringify(self.entityset_id),
                 "table_id": self.table_id,
-                "last_run_status": status,
+                "last_run_status": Status.LABEL.get(self.last_run_status),
                 "last_run_err_msg": self.last_run_err_msg,
             }
         )
