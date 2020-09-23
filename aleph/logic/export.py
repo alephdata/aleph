@@ -96,13 +96,17 @@ def create_export(
     operation,
     role_id,
     label,
-    file_path=None,
-    expires_after=Export.DEFAULT_EXPIRATION,
     collection=None,
     mime_type=None,
+    meta=None,
 ):
     export = Export.create(
-        operation, role_id, label, file_path, expires_after, collection, mime_type
+        operation,
+        role_id,
+        label,
+        collection=collection,
+        mime_type=mime_type,
+        meta=meta,
     )
     db.session.commit()
     return export

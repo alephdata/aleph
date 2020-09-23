@@ -7,7 +7,7 @@ from followthemoney import model
 from pantomime.types import ZIP
 
 from aleph.core import db, url_for
-from aleph.model import QueryLog, Export
+from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
@@ -174,9 +174,6 @@ def export():
         operation=OP_EXPORT_SEARCH_RESULTS,
         role_id=request.authz.id,
         label=label,
-        file_path=None,
-        expires_after=Export.DEFAULT_EXPIRATION,
-        collection=None,
         mime_type=ZIP,
     )
     job_id = get_session_id()

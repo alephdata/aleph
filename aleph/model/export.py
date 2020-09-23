@@ -65,27 +65,17 @@ class Export(db.Model, IdModel, DatedModel):
 
     @classmethod
     def create(
-        cls,
-        operation,
-        role_id,
-        label,
-        file_path=None,
-        expires_after=None,
-        collection=None,
-        mime_type=None,
+        cls, operation, role_id, label, collection=None, mime_type=None, meta=None
     ):
         export = cls()
         export.creator_id = role_id
         export.operation = operation
         export.label = label
-        if file_path is not None:
-            export.set_filepath(file_path)
         if collection is not None:
             export.collection_id = collection.id
         export.mime_type = mime_type
-        export.expires_at = datetime.utcnow() + (
-            expires_after or cls.DEFAULT_EXPIRATION
-        )
+        export.expires_at = datetime.utcnow() + cls.DEFAULT_EXPIRATION
+        export.meta = meta or {}
         db.session.add(export)
         return export
 
