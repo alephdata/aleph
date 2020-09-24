@@ -20,7 +20,7 @@ export class Screen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchTipsOpen: false,
+      advancedSearchOpen: false,
     };
     this.onToggleAdvancedSearch = this.onToggleAdvancedSearch.bind(this);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
@@ -38,7 +38,7 @@ export class Screen extends React.Component {
   }
 
   onToggleAdvancedSearch() {
-    this.setState(({ searchTipsOpen }) => ({ searchTipsOpen: !searchTipsOpen }));
+    this.setState(({ advancedSearchOpen }) => ({ advancedSearchOpen: !advancedSearchOpen }));
   }
 
   toggleAuthentication = event => event.preventDefault();
@@ -70,7 +70,7 @@ export class Screen extends React.Component {
       session, metadata, query, requireSession,
       isHomepage, title, description, className, searchScopes,
     } = this.props;
-    const { searchTipsOpen } = this.state;
+    const { advancedSearchOpen } = this.state;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
@@ -120,7 +120,7 @@ export class Screen extends React.Component {
           />
         )}
         <AdvancedSearch
-          isOpen={searchTipsOpen}
+          isOpen={advancedSearchOpen}
           onToggle={this.onToggleAdvancedSearch}
           navbarRef={this.navbarRef}
         />
