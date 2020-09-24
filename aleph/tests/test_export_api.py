@@ -4,7 +4,6 @@ from aleph.logic.export import (
     create_export,
     complete_export,
 )
-from aleph.model import Export
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
 

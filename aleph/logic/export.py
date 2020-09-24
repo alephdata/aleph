@@ -4,12 +4,14 @@ import shutil
 import logging
 import zipstream
 from pprint import pformat  # noqa
+from pathlib import Path
 from tempfile import mkdtemp
 from flask import render_template
+from normality import safe_filename
 from followthemoney import model
 from followthemoney.helpers import entity_filename
 from followthemoney.export.excel import ExcelExporter
-from servicelayer.archive.util import ensure_path
+from servicelayer.archive.util import checksum, ensure_path
 
 from aleph.core import archive, db, cache, url_for, settings
 from aleph.authz import Authz
@@ -114,8 +116,19 @@ def create_export(
 
 def complete_export(export_id, file_path):
     export = Export.by_id(export_id)
-    export.set_filepath(file_path)
-    export.publish()
+    file_path = ensure_path(file_path)
+    export.file_name = safe_filename(file_path)
+    export.file_size = file_path.stat().st_size
+    export.content_hash = checksum(file_path)
+    path = Path(file_path.parent, export.content_hash)
+    file_path.rename(path)
+    try:
+        archive.publish(export.namespace, path, export.mime_type)
+        export.set_status(status=Status.SUCCESS)
+    except Exception:
+        log.exception("Failed to upload export: %s", export)
+        export.set_status(status=Status.FAILED)
+
     db.session.commit()
     params = {"export": export}
     role = Role.by_id(export.creator_id)

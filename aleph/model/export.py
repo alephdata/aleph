@@ -1,10 +1,8 @@
 import logging
 from datetime import datetime, timedelta
-from pathlib import Path
 
-from normality import stringify, safe_filename
+from normality import stringify
 from sqlalchemy.dialects.postgresql import JSONB
-from servicelayer.archive.util import checksum, ensure_path
 from servicelayer.cache import make_key
 
 from aleph.core import db, archive
@@ -82,28 +80,6 @@ class Export(db.Model, IdModel, DatedModel):
     @property
     def namespace(self):
         return make_key("role", self.creator_id)
-
-    def publish(self):
-        if not self._file_path:
-            raise RuntimeError("file path not present for export: %r", self)
-        # Use contenthash as filename to make to ensure uniqueness
-        path = Path(self._file_path.parent, self.content_hash)
-        self._file_path.rename(path)
-        try:
-            archive.publish(self.namespace, path, self.mime_type)
-            self.set_status(status=Status.SUCCESS)
-        except Exception as ex:
-            self.set_status(status=Status.FAILED)
-            raise ex
-
-    def set_filepath(self, file_path):
-        file_path = ensure_path(file_path)
-        file_name = safe_filename(file_path)
-        file_size = file_path.stat().st_size
-        self.file_name = file_name
-        self.file_size = file_size
-        self._file_path = file_path
-        self.content_hash = checksum(file_path)
 
     def set_status(self, status):
         self.status = status
