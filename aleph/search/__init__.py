@@ -23,8 +23,8 @@ class CollectionsQuery(Query):
     SKIP_FILTERS = ["writeable"]
     PREFIX_FIELD = "label"
 
-    def get_filters(self):
-        filters = super(CollectionsQuery, self).get_filters()
+    def get_filters(self, **kwargs):
+        filters = super(CollectionsQuery, self).get_filters(**kwargs)
         if self.parser.getbool("filter:writeable"):
             ids = self.parser.authz.collections(self.parser.authz.WRITE)
             filters.append({"ids": {"values": ids}})
@@ -84,8 +84,8 @@ class XrefQuery(Query):
         parser.highlight = False
         super(XrefQuery, self).__init__(parser)
 
-    def get_filters(self):
-        filters = super(XrefQuery, self).get_filters()
+    def get_filters(self, **kwargs):
+        filters = super(XrefQuery, self).get_filters(**kwargs)
         filters.append({"term": {"collection_id": self.collection_id}})
         return filters
 
@@ -101,9 +101,9 @@ class NotificationsQuery(Query):
     def get_text_query(self):
         return [{"match_all": {}}]
 
-    def get_filters(self):
+    def get_filters(self, **kwargs):
         channels = get_role_channels(self.parser.authz.role)
-        filters = super(NotificationsQuery, self).get_filters()
+        filters = super(NotificationsQuery, self).get_filters(**kwargs)
         filters.append({"terms": {"channels": channels}})
         return filters
 
@@ -119,7 +119,7 @@ class EntitySetItemsQuery(EntitiesQuery):
         self.entityset = kwargs.pop("entityset")
         super(EntitySetItemsQuery, self).__init__(*args, **kwargs)
 
-    def get_filters(self):
-        filters = super(EntitySetItemsQuery, self).get_filters()
+    def get_filters(self, **kwargs):
+        filters = super(EntitySetItemsQuery, self).get_filters(**kwargs)
         filters.append({"ids": {"values": self.entityset.entities}})
         return filters

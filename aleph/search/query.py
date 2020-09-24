@@ -10,6 +10,7 @@ from aleph.index.util import (
     field_filter_query,
     DATE_FORMAT,
     range_filter_query,
+    filter_text,
 )
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
@@ -64,10 +65,10 @@ class Query(object):
             query.append({"match_all": {}})
         return query
 
-    def get_filters(self):
+    def get_filters(self, include_authz=True):
         """Apply query filters from the user interface."""
         filters = []
-        if self.AUTHZ_FIELD is not None:
+        if include_authz and self.AUTHZ_FIELD is not None:
             # This enforces the authorization (access control) rules on
             # a particular query by comparing the collections a user is
             # authorized for with the one on the document.
@@ -125,6 +126,13 @@ class Query(object):
                 "minimum_should_match": 1,
             }
         }
+
+    def get_full_query(self):
+        """Return a version of the query with post-filters included."""
+        query = self.get_query()
+        post_filters = self.get_post_filters()["bool"]["filter"]
+        query["bool"]["filter"].extend(post_filters)
+        return query
 
     def get_aggregations(self):
         """Aggregate the query in order to generate faceted results."""
@@ -250,12 +258,35 @@ class Query(object):
     def get_index(self):
         raise NotImplementedError
 
+    def to_text(self, empty="*:*"):
+        """Generate a string representation of the query."""
+        parts = []
+        if self.parser.text:
+            parts.append(self.parser.text)
+        elif self.parser.prefix:
+            query = "%s:%s*" % (self.PREFIX_FIELD, self.parser.prefix)
+            parts.append(query)
+        else:
+            parts.append(empty)
+
+        filters = self.get_filters(include_authz=False)
+        filters.extend(self.get_post_filters()["bool"]["filter"])
+        for filter_ in filters:
+            parts.append(filter_text(filter_))
+
+        for filter_ in self.get_negative_filters():
+            parts.append(filter_text(filter_, invert=True))
+
+        if len(parts) > 1 and empty in parts:
+            parts.remove(empty)
+        return " ".join([p for p in parts if p is not None])
+
     def search(self):
         """Execute the query as assmbled."""
         # log.info("Search index: %s", self.get_index())
         result = es.search(index=self.get_index(), body=self.get_body())
-        log.info("Took: %sms", result.get("took"))
-        # log.info("%s", pformat(result.get('profile')))
+        log.info("[%s] took: %sms", self.to_text(), result.get("took"))
+        # log.info("%s", pformat(self.get_query()))
         return result
 
     @classmethod

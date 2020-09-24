@@ -1,6 +1,6 @@
 import logging
 from pprint import pprint  # noqa
-from banal import ensure_list
+from banal import ensure_list, is_mapping
 from elasticsearch import TransportError
 from elasticsearch.helpers import streaming_bulk
 from followthemoney.types import registry
@@ -135,6 +135,35 @@ def field_filter_query(field, values):
 
 def range_filter_query(field, ops):
     return {"range": {field: ops}}
+
+
+def filter_text(spec, invert=False):
+    """Try to convert a given filter to a lucene query string."""
+    # CAVEAT: This doesn't cover all filters used by aleph.
+    if isinstance(spec, (list, tuple, set)):
+        parts = [filter_text(s, invert=invert) for s in spec]
+        return " ".join(parts)
+    if not is_mapping(spec):
+        return spec
+    for op, props in spec.items():
+        if op == "term":
+            field, value = next(iter(props.items()))
+            if invert:
+                field = "-%s" % field
+            return '%s:"%s"' % (field, value)
+        if op == "terms":
+            field, values = next(iter(props.items()))
+            parts = [{"term": {field: v}} for v in values]
+            parts = [filter_text(p, invert=invert) for p in parts]
+            predicate = " AND " if invert else " OR "
+            text = predicate.join(parts)
+            if len(parts) > 1:
+                text = "(%s)" % text
+            return text
+        if op == "exists":
+            field = props.get("field")
+            field = "-%s" % field if invert else field
+            return "%s:*" % field
 
 
 def query_delete(index, query, sync=False, **kwargs):
