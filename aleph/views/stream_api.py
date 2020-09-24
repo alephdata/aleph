@@ -40,13 +40,14 @@ def entities(collection_id=None):
       tags:
       - Entity
     """
-    require(request.authz.can_stream())
     log.debug("Stream entities [%r] begins... (coll: %s)", request.authz, collection_id)
     schemata = ensure_list(request.args.getlist("schema"))
     includes = ensure_list(request.args.getlist("include"))
     includes = includes or PROXY_INCLUDES
     if collection_id is not None:
-        get_db_collection(collection_id, request.authz.READ)
+        get_db_collection(collection_id, request.authz.WRITE)
+    else:
+        require(request.authz.can_stream())
     entities = iter_entities(
         authz=request.authz,
         collection_id=collection_id,
