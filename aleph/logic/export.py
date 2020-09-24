@@ -1,9 +1,9 @@
 import os
 import shutil
 import logging
-import zipstream
 from pprint import pformat  # noqa
 from pathlib import Path
+from zipfile import ZipFile
 from tempfile import mkdtemp
 from flask import render_template
 from normality import safe_filename
@@ -22,6 +22,7 @@ from aleph.logic.mail import email_role
 
 
 log = logging.getLogger(__name__)
+EXCEL_FILE = "Export.xlsx"
 EXTRA_HEADERS = ["url", "collection"]
 
 
@@ -33,7 +34,7 @@ def get_export(export_id):
         return export.to_dict()
 
 
-def write_document(export_dir, zf, collection, entity, fp):
+def write_document(export_dir, zf, collection, entity):
     content_hash = entity.first("contentHash", quiet=True)
     if content_hash is None:
         return
@@ -45,8 +46,6 @@ def write_document(export_dir, zf, collection, entity, fp):
         local_path = archive.load_file(content_hash, temp_path=export_dir)
         if local_path is not None and os.path.exists(local_path):
             zf.write(local_path, arcname=arcname)
-            for data in zf.flush():
-                fp.write(data)
     finally:
         archive.cleanup_file(content_hash, temp_path=export_dir)
 
@@ -59,9 +58,9 @@ def export_entities(export_id):
     try:
         filters = [export.meta.get("query", {"match_none": {}})]
         file_path = export_dir.joinpath("query-export.zip")
-        with open(file_path, "wb") as fp:
-            zf = zipstream.ZipFile(mode="w", allowZip64=True)
-            exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
+        with ZipFile(file_path, mode="w") as zf:
+            excel_path = export_dir.joinpath(EXCEL_FILE)
+            exporter = ExcelExporter(excel_path, extra=EXTRA_HEADERS)
             for entity in iter_proxies(filters=filters):
                 collection_id = entity.context.get("collection_id")
                 if collection_id not in collections:
@@ -71,12 +70,13 @@ def export_entities(export_id):
                     continue
                 extra = [entity_url(entity.id), collection.get("label")]
                 exporter.write(entity, extra=extra)
-                write_document(export_dir, zf, collection, entity, fp)
+                write_document(export_dir, zf, collection, entity)
+                if file_path.stat().st_size >= Export.MAX_FILE_SIZE:
+                    log.warn("Export too large: %r", export)
+                    break
 
-            content = exporter.get_bytesio()
-            zf.write_iter("Export.xlsx", content)
-            for data in zf:
-                fp.write(data)
+            exporter.finalize()
+            zf.write(excel_path, arcname=EXCEL_FILE)
         complete_export(export_id, file_path)
     except Exception:
         log.exception("Failed to process export [%s]", export_id)

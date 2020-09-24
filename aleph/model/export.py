@@ -17,7 +17,7 @@ class Export(db.Model, IdModel, DatedModel):
     storage bucket and the user is given a link to download the data. The link
     expires after a fixed duration and the exported data is deleted."""
 
-    MAX_FILE_SIZE = 10 * 1024 * 1024 * 1024  # 10 GB
+    MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024  # 2 GB
     DEFAULT_EXPIRATION = timedelta(days=30)  # After 30 days
 
     label = db.Column(db.Unicode)
