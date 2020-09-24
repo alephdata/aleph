@@ -11,7 +11,6 @@ from aleph.logic.matching import match_query
 from aleph.logic.notifications import get_role_channels
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
-from aleph.search.result import SearchQueryResult  # noqa
 from aleph.search.query import Query
 
 log = logging.getLogger(__name__)

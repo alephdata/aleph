@@ -87,16 +87,6 @@ class Query(object):
 
         return filters
 
-    def get_negative_filters(self):
-        """Apply negative filters."""
-        filters = []
-        for field, _ in self.parser.empties.items():
-            filters.append({"exists": {"field": field}})
-
-        for field, values in self.parser.excludes.items():
-            filters.append(field_filter_query(field, values))
-        return filters
-
     def get_post_filters(self, exclude=None):
         """Apply post-aggregation query filters."""
         filters = []
@@ -106,6 +96,16 @@ class Query(object):
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
         return {"bool": {"filter": filters}}
+
+    def get_negative_filters(self):
+        """Apply negative filters."""
+        filters = []
+        for field, _ in self.parser.empties.items():
+            filters.append({"exists": {"field": field}})
+
+        for field, values in self.parser.excludes.items():
+            filters.append(field_filter_query(field, values))
+        return filters
 
     def get_query(self):
         return {
@@ -284,5 +284,5 @@ class Query(object):
     def handle(cls, request, parser=None, **kwargs):
         if parser is None:
             parser = SearchQueryParser(request.args, request.authz)
-        result = cls(parser, **kwargs).search()
-        return SearchQueryResult(request, parser, result)
+        query = cls(parser, **kwargs)
+        return SearchQueryResult(request, query)
