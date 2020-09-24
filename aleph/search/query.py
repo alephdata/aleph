@@ -56,45 +56,47 @@ class Query(object):
             query.append({"match_all": {}})
         return query
 
-    def get_filters(self, include_authz=True):
-        """Apply query filters from the user interface."""
+    def get_filters_list(self, skip):
         filters = []
-        if include_authz and self.AUTHZ_FIELD is not None:
-            # This enforces the authorization (access control) rules on
-            # a particular query by comparing the collections a user is
-            # authorized for with the one on the document.
-            if self.parser.authz and not self.parser.authz.is_admin:
-                authz = authz_query(self.parser.authz, field=self.AUTHZ_FIELD)
-                filters.append(authz)
-
         range_filters = dict()
         for field, values in self.parser.filters.items():
-            if field in self.SKIP_FILTERS:
+            if field in skip:
                 continue
-            if field not in self.parser.facet_names:
-                # Collect all range query filters for a field in a single query
-                if field.startswith(("gt:", "gte:", "lt:", "lte:")):
-                    op, field = field.split(":", 1)
-                    if range_filters.get(field) is None:
-                        range_filters[field] = {op: list(values)[0]}
-                    else:
-                        range_filters[field][op] = list(values)[0]
-                    continue
-                filters.append(field_filter_query(field, values))
+            # Collect all range query filters for a field in a single query
+            if field.startswith(("gt:", "gte:", "lt:", "lte:")):
+                op, field = field.split(":", 1)
+                if range_filters.get(field) is None:
+                    range_filters[field] = {op: list(values)[0]}
+                else:
+                    range_filters[field][op] = list(values)[0]
+                continue
+            filters.append(field_filter_query(field, values))
 
         for field, ops in range_filters.items():
             filters.append(range_filter_query(field, ops))
 
         return filters
 
+    def get_filters(self):
+        """Apply query filters from the user interface."""
+        skip = [*self.SKIP_FILTERS, *self.parser.facet_names]
+        filters = self.get_filters_list(skip)
+
+        if self.AUTHZ_FIELD is not None:
+            # This enforces the authorization (access control) rules on
+            # a particular query by comparing the collections a user is
+            # authorized for with the one on the document.
+            if self.parser.authz and not self.parser.authz.is_admin:
+                authz = authz_query(self.parser.authz, field=self.AUTHZ_FIELD)
+                filters.append(authz)
+        return filters
+
     def get_post_filters(self, exclude=None):
         """Apply post-aggregation query filters."""
-        filters = []
-        for field, values in self.parser.filters.items():
-            if field in self.SKIP_FILTERS or field == exclude:
-                continue
-            if field in self.parser.facet_filters:
-                filters.append(field_filter_query(field, values))
+        pre = set(self.parser.filters.keys())
+        pre = pre.difference(self.parser.facet_names)
+        skip = [*pre, *self.SKIP_FILTERS, exclude]
+        filters = self.get_filters_list(skip)
         return {"bool": {"filter": filters}}
 
     def get_negative_filters(self):
@@ -260,9 +262,9 @@ class Query(object):
         else:
             parts.append(empty)
 
-        filters = self.get_filters(include_authz=False)
-        filters.extend(self.get_post_filters()["bool"]["filter"])
-        for filter_ in filters:
+        for filter_ in self.get_filters_list([]):
+            if filter_.get("term", {}).get("schemata") == "Thing":
+                continue
             parts.append(filter_text(filter_))
 
         for filter_ in self.get_negative_filters():
@@ -277,7 +279,8 @@ class Query(object):
         # log.info("Search index: %s", self.get_index())
         result = es.search(index=self.get_index(), body=self.get_body())
         log.info("[%s] took: %sms", self.to_text(), result.get("took"))
-        # log.info("%s", pformat(self.get_query()))
+        # log.info("%s", pformat(self.get_body()))
+        # log.info("%s", pformat(self.parser.filters))
         return result
 
     @classmethod

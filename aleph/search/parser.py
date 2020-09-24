@@ -31,6 +31,9 @@ class QueryParser(object):
 
         # Disable or enable query caching
         self.cache = self.getbool("cache", settings.CACHE)
+        self.filters = self.prefixed_items("filter:")
+        self.excludes = self.prefixed_items("exclude:")
+        self.empties = self.prefixed_items("empty:")
 
     @property
     def page(self):
@@ -46,18 +49,6 @@ class QueryParser(object):
             name = key[len(prefix) :]
             items[name] = set(self.getlist(key))
         return items
-
-    @property
-    def filters(self):
-        return self.prefixed_items("filter:")
-
-    @property
-    def excludes(self):
-        return self.prefixed_items("exclude:")
-
-    @property
-    def empties(self):
-        return self.prefixed_items("empty:")
 
     @property
     def sorts(self):
@@ -136,8 +127,6 @@ class SearchQueryParser(QueryParser):
         # values in the result set). These must match 'keyword' fields in the
         # index.
         self.facet_names = set(self.getlist("facet"))
-        filter_names = list(self.filters.keys())
-        self.facet_filters = self.facet_names.intersection(filter_names)
 
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool("highlight", False)
