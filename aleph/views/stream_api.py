@@ -47,7 +47,7 @@ def entities(collection_id=None):
     if collection_id is not None:
         get_db_collection(collection_id, request.authz.WRITE)
     else:
-        require(request.authz.can_stream())
+        require(request.authz.is_admin)
     entities = iter_entities(
         authz=request.authz,
         collection_id=collection_id,
