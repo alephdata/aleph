@@ -63,15 +63,14 @@ class CollectionIndexItem extends PureComponent {
               <Frequency.Label frequency={collection.frequency} />
             )}
           </span>
-          { collection.countries && collection.countries.length > 0 && (
+          {collection.countries && collection.countries.length > 0 && (
             <span className="index-item__details__item">
               <Icon icon="globe" />
               <Country.List codes={collection.countries} truncate={3} />
             </span>
           )}
-          { collection.casefile && (
+          {collection.casefile && (
             <span className="index-item__details__item">
-              <Icon icon="social-media" />
               <Role.List roles={collection.team} icon={false} truncate={3} truncateItem={20} separateItems />
             </span>
           )}
