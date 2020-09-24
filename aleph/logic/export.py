@@ -31,7 +31,6 @@ def get_export(export_id):
     export = Export.by_id(export_id)
     if export is not None:
         return export.to_dict()
-        log.debug("Export cache refresh: %r", export)
 
 
 def write_document(export_dir, zf, collection, entity, fp):
@@ -61,7 +60,7 @@ def export_entities(export_id):
         filters = [export.meta.get("query", {"match_none": {}})]
         file_path = export_dir.joinpath("query-export.zip")
         with open(file_path, "wb") as fp:
-            zf = zipstream.ZipFile(mode="w")
+            zf = zipstream.ZipFile(mode="w", allowZip64=True)
             exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
             for entity in iter_proxies(filters=filters):
                 collection_id = entity.context.get("collection_id")
@@ -126,6 +125,7 @@ def complete_export(export_id, file_path):
     db.session.commit()
     params = {"export": export}
     role = Role.by_id(export.creator_id)
+    log.info("Export [%r] complete: %s", export, export.status)
     publish(
         Events.COMPLETE_EXPORT,
         params=params,

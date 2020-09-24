@@ -10,6 +10,7 @@ from aleph.index.util import (
     field_filter_query,
     DATE_FORMAT,
     range_filter_query,
+    query_string_query,
     filter_text,
 )
 from aleph.search.result import SearchQueryResult
@@ -27,7 +28,6 @@ def convert_filters(filters):
 
 
 class Query(object):
-    RESULT_CLASS = SearchQueryResult
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ["text"]
@@ -46,17 +46,8 @@ class Query(object):
     def get_text_query(self):
         query = []
         if self.parser.text:
-            query.append(
-                {
-                    "query_string": {
-                        "query": self.parser.text,
-                        "fields": self.TEXT_FIELDS,
-                        "analyzer": "latin_query",
-                        "default_operator": "AND",
-                        "lenient": True,
-                    }
-                }
-            )
+            qs = query_string_query(self.TEXT_FIELDS, self.parser.text)
+            query.append(qs)
         if self.parser.prefix:
             query.append(
                 {"match_phrase_prefix": {self.PREFIX_FIELD: self.parser.prefix}}
@@ -294,4 +285,4 @@ class Query(object):
         if parser is None:
             parser = SearchQueryParser(request.args, request.authz)
         result = cls(parser, **kwargs).search()
-        return cls.RESULT_CLASS(request, parser, result)
+        return SearchQueryResult(request, parser, result)

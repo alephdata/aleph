@@ -116,6 +116,19 @@ def none_query(query=None):
     return query
 
 
+def query_string_query(field, query):
+    """Default config for querying the entity text."""
+    return {
+        "query_string": {
+            "query": query,
+            "lenient": True,
+            "fields": ensure_list(field),
+            "default_operator": "AND",
+            "minimum_should_match": "66%",
+        }
+    }
+
+
 def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
     values = ensure_list(values)
@@ -148,8 +161,7 @@ def filter_text(spec, invert=False):
     for op, props in spec.items():
         if op == "term":
             field, value = next(iter(props.items()))
-            if invert:
-                field = "-%s" % field
+            field = "-%s" % field if invert else field
             return '%s:"%s"' % (field, value)
         if op == "terms":
             field, values = next(iter(props.items()))
