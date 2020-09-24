@@ -5,7 +5,7 @@ from normality import stringify
 from sqlalchemy.dialects.postgresql import JSONB
 from servicelayer.cache import make_key
 
-from aleph.core import db, archive
+from aleph.core import db
 from aleph.model import Role, Collection
 from aleph.model.common import IdModel, DatedModel, Status
 
@@ -85,13 +85,7 @@ class Export(db.Model, IdModel, DatedModel):
         self.status = status
         db.session.add(self)
 
-    def delete_publication(self):
-        if self._should_delete_publication():
-            archive.delete_publication(self.namespace, self.content_hash)
-        self.deleted = True
-        db.session.add(self)
-
-    def _should_delete_publication(self):
+    def should_delete_publication(self):
         """Check whether the published export should be deleted from the archive
 
         Since we store exports by contenthash, there may be other non-expired exports
@@ -107,8 +101,10 @@ class Export(db.Model, IdModel, DatedModel):
     @classmethod
     def get_expired(cls, deleted=False):
         now = datetime.utcnow()
-        q = cls.all().filter(cls.expires_at.isnot(None)).filter(cls.expires_at <= now)
-        if deleted is not None:
+        q = cls.all()
+        q = q.filter(cls.expires_at.isnot(None))
+        q = q.filter(cls.expires_at <= now)
+        if not deleted:
             q = q.filter(cls.deleted == deleted)
         return q
 
@@ -131,4 +127,4 @@ class Export(db.Model, IdModel, DatedModel):
         return q
 
     def __repr__(self):
-        return "<Export(%r, %r)>" % (self.id, self.creator_id)
+        return "<Export(%r, %r, %r)>" % (self.id, self.creator_id, self.label)

@@ -45,7 +45,7 @@ class Export extends PureComponent {
         <td className="export-filesize">
           <FileSize value={export_.file_size} />
         </td>
-        <td className="export-status">{export_.export_status}</td>
+        <td className="export-status">{export_.status}</td>
         <td className="timestamp">
           <FormattedRelativeTime
             value={value}

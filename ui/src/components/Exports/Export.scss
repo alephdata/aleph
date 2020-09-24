@@ -4,13 +4,4 @@
   .ExportLink {
     font-weight: bold;
   }
-
-  &.pending {
-    opacity: .5;
-  }
-  &.error {
-    * {
-      color: $aleph-error-highlight-color;
-    }
-  }
 }

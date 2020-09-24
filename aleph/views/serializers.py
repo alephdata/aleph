@@ -148,13 +148,11 @@ class CollectionSerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get("id")
-        authz = request.authz if obj.get('secret') else None
+        authz = request.authz if obj.get("secret") else None
         obj["links"] = {
             "self": url_for("collections_api.view", collection_id=pk),
             "xref": url_for("xref_api.index", collection_id=pk),
-            "xref_export": url_for(
-                "xref_api.export", collection_id=pk, _authz=authz
-            ),
+            "xref_export": url_for("xref_api.export", collection_id=pk, _authz=authz),
             "reconcile": url_for(
                 "reconcile_api.reconcile",
                 collection_id=pk,
@@ -285,11 +283,14 @@ class QueryLogSerializer(Serializer):
 
 class ExportSerializer(Serializer):
     def _serialize(self, obj):
-        obj["links"] = {
-            "download": url_for(
-                "exports_api.download", export_id=obj.get("id"), _authz=request.authz
+        links = {}
+        if obj.get("content_hash"):
+            links["download"] = url_for(
+                "exports_api.download",
+                export_id=obj.get("id"),
+                _authz=request.authz,
             )
-        }
+        obj["links"] = links
         return obj
 
 

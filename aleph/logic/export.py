@@ -1,5 +1,4 @@
 import os
-import types
 import shutil
 import logging
 import zipstream
@@ -8,14 +7,15 @@ from pathlib import Path
 from tempfile import mkdtemp
 from flask import render_template
 from normality import safe_filename
-from followthemoney import model
 from followthemoney.helpers import entity_filename
 from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import checksum, ensure_path
 
-from aleph.core import archive, db, cache, url_for, settings
+from aleph.core import archive, db, url_for, settings
 from aleph.authz import Authz
-from aleph.model import Collection, Export, Events, Role, Status
+from aleph.model import Export, Events, Role, Status
+from aleph.index.entities import iter_proxies
+from aleph.index.collections import get_collection
 from aleph.logic.util import entity_url, ui_url
 from aleph.logic.notifications import publish
 from aleph.logic.mail import email_role
@@ -28,16 +28,10 @@ EXTRA_HEADERS = ["url", "collection"]
 def get_export(export_id):
     if export_id is None:
         return
-    key = cache.object_key(Export, export_id)
-    data = cache.get_complex(key)
-    if data is None:
-        export = Export.by_id(export_id)
-        if export is None:
-            return
+    export = Export.by_id(export_id)
+    if export is not None:
+        return export.to_dict()
         log.debug("Export cache refresh: %r", export)
-        data = export.to_dict()
-        cache.set_complex(key, data, expires=cache.EXPIRE)
-    return data
 
 
 def write_document(export_dir, zf, collection, entity, fp):
@@ -47,6 +41,7 @@ def write_document(export_dir, zf, collection, entity, fp):
     file_name = entity_filename(entity)
     arcname = "{0}-{1}".format(entity.id, file_name)
     arcname = os.path.join(collection.get("label"), arcname)
+    log.info("Export file: %s", arcname)
     try:
         local_path = archive.load_file(content_hash, temp_path=export_dir)
         if local_path is not None and os.path.exists(local_path):
@@ -57,25 +52,24 @@ def write_document(export_dir, zf, collection, entity, fp):
         archive.cleanup_file(content_hash, temp_path=export_dir)
 
 
-def export_entities(export_id, result):
-    from aleph.logic import resolver
-
+def export_entities(export_id):
+    export = Export.by_id(export_id)
+    log.info("Export entities [%r]...", export)
     export_dir = ensure_path(mkdtemp(prefix="aleph.export."))
+    collections = {}
     try:
-        entities = []
-        stub = types.SimpleNamespace(result=result)
-        for entity in result["results"]:
-            resolver.queue(stub, Collection, entity.get("collection_id"))
-            entities.append(model.get_proxy(entity))
-        resolver.resolve(stub)
-
+        filters = [export.meta.get("query", {"match_none": {}})]
         file_path = export_dir.joinpath("query-export.zip")
         with open(file_path, "wb") as fp:
             zf = zipstream.ZipFile(mode="w")
             exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
-            for entity in entities:
+            for entity in iter_proxies(filters=filters):
                 collection_id = entity.context.get("collection_id")
-                collection = resolver.get(stub, Collection, collection_id)
+                if collection_id not in collections:
+                    collections[collection_id] = get_collection(collection_id)
+                collection = collections[collection_id]
+                if collection is None:
+                    continue
                 extra = [entity_url(entity.id), collection.get("label")]
                 exporter.write(entity, extra=extra)
                 write_document(export_dir, zf, collection, entity, fp)
@@ -143,7 +137,11 @@ def complete_export(export_id, file_path):
 def delete_expired_exports():
     expired_exports = Export.get_expired(deleted=False)
     for export in expired_exports:
-        export.delete_publication()
+        log.info("Deleting expired export: %r", export)
+        if export.should_delete_publication():
+            archive.delete_publication(export.namespace, export.content_hash)
+        export.deleted = True
+        db.session.add(export)
     db.session.commit()
 
 
