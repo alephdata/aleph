@@ -26,16 +26,22 @@ def entity_url(entity_id=None, **query):
     return ui_url("entities", id=entity_id, **query)
 
 
-def archive_url(authz, content_hash, file_name=None, mime_type=None):
+def archive_url(authz, content_hash, file_name=None, mime_type=None, expire=None):
     """Create an access authorization link for an archive blob."""
     if content_hash is None:
         return None
-    payload = dict(r=authz.id, h=content_hash, f=file_name, t=mime_type)
+    payload = dict(r=authz.id, f=file_name, t=mime_type)
     claim = jwt.encode(payload, settings.SECRET_KEY).decode("utf-8")
-    return url_for("archive_api.retrieve", _authz=authz, _query=[("claim", claim)])
+    return url_for(
+        "archive_api.retrieve",
+        content_hash=content_hash,
+        _authz=authz,
+        _expire=expire,
+        _query=[("claim", claim)],
+    )
 
 
 def archive_claim(claim):
     """Unpack an access authorization token for an archive blob."""
     data = jwt.decode(claim, key=settings.SECRET_KEY, verify=True)
-    return data.get("r"), data.get("h"), data.get("f"), data.get("t")
+    return data.get("r"), data.get("f"), data.get("t")

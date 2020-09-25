@@ -27,14 +27,10 @@ class ExportsTestCase(TestCase):
     def test_create(self):
         assert self.export1.content_hash is not None
         assert self.export1.content_hash == self.export2.content_hash
-        assert (
-            archive.load_publication(self.export1.namespace, self.export1.content_hash)
-            is not None
+        assert archive.load_file(self.export1.content_hash) is not None
+        assert archive.load_file(self.export1.content_hash) == archive.load_file(
+            self.export2.content_hash
         )
-        assert archive.load_publication(
-            self.export1.namespace, self.export1.content_hash
-        ) == archive.load_publication(self.export2.namespace, self.export2.content_hash)
-
         assert self.export1.file_name == self.export2.file_name == "experts.csv"
 
         res = get_notifications(self.role_email)
@@ -55,9 +51,7 @@ class ExportsTestCase(TestCase):
         assert exp2 is not None
         assert exp2.deleted is True
 
-        path = archive.load_publication(
-            self.export1.namespace, self.export1.content_hash
-        )
+        path = archive.load_file(self.export1.content_hash)
         assert path is not None
         assert path.exists()
 
@@ -71,7 +65,5 @@ class ExportsTestCase(TestCase):
         exp1 = Export.by_id(self.export1.id, deleted=True)
         assert exp1 is not None
         assert exp1.deleted is True
-        path = archive.load_publication(
-            self.export1.namespace, self.export1.content_hash
-        )
+        path = archive.load_file(self.export1.content_hash)
         assert path is None, path

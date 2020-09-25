@@ -2,7 +2,6 @@ import os
 import shutil
 import logging
 from pprint import pformat  # noqa
-from pathlib import Path
 from zipfile import ZipFile
 from tempfile import mkdtemp
 from flask import render_template
@@ -11,12 +10,12 @@ from followthemoney.helpers import entity_filename
 from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import checksum, ensure_path
 
-from aleph.core import archive, db, url_for, settings
+from aleph.core import archive, db, settings
 from aleph.authz import Authz
 from aleph.model import Export, Events, Role, Status
 from aleph.index.entities import iter_proxies
 from aleph.index.collections import get_collection
-from aleph.logic.util import entity_url, ui_url
+from aleph.logic.util import entity_url, ui_url, archive_url
 from aleph.logic.notifications import publish
 from aleph.logic.mail import email_role
 
@@ -113,10 +112,10 @@ def complete_export(export_id, file_path):
     export.file_name = safe_filename(file_path)
     export.file_size = file_path.stat().st_size
     export.content_hash = checksum(file_path)
-    path = Path(file_path.parent, export.content_hash)
-    file_path.rename(path)
     try:
-        archive.publish(export.namespace, path, export.mime_type)
+        archive.archive_file(
+            file_path, content_hash=export.content_hash, mime_type=export.mime_type
+        )
         export.set_status(status=Status.SUCCESS)
     except Exception:
         log.exception("Failed to upload export: %s", export)
@@ -139,23 +138,23 @@ def delete_expired_exports():
     for export in expired_exports:
         log.info("Deleting expired export: %r", export)
         if export.should_delete_publication():
-            archive.delete_publication(export.namespace, export.content_hash)
+            archive.delete_file(export.content_hash)
         export.deleted = True
         db.session.add(export)
     db.session.commit()
 
 
 def send_export_notification(export):
-    role = Role.by_id(export.creator_id)
-    authz = Authz.from_role(role)
-    download_url = url_for(
-        "exports_api.download",
-        export_id=export.id,
-        _authz=authz,
-        _expire=export.expires_at,
+    authz = Authz.from_role(export.creator)
+    download_url = archive_url(
+        authz,
+        export.content_hash,
+        file_name=export.file_name,
+        mime_type=export.mime_type,
+        expire=export.expires_at,
     )
     params = dict(
-        role=role,
+        role=export.creator,
         export_label=export.label,
         download_url=download_url,
         expiration_date=export.expires_at.strftime("%Y-%m-%d"),
@@ -167,4 +166,4 @@ def send_export_notification(export):
     html = render_template("email/export.html", **params)
     log.info("Notification: %s", plain)
     subject = "Export ready for download"
-    email_role(role, subject, html=html, plain=plain)
+    email_role(export.creator, subject, html=html, plain=plain)

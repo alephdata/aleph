@@ -56,6 +56,7 @@ class Export(db.Model, IdModel, DatedModel):
                 "content_hash": self.content_hash,
                 "file_size": self.file_size,
                 "file_name": self.file_name,
+                "mime_type": self.mime_type,
                 "meta": self.meta,
             }
         )

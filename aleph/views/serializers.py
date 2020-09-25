@@ -283,14 +283,14 @@ class QueryLogSerializer(Serializer):
 
 class ExportSerializer(Serializer):
     def _serialize(self, obj):
-        links = {}
-        if obj.get("content_hash"):
-            links["download"] = url_for(
-                "exports_api.download",
-                export_id=obj.get("id"),
-                _authz=request.authz,
+        obj["links"] = {
+            "download": archive_url(
+                request.authz,
+                obj.get("content_hash"),
+                file_name=obj.get("file_name"),
+                mime_type=obj.get("file_name"),
             )
-        obj["links"] = links
+        }
         return obj
 
 

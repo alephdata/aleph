@@ -39,20 +39,3 @@ class ExportApiTestCase(TestCase):
         assert res.json["total"] == 2, res.json
         results = res.json["results"]
         validate(results[0], "Export")
-
-    def test_invalid_authz(self):
-        res = self.client.get("/api/2/exports/1/download")
-        assert res.status_code == 403, res
-        res = self.client.get("/api/2/exports/1/download", headers=self.headers)
-        assert res.status_code == 200, res
-
-    def test_no_claim(self):
-        res = self.client.get("/api/2/exports/1/download")
-        assert res.status_code == 403, res
-        _, headers = self.login()
-        res = self.client.get("/api/2/exports/1/download", headers=headers)
-        assert res.status_code == 404, res
-        res = self.client.get("/api/2/exports/1/download", headers=self.headers)
-        assert res.status_code == 200, res
-        disposition = res.headers.get("Content-Disposition")
-        assert "attachment; filename=experts.csv" in disposition, res.headers

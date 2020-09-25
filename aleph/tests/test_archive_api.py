@@ -9,13 +9,17 @@ class ArchiveApiTestCase(TestCase):
         super(ArchiveApiTestCase, self).setUp()
         self.fixture = self.get_fixture_path("samples/website.html")
         self.content_hash = archive.archive_file(self.fixture)
+        self.fixture2 = self.get_fixture_path("samples/taggable.txt")
+        self.content_hash2 = archive.archive_file(self.fixture2)
 
     def test_no_claim(self):
-        res = self.client.get("/api/2/archive")
+        url = "/api/2/archive/%s" % self.content_hash
+        res = self.client.get(url)
         assert res.status_code == 401, res
 
     def test_invalid_claim(self):
-        res = self.client.get("/api/2/archive?claim=banana")
+        url = "/api/2/archive/%s" % self.content_hash
+        res = self.client.get(url + "?claim=banana")
         assert res.status_code == 401, res
 
     def test_anon_claim(self):

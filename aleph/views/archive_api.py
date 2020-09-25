@@ -11,8 +11,8 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint("archive_api", __name__)
 
 
-@blueprint.route("/api/2/archive")
-def retrieve():
+@blueprint.route("/api/2/archive/<content_hash>")
+def retrieve(content_hash):
     """Downloads a binary blob from the blob storage archive.
     ---
     get:
@@ -35,10 +35,15 @@ def retrieve():
       - Archive
     """
     claim = request.args.get("claim")
-    role_id, content_hash, file_name, mime_type = archive_claim(claim)
+    role_id, file_name, mime_type = archive_claim(claim)
     require(request.authz.id == role_id)
     tag_request(content_hash=content_hash, file_name=file_name)
-    url = archive.generate_url(content_hash, file_name=file_name, mime_type=mime_type)
+    url = archive.generate_url(
+        content_hash,
+        file_name=file_name,
+        mime_type=mime_type,
+        expire=request.authz.expire,
+    )
     if url is not None:
         return redirect(url)
     try:
