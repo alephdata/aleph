@@ -12,7 +12,7 @@ from servicelayer.archive.util import checksum, ensure_path
 
 from aleph.core import archive, db, settings
 from aleph.model import Export, Events, Role, Status
-from aleph.index.entities import iter_proxies
+from aleph.index.entities import iter_proxies, checksums_count
 from aleph.index.collections import get_collection
 from aleph.logic.util import entity_url, ui_url, archive_url
 from aleph.logic.notifications import publish
@@ -133,11 +133,16 @@ def complete_export(export_id, file_path):
 
 
 def delete_expired_exports():
+    """Delete export files from the archive after their time
+    limit has expired."""
     expired_exports = Export.get_expired(deleted=False)
     for export in expired_exports:
         log.info("Deleting expired export: %r", export)
         if export.should_delete_publication():
-            archive.delete_file(export.content_hash)
+            counts = list(checksums_count([export.content_hash]))
+            print(counts)
+            if list(counts)[0][1] == 0:
+                archive.delete_file(export.content_hash)
         export.deleted = True
         db.session.add(export)
     db.session.commit()

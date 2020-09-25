@@ -24,6 +24,12 @@ class ExportsTestCase(TestCase):
         self.export2.expires_at = datetime.utcnow() + timedelta(days=-1)
         complete_export(self.export2.id, temp_path)
 
+        source_path = self.get_fixture_path("../util.py")
+        temp_path = self._create_temporary_copy(source_path, "init.py")
+        self.export3 = create_export("TEST", self.role_email.id, "test3")
+        self.export3.expires_at = datetime.utcnow() + timedelta(days=-1)
+        complete_export(self.export3.id, temp_path)
+
     def test_create(self):
         assert self.export1.content_hash is not None
         assert self.export1.content_hash == self.export2.content_hash
@@ -35,11 +41,11 @@ class ExportsTestCase(TestCase):
 
         res = get_notifications(self.role_email)
         notification_count = res.get("hits").get("total").get("value")
-        assert notification_count == 2, notification_count
+        assert notification_count == 3, notification_count
 
     def test_delete_expired(self):
         q = Export.by_role_id(self.role_email.id)
-        assert q.count() == 2, q.count()
+        assert q.count() == 3, q.count()
 
         delete_expired_exports()
         q = Export.by_role_id(self.role_email.id)
@@ -66,4 +72,7 @@ class ExportsTestCase(TestCase):
         assert exp1 is not None
         assert exp1.deleted is True
         path = archive.load_file(self.export1.content_hash)
+        assert path is not None, path
+
+        path = archive.load_file(self.export3.content_hash)
         assert path is None, path

@@ -223,3 +223,18 @@ def delete_entity(entity_id, exclude=None, sync=False):
         if index == exclude:
             continue
         delete_safe(index, entity_id)
+
+
+def checksums_count(checksums):
+    """Query how many documents mention a checksum."""
+    schemata = model.get_type_schemata(registry.checksum)
+    index = entities_read_index(schemata)
+    body = []
+    for checksum in checksums:
+        body.append({"index": index})
+        query = {"term": {"checksums": checksum}}
+        body.append({"size": 0, "query": query})
+    results = es.msearch(body=body)
+    for checksum, result in zip(checksums, results.get("responses", [])):
+        total = result.get("hits", {}).get("total", {}).get("value", 0)
+        yield checksum, total
