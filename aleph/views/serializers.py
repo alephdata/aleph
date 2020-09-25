@@ -225,22 +225,31 @@ class EntitySerializer(Serializer):
             content_hash = first(properties.get("contentHash"))
             if content_hash:
                 name = entity_filename(proxy)
-                mime_type = first(properties.get("mimeType"))
+                mime = first(properties.get("mimeType"))
                 links["file"] = archive_url(
-                    request.authz, content_hash, file_name=name, mime_type=mime_type
+                    content_hash,
+                    file_name=name,
+                    mime_type=mime,
+                    expire=request.authz.expire,
                 )
 
             pdf_hash = first(properties.get("pdfHash"))
             if pdf_hash:
                 name = entity_filename(proxy, extension="pdf")
                 links["pdf"] = archive_url(
-                    request.authz, pdf_hash, file_name=name, mime_type=PDF
+                    pdf_hash,
+                    file_name=name,
+                    mime_type=PDF,
+                    expire=request.authz.expire,
                 )
             csv_hash = first(properties.get("csvHash"))
             if csv_hash:
                 name = entity_filename(proxy, extension="csv")
                 links["csv"] = archive_url(
-                    request.authz, csv_hash, file_name=name, mime_type=CSV
+                    csv_hash,
+                    file_name=name,
+                    mime_type=CSV,
+                    expire=request.authz.expire,
                 )
 
         obj["links"] = links
@@ -285,10 +294,10 @@ class ExportSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {
             "download": archive_url(
-                request.authz,
                 obj.get("content_hash"),
                 file_name=obj.get("file_name"),
                 mime_type=obj.get("mime_type"),
+                expire=request.authz.expire,
             )
         }
         return obj

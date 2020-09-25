@@ -11,7 +11,6 @@ from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import checksum, ensure_path
 
 from aleph.core import archive, db, settings
-from aleph.authz import Authz
 from aleph.model import Export, Events, Role, Status
 from aleph.index.entities import iter_proxies
 from aleph.index.collections import get_collection
@@ -145,9 +144,7 @@ def delete_expired_exports():
 
 
 def send_export_notification(export):
-    authz = Authz.from_role(export.creator)
     download_url = archive_url(
-        authz,
         export.content_hash,
         file_name=export.file_name,
         mime_type=export.mime_type,

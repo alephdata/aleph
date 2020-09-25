@@ -92,7 +92,7 @@ def _iter_params(data, event):
             yield name, clazz, value
 
 
-def render_notification(authz, stub, notification):
+def render_notification(stub, notification):
     """Generate a text version of the notification, suitable for use
     in an email or text message."""
     from aleph.logic import resolver
@@ -129,7 +129,6 @@ def render_notification(authz, stub, notification):
         elif clazz == Export:
             title = data.get("label")
             link = archive_url(
-                authz,
                 data.get("content_hash"),
                 file_name=data.get("file_name"),
                 mime_type=data.get("file_name"),
@@ -154,7 +153,6 @@ def generate_digest():
 def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
-    authz = Authz.from_role(role)
     since = datetime.utcnow() - timedelta(hours=26)
     result = get_notifications(role, since=since)
     hits = result.get("hits", {})
@@ -162,7 +160,7 @@ def generate_role_digest(role):
     log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:
         return
-    notifications = [render_notification(authz, role, n) for n in hits.get("hits")]
+    notifications = [render_notification(role, n) for n in hits.get("hits")]
     notifications = [n for n in notifications if n is not None]
     params = dict(
         notifications=notifications,

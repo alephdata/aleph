@@ -1,18 +1,18 @@
+import jwt
 import logging
+from datetime import datetime
 from flask.wrappers import Response
-from werkzeug.exceptions import Unauthorized
 from flask import Blueprint, redirect, send_file, request
 
-from aleph.core import archive
-from aleph.authz import Authz
+from aleph.core import archive, settings
 from aleph.views.context import tag_request
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("archive_api", __name__)
 
 
-@blueprint.route("/api/2/archive/<content_hash>")
-def retrieve(content_hash):
+@blueprint.route("/api/2/archive")
+def retrieve():
     """Downloads a binary blob from the blob storage archive.
     ---
     get:
@@ -34,18 +34,18 @@ def retrieve(content_hash):
       tags:
       - Archive
     """
-    token = request.args.get("api_key")
-    authz = Authz.from_token(token, scope=request.path)
-    if authz is None:
-        raise Unauthorized()
-    file_name = request.args.get("file_name")
-    mime_type = request.args.get("mime_type")
+    token = request.args.get("token")
+    token = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
+    content_hash = token.get("c")
+    file_name = token.get("f")
+    mime_type = token.get("m")
+    expire = datetime.utcfromtimestamp(token["exp"])
     tag_request(content_hash=content_hash, file_name=file_name)
     url = archive.generate_url(
         content_hash,
         file_name=file_name,
         mime_type=mime_type,
-        expire=authz.expire,
+        expire=expire,
     )
     if url is not None:
         return redirect(url)
