@@ -1,10 +1,10 @@
 import logging
 from flask.wrappers import Response
+from werkzeug.exceptions import Unauthorized
 from flask import Blueprint, redirect, send_file, request
 
 from aleph.core import archive
-from aleph.logic.util import archive_claim
-from aleph.views.util import require
+from aleph.authz import Authz
 from aleph.views.context import tag_request
 
 log = logging.getLogger(__name__)
@@ -34,15 +34,18 @@ def retrieve(content_hash):
       tags:
       - Archive
     """
-    claim = request.args.get("claim")
-    role_id, file_name, mime_type = archive_claim(claim)
-    require(request.authz.id == role_id)
+    token = request.args.get("api_key")
+    authz = Authz.from_token(token, scope=request.path)
+    if authz is None:
+        raise Unauthorized()
+    file_name = request.args.get("file_name")
+    mime_type = request.args.get("mime_type")
     tag_request(content_hash=content_hash, file_name=file_name)
     url = archive.generate_url(
         content_hash,
         file_name=file_name,
         mime_type=mime_type,
-        expire=request.authz.expire,
+        expire=authz.expire,
     )
     if url is not None:
         return redirect(url)

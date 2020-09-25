@@ -157,7 +157,7 @@ def url_for(*a, **kw):
         expire = kw.pop("_expire", None)
         relative = kw.pop("_relative", False)
         path = flask_url_for(*a, **kw)
-        if authz is not None and authz.id is not None:
+        if authz is not None:
             token = authz.to_token(scope=path, expire=expire)
             query = list(ensure_list(query))
             query.append(("api_key", token))

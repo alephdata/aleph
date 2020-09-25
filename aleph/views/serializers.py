@@ -288,7 +288,7 @@ class ExportSerializer(Serializer):
                 request.authz,
                 obj.get("content_hash"),
                 file_name=obj.get("file_name"),
-                mime_type=obj.get("file_name"),
+                mime_type=obj.get("mime_type"),
             )
         }
         return obj
