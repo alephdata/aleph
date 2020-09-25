@@ -16,15 +16,12 @@ class ExportsTestCase(TestCase):
 
         csv_path = self.get_fixture_path("experts.csv")
         temp_path = self._create_temporary_copy(csv_path, "experts.csv")
-        self.export1 = create_export(
-            "TEST", self.role_email.id, "test1", expires_after=Export.DEFAULT_EXPIRATION
-        )
+        self.export1 = create_export("TEST", self.role_email.id, "test1")
         complete_export(self.export1.id, temp_path)
 
         temp_path = self._create_temporary_copy(csv_path, "experts.csv")
-        self.export2 = create_export(
-            "TEST", self.role_email.id, "test2", expires_after=timedelta(days=-1)
-        )
+        self.export2 = create_export("TEST", self.role_email.id, "test2")
+        self.export2.expires_at = datetime.utcnow() + timedelta(days=-1)
         complete_export(self.export2.id, temp_path)
 
     def test_create(self):

@@ -178,8 +178,7 @@ export class SearchScreen extends React.Component {
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
-    const hasExportLink = result && result.total > 0 && result.links && result.links.export;
-    const exportLink = !hasExportLink ? null : result.links.export;
+    const exportLink = result?.total > 0 ? result?.links?.export : null;
     const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
     const noResults = !result.isPending && result.total === 0;
     const dateFacetDisabled = dateFacetIntervals && (noResults || dateFacetIntervals.length <= 1);
@@ -187,11 +186,11 @@ export class SearchScreen extends React.Component {
     const operation = (
       <ButtonGroup>
         <Tooltip content={tooltip} disabled={exportLink}>
-        <ExportButton
-          text={intl.formatMessage(messages.export)}
-          disabled={!exportLink}
-          onExport={() => this.props.triggerQueryExport(exportLink)}
-        />
+          <ExportButton
+            text={intl.formatMessage(messages.export)}
+            disabled={!exportLink}
+            onExport={() => this.props.triggerQueryExport(exportLink)}
+          />
         </Tooltip>
       </ButtonGroup>
     );
@@ -264,26 +263,26 @@ export class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             <SignInCallout />
             <div className="SearchScreen__control-bar">
-                {!noResults && (
-                  <div className="SearchScreen__control-bar__button">
-                    <Tooltip
-                      content={intl.formatMessage(
-                        dateFacetDisabled ? messages.date_facet_disabled : (
-                          dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
-                        )
-                      )}
-                    >
-                      <AnchorButton
-                        outlined
-                        icon="calendar"
-                        onClick={this.toggleDateFacet}
-                        disabled={dateFacetDisabled}
-                        active={dateFacetIsOpen}
-                      />
-                    </Tooltip>
-                  </div>
-                )}
-               <QueryTags query={query} updateQuery={this.updateQuery} />
+              {!noResults && (
+                <div className="SearchScreen__control-bar__button">
+                  <Tooltip
+                    content={intl.formatMessage(
+                      dateFacetDisabled ? messages.date_facet_disabled : (
+                        dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
+                      )
+                    )}
+                  >
+                    <AnchorButton
+                      outlined
+                      icon="calendar"
+                      onClick={this.toggleDateFacet}
+                      disabled={dateFacetDisabled}
+                      active={dateFacetIsOpen}
+                    />
+                  </Tooltip>
+                </div>
+              )}
+              <QueryTags query={query} updateQuery={this.updateQuery} />
             </div>
             <DateFacet
               isOpen={dateFacetDisabled ? false : dateFacetIsOpen}

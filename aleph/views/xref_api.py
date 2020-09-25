@@ -3,7 +3,6 @@ from flask import Blueprint, request
 from followthemoney import model
 from pantomime.types import XLSX
 
-from aleph.model import Export
 from aleph.search import XrefQuery
 from aleph.index.xref import get_xref
 from aleph.logic.profiles import decide_xref, pairwise_decisions
@@ -133,8 +132,6 @@ def export(collection_id):
         operation=OP_EXPORT_XREF_RESULTS,
         role_id=request.authz.id,
         label=label,
-        file_path=None,
-        expires_after=Export.DEFAULT_EXPIRATION,
         collection=collection,
         mime_type=XLSX,
     )

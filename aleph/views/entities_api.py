@@ -2,12 +2,13 @@ import logging
 from urllib.parse import quote
 from urlnormalizer import query_string
 from flask import Blueprint, request
+from flask_babel import gettext
 from werkzeug.exceptions import NotFound
 from followthemoney import model
 from pantomime.types import ZIP
 
 from aleph.core import db, url_for
-from aleph.model import QueryLog, Export
+from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
@@ -166,24 +167,18 @@ def export():
     """
     require(request.authz.logged_in)
     parser = SearchQueryParser(request.args, request.authz)
-    parser.limit = MAX_PAGE
     tag_request(query=parser.text, prefix=parser.prefix)
-    result = EntitiesQuery.handle(request, parser=parser)
-    label = "Search results for query: %s" % parser.text
+    query = EntitiesQuery(parser)
+    label = gettext("Search: %s") % query.to_text()
     export = create_export(
         operation=OP_EXPORT_SEARCH_RESULTS,
         role_id=request.authz.id,
         label=label,
-        file_path=None,
-        expires_after=Export.DEFAULT_EXPIRATION,
-        collection=None,
         mime_type=ZIP,
+        meta={"query": query.get_full_query()},
     )
     job_id = get_session_id()
-    payload = {
-        "export_id": export.id,
-        "result": result.to_dict(),
-    }
+    payload = {"export_id": export.id}
     queue_task(None, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
     return ("", 202)
 

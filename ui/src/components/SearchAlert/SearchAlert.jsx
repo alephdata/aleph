@@ -22,11 +22,11 @@ const messages = defineMessages({
 
 
 class SearchAlert extends Component {
-  static doesAlertExist({ queryText, session, alerts }) {
-    if (!session.loggedIn || !alerts || !alerts.results || !queryText) {
+  static doesAlertExist({ alertQuery, session, alerts }) {
+    if (!session.loggedIn || !alerts || !alerts.results || !alertQuery) {
       return false;
     }
-    return !!alerts.results.some(a => a.query && a.query.trim() === queryText.trim());
+    return !!alerts.results.some(a => a.query && a.query.trim() === alertQuery.trim());
   }
 
   constructor(props) {
@@ -49,12 +49,12 @@ class SearchAlert extends Component {
 
     return !this.props.alerts
       || this.props.alerts.total !== nextProps.alerts.total
-      || this.props.queryText !== nextProps.queryText;
+      || this.props.alertQuery !== nextProps.alertQuery;
   }
 
   async onToggleAlert(event) {
     event.preventDefault();
-    const { alerts, queryText } = this.props;
+    const { alerts, alertQuery } = this.props;
     const alertExists = this.alertExists();
 
     if (!alerts || !alerts.results || this.state.updating) {
@@ -64,7 +64,7 @@ class SearchAlert extends Component {
     this.setState({ updating: true });
     if (alertExists) {
       await Promise.all(alerts.results.reduce((pool, alert) => {
-        if (alert.query.trim() === queryText.trim()) {
+        if (alert.query.trim() === alertQuery.trim()) {
           pool.push(
             this.props.deleteAlert(alert.id),
             this.props.fetchAlerts(),
@@ -73,7 +73,7 @@ class SearchAlert extends Component {
         return pool;
       }, []));
     } else {
-      await this.props.addAlert({ query: queryText.trim() });
+      await this.props.addAlert({ query: alertQuery.trim() });
       await this.props.fetchAlerts();
     }
 
@@ -86,8 +86,8 @@ class SearchAlert extends Component {
   }
 
   render() {
-    const { queryText, session, intl } = this.props;
-    if (!session.loggedIn || !queryText || !queryText.trim().length) {
+    const { alertQuery, session, intl } = this.props;
+    if (!session.loggedIn || !alertQuery || !alertQuery.trim().length) {
       return null;
     }
     const alertExists = this.alertExists();

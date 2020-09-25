@@ -82,9 +82,6 @@ class Authz(object):
             return False
         return collection in self.collections(action)
 
-    def can_stream(self):
-        return self.logged_in
-
     def can_bulk_import(self):
         if not self.session_write:
             return False

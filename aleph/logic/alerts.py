@@ -6,7 +6,7 @@ from aleph.authz import Authz
 from aleph.core import db, es
 from aleph.model import Alert, Events, Entity
 from aleph.index.indexes import entities_read_index
-from aleph.index.util import unpack_result, authz_query
+from aleph.index.util import unpack_result, authz_query, query_string_query
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -65,17 +65,6 @@ def alert_query(alert, authz):
     latest known result."""
     # Many users have bookmarked complex queries, otherwise we'd use a
     # precise match query.
-    queries = [
-        {
-            "query_string": {
-                "query": alert.query,
-                "lenient": True,
-                "default_field": "text",
-                "default_operator": "AND",
-                "minimum_should_match": "90%",
-            }
-        }
-    ]
     filters = [authz_query(authz)]
     if alert.notified_at is not None:
         notified_at = alert.notified_at.isoformat()
@@ -84,6 +73,10 @@ def alert_query(alert, authz):
         "size": 50,
         "_source": {"includes": ["collection_id"]},
         "query": {
-            "bool": {"should": queries, "filter": filters, "minimum_should_match": 1}
+            "bool": {
+                "should": [query_string_query("text", alert.query)],
+                "filter": filters,
+                "minimum_should_match": 1,
+            }
         },
     }

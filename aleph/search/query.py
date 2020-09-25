@@ -10,6 +10,8 @@ from aleph.index.util import (
     field_filter_query,
     DATE_FORMAT,
     range_filter_query,
+    query_string_query,
+    filter_text,
 )
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
@@ -26,7 +28,6 @@ def convert_filters(filters):
 
 
 class Query(object):
-    RESULT_CLASS = SearchQueryResult
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ["text"]
@@ -45,17 +46,8 @@ class Query(object):
     def get_text_query(self):
         query = []
         if self.parser.text:
-            query.append(
-                {
-                    "query_string": {
-                        "query": self.parser.text,
-                        "fields": self.TEXT_FIELDS,
-                        "analyzer": "latin_query",
-                        "default_operator": "AND",
-                        "lenient": True,
-                    }
-                }
-            )
+            qs = query_string_query(self.TEXT_FIELDS, self.parser.text)
+            query.append(qs)
         if self.parser.prefix:
             query.append(
                 {"match_phrase_prefix": {self.PREFIX_FIELD: self.parser.prefix}}
@@ -64,9 +56,32 @@ class Query(object):
             query.append({"match_all": {}})
         return query
 
+    def get_filters_list(self, skip):
+        filters = []
+        range_filters = dict()
+        for field, values in self.parser.filters.items():
+            if field in skip:
+                continue
+            # Collect all range query filters for a field in a single query
+            if field.startswith(("gt:", "gte:", "lt:", "lte:")):
+                op, field = field.split(":", 1)
+                if range_filters.get(field) is None:
+                    range_filters[field] = {op: list(values)[0]}
+                else:
+                    range_filters[field][op] = list(values)[0]
+                continue
+            filters.append(field_filter_query(field, values))
+
+        for field, ops in range_filters.items():
+            filters.append(range_filter_query(field, ops))
+
+        return filters
+
     def get_filters(self):
         """Apply query filters from the user interface."""
-        filters = []
+        skip = [*self.SKIP_FILTERS, *self.parser.facet_names]
+        filters = self.get_filters_list(skip)
+
         if self.AUTHZ_FIELD is not None:
             # This enforces the authorization (access control) rules on
             # a particular query by comparing the collections a user is
@@ -74,26 +89,15 @@ class Query(object):
             if self.parser.authz and not self.parser.authz.is_admin:
                 authz = authz_query(self.parser.authz, field=self.AUTHZ_FIELD)
                 filters.append(authz)
-
-        range_filters = dict()
-        for field, values in self.parser.filters.items():
-            if field in self.SKIP_FILTERS:
-                continue
-            if field not in self.parser.facet_names:
-                # Collect all range query filters for a field in a single query
-                if field.startswith(("gt:", "gte:", "lt:", "lte:")):
-                    op, field = field.split(":", 1)
-                    if range_filters.get(field) is None:
-                        range_filters[field] = {op: list(values)[0]}
-                    else:
-                        range_filters[field][op] = list(values)[0]
-                    continue
-                filters.append(field_filter_query(field, values))
-
-        for field, ops in range_filters.items():
-            filters.append(range_filter_query(field, ops))
-
         return filters
+
+    def get_post_filters(self, exclude=None):
+        """Apply post-aggregation query filters."""
+        pre = set(self.parser.filters.keys())
+        pre = pre.difference(self.parser.facet_names)
+        skip = [*pre, *self.SKIP_FILTERS, exclude]
+        filters = self.get_filters_list(skip)
+        return {"bool": {"filter": filters}}
 
     def get_negative_filters(self):
         """Apply negative filters."""
@@ -105,16 +109,6 @@ class Query(object):
             filters.append(field_filter_query(field, values))
         return filters
 
-    def get_post_filters(self, exclude=None):
-        """Apply post-aggregation query filters."""
-        filters = []
-        for field, values in self.parser.filters.items():
-            if field in self.SKIP_FILTERS or field == exclude:
-                continue
-            if field in self.parser.facet_filters:
-                filters.append(field_filter_query(field, values))
-        return {"bool": {"filter": filters}}
-
     def get_query(self):
         return {
             "bool": {
@@ -125,6 +119,13 @@ class Query(object):
                 "minimum_should_match": 1,
             }
         }
+
+    def get_full_query(self):
+        """Return a version of the query with post-filters included."""
+        query = self.get_query()
+        post_filters = self.get_post_filters()["bool"]["filter"]
+        query["bool"]["filter"].extend(post_filters)
+        return query
 
     def get_aggregations(self):
         """Aggregate the query in order to generate faceted results."""
@@ -250,17 +251,41 @@ class Query(object):
     def get_index(self):
         raise NotImplementedError
 
+    def to_text(self, empty="*:*"):
+        """Generate a string representation of the query."""
+        parts = []
+        if self.parser.text:
+            parts.append(self.parser.text)
+        elif self.parser.prefix:
+            query = "%s:%s*" % (self.PREFIX_FIELD, self.parser.prefix)
+            parts.append(query)
+        else:
+            parts.append(empty)
+
+        for filter_ in self.get_filters_list([]):
+            if filter_.get("term", {}).get("schemata") == "Thing":
+                continue
+            parts.append(filter_text(filter_))
+
+        for filter_ in self.get_negative_filters():
+            parts.append(filter_text(filter_, invert=True))
+
+        if len(parts) > 1 and empty in parts:
+            parts.remove(empty)
+        return " ".join([p for p in parts if p is not None])
+
     def search(self):
         """Execute the query as assmbled."""
         # log.info("Search index: %s", self.get_index())
         result = es.search(index=self.get_index(), body=self.get_body())
-        log.info("Took: %sms", result.get("took"))
-        # log.info("%s", pformat(result.get('profile')))
+        log.info("[%s] took: %sms", self.to_text(), result.get("took"))
+        # log.info("%s", pformat(self.get_body()))
+        # log.info("%s", pformat(self.parser.filters))
         return result
 
     @classmethod
     def handle(cls, request, parser=None, **kwargs):
         if parser is None:
             parser = SearchQueryParser(request.args, request.authz)
-        result = cls(parser, **kwargs).search()
-        return cls.RESULT_CLASS(request, parser, result)
+        query = cls(parser, **kwargs)
+        return SearchQueryResult(request, query)

@@ -91,10 +91,12 @@ class QueryTestCase(TestCase):
         q = query(
             [
                 ("filter:key1", "foo"),
-                ("post_filter:key2", "foo"),
-                ("post_filter:key2", "bar"),
-                ("post_filter:key3", "blah"),
-                ("post_filter:key3", "blahblah"),
+                ("filter:key2", "foo"),
+                ("filter:key2", "bar"),
+                ("facet", "key2"),
+                ("filter:key3", "blah"),
+                ("filter:key3", "blahblah"),
+                ("facet", "key3"),
             ]
         )
         self.assertEqual(q.get_filters(), [{"term": {"key1": "foo"}}])

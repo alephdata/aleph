@@ -6,7 +6,7 @@ import { ControlGroup, InputGroup } from '@blueprintjs/core';
 
 import SearchAlert from 'components/SearchAlert/SearchAlert';
 import ScopeSelect from 'components/Navbar/ScopeSelect';
-import { selectSession } from 'selectors';
+import { selectEntitiesResult } from 'selectors';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import './ScopedSearchBox.scss';
@@ -72,8 +72,9 @@ class ScopedSearchBox extends React.Component {
   }
 
   render() {
-    const { searchScopes, intl } = this.props;
+    const { searchScopes, result, intl } = this.props;
     const { queryText, activeScope } = this.state;
+    const alertQuery = result.query_text || queryText;
 
     const placeholder = activeScope.label
       ? intl.formatMessage(messages.placeholder, { label: activeScope.label })
@@ -92,7 +93,7 @@ class ScopedSearchBox extends React.Component {
             id="search-box"
             leftIcon="search"
             placeholder={placeholder}
-            rightElement={<SearchAlert queryText={queryText} />}
+            rightElement={<SearchAlert alertQuery={alertQuery} />}
             value={queryText}
             onChange={this.onQueryChange}
             className="ScopedSearchBox"
@@ -103,9 +104,11 @@ class ScopedSearchBox extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  session: selectSession(state),
-});
+const mapStateToProps = (state, ownProps) => {
+  const { query } = ownProps;
+  const result = query ? selectEntitiesResult(state, query) : {};
+  return { result };
+};
 
 
 export default compose(

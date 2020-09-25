@@ -3,7 +3,7 @@ from followthemoney import model
 from followthemoney.helpers import remove_checksums
 
 from aleph.core import db, archive
-from aleph.model import Mapping, Events, EntitySetItem
+from aleph.model import Mapping, Events, EntitySetItem, Status
 from aleph.index.entities import get_entity
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.collections import delete_entities
@@ -86,10 +86,10 @@ def load_mapping(collection, mapping_id, sync=False):
         map_to_aggregator(collection, mapping, aggregator)
         aggregate_model(collection, aggregator)
         index_aggregator(collection, aggregator, sync=sync)
-        mapping.set_status(status=Mapping.SUCCESS)
+        mapping.set_status(status=Status.SUCCESS)
         db.session.commit()
     except Exception as exc:
-        mapping.set_status(status=Mapping.FAILED, error=str(exc))
+        mapping.set_status(status=Status.FAILED, error=str(exc))
         db.session.commit()
         aggregator.delete(origin=origin)
     finally:
