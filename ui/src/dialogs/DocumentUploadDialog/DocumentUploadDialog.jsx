@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import {
   Classes, Dialog,
 } from '@blueprintjs/core';
@@ -6,12 +7,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { ingestDocument as ingestDocumentAction } from 'actions';
-import { showErrorToast, showSuccessToast } from 'app/toast';
 import convertPathsToTree from 'util/convertPathsToTree';
 import DocumentUploadForm from './DocumentUploadForm';
-import DocumentUploadStatus from './DocumentUploadStatus';
+import DocumentUploadStatus, { UPLOAD_STATUS } from './DocumentUploadStatus';
 import DocumentUploadView from './DocumentUploadView';
-
 
 import './DocumentUploadDialog.scss';
 
@@ -20,31 +19,21 @@ const messages = defineMessages({
   title: {
     id: 'document.upload.title',
     defaultMessage: 'Upload Documents',
-  },
-  success: {
-    id: 'document.upload.success',
-    defaultMessage: 'Documents are being processed...',
-  },
-  error: {
-    id: 'document.upload.error',
-    defaultMessage: 'There was an error while uploading the file.',
-  },
+  }
 });
-
 
 export class DocumentUploadDialog extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       files: props.filesToUpload || [],
-      currUploading: false,
-      totalUploadSize: 0,
+      uploadMeta: null,
       uploadTraces: []
     };
-
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFilesChange = this.onFilesChange.bind(this);
+    this.onClose = this.onClose.bind(this);
+    this.onRetry = this.onRetry.bind(this);
   }
 
   onFilesChange(files) {
@@ -53,34 +42,74 @@ export class DocumentUploadDialog extends Component {
 
   async onFormSubmit(files) {
     const {
-      intl, onUploadSuccess, parent,
+      parent,
     } = this.props;
 
     const fileTree = convertPathsToTree(files);
-    this.setState({
-      currUploading: true,
-      totalUploadSize: files.reduce((result, file) => result + file.size, 0),
+    await this.setState({
+      uploadMeta: {
+        totalUploadSize: files.reduce((result, file) => result + file.size, 0),
+        totalFiles: files.length,
+        status: UPLOAD_STATUS.PENDING,
+        cancelSource: axios.CancelToken.source()
+      },
       uploadTraces: []
     })
 
-    try {
-      await this.traverseFileTree(fileTree, parent);
-      this.setState({
-        currUploading: false,
-        files: []
-      });
-      showSuccessToast(intl.formatMessage(messages.success));
-      if (onUploadSuccess) {
-        onUploadSuccess();
-      }
-    } catch (e) {
-      console.trace(e);
-      this.setState({
-        currUploading: false
-      });
-      showErrorToast(intl.formatMessage(messages.error));
+    await this.traverseFileTree(fileTree, parent);
+    this.onUploadDone();
+  }
+
+  onClose() {
+    const { toggleDialog, isOpen, onUploadSuccess } = this.props;
+    const { uploadMeta } = this.state;
+
+    if (uploadMeta?.status === UPLOAD_STATUS.PENDING) {
+      this.onCancel();
     }
 
+    if (uploadMeta && uploadMeta.status !== UPLOAD_STATUS.PENDING) {
+      onUploadSuccess();
+    }
+    else if (isOpen) {
+      toggleDialog();
+    }
+
+    this.setState({
+      files: [],
+      uploadTraces: [],
+      uploadMeta: null
+    });
+  }
+
+  async onRetry() {
+    const { uploadTraces, uploadMeta } = this.state;
+    const errorTraces = uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.ERROR);
+    await this.setState({
+      uploadMeta: Object.assign({}, uploadMeta, {
+        status: UPLOAD_STATUS.PENDING
+      }),
+      uploadTraces: uploadTraces.filter(trace => trace.status !== UPLOAD_STATUS.ERROR)
+    });
+    return Promise.all(errorTraces.map(trace => trace.retryFn()))
+      .then(() => this.onUploadDone());
+  }
+
+  onCancel() {
+    const { uploadMeta } = this.state;
+    uploadMeta.cancelSource.cancel();
+  }
+
+  onUploadDone() {
+    this.setState(({ uploadMeta, uploadTraces }) => {
+      if (uploadMeta) { // on cancellation uploadMeta could be none, as it takes a while to cancel all requests
+        return {
+          uploadMeta: Object.assign({}, uploadMeta, {
+            status: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.SUCCESS).length > 0 ? UPLOAD_STATUS.SUCCESS : UPLOAD_STATUS.ERROR
+          })
+        }
+      }
+    });
   }
 
   async traverseFileTree(tree, parent) {
@@ -91,12 +120,7 @@ export class DocumentUploadDialog extends Component {
           return this.uploadFile(value, parent);
         }
         // recursive case
-        return this.uploadFolder(key, parent)
-          .then(({ id }) => {
-            if (id) { // id is not existent when folder upload failed
-              return this.traverseFileTree(value, { id, foreign_id: key });
-            }
-          });
+        return this.uploadFolderRecursive(key, parent, value);
       });
 
     await Promise.all(filePromises);
@@ -126,21 +150,22 @@ export class DocumentUploadDialog extends Component {
     }
   }
 
-  doTracedIngest(metadata, file, uploadTrace) {
+  doTracedIngest(metadata, file, uploadTrace, retryFn) {
     const { collection, ingestDocument } = this.props;
+    const { uploadMeta } = this.state;
 
     this.addUploadTrace(uploadTrace);
-    return ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev))
+    return ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev), uploadMeta.cancelSource.token)
       .then((result) => {
-        uploadTrace.status = 'done';
+        uploadTrace.status = UPLOAD_STATUS.SUCCESS;
         this.updateUploadTraces();
         return result;
       })
       .catch((e) => {
         console.error(`failure uploading ${uploadTrace.name}`, e);
-        uploadTrace.status = 'error';
+        uploadTrace.status = UPLOAD_STATUS.ERROR;
+        uploadTrace.retryFn = retryFn;
         this.updateUploadTraces();
-        throw e;
       });
   }
 
@@ -148,9 +173,10 @@ export class DocumentUploadDialog extends Component {
     const uploadTrace = {
       name: file.name,
       size: file.size,
+      type: 'file',
       uploaded: 0,
       total: file.size,
-      status: 'pending'
+      status: UPLOAD_STATUS.PENDING
     };
 
     const metadata = {
@@ -161,13 +187,15 @@ export class DocumentUploadDialog extends Component {
       metadata.parent_id = parent.id;
     }
 
-    return this.doTracedIngest(metadata, file, uploadTrace);
+    const retryFn = () => this.uploadFile(file, parent);
+    return this.doTracedIngest(metadata, file, uploadTrace, retryFn);
   }
 
-  uploadFolder(title, parent) {
+  uploadFolder(title, parent, retryFn) {
     const uploadTrace = {
       name: title,
-      status: 'pending'
+      type: 'directory',
+      status: UPLOAD_STATUS.PENDING
     };
 
     const metadata = {
@@ -179,16 +207,26 @@ export class DocumentUploadDialog extends Component {
       metadata.parent_id = parent.id;
     }
 
-    return this.doTracedIngest(metadata, null, uploadTrace);
+    return this.doTracedIngest(metadata, null, uploadTrace, retryFn);
   }
 
+  uploadFolderRecursive(title, parent, childTree) {
+    const retryFn = () => this.uploadFolderRecursive(title, parent, childTree);
+    return this.uploadFolder(title, parent, retryFn)
+      .then(result => {
+        if (result?.id) { // id is not existent when folder upload failed
+          return this.traverseFileTree(childTree, { id: result.id, foreign_id: title });
+        }
+      });
+  }
 
   renderContent() {
-    const { files, currUploading, uploadTraces, totalUploadSize } = this.state;
+    const { files, uploadTraces, uploadMeta } = this.state;
 
-    if (currUploading) {
+    if (uploadMeta) {
       return (
-        <DocumentUploadStatus uploadTraces={uploadTraces} totalUploadSize={totalUploadSize}/>
+        <DocumentUploadStatus uploadTraces={uploadTraces} uploadMeta={uploadMeta} onClose={this.onClose}
+                              onRetry={this.onRetry}/>
       );
     }
     if (files && files.length) {
@@ -199,15 +237,20 @@ export class DocumentUploadDialog extends Component {
   }
 
   render() {
-    const { intl, toggleDialog, isOpen } = this.props;
+    const { intl, isOpen } = this.props;
+    const { uploadMeta } = this.state;
+    const closeable = uploadMeta?.status !== UPLOAD_STATUS.PENDING;
 
     return (
       <Dialog
         icon="upload"
         className="DocumentUploadDialog"
         isOpen={isOpen}
+        canEscapeKeyClose={closeable}
+        canOutsideClickClose={closeable}
+        isCloseButtonShown={closeable}
         title={intl.formatMessage(messages.title)}
-        onClose={toggleDialog}
+        onClose={this.onClose}
       >
         <div className={Classes.DIALOG_BODY}>
           {this.renderContent()}

@@ -33,7 +33,6 @@ Mapping:
       nullable: true
     last_run_status:
       type: string
-      enum: ["failed", "success"]
       readonly: true
       nullable: true
     query:

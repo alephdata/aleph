@@ -22,7 +22,7 @@ class Authz(object):
     WRITE = "write"
     PREFIX = "aauthz"
 
-    def __init__(self, role_id, roles, is_admin=False, is_blocked=False):
+    def __init__(self, role_id, roles, is_admin=False, is_blocked=False, expire=None):
         self.id = role_id
         self.logged_in = role_id is not None
         self.roles = set(ensure_list(roles))
@@ -32,6 +32,10 @@ class Authz(object):
         self.session_write = not self.in_maintenance and self.logged_in
         self.session_write = not is_blocked and self.session_write
         self._collections = {}
+
+        if expire is None:
+            expire = datetime.utcnow() + timedelta(days=1)
+        self.expire = expire
 
     def collections(self, action):
         if action in self._collections:
@@ -82,9 +86,6 @@ class Authz(object):
             return False
         return collection in self.collections(action)
 
-    def can_stream(self):
-        return self.logged_in
-
     def can_bulk_import(self):
         if not self.session_write:
             return False
@@ -123,11 +124,9 @@ class Authz(object):
         return self.roles.difference(Role.public_roles())
 
     def to_token(self, scope=None, role=None, expire=None):
-        if expire is None:
-            expire = datetime.utcnow() + timedelta(days=1)
         payload = {
             "u": self.id,
-            "exp": expire,
+            "exp": expire or self.expire,
             "r": list(self.roles),
             "a": self.is_admin,
             "b": self.is_blocked,
@@ -164,8 +163,13 @@ class Authz(object):
             data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
             if "s" in data and data.get("s") != scope:
                 raise Unauthorized()
+            expire = datetime.utcfromtimestamp(data["exp"])
             return cls(
-                data.get("u"), data.get("r"), data.get("a", False), data.get("b", False)
+                data.get("u"),
+                data.get("r"),
+                expire=expire,
+                is_admin=data.get("a", False),
+                is_blocked=data.get("b", False),
             )
         except (jwt.DecodeError, TypeError):
             return

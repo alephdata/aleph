@@ -1,10 +1,9 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from aleph.logic.export import (
     create_export,
     complete_export,
 )
-from aleph.model import Export
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
 
@@ -19,15 +18,12 @@ class ExportApiTestCase(TestCase):
 
         csv_path = self.get_fixture_path("experts.csv")
         temp_path = self._create_temporary_copy(csv_path, "experts.csv")
-        self.export1 = create_export(
-            "TEST", self.role_email.id, "test1", expires_after=Export.DEFAULT_EXPIRATION
-        )
+        self.export1 = create_export("TEST", self.role_email.id, "test1")
         complete_export(self.export1.id, temp_path)
 
         temp_path = self._create_temporary_copy(csv_path, "experts.csv")
-        self.export2 = create_export(
-            "TEST", self.role_email.id, "test2", expires_after=timedelta(days=-1)
-        )
+        self.export2 = create_export("TEST", self.role_email.id, "test2")
+        self.export2.expires_at = datetime.utcnow() + timedelta(days=-1)
         complete_export(self.export2.id, temp_path)
 
     def test_exports_index(self):
@@ -43,22 +39,3 @@ class ExportApiTestCase(TestCase):
         assert res.json["total"] == 2, res.json
         results = res.json["results"]
         validate(results[0], "Export")
-
-    def test_invalid_authz(self):
-        res = self.client.get("/api/2/exports/1/download")
-        assert res.status_code == 403, res
-        res = self.client.get(
-            "/api/2/exports/1/download", headers=self.headers
-        )
-        assert res.status_code == 200, res
-
-    def test_no_claim(self):
-        res = self.client.get("/api/2/exports/1/download")
-        assert res.status_code == 403, res
-        _, headers = self.login()
-        res = self.client.get("/api/2/exports/1/download", headers=headers)
-        assert res.status_code == 404, res
-        res = self.client.get("/api/2/exports/1/download", headers=self.headers)
-        assert res.status_code == 200, res
-        disposition = res.headers.get("Content-Disposition")
-        assert "attachment; filename=experts.csv" in disposition, res.headers

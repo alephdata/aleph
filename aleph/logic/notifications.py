@@ -11,7 +11,13 @@ from aleph.model import Collection, Entity, Role, Alert, EntitySet, Export
 from aleph.model import Event, Events
 from aleph.logic.mail import email_role
 from aleph.logic.html import html_link
-from aleph.logic.util import collection_url, entity_url, ui_url, entityset_url
+from aleph.logic.util import (
+    collection_url,
+    entity_url,
+    ui_url,
+    entityset_url,
+    archive_url,
+)
 from aleph.index.notifications import index_notification, delete_notifications
 from aleph.index.notifications import notifications_index
 from aleph.index.util import unpack_result
@@ -122,6 +128,11 @@ def render_notification(stub, notification):
             link = entityset_url(data.id)
         elif clazz == Export:
             title = data.get("label")
+            link = archive_url(
+                data.get("content_hash"),
+                file_name=data.get("file_name"),
+                mime_type=data.get("file_name"),
+            )
             link = url_for("exports_api.download", export_id=data.get("id"))
 
         template = "{{%s}}" % name

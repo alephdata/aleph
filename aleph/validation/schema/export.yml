@@ -21,7 +21,7 @@ Export:
     deleted:
       type: boolean
       readOnly: true
-    export_status:
+    status:
       type: string
       readOnly: true
     file_name:

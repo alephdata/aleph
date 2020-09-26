@@ -73,13 +73,15 @@ class SearchQueryResult(QueryResult):
         "event": EventFacet,
     }
 
-    def __init__(self, request, parser, result):
-        super(SearchQueryResult, self).__init__(request, parser=parser)
-        self.result = result
-        hits = self.result.get("hits", {})
+    def __init__(self, request, query):
+        super(SearchQueryResult, self).__init__(request, parser=query.parser)
+        self.query = query
+        result = query.search()
+        hits = result.get("hits", {})
         total = hits.get("total", {})
         self.total = total.get("value")
         self.total_type = total.get("relation")
+        self.aggregations = result.get("aggregations")
         for doc in hits.get("hits", []):
             # log.info("Res: %s", pformat(doc))
             doc = unpack_result(doc)
@@ -88,13 +90,13 @@ class SearchQueryResult(QueryResult):
 
     def get_facets(self):
         facets = {}
-        aggregations = self.result.get("aggregations")
         for name in self.parser.facet_names:
             facet_cls = self.FACETS.get(name, Facet)
-            facets[name] = facet_cls(name, aggregations, self.parser)
+            facets[name] = facet_cls(name, self.aggregations, self.parser)
         return facets
 
     def to_dict(self, serializer=None):
         data = super(SearchQueryResult, self).to_dict(serializer=serializer)
         data["facets"] = self.get_facets()
+        data["query_text"] = self.query.to_text()
         return data

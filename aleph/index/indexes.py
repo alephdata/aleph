@@ -111,6 +111,7 @@ def configure_schema(schema, version):
                 "type": "text",
                 "analyzer": "latin_index",
                 "search_analyzer": "latin_query",
+                "search_quote_analyzer": "latin_index",
                 "term_vector": "with_positions_offsets",
             },
             "properties": {"type": "object", "properties": schema_mapping},

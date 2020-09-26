@@ -148,13 +148,11 @@ class CollectionSerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get("id")
-        authz = request.authz if obj.get('secret') else None
+        authz = request.authz if obj.get("secret") else None
         obj["links"] = {
             "self": url_for("collections_api.view", collection_id=pk),
             "xref": url_for("xref_api.index", collection_id=pk),
-            "xref_export": url_for(
-                "xref_api.export", collection_id=pk, _authz=authz
-            ),
+            "xref_export": url_for("xref_api.export", collection_id=pk, _authz=authz),
             "reconcile": url_for(
                 "reconcile_api.reconcile",
                 collection_id=pk,
@@ -227,22 +225,31 @@ class EntitySerializer(Serializer):
             content_hash = first(properties.get("contentHash"))
             if content_hash:
                 name = entity_filename(proxy)
-                mime_type = first(properties.get("mimeType"))
+                mime = first(properties.get("mimeType"))
                 links["file"] = archive_url(
-                    request.authz, content_hash, file_name=name, mime_type=mime_type
+                    content_hash,
+                    file_name=name,
+                    mime_type=mime,
+                    expire=request.authz.expire,
                 )
 
             pdf_hash = first(properties.get("pdfHash"))
             if pdf_hash:
                 name = entity_filename(proxy, extension="pdf")
                 links["pdf"] = archive_url(
-                    request.authz, pdf_hash, file_name=name, mime_type=PDF
+                    pdf_hash,
+                    file_name=name,
+                    mime_type=PDF,
+                    expire=request.authz.expire,
                 )
             csv_hash = first(properties.get("csvHash"))
             if csv_hash:
                 name = entity_filename(proxy, extension="csv")
                 links["csv"] = archive_url(
-                    request.authz, csv_hash, file_name=name, mime_type=CSV
+                    csv_hash,
+                    file_name=name,
+                    mime_type=CSV,
+                    expire=request.authz.expire,
                 )
 
         obj["links"] = links
@@ -286,8 +293,11 @@ class QueryLogSerializer(Serializer):
 class ExportSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {
-            "download": url_for(
-                "exports_api.download", export_id=obj.get("id"), _authz=request.authz
+            "download": archive_url(
+                obj.get("content_hash"),
+                file_name=obj.get("file_name"),
+                mime_type=obj.get("mime_type"),
+                expire=request.authz.expire,
             )
         }
         return obj

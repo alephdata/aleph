@@ -6,7 +6,6 @@ import "./ExportLink.scss";
 class ExportLink extends PureComponent {
   render() {
     const { export_, icon } = this.props;
-    const exportSuccess = "successful";
 
     const label = (
       <span className="ExportLink">
@@ -15,7 +14,7 @@ class ExportLink extends PureComponent {
       </span>
     );
 
-    if (export_.export_status === exportSuccess) {
+    if (export_?.links?.download) {
       return (
         <a href={export_.links.download}>
           {label}

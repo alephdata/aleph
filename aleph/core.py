@@ -1,6 +1,6 @@
 import logging
 from banal import ensure_list
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, urlencode
 from werkzeug.local import LocalProxy
 from werkzeug.middleware.profiler import ProfilerMiddleware
 from flask import Flask, request
@@ -13,7 +13,6 @@ from flask_babel import Babel
 from flask_talisman import Talisman
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch, TransportError
-from urlnormalizer import query_string
 from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.logs import configure_logging
@@ -158,7 +157,7 @@ def url_for(*a, **kw):
         expire = kw.pop("_expire", None)
         relative = kw.pop("_relative", False)
         path = flask_url_for(*a, **kw)
-        if authz is not None and authz.id is not None:
+        if authz is not None:
             token = authz.to_token(scope=path, expire=expire)
             query = list(ensure_list(query))
             query.append(("api_key", token))
@@ -171,7 +170,7 @@ def url_external(path, query, relative=False):
     """Generate external URLs with HTTPS (if configured)."""
     try:
         if query is not None:
-            path = path + query_string(query)
+            path = "%s?%s" % (path, urlencode(query))
         if relative:
             return path
 

@@ -1,10 +1,10 @@
+import jwt
 import logging
+from datetime import datetime
 from flask.wrappers import Response
 from flask import Blueprint, redirect, send_file, request
 
-from aleph.core import archive
-from aleph.logic.util import archive_claim
-from aleph.views.util import require
+from aleph.core import archive, settings
 from aleph.views.context import tag_request
 
 log = logging.getLogger(__name__)
@@ -34,11 +34,19 @@ def retrieve():
       tags:
       - Archive
     """
-    claim = request.args.get("claim")
-    role_id, content_hash, file_name, mime_type = archive_claim(claim)
-    require(request.authz.id == role_id)
+    token = request.args.get("token")
+    token = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
+    content_hash = token.get("c")
+    file_name = token.get("f")
+    mime_type = token.get("m")
+    expire = datetime.utcfromtimestamp(token["exp"])
     tag_request(content_hash=content_hash, file_name=file_name)
-    url = archive.generate_url(content_hash, file_name=file_name, mime_type=mime_type)
+    url = archive.generate_url(
+        content_hash,
+        file_name=file_name,
+        mime_type=mime_type,
+        expire=expire,
+    )
     if url is not None:
         return redirect(url)
     try:
