@@ -86,7 +86,7 @@ def compute_collection(collection, force=False, sync=False):
     refresh_collection(collection.id)
     log.info("[%s] Computing statistics...", collection)
     index.update_collection_stats(collection.id)
-    cache.set(key, "computed", expires=cache.EXPIRE)
+    cache.set(key, datetime.utcnow().isoformat())
     index.index_collection(collection, sync=sync)
 
 
