@@ -1,0 +1,30 @@
+@import "app/variables.scss";
+
+.AdvancedSearchVariants {
+  &__list {
+    margin-bottom: $aleph-grid-size;
+
+    &__item {
+
+    }
+  }
+
+  &__form {
+    border: 1px solid $aleph-border-color;
+    border-radius: $aleph-grid-size/2;
+    padding: 8px;
+
+    .bp3-form-group {
+      margin-bottom: 0;
+      align-self: flex-end;
+    }
+  }
+
+  .bp3-slider {
+    height: $aleph-grid-size*3;
+  }
+
+  .bp3-slider-label {
+    font-size: 10px;
+  }
+}
