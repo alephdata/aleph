@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
@@ -8,6 +9,7 @@ import { parse } from 'search-query-parser';
 import { Query as ESQuery, QueryStringQuery, ValueTermQueryBase, TermQuery } from 'elastic-builder';
 import { Button, ButtonGroup, Classes, ControlGroup, Dialog, Divider, Drawer, FormGroup, InputGroup, Intent, NumericInput, Position, Slider, Tag, TagInput } from '@blueprintjs/core';
 
+import { FIELDS, composeQueryText, parseQueryText } from 'components/AdvancedSearch/util';
 import AdvancedSearchVariants from 'components/AdvancedSearch/AdvancedSearchVariants';
 import Query from 'app/Query';
 
@@ -96,7 +98,6 @@ const messages = defineMessages({
   }
 });
 
-const FIELDS = ['all', 'exact', 'none', 'must'];
 
 /* eslint-disable jsx-quotes */
 class AdvancedSearch extends React.Component {
@@ -110,7 +111,7 @@ class AdvancedSearch extends React.Component {
       none: [],
       must: [],
       variants: [],
-      proximity: null
+      proximity: []
     };
 
     this.ref = React.createRef();
@@ -123,55 +124,15 @@ class AdvancedSearch extends React.Component {
     const queryChanged = !prevState || prevState.queryText !== nextQueryText;
 
     if (queryChanged) {
-      const { query } = nextProps;
-      let queryText = query.getString('q');
-
-      const proximityRE = /"(?<term1>[^\s]+) (?<term2>[^\s]+)"~(?<distance>[0-9]+)/;
-      const proximity = queryText.match(proximityRE)?.groups;
-      queryText = queryText.replace(proximityRE, '');
-
-      const variantRE = /[^\s]+~[0-9]+/g;
-      const variants = queryText.match(variantRE) || [];
-      queryText = queryText.replace(variantRE, '');
-
-      const exactRE = /"[^\s]+"/g;
-      const exact = queryText.match(exactRE) || [];
-      queryText = queryText.replace(exactRE, '');
-
-      const noneRE = /(^|\s)-[^\s]+/g;
-      const none = queryText.match(noneRE) || [];
-      queryText = queryText.replace(noneRE, '');
-
-      const mustRE = /(^|\s)\+[^\s]+/g;
-      const must = queryText.match(mustRE) || [];
-      queryText = queryText.replace(mustRE, '');
-
-      console.log('setting all to', queryText.split(' '))
+      const { query } = nextProps
+      const queryText = query.getString('q');
+      const parsed = parseQueryText(queryText);
 
       return {
         queryText: nextQueryText,
-        all: queryText.trim().split(' '),
-        exact: exact.map(t => t.replace(/["']/g,'')),
-        none: none.map(t => t.replace(/-/g,'')),
-        must: must.map(t => t.replace(/\+/g,'')),
-        variants: variants.map(v => v.match(/(?<term>[^\s])+~(?<distance>[0-9]+)/).groups),
-        proximity
-      };
+        ...parsed
+      }
     }
-  }
-
-  formulateQueryText() {
-    const { all, exact, any, none, must, variants, variantInput, proximity } = this.state;
-
-    const allQ = all && all.join(' ');
-    const exactQ = exact && exact.map(e => `"${e}"`).join(' ');
-    const noneQ = none && none.map(n => `-${n}`).join(' ');
-    const mustQ = must && must.map(m => `+${m}`).join(' ');
-    const variantQ = [...variants, variantInput].map(v => v?.term && v.distance && `${v.term}~${v.distance}`).join(' ');
-    const proximityQ = proximity && proximity.term1 && proximity.term2 && proximity.distance
-      && `"${proximity.term1} ${proximity.term2}"~${proximity.distance}`;
-
-    return [allQ, exactQ, noneQ, variantQ, proximityQ].join(' ').trim();
   }
 
   updateQuery(e, isClear) {
@@ -179,7 +140,7 @@ class AdvancedSearch extends React.Component {
     e.stopPropagation();
 
     const { history, query, location } = this.props;
-    const queryText = isClear ? '' : this.formulateQueryText();
+    const queryText = isClear ? '' : composeQueryText(this.state);
 
     history.push({
       pathname: '/search',
@@ -187,25 +148,11 @@ class AdvancedSearch extends React.Component {
     });
   }
 
-  onChange = (field, subfield, values) => {
-    console.log('changing', values)
-    this.setState((state) => {
-      if (subfield) {
-        const fieldObj = state[field] || {};
-        fieldObj[subfield] = values;
-        return ({
-          [field]: fieldObj
-        });
-      }
-      return ({
-        [field]: values
-      });
+  onChange = (field, values) => {
+    console.log('in on change', field, values);
+    this.setState({
+      [field]: values
     });
-  }
-
-  onSubmit = (e) => {
-    this.updateQuery(e);
-    // this.props.onToggle()
   }
 
   onClear = (e) => {
@@ -216,9 +163,99 @@ class AdvancedSearch extends React.Component {
       none: [],
       must: [],
       variants: [],
-      variantInput: null,
-      proximity: null
+      proximity: []
     });
+  }
+
+  renderField(field) {
+    const values = this.state[field]
+    switch(field) {
+      case 'proximity':
+        return null;
+      case 'variants':
+        return (
+          <>
+            <Divider />
+            <AdvancedSearchVariants
+              variants={values}
+              onChange={variantList => this.onChange(field, variantList)}
+            />
+          </>
+        )
+      default:
+        return this.renderSimpleField(field, values);
+    }
+  }
+
+  renderProximity() {
+    const { intl } = this.props;
+
+    return (
+      <>
+        <Divider />
+        <FormGroup
+          label={intl.formatMessage(messages.proximity_label)}
+          labelFor="proximity"
+          helperText={intl.formatMessage(messages.proximity_helptext)}
+          class
+        >
+          <ControlGroup id="proximity" fill vertical={false}>
+            <FormGroup
+              helperText={intl.formatMessage(messages.proximity_term1)}
+            >
+              <InputGroup
+                value={this.state.proximity?.term1}
+                onChange={e => this.onChange("proximity", e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup
+              helperText={intl.formatMessage(messages.proximity_distance)}
+              labelFor="proximity_slider"
+              className="padded"
+            >
+              <Slider
+                id="proximity_slider"
+                min={0}
+                max={10}
+                labelStepSize={2}
+                onChange={val => this.onChange("proximity", val)}
+                value={+this.state.proximity?.distance || 0}
+              />
+            </FormGroup>
+            <FormGroup
+              helperText={intl.formatMessage(messages.proximity_term2)}
+            >
+              <InputGroup
+                inline
+                value={this.state.proximity?.term2}
+                onChange={e => this.onChange("proximity", e.target.value)}
+              />
+            </FormGroup>
+          </ControlGroup>
+        </FormGroup>
+      </>
+    );
+  }
+
+  renderSimpleField(field, values) {
+    const { intl } = this.props;
+    return (
+      <FormGroup
+        label={intl.formatMessage(messages[`${field}_label`])}
+        labelFor={field}
+        inline
+        fill
+        helperText={intl.formatMessage(messages[`${field}_helptext`])}
+      >
+        <TagInput
+          id={field}
+          addOnBlur
+          fill
+          values={values}
+          onChange={vals => this.onChange(field, vals)}
+        />
+      </FormGroup>
+    );
   }
 
   render() {
@@ -245,70 +282,8 @@ class AdvancedSearch extends React.Component {
           }}
         >
           <div className={Classes.DIALOG_BODY}>
-            <form onSubmit={this.onSubmit}>
-              {FIELDS.map(field => (
-                <FormGroup
-                  label={intl.formatMessage(messages[`${field}_label`])}
-                  labelFor={field}
-                  inline
-                  fill
-                  helperText={intl.formatMessage(messages[`${field}_helptext`])}
-                >
-                  <TagInput
-                    id={field}
-                    addOnBlur
-                    fill
-                    values={this.state[field]}
-                    onChange={vals => this.onChange(field, null, vals)}
-                  />
-                </FormGroup>
-              ))}
-              <Divider />
-              <AdvancedSearchVariants
-                variants={variants}
-                onChange={variantList => this.onChange('variants', null, variantList)}
-              />
-              <Divider />
-              <FormGroup
-                label={intl.formatMessage(messages.proximity_label)}
-                labelFor="proximity"
-                helperText={intl.formatMessage(messages.proximity_helptext)}
-                class
-              >
-                <ControlGroup id="proximity" fill vertical={false}>
-                  <FormGroup
-                    helperText={intl.formatMessage(messages.proximity_term1)}
-                  >
-                    <InputGroup
-                      value={this.state.proximity?.term1}
-                      onChange={e => this.onChange("proximity", "term1", e.target.value)}
-                    />
-                  </FormGroup>
-                  <FormGroup
-                    helperText={intl.formatMessage(messages.proximity_distance)}
-                    labelFor="proximity_slider"
-                    className="padded"
-                  >
-                    <Slider
-                      id="proximity_slider"
-                      min={0}
-                      max={10}
-                      labelStepSize={2}
-                      onChange={val => this.onChange("variant", "distance", val)}
-                      value={+this.state.proximity?.distance || 0}
-                    />
-                  </FormGroup>
-                  <FormGroup
-                    helperText={intl.formatMessage(messages.proximity_term2)}
-                  >
-                    <InputGroup
-                      inline
-                      value={this.state.proximity?.term2}
-                      onChange={e => this.onChange("proximity", "term2", e.target.value)}
-                    />
-                  </FormGroup>
-                </ControlGroup>
-              </FormGroup>
+            <form onSubmit={this.updateQuery}>
+              {_.reverse(FIELDS).map(this.renderField)}
               <ButtonGroup>
                 <Button
                   text={intl.formatMessage(messages.clear)}
