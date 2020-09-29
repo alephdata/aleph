@@ -110,6 +110,14 @@ class Export(db.Model, IdModel, DatedModel):
         return q
 
     @classmethod
+    def get_pending(cls):
+        now = datetime.utcnow()
+        q = cls.all()
+        q = q.filter(cls.status == Status.PENDING)
+        q = q.filter(cls.deleted == False)
+        return q
+
+    @classmethod
     def by_id(cls, id, role_id=None, deleted=False):
         q = cls.all().filter_by(id=id)
         if role_id is not None:

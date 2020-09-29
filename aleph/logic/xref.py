@@ -176,7 +176,7 @@ def _iter_match_batch(stub, sheet, batch):
         )
 
 
-def export_matches(collection_id, export_id):
+def export_matches(export_id):
     """Export the top N matches of cross-referencing for the given collection
     to an Excel formatted export."""
     export = Export.by_id(export_id)
@@ -184,7 +184,7 @@ def export_matches(collection_id, export_id):
     try:
         role = Role.by_id(export.creator_id)
         authz = Authz.from_role(role)
-        collection = Collection.by_id(collection_id)
+        collection = Collection.by_id(export.collection_id)
         file_name = "%s - Crossreference.xlsx" % collection.label
         file_path = export_dir.joinpath(file_name)
         excel = ExcelWriter()

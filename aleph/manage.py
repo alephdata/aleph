@@ -25,6 +25,7 @@ from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.xref import xref_collection
+from aleph.logic.export import retry_exports
 from aleph.logic.roles import create_user, update_roles, delete_role
 from aleph.logic.permissions import update_permission
 
@@ -280,6 +281,18 @@ def cancel(foreign_id):
     collection = get_collection(foreign_id)
     cancel_queue(collection)
     update_collection(collection)
+
+
+@cli.command("cancel-user")
+def cancel_user():
+    """Cancel all queued tasks not related to a dataset."""
+    cancel_queue(None)
+
+
+@cli.command("retry-exports")
+def retry_exports_():
+    """Cancel all queued tasks not related to a dataset."""
+    retry_exports()
 
 
 @cli.command()
