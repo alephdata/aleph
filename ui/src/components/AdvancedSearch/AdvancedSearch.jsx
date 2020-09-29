@@ -205,7 +205,7 @@ class AdvancedSearch extends React.Component {
 
   onSubmit = (e) => {
     this.updateQuery(e);
-    this.props.onToggle()
+    // this.props.onToggle()
   }
 
   onClear = (e) => {
@@ -235,13 +235,14 @@ class AdvancedSearch extends React.Component {
           title={intl.formatMessage(messages.title)}
           hasBackdrop={false}
           enforceFocus={false}
+          usePortal
+          portalContainer={this.ref.current}
           onClose={(e) => {
             // prevent interaction with Navbar from closing
             if (!navbarRef || !navbarRef.current || !navbarRef.current.contains(e.target)) {
               this.props.onToggle();
             }
           }}
-          className="AdvancedSearch"
         >
           <div className={Classes.DIALOG_BODY}>
             <form onSubmit={this.onSubmit}>
