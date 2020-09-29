@@ -111,10 +111,9 @@ class Export(db.Model, IdModel, DatedModel):
 
     @classmethod
     def get_pending(cls):
-        now = datetime.utcnow()
         q = cls.all()
         q = q.filter(cls.status == Status.PENDING)
-        q = q.filter(cls.deleted == False)
+        q = q.filter(cls.deleted == False)  # noqa
         return q
 
     @classmethod
