@@ -54,13 +54,13 @@ class AlephWorker(Worker):
             self.hourly.update()
             log.info("Running hourly tasks...")
             check_alerts()
-            delete_expired_exports()
 
         if self.daily.check():
             self.daily.update()
             log.info("Running daily tasks...")
             generate_digest()
             update_roles()
+            delete_expired_exports()
 
     def periodic(self):
         with app.app_context():

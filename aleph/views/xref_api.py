@@ -70,9 +70,7 @@ def index(collection_id):
     return XrefSerializer.jsonify_result(result)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/xref", methods=["POST"]
-)  # noqa
+@blueprint.route("/api/2/collections/<int:collection_id>/xref", methods=["POST"])
 def generate(collection_id):
     """
     ---

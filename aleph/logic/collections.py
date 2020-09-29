@@ -111,7 +111,7 @@ def index_aggregator(
     def _generate():
         idx = 0
         entities = aggregator.iterate(entity_id=entity_ids, skip_errors=skip_errors)
-        for idx, proxy in enumerate(entities):
+        for idx, proxy in enumerate(entities, 1):
             if idx > 0 and idx % 1000 == 0:
                 log.debug("[%s] Index: %s...", collection, idx)
             yield proxy

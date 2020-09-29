@@ -99,11 +99,20 @@ def crawldir(path, language=None, foreign_id=None):
 
 @cli.command()
 @click.argument("foreign_id")
-@click.option("-k", "--keep-metadata", is_flag=True, default=False)
-def delete(foreign_id, keep_metadata=False):
-    """Delete all the contents for a given collecton."""
+@click.option("--sync/--async", default=False)
+def delete(foreign_id, sync=False):
+    """Delete a given collection."""
     collection = get_collection(foreign_id)
-    delete_collection(collection, keep_metadata=keep_metadata)
+    delete_collection(collection, sync=sync)
+
+
+@cli.command()
+@click.argument("foreign_id")
+@click.option("--sync/--async", default=False)
+def flush(foreign_id, sync=False):
+    """Flush all the contents for a given collection."""
+    collection = get_collection(foreign_id)
+    delete_collection(collection, keep_metadata=True, sync=sync)
 
 
 def _reindex_collection(collection, flush=False):

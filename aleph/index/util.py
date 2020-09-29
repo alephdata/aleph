@@ -185,6 +185,8 @@ def query_delete(index, query, sync=False, **kwargs):
             es.delete_by_query(
                 index=index,
                 body={"query": query},
+                _source=False,
+                slices="auto",
                 conflicts="proceed",
                 wait_for_completion=sync,
                 refresh=refresh_sync(sync),
