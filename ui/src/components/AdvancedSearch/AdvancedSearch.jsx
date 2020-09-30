@@ -84,7 +84,6 @@ class AdvancedSearch extends React.Component {
     this.state = {
       all: [],
       exact: [],
-      any: [],
       none: [],
       must: [],
       variants: [],
