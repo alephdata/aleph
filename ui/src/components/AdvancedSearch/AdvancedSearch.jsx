@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { Button, ButtonGroup, Classes, Drawer, FormGroup, Intent, Position, TagInput } from '@blueprintjs/core';
+import { Button, Classes, Drawer, FormGroup, Intent, Position, TagInput } from '@blueprintjs/core';
 
 import { FIELDS, composeQueryText, parseQueryText } from 'components/AdvancedSearch/util';
 import AdvancedSearchMultiField from 'components/AdvancedSearch/AdvancedSearchMultiField';
@@ -220,7 +220,7 @@ class AdvancedSearch extends React.Component {
   }
 
   render() {
-    const { intl, navbarRef } = this.props;
+    const { navbarRef } = this.props;
 
     return (
       <div className="AdvancedSearch" ref={this.ref}>
