@@ -198,8 +198,6 @@ class AdvancedSearch extends React.Component {
             text={<span className="bp3-text-muted">{intl.formatMessage(messages.clear)}</span>}
             onClick={this.onClear}
             minimal
-            type="reset"
-
           />
           <Button
             type="submit"
