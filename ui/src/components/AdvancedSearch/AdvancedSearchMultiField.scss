@@ -1,0 +1,50 @@
+@import "app/variables.scss";
+
+.AdvancedSearchMultiField {
+  &__list {
+    margin-bottom: $aleph-grid-size;
+
+    &__item {
+      margin: $aleph-grid-size/2 $aleph-grid-size $aleph-grid-size/2 0;
+    }
+  }
+
+  &__form {
+    border: 1px solid $aleph-border-color;
+    border-radius: $aleph-grid-size/2;
+    padding: 8px;
+    margin-top: $aleph-grid-size;
+
+    .bp3-form-group {
+      margin-bottom: 0;
+      align-self: flex-end;
+    }
+
+    .bp3-button {
+      width: $aleph-grid-size !important;
+      max-width: $aleph-grid-size !important;
+      flex-basis: $aleph-grid-size !important;
+      margin-left: $aleph-grid-size;
+    }
+  }
+
+  &__label {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    margin-top: $aleph-grid-size;
+  }
+
+  .bp3-slider {
+    height: $aleph-grid-size*3;
+  }
+
+  .bp3-slider-label {
+    font-size: 10px;
+  }
+
+  .bp3-collapse-body {
+    padding-bottom: $aleph-grid-size;
+  }
+}

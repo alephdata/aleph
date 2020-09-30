@@ -1,16 +1,13 @@
-import _ from 'lodash';
 import React from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { parse } from 'search-query-parser';
-import { Query as ESQuery, QueryStringQuery, ValueTermQueryBase, TermQuery } from 'elastic-builder';
-import { Button, ButtonGroup, Classes, ControlGroup, Dialog, Divider, Drawer, FormGroup, InputGroup, Intent, NumericInput, Position, Slider, Tag, TagInput } from '@blueprintjs/core';
+import { Button, ButtonGroup, Classes, Drawer, FormGroup, Intent, Position, TagInput } from '@blueprintjs/core';
 
 import { FIELDS, composeQueryText, parseQueryText } from 'components/AdvancedSearch/util';
-import AdvancedSearchVariants from 'components/AdvancedSearch/AdvancedSearchVariants';
+import AdvancedSearchMultiField from 'components/AdvancedSearch/AdvancedSearchMultiField';
 import Query from 'app/Query';
 
 import './AdvancedSearch.scss';
@@ -52,21 +49,13 @@ const messages = defineMessages({
     id: 'search.advanced.must.helptext',
     defaultMessage: 'Only results with these words will be returned',
   },
-  variant_label: {
-    id: 'search.advanced.variant.label',
+  variants_label: {
+    id: 'search.advanced.variants.label',
     defaultMessage: 'Spelling variations',
   },
-  variant_helptext: {
-    id: 'search.advanced.variant.helptext',
+  variants_helptext: {
+    id: 'search.advanced.variants.helptext',
     defaultMessage: 'Increase the fuzziness of a search.  For example, Wladimir~2 will return not just the term “Wladimir” but also similar spellings such as "Wladimyr" or "Vladimyr". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant.',
-  },
-  variant_term: {
-    id: 'search.advanced.variant.term1',
-    defaultMessage: 'Term',
-  },
-  variant_distance: {
-    id: 'search.advanced.variant.distance',
-    defaultMessage: 'Letters different',
   },
   proximity_label: {
     id: 'search.advanced.proximity.label',
@@ -75,18 +64,6 @@ const messages = defineMessages({
   proximity_helptext: {
     id: 'search.advanced.proximity.helptext',
     defaultMessage: 'Search for two terms within a certain distance of each other. For example, return results with the terms "Bank" and "America" occurring within two words from each other, such as "Bank of America", "Bank in America", even "America has a Bank".',
-  },
-  proximity_term1: {
-    id: 'search.advanced.proximity.term1',
-    defaultMessage: 'First term',
-  },
-  proximity_term2: {
-    id: 'search.advanced.proximity.term2',
-    defaultMessage: 'Second term',
-  },
-  proximity_distance: {
-    id: 'search.advanced.proximity.distance',
-    defaultMessage: 'Distance',
   },
   submit: {
     id: 'search.advanced.submit',
@@ -115,8 +92,8 @@ class AdvancedSearch extends React.Component {
     };
 
     this.ref = React.createRef();
-
     this.updateQuery = this.updateQuery.bind(this);
+    this.renderField = this.renderField.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -139,7 +116,7 @@ class AdvancedSearch extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { history, query, location } = this.props;
+    const { history } = this.props;
     const queryText = isClear ? '' : composeQueryText(this.state);
 
     history.push({
@@ -167,74 +144,25 @@ class AdvancedSearch extends React.Component {
     });
   }
 
-  renderField(field) {
-    const values = this.state[field]
-    switch(field) {
-      case 'proximity':
-        return null;
-      case 'variants':
-        return (
-          <>
-            <Divider />
-            <AdvancedSearchVariants
-              variants={values}
-              onChange={variantList => this.onChange(field, variantList)}
-            />
-          </>
-        )
-      default:
-        return this.renderSimpleField(field, values);
-    }
-  }
-
-  renderProximity() {
+  renderField({ key }) {
     const { intl } = this.props;
+    const values = this.state[key];
 
-    return (
-      <>
-        <Divider />
-        <FormGroup
-          label={intl.formatMessage(messages.proximity_label)}
-          labelFor="proximity"
-          helperText={intl.formatMessage(messages.proximity_helptext)}
-          class
-        >
-          <ControlGroup id="proximity" fill vertical={false}>
-            <FormGroup
-              helperText={intl.formatMessage(messages.proximity_term1)}
-            >
-              <InputGroup
-                value={this.state.proximity?.term1}
-                onChange={e => this.onChange("proximity", e.target.value)}
-              />
-            </FormGroup>
-            <FormGroup
-              helperText={intl.formatMessage(messages.proximity_distance)}
-              labelFor="proximity_slider"
-              className="padded"
-            >
-              <Slider
-                id="proximity_slider"
-                min={0}
-                max={10}
-                labelStepSize={2}
-                onChange={val => this.onChange("proximity", val)}
-                value={+this.state.proximity?.distance || 0}
-              />
-            </FormGroup>
-            <FormGroup
-              helperText={intl.formatMessage(messages.proximity_term2)}
-            >
-              <InputGroup
-                inline
-                value={this.state.proximity?.term2}
-                onChange={e => this.onChange("proximity", e.target.value)}
-              />
-            </FormGroup>
-          </ControlGroup>
-        </FormGroup>
-      </>
-    );
+    console.log('rendering', key);
+
+    if (key === 'proximity' || key === 'variants') {
+      return (
+        <AdvancedSearchMultiField
+          values={values}
+          label={intl.formatMessage(messages[`${key}_label`])}
+          helperText={intl.formatMessage(messages[`${key}_helptext`])}
+          onChange={vals => this.onChange(key, vals)}
+          field={key}
+        />
+      );
+    }
+
+    return this.renderSimpleField(key, values);
   }
 
   renderSimpleField(field, values) {
@@ -259,8 +187,9 @@ class AdvancedSearch extends React.Component {
   }
 
   render() {
-    const { intl, navbarRef, onToggle } = this.props;
-    const { variants } = this.state;
+    const { intl, navbarRef } = this.props;
+
+    console.log('fields are', FIELDS);
 
     return (
       <div className="AdvancedSearch" ref={this.ref}>
@@ -283,7 +212,7 @@ class AdvancedSearch extends React.Component {
         >
           <div className={Classes.DIALOG_BODY}>
             <form onSubmit={this.updateQuery}>
-              {_.reverse(FIELDS).map(this.renderField)}
+              {FIELDS.map(this.renderField)}
               <ButtonGroup>
                 <Button
                   text={intl.formatMessage(messages.clear)}
