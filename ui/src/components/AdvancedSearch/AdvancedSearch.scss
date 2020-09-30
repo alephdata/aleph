@@ -34,4 +34,18 @@
   .bp3-form-content {
     width: 100%;
   }
+
+  .bp3-drawer-header .bp3-heading {
+    margin-right: $aleph-grid-size/2 !important;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .bp3-button {
+      margin-left: $aleph-grid-size/2;
+    }
+  }
 }

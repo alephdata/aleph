@@ -40,28 +40,22 @@ export const FIELDS = [
 
 
 export const parseQueryText = (queryText) => {
-  console.log('PARSING')
   const parsedResults = {};
   let qt = queryText;
 
   [...FIELDS].reverse().forEach(({ key, re, process }) => {
     const matches = qt.match(re) || [];
-    console.log(key, matches, matches.map(process));
     parsedResults[key] = matches.map(process)
     qt = qt.replace(re, '');
   })
-
-  console.log('parsed results', parsedResults, qt);
 
   return parsedResults
 }
 
 export const composeQueryText = (queryParts) => {
-  console.log('COMPOSING', queryParts)
   return FIELDS
     .map(({ key, compose }) => {
       if (queryParts[key]) {
-        console.log(key, queryParts[key], queryParts[key].map(compose).join(' '));
         return queryParts[key].map(compose).join(' ');
       }
       return null;

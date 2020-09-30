@@ -188,6 +188,37 @@ class AdvancedSearch extends React.Component {
     );
   }
 
+  renderTitle = () => {
+    const { intl } = this.props;
+    return (
+      <span className="AdvancedSearch__header">
+        <span>{intl.formatMessage(messages.title)}</span>
+        <span>
+          <Button
+            text={<span className="bp3-text-muted">{intl.formatMessage(messages.clear)}</span>}
+            onClick={this.onClear}
+            minimal
+            type="reset"
+
+          />
+          <Button
+            type="submit"
+            icon="search"
+            intent={Intent.PRIMARY}
+            text={intl.formatMessage(messages.submit)}
+            onClick={this.updateQuery}
+          />
+          <Button
+            className="AdvancedSearch__header__close"
+            minimal
+            icon="chevron-up"
+            onClick={this.props.onToggle}
+          />
+        </span>
+      </span>
+    )
+  }
+
   render() {
     const { intl, navbarRef } = this.props;
 
@@ -198,7 +229,8 @@ class AdvancedSearch extends React.Component {
           position={Position.TOP}
           canOutsideClickClose
           icon="settings"
-          title={intl.formatMessage(messages.title)}
+          title={this.renderTitle()}
+          isCloseButtonShown={false}
           hasBackdrop={false}
           enforceFocus={false}
           usePortal
@@ -213,20 +245,10 @@ class AdvancedSearch extends React.Component {
           <div className={Classes.DIALOG_BODY}>
             <form onSubmit={this.updateQuery}>
               {FIELDS.map(this.renderField)}
-              <ButtonGroup>
-                <Button
-                  text={intl.formatMessage(messages.clear)}
-                  onClick={this.onClear}
-                />
-                <Button
-                  type="submit"
-                  intent={Intent.PRIMARY}
-                  text={intl.formatMessage(messages.submit)}
-                />
-              </ButtonGroup>
             </form>
           </div>
         </Drawer>
+
       </div>
     );
   }
