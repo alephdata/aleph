@@ -110,6 +110,7 @@ class AdvancedSearch extends React.Component {
         ...parsed
       }
     }
+    return prevState;
   }
 
   updateQuery(e, isClear) {
@@ -126,7 +127,6 @@ class AdvancedSearch extends React.Component {
   }
 
   onChange = (field, values) => {
-    console.log('in on change', field, values);
     this.setState({
       [field]: values
     });
@@ -148,8 +148,6 @@ class AdvancedSearch extends React.Component {
     const { intl } = this.props;
     const values = this.state[key];
 
-    console.log('rendering', key);
-
     if (key === 'proximity' || key === 'variants') {
       return (
         <AdvancedSearchMultiField
@@ -158,6 +156,7 @@ class AdvancedSearch extends React.Component {
           helperText={intl.formatMessage(messages[`${key}_helptext`])}
           onChange={vals => this.onChange(key, vals)}
           field={key}
+          key={key}
         />
       );
     }
@@ -169,6 +168,7 @@ class AdvancedSearch extends React.Component {
     const { intl } = this.props;
     return (
       <FormGroup
+        key={field}
         label={intl.formatMessage(messages[`${field}_label`])}
         labelFor={field}
         inline
@@ -180,7 +180,9 @@ class AdvancedSearch extends React.Component {
           addOnBlur
           fill
           values={values}
+          separator={field !== 'exact' && ' '}
           onChange={vals => this.onChange(field, vals)}
+          tagProps={{ minimal: true }}
         />
       </FormGroup>
     );
@@ -188,8 +190,6 @@ class AdvancedSearch extends React.Component {
 
   render() {
     const { intl, navbarRef } = this.props;
-
-    console.log('fields are', FIELDS);
 
     return (
       <div className="AdvancedSearch" ref={this.ref}>

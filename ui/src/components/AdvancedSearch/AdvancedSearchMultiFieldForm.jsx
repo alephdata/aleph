@@ -61,50 +61,47 @@ class AdvancedSearchMultiFieldForm extends PureComponent {
     const { field, intl } = this.props;
     const { distance, term, term2 } = this.state;
 
-    console.log('field is', field);
     return (
-      <form onSubmit={this.onSubmit}>
-        <ControlGroup id={field} fill vertical={false} className="AdvancedSearchMultiField__form">
+      <ControlGroup id={field} fill vertical={false} className="AdvancedSearchMultiField__form">
+        <FormGroup
+          helperText={intl.formatMessage(messages[`${field}_term`])}
+        >
+          <InputGroup
+            value={term || ''}
+            onChange={e => this.onChange("term", e.target.value)}
+          />
+        </FormGroup>
+        <FormGroup
+          helperText={intl.formatMessage(messages[`${field}_distance`])}
+          labelFor={`${field}_slider`}
+          className="padded"
+        >
+          <Slider
+            id={`${field}_slider`}
+            min={0}
+            max={10}
+            labelStepSize={2}
+            onChange={val => this.onChange("distance", val)}
+            value={+distance || 0}
+          />
+        </FormGroup>
+        {field === 'proximity' && (
           <FormGroup
-            helperText={intl.formatMessage(messages[`${field}_term`])}
+            helperText={intl.formatMessage(messages.proximity_term2)}
           >
             <InputGroup
-              value={term}
-              onChange={e => this.onChange("term", e.target.value)}
+              inline
+              value={term2 || ''}
+              onChange={e => this.onChange("term2", e.target.value)}
             />
           </FormGroup>
-          <FormGroup
-            helperText={intl.formatMessage(messages[`${field}_distance`])}
-            labelFor={`${field}_slider`}
-            className="padded"
-          >
-            <Slider
-              id={`${field}_slider`}
-              min={0}
-              max={10}
-              labelStepSize={2}
-              onChange={val => this.onChange("distance", val)}
-              value={+distance || 0}
-            />
-          </FormGroup>
-          {field === 'proximity' && (
-            <FormGroup
-              helperText={intl.formatMessage(messages.proximity_term2)}
-            >
-              <InputGroup
-                inline
-                value={term2}
-                onChange={e => this.onChange("term2", e.target.value)}
-              />
-            </FormGroup>
-          )}
-          <Button
-            type="submit"
-            icon="add"
-            disabled={!term || !distance || (field === 'proximity' && !term2)}
-          />
-        </ControlGroup>
-      </form>
+        )}
+        <Button
+          onClick={this.onSubmit}
+          icon="add"
+          disabled={!term || !distance || (field === 'proximity' && !term2)}
+        />
+      </ControlGroup>
     );
   }
 }

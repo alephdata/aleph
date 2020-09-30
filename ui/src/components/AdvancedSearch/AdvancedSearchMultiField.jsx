@@ -18,9 +18,10 @@ class AdvancedSearchMultiField extends PureComponent {
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
-  onRemove(val) {
+  onRemove(index) {
     const { onChange, values } = this.props;
-    onChange(values.filter(v => v.term !== val.term));
+    values.splice(index, 1);
+    onChange(values);
   }
 
   onFormSubmit(newVal) {
@@ -59,9 +60,10 @@ class AdvancedSearchMultiField extends PureComponent {
           </Collapse>
           {values.length > 0 && (
             <div className="AdvancedSearchMultiField__list">
-              {values?.map(v => (
+              {values?.map((v, i) => (
                 <Tag
-                  onRemove={() => this.onRemove(v)}
+                  key={i}
+                  onRemove={() => this.onRemove(i)}
                   rightIcon={<Count count={v.distance} />}
                   className="AdvancedSearchMultiField__list__item"
                   minimal

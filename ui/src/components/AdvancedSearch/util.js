@@ -16,13 +16,13 @@ export const FIELDS = [
     key: 'must',
     re: /(^|\s)\+[^\s]+/g,
     process: t => t.replace(/\+/g,''),
-    compose: t => `+${t}`
+    compose: t => `+${t.trim()}`
   },
   {
     key: 'none',
     re: /(^|\s)-[^\s]+/g,
     process: t => t.replace(/-/g,''),
-    compose: t => `-${t}`,
+    compose: t => `-${t.trim()}`,
   },
   {
     key: 'variants',
