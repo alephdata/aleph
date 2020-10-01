@@ -90,6 +90,7 @@ class DownloadButton extends React.PureComponent {
               rel="nofollow noopener noreferrer"
               text={intl.formatMessage(messages.button_confirm)}
               intent={Intent.DANGER}
+              onClick={this.toggleDialog}
             />
             <Button
               onClick={this.toggleDialog}
