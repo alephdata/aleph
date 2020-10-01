@@ -35,5 +35,5 @@ pillow==7.2.0
 vobject==0.9.6.1
 msglite==0.29.0
 
-cryptography==3.1
+cryptography==3.1.1
 requests[security]==2.24.0
