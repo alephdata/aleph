@@ -10,7 +10,7 @@ import { withRouter } from 'react-router';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import EntityPreview from 'components/Entity/EntityPreview';
 import Navbar from 'components/Navbar/Navbar';
-import SearchTips from 'components/SearchTips/SearchTips';
+import AdvancedSearch from 'components/AdvancedSearch/AdvancedSearch';
 import { selectSession, selectMetadata } from 'selectors';
 
 import './Screen.scss';
@@ -20,9 +20,9 @@ export class Screen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchTipsOpen: false,
+      advancedSearchOpen: false,
     };
-    this.onToggleSearchTips = this.onToggleSearchTips.bind(this);
+    this.onToggleAdvancedSearch = this.onToggleAdvancedSearch.bind(this);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
     this.navbarRef = React.createRef();
   }
@@ -37,8 +37,8 @@ export class Screen extends React.Component {
     }
   }
 
-  onToggleSearchTips() {
-    this.setState(({ searchTipsOpen }) => ({ searchTipsOpen: !searchTipsOpen }));
+  onToggleAdvancedSearch() {
+    this.setState(({ advancedSearchOpen }) => ({ advancedSearchOpen: !advancedSearchOpen }));
   }
 
   toggleAuthentication = event => event.preventDefault();
@@ -70,7 +70,7 @@ export class Screen extends React.Component {
       session, metadata, query, requireSession,
       isHomepage, title, description, className, searchScopes,
     } = this.props;
-    const { searchTipsOpen } = this.state;
+    const { advancedSearchOpen } = this.state;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
@@ -97,7 +97,7 @@ export class Screen extends React.Component {
           query={query}
           isHomepage={isHomepage}
           searchScopes={searchScopes}
-          onToggleSearchTips={this.onToggleSearchTips}
+          onToggleAdvancedSearch={this.onToggleAdvancedSearch}
         />
         { (hasMetadata && !!metadata.app.banner) && (
           <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
@@ -119,9 +119,9 @@ export class Screen extends React.Component {
             toggleDialog={this.toggleAuthentication}
           />
         )}
-        <SearchTips
-          isOpen={searchTipsOpen}
-          onToggle={this.onToggleSearchTips}
+        <AdvancedSearch
+          isOpen={advancedSearchOpen}
+          onToggle={this.onToggleAdvancedSearch}
           navbarRef={this.navbarRef}
         />
       </div>
