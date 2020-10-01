@@ -79,8 +79,8 @@ class AdvancedSearchMultiFieldForm extends PureComponent {
           <Slider
             id={`${field}_slider`}
             min={0}
-            max={10}
-            labelStepSize={2}
+            max={field === 'proximity' ? 6 : 4}
+            labelStepSize={1}
             onChange={val => this.onChange("distance", val)}
             value={+distance || 0}
           />
