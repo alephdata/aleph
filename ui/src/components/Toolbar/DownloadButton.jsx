@@ -1,6 +1,12 @@
 import React from 'react';
-import { AnchorButton, Button, ButtonGroup, Classes, Dialog, Icon, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { AnchorButton, Button, Callout, Checkbox, Classes, Dialog, Icon, Intent, Tooltip, Position } from '@blueprintjs/core';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { dispatchSetConfigValue } from 'actions/configActions';
+
+import './DownloadButton.scss';
+
 
 const messages = defineMessages({
   download: {
@@ -19,6 +25,10 @@ const messages = defineMessages({
     id: 'document.download.confirm',
     defaultMessage: 'Download',
   },
+  checkbox_label: {
+    id: 'document.download.dont_warn',
+    defaultMessage: "Don't warn me in the future when downloading source documents",
+  },
 });
 
 
@@ -26,22 +36,54 @@ class DownloadButton extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = { isOpen: false };
+    this.state = { checkboxChecked: false, isOpen: false };
 
+    this.toggleCheckbox = this.toggleCheckbox.bind(this);
     this.toggleDialog = this.toggleDialog.bind(this);
   }
   toggleDialog() {
-    this.setState(({ isOpen }) => ({
-      isOpen: !isOpen,
+    this.setState(({ checkboxChecked, isOpen }) => {
+      if (checkboxChecked) {
+        this.props.dispatchSetConfigValue({ dontWarnOnDownload: true });
+      }
+      return ({
+        isOpen: !isOpen,
+      });
+    });
+  }
+  toggleCheckbox() {
+    this.setState(({ checkboxChecked }) => ({
+      checkboxChecked: !checkboxChecked,
     }));
   }
+
   render() {
-    const { intl, document } = this.props;
-    const { isOpen } = this.state;
+    const { intl, document, dontWarnOnDownload } = this.props;
+    const { checkboxChecked, isOpen } = this.state;
 
     if (!document || !document.links || !document.links.file) {
       return null;
     }
+
+    if (dontWarnOnDownload) {
+      return (
+        <Tooltip
+          content={intl.formatMessage(messages.mode_download)}
+          position={Position.BOTTOM_RIGHT}
+        >
+          <AnchorButton
+            href={document.links.file}
+            icon="download"
+            download
+            target="_blank"
+            className="DownloadButton"
+            rel="nofollow noopener noreferrer"
+            text={intl.formatMessage(messages.download)}
+          />
+        </Tooltip>
+      );
+    }
+
     return (
       <>
         <Tooltip
@@ -78,6 +120,15 @@ class DownloadButton extends React.PureComponent {
                   }}
                 />
               </p>
+              <Callout
+                className="DownloadButton__checkbox-container"
+              >
+                <Checkbox
+                  checked={checkboxChecked}
+                  label={intl.formatMessage(messages.checkbox_label)}
+                  onChange={this.toggleCheckbox}
+                />
+              </Callout>
             </div>
           </div>
           <div className={Classes.ALERT_FOOTER}>
@@ -102,6 +153,9 @@ class DownloadButton extends React.PureComponent {
     );
   }
 }
-
-DownloadButton = injectIntl(DownloadButton);
-export default DownloadButton;
+const mapStateToProps = ({ config }) => ({ dontWarnOnDownload: config.dontWarnOnDownload });
+const mapDispatchToProps = { dispatchSetConfigValue };
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(DownloadButton);
