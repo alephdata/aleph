@@ -39,8 +39,8 @@ def _entities_query(filters, authz, collection_id, schemata):
         filters.append(authz_query(authz))
     if collection_id is not None:
         filters.append({"term": {"collection_id": collection_id}})
-    if ensure_list(schemata):
-        filters.append({"terms": {"schemata": ensure_list(schemata)}})
+    # if ensure_list(schemata):
+    #     filters.append({"terms": {"schemata": ensure_list(schemata)}})
     return {"bool": {"filter": filters}}
 
 

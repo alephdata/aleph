@@ -210,7 +210,6 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
         actions,
         chunk_size=chunk_size,
         max_retries=10,
-        initial_backoff=2,
         yield_ok=False,
         raise_on_error=False,
         refresh=refresh_sync(sync),

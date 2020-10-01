@@ -49,6 +49,7 @@ def _query_item(entity):
     if query == none_query():
         return
 
+    log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
     query = {"query": query, "size": 100, "_source": {"includes": PROXY_INCLUDES}}
     matchable = list(entity.schema.matchable_schemata)
     index = entities_read_index(schema=matchable)
@@ -66,6 +67,7 @@ def _query_item(entity):
 
 def _iter_mentions(collection):
     """Combine mentions into pseudo-entities used for xref."""
+    log.info("[%s] Generating mention-based xref...", collection)
     proxy = model.make_entity(Entity.LEGAL_ENTITY)
     for mention in iter_proxies(
         collection_id=collection.id,
@@ -86,6 +88,7 @@ def _iter_mentions(collection):
 
 def _query_mentions(collection):
     aggregator = get_aggregator(collection, origin=ORIGIN)
+    aggregator.delete(origin=ORIGIN)
     writer = aggregator.bulk()
     for proxy in _iter_mentions(collection):
         schemata = set()
@@ -113,17 +116,20 @@ def _query_mentions(collection):
 
 def _query_entities(collection):
     """Generate matches for indexing."""
-    matchable = [s.name for s in model if s.matchable]
+    log.info("[%s] Generating matchable entity-based xref...", collection)
+    matchable = [s for s in model if s.matchable]
     for proxy in iter_proxies(collection_id=collection.id, schemata=matchable):
         yield from _query_item(proxy)
 
 
 def xref_collection(stage, collection):
     """Cross-reference all the entities and documents in a collection."""
+    log.info("[%s] Clearing previous xref state....", collection)
     delete_xref(collection, sync=True)
     delete_entities(collection.id, origin=ORIGIN, sync=True)
     index_matches(collection, _query_entities(collection))
     index_matches(collection, _query_mentions(collection))
+    log.info("[%s] Xref done, re-indexing to reify mentions...", collection)
     reindex_collection(collection, sync=False)
 
 
