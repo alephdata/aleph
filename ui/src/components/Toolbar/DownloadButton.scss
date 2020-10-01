@@ -1,0 +1,11 @@
+@import "app/variables.scss";
+
+.DownloadButton {
+  &__checkbox-container {
+    margin: $aleph-grid-size*2 0;
+
+    .bp3-checkbox {
+      margin: 0;
+    }
+  }
+}
