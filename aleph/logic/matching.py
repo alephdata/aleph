@@ -63,19 +63,19 @@ def match_query(proxy, collection_ids=None, query=None):
     for (prop, value) in proxy.itervalues():
         specificity = prop.specificity(value)
         if specificity > 0:
-            filters.append((prop, value))
+            filters.add((prop.type, value, specificity))
 
     filters = sorted(filters, key=lambda p: p[2], reverse=True)
     required = []
-    for (prop, value) in filters:
-        if prop.type in REQUIRED and len(required) <= MAX_CLAUSES:
-            required.extend(_make_queries(prop.type, value))
+    for (type_, value, _) in filters:
+        if type_ in REQUIRED and len(required) <= MAX_CLAUSES:
+            required.extend(_make_queries(type_, value))
 
     scoring = []
-    for (prop, value) in filters:
+    for (type_, value, _) in filters:
         clauses = len(required) + len(scoring)
-        if prop.type not in REQUIRED and clauses <= MAX_CLAUSES:
-            scoring.extend(_make_queries(prop.type, value))
+        if type_ not in REQUIRED and clauses <= MAX_CLAUSES:
+            scoring.extend(_make_queries(type_, value))
 
     if not len(required):
         # e.g. a document from which no features have been extracted.

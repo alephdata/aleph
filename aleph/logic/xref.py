@@ -1,8 +1,8 @@
-import sys
+import shutil
 import logging
+from copy import deepcopy
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
-import shutil
 
 from followthemoney import model
 from followthemoney.types import registry
@@ -50,22 +50,20 @@ def _query_item(entity):
     if query == none_query():
         return
 
-    log.debug("Query: %r", query)
+    # log.debug("Query: %r", query)
     log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
     query = {"query": query, "size": 5, "_source": ENTITY_SOURCE}
     index = entities_read_index(schema=list(entity.schema.matchable_schemata))
     result = es.search(index=index, body=query)
-    log.debug("Res size: %d", sys.getsizeof(result))
     for result in result.get("hits").get("hits"):
-        result = unpack_result(result)
+        result = deepcopy(unpack_result(result))
         if result is None:
             continue
         match = model.get_proxy(result)
         score = compare(model, entity, match)
         if score >= SCORE_CUTOFF:
             log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
-            if False:
-                yield score, entity, result.get("collection_id"), match
+            yield score, entity, result.get("collection_id"), match
 
 
 def _iter_mentions(collection):
