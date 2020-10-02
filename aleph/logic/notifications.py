@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from followthemoney import model
 from followthemoney.util import get_entity_id
 
-from aleph.core import cache, es, settings, url_for
+from aleph.core import cache, es, settings
 from aleph.authz import Authz
 from aleph.model import Collection, Entity, Role, Alert, EntitySet, Export
 from aleph.model import Event, Events
@@ -133,7 +133,6 @@ def render_notification(stub, notification):
                 file_name=data.get("file_name"),
                 mime_type=data.get("file_name"),
             )
-            link = url_for("exports_api.download", export_id=data.get("id"))
 
         template = "{{%s}}" % name
         html = html.replace(template, html_link(title, link))
