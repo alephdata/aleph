@@ -1,6 +1,6 @@
 import logging
 from pprint import pprint  # noqa
-from banal import hash_data, ensure_list
+from banal import hash_data, unique_list
 from datetime import datetime
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
@@ -12,6 +12,7 @@ from aleph.index.util import authz_query
 from aleph.index.util import KEYWORD, SHARDS_HEAVY
 
 log = logging.getLogger(__name__)
+XREF_SOURCE = {"excludes": ["text", "countries"]}
 
 
 def xref_index():
@@ -42,8 +43,10 @@ def _index_form(collection, matches):
     now = datetime.utcnow().isoformat()
     for (score, entity, match_collection_id, match) in matches:
         xref_id = hash_data((entity.id, collection.id, match.id))
-        text = ensure_list(entity.get_type_values(registry.name))
+        text = entity.get_type_values(registry.name)
         text.extend(match.get_type_values(registry.name))
+        countries = entity.get_type_values(registry.country)
+        countries.extend(match.get_type_values(registry.country))
         yield {
             "_id": xref_id,
             "_index": xref_index(),
@@ -53,7 +56,7 @@ def _index_form(collection, matches):
                 "collection_id": collection.id,
                 "match_id": match.id,
                 "match_collection_id": match_collection_id,
-                "countries": match.get_type_values(registry.country),
+                "countries": unique_list(countries),
                 "schema": match.schema.name,
                 "text": text,
                 "created_at": now,
@@ -72,7 +75,7 @@ def iter_matches(collection, authz):
         {"term": {"collection_id": collection.id}},
         authz_query(authz, field="match_collection_id"),
     ]
-    query = {"query": {"bool": {"filter": filters}}}
+    query = {"query": {"bool": {"filter": filters}}, "_source": XREF_SOURCE}
     for res in scan(es, index=xref_index(), query=query):
         yield unpack_result(res)
 
@@ -82,7 +85,8 @@ def get_xref(xref_id, collection_id=None):
     filters = [{"ids": {"values": [xref_id]}}]
     if collection_id is not None:
         filters.append({"term": {"collection_id": collection_id}})
-    query = {"query": {"bool": {"filter": filters}}, "size": 1}
+    query = {"bool": {"filter": filters}}
+    query = {"query": query, "size": 1, "_source": XREF_SOURCE}
     result = es.search(index=xref_index(), body=query)
     for doc in result.get("hits", {}).get("hits", []):
         return unpack_result(doc)

@@ -4,9 +4,9 @@ from werkzeug.exceptions import BadRequest
 
 from aleph.index.indexes import entities_read_index
 from aleph.index.collections import collections_index
-from aleph.index.xref import xref_index
+from aleph.index.xref import xref_index, XREF_SOURCE
 from aleph.index.notifications import notifications_index
-from aleph.index.entities import PROXY_INCLUDES
+from aleph.index.entities import ENTITY_SOURCE
 from aleph.logic.matching import match_query
 from aleph.logic.notifications import get_role_channels
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
@@ -21,6 +21,7 @@ class CollectionsQuery(Query):
     SORT_DEFAULT = ["_score", {"label.kw": "asc"}]
     SKIP_FILTERS = ["writeable"]
     PREFIX_FIELD = "label"
+    SOURCE = {"excludes": ["text"]}
 
     def get_filters(self, **kwargs):
         filters = super(CollectionsQuery, self).get_filters(**kwargs)
@@ -37,7 +38,7 @@ class EntitiesQuery(Query):
     TEXT_FIELDS = ["fingerprints.text^3", "text"]
     PREFIX_FIELD = "fingerprints.text"
     SKIP_FILTERS = ["schema", "schemata"]
-    INCLUDE_FIELDS = PROXY_INCLUDES
+    SOURCE = ENTITY_SOURCE
     SORT_DEFAULT = []
 
     def get_index(self):
@@ -77,6 +78,7 @@ class XrefQuery(Query):
     TEXT_FIELDS = ["text"]
     SORT_DEFAULT = [{"score": "desc"}]
     AUTHZ_FIELD = "match_collection_id"
+    SOURCE = XREF_SOURCE
 
     def __init__(self, parser, collection_id=None):
         self.collection_id = collection_id

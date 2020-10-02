@@ -6,7 +6,7 @@ from followthemoney.graph import Graph as FtMGraph
 
 from aleph.core import es
 from aleph.model import Entity
-from aleph.index.entities import _source_spec, PROXY_INCLUDES
+from aleph.index.entities import ENTITY_SOURCE
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import field_filter_query, authz_query, unpack_result
 
@@ -89,7 +89,7 @@ class GraphQuery(object):
             query = {
                 "size": patterns[0].limit,
                 "query": {"bool": query},
-                "_source": _source_spec(PROXY_INCLUDES, None),
+                "_source": ENTITY_SOURCE,
             }
             counters = {}
             for pattern in patterns:

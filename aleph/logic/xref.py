@@ -21,7 +21,7 @@ from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
 from aleph.index.xref import index_matches, delete_xref, iter_matches
 from aleph.index.entities import iter_proxies, entities_by_ids
-from aleph.index.entities import PROXY_INCLUDES
+from aleph.index.entities import ENTITY_SOURCE
 from aleph.index.indexes import entities_read_index
 from aleph.index.collections import delete_entities
 from aleph.index.util import unpack_result, none_query
@@ -50,7 +50,7 @@ def _query_item(entity):
         return
 
     log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
-    query = {"query": query, "size": 100, "_source": {"includes": PROXY_INCLUDES}}
+    query = {"query": query, "size": 100, "_source": ENTITY_SOURCE}
     matchable = list(entity.schema.matchable_schemata)
     index = entities_read_index(schema=matchable)
     result = es.search(index=index, body=query)

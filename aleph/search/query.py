@@ -28,8 +28,6 @@ def convert_filters(filters):
 
 
 class Query(object):
-    INCLUDE_FIELDS = None
-    EXCLUDE_FIELDS = None
     TEXT_FIELDS = ["text"]
     PREFIX_FIELD = "name"
     SKIP_FILTERS = []
@@ -39,6 +37,7 @@ class Query(object):
         "score": "_score",
     }
     SORT_DEFAULT = ["_score"]
+    SOURCE = {}
 
     def __init__(self, parser):
         self.parser = parser
@@ -227,12 +226,7 @@ class Query(object):
         }
 
     def get_source(self):
-        source = {}
-        if self.INCLUDE_FIELDS:
-            source["includes"] = self.INCLUDE_FIELDS
-        elif self.EXCLUDE_FIELDS:
-            source["excludes"] = self.EXCLUDE_FIELDS
-        return source
+        return self.SOURCE
 
     def get_body(self):
         body = {

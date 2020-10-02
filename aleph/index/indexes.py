@@ -1,4 +1,5 @@
 import logging
+from copy import deepcopy
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
@@ -73,11 +74,11 @@ def configure_schema(schema, version):
     schema_mapping = {}
     numeric_mapping = {registry.date.group: NUMERIC}
     for prop in schema.properties.values():
-        config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
+        config = deepcopy(TYPE_MAPPINGS.get(prop.type, KEYWORD))
         config["copy_to"] = ["text"]
         schema_mapping[prop.name] = config
         if prop.type in NUMERIC_TYPES:
-            numeric_mapping[prop.name] = NUMERIC
+            numeric_mapping[prop.name] = deepcopy(NUMERIC)
 
     mapping = {
         "date_detection": False,

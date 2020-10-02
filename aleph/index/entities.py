@@ -25,6 +25,7 @@ PROXY_INCLUDES = [
     "created_at",
     "updated_at",
 ]
+ENTITY_SOURCE = {"includes": PROXY_INCLUDES}
 
 
 def _source_spec(includes, excludes):

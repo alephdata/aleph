@@ -45,9 +45,6 @@ class Authz(object):
         if collections:
             collections = json.loads(collections)
             self._collections[action] = collections
-            log.debug(
-                "[C] Authz: %s (%s): %d collections", self, action, len(collections)
-            )
             return collections
 
         if self.is_admin:
