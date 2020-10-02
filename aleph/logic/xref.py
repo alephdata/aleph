@@ -1,3 +1,4 @@
+import sys
 import logging
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
@@ -49,10 +50,12 @@ def _query_item(entity):
     if query == none_query():
         return
 
+    log.debug("Query: %r", query)
     log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
-    query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
+    query = {"query": query, "size": 5, "_source": ENTITY_SOURCE}
     index = entities_read_index(schema=list(entity.schema.matchable_schemata))
     result = es.search(index=index, body=query)
+    log.debug("Res size: %d", sys.getsizeof(result))
     for result in result.get("hits").get("hits"):
         result = unpack_result(result)
         if result is None:
@@ -61,7 +64,8 @@ def _query_item(entity):
         score = compare(model, entity, match)
         if score >= SCORE_CUTOFF:
             log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
-            yield score, entity, result.get("collection_id"), match
+            if False:
+                yield score, entity, result.get("collection_id"), match
 
 
 def _iter_mentions(collection):
