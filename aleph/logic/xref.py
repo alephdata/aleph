@@ -50,9 +50,8 @@ def _query_item(entity):
         return
 
     log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
-    query = {"query": query, "size": 100, "_source": ENTITY_SOURCE}
-    matchable = list(entity.schema.matchable_schemata)
-    index = entities_read_index(schema=matchable)
+    query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
+    index = entities_read_index(schema=list(entity.schema.matchable_schemata))
     result = es.search(index=index, body=query)
     for result in result.get("hits").get("hits"):
         result = unpack_result(result)
@@ -74,11 +73,12 @@ def _iter_mentions(collection):
         schemata=["Mention"],
         sort={"properties.resolved": "desc"},
     ):
-        if mention.first("resolved") != proxy.id:
+        resolved_id = mention.first("resolved")
+        if resolved_id != proxy.id:
             if proxy.id is not None:
                 yield proxy
             proxy = model.make_entity(Entity.LEGAL_ENTITY)
-            proxy.id = mention.first("resolved")
+            proxy.id = resolved_id
         _merge_schemata(proxy, mention.get("detectedSchema"))
         proxy.add("name", mention.get("name"))
         proxy.add("country", mention.get("contextCountry"))
@@ -116,7 +116,7 @@ def _query_mentions(collection):
 
 def _query_entities(collection):
     """Generate matches for indexing."""
-    log.info("[%s] Generating matchable entity-based xref...", collection)
+    log.info("[%s] Generating entity-based xref...", collection)
     matchable = [s for s in model if s.matchable]
     for proxy in iter_proxies(collection_id=collection.id, schemata=matchable):
         yield from _query_item(proxy)
