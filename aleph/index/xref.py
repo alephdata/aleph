@@ -47,7 +47,7 @@ def _index_form(collection, matches):
         text.extend(match.get_type_values(registry.name))
         countries = entity.get_type_values(registry.country)
         countries.extend(match.get_type_values(registry.country))
-        yield {
+        data = {
             "_id": xref_id,
             "_index": xref_index(),
             "_source": {
@@ -62,6 +62,8 @@ def _index_form(collection, matches):
                 "created_at": now,
             },
         }
+        log.info("Xref entry: %r", data)
+    return []
 
 
 def index_matches(collection, matches, sync=False):
