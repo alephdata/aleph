@@ -1,6 +1,5 @@
 import shutil
 import logging
-from copy import deepcopy
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
 
@@ -56,7 +55,7 @@ def _query_item(entity):
     index = entities_read_index(schema=list(entity.schema.matchable_schemata))
     result = es.search(index=index, body=query)
     for result in result.get("hits").get("hits"):
-        result = deepcopy(unpack_result(result))
+        result = unpack_result(result)
         if result is None:
             continue
         match = model.get_proxy(result)

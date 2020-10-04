@@ -1,4 +1,5 @@
 import logging
+from copy import deepcopy
 from pprint import pprint  # noqa
 from banal import ensure_list, is_mapping
 from elasticsearch import TransportError
@@ -80,18 +81,17 @@ def unpack_result(res):
         return
     data = res.get("_source", {})
     data["id"] = res.get("_id")
+    data["_index"] = res.get("_index")
 
     _score = res.get("_score")
     if _score is not None and _score != 0.0 and "score" not in data:
         data["score"] = _score
 
-    data["_index"] = res.get("_index")
-
     if "highlight" in res:
         data["highlight"] = []
         for key, value in res.get("highlight", {}).items():
             data["highlight"].extend(value)
-    return data
+    return deepcopy(data)
 
 
 def authz_query(authz, field="collection_id"):
