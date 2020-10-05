@@ -1,9 +1,18 @@
 import jwt
 from werkzeug.urls import url_join
+from normality import latinize_text
 from urlnormalizer import query_string
 from datetime import datetime, timedelta
 
 from aleph.core import settings, url_for
+
+
+def latin_alt(value):
+    """Make a latin version of a string and return if it differs
+    from the input."""
+    trans_value = latinize_text(value)
+    if trans_value.lower() != value.lower():
+        return trans_value
 
 
 def ui_url(resource, id=None, _relative=False, **query):
