@@ -1,7 +1,7 @@
 Collection:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     casefile:
       type: boolean
@@ -19,7 +19,7 @@ Collection:
         type: string
         format: country
     creator:
-      $ref: '#/components/schemas/Role'
+      $ref: "#/components/schemas/Role"
     foreign_id:
       type: string
     label:
@@ -65,7 +65,7 @@ CollectionCreate:
       type: array
       items:
         type: string
-        format: language
+        format: ftm-language
     data_url:
       type: string
       format: url
@@ -98,13 +98,13 @@ CollectionCreate:
 CollectionUpdate:
   type: object
   allOf:
-  - $ref: '#/components/schemas/CollectionCreate'
+    - $ref: "#/components/schemas/CollectionCreate"
   properties:
     creator_id:
       type: string
       nullable: true
     creator:
-      $ref: '#/components/schemas/Role'
+      $ref: "#/components/schemas/Role"
 
 StatusCounts:
   type: object
@@ -119,21 +119,21 @@ StatusCounts:
 CollectionStatus:
   type: object
   allOf:
-  - $ref: '#/components/schemas/StatusCounts'  
+    - $ref: "#/components/schemas/StatusCounts"
   properties:
     jobs:
       type: array
       items:
         type: object
         allOf:
-          - $ref: '#/components/schemas/StatusCounts'
+          - $ref: "#/components/schemas/StatusCounts"
         properties:
           stages:
             type: array
             items:
               type: object
               allOf:
-              - $ref: '#/components/schemas/StatusCounts'
+                - $ref: "#/components/schemas/StatusCounts"
               properties:
                 job_id:
                   type: string
@@ -143,10 +143,10 @@ CollectionStatus:
 CollectionFull:
   type: object
   allOf:
-  - $ref: '#/components/schemas/Collection'
+    - $ref: "#/components/schemas/Collection"
   properties:
     status:
-      $ref: '#/components/schemas/CollectionStatus'
+      $ref: "#/components/schemas/CollectionStatus"
     statistics:
       type: object
       properties:
@@ -169,12 +169,12 @@ CollectionFull:
 
 CollectionsResponse:
   allOf:
-   - $ref: '#/components/schemas/QueryResponse'
+    - $ref: "#/components/schemas/QueryResponse"
   properties:
     facets:
       type: object
     results:
       items:
-        $ref: '#/components/schemas/Collection'
+        $ref: "#/components/schemas/Collection"
       type: array
   type: object

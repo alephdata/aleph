@@ -68,9 +68,8 @@ def check_url(value):
     return True
 
 
-@checker.checks("language", raises=ValueError)
+@checker.checks("ftm-language", raises=ValueError)
 def check_language(value):
-    value = registry.language.clean(value)
     if not registry.language.validate(value):
         raise ValueError(gettext("Invalid language code."))
     return True
