@@ -132,11 +132,14 @@ def index():
     """
     # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.args, request.authz)
-    if parser.text:
-        QueryLog.save(request.authz.id, request._session_id, parser.text)
-        db.session.commit()
-    tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
+    query_text = result.query.to_text()
+    tag_request(query=query_text)
+
+    if parser.text:
+        QueryLog.save(request.authz.id, request._session_id, query_text)
+        db.session.commit()
+
     links = {}
     if request.authz.logged_in and result.total <= MAX_PAGE:
         query = list(request.args.items(multi=True))
