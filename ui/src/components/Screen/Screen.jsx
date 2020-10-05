@@ -35,7 +35,8 @@ class Screen extends React.PureComponent {
   }
 }
 
-
+// See https://github.com/palantir/blueprint/issues/2972#issuecomment-441978641
+//  - HotkeysTarget does not support wrapped es6 components, so wraps Screen component in es5 compatible function
 function ScreenAsAFunction() {}
 ScreenAsAFunction.prototype = Object.create(Screen.prototype);
 
