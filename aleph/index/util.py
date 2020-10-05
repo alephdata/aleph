@@ -80,12 +80,11 @@ def unpack_result(res):
         return
     data = res.get("_source", {})
     data["id"] = res.get("_id")
+    data["_index"] = res.get("_index")
 
     _score = res.get("_score")
     if _score is not None and _score != 0.0 and "score" not in data:
         data["score"] = _score
-
-    data["_index"] = res.get("_index")
 
     if "highlight" in res:
         data["highlight"] = []

@@ -1,7 +1,7 @@
+import shutil
 import logging
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
-import shutil
 
 from followthemoney import model
 from followthemoney.types import registry
