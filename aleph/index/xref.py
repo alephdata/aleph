@@ -13,6 +13,7 @@ from aleph.index.util import KEYWORD, SHARDS_HEAVY
 
 log = logging.getLogger(__name__)
 XREF_SOURCE = {"excludes": ["text", "countries"]}
+MAX_NAMES = 30
 
 
 def xref_index():
@@ -44,8 +45,8 @@ def _index_form(collection, matches):
     for (score, entity, match_collection_id, match) in matches:
         xref_id = hash_data((entity.id, collection.id, match.id))
         text = set([entity.caption, match.caption])
-        text.update(entity.get_type_values(registry.name)[:30])
-        text.update(match.get_type_values(registry.name)[:30])
+        text.update(entity.get_type_values(registry.name)[:MAX_NAMES])
+        text.update(match.get_type_values(registry.name)[:MAX_NAMES])
         countries = set(entity.get_type_values(registry.country))
         countries.update(match.get_type_values(registry.country))
         yield {

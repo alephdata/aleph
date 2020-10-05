@@ -49,9 +49,8 @@ def _query_item(entity):
     if query == none_query():
         return
 
-    # log.debug("Query: %r", query)
     log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
-    query = {"query": query, "size": 5, "_source": ENTITY_SOURCE}
+    query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
     index = entities_read_index(schema=list(entity.schema.matchable_schemata))
     result = es.search(index=index, body=query)
     for result in result.get("hits").get("hits"):
