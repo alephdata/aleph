@@ -13,7 +13,7 @@ DocumentIngest:
       type: array
       items:
         type: string
-        format: country
+        format: ftm-country
     crawler:
       type: string
       nullable: true

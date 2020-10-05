@@ -17,7 +17,7 @@ Collection:
       type: array
       items:
         type: string
-        format: country
+        format: ftm-country
     creator:
       $ref: "#/components/schemas/Role"
     foreign_id:
@@ -60,7 +60,7 @@ CollectionCreate:
       type: array
       items:
         type: string
-        format: country
+        format: ftm-country
     languages:
       type: array
       items:

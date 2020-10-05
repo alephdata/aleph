@@ -223,46 +223,6 @@ def update(collection_id, mapping_id):
 
 
 @blueprint.route(
-    "/<int:collection_id>/mappings/<int:mapping_id>",
-    methods=["DELETE"],
-)
-def delete(collection_id, mapping_id):
-    """Delete a mapping.
-    ---
-    delete:
-      summary: Delete a mapping
-      parameters:
-      - description: The collection id.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-        example: 2
-      - description: The mapping id.
-        in: path
-        name: mapping_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-        example: 2
-      responses:
-        '204':
-          description: No Content
-      tags:
-      - Collection
-      - Mapping
-    """
-    get_db_collection(collection_id, request.authz.WRITE)
-    mapping = obj_or_404(Mapping.by_id(mapping_id))
-    mapping.delete()
-    db.session.commit()
-    return ("", 204)
-
-
-@blueprint.route(
     "/<int:collection_id>/mappings/<int:mapping_id>/trigger",
     methods=["POST", "PUT"],
 )
@@ -355,3 +315,49 @@ def flush(collection_id, mapping_id):
         payload={"mapping_id": mapping_id},
     )
     return ("", 202)
+
+
+@blueprint.route(
+    "/<int:collection_id>/mappings/<int:mapping_id>",
+    methods=["DELETE"],
+)
+def delete(collection_id, mapping_id):
+    """Delete a mapping.
+    ---
+    delete:
+      summary: Delete a mapping
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      - description: The mapping id.
+        in: path
+        name: mapping_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      responses:
+        '204':
+          description: No Content
+      tags:
+      - Collection
+      - Mapping
+    """
+    collection = get_db_collection(collection_id, request.authz.WRITE)
+    mapping = obj_or_404(Mapping.by_id(mapping_id))
+    mapping.delete()
+    db.session.commit()
+    queue_task(
+        collection,
+        OP_FLUSH_MAPPING,
+        job_id=get_session_id(),
+        payload={"mapping_id": mapping_id},
+    )
+    return ("", 204)
