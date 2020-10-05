@@ -1,5 +1,4 @@
 import logging
-from copy import deepcopy
 from pprint import pprint  # noqa
 from banal import ensure_list, is_mapping
 from elasticsearch import TransportError
@@ -91,7 +90,7 @@ def unpack_result(res):
         data["highlight"] = []
         for key, value in res.get("highlight", {}).items():
             data["highlight"].extend(value)
-    return deepcopy(data)
+    return data
 
 
 def authz_query(authz, field="collection_id"):

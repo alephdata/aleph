@@ -1,6 +1,6 @@
 import logging
 from pprint import pprint  # noqa
-from banal import hash_data, unique_list
+from banal import hash_data
 from datetime import datetime
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
@@ -43,27 +43,26 @@ def _index_form(collection, matches):
     now = datetime.utcnow().isoformat()
     for (score, entity, match_collection_id, match) in matches:
         xref_id = hash_data((entity.id, collection.id, match.id))
-        text = entity.get_type_values(registry.name)
-        text.extend(match.get_type_values(registry.name))
-        countries = entity.get_type_values(registry.country)
-        countries.extend(match.get_type_values(registry.country))
-        data = {
+        text = set([entity.caption, match.caption])
+        text.update(entity.get_type_values(registry.name)[:30])
+        text.update(match.get_type_values(registry.name)[:30])
+        countries = set(entity.get_type_values(registry.country))
+        countries.update(match.get_type_values(registry.country))
+        yield {
             "_id": xref_id,
             "_index": xref_index(),
             "_source": {
                 "score": score,
                 "entity_id": entity.id,
+                "schema": match.schema.name,
                 "collection_id": collection.id,
                 "match_id": match.id,
                 "match_collection_id": match_collection_id,
-                "countries": unique_list(countries),
-                "schema": match.schema.name,
-                "text": text,
+                "countries": list(countries),
+                "text": list(text),
                 "created_at": now,
             },
         }
-        log.info("Xref entry: %r", data)
-    return []
 
 
 def index_matches(collection, matches, sync=False):
