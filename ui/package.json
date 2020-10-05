@@ -21,7 +21,7 @@
     "http-proxy-middleware": "^1.0.3",
     "intl-pluralrules": "^1.1.1",
     "js-file-download": "^0.4.9",
-    "jwt-decode": "^2.2.0",
+    "jwt-decode": "^3.0.0",
     "lodash": "^4.17.11",
     "node-sass": "^4.13.1",
     "numeral": "^2.0.6",
