@@ -54,6 +54,9 @@ def password_login():
     if not role.check_password(data.get("password")):
         raise BadRequest(gettext("Invalid user or password."))
 
+    if role.is_blocked:
+        raise Unauthorized(gettext("Your account is blocked."))
+
     role.touch()
     db.session.commit()
     update_role(role)
@@ -97,8 +100,7 @@ def oauth_callback():
     if role is None:
         log.error("No OAuth handler was installed.")
         raise Unauthorized(gettext("Authentication has failed."))
-    if role.is_blocked:
-        raise Unauthorized(gettext("Your account is blocked."))
+
     db.session.commit()
     update_role(role)
     log.info("Logged in: %r", role)

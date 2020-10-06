@@ -97,7 +97,7 @@ def enable_authz(request):
 
 
 def enable_rate_limit(request):
-    if request.authz.logged_in and not request.authz.is_blocked:
+    if request.authz.logged_in:
         return
     limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
     request.rate_limit = get_rate_limit(
