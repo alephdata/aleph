@@ -287,10 +287,6 @@ class XrefSerializer(Serializer):
             return obj
 
 
-class QueryLogSerializer(Serializer):
-    pass
-
-
 class ExportSerializer(Serializer):
     def _serialize(self, obj):
         obj["links"] = {
