@@ -11,7 +11,6 @@ from aleph.views.ingest_api import blueprint as ingest_api
 from aleph.views.notifications_api import blueprint as notifications_api
 from aleph.views.reconcile_api import blueprint as reconcile_api
 from aleph.views.xref_api import blueprint as xref_api
-from aleph.views.querylog_api import blueprint as querylog_api
 from aleph.views.stream_api import blueprint as stream_api
 from aleph.views.archive_api import blueprint as archive_api
 from aleph.views.status_api import blueprint as status_api
@@ -34,7 +33,6 @@ def mount_app_blueprints(app):
     app.register_blueprint(reconcile_api)
     app.register_blueprint(notifications_api)
     app.register_blueprint(xref_api)
-    app.register_blueprint(querylog_api)
     app.register_blueprint(stream_api)
     app.register_blueprint(archive_api)
     app.register_blueprint(status_api)

@@ -4,7 +4,7 @@ from flask import render_template
 
 from aleph.core import db, settings, cache
 from aleph.authz import Authz
-from aleph.model import Role, Alert, QueryLog, Permission, EntitySet
+from aleph.model import Role, Alert, Permission, EntitySet
 from aleph.model import Collection, Document, Entity, EntitySetItem, Mapping
 from aleph.model.role import membership
 from aleph.logic.mail import email_role
@@ -89,7 +89,6 @@ def delete_role(role):
         pq.update({col: fallback.id}, synchronize_session=False)
 
     _del(Alert, Alert.role_id)
-    _del(QueryLog, QueryLog.role_id)
     _del(Permission, Permission.role_id)
     _del(membership, membership.c.group_id)
     _del(membership, membership.c.member_id)
