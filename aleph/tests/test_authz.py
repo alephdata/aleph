@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from werkzeug.exceptions import Unauthorized
 
 from aleph.core import db, settings
@@ -66,3 +67,5 @@ class AuthzTestCase(TestCase):
             Authz.from_token(token, scope="/blubb")
         sauthz = Authz.from_token(token, scope="/bla")
         assert sauthz.id == authz.id
+        assert abs(sauthz.expire - authz.expire) < timedelta(seconds=2)
+        assert sauthz.expire > datetime.utcnow()

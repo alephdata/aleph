@@ -30,6 +30,7 @@ def _metadata_locale(locale):
     auth = {}
     if settings.PASSWORD_LOGIN:
         auth["password_login_uri"] = url_for("sessions_api.password_login")
+    if settings.PASSWORD_LOGIN and not settings.MAINTENANCE:
         auth["registration_uri"] = url_for("roles_api.create_code")
     if settings.OAUTH:
         auth["oauth_uri"] = url_for("sessions_api.oauth_init")
@@ -39,7 +40,7 @@ def _metadata_locale(locale):
 
     return {
         "status": "ok",
-        "maintenance": request.authz.in_maintenance,
+        "maintenance": settings.MAINTENANCE,
         "app": {
             "title": settings.APP_TITLE,
             "version": __version__,

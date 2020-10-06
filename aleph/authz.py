@@ -27,8 +27,7 @@ class Authz(object):
         self.logged_in = role_id is not None
         self.roles = set(ensure_list(roles))
         self.is_admin = is_admin
-        self.in_maintenance = settings.MAINTENANCE
-        self.session_write = not self.in_maintenance and self.logged_in
+        self.session_write = not settings.MAINTENANCE and self.logged_in
         self._collections = {}
 
         if expire is None:
@@ -100,6 +99,11 @@ class Authz(object):
         if self.is_admin:
             return True
         return int(role_id) in self.roles
+
+    def can_register(self):
+        if self.logged_in or settings.MAINTENANCE or not settings.PASSWORD_LOGIN:
+            return False
+        return True
 
     def match(self, roles):
         """See if there's overlap in roles."""

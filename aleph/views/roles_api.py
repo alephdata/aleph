@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from itsdangerous import BadSignature
 from werkzeug.exceptions import BadRequest
 
-from aleph.core import db, settings
+from aleph.core import db
 from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
@@ -99,8 +99,7 @@ def create_code():
       tags:
       - Role
     """
-    require(settings.PASSWORD_LOGIN)
-    require(not request.authz.in_maintenance)
+    require(request.authz.can_register())
     data = parse_request("RoleCodeCreate")
     challenge_role(data)
     return jsonify(
@@ -131,8 +130,7 @@ def create():
       tags:
       - Role
     """
-    require(settings.PASSWORD_LOGIN)
-    require(not request.authz.in_maintenance)
+    require(request.authz.can_register())
     data = parse_request("RoleCreate")
     try:
         email = Role.SIGNATURE.loads(data.get("code"), max_age=Role.SIGNATURE_MAX_AGE)
