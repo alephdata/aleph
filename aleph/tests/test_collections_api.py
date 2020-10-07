@@ -16,8 +16,8 @@ class CollectionsApiTestCase(TestCase):
             label="Test Collection",
             foreign_id="test_coll_entities_api",
             category="leak",
-            countries=["usa"],
-            languages=["en"],
+            countries=["us"],
+            languages=["eng"],
         )
         self.ent = self.create_entity(
             {
@@ -194,7 +194,7 @@ class CollectionsApiTestCase(TestCase):
 
         meta = {
             "countries": ["de", "us"],
-            "languages": ["en"],
+            "languages": ["eng"],
             "mime_type": "text/csv",
             "source_url": "http://pudo.org/experts.csv",
             "collection_id": self.col.id,

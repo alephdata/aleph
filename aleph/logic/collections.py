@@ -86,7 +86,7 @@ def compute_collection(collection, force=False, sync=False):
     refresh_collection(collection.id)
     log.info("[%s] Computing statistics...", collection)
     index.update_collection_stats(collection.id)
-    cache.set(key, "computed", expires=cache.EXPIRE)
+    cache.set(key, datetime.utcnow().isoformat())
     index.index_collection(collection, sync=sync)
 
 
@@ -111,7 +111,7 @@ def index_aggregator(
     def _generate():
         idx = 0
         entities = aggregator.iterate(entity_id=entity_ids, skip_errors=skip_errors)
-        for idx, proxy in enumerate(entities):
+        for idx, proxy in enumerate(entities, 1):
             if idx > 0 and idx % 1000 == 0:
                 log.debug("[%s] Index: %s...", collection, idx)
             yield proxy

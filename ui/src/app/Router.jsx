@@ -14,7 +14,6 @@ import HomeScreen from 'screens/HomeScreen/HomeScreen';
 import SearchScreen from 'screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'screens/NotificationsScreen/NotificationsScreen';
 import PagesScreen from 'screens/PagesScreen/PagesScreen';
-import HistoryScreen from 'screens/HistoryScreen/HistoryScreen';
 import AlertsScreen from 'screens/AlertsScreen/AlertsScreen';
 import SettingsScreen from 'screens/SettingsScreen/SettingsScreen';
 import SystemStatusScreen from 'screens/SystemStatusScreen/SystemStatusScreen';
@@ -85,7 +84,6 @@ class Router extends Component {
           <Route path="/lists" exact component={EntitySetIndexScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
-          <Route path="/history" exact component={HistoryScreen} />
           <Route path="/alerts" exact component={AlertsScreen} />
           <Route path="/exports" exact component={ExportsScreen} />
           <Route path="/settings" exact component={SettingsScreen} />

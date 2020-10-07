@@ -192,4 +192,4 @@ class MappingAPITest(TestCase):
         assert res.status_code == 404, res
         res = self.client.get(index_url, headers=self.headers)
         assert res.status_code == 200, res
-        assert res.json["total"] == 15, res.json
+        assert res.json["total"] == 1, res.json

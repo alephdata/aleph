@@ -42,10 +42,6 @@ const messages = defineMessages({
     id: 'nav.signin_register',
     defaultMessage: 'Sign in / Register',
   },
-  querylogs: {
-    id: 'nav.querylogs',
-    defaultMessage: 'Search history',
-  },
   exports: {
     id: 'nav.exports',
     defaultMessage: 'Exports',
@@ -53,6 +49,10 @@ const messages = defineMessages({
   alerts: {
     id: 'nav.alerts',
     defaultMessage: 'Alerts',
+  },
+  status: {
+    id: 'nav.status',
+    defaultMessage: 'System status',
   },
 });
 export class AuthButtons extends Component {
@@ -100,12 +100,6 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.notifications)}
                   </div>
                 </Link>
-                <Link to="/history" className="bp3-menu-item">
-                  <Icon icon="history" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.querylogs)}
-                  </div>
-                </Link>
                 <Link to="/alerts" className="bp3-menu-item">
                   <Icon icon="feed" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
@@ -144,6 +138,12 @@ export class AuthButtons extends Component {
                   {' '}
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.settings)}
+                  </div>
+                </Link>
+                <Link to="/status" className="bp3-menu-item">
+                  <Icon icon="dashboard" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.status)}
                   </div>
                 </Link>
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />

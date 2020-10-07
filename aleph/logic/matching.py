@@ -12,33 +12,32 @@ MAX_CLAUSES = 500
 REQUIRED = [registry.name, registry.iban, registry.identifier]
 
 
-def _make_queries(prop, value, specificity):
-    if prop.type == registry.name:
-        boost = (1 + specificity) * 2
+def _make_queries(type_, value):
+    if type_ == registry.name:
         yield {
             "match": {
                 "fingerprints.text": {
                     "query": value,
                     "operator": "and",
                     "minimum_should_match": "60%",
-                    "boost": boost,
                 }
             }
         }
         fp = fingerprints.generate(value)
-        if fp is not None and fp != value:
+        if fp is None:
+            return
+        if fp.lower() != value.lower():
             yield {
                 "match": {
                     "fingerprints.text": {
                         "query": value,
                         "operator": "and",
                         "minimum_should_match": "60%",
-                        "boost": boost,
                     }
                 }
             }
-    elif prop.type.group is not None:
-        yield {"term": {prop.type.group: {"value": value}}}
+    elif type_.group is not None:
+        yield {"term": {type_.group: {"value": value}}}
 
 
 def match_query(proxy, collection_ids=None, query=None):
@@ -60,23 +59,23 @@ def match_query(proxy, collection_ids=None, query=None):
     if len(collection_ids):
         query["bool"]["filter"].append({"terms": {"collection_id": collection_ids}})
 
-    filters = []
+    filters = set()
     for (prop, value) in proxy.itervalues():
         specificity = prop.specificity(value)
         if specificity > 0:
-            filters.append((prop, value, specificity))
+            filters.add((prop.type, value, specificity))
 
     filters = sorted(filters, key=lambda p: p[2], reverse=True)
     required = []
-    for (prop, value, specificity) in filters:
-        if prop.type in REQUIRED and len(required) <= MAX_CLAUSES:
-            required.extend(_make_queries(prop, value, specificity))
+    for (type_, value, _) in filters:
+        if type_ in REQUIRED and len(required) <= MAX_CLAUSES:
+            required.extend(_make_queries(type_, value))
 
     scoring = []
-    for (prop, value, specificity) in filters:
+    for (type_, value, _) in filters:
         clauses = len(required) + len(scoring)
-        if prop.type not in REQUIRED and clauses <= MAX_CLAUSES:
-            scoring.extend(_make_queries(prop, value, specificity))
+        if type_ not in REQUIRED and clauses <= MAX_CLAUSES:
+            scoring.extend(_make_queries(type_, value))
 
     if not len(required):
         # e.g. a document from which no features have been extracted.

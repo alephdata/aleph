@@ -7,7 +7,7 @@ import { ResultCount, Skeleton, AppItem } from 'components/common';
 import c from 'classnames';
 
 import Query from 'app/Query';
-import { fetchExports, queryCollections, queryEntitySets, queryRoles} from 'actions';
+import { fetchExports, queryCollections, queryEntitySets, queryRoles } from 'actions';
 import { queryGroups } from 'queries';
 import { selectAlerts, selectCollectionsResult, selectEntitySetsResult, selectExports, selectRolesResult } from 'selectors';
 
@@ -17,10 +17,6 @@ const messages = defineMessages({
   notifications: {
     id: 'dashboard.notifications',
     defaultMessage: 'Notifications',
-  },
-  history: {
-    id: 'dashboard.history',
-    defaultMessage: 'Search history',
   },
   alerts: {
     id: 'dashboard.alerts',
@@ -72,16 +68,16 @@ class Dashboard extends React.Component {
       diagramsCountResult, listsCountQuery, listsCountResult } = this.props;
 
     if (groupsResult.shouldLoad) {
-      this.props.queryRoles({query: groupsQuery});
+      this.props.queryRoles({ query: groupsQuery });
     }
     if (casesCountResult.shouldLoad) {
-      this.props.queryCollections({query: casesCountQuery});
+      this.props.queryCollections({ query: casesCountQuery });
     }
     if (diagramsCountResult.shouldLoad) {
-      this.props.queryEntitySets({query: diagramsCountQuery});
+      this.props.queryEntitySets({ query: diagramsCountQuery });
     }
     if (listsCountResult.shouldLoad) {
-      this.props.queryEntitySets({query: listsCountQuery});
+      this.props.queryEntitySets({ query: listsCountQuery });
     }
     if (exports.shouldLoad) {
       this.props.fetchExports();
@@ -110,12 +106,6 @@ class Dashboard extends React.Component {
               text={intl.formatMessage(messages.notifications)}
               onClick={() => this.navigate('/notifications')}
               active={current === '/notifications'}
-            />
-            <MenuItem
-              icon="history"
-              text={intl.formatMessage(messages.history)}
-              onClick={() => this.navigate('/history')}
-              active={current === '/history'}
             />
             <MenuItem
               icon="feed"
@@ -208,7 +198,7 @@ class Dashboard extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const groupsQuery = queryGroups(location);
-  const caseFilter = {'filter:category': 'casefile'};
+  const caseFilter = { 'filter:category': 'casefile' };
   const casesCountQuery = new Query('collections', {}, caseFilter, 'collections')
     .limit(0);
 

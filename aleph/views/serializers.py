@@ -11,7 +11,7 @@ from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
 from aleph.model import Alert, EntitySet, EntitySetItem, Export
 from aleph.logic import resolver
-from aleph.logic.entities import check_write_entity
+from aleph.logic.entities import check_write_entity, transliterate_values
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
 
@@ -253,6 +253,7 @@ class EntitySerializer(Serializer):
                 )
 
         obj["links"] = links
+        obj["latinized"] = transliterate_values(proxy)
         obj["writeable"] = check_write_entity(obj, request.authz)
         obj["shallow"] = obj.get("shallow", True)
         return obj
@@ -284,10 +285,6 @@ class XrefSerializer(Serializer):
 
         if obj["entity"] and obj["match"]:
             return obj
-
-
-class QueryLogSerializer(Serializer):
-    pass
 
 
 class ExportSerializer(Serializer):

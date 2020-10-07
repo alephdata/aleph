@@ -70,9 +70,7 @@ def index(collection_id):
     return XrefSerializer.jsonify_result(result)
 
 
-@blueprint.route(
-    "/api/2/collections/<int:collection_id>/xref", methods=["POST"]
-)  # noqa
+@blueprint.route("/api/2/collections/<int:collection_id>/xref", methods=["POST"])
 def generate(collection_id):
     """
     ---
@@ -136,10 +134,7 @@ def export(collection_id):
         mime_type=XLSX,
     )
     job_id = get_session_id()
-    payload = {
-        "collection_id": collection_id,
-        "export_id": export.id,
-    }
+    payload = {"export_id": export.id}
     queue_task(None, OP_EXPORT_XREF_RESULTS, job_id=job_id, payload=payload)
     return ("", 202)
 

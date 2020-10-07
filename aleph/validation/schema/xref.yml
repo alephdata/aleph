@@ -1,16 +1,16 @@
 Xref:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     collection_id:
       type: string
     entity:
-      $ref: '#/components/schemas/Entity'
+      $ref: "#/components/schemas/Entity"
     match:
-      $ref: '#/components/schemas/Entity'
+      $ref: "#/components/schemas/Entity"
     match_collection:
-      $ref: '#/components/schemas/Collection'
+      $ref: "#/components/schemas/Collection"
     schema:
       type: string
       format: schema
@@ -19,7 +19,7 @@ Xref:
       type: array
       items:
         type: string
-        format: country
+        format: ftm-country
         example: at
     score:
       type: number
@@ -27,7 +27,7 @@ Xref:
 XrefResponse:
   type: object
   allOf:
-    - $ref: '#/components/schemas/QueryResponse'
+    - $ref: "#/components/schemas/QueryResponse"
   properties:
     links:
       properties:
@@ -36,7 +36,7 @@ XrefResponse:
       type: object
     results:
       items:
-        $ref: '#/components/schemas/Xref'
+        $ref: "#/components/schemas/Xref"
       type: array
 
 XrefDecide:
@@ -44,4 +44,4 @@ XrefDecide:
   properties:
     decision:
       allOf:
-        - $ref: '#/components/schemas/Judgement'
+        - $ref: "#/components/schemas/Judgement"

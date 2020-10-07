@@ -21,15 +21,6 @@ def check_locale(value):
     return True
 
 
-@checker.checks("country", raises=ValueError)
-def check_country_code(value):
-    value = registry.country.clean(value)
-    if not registry.country.validate(value):
-        msg = gettext("Invalid country code: %s")
-        raise ValueError(msg % value)
-    return True
-
-
 @checker.checks("entity_id", raises=ValueError)
 def check_entity_id(value):
     value, _ = Namespace.parse(value)
@@ -68,11 +59,20 @@ def check_url(value):
     return True
 
 
-@checker.checks("language", raises=ValueError)
+@checker.checks("ftm-language", raises=ValueError)
 def check_language(value):
     value = registry.language.clean(value)
     if not registry.language.validate(value):
         raise ValueError(gettext("Invalid language code."))
+    return True
+
+
+@checker.checks("ftm-country", raises=ValueError)
+def check_country_code(value):
+    value = registry.country.clean(value)
+    if not registry.country.validate(value):
+        msg = gettext("Invalid country code: %s")
+        raise ValueError(msg % value)
     return True
 
 

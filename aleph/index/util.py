@@ -80,12 +80,11 @@ def unpack_result(res):
         return
     data = res.get("_source", {})
     data["id"] = res.get("_id")
+    data["_index"] = res.get("_index")
 
     _score = res.get("_score")
     if _score is not None and _score != 0.0 and "score" not in data:
         data["score"] = _score
-
-    data["_index"] = res.get("_index")
 
     if "highlight" in res:
         data["highlight"] = []
@@ -185,6 +184,8 @@ def query_delete(index, query, sync=False, **kwargs):
             es.delete_by_query(
                 index=index,
                 body={"query": query},
+                _source=False,
+                slices="auto",
                 conflicts="proceed",
                 wait_for_completion=sync,
                 refresh=refresh_sync(sync),
@@ -208,7 +209,6 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
         actions,
         chunk_size=chunk_size,
         max_retries=10,
-        initial_backoff=2,
         yield_ok=False,
         raise_on_error=False,
         refresh=refresh_sync(sync),

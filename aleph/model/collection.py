@@ -96,12 +96,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.data_url = data.get("data_url", self.data_url)
         if self.data_url is not None:
             self.data_url = stringify(self.data_url)
-        self.countries = ensure_list(data.get("countries", self.countries))
-        self.countries = [registry.country.clean(val) for val in self.countries]  # noqa
-        self.languages = ensure_list(data.get("languages", self.languages))
-        self.languages = [
-            registry.language.clean(val) for val in self.languages
-        ]  # noqa
+        countries = ensure_list(data.get("countries", self.countries))
+        self.countries = [registry.country.clean(val) for val in countries]
+        languages = ensure_list(data.get("languages", self.languages))
+        self.languages = [registry.language.clean(val) for val in languages]
         self.frequency = data.get("frequency", self.frequency)
         self.restricted = data.get("restricted", self.restricted)
         self.xref = data.get("xref", self.xref)

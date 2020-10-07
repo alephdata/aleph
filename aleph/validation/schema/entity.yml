@@ -24,7 +24,7 @@ Entity:
       type: array
       items:
         type: string
-        format: country
+        format: ftm-country
     dates:
       type: array
       items:

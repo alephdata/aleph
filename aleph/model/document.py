@@ -83,14 +83,10 @@ class Document(db.Model, DatedModel):
             "countries",
             "keywords",
         )
-        data["countries"] = ensure_list(data.get("countries", []))
-        data["countries"] = [
-            registry.country.clean(val) for val in data["countries"]
-        ]  # noqa
-        data["languages"] = ensure_list(data.get("languages", []))
-        data["languages"] = [
-            registry.language.clean(val) for val in data["languages"]
-        ]  # noqa
+        countries = ensure_list(data.get("countries", []))
+        data["countries"] = [registry.country.clean(val) for val in countries]
+        languages = ensure_list(data.get("languages", []))
+        data["languages"] = [registry.language.clean(val) for val in languages]
         for prop in props:
             text = data.get(prop, self.meta.get(prop))
             if isinstance(text, list):

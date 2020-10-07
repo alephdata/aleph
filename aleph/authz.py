@@ -22,15 +22,12 @@ class Authz(object):
     WRITE = "write"
     PREFIX = "aauthz"
 
-    def __init__(self, role_id, roles, is_admin=False, is_blocked=False, expire=None):
+    def __init__(self, role_id, roles, is_admin=False, expire=None):
         self.id = role_id
         self.logged_in = role_id is not None
         self.roles = set(ensure_list(roles))
         self.is_admin = is_admin
-        self.is_blocked = is_blocked
-        self.in_maintenance = settings.MAINTENANCE
-        self.session_write = not self.in_maintenance and self.logged_in
-        self.session_write = not is_blocked and self.session_write
+        self.session_write = not settings.MAINTENANCE and self.logged_in
         self._collections = {}
 
         if expire is None:
@@ -45,9 +42,6 @@ class Authz(object):
         if collections:
             collections = json.loads(collections)
             self._collections[action] = collections
-            log.debug(
-                "[C] Authz: %s (%s): %d collections", self, action, len(collections)
-            )
             return collections
 
         if self.is_admin:
@@ -92,7 +86,7 @@ class Authz(object):
         return self.logged_in
 
     def can_write_role(self, role_id):
-        if not self.session_write or role_id is None:
+        if not self.session_write:
             return False
         if self.is_admin:
             return True
@@ -105,6 +99,11 @@ class Authz(object):
         if self.is_admin:
             return True
         return int(role_id) in self.roles
+
+    def can_register(self):
+        if self.logged_in or settings.MAINTENANCE or not settings.PASSWORD_LOGIN:
+            return False
+        return True
 
     def match(self, roles):
         """See if there's overlap in roles."""
@@ -129,7 +128,6 @@ class Authz(object):
             "exp": expire or self.expire,
             "r": list(self.roles),
             "a": self.is_admin,
-            "b": self.is_blocked,
         }
         if scope is not None:
             payload["s"] = scope
@@ -146,14 +144,13 @@ class Authz(object):
     @classmethod
     def from_role(cls, role):
         roles = set([Role.load_id(Role.SYSTEM_GUEST)])
-        if role is None:
+        if role is None or role.is_blocked:
             return cls(None, roles)
 
         roles.add(role.id)
-        if not role.is_blocked:
-            roles.add(Role.load_id(Role.SYSTEM_USER))
-            roles.update([g.id for g in role.roles])
-        return cls(role.id, roles, is_admin=role.is_admin, is_blocked=role.is_blocked)
+        roles.add(Role.load_id(Role.SYSTEM_USER))
+        roles.update([g.id for g in role.roles])
+        return cls(role.id, roles, is_admin=role.is_admin)
 
     @classmethod
     def from_token(cls, token, scope=None):
@@ -169,7 +166,6 @@ class Authz(object):
                 data.get("r"),
                 expire=expire,
                 is_admin=data.get("a", False),
-                is_blocked=data.get("b", False),
             )
         except (jwt.DecodeError, TypeError):
             return

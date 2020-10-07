@@ -13,6 +13,7 @@ from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
+from aleph.logic.util import latin_alt
 from aleph.index import xref as xref_index
 from aleph.logic.aggregator import delete_aggregator_entity
 from aleph.logic.graph import Graph
@@ -72,6 +73,16 @@ def check_write_entity(entity, authz):
     if not entity.get("mutable"):
         return False
     return authz.can(collection_id, authz.WRITE)
+
+
+def transliterate_values(entity):
+    """Generate transliterated strings for the names and addresses
+    linked to the given entity proxy."""
+    transliterated = {}
+    for type_ in (registry.name, registry.address):
+        for value in entity.get_type_values(type_):
+            transliterated[value] = latin_alt(value)
+    return transliterated
 
 
 def refresh_entity(collection, entity_id):

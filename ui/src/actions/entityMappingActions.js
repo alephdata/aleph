@@ -7,10 +7,6 @@ export const fetchEntityMapping = asyncActionCreator(({ id, collection }) => asy
   return { id, data: response.data.results[0] };
 }, { name: 'FETCH_ENTITY_MAPPING' });
 
-const executeFlush = async (collectionId, mappingId) => (
-  endpoint.put(`collections/${collectionId}/mappings/${mappingId}/flush`)
-);
-
 const executeTrigger = async (collectionId, mappingId) => (
   endpoint.put(`collections/${collectionId}/mappings/${mappingId}/trigger`)
 );
@@ -25,15 +21,14 @@ export const createEntityMapping = asyncActionCreator(({ id, collection }, mappi
 
 export const deleteEntityMapping = asyncActionCreator(
   ({ id, collection }, mappingId) => async () => {
-    executeFlush(collection.id, mappingId);
-    endpoint.delete(`collections/${collection.id}/mappings/${mappingId}`);
+    await endpoint.delete(`collections/${collection.id}/mappings/${mappingId}`);
     return { id };
   }, { name: 'DELETE_ENTITY_MAPPING' },
 );
 
 export const flushEntityMapping = asyncActionCreator(
   ({ id, collection }, mappingId) => async () => {
-    executeFlush(collection.id, mappingId);
+    await endpoint.put(`collections/${collection.id}/mappings/${mappingId}/flush`);
     return { id };
   }, { name: 'FLUSH_COLLECTION_MAPPING' },
 );

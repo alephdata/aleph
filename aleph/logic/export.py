@@ -11,6 +11,7 @@ from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import checksum, ensure_path
 
 from aleph.core import archive, db, settings
+from aleph.queues import queue_task
 from aleph.model import Export, Events, Role, Status
 from aleph.index.entities import iter_proxies, checksums_count
 from aleph.index.collections import get_collection
@@ -140,12 +141,16 @@ def delete_expired_exports():
         log.info("Deleting expired export: %r", export)
         if export.should_delete_publication():
             counts = list(checksums_count([export.content_hash]))
-            print(counts)
-            if list(counts)[0][1] == 0:
+            if counts[0][1] == 0:
                 archive.delete_file(export.content_hash)
         export.deleted = True
         db.session.add(export)
     db.session.commit()
+
+
+def retry_exports():
+    for export in Export.get_pending():
+        queue_task(None, export.operation, payload={"export_id": export.id})
 
 
 def send_export_notification(export):
