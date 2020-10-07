@@ -71,7 +71,6 @@ jobs:
     needs:
       - docker-aleph
       - docker-ingest-file
-      - docker-ui
     steps:
       - uses: actions/checkout@v1
       - name: Set up
