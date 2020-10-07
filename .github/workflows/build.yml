@@ -3,7 +3,7 @@ name: package
 on: [push]
 
 jobs:
-  docker-ui:
+  ui:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -26,6 +26,14 @@ jobs:
         run: |
           docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
           docker push alephdata/aleph-ui-production:${GITHUB_SHA}
+      - name: Push docker image (tagged)
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        run: |
+          export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
+          docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:${ALEPH_TAG};
+          docker push alephdata/aleph-ui-production:${ALEPH_TAG};
+          docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:latest;
+          docker push alephdata/aleph-ui-production:latest;
   docker-ingest-file:
     runs-on: ubuntu-latest
     steps:
@@ -87,8 +95,7 @@ jobs:
         run: |
           export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
           docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-          docker pull alephdata/aleph-ui-production:${GITHUB_SHA}
-          for IMAGE in aleph aleph-ui-production ingest-file; do
+          for IMAGE in aleph ingest-file; do
             docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:${ALEPH_TAG};
             docker push alephdata/${IMAGE}:${ALEPH_TAG};
             docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:latest;
