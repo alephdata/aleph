@@ -74,7 +74,7 @@ docker-push:
 	docker push alephdata/aleph-ui-production:$(ALEPH_TAG)
 
 dev: 
-	pip install -q bumpversion babel jinja2
+	pip install -q bump2version babel jinja2
 
 fixtures:
 	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
