@@ -47,15 +47,9 @@ def password_login():
     """
     require(settings.PASSWORD_LOGIN)
     data = parse_request("Login")
-    role = Role.by_email(data.get("email"))
-    if role is None or not role.has_password:
+    role = Role.login(data.get("email"), data.get("password"))
+    if role is None:
         raise BadRequest(gettext("Invalid user or password."))
-
-    if not role.check_password(data.get("password")):
-        raise BadRequest(gettext("Invalid user or password."))
-
-    if role.is_blocked:
-        raise Unauthorized(gettext("Your account is blocked."))
 
     role.touch()
     db.session.commit()

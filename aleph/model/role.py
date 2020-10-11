@@ -56,6 +56,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @property
     def has_password(self):
+        if self.type != self.USER:
+            return False
         return self.password_digest is not None
 
     @property
@@ -103,6 +105,22 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         db.session.add(role)
         db.session.add(self)
         self.updated_at = datetime.utcnow()
+
+    def set_password(self, secret):
+        """Hashes and sets the role password.
+
+        :param str secret: The password to be set.
+        """
+        self.password_digest = generate_password_hash(secret)
+
+    def check_password(self, secret):
+        """Checks the password if it matches the role password hash.
+
+        :param str secret: The password to be checked.
+        :rtype: bool
+        """
+        digest = self.password_digest or ""
+        return check_password_hash(digest, secret)
 
     def to_dict(self):
         data = self.to_dict_dates()
@@ -240,21 +258,14 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def all_system(cls):
         return cls.all().filter(Role.type == Role.SYSTEM)
 
-    def set_password(self, secret):
-        """Hashes and sets the role password.
-
-        :param str secret: The password to be set.
-        """
-        self.password_digest = generate_password_hash(secret)
-
-    def check_password(self, secret):
-        """Checks the password if it matches the role password hash.
-
-        :param str secret: The password to be checked.
-        :rtype: bool
-        """
-        digest = self.password_digest or ""
-        return check_password_hash(digest, secret)
+    @classmethod
+    def login(cls, email, password):
+        """Attempt to log a user in via an email/password method."""
+        role = cls.by_email(email)
+        if role is None or role.is_blocked or not role.has_password:
+            return
+        if role.check_password(password):
+            return role
 
     def __repr__(self):
         return "<Role(%r,%r)>" % (self.id, self.foreign_id)
