@@ -35,31 +35,28 @@ class Authz(object):
         self.expire = expire
 
     def collections(self, action):
+        if self.is_admin:
+            return [c for (c,) in Collection.all_ids()]
+
         if action in self._collections:
             return self._collections.get(action)
-        key = cache.key(action, self.id)
-        collections = cache.kv.hget(self.PREFIX, key)
+        collections = cache.kv.hget(self.PREFIX, self.id)
         if collections:
-            collections = json.loads(collections)
-            self._collections[action] = collections
-            return collections
-
-        if self.is_admin:
-            q = Collection.all_ids()
+            self._collections = json.loads(collections)
         else:
-            q = db.session.query(Permission.collection_id)
+            reads = set()
+            writes = set()
+            q = db.session.query(Permission)
             q = q.filter(Permission.role_id.in_(self.roles))
-            if action == self.READ:
-                q = q.filter(Permission.read == True)  # noqa
-            if action == self.WRITE:
-                q = q.filter(Permission.write == True)  # noqa
-            q = q.distinct()
-            # log.info("Query: %s - roles: %s", q, self.roles)
-        collections = [c for (c,) in q.all()]
-        log.debug("Authz: %s (%s): %d collections", self, action, len(collections))
-        cache.kv.hset(self.PREFIX, key, json.dumps(collections))
-        self._collections[action] = collections
-        return collections
+            for perm in q.all():
+                if perm.read:
+                    reads.add(perm.collection_id)
+                if perm.write:
+                    writes.add(perm.collection_id)
+            self._collections = {self.READ: list(reads), self.WRITE: list(writes)}
+            log.debug("Authz: %s: %r", self, self._collections)
+            cache.kv.hset(self.PREFIX, self.id, json.dumps(self._collections))
+        return self._collections.get(action, [])
 
     def can(self, collection, action):
         """Query permissions to see if the user can perform the specified
@@ -71,12 +68,9 @@ class Authz(object):
 
         if isinstance(collection, Collection):
             collection = collection.id
-        if collection is None:
-            return False
-
         try:
             collection = int(collection)
-        except ValueError:
+        except (TypeError, ValueError):
             return False
         return collection in self.collections(action)
 
@@ -176,5 +170,4 @@ class Authz(object):
 
     @classmethod
     def flush_role(cls, role_id):
-        keys = [cache.key(a, role_id) for a in (cls.READ, cls.WRITE)]
-        cache.kv.hdel(cls.PREFIX, *keys)
+        cache.kv.hdel(cls.PREFIX, role_id)
