@@ -55,7 +55,7 @@ class EntitySearchResults extends Component {
   }
 
   render() {
-    const { result, intl, location, query } = this.props;
+    const { result, intl, location, query, writeable } = this.props;
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
     const { field: sortedField, direction } = query.getSort();
@@ -89,7 +89,7 @@ class EntitySearchResults extends Component {
       <table className="EntitySearchResults data-table">
         <thead>
           <tr>
-            {updateSelection && (<th className="select" />)}
+            {writeable && updateSelection && (<th className="select" />)}
             <TH field="caption" className="wide" sortable />
             {!hideCollection && (
               <TH field="collection_id" className="wide" />
@@ -114,6 +114,7 @@ class EntitySearchResults extends Component {
               documentMode={documentMode}
               updateSelection={updateSelection}
               selection={selection}
+              writeable={writeable}
             />
           ))}
           {result.isPending && skeletonItems.map(item => (
@@ -122,6 +123,7 @@ class EntitySearchResults extends Component {
               hideCollection={hideCollection}
               documentMode={documentMode}
               updateSelection={updateSelection}
+              writeable={writeable}
               isPending
             />
           ))}

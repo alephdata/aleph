@@ -3,8 +3,6 @@ import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InputGroup } from '@blueprintjs/core';
 
-import './SearchBox.scss';
-
 
 const messages = defineMessages({
   search_placeholder: {
