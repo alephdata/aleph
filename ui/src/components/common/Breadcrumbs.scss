@@ -8,6 +8,7 @@
   flex-flow: row wrap;
   justify-content: space-between;
   background-color: $aleph-breadcrumbs-background;
+  min-height: $aleph-grid-size*4.3;
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     @include rtlSupportInvertedProp(padding, left, $aleph-mobile-content-padding, $aleph-mobile-content-padding);
@@ -24,7 +25,7 @@
   .bp3-breadcrumbs {
     height: auto;
     margin: 1px 0;
-    
+
     & > li {
       margin: 5px 0;
       &::after {
