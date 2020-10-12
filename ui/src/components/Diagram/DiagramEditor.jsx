@@ -1,8 +1,8 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
-import { processApiEntity } from 'components/EntitySet/util';
+import { NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
+// import { processApiEntity } from 'components/EntitySet/util';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
 import updateStates from 'util/updateStates';
@@ -20,21 +20,14 @@ class DiagramEditor extends React.Component {
     let initialLayout;
 
     if (diagram) {
-      let layoutData = { vertices: [], edges: [], entities: [], selection: [] };
-      if (diagram.entities) {
-        layoutData.entities = diagram.entities.map(processApiEntity);
-      }
-      if (diagram.layout) {
-        layoutData = {...layoutData, ...diagram.layout};
-      }
-
+      console.log('in DiagramEditor, diagram is', diagram);
+      const layoutData = { vertices: [], edges: [], selection: [] };
       initialLayout = GraphLayout.fromJSON(
         config,
-        props.entityManager,
-        layoutData
+        {...layoutData, ...diagram.layout}
       );
     } else {
-      initialLayout = new GraphLayout(config, props.entityManager);
+      initialLayout = new GraphLayout(config);
     }
 
     this.state = {
@@ -64,12 +57,15 @@ class DiagramEditor extends React.Component {
   }
 
   updateLayout(layout, options) {
-    const { diagram, onStatusChange } = this.props;
+    const { entityManager, diagram, onStatusChange } = this.props;
     this.setState({ layout });
 
     if (options?.propagate) {
       onStatusChange(updateStates.IN_PROGRESS);
-      const { entities, selection, ...layoutData } = layout.toJSON();
+      const { selection, ...layoutData } = layout.toJSON();
+      const entities = entityManager.getEntities();
+
+      console.log('in update layout', entityManager, entities)
 
       const updatedDiagram = {
         ...diagram,
@@ -114,7 +110,7 @@ class DiagramEditor extends React.Component {
 
     return (
       <div className="DiagramEditor">
-        <VisGraph
+        <NetworkDiagram
           config={config}
           entityManager={entityManager}
           layout={layout}

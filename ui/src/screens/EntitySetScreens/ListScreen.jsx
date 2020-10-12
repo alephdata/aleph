@@ -55,10 +55,10 @@ export class ListScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { list, countsResult, countsQuery, entitySetId } = this.props;
+    const { list, countsResult, countsQuery, listId } = this.props;
 
     if (list.shouldLoad || list.shallow) {
-      this.props.fetchEntitySet(entitySetId);
+      this.props.fetchEntitySet(listId);
     }
     if (countsResult.shouldLoad) {
       this.props.queryEntitySetEntities({ query: countsQuery });
@@ -115,15 +115,15 @@ export class ListScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location, match } = ownProps;
-  const { entitySetId } = match.params;
+  const { listId } = match.params;
 
-  const list = selectEntitySet(state, entitySetId);
-  const countsQuery = entitySetSchemaCountsQuery(entitySetId)
+  const list = selectEntitySet(state, listId);
+  const countsQuery = entitySetSchemaCountsQuery(listId)
   const countsResult = selectEntitiesResult(state, countsQuery);
-  const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name);
+  const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, listId, schema.name);
 
   return {
-    entitySetId,
+    listId,
     list,
     countsQuery,
     countsResult,

@@ -23,7 +23,10 @@ const entityEditorWrapper = (EditorComponent) => {
       constructor(props) {
         super(props);
 
-        this.entityManager = new EntityManager({
+        console.log('in wrapper', props);
+        const { entities } = props;
+
+        const config = {
           model: props.model,
           namespace: new Namespace(props.collection.foreign_id),
           createEntity: this.createEntity.bind(this),
@@ -31,7 +34,17 @@ const entityEditorWrapper = (EditorComponent) => {
           expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
-        });
+        };
+
+        if (entities) {
+          this.entityManager = EntityManager.fromJSON(config, entities);
+        } else {
+          this.entityManager = new EntityManager(config);
+        }
+
+        // if (diagram.entities) {
+        //   layoutData.entities = diagram.entities.map(processApiEntity);
+        // }
 
         this.pendingPromises = [];
       }
