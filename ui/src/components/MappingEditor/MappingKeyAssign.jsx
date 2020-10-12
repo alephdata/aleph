@@ -77,11 +77,12 @@ export class MappingKeyAssignItem extends Component {
   }
 
   renderKeySelect({ id, keys }) {
-    const { columnLabels, onKeyAdd, onKeyRemove, intl } = this.props;
+    const { columnLabels, fullMappingsList, onKeyAdd, onKeyRemove, intl } = this.props;
     const { keyExplanationVisible } = this.state;
 
+    const allKeys = fullMappingsList.getMappingKeys(id);
     const items = columnLabels
-      .filter((column) => column !== '' && keys.indexOf(column) === -1)
+      .filter((column) => column !== '' && allKeys.indexOf(column) === -1)
       .sort();
 
     return (
@@ -125,14 +126,16 @@ export class MappingKeyAssignItem extends Component {
           itemRenderer={keySelectItemRenderer}
           tagRenderer={item => item}
           onItemSelect={item => onKeyAdd(id, item)}
-          selectedItems={keys}
+          selectedItems={allKeys}
           itemPredicate={(query, item) => item.toLowerCase().includes(query.toLowerCase())}
           placeholder={intl.formatMessage(messages.keyAssignPlaceholder)}
           fill
           resetOnSelect
           tagInputProps={{
-            tagProps: { minimal: true },
-            onRemove: item => onKeyRemove(id, item),
+            tagProps: (key) => ({
+              minimal: true,
+              onRemove: keys.indexOf(key) > -1 && (() => onKeyRemove(id, key))
+            })
           }}
           noResults={
             <MenuItem disabled text={intl.formatMessage(messages.keyAssignNoResults)} />

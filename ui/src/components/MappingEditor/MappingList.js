@@ -56,6 +56,25 @@ class MappingList {
     return this.mappingItems.get(id);
   }
 
+  getMappingKeys(id) {
+    const { keys, properties, schema } = this.getMapping(id);
+    if (schema.isEdge) {
+      let sourceKeys = [], targetKeys = [];
+      const { source, target } = schema.edge;
+
+      if (properties[source]) {
+        sourceKeys = this.getMappingKeys(properties[source].entity);
+      }
+      if (properties[target]) {
+        targetKeys = this.getMappingKeys(properties[target].entity);
+      }
+
+      return [...sourceKeys, ...targetKeys, ...keys]
+    } else {
+      return keys;
+    }
+  }
+
   // returns pseudo-entity for mapping, in order to be allow Entity ftm components to be used
   getMappingAsEntity(id) {
     const { properties, schema } = this.getMapping(id);
@@ -178,10 +197,10 @@ class MappingList {
   toApiFormat() {
     const query = {};
 
-    this.mappingItems.forEach(({ id, schema, keys, properties }) => {
+    this.mappingItems.forEach(({ id, schema, properties }) => {
       query[id] = {
         schema: schema.name,
-        keys,
+        keys: this.getMappingKeys(id),
         properties,
       };
     });
