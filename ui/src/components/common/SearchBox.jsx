@@ -3,6 +3,8 @@ import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InputGroup } from '@blueprintjs/core';
 
+import './SearchBox.scss';
+
 
 const messages = defineMessages({
   search_placeholder: {
@@ -50,7 +52,7 @@ export class SearchBox extends PureComponent {
       return null;
     }
     return (
-      <form onSubmit={this.onSubmitSearch} className={c(['search-box', className])}>
+      <form onSubmit={this.onSubmitSearch} className={c(['SearchBox', className])}>
         <InputGroup
           fill
           leftIcon="search"
