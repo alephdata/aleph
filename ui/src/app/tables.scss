@@ -37,7 +37,7 @@ table {
     width: 1%;
     white-space: nowrap;
     overflow: visible;
-    max-width: unset;
+    min-width: $aleph-grid-size*2;
     text-overflow: unset;
 
     .bp3-control {
