@@ -30,10 +30,10 @@ endpoint.interceptors.request.use((config) => {
   const { session } = state;
   const locale = selectLocale(state);
   document.documentElement.lang = locale;
-  document.documentElement.dir  = isLangRtl(locale) ? "rtl" : "ltr";
+  document.documentElement.dir = isLangRtl(locale) ? "rtl" : "ltr";
   if (session.loggedIn) {
     Object.assign(config.headers.common, {
-      Authorization: `Bearer ${session.token}`,
+      Authorization: `Token ${session.token}`,
     });
   }
   if (session.sessionID) {

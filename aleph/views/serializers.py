@@ -227,30 +227,17 @@ class EntitySerializer(Serializer):
                 name = entity_filename(proxy)
                 mime = first(properties.get("mimeType"))
                 links["file"] = archive_url(
-                    content_hash,
-                    file_name=name,
-                    mime_type=mime,
-                    expire=request.authz.expire,
+                    content_hash, file_name=name, mime_type=mime
                 )
 
             pdf_hash = first(properties.get("pdfHash"))
             if pdf_hash:
                 name = entity_filename(proxy, extension="pdf")
-                links["pdf"] = archive_url(
-                    pdf_hash,
-                    file_name=name,
-                    mime_type=PDF,
-                    expire=request.authz.expire,
-                )
+                links["pdf"] = archive_url(pdf_hash, file_name=name, mime_type=PDF)
             csv_hash = first(properties.get("csvHash"))
             if csv_hash:
                 name = entity_filename(proxy, extension="csv")
-                links["csv"] = archive_url(
-                    csv_hash,
-                    file_name=name,
-                    mime_type=CSV,
-                    expire=request.authz.expire,
-                )
+                links["csv"] = archive_url(csv_hash, file_name=name, mime_type=CSV)
 
         obj["links"] = links
         obj["latinized"] = transliterate_values(proxy)
@@ -294,7 +281,6 @@ class ExportSerializer(Serializer):
                 obj.get("content_hash"),
                 file_name=obj.get("file_name"),
                 mime_type=obj.get("mime_type"),
-                expire=request.authz.expire,
             )
         }
         return obj

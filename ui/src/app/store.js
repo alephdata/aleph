@@ -21,8 +21,13 @@ const store = createStore(
 
 store.subscribe(throttle(() => {
   const state = store.getState();
+  const session = state.session;
   saveState({
-    session: state.session,
+    session: {
+      token: session.token,
+      loggedIn: session.loggedIn,
+      sessionID: session.sessionID
+    },
     config: state.config,
   });
 }));

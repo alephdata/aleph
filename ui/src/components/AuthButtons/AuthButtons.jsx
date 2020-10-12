@@ -6,7 +6,7 @@ import {
   Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position,
 } from '@blueprintjs/core';
 
-import { fetchRole } from 'actions';
+import { fetchCurrentRole } from 'actions';
 import { selectCurrentRole, selectSession, selectMetadata } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 
@@ -73,9 +73,9 @@ export class AuthButtons extends Component {
   }
 
   fetchIfNeeded() {
-    const { role, session } = this.props;
-    if (role.shouldLoad && session.loggedIn) {
-      this.props.fetchRole({ id: session.id });
+    const { role } = this.props;
+    if (role.shouldLoad) {
+      this.props.fetchCurrentRole();
     }
   }
 
@@ -183,5 +183,5 @@ const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
 });
 
-AuthButtons = connect(mapStateToProps, { fetchRole })(AuthButtons);
+AuthButtons = connect(mapStateToProps, { fetchCurrentRole })(AuthButtons);
 export default injectIntl(AuthButtons);

@@ -72,6 +72,12 @@ def update_role(role):
     get_role_channels(role)
 
 
+def update_roles():
+    Authz.flush()
+    for role in Role.all():
+        update_role(role)
+
+
 def delete_role(role):
     """Fully delete a role from the database and transfer the
     ownership of documents and entities created by it to the
@@ -106,13 +112,6 @@ def refresh_role(role, sync=False):
     cache.kv.delete(
         cache.object_key(Role, role.id), cache.object_key(Role, role.id, "channels")
     )
-    Authz.flush_role(role.id)
-
-
-def update_roles():
-    Authz.flush()
-    for role in Role.all():
-        update_role(role)
 
 
 def check_visible(role, authz):

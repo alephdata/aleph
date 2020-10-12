@@ -1,16 +1,10 @@
-import jwtDecode from 'jwt-decode';
 import { createReducer } from 'redux-act';
 
-import { loginWithToken } from 'actions/sessionActions';
-import { queryRoles, fetchRole, updateRole } from 'actions';
+import { queryRoles, fetchRole, fetchCurrentRole, updateRole } from 'actions';
 import { resultObjects, objectLoadStart, objectLoadError, objectLoadComplete } from './util';
 
 const initialState = {};
 
-const handleLogin = (state, token) => {
-  const data = jwtDecode(token);
-  return objectLoadComplete(state, data.role.id, data.role);
-};
 
 export default createReducer({
   [queryRoles.COMPLETE]: (state, { result }) => resultObjects(state, result),
@@ -21,7 +15,7 @@ export default createReducer({
 
   [fetchRole.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
-  [updateRole.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
+  [fetchCurrentRole.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
-  [loginWithToken]: handleLogin,
+  [updateRole.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 }, initialState);

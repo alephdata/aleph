@@ -6,7 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db, settings
-from aleph.model.common import SoftDeleteModel, IdModel, make_textid, query_like
+from aleph.model.common import SoftDeleteModel, IdModel, make_token, query_like
 from aleph.util import anonymize_email
 
 log = logging.getLogger(__name__)
@@ -56,8 +56,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @property
     def has_password(self):
-        if self.type != self.USER:
-            return False
         return self.password_digest is not None
 
     @property
@@ -65,10 +63,18 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return self.id in self.public_roles()
 
     @property
-    def is_alertable(self):
-        if self.email is None:
+    def is_actor(self):
+        if self.type != self.USER:
             return False
-        if self.is_muted or self.is_blocked:
+        if self.is_blocked:
+            return False
+        return True
+
+    @property
+    def is_alertable(self):
+        if self.email is None or not self.is_actor:
+            return False
+        if self.is_muted:
             return False
         if self.updated_at < (datetime.utcnow() - settings.ROLE_INACTIVE):
             # Disable sending notifications to roles that haven't been
@@ -184,7 +190,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.notified_at = datetime.utcnow()
 
         if role.api_key is None:
-            role.api_key = make_textid()
+            role.api_key = make_token()
 
         if email is not None:
             role.email = email
@@ -262,7 +268,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def login(cls, email, password):
         """Attempt to log a user in via an email/password method."""
         role = cls.by_email(email)
-        if role is None or role.is_blocked or not role.has_password:
+        if role is None or not role.is_actor or not role.has_password:
             return
         if role.check_password(password):
             return role
