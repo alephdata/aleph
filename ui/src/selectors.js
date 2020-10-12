@@ -79,14 +79,7 @@ export function selectSession(state) {
 
 export function selectCurrentRole(state) {
   const session = selectSession(state);
-  const role = selectRole(state, session.roleId);
-  if (role.id) {
-    return role;
-  }
-  if (session.shouldLoad === undefined) {
-    session.shouldLoad = session.loggedIn;
-  }
-  return session;
+  return !!session.roleId ? selectRole(state, session.roleId) : {};
 }
 
 export function selectTester(state) {

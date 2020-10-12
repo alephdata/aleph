@@ -23,11 +23,7 @@ store.subscribe(throttle(() => {
   const state = store.getState();
   const session = state.session;
   saveState({
-    session: {
-      token: session.token,
-      loggedIn: session.loggedIn,
-      sessionID: session.sessionID
-    },
+    session: state.session,
     config: state.config,
   });
 }));

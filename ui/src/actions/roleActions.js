@@ -11,11 +11,6 @@ export const suggestRoles = asyncActionCreator((prefix, exclude) => async () => 
   return response.data;
 }, { name: 'SUGGEST_ROLES' });
 
-export const fetchCurrentRole = asyncActionCreator(() => async () => {
-  const response = await endpoint.get(`me`);
-  return { id: response.data.id, data: response.data };
-}, { name: 'FETCH_CURRENT_ROLE' });
-
 export const fetchRole = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`roles/${id}`);
   return { id, data: response.data };

@@ -175,14 +175,14 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def load_or_create(cls, foreign_id, type, name, email=None, is_admin=None):
+    def load_or_create(cls, foreign_id, type_, name, email=None, is_admin=None):
         role = cls.by_foreign_id(foreign_id)
 
         if role is None:
             role = cls()
             role.foreign_id = foreign_id
             role.name = name or email
-            role.type = type
+            role.type = type_
             role.is_admin = False
             role.is_muted = False
             role.is_tester = False
@@ -210,7 +210,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def load_cli_user(cls):
         return cls.load_or_create(
-            foreign_id=settings.SYSTEM_USER, name="Aleph", type=cls.USER, is_admin=True
+            settings.SYSTEM_USER, cls.USER, "Aleph", is_admin=True
         )
 
     @classmethod

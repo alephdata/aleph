@@ -122,14 +122,14 @@ class Authz(object):
 
     def to_token(self):
         if self.token_id is None:
-            self.token_id = make_token()
+            self.token_id = "%s.%s" % (self.id, make_token())
             key = cache.key(self.TOKENS, self.token_id)
             state = {
                 "id": self.id,
                 "roles": list(self.roles),
                 "is_admin": self.is_admin,
             }
-            cache.set_complex(key, state, expires=84600)
+            cache.set_complex(key, state, expires=42300)
         return self.token_id
 
     def __repr__(self):

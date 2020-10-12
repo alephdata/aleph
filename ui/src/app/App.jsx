@@ -36,9 +36,9 @@ endpoint.interceptors.request.use((config) => {
       Authorization: `Token ${session.token}`,
     });
   }
-  if (session.sessionID) {
+  if (session.sessionId) {
     Object.assign(config.headers.common, {
-      'X-Aleph-Session': session.sessionID,
+      'X-Aleph-Session': session.sessionId,
     });
   }
   if (locale) {

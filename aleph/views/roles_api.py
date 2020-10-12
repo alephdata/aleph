@@ -153,26 +153,6 @@ def create():
     return RoleSerializer.jsonify(role, status=201)
 
 
-@blueprint.route("/api/2/me", methods=["GET"])
-def me():
-    """Retrieve current role.
-    ---
-    post:
-      summary: Retrieve current role details
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Role'
-      tags:
-      - Role
-    """
-    require(request.authz.logged_in)
-    return RoleSerializer.jsonify(request.authz.role)
-
-
 @blueprint.route("/api/2/roles/<int:id>", methods=["GET"])
 def view(id):
     """Retrieve role details.
