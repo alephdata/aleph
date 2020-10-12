@@ -20,6 +20,10 @@
 
   &__right {
     display: flex;
+
+    .bp3-button-group {
+      align-items: center;
+    }
   }
 
   .bp3-breadcrumbs {
