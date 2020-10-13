@@ -69,7 +69,7 @@ class MappingList {
         targetKeys = this.getMappingKeys(properties[target].entity);
       }
 
-      return [...sourceKeys, ...targetKeys, ...keys]
+      return [...new Set([...sourceKeys, ...targetKeys, ...keys])]
     } else {
       return keys;
     }
