@@ -183,5 +183,5 @@ const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
 });
 
-AuthButtons = connect(mapStateToProps, { fetchCurrentRole })(AuthButtons);
+AuthButtons = connect(mapStateToProps, { fetchRole })(AuthButtons);
 export default injectIntl(AuthButtons);
