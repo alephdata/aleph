@@ -136,9 +136,7 @@ def index():
     links = {}
     if request.authz.logged_in and result.total <= MAX_PAGE:
         query = list(request.args.items(multi=True))
-        links["export"] = url_for(
-            "entities_api.export", _authz=request.authz, _query=query
-        )
+        links["export"] = url_for("entities_api.export", _query=query)
     return EntitySerializer.jsonify_result(result, extra={"links": links})
 
 

@@ -22,7 +22,6 @@ def get_role(role_id):
         role = Role.by_id(role_id)
         if role is None:
             return
-        log.debug("Role cache refresh: %r", role)
         data = role.to_dict()
         cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
@@ -72,6 +71,11 @@ def update_role(role):
     get_role_channels(role)
 
 
+def update_roles():
+    for role in Role.all(deleted=True):
+        update_role(role)
+
+
 def delete_role(role):
     """Fully delete a role from the database and transfer the
     ownership of documents and entities created by it to the
@@ -103,16 +107,11 @@ def delete_role(role):
 
 
 def refresh_role(role, sync=False):
+    Authz.flush_role(role)
     cache.kv.delete(
-        cache.object_key(Role, role.id), cache.object_key(Role, role.id, "channels")
+        cache.object_key(Role, role.id),
+        cache.object_key(Role, role.id, "channels"),
     )
-    Authz.flush_role(role.id)
-
-
-def update_roles():
-    Authz.flush()
-    for role in Role.all():
-        update_role(role)
 
 
 def check_visible(role, authz):

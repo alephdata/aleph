@@ -72,10 +72,9 @@ def _get_credential_authz(credential):
     if credential is None or not len(credential):
         return
     if " " in credential:
-        _, credential = credential.split(" ", 1)
-    authz = Authz.from_token(credential, scope=request.path)
-    if authz is not None:
-        return authz
+        method, credential = credential.split(" ", 1)
+        if method == "Token":
+            return Authz.from_token(credential)
 
     role = Role.by_api_key(credential)
     if role is not None:

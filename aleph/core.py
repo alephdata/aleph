@@ -1,5 +1,4 @@
 import logging
-from banal import ensure_list
 from urllib.parse import urlparse, urljoin, urlencode
 from werkzeug.local import LocalProxy
 from werkzeug.middleware.profiler import ProfilerMiddleware
@@ -153,14 +152,8 @@ def url_for(*a, **kw):
     try:
         kw["_external"] = False
         query = kw.pop("_query", None)
-        authz = kw.pop("_authz", None)
-        expire = kw.pop("_expire", None)
         relative = kw.pop("_relative", False)
         path = flask_url_for(*a, **kw)
-        if authz is not None:
-            token = authz.to_token(scope=path, expire=expire)
-            query = list(ensure_list(query))
-            query.append(("api_key", token))
         return url_external(path, query, relative=relative)
     except RuntimeError:
         return None
@@ -174,11 +167,9 @@ def url_external(path, query, relative=False):
         if relative:
             return path
 
-        # api_url = request.url_root
         api_url = settings.APP_UI_URL
         if settings.FORCE_HTTPS:
-            parsed = urlparse(api_url)
-            parsed = parsed._replace(scheme="https")
+            parsed = urlparse(api_url)._replace(scheme="https")
             api_url = parsed.geturl()
         return urljoin(api_url, path)
     except RuntimeError:
