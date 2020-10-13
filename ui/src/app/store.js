@@ -21,7 +21,6 @@ const store = createStore(
 
 store.subscribe(throttle(() => {
   const state = store.getState();
-  const session = state.session;
   saveState({
     session: state.session,
     config: state.config,
