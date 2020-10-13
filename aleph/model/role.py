@@ -66,7 +66,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def is_actor(self):
         if self.type != self.USER:
             return False
-        if self.is_blocked:
+        if self.is_blocked or self.deleted_at is not None:
             return False
         return True
 

@@ -22,7 +22,6 @@ def get_role(role_id):
         role = Role.by_id(role_id)
         if role is None:
             return
-        log.debug("Role cache refresh: %r", role)
         data = role.to_dict()
         cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
@@ -73,8 +72,7 @@ def update_role(role):
 
 
 def update_roles():
-    Authz.flush()
-    for role in Role.all():
+    for role in Role.all(deleted=True):
         update_role(role)
 
 
@@ -109,8 +107,10 @@ def delete_role(role):
 
 
 def refresh_role(role, sync=False):
+    Authz.flush_role(role)
     cache.kv.delete(
-        cache.object_key(Role, role.id), cache.object_key(Role, role.id, "channels")
+        cache.object_key(Role, role.id),
+        cache.object_key(Role, role.id, "channels"),
     )
 
 

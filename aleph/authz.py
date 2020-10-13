@@ -105,14 +105,16 @@ class Authz(object):
         return self.roles.intersection(roles) > 0
 
     def destroy(self):
-        if self.id is not None:
-            self.flush_role(self.id)
+        if self.role is not None:
+            self.flush_role(self.role)
         if self.token_id is not None:
             cache.delete(cache.key(self.TOKENS, self.token_id))
 
     @property
     def role(self):
-        return Role.by_id(self.id)
+        if not hasattr(self, "_role"):
+            self._role = Role.by_id(self.id)
+        return self._role
 
     @property
     def private_roles(self):
@@ -164,5 +166,10 @@ class Authz(object):
         cache.kv.delete(cls.ACCESS)
 
     @classmethod
-    def flush_role(cls, role_id):
-        cache.kv.hdel(cls.ACCESS, role_id)
+    def flush_role(cls, role):
+        # Clear collections ACL cache.
+        cache.kv.hdel(cls.ACCESS, role.id)
+        if not role.is_actor:
+            # End all user sessions.
+            prefix = cache.key(cls.TOKENS, "%s." % role.id)
+            cache.flush(prefix=prefix)
