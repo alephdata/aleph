@@ -53,7 +53,7 @@ class NotificationListFilter extends Component {
         <span className="SortingBar__label">
           <FormattedMessage
             id="notifications.type_filter"
-            defaultMessage="Showing"
+            defaultMessage="Show:"
           />
         </span>
         <div className="SortingBar__control">

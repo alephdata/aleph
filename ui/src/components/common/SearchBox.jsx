@@ -50,7 +50,7 @@ export class SearchBox extends PureComponent {
       return null;
     }
     return (
-      <form onSubmit={this.onSubmitSearch} className={c(['search-box', className])}>
+      <form onSubmit={this.onSubmitSearch} className={c(['SearchBox', className])}>
         <InputGroup
           fill
           leftIcon="search"

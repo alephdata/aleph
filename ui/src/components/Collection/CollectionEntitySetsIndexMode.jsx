@@ -32,9 +32,11 @@ export class CollectionEntitySetsIndexMode extends Component {
 
     return (
       <div>
-        <div style={{ marginBottom: '20px' }}>
-          <EntitySetCreateMenu collection={collection} type={type} />
-        </div>
+        {collection.writeable && (
+          <div style={{ marginBottom: '20px' }}>
+            <EntitySetCreateMenu collection={collection} type={type} />
+          </div>
+        )}
         <EntitySetIndex
           result={result}
           getMoreItems={this.getMoreResults}

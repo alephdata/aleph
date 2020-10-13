@@ -4,6 +4,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, Collapse, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 import SelectWrapper from 'components/common/SelectWrapper';
+import { Schema } from 'components/common';
 import { MappingLabel } from './util';
 
 import './MappingKeyAssign.scss';
@@ -76,11 +77,12 @@ export class MappingKeyAssignItem extends Component {
   }
 
   renderKeySelect({ id, keys }) {
-    const { columnLabels, onKeyAdd, onKeyRemove, intl } = this.props;
+    const { columnLabels, fullMappingsList, onKeyAdd, onKeyRemove, intl } = this.props;
     const { keyExplanationVisible } = this.state;
 
+    const allKeys = fullMappingsList.getMappingKeys(id);
     const items = columnLabels
-      .filter((column) => column !== '' && keys.indexOf(column) === -1)
+      .filter((column) => column !== '' && allKeys.indexOf(column) === -1)
       .sort();
 
     return (
@@ -124,14 +126,16 @@ export class MappingKeyAssignItem extends Component {
           itemRenderer={keySelectItemRenderer}
           tagRenderer={item => item}
           onItemSelect={item => onKeyAdd(id, item)}
-          selectedItems={keys}
+          selectedItems={allKeys}
           itemPredicate={(query, item) => item.toLowerCase().includes(query.toLowerCase())}
           placeholder={intl.formatMessage(messages.keyAssignPlaceholder)}
           fill
           resetOnSelect
           tagInputProps={{
-            tagProps: { minimal: true },
-            onRemove: item => onKeyRemove(id, item),
+            tagProps: (key) => ({
+              minimal: true,
+              onRemove: keys.indexOf(key) > -1 && (() => onKeyRemove(id, key))
+            })
           }}
           noResults={
             <MenuItem disabled text={intl.formatMessage(messages.keyAssignNoResults)} />
@@ -153,8 +157,9 @@ export class MappingKeyAssignItem extends Component {
 
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
-    const buttonText = currValue?.entity
-      ? <MappingLabel mapping={fullMappingsList.getMapping(currValue.entity)} />
+    const referredEntity = currValue?.entity && fullMappingsList.getMapping(currValue.entity);
+    const buttonText = referredEntity
+      ? referredEntity.id
       : intl.formatMessage(messages.entityAssignPlaceholder);
 
     return (
@@ -179,6 +184,7 @@ export class MappingKeyAssignItem extends Component {
                 text={buttonText}
                 rightIcon="caret-down"
                 disabled={disabled}
+                icon={referredEntity && <Schema.Icon schema={referredEntity.schema} />}
               />
             </SelectWrapper>
           </FormGroup>

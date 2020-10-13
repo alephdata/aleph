@@ -46,7 +46,7 @@ class EntitySetManageMenu extends Component {
   }
 
   render() {
-    const { entitySet, intl, onSearch } = this.props;
+    const { entitySet, intl, onSearch, triggerDownload, writeable } = this.props;
     const { editIsOpen, deleteIsOpen } = this.state;
     const showMenu = entitySet.type === 'diagram';
 
@@ -59,7 +59,7 @@ class EntitySetManageMenu extends Component {
               placeholder={intl.formatMessage(messages.placeholder, { set_name: entitySet.label })}
             />
           )}
-          {onSearch && entitySet.writeable && <Divider />}
+          {onSearch && (entitySet.writeable || triggerDownload) && <Divider />}
           {entitySet.writeable && (
             <ButtonGroup>
               <Button icon="cog" onClick={this.toggleEdit}>
@@ -76,6 +76,11 @@ class EntitySetManageMenu extends Component {
                 </Popover>
               )}
             </ButtonGroup>
+          )}
+          {!entitySet.writeable && triggerDownload && (
+            <Button icon="export" onClick={triggerDownload}>
+              <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
+            </Button>
           )}
         </ControlGroup>
         <EntitySetEditDialog

@@ -3,6 +3,7 @@ import { Colors } from '@blueprintjs/core';
 
 const colorOptions = [
   Colors.BLUE1, Colors.TURQUOISE1, Colors.VIOLET1, Colors.ORANGE1, Colors.GREEN1, Colors.RED1,
+  Colors.INDIGO1, Colors.LIME1, Colors.SEPIA1, Colors.COBALT1, Colors.ROSE1,
 ];
 
 class MappingList {
@@ -53,6 +54,25 @@ class MappingList {
 
   getMapping(id) {
     return this.mappingItems.get(id);
+  }
+
+  getMappingKeys(id) {
+    const { keys, properties, schema } = this.getMapping(id);
+    if (schema.isEdge) {
+      let sourceKeys = [], targetKeys = [];
+      const { source, target } = schema.edge;
+
+      if (properties[source]) {
+        sourceKeys = this.getMappingKeys(properties[source].entity);
+      }
+      if (properties[target]) {
+        targetKeys = this.getMappingKeys(properties[target].entity);
+      }
+
+      return [...new Set([...sourceKeys, ...targetKeys, ...keys])]
+    } else {
+      return keys;
+    }
   }
 
   // returns pseudo-entity for mapping, in order to be allow Entity ftm components to be used
@@ -177,10 +197,10 @@ class MappingList {
   toApiFormat() {
     const query = {};
 
-    this.mappingItems.forEach(({ id, schema, keys, properties }) => {
+    this.mappingItems.forEach(({ id, schema, properties }) => {
       query[id] = {
         schema: schema.name,
-        keys,
+        keys: this.getMappingKeys(id),
         properties,
       };
     });
