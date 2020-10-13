@@ -8,6 +8,7 @@ import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import Screen from 'components/Screen/Screen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
+import LoadingScreen from 'components/Screen/LoadingScreen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { selectNotificationsResult, selectCurrentRole } from 'selectors';
 
@@ -34,6 +35,10 @@ export class NotificationsScreen extends React.Component {
       return <ErrorScreen error={result.error} />;
     }
 
+    if (!role.id) {
+      return <LoadingScreen />
+    }
+
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
@@ -58,7 +63,7 @@ export class NotificationsScreen extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
 
-  const query = Query.fromLocation('notifications', location, {'facet': 'event'}, 'notifications')
+  const query = Query.fromLocation('notifications', location, { 'facet': 'event' }, 'notifications')
     .limit(40);
 
   return {

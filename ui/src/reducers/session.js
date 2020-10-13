@@ -15,7 +15,6 @@ const handleLogin = (state, token) => {
     return {
       token,
       loggedIn: true,
-      roleId: token.split('.', 1),
       sessionId: state.sessionId || uuidv4(),
     };
   };

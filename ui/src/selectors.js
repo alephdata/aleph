@@ -77,9 +77,16 @@ export function selectSession(state) {
   return selectObject(state, state, 'session');
 }
 
-export function selectCurrentRole(state) {
+export function selectCurrentRoleId(state) {
   const session = selectSession(state);
-  return !!session.roleId ? selectRole(state, session.roleId) : {};
+  if (!!session.token) {
+    return session.token.split('.', 1);
+  }
+}
+
+export function selectCurrentRole(state) {
+  const roleId = selectCurrentRoleId(state);
+  return !!roleId ? selectRole(state, roleId) : {};
 }
 
 export function selectTester(state) {
