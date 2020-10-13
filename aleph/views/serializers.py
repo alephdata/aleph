@@ -272,13 +272,13 @@ class XrefSerializer(Serializer):
 
 class ExportSerializer(Serializer):
     def _serialize(self, obj):
-        obj["links"] = {
-            "download": archive_url(
+        if obj.get("content_hash") and not obj.get("deleted"):
+            url = archive_url(
                 obj.get("content_hash"),
                 file_name=obj.get("file_name"),
                 mime_type=obj.get("mime_type"),
             )
-        }
+            obj["links"] = {"download": url}
         return obj
 
 
