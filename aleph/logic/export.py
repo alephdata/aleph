@@ -28,7 +28,7 @@ EXTRA_HEADERS = ["url", "collection"]
 def get_export(export_id):
     if export_id is None:
         return
-    export = Export.by_id(export_id)
+    export = Export.by_id(export_id, deleted=True)
     if export is not None:
         return export.to_dict()
 

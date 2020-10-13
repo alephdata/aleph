@@ -36,9 +36,9 @@ class RoleModelTest(TestCase):
     def test_load_or_create_role_exists(self):
         self.assertEqual(
             Role.load_or_create(
-                foreign_id=self.role.foreign_id,
-                type=self.role.type,
-                name=self.role.name,
+                self.role.foreign_id,
+                self.role.type,
+                self.role.name,
                 email=self.role.email,
             ),
             self.role,

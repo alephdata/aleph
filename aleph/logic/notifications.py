@@ -57,13 +57,13 @@ def get_role_channels(role):
     if len(channels):
         return channels
     channels = [GLOBAL]
-    if role.deleted_at is None and role.type == Role.USER:
+    if role.is_actor:
         authz = Authz.from_role(role)
         for role_id in authz.roles:
             channels.append(channel_tag(role_id, Role))
         for coll_id in authz.collections(authz.READ):
             channels.append(channel_tag(coll_id, Collection))
-    cache.set_list(key, channels, expires=3600 * 2)
+        cache.set_list(key, channels)
     return channels
 
 

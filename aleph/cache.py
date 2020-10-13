@@ -57,6 +57,9 @@ class Cache(object):
     def get_list(self, key):
         return self.kv.lrange(key, 0, -1)
 
+    def delete(self, key):
+        self.kv.delete(key)
+
     def lock(self, key, timeout=120):
         return self.kv.lock(key, timeout=timeout)
 

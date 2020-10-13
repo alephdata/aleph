@@ -1,4 +1,5 @@
 import uuid
+import secrets
 import logging
 from sqlalchemy import false
 from datetime import datetime, date
@@ -12,6 +13,10 @@ ENTITY_ID_LEN = 128
 
 def make_textid():
     return uuid.uuid4().hex
+
+
+def make_token():
+    return secrets.token_urlsafe()
 
 
 def iso_text(obj):

@@ -56,6 +56,8 @@ def reconcile_index(collection=None):
     domain = settings.APP_UI_URL.strip("/")
     label = settings.APP_TITLE
     suggest_query = []
+    if request.authz.id:
+        suggest_query.append(("api_key", request.authz.role.api_key))
     schemata = list(model)
     if collection is not None:
         label = "%s (%s)" % (collection.get("label"), label)
@@ -73,23 +75,18 @@ def reconcile_index(collection=None):
                 "entity": {
                     "service_url": domain,
                     "service_path": url_for(
-                        "reconcile_api.suggest_entity",
+                        ".suggest_entity",
                         _query=suggest_query,
-                        _authz=request.authz,
                         _relative=True,
                     ),
                 },
                 "type": {
                     "service_url": domain,
-                    "service_path": url_for(
-                        "reconcile_api.suggest_type", _relative=True
-                    ),
+                    "service_path": url_for(".suggest_type", _relative=True),
                 },
                 "property": {
                     "service_url": domain,
-                    "service_path": url_for(
-                        "reconcile_api.suggest_property", _relative=True
-                    ),
+                    "service_path": url_for(".suggest_property", _relative=True),
                 },
             },
             "defaultTypes": [get_freebase_type(s) for s in schemata if s.matchable],
