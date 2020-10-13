@@ -153,11 +153,7 @@ class CollectionSerializer(Serializer):
             "self": url_for("collections_api.view", collection_id=pk),
             "xref": url_for("xref_api.index", collection_id=pk),
             "xref_export": url_for("xref_api.export", collection_id=pk, _authz=authz),
-            "reconcile": url_for(
-                "reconcile_api.reconcile",
-                collection_id=pk,
-                _authz=authz,
-            ),
+            "reconcile": url_for("reconcile_api.reconcile", collection_id=pk),
             "ui": collection_url(pk),
         }
         obj["shallow"] = obj.get("shallow", True)
