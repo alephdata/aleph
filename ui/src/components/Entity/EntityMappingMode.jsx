@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 
 import { csvContextLoader, SectionLoading } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
+import MappingImportDialog from 'dialogs/MappingImportDialog/MappingImportDialog';
 import { fetchEntityMapping } from 'actions';
 import { selectEntityMapping } from 'selectors';
-import { MappingEditor, MappingImportButton, MappingStatus } from 'components/MappingEditor/.';
+import { MappingEditor, MappingStatus } from 'components/MappingEditor/.';
 
 import './EntityMappingMode.scss';
+
+
+const messages = defineMessages({
+  import: {
+    id: 'mapping.import.button',
+    defaultMessage: 'Import existing mapping',
+  },
+});
+
 
 export class EntityMappingMode extends Component {
   constructor(props) {
@@ -76,7 +87,7 @@ export class EntityMappingMode extends Component {
   }
 
   render() {
-    const { columns, document, existingMapping, prefilledSchemaData, rows } = this.props;
+    const { columns, document, existingMapping, intl, prefilledSchemaData, rows } = this.props;
     const { importedMappingData } = this.state;
 
     if (!rows || !columns || existingMapping.isPending) {
@@ -114,7 +125,14 @@ export class EntityMappingMode extends Component {
         </div>
 
         {showImport && (
-          <MappingImportButton onImport={this.onImport} />
+          <DialogToggleButton
+            buttonProps={{
+              text: intl.formatMessage(messages.import),
+              icon: "import"
+            }}
+            Dialog={MappingImportDialog}
+            dialogProps={{ onSubmit: this.onImport }}
+          />
         )}
 
         {existingMapping.id && (

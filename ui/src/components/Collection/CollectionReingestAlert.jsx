@@ -38,7 +38,7 @@ class CollectionReingestAlert extends Component {
     const { collection, intl } = this.props;
     this.props.triggerCollectionReingest(collection.id, this.state.index);
     showSuccessToast(intl.formatMessage(messages.processing));
-    this.props.toggleAlert();
+    this.props.toggleDialog();
   }
 
   onToggleIndex() {
@@ -56,7 +56,7 @@ class CollectionReingestAlert extends Component {
         icon="automatic-updates"
         intent={Intent.DANGER}
         isOpen={isOpen}
-        onCancel={this.props.toggleAlert}
+        onCancel={this.props.toggleDialog}
         onConfirm={this.onConfirm}
       >
         <p>

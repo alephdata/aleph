@@ -38,7 +38,7 @@ class CollectionReindexAlert extends Component {
     const { collection, intl } = this.props;
     this.props.triggerCollectionReindex(collection.id, this.state.flush);
     showSuccessToast(intl.formatMessage(messages.processing));
-    this.props.toggleAlert();
+    this.props.toggleDialog();
   }
 
   onToggleFlush() {
@@ -56,7 +56,7 @@ class CollectionReindexAlert extends Component {
         icon="search-template"
         intent={Intent.DANGER}
         isOpen={isOpen}
-        onCancel={this.props.toggleAlert}
+        onCancel={this.props.toggleDialog}
         onConfirm={this.onConfirm}
       >
         <p>
