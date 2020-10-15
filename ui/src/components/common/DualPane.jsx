@@ -35,7 +35,9 @@ class DualPane extends PureComponent {
     const { children, className, ...restProps } = this.props;
     return (
       <article {...restProps} className={c('DualPane', className)}>
-        { children }
+        <div className="DualPane__inner-container">
+          { children }
+        </div>
       </article>
     );
   }
