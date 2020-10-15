@@ -263,26 +263,28 @@ export class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             <SignInCallout />
             <div className="SearchScreen__control-bar">
-              {!noResults && (
-                <div className="SearchScreen__control-bar__button">
-                  <Tooltip
-                    content={intl.formatMessage(
-                      dateFacetDisabled ? messages.date_facet_disabled : (
-                        dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
-                      )
-                    )}
-                  >
-                    <AnchorButton
-                      outlined
-                      icon="calendar"
-                      onClick={this.toggleDateFacet}
-                      disabled={dateFacetDisabled}
-                      active={dateFacetIsOpen}
-                    />
-                  </Tooltip>
-                </div>
-              )}
-              <QueryTags query={query} updateQuery={this.updateQuery} />
+              <div className="SearchScreen__control-bar__inner-container">
+                {!noResults && (
+                  <div className="SearchScreen__control-bar__button">
+                    <Tooltip
+                      content={intl.formatMessage(
+                        dateFacetDisabled ? messages.date_facet_disabled : (
+                          dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
+                        )
+                      )}
+                    >
+                      <AnchorButton
+                        outlined
+                        icon="calendar"
+                        onClick={this.toggleDateFacet}
+                        disabled={dateFacetDisabled}
+                        active={dateFacetIsOpen}
+                      />
+                    </Tooltip>
+                  </div>
+                )}
+                <QueryTags query={query} updateQuery={this.updateQuery} />
+              </div>
             </div>
             <DateFacet
               isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
