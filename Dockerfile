@@ -8,6 +8,8 @@ RUN apt-get -qq -y update \
     ca-certificates postgresql-client curl \
     python3-pip python3-dev python3-icu python3-psycopg2 \
     python3-lxml python3-crypto cython3 \
+    icu-devtools libicu-dev build-essential pkg-config git \
+    gfortran libopenblas-dev liblapack-dev \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
