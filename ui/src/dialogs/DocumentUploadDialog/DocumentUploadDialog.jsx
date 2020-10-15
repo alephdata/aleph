@@ -69,9 +69,9 @@ export class DocumentUploadDialog extends Component {
     }
 
     if (uploadMeta && uploadMeta.status !== UPLOAD_STATUS.PENDING) {
-      onUploadSuccess();
+      onUploadSuccess && onUploadSuccess();
     }
-    else if (isOpen) {
+    if (isOpen) {
       toggleDialog();
     }
 

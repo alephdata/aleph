@@ -1,11 +1,11 @@
 import CloseButton from './CloseButton';
 import DownloadButton from './DownloadButton';
 import PagingButtons from './PagingButtons';
-import DocumentFolderButton from './DocumentFolderButton';
+import DialogToggleButton from './DialogToggleButton';
 
 export {
   CloseButton,
   DownloadButton,
   PagingButtons,
-  DocumentFolderButton,
+  DialogToggleButton,
 };
