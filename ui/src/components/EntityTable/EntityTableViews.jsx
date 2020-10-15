@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import { Count, Schema, SectionLoading, Skeleton } from 'components/common';
-import EntityTable from './EntityTable';
+import EntityTableView from './EntityTableView';
 import { selectModel } from 'selectors';
 
 import './EntityTableViews.scss';
@@ -40,7 +40,7 @@ class EntityTableViews extends React.PureComponent {
 
   renderTable() {
     const { collection, activeSchema, querySchemaEntities, isEntitySet, writeable } = this.props;
-    return <EntityTable
+    return <EntityTableView
       query={querySchemaEntities(activeSchema)}
       collection={collection}
       schema={activeSchema}

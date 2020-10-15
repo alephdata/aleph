@@ -20,7 +20,6 @@ class DiagramEditor extends React.Component {
     let initialLayout;
 
     if (diagram) {
-      console.log('in DiagramEditor, diagram is', diagram);
       const layoutData = { vertices: [], edges: [], selection: [] };
       initialLayout = GraphLayout.fromJSON(
         config,
@@ -93,14 +92,15 @@ class DiagramEditor extends React.Component {
   }
 
   downloadDiagram() {
-    const { diagram, onDownloadComplete } = this.props;
+    const { entityManager, diagram, onDownloadComplete } = this.props;
     const { layout, viewport } = this.state;
 
     const graphData = JSON.stringify({
+      entities: entityManager.toJSON(),
       layout: layout.toJSON(),
       viewport: viewport.toJSON(),
     });
-    fileDownload(graphData, `${diagram.label}.vis`);
+    fileDownload(graphData, `${diagram.label}.ftm`);
     onDownloadComplete();
   }
 

@@ -120,8 +120,10 @@ const entityEditorWrapper = (EditorComponent) => {
         }
       }
 
-      async deleteEntity(entityId) {
+      async deleteEntity(entity) {
         const { entitySetId, onStatusChange } = this.props;
+        const entityId = entity.id;
+
         onStatusChange(updateStates.IN_PROGRESS);
 
         try {
@@ -154,7 +156,8 @@ const entityEditorWrapper = (EditorComponent) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entitySetId } = ownProps.match.params;
+  const { entities, query, match } = ownProps;
+  const { entitySetId } = match.params;
 
   return ({
     model: selectModel(state),

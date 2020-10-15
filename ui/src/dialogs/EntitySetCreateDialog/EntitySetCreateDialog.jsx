@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
   diagram_import_placeholder: {
     id: 'diagram.import.placeholder',
-    defaultMessage: 'Drop a .vis file here or click to import an existing diagram',
+    defaultMessage: 'Drop a .ftm file here or click to import an existing diagram',
   },
 });
 
@@ -203,7 +203,7 @@ class EntitySetCreateDialog extends Component {
         <div className="bp3-dialog-body">
           {canImport && (
             <FileImport
-              accept=".vis"
+              accept={['.ftm', '.vis']}
               placeholder={intl.formatMessage(messages.diagram_import_placeholder)}
               onImport={this.onImport}
               importedFile={importedFileName}

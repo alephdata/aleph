@@ -15,8 +15,6 @@ import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'components/Entity/EntityActionBar';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
-import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
 import { showErrorToast, showSuccessToast } from 'app/toast';
 import getEntityLink from 'util/getEntityLink';
 
@@ -52,7 +50,6 @@ export class EntityTable extends Component {
       addToIsOpen: false,
     };
     this.updateQuery = this.updateQuery.bind(this);
-    this.getMoreResults = this.getMoreResults.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
     this.onSortColumn = this.onSortColumn.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
@@ -61,28 +58,6 @@ export class EntityTable extends Component {
     this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
     this.toggleEdgeCreateDialog = this.toggleEdgeCreateDialog.bind(this);
     this.toggleEntitySetSelector = this.toggleEntitySetSelector.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result.next && !result.isPending && !result.isError) {
-      this.props.queryEntities({ query, next: result.next });
-    }
-  }
-
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryEntities({ query });
-    }
   }
 
   updateQuery(newQuery) {
@@ -97,7 +72,7 @@ export class EntityTable extends Component {
   updateSelection(entity) {
     const { selection } = this.state;
     this.setState({
-      selection: _.xorBy(selection, [entity], 'id'),
+      selection: _.xor(selection, [entity]),
     });
   }
 
@@ -186,11 +161,10 @@ export class EntityTable extends Component {
   }
 
   render() {
-    const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, writeable } = this.props;
+    const { collection, entityManager, getMoreResults, query, intl, schema, isEmpty, isEntitySet, sort, writeable } = this.props;
     const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
-    const showEmptyComponent = result.total === 0 && query.hasQuery();
-
+    const showEmptyComponent = isEmpty && query.hasQuery();
 
     return (
       <div className="EntityTable">
@@ -199,7 +173,7 @@ export class EntityTable extends Component {
           writeable={writeable}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
-          searchDisabled={result.total === 0 && !query.hasQuery()}
+          searchDisabled={isEmpty && !query.hasQuery()}
         >
           {!isEntitySet && (
             <>
@@ -236,7 +210,7 @@ export class EntityTable extends Component {
           {!showEmptyComponent && (
             <>
               <TableEditor
-                entities={result.results}
+                entities={entityManager.getEntities()}
                 schema={schema}
                 entityManager={entityManager}
                 sort={sort}
@@ -244,11 +218,11 @@ export class EntityTable extends Component {
                 selection={selection}
                 updateSelection={this.updateSelection}
                 writeable={writeable}
-                isPending={result.isPending}
+                isPending={isPending}
                 visitEntity={visitEntity}
               />
               <Waypoint
-                onEnter={this.getMoreResults}
+                onEnter={getMoreResults}
                 bottomOffset="-600px"
                 scrollableAncestor={window}
               />
@@ -263,18 +237,17 @@ export class EntityTable extends Component {
           onSelect={this.onDocSelected}
         />
         <EdgeCreateDialog
-          source={selection.length ? selection[0] : undefined}
-          target={selection.length > 1 ? selection[1] : undefined}
+          source={selection.length ? entityManager.getEntity(selection[0]) : undefined}
+          target={selection.length > 1 ? entityManager.getEntity(selection[1]) : undefined}
           isOpen={this.state.edgeCreateIsOpen}
           toggleDialog={this.toggleEdgeCreateDialog}
           onSubmit={this.onEdgeCreate}
-          model={entityManager.model}
-          getEntitySuggestions={entityManager.getEntitySuggestions}
+          entityManager={entityManager}
           intl={intl}
         />
         <EntitySetSelector
           collection={collection}
-          entities={selection}
+          entities={entityManager.getEntities(selection)}
           isOpen={this.state.addToIsOpen}
           toggleDialog={this.toggleEntitySetSelector}
         />
@@ -283,22 +256,9 @@ export class EntityTable extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { query } = ownProps;
-  const sort = query.getSort();
-
-  return {
-    sort: !_.isEmpty(sort) ? {
-      field: sort.field.replace('properties.', ''),
-      direction: sort.direction
-    } : {},
-    result: selectEntitiesResult(state, query)
-  };
-};
-
 export default compose(
   withRouter,
   entityEditorWrapper,
-  connect(mapStateToProps, { queryEntities }),
+  connect({}, { queryEntities }),
   injectIntl,
 )(EntityTable);
