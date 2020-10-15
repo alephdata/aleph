@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import React, { PureComponent } from 'react';
+import { injectIntl, defineMessages } from 'react-intl';
 import { Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
+import { DialogToggleButton } from 'components/Toolbar'
 import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
@@ -9,92 +10,98 @@ import CollectionReingestAlert from './CollectionReingestAlert';
 import CollectionReindexAlert from './CollectionReindexAlert';
 
 
-class CollectionManageMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editIsOpen: false,
-      accessIsOpen: false,
-      deleteIsOpen: false,
-      reindexIsOpen: false,
-      reingestIsOpen: false,
-    };
-    this.toggleEdit = this.toggleEdit.bind(this);
-    this.toggleAccess = this.toggleAccess.bind(this);
-    this.toggleDelete = this.toggleDelete.bind(this);
-    this.toggleReindex = this.toggleReindex.bind(this);
-    this.toggleReingest = this.toggleReingest.bind(this);
-  }
+const messages = defineMessages({
+  access: {
+    id: 'collection.info.access',
+    defaultMessage: 'Share',
+  },
+  edit: {
+    id: 'collection.info.edit',
+    defaultMessage: 'Settings',
+  },
+  delete: {
+    id: 'collection.info.delete',
+    defaultMessage: 'Delete dataset',
+  },
+  reingest: {
+    id: 'collection.info.reingest',
+    defaultMessage: 'Re-ingest documents',
+  },
+  reindex: {
+    id: 'collection.info.reindex',
+    defaultMessage: 'Re-index all content',
+  },
+});
 
-  toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
-  toggleAccess = () => this.setState(({ accessIsOpen }) => ({ accessIsOpen: !accessIsOpen }));
-
-  toggleEdit = () => this.setState(({ editIsOpen }) => ({ editIsOpen: !editIsOpen }));
-
-  toggleReindex = () => this.setState(({ reindexIsOpen }) => ({ reindexIsOpen: !reindexIsOpen }));
-
-  toggleReingest = () => this.setState(({ reingestIsOpen }) => ({ reingestIsOpen: !reingestIsOpen }));
-
+class CollectionManageMenu extends PureComponent {
   renderMenu() {
+    const { collection, intl } = this.props;
     return (
       <Menu>
-        <MenuItem icon="automatic-updates" onClick={this.toggleReingest} text={
-          <FormattedMessage id="collection.info.reingest" defaultMessage="Re-ingest documents" />
-        } />
-        <MenuItem icon="search-template" onClick={this.toggleReindex} text={
-          <FormattedMessage id="collection.info.reindex" defaultMessage="Re-index all content" />
-        } />
-        <MenuItem icon="trash" onClick={this.toggleDelete} text={
-          <FormattedMessage id="collection.info.delete" defaultMessage="Delete dataset" />
-        } />
+        <DialogToggleButton
+          ButtonComponent={MenuItem}
+          buttonProps={{
+            text: intl.formatMessage(messages.reingest),
+            icon: "automatic-updates",
+            shouldDismissPopover: false
+          }}
+          Dialog={CollectionReingestAlert}
+          dialogProps={{ collection }}
+        />
+        <DialogToggleButton
+          ButtonComponent={MenuItem}
+          buttonProps={{
+            text: intl.formatMessage(messages.reindex),
+            icon: "search-template",
+            shouldDismissPopover: false
+          }}
+          Dialog={CollectionReindexAlert}
+          dialogProps={{ collection }}
+        />
+        <DialogToggleButton
+          ButtonComponent={MenuItem}
+          buttonProps={{
+            text: intl.formatMessage(messages.delete),
+            icon: "trash",
+            shouldDismissPopover: false
+          }}
+          Dialog={CollectionDeleteDialog}
+          dialogProps={{ collection }}
+        />
       </Menu>
     );
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, intl } = this.props;
     if (!collection.writeable) {
       return null;
     }
     return (
       <>
         <ButtonGroup>
-          <Button icon="cog" onClick={this.toggleEdit}>
-            <FormattedMessage id="collection.info.edit" defaultMessage="Settings" />
-          </Button>
-          <Button icon="key" onClick={this.toggleAccess}>
-            <FormattedMessage id="collection.info.access" defaultMessage="Share" />
-          </Button>
-          <Popover content={this.renderMenu()}>
-            <Button rightIcon="caret-down" />
+          <DialogToggleButton
+            buttonProps={{
+              text: intl.formatMessage(messages.edit),
+              icon: "cog"
+            }}
+            Dialog={CollectionEditDialog}
+            dialogProps={{ collection }}
+          />
+          <DialogToggleButton
+            buttonProps={{
+              text: intl.formatMessage(messages.access),
+              icon: "key"
+            }}
+            Dialog={CollectionAccessDialog}
+            dialogProps={{ collection }}
+          />
+          <Popover>
+            <Button icon="caret-down" />
+            {this.renderMenu()}
           </Popover>
         </ButtonGroup>
-        <CollectionEditDialog
-          collection={collection}
-          isOpen={this.state.editIsOpen}
-          toggleDialog={this.toggleEdit}
-        />
-        <CollectionAccessDialog
-          collection={collection}
-          isOpen={this.state.accessIsOpen}
-          toggleDialog={this.toggleAccess}
-        />
-        <CollectionDeleteDialog
-          isOpen={this.state.deleteIsOpen}
-          collection={collection}
-          toggleDialog={this.toggleDelete}
-        />
-        <CollectionReingestAlert
-          isOpen={this.state.reingestIsOpen}
-          collection={collection}
-          toggleAlert={this.toggleReingest}
-        />
-        <CollectionReindexAlert
-          isOpen={this.state.reindexIsOpen}
-          collection={collection}
-          toggleAlert={this.toggleReindex}
-        />
       </>
     );
   }

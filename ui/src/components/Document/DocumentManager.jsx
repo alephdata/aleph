@@ -8,7 +8,6 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import { DialogToggleButton } from 'components/Toolbar';
-
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentMoveDialog from 'dialogs/DocumentMoveDialog/DocumentMoveDialog';
 import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';
@@ -41,7 +40,7 @@ const messages = defineMessages({
   },
   move: {
     id: 'document.folder.move',
-    defaultMessage: 'Move documents',
+    defaultMessage: 'Move',
   },
   new: {
     id: 'document.folder.new',
@@ -149,7 +148,7 @@ export class DocumentManager extends Component {
           )}
           <DialogToggleButton
             buttonProps={{
-              text: intl.formatMessage(messages.move),
+              text: intl.formatMessage(messages.new),
               icon: "folder-new"
             }}
             Dialog={DocumentFolderDialog}
@@ -159,7 +158,8 @@ export class DocumentManager extends Component {
           <DialogToggleButton
             buttonProps={{
               text: intl.formatMessage(messages.move),
-              icon: "folder-shared-open"
+              icon: "folder-shared-open",
+              disabled: !selection.length
             }}
             Dialog={DocumentMoveDialog}
             dialogProps={{ entities: selection }}

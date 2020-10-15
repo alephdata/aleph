@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
@@ -9,7 +9,7 @@ import {
 import { fetchRole } from 'actions';
 import { selectCurrentRole, selectCurrentRoleId, selectMetadata } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
-
+import { DialogToggleButton } from 'components/Toolbar'
 import './AuthButtons.scss';
 
 
@@ -39,8 +39,8 @@ const messages = defineMessages({
     defaultMessage: 'Sign out',
   },
   signin: {
-    id: 'nav.signin_register',
-    defaultMessage: 'Sign in / Register',
+    id: 'nav.signin',
+    defaultMessage: 'Sign in',
   },
   exports: {
     id: 'nav.exports',
@@ -56,14 +56,6 @@ const messages = defineMessages({
   },
 });
 export class AuthButtons extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSignupOpen: false,
-    };
-    this.toggleAuthentication = this.toggleAuthentication.bind(this);
-  }
-
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -77,10 +69,6 @@ export class AuthButtons extends Component {
     if (role.shouldLoad) {
       this.props.fetchRole({ id: roleId });
     }
-  }
-
-  toggleAuthentication() {
-    this.setState(({ isSignupOpen }) => ({ isSignupOpen: !isSignupOpen }));
   }
 
   render() {
@@ -161,14 +149,15 @@ export class AuthButtons extends Component {
     if (metadata.auth.password_login_uri || metadata.auth.oauth_uri) {
       return (
         <span className="AuthButtons">
-          <AuthenticationDialog
-            auth={metadata.auth}
-            isOpen={this.state.isSignupOpen}
-            toggleDialog={this.toggleAuthentication}
+          <DialogToggleButton
+            buttonProps={{
+              text: intl.formatMessage(messages.signin),
+              icon: 'log-in',
+              className: 'bp3-minimal'
+            }}
+            Dialog={AuthenticationDialog}
+            dialogProps={{ auth: metadata.auth }}
           />
-          <Button icon="log-in" className="bp3-minimal" onClick={this.toggleAuthentication}>
-            <FormattedMessage id="nav.signin" defaultMessage="Sign in" />
-          </Button>
         </span>
       );
     }
