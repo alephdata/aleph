@@ -9,7 +9,6 @@ import queryString from 'query-string';
 
 import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
-import DocumentMoveDialog from 'dialogs/DocumentMoveDialog/DocumentMoveDialog';
 import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';
 import EntityActionBar from 'components/Entity/EntityActionBar';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
@@ -155,15 +154,6 @@ export class DocumentManager extends Component {
             dialogProps={{ collection, parent: document }}
           />
           <Divider />
-          <DialogToggleButton
-            buttonProps={{
-              text: intl.formatMessage(messages.move),
-              icon: "folder-shared-open",
-              disabled: !selection.length
-            }}
-            Dialog={DocumentMoveDialog}
-            dialogProps={{ entities: selection }}
-          />
           <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)} className="prevent-flex-grow">
             <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
               <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
