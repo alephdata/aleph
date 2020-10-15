@@ -37,10 +37,6 @@ const messages = defineMessages({
     id: 'entity.document.manager.cannot_map',
     defaultMessage: 'Select a table document to generate structured entities',
   },
-  move: {
-    id: 'document.folder.move',
-    defaultMessage: 'Move',
-  },
   new: {
     id: 'document.folder.new',
     defaultMessage: 'New folder',
