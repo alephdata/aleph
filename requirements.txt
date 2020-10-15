@@ -46,10 +46,5 @@ coverage
 coveralls
 
 # Tracing and logging libraries
-<<<<<<< HEAD
 python-json-logger==2.0.0
 google-cloud-logging==1.15.1
-=======
-python-json-logger==0.1.11
-google-cloud-logging==1.15.1
->>>>>>> 2aa6a73e3... Added model info to xref index and cleaned up xref results passing
