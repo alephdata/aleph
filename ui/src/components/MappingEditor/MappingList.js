@@ -63,6 +63,8 @@ class MappingList {
       mapping.id = newId;
       mapping.altLabel = null;
       this.mappingItems.set(newId, mapping);
+
+      // replace any references to this mapping in other mappings' properties
       this.applyToEntityRefs(oldId,
         (mappingId, propName) => (
           this.addProperty(mappingId, propName, { entity: newId })
@@ -89,11 +91,6 @@ class MappingList {
   getMapping(id) {
     return this.mappingItems.get(id);
   }
-
-  // getMappingLabel(id) {
-  //   const mapping = this.getMapping(id);
-  //   return mapping.altLabel || mapping.id;
-  // }
 
   getMappingKeys(id) {
     const mapping = this.getMapping(id);
@@ -157,18 +154,18 @@ class MappingList {
 
   removeMapping(idToRemove) {
     this.mappingItems.delete(idToRemove);
+    // remove any references to this mapping in other mappings' properties
     this.applyToEntityRefs(idToRemove, this.removeProperty);
 
     return this;
   }
 
   applyToEntityRefs(id, applyFunc) {
-
     this.getValues().forEach(mapping => {
       if (mapping?.properties) {
         Object.entries(mapping.properties).forEach(([propName, propValue]) => {
           if (propValue?.entity && propValue?.entity === id) {
-            applyFunc(mapping.id, propName, propValue);
+            applyFunc(mapping.id, propName);
           }
         });
       }
