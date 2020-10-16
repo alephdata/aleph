@@ -96,7 +96,7 @@ export class MappingLabel extends Component {
     }
 
     return (
-      <span className="MappingLabel">{content}</span>
+      <span className="MappingLabel" style={{ color: mapping.color }}>{content}</span>
     )
   }
 };

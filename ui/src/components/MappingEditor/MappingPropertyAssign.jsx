@@ -74,7 +74,6 @@ export class MappingPropertyAssign extends Component {
             key={mapping.id}
             text={<MappingLabel mapping={mapping} truncate={15} />}
             popoverProps={{ interactionKind: PopoverInteractionKind.CLICK }}
-            style={{ color: mapping.color }}
             className="MappingPropertyAssign__headerSelect__item"
           >
             {this.propertyListRenderer(mapping, renderItem, false)}
@@ -91,8 +90,8 @@ export class MappingPropertyAssign extends Component {
     return (
       <>
         {showHeader && (
-          <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading" style={{ color }}>
-            <h6 className="bp3-heading"><MappingLabel mapping={mapping} truncate={15} /></h6>
+          <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading">
+            <h6 className="bp3-heading"><MappingLabel mapping={mapping} truncate={25} /></h6>
           </li>
         )}
         {
