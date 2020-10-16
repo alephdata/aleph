@@ -144,7 +144,7 @@ class MappingVerifyItem extends Component {
     return (
       <Card className="MappingVerify__item" key={id} style={{ borderColor: color }}>
         <h6 className="MappingVerify__title bp3-heading" style={{ color }}>
-          <MappingLabel mapping={{ id, schema }} onEdit={onMappingIdChange} />
+          <MappingLabel mapping={mapping} onEdit={onMappingIdChange} />
         </h6>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">

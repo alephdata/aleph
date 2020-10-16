@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
+import truncateText from 'truncate';
 
 import { Schema } from 'components/common';
+
+import './MappingLabel.scss';
 
 export class MappingLabel extends Component {
   constructor(props) {
@@ -9,12 +12,23 @@ export class MappingLabel extends Component {
 
     this.state = {
       editing: false,
-      editValue: props.mapping.id
+      editValue: this.getLabelText()
     };
   }
 
   toggleEditing = () => {
     this.setState(({ editing }) => ({ editing: !editing }));
+  }
+
+  getLabelText = () => {
+    const { mapping, truncate } = this.props;
+    const text = mapping.altLabel || mapping.id;
+    return truncate ? truncateText(text, truncate) : text;
+  }
+
+  getLabelIcon = (className) => {
+    const { icon = true, mapping } = this.props;
+    return icon && <Schema.Icon schema={mapping.schema} className={className} />
   }
 
   onSubmit = (e) => {
@@ -26,35 +40,63 @@ export class MappingLabel extends Component {
     this.toggleEditing();
   }
 
-  render() {
+  renderEditor() {
+    const { editValue } = this.state;
+
+    return (
+      <form className="MappingLabel__input" onSubmit={this.onSubmit}>
+        <InputGroup
+          autoFocus
+          value={editValue}
+          leftIcon={this.getLabelIcon()}
+          onChange={(e) => this.setState({ editValue: e.target.value })}
+          rightElement={<Button minimal icon="arrow-right" onClick={this.onSubmit} />}
+        />
+      </form>
+    );
+  }
+
+  renderButton() {
+    const { mapping, icon = true } = this.props;
+
+    return (
+      <Button
+        onClick={this.toggleEditing}
+        minimal
+        className="MappingLabel__button"
+        text={this.getLabelText()}
+        icon={icon && <Schema.Icon schema={mapping.schema} />}
+      />
+    );
+  }
+
+  renderLabel() {
     const { mapping, icon = true, onEdit } = this.props;
+
+    return (
+      <>
+        {this.getLabelIcon("left-icon")}
+        {this.getLabelText()}
+      </>
+    );
+  }
+
+  render() {
+    const { mapping, onEdit } = this.props;
     const { editing, editValue } = this.state;
     if (!mapping || !mapping.schema || !mapping.id) return null;
 
+    let content;
     if (editing) {
-      return (
-        <form onSubmit={this.onSubmit}>
-          <InputGroup
-            value={editValue}
-            onChange={(e) => this.setState({ editValue: e.target.value })}
-          />
-        </form>
-      )
-    }
-
-    const label = (
-      <>
-        {icon && <Schema.Icon schema={mapping.schema} className="left-icon" />}
-        {mapping.id}
-      </>
-    );
-
-    if (onEdit) {
-      return (
-        <Button onClick={this.toggleEditing} minimal>{label}</Button>
-      )
+      content = this.renderEditor();
+    } else if (onEdit) {
+      content = this.renderButton();
     } else {
-      return label;
+      content = this.renderLabel();
     }
+
+    return (
+      <span className="MappingLabel">{content}</span>
+    )
   }
 };
