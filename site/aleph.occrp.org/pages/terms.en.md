@@ -105,7 +105,8 @@ You must not misuse Aleph by knowingly introducing viruses, trojans, worms, logi
 
 You may link to the Aleph home page, provided you do so in a way that is fair and legal and does not damage our reputation or take advantage of it. You must not establish a link in such a way as to suggest any form of association, approval or endorsement on our part where none exists. We reserve the right to withdraw linking permission without notice. The website in which you are linking must comply in all respects with the content standards set out in our [Acceptable Use Policy](/pages/acceptable-use). If you wish to link to or make any use of content on Aleph other than that set out above, please contact data@occrp.org.
 
-INTELLECTUAL PROPERTY RIGHTS 
+### INTELLECTUAL PROPERTY RIGHTS 
+
 The copyright or other intellectual property rights in data and materials in Aleph will be owned by the author (or owner) of such data and materials. Under no circumstances may you claim to OCCRP that you are the author and/or owner of any intellectual property rights in data and/or materials in Aleph where you are not the author and/or owner of such intellectual property rights in data and/or materials. In the event that you do, OCCRP reserves the right, at any time, to permanently suspend and block your use of Aleph. 
 
 ### TERMINATION
