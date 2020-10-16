@@ -17,7 +17,7 @@ class MappingList {
         this.mappingItems.set(id, {
           id,
           color: this.assignColor(i),
-          // altLabel: this.getLabelFromId(id, ftmSchema),
+          altLabel: this.getLabelFromId(id, ftmSchema),
           schema: ftmSchema,
           keys: keys || [],
           properties: properties || {},
@@ -44,26 +44,32 @@ class MappingList {
     return schemaCount ? `${schema.name}${schemaCount + 1}` : schema.name;
   }
 
+  // for pre-existing mappings, generate display label from schema id
   getLabelFromId(id, schema) {
     const schemaName = schema.name;
     const re = new RegExp(`^${schemaName}(?<index>([0-9]*))$`);
     const match = id.match(re)?.groups;
     if (!match) { return; }
 
-    const label = `${schema.label} ${match.index}`;
-    return label !== undefined && label !== id && label;
+    const label = `${schema.label} ${match.index}`.trim();
+    if (label !== id) {
+      return label;
+    }
   }
 
   changeId(oldId, newId) {
     const mapping = this.getMapping(oldId);
-    mapping.id = newId;
-    this.mappingItems.set(newId, mapping);
-    this.applyToEntityRefs(oldId,
-      (mappingId, propName) => (
-        this.addProperty(mappingId, propName, { entity: newId })
-      )
-    );
-    this.removeMapping(oldId);
+    if (mapping && oldId !== newId) {
+      mapping.id = newId;
+      mapping.altLabel = null;
+      this.mappingItems.set(newId, mapping);
+      this.applyToEntityRefs(oldId,
+        (mappingId, propName) => (
+          this.addProperty(mappingId, propName, { entity: newId })
+        )
+      );
+      this.removeMapping(oldId);
+    }
 
     return this;
   }
@@ -83,6 +89,11 @@ class MappingList {
   getMapping(id) {
     return this.mappingItems.get(id);
   }
+
+  // getMappingLabel(id) {
+  //   const mapping = this.getMapping(id);
+  //   return mapping.altLabel || mapping.id;
+  // }
 
   getMappingKeys(id) {
     const mapping = this.getMapping(id);
@@ -134,7 +145,7 @@ class MappingList {
 
     const newMapping = {
       id,
-      // altLabel: schemaCount ? `${schema.label} ${schemaCount + 1}` : schema.name,
+      altLabel: schemaCount ? `${schema.label} ${schemaCount + 1}` : schema.label,
       color: this.assignColor(),
       schema,
       keys: [],
@@ -194,12 +205,12 @@ class MappingList {
   getColumnAssignments() {
     const columnAssignments = new Map();
 
-    this.mappingItems.forEach(({ id, schema, properties }) => {
+    this.mappingItems.forEach(({ id, altLabel, schema, properties }) => {
       if (properties) {
         Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
           if (propValue && propValue.column) {
             columnAssignments.set(propValue.column, {
-              id, schema, property: schema.getProperty(propKey),
+              id, altLabel, schema, property: schema.getProperty(propKey),
             });
           }
         });

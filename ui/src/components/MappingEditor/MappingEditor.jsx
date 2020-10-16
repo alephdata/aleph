@@ -135,8 +135,6 @@ export class MappingEditor extends Component {
     const { document, existingMappingMetadata, csvData, csvHeader, intl } = this.props;
     const { entitySet, mappings } = this.state;
 
-    console.log('mappings', mappings);
-
     return (
       <>
         <div className="MappingEditor">
