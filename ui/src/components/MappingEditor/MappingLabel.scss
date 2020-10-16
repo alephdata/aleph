@@ -2,6 +2,7 @@
 @import "app/mixins.scss";
 
 .MappingLabel {
+  font-weight: bold;
   &__button, &__input {
     margin-top: -5px !important;
     margin-left: -10px !important;

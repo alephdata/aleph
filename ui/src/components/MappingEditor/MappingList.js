@@ -205,12 +205,14 @@ class MappingList {
   getColumnAssignments() {
     const columnAssignments = new Map();
 
-    this.mappingItems.forEach(({ id, altLabel, schema, properties }) => {
+    this.mappingItems.forEach(mapping => {
+      const { properties, schema } = mapping;
       if (properties) {
         Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
           if (propValue && propValue.column) {
             columnAssignments.set(propValue.column, {
-              id, altLabel, schema, property: schema.getProperty(propKey),
+                ...mapping,
+                property: schema.getProperty(propKey),
             });
           }
         });
