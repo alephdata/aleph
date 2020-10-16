@@ -84,7 +84,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   propertyListRenderer(mapping, renderItem, showHeader) {
-    const { id, color, schema } = mapping;
+    const { id, schema } = mapping;
     const { featuredProps, otherProps } = this.getAssignableProps(schema);
 
     return (
