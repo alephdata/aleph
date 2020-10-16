@@ -5,7 +5,7 @@ import { Button, Menu, MenuDivider, MenuItem, PopoverInteractionKind } from '@bl
 import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
-import { MappingLabel } from './util';
+import { MappingLabel } from 'components/MappingEditor/MappingLabel';
 import SelectWrapper from 'components/common/SelectWrapper';
 
 import './MappingPropertyAssign.scss';

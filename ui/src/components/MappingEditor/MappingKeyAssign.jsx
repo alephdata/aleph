@@ -5,7 +5,7 @@ import { Button, Card, Collapse, FormGroup, Icon, MenuItem, Tooltip } from '@blu
 import { MultiSelect } from '@blueprintjs/select';
 import SelectWrapper from 'components/common/SelectWrapper';
 import { Schema } from 'components/common';
-import { MappingLabel } from './util';
+import { MappingLabel } from 'components/MappingEditor/MappingLabel';
 
 import './MappingKeyAssign.scss';
 
@@ -208,7 +208,7 @@ export class MappingKeyAssignItem extends Component {
   }
 
   render() {
-    const { mapping, onMappingRemove } = this.props;
+    const { fullMappingsList, mapping, onMappingRemove, onMappingIdChange } = this.props;
     const { id, color, schema } = mapping;
 
     return (
@@ -220,7 +220,7 @@ export class MappingKeyAssignItem extends Component {
           onClick={() => onMappingRemove(id)}
         />
         <h6 className="MappingKeyAssign__item__title bp3-heading">
-          <MappingLabel mapping={{ id, schema }} />
+          <MappingLabel mapping={mapping} onEdit={onMappingIdChange} />
         </h6>
         <div className="MappingKeyAssign__item__property">
           <span className="MappingKeyAssign__item__property__label">

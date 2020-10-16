@@ -13,15 +13,19 @@ class MappingList {
 
     if (mappingData) {
       Object.entries(mappingData).forEach(([id, { schema, keys, properties }], i) => {
+        const ftmSchema = model.getSchema(schema);
         this.mappingItems.set(id, {
-          color: this.assignColor(i),
           id,
-          schema: model.getSchema(schema),
+          color: this.assignColor(i),
+          // altLabel: this.getLabelFromId(id, ftmSchema),
+          schema: ftmSchema,
           keys: keys || [],
           properties: properties || {},
         });
       });
     }
+
+    this.changeId = this.changeId.bind(this)
   }
 
   assignColor() {
@@ -37,7 +41,31 @@ class MappingList {
 
   assignId(schema) {
     const schemaCount = this.getSchemaCount(schema);
-    return schemaCount ? `${schema.label} ${schemaCount + 1}` : schema.label;
+    return schemaCount ? `${schema.name}${schemaCount + 1}` : schema.name;
+  }
+
+  getLabelFromId(id, schema) {
+    const schemaName = schema.name;
+    const re = new RegExp(`^${schemaName}(?<index>([0-9]*))$`);
+    const match = id.match(re)?.groups;
+    if (!match) { return; }
+
+    const label = `${schema.label} ${match.index}`;
+    return label !== undefined && label !== id && label;
+  }
+
+  changeId(oldId, newId) {
+    const mapping = this.getMapping(oldId);
+    mapping.id = newId;
+    this.mappingItems.set(newId, mapping);
+    this.applyToEntityRefs(oldId,
+      (mappingId, propName) => (
+        this.addProperty(mappingId, propName, { entity: newId })
+      )
+    );
+    this.removeMapping(oldId);
+
+    return this;
   }
 
   getValues() {
@@ -57,7 +85,10 @@ class MappingList {
   }
 
   getMappingKeys(id) {
-    const { keys, properties, schema } = this.getMapping(id);
+    const mapping = this.getMapping(id);
+    if (!mapping) { return []; }
+    const { keys, properties, schema } = mapping;
+
     if (schema.isEdge) {
       let sourceKeys = [], targetKeys = [];
       const { source, target } = schema.edge;
@@ -99,9 +130,11 @@ class MappingList {
 
   addMapping(schema) {
     const id = this.assignId(schema);
+    const schemaCount = this.getSchemaCount(schema);
 
     const newMapping = {
       id,
+      // altLabel: schemaCount ? `${schema.label} ${schemaCount + 1}` : schema.name,
       color: this.assignColor(),
       schema,
       keys: [],
@@ -113,19 +146,22 @@ class MappingList {
 
   removeMapping(idToRemove) {
     this.mappingItems.delete(idToRemove);
+    this.applyToEntityRefs(idToRemove, this.removeProperty);
 
-    // remove any references to this mapping in other mappings' properties
+    return this;
+  }
+
+  applyToEntityRefs(id, applyFunc) {
+
     this.getValues().forEach(mapping => {
-      if (mapping.properties) {
+      if (mapping?.properties) {
         Object.entries(mapping.properties).forEach(([propName, propValue]) => {
-          if (propValue?.entity && propValue?.entity === idToRemove) {
-            this.removeProperty(mapping.id, propName);
+          if (propValue?.entity && propValue?.entity === id) {
+            applyFunc(mapping.id, propName, propValue);
           }
         });
       }
     });
-
-    return this;
   }
 
   addKey(id, key) {
