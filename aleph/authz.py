@@ -169,7 +169,7 @@ class Authz(object):
     def flush_role(cls, role):
         # Clear collections ACL cache.
         cache.kv.hdel(cls.ACCESS, role.id)
-        if not role.is_actor:
+        if role.is_blocked or role.deleted_at is not None:
             # End all user sessions.
             prefix = cache.key(cls.TOKENS, "%s." % role.id)
             cache.flush(prefix=prefix)
