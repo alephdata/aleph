@@ -106,10 +106,10 @@ export class DiagramScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { diagram, diagramId } = this.props;
+    const { diagram, entitySetId } = this.props;
 
     if (diagram.shouldLoad || diagram.shallow) {
-      this.props.fetchEntitySet(diagramId);
+      this.props.fetchEntitySet(entitySetId);
     }
   }
 
@@ -184,11 +184,11 @@ export class DiagramScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { diagramId } = ownProps.match.params;
+  const { entitySetId } = ownProps.match.params;
 
   return {
-    diagramId,
-    diagram: selectEntitySet(state, diagramId),
+    entitySetId,
+    diagram: selectEntitySet(state, entitySetId),
   };
 };
 
