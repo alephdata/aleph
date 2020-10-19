@@ -31,14 +31,14 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:428b493ec1a57b3551222556c5ad2c60b129c157
+    image: gchr.io/alephdata/convert-document:8b76b3ecdc3dd2c489e38697ec1743002919d1f0
     read_only: true
     restart: on-failure
     user: app
     tmpfs: /tmp
 
   ingest-file:
-    image: alephdata/ingest-file:19c1ae980fd09d769e88fe50e50db8ab75f7fbf0
+    image: gchr.io/alephdata/ingest-file:a2a2dfc8605a7e1d7c4faa6f5260a16807f6d51e
     hostname: ingest
     tmpfs: /tmp
     volumes:
