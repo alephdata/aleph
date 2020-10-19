@@ -5,7 +5,7 @@ import logging
 import requests
 from authlib.integrations.flask_client import OAuth
 from servicelayer.extensions import get_entry_point
-from authlib import jose
+from authlib.jose import jwk, jwt
 
 from aleph import settings
 
@@ -32,7 +32,7 @@ def configure_oauth(app, cache):
 
 
 def handle_oauth(provider, oauth_token):
-    handler = get_entry_point("aleph.oauth", settings.OAUTH_HANDLER)
+    handler = get_entry_point("aleph.oauth", settings.OAUTH_HANDLER.lower())
     if handler is not None:
         return handler(provider, oauth_token)
 
@@ -50,10 +50,14 @@ def handle_azure_oauth(provider, oauth_token):
     # TODO: this can be cached 24 hours.
     log.debug("Fetching Azure OAuth keys...")
     res = requests.get(AZURE_KEYS_URL, timeout=10)
-    pk = jose.jwk.loads(res.json(), kid=headerbit["kid"])
+    public_key = jwk.loads(res.json(), kid=headerbit["kid"])
 
     # Decode incoming token and verify against the MS cert
-    token_data = jwt.decode(id_token, pk, verify=True, audience=settings.OAUTH_KEY)
+    token_data = jwt.decode(id_token, public_key)
+
+    # Validate
+    token_data.validate()
+
     upn = token_data["upn"]
     name = token_data["name"]
     log.debug("Decoded token: %s (%s)", upn, name)
@@ -76,9 +80,9 @@ def handle_cognito_oauth(provider, oauth_token):
 
     # Pull keys from Cognito server
     keys = requests.get(settings.OAUTH_CERT_URL).json()
-    key = lambda header, payload: jose.jwk.loads(keys, kid=header.get("kid"))
+    key = lambda header, payload: jwk.loads(keys, kid=header.get("kid"))
     # Verify id and access token
-    id_token = jose.jwt.decode(
+    id_token = jwt.decode(
         oauth_token.get("id_token"),
         key,
         claims_options={
@@ -87,7 +91,7 @@ def handle_cognito_oauth(provider, oauth_token):
         },
     )
     id_token.validate()
-    access_token = jose.jwt.decode(
+    access_token = jwt.decode(
         oauth_token.get("access_token"),
         key,
         claims_options={"exp": {"essential": True}},
