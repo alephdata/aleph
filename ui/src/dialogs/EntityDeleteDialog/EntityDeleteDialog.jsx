@@ -82,9 +82,7 @@ export class EntityDeleteDialog extends Component {
 
         for (const entity of entities) {
           this.setState({ processingEntity: entity.id });
-          console.log('in delete dialog, deleting', entity.id);
           await deleteEntity(entity);
-          console.log('in delete dialog, deleted', entity.id);
 
           this.setState(({ deletedEntities }) => (
             { deletedEntities: [...deletedEntities, entity.id], processingEntity: null }

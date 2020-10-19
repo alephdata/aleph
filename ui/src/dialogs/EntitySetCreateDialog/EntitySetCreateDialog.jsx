@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
   diagram_import_placeholder: {
     id: 'diagram.import.placeholder',
-    defaultMessage: 'Drop a .ftm file here or click to import an existing diagram',
+    defaultMessage: 'Drop a .ftm or .vis file here or click to import an existing diagram',
   },
 });
 
@@ -76,6 +76,7 @@ class EntitySetCreateDialog extends Component {
       summary: entitySet.summary || '',
       collection: entitySet.collection || '',
       layout: entitySet.layout || null,
+      entities: entitySet.entities || null,
       importedFileName: null,
       processing: false,
       collectionCreateIsOpen: false,
@@ -95,6 +96,7 @@ class EntitySetCreateDialog extends Component {
       summary: '',
       collection: '',
       layout: null,
+      entities: null,
       importedFileName: null,
       processing: false,
     });
@@ -102,7 +104,7 @@ class EntitySetCreateDialog extends Component {
 
   async onSubmit(event) {
     const { history, entitySet, intl } = this.props;
-    const { label, summary, collection, layout, processing } = this.state;
+    const { label, entities, summary, collection, layout, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
     const { type } = entitySet;
@@ -114,14 +116,9 @@ class EntitySetCreateDialog extends Component {
         label,
         summary,
         collection_id: collection.id,
-        entities: entitySet?.entities || []
+        entities,
+        layout
       };
-
-      if (layout) {
-        const { entities, selection, ...rest } = layout;
-        newEntitySet.entities = entities.map(processApiEntity);
-        newEntitySet.layout = rest;
-      }
 
       const response = await this.props.createEntitySet(newEntitySet);
       this.setState({ processing: false });
@@ -152,8 +149,11 @@ class EntitySetCreateDialog extends Component {
   }
 
   onImport({ fileName, label, data }) {
-    const { layout } = JSON.parse(data);
-    this.setState({ label, layout, importedFileName: fileName });
+    const parsed = JSON.parse(data);
+    // suppors legacy layout.entities from .vis files
+    const { entities, selection, ...rest } = parsed.layout;
+
+    this.setState({ entities: entities || parsed.entities, label, layout: rest, importedFileName: fileName });
   }
 
   getCollectionOptionsQuery() {

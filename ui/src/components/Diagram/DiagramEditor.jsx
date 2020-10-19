@@ -65,8 +65,6 @@ class DiagramEditor extends React.Component {
       const { selection, ...layoutData } = layout.toJSON();
       const entities = entityManager.getEntities();
 
-      console.log('in update layout', entityManager, entities)
-
       const updatedDiagram = {
         ...diagram,
         layout: layoutData,

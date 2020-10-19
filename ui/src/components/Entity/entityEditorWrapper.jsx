@@ -23,7 +23,6 @@ const entityEditorWrapper = (EditorComponent) => {
       constructor(props) {
         super(props);
 
-        console.log('in wrapper', props);
         const { entities } = props;
 
         const config = {
@@ -41,10 +40,6 @@ const entityEditorWrapper = (EditorComponent) => {
         } else {
           this.entityManager = new EntityManager(config);
         }
-
-        // if (diagram.entities) {
-        //   layoutData.entities = diagram.entities.map(processApiEntity);
-        // }
 
         this.pendingPromises = [];
       }

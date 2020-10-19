@@ -81,7 +81,6 @@ export class EntityTable extends Component {
 
   fetchIfNeeded() {
     const { query, result } = this.props;
-    console.log('in fetch if needed', result.shouldLoad);
     if (result.shouldLoad) {
       this.props.queryEntities({ query });
     }
@@ -197,8 +196,6 @@ export class EntityTable extends Component {
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
     const showEmptyComponent = result.total === 0 && query.hasQuery();
     const selectedEntities = selection.map(this.getEntity).filter(e => e !== undefined);
-
-    console.log('in entities table, entities are', result.results);
 
     return (
       <div className="EntityTable">
