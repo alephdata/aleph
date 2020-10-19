@@ -16,7 +16,7 @@ const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left' }
 class DiagramEditor extends React.Component {
   constructor(props) {
     super(props);
-    const { diagram } = props;
+    const { diagram, entityManager } = props;
     let initialLayout;
 
     if (diagram) {
@@ -25,6 +25,7 @@ class DiagramEditor extends React.Component {
         config,
         {...layoutData, ...diagram.layout}
       );
+      initialLayout.layout(entityManager.getEntities());
     } else {
       initialLayout = new GraphLayout(config);
     }
