@@ -11,7 +11,6 @@ import FormDialog from 'dialogs/common/FormDialog';
 import { createEntitySetMutate as createEntitySet } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
-import { processApiEntity } from 'components/EntitySet/util';
 
 
 const messages = defineMessages({

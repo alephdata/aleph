@@ -2,7 +2,6 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
-// import { processApiEntity } from 'components/EntitySet/util';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
 import updateStates from 'util/updateStates';

@@ -151,7 +151,7 @@ const entityEditorWrapper = (EditorComponent) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entities, query, match } = ownProps;
+  const { match } = ownProps;
   const { entitySetId } = match.params;
 
   return ({
