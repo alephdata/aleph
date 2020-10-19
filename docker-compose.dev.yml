@@ -31,25 +31,18 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:38f168c2eb86013de95861c895bfdae0c4de7611
+    image: alephdata/convert-document:428b493ec1a57b3551222556c5ad2c60b129c157
     read_only: true
     restart: on-failure
     user: app
     tmpfs: /tmp
 
   ingest-file:
-    build:
-      context: services/ingest-file
-    image: alephdata/ingest-file:${ALEPH_TAG:-latest}
+    image: alephdata/ingest-file:19c1ae980fd09d769e88fe50e50db8ab75f7fbf0
     hostname: ingest
     tmpfs: /tmp
     volumes:
       - archive-data:/data
-      - "./services/ingest-file/ingestors:/ingestors/ingestors"
-      - "./services/ingest-file/tests:/ingestors/tests"
-      - "./services/ingest-file/data:/ingestors/data"
-      - "./services/ingest-file/requirements.txt:/ingestors/requirements.txt"
-      - "/:/host"
     depends_on:
       - postgres
       - redis
