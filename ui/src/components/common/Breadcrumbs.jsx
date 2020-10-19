@@ -135,16 +135,18 @@ export default class Breadcrumbs extends Component {
 
     return (
       <nav className="Breadcrumbs">
-        <div className="Breadcrumbs__main">
-          <ul className="bp3-breadcrumbs">
-            {collectionCrumbs}
-            {children}
-          </ul>
-        </div>
-        <div className="Breadcrumbs__right">
-          {status && this.renderStatus()}
-          {status && operation && <Divider />}
-          {operation}
+        <div className="Breadcrumbs__inner-container">
+          <div className="Breadcrumbs__main">
+            <ul className="bp3-breadcrumbs">
+              {collectionCrumbs}
+              {children}
+            </ul>
+          </div>
+          <div className="Breadcrumbs__right">
+            {status && this.renderStatus()}
+            {status && operation && <Divider />}
+            {operation}
+          </div>
         </div>
       </nav>
     );

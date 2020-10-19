@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from werkzeug.exceptions import Unauthorized
 
 from aleph.core import db, settings
@@ -9,7 +8,7 @@ from aleph.tests.util import TestCase
 class AuthzTestCase(TestCase):
     def setUp(self):
         super(AuthzTestCase, self).setUp()
-        self.user = self.create_user(foreign_id="user")
+        self.user = self.create_user(foreign_id="normal_joe")
         self.group = self.create_group("group", self.user)
         self.admin = self.create_user(foreign_id="admin", is_admin=True)
         self.public = self.create_collection(foreign_id="public")
@@ -27,6 +26,7 @@ class AuthzTestCase(TestCase):
         assert len(authz.roles) == 1, authz.roles
 
     def test_user(self):
+        print("XXXXX", self.user.type, self.user.is_blocked)
         authz = Authz.from_role(self.user)
         assert authz.logged_in is True, authz
         assert authz.is_admin is False, authz.is_admin
@@ -58,14 +58,10 @@ class AuthzTestCase(TestCase):
         assert authz.can(self.public, authz.WRITE) is False, authz._collections
         settings.MAINTENANCE = False
 
-    def test_scope(self):
+    def test_token(self):
         authz = Authz.from_role(self.admin)
-        token = authz.to_token(scope="/bla")
+        token = authz.to_token()
         with self.assertRaises(Unauthorized):
-            Authz.from_token(token)
-        with self.assertRaises(Unauthorized):
-            Authz.from_token(token, scope="/blubb")
-        sauthz = Authz.from_token(token, scope="/bla")
+            Authz.from_token("banana")
+        sauthz = Authz.from_token(token)
         assert sauthz.id == authz.id
-        assert abs(sauthz.expire - authz.expire) < timedelta(seconds=2)
-        assert sauthz.expire > datetime.utcnow()

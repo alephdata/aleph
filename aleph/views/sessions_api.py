@@ -47,22 +47,15 @@ def password_login():
     """
     require(settings.PASSWORD_LOGIN)
     data = parse_request("Login")
-    role = Role.by_email(data.get("email"))
-    if role is None or not role.has_password:
+    role = Role.login(data.get("email"), data.get("password"))
+    if role is None:
         raise BadRequest(gettext("Invalid user or password."))
-
-    if not role.check_password(data.get("password")):
-        raise BadRequest(gettext("Invalid user or password."))
-
-    if role.is_blocked:
-        raise Unauthorized(gettext("Your account is blocked."))
 
     role.touch()
     db.session.commit()
     update_role(role)
     authz = Authz.from_role(role)
-    request.authz = authz
-    return jsonify({"status": "ok", "token": authz.to_token(role=role)})
+    return jsonify({"status": "ok", "token": authz.to_token()})
 
 
 @blueprint.route("/api/2/sessions/oauth")
@@ -105,9 +98,25 @@ def oauth_callback():
     update_role(role)
     log.info("Logged in: %r", role)
     request.authz = Authz.from_role(role)
-    token = request.authz.to_token(role=role)
-    token = token.decode("utf-8")
+    token = request.authz.to_token()
     next_path = get_url_path(request.args.get("state"))
     next_url = ui_url(settings.OAUTH_UI_CALLBACK, next=next_path)
     next_url = "%s#token=%s" % (next_url, token)
     return redirect(next_url)
+
+
+@blueprint.route("/api/2/sessions/logout", methods=["POST"])
+def logout():
+    """Destroy the current authz session (state).
+    ---
+    post:
+      summary: Destroy the current state.
+      responses:
+        '200':
+          description: Done
+      tags:
+      - Role
+    """
+    request.rate_limit = None
+    request.authz.destroy()
+    return ("", 202)

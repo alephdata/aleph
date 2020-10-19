@@ -69,6 +69,7 @@ class Statistics extends PureComponent {
         {showSeeMoreButton && (
           <li className="Statistics__list-item">
             <Button
+              className="Statistics__more-toggle"
               onClick={this.onExpand}
               text={seeMoreButtonText(rest)}
             />

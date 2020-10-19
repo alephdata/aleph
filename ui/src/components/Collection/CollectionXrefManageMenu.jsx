@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
+import { ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { ExportButton } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
+import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { triggerCollectionXrefDownload } from 'actions';
 import { selectSession } from 'selectors';
@@ -27,16 +28,6 @@ const messages = defineMessages({
 });
 
 class CollectionXrefManageMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      xrefIsOpen: false,
-    };
-    this.toggleXref = this.toggleXref.bind(this);
-  }
-
-  toggleXref = () => this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
-
   render() {
     const { collection, intl, result, session } = this.props;
     if (!session.loggedIn) {
@@ -53,26 +44,30 @@ class CollectionXrefManageMenu extends Component {
     return (
       <>
         <ButtonGroup className="CollectionXrefManageMenu">
-          <Button
-            icon="play"
-            disabled={!collection.writeable}
-            onClick={this.toggleXref}
-            className={c({ [Classes.SKELETON]: result.isPending })}
-          >
-            {xrefButtonText}
-          </Button>
+          <DialogToggleButton
+            buttonProps={{
+              text: xrefButtonText,
+              icon: "play",
+              disabled: !collection.writeable,
+              className: c({ [Classes.SKELETON]: result.isPending })
+            }}
+            Dialog={CollectionXrefDialog}
+            dialogProps={{ collection }}
+          />
           {showDownload && (
-            <ExportButton
-              text={intl.formatMessage(messages.export)}
-              onExport={() => this.props.triggerCollectionXrefDownload(collection.id)}
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.export),
+                icon: "export",
+                className: "bp3-intent-primary"
+              }}
+              Dialog={ExportDialog}
+              dialogProps={{
+                onExport: () => this.props.triggerCollectionXrefDownload(collection.id)
+              }}
             />
           )}
         </ButtonGroup>
-        <CollectionXrefDialog
-          collection={collection}
-          isOpen={this.state.xrefIsOpen}
-          toggleDialog={this.toggleXref}
-        />
       </>
     );
   }

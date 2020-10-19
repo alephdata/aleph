@@ -28,11 +28,14 @@
     margin: 0;
   }
 
+  &__more-toggle.bp3-button {
+    padding: 0;
+    margin-bottom: 0 !important;
+  }
 
   &__list-item {
     margin: 7px 0;
     display: flex;
-
 
     a, .bp3-button {
       color: $aleph-content-background !important;

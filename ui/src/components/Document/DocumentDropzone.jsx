@@ -14,13 +14,6 @@ class DocumentDropzone extends Component {
 
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
-    this.onUploadSuccess = this.onUploadSuccess.bind(this);
-  }
-
-  onUploadSuccess() {
-    const { onUploadSuccess } = this.props;
-    this.closeDialog();
-    if (onUploadSuccess) onUploadSuccess();
   }
 
   openDialog(files = []) {
@@ -63,7 +56,7 @@ class DocumentDropzone extends Component {
             isOpen={this.state.uploadIsOpen}
             toggleDialog={this.closeDialog}
             filesToUpload={this.state.filesToUpload}
-            onUploadSuccess={this.onUploadSuccess}
+            onUploadSuccess={this.props.onUploadSuccess}
             parent={document}
           />
         )}

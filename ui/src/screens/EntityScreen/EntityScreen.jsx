@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import { ButtonGroup } from '@blueprintjs/core';
 import { Entity as EntityObject } from '@alephdata/followthemoney';
 
 import Query from 'app/Query';
@@ -18,6 +18,7 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
 import { deleteEntity } from 'actions';
@@ -31,17 +32,19 @@ import 'components/common/ItemOverview.scss';
 const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
 
 
+const messages = defineMessages({
+  add_to: {
+    id: 'entity.viewer.add_to',
+    defaultMessage: 'Add to...',
+  },
+});
+
 class EntityScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      addToIsOpen: false,
-    };
-
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
-    this.toggleEntitySetSelector = this.toggleEntitySetSelector.bind(this);
   }
 
   onCollectionSearch(queryText) {
@@ -133,14 +136,11 @@ class EntityScreen extends Component {
     return scopes.reverse();
   }
 
-  toggleEntitySetSelector() {
-    this.setState(({ addToIsOpen }) => ({ addToIsOpen: !addToIsOpen }));
-  }
-
   render() {
     const {
-      entity, entityId, activeMode, query, isDocument,
+      entity, entityId, activeMode, query, isDocument, intl,
     } = this.props;
+
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
     }
@@ -160,9 +160,17 @@ class EntityScreen extends Component {
         {showDownloadButton && <DownloadButton document={entity} /> }
         {writeable && (
           <>
-            <Button icon="add-to-artifact" onClick={this.toggleEntitySetSelector}>
-              <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
-            </Button>
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.add_to),
+                icon: "add-to-artifact"
+              }}
+              Dialog={EntitySetSelector}
+              dialogProps={{
+                collection: entity.collection,
+                entities: [entity]
+              }}
+            />
             <EntityDeleteButton
               entities={[entity]}
               redirectOnSuccess
@@ -199,12 +207,6 @@ class EntityScreen extends Component {
                 entity={entity}
                 activeMode={activeMode}
                 isPreview={false}
-              />
-              <EntitySetSelector
-                collection={entity.collection}
-                entities={[entity]}
-                isOpen={this.state.addToIsOpen}
-                toggleDialog={this.toggleEntitySetSelector}
               />
             </DualPane.ContentPane>
           </DualPane>

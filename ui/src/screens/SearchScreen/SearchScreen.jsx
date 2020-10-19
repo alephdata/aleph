@@ -9,8 +9,10 @@ import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
 import { triggerQueryExport } from 'src/actions';
 import {
-  Collection, DualPane, SignInCallout, ErrorSection, ExportButton, Breadcrumbs, ResultText,
+  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
 } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
+import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import SearchFacets from 'components/Facet/SearchFacets';
 import DateFacet from 'components/Facet/DateFacet';
@@ -186,10 +188,17 @@ export class SearchScreen extends React.Component {
     const operation = (
       <ButtonGroup>
         <Tooltip content={tooltip} disabled={exportLink}>
-          <ExportButton
-            text={intl.formatMessage(messages.export)}
-            disabled={!exportLink}
-            onExport={() => this.props.triggerQueryExport(exportLink)}
+          <DialogToggleButton
+            buttonProps={{
+              text: intl.formatMessage(messages.export),
+              icon: "export",
+              disabled: !exportLink,
+              className: "bp3-intent-primary"
+            }}
+            Dialog={ExportDialog}
+            dialogProps={{
+              onExport: () => this.props.triggerQueryExport(exportLink)
+            }}
           />
         </Tooltip>
       </ButtonGroup>
@@ -263,26 +272,28 @@ export class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             <SignInCallout />
             <div className="SearchScreen__control-bar">
-              {!noResults && (
-                <div className="SearchScreen__control-bar__button">
-                  <Tooltip
-                    content={intl.formatMessage(
-                      dateFacetDisabled ? messages.date_facet_disabled : (
-                        dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
-                      )
-                    )}
-                  >
-                    <AnchorButton
-                      outlined
-                      icon="calendar"
-                      onClick={this.toggleDateFacet}
-                      disabled={dateFacetDisabled}
-                      active={dateFacetIsOpen}
-                    />
-                  </Tooltip>
-                </div>
-              )}
-              <QueryTags query={query} updateQuery={this.updateQuery} />
+              <div className="SearchScreen__control-bar__inner-container">
+                {!noResults && (
+                  <div className="SearchScreen__control-bar__button">
+                    <Tooltip
+                      content={intl.formatMessage(
+                        dateFacetDisabled ? messages.date_facet_disabled : (
+                          dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
+                        )
+                      )}
+                    >
+                      <AnchorButton
+                        outlined
+                        icon="calendar"
+                        onClick={this.toggleDateFacet}
+                        disabled={dateFacetDisabled}
+                        active={dateFacetIsOpen}
+                      />
+                    </Tooltip>
+                  </div>
+                )}
+                <QueryTags query={query} updateQuery={this.updateQuery} />
+              </div>
             </div>
             <DateFacet
               isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
