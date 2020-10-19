@@ -32,7 +32,7 @@ services:
     tmpfs: /tmp
 
   ingest-file:
-    image: alephdata/ingest-file:${ALEPH_TAG:-3.9.3}
+    image: alephdata/ingest-file:19c1ae980fd09d769e88fe50e50db8ab75f7fbf0
     tmpfs:
       - /tmp:mode=777
     volumes:

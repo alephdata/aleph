@@ -10,21 +10,8 @@ services:
 		postgres elasticsearch ingest-file \
 		convert-document
 
-ingest-shell: services    
-	$(INGESTDOCKER) /bin/bash
-
-ingest-tail:
-	$(COMPOSE) logs -f ingest-file convert-document
-
 shell: services
 	$(APPDOCKER) /bin/bash
-
-ingest-test:
-	$(INGESTDOCKER) nosetests --with-coverage --cover-package=ingestors
-
-ingest-restart:
-	$(COMPOSE) build ingest-file convert-document
-	$(COMPOSE) up --force-recreate --no-deps --detach convert-document ingest-file
 
 test:
 	$(APPDOCKER) contrib/test.sh
@@ -68,7 +55,6 @@ docker-pull:
 
 docker-push:
 	docker push alephdata/aleph-elasticsearch:$(ALEPH_TAG)
-	docker push alephdata/ingest-file:$(ALEPH_TAG)
 	docker push alephdata/aleph:$(ALEPH_TAG)
 	docker push alephdata/aleph-ui:$(ALEPH_TAG)
 	docker push alephdata/aleph-ui-production:$(ALEPH_TAG)

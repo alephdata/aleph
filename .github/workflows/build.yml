@@ -6,15 +6,7 @@ jobs:
   ui:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      # - uses: satackey/action-docker-layer-caching@v0.0.8
-      #   # Ignore the failure of a step and avoid terminating the job.
-      #   continue-on-error: true
-      #   with:
-      #     key: aleph-ui-docker-cache-${GITHUB_REF}-{hash}
-      #     restore-keys: |
-      #       aleph-ui-docker-cache-${GITHUB_REF}-
-      #       aleph-ui-docker-cache-
+      - uses: actions/checkout@v2
       - name: Build development image
         run: |
           docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
@@ -34,69 +26,36 @@ jobs:
           docker push alephdata/aleph-ui-production:${ALEPH_TAG};
           docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:latest;
           docker push alephdata/aleph-ui-production:latest;
-  docker-ingest-file:
+  backend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: satackey/action-docker-layer-caching@v0.0.8
-        # Ignore the failure of a step and avoid terminating the job.
-        continue-on-error: true
-        with:
-          key: ingest-file-docker-cache-${GITHUB_REF}-{hash}
-          restore-keys: |
-            ingest-file-docker-cache-${GITHUB_REF}-
-            ingest-file-docker-cache-
-      - name: Build docker image
-        run: |
-          docker build -t alephdata/ingest-file:${GITHUB_SHA} services/ingest-file
-          docker tag alephdata/ingest-file:${GITHUB_SHA} alephdata/ingest-file:latest
-      - name: Push docker image (hash)
-        run: |
-          docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-          docker push alephdata/ingest-file:${GITHUB_SHA}
-  docker-aleph:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Build docker image
-        run: |
-          docker build -t alephdata/aleph:${GITHUB_SHA} .
-          docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
-      - name: Push docker image (hash)
-        run: |
-          docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-          docker push alephdata/aleph:${GITHUB_SHA}
-  test-aleph:
-    runs-on: ubuntu-latest
-    needs:
-      - docker-aleph
-      - docker-ingest-file
-    steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up
         run: |
           sudo sysctl -w vm.max_map_count=262144
           sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
+          echo "${GITHUB_REF}"
           docker --version
           docker-compose --version
-      - name: Docker pull and start
+      - name: Docker pull services
         run: |
-          echo "${GITHUB_REF}"
-          ALEPH_TAG=${GITHUB_SHA} docker-compose pull --quiet elasticsearch convert-document ingest-file worker
+          ALEPH_TAG=${GITHUB_SHA} docker-compose pull --quiet elasticsearch convert-document ingest-file
           make ALEPH_TAG=${GITHUB_SHA} services
-          sleep 10
-      - name: Run ingest tests
-        run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
+      - name: Build docker image
+        run: |
+          docker build -t alephdata/aleph:${GITHUB_SHA} .
+          docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
       - name: Run aleph tests
         run: make ALEPH_TAG=${GITHUB_SHA} test
+      - name: Push docker image (hash)
+        run: |
+          docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+          docker push alephdata/aleph:${GITHUB_SHA}
       - name: Push docker images for tags
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
           export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
-          docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-          for IMAGE in aleph ingest-file; do
-            docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:${ALEPH_TAG};
-            docker push alephdata/${IMAGE}:${ALEPH_TAG};
-            docker tag alephdata/${IMAGE}:${GITHUB_SHA} alephdata/${IMAGE}:latest;
-            docker push alephdata/${IMAGE}:latest;
-          done;
+          docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:${ALEPH_TAG};
+          docker push alephdata/aleph:${ALEPH_TAG};
+          docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest;
+          docker push alephdata/aleph:latest;
