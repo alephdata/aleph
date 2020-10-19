@@ -60,6 +60,7 @@ def _load_compare_model():
             model = COMPARE_MODEL = xref.XrefModel.load(model_name)
             COMPARE_SCORE_CUTOFF = 0.5
             COMPARE_MODEL_NAME = str(model)
+        log.info(f"Using xref model: {COMPARE_MODEL_NAME}")
     return COMPARE_MODEL, COMPARE_MODEL_NAME, COMPARE_SCORE_CUTOFF
 
 
@@ -94,7 +95,7 @@ def _query_item(entity):
             continue
         if score >= compare_cutoff:
             log.debug(
-                "Match: [%s] %s <[%.2f]> %s",
+                "XRef Match: [%s] %s <[%.2f]> %s",
                 compare_model,
                 entity.caption,
                 score,
