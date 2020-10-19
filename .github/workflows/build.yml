@@ -39,12 +39,11 @@ jobs:
           docker-compose --version
       - name: Docker pull services
         run: |
-          ALEPH_TAG=${GITHUB_SHA} docker-compose pull --parallel --quiet elasticsearch convert-document ingest-file
+          docker-compose pull --parallel --quiet elasticsearch convert-document ingest-file
           make ALEPH_TAG=${GITHUB_SHA} services
       - name: Build docker image
         run: |
           docker build -t alephdata/aleph:${GITHUB_SHA} .
-          docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
       - name: Run aleph tests
         run: make ALEPH_TAG=${GITHUB_SHA} test
       - name: Push docker image (hash)
