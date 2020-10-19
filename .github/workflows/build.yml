@@ -39,7 +39,7 @@ jobs:
           docker-compose --version
       - name: Docker pull services
         run: |
-          ALEPH_TAG=${GITHUB_SHA} docker-compose pull --quiet elasticsearch convert-document ingest-file
+          ALEPH_TAG=${GITHUB_SHA} docker-compose pull --parallel --quiet elasticsearch convert-document ingest-file
           make ALEPH_TAG=${GITHUB_SHA} services
       - name: Build docker image
         run: |
