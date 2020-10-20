@@ -162,7 +162,6 @@ export class EntityTable extends Component {
         intl.formatMessage(messages.edge_create_success, { source: source.getCaption(), target: target.getCaption() })
       );
       this.setState({ selection: [] });
-      this.toggleEdgeCreateDialog();
     } catch (e) {
       showErrorToast(e);
     }
@@ -225,11 +224,11 @@ export class EntityTable extends Component {
               }}
               Dialog={EdgeCreateDialog}
               dialogProps={{
-                source: selection.length ? selection[0] : undefined,
-                target: selection.length > 1 ? selection[1] : undefined,
+                source: selection.length ? selectedEntities[0] : undefined,
+                target: selection.length > 1 ? selectedEntities[1] : undefined,
                 onSubmit: this.onEdgeCreate,
-                model: entityManager.model,
-                getEntitySuggestions: entityManager.getEntitySuggestions,
+                entityManager,
+                fetchEntitySuggestions: (queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata),
                 intl
               }}
             />
