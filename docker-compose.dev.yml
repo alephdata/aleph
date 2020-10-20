@@ -38,7 +38,7 @@ services:
     tmpfs: /tmp
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:a2a2dfc8605a7e1d7c4faa6f5260a16807f6d51e
+    image: ghcr.io/alephdata/ingest-file:e3626301a1423403b63d2040ab6ba795fb8c33b0
     hostname: ingest
     tmpfs: /tmp
     volumes:
