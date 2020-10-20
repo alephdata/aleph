@@ -251,7 +251,7 @@ export class EntityTable extends Component {
             entities={selectedEntities}
             onSuccess={this.clearSelection}
             actionType={isEntitySet ? "remove" : "delete"}
-            deleteEntity={(entity) => entityManager.deleteEntity(entity, true)}
+            deleteEntity={entityManager.overload.deleteEntity}
             showCount
           />
         </EntityActionBar>
