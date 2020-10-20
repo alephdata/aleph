@@ -41,6 +41,7 @@ ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
     ARCHIVE_PATH=/data
 
 ADD ${FTM_PREDICT_MODEL} /model.pkl
+RUN chown app:app /model.pkl
 
 # Run the green unicorn
 CMD gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file - aleph.manage:app
