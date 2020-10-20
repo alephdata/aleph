@@ -7,7 +7,7 @@ import { PropertyEditor } from '@alephdata/react-ftm';
 import { Property } from 'components/common';
 
 import { selectLocale } from 'selectors';
-import { MappingLabel } from './util';
+import { MappingLabel } from 'components/MappingEditor/MappingLabel';
 import SelectWrapper from 'components/common/SelectWrapper';
 
 
@@ -127,7 +127,7 @@ class MappingVerifyItem extends Component {
 
       if (referredEntity) {
         return (
-          <td className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
+          <td className="MappingVerify__listItem__value" style={{ fontWeight: 'bold' }}>
             <MappingLabel mapping={referredEntity} />
           </td>
         );
@@ -138,13 +138,13 @@ class MappingVerifyItem extends Component {
   }
 
   render() {
-    const { intl, mapping, onPropertyRemove } = this.props;
+    const { intl, mapping, onPropertyRemove, onMappingIdChange } = this.props;
     const { id, schema, color, keys, properties } = mapping;
 
     return (
       <Card className="MappingVerify__item" key={id} style={{ borderColor: color }}>
-        <h6 className="MappingVerify__title bp3-heading" style={{ color }}>
-          <MappingLabel mapping={{ id, schema }} />
+        <h6 className="MappingVerify__title bp3-heading">
+          <MappingLabel mapping={mapping} onEdit={onMappingIdChange} />
         </h6>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">
