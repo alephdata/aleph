@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
-ARG FTM_PREDICT_MODEL=https://public.data.occrp.org/develop/models/xref/model.xgboost.0a7e314.pkl
+ARG FTM_PREDICT_MODEL=https://public.data.occrp.org/develop/models/xref/model.xgboost.576edd5.pkl
 
 # build-essential 
 RUN apt-get -qq -y update \
