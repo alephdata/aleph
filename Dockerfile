@@ -39,7 +39,7 @@ ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
     ARCHIVE_TYPE=file \
     ARCHIVE_PATH=/data
 
-ARG FTM_PREDICT_MODEL=https://public.data.occrp.org/develop/models/xref/model.xgboost.785bc6c.log
+ARG FTM_PREDICT_MODEL=https://public.data.occrp.org/develop/models/xref/model.xgboost.785bc6c.pkl
 ADD ${FTM_PREDICT_MODEL} /model.pkl
 RUN chown app:app /model.pkl
 
