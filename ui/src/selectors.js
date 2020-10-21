@@ -77,9 +77,16 @@ export function selectSession(state) {
   return selectObject(state, state, 'session');
 }
 
-export function selectCurrentRole(state) {
+export function selectCurrentRoleId(state) {
   const session = selectSession(state);
-  return session.role || {};
+  if (!!session.token) {
+    return session.token.split('.', 1);
+  }
+}
+
+export function selectCurrentRole(state) {
+  const roleId = selectCurrentRoleId(state);
+  return !!roleId ? selectRole(state, roleId) : {};
 }
 
 export function selectTester(state) {
@@ -89,7 +96,9 @@ export function selectTester(state) {
 }
 
 export function selectAdmin(state) {
-  return selectSession(state).isAdmin || false;
+  const role = selectCurrentRole(state);
+  /* eslint-disable camelcase */
+  return role.is_admin || false;
 }
 
 export function selectAlerts(state) {

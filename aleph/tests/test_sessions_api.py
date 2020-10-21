@@ -1,4 +1,3 @@
-import jwt
 from aleph.core import db, settings
 from aleph.model import Collection
 from aleph.logic.collections import update_collection
@@ -58,5 +57,7 @@ class SessionsApiTestCase(TestCase):
         data = dict(email=self.role.email, password=secret)
         res = self.client.post("/api/2/sessions/login", data=data)
         assert res.status_code == 200, res
-        data = jwt.decode(res.json["token"], verify=False)
-        assert data["role"]["id"] == str(self.role.id), res
+        headers = {"Authorization": "Token %s" % res.json["token"]}
+        res = self.client.get("/api/2/roles/%s" % self.role.id, headers=headers)
+        assert res.status_code == 200, res
+        assert res.json["id"] == str(self.role.id), res

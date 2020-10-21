@@ -6,7 +6,7 @@ import { queryEndpoint } from './util';
 export const queryRoles = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ROLES' });
 
 export const suggestRoles = asyncActionCreator((prefix, exclude) => async () => {
-  const params = { 'exclude:id': exclude, prefix}
+  const params = { 'exclude:id': exclude, prefix }
   const response = await endpoint.get('roles/_suggest', { params });
   return response.data;
 }, { name: 'SUGGEST_ROLES' });

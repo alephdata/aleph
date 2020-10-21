@@ -4,14 +4,17 @@
 $dashboard-padding: $aleph-grid-size * 2.5;
 
 .Dashboard {
-    display: flex;
-    flex-flow: row nowrap;
-    align-content: stretch;
-    align-items: stretch;
     padding: $dashboard-padding;
 
+    &__inner-container {
+      display: flex;
+      flex-flow: row nowrap;
+      align-content: stretch;
+      align-items: stretch;
+    }
+
     &__menu {
-        flex: flex;
+        display: flex;
         flex-direction: column;
         flex-grow: 0;
         width: 20%;

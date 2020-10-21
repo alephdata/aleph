@@ -5,7 +5,7 @@ import { Button, Menu, MenuDivider, MenuItem, PopoverInteractionKind } from '@bl
 import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
-import { MappingLabel } from './util';
+import { MappingLabel } from 'components/MappingEditor/MappingLabel';
 import SelectWrapper from 'components/common/SelectWrapper';
 
 import './MappingPropertyAssign.scss';
@@ -69,31 +69,29 @@ export class MappingPropertyAssign extends Component {
   mappingListRenderer({ items, itemsParentRef, renderItem }) {
     return (
       <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
-        {items.map(({ color, id, schema }) => (
+        {items.map(mapping => (
           <MenuItem
-            key={id}
-            text={<MappingLabel mapping={{ id, schema }} />}
+            key={mapping.id}
+            text={<MappingLabel mapping={mapping} truncate={15} />}
             popoverProps={{ interactionKind: PopoverInteractionKind.CLICK }}
-            style={{ color }}
             className="MappingPropertyAssign__headerSelect__item"
           >
-            {this.propertyListRenderer({ id, schema }, renderItem, false)}
+            {this.propertyListRenderer(mapping, renderItem, false)}
           </MenuItem>
         ))}
       </Menu>
     );
   }
 
-  propertyListRenderer({ id, schema }, renderItem, showHeader) {
-    const { mappings } = this.props;
+  propertyListRenderer(mapping, renderItem, showHeader) {
+    const { id, schema } = mapping;
     const { featuredProps, otherProps } = this.getAssignableProps(schema);
-    const { color } = mappings.getMapping(id);
 
     return (
       <>
         {showHeader && (
-          <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading" style={{ color }}>
-            <h6 className="bp3-heading"><MappingLabel mapping={{ id, schema }} /></h6>
+          <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading">
+            <h6 className="bp3-heading"><MappingLabel mapping={mapping} truncate={25} /></h6>
           </li>
         )}
         {
@@ -136,7 +134,7 @@ export class MappingPropertyAssign extends Component {
             {colValue && (
               <>
                 <div className="MappingPropertyAssign__headerSelect__label">
-                  <MappingLabel mapping={colValue} />
+                  <MappingLabel mapping={colValue} truncate={15} />
                 </div>
                 <SelectWrapper
                   id="property-select"

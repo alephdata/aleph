@@ -106,12 +106,10 @@ class EntitySetSelector extends Component {
   }
 
   onSuccess(entitySet) {
-    const { entities, history, intl, onSuccess } = this.props;
+    const { entities, history, intl, onSuccess, toggleDialog, triggerMutationOnCreate = true } = this.props;
     this.setState({ processing: false });
 
-    if (onSuccess) {
-      onSuccess(entitySet);
-    } else {
+    if (triggerMutationOnCreate) {
       showSuccessToast({
         message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
         action: {
@@ -122,7 +120,8 @@ class EntitySetSelector extends Component {
         }
       });
     }
-    this.props.toggleDialog(true);
+    onSuccess && onSuccess();
+    toggleDialog();
   }
 
   onError(e) {

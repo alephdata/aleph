@@ -11,11 +11,11 @@ import {
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {
-    const { hideCollection, documentMode, updateSelection } = this.props;
+    const { hideCollection, documentMode, updateSelection, writeable } = this.props;
 
     return (
       <tr className={c('EntitySearchResultsRow', 'nowrap')} key="skeleton">
-        {updateSelection && (
+        {writeable && updateSelection && (
           <td className="select">
             <Skeleton.Text type="span" length={2} />
           </td>
@@ -54,7 +54,8 @@ class EntitySearchResultsRow extends Component {
       documentMode,
       showPreview,
       updateSelection,
-      selection
+      selection,
+      writeable,
     } = this.props;
 
     if (isPending) {
@@ -77,7 +78,7 @@ class EntitySearchResultsRow extends Component {
     return (
       <>
         <tr key={entity.id} className={resultClass}>
-          {updateSelection && (
+          {writeable && updateSelection && (
             <td key="select" className="select">
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
             </td>

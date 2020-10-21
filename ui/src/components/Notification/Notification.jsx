@@ -68,7 +68,7 @@ class Notification extends PureComponent {
       } else if (paramActive) {
         const param = this.getParam(token);
         message.push((<div key={token} className="param">{param}</div>));
-      } else if (token.length===0){
+      } else if (token.length === 0) {
         return false;
       } else {
         message.push((<div key={token} className="token">{token}</div>));

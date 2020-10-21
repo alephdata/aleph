@@ -341,7 +341,7 @@ def upgrade():
 def resetindex():
     """Re-create the ES index configuration, dropping all data."""
     delete_index()
-    upgrade()
+    upgrade_system()
 
 
 @cli.command()

@@ -1,14 +1,15 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { AnchorButton, Button, Callout, Divider, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, Callout, Divider, Tooltip } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
+import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
-import DocumentFolderButton from 'components/Toolbar/DocumentFolderButton';
+import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';
 import EntityActionBar from 'components/Entity/EntityActionBar';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
@@ -36,6 +37,14 @@ const messages = defineMessages({
     id: 'entity.document.manager.cannot_map',
     defaultMessage: 'Select a table document to generate structured entities',
   },
+  new: {
+    id: 'document.folder.new',
+    defaultMessage: 'New folder',
+  },
+  upload: {
+    id: 'document.upload.button',
+    defaultMessage: 'Upload',
+  },
 });
 
 
@@ -44,18 +53,11 @@ export class DocumentManager extends Component {
     super(props);
     this.state = {
       selection: [],
-      uploadIsOpen: false,
     };
     this.updateSelection = this.updateSelection.bind(this);
-    this.toggleUpload = this.toggleUpload.bind(this);
-    this.onUploadSuccess = this.onUploadSuccess.bind(this);
     this.openMappingEditor = this.openMappingEditor.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
-  }
-
-  onUploadSuccess() {
-    this.setState({ uploadIsOpen: false });
   }
 
   updateSelection(document) {
@@ -63,12 +65,6 @@ export class DocumentManager extends Component {
     this.setState({
       selection: _.xorBy(selection, [document], 'id'),
     });
-  }
-
-  toggleUpload() {
-    this.setState(({ uploadIsOpen }) => ({
-      uploadIsOpen: !uploadIsOpen,
-    }));
   }
 
   canUpload() {
@@ -136,11 +132,23 @@ export class DocumentManager extends Component {
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >
           {canUpload && (
-            <Button icon="upload" onClick={this.toggleUpload}>
-              <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
-            </Button>
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.upload),
+                icon: "upload"
+              }}
+              Dialog={DocumentUploadDialog}
+              dialogProps={{ collection, parent: document }}
+            />
           )}
-          <DocumentFolderButton collection={collection} parent={document} />
+          <DialogToggleButton
+            buttonProps={{
+              text: intl.formatMessage(messages.new),
+              icon: "folder-new"
+            }}
+            Dialog={DocumentFolderDialog}
+            dialogProps={{ collection, parent: document }}
+          />
           <Divider />
           <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)} className="prevent-flex-grow">
             <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
@@ -175,13 +183,6 @@ export class DocumentManager extends Component {
             emptyComponent={emptyComponent}
           />
         </div>
-        <DocumentUploadDialog
-          collection={collection}
-          isOpen={this.state.uploadIsOpen}
-          toggleDialog={this.toggleUpload}
-          onUploadSuccess={this.onUploadSuccess}
-          parent={document}
-        />
       </div>
     );
   }

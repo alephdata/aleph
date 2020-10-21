@@ -60,6 +60,7 @@ export class MappingEditor extends Component {
 
     this.onMappingAdd = this.onMappingAdd.bind(this);
     this.onMappingRemove = this.onMappingRemove.bind(this);
+    this.onMappingIdChange = this.onMappingIdChange.bind(this);
     this.onKeyAdd = this.onKeyAdd.bind(this);
     this.onKeyRemove = this.onKeyRemove.bind(this);
     this.onPropertyAdd = this.onPropertyAdd.bind(this);
@@ -85,6 +86,10 @@ export class MappingEditor extends Component {
 
   onMappingRemove(id) {
     this.setState(({ mappings }) => ({ mappings: mappings.removeMapping(id) }));
+  }
+
+  onMappingIdChange(oldId, newId) {
+    this.setState(({ mappings }) => ({ mappings: mappings.changeId(oldId, newId) }));
   }
 
   onKeyAdd(id, key) {
@@ -158,6 +163,7 @@ export class MappingEditor extends Component {
                       onKeyAdd={this.onKeyAdd}
                       onKeyRemove={this.onKeyRemove}
                       onPropertyAdd={this.onPropertyAdd}
+                      onMappingIdChange={this.onMappingIdChange}
                       onMappingRemove={this.onMappingRemove}
                     />
                   </>
@@ -191,6 +197,7 @@ export class MappingEditor extends Component {
                         fullMappingsList={mappings}
                         onPropertyRemove={this.onPropertyRemove}
                         onPropertyAdd={this.onPropertyAdd}
+                        onMappingIdChange={this.onMappingIdChange}
                       />
                     ))}
                   />

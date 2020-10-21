@@ -6,7 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db, settings
-from aleph.model.common import SoftDeleteModel, IdModel, make_textid, query_like
+from aleph.model.common import SoftDeleteModel, IdModel, make_token, query_like
 from aleph.util import anonymize_email
 
 log = logging.getLogger(__name__)
@@ -63,10 +63,18 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return self.id in self.public_roles()
 
     @property
-    def is_alertable(self):
-        if self.email is None:
+    def is_actor(self):
+        if self.type != self.USER:
             return False
-        if self.is_muted or self.is_blocked:
+        if self.is_blocked or self.deleted_at is not None:
+            return False
+        return True
+
+    @property
+    def is_alertable(self):
+        if self.email is None or not self.is_actor:
+            return False
+        if self.is_muted:
             return False
         if self.updated_at < (datetime.utcnow() - settings.ROLE_INACTIVE):
             # Disable sending notifications to roles that haven't been
@@ -103,6 +111,22 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         db.session.add(role)
         db.session.add(self)
         self.updated_at = datetime.utcnow()
+
+    def set_password(self, secret):
+        """Hashes and sets the role password.
+
+        :param str secret: The password to be set.
+        """
+        self.password_digest = generate_password_hash(secret)
+
+    def check_password(self, secret):
+        """Checks the password if it matches the role password hash.
+
+        :param str secret: The password to be checked.
+        :rtype: bool
+        """
+        digest = self.password_digest or ""
+        return check_password_hash(digest, secret)
 
     def to_dict(self):
         data = self.to_dict_dates()
@@ -151,14 +175,14 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def load_or_create(cls, foreign_id, type, name, email=None, is_admin=None):
+    def load_or_create(cls, foreign_id, type_, name, email=None, is_admin=None):
         role = cls.by_foreign_id(foreign_id)
 
         if role is None:
             role = cls()
             role.foreign_id = foreign_id
             role.name = name or email
-            role.type = type
+            role.type = type_
             role.is_admin = False
             role.is_muted = False
             role.is_tester = False
@@ -166,7 +190,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.notified_at = datetime.utcnow()
 
         if role.api_key is None:
-            role.api_key = make_textid()
+            role.api_key = make_token()
 
         if email is not None:
             role.email = email
@@ -186,7 +210,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def load_cli_user(cls):
         return cls.load_or_create(
-            foreign_id=settings.SYSTEM_USER, name="Aleph", type=cls.USER, is_admin=True
+            settings.SYSTEM_USER, cls.USER, "Aleph", is_admin=True
         )
 
     @classmethod
@@ -240,21 +264,14 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def all_system(cls):
         return cls.all().filter(Role.type == Role.SYSTEM)
 
-    def set_password(self, secret):
-        """Hashes and sets the role password.
-
-        :param str secret: The password to be set.
-        """
-        self.password_digest = generate_password_hash(secret)
-
-    def check_password(self, secret):
-        """Checks the password if it matches the role password hash.
-
-        :param str secret: The password to be checked.
-        :rtype: bool
-        """
-        digest = self.password_digest or ""
-        return check_password_hash(digest, secret)
+    @classmethod
+    def login(cls, email, password):
+        """Attempt to log a user in via an email/password method."""
+        role = cls.by_email(email)
+        if role is None or not role.is_actor or not role.has_password:
+            return
+        if role.check_password(password):
+            return role
 
     def __repr__(self):
         return "<Role(%r,%r)>" % (self.id, self.foreign_id)

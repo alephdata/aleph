@@ -40,10 +40,15 @@
     &__label {
       white-space: nowrap;
       margin-bottom: 3px;
+
+      .MappingLabel {
+        color: white !important;
+      }
     }
 
     &__item {
       font-weight: bold;
+      align-items: center !important;
     }
 
     &__remove {
@@ -59,10 +64,6 @@
     &__propListHeading {
       padding: $aleph-grid-size !important;
       margin: 0 !important;
-
-      .bp3-heading {
-        color: inherit;
-      }
     }
   }
 

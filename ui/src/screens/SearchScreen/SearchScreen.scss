@@ -32,10 +32,13 @@
   }
 
   &__control-bar {
-    display: flex;
-    flex-flow: row-reverse nowrap;
-    justify-content: space-between;
     margin-bottom: $aleph-grid-size;
+
+    &__inner-container {
+      display: flex;
+      flex-flow: row-reverse nowrap;
+      justify-content: space-between;
+    }
 
     &__button {
       .bp3-button {

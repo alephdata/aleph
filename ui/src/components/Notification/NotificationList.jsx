@@ -72,9 +72,9 @@ class NotificationList extends Component {
     }
 
     return (
-      <>
+      <div className="NotificationList">
         <NotificationListFilter query={query} updateQuery={this.updateQuery} result={result} />
-        <ul className="NotificationList">
+        <ul className="NotificationList__items">
           {result.results && result.results.map(
             notif => <Notification key={notif.id} notification={notif} />,
           )}
@@ -87,7 +87,7 @@ class NotificationList extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-      </>
+      </div>
     );
   }
 }

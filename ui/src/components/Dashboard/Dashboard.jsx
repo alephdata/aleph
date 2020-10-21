@@ -94,101 +94,103 @@ class Dashboard extends React.Component {
 
     return (
       <div className="Dashboard">
-        <div className="Dashboard__menu">
-          <Menu>
-            <li className="bp3-menu-header">
-              <h6 className="bp3-heading">
-                <FormattedMessage id="dashboard.activity" defaultMessage="Activity" />
-              </h6>
-            </li>
-            <MenuItem
-              icon="notifications"
-              text={intl.formatMessage(messages.notifications)}
-              onClick={() => this.navigate('/notifications')}
-              active={current === '/notifications'}
-            />
-            <MenuItem
-              icon="feed"
-              text={intl.formatMessage(messages.alerts)}
-              label={<ResultCount result={alerts} />}
-              onClick={() => this.navigate('/alerts')}
-              active={current === '/alerts'}
-            />
-            <MenuItem
-              icon="export"
-              text={intl.formatMessage(messages.exports)}
-              label={<ResultCount result={exports} />}
-              onClick={() => this.navigate('/exports')}
-              active={current === '/exports'}
-            />
-            <MenuDivider />
-            <li className="bp3-menu-header">
-              <h6 className="bp3-heading">
-                <FormattedMessage id="dashboard.workspace" defaultMessage="Workspace" />
-              </h6>
-            </li>
-            <MenuItem
-              icon="briefcase"
-              text={intl.formatMessage(messages.cases)}
-              label={<ResultCount result={casesCountResult} />}
-              onClick={() => this.navigate('/cases')}
-              active={current === '/cases'}
-            />
-            <MenuItem
-              icon="graph"
-              text={intl.formatMessage(messages.diagrams)}
-              label={<ResultCount result={diagramsCountResult} />}
-              onClick={() => this.navigate('/diagrams')}
-              active={current === '/diagrams'}
-            />
-            <MenuItem
-              icon="list"
-              text={intl.formatMessage(messages.lists)}
-              label={<ResultCount result={listsCountResult} />}
-              onClick={() => this.navigate('/lists')}
-              active={current === '/lists'}
-            />
-            {(groupsResult.total === undefined || groupsResult.total > 0) && (
-              <>
-                <MenuDivider />
-                <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
-                  <h6 className="bp3-heading">
-                    <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
-                  </h6>
-                </li>
-                {groupsResult.results !== undefined && groupsResult.results.map(group => (
-                  <MenuItem
-                    key={group.id}
-                    icon="shield"
-                    text={group.label}
-                    onClick={() => this.navigate(`/groups/${group.id}`)}
-                    active={current === `/groups/${group.id}`}
-                  />
-                ))}
-                {groupsResult.total === undefined && (
-                  <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
-                )}
-              </>
-            )}
-            <MenuDivider />
-            <MenuItem
-              icon="dashboard"
-              text={intl.formatMessage(messages.status)}
-              onClick={() => this.navigate('/status')}
-              active={current === '/status'}
-            />
-            <MenuItem
-              icon="cog"
-              text={intl.formatMessage(messages.settings)}
-              onClick={() => this.navigate('/settings')}
-              active={current === '/settings'}
-            />
-            <MenuDivider />
-            <AppItem />
-          </Menu>
-        </div>
-        <div className="Dashboard__body">
-          {this.props.children}
+        <div className="Dashboard__inner-container">
+          <div className="Dashboard__menu">
+            <Menu>
+              <li className="bp3-menu-header">
+                <h6 className="bp3-heading">
+                  <FormattedMessage id="dashboard.activity" defaultMessage="Activity" />
+                </h6>
+              </li>
+              <MenuItem
+                icon="notifications"
+                text={intl.formatMessage(messages.notifications)}
+                onClick={() => this.navigate('/notifications')}
+                active={current === '/notifications'}
+              />
+              <MenuItem
+                icon="feed"
+                text={intl.formatMessage(messages.alerts)}
+                label={<ResultCount result={alerts} />}
+                onClick={() => this.navigate('/alerts')}
+                active={current === '/alerts'}
+              />
+              <MenuItem
+                icon="export"
+                text={intl.formatMessage(messages.exports)}
+                label={<ResultCount result={exports} />}
+                onClick={() => this.navigate('/exports')}
+                active={current === '/exports'}
+              />
+              <MenuDivider />
+              <li className="bp3-menu-header">
+                <h6 className="bp3-heading">
+                  <FormattedMessage id="dashboard.workspace" defaultMessage="Workspace" />
+                </h6>
+              </li>
+              <MenuItem
+                icon="briefcase"
+                text={intl.formatMessage(messages.cases)}
+                label={<ResultCount result={casesCountResult} />}
+                onClick={() => this.navigate('/cases')}
+                active={current === '/cases'}
+              />
+              <MenuItem
+                icon="graph"
+                text={intl.formatMessage(messages.diagrams)}
+                label={<ResultCount result={diagramsCountResult} />}
+                onClick={() => this.navigate('/diagrams')}
+                active={current === '/diagrams'}
+              />
+              <MenuItem
+                icon="list"
+                text={intl.formatMessage(messages.lists)}
+                label={<ResultCount result={listsCountResult} />}
+                onClick={() => this.navigate('/lists')}
+                active={current === '/lists'}
+              />
+              {(groupsResult.total === undefined || groupsResult.total > 0) && (
+                <>
+                  <MenuDivider />
+                  <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
+                    <h6 className="bp3-heading">
+                      <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
+                    </h6>
+                  </li>
+                  {groupsResult.results !== undefined && groupsResult.results.map(group => (
+                    <MenuItem
+                      key={group.id}
+                      icon="shield"
+                      text={group.label}
+                      onClick={() => this.navigate(`/groups/${group.id}`)}
+                      active={current === `/groups/${group.id}`}
+                    />
+                  ))}
+                  {groupsResult.total === undefined && (
+                    <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
+                  )}
+                </>
+              )}
+              <MenuDivider />
+              <MenuItem
+                icon="dashboard"
+                text={intl.formatMessage(messages.status)}
+                onClick={() => this.navigate('/status')}
+                active={current === '/status'}
+              />
+              <MenuItem
+                icon="cog"
+                text={intl.formatMessage(messages.settings)}
+                onClick={() => this.navigate('/settings')}
+                active={current === '/settings'}
+              />
+              <MenuDivider />
+              <AppItem />
+            </Menu>
+          </div>
+          <div className="Dashboard__body">
+            {this.props.children}
+          </div>
         </div>
       </div>
     );

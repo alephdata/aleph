@@ -10,9 +10,9 @@
 
     &__close {
       position: absolute;
-      top: $aleph-grid-size/2;
-      @include rtl(right, $aleph-grid-size/2, null);
-      @include rtl(left, null, $aleph-grid-size/2);
+      top: $aleph-grid-size;
+      @include rtl(right, $aleph-grid-size, null);
+      @include rtl(left, null, $aleph-grid-size);
 
       svg {
         fill: white !important;
@@ -21,6 +21,7 @@
 
     &__title.bp3-heading {
       color: white;
+      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*5, null);
     }
 
     &__property {
@@ -60,6 +61,10 @@
         }
       }
     }
+  }
+
+  .MappingLabel {
+    color: white !important;
   }
 
   &__properties {

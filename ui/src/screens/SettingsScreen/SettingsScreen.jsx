@@ -241,98 +241,108 @@ export class SettingsScreen extends React.Component {
     );
   }
 
-  render() {
+  renderForm() {
     const { intl, metadata } = this.props;
     const { role } = this.state;
     const nameIntent = this.validName() ? undefined : Intent.DANGER;
     const locales = Object.keys(metadata.app.locales);
+    if (!role.id) {
+      return null;
+    }
+    return (
+      <div className="settings-form">
+        <FormGroup
+          label={intl.formatMessage(messages.name)}
+          labelFor="name"
+          intent={nameIntent}
+        >
+          <InputGroup
+            id="name"
+            value={role.name}
+            onChange={this.onChangeInput}
+            intent={nameIntent}
+            autoFocus
+            large
+          />
+        </FormGroup>
+        <FormGroup
+          label={intl.formatMessage(messages.locale)}
+          labelFor="locale"
+        >
+          <SelectWrapper
+            itemRenderer={this.renderLocale}
+            items={locales}
+            onItemSelect={this.onSelectLocale}
+            popoverProps={{
+              minimal: true,
+              fill: true,
+            }}
+            inputProps={{
+              fill: true,
+            }}
+            filterable={false}
+          >
+            <Button
+              fill
+              text={metadata.app.locales[role.locale]}
+              alignText={Alignment.LEFT}
+              icon="translate"
+              rightIcon="caret-down"
+            />
+          </SelectWrapper>
+        </FormGroup>
+        <FormGroup
+          label={intl.formatMessage(messages.api_key)}
+          labelFor="api_key"
+          helperText={intl.formatMessage(messages.api_key_help)}
+        >
+          <ClipboardInput id="api_key" icon="key" value={role.api_key} />
+        </FormGroup>
+        <FormGroup
+          label={intl.formatMessage(messages.email)}
+          labelFor="email"
+          helperText={intl.formatMessage(messages.email_no_change)}
+        >
+          <InputGroup
+            id="email"
+            readOnly
+            value={role.email}
+          />
+        </FormGroup>
+        <Checkbox
+          checked={!role.is_muted}
+          label={intl.formatMessage(messages.email_muted)}
+          onChange={this.onToggleMuted}
+        />
+        <Checkbox
+          checked={role.is_tester}
+          label={intl.formatMessage(messages.beta_tester)}
+          onChange={this.onToggleTester}
+        />
+        {this.renderPassword()}
+        <FormGroup>
+          <Button
+            className="settings-form__submit"
+            intent={Intent.PRIMARY}
+            onClick={this.onSave}
+            disabled={!this.valid()}
+            text={intl.formatMessage(messages.save_button)}
+            large
+          />
+        </FormGroup>
+      </div>
+    );
+  }
+
+  render() {
+    const { intl } = this.props;
     return (
       <Screen title={intl.formatMessage(messages.title)} className="SettingsScreen" requireSession>
         <Dashboard>
           <div className="Dashboard__title-container">
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
           </div>
-          <div className="settings-form">
-            <FormGroup
-              label={intl.formatMessage(messages.name)}
-              labelFor="name"
-              intent={nameIntent}
-            >
-              <InputGroup
-                id="name"
-                value={role.name}
-                onChange={this.onChangeInput}
-                intent={nameIntent}
-                autoFocus
-                large
-              />
-            </FormGroup>
-            <FormGroup
-              label={intl.formatMessage(messages.locale)}
-              labelFor="locale"
-            >
-              <SelectWrapper
-                itemRenderer={this.renderLocale}
-                items={locales}
-                onItemSelect={this.onSelectLocale}
-                popoverProps={{
-                  minimal: true,
-                  fill: true,
-                }}
-                inputProps={{
-                  fill: true,
-                }}
-                filterable={false}
-              >
-                <Button
-                  fill
-                  text={metadata.app.locales[role.locale]}
-                  alignText={Alignment.LEFT}
-                  icon="translate"
-                  rightIcon="caret-down"
-                />
-              </SelectWrapper>
-            </FormGroup>
-            <FormGroup
-              label={intl.formatMessage(messages.api_key)}
-              labelFor="api_key"
-              helperText={intl.formatMessage(messages.api_key_help)}
-            >
-              <ClipboardInput id="api_key" icon="key" value={role.api_key} />
-            </FormGroup>
-            <FormGroup
-              label={intl.formatMessage(messages.email)}
-              labelFor="email"
-              helperText={intl.formatMessage(messages.email_no_change)}
-            >
-              <InputGroup
-                id="email"
-                readOnly
-                value={role.email}
-              />
-            </FormGroup>
-            <Checkbox
-              checked={!role.is_muted}
-              label={intl.formatMessage(messages.email_muted)}
-              onChange={this.onToggleMuted}
-            />
-            <Checkbox
-              checked={role.is_tester}
-              label={intl.formatMessage(messages.beta_tester)}
-              onChange={this.onToggleTester}
-            />
-            {this.renderPassword()}
-            <FormGroup>
-              <Button
-                className="settings-form__submit"
-                intent={Intent.PRIMARY}
-                onClick={this.onSave}
-                disabled={!this.valid()}
-                text={intl.formatMessage(messages.save_button)}
-                large
-              />
-            </FormGroup>
-          </div>
+          {this.renderForm()}
         </Dashboard>
       </Screen>
     );

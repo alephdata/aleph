@@ -10,3 +10,4 @@ contrib/allCountries.zip
 .vscode
 .travis.yml
 .env
+.tx

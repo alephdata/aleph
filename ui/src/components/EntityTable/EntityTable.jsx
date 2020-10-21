@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, Divider } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Divider } from '@blueprintjs/core';
 import { Waypoint } from 'react-waypoint';
 import _ from 'lodash';
 import { compose } from 'redux';
@@ -11,6 +11,7 @@ import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { Count, ErrorSection } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import EntityActionBar from 'components/Entity/EntityActionBar';
@@ -40,6 +41,18 @@ const messages = defineMessages({
     id: 'entity.manager.entity_set_add_success',
     defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
   },
+  bulk_import: {
+    id: 'entity.viewer.bulk_import',
+    defaultMessage: 'Bulk import',
+  },
+  add_link: {
+    id: 'entity.viewer.add_link',
+    defaultMessage: 'Create link',
+  },
+  add_to: {
+    id: 'entity.viewer.add_to',
+    defaultMessage: 'Add to...',
+  },
 });
 
 export class EntityTable extends Component {
@@ -47,9 +60,6 @@ export class EntityTable extends Component {
     super(props);
     this.state = {
       selection: [],
-      docSelectIsOpen: false,
-      edgeCreateIsOpen: false,
-      addToIsOpen: false,
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -58,9 +68,7 @@ export class EntityTable extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onEdgeCreate = this.onEdgeCreate.bind(this);
     this.onDocSelected = this.onDocSelected.bind(this);
-    this.toggleDocumentSelectDialog = this.toggleDocumentSelectDialog.bind(this);
-    this.toggleEdgeCreateDialog = this.toggleEdgeCreateDialog.bind(this);
-    this.toggleEntitySetSelector = this.toggleEntitySetSelector.bind(this);
+    this.clearSelection = this.clearSelection.bind(this);
   }
 
   componentDidMount() {
@@ -166,23 +174,8 @@ export class EntityTable extends Component {
     history.push({ pathname, hash: queryString.stringify({ mode: 'mapping', schema: schema.name }) });
   }
 
-  toggleDocumentSelectDialog() {
-    this.setState(({ docSelectIsOpen }) => ({
-      docSelectIsOpen: !docSelectIsOpen,
-    }));
-  }
-
-  toggleEdgeCreateDialog() {
-    this.setState(({ edgeCreateIsOpen }) => ({
-      edgeCreateIsOpen: !edgeCreateIsOpen,
-    }));
-  }
-
-  toggleEntitySetSelector(isSuccess) {
-    this.setState(({ addToIsOpen, selection }) => ({
-      selection: isSuccess ? [] : selection,
-      addToIsOpen: !addToIsOpen,
-    }));
+  clearSelection() {
+    this.setState({ selection: [] });
   }
 
   render() {
@@ -203,24 +196,56 @@ export class EntityTable extends Component {
         >
           {!isEntitySet && (
             <>
-              <Button icon="import" onClick={this.toggleDocumentSelectDialog}>
-                <FormattedMessage id="entity.viewer.bulk_import" defaultMessage="Bulk import" />
-              </Button>
+              <DialogToggleButton
+                buttonProps={{
+                  text: intl.formatMessage(messages.bulk_import),
+                  icon: "import"
+                }}
+                Dialog={DocumentSelectDialog}
+                dialogProps={{
+                  schema,
+                  collection,
+                  onSelect: this.onDocSelected
+                }}
+              />
               <Divider />
             </>
           )}
           {!schema.isEdge && (
-            <Button icon="new-link" onClick={this.toggleEdgeCreateDialog} disabled={selection.length < 1 || selection.length > 2}>
-              <FormattedMessage id="entity.viewer.add_link" defaultMessage="Create link" />
-            </Button>
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.add_link),
+                icon: "new-link",
+                disabled: selection.length < 1 || selection.length > 2
+              }}
+              Dialog={EdgeCreateDialog}
+              dialogProps={{
+                source: selection.length ? selection[0] : undefined,
+                target: selection.length > 1 ? selection[1] : undefined,
+                onSubmit: this.onEdgeCreate,
+                model: entityManager.model,
+                getEntitySuggestions: entityManager.getEntitySuggestions,
+                intl
+              }}
+            />
           )}
-          <Button icon="add-to-artifact" onClick={() => this.toggleEntitySetSelector()} disabled={selection.length < 1}>
-            <FormattedMessage id="entity.viewer.add_to" defaultMessage="Add to..." />
-            <Count count={selection.length || null} />
-          </Button>
+          <DialogToggleButton
+            buttonProps={{
+              text: intl.formatMessage(messages.add_to),
+              icon: "add-to-artifact",
+              disabled: selection.length < 1,
+              rightIcon: <Count count={selection.length || null} />
+            }}
+            Dialog={EntitySetSelector}
+            dialogProps={{
+              collection,
+              entities: selection,
+              onSuccess: this.clearSelection
+            }}
+          />
           <EntityDeleteButton
             entities={selection}
-            onSuccess={() => this.setState({ selection: [] })}
+            onSuccess={this.clearSelection}
             actionType={isEntitySet ? "remove" : "delete"}
             deleteEntity={entityManager.overload.deleteEntity}
             showCount
@@ -255,29 +280,6 @@ export class EntityTable extends Component {
             </>
           )}
         </div>
-        <DocumentSelectDialog
-          schema={schema}
-          collection={collection}
-          isOpen={this.state.docSelectIsOpen}
-          toggleDialog={this.toggleDocumentSelectDialog}
-          onSelect={this.onDocSelected}
-        />
-        <EdgeCreateDialog
-          source={selection.length ? selection[0] : undefined}
-          target={selection.length > 1 ? selection[1] : undefined}
-          isOpen={this.state.edgeCreateIsOpen}
-          toggleDialog={this.toggleEdgeCreateDialog}
-          onSubmit={this.onEdgeCreate}
-          model={entityManager.model}
-          getEntitySuggestions={entityManager.getEntitySuggestions}
-          intl={intl}
-        />
-        <EntitySetSelector
-          collection={collection}
-          entities={selection}
-          isOpen={this.state.addToIsOpen}
-          toggleDialog={this.toggleEntitySetSelector}
-        />
       </div>
     );
   }

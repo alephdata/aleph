@@ -28,6 +28,7 @@
     form {
       .bp3-control-group {
         width: 100%;
+        align-items: center;
       }
 
       input {
@@ -96,6 +97,10 @@
       @media screen and (max-width: $aleph-screen-md-max-width) {
         display: none !important;
       }
+    }
+
+    .bp3-button {
+      margin: 0;
     }
   }
 

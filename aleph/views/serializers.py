@@ -153,11 +153,7 @@ class CollectionSerializer(Serializer):
             "self": url_for("collections_api.view", collection_id=pk),
             "xref": url_for("xref_api.index", collection_id=pk),
             "xref_export": url_for("xref_api.export", collection_id=pk, _authz=authz),
-            "reconcile": url_for(
-                "reconcile_api.reconcile",
-                collection_id=pk,
-                _authz=authz,
-            ),
+            "reconcile": url_for("reconcile_api.reconcile", collection_id=pk),
             "ui": collection_url(pk),
         }
         obj["shallow"] = obj.get("shallow", True)
@@ -227,30 +223,17 @@ class EntitySerializer(Serializer):
                 name = entity_filename(proxy)
                 mime = first(properties.get("mimeType"))
                 links["file"] = archive_url(
-                    content_hash,
-                    file_name=name,
-                    mime_type=mime,
-                    expire=request.authz.expire,
+                    content_hash, file_name=name, mime_type=mime
                 )
 
             pdf_hash = first(properties.get("pdfHash"))
             if pdf_hash:
                 name = entity_filename(proxy, extension="pdf")
-                links["pdf"] = archive_url(
-                    pdf_hash,
-                    file_name=name,
-                    mime_type=PDF,
-                    expire=request.authz.expire,
-                )
+                links["pdf"] = archive_url(pdf_hash, file_name=name, mime_type=PDF)
             csv_hash = first(properties.get("csvHash"))
             if csv_hash:
                 name = entity_filename(proxy, extension="csv")
-                links["csv"] = archive_url(
-                    csv_hash,
-                    file_name=name,
-                    mime_type=CSV,
-                    expire=request.authz.expire,
-                )
+                links["csv"] = archive_url(csv_hash, file_name=name, mime_type=CSV)
 
         obj["links"] = links
         obj["latinized"] = transliterate_values(proxy)
@@ -289,14 +272,13 @@ class XrefSerializer(Serializer):
 
 class ExportSerializer(Serializer):
     def _serialize(self, obj):
-        obj["links"] = {
-            "download": archive_url(
+        if obj.get("content_hash") and not obj.get("deleted"):
+            url = archive_url(
                 obj.get("content_hash"),
                 file_name=obj.get("file_name"),
                 mime_type=obj.get("mime_type"),
-                expire=request.authz.expire,
             )
-        }
+            obj["links"] = {"download": url}
         return obj
 
 

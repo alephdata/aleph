@@ -3,7 +3,6 @@ from banal import ensure_list
 from flask import Blueprint, request
 
 from aleph.index.entities import iter_entities, PROXY_INCLUDES
-from aleph.views.util import get_db_collection
 from aleph.views.util import require, stream_ijson
 
 log = logging.getLogger(__name__)
@@ -40,14 +39,14 @@ def entities(collection_id=None):
       tags:
       - Entity
     """
-    log.debug("Stream entities [%r] begins... (coll: %s)", request.authz, collection_id)
+    if collection_id is not None:
+        require(request.authz.can(collection_id, request.authz.WRITE))
+    else:
+        require(request.authz.is_admin)
     schemata = ensure_list(request.args.getlist("schema"))
     includes = ensure_list(request.args.getlist("include"))
     includes = includes or PROXY_INCLUDES
-    if collection_id is not None:
-        get_db_collection(collection_id, request.authz.WRITE)
-    else:
-        require(request.authz.is_admin)
+    log.debug("Stream entities [%r] begins... (coll: %s)", request.authz, collection_id)
     entities = iter_entities(
         authz=request.authz,
         collection_id=collection_id,

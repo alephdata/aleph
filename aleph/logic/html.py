@@ -2,9 +2,7 @@ import logging
 from lxml import html
 from lxml.etree import tostring
 from lxml.html.clean import Cleaner
-from normality import stringify
 from flask_babel import gettext
-from werkzeug.urls import url_parse, url_join
 
 log = logging.getLogger(__name__)
 
@@ -12,10 +10,13 @@ CLEANER = Cleaner(
     style=True,
     meta=True,
     links=False,
+    scripts=True,
+    javascript=True,
     remove_tags=["body", "form"],
     kill_tags=[
         "area",
         "audio",
+        "svg",
         "base",
         "bgsound",
         "embed",
@@ -47,35 +48,19 @@ def sanitize_html(html_text, base_url, encoding=None):
         parser = html.HTMLParser(encoding=encoding)
         data = cleaned.encode(encoding, "replace")
         doc = html.document_fromstring(data, parser=parser)
+        if base_url is not None and len(base_url.strip()):
+            try:
+                doc.make_links_absolute(base_url)
+            except TypeError:
+                pass
         for (el, attr, href, _) in doc.iterlinks():
-            href = normalize_href(href, base_url)
-            if href is not None:
-                el.set(attr, href)
             if el.tag == "a":
                 el.set("target", "_blank")
-                rel = set(el.get("rel", "").lower().split())
-                rel.update(["nofollow", "noreferrer", "external", "noopener"])
-                el.set("rel", " ".join(rel))
+                el.set("rel", "nofollow noreferrer external noopener")
         return tostring(doc)
     except Exception as exc:
         log.warning("HTML sanitizer failure [%s]: %s", type(exc), exc)
         return gettext("[HTML removed: could not be sanitized]")
-
-
-def normalize_href(href, base_url):
-    # Make links relative to the source_url
-    href = stringify(href)
-    if href is None:
-        return
-    if base_url is not None:
-        return url_join(base_url, href)
-    try:
-        parsed = url_parse(href)
-        if not parsed.netloc:
-            return None
-        return href
-    except ValueError:
-        return None
 
 
 def html_link(text, link):

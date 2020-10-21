@@ -2,11 +2,6 @@
 @import "app/mixins.scss";
 
 .EntitySetManageMenu {
-  // display: flex;
-
-  // .search-box {
-  //   @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
-  // }
   .bp3-input-group {
     border-radius: $aleph-border-radius;
   }
