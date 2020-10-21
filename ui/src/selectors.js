@@ -139,6 +139,8 @@ export function selectEntity(state, entityId) {
   result.safeHtml = entity.safeHtml;
   result.collection = entity.collection;
   result.highlight = entity.highlight;
+  result.latinized = entity.latinized;
+
   return result;
 }
 
