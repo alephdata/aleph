@@ -33,7 +33,7 @@ python-frontmatter==0.5.0
 pyjwt==1.7.1
 cryptography==3.1.1
 requests[security]==2.24.0
-urllib3==1.25.10
+urllib3==1.25.11
 tabulate==0.8.7
 zipstream-new==1.1.8
 
