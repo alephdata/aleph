@@ -9,6 +9,7 @@ class EntityProperties extends React.Component {
     because they are so important, that them not being set is a
     piece of information in itself. */
     const { entity, children } = this.props;
+    console.log('in entity props', entity);
     const featured = entity.schema.getFeaturedProperties();
     const existing = entity.getProperties().filter(prop => !prop.hidden);
     const sorted = _.sortBy(existing, p => p.label).filter(p => featured.indexOf(p) === -1);
@@ -27,7 +28,7 @@ class EntityProperties extends React.Component {
               <Property.Name prop={prop} />
             </span>
             <span className="value">
-              <Mention.List prop={prop} values={entity.getProperty(prop)} missing={missing} />
+              <Mention.List prop={prop} values={entity.getProperty(prop)} missing={missing} translitLookup={entity.latinized} />
             </span>
           </li>
         ))}

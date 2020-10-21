@@ -61,7 +61,7 @@ MentionLink = injectIntl(MentionLink);
 
 class MentionList extends Component {
   render() {
-    const { prop, values, separator = ' · ', missing = '—' } = this.props;
+    const { prop, values, separator = ' · ', missing = '—', translitLookup } = this.props;
     const vals = ensureArray(values).map(value => (
       <MentionLink key={value.id || value} prop={prop} value={value} {...this.props} />
     ));
