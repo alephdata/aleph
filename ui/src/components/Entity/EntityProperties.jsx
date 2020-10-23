@@ -9,7 +9,6 @@ class EntityProperties extends React.Component {
     because they are so important, that them not being set is a
     piece of information in itself. */
     const { entity, children } = this.props;
-    console.log('in entity props', entity);
     const featured = entity.schema.getFeaturedProperties();
     const existing = entity.getProperties().filter(prop => !prop.hidden);
     const sorted = _.sortBy(existing, p => p.label).filter(p => featured.indexOf(p) === -1);

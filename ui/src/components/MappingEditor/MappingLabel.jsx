@@ -71,8 +71,6 @@ export class MappingLabel extends Component {
   }
 
   renderLabel() {
-    const { mapping, icon = true, onEdit } = this.props;
-
     return (
       <>
         {this.getLabelIcon("left-icon")}
@@ -83,7 +81,7 @@ export class MappingLabel extends Component {
 
   render() {
     const { mapping, onEdit } = this.props;
-    const { editing, editValue } = this.state;
+    const { editing } = this.state;
     if (!mapping || !mapping.schema || !mapping.id) return null;
 
     let content;

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alephdata/followthemoney": "2.1.9",
-    "@alephdata/react-ftm": "2.0.1-alpha",
+    "@alephdata/react-ftm": "2.0.1-alpha.3",
     "@blueprintjs/core": "3.34.0",
     "@blueprintjs/datetime": "^3.15.1",
     "@blueprintjs/icons": "3.22.0",
@@ -77,5 +77,8 @@
       "last 5 firefox version",
       "last 5 safari version"
     ]
+  },
+  "devDependencies": {
+    "file-selector": "^0.2.2"
   }
 }

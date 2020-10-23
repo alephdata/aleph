@@ -23,9 +23,8 @@ const messages = defineMessages({
 class MentionLink extends Component {
   render() {
     const { intl, value, prop, count, metadata } = this.props;
-    const content = <Property.Value {...this.props} />;
     if (count === null || count === 0) {
-      return content;
+      return <Property.Value {...this.props} />;
     }
 
     const href = getValueLink(prop.type, value);
@@ -38,7 +37,7 @@ class MentionLink extends Component {
         <Link to={href} className="Mention">
           <Bp3Tag minimal interactive multiline>
             <Tag.Icon field={prop.type.group} />
-            <span>{content}</span>
+            <span><Property.Value {...this.props} translitLookup={null} /></span>
             <Count count={count} className="no-fill" />
           </Bp3Tag>
         </Link>
@@ -61,7 +60,7 @@ MentionLink = injectIntl(MentionLink);
 
 class MentionList extends Component {
   render() {
-    const { prop, values, separator = ' · ', missing = '—', translitLookup } = this.props;
+    const { prop, values, separator = ' · ', missing = '—' } = this.props;
     const vals = ensureArray(values).map(value => (
       <MentionLink key={value.id || value} prop={prop} value={value} {...this.props} />
     ));
