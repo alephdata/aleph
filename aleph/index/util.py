@@ -298,16 +298,16 @@ def configure_index(index, mapping, settings):
             "master_timeout": MAX_TIMEOUT,
         }
         config = es.indices.get(index=index).get(index, {})
-        mapping = rewrite_mapping_safe(mapping, config.get("mappings"))
-        res = es.indices.put_mapping(body=mapping, ignore=[400], **options)
-        if not _check_response(index, res):
-            return False
         settings.get("index").pop("number_of_shards")
         if check_settings_changed(settings, config.get("settings")):
             res = es.indices.close(ignore_unavailable=True, **options)
             res = es.indices.put_settings(body=settings, **options)
             if not _check_response(index, res):
                 return False
+        mapping = rewrite_mapping_safe(mapping, config.get("mappings"))
+        res = es.indices.put_mapping(body=mapping, ignore=[400], **options)
+        if not _check_response(index, res):
+            return False
         res = es.indices.open(**options)
         return True
     else:
