@@ -1,4 +1,4 @@
-FROM node:14-slim
+FROM node:15-slim
 
 RUN mkdir /alephui
 WORKDIR /alephui
