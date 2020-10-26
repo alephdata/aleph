@@ -244,11 +244,15 @@ class MappingList {
     const query = {};
 
     this.mappingItems.forEach(({ id, schema, properties }) => {
-      query[id] = {
+      const queryItem = {
         schema: schema.name,
         keys: this.getMappingKeys(id),
         properties,
       };
+      if (!schema?.isThing()) {
+        queryItem.key_literal = schema.name;
+      }
+      query[id] = queryItem
     });
 
     return query;
