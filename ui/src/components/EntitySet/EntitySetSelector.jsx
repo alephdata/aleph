@@ -135,7 +135,7 @@ class EntitySetSelector extends Component {
       return intl.formatMessage(messages.title_default);
     }
     const entLength = entities.length;
-    const firstCaption = entities[0]?.getCaption();
+    const firstCaption = entities?.[0]?.getCaption();
     const titleSecondary = entLength === 1 ? "" : intl.formatMessage(messages.title_secondary, { count: entLength - 1 })
     return intl.formatMessage(messages.title, { firstCaption, titleSecondary });
   }

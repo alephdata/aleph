@@ -41,7 +41,14 @@ class CollectionBreadcrumb extends PureComponent {
           </li>
         )}
         <li key={collection.id}>
-          <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
+          <Collection.Status
+            collection={collection}
+            showPopover
+            className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
+            icon
+            truncate={30}
+            LabelComponent={active ? Collection.Label : Collection.Link}
+          />
           <Restricted collection={collection} />
         </li>
       </>
@@ -71,7 +78,7 @@ class EntityBreadcrumb extends PureComponent {
           </li>
         )}
         <li key={entity.id}>
-          <Entity.Link entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
+          <Entity.Label entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
         </li>
       </>
     );

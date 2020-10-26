@@ -27,7 +27,7 @@ class EntityProperties extends React.Component {
               <Property.Name prop={prop} />
             </span>
             <span className="value">
-              <Mention.List prop={prop} values={entity.getProperty(prop)} missing={missing} />
+              <Mention.List prop={prop} values={entity.getProperty(prop)} missing={missing} translitLookup={entity.latinized} />
             </span>
           </li>
         ))}

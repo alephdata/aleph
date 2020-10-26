@@ -50,11 +50,15 @@
   }
 
   .bp3-breadcrumb-current {
-    pointer-events: none;
     color: $blue1;
 
     .bp3-spinner-head {
       stroke: $blue1;
     }
+  }
+
+  .EntityLabel > * {
+    display: inline-flex !important;
+    white-space: nowrap !important;
   }
 }

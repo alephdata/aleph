@@ -20,7 +20,7 @@ class EmailViewer extends React.Component {
         document.getProperty(eprop).forEach((entity) => {
           entity.getProperty('email').forEach((email) => {
             if (normValue.indexOf(email.toLowerCase().trim()) !== -1) {
-              result = <Property.Value key={entity.id} prop={eprop} value={entity} />;
+              result = <Property.Value key={entity.id} prop={eprop} value={entity} translitLookup={entity.latinized} />;
             }
           });
         });

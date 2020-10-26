@@ -1,8 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
-import { processApiEntity } from 'components/EntitySet/util';
+import { NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
 import updateStates from 'util/updateStates';
@@ -16,25 +15,18 @@ const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left' }
 class DiagramEditor extends React.Component {
   constructor(props) {
     super(props);
-    const { diagram } = props;
+    const { diagram, entityManager } = props;
     let initialLayout;
 
     if (diagram) {
-      let layoutData = { vertices: [], edges: [], entities: [], selection: [] };
-      if (diagram.entities) {
-        layoutData.entities = diagram.entities.map(processApiEntity);
-      }
-      if (diagram.layout) {
-        layoutData = {...layoutData, ...diagram.layout};
-      }
-
+      const layoutData = { vertices: [], edges: [], selection: [] };
       initialLayout = GraphLayout.fromJSON(
         config,
-        props.entityManager,
-        layoutData
+        {...layoutData, ...diagram.layout}
       );
+      initialLayout.layout(entityManager.getEntities());
     } else {
-      initialLayout = new GraphLayout(config, props.entityManager);
+      initialLayout = new GraphLayout(config);
     }
 
     this.state = {
@@ -64,12 +56,13 @@ class DiagramEditor extends React.Component {
   }
 
   updateLayout(layout, options) {
-    const { diagram, onStatusChange } = this.props;
+    const { entityManager, diagram, onStatusChange } = this.props;
     this.setState({ layout });
 
     if (options?.propagate) {
       onStatusChange(updateStates.IN_PROGRESS);
-      const { entities, selection, ...layoutData } = layout.toJSON();
+      const { selection, ...layoutData } = layout.toJSON();
+      const entities = entityManager.getEntities();
 
       const updatedDiagram = {
         ...diagram,
@@ -97,14 +90,15 @@ class DiagramEditor extends React.Component {
   }
 
   downloadDiagram() {
-    const { diagram, onDownloadComplete } = this.props;
+    const { entityManager, diagram, onDownloadComplete } = this.props;
     const { layout, viewport } = this.state;
 
     const graphData = JSON.stringify({
+      entities: entityManager.toJSON(),
       layout: layout.toJSON(),
       viewport: viewport.toJSON(),
     });
-    fileDownload(graphData, `${diagram.label}.vis`);
+    fileDownload(graphData, `${diagram.label}.ftm`);
     onDownloadComplete();
   }
 
@@ -114,7 +108,7 @@ class DiagramEditor extends React.Component {
 
     return (
       <div className="DiagramEditor">
-        <VisGraph
+        <NetworkDiagram
           config={config}
           entityManager={entityManager}
           layout={layout}

@@ -78,9 +78,9 @@ class CollectionUpdateStatus extends PureComponent {
   }
 
   render() {
-    const { collection, showPopover, status } = this.props;
+    const { collection, showPopover, status, LabelComponent } = this.props;
     const updating = !status.shouldLoad && status.active;
-    const collectionLink = <CollectionLink updating={updating} {...this.props} />;
+    const collectionLabel = <LabelComponent updating={updating} {...this.props} />;
 
     if (showPopover && updating) {
       return (
@@ -90,12 +90,12 @@ class CollectionUpdateStatus extends PureComponent {
           autofocus={false}
           enforceFocus={false}
           popoverClassName="CollectionUpdateStatus__popover"
-          target={collectionLink}
+          target={collectionLabel}
           content={<CollectionStatus collection={collection} showCancel={false} className="bp3-callout bp3-intent-primary" />}
         />
       );
     }
-    return collectionLink;
+    return collectionLabel;
   }
 }
 

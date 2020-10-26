@@ -4,7 +4,7 @@ $top-nav-height: 50px;
 $breadcrumb-height: 44px;
 
 .DiagramEditor {
-  .VisGraph {
+  .NetworkDiagram {
     height: calc(100vh - #{$top-nav-height + $breadcrumb-height});
     background: white;
     overflow: hidden;

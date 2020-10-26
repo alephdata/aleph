@@ -172,6 +172,7 @@ export class DiagramScreen extends Component {
             collection={diagram.collection}
             onStatusChange={this.onStatusChange}
             diagram={diagram}
+            entities={diagram?.entities}
             downloadTriggered={downloadTriggered}
             filterText={filterText}
             onDownloadComplete={this.onDownloadComplete}

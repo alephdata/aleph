@@ -54,7 +54,7 @@ class XrefTableRow extends Component {
               <Property.Name prop={prop} />
             </span>
             <span className="XrefTableRow__property__value">
-              <Property.Values prop={prop} values={entity.getProperty(prop)} />
+              <Property.Values prop={prop} values={entity.getProperty(prop)} translitLookup={entity.latinized} />
             </span>
           </div>
         ))}

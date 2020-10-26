@@ -68,6 +68,7 @@ export class EntityTable extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onEdgeCreate = this.onEdgeCreate.bind(this);
     this.onDocSelected = this.onDocSelected.bind(this);
+    this.getEntity = this.getEntity.bind(this);
     this.clearSelection = this.clearSelection.bind(this);
   }
 
@@ -102,10 +103,10 @@ export class EntityTable extends Component {
     });
   }
 
-  updateSelection(entity) {
+  updateSelection(entityId) {
     const { selection } = this.state;
     this.setState({
-      selection: _.xorBy(selection, [entity], 'id'),
+      selection: _.xor(selection, [entityId]),
     });
   }
 
@@ -161,7 +162,6 @@ export class EntityTable extends Component {
         intl.formatMessage(messages.edge_create_success, { source: source.getCaption(), target: target.getCaption() })
       );
       this.setState({ selection: [] });
-      this.toggleEdgeCreateDialog();
     } catch (e) {
       showErrorToast(e);
     }
@@ -178,12 +178,16 @@ export class EntityTable extends Component {
     this.setState({ selection: [] });
   }
 
+  getEntity(entityId) {
+    return this.props.result.results.find(({ id }) => entityId === id);
+  }
+
   render() {
     const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, writeable } = this.props;
     const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
     const showEmptyComponent = result.total === 0 && query.hasQuery();
-
+    const selectedEntities = selection.map(this.getEntity).filter(e => e !== undefined);
 
     return (
       <div className="EntityTable">
@@ -220,11 +224,11 @@ export class EntityTable extends Component {
               }}
               Dialog={EdgeCreateDialog}
               dialogProps={{
-                source: selection.length ? selection[0] : undefined,
-                target: selection.length > 1 ? selection[1] : undefined,
+                source: selection.length ? selectedEntities[0] : undefined,
+                target: selection.length > 1 ? selectedEntities[1] : undefined,
                 onSubmit: this.onEdgeCreate,
-                model: entityManager.model,
-                getEntitySuggestions: entityManager.getEntitySuggestions,
+                entityManager,
+                fetchEntitySuggestions: (queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata),
                 intl
               }}
             />
@@ -239,12 +243,12 @@ export class EntityTable extends Component {
             Dialog={EntitySetSelector}
             dialogProps={{
               collection,
-              entities: selection,
+              entities: selectedEntities,
               onSuccess: this.clearSelection
             }}
           />
           <EntityDeleteButton
-            entities={selection}
+            entities={selectedEntities}
             onSuccess={this.clearSelection}
             actionType={isEntitySet ? "remove" : "delete"}
             deleteEntity={entityManager.overload.deleteEntity}
@@ -264,6 +268,7 @@ export class EntityTable extends Component {
                 entities={result.results}
                 schema={schema}
                 entityManager={entityManager}
+                fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
                 sort={sort}
                 sortColumn={this.onSortColumn}
                 selection={selection}
