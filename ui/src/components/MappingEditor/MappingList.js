@@ -221,8 +221,8 @@ class MappingList {
 
   validate() {
     const errors = [];
-    this.mappingItems.forEach(({ id, keys, properties, schema }) => {
-      if (keys.length === 0) {
+    this.mappingItems.forEach(({ id, properties, schema }) => {
+      if (this.getMappingKeys(id).length === 0) {
         errors.push({ error: 'keyError', values: { id } });
       }
       if (schema.isEdge) {
