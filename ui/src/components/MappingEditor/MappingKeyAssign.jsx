@@ -208,7 +208,7 @@ export class MappingKeyAssignItem extends Component {
   }
 
   render() {
-    const { fullMappingsList, mapping, onMappingRemove, onMappingIdChange } = this.props;
+    const { mapping, onMappingRemove, onMappingIdChange } = this.props;
     const { id, color, schema } = mapping;
 
     const edgeProps = schema.isEdge ? [schema.edge.source, schema.edge.target] : [];
