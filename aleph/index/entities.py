@@ -233,7 +233,7 @@ def checksums_count(checksums):
     body = []
     for checksum in checksums:
         body.append({"index": index})
-        query = {"term": {"checksums": checksum}}
+        query = {"term": {registry.checksum.group: checksum}}
         body.append({"size": 0, "query": query})
     results = es.msearch(body=body)
     for checksum, result in zip(checksums, results.get("responses", [])):

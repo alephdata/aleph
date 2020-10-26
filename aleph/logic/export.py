@@ -140,9 +140,10 @@ def delete_expired_exports():
     for export in expired_exports:
         log.info("Deleting expired export: %r", export)
         if export.should_delete_publication():
-            counts = list(checksums_count([export.content_hash]))
-            if counts[0][1] == 0:
-                archive.delete_file(export.content_hash)
+            if export.content_hash is not None:
+                counts = list(checksums_count([export.content_hash]))
+                if counts[0][1] == 0:
+                    archive.delete_file(export.content_hash)
         export.deleted = True
         db.session.add(export)
     db.session.commit()
