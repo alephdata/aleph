@@ -221,8 +221,8 @@ class MappingList {
 
   validate() {
     const errors = [];
-    this.mappingItems.forEach(({ id, keys, properties, schema }) => {
-      if (keys.length === 0) {
+    this.mappingItems.forEach(({ id, properties, schema }) => {
+      if (this.getMappingKeys(id).length === 0) {
         errors.push({ error: 'keyError', values: { id } });
       }
       if (schema.isEdge) {
@@ -244,11 +244,15 @@ class MappingList {
     const query = {};
 
     this.mappingItems.forEach(({ id, schema, properties }) => {
-      query[id] = {
+      const queryItem = {
         schema: schema.name,
         keys: this.getMappingKeys(id),
         properties,
       };
+      if (!schema?.isThing()) {
+        queryItem.key_literal = schema.name;
+      }
+      query[id] = queryItem
     });
 
     return query;

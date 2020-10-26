@@ -211,6 +211,11 @@ export class MappingKeyAssignItem extends Component {
     const { mapping, onMappingRemove, onMappingIdChange } = this.props;
     const { id, color, schema } = mapping;
 
+    const edgeProps = schema.isEdge ? [schema.edge.source, schema.edge.target] : [];
+    const requiredEntityProps = schema.required.filter(prop => (
+      schema.getProperty(prop)?.type?.isEntity && edgeProps.indexOf(prop) < 0
+    ));
+
     return (
       <Card className="MappingKeyAssign__item" key={id} style={{ backgroundColor: color }}>
         <Button
@@ -230,12 +235,9 @@ export class MappingKeyAssignItem extends Component {
             {this.renderKeySelect(mapping)}
           </span>
         </div>
-        {schema.isEdge && (
-          <>
-            {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.source))}
-            {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.target))}
-          </>
-        )}
+        {[...edgeProps, ...requiredEntityProps].map(prop => (
+          this.renderEntitySelect(mapping, schema.getProperty(prop))
+        ))}
       </Card>
     );
   }
