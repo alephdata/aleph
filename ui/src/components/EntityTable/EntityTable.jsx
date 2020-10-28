@@ -103,10 +103,15 @@ export class EntityTable extends Component {
     });
   }
 
-  updateSelection(entityId) {
-    const { selection } = this.state;
-    this.setState({
-      selection: _.xor(selection, [entityId]),
+  updateSelection(entityIds, newVal) {
+    this.setState(({ selection }) => {
+      let newSelection;
+      if (newVal) {
+        newSelection = [...selection, ...entityIds];
+      } else {
+        newSelection = selection.filter(id => entityIds.indexOf(id) < 0);
+      }
+      return ({ selection: newSelection });
     });
   }
 
