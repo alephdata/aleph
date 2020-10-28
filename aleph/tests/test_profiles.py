@@ -70,8 +70,9 @@ class ProfileTestCase(TestCase):
             assert len(result) == 1, len(result)
             profile, items = result[0]
             assert profile.collection_id == coll.id, profile.collection_id
-            assert len(items) == 2, len(items)
-            assert [r == judgement for r in items]
+            if judgement != Judgement.NO_JUDGEMENT:
+                assert len(items) == 2, (judgement, len(items))
+                assert [r == judgement for r in items]
 
         result = list(collection_profiles(coll.id, deleted=True))
         assert len(result) == 1, len(result)

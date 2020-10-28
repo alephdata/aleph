@@ -293,7 +293,7 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         if entityset.type == EntitySet.PROFILE and judgement == Judgement.POSITIVE:
             for existing in EntitySet.by_entity_id(
                 entity_id,
-                collection_id=entityset.collection_id,
+                collection_ids=[entityset.collection_id],
                 judgements=[Judgement.POSITIVE],
                 types=[EntitySet.PROFILE],
             ):
@@ -314,7 +314,7 @@ class EntitySetItem(db.Model, SoftDeleteModel):
             return
 
         item = cls(
-            entityset_id=entityset.id,
+            entityset=entityset,
             entity_id=entity_id,
             judgement=judgement,
             collection_id=collection_id,

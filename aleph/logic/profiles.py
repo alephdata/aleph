@@ -80,4 +80,6 @@ def decide_xref(xref, judgement, authz):
         item.entityset, match_id, match_collection_id, judgement=judgement
     )
     db.session.commit()
-    return item.entityset
+
+    if item is not None:
+        return item.entityset
