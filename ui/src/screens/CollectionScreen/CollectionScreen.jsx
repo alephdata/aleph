@@ -9,6 +9,8 @@ import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
+import InvestigationViews from 'components/Investigation/InvestigationViews';
+
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
@@ -50,11 +52,48 @@ export class CollectionScreen extends Component {
     });
   }
 
+  renderInvestigation() {
+    return (
+      <DocumentDropzone
+        canDrop={collection.writeable}
+        collection={collection}
+        onUploadSuccess={this.onUploadSuccess}
+      >
+        <SinglePane>
+          <CollectionHeading collection={collection} />
+          <div>
+            <InvestigationViews
+              investigation={investigation}
+              activeMode={activeMode}
+              isPreview={false}
+            />
+          </div>
+        </SinglePane>
+      </DocumentDropzone>
+    );
+  }
+
+  renderCollection() {
+    return (
+      <SinglePane>
+        <CollectionHeading collection={collection} />
+        <div>
+          <CollectionViews
+            collection={collection}
+            activeMode={activeMode}
+            isPreview={false}
+          />
+        </div>
+      </SinglePane>
+    );
+  }
+
   render() {
     const {
       collection, collectionId, activeMode,
     } = this.props;
     const { extraBreadcrumbs } = this.props;
+    const isInvestigation = collection.casefile;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -76,6 +115,7 @@ export class CollectionScreen extends Component {
         {extraBreadcrumbs}
       </Breadcrumbs>
     );
+    const content = isInvestigation ? this.renderInvestigation() : this.renderCollection();
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
@@ -85,22 +125,7 @@ export class CollectionScreen extends Component {
           searchScopes={[searchScope]}
         >
           {breadcrumbs}
-          <DocumentDropzone
-            canDrop={collection.writeable}
-            collection={collection}
-            onUploadSuccess={this.onUploadSuccess}
-          >
-            <SinglePane>
-              <CollectionHeading collection={collection} />
-              <div>
-                <CollectionViews
-                  collection={collection}
-                  activeMode={activeMode}
-                  isPreview={false}
-                />
-              </div>
-            </SinglePane>
-          </DocumentDropzone>
+          {content}
         </Screen>
       </CollectionContextLoader>
     );
