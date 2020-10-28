@@ -1,10 +1,25 @@
 import logging
 
-from aleph.model import EntitySet, EntitySetItem, Events
+from aleph.model import EntitySet, EntitySetItem, Events, Judgement
 from aleph.logic.entities import upsert_entity
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
+
+
+def get_entitysets_by_entity(
+    entity_id, collection_ids=None, judgements=None, types=None, labels=None
+):
+    if judgements is not None:
+        judgements = list(map(Judgement, judgements))
+    entitysets = EntitySet.by_entity_id(
+        entity_id,
+        collection_ids=collection_ids,
+        judgements=judgements,
+        types=types,
+        labels=labels,
+    )
+    return entitysets
 
 
 def get_entityset(entityset_id):

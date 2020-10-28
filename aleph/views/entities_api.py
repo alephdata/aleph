@@ -8,19 +8,20 @@ from followthemoney import model
 from pantomime.types import ZIP
 
 from aleph.core import db, url_for
-from aleph.search import EntitiesQuery, MatchQuery
+from aleph.search import EntitiesQuery, MatchQuery, DatabaseQueryResult
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.entities import validate_entity, check_write_entity
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
+from aleph.model.entityset import EntitySet, Judgement
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag
 from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
-from aleph.views.serializers import EntitySerializer
+from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
 from aleph.queues import queue_task, OP_EXPORT_SEARCH_RESULTS
 
@@ -576,3 +577,92 @@ def expand(entity_id):
             "results": results,
         }
     )
+
+
+@blueprint.route("/api/2/entities/<entity_id>/entitysets", methods=["GET"])
+def entity_entitysets(entity_id):
+    """Returns a list of entitysets which the entity has references in
+    ---
+    get:
+      summary: Shows EntitySets which reference the given entity
+      description: >-
+        Search for all entitysets which reference the given entity. The entity
+        sets can be filtered based on it's collection id, label, type or the
+        judgement of the entity within the set.
+      parameters:
+      - in: path
+        name: entity_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: 'filter:type'
+        description: Restrict to a EntitySets of a particular type
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      - in: query
+        name: 'filter:label'
+        description: Restrict to a EntitySets with a particular label
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      - in: query
+        name: 'filter:judgement'
+        description: Restrict to a specific profile judgement
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      - in: query
+        name: 'filter:collection_id'
+        description: Restrict to entity sets within particular collections
+        schema:
+          items:
+            type: string
+          type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntitySet'
+          description: OK
+      tags:
+      - Entity
+      - Profiles
+    """
+    entity = get_index_entity(entity_id, request.authz.READ)
+
+    parser = QueryParser(request.args, request.authz)
+    collection_ids = [
+        cid
+        for cid in parser.filters.get("collection_id", [])
+        if request.authz.can(cid, request.authz.READ)
+    ]
+    judgements = parser.filters.get("judgement")
+    labels = parser.filters.get("label")
+    types = parser.filters.get("type")
+
+    if judgements is not None:
+        judgements = list(map(Judgement, judgements))
+    if not collection_ids:
+        collection_ids = request.authz.collections(request.authz.READ)
+
+    entitysets = EntitySet.by_entity_id(
+        entity["id"],
+        collection_ids=collection_ids,
+        judgements=judgements,
+        types=types,
+        labels=labels,
+    )
+
+    result = DatabaseQueryResult(request, entitysets, parser=parser)
+    return EntitySetSerializer.jsonify_result(result)
