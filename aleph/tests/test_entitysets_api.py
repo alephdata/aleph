@@ -213,6 +213,36 @@ class EntitySetAPITest(TestCase):
         assert res2.json["id"] == res.json["id"], res2.json
         assert "np" in res2.json["properties"]["nationality"], res2.json
 
+    def test_entity_entitysets(self):
+        url = "/api/2/entitysets"
+        res = self.client.post(url, json=self.input_data, headers=self.headers)
+        assert res.status_code == 200, res
+
+        colid = str(self.col.id)
+        entityset_id = res.json["id"]
+
+        url = f"/api/2/entitysets/{entityset_id}/entities?filter:schemata=Person"
+        res = self.client.get(url, headers=self.headers)
+        ent_id = res.json["results"][0]["id"]
+
+        url = f"/api/2/entities/{ent_id}/entitysets"
+        res = self.client.get(url, headers=self.headers)
+        assert entityset_id in {e["id"] for e in res.json["results"]}, res.json
+
+        url = f"/api/2/entities/{ent_id}/entitysets?filter:collection_id={colid}&filter:type=diagram&filter:judgement=positive"
+        res = self.client.get(url, headers=self.headers)
+        assert entityset_id in {e["id"] for e in res.json["results"]}, res.json
+
+        for filt in (
+            "collection_id=66666",
+            "label=asdfadsfs",
+            "judgement=no_judgement",
+            "type=timeline",
+        ):
+            url = f"/api/2/entities/{ent_id}/entitysets?filter:{filt}"
+            res = self.client.get(url, headers=self.headers)
+            assert entityset_id not in {e["id"] for e in res.json["results"]}, res.json
+
     def test_entityset_items_query(self):
         url = "/api/2/entitysets"
         res = self.client.post(url, json=self.input_data, headers=self.headers)
