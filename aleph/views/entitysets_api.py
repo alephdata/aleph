@@ -278,7 +278,10 @@ def entities_update(entityset_id):
         sync = get_flag("sync", default=True)
         entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
     EntitySetItem.save(
-        entityset, entity_id, collection_id=collection.id, added_by_id=request.authz.id,
+        entityset,
+        entity_id,
+        collection_id=collection.id,
+        added_by_id=request.authz.id,
     )
     db.session.commit()
     return entity_view(entity_id)
@@ -312,7 +315,7 @@ def item_index(entityset_id):
       - EntitySetItem
     """
     entityset = get_entityset(entityset_id, request.authz.READ)
-    result = DatabaseQueryResult(request, entityset.items())
+    result = DatabaseQueryResult(request, entityset.items(request.authz))
     return EntitySetItemSerializer.jsonify_result(result)
 
 

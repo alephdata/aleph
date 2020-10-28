@@ -122,8 +122,11 @@ class EntitySet(db.Model, SoftDeleteModel):
         pq = pq.filter(cls.deleted_at == None)  # noqa
         pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
 
-    def items(self, deleted=False):
+    def items(self, authz=None, deleted=False):
         q = EntitySetItem.all(deleted=deleted)
+        if authz is not None:
+            ids = authz.collections(authz.READ)
+            q = q.filter(EntitySetItem.collection_id.in_(ids))
         q = q.filter(EntitySetItem.entityset_id == self.id)
         q = q.order_by(EntitySetItem.created_at.asc())
         return q
