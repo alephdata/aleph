@@ -291,7 +291,7 @@ def bulk(collection_id):
             EntitySetItem.save(
                 entityset,
                 entity_id,
-                collection_id=collection.id,
+                collection.id,
                 added_by_id=request.authz.id,
             )
     collection.touch()

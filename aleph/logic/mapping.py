@@ -58,7 +58,7 @@ def map_to_aggregator(collection, mapping, aggregator):
                 EntitySetItem.save(
                     mapping.entityset,
                     entity.id,
-                    collection_id=collection.id,
+                    collection.id,
                     added_by_id=mapping.role_id,
                 )
     writer.flush()

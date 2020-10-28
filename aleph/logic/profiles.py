@@ -47,11 +47,6 @@ def pairwise_decisions(pairs, collection_id):
     )
 
 
-def create_profile(collection, authz):
-    data = {"type": EntitySet.PROFILE, "label": "profile"}
-    return EntitySet.create(data, collection, authz)
-
-
 def decide_xref(xref, judgement, authz):
     """Store user feedback from an Xref result as an profile-type EntitySet
     The problem here is that we're trying to translate a single pair-wise
@@ -67,54 +62,22 @@ def decide_xref(xref, judgement, authz):
 
     entity_id = xref.get("entity_id")
     collection = Collection.by_id(xref.get("collection_id"))
-    entity_profile = EntitySet.by_entity_id(
+    profile = EntitySet.by_entity_id(
         entity_id,
-        judgements=[Judgement.POSITIVE],
         collection_ids=[collection.id],
         types=[EntitySet.PROFILE],
+        judgements=[Judgement.POSITIVE],
     ).first()
-
+    if profile is None:
+        data = {"type": EntitySet.PROFILE, "label": "profile"}
+        profile = EntitySet.create(data, collection, authz)
+    item = EntitySetItem.save(
+        profile, entity_id, collection.id, judgement=Judgement.POSITIVE
+    )
     match_id = xref.get("match_id")
     match_collection_id = xref.get("match_collection_id")
-    match_profile = EntitySet.by_entity_id(
-        match_id,
-        judgements=[Judgement.POSITIVE],
-        collection_ids=[collection.id],
-        types=[EntitySet.PROFILE],
-    ).first()
-
-    # If we are undecided, and we stay undecided, not much to change.
-    if entity_profile is None or match_profile is None:
-        if judgement == Judgement.NO_JUDGEMENT:
-            return
-
-    if entity_profile is None:
-        entity_profile = create_profile(collection, authz)
-        EntitySetItem.save(
-            entity_profile,
-            entity_id,
-            judgement=Judgement.POSITIVE,
-            collection_id=collection.id,
-            added_by_id=authz.id,
-        )
-
-    if judgement is Judgement.POSITIVE and match_profile is not None:
-        # Case 1: both entities have profiles and the match is positive
-        entity_profile = entity_profile.merge(match_profile, authz.id)
-    else:
-        # Case 2: any other judgement
-        # NOTE: Another case of NEGATIVE judgements triggering a
-        # `split_profile` could be useful, however it isn't implemented
-        # here so that we don't lose judgements. This however should be
-        # strongly considered in order to reverse profile mergers. The question
-        # is: what to do with old judgements on a pair when we do this?
-        EntitySetItem.save(
-            entity_profile,
-            match_id,
-            judgement=judgement,
-            collection_id=match_collection_id,
-            added_by_id=authz.id,
-            compared_to_entity_id=entity_id,
-        )
+    item = EntitySetItem.save(
+        item.entityset, match_id, match_collection_id, judgement=judgement
+    )
     db.session.commit()
-    return entity_profile
+    return item.entityset

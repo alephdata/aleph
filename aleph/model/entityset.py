@@ -68,6 +68,7 @@ class EntitySet(db.Model, SoftDeleteModel):
         entityset.layout = {}
         entityset.role_id = authz.id
         entityset.collection_id = collection.id
+        entityset.created_at = datetime.utcnow()
         entityset.update(data)
         return entityset
 
@@ -280,24 +281,44 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def save(cls, entityset, entity_id, judgement=None, **data):
+    def save(cls, entityset, entity_id, collection_id, judgement=None, **data):
         if judgement is None:
             judgement = Judgement.POSITIVE
         else:
             judgement = Judgement(judgement)
+
+        # Special case for profiles: an entity can only be part of one profile
+        # in any given collection. An attempt to add it to a second profile must
+        # result in a merging of both profiles.
+        if entityset.type == EntitySet.PROFILE and judgement == Judgement.POSITIVE:
+            for existing in EntitySet.by_entity_id(
+                entity_id,
+                collection_id=entityset.collection_id,
+                judgements=[Judgement.POSITIVE],
+                types=[EntitySet.PROFILE],
+            ):
+                entityset = entityset.merge(existing, entity_id)
+
+        # Check if there is an existing relationship between the entity and the
+        # entity set. If the judgement matches, no-op - otherwise delete the
+        # previous relationship item.
         existing = cls.by_entity_id(entityset, entity_id)
         if existing is not None:
             if existing.judgement == judgement:
                 return existing
             existing.delete()
+
+        # There is no judgement information to be stored, so let's keep that out
+        # of the database:
         if judgement == Judgement.NO_JUDGEMENT:
             return
+
         item = cls(
             entityset_id=entityset.id,
             entity_id=entity_id,
             judgement=judgement,
+            collection_id=collection_id,
             compared_to_entity_id=data.get("compared_to_entity_id"),
-            collection_id=data.get("collection_id"),
             added_by_id=data.get("added_by_id"),
         )
         db.session.add(item)
