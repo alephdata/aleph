@@ -13,9 +13,9 @@ from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.entities import validate_entity, check_write_entity
-from aleph.logic.entitysets import get_entitysets_by_entity
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
+from aleph.model.entityset import EntitySet, Judgement
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag
@@ -651,8 +651,17 @@ def entity_entitysets(entity_id):
     labels = parser.filters.get("label")
     types = parser.filters.get("type")
 
-    entitysets = get_entitysets_by_entity(
-        entity["id"], collection_ids, judgements=judgements, types=types, labels=labels
+    if judgements is not None:
+        judgements = list(map(Judgement, judgements))
+    if not collection_ids:
+        collection_ids = request.authz.collections(request.authz.READ)
+
+    entitysets = EntitySet.by_entity_id(
+        entity["id"],
+        collection_ids=collection_ids,
+        judgements=judgements,
+        types=types,
+        labels=labels,
     )
 
     result = DatabaseQueryResult(request, entitysets, parser=parser)
