@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from aleph.core import db
 from aleph.model import EntitySet, EntitySetItem
 from aleph.model.common import make_textid
-from aleph.logic.entitysets import create_entityset
+from aleph.logic.entitysets import create_entityset, refresh_entityset
 from aleph.logic.entities import upsert_entity, validate_entity, check_write_entity
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
 from aleph.search import QueryParser, DatabaseQueryResult
@@ -161,6 +161,7 @@ def update(entityset_id):
     data = parse_request("EntitySetUpdate")
     entityset.update(data)
     db.session.commit()
+    refresh_entityset(entityset_id)
     return EntitySetSerializer.jsonify(entityset)
 
 
@@ -187,6 +188,7 @@ def delete(entityset_id):
     entityset = get_entityset(entityset_id, request.authz.WRITE)
     entityset.delete()
     db.session.commit()
+    refresh_entityset(entityset_id)
     return ("", 204)
 
 
@@ -284,6 +286,7 @@ def entities_update(entityset_id):
         added_by_id=request.authz.id,
     )
     db.session.commit()
+    refresh_entityset(entityset.id)
     return entity_view(entity_id)
 
 
@@ -362,6 +365,7 @@ def item_update(entityset_id):
     data["added_by_id"] = request.authz.id
     item = EntitySetItem.save(entityset, entity_id, **data)
     db.session.commit()
+    refresh_entityset(entityset.id)
     if item is None:
         return ("", 204)
     return EntitySetItemSerializer.jsonify(item)

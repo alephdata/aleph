@@ -1,5 +1,6 @@
 import logging
 
+from aleph.core import cache
 from aleph.model import EntitySet, EntitySetItem, Events, Judgement
 from aleph.logic.entities import upsert_entity
 from aleph.logic.notifications import publish
@@ -28,6 +29,10 @@ def get_entityset(entityset_id):
 
 def get_entitysetitem(entitysetitem_id):
     return EntitySetItem.by_id(entitysetitem_id)
+
+
+def refresh_entityset(entityset_id):
+    cache.kv.delete(cache.object_key(EntitySet, entityset_id))
 
 
 def create_entityset(collection, data, authz):

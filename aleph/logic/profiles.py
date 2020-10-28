@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 from sqlalchemy.orm import aliased
 
 from aleph.util import PairwiseDict
@@ -7,6 +6,20 @@ from aleph.core import db
 from aleph.model import Collection, EntitySet, EntitySetItem, Judgement
 
 log = logging.getLogger(__name__)
+
+
+def get_profile(entityset_id):
+    return {
+        "id": entityset_id,
+        "collection_id": None,
+        "items": [],
+        "entities": [],
+        "merged": {},
+    }
+
+
+def generate_profile_fragments(collection, entity_id=None):
+    pass
 
 
 def collection_profiles(collection_id, judgements=None, deleted=False):
@@ -29,29 +42,9 @@ def pairwise_decisions(pairs, collection_id):
     q = q.filter(left.entityset_id == right.entityset_id)
     q = q.filter(db.tuple_(left.entity_id, right.entity_id).in_(pairs))
     return PairwiseDict(
-        ((l.entity_id, r.entity_id), (l.judgement + r.judgement)) for l, r in q.all()
+        ((lft.entity_id, rgt.entity_id), (lft.judgement + rgt.judgement))
+        for lft, rgt in q.all()
     )
-
-
-def profile_add_entities(
-    entityset, entity_id, collection_id, compared_to_entity_id, judgement, authz
-):
-    pq = db.session.query(EntitySetItem)
-    pq = pq.filter(EntitySetItem.entityset_id == entityset.id)
-    pq = pq.filter(EntitySetItem.entity_id == entity_id)
-    pq = pq.filter(EntitySetItem.deleted_at == None)  # noqa
-    pq.update({EntitySetItem.deleted_at: datetime.utcnow()}, synchronize_session=False)
-
-    esi = EntitySetItem(
-        entityset=entityset,
-        entity_id=entity_id,
-        compared_to_entity_id=compared_to_entity_id,
-        collection_id=collection_id,
-        added_by_id=authz.id,
-        judgement=judgement,
-    )
-    db.session.add(esi)
-    return esi
 
 
 def create_profile(collection, authz):
@@ -97,8 +90,12 @@ def decide_xref(xref, judgement, authz):
 
     if entity_profile is None:
         entity_profile = create_profile(collection, authz)
-        profile_add_entities(
-            entity_profile, entity_id, collection.id, None, Judgement.POSITIVE, authz
+        EntitySetItem.save(
+            entity_profile,
+            entity_id,
+            judgement=Judgement.POSITIVE,
+            collection_id=collection.id,
+            added_by_id=authz.id,
         )
 
     if judgement is Judgement.POSITIVE and match_profile is not None:
@@ -111,8 +108,13 @@ def decide_xref(xref, judgement, authz):
         # here so that we don't lose judgements. This however should be
         # strongly considered in order to reverse profile mergers. The question
         # is: what to do with old judgements on a pair when we do this?
-        profile_add_entities(
-            entity_profile, match_id, match_collection_id, entity_id, judgement, authz
+        EntitySetItem.save(
+            entity_profile,
+            match_id,
+            judgement=judgement,
+            collection_id=match_collection_id,
+            added_by_id=authz.id,
+            compared_to_entity_id=entity_id,
         )
     db.session.commit()
     return entity_profile
