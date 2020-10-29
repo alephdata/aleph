@@ -10,6 +10,8 @@ import CollectionContextLoader from 'components/Collection/CollectionContextLoad
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
 import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
+import InvestigationViews from 'components/Investigation/InvestigationViews';
+
 
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
@@ -53,14 +55,19 @@ export class CollectionScreen extends Component {
   }
 
   renderInvestigation() {
-    const { collection, collectionId, activeMode } = this.props;
+    const { activeMode, collection, collectionId } = this.props;
 
     return (
       <InvestigationWrapper
         collection={collection}
         collectionId={collectionId}
       >
-        contenttt
+        <InvestigationViews
+          collection={collection}
+          activeMode={activeMode}
+          isPreview={false}
+        />
+
       </InvestigationWrapper>
     )
 
