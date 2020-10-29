@@ -34,8 +34,6 @@ Entity:
       type: array
       items:
         type: string
-    job_id:
-      type: string
     links:
       properties:
         tags:

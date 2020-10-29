@@ -663,6 +663,5 @@ def entity_entitysets(entity_id):
         types=types,
         labels=labels,
     )
-
     result = DatabaseQueryResult(request, entitysets, parser=parser)
     return EntitySetSerializer.jsonify_result(result)

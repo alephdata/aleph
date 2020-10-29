@@ -1,21 +1,68 @@
 import logging
 from sqlalchemy.orm import aliased
+from followthemoney import model
+from followthemoney.helpers import name_entity
 
-from aleph.util import PairwiseDict
-from aleph.core import db
-from aleph.model import Collection, EntitySet, EntitySetItem, Judgement
+from aleph.core import db, cache
+from aleph.logic.entitysets import get_entityset
+from aleph.logic import resolver
+from aleph.model import Collection, Entity, EntitySet, EntitySetItem, Judgement
+from aleph.util import PairwiseDict, Stub
 
 log = logging.getLogger(__name__)
 
 
-def get_profile(entityset_id):
-    return {
-        "id": entityset_id,
-        "collection_id": None,
-        "items": [],
-        "entities": [],
-        "merged": {},
-    }
+def get_profile(entityset_id, authz=None):
+    """A profile is an entityset having a party. The idea is to cache
+    profile metadata for the API, and to generate a merged view of all
+    the entities the current user has access to."""
+    if entityset_id is None:
+        return
+    key = cache.object_key(EntitySet, entityset_id)
+    data = cache.get_complex(key)
+    stub = Stub()
+    if data is None:
+        entityset = get_entityset(entityset_id)
+        data = entityset.to_dict()
+        data["items"] = []
+        for item in entityset.items():
+            data["items"].append(item.to_dict())
+        cache.set_complex(key, data, expires=cache.EXPIRE)
+
+    # Filter the subset of items the current user can access
+    if authz is not None:
+        if not authz.can(data["collection_id"], authz.READ):
+            return
+        items = [i for i in data["items"] if authz.can(i["collection_id"], authz.READ)]
+        data["items"] = items
+
+    # Load the constituent entities for the profile and generate a
+    # combined proxy with all of the given properties.
+    for item in data["items"]:
+        if Judgement(item["judgement"]) == Judgement.POSITIVE:
+            resolver.queue(stub, Entity, item.get("entity_id"))
+    resolver.resolve(stub)
+    merged = None
+    for item in data["items"]:
+        item["entity"] = resolver.get(stub, Entity, item.get("entity_id"))
+        if item["entity"] is not None:
+            proxy = model.get_proxy(item["entity"])
+            if merged is None:
+                merged = proxy
+                merged.context["entities"] = [proxy.id]
+            else:
+                merged.merge(proxy)
+                merged.context["entities"].append(proxy.id)
+
+    if merged is None:
+        return
+
+    # Polish it a bit:
+    merged.id = data.get("id")
+    merged = name_entity(merged)
+    data["merged"] = merged.to_dict()
+    data["label"] = merged.caption
+    return data
 
 
 def generate_profile_fragments(collection, entity_id=None):
@@ -72,12 +119,21 @@ def decide_xref(xref, judgement, authz):
         data = {"type": EntitySet.PROFILE, "label": "profile"}
         profile = EntitySet.create(data, collection, authz)
     item = EntitySetItem.save(
-        profile, entity_id, collection.id, judgement=Judgement.POSITIVE
+        profile,
+        entity_id,
+        collection.id,
+        judgement=Judgement.POSITIVE,
+        added_by_id=authz.id,
     )
     match_id = xref.get("match_id")
     match_collection_id = xref.get("match_collection_id")
     item = EntitySetItem.save(
-        item.entityset, match_id, match_collection_id, judgement=judgement
+        item.entityset,
+        match_id,
+        match_collection_id,
+        judgement=judgement,
+        compared_to_entity_id=entity_id,
+        added_by_id=authz.id,
     )
     db.session.commit()
 

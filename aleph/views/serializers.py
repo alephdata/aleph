@@ -326,14 +326,23 @@ class EntitySetIndexSerializer(Serializer):
 
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
-        obj.update(
-            {
-                "shallow": True,
-                "writeable": request.authz.can(collection_id, request.authz.WRITE),
-                "collection": self.resolve(
-                    Collection, collection_id, CollectionSerializer
-                ),
-            }
+        obj["shallow"] = True
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["collection"] = self.resolve(
+            Collection, collection_id, CollectionSerializer
+        )
+        return obj
+
+
+class ProfileSerializer(Serializer):
+    def _collect(self, obj):
+        self.queue(Collection, obj.get("collection_id"))
+
+    def _serialize(self, obj):
+        collection_id = obj.pop("collection_id", None)
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["collection"] = self.resolve(
+            Collection, collection_id, CollectionSerializer
         )
         return obj
 

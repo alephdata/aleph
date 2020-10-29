@@ -1,0 +1,15 @@
+Profile:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/EntitySet"
+  properties:
+    items:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: "#/components/schemas/EntitySetItem"
+    merged:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Entity"

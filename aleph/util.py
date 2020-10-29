@@ -45,6 +45,10 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+class Stub(object):
+    pass
+
+
 class PairwiseDict(abc.MutableMapping):
     """A dictionary which sorts it's keys so that getting key (a, b) is the same as (b, a)"""
 
