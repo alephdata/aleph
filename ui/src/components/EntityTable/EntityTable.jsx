@@ -107,7 +107,7 @@ export class EntityTable extends Component {
     this.setState(({ selection }) => {
       let newSelection;
       if (newVal) {
-        newSelection = [...selection, ...entityIds];
+        newSelection = [...new Set([...selection, ...entityIds])];
       } else {
         newSelection = selection.filter(id => entityIds.indexOf(id) < 0);
       }
