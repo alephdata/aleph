@@ -1,0 +1,20 @@
+@import "app/variables.scss";
+
+.InvestigationWrapper {
+  &__inner-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  &__body {
+    flex-grow: 2;
+  }
+
+  .bp3-overlay {
+    position: relative !important;
+    height: 100vh;
+    top: 0;
+    left: 0;
+  }
+}

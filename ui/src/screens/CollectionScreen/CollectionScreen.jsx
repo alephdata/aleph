@@ -85,18 +85,32 @@ export class CollectionScreen extends Component {
   }
 
   renderCollection() {
-    const { collection, activeMode } = this.props;
+    const { collection, activeMode, extraBreadcrumbs } = this.props;
+
+    const operation = (
+      <CollectionManageMenu collection={collection} />
+    );
+
+    const breadcrumbs = (
+      <Breadcrumbs operation={operation}>
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
+        {extraBreadcrumbs}
+      </Breadcrumbs>
+    );
     return (
-      <SinglePane>
-        <CollectionHeading collection={collection} />
-        <div>
-          <CollectionViews
-            collection={collection}
-            activeMode={activeMode}
-            isPreview={false}
-          />
-        </div>
-      </SinglePane>
+      <>
+        {breadcrumbs}
+        <SinglePane>
+          <CollectionHeading collection={collection} />
+          <div>
+            <CollectionViews
+              collection={collection}
+              activeMode={activeMode}
+              isPreview={false}
+            />
+          </div>
+        </SinglePane>
+      </>
     );
   }
 
@@ -104,7 +118,6 @@ export class CollectionScreen extends Component {
     const {
       collection, collectionId, activeMode,
     } = this.props;
-    const { extraBreadcrumbs } = this.props;
     const isInvestigation = collection.casefile;
 
     if (collection.isError) {
@@ -117,16 +130,7 @@ export class CollectionScreen extends Component {
       onSearch: this.onSearch,
     };
 
-    const operation = (
-      <CollectionManageMenu collection={collection} />
-    );
 
-    const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
-        {extraBreadcrumbs}
-      </Breadcrumbs>
-    );
     const content = isInvestigation ? this.renderInvestigation() : this.renderCollection();
 
     return (
@@ -136,7 +140,6 @@ export class CollectionScreen extends Component {
           description={collection.summary}
           searchScopes={[searchScope]}
         >
-          {breadcrumbs}
           {content}
         </Screen>
       </CollectionContextLoader>

@@ -1,19 +1,45 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab, Icon } from '@blueprintjs/core';
+import { Drawer, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
+import { Breadcrumbs, SinglePane } from 'components/common';
 
 
-// import './InvestigationWrapper.scss';
+import './InvestigationWrapper.scss';
 
 class InvestigationWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { isOpen: true };
+  }
   render() {
     const { collection } = this.props;
+    const { isOpen } = this.state;
+
+    const operation = (
+      <CollectionManageMenu collection={collection} />
+    );
+
+    // <Drawer
+    //   isOpen={isOpen}
+    //   position={Position.LEFT}
+    //   size={Drawer.SIZE_SMALL}
+    //   hasBackdrop={false}
+    //   usePortal={false}
+    //   className="InvestigationWrapper__sidebar"
+    // >
+
+    const breadcrumbs = (
+      <Breadcrumbs operation={operation}>
+        <Breadcrumbs.Collection key="collection" collection={collection} active />
+      </Breadcrumbs>
+    );
 
     return (
       <div className="InvestigationWrapper">
@@ -24,7 +50,10 @@ class InvestigationWrapper extends React.Component {
             />
           </div>
           <div className="InvestigationWrapper__body">
-            {this.props.children}
+            {breadcrumbs}
+            <SinglePane>
+              {this.props.children}
+            </SinglePane>
           </div>
         </div>
       </div>

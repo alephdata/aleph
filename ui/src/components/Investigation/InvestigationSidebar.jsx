@@ -17,7 +17,7 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
 
-// import './InvestigationSidebar.scss';
+import './InvestigationSidebar.scss';
 
 const messages = defineMessages({
   diagrams: {
@@ -77,61 +77,59 @@ class InvestigationSidebar extends React.Component {
 
     return (
       <div className="InvestigationSidebar">
-        <div className="InvestigationSidebar">
-          <CollectionHeading collection={collection} showCategory={false} showDescription />
+        <CollectionHeading collection={collection} showDescription />
 
-          <div className="InvestigationSidebar__section">
-            <Menu>
-              <li className="bp3-menu-header">
-                <h6 className="bp3-heading">
-                  <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
-                </h6>
-              </li>
+        <div className="InvestigationSidebar__section">
+          <Menu>
+            <li className="bp3-menu-header">
+              <h6 className="bp3-heading">
+                <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
+              </h6>
+            </li>
 
-              <MenuItem
-                icon="graph"
-                text={intl.formatMessage(messages.diagrams)}
-                onClick={() => this.navigate('/')}
-                rightIcon={<ResultCount result={diagrams} />}
-                active={activeMode === 'diagrams'}
-              />
-              <MenuItem
-                icon="list"
-                text={intl.formatMessage(messages.lists)}
-                onClick={() => this.navigate('/')}
-                rightIcon={<ResultCount result={lists} />}
-                active={activeMode === 'lists'}
-              />
-            </Menu>
-          </div>
-          <div className="InvestigationSidebar__section">
-            <Menu>
-              <li className="bp3-menu-header">
-                <h6 className="bp3-heading">
-                  <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
-                </h6>
-              </li>
-              <MenuItem
-                icon="folder-open"
-                text={intl.formatMessage(messages.browse)}
-                onClick={() => this.navigate('/')}
-                active={activeMode === ''}
-              />
-              <MenuItem
-                icon="new-object"
-                text={intl.formatMessage(messages.mappings)}
-                onClick={() => this.navigate('/')}
-                active={activeMode === ''}
-              />
-              <MenuItem
-                icon="tag"
-                text={intl.formatMessage(messages.mentions)}
-                onClick={() => this.navigate('/')}
-                active={activeMode === ''}
-              />
-            </Menu>
+            <MenuItem
+              icon="graph"
+              text={intl.formatMessage(messages.diagrams)}
+              onClick={() => this.navigate('/')}
+              rightIcon={<ResultCount result={diagrams} />}
+              active={activeMode === 'diagrams'}
+            />
+            <MenuItem
+              icon="list"
+              text={intl.formatMessage(messages.lists)}
+              onClick={() => this.navigate('/')}
+              rightIcon={<ResultCount result={lists} />}
+              active={activeMode === 'lists'}
+            />
+          </Menu>
+        </div>
+        <div className="InvestigationSidebar__section">
+          <Menu>
+            <li className="bp3-menu-header">
+              <h6 className="bp3-heading">
+                <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
+              </h6>
+            </li>
+            <MenuItem
+              icon="folder-open"
+              text={intl.formatMessage(messages.browse)}
+              onClick={() => this.navigate('/')}
+              active={activeMode === ''}
+            />
+            <MenuItem
+              icon="new-object"
+              text={intl.formatMessage(messages.mappings)}
+              onClick={() => this.navigate('/')}
+              active={activeMode === ''}
+            />
+            <MenuItem
+              icon="tag"
+              text={intl.formatMessage(messages.mentions)}
+              onClick={() => this.navigate('/')}
+              active={activeMode === ''}
+            />
+          </Menu>
 
-          </div>
         </div>
       </div>
     );
