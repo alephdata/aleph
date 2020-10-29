@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
@@ -11,8 +9,6 @@ import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-
-// import './InvestigationViews.scss';
 
 class InvestigationViews extends React.Component {
   render() {

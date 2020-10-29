@@ -24,6 +24,7 @@ import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
 import Tag from './Tag';
+import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
@@ -57,6 +58,7 @@ export {
   Property,
   Role,
   Schema,
+  SchemaCounts,
   SectionLoading,
   TextLoading,
   ErrorSection,
