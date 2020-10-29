@@ -9,7 +9,7 @@ import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
-import InvestigationViews from 'components/Investigation/InvestigationViews';
+import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
@@ -53,27 +53,39 @@ export class CollectionScreen extends Component {
   }
 
   renderInvestigation() {
+    const { collection, collectionId, activeMode } = this.props;
+
     return (
-      <DocumentDropzone
-        canDrop={collection.writeable}
+      <InvestigationWrapper
         collection={collection}
-        onUploadSuccess={this.onUploadSuccess}
+        collectionId={collectionId}
       >
-        <SinglePane>
-          <CollectionHeading collection={collection} />
-          <div>
-            <InvestigationViews
-              investigation={investigation}
-              activeMode={activeMode}
-              isPreview={false}
-            />
-          </div>
-        </SinglePane>
-      </DocumentDropzone>
-    );
+        contenttt
+      </InvestigationWrapper>
+    )
+
+    // return (
+    //   <DocumentDropzone
+    //     canDrop={collection.writeable}
+    //     collection={collection}
+    //     onUploadSuccess={this.onUploadSuccess}
+    //   >
+    //     <SinglePane>
+    //       <CollectionHeading collection={collection} />
+    //       <div>
+    //         <InvestigationViews
+    //           collection={collection}
+    //           activeMode={activeMode}
+    //           isPreview={false}
+    //         />
+    //       </div>
+    //     </SinglePane>
+    //   </DocumentDropzone>
+    // );
   }
 
   renderCollection() {
+    const { collection, activeMode } = this.props;
     return (
       <SinglePane>
         <CollectionHeading collection={collection} />

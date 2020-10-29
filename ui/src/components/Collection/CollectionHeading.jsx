@@ -12,7 +12,7 @@ class CollectionHeading extends PureComponent {
   )
 
   render() {
-    const { collection } = this.props;
+    const { collection, showCategory = true, showDescription = false } = this.props;
     const isPending = collection.isPending && !collection.label;
 
     if (isPending) {
@@ -21,13 +21,20 @@ class CollectionHeading extends PureComponent {
 
     return (
       <div className="CollectionHeading">
-        <span className="bp3-text-muted">
-          <Collection.Label collection={collection} label={false} />
-          <Category.Label category={collection.category} />
-        </span>
+        {showCategory && (
+          <span className="bp3-text-muted">
+            <Collection.Label collection={collection} label={false} />
+            <Category.Label category={collection.category} />
+          </span>
+        )}
         <h1 itemProp="name" className="CollectionHeading__title">
           {collection.label}
         </h1>
+        {showDescription && collection.summary !== null && (
+          <p className="CollectionHeading__description">
+            {collection.summary}
+          </p>
+        )}
       </div>
     );
   }
