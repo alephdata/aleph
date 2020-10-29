@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { loadState } from 'reducers/util';
-
+import { queryEntityReferences } from 'queries';
 
 function selectTimestamp(state) {
   return state.mutation;
@@ -164,11 +164,34 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
-export function selectExpandResult(state, query) {
+export function selectEntityExpandResult(state, query) {
   return {
     results: [],
     ...selectObject(state, state.results, query.toKey()),
   };
+}
+
+export function selectEntityReferences(state, entityId) {
+  const entity = selectEntity(state, entityId);
+  const query = queryEntityReferences(entity.id);
+  const references = selectEntityExpandResult(state, query);
+  references.results = references.results || [];
+  references.results = references.results.map((ref) => {
+    const reverse = entity.schema.getProperty(ref.property);
+    const property = reverse.getReverse();
+    return {
+      schema: property.schema, property, reverse, count: ref.count,
+    };
+  });
+  return references;
+}
+
+export function selectEntityReference(state, entityId, qname) {
+  const references = selectEntityReferences(state, entityId);
+  if (!references.total) {
+    return undefined;
+  }
+  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectNotificationsResult(state, query) {
@@ -201,29 +224,6 @@ export function selectValueCount(state, prop, value) {
     return null;
   }
   return state.values[`${prop.type.group}:${value}`] || null;
-}
-
-export function selectEntityReferences(state, entityId) {
-  const model = selectModel(state);
-  const references = selectObject(state, state.entityReferences, entityId);
-  references.results = references.results || [];
-  references.results = references.results.map((ref) => {
-    const schema = model.getSchema(ref.schema);
-    const property = schema.getProperty(ref.property.name);
-    const reverse = property.getReverse();
-    return {
-      schema, property, reverse, count: ref.count,
-    };
-  });
-  return references;
-}
-
-export function selectEntityReference(state, entityId, qname) {
-  const references = selectEntityReferences(state, entityId);
-  if (!references.total) {
-    return undefined;
-  }
-  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectEntityView(state, entityId, mode, isPreview) {

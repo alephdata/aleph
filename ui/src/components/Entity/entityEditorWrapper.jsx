@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
-import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'selectors';
+import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult, } from 'selectors';
 import {
   createEntity,
   deleteEntity,
@@ -92,11 +92,8 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async expandEntity(entityId, properties, limit) {
-        const { location } = this.props;
-        const query = queryExpand(location, entityId, properties, limit);
-
+        const query = queryExpand(entityId, properties, limit);
         this.props.queryEntityExpand({ query });
-
         return new Promise((resolve) => {
           this.pendingPromises.push({ query, promiseResolve: resolve });
         });
@@ -162,7 +159,7 @@ const mapStateToProps = (state, ownProps) => {
       let result;
 
       if (query.queryName === 'expand') {
-        result = selectExpandResult(state, query);
+        result = selectEntityExpandResult(state, query);
       } else {
         result = selectEntitiesResult(state, query);
       }

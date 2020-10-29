@@ -26,7 +26,6 @@ export {
   createEntity,
   deleteEntity,
   fetchEntity,
-  fetchEntityReferences,
   fetchEntityTags,
   queryEntities,
   queryEntityExpand,

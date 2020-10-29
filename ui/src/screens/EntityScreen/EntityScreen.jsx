@@ -97,7 +97,7 @@ class EntityScreen extends Component {
     const item = (
       <>
         <Entity.Label entity={entity} icon truncate={30} />
-        { ': ' }
+        { ': '}
         <Property.Reverse prop={reference.property} />
       </>
     );
@@ -157,7 +157,7 @@ class EntityScreen extends Component {
 
     const operation = (
       <ButtonGroup>
-        {showDownloadButton && <DownloadButton document={entity} /> }
+        {showDownloadButton && <DownloadButton document={entity} />}
         {writeable && (
           <>
             <DialogToggleButton
@@ -221,7 +221,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const entity = selectEntity(state, entityId);
   const hashQuery = queryString.parse(location.hash);
-  const isDocument = entity && entity.id && entity.schema.isDocument();
+  const isDocument = entity?.schema?.isDocument();
   const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
   const reference = selectEntityReference(state, entityId, activeMode);
   const referenceQuery = queryEntityReference(location, entity, reference);
