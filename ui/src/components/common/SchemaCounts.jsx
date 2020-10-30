@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { Button, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { compose } from 'redux';
@@ -38,8 +39,7 @@ class SchemaCounts extends React.PureComponent {
   }
 
   render() {
-    const { activeSchema, visibleCounts, selectableSchemata, intl, isPending, onSelect, writeable } = this.props;
-    const showSchemaSelect = writeable && selectableSchemata.length;
+    const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, isPending, onSelect, writeable } = this.props;
 
     if (isPending && !activeSchema) {
       return <SectionLoading />
@@ -47,23 +47,23 @@ class SchemaCounts extends React.PureComponent {
 
     return (
       <>
-        {visibleCounts.map(ref => (
+        {Object.keys(visibleCounts).map(schema => (
           <MenuItem
-            id={ref.id}
-            key={ref.id}
+            id={schema}
+            key={schema}
             className="SchemaCounts"
-            onClick={() => onSelect(ref.id)}
-            rightIcon={<Count count={ref.count} isPending={isPending} />}
+            onClick={() => onSelect(schema)}
+            rightIcon={<Count count={visibleCounts[schema]} isPending={isPending} />}
             text={
               <>
                 {isPending && <Skeleton.Text type="span" length={15} />}
-                {!isPending && <Schema.Label schema={ref.id} plural icon />}
+                {!isPending && <Schema.Label schema={schema} plural icon />}
               </>
             }
           />
         ))}
-        {visibleCounts.length > 0 && showSchemaSelect && <MenuDivider />}
-        {showSchemaSelect && (
+        {visibleCounts.size > 0 && showSchemaAdd && <MenuDivider />}
+        {showSchemaAdd && (
           <MenuItem
             id="new"
             key="new"
@@ -88,25 +88,21 @@ class SchemaCounts extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { filterSchemata, schemaCounts } = ownProps;
+  const { activeSchema, filterSchemata, schemaCounts } = ownProps;
   const model = selectModel(state);
 
-  const allSchemata = model.getSchemata()
-    .filter((schema) => filterSchemata(schema) && !schema.hidden)
+  const visibleCounts = _.pickBy({[activeSchema]: 0, ...schemaCounts}, (val, key) => {
+    const schema = model.getSchema(key);
+    return filterSchemata(schema) && !schema.hidden;
+  })
+
+  const selectableSchemata = model.getSchemata()
+    .filter((schema) => filterSchemata(schema) && !schema.hidden && !(schema in visibleCounts))
     .map((schema) => schema.name);
 
-  const visibleCounts = schemaCounts
-    .filter(({id}) => {
-      const schema = model.getSchema(id);
-      return filterSchemata(schema) && !schema.hidden;
-    });
-
-  const selectableSchemata = allSchemata
-    .filter((s) => !schemaCounts.find((v) => v.id === s));
-
-
   return {
-    visibleCounts, selectableSchemata
+    visibleCounts,
+    selectableSchemata
   }
 };
 

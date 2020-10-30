@@ -66,7 +66,7 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, lists, xref,
+      collection, activeMode, activeType, diagrams, lists, xref,
       intl, schemaCounts
     } = this.props;
 
@@ -85,19 +85,21 @@ class InvestigationSidebar extends React.Component {
               filterSchemata={schema => !schema.isDocument()}
               schemaCounts={schemaCounts}
               onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
+              showSchemaAdd={collection.writeable}
+              activeSchema={activeType}
             />
             <MenuItem
               icon="graph"
               text={intl.formatMessage(messages.diagrams)}
               onClick={() => this.navigate(collectionViewIds.DIAGRAMS)}
-              rightIcon={<ResultCount result={diagrams} />}
+              labelElement={<ResultCount result={diagrams} />}
               active={activeMode === collectionViewIds.DIAGRAMS}
             />
             <MenuItem
               icon="list"
               text={intl.formatMessage(messages.lists)}
               onClick={() => this.navigate(collectionViewIds.LISTS)}
-              rightIcon={<ResultCount result={lists} />}
+              labelElement={<ResultCount result={lists} />}
               active={activeMode === collectionViewIds.LISTS}
             />
           </Menu>
@@ -113,6 +115,8 @@ class InvestigationSidebar extends React.Component {
               filterSchemata={schema => schema.isDocument()}
               schemaCounts={schemaCounts}
               onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
+              showSchemaAdd={false}
+              activeSchema={activeType}
             />
             <MenuItem
               icon="folder-open"
@@ -147,24 +151,15 @@ const mapStateToProps = (state, ownProps) => {
   const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
   const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
-  const schemata = collection?.statistics?.schema?.values;
   const hashQuery = queryString.parse(location.hash);
 
-  const rawSchemaCounts = collection?.statistics?.schema?.values || [];
-  const schemaCounts = [];
-  for (const key in rawSchemaCounts) {
-    schemaCounts.push({
-      id: key,
-      count: rawSchemaCounts[key],
-    });
-  }
-
   return {
-    schemaCounts,
+    schemaCounts: collection?.statistics?.schema?.values || {},
     xref: selectCollectionXrefResult(state, xrefQuery),
     diagrams: selectEntitySetsResult(state, diagramsQuery),
     lists: selectEntitySetsResult(state, listsQuery),
     activeMode: hashQuery.mode,
+    activeType: hashQuery.type,
   };
 };
 
