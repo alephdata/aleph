@@ -183,6 +183,9 @@ export function selectEntityReferences(state, entityId) {
       schema: property.schema, property, reverse, count: ref.count,
     };
   });
+  references.results = references.results.filter((ref) => {
+    return ref.reverse.stub;
+  });
   return references;
 }
 
