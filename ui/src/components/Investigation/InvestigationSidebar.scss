@@ -3,5 +3,28 @@
 .InvestigationSidebar {
   padding: $aleph-content-padding;
   background: $aleph-breadcrumbs-background;
-  height: 100vh;
+  box-shadow: 0 0 0 1px rgba(16,22,26,.1), 0 4px 8px rgba(16,22,26,.2), 0 18px 46px 6px rgba(16,22,26,.2);  // background: $aleph-breadcrumbs-background;
+  min-height: 100vh;
+
+  .CollectionHeading {
+    margin: 0;
+  }
+
+  // &__content {
+  //   padding: 10px;
+  //   background: white;
+  // }
+
+  &__section {
+    margin: $aleph-grid-size*2 -1*$aleph-grid-size/2;
+
+    .bp3-heading {
+      color: $blue1;
+    }
+
+    &__menu.bp3-menu {
+      background: none;
+      padding: 0;
+    }
+  }
 }

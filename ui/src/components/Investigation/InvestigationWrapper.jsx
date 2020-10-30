@@ -50,7 +50,6 @@ class InvestigationWrapper extends React.Component {
             />
           </div>
           <div className="InvestigationWrapper__body">
-            {breadcrumbs}
             <SinglePane>
               {this.props.children}
             </SinglePane>

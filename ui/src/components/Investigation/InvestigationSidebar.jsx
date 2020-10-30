@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Card, Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import { Count, ResultCount, SchemaCounts } from 'components/common';
+import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
+
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
@@ -73,9 +75,8 @@ class InvestigationSidebar extends React.Component {
     return (
       <div className="InvestigationSidebar">
         <CollectionHeading collection={collection} showDescription />
-
         <div className="InvestigationSidebar__section">
-          <Menu>
+          <Menu className="InvestigationSidebar__section__menu">
             <li className="bp3-menu-header">
               <h6 className="bp3-heading">
                 <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
@@ -105,7 +106,7 @@ class InvestigationSidebar extends React.Component {
           </Menu>
         </div>
         <div className="InvestigationSidebar__section">
-          <Menu>
+          <Menu className="InvestigationSidebar__section__menu">
             <li className="bp3-menu-header">
               <h6 className="bp3-heading">
                 <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
@@ -139,6 +140,7 @@ class InvestigationSidebar extends React.Component {
           </Menu>
 
         </div>
+        <CollectionManageMenu collection={collection} />
       </div>
     );
   }

@@ -1,20 +1,32 @@
 @import "app/variables.scss";
 
 .InvestigationWrapper {
+  overflow: hidden;
   &__inner-container {
     display: flex;
-    width: 100%;
-    justify-content: space-between;
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: stretch;
+    align-items: stretch;
+  }
+
+  &__sidebar {
+    // display: flex;
+    // flex-direction: column;
+    // flex-grow: 0;
+    width: 25%;
+    min-width: 270px;
   }
 
   &__body {
-    flex-grow: 2;
+    width: 75%;
+    max-width: calc(100% - 270px);
   }
-
-  .bp3-overlay {
-    position: relative !important;
-    height: 100vh;
-    top: 0;
-    left: 0;
-  }
+  //
+  // .bp3-overlay {
+  //   position: relative !important;
+  //   height: 100vh;
+  //   top: 0;
+  //   left: 0;
+  // }
 }

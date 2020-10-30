@@ -1,0 +1,9 @@
+@import "app/variables.scss";
+
+.SchemaCounts {
+  &.bp3-card {
+    background: none;
+    padding: $aleph-grid-size;
+    margin: $aleph-grid-size 7px;
+  }
+}
