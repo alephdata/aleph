@@ -4,7 +4,7 @@ from aleph.core import db
 from aleph.queues import get_stage, OP_XREF
 from aleph.index.entities import index_entity
 from aleph.logic import xref
-from aleph.tests.util import TestCase, get_caption
+from aleph.tests.util import TestCase, get_caption, JSON
 
 
 class XrefApiTestCase(TestCase):
@@ -159,7 +159,7 @@ class XrefApiTestCase(TestCase):
             xref_url,
             headers=headers,
             data=json.dumps({"decision": "positive"}),
-            content_type="application/json",
+            content_type=JSON,
         )
         assert res.status_code == 204, res.json
 
@@ -174,7 +174,7 @@ class XrefApiTestCase(TestCase):
             xref_url,
             headers=headers,
             data=json.dumps({"decision": "negative"}),
-            content_type="application/json",
+            content_type=JSON,
         )
         assert res.status_code == 204, res.json
 

@@ -26,7 +26,6 @@ class AuthzTestCase(TestCase):
         assert len(authz.roles) == 1, authz.roles
 
     def test_user(self):
-        print("XXXXX", self.user.type, self.user.is_blocked)
         authz = Authz.from_role(self.user)
         assert authz.logged_in is True, authz
         assert authz.is_admin is False, authz.is_admin

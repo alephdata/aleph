@@ -1,9 +1,6 @@
 from datetime import datetime, timedelta
 
-from aleph.logic.export import (
-    create_export,
-    complete_export,
-)
+from aleph.logic.export import create_export, complete_export
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
 
