@@ -189,10 +189,9 @@ export function selectEntityReferences(state, entityId) {
 
 export function selectEntityReference(state, entityId, qname) {
   const references = selectEntityReferences(state, entityId);
-  if (!references.total) {
-    return undefined;
+  if (references?.results?.length) {
+    return references.results.find(ref => ref.property.qname === qname);
   }
-  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectNotificationsResult(state, query) {
@@ -245,7 +244,7 @@ export function selectEntityView(state, entityId, mode, isPreview) {
     return 'info';
   }
   const references = selectEntityReferences(state, entityId);
-  if (references.total) {
+  if (references?.results?.length) {
     return references.results[0].property.qname;
   }
   return undefined;

@@ -135,7 +135,9 @@ class TestCase(unittest.TestCase):
         return collection
 
     def create_entity(self, data, collection):
-        return Entity.create(data, collection)
+        entity = Entity.create(data, collection)
+        entity.collection = collection
+        return entity
 
     def grant(self, collection, role, read, write):
         Permission.grant(collection, role, read, write)
