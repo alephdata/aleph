@@ -213,7 +213,7 @@ class EntitySerializer(Serializer):
 
         links = {
             "self": url_for("entities_api.view", entity_id=pk),
-            "references": url_for("entities_api.references", entity_id=pk),
+            "expand": url_for("entities_api.expand", entity_id=pk),
             "tags": url_for("entities_api.tags", entity_id=pk),
             "ui": entity_url(pk),
         }

@@ -114,22 +114,6 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     refresh_entity(collection, entity_id)
 
 
-def entity_references(entity, authz=None):
-    """Given a particular entity, find all the references to it from other
-    entities, grouped by the property where they are used."""
-    proxy = model.get_proxy(entity)
-    node = Node.from_proxy(proxy)
-    graph = Graph()
-    query = graph.query(authz=authz)
-    for prop in proxy.schema.properties.values():
-        if not prop.stub:
-            continue
-        query.edge(node, prop.reverse, count=True)
-    for res in query.execute():
-        if res.count > 0:
-            yield (res.prop, res.count)
-
-
 def entity_tags(entity, authz=None, edge_types=registry.pivots):
     """Do a search on tags of an entity."""
     proxy = model.get_proxy(entity)

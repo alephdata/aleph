@@ -11,7 +11,7 @@ from aleph.core import db, url_for
 from aleph.search import EntitiesQuery, MatchQuery, DatabaseQueryResult
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
-from aleph.logic.entities import entity_references, entity_tags, entity_expand
+from aleph.logic.entities import entity_tags, entity_expand
 from aleph.logic.entities import validate_entity, check_write_entity
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
@@ -335,47 +335,6 @@ def similar(entity_id):
     entity = model.get_proxy(entity)
     result = MatchQuery.handle(request, entity=entity)
     return EntitySerializer.jsonify_result(result)
-
-
-@blueprint.route("/api/2/entities/<entity_id>/references", methods=["GET"])
-def references(entity_id):
-    """
-    ---
-    get:
-      summary: Get entity references
-      description: >-
-        Get the schema-wise aggregation of references to the entity with id
-        `entity_id`. This can be used to find and display adjacent entities.
-      parameters:
-      - in: path
-        name: entity_id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                allOf:
-                - $ref: '#/components/schemas/QueryResponse'
-                properties:
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/EntityReference'
-      tags:
-      - Entity
-    """
-    enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ)
-    tag_request(collection_id=entity.get("collection_id"))
-    results = []
-    for prop, total in entity_references(entity, request.authz):
-        results.append({"count": total, "property": prop, "schema": prop.schema.name})
-    return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
 @blueprint.route("/api/2/entities/<entity_id>/tags", methods=["GET"])

@@ -31,6 +31,7 @@ APP_NAME = "aleph-test"
 UI_URL = "http://aleph.ui/"
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
 DB_URI = settings.DATABASE_URI + "_test"
+JSON = "application/json"
 
 
 def read_entities(file_name):

@@ -8,7 +8,7 @@ from followthemoney.types import registry
 from aleph.core import db
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
-from aleph.tests.util import TestCase, get_caption
+from aleph.tests.util import TestCase, get_caption, JSON
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +20,10 @@ class EntitiesApiTestCase(TestCase):
         self.col = self.create_collection()
         book = {
             "schema": "PlainText",
-            "properties": {"name": "The Book", "fileName": "book.txt",},
+            "properties": {
+                "name": "The Book",
+                "fileName": "book.txt",
+            },
         }
         self.book = self.create_entity(book, self.col)
         self.book_id = self.col.ns.sign(self.book.id)
@@ -104,7 +107,7 @@ class EntitiesApiTestCase(TestCase):
         data = res.json
         data["properties"]["name"] = ["Winne the little Shit"]
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.json
         validate(res.json, "Entity")
@@ -115,7 +118,7 @@ class EntitiesApiTestCase(TestCase):
             url + "?validate=true",
             data=json.dumps(data),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         assert res.status_code == 400, res.json
 
@@ -131,7 +134,7 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.json
         assert "middle" in res.json["properties"]["summary"][0], res.json
@@ -149,7 +152,7 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.json
         assert res.json["collection"]["id"] == self.col_id, res.json
@@ -168,7 +171,7 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.json
         assert 2 == len(res.json["properties"].get("alias", [])), res.json
@@ -185,7 +188,7 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
@@ -193,7 +196,7 @@ class EntitiesApiTestCase(TestCase):
         assert 1 == len(data["properties"]["alias"]), data
         url = "/api/2/entities/%s" % data["id"]
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, (res.status_code, res.json)
         assert 1 == len(res.json["properties"].get("alias")), res.json
@@ -203,11 +206,13 @@ class EntitiesApiTestCase(TestCase):
         url = "/api/2/entities"
         data = {
             "schema": "Person",
-            "properties": {"name": "Osama bin Laden",},
+            "properties": {
+                "name": "Osama bin Laden",
+            },
             "collection_id": self.col_id,
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
@@ -226,7 +231,7 @@ class EntitiesApiTestCase(TestCase):
             "properties": {"name": "Osama bin Laden"},
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         data = {
             "schema": "Person",
@@ -234,7 +239,7 @@ class EntitiesApiTestCase(TestCase):
             "properties": {"name": "Osama bin Laden"},
         }
         obj = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         url = "/api/2/entities/%s/similar" % obj.json["id"]
         similar = self.client.get(url, headers=headers)
@@ -253,20 +258,27 @@ class EntitiesApiTestCase(TestCase):
         data = {
             "schema": "Person",
             "collection_id": self.col_id,
-            "properties": {"name": "Osama bin Laden",},
+            "properties": {
+                "name": "Osama bin Laden",
+            },
         }
         res = self.client.post(
             "/api/2/entities",
             data=json.dumps(data),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
-        data = {"schema": "Person", "properties": {"name": "Osama bin Laden",}}
+        data = {
+            "schema": "Person",
+            "properties": {
+                "name": "Osama bin Laden",
+            },
+        }
         matches = self.client.post(
             "/api/2/match",
             data=json.dumps(data),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         assert matches.status_code == 200, (matches.status_code, matches.json)
         data = matches.json
@@ -274,17 +286,6 @@ class EntitiesApiTestCase(TestCase):
         assert "Laden" in get_caption(data["results"][0]), data
         assert b"Pooh" not in res.data, res.data
         validate(data["results"][0], "Entity")
-
-    def test_entity_references(self):
-        _, headers = self.login(is_admin=True)
-        url = "/api/2/entities/%s/references" % self.book_id
-        res = self.client.get(url)
-        assert res.status_code == 403, res.status_code
-        res = self.client.get(url, headers=headers)
-        results = res.json["results"]
-        assert len(results) == 1, results
-        assert results[0]["count"] == 2, results
-        validate(res.json["results"][0], "EntityReference")
 
     def test_entity_tags(self):
         _, headers = self.login(is_admin=True)
@@ -298,7 +299,7 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         resa = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         data = {
             "schema": "Person",
@@ -309,7 +310,7 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         resa = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         url = "/api/2/entities/%s/tags" % resa.json["id"]
         res = self.client.get(url, headers=headers)
@@ -324,11 +325,13 @@ class EntitiesApiTestCase(TestCase):
         url = "/api/2/entities"
         data = {
             "schema": "Person",
-            "properties": {"name": "Mr. Mango",},
+            "properties": {
+                "name": "Mr. Mango",
+            },
             "collection_id": self.col_id,
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, (res.status_code, res.json)
         id1 = res.json["id"]
@@ -343,11 +346,14 @@ class EntitiesApiTestCase(TestCase):
         url = "/api/2/entities/%s" % id1
         data = {
             "schema": "Person",
-            "properties": {"name": "Mr. Mango", "status": "ripe",},
+            "properties": {
+                "name": "Mr. Mango",
+                "status": "ripe",
+            },
             "collection_id": self.col_id,
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.status_code
         validate(res.json, "Entity")
@@ -371,28 +377,30 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.status_code
         validate(res.json, "Entity")
         assert res.json["properties"]["name"] == ["Mr. Mango"], res.json
         assert res.json["properties"]["status"] == ["ripe"], res.json
-        assert res.json["properties"]["email"] == ["mango@mango.yum"], res.json  # noqa
+        assert res.json["properties"]["email"] == ["mango@mango.yum"], res.json
 
         # test create entity with undelete
         id2 = "randomid"
         url = "/api/2/entities/%s" % id2
         data = {
             "schema": "Person",
-            "properties": {"name": "Mr. Banana",},
+            "properties": {
+                "name": "Mr. Banana",
+            },
         }
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 404, res.status_code
         data["collection_id"] = self.col_id
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.status_code
         validate(res.json, "Entity")
@@ -402,11 +410,13 @@ class EntitiesApiTestCase(TestCase):
     def test_recursive_delete(self):
         _, headers = self.login(is_admin=True)
         url = "/api/2/entities"
-        headers["Content-Type"] = "application/json"
+        headers["Content-Type"] = JSON
         data1 = json.dumps(
             {
                 "schema": "Person",
-                "properties": {"name": "Osama bin Laden",},
+                "properties": {
+                    "name": "Osama bin Laden",
+                },
                 "collection_id": self.col_id,
             }
         )
@@ -415,7 +425,9 @@ class EntitiesApiTestCase(TestCase):
         data2 = json.dumps(
             {
                 "schema": "Organization",
-                "properties": {"name": "Al-Qaeda",},
+                "properties": {
+                    "name": "Al-Qaeda",
+                },
                 "collection_id": self.col_id,
             }
         )
@@ -469,16 +481,12 @@ class EntitiesApiTestCase(TestCase):
     def test_sort_by_date(self):
         _, headers = self.login(is_admin=True)
         url = "/api/2/entities?filter:schemata=Thing&sort=dates%3Aasc"
-        res = self.client.get(
-            url, headers=headers, content_type="application/json"
-        )  # noqa
+        res = self.client.get(url, headers=headers, content_type=JSON)
         assert res.json["results"][0]["id"] == self.ent.id, res.json
         assert res.json["results"][1]["id"] == self.ent2.id, res.json
         assert res.json["results"][2]["id"] == self.book.id, res.json
         url = "/api/2/entities?filter:schemata=Thing&sort=dates%3Adesc"
-        res = self.client.get(
-            url, headers=headers, content_type="application/json"
-        )  # noqa
+        res = self.client.get(url, headers=headers, content_type=JSON)
         assert res.json["results"][0]["id"] == self.ent2.id, res.json
         assert res.json["results"][1]["id"] == self.ent.id, res.json
         assert res.json["results"][2]["id"] == self.book.id, res.json
@@ -497,37 +505,46 @@ class EntitiesApiTestCase(TestCase):
             },
         }
         person1 = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         data = {
             "schema": "Passport",
             "collection_id": self.col_id,
-            "properties": {"passportNumber": "A1B2C3", "holder": person1.json["id"],},
+            "properties": {
+                "passportNumber": "A1B2C3",
+                "holder": person1.json["id"],
+            },
         }
         passport = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
 
         col2 = self.create_collection()
         data = {
             "schema": "Person",
             "collection_id": str(col2.id),
-            "properties": {"name": "John Doe", "email": "osama@al-qaeda.org",},
+            "properties": {
+                "name": "John Doe",
+                "email": "osama@al-qaeda.org",
+            },
         }
         person1_in_other_collection = self.client.post(  # noqa
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
 
         data = {
             "schema": "Person",
             "collection_id": self.col_id,
-            "properties": {"name": "Undercover Osama", "email": "osama@al-qaeda.org",},
+            "properties": {
+                "name": "Undercover Osama",
+                "email": "osama@al-qaeda.org",
+            },
         }
-        person2 = self.client.post(
-            url,  # noqa
+        self.client.post(
+            url,
             data=json.dumps(data),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
 
         data = {
@@ -539,49 +556,57 @@ class EntitiesApiTestCase(TestCase):
                 "nationality": "sa",
             },
         }
-        person3 = self.client.post(
-            url,  # noqa
+        self.client.post(
+            url,
             data=json.dumps(data),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         data = {
             "schema": "Person",
             "collection_id": self.col_id,
-            "properties": {"name": "Dead Guy 1", "status": "dead",},
+            "properties": {
+                "name": "Dead Guy 1",
+                "status": "dead",
+            },
         }
-        person3 = self.client.post(
-            url,  # noqa
+        self.client.post(
+            url,
             data=json.dumps(data),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         data = {
             "schema": "Company",
             "collection_id": self.col_id,
-            "properties": {"name": "Al-Qaeda",},
+            "properties": {
+                "name": "Al-Qaeda",
+            },
         }
         company1 = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         data = {
             "schema": "Ownership",
             "collection_id": self.col_id,
-            "properties": {"owner": person1.json["id"], "asset": company1.json["id"],},
+            "properties": {
+                "owner": person1.json["id"],
+                "asset": company1.json["id"],
+            },
         }
-        ownership1 = self.client.post(
-            url,  # noqa
+        self.client.post(
+            url,
             data=json.dumps(data),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
 
-        query_string = "&".join("edge_types=" + t.name for t in registry.pivots)  # noqa
+        query_string = "&".join("edge_types=" + t.name for t in registry.pivots)
 
         url = "/api/2/entities/%s/expand?%s&limit=0" % (
             person1.json["id"],
             query_string,
-        )  # noqa
+        )
         stats = self.client.get(url, headers=headers)
         assert stats.status_code == 200, (stats.status_code, stats.json)
         validate(stats.json, "QueryResponse")
@@ -631,9 +656,7 @@ class EntitiesApiTestCase(TestCase):
                 assert res["count"] == 1
                 assert res["entities"][0]["schema"] == "Passport", res
 
-        url = "/api/2/entities/%s/expand?edge_types=entity" % (
-            company1.json["id"]
-        )  # noqa
+        url = "/api/2/entities/%s/expand?edge_types=entity" % (company1.json["id"])
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, "EntityExpand")
