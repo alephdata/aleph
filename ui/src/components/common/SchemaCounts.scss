@@ -1,9 +1,15 @@
 @import "app/variables.scss";
 
 .SchemaCounts {
-  &.bp3-card {
-    background: none;
-    padding: $aleph-grid-size;
-    margin: $aleph-grid-size 7px;
+  // padding: $aleph-grid-size;
+  border-radius: $aleph-border-radius;
+  border: 1px solid $aleph-border-color;
+
+  .collapsed & {
+
+  }
+
+  .bp3-divider {
+    border-bottom: 1px dashed $aleph-border-color;
   }
 }

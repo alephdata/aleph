@@ -11,8 +11,6 @@
   &.collapsed {
     padding: $aleph-grid-size/2;
     min-width: auto;
-    // width: 35px;
-    // overflow-x: hidden;
 
     .InvestigationSidebar__section__title {
       // visibility: hidden;
@@ -25,10 +23,9 @@
     margin: 0;
   }
 
-  // &__content {
-  //   padding: 10px;
-  //   background: white;
-  // }
+  .SchemaCounts {
+    margin-bottom: $aleph-grid-size;
+  }
 
   &__collapse-toggle.bp3-button {
     position: absolute !important;
@@ -47,12 +44,12 @@
       color: $blue1;
     }
 
-    &__menu {
-      margin: 0 -1*$aleph-grid-size;
-
-      .collapsed & {
-        margin: 0;
-      }
-    }
+    // &__menu__item {
+    //   margin: 0 -1*$aleph-grid-size;
+    //
+    //   .collapsed & {
+    //     margin: 0;
+    //   }
+    // }
   }
 }

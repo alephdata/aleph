@@ -52,7 +52,6 @@ class SchemaCounts extends React.PureComponent {
             id={schema}
             key={schema}
             icon={<Schema.Icon schema={schema} />}
-            className="SchemaCounts"
             onClick={() => onSelect(schema)}
             alignText={Alignment.LEFT}
             rightIcon={!isCollapsed && <Count count={visibleCounts[schema]} isPending={isPending} />}

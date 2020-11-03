@@ -133,6 +133,7 @@ class InvestigationSidebar extends React.Component {
                   rightIcon={!isCollapsed && rightIcon}
                   active={activeMode === id}
                   alignText={Alignment.LEFT}
+                  className="InvestigationSidebar__section__menu__item"
                 />
               </Tooltip>
             ))}
@@ -161,6 +162,7 @@ class InvestigationSidebar extends React.Component {
                   rightIcon={!isCollapsed && rightIcon}
                   active={activeMode === id}
                   alignText={Alignment.LEFT}
+                  className="InvestigationSidebar__section__menu__item"
                 />
               </Tooltip>
             ))}
