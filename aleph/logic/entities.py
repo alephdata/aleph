@@ -144,10 +144,18 @@ def entity_tags(entity, authz=None, edge_types=registry.pivots):
         nodes.add(Node(prop.type, value))
     for node in nodes:
         query.node(node, count=True)
+    results = []
     for res in query.execute():
-        field = res.node.type.group
         if res.count is not None and res.count > 1:
-            yield (field, res.node.value, res.count)
+            item = {
+                "id": res.node.id,
+                "field": res.node.type.group,
+                "value": res.node.value,
+                "count": res.count,
+            }
+            results.append(item)
+    results.sort(key=lambda p: p["count"], reverse=True)
+    return results
 
 
 def entity_expand(

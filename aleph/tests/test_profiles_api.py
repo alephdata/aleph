@@ -27,6 +27,7 @@ class ProfilesApiTestCase(TestCase):
             "properties": {
                 "name": "Donald Trump",
                 "address": "721 Fifth Avenue, New York, NY",
+                "phone": "+12024561414",
             },
         }
         self.ent1 = self.create_entity(ent1, self.col1)
@@ -40,6 +41,7 @@ class ProfilesApiTestCase(TestCase):
             "properties": {
                 "name": "Donald J. Trump",
                 "position": "45th President of the US",
+                "phone": "+12024561414",
             },
         }
         self.ent2 = self.create_entity(ent2, self.col2)
@@ -80,3 +82,13 @@ class ProfilesApiTestCase(TestCase):
         assert not merged.has("email"), merged.to_dict()
         assert not merged.has("birthDate"), merged.to_dict()
         assert len(res.json.get("items")) == 3, res.json.get("items")
+
+    def test_profile_tags(self):
+        url = "/api/2/profiles/%s/tags" % self.profile.id
+        res = self.client.get(url)
+        assert res.status_code == 404, res.json
+        _, headers = self.login(foreign_id="rolex")
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.json
+        assert res.json["total"] == 1, res.json
+        assert res.json["results"][0]["field"] == "phones", res.json

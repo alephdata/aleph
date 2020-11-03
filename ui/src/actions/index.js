@@ -51,6 +51,7 @@ export {
 } from './entitySetActions';
 export {
   fetchProfile,
+  fetchProfileTags,
 } from './profileActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';

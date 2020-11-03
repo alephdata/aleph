@@ -64,6 +64,7 @@ def get_profile(entityset_id, authz=None):
         item["entity"] = resolver.get(stub, Entity, item.get("entity_id"))
         if item["entity"] is not None:
             proxy = model.get_proxy(item["entity"])
+            proxy.context = {}
             if merged is None:
                 merged = proxy
                 merged.context["entities"] = [proxy.id]

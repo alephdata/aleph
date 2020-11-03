@@ -1,6 +1,4 @@
 import logging
-from urllib.parse import quote
-from urlnormalizer import query_string
 from flask import Blueprint, request
 from flask_babel import gettext
 from werkzeug.exceptions import NotFound
@@ -344,8 +342,7 @@ def tags(entity_id):
     get:
       summary: Get entity tags
       description: >-
-        Get tags for the entity with id `entity_id`. Tags include the query
-        string to make a search by that particular tag.
+        Get tags for the entity with id `entity_id`.
       parameters:
       - in: path
         name: entity_id
@@ -372,13 +369,7 @@ def tags(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get("collection_id"))
-    results = []
-    for (field, value, total) in entity_tags(entity, request.authz):
-        qvalue = quote(value.encode("utf-8"))
-        key = ("filter:%s" % field, qvalue)
-        qid = query_string([key])
-        results.append({"id": qid, "value": value, "field": field, "count": total})
-    results.sort(key=lambda p: p["count"], reverse=True)
+    results = entity_tags(entity, request.authz)
     return jsonify({"status": "ok", "total": len(results), "results": results})
 
 

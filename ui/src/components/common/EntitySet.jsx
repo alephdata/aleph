@@ -10,7 +10,7 @@ import getEntitySetLink from 'util/getEntitySetLink';
 const ICONS = {
   diagram: 'graph',
   timeline: 'timeline-events',
-  profile: 'mugshot',
+  profile: 'book',
   list: 'list'
 }
 

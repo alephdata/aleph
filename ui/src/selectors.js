@@ -225,6 +225,10 @@ export function selectEntityTags(state, entityId) {
   return selectObject(state, state.entityTags, entityId);
 }
 
+export function selectProfileTags(state, profileId) {
+  return selectEntityTags(state, profileId);
+}
+
 export function selectExports(state) {
   return state.exports;
 }

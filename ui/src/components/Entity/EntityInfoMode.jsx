@@ -45,5 +45,4 @@ function EntityInfoMode(props) {
   );
 }
 
-
 export default EntityInfoMode;

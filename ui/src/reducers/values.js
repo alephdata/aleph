@@ -1,17 +1,20 @@
 import { createReducer } from 'redux-act';
 
-import { fetchEntityTags } from 'actions';
+import { fetchEntityTags, fetchProfileTags } from 'actions';
 
 const initialState = {};
 
+function updateState(state, { data }) {
+  const values = {};
+  data.results.forEach((res) => {
+    values[`${res.field}:${res.value}`] = res.count;
+  });
+  return { ...values, ...state };
+}
+
 export default createReducer({
 
-  [fetchEntityTags.COMPLETE]: (state, { data }) => {
-    const values = {};
-    data.results.forEach((res) => {
-      values[`${res.field}:${res.value}`] = res.count;
-    });
-    return { ...values, ...state };
-  },
+  [fetchEntityTags.COMPLETE]: updateState,
+  [fetchProfileTags.COMPLETE]: updateState,
 
 }, initialState);
