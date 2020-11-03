@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Classes, ButtonGroup, Button, Divider } from '@blueprintjs/core';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import { Count, ResultCount, SchemaCounts } from 'components/common';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
@@ -25,7 +26,7 @@ const messages = defineMessages({
     id: 'collection.info.lists',
     defaultMessage: 'Lists',
   },
-  browse: {
+  documents: {
     id: 'collection.info.browse',
     defaultMessage: 'Browse folders',
   },
@@ -68,79 +69,90 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref,
+      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = true,
       intl, schemaCounts
     } = this.props;
 
+    const entityTools = [
+      {
+        id: collectionViewIds.DIAGRAMS,
+        icon: 'graph',
+        rightIcon: <ResultCount result={diagrams} />
+      },
+      {
+        id: collectionViewIds.LISTS,
+        icon: 'list',
+        rightIcon: <ResultCount result={lists} />
+      },
+    ];
+    const docTools = [
+      {
+        id: collectionViewIds.DOCUMENTS,
+        icon: 'folder-open',
+      },
+      {
+        id: collectionViewIds.MAPPINGS,
+        icon: 'new-object',
+      },
+      {
+        id: collectionViewIds.MENTIONS,
+        icon: 'tag',
+      },
+    ];
+
     return (
-      <div className="InvestigationSidebar">
+      <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
         <CollectionHeading collection={collection} showDescription />
         <div className="InvestigationSidebar__section">
-          <Menu className="InvestigationSidebar__section__menu">
-            <li className="bp3-menu-header">
-              <h6 className="bp3-heading">
-                <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
-              </h6>
-            </li>
+          <h6 className="bp3-heading InvestigationSidebar__section__title">
+            <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
+          </h6>
+          <ButtonGroup vertical minimal className="InvestigationSidebar__section__menu">
             <SchemaCounts
               filterSchemata={schema => !schema.isDocument()}
               schemaCounts={schemaCounts}
               onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
               showSchemaAdd={collection.writeable}
               activeSchema={activeType}
+              isCollapsed={isCollapsed}
             />
-            <MenuItem
-              icon="graph"
-              text={intl.formatMessage(messages.diagrams)}
-              onClick={() => this.navigate(collectionViewIds.DIAGRAMS)}
-              labelElement={<ResultCount result={diagrams} />}
-              active={activeMode === collectionViewIds.DIAGRAMS}
-            />
-            <MenuItem
-              icon="list"
-              text={intl.formatMessage(messages.lists)}
-              onClick={() => this.navigate(collectionViewIds.LISTS)}
-              labelElement={<ResultCount result={lists} />}
-              active={activeMode === collectionViewIds.LISTS}
-            />
-          </Menu>
+            {entityTools.map(({ id, icon, rightIcon }) => (
+              <Button
+                key={id}
+                icon={icon}
+                text={!isCollapsed && intl.formatMessage(messages[id])}
+                onClick={() => this.navigate(id)}
+                rightIcon={!isCollapsed && rightIcon}
+                active={activeMode === id}
+              />
+            ))}
+          </ButtonGroup>
         </div>
         <div className="InvestigationSidebar__section">
-          <Menu className="InvestigationSidebar__section__menu">
-            <li className="bp3-menu-header">
-              <h6 className="bp3-heading">
-                <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
-              </h6>
-            </li>
+          <h6 className="bp3-heading InvestigationSidebar__section__title">
+            <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
+          </h6>
+          <ButtonGroup vertical minimal className="InvestigationSidebar__section__menu">
             <SchemaCounts
               filterSchemata={schema => schema.isDocument()}
               schemaCounts={schemaCounts}
               onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
               showSchemaAdd={false}
               activeSchema={activeType}
+              isCollapsed={isCollapsed}
             />
-            <MenuItem
-              icon="folder-open"
-              text={intl.formatMessage(messages.browse)}
-              onClick={() => this.navigate(collectionViewIds.DOCUMENTS)}
-              active={activeMode === collectionViewIds.DOCUMENTS}
-            />
-            <MenuItem
-              icon="new-object"
-              text={intl.formatMessage(messages.mappings)}
-              onClick={() => this.navigate()}
-              active={activeMode === ''}
-            />
-            <MenuItem
-              icon="tag"
-              text={intl.formatMessage(messages.mentions)}
-              onClick={() => this.navigate()}
-              active={activeMode === ''}
-            />
-          </Menu>
-
+            {docTools.map(({ id, icon, rightIcon }) => (
+              <Button
+                key={id}
+                icon={icon}
+                text={!isCollapsed && intl.formatMessage(messages[id])}
+                onClick={() => this.navigate(id)}
+                rightIcon={!isCollapsed && rightIcon}
+                active={activeMode === id}
+              />
+            ))}
+          </ButtonGroup>
         </div>
-        <CollectionManageMenu collection={collection} />
       </div>
     );
   }

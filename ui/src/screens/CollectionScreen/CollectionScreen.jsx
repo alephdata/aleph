@@ -67,7 +67,6 @@ export class CollectionScreen extends Component {
           activeMode={activeMode}
           isPreview={false}
         />
-
       </InvestigationWrapper>
     )
 

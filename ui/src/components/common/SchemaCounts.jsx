@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { Button, Card, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { ButtonGroup, Card, Divider, Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -39,51 +39,44 @@ class SchemaCounts extends React.PureComponent {
   }
 
   render() {
-    const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, isPending, onSelect, writeable } = this.props;
+    const { activeSchema, isCollapsed, visibleCounts, selectableSchemata, showSchemaAdd, intl, isPending, onSelect, writeable } = this.props;
 
     if (isPending && !activeSchema) {
       return <SectionLoading />
     }
 
     return (
-      <Card className="SchemaCounts">
+      <ButtonGroup vertical minimal className="SchemaCounts">
         {Object.keys(visibleCounts).map(schema => (
-          <MenuItem
+          <Button
             id={schema}
             key={schema}
+            icon={<Schema.Icon schema={schema} />}
             className="SchemaCounts"
             onClick={() => onSelect(schema)}
-            labelElement={<Count count={visibleCounts[schema]} isPending={isPending} />}
-            text={
+            rightIcon={!isCollapsed && <Count count={visibleCounts[schema]} isPending={isPending} />}
+            text={!isCollapsed && (
               <>
                 {isPending && <Skeleton.Text type="span" length={15} />}
-                {!isPending && <Schema.Label schema={schema} plural icon />}
+                {!isPending && <Schema.Label schema={schema} plural />}
               </>
-            }
+            )}
             active={activeSchema === schema}
           />
         ))}
-        {_.size(visibleCounts) > 0 && showSchemaAdd && <MenuDivider />}
+        {_.size(visibleCounts) > 0 && showSchemaAdd && <Divider />}
         {showSchemaAdd && (
-          <MenuItem
-            id="new"
-            key="new"
-            disabled
-            className="SchemaCount schema-add-tab"
-            text={
-              <Schema.Select
-                onSelect={this.handleTabChange}
-                optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
-              >
-                <Button
-                  icon="plus"
-                  text={intl.formatMessage(messages.addSchemaPlaceholder)}
-                />
-              </Schema.Select>
-            }
-          />
+          <Schema.Select
+            onSelect={this.handleTabChange}
+            optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
+          >
+            <Button
+              icon="plus"
+              text={!isCollapsed && intl.formatMessage(messages.addSchemaPlaceholder)}
+            />
+          </Schema.Select>
         )}
-      </Card>
+      </ButtonGroup>
     );
   }
 }

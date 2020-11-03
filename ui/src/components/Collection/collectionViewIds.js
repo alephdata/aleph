@@ -5,6 +5,8 @@ const viewIds = {
   XREF: 'xref',
   DIAGRAMS: 'diagrams',
   LISTS: 'lists',
+  MAPPINGS: 'mappings',
+  MENTIONS: 'mentions',
 };
 
 export default viewIds;

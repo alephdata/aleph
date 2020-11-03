@@ -27,9 +27,9 @@ class CollectionHeading extends PureComponent {
             <Category.Label category={collection.category} />
           </span>
         )}
-        <h1 itemProp="name" className="CollectionHeading__title">
+        <h2 itemProp="name" className="CollectionHeading__title">
           {collection.label}
-        </h1>
+        </h2>
         {showDescription && collection.summary !== null && (
           <p className="CollectionHeading__description">
             {collection.summary}
