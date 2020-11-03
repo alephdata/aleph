@@ -132,8 +132,10 @@ export class MappingEditor extends Component {
   }
 
   render() {
-    const { document, existingMappingMetadata, csvData, csvHeader, intl } = this.props;
+    const { document, existingMappingMetadata, csvData, csvHeader, intl, mappingData } = this.props;
     const { entitySet, mappings } = this.state;
+
+    const showPropertySections = mappings.getMappingsCount() > 0;
 
     return (
       <>
@@ -170,7 +172,7 @@ export class MappingEditor extends Component {
                 ))}
               />
             </div>
-            {mappings.getMappingsCount() > 0 && (
+            {showPropertySections && (
               <>
                 <div className="MappingEditor__section">
                   <h5 className="bp3-heading MappingEditor__section__title">
@@ -246,16 +248,17 @@ export class MappingEditor extends Component {
                     </Button>
                   )}
                 </div>
-                <div className="MappingEditor__section">
-                  <MappingManageMenu
-                    mappings={mappings}
-                    entitySet={entitySet}
-                    document={document}
-                    existingMappingMetadata={existingMappingMetadata}
-                  />
-                </div>
               </>
             )}
+            <div className="MappingEditor__section">
+              <MappingManageMenu
+                mappings={mappings}
+                isEmpty={mappings.getMappingsCount() === 0}
+                entitySet={entitySet}
+                document={document}
+                existingMappingMetadata={existingMappingMetadata}
+              />
+            </div>
           </div>
         </div>
         <EntitySetSelector

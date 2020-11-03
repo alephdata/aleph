@@ -239,7 +239,7 @@ class MappingList {
   }
 
   clone() {
-    return MappingList.fromData(this.model, this.mappingItems);
+    return MappingList.fromApiFormat(this.model, this.mappingItems);
   }
 
   toApiFormat() {
