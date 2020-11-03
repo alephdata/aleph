@@ -116,6 +116,8 @@ class NotificationsQuery(Query):
 
 
 class EntitySetItemsQuery(EntitiesQuery):
+    SKIP_FILTERS = []
+
     def __init__(self, *args, **kwargs):
         self.entityset = kwargs.pop("entityset")
         super(EntitySetItemsQuery, self).__init__(*args, **kwargs)
@@ -124,3 +126,6 @@ class EntitySetItemsQuery(EntitiesQuery):
         filters = super(EntitySetItemsQuery, self).get_filters(**kwargs)
         filters.append({"ids": {"values": self.entityset.entities}})
         return filters
+
+    def get_index(self):
+        return entities_read_index()
