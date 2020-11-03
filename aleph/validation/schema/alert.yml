@@ -10,7 +10,7 @@ AlertCreate:
 Alert:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     normalized:
       type: string

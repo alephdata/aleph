@@ -1,4 +1,3 @@
-
 DiagramVertex:
   type: object
   properties:
@@ -72,19 +71,19 @@ DiagramLayout:
       items:
         type: object
         allOf:
-          - $ref: '#/components/schemas/DiagramVertex'
+          - $ref: "#/components/schemas/DiagramVertex"
     edges:
       type: array
       items:
         type: object
         allOf:
-          - $ref: '#/components/schemas/DiagramEdge'
+          - $ref: "#/components/schemas/DiagramEdge"
     groupings:
       type: array
       items:
         type: object
         allOf:
-          - $ref: '#/components/schemas/DiagramGrouping'
+          - $ref: "#/components/schemas/DiagramGrouping"
     settings:
       type: object
       properties:
