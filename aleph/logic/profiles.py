@@ -1,3 +1,18 @@
+"""
+Profiles are a type of entity set that expresses the notion that several entities
+(often from different collections) refer to the same real-world thing.
+
+A special case exists where an entity is positively associated with a profle in
+its own collection: this then becomes its "primary" profile. This means that an
+entity can only be positively linked to one profile in its own collection, adding
+it to a second would merge both profiles.
+
+In the UI, a primary profile is shown instead of the original entity whereever
+available. In order to render profiles in a view similar to entities, some of the
+APIs designed for entities have to be re-implemented for profiles.
+
+Outside of its own collection, any entity can be linked to any number of profiles.
+"""
 import logging
 from sqlalchemy.orm import aliased
 from followthemoney import model
