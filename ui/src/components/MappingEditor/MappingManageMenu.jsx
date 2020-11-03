@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import { AnchorButton, Button, ButtonGroup, Intent, Tooltip } from '@blueprintjs/core';
 import YAML from 'yaml';
 
 import { showErrorToast, showInfoToast } from 'app/toast';
@@ -39,6 +39,10 @@ const messages = defineMessages({
   relationshipError: {
     id: 'mapping.error.relationshipMissing',
     defaultMessage: 'Relationship Error: {id} entity must have a {source} and {target} assigned',
+  },
+  emptyWarning: {
+    id: 'mapping.warning.empty',
+    defaultMessage: 'You must create at least one entity',
   },
 });
 
@@ -173,7 +177,7 @@ class MappingManageMenu extends Component {
   }
 
   render() {
-    const { existingMappingMetadata } = this.props;
+    const { existingMappingMetadata, intl, isEmpty} = this.props;
     const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
 
     const hasExisting = existingMappingMetadata?.id !== undefined;
@@ -188,9 +192,11 @@ class MappingManageMenu extends Component {
           )}
           {hasExisting && (
             <>
-              <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
-                <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
-              </Button>
+              <Tooltip content={intl.formatMessage(messages.emptyWarning)} disabled={!isEmpty}>
+                <AnchorButton icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave} disabled={isEmpty}>
+                  <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
+                </AnchorButton>
+              </Tooltip>
               <Button icon="export" onClick={this.exportMappingData}>
                 <FormattedMessage id="mapping.actions.export" defaultMessage="Export mapping" />
               </Button>
