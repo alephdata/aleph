@@ -49,6 +49,9 @@ export {
   queryEntitySetEntities,
   updateEntitySet,
 } from './entitySetActions';
+export {
+  fetchProfile,
+} from './profileActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';

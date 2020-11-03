@@ -8,7 +8,7 @@ export const queryEntitySetEntities = asyncActionCreator(query => async () => qu
 
 export const fetchEntitySet = asyncActionCreator((entitySetId) => async () => {
   const response = await endpoint.get(`entitysets/${entitySetId}`);
-  return { entitySetId, data: response.data };
+  return { id: entitySetId, data: response.data };
 }, { name: 'FETCH_ENTITYSET' });
 
 const createEntitySet = (entitySet) => async () => {
@@ -42,8 +42,8 @@ export const entitySetAddEntity = asyncActionCreator(({ entity, entitySetId, syn
 }, { name: 'CREATE_ENTITY' });
 
 export const entitySetDeleteEntity = asyncActionCreator(({ entityId, entitySetId }) => async () => {
-  const config = { params: { sync: true }};
-  const payload = {"entity_id": entityId, "judgement": "no_judgement"};
+  const config = { params: { sync: true } };
+  const payload = { "entity_id": entityId, "judgement": "no_judgement" };
   await endpoint.post(`entitysets/${entitySetId}/items`, payload, config);
   return { id: entityId };
 }, { name: 'DELETE_ENTITY' });

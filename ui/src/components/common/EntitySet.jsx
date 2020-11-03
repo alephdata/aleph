@@ -10,12 +10,13 @@ import getEntitySetLink from 'util/getEntitySetLink';
 const ICONS = {
   diagram: 'graph',
   timeline: 'timeline-events',
+  profile: 'mugshot',
   list: 'list'
 }
 
 const getIcon = ({ type }) => ICONS[type] || ICONS.list;
 
-const EntitySetIcon = ({entitySet, className}) => {
+const EntitySetIcon = ({ entitySet, className }) => {
   if (!entitySet) return null;
 
   return (
@@ -25,7 +26,7 @@ const EntitySetIcon = ({entitySet, className}) => {
 
 class EntitySetLabel extends PureComponent {
   render() {
-    const { entitySet, icon, truncate } = this.props;
+    const { entitySet, icon, truncate, className } = this.props;
     if (!entitySet || !entitySet.id) {
       return null;
     }
@@ -36,7 +37,7 @@ class EntitySetLabel extends PureComponent {
     }
 
     return (
-      <span className="EntitySetLabel" title={entitySet.label}>
+      <span className={c('EntitySetLabel', className)} title={entitySet.label}>
         {icon && <EntitySetIcon entitySet={entitySet} className="left-icon" />}
         <span>{text}</span>
       </span>
@@ -54,7 +55,7 @@ class EntitySetLink extends PureComponent {
 }
 
 class EntitySetSelect extends PureComponent {
-  itemRenderer = (entitySet, {handleClick}) => {
+  itemRenderer = (entitySet, { handleClick }) => {
     return (
       <MenuItem
         key={entitySet.id}

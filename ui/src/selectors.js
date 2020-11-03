@@ -140,12 +140,22 @@ export function selectEntity(state, entityId) {
   result.collection = entity.collection;
   result.highlight = entity.highlight;
   result.latinized = entity.latinized;
+  result.profileId = entity.profile_id
 
   return result;
 }
 
 export function selectEntitySet(state, entitySetId) {
   return selectObject(state, state.entitySets, entitySetId);
+}
+
+export function selectProfile(state, entitySetId) {
+  const profile = selectObject(state, state.entitySets, entitySetId);
+  if (profile?.merged?.id && profile?.merged?.schema) {
+    const model = selectModel(state);
+    profile.merged = model.getEntity(profile.merged);
+  }
+  return profile;
 }
 
 export function selectDocumentContent(state, documentId) {
