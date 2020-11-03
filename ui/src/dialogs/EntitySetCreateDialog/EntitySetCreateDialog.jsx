@@ -275,7 +275,7 @@ class EntitySetCreateDialog extends Component {
                             <FormattedMessage
                               id='entity.manager.bulk_import.link_text'
                               defaultMessage={
-                                `Create a new personal dataset`
+                                `Create a new investigation`
                               }
                             />
                           </a>

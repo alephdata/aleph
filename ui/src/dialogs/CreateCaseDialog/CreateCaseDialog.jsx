@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'case.title',
-    defaultMessage: 'Create a personal dataset',
+    defaultMessage: 'Create an investigation',
   },
 });
 

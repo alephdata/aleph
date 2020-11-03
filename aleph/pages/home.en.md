@@ -40,7 +40,7 @@ samples: ["Vladimir Putin", "TeliaSonera"]
     <div className="HomeScreen__feature-block">
       <div className="HomeScreen__feature-block__content">
         <img src="/static/home_networks.svg" />
-        <p><b>Sketch out the defining connections</b> of your project in a personal dataset to keep track of your story as it develops.</p>
+        <p><b>Sketch out the defining connections</b> of your project in an investigation to keep track of your story as it develops.</p>
       </div>
     </div>
     <div className="HomeScreen__feature-block">

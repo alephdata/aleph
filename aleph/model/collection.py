@@ -41,7 +41,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         "customs": lazy_gettext("Customs declarations"),
         "census": lazy_gettext("Population census"),
         "transport": lazy_gettext("Air and maritime registers"),
-        "casefile": lazy_gettext("Personal datasets"),
+        "casefile": lazy_gettext("Investigations"),
         "other": lazy_gettext("Other material"),
     }
     CASEFILE = "casefile"
