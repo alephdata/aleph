@@ -6,10 +6,12 @@ from followthemoney.helpers import name_entity
 from aleph.core import db, cache
 from aleph.logic.entitysets import get_entityset
 from aleph.logic import resolver
+from aleph.logic.entitysets import save_entityset_item
 from aleph.model import Collection, Entity, EntitySet, EntitySetItem, Judgement
 from aleph.util import PairwiseDict, Stub
 
 log = logging.getLogger(__name__)
+ORIGIN = "profile"
 
 
 def get_profile(entityset_id, authz=None):
@@ -65,8 +67,20 @@ def get_profile(entityset_id, authz=None):
     return data
 
 
-def generate_profile_fragments(collection, entity_id=None):
-    pass
+def profile_fragments(collection, aggregator, entity_id=None):
+    """In order to make the profile_id visible on entities in a collection,
+    we generate stub entities in the FtM store that contain only a context.
+    """
+    aggregator.delete(origin=ORIGIN)
+    writer = aggregator.bulk()
+    profile_id = None
+    for (profile_id, entity_id) in EntitySet.all_profiles(
+        collection.id, entity_id=entity_id
+    ):
+        data = {"id": entity_id, "schema": Entity.THING, "profile_id": profile_id}
+        writer.put(model.get_proxy(data), origin=ORIGIN)
+    writer.flush()
+    return profile_id
 
 
 def collection_profiles(collection_id, judgements=None, deleted=False):
@@ -118,19 +132,19 @@ def decide_xref(xref, judgement, authz):
     if profile is None:
         data = {"type": EntitySet.PROFILE, "label": "profile"}
         profile = EntitySet.create(data, collection, authz)
-    item = EntitySetItem.save(
+    item = save_entityset_item(
         profile,
+        collection,
         entity_id,
-        collection.id,
         judgement=Judgement.POSITIVE,
         added_by_id=authz.id,
     )
     match_id = xref.get("match_id")
-    match_collection_id = xref.get("match_collection_id")
-    item = EntitySetItem.save(
-        item.entityset,
+    match_collection = Collection.by_id(xref.get("match_collection_id"))
+    item = save_entityset_item(
+        profile,
+        match_collection,
         match_id,
-        match_collection_id,
         judgement=judgement,
         compared_to_entity_id=entity_id,
         added_by_id=authz.id,

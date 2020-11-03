@@ -4,9 +4,10 @@ from flask import Blueprint, request
 from werkzeug.exceptions import NotFound
 
 from aleph.core import db
-from aleph.model import EntitySet, EntitySetItem
+from aleph.model import EntitySet
 from aleph.model.common import make_textid
 from aleph.logic.entitysets import create_entityset, refresh_entityset
+from aleph.logic.entitysets import save_entityset_item
 from aleph.logic.entities import upsert_entity, validate_entity, check_write_entity
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
 from aleph.search import QueryParser, DatabaseQueryResult
@@ -279,14 +280,13 @@ def entities_update(entityset_id):
             validate_entity(data)
         sync = get_flag("sync", default=True)
         entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
-    EntitySetItem.save(
+    save_entityset_item(
         entityset,
+        collection,
         entity_id,
-        collection.id,
         added_by_id=request.authz.id,
     )
     db.session.commit()
-    refresh_entityset(entityset.id)
     return entity_view(entity_id)
 
 
@@ -361,10 +361,11 @@ def item_update(entityset_id):
     entity = data.pop("entity", {})
     entity_id = data.pop("entity_id", entity.get("id"))
     entity = get_index_entity(entity_id, request.authz.READ)
+    collection = get_db_collection(entity["collection_id"])
     data["added_by_id"] = request.authz.id
-    item = EntitySetItem.save(entityset, entity_id, entity["collection_id"], **data)
+    data.pop("collection", None)
+    item = save_entityset_item(entityset, collection, entity_id, **data)
     db.session.commit()
-    refresh_entityset(entityset.id)
     if item is None:
         return ("", 204)
     return EntitySetItemSerializer.jsonify(item)

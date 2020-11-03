@@ -118,6 +118,20 @@ class EntitySet(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
+    def all_profiles(cls, collection_id, entity_id=None):
+        q = EntitySet.all_ids()
+        q = q.filter(EntitySet.type == EntitySet.PROFILE)
+        q = q.filter(EntitySet.collection_id == collection_id)
+        q = q.join(EntitySetItem)
+        q = q.filter(EntitySetItem.deleted_at == None)  # NOQA
+        q = q.filter(EntitySetItem.judgement == Judgement.POSITIVE)
+        q = q.filter(EntitySetItem.collection_id == collection_id)
+        if entity_id is not None:
+            q = q.filter(EntitySetItem.entity_id == entity_id)
+        q = q.add_columns(EntitySetItem.entity_id)
+        return q
+
+    @classmethod
     def delete_by_collection(cls, collection_id, deleted_at):
         EntitySetItem.delete_by_collection(collection_id)
 

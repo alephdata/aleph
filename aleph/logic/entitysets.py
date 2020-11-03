@@ -1,8 +1,10 @@
 import logging
 
 from aleph.core import cache
-from aleph.model import EntitySet, Events
-from aleph.logic.entities import upsert_entity
+from aleph.model import EntitySet, EntitySetItem, Events
+from aleph.logic.entities import upsert_entity, refresh_entity
+from aleph.logic.collections import index_aggregator
+from aleph.logic.aggregator import get_aggregator
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -38,6 +40,24 @@ def create_entityset(collection, data, authz):
         actor_id=authz.id,
     )
     return entityset
+
+
+def save_entityset_item(entityset, collection, entity_id, **data):
+    """Change the association between an entity and an entityset. In the case of
+    a profile, this may require re-indexing of the entity to update the associated
+    profile_id.
+    """
+    item = EntitySetItem.save(entityset, entity_id, collection.id, **data)
+    if entityset.type == EntitySet.PROFILE and entityset.collection_id == collection.id:
+        from aleph.logic.profiles import profile_fragments
+
+        aggregator = get_aggregator(collection)
+        profile_fragments(collection, aggregator, entity_id=entity_id)
+        index_aggregator(collection, aggregator, entity_ids=[entity_id])
+        refresh_entity(collection, entity_id)
+        aggregator.close()
+    refresh_entityset(entityset.id)
+    return item
 
 
 def replace_layout_ids(layout, old_to_new_id_map):

@@ -12,10 +12,10 @@ from aleph.core import db, cache
 from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
-from aleph.logic.collections import refresh_collection
+from aleph.logic.collections import MODEL_ORIGIN, refresh_collection
 from aleph.logic.util import latin_alt
 from aleph.index import xref as xref_index
-from aleph.logic.aggregator import delete_aggregator_entity
+from aleph.logic.aggregator import get_aggregator
 from aleph.logic.graph import Graph
 
 log = logging.getLogger(__name__)
@@ -26,6 +26,8 @@ def upsert_entity(data, collection, authz=None, sync=False):
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
     """
+    from aleph.logic.profiles import profile_fragments
+
     entity = None
     entity_id = collection.ns.sign(data.get("id"))
     if entity_id is not None:
@@ -45,7 +47,17 @@ def upsert_entity(data, collection, authz=None, sync=False):
     entity.data = proxy.properties
     db.session.add(entity)
 
-    delete_aggregator_entity(collection, entity.id)
+    aggregator = get_aggregator(collection)
+    aggregator.delete(entity_id=entity.id)
+    aggregator.put(proxy, origin=MODEL_ORIGIN)
+
+    # If the entity is part of a profile, tag it.
+    profile_id = profile_fragments(collection, aggregator, entity_id=entity.id)
+    if profile_id is not None:
+        proxy.context["profile_id"] = [profile_id]
+
+    aggregator.close()
+
     index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(collection, entity.id)
     return entity.id
@@ -110,7 +122,9 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     EntitySetItem.delete_by_entity(entity_id)
     Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
-    delete_aggregator_entity(collection, entity_id)
+    aggregator = get_aggregator(collection)
+    aggregator.delete(entity_id=entity_id)
+    aggregator.close()
     refresh_entity(collection, entity_id)
 
 
