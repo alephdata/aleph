@@ -13,7 +13,7 @@ import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet } from 'components/common';
+import { Breadcrumbs, Collection } from 'components/common';
 import updateStates from 'util/updateStates';
 
 const messages = defineMessages({
@@ -140,15 +140,13 @@ export class DiagramScreen extends Component {
     }
 
     const operation = (
-      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch}/>
+      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch} />
     );
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation} status={this.formatStatus()}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
-        <Breadcrumbs.Text active>
-          <EntitySet.Label entitySet={diagram} icon />
-        </Breadcrumbs.Text>
+        <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} />
       </Breadcrumbs>
     );
 

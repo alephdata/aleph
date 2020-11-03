@@ -12,7 +12,7 @@ import EntityTableViews from 'components/EntityTable/EntityTableViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet, SinglePane } from 'components/common';
+import { Breadcrumbs, Collection, SinglePane } from 'components/common';
 
 
 export class ListScreen extends Component {
@@ -83,9 +83,7 @@ export class ListScreen extends Component {
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection key="collection" collection={list.collection} />
-        <Breadcrumbs.Text active>
-          <EntitySet.Label entitySet={list} icon />
-        </Breadcrumbs.Text>
+        <Breadcrumbs.EntitySet key="list" entitySet={list} />
       </Breadcrumbs>
     );
 
