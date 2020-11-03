@@ -2,7 +2,7 @@ import logging
 from pprint import pprint, pformat  # noqa
 from flask import request
 from pantomime.types import PDF, CSV
-from banal import ensure_list, is_listish, is_mapping, first
+from banal import ensure_list, first
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.helpers import entity_filename
@@ -13,7 +13,7 @@ from aleph.model import Alert, EntitySet, EntitySetItem, Export
 from aleph.logic import resolver
 from aleph.logic.entities import check_write_entity, transliterate_values
 from aleph.logic.util import collection_url, entity_url, archive_url
-from aleph.views.util import jsonify
+from aleph.views.util import jsonify, clean_object
 
 log = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ class Serializer(object):
         obj["writeable"] = False
         obj["links"] = {}
         obj = self._serialize(obj)
-        return self._clean_response(obj)
+        return clean_object(obj)
 
     def queue(self, clazz, key, schema=None):
         if not self.reference:
@@ -79,23 +79,6 @@ class Serializer(object):
         if hasattr(obj, "_asdict"):
             obj = obj._asdict()
         return obj
-
-    def _clean_response(self, data):
-        """Remove unset values from the response to save some bandwidth."""
-        if is_mapping(data):
-            out = {}
-            for k, v in data.items():
-                v = self._clean_response(v)
-                if v is not None:
-                    out[k] = v
-            return out if len(out) else None
-        elif is_listish(data):
-            data = [self._clean_response(d) for d in data]
-            data = [d for d in data if d is not None]
-            return data if len(data) else None
-        elif isinstance(data, str):
-            return data if len(data) else None
-        return data
 
     @classmethod
     def jsonify(cls, obj, **kwargs):
