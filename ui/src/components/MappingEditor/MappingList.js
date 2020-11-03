@@ -46,7 +46,9 @@ class MappingList {
 
   // for pre-existing mappings, generate display label from schema id
   getLabelFromId(id, schema) {
-    const schemaName = schema.name;
+    const schemaName = schema?.name;
+    if (!schemaName) { return; }
+
     const re = new RegExp(`^${schemaName}(?<index>([0-9]*))$`);
     const match = id.match(re)?.groups;
     if (!match) { return; }
