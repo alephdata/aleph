@@ -152,12 +152,11 @@ class EntityScreen extends Component {
       );
     }
 
-    const showDownloadButton = isDocument && entity && entity.links && entity.links.file;
     const { writeable } = entity.collection;
 
     const operation = (
       <ButtonGroup>
-        {showDownloadButton && <DownloadButton document={entity} />}
+        <DownloadButton document={entity} />
         {writeable && (
           <>
             <DialogToggleButton

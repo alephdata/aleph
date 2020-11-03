@@ -41,6 +41,7 @@ class DownloadButton extends React.PureComponent {
     this.toggleCheckbox = this.toggleCheckbox.bind(this);
     this.toggleDialog = this.toggleDialog.bind(this);
   }
+
   toggleDialog() {
     this.setState(({ checkboxChecked, isOpen }) => {
       if (checkboxChecked) {
@@ -51,6 +52,7 @@ class DownloadButton extends React.PureComponent {
       });
     });
   }
+
   toggleCheckbox() {
     this.setState(({ checkboxChecked }) => ({
       checkboxChecked: !checkboxChecked,
@@ -61,7 +63,7 @@ class DownloadButton extends React.PureComponent {
     const { intl, document, dontWarnOnDownload } = this.props;
     const { checkboxChecked, isOpen } = this.state;
 
-    if (!document || !document.links || !document.links.file) {
+    if (!document?.links?.file) {
       return null;
     }
 
