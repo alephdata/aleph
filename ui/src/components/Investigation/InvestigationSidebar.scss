@@ -1,22 +1,18 @@
 @import "app/variables.scss";
 
 .InvestigationSidebar {
+  position: relative;
   padding: $aleph-content-padding;
   background: $aleph-breadcrumbs-background;
   box-shadow: 0 0 0 1px rgba(16,22,26,.1), 0 4px 8px rgba(16,22,26,.2), 0 18px 46px 6px rgba(16,22,26,.2);  // background: $aleph-breadcrumbs-background;
-  min-height: 100vh;
+  min-height: calc(100vh - 50px);
+  min-width: 300px;
 
   &.collapsed {
-    padding-left: $aleph-grid-size;
-    padding-right: $aleph-grid-size;
+    padding: $aleph-grid-size/2;
+    min-width: auto;
     // width: 35px;
     // overflow-x: hidden;
-
-    .CollectionHeading {
-      // width: 275px;
-      // visibility: hidden;
-      display: none;
-    }
 
     .InvestigationSidebar__section__title {
       // visibility: hidden;
@@ -34,16 +30,29 @@
   //   background: white;
   // }
 
+  &__collapse-toggle.bp3-button {
+    position: absolute !important;
+    top: $aleph-grid-size/2;
+    right: $aleph-grid-size/2;
+
+    .collapsed & {
+      position: static !important;
+    }
+  }
+
   &__section {
-    margin: $aleph-grid-size*2 -1*$aleph-grid-size/2;
+    margin: $aleph-grid-size*2 0;
 
     .bp3-heading {
       color: $blue1;
     }
 
-    &__menu.bp3-menu {
-      background: none;
-      padding: 0;
+    &__menu {
+      margin: 0 -1*$aleph-grid-size;
+
+      .collapsed & {
+        margin: 0;
+      }
     }
   }
 }

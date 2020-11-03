@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { ButtonGroup, Card, Divider, Button } from '@blueprintjs/core';
+import { Alignment, ButtonGroup, Card, Divider, Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -54,6 +54,7 @@ class SchemaCounts extends React.PureComponent {
             icon={<Schema.Icon schema={schema} />}
             className="SchemaCounts"
             onClick={() => onSelect(schema)}
+            alignText={Alignment.LEFT}
             rightIcon={!isCollapsed && <Count count={visibleCounts[schema]} isPending={isPending} />}
             text={!isCollapsed && (
               <>
@@ -68,6 +69,7 @@ class SchemaCounts extends React.PureComponent {
         {showSchemaAdd && (
           <Schema.Select
             onSelect={this.handleTabChange}
+            fill
             optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
           >
             <Button

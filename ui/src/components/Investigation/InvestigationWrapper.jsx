@@ -16,11 +16,16 @@ class InvestigationWrapper extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { isOpen: true };
+    this.state = { isCollapsed: false };
   }
+
+  toggleCollapsed = () => {
+    this.setState(({ isCollapsed }) => ({ isCollapsed: !isCollapsed }));
+  }
+
   render() {
     const { collection } = this.props;
-    const { isOpen } = this.state;
+    const { isCollapsed } = this.state;
 
     const operation = (
       <CollectionManageMenu collection={collection} />
@@ -47,6 +52,8 @@ class InvestigationWrapper extends React.Component {
           <div className="InvestigationWrapper__sidebar">
             <InvestigationSidebar
               collection={collection}
+              isCollapsed={isCollapsed}
+              toggleCollapsed={this.toggleCollapsed}
             />
           </div>
           <div className="InvestigationWrapper__body">

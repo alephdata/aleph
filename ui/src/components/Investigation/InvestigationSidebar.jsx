@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Classes, ButtonGroup, Button, Divider } from '@blueprintjs/core';
+import { Alignment, Classes, ButtonGroup, Button, Divider, Tooltip } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
@@ -69,7 +69,7 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = true,
+      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false, toggleCollapsed,
       intl, schemaCounts
     } = this.props;
 
@@ -102,12 +102,18 @@ class InvestigationSidebar extends React.Component {
 
     return (
       <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
-        <CollectionHeading collection={collection} showDescription />
+        <Button
+          minimal
+          icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
+          onClick={toggleCollapsed}
+          className="InvestigationSidebar__collapse-toggle"
+        />
+        {!isCollapsed && <CollectionHeading collection={collection} showDescription />}
         <div className="InvestigationSidebar__section">
           <h6 className="bp3-heading InvestigationSidebar__section__title">
             <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
           </h6>
-          <ButtonGroup vertical minimal className="InvestigationSidebar__section__menu">
+          <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
             <SchemaCounts
               filterSchemata={schema => !schema.isDocument()}
               schemaCounts={schemaCounts}
@@ -117,14 +123,18 @@ class InvestigationSidebar extends React.Component {
               isCollapsed={isCollapsed}
             />
             {entityTools.map(({ id, icon, rightIcon }) => (
-              <Button
-                key={id}
-                icon={icon}
-                text={!isCollapsed && intl.formatMessage(messages[id])}
-                onClick={() => this.navigate(id)}
-                rightIcon={!isCollapsed && rightIcon}
-                active={activeMode === id}
-              />
+              <Tooltip disabled={!isCollapsed} content={intl.formatMessage(messages[id])} position="right">
+                <Button
+                  key={id}
+                  fill
+                  icon={icon}
+                  text={!isCollapsed && intl.formatMessage(messages[id])}
+                  onClick={() => this.navigate(id)}
+                  rightIcon={!isCollapsed && rightIcon}
+                  active={activeMode === id}
+                  alignText={Alignment.LEFT}
+                />
+              </Tooltip>
             ))}
           </ButtonGroup>
         </div>
@@ -132,7 +142,7 @@ class InvestigationSidebar extends React.Component {
           <h6 className="bp3-heading InvestigationSidebar__section__title">
             <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
           </h6>
-          <ButtonGroup vertical minimal className="InvestigationSidebar__section__menu">
+          <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
             <SchemaCounts
               filterSchemata={schema => schema.isDocument()}
               schemaCounts={schemaCounts}
@@ -142,14 +152,17 @@ class InvestigationSidebar extends React.Component {
               isCollapsed={isCollapsed}
             />
             {docTools.map(({ id, icon, rightIcon }) => (
-              <Button
-                key={id}
-                icon={icon}
-                text={!isCollapsed && intl.formatMessage(messages[id])}
-                onClick={() => this.navigate(id)}
-                rightIcon={!isCollapsed && rightIcon}
-                active={activeMode === id}
-              />
+              <Tooltip disabled={!isCollapsed} content={intl.formatMessage(messages[id])} position="right">
+                <Button
+                  key={id}
+                  icon={icon}
+                  text={!isCollapsed && intl.formatMessage(messages[id])}
+                  onClick={() => this.navigate(id)}
+                  rightIcon={!isCollapsed && rightIcon}
+                  active={activeMode === id}
+                  alignText={Alignment.LEFT}
+                />
+              </Tooltip>
             ))}
           </ButtonGroup>
         </div>
