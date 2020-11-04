@@ -9,14 +9,9 @@
   min-width: 300px;
 
   &.collapsed {
-    padding: $aleph-grid-size/2;
+    padding: 0;
     min-width: auto;
-
-    .InvestigationSidebar__section__title {
-      // visibility: hidden;
-      display: none;
-
-    }
+    box-shadow: none;
   }
 
   .CollectionHeading {
@@ -39,17 +34,30 @@
 
   &__section {
     margin: $aleph-grid-size*2 0;
+    position: relative;
 
-    .bp3-heading {
-      color: $blue1;
+    .collapsed & {
+      padding: $aleph-grid-size $aleph-grid-size/2 $aleph-grid-size $aleph-grid-size*2;
+      margin: 0;
+      border-top: 1px solid $aleph-border-color;
     }
 
-    // &__menu__item {
-    //   margin: 0 -1*$aleph-grid-size;
-    //
-    //   .collapsed & {
-    //     margin: 0;
-    //   }
-    // }
+    &__title.bp3-heading {
+      color: $blue1;
+
+      .collapsed & {
+        text-transform: uppercase;
+        font-weight: bold;
+        color: $gray1;
+        font-weight: normal;
+        position: absolute;
+        writing-mode: vertical-rl;
+        font-size: 10px;
+        top: 50%;
+        left: 0;
+        transform: rotate(180deg);
+        text-align: right;
+      }
+    }
   }
 }

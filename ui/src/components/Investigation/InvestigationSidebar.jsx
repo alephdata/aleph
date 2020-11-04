@@ -100,14 +100,16 @@ class InvestigationSidebar extends React.Component {
       },
     ];
 
+    // <Button
+    //   minimal
+    //   icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
+    //   onClick={toggleCollapsed}
+    //   className="InvestigationSidebar__collapse-toggle"
+    // />
+
     return (
       <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
-        <Button
-          minimal
-          icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
-          onClick={toggleCollapsed}
-          className="InvestigationSidebar__collapse-toggle"
-        />
+
         {!isCollapsed && <CollectionHeading collection={collection} showDescription />}
         <div className="InvestigationSidebar__section">
           <h6 className="bp3-heading InvestigationSidebar__section__title">

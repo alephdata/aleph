@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { Alignment, ButtonGroup, Card, Divider, Button } from '@blueprintjs/core';
+import { Alignment, ButtonGroup, Card, Divider, Button, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -45,25 +45,28 @@ class SchemaCounts extends React.PureComponent {
       return <SectionLoading />
     }
 
+
     return (
       <ButtonGroup vertical minimal className="SchemaCounts">
-        {Object.keys(visibleCounts).map(schema => (
-          <Button
-            id={schema}
-            key={schema}
-            icon={<Schema.Icon schema={schema} />}
-            onClick={() => onSelect(schema)}
-            alignText={Alignment.LEFT}
-            rightIcon={!isCollapsed && <Count count={visibleCounts[schema]} isPending={isPending} />}
-            text={!isCollapsed && (
-              <>
-                {isPending && <Skeleton.Text type="span" length={15} />}
-                {!isPending && <Schema.Label schema={schema} plural />}
-              </>
-            )}
-            active={activeSchema === schema}
-          />
-        ))}
+        {Object.keys(visibleCounts).map(schema => {
+          const text = isPending
+            ? <Skeleton.Text type="span" length={15} />
+            : <Schema.Label schema={schema} plural />;
+          return (
+            <Tooltip disabled={!isCollapsed} content={text} position="right">
+              <Button
+                id={schema}
+                key={schema}
+                icon={<Schema.Icon schema={schema} />}
+                onClick={() => onSelect(schema)}
+                alignText={Alignment.LEFT}
+                rightIcon={!isCollapsed && <Count count={visibleCounts[schema]} isPending={isPending} />}
+                text={!isCollapsed && text}
+                active={activeSchema === schema}
+              />
+            </Tooltip>
+          )
+        })}
         {_.size(visibleCounts) > 0 && showSchemaAdd && <Divider />}
         {showSchemaAdd && (
           <Schema.Select
@@ -71,10 +74,12 @@ class SchemaCounts extends React.PureComponent {
             fill
             optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
           >
-            <Button
-              icon="plus"
-              text={!isCollapsed && intl.formatMessage(messages.addSchemaPlaceholder)}
-            />
+            <Tooltip disabled={!isCollapsed} content={intl.formatMessage(messages.addSchemaPlaceholder)} position="right">
+              <Button
+                icon="plus"
+                text={!isCollapsed && intl.formatMessage(messages.addSchemaPlaceholder)}
+              />
+            </Tooltip>
           </Schema.Select>
         )}
       </ButtonGroup>

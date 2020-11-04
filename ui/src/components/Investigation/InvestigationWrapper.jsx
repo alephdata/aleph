@@ -58,7 +58,6 @@ class InvestigationWrapper extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const nextMode = nextProps.activeMode
     if (nextMode !== prevState.prevMode) {
-      console.log('mode changed', collapsedModes.indexOf(nextMode) >= 0, nextMode);
       return ({ isCollapsed: collapsedModes.indexOf(nextMode) >= 0, prevMode: nextMode })
     }
     return prevState;
