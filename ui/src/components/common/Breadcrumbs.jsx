@@ -26,7 +26,7 @@ class CollectionBreadcrumb extends PureComponent {
   }
 
   render() {
-    const { collection, active, showCategory } = this.props;
+    const { collection, active, showCategory, onClick } = this.props;
 
     const isPending = collection.isPending && !collection.label;
     if (isPending) {
@@ -47,6 +47,7 @@ class CollectionBreadcrumb extends PureComponent {
             className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
             icon
             truncate={30}
+            onClick={onClick}
             LabelComponent={active ? Collection.Label : Collection.Link}
           />
           <Restricted collection={collection} />

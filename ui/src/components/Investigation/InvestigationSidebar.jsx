@@ -109,8 +109,9 @@ class InvestigationSidebar extends React.Component {
 
     return (
       <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
-
-        {!isCollapsed && <CollectionHeading collection={collection} showDescription />}
+        <div className="InvestigationSidebar__heading">
+          <CollectionHeading collection={collection} showDescription />
+        </div>
         <div className="InvestigationSidebar__section">
           <h6 className="bp3-heading InvestigationSidebar__section__title">
             <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />

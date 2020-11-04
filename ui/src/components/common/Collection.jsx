@@ -19,7 +19,7 @@ import './Collection.scss';
 class CollectionLabel extends PureComponent {
   render() {
     const {
-      collection, icon = true, label = true, updating = false, truncate, className,
+      collection, icon = true, label = true, updating = false, truncate, className, onClick,
     } = this.props;
 
     if (!collection) {
@@ -49,7 +49,7 @@ class CollectionLabel extends PureComponent {
     }
 
     return (
-      <span className={c('CollectionLabel', className)} title={collection.label}>
+      <span className={c('CollectionLabel', className)} title={collection.label} onClick={onClick}>
         { renderedIcon }
         <span>{ label && text }</span>
       </span>
@@ -59,13 +59,17 @@ class CollectionLabel extends PureComponent {
 
 class CollectionLink extends PureComponent {
   render() {
-    const { collection, className } = this.props;
-    const link = getCollectionLink(collection);
+    const { collection, className, onClick } = this.props;
     const content = <Collection.Label {...this.props} />;
-    if (!link) {
+    if (onClick) {
       return content;
+    } else {
+      const link = getCollectionLink(collection);
+      if (!link) {
+        return content;
+      }
+      return <Link to={link} className={c('CollectionLink', className)}>{content}</Link>;
     }
-    return <Link to={link} className={c('CollectionLink', className)}>{content}</Link>;
   }
 }
 

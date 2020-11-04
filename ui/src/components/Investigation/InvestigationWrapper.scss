@@ -2,31 +2,17 @@
 
 .InvestigationWrapper {
   overflow: hidden;
-  &__inner-container {
-    display: flex;
-    display: flex;
-    flex-flow: row nowrap;
-    align-content: stretch;
-    align-items: stretch;
+  width: 100%;
+
+  .DualPane {
+    padding: 0;
   }
 
-  &__sidebar {
-    // display: flex;
-    // flex-direction: column;
-    // flex-grow: 0;
-    // width: 25%;
-    // min-width: 270px;
+  .ContentPane {
+    padding: 0 !important;
   }
 
-  &__body {
-    // width: 75%;
-    // max-width: calc(100% - 270px);
+  &__body-content {
+    padding: $aleph-content-padding;
   }
-  //
-  // .bp3-overlay {
-  //   position: relative !important;
-  //   height: 100vh;
-  //   top: 0;
-  //   left: 0;
-  // }
 }

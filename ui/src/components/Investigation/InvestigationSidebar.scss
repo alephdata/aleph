@@ -1,16 +1,19 @@
 @import "app/variables.scss";
 
+$transition-duration: .3s;
+
 .InvestigationSidebar {
   position: relative;
   padding: $aleph-content-padding;
   background: $aleph-breadcrumbs-background;
   box-shadow: 0 0 0 1px rgba(16,22,26,.1), 0 4px 8px rgba(16,22,26,.2), 0 18px 46px 6px rgba(16,22,26,.2);  // background: $aleph-breadcrumbs-background;
   min-height: calc(100vh - 50px);
-  min-width: 300px;
+  width: 300px;
+  transition: width $transition-duration ease-in-out, min-width $transition-duration ease-in-out, box-shadow $transition-duration ease-in-out;
 
   &.collapsed {
     padding: 0;
-    min-width: auto;
+    width: 57px;
     box-shadow: none;
   }
 
@@ -20,6 +23,15 @@
 
   .SchemaCounts {
     margin-bottom: $aleph-grid-size;
+  }
+
+  &__heading {
+    transition: max-height $transition-duration ease-in-out 5s;
+    overflow: hidden;
+    max-height: none;
+    .collapsed & {
+      max-height: 0;
+    }
   }
 
   &__collapse-toggle.bp3-button {

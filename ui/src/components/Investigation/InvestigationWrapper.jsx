@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Drawer, Position } from '@blueprintjs/core';
+import { Button, Drawer, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
-import { Breadcrumbs, Schema, SinglePane } from 'components/common';
+import { Breadcrumbs, Schema, DualPane } from 'components/common';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 
 
@@ -77,7 +77,9 @@ class InvestigationWrapper extends React.Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        {isCollapsed && <Breadcrumbs.Collection key="collection" collection={collection} />}
+        {isCollapsed && (
+          <Breadcrumbs.Collection key="collection" collection={collection} onClick={this.toggleCollapsed} />
+        )}
         {!activeType && (
           <Breadcrumbs.Text active>
             {intl.formatMessage(messages[activeMode])}
@@ -94,21 +96,21 @@ class InvestigationWrapper extends React.Component {
     return (
       <div className="InvestigationWrapper">
         {isCollapsed && breadcrumbs}
-        <div className="InvestigationWrapper__inner-container">
-          <div className="InvestigationWrapper__sidebar">
+        <DualPane>
+          <div>
             <InvestigationSidebar
               collection={collection}
               isCollapsed={isCollapsed}
               toggleCollapsed={this.toggleCollapsed}
             />
           </div>
-          <div className="InvestigationWrapper__body">
+          <DualPane.ContentPane>
             {!isCollapsed && breadcrumbs}
-            <SinglePane>
+            <div className="InvestigationWrapper__body-content">
               {this.props.children}
-            </SinglePane>
-          </div>
-        </div>
+            </div>
+          </DualPane.ContentPane>
+        </DualPane>
       </div>
     );
   }

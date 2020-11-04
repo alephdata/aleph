@@ -18,3 +18,12 @@
     }
   }
 }
+
+.CollectionLink-plain {
+  cursor: pointer;
+  &:hover {
+    & > * {
+      color: $blue2 !important;
+    }
+  }
+}
