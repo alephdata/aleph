@@ -13,37 +13,6 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 
 import './InvestigationViews.scss'
 
-const messages = defineMessages({
-  overview: {
-    id: 'collection.info.overview',
-    defaultMessage: 'Overview',
-  },
-  entities: {
-    id: 'collection.info.entities',
-    defaultMessage: 'Entities',
-  },
-  diagrams: {
-    id: 'collection.info.diagrams',
-    defaultMessage: 'Network diagrams',
-  },
-  lists: {
-    id: 'collection.info.lists',
-    defaultMessage: 'Lists',
-  },
-  documents: {
-    id: 'collection.info.browse',
-    defaultMessage: 'Browse folders',
-  },
-  mappings: {
-    id: 'collection.info.mappings',
-    defaultMessage: 'Mappings',
-  },
-  mentions: {
-    id: 'collection.info.mentions',
-    defaultMessage: 'Mentions',
-  },
-});
-
 class InvestigationViews extends React.Component {
   renderContent() {
     const { collection, activeMode } = this.props;
@@ -68,9 +37,6 @@ class InvestigationViews extends React.Component {
     const { activeMode, intl } = this.props;
     return (
       <>
-        <h4 className="InvestigationViews__title bp3-heading">
-          {intl.formatMessage(messages[activeMode] )}
-        </h4>
         <div className="InvestigationViews__content">
           {this.renderContent()}
         </div>

@@ -55,12 +55,14 @@ export class CollectionScreen extends Component {
   }
 
   renderInvestigation() {
-    const { activeMode, collection, collectionId } = this.props;
+    const { activeMode, activeType, collection, collectionId } = this.props;
 
     return (
       <InvestigationWrapper
         collection={collection}
         collectionId={collectionId}
+        activeMode={activeMode}
+        activeType={activeType}
       >
         <InvestigationViews
           collection={collection}
@@ -163,6 +165,7 @@ const mapStateToProps = (state, ownProps) => {
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
     activeMode: hashQuery.mode || collectionViewIds.OVERVIEW,
+    activeType: hashQuery.type,
   };
 };
 
