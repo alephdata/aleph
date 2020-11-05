@@ -132,7 +132,7 @@ export class MappingEditor extends Component {
   }
 
   render() {
-    const { document, existingMappingMetadata, csvData, csvHeader, intl, mappingData } = this.props;
+    const { document, existingMappingMetadata, csvData, csvHeader, intl } = this.props;
     const { entitySet, mappings } = this.state;
 
     const showPropertySections = mappings.getMappingsCount() > 0;
