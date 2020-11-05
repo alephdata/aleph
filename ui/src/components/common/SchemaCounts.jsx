@@ -9,6 +9,8 @@ import queryString from 'query-string';
 
 import { Count, Schema, SectionLoading, Skeleton } from 'components/common';
 import { selectModel } from 'selectors';
+import InvestigationSidebarButton from 'components/Investigation/InvestigationSidebarButton';
+
 
 import './SchemaCounts.scss';
 
@@ -52,19 +54,17 @@ class SchemaCounts extends React.PureComponent {
           const text = isPending
             ? <Skeleton.Text type="span" length={15} />
             : <Schema.Label schema={schema} plural />;
+
           return (
-            <Tooltip disabled={!isCollapsed} content={text} position="right">
-              <Button
-                id={schema}
-                key={schema}
-                icon={<Schema.Icon schema={schema} />}
-                onClick={() => onSelect(schema)}
-                alignText={Alignment.LEFT}
-                rightIcon={!isCollapsed && <Count count={visibleCounts[schema]} isPending={isPending} />}
-                text={!isCollapsed && text}
-                active={activeSchema === schema}
-              />
-            </Tooltip>
+            <InvestigationSidebarButton
+              key={schema}
+              text={text}
+              icon={<Schema.Icon schema={schema} />}
+              rightIcon={<Count count={visibleCounts[schema]} isPending={isPending} />}
+              onClick={() => onSelect(schema)}
+              active={activeSchema === schema}
+              isCollapsed={isCollapsed}
+            />
           )
         })}
         {_.size(visibleCounts) > 0 && showSchemaAdd && <Divider />}
@@ -74,12 +74,11 @@ class SchemaCounts extends React.PureComponent {
             fill
             optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
           >
-            <Tooltip disabled={!isCollapsed} content={intl.formatMessage(messages.addSchemaPlaceholder)} position="right">
-              <Button
-                icon="plus"
-                text={!isCollapsed && intl.formatMessage(messages.addSchemaPlaceholder)}
-              />
-            </Tooltip>
+            <InvestigationSidebarButton
+              text={intl.formatMessage(messages.addSchemaPlaceholder)}
+              icon="plus"
+              isCollapsed={isCollapsed}
+            />
           </Schema.Select>
         )}
       </ButtonGroup>

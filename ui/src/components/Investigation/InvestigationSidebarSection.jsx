@@ -9,7 +9,7 @@ import c from 'classnames';
 
 import { Count, ResultCount, SchemaCounts } from 'components/common';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
-import InvestigationSidebarButton from 'components/Investigation/InvestigationSidebarButton';
+
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
@@ -125,15 +125,20 @@ class InvestigationSidebar extends React.Component {
               activeSchema={activeType}
               isCollapsed={isCollapsed}
             />
-            {entityTools.map(({ id, ...rest }) => (
-              <InvestigationSidebarButton
-                key={id}
-                text={intl.formatMessage(messages[id])}
-                onClick={() => this.navigate(id)}
-                active={activeMode === id}
-                isCollapsed={isCollapsed}
-                {...rest}
-              />
+            {entityTools.map(({ id, icon, rightIcon }) => (
+              <Tooltip disabled={!isCollapsed} content={intl.formatMessage(messages[id])} position="right">
+                <Button
+                  key={id}
+                  fill
+                  icon={icon}
+                  text={!isCollapsed && intl.formatMessage(messages[id])}
+                  onClick={() => this.navigate(id)}
+                  rightIcon={!isCollapsed && rightIcon}
+                  active={activeMode === id}
+                  alignText={Alignment.LEFT}
+                  className="InvestigationSidebar__section__menu__item"
+                />
+              </Tooltip>
             ))}
           </ButtonGroup>
         </div>
@@ -150,15 +155,19 @@ class InvestigationSidebar extends React.Component {
               activeSchema={activeType}
               isCollapsed={isCollapsed}
             />
-            {docTools.map(({ id, ...rest }) => (
-              <InvestigationSidebarButton
-                key={id}
-                text={intl.formatMessage(messages[id])}
-                onClick={() => this.navigate(id)}
-                active={activeMode === id}
-                isCollapsed={isCollapsed}
-                {...rest}
-              />
+            {docTools.map(({ id, icon, rightIcon }) => (
+              <Tooltip disabled={!isCollapsed} content={intl.formatMessage(messages[id])} position="right">
+                <Button
+                  key={id}
+                  icon={icon}
+                  text={!isCollapsed && intl.formatMessage(messages[id])}
+                  onClick={() => this.navigate(id)}
+                  rightIcon={!isCollapsed && rightIcon}
+                  active={activeMode === id}
+                  alignText={Alignment.LEFT}
+                  className="InvestigationSidebar__section__menu__item"
+                />
+              </Tooltip>
             ))}
           </ButtonGroup>
         </div>
