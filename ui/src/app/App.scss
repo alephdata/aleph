@@ -16,7 +16,7 @@ $svg-icon-map: (
 $icon-font-path: "~@blueprintjs/icons/resources/icons";
 
 @import "~@blueprintjs/core/src/blueprint.scss";
-@import "~@blueprintjs/table/src/table.scss";
+@import "~@blueprintjs/table/lib/css/table.css";
 @import "~@blueprintjs/icons/src/blueprint-icons.scss";
 @import "~@blueprintjs/select/src/blueprint-select.scss";
 @import "./variables.scss";
