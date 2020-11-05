@@ -11,8 +11,6 @@ import { Breadcrumbs } from 'components/common';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
 import CaseCreateButton from 'components/Toolbar/CaseCreateButton';
 
-import './CasesIndexScreen.scss';
-
 
 const messages = defineMessages({
   title: {
