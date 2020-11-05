@@ -25,7 +25,7 @@ $vertical-spacing: $aleph-grid-size*5;
       position: relative;
       background-color: white !important;
       &::after {
-        background-image: url("/static/background.jpg");
+        background-image: url('../../assets/background.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: 50% 50%;
