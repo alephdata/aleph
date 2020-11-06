@@ -13,7 +13,8 @@ $transition-duration: .3s;
 
   &.collapsed {
     width: 57px;
-    box-shadow: none;
+    // box-shadow: none;
+    padding: 0;
   }
 
   .CollectionHeading {
@@ -30,7 +31,7 @@ $transition-duration: .3s;
   &__section {
     // border-radius: 5px;
     // background: white;
-    padding: 10px 25px;
+    padding: 20px 25px;
     // margin: 20px;
   }
 

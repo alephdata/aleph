@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, Drawer, Position } from '@blueprintjs/core';
+import { Button, Drawer, Intent, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
-import { Breadcrumbs, Schema, DualPane } from 'components/common';
+import { Breadcrumbs, Collection, Schema, DualPane } from 'components/common';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 
 
@@ -77,9 +77,6 @@ class InvestigationWrapper extends React.Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        {isCollapsed && (
-          <Breadcrumbs.Collection key="collection" collection={collection} onClick={this.toggleCollapsed} />
-        )}
         {!activeType && (
           <Breadcrumbs.Text active>
             {intl.formatMessage(messages[activeMode])}
@@ -95,7 +92,18 @@ class InvestigationWrapper extends React.Component {
 
     return (
       <div className="InvestigationWrapper">
-        {isCollapsed && breadcrumbs}
+        {isCollapsed && (
+          <div className="InvestigationWrapper__breadcrumbs-container">
+            <Button
+              minimal
+              className="InvestigationWrapper__breadcrumbs-container__label"
+              onClick={this.toggleCollapsed}
+            >
+              <Collection.Label collection={collection} />
+            </Button>
+            {breadcrumbs}
+          </div>
+        )}
         <DualPane>
           <div>
             <InvestigationSidebar
