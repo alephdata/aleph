@@ -4,21 +4,34 @@ $transition-duration: .3s;
 
 .InvestigationSidebar {
   position: relative;
-  padding: $aleph-content-padding;
   background: $aleph-breadcrumbs-background;
-  box-shadow: 0 0 0 1px rgba(16,22,26,.1), 0 4px 8px rgba(16,22,26,.2), 0 18px 46px 6px rgba(16,22,26,.2);  // background: $aleph-breadcrumbs-background;
+  box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
   min-height: calc(100vh - 50px);
   width: 300px;
   transition: width $transition-duration ease-in-out, min-width $transition-duration ease-in-out, box-shadow $transition-duration ease-in-out;
+  padding: 15px 0;
 
   &.collapsed {
-    padding: 0;
     width: 57px;
     box-shadow: none;
   }
 
   .CollectionHeading {
     margin: 0;
+  }
+
+  &__heading, &__content {
+
+    .collapsed & {
+      padding: 0;
+    }
+  }
+
+  &__section {
+    // border-radius: 5px;
+    // background: white;
+    padding: 10px 25px;
+    // margin: 20px;
   }
 
   .SchemaCounts {
@@ -29,8 +42,59 @@ $transition-duration: .3s;
     transition: max-height $transition-duration ease-in-out 5s;
     overflow: hidden;
     max-height: none;
+    background: $blue1;
+    border-radius: 5px;
+    margin: 0 15px;
+
     .collapsed & {
       max-height: 0;
+    }
+
+    &__inner-container {
+      padding: 20px;
+      padding-bottom: 0;
+
+      * {
+        color: white !important;
+      }
+    }
+
+    .text-markdown, .text-markdown p {
+      margin-bottom: 5px !important;
+    }
+
+    // &__divider {
+    //   border-top: 1px solid white;
+    //   margin: auto;
+    //   width: 0;
+    //   transition: width .3s ease-in-out,  margin .3s ease-in-out;
+    //
+    //   .metadata-shown & {
+    //     width: 100%;
+    //     margin-top: 15px;
+    //     // margin: 20px auto;
+    //   }
+    // }
+
+    &__metadata {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease-in-out;
+
+      .metadata-shown & {
+        max-height: 10000px;
+      }
+
+      .CollectionInfo__item .key {
+        color: white !important;
+      }
+
+      &__inner-container {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        background: rgba(#fff, .15);
+      }
     }
   }
 
@@ -44,9 +108,23 @@ $transition-duration: .3s;
     }
   }
 
+  &__metadata-toggle {
+    width: 100%;
+    margin-top: 10px;
+    .bp3-icon {
+      color: white !important;
+    }
+  }
+
+
+
   &__section {
-    margin: $aleph-grid-size*2 0;
+    // margin: $aleph-grid-size*2 0;
     position: relative;
+    // background-color: white;
+    // padding: $aleph-grid-size;
+    // border-radius: $aleph-border-radius;
+    // box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.3);
 
     .collapsed & {
       padding: $aleph-grid-size $aleph-grid-size/2 $aleph-grid-size $aleph-grid-size*2;
