@@ -21,30 +21,26 @@ $transition-duration: .3s;
     margin: 0;
   }
 
-  &__heading, &__content {
+  &__header, &__content {
 
     .collapsed & {
       padding: 0;
     }
   }
 
-  &__section {
-    // border-radius: 5px;
-    // background: white;
-    padding: 20px 25px;
-    // margin: 20px;
-  }
-
   .SchemaCounts {
     margin-bottom: $aleph-grid-size;
   }
 
-  &__heading, &__footer {
+  &__header {
     background: $blue1;
-
   }
 
-  &__heading {
+  &__footer {
+    background: $light-gray3;
+  }
+
+  &__header {
     transition: max-height $transition-duration ease-in-out 5s;
     overflow: hidden;
     max-height: none;
@@ -108,11 +104,18 @@ $transition-duration: .3s;
     }
 
     &__actions {
-      margin-top: 20px;
+      margin-top: 15px;
+      // padding-top: 5px;
+      // border-top: 1px solid white;
 
-      .bp3-button.bp3-outlined {
-        border-color: white;
-        color: white;
+      .bp3-button.bp3-minimal {
+        // border-color: white;
+        color: white !important;
+        background: rgba(white, .15);
+
+        &:hover {
+          background: rgba(white, .3);
+        }
 
         .bp3-icon {
           color: white;
@@ -141,9 +144,10 @@ $transition-duration: .3s;
 
   &__footer {
     padding: 25px;
+    // border-top: 1px solid $aleph-border-color;
 
     .bp3-text-muted, .text-muted, code {
-      color: white !important;
+      // color: white !important;
     }
 
     &__inner-container {
@@ -163,31 +167,47 @@ $transition-duration: .3s;
     // margin: $aleph-grid-size*2 0;
     position: relative;
     // background-color: white;
-    // padding: $aleph-grid-size;
+    margin: 0 $aleph-content-padding;
+    padding: $aleph-content-padding 0;
+    border-top: 1px solid $gray5;
+
     // border-radius: $aleph-border-radius;
     // box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.3);
+
+    &:first-child {
+      border: none;
+      // border-top: 1px solid $aleph-border-color;
+      // padding-top: 0;
+    }
 
     .collapsed & {
       padding: $aleph-grid-size $aleph-grid-size/2 $aleph-grid-size $aleph-grid-size*2;
       margin: 0;
-      border-top: 1px solid $aleph-border-color;
     }
 
     &__title.bp3-heading {
       color: $blue1;
+      // text-transform: uppercase;
+      // font-weight: bold;
+      // font-size: 16px;
+      // border-bottom: 1px solid $blue1;
+      // margin-bottom: 15px;
+      padding-bottom: 5px;
 
       .collapsed & {
-        text-transform: uppercase;
-        font-weight: bold;
         color: $gray1;
+        text-transform: uppercase;
+        border: none;
         font-weight: normal;
         position: absolute;
         writing-mode: vertical-rl;
         font-size: 10px;
         top: 50%;
         left: 0;
-        transform: rotate(180deg);
+        transform: rotate(180deg) translateY(50%);
         text-align: right;
+        padding: 0;
+        margin: 0;
       }
     }
   }

@@ -132,28 +132,27 @@ class InvestigationSidebar extends React.Component {
 
     return (
       <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
-        <div className={c('InvestigationSidebar__heading', {'metadata-shown': showMetadata})}>
-          <div className="InvestigationSidebar__heading__inner-container">
+        <div className={c('InvestigationSidebar__header', {'metadata-shown': showMetadata})}>
+          <div className="InvestigationSidebar__header__inner-container">
             <CollectionHeading collection={collection} />
             {collection.summary && (
               <div>
                 <Summary text={collection.summary} />
               </div>
             )}
-            <div className="InvestigationSidebar__heading__metadata">
+            <div className="InvestigationSidebar__header__metadata">
               <SearchBox
                 onSearch={onSearch}
                 placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
                 inputProps={{ autoFocus: true }}
               />
-              <div className="InvestigationSidebar__heading__divider" />
-              <div className="InvestigationSidebar__heading__metadata__inner-container">
+              <div className="InvestigationSidebar__header__divider" />
+              <div className="InvestigationSidebar__header__metadata__inner-container">
                 <CollectionInfo collection={collection} />
                 <CollectionStatus collection={collection} showCancel={collection.writeable} />
-              </div>
-              <div className="InvestigationSidebar__heading__divider" />
-              <div className="InvestigationSidebar__heading__actions">
-                <CollectionManageMenu collection={collection} buttonProps={{ }}/>
+                <div className="InvestigationSidebar__header__actions">
+                  <CollectionManageMenu collection={collection} buttonProps={{ className: 'bp3-minimal' }}/>
+                </div>
               </div>
             </div>
           </div>
