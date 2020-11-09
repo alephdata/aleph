@@ -110,6 +110,7 @@ class InvestigationWrapper extends React.Component {
               collection={collection}
               isCollapsed={isCollapsed}
               toggleCollapsed={this.toggleCollapsed}
+              onSearch={this.props.onSearch}
             />
           </div>
           <DualPane.ContentPane>

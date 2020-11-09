@@ -63,6 +63,7 @@ export class CollectionScreen extends Component {
         collectionId={collectionId}
         activeMode={activeMode}
         activeType={activeType}
+        onSearch={this.onSearch}
       >
         <InvestigationViews
           collection={collection}
@@ -146,7 +147,7 @@ export class CollectionScreen extends Component {
         <Screen
           title={collection.label}
           description={collection.summary}
-          searchScopes={[searchScope]}
+          searchScopes={!isInvestigation && [searchScope]}
         >
           {content}
         </Screen>

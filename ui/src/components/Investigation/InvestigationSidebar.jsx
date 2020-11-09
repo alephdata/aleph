@@ -7,7 +7,7 @@ import { Alignment, Classes, ButtonGroup, Button, Divider, Tooltip } from '@blue
 import queryString from 'query-string';
 import c from 'classnames';
 
-import { Count, ResultCount, SchemaCounts, Summary } from 'components/common';
+import { Count, ResultCount, SchemaCounts, SearchBox, Summary } from 'components/common';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionInfo from 'components/Collection/CollectionInfo';
 import CollectionStatus from 'components/Collection/CollectionStatus';
@@ -47,6 +47,10 @@ const messages = defineMessages({
   metadataShow : {
     id: 'collection.info.show-metadata',
     defaultMessage: 'More',
+  },
+  searchPlaceholder: {
+    id: 'collection.info.search',
+    defaultMessage: 'Search {collection}',
   }
 });
 
@@ -86,7 +90,7 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false, toggleCollapsed,
+      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false, toggleCollapsed, onSearch,
       intl, schemaCounts
     } = this.props;
     const { showMetadata } = this.state;
@@ -137,6 +141,12 @@ class InvestigationSidebar extends React.Component {
             )}
             <div className="InvestigationSidebar__heading__divider" />
             <div className="InvestigationSidebar__heading__metadata">
+              <SearchBox
+                onSearch={onSearch}
+                placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
+                inputProps={{ autoFocus: true }}
+              />
+
               <div className="InvestigationSidebar__heading__metadata__inner-container">
                 <CollectionInfo collection={collection} />
                 <CollectionStatus collection={collection} showCancel={collection.writeable} />
