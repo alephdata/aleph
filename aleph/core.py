@@ -20,6 +20,7 @@ from servicelayer.util import service_retries, backoff
 
 from aleph import settings
 from aleph.cache import Cache
+from aleph.session import SessionManager
 from aleph.oauth import configure_oauth
 
 NONE = "'none'"
@@ -54,8 +55,10 @@ def create_app(config={}):
     if settings.PROFILE:
         app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30])
 
+    app.session_interface = SessionManager(get_cache())
+
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
-    configure_oauth(app, cache=get_cache())
+    configure_oauth(app)
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
