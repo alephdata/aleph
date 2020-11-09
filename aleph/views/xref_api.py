@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 from followthemoney import model
 from pantomime.types import XLSX
 
@@ -13,7 +13,6 @@ from aleph.views.util import (
     get_db_collection,
     get_index_collection,
     get_index_entity,
-    get_session_id,
     parse_request,
     require,
     jsonify,
@@ -133,9 +132,8 @@ def export(collection_id):
         collection=collection,
         mime_type=XLSX,
     )
-    job_id = get_session_id()
     payload = {"export_id": export.id}
-    queue_task(None, OP_EXPORT_XREF_RESULTS, job_id=job_id, payload=payload)
+    queue_task(None, OP_EXPORT_XREF_RESULTS, job_id=session.job_id, payload=payload)
     return ("", 202)
 
 
