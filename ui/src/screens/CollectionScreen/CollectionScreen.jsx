@@ -55,7 +55,7 @@ export class CollectionScreen extends Component {
   }
 
   renderInvestigation() {
-    const { activeMode, activeType, collection, collectionId } = this.props;
+    const { activeMode, activeSearch, activeType, collection, collectionId } = this.props;
 
     return (
       <InvestigationWrapper
@@ -63,7 +63,7 @@ export class CollectionScreen extends Component {
         collectionId={collectionId}
         activeMode={activeMode}
         activeType={activeType}
-        onSearch={this.onSearch}
+        activeSearch={activeSearch}
       >
         <InvestigationViews
           collection={collection}
@@ -160,6 +160,7 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+  const searchQuery = queryString.parse(location.search);
 
   return {
     collectionId,
@@ -167,6 +168,7 @@ const mapStateToProps = (state, ownProps) => {
     status: selectCollectionStatus(state, collectionId),
     activeMode: hashQuery.mode || collectionViewIds.OVERVIEW,
     activeType: hashQuery.type,
+    activeSearch: searchQuery,
   };
 };
 

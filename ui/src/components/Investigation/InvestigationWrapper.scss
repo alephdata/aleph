@@ -1,4 +1,5 @@
 @import "app/variables.scss";
+@import "app/mixins.scss";
 
 .InvestigationWrapper {
   overflow: hidden;
@@ -8,8 +9,8 @@
     padding: 0;
   }
 
-  .ContentPane {
-    padding: 0 !important;
+  &__body.ContentPane {
+    @include rtlSupportInvertedProp(padding, left, 0, null);
   }
 
   &__body-content {

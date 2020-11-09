@@ -2,6 +2,7 @@ const viewIds = {
   OVERVIEW: 'overview',
   DOCUMENTS: 'documents',
   ENTITIES: 'entities',
+  SEARCH: 'search',
   XREF: 'xref',
   DIAGRAMS: 'diagrams',
   LISTS: 'lists',

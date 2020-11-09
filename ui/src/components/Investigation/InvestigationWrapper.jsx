@@ -1,25 +1,32 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Drawer, Intent, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import Query from 'app/Query';
+import { selectEntitiesResult } from 'selectors';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
-import { Breadcrumbs, Collection, Schema, DualPane } from 'components/common';
+import { Breadcrumbs, Collection, Schema, DualPane, ResultText } from 'components/common';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-
-
+import { queryCollectionEntities } from 'queries';
 
 import './InvestigationWrapper.scss';
 
-const collapsedModes = [collectionViewIds.ENTITIES];
+const collapsedModes = [collectionViewIds.ENTITIES, collectionViewIds.SEARCH];
 
 const messages = defineMessages({
   overview: {
     id: 'collection.info.overview',
     defaultMessage: 'Overview',
+  },
+  search: {
+    id: 'collection.info.search',
+    defaultMessage: 'Search',
   },
   entities: {
     id: 'collection.info.entities',
@@ -68,12 +75,14 @@ class InvestigationWrapper extends React.Component {
   }
 
   render() {
-    const { activeMode, activeType, collection, intl } = this.props;
+    const { activeMode, activeSearch, activeType, collection, intl, result } = this.props;
     const { isCollapsed } = this.state;
 
     // const operation = (
     //   <CollectionManageMenu collection={collection} />
     // );
+
+    console.log(activeSearch)
 
     const breadcrumbs = (
       <Breadcrumbs>
@@ -85,6 +94,11 @@ class InvestigationWrapper extends React.Component {
         {!!activeType && (
           <Breadcrumbs.Text active>
             <Schema.Label schema={activeType} plural icon />
+          </Breadcrumbs.Text>
+        )}
+        {!_.isEmpty(activeSearch) && (
+          <Breadcrumbs.Text active>
+            <ResultText result={result} />
           </Breadcrumbs.Text>
         )}
       </Breadcrumbs>
@@ -113,7 +127,7 @@ class InvestigationWrapper extends React.Component {
               onSearch={this.props.onSearch}
             />
           </div>
-          <DualPane.ContentPane>
+          <DualPane.ContentPane className="InvestigationWrapper__body">
             {!isCollapsed && breadcrumbs}
             <div className="InvestigationWrapper__body-content">
               {this.props.children}
@@ -125,4 +139,16 @@ class InvestigationWrapper extends React.Component {
   }
 }
 
-export default injectIntl(InvestigationWrapper);
+const mapStateToProps = (state, ownProps) => {
+  const { activeType, collection, location } = ownProps;
+  console.log('active type is', activeType)
+  const query = queryCollectionEntities(location, collection.id, activeType);
+  const result = selectEntitiesResult(state, query);
+  return { query, result };
+};
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  injectIntl,
+)(InvestigationWrapper);

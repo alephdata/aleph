@@ -61,6 +61,7 @@ class InvestigationSidebar extends React.Component {
 
     this.state = { showMetadata: false };
 
+    this.onSearch = this.onSearch.bind(this);
     this.navigate = this.navigate.bind(this);
   }
 
@@ -75,7 +76,7 @@ class InvestigationSidebar extends React.Component {
     this.setState(({ showMetadata }) => ({ showMetadata: !showMetadata }));
   }
 
-  navigate(mode, type) {
+  navigate(mode, type, search) {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
@@ -86,12 +87,22 @@ class InvestigationSidebar extends React.Component {
     history.push({
       pathname: location.pathname,
       hash: queryString.stringify(parsedHash),
+      search
     });
+  }
+
+  onSearch(queryText) {
+    const { history, collection } = this.props;
+    const query = {
+      q: queryText,
+      'filter:collection_id': collection.id,
+    };
+    this.navigate(collectionViewIds.SEARCH, null, queryString.stringify(query))
   }
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false, toggleCollapsed, onSearch,
+      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false, toggleCollapsed,
       intl, schemaCounts
     } = this.props;
     const { showMetadata } = this.state;
@@ -142,7 +153,7 @@ class InvestigationSidebar extends React.Component {
             )}
             <div className="InvestigationSidebar__header__metadata">
               <SearchBox
-                onSearch={onSearch}
+                onSearch={this.onSearch}
                 placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
                 inputProps={{ autoFocus: true }}
               />
