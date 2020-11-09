@@ -115,9 +115,13 @@ class EntitySetCreateDialog extends Component {
         label,
         summary,
         collection_id: collection.id,
-        entities,
-        layout
       };
+      if (layout) {
+        newEntitySet.layout = layout;
+      }
+      if (entities) {
+        newEntitySet.entities = entities;
+      }
 
       const response = await this.props.createEntitySet(newEntitySet);
       this.setState({ processing: false });
