@@ -8,11 +8,12 @@ import queryString from 'query-string';
 import c from 'classnames';
 
 import { Count, ResultCount, SchemaCounts, SearchBox, Summary } from 'components/common';
-import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionInfo from 'components/Collection/CollectionInfo';
 import CollectionStatus from 'components/Collection/CollectionStatus';
 import InvestigationSidebarButton from 'components/Investigation/InvestigationSidebarButton';
 import CollectionHeading from 'components/Collection/CollectionHeading';
+import CollectionReference from 'components/Collection/CollectionReference';
+import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
@@ -139,17 +140,20 @@ class InvestigationSidebar extends React.Component {
                 <Summary text={collection.summary} />
               </div>
             )}
-            <div className="InvestigationSidebar__heading__divider" />
             <div className="InvestigationSidebar__heading__metadata">
               <SearchBox
                 onSearch={onSearch}
                 placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
                 inputProps={{ autoFocus: true }}
               />
-
+              <div className="InvestigationSidebar__heading__divider" />
               <div className="InvestigationSidebar__heading__metadata__inner-container">
                 <CollectionInfo collection={collection} />
                 <CollectionStatus collection={collection} showCancel={collection.writeable} />
+              </div>
+              <div className="InvestigationSidebar__heading__divider" />
+              <div className="InvestigationSidebar__heading__actions">
+                <CollectionManageMenu collection={collection} buttonProps={{ }}/>
               </div>
             </div>
           </div>
@@ -212,6 +216,11 @@ class InvestigationSidebar extends React.Component {
                 />
               ))}
             </ButtonGroup>
+          </div>
+        </div>
+        <div className="InvestigationSidebar__footer">
+          <div className="InvestigationSidebar__footer__inner-container">
+            <CollectionReference collection={collection} />
           </div>
         </div>
       </div>

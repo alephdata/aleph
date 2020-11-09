@@ -71,12 +71,12 @@ class InvestigationWrapper extends React.Component {
     const { activeMode, activeType, collection, intl } = this.props;
     const { isCollapsed } = this.state;
 
-    const operation = (
-      <CollectionManageMenu collection={collection} />
-    );
+    // const operation = (
+    //   <CollectionManageMenu collection={collection} />
+    // );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs>
         {!activeType && (
           <Breadcrumbs.Text active>
             {intl.formatMessage(messages[activeMode])}

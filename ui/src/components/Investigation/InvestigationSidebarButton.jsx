@@ -11,6 +11,7 @@ const InvestigationSidebarButton = ({ text, rightIcon, isCollapsed, ...rest }) =
       content={<>{text}{rightIcon}</>}
       position="right"
       popoverClassName="InvestigationSidebarButton__tooltip"
+      fill
     >
       <Button
         className="InvestigationSidebarButton"

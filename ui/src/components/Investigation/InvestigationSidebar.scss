@@ -39,11 +39,15 @@ $transition-duration: .3s;
     margin-bottom: $aleph-grid-size;
   }
 
+  &__heading, &__footer {
+    background: $blue1;
+
+  }
+
   &__heading {
     transition: max-height $transition-duration ease-in-out 5s;
     overflow: hidden;
     max-height: none;
-    background: $blue1;
     // border-radius: 5px;
     margin: 0;
 
@@ -68,19 +72,19 @@ $transition-duration: .3s;
       margin-bottom: 5px !important;
     }
 
-    // &__divider {
-    //   border-top: 1px solid rgba(white, .8);
-    //   margin: auto;
-    //   width: 0;
-    //   transition: width .3s ease-in-out,  margin .3s ease-in-out;
-    //
-    //   .metadata-shown & {
-    //     width: 100%;
-    //     margin-top: 20px;
-    //     margin-bottom: 10px;
-    //     // margin: 20px auto;
-    //   }
-    // }
+    &__divider {
+      border-top: 1px solid rgba(white, .7);
+      margin: auto;
+      width: 0;
+      transition: width .3s ease-in-out, margin 1s ease-in-out;
+
+      .metadata-shown & {
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        // margin: 20px auto;
+      }
+    }
 
     &__metadata {
       max-height: 0;
@@ -102,6 +106,19 @@ $transition-duration: .3s;
         background: rgba(#fff, .15);
       }
     }
+
+    &__actions {
+      margin-top: 20px;
+
+      .bp3-button.bp3-outlined {
+        border-color: white;
+        color: white;
+
+        .bp3-icon {
+          color: white;
+        }
+      }
+    }
   }
 
   &__collapse-toggle.bp3-button {
@@ -119,6 +136,24 @@ $transition-duration: .3s;
     margin-top: 10px;
     .bp3-icon {
       color: white !important;
+    }
+  }
+
+  &__footer {
+    padding: 25px;
+
+    .bp3-text-muted, .text-muted, code {
+      color: white !important;
+    }
+
+    &__inner-container {
+      // border-radius: 5px;
+      // background: rgba(#fff, .15);
+      // padding: 10px;
+    }
+
+    .collapsed & {
+      display: none;
     }
   }
 

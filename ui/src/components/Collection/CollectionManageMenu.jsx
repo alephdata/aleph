@@ -36,7 +36,7 @@ const messages = defineMessages({
 
 class CollectionManageMenu extends PureComponent {
   renderMenu() {
-    const { collection, intl } = this.props;
+    const { collection, intl, buttonProps = {} } = this.props;
     return (
       <Menu>
         <DialogToggleButton
@@ -44,7 +44,8 @@ class CollectionManageMenu extends PureComponent {
           buttonProps={{
             text: intl.formatMessage(messages.reingest),
             icon: "automatic-updates",
-            shouldDismissPopover: false
+            shouldDismissPopover: false,
+            ...buttonProps
           }}
           Dialog={CollectionReingestAlert}
           dialogProps={{ collection }}
@@ -54,7 +55,8 @@ class CollectionManageMenu extends PureComponent {
           buttonProps={{
             text: intl.formatMessage(messages.reindex),
             icon: "search-template",
-            shouldDismissPopover: false
+            shouldDismissPopover: false,
+            ...buttonProps
           }}
           Dialog={CollectionReindexAlert}
           dialogProps={{ collection }}
@@ -64,7 +66,8 @@ class CollectionManageMenu extends PureComponent {
           buttonProps={{
             text: intl.formatMessage(messages.delete),
             icon: "trash",
-            shouldDismissPopover: false
+            shouldDismissPopover: false,
+            ...buttonProps
           }}
           Dialog={CollectionDeleteDialog}
           dialogProps={{ collection }}
@@ -74,35 +77,35 @@ class CollectionManageMenu extends PureComponent {
   }
 
   render() {
-    const { collection, intl } = this.props;
+    const { collection, intl, buttonGroupProps = {}, buttonProps = {} } = this.props;
     if (!collection.writeable) {
       return null;
     }
     return (
-      <>
-        <ButtonGroup>
-          <DialogToggleButton
-            buttonProps={{
-              text: intl.formatMessage(messages.edit),
-              icon: "cog"
-            }}
-            Dialog={CollectionEditDialog}
-            dialogProps={{ collection }}
-          />
-          <DialogToggleButton
-            buttonProps={{
-              text: intl.formatMessage(messages.access),
-              icon: "key"
-            }}
-            Dialog={CollectionAccessDialog}
-            dialogProps={{ collection }}
-          />
-          <Popover>
-            <Button icon="caret-down" />
-            {this.renderMenu()}
-          </Popover>
-        </ButtonGroup>
-      </>
+      <ButtonGroup fill>
+        <DialogToggleButton
+          buttonProps={{
+            text: intl.formatMessage(messages.edit),
+            icon: "cog",
+            ...buttonProps
+          }}
+          Dialog={CollectionEditDialog}
+          dialogProps={{ collection }}
+        />
+        <DialogToggleButton
+          buttonProps={{
+            text: intl.formatMessage(messages.access),
+            icon: "key",
+            ...buttonProps
+          }}
+          Dialog={CollectionAccessDialog}
+          dialogProps={{ collection }}
+        />
+        <Popover>
+          <Button icon="caret-down" {...buttonProps} />
+          {this.renderMenu()}
+        </Popover>
+      </ButtonGroup>
     );
   }
 }
