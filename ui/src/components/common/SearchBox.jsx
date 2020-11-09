@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InputGroup } from '@blueprintjs/core';
 
