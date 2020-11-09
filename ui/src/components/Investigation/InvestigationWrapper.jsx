@@ -141,7 +141,6 @@ class InvestigationWrapper extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { activeType, collection, location } = ownProps;
-  console.log('active type is', activeType)
   const query = queryCollectionEntities(location, collection.id, activeType);
   const result = selectEntitiesResult(state, query);
   return { query, result };
