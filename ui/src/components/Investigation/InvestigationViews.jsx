@@ -7,6 +7,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
+import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import collectionViewIds from 'components/Collection/collectionViewIds';
@@ -28,6 +29,8 @@ class InvestigationViews extends React.Component {
         return <CollectionEntitySetsIndexMode collection={collection} type="diagram" />;
       case collectionViewIds.LISTS:
         return <CollectionEntitySetsIndexMode collection={collection} type="list" />;
+      case collectionViewIds.SEARCH:
+        return <CollectionSearchMode collection={collection} />;
       case collectionViewIds.XREF:
         return <CollectionXrefMode collection={collection} />;
     }

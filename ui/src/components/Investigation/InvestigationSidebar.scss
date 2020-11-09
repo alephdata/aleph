@@ -14,6 +14,7 @@ $transition-duration: .3s;
   &.collapsed {
     width: 57px;
     // box-shadow: none;
+    background: $aleph-breadcrumbs-background;
     padding: 0;
   }
 
@@ -41,14 +42,16 @@ $transition-duration: .3s;
   }
 
   &__header {
-    transition: max-height $transition-duration ease-in-out 5s;
+    transition: max-height $transition-duration ease-in-out $transition-duration, opacity $transition-duration ease-in-out $transition-duration;
     overflow: hidden;
     max-height: none;
+    opacity: 1;
     // border-radius: 5px;
     margin: 0;
 
     .collapsed & {
       max-height: 0;
+      opacity: 0;
     }
 
     &__inner-container {
@@ -167,9 +170,9 @@ $transition-duration: .3s;
     // margin: $aleph-grid-size*2 0;
     position: relative;
     // background-color: white;
-    margin: 0 $aleph-content-padding;
-    padding: $aleph-content-padding 0;
-    border-top: 1px solid $gray5;
+    // margin: 0 $aleph-content-padding;
+    padding: $aleph-content-padding;
+    border-top: 1px solid $aleph-border-color;
 
     // border-radius: $aleph-border-radius;
     // box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.3);
@@ -193,6 +196,7 @@ $transition-duration: .3s;
       // border-bottom: 1px solid $blue1;
       // margin-bottom: 15px;
       padding-bottom: 5px;
+      // transition: all 1s ease-in-out;
 
       .collapsed & {
         color: $gray1;
