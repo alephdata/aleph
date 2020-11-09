@@ -4,6 +4,10 @@
   border-right: 1px solid $aleph-border-color;
   color: $blue1;
 
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    border: none;
+  }
+
   &:last-child {
     border: none;
   }
