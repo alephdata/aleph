@@ -1,7 +1,7 @@
 import logging
 from urllib.parse import quote
 from urlnormalizer import query_string
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 from flask_babel import gettext
 from werkzeug.exceptions import NotFound
 from followthemoney import model
@@ -19,7 +19,7 @@ from aleph.model.entityset import EntitySet, Judgement
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag
-from aleph.views.util import require, get_nested_collection, get_session_id
+from aleph.views.util import require, get_nested_collection
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
@@ -172,9 +172,8 @@ def export():
         mime_type=ZIP,
         meta={"query": query.get_full_query()},
     )
-    job_id = get_session_id()
     payload = {"export_id": export.id}
-    queue_task(None, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
+    queue_task(None, OP_EXPORT_SEARCH_RESULTS, job_id=session.job_id, payload=payload)
     return ("", 202)
 
 

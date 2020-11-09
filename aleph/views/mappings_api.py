@@ -1,7 +1,7 @@
 import logging
 from banal import first
 from followthemoney import model
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 from werkzeug.exceptions import BadRequest
 
 from aleph.core import db
@@ -10,7 +10,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
 from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
-from aleph.views.util import get_index_entity, get_session_id, obj_or_404
+from aleph.views.util import get_index_entity, obj_or_404
 
 
 blueprint = Blueprint("mappings_api", __name__)
@@ -261,9 +261,8 @@ def trigger(collection_id, mapping_id):
     mapping.disabled = False
     mapping.set_status(Status.PENDING)
     db.session.commit()
-    job_id = get_session_id()
     payload = {"mapping_id": mapping.id}
-    queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
+    queue_task(collection, OP_LOAD_MAPPING, job_id=session.job_id, payload=payload)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping, status=202)
 
@@ -311,7 +310,7 @@ def flush(collection_id, mapping_id):
     queue_task(
         collection,
         OP_FLUSH_MAPPING,
-        job_id=get_session_id(),
+        job_id=session.job_id,
         payload={"mapping_id": mapping_id},
     )
     return ("", 202)
@@ -357,7 +356,7 @@ def delete(collection_id, mapping_id):
     queue_task(
         collection,
         OP_FLUSH_MAPPING,
-        job_id=get_session_id(),
+        job_id=session.job_id,
         payload={"mapping_id": mapping_id},
     )
     return ("", 204)

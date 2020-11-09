@@ -20,7 +20,6 @@ from servicelayer.util import service_retries, backoff
 
 from aleph import settings
 from aleph.cache import Cache
-from aleph.session import SessionManager
 from aleph.oauth import configure_oauth
 
 NONE = "'none'"
@@ -55,8 +54,6 @@ def create_app(config={}):
     if settings.PROFILE:
         app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30])
 
-    app.session_interface = SessionManager(get_cache())
-
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
     configure_oauth(app)
     mail.init_app(app)
@@ -88,7 +85,7 @@ def create_app(config={}):
 
     from aleph.views import mount_app_blueprints
 
-    mount_app_blueprints(app)
+    mount_app_blueprints(app, get_cache())
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.

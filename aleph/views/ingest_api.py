@@ -2,7 +2,7 @@ import json
 import shutil
 import logging
 from banal import ensure_dict
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
@@ -15,7 +15,7 @@ from aleph.index.entities import index_proxy
 from aleph.logic.documents import ingest_flush
 from aleph.logic.notifications import publish, channel_tag
 from aleph.views.util import get_db_collection, get_flag
-from aleph.views.util import jsonify, validate, get_session_id
+from aleph.views.util import jsonify, validate
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("ingest_api", __name__)
@@ -117,7 +117,6 @@ def ingest_upload(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    job_id = get_session_id()
     sync = get_flag("sync", default=False)
     index = get_flag("index", default=True)
     meta, foreign_id = _load_metadata()
@@ -144,7 +143,7 @@ def ingest_upload(collection_id):
         if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync and index:
             index_proxy(collection, proxy, sync=sync)
         ingest_flush(collection, entity_id=proxy.id)
-        ingest_entity(collection, proxy, job_id=job_id, index=index)
+        ingest_entity(collection, proxy, job_id=session.job_id, index=index)
         _notify(collection, proxy.id)
         return jsonify({"status": "ok", "id": proxy.id}, status=201)
     finally:

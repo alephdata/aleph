@@ -38,13 +38,6 @@ def get_flag(name, default=False):
     return as_bool(request.args.get(name), default=default)
 
 
-def get_session_id():
-    role_id = stringify(request.authz.id) or "anonymous"
-    session_id = stringify(request._session_id)
-    session_id = session_id or Job.random_id()
-    return "%s:%s" % (role_id, session_id)
-
-
 def parse_request(schema):
     """Get request form data or body and validate it against a schema."""
     if request.is_json:

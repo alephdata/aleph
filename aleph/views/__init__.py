@@ -1,4 +1,5 @@
-from aleph.views.context import blueprint as cache
+from aleph.views.context import blueprint as context
+from aleph.views.session import SessionManager
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.sessions_api import blueprint as sessions_api
 from aleph.views.roles_api import blueprint as roles_api
@@ -19,8 +20,9 @@ from aleph.views.entitysets_api import blueprint as entitysets_api
 from aleph.views.exports_api import blueprint as exports_api
 
 
-def mount_app_blueprints(app):
-    app.register_blueprint(cache)
+def mount_app_blueprints(app, cache):
+    app.session_interface = SessionManager(cache)
+    app.register_blueprint(context)
     app.register_blueprint(base_api)
     app.register_blueprint(sessions_api)
     app.register_blueprint(roles_api)
