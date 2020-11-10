@@ -21,11 +21,10 @@ $vertical-spacing: $aleph-grid-size*5;
 
     &.title-section {
       min-height: 500px;
-      max-height: 900px;
       position: relative;
       background-color: white !important;
       &::after {
-        background-image: url("/static/background.jpg");
+        background-image: url('../../assets/background.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: 50% 50%;
@@ -46,14 +45,6 @@ $vertical-spacing: $aleph-grid-size*5;
       margin: auto;
       padding: $aleph-grid-size*8 $aleph-grid-size*3;
       vertical-align: middle;
-
-      .title-section & {
-        width: 100%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
     }
 
     &:nth-child(even) {
@@ -113,7 +104,7 @@ $vertical-spacing: $aleph-grid-size*5;
   &__search {
     max-width: 600px;
     margin: auto;
-    .SearchBox {
+    .bp3-input-group {
       margin-bottom: $vertical-spacing/2;
     }
   }

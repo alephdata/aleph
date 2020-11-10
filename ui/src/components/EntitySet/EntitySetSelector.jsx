@@ -120,7 +120,7 @@ class EntitySetSelector extends Component {
         }
       });
     }
-    onSuccess && onSuccess();
+    onSuccess && onSuccess(entitySet);
     toggleDialog();
   }
 

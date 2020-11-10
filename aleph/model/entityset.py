@@ -91,24 +91,27 @@ class EntitySet(db.Model, SoftDeleteModel):
 
     @classmethod
     def by_collection_id(cls, collection_id, types=None):
-        """Retuns EntitySets within a given collection_id
-        """
+        """Retuns EntitySets within a given collection_id"""
         q = cls.by_type(types)
         q = q.filter(EntitySet.collection_id == collection_id)
         return q
 
     @classmethod
-    def by_entity_id(cls, entity_id, collection_id=None, judgements=None, types=None):
+    def by_entity_id(
+        cls, entity_id, collection_ids=None, judgements=None, types=None, labels=None
+    ):
         """Retuns EntitySets that include EntitySetItems with the provided entity_id.
 
         NOTE: This only considers EntitySetItems who haven't been deleted
         """
         q = cls.by_type(types)
+        if labels is not None:
+            q = q.filter(EntitySet.label.in_(ensure_list(labels)))
         q = q.join(EntitySetItem)
         q = q.filter(EntitySetItem.deleted_at == None)  # NOQA
         q = q.filter(EntitySetItem.entity_id == entity_id)
-        if collection_id is not None:
-            q = q.filter(EntitySet.collection_id == collection_id)
+        if collection_ids:
+            q = q.filter(EntitySet.collection_id.in_(collection_ids))
         if judgements is not None:
             q = q.filter(EntitySetItem.judgement.in_(ensure_list(judgements)))
         return q
@@ -122,8 +125,11 @@ class EntitySet(db.Model, SoftDeleteModel):
         pq = pq.filter(cls.deleted_at == None)  # noqa
         pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
 
-    def items(self, deleted=False):
+    def items(self, authz=None, deleted=False):
         q = EntitySetItem.all(deleted=deleted)
+        if authz is not None:
+            ids = authz.collections(authz.READ)
+            q = q.filter(EntitySetItem.collection_id.in_(ids))
         q = q.filter(EntitySetItem.entityset_id == self.id)
         q = q.order_by(EntitySetItem.created_at.asc())
         return q

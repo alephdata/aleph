@@ -77,7 +77,7 @@ def decide_xref(xref, judgement, authz):
     entity_profile = EntitySet.by_entity_id(
         entity_id,
         judgements=[Judgement.POSITIVE],
-        collection_id=collection.id,
+        collection_ids=[collection.id],
         types=[EntitySet.PROFILE],
     ).first()
 
@@ -86,7 +86,7 @@ def decide_xref(xref, judgement, authz):
     match_profile = EntitySet.by_entity_id(
         match_id,
         judgements=[Judgement.POSITIVE],
-        collection_id=collection.id,
+        collection_ids=[collection.id],
         types=[EntitySet.PROFILE],
     ).first()
 
