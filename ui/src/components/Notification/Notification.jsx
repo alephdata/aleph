@@ -12,11 +12,17 @@ import './Notification.scss';
 
 class Notification extends PureComponent {
   getParam(name) {
-    const { event, params } = this.props.notification;
+    const { notification, showCollectionLinks = true } = this.props;
+    const { event, params } = notification;
+
     const object = params[name];
     const type = event.params[name] || 'role';
     if (type === 'collection') {
-      return <Collection.Link collection={object} preview icon />;
+      if (showCollectionLinks) {
+        return <Collection.Link collection={object} icon />;
+      } else {
+        return <Collection.Label collection={object} icon={false} />;
+      }
     }
     if (type === 'entity') {
       return <Entity.Link entity={object} preview icon />;
@@ -56,6 +62,9 @@ class Notification extends PureComponent {
 
     const { event, id, created_at: createdAt } = notification;
     const parts = event.template.split(/({{|}})/);
+
+    console.log('parts', parts, event, event.template
+  )
     const message = [];
 
     let paramActive = false;

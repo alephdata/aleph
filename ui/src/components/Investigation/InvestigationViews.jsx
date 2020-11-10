@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
+import InvestigationOverviewMode from 'components/Investigation/InvestigationOverviewMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
@@ -19,8 +19,6 @@ class InvestigationViews extends React.Component {
     const { collection, activeMode } = this.props;
 
     switch(activeMode) {
-      case collectionViewIds.OVERVIEW:
-        return <CollectionOverviewMode collection={collection} />;
       case collectionViewIds.DOCUMENTS:
         return <CollectionDocumentsMode collection={collection} />;
       case collectionViewIds.ENTITIES:
@@ -33,6 +31,8 @@ class InvestigationViews extends React.Component {
         return <CollectionSearchMode collection={collection} />;
       case collectionViewIds.XREF:
         return <CollectionXrefMode collection={collection} />;
+      default:
+        return <InvestigationOverviewMode collection={collection} />;
     }
   }
 

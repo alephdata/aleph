@@ -114,7 +114,7 @@ export class CollectionScreen extends Component {
           <div>
             <CollectionViews
               collection={collection}
-              activeMode={activeMode}
+              activeMode={activeMode || collectionViewIds.OVERVIEW}
               isPreview={false}
             />
           </div>
@@ -166,7 +166,7 @@ const mapStateToProps = (state, ownProps) => {
     collectionId,
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
-    activeMode: hashQuery.mode || collectionViewIds.OVERVIEW,
+    activeMode: hashQuery.mode,
     activeType: hashQuery.type,
     activeSearch: searchQuery,
   };

@@ -21,6 +21,10 @@ $notification-items-padding: 1px;
           @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
         }
       }
+      & > .CollectionLabel {
+        font-weight: normal;
+        color: $blue1;
+      }
     }
     .token {
       @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);

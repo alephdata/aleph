@@ -1,12 +1,13 @@
 @import "app/variables.scss";
 
 $transition-duration: .3s;
+$sidebar-padding: 15px;
 
 .InvestigationSidebar {
-  position: relative;
-  background: $aleph-breadcrumbs-background;
+  // position: fixed;
+  background: $light-gray5;
   box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
-  min-height: calc(100vh - 50px);
+  // overflow-y: scroll;
   width: 300px;
   transition: width $transition-duration ease-in-out, min-width $transition-duration ease-in-out, box-shadow $transition-duration ease-in-out;
   padding: 0;
@@ -22,10 +23,32 @@ $transition-duration: .3s;
     margin: 0;
   }
 
+  .CollectionStatus {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin: 20px 0 10px;
+
+    .bp3-heading {
+      font-size: 14px !important;
+      margin-bottom: 0 !important;
+    }
+  }
+
   &__header, &__content {
 
     .collapsed & {
       padding: 0;
+    }
+  }
+
+  &__content {
+
+    .collapsed & {
+
+      height: calc(100vh - #{$aleph-top-nav-height + $aleph-breadcrumbs-height});
+
+      overflow-y: scroll;
     }
   }
 
@@ -38,7 +61,7 @@ $transition-duration: .3s;
   }
 
   &__footer {
-    background: $light-gray3;
+    background: $light-gray4;
   }
 
   &__header {
@@ -55,7 +78,7 @@ $transition-duration: .3s;
     }
 
     &__inner-container {
-      padding: 25px;
+      padding: $sidebar-padding*2 $sidebar-padding;
       padding-bottom: 0;
 
       .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
@@ -127,14 +150,25 @@ $transition-duration: .3s;
     }
   }
 
-  &__collapse-toggle.bp3-button {
-    position: absolute !important;
-    top: $aleph-grid-size/2;
-    right: $aleph-grid-size/2;
+  &__footer {
+    padding: 5px;
+    border-top: 1px solid $light-gray2;
+  }
 
-    .collapsed & {
-      position: static !important;
+  &__collapse-toggle.bp3-button {
+    background-color: $light-gray2 !important;
+
+    &:hover {
+      background-color: $light-gray1 !important;
     }
+
+    // position: absolute !important;
+    // top: $aleph-grid-size/2;
+    // right: $aleph-grid-size/2;
+
+    // .collapsed & {
+    //   position: static !important;
+    // }
   }
 
   &__metadata-toggle {
@@ -145,33 +179,12 @@ $transition-duration: .3s;
     }
   }
 
-  &__footer {
-    padding: 25px;
-    // border-top: 1px solid $aleph-border-color;
-
-    .bp3-text-muted, .text-muted, code {
-      // color: white !important;
-    }
-
-    &__inner-container {
-      // border-radius: 5px;
-      // background: rgba(#fff, .15);
-      // padding: 10px;
-    }
-
-    .collapsed & {
-      display: none;
-    }
-  }
-
-
-
   &__section {
     // margin: $aleph-grid-size*2 0;
     position: relative;
     // background-color: white;
-    // margin: 0 $aleph-content-padding;
-    padding: $aleph-content-padding;
+    // margin: 0 $sidebar-padding;
+    padding: $sidebar-padding;
     border-top: 1px solid $aleph-border-color;
 
     // border-radius: $aleph-border-radius;

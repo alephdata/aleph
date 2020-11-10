@@ -10,20 +10,19 @@ import queryString from 'query-string';
 import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
+import CollectionInfo from 'components/Collection/CollectionInfo';
+import CollectionStatus from 'components/Collection/CollectionStatus';
+import CollectionHeading from 'components/Collection/CollectionHeading';
+import CollectionReference from 'components/Collection/CollectionReference';
+
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
-import { Breadcrumbs, Collection, Schema, DualPane, ResultText } from 'components/common';
+import { Breadcrumbs, Collection, Schema, DualPane, ResultText, ResultCount, Summary } from 'components/common';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntities } from 'queries';
 
 import './InvestigationWrapper.scss';
 
-const collapsedModes = [collectionViewIds.ENTITIES, collectionViewIds.SEARCH];
-
 const messages = defineMessages({
-  overview: {
-    id: 'collection.info.overview',
-    defaultMessage: 'Overview',
-  },
   search: {
     id: 'collection.info.search',
     defaultMessage: 'Search',
@@ -39,6 +38,10 @@ const messages = defineMessages({
   lists: {
     id: 'collection.info.lists',
     defaultMessage: 'Lists',
+  },
+  xref: {
+    id: 'collection.info.xref',
+    defaultMessage: 'Cross-reference',
   },
   documents: {
     id: 'collection.info.browse',
@@ -56,37 +59,22 @@ const messages = defineMessages({
 
 
 class InvestigationWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { isCollapsed: false };
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const nextMode = nextProps.activeMode
-    if (nextMode !== prevState.prevMode) {
-      return ({ isCollapsed: collapsedModes.indexOf(nextMode) >= 0, prevMode: nextMode })
-    }
-    return prevState;
-  }
-
-  toggleCollapsed = () => {
-    this.setState(({ isCollapsed }) => ({ isCollapsed: !isCollapsed }));
-  }
-
   render() {
-    const { activeMode, activeSearch, activeType, collection, intl, result } = this.props;
-    const { isCollapsed } = this.state;
+    const { activeMode, activeSearch, activeType, collection, intl, isCollapsed, result } = this.props;
+
+    const showBreadcrumbs = !!activeMode;
 
     // const operation = (
     //   <CollectionManageMenu collection={collection} />
     // );
+    // <ResultCount result={result} className="bp3-intent-primary" />
 
-    console.log(activeSearch)
+
+    console.log(activeMode)
 
     const breadcrumbs = (
       <Breadcrumbs>
-        {!activeType && (
+        {activeMode && !activeType && (
           <Breadcrumbs.Text active>
             {intl.formatMessage(messages[activeMode])}
           </Breadcrumbs.Text>
@@ -104,31 +92,50 @@ class InvestigationWrapper extends React.Component {
       </Breadcrumbs>
     );
 
+    // {!activeMode && (
+    //   <div className='InvestigationSidebar__header'>
+    //     <div className="InvestigationSidebar__header__inner-container">
+    //       <CollectionHeading collection={collection} />
+    //       {collection.summary && (
+    //         <Summary text={collection.summary} />
+    //       )}
+    //       <CollectionStatus collection={collection} showCancel={collection.writeable} />
+    //       <div className="InvestigationSidebar__header__divider" />
+    //       <div className="InvestigationSidebar__header__metadata__inner-container">
+    //         <CollectionInfo collection={collection} />
+    //         <div className="InvestigationSidebar__header__actions">
+    //           <CollectionManageMenu collection={collection} buttonProps={{ className: 'bp3-minimal' }}/>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // )}
+
     return (
       <div className="InvestigationWrapper">
-        {isCollapsed && (
+        {isCollapsed && showBreadcrumbs && (
           <div className="InvestigationWrapper__breadcrumbs-container">
             <Button
               minimal
               className="InvestigationWrapper__breadcrumbs-container__label"
               onClick={this.toggleCollapsed}
+              icon="briefcase"
             >
-              <Collection.Label collection={collection} />
+              <Collection.Label collection={collection} icon={false} />
             </Button>
             {breadcrumbs}
           </div>
         )}
+
         <DualPane>
-          <div>
-            <InvestigationSidebar
-              collection={collection}
-              isCollapsed={isCollapsed}
-              toggleCollapsed={this.toggleCollapsed}
-              onSearch={this.props.onSearch}
-            />
-          </div>
+          <InvestigationSidebar
+            collection={collection}
+            isCollapsed={isCollapsed}
+            toggleCollapsed={this.toggleCollapsed}
+            onSearch={this.props.onSearch}
+          />
           <DualPane.ContentPane className="InvestigationWrapper__body">
-            {!isCollapsed && breadcrumbs}
+            {!isCollapsed && showBreadcrumbs && breadcrumbs}
             <div className="InvestigationWrapper__body-content">
               {this.props.children}
             </div>
@@ -141,9 +148,11 @@ class InvestigationWrapper extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { activeType, collection, location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
   const query = queryCollectionEntities(location, collection.id, activeType);
   const result = selectEntitiesResult(state, query);
-  return { query, result };
+  const isCollapsed = hashQuery.collapsed;
+  return { isCollapsed, query, result };
 };
 
 export default compose(

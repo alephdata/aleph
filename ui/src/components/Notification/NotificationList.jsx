@@ -59,7 +59,7 @@ class NotificationList extends Component {
   }
 
   render() {
-    const { query, result, intl } = this.props;
+    const { query, result, intl, showCollectionLinks } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
     if (result.total === 0) {
@@ -76,7 +76,7 @@ class NotificationList extends Component {
         <NotificationListFilter query={query} updateQuery={this.updateQuery} result={result} />
         <ul className="NotificationList__items">
           {result.results && result.results.map(
-            notif => <Notification key={notif.id} notification={notif} />,
+            notif => <Notification key={notif.id} notification={notif} showCollectionLinks={showCollectionLinks} />,
           )}
           {result.isPending && skeletonItems.map(
             item => <Notification key={item} isPending />,

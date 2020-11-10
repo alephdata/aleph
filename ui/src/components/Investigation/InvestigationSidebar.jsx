@@ -29,6 +29,10 @@ const messages = defineMessages({
     id: 'collection.info.lists',
     defaultMessage: 'Lists',
   },
+  xref: {
+    id: 'collection.info.xref',
+    defaultMessage: 'Cross-reference',
+  },
   documents: {
     id: 'collection.info.browse',
     defaultMessage: 'Browse folders',
@@ -49,10 +53,6 @@ const messages = defineMessages({
     id: 'collection.info.show-metadata',
     defaultMessage: 'More',
   },
-  searchPlaceholder: {
-    id: 'collection.info.search',
-    defaultMessage: 'Search {collection}',
-  }
 });
 
 class InvestigationSidebar extends React.Component {
@@ -61,48 +61,47 @@ class InvestigationSidebar extends React.Component {
 
     this.state = { showMetadata: false };
 
-    this.onSearch = this.onSearch.bind(this);
     this.navigate = this.navigate.bind(this);
-  }
-
-  componentDidUpdate() {
-    const { activeMode } = this.props;
-    if (Object.values(collectionViewIds).indexOf(activeMode) < 0) {
-      this.navigate(collectionViewIds.OVERVIEW);
-    }
   }
 
   toggleMetadata = () => {
     this.setState(({ showMetadata }) => ({ showMetadata: !showMetadata }));
   }
 
-  navigate(mode, type, search) {
+  toggleCollapsed = () => {
+    const { history, isCollapsed, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    if (!isCollapsed) {
+      parsedHash.collapsed = true;
+    } else {
+      delete parsedHash.collapsed;
+    }
+    history.push({
+      pathname: location.pathname,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
+  navigate(mode, type) {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     parsedHash.mode = mode;
-    parsedHash.type = type
-    // delete parsedHash.type;
+    if (type) {
+      parsedHash.type = type
+    } else {
+      delete parsedHash.type;
+    }
 
     history.push({
       pathname: location.pathname,
       hash: queryString.stringify(parsedHash),
-      search
     });
-  }
-
-  onSearch(queryText) {
-    const { history, collection } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': collection.id,
-    };
-    this.navigate(collectionViewIds.SEARCH, null, queryString.stringify(query))
   }
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false, toggleCollapsed,
+      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false,
       intl, schemaCounts
     } = this.props;
     const { showMetadata } = this.state;
@@ -117,6 +116,10 @@ class InvestigationSidebar extends React.Component {
         id: collectionViewIds.LISTS,
         icon: 'list',
         rightIcon: <ResultCount result={lists} />
+      },
+      {
+        id: collectionViewIds.XREF,
+        icon: 'comparison',
       },
     ];
     const docTools = [
@@ -134,33 +137,23 @@ class InvestigationSidebar extends React.Component {
       },
     ];
 
-    // <Button
-    //   minimal
-    //   icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
-    //   onClick={toggleCollapsed}
-    //   className="InvestigationSidebar__collapse-toggle"
-    // />
+    //
+
+
 
     return (
       <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
         <div className={c('InvestigationSidebar__header', {'metadata-shown': showMetadata})}>
           <div className="InvestigationSidebar__header__inner-container">
             <CollectionHeading collection={collection} />
-            {collection.summary && (
-              <div>
-                <Summary text={collection.summary} />
-              </div>
-            )}
             <div className="InvestigationSidebar__header__metadata">
-              <SearchBox
-                onSearch={this.onSearch}
-                placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
-                inputProps={{ autoFocus: true }}
-              />
+              {collection.summary && (
+                <Summary text={collection.summary} />
+              )}
+              <CollectionStatus collection={collection} showCancel={collection.writeable} />
               <div className="InvestigationSidebar__header__divider" />
               <div className="InvestigationSidebar__header__metadata__inner-container">
                 <CollectionInfo collection={collection} />
-                <CollectionStatus collection={collection} showCancel={collection.writeable} />
                 <div className="InvestigationSidebar__header__actions">
                   <CollectionManageMenu collection={collection} buttonProps={{ className: 'bp3-minimal' }}/>
                 </div>
@@ -229,9 +222,14 @@ class InvestigationSidebar extends React.Component {
           </div>
         </div>
         <div className="InvestigationSidebar__footer">
-          <div className="InvestigationSidebar__footer__inner-container">
-            <CollectionReference collection={collection} />
-          </div>
+          <Button
+            minimal
+            fill
+            icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
+            onClick={this.toggleCollapsed}
+            text={isCollapsed ? null : 'Collapse'}
+            className="InvestigationSidebar__collapse-toggle"
+          />
         </div>
       </div>
     );
