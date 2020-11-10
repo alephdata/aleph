@@ -71,7 +71,7 @@ class InvestigationWrapper extends React.Component {
 
     const breadcrumbs = (
       <Breadcrumbs>
-        <Breadcrumbs.Collection key="collection" collection={collection} />
+        {isCollapsed && <Breadcrumbs.Collection key="collection" collection={collection} />}
         {activeMode && !activeType && (
           <Breadcrumbs.Text active>
             {intl.formatMessage(messages[activeMode])}

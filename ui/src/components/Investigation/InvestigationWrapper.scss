@@ -21,41 +21,4 @@
   &__body-content {
     padding: $aleph-content-padding;
   }
-
-  &__breadcrumbs-container {
-    display: inline-flex;
-    width: 100%;
-    background: $aleph-breadcrumbs-background;
-
-    &__label {
-      // margin: auto;
-
-      &.bp3-button {
-        color: white !important;
-        background: $blue1 !important;
-        white-space: nowrap;
-        // margin: 5px;
-        border-radius: 0;
-        padding: 5px 20px;
-        font-weight: 500;
-
-        .bp3-icon {
-          color: white !important;
-        }
-
-        &:hover {
-          background: rgba($blue1, .9) !important;
-        }
-      }
-
-      // padding: 7px;
-      // border-radius: 5px;
-      // margin: 5px;
-    }
-
-    .Breadcrumbs {
-      flex-grow: 10;
-      padding-left: 15px;
-    }
-  }
 }

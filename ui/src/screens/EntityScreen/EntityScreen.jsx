@@ -127,11 +127,13 @@ class EntityScreen extends Component {
       currEntity = currEntity.getFirst('parent');
     }
 
-    scopes.push({
-      listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
-      label: entity.collection.label,
-      onSearch: this.onCollectionSearch,
-    });
+    if (!entity.collection.casefile) {
+      scopes.push({
+        listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
+        label: entity.collection.label,
+        onSearch: this.onCollectionSearch,
+      });
+    }
 
     return scopes.reverse();
   }
