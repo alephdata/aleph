@@ -3,12 +3,7 @@
 
 .Breadcrumbs {
   z-index: 1;
-  padding: $aleph-grid-size/2 $aleph-content-padding;
   background-color: $aleph-breadcrumbs-background;
-
-  @media screen and (max-width: $aleph-screen-sm-max-width) {
-    @include rtlSupportInvertedProp(padding, left, $aleph-mobile-content-padding, $aleph-mobile-content-padding);
-  }
 
   &__inner-container {
     display: flex;
@@ -17,12 +12,9 @@
     align-items: center;
   }
 
-  &__main, &__right {
-    margin: 2px 0;
-  }
-
   &__right {
     display: flex;
+    margin: 5px $aleph-content-padding;
 
     .bp3-button-group {
       align-items: center;
@@ -31,10 +23,14 @@
 
   .bp3-breadcrumbs {
     height: auto;
-    margin: 1px 0;
 
     & > li {
-      margin: 5px 0;
+      margin: $aleph-grid-size*1.2 0;
+
+      &:first-child {
+        margin-left: $aleph-content-padding;
+      }
+
       &::after {
         margin: 0 10px;
       }
@@ -60,5 +56,26 @@
   .EntityLabel > * {
     display: inline-flex !important;
     white-space: nowrap !important;
+  }
+
+  &__investigation-crumb {
+    margin: 0 $aleph-grid-size 0 0 !important;
+
+    .CollectionLink {
+      padding: $aleph-grid-size*1.2;
+      background: $aleph-investigation-theme;
+      font-weight: bolder;
+
+      &:hover {
+        background-color: rgba($aleph-investigation-theme, .8) !important;
+      }
+    }
+
+    &::after {
+      display: none !important;
+    }
+    * {
+      color: white !important;
+    }
   }
 }

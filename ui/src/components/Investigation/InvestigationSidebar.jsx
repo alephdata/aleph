@@ -55,6 +55,9 @@ const messages = defineMessages({
   },
 });
 
+const collapsedModes = [collectionViewIds.ENTITIES, collectionViewIds.SEARCH, collectionViewIds.XREF];
+
+
 class InvestigationSidebar extends React.Component {
   constructor(props) {
     super(props);
@@ -83,7 +86,7 @@ class InvestigationSidebar extends React.Component {
   }
 
   navigate(mode, type) {
-    const { history, location } = this.props;
+    const { history, isCollapsed, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     parsedHash.mode = mode;
@@ -91,6 +94,10 @@ class InvestigationSidebar extends React.Component {
       parsedHash.type = type
     } else {
       delete parsedHash.type;
+    }
+
+    if (!isCollapsed && collapsedModes.indexOf(mode) > 0) {
+      parsedHash.collapsed = true;
     }
 
     history.push({

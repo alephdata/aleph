@@ -69,11 +69,9 @@ class InvestigationWrapper extends React.Component {
     // );
     // <ResultCount result={result} className="bp3-intent-primary" />
 
-
-    console.log(activeMode)
-
     const breadcrumbs = (
       <Breadcrumbs>
+        <Breadcrumbs.Collection key="collection" collection={collection} />
         {activeMode && !activeType && (
           <Breadcrumbs.Text active>
             {intl.formatMessage(messages[activeMode])}
@@ -110,22 +108,23 @@ class InvestigationWrapper extends React.Component {
     //     </div>
     //   </div>
     // )}
+    // {isCollapsed && showBreadcrumbs && (
+    //   <div className="InvestigationWrapper__breadcrumbs-container">
+    //     <Button
+    //       minimal
+    //       className="InvestigationWrapper__breadcrumbs-container__label"
+    //       onClick={this.toggleCollapsed}
+    //       icon="briefcase"
+    //     >
+    //       <Collection.Label collection={collection} icon={false} />
+    //     </Button>
+    //     {breadcrumbs}
+    //   </div>
+    // )}
 
     return (
       <div className="InvestigationWrapper">
-        {isCollapsed && showBreadcrumbs && (
-          <div className="InvestigationWrapper__breadcrumbs-container">
-            <Button
-              minimal
-              className="InvestigationWrapper__breadcrumbs-container__label"
-              onClick={this.toggleCollapsed}
-              icon="briefcase"
-            >
-              <Collection.Label collection={collection} icon={false} />
-            </Button>
-            {breadcrumbs}
-          </div>
-        )}
+        {isCollapsed && breadcrumbs}
 
         <DualPane>
           <InvestigationSidebar

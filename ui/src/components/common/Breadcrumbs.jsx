@@ -40,7 +40,7 @@ class CollectionBreadcrumb extends PureComponent {
             <Category.Link category={collection.category} className="bp3-breadcrumb" icon />
           </li>
         )}
-        <li key={collection.id}>
+        <li key={collection.id} className={c({'Breadcrumbs__investigation-crumb': collection.casefile})} >
           <Collection.Status
             collection={collection}
             showPopover
