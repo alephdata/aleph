@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 AZURE_KEYS_URL = "https://login.microsoftonline.com/common/discovery/keys"
 
 
-def configure_oauth(app):
+def configure_oauth(app, cache):
     if settings.OAUTH:
         oauth.provider = oauth.register(
             name=settings.OAUTH_HANDLER,
@@ -27,7 +27,7 @@ def configure_oauth(app):
             api_base_url=settings.OAUTH_BASE_URL,
             authorize_url=settings.OAUTH_AUTHORIZE_URL,
         )
-    oauth.init_app(app)
+    oauth.init_app(app, cache=cache)
     return oauth
 
 

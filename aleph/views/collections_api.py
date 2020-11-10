@@ -1,5 +1,5 @@
 from banal import ensure_list
-from flask import Blueprint, request, session
+from flask import Blueprint, request
 
 from aleph.core import db
 from aleph.search import CollectionsQuery
@@ -14,7 +14,7 @@ from aleph.logic.processing import bulk_write
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import get_db_collection, get_index_collection, get_entityset
 from aleph.views.util import require, parse_request, jsonify
-from aleph.views.util import get_flag
+from aleph.views.util import get_flag, get_session_id
 
 blueprint = Blueprint("collections_api", __name__)
 
@@ -186,8 +186,9 @@ def reingest(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
+    job_id = get_session_id()
     data = {"index": get_flag("index", False)}
-    queue_task(collection, OP_REINGEST, job_id=session.job_id, payload=data)
+    queue_task(collection, OP_REINGEST, job_id=job_id, payload=data)
     return ("", 202)
 
 
@@ -219,8 +220,9 @@ def reindex(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
+    job_id = get_session_id()
     data = {"flush": get_flag("flush", False)}
-    queue_task(collection, OP_REINDEX, job_id=session.job_id, payload=data)
+    queue_task(collection, OP_REINDEX, job_id=job_id, payload=data)
     return ("", 202)
 
 
@@ -264,6 +266,7 @@ def bulk(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
+    job_id = get_session_id()
     entityset = request.args.get("entityset_id")
     if entityset is not None:
         entityset = get_entityset(entityset, request.authz.WRITE)
@@ -294,7 +297,7 @@ def bulk(collection_id):
     collection.touch()
     db.session.commit()
     data = {"entity_ids": entity_ids}
-    queue_task(collection, OP_INDEX, job_id=session.job_id, payload=data)
+    queue_task(collection, OP_INDEX, job_id=job_id, payload=data)
     return ("", 204)
 
 

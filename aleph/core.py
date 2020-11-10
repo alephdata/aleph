@@ -55,7 +55,7 @@ def create_app(config={}):
         app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30])
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
-    configure_oauth(app)
+    configure_oauth(app, cache=get_cache())
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
@@ -85,7 +85,7 @@ def create_app(config={}):
 
     from aleph.views import mount_app_blueprints
 
-    mount_app_blueprints(app, get_cache())
+    mount_app_blueprints(app)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.

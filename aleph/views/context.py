@@ -6,7 +6,7 @@ from pprint import pformat  # noqa
 from banal import hash_data
 from datetime import datetime
 from flask_babel import get_locale
-from flask import request, session, Response, Blueprint
+from flask import request, Response, Blueprint
 from werkzeug.exceptions import TooManyRequests
 
 from aleph import __version__
@@ -22,6 +22,7 @@ blueprint = Blueprint("context", __name__)
 
 class NotModified(Exception):
     """Converts to HTTP status 304."""
+
     pass
 
 
@@ -109,9 +110,9 @@ def enable_rate_limit(request):
 def setup_request():
     """Set some request attributes at the beginning of the request.
     By default, caching will be disabled."""
-    # log.info("Setting up request...")
     request._begin_time = time.time()
     request._app_locale = str(get_locale())
+    request._session_id = request.headers.get("X-Aleph-Session")
     request._http_cache = False
     request._http_private = False
     request._http_revalidate = False
@@ -181,7 +182,7 @@ def generate_request_log(resp, took):
         "ip": _get_remote_ip(),
         "ua": str(request.user_agent),
         "time": datetime.utcnow().isoformat(),
-        "session_id": getattr(session, "id", None),
+        "session_id": getattr(request, "_session_id", None),
         "locale": getattr(request, "_app_locale", None),
         "took": took,
         "url": request.url,
