@@ -39,7 +39,9 @@ APP_FAVICON = env.get("ALEPH_FAVICON", "/static/favicon.png")
 APP_BANNER = env.get("ALEPH_APP_BANNER")
 
 # Force HTTPS here:
-FORCE_HTTPS = env.to_bool("ALEPH_FORCE_HTTPS", False)
+FORCE_HTTPS = True if APP_UI_URL.lower().startswith("https") else False
+FORCE_HTTPS = env.to_bool("ALEPH_FORCE_HTTPS", FORCE_HTTPS)
+PREFERRED_URL_SCHEME = "https" if FORCE_HTTPS else "http"
 
 # Content security policy:
 CONTENT_POLICY = "default-src: 'self' 'unsafe-inline' 'unsafe-eval' data: *"
