@@ -38,6 +38,12 @@ def _metadata_locale(locale):
     locales = settings.UI_LANGUAGES
     locales = {loc: Locale(loc).get_language_name(loc) for loc in locales}
 
+    # This is dumb but we agreed it with ARIJ
+    # https://github.com/alephdata/aleph/issues/1432
+    app_logo = settings.APP_LOGO
+    if locale.startswith("ar"):
+        app_logo = settings.APP_LOGO_AR or app_logo
+
     return {
         "status": "ok",
         "maintenance": settings.MAINTENANCE,
@@ -46,7 +52,7 @@ def _metadata_locale(locale):
             "version": __version__,
             "banner": settings.APP_BANNER,
             "ui_uri": settings.APP_UI_URL,
-            "logo": settings.APP_LOGO,
+            "logo": app_logo,
             "favicon": settings.APP_FAVICON,
             "locale": locale,
             "locales": locales,
