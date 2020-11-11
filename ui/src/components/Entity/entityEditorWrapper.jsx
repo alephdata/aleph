@@ -2,9 +2,10 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Namespace } from '@alephdata/followthemoney';
+import { Entity, Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
+import { processApiEntity } from 'components/EntitySet/util';
 import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'selectors';
 import {
   createEntity,
@@ -35,10 +36,10 @@ const entityEditorWrapper = (EditorComponent) => {
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
         };
 
-        this.entityManager = new EntityManager(config);
-
         if (entities) {
-          this.entityManager.addEntities(entities);
+          this.entityManager = EntityManager.fromJSON(config, entities.map(processApiEntity));
+        } else {
+          this.entityManager = new EntityManager(config);
         }
         this.pendingPromises = [];
       }
@@ -91,13 +92,19 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async expandEntity(entityId, properties, limit) {
-        const { location } = this.props;
+        const { location, model } = this.props;
         const query = queryExpand(location, entityId, properties, limit);
 
         this.props.queryEntityExpand({ query });
 
         return new Promise((resolve) => {
-          this.pendingPromises.push({ query, promiseResolve: resolve });
+          this.pendingPromises.push({ query, promiseResolve: results => {
+            const processed = results.map(({ entities, ...rest }) => ({
+              entities: entities?.map(e => processApiEntity(Entity.fromJSON(model, e))),
+              ...rest
+            }));
+            return resolve(processed);
+          }});
         });
       }
 

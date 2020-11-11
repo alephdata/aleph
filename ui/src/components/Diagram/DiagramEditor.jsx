@@ -20,6 +20,7 @@ class DiagramEditor extends React.Component {
 
     if (diagram) {
       const layoutData = { vertices: [], edges: [], selection: [] };
+
       initialLayout = GraphLayout.fromJSON(
         config,
         {...layoutData, ...diagram.layout}
@@ -67,7 +68,6 @@ class DiagramEditor extends React.Component {
       const updatedDiagram = {
         ...diagram,
         layout: layoutData,
-        entities: entities ? entities.map(entity => entity.id) : [],
       };
 
       this.props.updateEntitySet(updatedDiagram.id, updatedDiagram)
