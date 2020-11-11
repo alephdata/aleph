@@ -120,7 +120,7 @@ const mapStateToProps = (state, ownProps) => {
   const list = selectEntitySet(state, entitySetId);
   const countsQuery = entitySetSchemaCountsQuery(entitySetId)
   const countsResult = selectEntitiesResult(state, countsQuery);
-  const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name);
+  const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name, 30);
 
   return {
     entitySetId,

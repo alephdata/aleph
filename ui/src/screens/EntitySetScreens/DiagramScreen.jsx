@@ -6,8 +6,9 @@ import { Prompt, withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
-import { fetchEntitySet } from 'actions';
-import { selectEntitySet } from 'selectors';
+import { fetchEntitySet, queryEntitySetEntities } from 'actions';
+import { selectEntitySet, selectEntitiesResult } from 'selectors';
+import { entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
@@ -106,10 +107,14 @@ export class DiagramScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { diagram, entitySetId } = this.props;
+    const { diagram, entitiesQuery, entitiesResult, entitySetId } = this.props;
 
     if (diagram.shouldLoad || diagram.shallow) {
       this.props.fetchEntitySet(entitySetId);
+    }
+
+    if (entitiesResult.shouldLoad) {
+      this.props.queryEntitySetEntities({ query: entitiesQuery });
     }
   }
 
@@ -128,14 +133,14 @@ export class DiagramScreen extends Component {
   }
 
   render() {
-    const { diagram, intl } = this.props;
+    const { diagram, entitiesResult, intl } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
       return <ErrorScreen error={diagram.error} />;
     }
 
-    if ((!diagram.id) || diagram.shallow) {
+    if (!diagram.id || diagram.shallow || (entitiesResult.isPending && !entitiesResult.results?.length)) {
       return <LoadingScreen />;
     }
 
@@ -172,7 +177,7 @@ export class DiagramScreen extends Component {
             collection={diagram.collection}
             onStatusChange={this.onStatusChange}
             diagram={diagram}
-            entities={diagram?.entities}
+            entities={entitiesResult?.results}
             downloadTriggered={downloadTriggered}
             filterText={filterText}
             onDownloadComplete={this.onDownloadComplete}
@@ -184,11 +189,15 @@ export class DiagramScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entitySetId } = ownProps.match.params;
+  const { location, match } = ownProps;
+  const { entitySetId } = match.params;
+  const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000);
 
   return {
     entitySetId,
     diagram: selectEntitySet(state, entitySetId),
+    entitiesQuery,
+    entitiesResult: selectEntitiesResult(state, entitiesQuery),
   };
 };
 
@@ -196,5 +205,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { fetchEntitySet }),
+  connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
 )(DiagramScreen);
