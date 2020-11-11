@@ -69,7 +69,7 @@ export class EntitySetIndexScreen extends Component {
     const description = intl.formatMessage(messages[`${type}_description`])
 
     if (result.isError) {
-      return <ErrorScreen error={result.error} />;
+      return <ErrorScreen error={result.error} requireSession />;
     }
 
     return (
