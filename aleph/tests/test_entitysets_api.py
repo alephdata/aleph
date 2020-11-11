@@ -61,35 +61,6 @@ class EntitySetAPITest(TestCase):
             "summary": "...",
         }
 
-    def _load_data_for_update(self, fixture):
-        fixture = self.get_fixture_path(fixture)
-        with open(fixture, "r") as fp:
-            data = json.load(fp)
-        data = _normalize_data(data)
-        layout = data.pop("layout")
-        entities = layout.pop("entities")
-        # Replace entitiy ids with our own newly created signed
-        # entity ids.
-        signed_entity_ids = {}
-        for ent in entities:
-            ent = json.dumps(ent)
-            for old_id, new_id in signed_entity_ids.items():
-                ent = ent.replace(old_id, new_id)
-            ent = json.loads(ent)
-            # clear existing id if any
-            ent.pop("foreign_id", None)
-            signed_entity_id = upsert_entity(ent, self.col)
-            signed_entity_ids[ent["id"]] = signed_entity_id
-
-        return {
-            "collection_id": str(self.col.id),
-            "layout": layout,
-            "entities": list(signed_entity_ids.values()),
-            "label": "Royal Family",
-            "type": "diagram",
-            "summary": "...",
-        }
-
     def test_entityset_crud(self):
         url = "/api/2/entitysets"
         res = self.client.post(url, json=self.input_data, headers=self.headers)
@@ -97,7 +68,6 @@ class EntitySetAPITest(TestCase):
         validate(res.json, "EntitySet")
         ent_id = self.input_data["entities"][0]["id"]
         assert ent_id in str(res.json), res.json
-        assert len(res.json["entities"]) == 7, len(res.json["entities"])
         entityset_id = res.json["id"]
 
         url = "/api/2/entitysets"
@@ -128,19 +98,13 @@ class EntitySetAPITest(TestCase):
         res_str = json.dumps(res.json)
         assert "Philip" in res_str
 
-        updated = self._load_data_for_update("royal-family-v2.vis")
-        updated["label"] = "Royal Family v2"
-        res = self.client.post(url, json=updated, headers=self.headers)
+        data = self._load_data_for_import("royal-family.vis")
+        data["label"] = "Royal Family v2"
+        res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "EntitySet")
-        signed_id = res.json["entities"][0]["id"]
-        assert self.col.ns.verify(signed_id)
-        assert len(res.json["entities"]) == 4, len(res.json["entities"])
         assert res.json["label"] == "Royal Family v2"
         assert res.json["summary"] == "..."
-        res_str = json.dumps(res.json)
-        assert "Philip" not in res_str
-        assert "Charles" in res_str
 
         res = self.client.delete(url, headers=self.headers)
         assert res.status_code == 204, res
@@ -152,9 +116,6 @@ class EntitySetAPITest(TestCase):
         res = self.client.post(url, json=self.input_data, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "EntitySet")
-        ent_id = self.input_data["entities"][0]["id"]
-        assert ent_id in str(res.json), res.json
-        assert len(res.json["entities"]) == 7, len(res.json["entities"])
         entityset_id = res.json["id"]
 
         entityset2_data = self._load_data_for_import("royal-family-v2.vis")

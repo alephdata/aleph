@@ -189,36 +189,6 @@ class EntitySet(db.Model, SoftDeleteModel):
         self.updated_at = datetime.utcnow()
         self.deleted_at = None
         db.session.add(self)
-        self.update_entities(data.get("entities", []))
-
-    def update_entities(self, entities):
-        """Update entities to the current EntitySet. Will delete EntitySetItems
-        not in the provided entities list
-        """
-        q = EntitySetItem.all(deleted=True)
-        q = q.filter(EntitySetItem.entityset_id == self.id)
-        existing_items = {item.entity_id: item for item in q}
-
-        for entity_id in entities:
-            if entity_id in existing_items:
-                item = existing_items.pop(entity_id)
-                item.deleted_at = None
-            else:
-                item = EntitySetItem()
-                item.created_at = self.updated_at
-            item.added_by_id = self.role_id
-            item.collection_id = self.collection_id
-            item.entityset_id = self.id
-            item.entity_id = entity_id
-            item.judgement = Judgement.POSITIVE
-            item.updated_at = self.updated_at
-            db.session.add(item)
-
-        # Now we delete any existing EntitySetItems that haven't been
-        # referenced in entities and removed from the existing_items dict
-        for item in existing_items.values():
-            if item.deleted_at is None:
-                item.delete()
 
     def delete(self, deleted_at=None):
         pq = db.session.query(EntitySetItem)
@@ -241,7 +211,6 @@ class EntitySet(db.Model, SoftDeleteModel):
                 "type": self.type,
                 "label": self.label,
                 "summary": self.summary,
-                "entities": self.entities,
                 "layout": self.layout,
                 "role_id": stringify(self.role_id),
                 "collection_id": stringify(self.collection_id),
@@ -280,7 +249,7 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def save(cls, entityset, entity_id, judgement=None, **data):
+    def save(cls, entityset, entity_id, judgement=None, collection_id=None, **data):
         if judgement is None:
             judgement = Judgement.POSITIVE
         else:
@@ -297,7 +266,7 @@ class EntitySetItem(db.Model, SoftDeleteModel):
             entity_id=entity_id,
             judgement=judgement,
             compared_to_entity_id=data.get("compared_to_entity_id"),
-            collection_id=data.get("collection_id"),
+            collection_id=collection_id or entityset.collection_id,
             added_by_id=data.get("added_by_id"),
         )
         db.session.add(item)
