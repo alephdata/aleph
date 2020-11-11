@@ -35,12 +35,11 @@ const entityEditorWrapper = (EditorComponent) => {
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
         };
 
-        if (entities) {
-          this.entityManager = EntityManager.fromJSON(config, entities);
-        } else {
-          this.entityManager = new EntityManager(config);
-        }
+        this.entityManager = new EntityManager(config);
 
+        if (entities) {
+          this.entityManager.addEntities(entities);
+        }
         this.pendingPromises = [];
       }
 
