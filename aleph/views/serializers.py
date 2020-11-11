@@ -285,8 +285,6 @@ class ExportSerializer(Serializer):
 class EntitySetSerializer(Serializer):
     def _collect(self, obj):
         self.queue(Collection, obj.get("collection_id"))
-        for entity_id in ensure_list(obj.get("entities", [])):
-            self.queue(Entity, entity_id)
 
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
@@ -296,11 +294,6 @@ class EntitySetSerializer(Serializer):
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )
-        obj["entities"] = []
-        for ent_id in entity_ids:
-            entity = self.resolve(Entity, ent_id, EntitySerializer)
-            if entity is not None:
-                obj["entities"].append(entity)
         return obj
 
 
@@ -317,24 +310,6 @@ class EntitySetItemSerializer(Serializer):
             Collection, collection_id, CollectionSerializer
         )
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
-        return obj
-
-
-class EntitySetIndexSerializer(Serializer):
-    def _collect(self, obj):
-        self.queue(Collection, obj.get("collection_id"))
-
-    def _serialize(self, obj):
-        collection_id = obj.pop("collection_id", None)
-        obj.update(
-            {
-                "shallow": True,
-                "writeable": request.authz.can(collection_id, request.authz.WRITE),
-                "collection": self.resolve(
-                    Collection, collection_id, CollectionSerializer
-                ),
-            }
-        )
         return obj
 
 
