@@ -6,11 +6,11 @@ import Screen from 'components/Screen/Screen';
 
 
 function ErrorScreen(props) {
-  const { title = '', error, requireSession } = props;
+  const { title = '', error } = props;
   const screenTitle = error === undefined ? title : error.message;
 
   return (
-    <Screen title={screenTitle} requireSession={requireSession}>
+    <Screen title={screenTitle}>
       <SinglePane>
         <ErrorSection {...props} />
       </SinglePane>

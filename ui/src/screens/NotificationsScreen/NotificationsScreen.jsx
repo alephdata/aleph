@@ -30,17 +30,17 @@ const messages = defineMessages({
 export class NotificationsScreen extends React.Component {
   render() {
     const { query, result, intl, role } = this.props;
-
-    if (result.isError) {
-      return <ErrorScreen error={result.error} requireSession />;
-    }
+    const screenProps = {
+      title: intl.formatMessage(messages.title),
+      requireSession: true,
+    };
 
     if (!role.id) {
-      return <LoadingScreen requireSession />
+      return <LoadingScreen {...screenProps} />
     }
 
     return (
-      <Screen title={intl.formatMessage(messages.title)} requireSession>
+      <Screen {...screenProps}>
         <Dashboard>
           <div className="Dashboard__title-container">
             <h5 className="Dashboard__title">
