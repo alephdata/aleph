@@ -63,8 +63,6 @@ class Notification extends PureComponent {
     const { event, id, created_at: createdAt } = notification;
     const parts = event.template.split(/({{|}})/);
 
-    console.log('parts', parts, event, event.template
-  )
     const message = [];
 
     let paramActive = false;

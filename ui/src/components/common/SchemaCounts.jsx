@@ -89,6 +89,7 @@ class SchemaCounts extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const { activeSchema, filterSchemata, schemaCounts } = ownProps;
   const model = selectModel(state);
+  console.log('in schema counts', schemaCounts)
 
   const allCounts = schemaCounts
   if (activeSchema && !allCounts[activeSchema]) {
@@ -97,11 +98,11 @@ const mapStateToProps = (state, ownProps) => {
 
   const visibleCounts = _.pickBy(schemaCounts, (val, key) => {
     const schema = model.getSchema(key);
-    return filterSchemata(schema) && !schema.hidden;
+    return (!filterSchemata || filterSchemata(schema)) && !schema.hidden;
   })
 
   const selectableSchemata = model.getSchemata()
-    .filter((schema) => filterSchemata(schema) && !schema.hidden && !(schema in visibleCounts))
+    .filter((schema) => (!filterSchemata || filterSchemata(schema)) && !schema.hidden && !(schema in visibleCounts))
     .map((schema) => schema.name);
 
   return {

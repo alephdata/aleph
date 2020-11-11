@@ -4,6 +4,8 @@ $transition-duration: .3s;
 $sidebar-padding: 15px;
 
 .InvestigationSidebar {
+  height: calc(100vh - #{$aleph-top-nav-height});
+
   // position: fixed;
   background: $light-gray5;
   box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
@@ -43,12 +45,13 @@ $sidebar-padding: 15px;
   }
 
   &__content {
+    overflow-y: scroll;
 
     .collapsed & {
 
-      height: calc(100vh - #{$aleph-top-nav-height + $aleph-breadcrumbs-height});
+      // height: calc(100vh - #{$aleph-top-nav-height + $aleph-breadcrumbs-height});
 
-      overflow-y: scroll;
+      // overflow-y: scroll;
     }
   }
 
