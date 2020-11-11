@@ -32,11 +32,11 @@ export class NotificationsScreen extends React.Component {
     const { query, result, intl, role } = this.props;
 
     if (result.isError) {
-      return <ErrorScreen error={result.error} />;
+      return <ErrorScreen error={result.error} requireSession />;
     }
 
     if (!role.id) {
-      return <LoadingScreen />
+      return <LoadingScreen requireSession />
     }
 
     return (

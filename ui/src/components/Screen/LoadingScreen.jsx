@@ -5,8 +5,8 @@ import Screen from 'components/Screen/Screen';
 
 import './LoadingScreen.scss';
 
-const LoadingScreen = () => (
-  <Screen>
+const LoadingScreen = (requireSession) => (
+  <Screen requireSession={requireSession}>
     <div className="LoadingScreen">
       <div className="spinner">
         <Spinner className="bp3-large" />
