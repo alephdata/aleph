@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-// import EntityTableViews from 'components/EntityTable/EntityTableViews';
 import EntityTable from 'components/EntityTable/EntityTable';
 import { selectModel } from 'selectors';
 import { queryCollectionEntities } from 'queries';

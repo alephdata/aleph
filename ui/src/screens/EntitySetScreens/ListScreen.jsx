@@ -72,6 +72,7 @@ export class ListScreen extends Component {
     parsedHash.type = schema;
     history.push({
       pathname: location.pathname,
+      search: "",
       hash: queryString.stringify(parsedHash),
     });
   }
