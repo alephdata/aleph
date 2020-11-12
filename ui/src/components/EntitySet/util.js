@@ -1,6 +1,6 @@
 // convert any entity references contained in entity properties to entityIds instead of
 //  full Entity objects
-const processApiEntity = (entity) => {
+const processApiEntity = (entity, model) => {
   const props = entity.getProperties();
 
   props.forEach(prop => {
@@ -11,7 +11,7 @@ const processApiEntity = (entity) => {
     }
   })
 
-  return entity.toJSON();
+  return entity.clone();
 };
 
 export {

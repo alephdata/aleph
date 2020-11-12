@@ -35,11 +35,11 @@ const entityEditorWrapper = (EditorComponent) => {
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
         };
+        this.entityManager = new EntityManager(config);
 
         if (entities) {
-          this.entityManager = EntityManager.fromJSON(config, entities.map(processApiEntity));
-        } else {
-          this.entityManager = new EntityManager(config);
+          const processedEntities = entities.map(processApiEntity);
+          this.entityManager.addEntities(processedEntities);
         }
         this.pendingPromises = [];
       }
@@ -100,7 +100,7 @@ const entityEditorWrapper = (EditorComponent) => {
         return new Promise((resolve) => {
           this.pendingPromises.push({ query, promiseResolve: results => {
             const processed = results.map(({ entities, ...rest }) => ({
-              entities: entities?.map(e => processApiEntity(Entity.fromJSON(model, e))),
+              entities,
               ...rest
             }));
             return resolve(processed);
