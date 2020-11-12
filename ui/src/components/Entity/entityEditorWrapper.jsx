@@ -2,7 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Entity, Namespace } from '@alephdata/followthemoney';
+import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
 import { processApiEntity } from 'components/EntitySet/util';
@@ -92,7 +92,7 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async expandEntity(entityId, properties, limit) {
-        const { location, model } = this.props;
+        const { location } = this.props;
         const query = queryExpand(location, entityId, properties, limit);
 
         this.props.queryEntityExpand({ query });
