@@ -98,13 +98,7 @@ const entityEditorWrapper = (EditorComponent) => {
         this.props.queryEntityExpand({ query });
 
         return new Promise((resolve) => {
-          this.pendingPromises.push({ query, promiseResolve: results => {
-            const processed = results.map(({ entities, ...rest }) => ({
-              entities,
-              ...rest
-            }));
-            return resolve(processed);
-          }});
+          this.pendingPromises.push({ query, promiseResolve: resolve });
         });
       }
 
