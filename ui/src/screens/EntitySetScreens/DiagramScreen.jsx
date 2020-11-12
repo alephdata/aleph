@@ -140,7 +140,7 @@ export class DiagramScreen extends Component {
       return <ErrorScreen error={diagram.error} />;
     }
 
-    if (!diagram.id || diagram.shallow || (entitiesResult.isPending && !entitiesResult.results?.length)) {
+    if (!diagram.id || diagram.shallow || entitiesResult.total === undefined) {
       return <LoadingScreen />;
     }
 
