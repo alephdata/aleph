@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)
 
 
-@blueprint.route("/api/2/search", methods=["GET"])
+@blueprint.route("/api/2/search", methods=["GET", "POST", "PUT"])
 @blueprint.route("/api/2/entities", methods=["GET"])
 def index():
     """
@@ -131,7 +131,7 @@ def index():
       - Entity
     """
     # enable_cache(vary_user=True)
-    parser = SearchQueryParser(request.args, request.authz)
+    parser = SearchQueryParser(request.values, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
     tag_request(query=result.query.to_text(), prefix=parser.prefix)
     links = {}
