@@ -32,7 +32,7 @@ services:
     tmpfs: /tmp
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:b9a091020939d65f5ab1e0322286fa7cf6c9cde1
+    image: ghcr.io/alephdata/ingest-file:5d23a534ef1dd9500bfb390ee2e095fe98796eac
     tmpfs:
       - /tmp:mode=777
     volumes:
