@@ -3,14 +3,15 @@
 
 .InvestigationWrapper {
   width: 100%;
-  overflow: hidden;
-  height: calc(100vh - #{$aleph-top-nav-height});
+  // overflow: hidden;
+  // height: calc(100vh - #{$aleph-top-nav-height});
 
   .DualPane {
     padding: 0;
   }
 
   &__body.ContentPane {
+    flex: 1;
     // height: calc(100vh - #{$aleph-top-nav-height + $aleph-breadcrumbs-height});
     // overflow-y: scroll;
   }

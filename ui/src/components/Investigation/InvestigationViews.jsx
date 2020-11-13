@@ -6,8 +6,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 
 import InvestigationOverviewMode from 'components/Investigation/InvestigationOverviewMode';
 import InvestigationMentionsMode from 'components/Investigation/InvestigationMentionsMode';
+import InvestigationDocumentsMode from 'components/Investigation/InvestigationDocumentsMode';
 
-import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
@@ -22,7 +22,7 @@ class InvestigationViews extends React.Component {
 
     switch(activeMode) {
       case collectionViewIds.DOCUMENTS:
-        return <CollectionDocumentsMode collection={collection} />;
+        return <InvestigationDocumentsMode collection={collection} />;
       case collectionViewIds.ENTITIES:
         return <CollectionEntitiesMode collection={collection} />;
       case collectionViewIds.DIAGRAMS:

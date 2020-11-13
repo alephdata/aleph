@@ -78,6 +78,7 @@ class SchemaCounts extends React.PureComponent {
               text={intl.formatMessage(messages.addSchemaPlaceholder)}
               icon="plus"
               isCollapsed={isCollapsed}
+              rightIcon="chevron-down"
             />
           </Schema.Select>
         )}
@@ -89,7 +90,6 @@ class SchemaCounts extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const { activeSchema, filterSchemata, schemaCounts } = ownProps;
   const model = selectModel(state);
-  console.log('in schema counts', schemaCounts)
 
   const allCounts = schemaCounts
   if (activeSchema && !allCounts[activeSchema]) {

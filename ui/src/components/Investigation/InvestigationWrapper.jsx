@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   documents: {
     id: 'collection.info.browse',
-    defaultMessage: 'Browse folders',
+    defaultMessage: 'Browse documents',
   },
   mappings: {
     id: 'collection.info.mappings',

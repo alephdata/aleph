@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
   documents: {
     id: 'collection.info.browse',
-    defaultMessage: 'Browse folders',
+    defaultMessage: 'Browse documents',
   },
   mappings: {
     id: 'collection.info.mappings',
@@ -207,14 +207,6 @@ class InvestigationSidebar extends React.Component {
               <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
             </h6>
             <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-              <SchemaCounts
-                filterSchemata={schema => schema.isDocument()}
-                schemaCounts={schemaCounts}
-                onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
-                showSchemaAdd={false}
-                activeSchema={activeType}
-                isCollapsed={isCollapsed}
-              />
               {docTools.map(({ id, ...rest }) => (
                 <InvestigationSidebarButton
                   key={id}

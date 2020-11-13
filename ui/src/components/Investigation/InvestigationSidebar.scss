@@ -2,20 +2,22 @@
 
 $transition-duration: .3s;
 $sidebar-padding: 15px;
+$full-width: 300px;
+$collapsed-width: 57px;
 
 .InvestigationSidebar {
-  height: calc(100vh - #{$aleph-top-nav-height});
+  // height: calc(100vh - #{$aleph-top-nav-height});
 
   // position: fixed;
   background: $light-gray5;
   box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
   // overflow-y: scroll;
-  width: 300px;
+  width: $full-width;
   transition: width $transition-duration ease-in-out, min-width $transition-duration ease-in-out, box-shadow $transition-duration ease-in-out;
   padding: 0;
 
   &.collapsed {
-    width: 57px;
+    width: $collapsed-width;
     // box-shadow: none;
     background: $aleph-breadcrumbs-background;
     padding: 0;
@@ -45,7 +47,8 @@ $sidebar-padding: 15px;
   }
 
   &__content {
-    overflow-y: scroll;
+    margin-bottom: 40px;
+
 
     .collapsed & {
 
@@ -156,6 +159,16 @@ $sidebar-padding: 15px;
   &__footer {
     padding: 5px;
     border-top: 1px solid $light-gray2;
+    position: fixed;
+    width: $full-width;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    transition: width $transition-duration ease-in-out;
+
+    .collapsed & {
+      width: $collapsed-width;
+    }
   }
 
   &__collapse-toggle.bp3-button {

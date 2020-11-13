@@ -13,6 +13,8 @@ class CollectionEntitiesMode extends React.PureComponent {
   render() {
     const { activeSchema, collection, querySchemaEntities } = this.props;
 
+    console.log('in collection entities mode', activeSchema);
+
     return (
       <EntityTable
         query={querySchemaEntities(activeSchema)}
@@ -28,7 +30,6 @@ class CollectionEntitiesMode extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { location, collection } = ownProps;
-  const isPending = false;
 
   const model = selectModel(state);
   const hashQuery = queryString.parse(location.hash);
@@ -52,7 +53,7 @@ const mapStateToProps = (state, ownProps) => {
   let addedView;
   if (hashType && !visibleCounts.find(obj => obj.id === hashType)) {
     addedView = { id: hashType, count: 0 };
-  } else if (!isPending && !visibleCounts.length) {
+  } else if (!visibleCounts.length) {
     addedView = { id: 'Person', count: 0 };
   }
 

@@ -5,12 +5,14 @@ export function queryGroups(location) {
   return Query.fromLocation('groups', location, {}, 'groups');
 }
 
-export function queryCollectionDocuments(location, collectionId) {
+export function queryCollectionDocuments(location, collectionId, onlyTopLevel = true) {
   const context = {
     'filter:collection_id': collectionId,
     'filter:schemata': 'Document',
-    'empty:properties.parent': true,
   };
+  if (onlyTopLevel) {
+    context['empty:properties.parent'] = true;
+  }
   return Query.fromLocation('entities', location, context, 'document');
 }
 

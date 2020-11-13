@@ -162,8 +162,6 @@ const mapStateToProps = (state, ownProps) => {
   const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name);
   const hashQuery = queryString.parse(location.hash);
 
-  console.log(countsResult)
-
   return {
     entitySetId,
     list,
