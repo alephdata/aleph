@@ -1,0 +1,1376 @@
+{
+  "auth.bad_request": {
+    "defaultMessage": "The Server did not accept your input"
+  },
+  "auth.unauthorized": {
+    "defaultMessage": "Non autorisé"
+  },
+  "auth.server_error": {
+    "defaultMessage": "Erreur du serveur"
+  },
+  "auth.unknown_error": {
+    "defaultMessage": "Une erreur inattendue s'est produite"
+  },
+  "auth.success": {
+    "defaultMessage": "Success"
+  },
+  "alerts.heading": {
+    "defaultMessage": "Gérer vos alertes"
+  },
+  "alerts.save": {
+    "defaultMessage": "Update"
+  },
+  "alerts.add_placeholder": {
+    "defaultMessage": "Créer une nouvelle alerte de suivi..."
+  },
+  "alerts.no_alerts": {
+    "defaultMessage": "You are not tracking any searches"
+  },
+  "alerts.track": {
+    "defaultMessage": "Track"
+  },
+  "pass.auth.not_same": {
+    "defaultMessage": "Your passwords are not the same!"
+  },
+  "password_auth.email": {
+    "defaultMessage": "Adresse mail"
+  },
+  "password_auth.name": {
+    "defaultMessage": "Your Name"
+  },
+  "password_auth.password": {
+    "defaultMessage": "Mot de passe"
+  },
+  "password_auth.confirm": {
+    "defaultMessage": "Confirmez le mot de passe"
+  },
+  "password_auth.signin": {
+    "defaultMessage": "Sign in"
+  },
+  "password_auth.signup": {
+    "defaultMessage": "Sign up"
+  },
+  "password_auth.activate": {
+    "defaultMessage": "Activer"
+  },
+  "nav.view_notifications": {
+    "defaultMessage": "Notifications"
+  },
+  "nav.casefiles": {
+    "defaultMessage": "Jeux de données personnels"
+  },
+  "nav.diagrams": {
+    "defaultMessage": "Network diagrams"
+  },
+  "nav.settings": {
+    "defaultMessage": "Réglages"
+  },
+  "nav.signout": {
+    "defaultMessage": "Sign out"
+  },
+  "nav.signin_register": {
+    "defaultMessage": "Sign in / Register"
+  },
+  "nav.querylogs": {
+    "defaultMessage": "Historique de recherche"
+  },
+  "nav.alerts": {
+    "defaultMessage": "Alertes"
+  },
+  "nav.signin": {
+    "defaultMessage": "Sign in"
+  },
+  "collection.addSchema.placeholder": {
+    "defaultMessage": "Add new entity type"
+  },
+  "collection.publisher": {
+    "defaultMessage": "Publicateur"
+  },
+  "collection.info_url": {
+    "defaultMessage": "URL d'information"
+  },
+  "collection.data_url": {
+    "defaultMessage": "URL des données"
+  },
+  "collection.creator": {
+    "defaultMessage": "Gestionnaire"
+  },
+  "collection.team": {
+    "defaultMessage": "Accessible à"
+  },
+  "collection.countries": {
+    "defaultMessage": "Pays"
+  },
+  "collection.frequency": {
+    "defaultMessage": "Updates"
+  },
+  "collection.updated_at": {
+    "defaultMessage": "Dernière mise à jour"
+  },
+  "collection.info.reingest": {
+    "defaultMessage": "Re-ingest documents"
+  },
+  "collection.info.reindex": {
+    "defaultMessage": "Re-index all content"
+  },
+  "collection.info.delete": {
+    "defaultMessage": "Delete dataset"
+  },
+  "collection.info.edit": {
+    "defaultMessage": "Réglages"
+  },
+  "collection.info.access": {
+    "defaultMessage": "Partager"
+  },
+  "collection.foreign_id": {
+    "defaultMessage": "Identifiant étranger"
+  },
+  "collection.reconcile": {
+    "defaultMessage": "Réconciliation"
+  },
+  "collection.reconcile.description": {
+    "defaultMessage": "Match your own data against the entities in this collection using the free {openrefine}\n              tool by adding the reconciliation endpoint."
+  },
+  "collection.reindex.processing": {
+    "defaultMessage": "Indexing started."
+  },
+  "collection.reindex.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "collection.reindex.confirm": {
+    "defaultMessage": "Start indexing"
+  },
+  "collection.reindex.flush": {
+    "defaultMessage": "Clear index before re-indexing"
+  },
+  "collection.analyze.alert.text": {
+    "defaultMessage": "You're about to re-index the entities in this dataset. This can be helpful if there are inconsistencies in how the data is presented."
+  },
+  "collection.reingest.processing": {
+    "defaultMessage": "Re-ingest started."
+  },
+  "collection.analyze.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "collection.reingest.confirm": {
+    "defaultMessage": "Start processing"
+  },
+  "collection.reingest.index": {
+    "defaultMessage": "Index documents as they are processed."
+  },
+  "collection.reingest.text": {
+    "defaultMessage": "You're about to re-process all documents in this dataset. This might take some time."
+  },
+  "collection.statistics.showmore": {
+    "defaultMessage": "Montrer plus"
+  },
+  "collection.status.cancel_button": {
+    "defaultMessage": "Annuler le processus"
+  },
+  "collection.status.title": {
+    "defaultMessage": "Update in progress ({percent}%)"
+  },
+  "collection.status.message": {
+    "defaultMessage": "Continuez à batifoler pendant que les données sont en train d'être traitées."
+  },
+  "entity.info.overview": {
+    "defaultMessage": "Vue d'ensemble"
+  },
+  "entity.info.documents": {
+    "defaultMessage": "Documents"
+  },
+  "entity.info.entities": {
+    "defaultMessage": "Entities"
+  },
+  "collection.info.diagrams": {
+    "defaultMessage": "Network diagrams"
+  },
+  "entity.info.xref": {
+    "defaultMessage": "Créer des références croisées"
+  },
+  "xref.compute": {
+    "defaultMessage": "Calculer"
+  },
+  "xref.recompute": {
+    "defaultMessage": "Re-compute"
+  },
+  "xref.download": {
+    "defaultMessage": "Télécharger au format Excel"
+  },
+  "collection.index.no_results": {
+    "defaultMessage": "No datasets were found matching this search"
+  },
+  "collection.last_updated": {
+    "defaultMessage": "Last updated {date}"
+  },
+  "footer.aleph": {
+    "defaultMessage": "Aleph {version}"
+  },
+  "search.facets.no_items": {
+    "defaultMessage": "Aucune option"
+  },
+  "clipboard.copy.before": {
+    "defaultMessage": "Copier dans le presse-papier"
+  },
+  "clipboard.copy.after": {
+    "defaultMessage": "Copié dans le presse-papier!"
+  },
+  "file_import.error": {
+    "defaultMessage": "Error importing file"
+  },
+  "valuelink.tooltip": {
+    "defaultMessage": "{count} mentions in {appName}"
+  },
+  "restricted.explain": {
+    "defaultMessage": "Use of this dataset is restricted. Read the description and contact {creator} before using this material."
+  },
+  "restricted.explain.creator": {
+    "defaultMessage": "the dataset owner"
+  },
+  "restricted.tag": {
+    "defaultMessage": "RESTRICTED"
+  },
+  "result.searching": {
+    "defaultMessage": "Recherche en cours..."
+  },
+  "result.error": {
+    "defaultMessage": "Erreur"
+  },
+  "result.more_results": {
+    "defaultMessage": "Plus de {total} résultats"
+  },
+  "result.none": {
+    "defaultMessage": "Aucun résultat trouvé"
+  },
+  "result.solo": {
+    "defaultMessage": "Un résultat trouvé"
+  },
+  "result.results": {
+    "defaultMessage": "Trouvé {total} résultats"
+  },
+  "role.select.user": {
+    "defaultMessage": "Choisissez un utilisateur"
+  },
+  "search.placeholder": {
+    "defaultMessage": "Chercher dans {label}"
+  },
+  "queryLogs.add_placeholder": {
+    "defaultMessage": "Garder une trace des recherches..."
+  },
+  "queryLogs.no_alerts": {
+    "defaultMessage": "You are not tracking any searches"
+  },
+  "queryLogs.query.search": {
+    "defaultMessage": "Recherche de {query}"
+  },
+  "queryLogs.query.delete.tooltip": {
+    "defaultMessage": "Enlever de {listType}"
+  },
+  "search.callout_message": {
+    "defaultMessage": "Some sources are hidden from anonymous users. {signInButton} to see all results you are authorised to access."
+  },
+  "search.callout_message.button_text": {
+    "defaultMessage": "Sign in"
+  },
+  "collection.index.sort.created_at": {
+    "defaultMessage": "Creation Date"
+  },
+  "collection.index.sort.updated_at": {
+    "defaultMessage": "Update Date"
+  },
+  "collection.index.sort.count": {
+    "defaultMessage": "Size"
+  },
+  "collection.index.sort.label": {
+    "defaultMessage": "Title"
+  },
+  "collection.index.filter.mine": {
+    "defaultMessage": "Created by me"
+  },
+  "collection.index.filter.all": {
+    "defaultMessage": "All"
+  },
+  "sorting.bar.label": {
+    "defaultMessage": "Sort by:"
+  },
+  "sorting.bar.direction": {
+    "defaultMessage": "Direction:"
+  },
+  "text.loading": {
+    "defaultMessage": "Chargement..."
+  },
+  "dashboard.notifications": {
+    "defaultMessage": "Notifications"
+  },
+  "dashboard.history": {
+    "defaultMessage": "Historique de recherche"
+  },
+  "dashboard.alerts": {
+    "defaultMessage": "Alertes"
+  },
+  "dashboard.cases": {
+    "defaultMessage": "Jeux de données personnels"
+  },
+  "dashboard.diagrams": {
+    "defaultMessage": "Network diagrams"
+  },
+  "dashboard.settings": {
+    "defaultMessage": "Réglages"
+  },
+  "dashboard.status": {
+    "defaultMessage": "System status"
+  },
+  "dashboard.activity": {
+    "defaultMessage": "Activité"
+  },
+  "dashboard.workspace": {
+    "defaultMessage": "Workspace"
+  },
+  "dashboard.groups": {
+    "defaultMessage": "Groupes"
+  },
+  "diagrams.no_diagrams": {
+    "defaultMessage": "There are no network diagrams."
+  },
+  "diagram.last_updated": {
+    "defaultMessage": "Updated {date}"
+  },
+  "entity.document.manager.empty": {
+    "defaultMessage": "Aucun fichier ni aucun dossier."
+  },
+  "entity.document.manager.emptyCanUpload": {
+    "defaultMessage": "Aucun fichier ni aucun dossier. Déposez des fichiers ici ou cliquez pour téléverser."
+  },
+  "entity.document.manager.search_placeholder": {
+    "defaultMessage": "Search documents"
+  },
+  "entity.document.manager.cannot_map": {
+    "defaultMessage": "Select a table document to generate structured entities"
+  },
+  "document.upload.button": {
+    "defaultMessage": "Upload"
+  },
+  "document.mapping.start": {
+    "defaultMessage": "Générer des entités"
+  },
+  "refresh.callout_message": {
+    "defaultMessage": "Les documents sont en cours de traitement. Veuillez patienter..."
+  },
+  "entity.viewer.delete": {
+    "defaultMessage": "Supprimer"
+  },
+  "infoMode.collection": {
+    "defaultMessage": "Jeu de données"
+  },
+  "infoMode.collection.entries": {
+    "defaultMessage": "{count} entries"
+  },
+  "entity.manager.search_placeholder": {
+    "defaultMessage": "Search {schema}"
+  },
+  "entity.manager.search_empty": {
+    "defaultMessage": "No matching {schema} results found"
+  },
+  "entity.manager.edge_create_success": {
+    "defaultMessage": "Successfully linked {source} and {target}"
+  },
+  "entity.viewer.bulk_import": {
+    "defaultMessage": "Bulk import"
+  },
+  "entity.viewer.add_link": {
+    "defaultMessage": "Create link"
+  },
+  "entity.viewer.add_to_diagram": {
+    "defaultMessage": "Add to diagram"
+  },
+  "mapping.title": {
+    "defaultMessage": "Générer des entités structurées"
+  },
+  "mapping.info": {
+    "defaultMessage": "Suivez les étapes ci-dessous pour associer des éléments de ce jeu de données à des entités structurées Follow the Money. Pour plus d'informations, veuillez consulter le {link}"
+  },
+  "mapping.infoLink": {
+    "defaultMessage": "Documentation sur l'association de données dans Aleph"
+  },
+  "entity.properties.missing": {
+    "defaultMessage": "unknown"
+  },
+  "entity.references.no_relationships": {
+    "defaultMessage": "This entity does not have any relationships."
+  },
+  "entity.similar.empty": {
+    "defaultMessage": "There are no similar entities."
+  },
+  "entity.tags.no_tags": {
+    "defaultMessage": "Aucun sélecteur n'a été extrait de cette entité."
+  },
+  "tags.title": {
+    "defaultMessage": "Sélecteurs extraits"
+  },
+  "tags.results": {
+    "defaultMessage": "Citations"
+  },
+  "sidebar.open": {
+    "defaultMessage": "Développer"
+  },
+  "entity.info.info": {
+    "defaultMessage": "Info"
+  },
+  "entity.info.view": {
+    "defaultMessage": "View"
+  },
+  "entity.info.text": {
+    "defaultMessage": "Text"
+  },
+  "entity.info.attachments": {
+    "defaultMessage": "Pièces jointes"
+  },
+  "entity.info.tags": {
+    "defaultMessage": "Mentions"
+  },
+  "entity.info.similar": {
+    "defaultMessage": "Similar"
+  },
+  "entity.mapping.view": {
+    "defaultMessage": "Générer des entités"
+  },
+  "entity.search.no_results_title": {
+    "defaultMessage": "Aucun résultat de recherche"
+  },
+  "entity.search.no_results_description": {
+    "defaultMessage": "Try making your search more general"
+  },
+  "entity.search.empty_title": {
+    "defaultMessage": "This folder is empty"
+  },
+  "entityset.create.login": {
+    "defaultMessage": "You must log in to create a {type}"
+  },
+  "entitysets.index.create": {
+    "defaultMessage": "New {type}"
+  },
+  "entitysets.index.import": {
+    "defaultMessage": "Import {type}"
+  },
+  "entity_set.menu.search_placeholder": {
+    "defaultMessage": "Search in {set_name}"
+  },
+  "entityset.info.export": {
+    "defaultMessage": "Exporter"
+  },
+  "entityset.info.delete": {
+    "defaultMessage": "Supprimer"
+  },
+  "entityset.info.edit": {
+    "defaultMessage": "Réglages"
+  },
+  "entity.column.name": {
+    "defaultMessage": "Name"
+  },
+  "entity.column.collection_id": {
+    "defaultMessage": "Jeu de données"
+  },
+  "entity.column.schema": {
+    "defaultMessage": "Type"
+  },
+  "entity.column.countries": {
+    "defaultMessage": "Pays"
+  },
+  "entity.column.file_size": {
+    "defaultMessage": "Size"
+  },
+  "entity.column.dates": {
+    "defaultMessage": "Date"
+  },
+  "search.screen.dates_label": {
+    "defaultMessage": "results"
+  },
+  "search.screen.dates_title": {
+    "defaultMessage": "Dates"
+  },
+  "search.facets.filtersSelected": {
+    "defaultMessage": "{count} selected"
+  },
+  "search.facets.showMore": {
+    "defaultMessage": "Montrer plus..."
+  },
+  "mapping.section1.title": {
+    "defaultMessage": "1. Select entity types to generate"
+  },
+  "mapping.section2.title": {
+    "defaultMessage": "2. Associer des colonnes à des propriétés d'entités"
+  },
+  "mapping.section3.title": {
+    "defaultMessage": "3. Vérifier"
+  },
+  "schemaSelect.button.thing": {
+    "defaultMessage": "Ajouter un nouvel objet"
+  },
+  "schemaSelect.button.relationship": {
+    "defaultMessage": "Ajouter une nouvelle relation"
+  },
+  "mapping.import.button": {
+    "defaultMessage": "Import existing mapping"
+  },
+  "mapping.keyAssign.placeholder": {
+    "defaultMessage": "Sélectionner des clés à partir des colonnes disponibles"
+  },
+  "mapping.keyAssign.noResults": {
+    "defaultMessage": "Aucun résultat"
+  },
+  "mapping.entityAssign.noResults": {
+    "defaultMessage": "Aucun objet correspondant disponible"
+  },
+  "mapping.entityAssign.placeholder": {
+    "defaultMessage": "Sélectionner un objet"
+  },
+  "mapping.entityAssign.helpText": {
+    "defaultMessage": "You must create an object of type \"{range}\" to be the {property}"
+  },
+  "mapping.keyAssign.additionalHelpToggle.more": {
+    "defaultMessage": "More about keys"
+  },
+  "mapping.keyAssign.additionalHelpToggle.less": {
+    "defaultMessage": "Less"
+  },
+  "mapping.keyAssign.helpText": {
+    "defaultMessage": "Specify which columns from the source data will be used to identify unique entities."
+  },
+  "mapping.keys": {
+    "defaultMessage": "Clés"
+  },
+  "mapping.actions.create.toast": {
+    "defaultMessage": "Génération d'entités..."
+  },
+  "mapping.actions.save.toast": {
+    "defaultMessage": "Régénération des entités..."
+  },
+  "mapping.actions.delete.toast": {
+    "defaultMessage": "Deleting mapping and any generated entities..."
+  },
+  "mapping.actions.flush.toast": {
+    "defaultMessage": "Retrait des entités générées..."
+  },
+  "mapping.error.keyMissing": {
+    "defaultMessage": "Erreur de clé: l'entité {id} doit avoir au moins une clé"
+  },
+  "mapping.error.relationshipMissing": {
+    "defaultMessage": "Erreur de relation: l'entité {id} doit s'être vue attribuer une {source} et une {target}"
+  },
+  "mapping.actions.create": {
+    "defaultMessage": "Générer des entités"
+  },
+  "mapping.actions.save": {
+    "defaultMessage": "Sauvegarder les changements"
+  },
+  "mapping.actions.export": {
+    "defaultMessage": "Export mapping"
+  },
+  "mapping.actions.flush": {
+    "defaultMessage": "Enlever les entités générées"
+  },
+  "mapping.actions.delete": {
+    "defaultMessage": "Supprimer"
+  },
+  "mapping.propAssign.errorBlank": {
+    "defaultMessage": "Les colonnes sans intitulé ne peuvent être affectées"
+  },
+  "mapping.propAssign.errorDuplicate": {
+    "defaultMessage": "Les colonnes avec des intitulés doublons ne peuvent pas être affectées"
+  },
+  "mapping.propAssign.other": {
+    "defaultMessage": "Autre"
+  },
+  "mapping.propAssign.placeholder": {
+    "defaultMessage": "Attribuer une propriété"
+  },
+  "mapping.types.objects": {
+    "defaultMessage": "Objets"
+  },
+  "mapping.types.relationships": {
+    "defaultMessage": "Relations"
+  },
+  "mapping.status.updated": {
+    "defaultMessage": "Dernière mise à jour:"
+  },
+  "mapping.status.status": {
+    "defaultMessage": "Status:"
+  },
+  "mapping.status.error": {
+    "defaultMessage": "Erreur:"
+  },
+  "mapping.propAssign.literalPlaceholder": {
+    "defaultMessage": "Ajouter une valeur textuelle fixe"
+  },
+  "mapping.propAssign.literalButtonText": {
+    "defaultMessage": "Ajouter une valeur fixe"
+  },
+  "mapping.propRemove": {
+    "defaultMessage": "Enlever cette propriété de l'association"
+  },
+  "mapping.props": {
+    "defaultMessage": "Propriétés"
+  },
+  "nav.collections": {
+    "defaultMessage": "Jeux de données"
+  },
+  "search.nolabel_placeholder": {
+    "defaultMessage": "Chercher des sociétés, personnes et documents"
+  },
+  "notifications.no_notifications": {
+    "defaultMessage": "You have no unseen notifications"
+  },
+  "search.filterTag.role": {
+    "defaultMessage": "Filtrer par accès"
+  },
+  "search.filterTag.ancestors": {
+    "defaultMessage": "in:"
+  },
+  "search.filterTag.exclude": {
+    "defaultMessage": "not:"
+  },
+  "search.filterTag.dates_after": {
+    "defaultMessage": "After "
+  },
+  "search.filterTag.dates_before": {
+    "defaultMessage": "Before "
+  },
+  "queryFilters.clearAll": {
+    "defaultMessage": "Tout effacer"
+  },
+  "navbar.alert_add": {
+    "defaultMessage": "Cliquez pour recevoir des alertes en cas de nouveaux résultats pour cette recherche."
+  },
+  "navbar.alert_remove": {
+    "defaultMessage": "You are receiving alerts about this search."
+  },
+  "searchTips.exact.title": {
+    "defaultMessage": "Correspondances exactes"
+  },
+  "searchTips.exact.1": {
+    "defaultMessage": "Use <em>\"\"</em> to return only exact matches.  For example, the search <em>\"barack obama\"</em> will return only results containing the exact phrase \"barack obama\""
+  },
+  "searchTips.spelling.title": {
+    "defaultMessage": "Spelling variants"
+  },
+  "searchTips.spelling.1": {
+    "defaultMessage": "Use <em>~</em> to increase the fuzziness of a search.  For example, <em>Wladimir~2</em> will return not just the term “Wladimir” but also similar spellings such as \"Wladimyr\" or \"Vladimyr\". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant."
+  },
+  "searchTips.composite.title": {
+    "defaultMessage": "Requêtes composées"
+  },
+  "searchTips.composite.1": {
+    "defaultMessage": "The search <em>banana ice cream</em> prioritizes results that contain all three terms: banana, ice, and cream.  Results with one or more of the given terms will follow"
+  },
+  "searchTips.composite.2": {
+    "defaultMessage": "<em>+banane crème glacée</em> requiert que seuls les résultats avec le terme banane soit renvoyés, alors que crème et glacée sont optionnels"
+  },
+  "searchTips.composite.3": {
+    "defaultMessage": "<em>-banane crème glacée</em>garantit qu'aucun résultat avec le terme banane ne sera renvoyé"
+  },
+  "searchTips.composite.4": {
+    "defaultMessage": "<em>banane AND \"crème glacée\"</em>requiert que seuls les résultats avec à la fois banane et crème glacée soient renvoyés"
+  },
+  "searchTips.composite.5": {
+    "defaultMessage": "<em>banane OR \"crème glacée\"</em>garantit que seuls les résultats avec soit banane soit crème glacée soient renvoyés"
+  },
+  "searchTips.composite.6": {
+    "defaultMessage": "These operations can be combined as you like.  For example <em>banana AND (“ice cream” OR “gelato”) -chocolate</em> will return results where banana appears with ice cream or gelato in the document but where chocolate is not present"
+  },
+  "searchTips.proximity.title": {
+    "defaultMessage": "Recherches par proximité"
+  },
+  "searchTips.proximity.1": {
+    "defaultMessage": "To search for two terms within a certain distance of each other, use double quotes <em>\"\"</em> around the two words and the tilde <em>~</em> symbol at the end of the phrase.  For example <em>“Bank America”~2</em> will find relevant matches with the terms \"Bank\" and \"America\" occurring within two words from each other, such as \"Bank of America\", \"Bank in America\", even \"America has a Bank\"."
+  },
+  "home.statistics.schemata": {
+    "defaultMessage": "Chercher des entités {things}"
+  },
+  "home.statistics.othertypes": {
+    "defaultMessage": "{count} more entity types"
+  },
+  "home.statistics.categories": {
+    "defaultMessage": "from {collections} datasets"
+  },
+  "home.statistics.other": {
+    "defaultMessage": "{count} more datasets"
+  },
+  "home.statistics.countries": {
+    "defaultMessage": "in {count} countries"
+  },
+  "home.statistics.territories": {
+    "defaultMessage": "{count} more countries & territories"
+  },
+  "case.create.login": {
+    "defaultMessage": "You must sign in to upload your own data."
+  },
+  "cases.index.create": {
+    "defaultMessage": "Nouveau jeu de données"
+  },
+  "document.folder.button": {
+    "defaultMessage": "Nouveau dossier"
+  },
+  "document.download": {
+    "defaultMessage": "Télécharger"
+  },
+  "document.download.tooltip": {
+    "defaultMessage": "Télécharger le document original"
+  },
+  "document.paging": {
+    "defaultMessage": "Page {pageInput} sur {numberOfPages}"
+  },
+  "collection.xref.empty": {
+    "defaultMessage": "There are no cross-referencing results."
+  },
+  "xref.entity": {
+    "defaultMessage": "Reference"
+  },
+  "xref.match": {
+    "defaultMessage": "Possible match"
+  },
+  "xref.score": {
+    "defaultMessage": "Évaluer"
+  },
+  "xref.match_collection": {
+    "defaultMessage": "Jeu de données"
+  },
+  "diagram.add_entities.create_new": {
+    "defaultMessage": "Create a new diagram"
+  },
+  "diagram.add_entities.title": {
+    "defaultMessage": "Add entities to a diagram"
+  },
+  "diagram.add_entities.select_placeholder": {
+    "defaultMessage": "Select an existing diagram"
+  },
+  "diagram.add_entities.select_empty": {
+    "defaultMessage": "No existing diagrams"
+  },
+  "diagram.add_entities.success": {
+    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {diagram}"
+  },
+  "diagram.add_entities.selected_count": {
+    "defaultMessage": "You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a diagram."
+  },
+  "diagram.add.or": {
+    "defaultMessage": "or"
+  },
+  "signup.title": {
+    "defaultMessage": "Activer votre compte"
+  },
+  "signup.register": {
+    "defaultMessage": "S'enregistrer"
+  },
+  "signup.register.question": {
+    "defaultMessage": "Vous n'avez pas encore de compte? Enregistrez-vous!"
+  },
+  "signup.inbox.title": {
+    "defaultMessage": "Vérifiez votre boîte mail"
+  },
+  "signup.inbox.desc": {
+    "defaultMessage": "We've sent you an email, please follow the link to complete your registration"
+  },
+  "signup.login": {
+    "defaultMessage": "Vous avez déjà un compte? Identifiez-vous!"
+  },
+  "login.oauth": {
+    "defaultMessage": "Sign in via OAuth"
+  },
+  "collection.edit.title": {
+    "defaultMessage": "Réglages du jeu de données"
+  },
+  "collection.edit.save_success": {
+    "defaultMessage": "Your changes are saved."
+  },
+  "collection.edit.cancel_button": {
+    "defaultMessage": "Annuler"
+  },
+  "collection.edit.save_button": {
+    "defaultMessage": "Sauvegarder les changements"
+  },
+  "collection.edit.permissionstable.view": {
+    "defaultMessage": "View"
+  },
+  "collection.edit.permissionstable.edit": {
+    "defaultMessage": "Éditer"
+  },
+  "collection.edit.groups": {
+    "defaultMessage": "Groupes"
+  },
+  "collection.edit.users": {
+    "defaultMessage": "Users"
+  },
+  "collection.delete.confirm": {
+    "defaultMessage": "Supprimer"
+  },
+  "collection.delete.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "collection.delete.question": {
+    "defaultMessage": "Êtes-vous sûr de vouloir supprimer ce jeu de données et tous les éléments qu'il contient?"
+  },
+  "collection.edit.info.placeholder_label": {
+    "defaultMessage": "Une étiquette"
+  },
+  "collection.edit.info.placeholder_summary": {
+    "defaultMessage": "Un bref résumé"
+  },
+  "collection.edit.info.placeholder_publisher": {
+    "defaultMessage": "Organisation ou personne qui publie ces données"
+  },
+  "collection.edit.info.placeholder_publisher_url": {
+    "defaultMessage": "Lien vers le publicateur"
+  },
+  "collection.edit.info.placeholder_info_url": {
+    "defaultMessage": "Lien vers de plus amples informations"
+  },
+  "collection.edit.info.placeholder_data_url": {
+    "defaultMessage": "Lien vers les données brutes sous forme téléchargeable"
+  },
+  "collection.edit.info.placeholder_country": {
+    "defaultMessage": "Select countries"
+  },
+  "collection.edit.info.placeholder_language": {
+    "defaultMessage": "Select languages"
+  },
+  "collection.edit.info.restricted": {
+    "defaultMessage": "This collection is restricted and viewers should be warned."
+  },
+  "collection.edit.info.delete": {
+    "defaultMessage": "Supprimer"
+  },
+  "collection.edit.info.analyze": {
+    "defaultMessage": "Retraiter"
+  },
+  "collection.edit.info.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "collection.edit.info.save": {
+    "defaultMessage": "Sauvegarder les changements"
+  },
+  "collection.edit.info.label": {
+    "defaultMessage": "Étiquette"
+  },
+  "collection.edit.info.category": {
+    "defaultMessage": "Catégorie"
+  },
+  "collection.edit.info.summary": {
+    "defaultMessage": "Summary"
+  },
+  "collection.edit.info.publisher": {
+    "defaultMessage": "Publicateur"
+  },
+  "collection.edit.info.publisher_url": {
+    "defaultMessage": "URL du publicateur"
+  },
+  "collection.edit.info.info_url": {
+    "defaultMessage": "URL d'information"
+  },
+  "collection.edit.info.data_url": {
+    "defaultMessage": "URL de la source de données"
+  },
+  "collection.edit.info.frequency": {
+    "defaultMessage": "Update frequency"
+  },
+  "collection.edit.info.creator": {
+    "defaultMessage": "Gestionnaire"
+  },
+  "collection.edit.info.countries": {
+    "defaultMessage": "Pays"
+  },
+  "collection.edit.info.languages": {
+    "defaultMessage": "Langues"
+  },
+  "case.languages.helper": {
+    "defaultMessage": "Used for optical text recognition in non-Latin alphabets."
+  },
+  "collection.edit.info.foreign_id": {
+    "defaultMessage": "Identifiant étranger"
+  },
+  "collection.xref.title": {
+    "defaultMessage": "Créer des références croisées"
+  },
+  "collection.xref.processing": {
+    "defaultMessage": "La création de références croisées a démarré."
+  },
+  "collection.xref.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "collection.xref.confirm": {
+    "defaultMessage": "Confirm"
+  },
+  "collection.xref.text": {
+    "defaultMessage": "You will now cross-reference this dataset against all other sources. Start this process once and then wait for it to complete."
+  },
+  "case.label_placeholder": {
+    "defaultMessage": "Untitled dataset"
+  },
+  "case.language_placeholder": {
+    "defaultMessage": "Select languages"
+  },
+  "case.summary": {
+    "defaultMessage": "Une brève description du jeu de données"
+  },
+  "case.save": {
+    "defaultMessage": "Sauvegarder"
+  },
+  "case.users": {
+    "defaultMessage": "Chercher des utilisateurs"
+  },
+  "case.title": {
+    "defaultMessage": "Créer un jeu de données personnel"
+  },
+  "case.choose.name": {
+    "defaultMessage": "Title"
+  },
+  "case.choose.summary": {
+    "defaultMessage": "Summary"
+  },
+  "case.chose.languages": {
+    "defaultMessage": "Langues"
+  },
+  "case.share.with": {
+    "defaultMessage": "Partager avec"
+  },
+  "document.folder.title": {
+    "defaultMessage": "Nouveau dossier"
+  },
+  "document.folder.save": {
+    "defaultMessage": "Créer"
+  },
+  "document.folder.untitled": {
+    "defaultMessage": "Titre du dossier"
+  },
+  "document.folder.error": {
+    "defaultMessage": "There was an error creating the folder."
+  },
+  "entity.manager.bulk_import.title": {
+    "defaultMessage": "Bulk import"
+  },
+  "entity.manager.bulk_import.no_results": {
+    "defaultMessage": "No matching documents found"
+  },
+  "entity.manager.bulk_import.placeholder": {
+    "defaultMessage": "Select a table document"
+  },
+  "document.upload.title": {
+    "defaultMessage": "Upload Documents"
+  },
+  "document.upload.success": {
+    "defaultMessage": "Les documents sont en cours de traitement..."
+  },
+  "document.upload.error": {
+    "defaultMessage": "There was an error while uploading the file."
+  },
+  "document.upload.files": {
+    "defaultMessage": "Choisissez des fichiers à téléverser..."
+  },
+  "document.upload.folder": {
+    "defaultMessage": "If you would like to upload folders instead, { button }."
+  },
+  "document.upload.folder-toggle": {
+    "defaultMessage": "click here"
+  },
+  "document.upload.progress": {
+    "defaultMessage": "Uploading: {file}..."
+  },
+  "document.upload.notice": {
+    "defaultMessage": "Once the upload is complete, it will take a few moments for the documents to be processed and become searchable."
+  },
+  "document.upload.save": {
+    "defaultMessage": "Upload"
+  },
+  "entity.delete.confirm": {
+    "defaultMessage": "Supprimer"
+  },
+  "entity.delete.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "entity.delete.success": {
+    "defaultMessage": "Successfully deleted"
+  },
+  "entity.delete.error": {
+    "defaultMessage": "Une erreur s'est produite pendant la tentative de suppression de cette entité."
+  },
+  "entity.delete.progress": {
+    "defaultMessage": "Deleting..."
+  },
+  "entityset.create.label_placeholder": {
+    "defaultMessage": "Untitled {type}"
+  },
+  "entityset.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the {type}"
+  },
+  "entityset.create.submit": {
+    "defaultMessage": "Créer"
+  },
+  "entityset.create.title": {
+    "defaultMessage": "Create a {type}"
+  },
+  "entityset.create.success": {
+    "defaultMessage": "Your {type} has been created successfully."
+  },
+  "diagram.import.title": {
+    "defaultMessage": "Import a network diagram"
+  },
+  "diagram.import.placeholder": {
+    "defaultMessage": "Drop a .vis file here or click to import an existing diagram layout"
+  },
+  "entityset.create.collection.existing": {
+    "defaultMessage": "Select a dataset"
+  },
+  "entityset.choose.name": {
+    "defaultMessage": "Title"
+  },
+  "entityset.choose.summary": {
+    "defaultMessage": "Summary"
+  },
+  "entityset.create.collection": {
+    "defaultMessage": "Jeu de données"
+  },
+  "entityset.delete.confirm": {
+    "defaultMessage": "Supprimer"
+  },
+  "entityset.delete.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "entityset.delete.question": {
+    "defaultMessage": "Are you sure you want to delete this {type}?"
+  },
+  "entityset.update.title": {
+    "defaultMessage": "Réglages"
+  },
+  "entityset.update.submit": {
+    "defaultMessage": "Submit"
+  },
+  "entityset.update.success": {
+    "defaultMessage": "Your {type} has been successfully updated."
+  },
+  "mapping.create.confirm": {
+    "defaultMessage": "Générer"
+  },
+  "mapping.create.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "mapping.create.question": {
+    "defaultMessage": "Êtes-vous sûr d'être prêt à générer des entités en utilisant cette association?"
+  },
+  "mapping.delete.confirm": {
+    "defaultMessage": "Supprimer"
+  },
+  "mapping.delete.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "mapping.delete.question": {
+    "defaultMessage": "Êtes-vous sûr de vouloir supprimer cette association et toutes les entités générées?"
+  },
+  "mapping.flush.confirm": {
+    "defaultMessage": "Enlever"
+  },
+  "mapping.flush.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "mapping.flush.question": {
+    "defaultMessage": "Êtes-vous sûr de vouloir supprimer les entités générées en utilisant cette association?"
+  },
+  "mapping.import.success": {
+    "defaultMessage": "Your mapping has been imported successfully."
+  },
+  "mapping.import.submit": {
+    "defaultMessage": "Submit"
+  },
+  "mapping.import.title": {
+    "defaultMessage": "Import a mapping"
+  },
+  "mapping.import.placeholder": {
+    "defaultMessage": "Drop a .yml file here or click to import an existing mapping file"
+  },
+  "mapping.import.querySelect": {
+    "defaultMessage": "Select a mapping query from this file to import:"
+  },
+  "mapping.save.confirm": {
+    "defaultMessage": "Update mapping & re-generate"
+  },
+  "mapping.save.cancel": {
+    "defaultMessage": "Annuler"
+  },
+  "mapping.save.question": {
+    "defaultMessage": "Updating this mapping will delete any previously generated entities and re-generate them. Are you sure you would like to continue?"
+  },
+  "xref.context.title": {
+    "defaultMessage": "Cross-reference match review"
+  },
+  "xref.context.select": {
+    "defaultMessage": "Share with:"
+  },
+  "xref.context.private": {
+    "defaultMessage": "Keep private (no sharing)"
+  },
+  "xref.context.submit": {
+    "defaultMessage": "Start review"
+  },
+  "xref.context.explain1": {
+    "defaultMessage": "Reviewing cross-reference matches helps you to flag and share leads. Your judgements are sensitive information, so please select what group of users can view your decisions."
+  },
+  "alerts.title": {
+    "defaultMessage": "Tracking alerts"
+  },
+  "alert.manager.description": {
+    "defaultMessage": "You will receive notifications when a new result is added that matches any of the alerts you have set up below."
+  },
+  "cases.title": {
+    "defaultMessage": "Jeux de données personnels"
+  },
+  "cases.no_results_title": {
+    "defaultMessage": "You do not have any personal datasets yet."
+  },
+  "cases.placeholder": {
+    "defaultMessage": "Chercher des jeux de données personnels..."
+  },
+  "cases.empty": {
+    "defaultMessage": "No personal datasets were found"
+  },
+  "cases.browser.breadcrumb": {
+    "defaultMessage": "Vue d'ensemble des cas"
+  },
+  "case.description": {
+    "defaultMessage": "Les jeux de données personnels vous permettent de téléverser et partager des documents et des données qui appartiennent à une même histoire. Vous pouvez téléverser des PDFs, des archives de courriels ou des tableurs, et ces fichiers deviendront faciles à chercher et à parcourir."
+  },
+  "collection.index.title": {
+    "defaultMessage": "Jeux de données"
+  },
+  "collection.index.placeholder": {
+    "defaultMessage": "Chercher des jeux de données..."
+  },
+  "collection.index.empty": {
+    "defaultMessage": "No datasets were found"
+  },
+  "collection.index.breadcrumb": {
+    "defaultMessage": "Jeux de données"
+  },
+  "diagrams.title": {
+    "defaultMessage": "Network diagrams"
+  },
+  "diagrams.no_results_title": {
+    "defaultMessage": "You do not have any network diagrams yet"
+  },
+  "diagrams.browser.breadcrumb": {
+    "defaultMessage": "Diagrams"
+  },
+  "diagram.description": {
+    "defaultMessage": "Network diagrams let you visualize complex relationships within a dataset."
+  },
+  "diagram.status_success": {
+    "defaultMessage": "Saved"
+  },
+  "diagram.status_error": {
+    "defaultMessage": "Error saving"
+  },
+  "diagram.status_in_progress": {
+    "defaultMessage": "Saving..."
+  },
+  "diagram.error_warning": {
+    "defaultMessage": "There was an error saving your latest changes, are you sure you want to leave?"
+  },
+  "diagram.in_progress_warning": {
+    "defaultMessage": "Changes are still being saved, are you sure you want to leave?"
+  },
+  "entity.delete": {
+    "defaultMessage": "Supprimer"
+  },
+  "sources.index.empty": {
+    "defaultMessage": "This group is not linked to any datasets."
+  },
+  "sources.index.placeholder": {
+    "defaultMessage": "Search datasets belonging to {group}..."
+  },
+  "group.page.description": {
+    "defaultMessage": "The list below shows all datasets that belong to this group."
+  },
+  "history.title": {
+    "defaultMessage": "Historique de recherche"
+  },
+  "history.screen.subheading": {
+    "defaultMessage": "Below is a list of your most recent searches. You have the option to delete specific searches so they do not show up in our records."
+  },
+  "home.title": {
+    "defaultMessage": "Trouver des enregistrements publics et des fuites"
+  },
+  "home.placeholder": {
+    "defaultMessage": "Try searching: {samples}"
+  },
+  "logout.success": {
+    "defaultMessage": "Déconnexion réussie"
+  },
+  "error.screen.not_found": {
+    "defaultMessage": "The requested page could not be found."
+  },
+  "notifications.title": {
+    "defaultMessage": "Notifications récentes"
+  },
+  "notifications.greeting": {
+    "defaultMessage": "What's new, {role}?"
+  },
+  "notification.description": {
+    "defaultMessage": "View the latest updates to datasets, groups and tracking alerts you follow."
+  },
+  "pages.not.found": {
+    "defaultMessage": "Page not found"
+  },
+  "search.no_results_title": {
+    "defaultMessage": "Aucun résultat de recherche"
+  },
+  "search.no_results_description": {
+    "defaultMessage": "Try making your search more general"
+  },
+  "search.title": {
+    "defaultMessage": "Chercher"
+  },
+  "search.screen.export_disabled": {
+    "defaultMessage": "Impossible d'exporter plus de 10 000 résultats à la fois"
+  },
+  "search.screen.show_dates": {
+    "defaultMessage": "Show date filter"
+  },
+  "search.screen.hide_dates": {
+    "defaultMessage": "Hide date filter"
+  },
+  "search.screen.export": {
+    "defaultMessage": "Exporter"
+  },
+  "search.screen.breadcrumb": {
+    "defaultMessage": "Chercher"
+  },
+  "search.screen.filters": {
+    "defaultMessage": "Filtres"
+  },
+  "settings.title": {
+    "defaultMessage": "Réglages"
+  },
+  "settings.save": {
+    "defaultMessage": "Update"
+  },
+  "settings.name": {
+    "defaultMessage": "Nom"
+  },
+  "settings.locale": {
+    "defaultMessage": "Langue"
+  },
+  "settings.api_key": {
+    "defaultMessage": "Clé d'accès secrète à l'API"
+  },
+  "profileinfo.api_desc": {
+    "defaultMessage": "Use the API key to read and write data via remote applications."
+  },
+  "settings.email": {
+    "defaultMessage": "Adresse mail"
+  },
+  "settings.email.no_change": {
+    "defaultMessage": "Your e-mail address cannot be changed"
+  },
+  "settings.email.muted": {
+    "defaultMessage": "Recevoir des courriels de notification quotidiens"
+  },
+  "settings.email.tester": {
+    "defaultMessage": "Test new features before they are finished"
+  },
+  "settings.current_password": {
+    "defaultMessage": "Mot de passe actuel"
+  },
+  "settings.current_explain": {
+    "defaultMessage": "Entrez votre mot de passe actuel pour en définir un nouveau."
+  },
+  "settings.new_password": {
+    "defaultMessage": "Nouveau mot de passe"
+  },
+  "settings.confirm": {
+    "defaultMessage": "(confirmer)"
+  },
+  "settings.password.rules": {
+    "defaultMessage": "Use at least six characters"
+  },
+  "settings.password.missmatch": {
+    "defaultMessage": "Les mots de passe ne correspondent pas"
+  },
+  "settings.saved": {
+    "defaultMessage": "C'est officiel, votre profil a été mis à jour."
+  },
+  "settings.password.title": {
+    "defaultMessage": "Changez votre mot de passe"
+  },
+  "dashboard.title": {
+    "defaultMessage": "System Status"
+  },
+  "collection.status.no_active": {
+    "defaultMessage": "There are no ongoing tasks"
+  },
+  "collection.cancel.button": {
+    "defaultMessage": "Annuler"
+  },
+  "dashboard.subheading": {
+    "defaultMessage": "Vérifiez la progression des tâches d'analyse de données, de téléversement et de traitement en cours."
+  },
+  "collection.status.collection": {
+    "defaultMessage": "Jeu de données"
+  },
+  "collection.status.jobs": {
+    "defaultMessage": "Jobs"
+  },
+  "collection.status.progress": {
+    "defaultMessage": "Tasks"
+  },
+  "collection.status.finished_tasks": {
+    "defaultMessage": "Terminé"
+  },
+  "collection.status.pending_tasks": {
+    "defaultMessage": "En attente"
+  },
+  "facet.schema": {
+    "defaultMessage": "{count, plural, one {Type} other {Types}}"
+  },
+  "facet.collection_id": {
+    "defaultMessage": "{count, plural, one {Dataset} other {Datasets}}"
+  },
+  "facet.ibans": {
+    "defaultMessage": "{count, plural, one {IBAN} other {IBANs}}"
+  },
+  "facet.languages": {
+    "defaultMessage": "{count, plural, one {Language} other {Languages}}"
+  },
+  "facet.emails": {
+    "defaultMessage": "{count, plural, one {E-Mail} other {E-Mails}}"
+  },
+  "facet.phones": {
+    "defaultMessage": "{count, plural, one {Phone number} other {Phone numbers}}"
+  },
+  "facet.countries": {
+    "defaultMessage": "{count, plural, one {Country} other {Countries}}"
+  },
+  "facet.names": {
+    "defaultMessage": "{count, plural, one {Name} other {Names}}"
+  },
+  "facet.addresses": {
+    "defaultMessage": "{count, plural, one {Address} other {Addresses}}"
+  },
+  "facet.mimetypes": {
+    "defaultMessage": "{count, plural, one {File type} other {File types}}"
+  },
+  "facet.category": {
+    "defaultMessage": "{count, plural, one {Category} other {Categories}}"
+  },
+  "document.viewer.no_viewer": {
+    "defaultMessage": "Aucune prévisualisation n'est disponible pour ce document"
+  },
+  "document.viewer.ignored_file": {
+    "defaultMessage": "The system does not work with these types of files. Please download it so you’ll be able to see it."
+  },
+  "email.body.empty": {
+    "defaultMessage": "Aucun corps de message."
+  },
+  "document.search.no_match": {
+    "defaultMessage": "Aucune page de ce document ne correspond à tous vos termes de recherche."
+  },
+  "document.pdf.search.page": {
+    "defaultMessage": "Page {page}"
+  }
+}
