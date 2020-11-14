@@ -1,28 +1,25 @@
 import { createReducer } from 'redux-act';
-import { v4 as uuidv4 } from 'uuid';
 
 import { fetchMetadata, loginWithToken, logout } from 'actions';
 
-const initialState = {
-  loggedIn: false,
-  sessionId: uuidv4(),
-};
+const initialState = { loggedIn: false };
 
 const handleLogin = (state, token) => {
   if (!token) {
     return state;
   } else {
     return {
+      ...state,
       token,
       loggedIn: true,
-      sessionId: state.sessionId || uuidv4(),
     };
   };
 };
 
 const handleLogout = state => ({
+  sessionId: state.sessionId,
+  sessionStart: state.sessionStart,
   loggedIn: false,
-  sessionId: state.sessionId || uuidv4(),
 });
 
 export default createReducer({
