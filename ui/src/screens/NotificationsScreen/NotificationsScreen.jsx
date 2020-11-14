@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import Screen from 'components/Screen/Screen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { selectNotificationsResult, selectCurrentRole } from 'selectors';
