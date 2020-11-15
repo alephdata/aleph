@@ -30,7 +30,7 @@ const messages = defineMessages({
     defaultMessage: 'An error occured while attempting to delete this entity.',
   },
   delete_progress: {
-    id: 'entity.delete.error',
+    id: 'entity.delete.progress',
     defaultMessage: 'Deleting...',
   },
   delete_question: {
@@ -51,7 +51,7 @@ const messages = defineMessages({
     defaultMessage: 'An error occured while attempting to remove this entity.',
   },
   remove_progress: {
-    id: 'entity.remove.error',
+    id: 'entity.remove.progress',
     defaultMessage: 'Removing...',
   },
   remove_question: {

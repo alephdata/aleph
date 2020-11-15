@@ -14,7 +14,7 @@ import './CollectionAccessDialog.scss';
 
 const messages = defineMessages({
   title: {
-    id: 'collection.edit.title',
+    id: 'collection.edit.access_title',
     defaultMessage: 'Access control',
   },
   save_success: {
