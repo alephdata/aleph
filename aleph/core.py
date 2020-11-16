@@ -1,5 +1,5 @@
 import logging
-from urllib.parse import urlparse, urljoin, urlencode
+from urllib.parse import urljoin, urlencode
 from werkzeug.local import LocalProxy
 from werkzeug.middleware.profiler import ProfilerMiddleware
 from flask import Flask, request
