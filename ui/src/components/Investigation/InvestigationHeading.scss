@@ -1,0 +1,123 @@
+@import "app/variables.scss";
+
+$transition-duration: .3s;
+$sidebar-padding: 15px;
+$full-width: 300px;
+$collapsed-width: 57px;
+
+.InvestigationHeading {
+  background: $blue1;
+  transition: max-height $transition-duration ease-in-out $transition-duration, opacity $transition-duration ease-in-out $transition-duration;
+  overflow: hidden;
+  max-height: none;
+  opacity: 1;
+  // border-radius: 5px;
+  margin: 0;
+
+  .collapsed & {
+    padding: 0;
+    max-height: 0;
+    opacity: 0;
+  }
+
+  &__inner-container {
+    padding: $sidebar-padding*2 $sidebar-padding;
+    padding-bottom: 0;
+
+    .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
+      color: white !important;
+    }
+
+    .bp3-input-group {
+      margin-top: 10px;
+    }
+  }
+
+  .text-markdown, .text-markdown p {
+    margin-bottom: 5px !important;
+  }
+
+  &__divider {
+    border-top: 1px solid rgba(white, .7);
+    margin: auto;
+    width: 0;
+    transition: width .3s ease-in-out, margin 1s ease-in-out;
+
+    .metadata-shown & {
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      // margin: 20px auto;
+    }
+  }
+
+  &__metadata {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 1s ease-in-out;
+
+    .metadata-shown & {
+      max-height: 10000px;
+    }
+
+    .CollectionInfo__item .key {
+      color: white !important;
+    }
+
+    &__inner-container {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background: rgba(#fff, .15);
+    }
+  }
+
+  &__actions {
+    margin-top: 15px;
+    // padding-top: 5px;
+    // border-top: 1px solid white;
+
+    .bp3-button.bp3-minimal {
+      // border-color: white;
+      color: white !important;
+      background: rgba(white, .15);
+
+      &:hover {
+        background: rgba(white, .3);
+      }
+
+      .bp3-icon {
+        color: white;
+      }
+    }
+  }
+
+  &__metadata-toggle {
+    width: 100%;
+    margin-top: 10px;
+    .bp3-icon {
+      color: white !important;
+    }
+  }
+
+
+  .CollectionHeading {
+    margin: 0;
+  }
+
+  .CollectionStatus {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin: 20px 0 10px;
+
+    .bp3-heading {
+      font-size: 14px !important;
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .CollectionLink {
+    color: white !important;
+  }
+}

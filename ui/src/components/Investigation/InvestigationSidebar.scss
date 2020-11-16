@@ -23,27 +23,7 @@ $collapsed-width: 57px;
     padding: 0;
   }
 
-  .CollectionHeading {
-    margin: 0;
-  }
-
-  .CollectionStatus {
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    margin: 20px 0 10px;
-
-    .bp3-heading {
-      font-size: 14px !important;
-      margin-bottom: 0 !important;
-    }
-  }
-
-  .CollectionLink {
-    color: white !important;
-  }
-
-  &__header, &__content {
+  &__content {
 
     .collapsed & {
       padding: 0;
@@ -52,112 +32,14 @@ $collapsed-width: 57px;
 
   &__content {
     margin-bottom: 40px;
-
-
-    .collapsed & {
-
-      // height: calc(100vh - #{$aleph-top-nav-height + $aleph-breadcrumbs-height});
-
-      // overflow-y: scroll;
-    }
   }
 
   .SchemaCounts {
     margin-bottom: $aleph-grid-size;
   }
 
-  &__header {
-    background: $blue1;
-  }
-
   &__footer {
     background: $light-gray4;
-  }
-
-  &__header {
-    transition: max-height $transition-duration ease-in-out $transition-duration, opacity $transition-duration ease-in-out $transition-duration;
-    overflow: hidden;
-    max-height: none;
-    opacity: 1;
-    // border-radius: 5px;
-    margin: 0;
-
-    .collapsed & {
-      max-height: 0;
-      opacity: 0;
-    }
-
-    &__inner-container {
-      padding: $sidebar-padding*2 $sidebar-padding;
-      padding-bottom: 0;
-
-      .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
-        color: white !important;
-      }
-
-      .bp3-input-group {
-        margin-top: 10px;
-      }
-    }
-
-    .text-markdown, .text-markdown p {
-      margin-bottom: 5px !important;
-    }
-
-    &__divider {
-      border-top: 1px solid rgba(white, .7);
-      margin: auto;
-      width: 0;
-      transition: width .3s ease-in-out, margin 1s ease-in-out;
-
-      .metadata-shown & {
-        width: 100%;
-        margin-top: 20px;
-        margin-bottom: 10px;
-        // margin: 20px auto;
-      }
-    }
-
-    &__metadata {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 1s ease-in-out;
-
-      .metadata-shown & {
-        max-height: 10000px;
-      }
-
-      .CollectionInfo__item .key {
-        color: white !important;
-      }
-
-      &__inner-container {
-        margin-top: 15px;
-        padding: 10px;
-        border-radius: 5px;
-        background: rgba(#fff, .15);
-      }
-    }
-
-    &__actions {
-      margin-top: 15px;
-      // padding-top: 5px;
-      // border-top: 1px solid white;
-
-      .bp3-button.bp3-minimal {
-        // border-color: white;
-        color: white !important;
-        background: rgba(white, .15);
-
-        &:hover {
-          background: rgba(white, .3);
-        }
-
-        .bp3-icon {
-          color: white;
-        }
-      }
-    }
   }
 
   &__footer {
@@ -180,22 +62,6 @@ $collapsed-width: 57px;
 
     &:hover {
       background-color: $light-gray1 !important;
-    }
-
-    // position: absolute !important;
-    // top: $aleph-grid-size/2;
-    // right: $aleph-grid-size/2;
-
-    // .collapsed & {
-    //   position: static !important;
-    // }
-  }
-
-  &__metadata-toggle {
-    width: 100%;
-    margin-top: 10px;
-    .bp3-icon {
-      color: white !important;
     }
   }
 

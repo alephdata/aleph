@@ -8,12 +8,8 @@ import queryString from 'query-string';
 import c from 'classnames';
 
 import { Count, ResultCount, SchemaCounts, SearchBox, Summary } from 'components/common';
-import CollectionInfo from 'components/Collection/CollectionInfo';
-import CollectionStatus from 'components/Collection/CollectionStatus';
+import InvestigationHeading from 'components/Investigation/InvestigationHeading';
 import InvestigationSidebarButton from 'components/Investigation/InvestigationSidebarButton';
-import CollectionHeading from 'components/Collection/CollectionHeading';
-import CollectionReference from 'components/Collection/CollectionReference';
-import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
@@ -45,14 +41,6 @@ const messages = defineMessages({
     id: 'collection.info.mentions',
     defaultMessage: 'Mentions',
   },
-  metadataHide : {
-    id: 'collection.info.hide-metadata',
-    defaultMessage: 'Less',
-  },
-  metadataShow : {
-    id: 'collection.info.show-metadata',
-    defaultMessage: 'More',
-  },
 });
 
 const collapsedModes = [collectionViewIds.ENTITIES, collectionViewIds.SEARCH, collectionViewIds.XREF];
@@ -62,13 +50,7 @@ class InvestigationSidebar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { showMetadata: false };
-
     this.navigate = this.navigate.bind(this);
-  }
-
-  toggleMetadata = () => {
-    this.setState(({ showMetadata }) => ({ showMetadata: !showMetadata }));
   }
 
   toggleCollapsed = () => {
@@ -111,7 +93,6 @@ class InvestigationSidebar extends React.Component {
       collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false,
       intl, schemaCounts
     } = this.props;
-    const { showMetadata } = this.state;
 
     const entityTools = [
       {
@@ -144,38 +125,9 @@ class InvestigationSidebar extends React.Component {
       },
     ];
 
-    //
-
-
-
     return (
       <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
-        <div className={c('InvestigationSidebar__header', {'metadata-shown': showMetadata})}>
-          <div className="InvestigationSidebar__header__inner-container">
-            <CollectionHeading collection={collection} link={!!activeMode} />
-            <div className="InvestigationSidebar__header__metadata">
-              {collection.summary && (
-                <Summary text={collection.summary} />
-              )}
-              <CollectionStatus collection={collection} showCancel={collection.writeable} />
-              <div className="InvestigationSidebar__header__divider" />
-              <div className="InvestigationSidebar__header__metadata__inner-container">
-                <CollectionInfo collection={collection} />
-                <div className="InvestigationSidebar__header__actions">
-                  <CollectionManageMenu collection={collection} buttonProps={{ className: 'bp3-minimal' }}/>
-                </div>
-              </div>
-            </div>
-          </div>
-          <Button
-            onClick={this.toggleMetadata}
-            minimal
-            small
-            fill
-            className="InvestigationSidebar__metadata-toggle"
-            rightIcon={showMetadata ? 'chevron-up' : 'chevron-down'}
-          />
-        </div>
+        <InvestigationHeading collection={collection} activeMode={activeMode} />
         <div className="InvestigationSidebar__content">
           <div className="InvestigationSidebar__section">
             <h6 className="bp3-heading InvestigationSidebar__section__title">
