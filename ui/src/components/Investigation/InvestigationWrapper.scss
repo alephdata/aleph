@@ -1,6 +1,8 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
+$transition-duration: .3s;
+
 .InvestigationWrapper {
   width: 100%;
   // overflow: hidden;
@@ -8,6 +10,28 @@
 
   .DualPane {
     padding: 0;
+  }
+
+  &__sidebar-placeholder {
+    width: $aleph-investigation-sidebar-width;
+    transition: width $transition-duration ease-in-out;
+
+    &.collapsed {
+      width: $aleph-investigation-sidebar-width-collapsed;
+    }
+  }
+
+  &__sidebar-container {
+    width: $aleph-investigation-sidebar-width;
+    transition: width $transition-duration ease-in-out;
+    top: 0;
+
+    .fixed & {
+      position: fixed;
+    }
+    .collapsed & {
+      width: $aleph-investigation-sidebar-width-collapsed;
+    }
   }
 
   &__body.ContentPane {

@@ -2,28 +2,38 @@
 
 $transition-duration: .3s;
 $sidebar-padding: 15px;
-$full-width: 300px;
-$collapsed-width: 57px;
 
 .InvestigationSidebar {
-  // height: calc(100vh - #{$aleph-top-nav-height});
+  height: calc(100vh);
+  overflow: scroll;
 
   // position: fixed;
   background: $light-gray5;
   box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
   // overflow-y: scroll;
-  width: $full-width;
-  transition: width $transition-duration ease-in-out, min-width $transition-duration ease-in-out, box-shadow $transition-duration ease-in-out;
+  // width: $aleph-investigation-sidebar-width;
+  transition: box-shadow $transition-duration ease-in-out;
   padding: 0;
 
-  &.collapsed {
-    width: $collapsed-width;
-    // box-shadow: none;
+  .collapsed & {
+    box-shadow: none;
     background: $aleph-breadcrumbs-background;
-    padding: 0;
+  }
+
+  &__scroll-container {
+
   }
 
   &__content {
+    // position: relative;
+    // height: 100%;
+    // overflow: scroll;
+
+    // &__inner-container {
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    // }
 
     .collapsed & {
       padding: 0;
@@ -46,14 +56,14 @@ $collapsed-width: 57px;
     padding: 5px;
     border-top: 1px solid $light-gray2;
     position: fixed;
-    width: $full-width;
+    width: $aleph-investigation-sidebar-width;
     bottom: 0;
     left: 0;
     z-index: 10;
     transition: width $transition-duration ease-in-out;
 
     .collapsed & {
-      width: $collapsed-width;
+      width: $aleph-investigation-sidebar-width-collapsed;
     }
   }
 

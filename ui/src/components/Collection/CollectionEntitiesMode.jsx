@@ -13,8 +13,6 @@ class CollectionEntitiesMode extends React.PureComponent {
   render() {
     const { activeSchema, collection, querySchemaEntities } = this.props;
 
-    console.log('in collection entities mode', activeSchema);
-
     return (
       <EntityTable
         query={querySchemaEntities(activeSchema)}

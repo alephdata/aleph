@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Drawer, Intent, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
@@ -59,9 +60,55 @@ const messages = defineMessages({
 
 
 class InvestigationWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { sidebarFixed: false };
+
+    this.sidebarRef = React.createRef();
+
+    this.onScroll = this.onScroll.bind(this);
+    this.toggleCollapsed = this.toggleCollapsed.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.onScroll)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll)
+  }
+
+  onScroll() {
+    console.log('scrolling wrapper');
+    const ref = this.sidebarRef.current.getBoundingClientRect().y;
+    console.log('ref is', ref);
+    if (ref < 0) {
+      this.setState({ sidebarFixed: true });
+    } else {
+      this.setState({ sidebarFixed: false });
+    }
+    // console.log(ref.pageYOffset, ref.offsetTop)
+
+  }
+
+  toggleCollapsed = () => {
+    const { history, isCollapsed, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    if (!isCollapsed) {
+      parsedHash.collapsed = true;
+    } else {
+      delete parsedHash.collapsed;
+    }
+    history.push({
+      pathname: location.pathname,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
   render() {
     const { activeMode, activeSearch, activeType, collection, intl, isCollapsed, result } = this.props;
-
+    const { sidebarFixed } = this.state;
     const showBreadcrumbs = !!activeMode;
 
     // const operation = (
@@ -90,49 +137,21 @@ class InvestigationWrapper extends React.Component {
       </Breadcrumbs>
     );
 
-    // {!activeMode && (
-    //   <div className='InvestigationSidebar__header'>
-    //     <div className="InvestigationSidebar__header__inner-container">
-    //       <CollectionHeading collection={collection} />
-    //       {collection.summary && (
-    //         <Summary text={collection.summary} />
-    //       )}
-    //       <CollectionStatus collection={collection} showCancel={collection.writeable} />
-    //       <div className="InvestigationSidebar__header__divider" />
-    //       <div className="InvestigationSidebar__header__metadata__inner-container">
-    //         <CollectionInfo collection={collection} />
-    //         <div className="InvestigationSidebar__header__actions">
-    //           <CollectionManageMenu collection={collection} buttonProps={{ className: 'bp3-minimal' }}/>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // )}
-    // {isCollapsed && showBreadcrumbs && (
-    //   <div className="InvestigationWrapper__breadcrumbs-container">
-    //     <Button
-    //       minimal
-    //       className="InvestigationWrapper__breadcrumbs-container__label"
-    //       onClick={this.toggleCollapsed}
-    //       icon="briefcase"
-    //     >
-    //       <Collection.Label collection={collection} icon={false} />
-    //     </Button>
-    //     {breadcrumbs}
-    //   </div>
-    // )}
-
     return (
       <div className="InvestigationWrapper">
         {isCollapsed && breadcrumbs}
 
         <DualPane>
-          <InvestigationSidebar
-            collection={collection}
-            isCollapsed={isCollapsed}
-            toggleCollapsed={this.toggleCollapsed}
-            onSearch={this.props.onSearch}
-          />
+          <div ref={this.sidebarRef} className={c("InvestigationWrapper__sidebar-placeholder", { fixed: sidebarFixed, collapsed: isCollapsed })}>
+            <div className="InvestigationWrapper__sidebar-container">
+              <InvestigationSidebar
+                collection={collection}
+                isCollapsed={isCollapsed}
+                toggleCollapsed={this.toggleCollapsed}
+                onSearch={this.props.onSearch}
+              />
+            </div>
+          </div>
           <DualPane.ContentPane className="InvestigationWrapper__body">
             {!isCollapsed && showBreadcrumbs && breadcrumbs}
             <div className="InvestigationWrapper__body-content">

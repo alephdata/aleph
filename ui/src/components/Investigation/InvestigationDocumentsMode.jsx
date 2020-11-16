@@ -31,8 +31,6 @@ class InvestigationDocumentsMode extends React.Component {
   render() {
     const { activeView, browseQuery, collection, searchQuery, searchResult } = this.props;
 
-    console.log('view is', activeView);
-
     return (
       <Tabs
         id="InvestigationDocumentsTabs"

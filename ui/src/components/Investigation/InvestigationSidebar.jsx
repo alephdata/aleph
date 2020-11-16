@@ -53,20 +53,6 @@ class InvestigationSidebar extends React.Component {
     this.navigate = this.navigate.bind(this);
   }
 
-  toggleCollapsed = () => {
-    const { history, isCollapsed, location } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    if (!isCollapsed) {
-      parsedHash.collapsed = true;
-    } else {
-      delete parsedHash.collapsed;
-    }
-    history.push({
-      pathname: location.pathname,
-      hash: queryString.stringify(parsedHash),
-    });
-  }
-
   navigate(mode, type) {
     const { history, isCollapsed, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
@@ -90,7 +76,7 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed = false,
+      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed, toggleCollapsed,
       intl, schemaCounts
     } = this.props;
 
@@ -126,50 +112,52 @@ class InvestigationSidebar extends React.Component {
     ];
 
     return (
-      <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
-        <InvestigationHeading collection={collection} activeMode={activeMode} />
-        <div className="InvestigationSidebar__content">
-          <div className="InvestigationSidebar__section">
-            <h6 className="bp3-heading InvestigationSidebar__section__title">
-              <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
-            </h6>
-            <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-              <SchemaCounts
-                filterSchemata={schema => !schema.isDocument()}
-                schemaCounts={schemaCounts}
-                onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
-                showSchemaAdd={collection.writeable}
-                activeSchema={activeType}
-                isCollapsed={isCollapsed}
-              />
-              {entityTools.map(({ id, ...rest }) => (
-                <InvestigationSidebarButton
-                  key={id}
-                  text={intl.formatMessage(messages[id])}
-                  onClick={() => this.navigate(id)}
-                  active={activeMode === id}
+      <div className='InvestigationSidebar'>
+        <div className="InvestigationSidebar__scroll-container">
+          <InvestigationHeading collection={collection} activeMode={activeMode} />
+          <div className="InvestigationSidebar__content">
+            <div className="InvestigationSidebar__section">
+              <h6 className="bp3-heading InvestigationSidebar__section__title">
+                <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
+              </h6>
+              <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
+                <SchemaCounts
+                  filterSchemata={schema => !schema.isDocument()}
+                  schemaCounts={schemaCounts}
+                  onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
+                  showSchemaAdd={collection.writeable}
+                  activeSchema={activeType}
                   isCollapsed={isCollapsed}
-                  {...rest}
                 />
-              ))}
-            </ButtonGroup>
-          </div>
-          <div className="InvestigationSidebar__section">
-            <h6 className="bp3-heading InvestigationSidebar__section__title">
-              <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
-            </h6>
-            <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-              {docTools.map(({ id, ...rest }) => (
-                <InvestigationSidebarButton
-                  key={id}
-                  text={intl.formatMessage(messages[id])}
-                  onClick={() => this.navigate(id)}
-                  active={activeMode === id}
-                  isCollapsed={isCollapsed}
-                  {...rest}
-                />
-              ))}
-            </ButtonGroup>
+                {entityTools.map(({ id, ...rest }) => (
+                  <InvestigationSidebarButton
+                    key={id}
+                    text={intl.formatMessage(messages[id])}
+                    onClick={() => this.navigate(id)}
+                    active={activeMode === id}
+                    isCollapsed={isCollapsed}
+                    {...rest}
+                  />
+                ))}
+              </ButtonGroup>
+            </div>
+            <div className="InvestigationSidebar__section">
+              <h6 className="bp3-heading InvestigationSidebar__section__title">
+                <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
+              </h6>
+              <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
+                {docTools.map(({ id, ...rest }) => (
+                  <InvestigationSidebarButton
+                    key={id}
+                    text={intl.formatMessage(messages[id])}
+                    onClick={() => this.navigate(id)}
+                    active={activeMode === id}
+                    isCollapsed={isCollapsed}
+                    {...rest}
+                  />
+                ))}
+              </ButtonGroup>
+            </div>
           </div>
         </div>
         <div className="InvestigationSidebar__footer">
@@ -177,7 +165,7 @@ class InvestigationSidebar extends React.Component {
             minimal
             fill
             icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
-            onClick={this.toggleCollapsed}
+            onClick={toggleCollapsed}
             text={isCollapsed ? null : 'Collapse'}
             className="InvestigationSidebar__collapse-toggle"
           />
