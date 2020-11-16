@@ -33,7 +33,7 @@ def create_entityset(collection, data, authz):
     data["layout"] = replace_layout_ids(layout, old_to_new_id_map)
     entityset = EntitySet.create(data, collection, authz)
     for entity_id in entity_ids:
-        EntitySetItem.save(entityset, entity_id)
+        save_entityset_item(entityset, collection, entity_id)
     publish(
         Events.CREATE_ENTITYSET,
         params={"collection": collection, "entityset": entityset},
@@ -48,7 +48,7 @@ def save_entityset_item(entityset, collection, entity_id, **data):
     a profile, this may require re-indexing of the entity to update the associated
     profile_id.
     """
-    item = EntitySetItem.save(entityset, entity_id, collection.id, **data)
+    item = EntitySetItem.save(entityset, entity_id, collection_id=collection.id, **data)
     if entityset.type == EntitySet.PROFILE and entityset.collection_id == collection.id:
         from aleph.logic.profiles import profile_fragments
 

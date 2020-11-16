@@ -32,7 +32,7 @@ class ProfilesApiTestCase(TestCase):
         }
         self.ent1 = self.create_entity(ent1, self.col1)
         index_entity(self.ent1)
-        EntitySetItem.save(self.profile, self.ent1.id, self.col1.id)
+        EntitySetItem.save(self.profile, self.ent1.id, collection_id=self.col1.id)
 
         self.col2 = self.create_collection()
         self.grant_publish(self.col2)
@@ -46,7 +46,7 @@ class ProfilesApiTestCase(TestCase):
         }
         self.ent2 = self.create_entity(ent2, self.col2)
         index_entity(self.ent2)
-        EntitySetItem.save(self.profile, self.ent2.id, self.col2.id)
+        EntitySetItem.save(self.profile, self.ent2.id, collection_id=self.col2.id)
 
         ent_false = {
             "schema": "LegalEntity",
@@ -55,7 +55,10 @@ class ProfilesApiTestCase(TestCase):
         self.ent_false = self.create_entity(ent_false, self.col2)
         index_entity(self.ent_false)
         EntitySetItem.save(
-            self.profile, self.ent_false.id, self.col2.id, judgement=Judgement.NEGATIVE
+            self.profile,
+            self.ent_false.id,
+            collection_id=self.col2.id,
+            judgement=Judgement.NEGATIVE,
         )
 
         self.col3 = self.create_collection()
@@ -65,7 +68,7 @@ class ProfilesApiTestCase(TestCase):
         }
         self.ent3 = self.create_entity(ent3, self.col3)
         index_entity(self.ent3)
-        EntitySetItem.save(self.profile, self.ent3.id, self.col3.id)
+        EntitySetItem.save(self.profile, self.ent3.id, collection_id=self.col3.id)
         db.session.commit()
 
     def test_profile_view(self):

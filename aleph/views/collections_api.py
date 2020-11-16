@@ -3,12 +3,12 @@ from flask import Blueprint, request
 
 from aleph.core import db
 from aleph.search import CollectionsQuery
-from aleph.model import EntitySetItem
 from aleph.queues import queue_task, get_status, cancel_queue
 from aleph.queues import OP_REINGEST, OP_REINDEX, OP_INDEX
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, refresh_collection
+from aleph.logic.entitysets import save_entityset_item
 from aleph.index.collections import update_collection_stats
 from aleph.logic.processing import bulk_write
 from aleph.views.serializers import CollectionSerializer
@@ -288,10 +288,10 @@ def bulk(collection_id):
     ):
         entity_ids.append(entity_id)
         if entityset is not None:
-            EntitySetItem.save(
+            save_entityset_item(
                 entityset,
+                collection,
                 entity_id,
-                collection.id,
                 added_by_id=request.authz.id,
             )
     collection.touch()
