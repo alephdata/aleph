@@ -39,6 +39,10 @@ $collapsed-width: 57px;
     }
   }
 
+  .CollectionLink {
+    color: white !important;
+  }
+
   &__header, &__content {
 
     .collapsed & {

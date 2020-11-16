@@ -152,7 +152,7 @@ class InvestigationSidebar extends React.Component {
       <div className={c('InvestigationSidebar', {collapsed: isCollapsed})}>
         <div className={c('InvestigationSidebar__header', {'metadata-shown': showMetadata})}>
           <div className="InvestigationSidebar__header__inner-container">
-            <CollectionHeading collection={collection} />
+            <CollectionHeading collection={collection} link={!!activeMode} />
             <div className="InvestigationSidebar__header__metadata">
               {collection.summary && (
                 <Summary text={collection.summary} />

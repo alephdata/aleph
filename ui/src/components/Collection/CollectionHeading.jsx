@@ -12,12 +12,14 @@ class CollectionHeading extends PureComponent {
   )
 
   render() {
-    const { collection, showCategory = true } = this.props;
+    const { collection, showCategory = true, link = false } = this.props;
     const isPending = collection.isPending && !collection.label;
 
     if (isPending) {
       return this.renderSkeleton();
     }
+
+    const LabelComponent = link ? Collection.Link : Collection.Label;
 
     return (
       <div className="CollectionHeading">
@@ -28,7 +30,7 @@ class CollectionHeading extends PureComponent {
           </span>
         )}
         <h2 itemProp="name" className="CollectionHeading__title">
-          {collection.label}
+          <LabelComponent collection={collection} icon={false} />
         </h2>
       </div>
     );

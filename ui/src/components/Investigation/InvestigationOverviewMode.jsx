@@ -8,6 +8,7 @@ import queryString from 'query-string';
 import { SearchBox, Skeleton, Summary } from 'components/common';
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
+import InvestigationQuickLinks from 'components/Investigation/InvestigationQuickLinks';
 import CollectionReference from 'components/Collection/CollectionReference';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 
@@ -64,6 +65,12 @@ class InvestigationOverviewMode extends React.Component {
             <FormattedMessage id="investigation.overview.notifications" defaultMessage="Recent activity" />
           </h6>
           <NotificationList query={notificationsQuery} showCollectionLinks={false} />
+        </div>
+        <div className="InvestigationOverview__section">
+          <h6 className="InvestigationOverview__section__title">
+            <FormattedMessage id="investigation.overview.notifications" defaultMessage="Quick links" />
+          </h6>
+          <InvestigationQuickLinks collection={collection} />
         </div>
         <div className="InvestigationOverview__section">
           <h6 className="InvestigationOverview__section__title">
