@@ -76,7 +76,7 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed, toggleCollapsed,
+      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed, toggleCollapsed, minimalHeader,
       intl, schemaCounts
     } = this.props;
 
@@ -114,7 +114,7 @@ class InvestigationSidebar extends React.Component {
     return (
       <div className='InvestigationSidebar'>
         <div className="InvestigationSidebar__scroll-container">
-          <InvestigationHeading collection={collection} activeMode={activeMode} />
+          <InvestigationHeading collection={collection} activeMode={activeMode} minimal={minimalHeader} />
           <div className="InvestigationSidebar__content">
             <div className="InvestigationSidebar__section">
               <h6 className="bp3-heading InvestigationSidebar__section__title">

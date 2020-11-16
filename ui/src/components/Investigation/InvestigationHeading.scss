@@ -23,6 +23,7 @@ $collapsed-width: 57px;
   &__inner-container {
     padding: $sidebar-padding*2 $sidebar-padding;
     padding-bottom: 0;
+    transition: padding .3s ease-in-out;
 
     .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
       color: white !important;
@@ -30,6 +31,11 @@ $collapsed-width: 57px;
 
     .bp3-input-group {
       margin-top: 10px;
+    }
+
+    .fixed & {
+      padding-top: 0;
+      padding-bottom: 0;
     }
   }
 
@@ -58,6 +64,10 @@ $collapsed-width: 57px;
 
     .metadata-shown & {
       max-height: 10000px;
+    }
+
+    .fixed & {
+      max-height: 0;
     }
 
     .CollectionInfo__item .key {
@@ -95,14 +105,36 @@ $collapsed-width: 57px;
   &__metadata-toggle {
     width: 100%;
     margin-top: 10px;
+    transition: height .3s ease-in-out;
+    overflow: hidden;
+
     .bp3-icon {
       color: white !important;
     }
-  }
 
+    .fixed & {
+      display: none !important;
+    }
+  }
 
   .CollectionHeading {
     margin: 0;
+
+    &__subheading {
+      transition: max-height .3s ease-in-out;
+      overflow: hidden;
+      .fixed & {
+        max-height: 0;
+      }
+    }
+
+    &__title {
+      transition: font-size .3s ease-in-out, font-weight .3s ease-in-out;
+      .fixed & {
+        font-size: 14px;
+        font-weight: normal !important;
+      }
+    }
   }
 
   .CollectionStatus {

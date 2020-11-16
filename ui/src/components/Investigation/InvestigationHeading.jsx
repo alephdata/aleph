@@ -35,14 +35,14 @@ class InvestigationHeading extends React.Component {
 
   render() {
     const {
-      collection, activeMode, isCollapsed = false, intl
+      collection, activeMode, intl, minimal
     } = this.props;
     const { showMetadata } = this.state;
 
     return (
-      <div className={c('InvestigationHeading', {'metadata-shown': showMetadata})}>
+      <div className={c('InvestigationHeading', {'metadata-shown': showMetadata, minimal })}>
         <div className="InvestigationHeading__inner-container">
-          <CollectionHeading collection={collection} link={!!activeMode} />
+          <CollectionHeading collection={collection} link={!!activeMode} showCategory={!minimal} />
           <div className="InvestigationHeading__metadata">
             {collection.summary && (
               <Summary text={collection.summary} />

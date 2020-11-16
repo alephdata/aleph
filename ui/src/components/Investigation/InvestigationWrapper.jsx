@@ -149,6 +149,7 @@ class InvestigationWrapper extends React.Component {
                 isCollapsed={isCollapsed}
                 toggleCollapsed={this.toggleCollapsed}
                 onSearch={this.props.onSearch}
+                minimalHeader={sidebarFixed}
               />
             </div>
           </div>

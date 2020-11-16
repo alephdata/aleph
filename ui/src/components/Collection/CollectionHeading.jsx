@@ -24,13 +24,13 @@ class CollectionHeading extends PureComponent {
     return (
       <div className="CollectionHeading">
         {showCategory && (
-          <span className="bp3-text-muted">
+          <div className="bp3-text-muted CollectionHeading__subheading">
             <Collection.Label collection={collection} label={false} />
             <Category.Label category={collection.category} />
-          </span>
+          </div>
         )}
         <h2 itemProp="name" className="CollectionHeading__title">
-          <LabelComponent collection={collection} icon={false} />
+          <LabelComponent collection={collection} icon={!showCategory} />
         </h2>
       </div>
     );
