@@ -6,9 +6,9 @@ import { queryEndpoint } from './util';
 export const queryEntitySets = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITYSETS' });
 export const queryEntitySetEntities = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITYSET_ENTITIES' });
 
-export const fetchEntitySet = asyncActionCreator((entitySetId) => async () => {
-  const response = await endpoint.get(`entitysets/${entitySetId}`);
-  return { id: entitySetId, data: response.data };
+export const fetchEntitySet = asyncActionCreator(({ id }) => async () => {
+  const response = await endpoint.get(`entitysets/${id}`);
+  return { id, data: response.data };
 }, { name: 'FETCH_ENTITYSET' });
 
 const createEntitySet = (entitySet) => async () => {

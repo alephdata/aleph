@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import Screen from 'components/Screen/Screen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { selectNotificationsResult, selectCurrentRole } from 'selectors';
@@ -30,17 +29,17 @@ const messages = defineMessages({
 export class NotificationsScreen extends React.Component {
   render() {
     const { query, result, intl, role } = this.props;
-
-    if (result.isError) {
-      return <ErrorScreen error={result.error} />;
-    }
+    const screenProps = {
+      title: intl.formatMessage(messages.title),
+      requireSession: true,
+    };
 
     if (!role.id) {
-      return <LoadingScreen />
+      return <LoadingScreen {...screenProps} />
     }
 
     return (
-      <Screen title={intl.formatMessage(messages.title)} requireSession>
+      <Screen {...screenProps}>
         <Dashboard>
           <div className="Dashboard__title-container">
             <h5 className="Dashboard__title">

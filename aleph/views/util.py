@@ -1,5 +1,6 @@
 import io
 import csv
+import string
 import logging
 from banal import as_bool, ensure_dict, is_mapping, is_listish
 from normality import stringify
@@ -18,6 +19,7 @@ from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
 
 log = logging.getLogger(__name__)
+CALLBACK_VALID = string.ascii_letters + string.digits + "_"
 
 
 def require(*predicates):
@@ -143,6 +145,7 @@ def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
     mimetype = "application/json"
     if "callback" in request.args:
         cb = request.args.get("callback")
+        cb = "".join((c for c in cb if c in CALLBACK_VALID))
         data = "%s && %s(%s)" % (cb, cb, data)
         # mime cf. https://stackoverflow.com/questions/24528211/
         mimetype = "application/javascript"

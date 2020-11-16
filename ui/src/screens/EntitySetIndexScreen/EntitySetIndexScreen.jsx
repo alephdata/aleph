@@ -68,10 +68,6 @@ export class EntitySetIndexScreen extends Component {
     const title = intl.formatMessage(messages[`${type}_title`])
     const description = intl.formatMessage(messages[`${type}_description`])
 
-    if (result.isError) {
-      return <ErrorScreen error={result.error} />;
-    }
-
     return (
       <Screen
         className="EntitySetIndexScreen"

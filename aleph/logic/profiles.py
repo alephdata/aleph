@@ -116,7 +116,9 @@ def pairwise_decisions(pairs, collection_id):
     q = db.session.query(left, right)
     q = q.filter(left.deleted_at == None, right.deleted_at == None)  # noqa
     q = q.filter(EntitySet.collection_id == collection_id)
-    q = q.filter(left.entityset_id == right.entityset_id)
+    q = q.filter(EntitySet.type == EntitySet.PROFILE)
+    q = q.filter(EntitySet.id == left.entityset_id)
+    q = q.filter(EntitySet.id == right.entityset_id)
     q = q.filter(db.tuple_(left.entity_id, right.entity_id).in_(pairs))
     return PairwiseDict(
         ((lft.entity_id, rgt.entity_id), (lft.judgement + rgt.judgement))

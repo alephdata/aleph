@@ -11,30 +11,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-07-09 19:12+0200\n"
+"POT-Creation-Date: 2020-11-16 08:52+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.8.0\n"
+"Generated-By: Babel 2.9.0\n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: aleph/settings.py:28
+#: aleph/settings.py:31
 msgid "Aleph"
 msgstr "Алеф"
 
-#: aleph/settings.py:39
-msgid "TeliaSonera"
-msgstr "TeliaSonera"
+#: aleph/logic/entities.py:58
+msgid "No schema on entity"
+msgstr "Отсутствует схема для сущности"
 
-#: aleph/settings.py:39
-msgid "Vladimir Putin"
-msgstr "Владимир Путин"
+#: aleph/logic/html.py:63
+msgid "[HTML removed: could not be sanitized]"
+msgstr "[HTML-код удалён как небезопасный]"
 
-#: aleph/logic/roles.py:44
+#: aleph/logic/roles.py:42
 msgid "Registration"
 msgstr "Регистрация"
 
@@ -138,62 +138,121 @@ msgstr "ежемесячно"
 msgid "annual"
 msgstr "ежегодно"
 
-#: aleph/model/entity.py:77
+#: aleph/model/common.py:116
+msgid "pending"
+msgstr "в ожидании"
+
+#: aleph/model/common.py:117
+msgid "successful"
+msgstr "успешно"
+
+#: aleph/model/common.py:118
+msgid "failed"
+msgstr "неудача"
+
+#: aleph/model/entity.py:74
 msgid "Invalid entity ID"
 msgstr "Неверный ID сущности"
 
 #: aleph/model/event.py:49
+msgid "New datasets"
+msgstr "Новые наборы данных"
+
+#: aleph/model/event.py:50
 msgid "{{actor}} created {{collection}}"
 msgstr "{{actor}} создали {{collection}}"
 
-#: aleph/model/event.py:56
-msgid "{{actor}} changed the settings of {{collection}}"
-msgstr "{{actor}} изменили настройки для {{collection}}"
+#: aleph/model/event.py:57
+msgid "Document uploads"
+msgstr "Загрузка документов"
 
-#: aleph/model/event.py:63
+#: aleph/model/event.py:58
 msgid "{{actor}} added {{document}} to {{collection}}"
 msgstr "{{actor}} добавили {{document}} в {{collection}}"
 
-#: aleph/model/event.py:73
+#: aleph/model/event.py:65
+msgid "Entities generated"
+msgstr "Сгенерированные сущности"
+
+#: aleph/model/event.py:66
 msgid "{{actor}} generated entities from {{table}} in {{collection}}"
 msgstr "{{actor}} создали сущности из {{table}} в {{collection}}"
 
-#: aleph/model/event.py:83
+#: aleph/model/event.py:75
+msgid "New network diagram"
+msgstr "Новая диаграмма"
+
+#: aleph/model/event.py:76
 msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
 msgstr "{{actor}} начали создавать {{diagram}} в {{collection}}"
 
-#: aleph/model/event.py:93
-msgid "{{actor}} created {{entityset}} in {{collection}}"
-msgstr ""
+#: aleph/model/event.py:85
+msgid "New diagrams and lists"
+msgstr "Новые диаграммы и списки"
 
-#: aleph/model/event.py:103
+#: aleph/model/event.py:86
+msgid "{{actor}} created {{entityset}} in {{collection}}"
+msgstr "{{actor}} создали {{entityset}} в {{collection}}"
+
+#: aleph/model/event.py:93
+msgid "Alert notifications"
+msgstr "Уведомления"
+
+#: aleph/model/event.py:94
 msgid "{{entity}} matches your alert for {{alert}}"
 msgstr "{{entity}} соответствует параметрам вашего оповещения для {{alert}}"
 
-#: aleph/model/event.py:114
+#: aleph/model/event.py:101
+msgid "Dataset access change"
+msgstr "Изменён доступ к набору данных"
+
+#: aleph/model/event.py:102
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr ""
 "{{actor}} предоставили вам права {{role}} для доступа к {{collection}}"
 
-#: aleph/model/event.py:124
+#: aleph/model/event.py:111
+msgid "Dataset published"
+msgstr "Опубликован набор данных"
+
+#: aleph/model/event.py:112
 msgid "{{actor}} published {{collection}}"
 msgstr "{{actor}} опубликовали {{collection}}"
 
-#: aleph/model/mapping.py:23
-msgid "success"
-msgstr "успешно"
+#: aleph/model/event.py:119
+msgid "Exports completed"
+msgstr "Экспорт завершён"
 
-#: aleph/model/mapping.py:24
-msgid "failed"
-msgstr "неудача"
+#: aleph/model/event.py:120
+msgid "{{export}} is ready for download"
+msgstr "{{export}} можно скачать"
 
-#: aleph/model/mapping.py:25
-msgid "pending"
-msgstr "в ожидании"
-
-#: aleph/search/__init__.py:48
+#: aleph/search/__init__.py:50
 msgid "No schema is specified for the query."
 msgstr "Отсутствует схема данных для запроса."
+
+#: aleph/templates/email/export.html:5
+msgid ""
+"\n"
+"    The following export is ready for download:\n"
+"    "
+msgstr ""
+"\n"
+"    Экспортированные данные доступны для скачивания:\n"
+"    "
+
+#: aleph/templates/email/export.html:13
+#, python-format
+msgid ""
+"\n"
+"    This download link will expire on %(expiration_date)s.\n"
+"    Browse all of your available exports here:\n"
+"    "
+msgstr ""
+"\n"
+"    Ссылка для скачивания перестанет работать после %(expiration_date)s.\n"
+"    Экспортированные данные для скачивания:\n"
+"    "
 
 #: aleph/templates/email/layout.html:45
 #, python-format
@@ -251,33 +310,33 @@ msgstr "Неверные региональные настройки."
 
 #: aleph/validation/formats.py:28
 #, python-format
-msgid "Invalid country code: %s"
-msgstr "Некорректный код страны: %s"
-
-#: aleph/validation/formats.py:37
-#, python-format
 msgid "Invalid entity ID: %s"
 msgstr "Неверный ID сущности: %s"
 
-#: aleph/validation/formats.py:45
+#: aleph/validation/formats.py:36
 msgid "Invalid category."
 msgstr "Неверная категория"
 
-#: aleph/validation/formats.py:52
+#: aleph/validation/formats.py:43
 msgid "Invalid frequency."
 msgstr "Некорректная частота"
 
-#: aleph/validation/formats.py:59
+#: aleph/validation/formats.py:50
 msgid "Invalid set type."
-msgstr ""
+msgstr "Неверный тип."
 
-#: aleph/validation/formats.py:67
+#: aleph/validation/formats.py:58
 msgid "Invalid URL."
 msgstr "Некорректная ссылка."
 
-#: aleph/validation/formats.py:75
+#: aleph/validation/formats.py:66
 msgid "Invalid language code."
 msgstr "Некорректный языковой код."
+
+#: aleph/validation/formats.py:74
+#, python-format
+msgid "Invalid country code: %s"
+msgstr "Некорректный код страны: %s"
 
 #: aleph/validation/formats.py:83
 #, python-format
@@ -289,23 +348,28 @@ msgstr "Некорректное имя схемы: %s"
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"
 
-#: aleph/views/base_api.py:202
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:211
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:220
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:238
+#: aleph/views/base_api.py:245
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 
-#: aleph/views/roles_api.py:60
+#: aleph/views/entities_api.py:167
+#, python-format
+msgid "Search: %s"
+msgstr "Найти: %s"
+
+#: aleph/views/roles_api.py:61
 msgid "prefix filter is too short"
 msgstr "Префикс слишком короткий"
 
@@ -313,35 +377,26 @@ msgstr "Префикс слишком короткий"
 msgid "To proceed, please check your email."
 msgstr "Пожалуйста, проверьте почту"
 
-#: aleph/views/roles_api.py:142
+#: aleph/views/roles_api.py:139
 msgid "Invalid code"
 msgstr "Неверный код"
 
-#: aleph/views/roles_api.py:149
+#: aleph/views/roles_api.py:145
 msgid "Email is already registered"
 msgstr "Этот электронный адрес уже зарегистрирован"
 
-#: aleph/views/roles_api.py:232
+#: aleph/views/roles_api.py:229
 msgid "Incorrect password."
 msgstr "Неверный пароль."
 
-#: aleph/views/sessions_api.py:52 aleph/views/sessions_api.py:55
+#: aleph/views/sessions_api.py:52
 msgid "Invalid user or password."
 msgstr "Неверное имя пользователя или пароль."
 
-#: aleph/views/sessions_api.py:93 aleph/views/sessions_api.py:96
-#: aleph/views/sessions_api.py:101
+#: aleph/views/sessions_api.py:90
 msgid "Authentication has failed."
 msgstr "Ошибка авторизации."
-
-#: aleph/views/sessions_api.py:103
-msgid "Your account is blocked."
-msgstr "Ваша учётная запись заблокирована."
 
 #: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "Ошибка проверки данных"
-
-#: aleph/views/util.py:145
-msgid "[HTML removed: could not be sanitized]"
-msgstr "[HTML-код удалён как небезопасный]"

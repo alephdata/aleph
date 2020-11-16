@@ -115,9 +115,13 @@ class EntitySetCreateDialog extends Component {
         label,
         summary,
         collection_id: collection.id,
-        entities,
-        layout
       };
+      if (layout) {
+        newEntitySet.layout = layout;
+      }
+      if (entities) {
+        newEntitySet.entities = entities;
+      }
 
       const response = await this.props.createEntitySet(newEntitySet);
       this.setState({ processing: false });
@@ -273,7 +277,7 @@ class EntitySetCreateDialog extends Component {
                           /* eslint-disable */
                           <a onClick={() => this.toggleCollectionCreateDialog()}>
                             <FormattedMessage
-                              id='entity.manager.bulk_import.link_text'
+                              id='entityset.create.collection.new_link'
                               defaultMessage={
                                 `Create a new personal dataset`
                               }

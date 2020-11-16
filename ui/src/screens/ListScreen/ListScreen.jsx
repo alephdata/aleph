@@ -58,7 +58,7 @@ export class ListScreen extends Component {
     const { list, countsResult, countsQuery, entitySetId } = this.props;
 
     if (list.shouldLoad || list.shallow) {
-      this.props.fetchEntitySet(entitySetId);
+      this.props.fetchEntitySet({ id: entitySetId });
     }
     if (countsResult.shouldLoad) {
       this.props.queryEntitySetEntities({ query: countsQuery });
@@ -118,7 +118,7 @@ const mapStateToProps = (state, ownProps) => {
   const list = selectEntitySet(state, entitySetId);
   const countsQuery = entitySetSchemaCountsQuery(entitySetId)
   const countsResult = selectEntitiesResult(state, countsQuery);
-  const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name);
+  const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name, 30);
 
   return {
     entitySetId,

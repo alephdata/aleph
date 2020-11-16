@@ -6,6 +6,7 @@
 import os
 import uuid
 from servicelayer import env
+from urllib.parse import urlparse
 from flask_babel import lazy_gettext
 from datetime import timedelta
 
@@ -32,13 +33,20 @@ APP_TITLE = env.get("ALEPH_APP_TITLE", lazy_gettext("Aleph"))
 APP_NAME = env.get("ALEPH_APP_NAME", "aleph")
 APP_UI_URL = env.get("ALEPH_UI_URL", "http://localhost:8080/")
 APP_LOGO = env.get("ALEPH_LOGO", "/static/logo.png")
+APP_LOGO_AR = env.get("ALEPH_LOGO_AR", APP_LOGO)
 APP_FAVICON = env.get("ALEPH_FAVICON", "/static/favicon.png")
 
 # Show a system-wide banner in the user interface.
 APP_BANNER = env.get("ALEPH_APP_BANNER")
 
 # Force HTTPS here:
-FORCE_HTTPS = env.to_bool("ALEPH_FORCE_HTTPS", False)
+FORCE_HTTPS = True if APP_UI_URL.lower().startswith("https") else False
+FORCE_HTTPS = env.to_bool("ALEPH_FORCE_HTTPS", FORCE_HTTPS)
+PREFERRED_URL_SCHEME = "https" if FORCE_HTTPS else "http"
+PREFERRED_URL_SCHEME = env.get("ALEPH_URL_SCHEME", PREFERRED_URL_SCHEME)
+# Apply HTTPS rules to the UI URL:
+APP_PARSED_UI_URL = urlparse(APP_UI_URL)._replace(scheme=PREFERRED_URL_SCHEME)
+APP_UI_URL = APP_PARSED_UI_URL.geturl()
 
 # Content security policy:
 CONTENT_POLICY = "default-src: 'self' 'unsafe-inline' 'unsafe-eval' data: *"
@@ -71,17 +79,13 @@ SYSTEM_USER = env.get("ALEPH_SYSTEM_USER", "system:aleph")
 #
 OAUTH = env.to_bool("ALEPH_OAUTH", False)
 # Handler is one of: keycloak, google, cognito, azure (or a plugin)
-OAUTH_HANDLER = env.get("ALEPH_OAUTH_HANDLER")
+OAUTH_MIGRATE_SUB = env.to_bool("ALEPH_OAUTH_MIGRATE_SUB", True)
+OAUTH_HANDLER = env.get("ALEPH_OAUTH_HANDLER", "oidc")
 OAUTH_KEY = env.get("ALEPH_OAUTH_KEY")
 OAUTH_SECRET = env.get("ALEPH_OAUTH_SECRET")
-OAUTH_SCOPE = env.get("ALEPH_OAUTH_SCOPE")
-OAUTH_BASE_URL = env.get("ALEPH_OAUTH_BASE_URL")
-OAUTH_REQUEST_TOKEN_URL = env.get("ALEPH_OAUTH_REQUEST_TOKEN_URL")
+OAUTH_SCOPE = env.get("ALEPH_OAUTH_SCOPE", "openid email profile")
+OAUTH_METADATA_URL = env.get("ALEPH_OAUTH_METADATA_URL")
 OAUTH_TOKEN_METHOD = env.get("ALEPH_OAUTH_TOKEN_METHOD", "POST")
-OAUTH_TOKEN_URL = env.get("ALEPH_OAUTH_TOKEN_URL")
-OAUTH_AUTHORIZE_URL = env.get("ALEPH_OAUTH_AUTHORIZE_URL")
-OAUTH_UI_CALLBACK = env.get("ALEPH_OAUTH_UI_CALLBACK", "/oauth")
-OAUTH_CERT_URL = env.get("ALEPH_OAUTH_CERT_URL")
 OAUTH_ADMIN_GROUP = env.get("ALEPH_OAUTH_ADMIN_GROUP", "superuser")
 
 # No authentication. Everyone is admin.

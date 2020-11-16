@@ -1,16 +1,14 @@
 import { createReducer } from 'redux-act';
 
 import { queryEntitySets, fetchEntitySet, fetchProfile, updateEntitySet, createEntitySetMutate, createEntitySetNoMutate, deleteEntitySet } from 'actions';
-import { objectLoadStart, objectLoadComplete, objectLoadError, objectDelete, resultObjects } from 'reducers/util';
+import { objectLoadComplete, objectLoadError, objectLoadStart, objectDelete, resultObjects } from 'reducers/util';
 
 const initialState = {};
 
 export default createReducer({
   [queryEntitySets.COMPLETE]: (state, { result }) => resultObjects(state, result),
 
-  [fetchEntitySet.START]: (state, {
-    id
-  }) => objectLoadStart(state, id),
+  [fetchEntitySet.START]: (state, { id }) => objectLoadStart(state, id),
 
   [fetchEntitySet.ERROR]: (state, {
     error, args,

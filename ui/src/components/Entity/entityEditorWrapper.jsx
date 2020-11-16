@@ -5,7 +5,8 @@ import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
-import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult, } from 'selectors';
+import { processApiEntity } from 'components/EntitySet/util';
+import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
 import {
   createEntity,
   deleteEntity,
@@ -34,13 +35,12 @@ const entityEditorWrapper = (EditorComponent) => {
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
         };
+        this.entityManager = new EntityManager(config);
 
         if (entities) {
-          this.entityManager = EntityManager.fromJSON(config, entities);
-        } else {
-          this.entityManager = new EntityManager(config);
+          const processedEntities = entities.map(processApiEntity);
+          this.entityManager.addEntities(processedEntities);
         }
-
         this.pendingPromises = [];
       }
 

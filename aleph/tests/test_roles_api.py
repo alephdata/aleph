@@ -51,12 +51,14 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_code_when_no_email(self):
+        settings.PASSWORD_LOGIN = True
         with mail.record_messages() as outbox:
             res = self.client.post("/api/2/roles/code")
             assert res.status_code == 400, res
             assert len(outbox) == 0, outbox
 
     def test_code_has_email(self):
+        settings.PASSWORD_LOGIN = True
         email = self.fake.email()
         with mail.record_messages() as outbox:
             res = self.client.post("/api/2/roles/code", data=dict(email=email))

@@ -19,10 +19,9 @@ md_companies: md_companies.load
 #
 # See also: https://docs.alephdata.org/developers/mappings
 %.load:
-	ftm map $*.yml | ftm store write -d $*
+	ftm store delete -d $* -o etl
+	ftm map $*.yml | ftm store write -o etl -d $*
 	ftm store iterate -d $* | aleph load-entities $*
-	ftm store delete -d $*
-
 
 # Load data from OpenSanctions.org, i.e. lists of politically exposed persons (PEPs) and
 # sanctioned invididuals and entities.

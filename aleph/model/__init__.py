@@ -9,4 +9,4 @@ from aleph.model.event import Event, Events  # noqa
 from aleph.model.mapping import Mapping  # noqa
 from aleph.model.entityset import EntitySet, EntitySetItem, Judgement  # noqa
 from aleph.model.export import Export  # noqa
-from aleph.model.common import Status  # noqa
+from aleph.model.common import Status, make_token  # noqa

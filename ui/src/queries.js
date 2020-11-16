@@ -30,11 +30,14 @@ export function entitySetSchemaCountsQuery(entitySetId) {
     .limit(0);
 }
 
-export function entitySetEntitiesQuery(location, entitySetId, schema) {
-  const context = {
-    'filter:schema': schema,
-  };
-  return Query.fromLocation(`entitysets/${entitySetId}/entities`, location, context, 'entitySetEntities');
+export function entitySetEntitiesQuery(location, entitySetId, schema, limit) {
+  const context = {}
+  if (schema) {
+    context['filter:schema'] = schema;
+  }
+  return Query
+    .fromLocation(`entitysets/${entitySetId}/entities`, location, context, 'entitySetEntities')
+    .limit(limit);
 }
 
 export function queryCollectionEntitySets(location, collectionId) {

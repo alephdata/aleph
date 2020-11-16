@@ -29,10 +29,11 @@ def create_entityset(collection, data, authz):
         new_id = upsert_entity(entity, collection, sync=True)
         old_to_new_id_map[old_id] = new_id
         entity_ids.append(new_id)
-    data["entities"] = entity_ids
     layout = data.get("layout", {})
     data["layout"] = replace_layout_ids(layout, old_to_new_id_map)
     entityset = EntitySet.create(data, collection, authz)
+    for entity_id in entity_ids:
+        EntitySetItem.save(entityset, entity_id)
     publish(
         Events.CREATE_ENTITYSET,
         params={"collection": collection, "entityset": entityset},

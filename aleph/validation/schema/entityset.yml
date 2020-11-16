@@ -19,12 +19,6 @@ EntitySetUpdate:
   type: object
   allOf:
     - $ref: "#/components/schemas/EntitySetBase"
-  properties:
-    entities:
-      type: array
-      items:
-        type: string
-  required: []
 
 EntitySetCreate:
   type: object
@@ -59,17 +53,6 @@ EntitySet:
     role_id:
       type: string
       readOnly: true
-    entities:
-      type: array
-      items:
-        type: object
-        allOf:
-          - $ref: "#/components/schemas/EntityUpdate"
-        properties:
-          id:
-            type: string
-            format: entity_id
-        required: ["id", "schema"]
     writeable:
       type: boolean
       readOnly: true

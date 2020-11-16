@@ -15,7 +15,6 @@ from aleph.views.context import tag_request
 from aleph.views.entities_api import view as entity_view
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
-from aleph.views.serializers import EntitySetIndexSerializer
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
 from aleph.views.util import parse_request, get_db_collection, get_flag
 
@@ -70,7 +69,7 @@ def index():
     if len(collection_ids):
         q = q.filter(EntitySet.collection_id.in_(collection_ids))
     result = DatabaseQueryResult(request, q, parser=parser)
-    return EntitySetIndexSerializer.jsonify_result(result)
+    return EntitySetSerializer.jsonify_result(result)
 
 
 @blueprint.route("/api/2/entitysets", methods=["POST", "PUT"])

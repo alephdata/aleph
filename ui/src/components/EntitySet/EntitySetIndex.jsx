@@ -42,11 +42,11 @@ class EntitySetIndex extends Component {
     const icon = type === 'diagram' ? 'graph' : 'list';
     const showLoadMoreButton = !loadMoreOnScroll && result.results && result.results.length < result.total;
 
-    if (result.total === 0) {
+    if (result.isError || result.total === 0) {
       return (
         <ErrorSection
           icon={icon}
-          title={intl.formatMessage(messages[`no_${type}`])}
+          title={result.isError ? result.error.message : intl.formatMessage(messages[`no_${type}`])}
         />
       );
     }

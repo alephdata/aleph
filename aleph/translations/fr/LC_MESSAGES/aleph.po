@@ -11,30 +11,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-07-09 19:12+0200\n"
+"POT-Creation-Date: 2020-11-16 08:52+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Mathieu Morey <mathieu@datactivi.st>, 2020\n"
 "Language-Team: French (https://www.transifex.com/aleph/teams/76591/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.8.0\n"
+"Generated-By: Babel 2.9.0\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: aleph/settings.py:28
+#: aleph/settings.py:31
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/settings.py:39
-msgid "TeliaSonera"
-msgstr "TeliaSonera"
+#: aleph/logic/entities.py:58
+msgid "No schema on entity"
+msgstr ""
 
-#: aleph/settings.py:39
-msgid "Vladimir Putin"
-msgstr "Vladimir Poutine"
+#: aleph/logic/html.py:63
+msgid "[HTML removed: could not be sanitized]"
+msgstr "[HTML retiré: n'a pas pu être assaini]"
 
-#: aleph/logic/roles.py:44
+#: aleph/logic/roles.py:42
 msgid "Registration"
 msgstr "Enregistrement"
 
@@ -138,61 +138,113 @@ msgstr ""
 msgid "annual"
 msgstr ""
 
-#: aleph/model/entity.py:77
+#: aleph/model/common.py:116
+msgid "pending"
+msgstr ""
+
+#: aleph/model/common.py:117
+msgid "successful"
+msgstr ""
+
+#: aleph/model/common.py:118
+msgid "failed"
+msgstr "échoué"
+
+#: aleph/model/entity.py:74
 msgid "Invalid entity ID"
 msgstr ""
 
 #: aleph/model/event.py:49
+msgid "New datasets"
+msgstr ""
+
+#: aleph/model/event.py:50
 msgid "{{actor}} created {{collection}}"
 msgstr "{{acteur}} a créé {{collection}}"
 
-#: aleph/model/event.py:56
-msgid "{{actor}} changed the settings of {{collection}}"
-msgstr "{{acteur}} a changé les réglages de {{collection}}"
+#: aleph/model/event.py:57
+msgid "Document uploads"
+msgstr ""
 
-#: aleph/model/event.py:63
+#: aleph/model/event.py:58
 msgid "{{actor}} added {{document}} to {{collection}}"
 msgstr "{{acteur}} a ajouté {{document}} à {{collection}}"
 
-#: aleph/model/event.py:73
+#: aleph/model/event.py:65
+msgid "Entities generated"
+msgstr ""
+
+#: aleph/model/event.py:66
 msgid "{{actor}} generated entities from {{table}} in {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:83
+#: aleph/model/event.py:75
+msgid "New network diagram"
+msgstr ""
+
+#: aleph/model/event.py:76
 msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:93
+#: aleph/model/event.py:85
+msgid "New diagrams and lists"
+msgstr ""
+
+#: aleph/model/event.py:86
 msgid "{{actor}} created {{entityset}} in {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:103
+#: aleph/model/event.py:93
+msgid "Alert notifications"
+msgstr ""
+
+#: aleph/model/event.py:94
 msgid "{{entity}} matches your alert for {{alert}}"
 msgstr "{{entite}} correspond à votre alerte pour {{alerte}}"
 
-#: aleph/model/event.py:114
+#: aleph/model/event.py:101
+msgid "Dataset access change"
+msgstr ""
+
+#: aleph/model/event.py:102
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr "{{acteur}} a donné l'accès {{role}} à {{collection}}"
 
-#: aleph/model/event.py:124
+#: aleph/model/event.py:111
+msgid "Dataset published"
+msgstr ""
+
+#: aleph/model/event.py:112
 msgid "{{actor}} published {{collection}}"
 msgstr ""
 
-#: aleph/model/mapping.py:23
-msgid "success"
-msgstr "succès"
-
-#: aleph/model/mapping.py:24
-msgid "failed"
-msgstr "échoué"
-
-#: aleph/model/mapping.py:25
-msgid "pending"
+#: aleph/model/event.py:119
+msgid "Exports completed"
 msgstr ""
 
-#: aleph/search/__init__.py:48
+#: aleph/model/event.py:120
+msgid "{{export}} is ready for download"
+msgstr ""
+
+#: aleph/search/__init__.py:50
 msgid "No schema is specified for the query."
 msgstr "Aucun schéma n'est spécifié pour la requête."
+
+#: aleph/templates/email/export.html:5
+msgid ""
+"\n"
+"    The following export is ready for download:\n"
+"    "
+msgstr ""
+
+#: aleph/templates/email/export.html:13
+#, python-format
+msgid ""
+"\n"
+"    This download link will expire on %(expiration_date)s.\n"
+"    Browse all of your available exports here:\n"
+"    "
+msgstr ""
 
 #: aleph/templates/email/layout.html:45
 #, python-format
@@ -256,33 +308,33 @@ msgstr "Locale utilisateur invalide."
 
 #: aleph/validation/formats.py:28
 #, python-format
-msgid "Invalid country code: %s"
-msgstr "Code pays invalide: %s"
-
-#: aleph/validation/formats.py:37
-#, python-format
 msgid "Invalid entity ID: %s"
 msgstr ""
 
-#: aleph/validation/formats.py:45
+#: aleph/validation/formats.py:36
 msgid "Invalid category."
 msgstr "Catégorie invalide."
 
-#: aleph/validation/formats.py:52
+#: aleph/validation/formats.py:43
 msgid "Invalid frequency."
 msgstr ""
 
-#: aleph/validation/formats.py:59
+#: aleph/validation/formats.py:50
 msgid "Invalid set type."
 msgstr ""
 
-#: aleph/validation/formats.py:67
+#: aleph/validation/formats.py:58
 msgid "Invalid URL."
 msgstr "URL invalide."
 
-#: aleph/validation/formats.py:75
+#: aleph/validation/formats.py:66
 msgid "Invalid language code."
 msgstr "Code de langue invalide."
+
+#: aleph/validation/formats.py:74
+#, python-format
+msgid "Invalid country code: %s"
+msgstr "Code pays invalide: %s"
 
 #: aleph/validation/formats.py:83
 #, python-format
@@ -294,23 +346,28 @@ msgstr "Nom de schéma invalide: %s"
 msgid "Invalid date: %s"
 msgstr "Date invalide: %s"
 
-#: aleph/views/base_api.py:202
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Vous n'êtes pas autorisé à faire ceci."
 
-#: aleph/views/base_api.py:211
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Ce chemin n'existe pas."
 
-#: aleph/views/base_api.py:220
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Erreur interne du serveur."
 
-#: aleph/views/base_api.py:238
+#: aleph/views/base_api.py:245
 msgid "Access token is invalid."
 msgstr "Le jeton d'accès est invalide."
 
-#: aleph/views/roles_api.py:60
+#: aleph/views/entities_api.py:167
+#, python-format
+msgid "Search: %s"
+msgstr ""
+
+#: aleph/views/roles_api.py:61
 msgid "prefix filter is too short"
 msgstr "le filtre de préfixe est trop court"
 
@@ -318,35 +375,26 @@ msgstr "le filtre de préfixe est trop court"
 msgid "To proceed, please check your email."
 msgstr "Pour continuer, veuillez vérifier votre boîte mail."
 
-#: aleph/views/roles_api.py:142
+#: aleph/views/roles_api.py:139
 msgid "Invalid code"
 msgstr "Code invalide"
 
-#: aleph/views/roles_api.py:149
+#: aleph/views/roles_api.py:145
 msgid "Email is already registered"
 msgstr "L'adresse mail est déjà enregistrée"
 
-#: aleph/views/roles_api.py:232
+#: aleph/views/roles_api.py:229
 msgid "Incorrect password."
 msgstr "Mot de passe incorrect."
 
-#: aleph/views/sessions_api.py:52 aleph/views/sessions_api.py:55
+#: aleph/views/sessions_api.py:52
 msgid "Invalid user or password."
 msgstr "Nom d'utilisateur ou mot de passe invalide."
 
-#: aleph/views/sessions_api.py:93 aleph/views/sessions_api.py:96
-#: aleph/views/sessions_api.py:101
+#: aleph/views/sessions_api.py:90
 msgid "Authentication has failed."
 msgstr "L'authentification a échoué."
-
-#: aleph/views/sessions_api.py:103
-msgid "Your account is blocked."
-msgstr ""
 
 #: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "Erreur pendant la validation des données"
-
-#: aleph/views/util.py:145
-msgid "[HTML removed: could not be sanitized]"
-msgstr "[HTML retiré: n'a pas pu être assaini]"
