@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-13 15:36+0100\n"
+"POT-Creation-Date: 2020-11-16 08:52+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Mohammed AlKawmani <komani@arij.net>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
@@ -342,19 +342,19 @@ msgstr "اسم مخطط غير صحيح : 1%s"
 msgid "Invalid date: %s"
 msgstr "تاريخ خاطئ 1%s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "غير مخول للقيام بذلك."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "هذا المسار غير موجود."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "خطأ في الخادم الداخلي."
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:245
 msgid "Access token is invalid."
 msgstr "رمز الدخول غير صحيح"
 
@@ -387,10 +387,10 @@ msgstr "كلمة المرور خاطئة"
 msgid "Invalid user or password."
 msgstr "اسم مستخدم أو كلمة مرور غير صحيحة"
 
-#: aleph/views/sessions_api.py:91
+#: aleph/views/sessions_api.py:90
 msgid "Authentication has failed."
 msgstr "فشل التوثيق "
 
-#: aleph/views/util.py:73
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "حدث خطأ أثناء التحقق من صحة البيانات"

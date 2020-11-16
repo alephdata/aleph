@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-13 15:36+0100\n"
+"POT-Creation-Date: 2020-11-16 08:52+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Laura M <kokoroko2@protonmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/aleph/teams/76591/pt_BR/)\n"
@@ -346,19 +346,19 @@ msgstr "Nome de schema inválido: %s"
 msgid "Invalid date: %s"
 msgstr "Data inválida: %s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Você não tem permissão para isso."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Esse caminho não existe."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Erro interno no servidor."
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:245
 msgid "Access token is invalid."
 msgstr "Token de acesso inválido."
 
@@ -391,10 +391,10 @@ msgstr "Senha incorreta."
 msgid "Invalid user or password."
 msgstr "Usuário ou senha inválida."
 
-#: aleph/views/sessions_api.py:91
+#: aleph/views/sessions_api.py:90
 msgid "Authentication has failed."
 msgstr "Autenticação falhou."
 
-#: aleph/views/util.py:73
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "Erro durante a validação do dado"
