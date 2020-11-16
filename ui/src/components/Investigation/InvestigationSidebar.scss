@@ -4,8 +4,6 @@ $transition-duration: .3s;
 $sidebar-padding: 15px;
 
 .InvestigationSidebar {
-  height: calc(100vh);
-  overflow: scroll;
 
   // position: fixed;
   background: $light-gray5;
@@ -21,7 +19,9 @@ $sidebar-padding: 15px;
   }
 
   &__scroll-container {
-
+    height: calc(100vh);
+    overflow-y: scroll;
+    width: 100%;
   }
 
   &__content {
@@ -34,6 +34,8 @@ $sidebar-padding: 15px;
     //   top: 0;
     //   left: 0;
     // }
+    overflow: visible;
+
 
     .collapsed & {
       padding: 0;

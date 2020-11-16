@@ -2,6 +2,10 @@
 
 
 .InvestigationSidebarButton {
+
+  &.bp3-button {
+    // position: static !important;
+  }
   &.bp3-button.bp3-active {
     // background: $blue1 !important;
     // color: white !important;
@@ -16,7 +20,6 @@
   }
 
   &__tooltip {
-    background: green;
     & > .bp3-popover-content {
       background: white !important;
       color: $gray1 !important;
