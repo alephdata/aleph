@@ -6,6 +6,7 @@ from followthemoney import model
 from aleph.core import db
 from aleph.authz import Authz
 from aleph.model import EntitySet, EntitySetItem, Judgement
+from aleph.logic.entitysets import save_entityset_item
 from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 
@@ -86,6 +87,11 @@ class ProfilesApiTestCase(TestCase):
         assert not merged.has("birthDate"), merged.to_dict()
         assert len(res.json.get("items")) == 3, res.json.get("items")
 
+        self.grant_publish(self.col3)
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.json
+        assert len(res.json.get("items")) == 4, res.json.get("items")
+
     def test_profile_tags(self):
         url = "/api/2/profiles/%s/tags" % self.profile.id
         res = self.client.get(url)
@@ -95,3 +101,23 @@ class ProfilesApiTestCase(TestCase):
         assert res.status_code == 200, res.json
         assert res.json["total"] == 1, res.json
         assert res.json["results"][0]["field"] == "phones", res.json
+
+    def test_profile_similar(self):
+        url = "/api/2/profiles/%s/similar" % self.profile.id
+        res = self.client.get(url)
+        assert res.status_code == 404, res.json
+        _, headers = self.login(foreign_id="rolex")
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.json
+        assert res.json["total"] == 0, res.json
+        save_entityset_item(
+            self.profile,
+            self.col3,
+            self.ent3.id,
+            judgement=Judgement.NO_JUDGEMENT,
+        )
+        db.session.commit()
+        self.grant_publish(self.col3)
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.json
+        assert res.json["total"] == 1, res.json

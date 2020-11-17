@@ -1,9 +1,11 @@
 import logging
 from flask import Blueprint, request
+from followthemoney import model
 
 from aleph.logic.profiles import get_profile
 from aleph.logic.entities import entity_tags
-from aleph.views.serializers import ProfileSerializer
+from aleph.search import MatchQuery
+from aleph.views.serializers import EntitySerializer, ProfileSerializer
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.util import obj_or_404, jsonify
 
@@ -67,7 +69,51 @@ def tags(profile_id):
     enable_cache()
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
     tag_request(collection_id=profile.get("collection_id"))
-    # from pprint import pformat
-    # log.info("XXX: %s", pformat(profile))
     results = entity_tags(profile.get("merged"), request.authz)
     return jsonify({"status": "ok", "total": len(results), "results": results})
+
+
+@blueprint.route("/api/2/profiles/<profile_id>/similar", methods=["GET"])
+def similar(profile_id):
+    """
+    ---
+    get:
+      summary: Get similar entities
+      description: >
+        Get a list of similar entities to the profile with id `profile_id`
+      parameters:
+      - in: path
+        name: profile_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: 'filter:schema'
+        schema:
+          items:
+            type: string
+          type: array
+      - in: query
+        name: 'filter:schemata'
+        schema:
+          items:
+            type: string
+          type: array
+      responses:
+        '200':
+          description: Returns a list of entities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitiesResponse'
+      tags:
+      - Profile
+    """
+    enable_cache()
+    profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    tag_request(collection_id=profile.get("collection_id"))
+    entity = model.get_proxy(profile.get("merged"))
+    exclude = [item["entity_id"] for item in profile["items"]]
+    log.info("Exclude: %r", exclude)
+    result = MatchQuery.handle(request, entity=entity, exclude=exclude)
+    return EntitySerializer.jsonify_result(result)
