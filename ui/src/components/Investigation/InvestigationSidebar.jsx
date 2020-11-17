@@ -112,7 +112,7 @@ class InvestigationSidebar extends React.Component {
     ];
 
     return (
-      <div className='InvestigationSidebar'>
+      <div className={c('InvestigationSidebar', {static: !activeMode})}>
         <div className="InvestigationSidebar__scroll-container">
           <InvestigationHeading collection={collection} activeMode={activeMode} minimal={minimalHeader} />
           <div className="InvestigationSidebar__content">
@@ -160,16 +160,18 @@ class InvestigationSidebar extends React.Component {
             </div>
           </div>
         </div>
-        <div className="InvestigationSidebar__footer">
-          <Button
-            minimal
-            fill
-            icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
-            onClick={toggleCollapsed}
-            text={isCollapsed ? null : 'Collapse'}
-            className="InvestigationSidebar__collapse-toggle"
-          />
-        </div>
+        {!!activeMode && (
+          <div className="InvestigationSidebar__footer">
+            <Button
+              minimal
+              fill
+              icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
+              onClick={toggleCollapsed}
+              text={isCollapsed ? null : 'Collapse'}
+              className="InvestigationSidebar__collapse-toggle"
+            />
+          </div>
+        )}
       </div>
     );
   }

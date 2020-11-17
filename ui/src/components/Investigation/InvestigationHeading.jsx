@@ -43,28 +43,32 @@ class InvestigationHeading extends React.Component {
       <div className={c('InvestigationHeading', {'metadata-shown': showMetadata, minimal })}>
         <div className="InvestigationHeading__inner-container">
           <CollectionHeading collection={collection} link={!!activeMode} showCategory={!minimal} />
-          <div className="InvestigationHeading__metadata">
-            {collection.summary && (
-              <Summary text={collection.summary} />
-            )}
-            <CollectionStatus collection={collection} showCancel={collection.writeable} />
-            <div className="InvestigationHeading__divider" />
-            <div className="InvestigationHeading__metadata__inner-container">
-              <CollectionInfo collection={collection} />
-              <div className="InvestigationHeading__actions">
-                <CollectionManageMenu collection={collection} buttonProps={{ className: 'bp3-minimal' }}/>
+          {!!activeMode && (
+            <div className="InvestigationHeading__metadata">
+              {collection.summary && (
+                <Summary text={collection.summary} />
+              )}
+              <CollectionStatus collection={collection} showCancel={collection.writeable} />
+              <div className="InvestigationHeading__divider" />
+              <div className="InvestigationHeading__metadata__inner-container">
+                <CollectionInfo collection={collection} />
+                <div className="InvestigationHeading__actions">
+                  <CollectionManageMenu collection={collection} buttonProps={{ className: 'bp3-minimal' }}/>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
-        <Button
-          onClick={this.toggleMetadata}
-          minimal
-          small
-          fill
-          className="InvestigationHeading__metadata-toggle"
-          rightIcon={showMetadata ? 'chevron-up' : 'chevron-down'}
-        />
+        {!!activeMode && (
+          <Button
+            onClick={this.toggleMetadata}
+            minimal
+            small
+            fill
+            className="InvestigationHeading__metadata-toggle"
+            rightIcon={showMetadata ? 'chevron-up' : 'chevron-down'}
+          />
+        )}
       </div>
     );
   }

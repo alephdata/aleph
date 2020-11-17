@@ -82,7 +82,7 @@ class CollectionManageMenu extends PureComponent {
       return null;
     }
     return (
-      <ButtonGroup fill>
+      <ButtonGroup fill {...buttonGroupProps}>
         <DialogToggleButton
           buttonProps={{
             text: intl.formatMessage(messages.edit),

@@ -1,0 +1,49 @@
+@import "app/variables.scss";
+
+
+.InvestigationOverview {
+  &__top {
+    display: flex;
+    background: rgba($blue1, .5);
+    padding: 10px;
+    border-radius: 5px;
+
+    &__item {
+      margin: 10px;
+      padding: 15px;
+      flex: 1 1 33%;
+      background: $light-gray4;
+      // color: white !important;
+      border-radius: 5px;
+
+      * {
+        // color: white !important;
+
+      }
+      // border: 1px solid $aleph-border-color;
+      &.narrow {
+        flex-basis: 10%;
+        padding: 5px;
+      }
+    }
+  }
+  &__section {
+    // padding-bottom: 20px;
+    // border-bottom: 1px solid $aleph-border-color;
+    margin: 20px 0;
+
+
+    &__title.bp3-heading {
+      // color: $blue1;
+      // border-bottom: 1px solid $aleph-border-color;
+
+    }
+
+    &__content.section-search {
+      background: $light-gray5;
+      border-radius: 5px;
+      padding: 20px;
+    }
+
+  }
+}

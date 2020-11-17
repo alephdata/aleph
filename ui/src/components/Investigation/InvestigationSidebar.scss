@@ -4,14 +4,16 @@ $transition-duration: .3s;
 $sidebar-padding: 15px;
 
 .InvestigationSidebar {
-
-  // position: fixed;
   background: $light-gray5;
   box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
-  // overflow-y: scroll;
-  // width: $aleph-investigation-sidebar-width;
   transition: box-shadow $transition-duration ease-in-out;
   padding: 0;
+
+  &.static {
+    box-shadow: none;
+    background: none;
+    border-right: 1px solid $aleph-border-color;
+  }
 
   .collapsed & {
     box-shadow: none;
@@ -22,20 +24,15 @@ $sidebar-padding: 15px;
     height: calc(100vh);
     overflow-y: scroll;
     width: 100%;
+
+    .static & {
+      overflow: visible;
+      height: auto;
+    }
   }
 
   &__content {
-    // position: relative;
-    // height: 100%;
-    // overflow: scroll;
-
-    // &__inner-container {
-    //   position: absolute;
-    //   top: 0;
-    //   left: 0;
-    // }
     overflow: visible;
-
 
     .collapsed & {
       padding: 0;
@@ -55,7 +52,7 @@ $sidebar-padding: 15px;
   }
 
   &__footer {
-    padding: 5px;
+    padding: 5px 15px;
     border-top: 1px solid $light-gray2;
     position: fixed;
     width: $aleph-investigation-sidebar-width;
@@ -91,12 +88,20 @@ $sidebar-padding: 15px;
     &:first-child {
       border: none;
       // border-top: 1px solid $aleph-border-color;
-      // padding-top: 0;
+      padding-top: 5px;
     }
 
     .collapsed & {
       padding: $aleph-grid-size $aleph-grid-size/2 $aleph-grid-size $aleph-grid-size*2;
       margin: 0;
+    }
+
+    .static & {
+      padding: 15px;
+      border-radius: 10px;
+      background: $light-gray5;
+      margin: 20px;
+      border: none;
     }
 
     &__title.bp3-heading {

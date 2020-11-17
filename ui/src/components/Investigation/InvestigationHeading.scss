@@ -9,8 +9,8 @@ $sidebar-padding: 15px;
   overflow: hidden;
   max-height: none;
   opacity: 1;
-  // border-radius: 5px;
-  margin: 0;
+  border-radius: 5px;
+  margin: 15px;
 
   .collapsed & {
     padding: 0;
@@ -18,10 +18,23 @@ $sidebar-padding: 15px;
     opacity: 0;
   }
 
+  .static & {
+    margin: 20px;
+  }
+
   &__inner-container {
-    padding: $sidebar-padding*2 $sidebar-padding;
+    padding: 15px;
     padding-bottom: 0;
     transition: padding .3s ease-in-out;
+
+    .static & {
+      padding-bottom: 15px;
+    }
+
+    .fixed & {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
 
     .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
       color: white !important;
@@ -31,10 +44,6 @@ $sidebar-padding: 15px;
       margin-top: 10px;
     }
 
-    .fixed & {
-      padding-top: 0;
-      padding-bottom: 0;
-    }
   }
 
   .text-markdown, .text-markdown p {
@@ -100,11 +109,16 @@ $sidebar-padding: 15px;
     }
   }
 
-  &__metadata-toggle {
+  &__metadata-toggle.bp3-button {
     width: 100%;
     margin-top: 10px;
     transition: height .3s ease-in-out;
     overflow: hidden;
+    background: rgba($white, .1) !important;
+
+    &:hover {
+      background: rgba($white, .2) !important;
+    }
 
     .bp3-icon {
       color: white !important;
@@ -128,9 +142,13 @@ $sidebar-padding: 15px;
 
     &__title {
       transition: font-size .3s ease-in-out, font-weight .3s ease-in-out;
+
+      .bp3-icon {
+        padding-right: 3px;
+      }
       .fixed & {
         font-size: 14px;
-        font-weight: normal !important;
+        // font-weight: normal !important;
       }
     }
   }
