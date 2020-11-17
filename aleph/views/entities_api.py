@@ -587,7 +587,7 @@ def entity_entitysets(entity_id):
           description: OK
       tags:
       - Entity
-      - Profiles
+      - Profile
     """
     entity = get_index_entity(entity_id, request.authz.READ)
 

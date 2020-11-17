@@ -152,32 +152,45 @@ class XrefApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.json["total"] == 2, res.json
         xref = res.json["results"][0]
-        assert xref.get("decision") is None, xref
+        assert xref.get("judgement") == "no_judgement", xref
 
-        xref_url = "%s/%s" % (url, xref["id"])
+        pairwise_url = "/api/2/profiles/_pairwise"
+        data = json.dumps(
+            {
+                "judgement": "positive",
+                "entity_id": xref["entity"]["id"],
+                "match_id": xref["match"]["id"],
+            }
+        )
         res = self.client.post(
-            xref_url,
+            pairwise_url,
             headers=headers,
-            data=json.dumps({"decision": "positive"}),
+            data=data,
             content_type=JSON,
         )
-        assert res.status_code == 204, res.json
+        assert res.status_code == 200, res.json
 
         res = self.client.get(url, headers=headers)
         assert res.json["total"] == 2, res.json
-        print(res.json)
         xref0 = res.json["results"][0]
         assert xref0["id"] == xref["id"], (xref0, xref)
-        assert xref0.get("decision") == "positive", xref0.get("decision")
+        assert xref0.get("judgement") == "positive", xref0
 
+        data = json.dumps(
+            {
+                "judgement": "negative",
+                "entity_id": xref["entity"]["id"],
+                "match_id": xref["match"]["id"],
+            }
+        )
         res = self.client.post(
-            xref_url,
+            pairwise_url,
             headers=headers,
-            data=json.dumps({"decision": "negative"}),
+            data=data,
             content_type=JSON,
         )
-        assert res.status_code == 204, res.json
+        assert res.status_code == 200, res.json
 
         res = self.client.get(url, headers=headers)
         xref0 = res.json["results"][0]
-        assert xref0.get("decision") == "negative", xref0.get("decision")
+        assert xref0.get("judgement") == "negative", xref0

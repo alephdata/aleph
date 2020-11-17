@@ -8,11 +8,11 @@ from followthemoney.types import registry
 from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
-from aleph.model import Role, Collection, Document, Entity, Events
-from aleph.model import Alert, EntitySet, EntitySetItem, Export
 from aleph.logic import resolver
 from aleph.logic.entities import check_write_entity, transliterate_values
 from aleph.logic.util import collection_url, entity_url, archive_url
+from aleph.model import Role, Collection, Document, Entity, Events
+from aleph.model import Alert, EntitySet, EntitySetItem, Export
 from aleph.views.util import jsonify, clean_object
 
 log = logging.getLogger(__name__)
@@ -241,10 +241,7 @@ class XrefSerializer(Serializer):
         obj["match_collection"] = self.resolve(
             Collection, match_collection_id, CollectionSerializer
         )
-        try:
-            obj["decision"] = str(obj["decision"].value)
-        except AttributeError:
-            obj["decision"] = None
+        obj["judgement"] = str(obj["judgement"].value)
 
         collection_id = obj.get("collection_id")
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)

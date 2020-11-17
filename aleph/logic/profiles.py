@@ -22,8 +22,8 @@ from aleph.core import db, cache
 from aleph.logic.entitysets import get_entityset
 from aleph.logic import resolver
 from aleph.logic.entitysets import save_entityset_item
-from aleph.model import Collection, Entity, EntitySet, EntitySetItem, Judgement
-from aleph.util import PairwiseDict, Stub
+from aleph.model import Entity, EntitySet, EntitySetItem, Judgement
+from aleph.util import Stub
 
 log = logging.getLogger(__name__)
 ORIGIN = "profile"
@@ -109,7 +109,7 @@ def collection_profiles(collection_id, judgements=None, deleted=False):
             yield (entity_set, items)
 
 
-def pairwise_decisions(pairs, collection_id):
+def pairwise_judgements(pairs, collection_id):
     left = aliased(EntitySetItem)
     right = aliased(EntitySetItem)
 
@@ -120,13 +120,20 @@ def pairwise_decisions(pairs, collection_id):
     q = q.filter(EntitySet.id == left.entityset_id)
     q = q.filter(EntitySet.id == right.entityset_id)
     q = q.filter(db.tuple_(left.entity_id, right.entity_id).in_(pairs))
-    return PairwiseDict(
-        ((lft.entity_id, rgt.entity_id), (lft.judgement + rgt.judgement))
-        for lft, rgt in q.all()
-    )
+
+    judgements = {}
+    for (left, right) in pairs:
+        judgements[(left, right)] = Judgement.NO_JUDGEMENT
+        judgements[(right, left)] = Judgement.NO_JUDGEMENT
+
+    for (left, right) in q.all():
+        judgement = left.judgement + right.judgement
+        judgements[(left.entity_id, right.entity_id)] = judgement
+        judgements[(right.entity_id, left.entity_id)] = judgement
+    return judgements
 
 
-def decide_xref(xref, judgement, authz):
+def decide_pairwise(collection, entity, match_collection, match, judgement, authz):
     """Store user feedback from an Xref result as an profile-type EntitySet
     The problem here is that we're trying to translate a single pair-wise
     user judgement into a merge or split judgement regarding a cluster of
@@ -139,10 +146,11 @@ def decide_xref(xref, judgement, authz):
     if not isinstance(judgement, Judgement):
         judgement = Judgement(judgement)
 
-    entity_id = xref.get("entity_id")
-    collection = Collection.by_id(xref.get("collection_id"))
+    # This will raise a InvalidData error if the two types are not compatible
+    model.common_schema(entity.get("schema"), match.get("schema"))
+
     profile = EntitySet.by_entity_id(
-        entity_id,
+        entity.get("id"),
         collection_ids=[collection.id],
         types=[EntitySet.PROFILE],
         judgements=[Judgement.POSITIVE],
@@ -150,21 +158,19 @@ def decide_xref(xref, judgement, authz):
     if profile is None:
         data = {"type": EntitySet.PROFILE, "label": "profile"}
         profile = EntitySet.create(data, collection, authz)
-    item = save_entityset_item(
-        profile,
-        collection,
-        entity_id,
-        judgement=Judgement.POSITIVE,
-        added_by_id=authz.id,
-    )
-    match_id = xref.get("match_id")
-    match_collection = Collection.by_id(xref.get("match_collection_id"))
+        item = save_entityset_item(
+            profile,
+            collection,
+            entity.get("id"),
+            judgement=Judgement.POSITIVE,
+            added_by_id=authz.id,
+        )
     item = save_entityset_item(
         profile,
         match_collection,
-        match_id,
+        match.get("id"),
         judgement=judgement,
-        compared_to_entity_id=entity_id,
+        compared_to_entity_id=entity.get("id"),
         added_by_id=authz.id,
     )
     db.session.commit()
