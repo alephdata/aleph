@@ -1,0 +1,72 @@
+@import "app/variables.scss";
+
+
+.InvestigationQuickLinks {
+  display: flex;
+
+  &__item {
+    flex: 1 1 33%;
+    margin: 20px;
+    margin-right: 0;
+    // padding: 15px;
+    border-radius: 5px;
+    background: $light-gray5;
+    box-shadow: $pt-elevation-shadow-2;
+
+
+    &:first-child {
+      margin-left: 0 !important;
+    }
+
+
+    img {
+      background: white;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      border-bottom: 1px solid $aleph-border-color;
+
+      // border: 1px solid $aleph-border-color;
+    }
+    &__text {
+      text-align: center;
+      width: 100%;
+      padding: 15px 10px;
+      margin: 0;
+      color: rgba($blue1, .9);
+      font-weight: bold;
+    }
+  }
+  // .bp3-button {
+  //   min-height: 100px;
+  //   display: table !important;
+  //
+  //   margin: 10px;
+  //   margin-right: 0;
+  //   border: 1px solid rgba($blue1, .7) !important;
+  //   flex-basis: 33% !important;
+  //
+  //   &:first-child {
+  //     margin-left: 0 !important;
+  //   }
+  // }
+  // .bp3-icon, .bp3-button-text {
+  //   display: block !important;
+  //   text-align: center;
+  //   width: 100%;
+  // }
+  //
+  // .bp3-icon {
+  //   color: rgba($blue1, .7) !important;
+  //   svg {
+  //     margin: auto;
+  //     width: 30px;
+  //     height: 30px;
+  //   }
+  // }
+  //
+  // .bp3-button-text {
+  //   margin-top: 10px;
+  //   color: rgba($blue1, .8) !important;
+  //   font-weight: 500;
+  // }
+}

@@ -15,6 +15,7 @@ import CollectionStatus from 'components/Collection/CollectionStatus';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import collectionViewIds from 'components/Collection/collectionViewIds';
+import { selectNotificationsResult } from 'selectors';
 
 
 import './InvestigationOverviewMode.scss';
@@ -50,7 +51,7 @@ class InvestigationOverviewMode extends React.Component {
   }
 
   render() {
-    const { collection, intl, notificationsQuery } = this.props;
+    const { collection, intl, notificationsQuery, notificationsResult } = this.props;
 
     // <h6 className="InvestigationOverview__section__title bp3-heading">
     //   <FormattedMessage id="investigation.overview.search" defaultMessage="Search" />
@@ -58,6 +59,14 @@ class InvestigationOverviewMode extends React.Component {
 
     return (
       <div className="InvestigationOverview">
+        <div className="InvestigationOverview__search">
+          <SearchBox
+            onSearch={this.onSearch}
+            placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
+            inputProps={{ autoFocus: true, large: true }}
+          />
+        </div>
+
         <div className="InvestigationOverview__top">
           {collection.summary && (
             <div className="InvestigationOverview__top__item">
@@ -72,23 +81,16 @@ class InvestigationOverviewMode extends React.Component {
             <CollectionManageMenu collection={collection} buttonGroupProps={{ vertical: true }} buttonProps={{ className: 'bp3-minimal', alignText: 'left', fill: false }}/>
           </div>
         </div>
-        <div className="InvestigationOverview__section">
-          <div className="InvestigationOverview__section__content section-search">
-            <SearchBox
-              onSearch={this.onSearch}
-              placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
-              inputProps={{ autoFocus: true, large: true }}
-            />
+        {(notificationsResult.total > 0 || notificationsResult.isPending) && (
+          <div className="InvestigationOverview__section">
+            <h6 className="InvestigationOverview__section__title bp3-heading">
+              <FormattedMessage id="investigation.overview.notifications" defaultMessage="Recent activity" />
+            </h6>
+            <div className="InvestigationOverview__section__content">
+              <NotificationList query={notificationsQuery} showCollectionLinks={false} />
+            </div>
           </div>
-        </div>
-        <div className="InvestigationOverview__section">
-          <h6 className="InvestigationOverview__section__title bp3-heading">
-            <FormattedMessage id="investigation.overview.notifications" defaultMessage="Recent activity" />
-          </h6>
-          <div className="InvestigationOverview__section__content">
-            <NotificationList query={notificationsQuery} showCollectionLinks={false} />
-          </div>
-        </div>
+        )}
         <div className="InvestigationOverview__section">
           <h6 className="InvestigationOverview__section__title bp3-heading">
             <FormattedMessage id="investigation.overview.notifications" defaultMessage="Quick links" />
@@ -120,9 +122,12 @@ const mapStateToProps = (state, ownProps) => {
 
   const notificationsQuery = Query.fromLocation('notifications', location, context, 'notifications')
     .limit(40);
+  const notificationsResult = selectNotificationsResult(state, notificationsQuery);
+
 
   return {
     notificationsQuery,
+    notificationsResult,
   };
 };
 
