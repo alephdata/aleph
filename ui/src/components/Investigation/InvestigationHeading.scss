@@ -5,7 +5,7 @@ $sidebar-padding: 15px;
 
 .InvestigationHeading {
   background: $blue1;
-  transition: max-height $transition-duration ease-in-out $transition-duration, opacity $transition-duration ease-in-out $transition-duration;
+  transition: all $transition-duration ease-in-out;
   overflow: hidden;
   max-height: none;
   opacity: 1;
@@ -16,6 +16,7 @@ $sidebar-padding: 15px;
     padding: 0;
     max-height: 0;
     opacity: 0;
+    margin: 0;
   }
 
   .static & {

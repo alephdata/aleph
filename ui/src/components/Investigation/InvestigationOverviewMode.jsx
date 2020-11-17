@@ -59,13 +59,6 @@ class InvestigationOverviewMode extends React.Component {
 
     return (
       <div className="InvestigationOverview">
-        <div className="InvestigationOverview__search">
-          <SearchBox
-            onSearch={this.onSearch}
-            placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
-            inputProps={{ autoFocus: true, large: true }}
-          />
-        </div>
 
         <div className="InvestigationOverview__top">
           {collection.summary && (
@@ -81,6 +74,14 @@ class InvestigationOverviewMode extends React.Component {
             <CollectionManageMenu collection={collection} buttonGroupProps={{ vertical: true }} buttonProps={{ className: 'bp3-minimal', alignText: 'left', fill: false }}/>
           </div>
         </div>
+        <div className="InvestigationOverview__search">
+          <SearchBox
+            onSearch={this.onSearch}
+            placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
+            inputProps={{ autoFocus: true, large: true }}
+          />
+        </div>
+
         {(notificationsResult.total > 0 || notificationsResult.isPending) && (
           <div className="InvestigationOverview__section">
             <h6 className="InvestigationOverview__section__title bp3-heading">

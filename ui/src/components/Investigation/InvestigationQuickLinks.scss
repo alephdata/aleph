@@ -10,7 +10,7 @@
     margin-right: 0;
     // padding: 15px;
     border-radius: 5px;
-    background: $light-gray5;
+    background: rgba($blue1, .8);
     box-shadow: $pt-elevation-shadow-2;
 
 
@@ -32,7 +32,7 @@
       width: 100%;
       padding: 15px 10px;
       margin: 0;
-      color: rgba($blue1, .9);
+      color: white;
       font-weight: bold;
     }
   }
