@@ -81,9 +81,7 @@ class InvestigationWrapper extends React.Component {
 
   onScroll() {
     const { activeMode } = this.props;
-    console.log('scrolling wrapper');
     const ref = this.sidebarRef.current.getBoundingClientRect().y;
-    console.log('ref is', ref);
     if (!!activeMode && ref < 0) {
       this.setState({ sidebarFixed: true });
     } else {
@@ -111,35 +109,35 @@ class InvestigationWrapper extends React.Component {
     const { activeMode, activeSearch, activeType, collection, intl, isCollapsed, result } = this.props;
     const { sidebarFixed } = this.state;
     const showBreadcrumbs = !!activeMode;
+    const isSearch = activeMode === collectionViewIds.SEARCH;
 
-    // const operation = (
-    //   <CollectionManageMenu collection={collection} />
-    // );
-    // <ResultCount result={result} className="bp3-intent-primary" />
+    console.log('in breadcrumbs', activeSearch, result);
 
     const breadcrumbs = (
       <Breadcrumbs>
         {isCollapsed && <Breadcrumbs.Collection key="collection" collection={collection} />}
-        {activeMode && !activeType && (
+        {activeMode && (isSearch || !activeType) && (
           <Breadcrumbs.Text active>
             {intl.formatMessage(messages[activeMode])}
           </Breadcrumbs.Text>
         )}
-        {!!activeType && (
+        {(!isSearch && !!activeType) && (
           <Breadcrumbs.Text active>
             <Schema.Label schema={activeType} plural icon />
           </Breadcrumbs.Text>
         )}
-        {!_.isEmpty(activeSearch) && (
+
           <Breadcrumbs.Text active>
             <ResultText result={result} />
           </Breadcrumbs.Text>
-        )}
+
       </Breadcrumbs>
     );
 
     let title, subheading;
-    if (!!activeType) {
+    if (activeMode === collectionViewIds.SEARCH) {
+      title = null;
+    } else if (!!activeType) {
       title = <Schema.Label schema={activeType} plural icon />;
       subheading = <Schema.Description schema={activeType} />
     } else if (!!activeMode) {
@@ -163,13 +161,13 @@ class InvestigationWrapper extends React.Component {
             </div>
           </div>
           <DualPane.ContentPane className="InvestigationWrapper__body">
-            {!!title && (
-              <div className="InvestigationWrapper__title-container">
-                <h5 className="InvestigationWrapper__title">{title}</h5>
-                {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
-              </div>
-            )}
             <div className="InvestigationWrapper__body-content">
+              {!!title && (
+                <div className="InvestigationWrapper__title-container">
+                  <h5 className="InvestigationWrapper__title">{title}</h5>
+                  {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
+                </div>
+              )}
               {this.props.children}
             </div>
           </DualPane.ContentPane>

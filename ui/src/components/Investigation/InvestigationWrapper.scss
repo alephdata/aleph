@@ -35,13 +35,13 @@ $transition-duration: .3s;
   }
 
   &__title-container {
-    margin: 20px;
+    margin: $aleph-grid-size 0 $aleph-content-padding;
   }
 
   &__title {
-    font-size: 22px;
+    font-size: 20px;
+    margin: 0 0 $aleph-grid-size;
     // color: $dark-gray1;
-    margin: $aleph-grid-size*2 0 $aleph-grid-size;
 
     .bp3-icon {
       vertical-align: middle !important;
@@ -66,6 +66,6 @@ $transition-duration: .3s;
   }
 
   &__body-content {
-    padding: 20px;
+    padding: $aleph-content-padding;
   }
 }

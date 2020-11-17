@@ -1,0 +1,18 @@
+@import "app/variables.scss";
+
+.CollectionSearchMode {
+  &__search-container {
+    margin-bottom: $aleph-content-padding;
+    display: flex;
+    width: 100%;
+  }
+
+  &__search {
+    flex: 4 1 auto;
+    margin-left: $aleph-content-padding;
+  }
+
+  &__type-toggle {
+    // flex:
+  }
+}
