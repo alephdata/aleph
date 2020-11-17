@@ -127,7 +127,7 @@ export class DocumentManager extends Component {
           writeable={showActions}
           selection={selection}
           resetSelection={() => this.setState({ selection: [] })}
-          onSearchSubmit={this.onSearchSubmit}
+          onSearchSubmit={this.props.onSearch || this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >

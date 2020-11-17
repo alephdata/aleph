@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
-import { queryCollectionEntities } from 'queries';
+import { queryCollectionDocuments, queryCollectionEntities } from 'queries';
 import Query from 'app/Query';
+import queryString from 'query-string';
 import { selectEntitiesResult } from 'selectors';
 
 const facetKeys = [
@@ -27,8 +28,14 @@ class CollectionSearchMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+  let query;
 
-  const query = queryCollectionEntities(location, collection.id);
+  if (hashQuery.type === 'Document') {
+    query = queryCollectionDocuments(location, collection.id);
+  } else {
+    query = queryCollectionEntities(location, collection.id);
+  }
   const result = selectEntitiesResult(state, query);
   return { query, result };
 };

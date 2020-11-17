@@ -10,78 +10,45 @@ import DocumentManager from 'components/Document/DocumentManager';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import { queryCollectionDocuments } from 'queries';
 import { selectEntitiesResult } from 'selectors';
+import collectionViewIds from 'components/Collection/collectionViewIds';
 
-const facetKeys = [
-  'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes',
-];
 
 class InvestigationDocumentsMode extends React.Component {
-  handleTabChange = (nextView) => {
-    const { history, location } = this.props;
+  constructor(props) {
+    super(props);
+
+    this.onSearch = this.onSearch.bind(this);
+  }
+
+  onSearch(queryText) {
+    console.log('in on search', queryText)
+    const { history, query, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
+    parsedHash.mode = collectionViewIds.SEARCH;
+    parsedHash.type = 'Document';
 
-    parsedHash.view = nextView;
-
+    const newQuery = query.set('q', queryText);
     history.push({
       pathname: location.pathname,
+      search: newQuery.toLocation(),
       hash: queryString.stringify(parsedHash),
     });
   }
 
   render() {
-    const { activeView, browseQuery, collection, searchQuery, searchResult } = this.props;
+    const { query, collection } = this.props;
 
     return (
-      <Tabs
-        id="InvestigationDocumentsTabs"
-        className="info-tabs-padding"
-        onChange={this.handleTabChange}
-        selectedTabId={activeView}
-        renderActiveTabPanelOnly
-      >
-        <Tab
-          id='browse'
-          className="CollectionViews__tab"
-          title={
-            <>
-              <Icon icon="folder-open" className="left-icon" />
-              <FormattedMessage id="entity.info.overview" defaultMessage="Browse" />
-            </>}
-          panel={<DocumentManager query={browseQuery} collection={collection} />}
-        />
-        <Tab
-          id='search'
-          className="CollectionViews__tab"
-          title={
-            <>
-              <Icon icon="search" className="left-icon" />
-              <FormattedMessage id="entity.info.overview" defaultMessage="Search" />
-            </>
-          }
-          panel={(
-            <FacetedEntitySearch
-              facets={facetKeys}
-              query={searchQuery}
-              result={searchResult}
-            />
-          )}
-        />
-      </Tabs>
+      <DocumentManager query={query} collection={collection} onSearch={this.onSearch}/>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-
-  const searchQuery = queryCollectionDocuments(location, collection.id, false);
 
   return {
-    searchQuery,
-    searchResult: selectEntitiesResult(state, searchQuery),
-    browseQuery: queryCollectionDocuments(location, collection.id, true),
-    activeView: hashQuery.view || 'browse'
+    query: queryCollectionDocuments(location, collection.id, true),
   };
 };
 
