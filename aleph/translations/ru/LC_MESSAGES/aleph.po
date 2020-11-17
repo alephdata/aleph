@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-13 15:36+0100\n"
+"POT-Creation-Date: 2020-11-16 08:52+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -144,7 +144,7 @@ msgstr "в ожидании"
 
 #: aleph/model/common.py:117
 msgid "successful"
-msgstr ""
+msgstr "успешно"
 
 #: aleph/model/common.py:118
 msgid "failed"
@@ -156,7 +156,7 @@ msgstr "Неверный ID сущности"
 
 #: aleph/model/event.py:49
 msgid "New datasets"
-msgstr ""
+msgstr "Новые наборы данных"
 
 #: aleph/model/event.py:50
 msgid "{{actor}} created {{collection}}"
@@ -164,7 +164,7 @@ msgstr "{{actor}} создали {{collection}}"
 
 #: aleph/model/event.py:57
 msgid "Document uploads"
-msgstr ""
+msgstr "Загрузка документов"
 
 #: aleph/model/event.py:58
 msgid "{{actor}} added {{document}} to {{collection}}"
@@ -172,7 +172,7 @@ msgstr "{{actor}} добавили {{document}} в {{collection}}"
 
 #: aleph/model/event.py:65
 msgid "Entities generated"
-msgstr ""
+msgstr "Сгенерированные сущности"
 
 #: aleph/model/event.py:66
 msgid "{{actor}} generated entities from {{table}} in {{collection}}"
@@ -180,7 +180,7 @@ msgstr "{{actor}} создали сущности из {{table}} в {{collection
 
 #: aleph/model/event.py:75
 msgid "New network diagram"
-msgstr ""
+msgstr "Новая диаграмма"
 
 #: aleph/model/event.py:76
 msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
@@ -188,7 +188,7 @@ msgstr "{{actor}} начали создавать {{diagram}} в {{collection}}"
 
 #: aleph/model/event.py:85
 msgid "New diagrams and lists"
-msgstr ""
+msgstr "Новые диаграммы и списки"
 
 #: aleph/model/event.py:86
 msgid "{{actor}} created {{entityset}} in {{collection}}"
@@ -196,7 +196,7 @@ msgstr "{{actor}} создали {{entityset}} в {{collection}}"
 
 #: aleph/model/event.py:93
 msgid "Alert notifications"
-msgstr ""
+msgstr "Уведомления"
 
 #: aleph/model/event.py:94
 msgid "{{entity}} matches your alert for {{alert}}"
@@ -204,7 +204,7 @@ msgstr "{{entity}} соответствует параметрам вашего 
 
 #: aleph/model/event.py:101
 msgid "Dataset access change"
-msgstr ""
+msgstr "Изменён доступ к набору данных"
 
 #: aleph/model/event.py:102
 msgid "{{actor}} gave {{role}} access to {{collection}}"
@@ -213,7 +213,7 @@ msgstr ""
 
 #: aleph/model/event.py:111
 msgid "Dataset published"
-msgstr ""
+msgstr "Опубликован набор данных"
 
 #: aleph/model/event.py:112
 msgid "{{actor}} published {{collection}}"
@@ -221,11 +221,11 @@ msgstr "{{actor}} опубликовали {{collection}}"
 
 #: aleph/model/event.py:119
 msgid "Exports completed"
-msgstr ""
+msgstr "Экспорт завершён"
 
 #: aleph/model/event.py:120
 msgid "{{export}} is ready for download"
-msgstr ""
+msgstr "{{export}} можно скачать"
 
 #: aleph/search/__init__.py:50
 msgid "No schema is specified for the query."
@@ -237,6 +237,9 @@ msgid ""
 "    The following export is ready for download:\n"
 "    "
 msgstr ""
+"\n"
+"    Экспортированные данные доступны для скачивания:\n"
+"    "
 
 #: aleph/templates/email/export.html:13
 #, python-format
@@ -246,6 +249,10 @@ msgid ""
 "    Browse all of your available exports here:\n"
 "    "
 msgstr ""
+"\n"
+"    Ссылка для скачивания перестанет работать после %(expiration_date)s.\n"
+"    Экспортированные данные для скачивания:\n"
+"    "
 
 #: aleph/templates/email/layout.html:45
 #, python-format
@@ -341,26 +348,26 @@ msgstr "Некорректное имя схемы: %s"
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:245
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 
 #: aleph/views/entities_api.py:167
 #, python-format
 msgid "Search: %s"
-msgstr ""
+msgstr "Найти: %s"
 
 #: aleph/views/roles_api.py:61
 msgid "prefix filter is too short"
@@ -386,10 +393,10 @@ msgstr "Неверный пароль."
 msgid "Invalid user or password."
 msgstr "Неверное имя пользователя или пароль."
 
-#: aleph/views/sessions_api.py:91
+#: aleph/views/sessions_api.py:90
 msgid "Authentication has failed."
 msgstr "Ошибка авторизации."
 
-#: aleph/views/util.py:73
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "Ошибка проверки данных"
