@@ -241,11 +241,8 @@ class XrefSerializer(Serializer):
         obj["match_collection"] = self.resolve(
             Collection, match_collection_id, CollectionSerializer
         )
-        obj["judgement"] = str(obj["judgement"].value)
-
         collection_id = obj.get("collection_id")
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
-
         if obj["entity"] and obj["match"]:
             return obj
 

@@ -26,6 +26,9 @@ class Judgement(Enum):
             return Judgement.NEGATIVE
         return Judgement.UNSURE
 
+    def to_dict(self):
+        return str(self.value)
+
 
 class EntitySet(db.Model, SoftDeleteModel):
     __tablename__ = "entityset"
