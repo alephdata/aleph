@@ -11,6 +11,7 @@ from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_tags, entity_expand
 from aleph.logic.entities import validate_entity, check_write_entity
+from aleph.logic.profiles import pairwise_judgements
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
 from aleph.model.entityset import EntitySet, Judgement
@@ -330,8 +331,12 @@ def similar(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get("collection_id"))
-    entity = model.get_proxy(entity)
-    result = MatchQuery.handle(request, entity=entity)
+    proxy = model.get_proxy(entity)
+    result = MatchQuery.handle(request, entity=proxy)
+    pairs = [(entity_id, s.get("id")) for s in result.results]
+    judgements = pairwise_judgements(pairs, entity.get("collection_id"))
+    for similar in result.results:
+        similar["judgement"] = judgements.get((entity_id, similar.get("id")))
     return EntitySerializer.jsonify_result(result)
 
 
