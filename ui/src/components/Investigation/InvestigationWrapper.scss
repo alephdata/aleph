@@ -34,6 +34,27 @@ $transition-duration: .3s;
     }
   }
 
+  &__title-container {
+    margin: 20px;
+  }
+
+  &__title {
+    font-size: 22px;
+    // color: $dark-gray1;
+    margin: $aleph-grid-size*2 0 $aleph-grid-size;
+
+    .bp3-icon {
+      vertical-align: middle !important;
+    }
+  }
+
+  &__subheading {
+    color: $dark-gray5;
+    line-height: 1.5;
+    clear: both;
+    max-width: 700px;
+  }
+
   &__body.ContentPane {
     flex: 1;
     // height: calc(100vh - #{$aleph-top-nav-height + $aleph-breadcrumbs-height});

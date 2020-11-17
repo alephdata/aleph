@@ -138,6 +138,14 @@ class InvestigationWrapper extends React.Component {
       </Breadcrumbs>
     );
 
+    let title, subheading;
+    if (!!activeType) {
+      title = <Schema.Label schema={activeType} plural icon />;
+      subheading = <Schema.Description schema={activeType} />
+    } else if (!!activeMode) {
+      title = intl.formatMessage(messages[activeMode]);
+    }
+
     return (
       <div className="InvestigationWrapper">
         {isCollapsed && breadcrumbs}
@@ -155,7 +163,12 @@ class InvestigationWrapper extends React.Component {
             </div>
           </div>
           <DualPane.ContentPane className="InvestigationWrapper__body">
-            {!isCollapsed && showBreadcrumbs && breadcrumbs}
+            {!!title && (
+              <div className="InvestigationWrapper__title-container">
+                <h5 className="InvestigationWrapper__title">{title}</h5>
+                {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
+              </div>
+            )}
             <div className="InvestigationWrapper__body-content">
               {this.props.children}
             </div>
