@@ -1,10 +1,8 @@
-import json
-
 from aleph.core import db
 from aleph.queues import get_stage, OP_XREF
 from aleph.index.entities import index_entity
 from aleph.logic import xref
-from aleph.tests.util import TestCase, get_caption, JSON
+from aleph.tests.util import TestCase, get_caption
 
 
 class XrefApiTestCase(TestCase):
@@ -155,18 +153,14 @@ class XrefApiTestCase(TestCase):
         assert xref.get("judgement") == "no_judgement", xref
 
         pairwise_url = "/api/2/profiles/_pairwise"
-        data = json.dumps(
-            {
-                "judgement": "positive",
-                "entity_id": xref["entity"]["id"],
-                "match_id": xref["match"]["id"],
-            }
-        )
         res = self.client.post(
             pairwise_url,
             headers=headers,
-            data=data,
-            content_type=JSON,
+            json={
+                "judgement": "positive",
+                "entity_id": xref["entity"]["id"],
+                "match_id": xref["match"]["id"],
+            },
         )
         assert res.status_code == 200, res.json
 
@@ -176,18 +170,14 @@ class XrefApiTestCase(TestCase):
         assert xref0["id"] == xref["id"], (xref0, xref)
         assert xref0.get("judgement") == "positive", xref0
 
-        data = json.dumps(
-            {
-                "judgement": "negative",
-                "entity_id": xref["entity"]["id"],
-                "match_id": xref["match"]["id"],
-            }
-        )
         res = self.client.post(
             pairwise_url,
             headers=headers,
-            data=data,
-            content_type=JSON,
+            json={
+                "judgement": "negative",
+                "entity_id": xref["entity"]["id"],
+                "match_id": xref["match"]["id"],
+            },
         )
         assert res.status_code == 200, res.json
 

@@ -7,10 +7,8 @@ from aleph.logic.entities import entity_tags
 from aleph.search import MatchQuery
 from aleph.views.serializers import EntitySerializer, ProfileSerializer
 from aleph.views.context import enable_cache, tag_request
-from aleph.views.util import obj_or_404, jsonify
+from aleph.views.util import obj_or_404, jsonify, parse_request
 from aleph.views.util import get_index_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, get_flag
-from aleph.views.util import require, get_nested_collection, get_session_id
 
 blueprint = Blueprint("profiles_api", __name__)
 log = logging.getLogger(__name__)
