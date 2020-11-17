@@ -4,7 +4,6 @@ import logging
 from normality import stringify
 from datetime import datetime, date
 from flask_babel.speaklater import LazyString
-from collections import abc
 
 
 log = logging.getLogger(__name__)

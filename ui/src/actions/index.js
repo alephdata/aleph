@@ -15,7 +15,6 @@ export {
   queryCollectionXref,
   triggerCollectionXref,
   triggerCollectionXrefDownload,
-  decideCollectionXref,
   triggerCollectionReingest,
   triggerCollectionReindex,
   triggerCollectionCancel,
@@ -52,6 +51,7 @@ export {
 export {
   fetchProfile,
   fetchProfileTags,
+  pairwiseJudgement,
 } from './profileActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
