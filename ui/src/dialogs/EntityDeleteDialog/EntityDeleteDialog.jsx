@@ -82,7 +82,7 @@ export class EntityDeleteDialog extends Component {
 
         for (const entity of entities) {
           this.setState({ processingEntity: entity.id });
-          await deleteEntity(entity);
+          await deleteEntity(entity.id);
 
           this.setState(({ deletedEntities }) => (
             { deletedEntities: [...deletedEntities, entity.id], processingEntity: null }
