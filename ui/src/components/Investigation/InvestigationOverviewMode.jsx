@@ -59,52 +59,45 @@ class InvestigationOverviewMode extends React.Component {
 
     return (
       <div className="InvestigationOverview">
-        <div className="InvestigationOverview__search">
-          <SearchBox
-            onSearch={this.onSearch}
-            placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
-            inputProps={{ autoFocus: true, large: true }}
-          />
-        </div>
-
-        <div className="InvestigationOverview__top">
-          {collection.summary && (
-            <div className="InvestigationOverview__top__item">
-              <Summary text={collection.summary} />
+        <div className="InvestigationOverview__main">
+          <div className="InvestigationOverview__search">
+            <SearchBox
+              onSearch={this.onSearch}
+              placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
+              inputProps={{ autoFocus: true, large: true }}
+            />
+          </div>
+          {(notificationsResult.total > 0 || notificationsResult.isPending) && (
+            <div className="InvestigationOverview__section">
+              <h6 className="InvestigationOverview__section__title bp3-heading">
+                <FormattedMessage id="investigation.overview.notifications" defaultMessage="Recent activity" />
+              </h6>
+              <div className="InvestigationOverview__section__content">
+                <NotificationList query={notificationsQuery} showCollectionLinks={false} />
+              </div>
             </div>
           )}
-          <div className="InvestigationOverview__top__item">
-            <CollectionStatus collection={collection} showCancel={collection.writeable} />
-            <CollectionInfo collection={collection} />
-          </div>
-          <div className="InvestigationOverview__top__item narrow">
-            <CollectionManageMenu collection={collection} buttonGroupProps={{ vertical: true }} buttonProps={{ className: 'bp3-minimal', alignText: 'left', fill: false }}/>
-          </div>
-        </div>
-
-        {(notificationsResult.total > 0 || notificationsResult.isPending) && (
-          <div className="InvestigationOverview__section">
-            <h6 className="InvestigationOverview__section__title bp3-heading">
-              <FormattedMessage id="investigation.overview.notifications" defaultMessage="Recent activity" />
-            </h6>
-            <div className="InvestigationOverview__section__content">
-              <NotificationList query={notificationsQuery} showCollectionLinks={false} />
-            </div>
-          </div>
-        )}
-        <div className="InvestigationOverview__section">
           <h6 className="InvestigationOverview__section__title bp3-heading">
             <FormattedMessage id="investigation.overview.notifications" defaultMessage="Quick links" />
           </h6>
-          <div className="InvestigationOverview__section__content">
+          <div>
             <InvestigationQuickLinks collection={collection} />
           </div>
         </div>
-        <div className="InvestigationOverview__section">
-          <h6 className="InvestigationOverview__section__title bp3-heading">
-            <FormattedMessage id="investigation.overview.reference" defaultMessage="Developer tools" />
-          </h6>
-          <div className="InvestigationOverview__section__content">
+        <div className="InvestigationOverview__secondary">
+          <div className="InvestigationOverview__secondary__vertical-container">
+            <div className="InvestigationOverview__secondary__item">
+              <Summary text={collection.summary} />
+            </div>
+            <CollectionStatus collection={collection} showCancel={collection.writeable} className="InvestigationOverview__secondary__item" />
+          </div>
+          <div className="InvestigationOverview__secondary__item">
+            <CollectionInfo collection={collection} />
+            <div className="InvestigationOverview__secondary__actions">
+              <CollectionManageMenu collection={collection} />
+            </div>
+          </div>
+          <div className="InvestigationOverview__secondary__item mobile-hide">
             <CollectionReference collection={collection} />
           </div>
         </div>
