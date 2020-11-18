@@ -9,9 +9,10 @@ from aleph.core import db, url_for
 from aleph.search import EntitiesQuery, MatchQuery, DatabaseQueryResult
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
-from aleph.logic.entities import entity_tags, entity_expand
-from aleph.logic.entities import validate_entity, check_write_entity
+from aleph.logic.entities import validate_entity, entity_tags
+from aleph.logic.entities import check_write_entity
 from aleph.logic.profiles import pairwise_judgements
+from aleph.logic.expand import expand_proxies
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
 from aleph.model.entityset import EntitySet, Judgement
@@ -504,38 +505,30 @@ def expand(entity_id):
       - Entity
     """
     entity = get_index_entity(entity_id, request.authz.READ)
+    proxy = model.get_proxy(entity)
     edge_types = request.args.getlist("edge_types")
     collection_id = entity.get("collection_id")
     tag_request(collection_id=collection_id)
     parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
     properties = parser.filters.get("property")
-    results = []
-    for (prop, total, proxies) in entity_expand(
-        entity,
+    results = expand_proxies(
+        [proxy],
         collection_ids=[collection_id],
         edge_types=edge_types,
         properties=properties,
         authz=request.authz,
         limit=parser.limit,
-    ):
-        results.append(
-            {
-                "count": total,
-                "property": prop.name,
-                "entities": [proxy.to_dict() for proxy in proxies],
-            }
-        )
-    return jsonify(
-        {
-            "status": "ok",
-            "total": sum(result["count"] for result in results),
-            "results": results,
-        }
     )
+    result = {
+        "status": "ok",
+        "total": sum(result["count"] for result in results),
+        "results": results,
+    }
+    return jsonify(result)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/entitysets", methods=["GET"])
-def entity_entitysets(entity_id):
+def entitysets(entity_id):
     """Returns a list of entitysets which the entity has references in
     ---
     get:

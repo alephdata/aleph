@@ -1,5 +1,5 @@
 import logging
-from banal import ensure_list, ensure_dict
+from banal import ensure_dict
 from pprint import pformat  # noqa
 from flask_babel import gettext
 from followthemoney import model
@@ -156,55 +156,3 @@ def entity_tags(entity, authz=None, edge_types=registry.pivots):
             results.append(item)
     results.sort(key=lambda p: p["count"], reverse=True)
     return results
-
-
-def entity_expand(
-    entity, collection_ids, edge_types, limit, properties=None, authz=None
-):
-    """Expand an entity's graph to find adjacent entities that are connected
-    by a common property value(eg: having the same email or phone number), a
-    property (eg: Passport entity linked to a Person) or an Entity type edge.
-    (eg: Person connected to Company through Directorship)
-
-    collection_ids: list of collection_ids to search
-    edge_types: list of FtM Types to expand as edges
-    properties: list of FtM Properties to expand as edges.
-    limit: max number of entities to return
-    """
-    proxy = model.get_proxy(entity)
-    node = Node.from_proxy(proxy)
-    graph = Graph(edge_types=edge_types)
-    graph.add(proxy)
-    query = graph.query(authz=authz, collection_ids=collection_ids)
-
-    # Get relevant property set
-    props = set(proxy.schema.properties.values())
-    props = [p for p in props if p.type in graph.edge_types]
-    properties = ensure_list(properties)
-    if len(properties):
-        props = [p for p in props if p.name in properties]
-
-    # Query for reverse properties
-    for prop in props:
-        if prop.stub:
-            query.edge(node, prop.reverse, limit=limit, count=True)
-    query.execute()
-
-    # Fill in missing graph entities:
-    if limit > 0:
-        graph.resolve()
-
-    for prop in props:
-        count = len(proxy.get(prop))
-        if prop.stub:
-            for res in query.patterns:
-                if res.prop == prop.reverse:
-                    count = res.count
-        proxies = set()
-        # Too much effort to do this right. This works, too:
-        for edge in graph.get_adjacent(node, prop=prop):
-            for part in (edge.proxy, edge.source.proxy, edge.target.proxy):
-                if part is not None and part != proxy:
-                    proxies.add(part)
-        if count > 0:
-            yield (prop, count, proxies)
