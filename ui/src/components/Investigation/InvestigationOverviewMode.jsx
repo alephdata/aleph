@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
+import { AnchorButton, ButtonGroup } from '@blueprintjs/core';
+
 
 import { SearchBox, Skeleton, Summary } from 'components/common';
 import Query from 'app/Query';
@@ -26,6 +28,8 @@ const messages = defineMessages({
     defaultMessage: 'Search {collection}',
   }
 });
+
+const guidesURLPrefix = "https://docs.alephdata.org/guide/building-out-your-investigation/";
 
 class InvestigationOverviewMode extends React.Component {
   constructor(props) {
@@ -79,10 +83,37 @@ class InvestigationOverviewMode extends React.Component {
           )}
           <div className="InvestigationOverview__section">
             <h6 className="InvestigationOverview__section__title bp3-heading">
-              <FormattedMessage id="investigation.overview.notifications" defaultMessage="Quick links" />
+              <FormattedMessage id="investigation.overview.shortcuts" defaultMessage="Quick links" />
             </h6>
             <div className="InvestigationOverview__section__content">
               <InvestigationQuickLinks collection={collection} />
+            </div>
+          </div>
+          <div className="InvestigationOverview__section">
+            <h6 className="InvestigationOverview__section__title bp3-heading">
+              <FormattedMessage id="investigation.overview.guides" defaultMessage="Read more" />
+            </h6>
+            <div className="InvestigationOverview__section__content">
+              <div className="InvestigationOverview__guides">
+                <AnchorButton outlined alignText="left" icon="people" target="_blank" href={`${guidesURLPrefix}creating-a-personal-dataset#managing-access-to-your-personal-dataset`}>
+                  <FormattedMessage id="investigation.overview.guides" defaultMessage="Managing access" />
+                </AnchorButton>
+                <AnchorButton outlined alignText="left" icon="upload" target="_blank" href={`${guidesURLPrefix}cross-referencing`}>
+                  <FormattedMessage id="investigation.overview.guides" defaultMessage="Uploading documents" />
+                </AnchorButton>
+                <AnchorButton outlined alignText="left" icon="graph" target="_blank" href={`${guidesURLPrefix}uploading-documents`}>
+                  <FormattedMessage id="investigation.overview.guides" defaultMessage="Drawing network diagrams" />
+                </AnchorButton>
+                <AnchorButton outlined alignText="left" icon="new-object" target="_blank" href={`${guidesURLPrefix}using-the-table-editor`}>
+                  <FormattedMessage id="investigation.overview.guides" defaultMessage="Creating & editing entities" />
+                </AnchorButton>
+                <AnchorButton outlined alignText="left" icon="table" target="_blank" href={`${guidesURLPrefix}generating-multiple-entities-from-a-list`}>
+                  <FormattedMessage id="investigation.overview.guides" defaultMessage="Generating entities from a spreadsheet" />
+                </AnchorButton>
+                <AnchorButton outlined alignText="left" icon="comparison" target="_blank" href={`${guidesURLPrefix}cross-referencing`}>
+                  <FormattedMessage id="investigation.overview.guides" defaultMessage="Cross-referencing your data" />
+                </AnchorButton>
+              </div>
             </div>
           </div>
         </div>

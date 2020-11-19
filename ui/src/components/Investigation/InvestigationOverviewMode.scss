@@ -125,4 +125,21 @@
     }
 
   }
+
+  &__guides {
+    $guides-button-margin: 7px;
+
+    margin: 0 (-$guides-button-margin);
+
+    .bp3-button {
+      margin: $guides-button-margin/2;
+      min-height: 48px !important;
+      width: calc(33% - #{$guides-button-margin}) !important;
+
+
+      @media screen and (max-width: $aleph-screen-lg-max-width) {
+        width: calc(50% - #{$guides-button-margin}) !important;
+      }
+    }
+  }
 }
