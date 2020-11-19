@@ -77,11 +77,13 @@ class InvestigationOverviewMode extends React.Component {
               </div>
             </div>
           )}
-          <h6 className="InvestigationOverview__section__title bp3-heading">
-            <FormattedMessage id="investigation.overview.notifications" defaultMessage="Quick links" />
-          </h6>
-          <div>
-            <InvestigationQuickLinks collection={collection} />
+          <div className="InvestigationOverview__section">
+            <h6 className="InvestigationOverview__section__title bp3-heading">
+              <FormattedMessage id="investigation.overview.notifications" defaultMessage="Quick links" />
+            </h6>
+            <div className="InvestigationOverview__section__content">
+              <InvestigationQuickLinks collection={collection} />
+            </div>
           </div>
         </div>
         <div className="InvestigationOverview__secondary">

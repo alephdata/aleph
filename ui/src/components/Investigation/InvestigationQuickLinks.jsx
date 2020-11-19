@@ -1,14 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 
+import { Schema } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
-import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAccessDialog';
+import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+
 
 import './InvestigationQuickLinks.scss'
 
@@ -29,6 +32,23 @@ const messages = defineMessages({
 
 
 class InvestigationQuickLinks extends React.Component {
+  onSchemaSelect = (schema) => {
+    const { history, location } = this.props;
+    console.log('in schema select', schema)
+    history.push({
+      pathname: location.pathname,
+      hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: schema.name }),
+    });
+  }
+
+  onXrefSubmit = () => {
+    const { history, location } = this.props;
+    console.log('in redirect')
+    history.push({
+      pathname: location.pathname,
+      hash: queryString.stringify({ mode: collectionViewIds.XREF }),
+    });
+  }
   // <DialogToggleButton
   //   buttonProps={{
   //     text: intl.formatMessage(messages.upload),
@@ -55,28 +75,76 @@ class InvestigationQuickLinks extends React.Component {
     return (
       <div className="InvestigationQuickLinks">
         <div className="InvestigationQuickLinks__item">
-          <img src="/static/home_networks.svg" />
-          <p className="InvestigationQuickLinks__item__text">
-            Create a network diagram
-          </p>
+          <DialogToggleButton
+            buttonProps={{
+              minimal: true,
+              className: "InvestigationQuickLinks__item__content"
+            }}
+            Dialog={DocumentUploadDialog}
+            dialogProps={{ collection }}
+          >
+            <>
+              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_documents.svg)' }} />
+              <p className="InvestigationQuickLinks__item__text">
+                Upload documents
+              </p>
+            </>
+          </DialogToggleButton>
         </div>
         <div className="InvestigationQuickLinks__item">
-          <img src="/static/home_documents.svg" />
-          <p className="InvestigationQuickLinks__item__text">
-            Upload documents
-          </p>
+          <div className="InvestigationQuickLinks__item__content">
+            <Schema.Select
+              onSelect={this.onSchemaSelect}
+              fill
+              optionsFilter={schema => !schema.isDocument()}
+            >
+                <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_documents.svg)' }} />
+                <p className="InvestigationQuickLinks__item__text">
+                  Create new entities
+                </p>
+            </Schema.Select>
+          </div>
         </div>
         <div className="InvestigationQuickLinks__item">
-          <img src="/static/home_xref.svg" />
-          <p className="InvestigationQuickLinks__item__text">
-            Compare with other datasets
-          </p>
-
+          <DialogToggleButton
+            buttonProps={{
+              minimal: true,
+              className: "InvestigationQuickLinks__item__content"
+            }}
+            Dialog={EntitySetCreateDialog}
+            dialogProps={{ entitySet: { collection, type: 'diagram' }, canChangeCollection: false }}
+          >
+            <>
+              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_networks.svg)' }} />
+              <p className="InvestigationQuickLinks__item__text">
+                Sketch out a network diagram
+              </p>
+            </>
+          </DialogToggleButton>
         </div>
-
+        <div className="InvestigationQuickLinks__item">
+          <DialogToggleButton
+            buttonProps={{
+              minimal: true,
+              className: "InvestigationQuickLinks__item__content"
+            }}
+            Dialog={CollectionXrefDialog}
+            dialogProps={{ collection, redirectOnSubmit: this.onXrefSubmit }}
+          >
+            <>
+              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_xref.svg)' }} />
+              <p className="InvestigationQuickLinks__item__text">
+                Compare with other datasets
+              </p>
+            </>
+          </DialogToggleButton>
+        </div>
       </div>
     )
   }
 }
 
-export default injectIntl(InvestigationQuickLinks);
+export default compose(
+  withRouter,
+  injectIntl,
+)(InvestigationQuickLinks);

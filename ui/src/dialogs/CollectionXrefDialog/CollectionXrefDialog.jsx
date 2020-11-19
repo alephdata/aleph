@@ -41,7 +41,7 @@ class CollectionXrefDialog extends Component {
   }
 
   async onConfirm() {
-    const { collection, intl } = this.props;
+    const { collection, intl, redirectOnSubmit } = this.props;
     const { blocking } = this.state;
     if (blocking) return;
     this.setState({ blocking: true });
@@ -49,6 +49,8 @@ class CollectionXrefDialog extends Component {
       await this.props.triggerCollectionXref(collection.id);
       showSuccessToast(intl.formatMessage(messages.processing));
       this.setState({ blocking: false });
+      console.log('triggered', redirectOnSubmit)
+      redirectOnSubmit && redirectOnSubmit();
       this.props.toggleDialog();
     } catch (e) {
       this.setState({ blocking: false });
