@@ -12,7 +12,6 @@ import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode
 import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
-import collectionViewIds from 'components/Collection/collectionViewIds';
 
 import './InvestigationViews.scss'
 
@@ -20,20 +19,22 @@ class InvestigationViews extends React.Component {
   renderContent() {
     const { collection, activeMode } = this.props;
 
+    console.log('active moew', activeMode)
+
     switch(activeMode) {
-      case collectionViewIds.DOCUMENTS:
+      case 'documents':
         return <InvestigationDocumentsMode collection={collection} />;
-      case collectionViewIds.ENTITIES:
+      case 'entities':
         return <CollectionEntitiesMode collection={collection} />;
-      case collectionViewIds.DIAGRAMS:
+      case 'diagrams':
         return <CollectionEntitySetsIndexMode collection={collection} type="diagram" />;
-      case collectionViewIds.LISTS:
+      case 'lists':
         return <CollectionEntitySetsIndexMode collection={collection} type="list" />;
-      case collectionViewIds.MENTIONS:
+      case 'mentions':
         return <InvestigationMentionsMode collection={collection} />;
-      case collectionViewIds.SEARCH:
+      case 'search':
         return <CollectionSearchMode collection={collection} />;
-      case collectionViewIds.XREF:
+      case 'xref':
         return <CollectionXrefMode collection={collection} />;
       default:
         return <InvestigationOverviewMode collection={collection} />;

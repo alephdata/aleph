@@ -10,8 +10,6 @@ import DocumentManager from 'components/Document/DocumentManager';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import { queryCollectionDocuments } from 'queries';
 import { selectEntitiesResult } from 'selectors';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-
 
 class InvestigationDocumentsMode extends React.Component {
   constructor(props) {
@@ -24,7 +22,7 @@ class InvestigationDocumentsMode extends React.Component {
     console.log('in on search', queryText)
     const { history, query, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
-    parsedHash.mode = collectionViewIds.SEARCH;
+    parsedHash.mode = 'search';
     parsedHash.type = 'Document';
 
     const newQuery = query.set('q', queryText);

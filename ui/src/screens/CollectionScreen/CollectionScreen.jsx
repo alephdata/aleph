@@ -15,7 +15,6 @@ import InvestigationViews from 'components/Investigation/InvestigationViews';
 
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
-import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Collection, SinglePane, Breadcrumbs } from 'components/common';
 import { selectCollection, selectCollectionStatus } from 'selectors';
 
@@ -44,7 +43,7 @@ export class CollectionScreen extends Component {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
-    parsedHash.mode = collectionViewIds.DOCUMENTS;
+    parsedHash.mode = 'documents';
     delete parsedHash.type;
 
     history.push({
@@ -114,7 +113,7 @@ export class CollectionScreen extends Component {
           <div>
             <CollectionViews
               collection={collection}
-              activeMode={activeMode || collectionViewIds.OVERVIEW}
+              activeMode={activeMode}
               isPreview={false}
             />
           </div>
@@ -138,7 +137,6 @@ export class CollectionScreen extends Component {
       label: collection.label,
       onSearch: this.onSearch,
     };
-
 
     const content = isInvestigation ? this.renderInvestigation() : this.renderCollection();
 

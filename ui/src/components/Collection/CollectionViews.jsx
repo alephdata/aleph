@@ -10,7 +10,7 @@ import { Count, ResultCount } from 'components/common';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
-import collectionViewIds from 'components/Collection/collectionViewIds';
+import { collectionModes } from 'components/Collection/collectionModes';
 import { queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectCollectionXrefResult } from 'selectors';
 
@@ -24,8 +24,8 @@ class CollectionViews extends React.Component {
 
   componentDidUpdate() {
     const { activeMode } = this.props;
-    if (Object.values(collectionViewIds).indexOf(activeMode) < 0) {
-      this.handleTabChange(collectionViewIds.OVERVIEW);
+    if (!!activeMode && !collectionModes[activeMode]) {
+      this.handleTabChange();
     }
   }
 
@@ -33,7 +33,11 @@ class CollectionViews extends React.Component {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
-    parsedHash.mode = mode;
+    if (mode) {
+      parsedHash.mode = mode;
+    } else {
+      delete parsedHash.mode;
+    }
     delete parsedHash.type;
 
     history.push({
@@ -44,7 +48,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, lists, xref,
+      collection, activeMode = "overview", diagrams, lists, xref,
       showDocumentsTab,
       documentTabCount, entitiesTabCount
     } = this.props;
@@ -58,7 +62,7 @@ class CollectionViews extends React.Component {
         renderActiveTabPanelOnly
       >
         <Tab
-          id={collectionViewIds.OVERVIEW}
+          id="overview"
           className="CollectionViews__tab"
           title={
             <>
@@ -69,7 +73,7 @@ class CollectionViews extends React.Component {
         />
         {showDocumentsTab && (
           <Tab
-            id={collectionViewIds.DOCUMENTS}
+            id={'documents'}
             className="CollectionViews__tab"
             title={
               <>
@@ -81,7 +85,7 @@ class CollectionViews extends React.Component {
           />
         )}
         <Tab
-          id={collectionViewIds.XREF}
+          id={'xref'}
           className="CollectionViews__tab"
           title={
             <>

@@ -10,7 +10,6 @@ import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
 import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
-import collectionViewIds from 'components/Collection/collectionViewIds';
 
 
 import './InvestigationQuickLinks.scss'
@@ -37,7 +36,7 @@ class InvestigationQuickLinks extends React.Component {
     console.log('in schema select', schema)
     history.push({
       pathname: location.pathname,
-      hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: schema.name }),
+      hash: queryString.stringify({ mode: 'entities', type: schema.name }),
     });
   }
 
@@ -46,7 +45,7 @@ class InvestigationQuickLinks extends React.Component {
     console.log('in redirect')
     history.push({
       pathname: location.pathname,
-      hash: queryString.stringify({ mode: collectionViewIds.XREF }),
+      hash: queryString.stringify({ mode: 'xref' }),
     });
   }
   // <DialogToggleButton

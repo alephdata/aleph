@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, ControlGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup, ControlGroup, Intent } from '@blueprintjs/core';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import { queryCollectionDocuments, queryCollectionEntities } from 'queries';
 import Query from 'app/Query';
@@ -55,14 +55,16 @@ class CollectionSearchMode extends React.Component {
 
   render() {
     const { activeType, collection, query, result } = this.props;
+
+    const activeProps = { active: true, intent: Intent.PRIMARY, outlined: false };
     return (
       <div className="CollectionSearchMode">
         <div className="CollectionSearchMode__search-container">
           <ButtonGroup className="CollectionSearchMode__type-toggle">
-            <Button outlined onClick={() => this.toggleType('Thing')} icon="thing" active={activeType === 'Thing'}>
+            <Button outlined onClick={() => this.toggleType('Thing')} icon="thing" {...(activeType === 'Thing' ? activeProps : {})}>
               <FormattedMessage id="collection.search.entities" defaultMessage="Entities" />
             </Button>
-            <Button outlined onClick={() => this.toggleType('Document')} icon="document" active={activeType === 'Document'}>
+            <Button outlined onClick={() => this.toggleType('Document')} icon="document" {...(activeType === 'Document' ? activeProps : {})}>
               <FormattedMessage id="collection.search.documents" defaultMessage="Documents" />
             </Button>
           </ButtonGroup>

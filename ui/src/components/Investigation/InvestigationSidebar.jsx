@@ -10,41 +10,13 @@ import c from 'classnames';
 import { Count, ResultCount, SchemaCounts, SearchBox, Summary } from 'components/common';
 import InvestigationHeading from 'components/Investigation/InvestigationHeading';
 import InvestigationSidebarButton from 'components/Investigation/InvestigationSidebarButton';
-import collectionViewIds from 'components/Collection/collectionViewIds';
+import { CollectionMode, collectionModes, getModesByCategory } from 'components/Collection/collectionModes';
 import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
 
 import './InvestigationSidebar.scss';
 
-const messages = defineMessages({
-  diagrams: {
-    id: 'collection.info.diagrams',
-    defaultMessage: 'Network diagrams',
-  },
-  lists: {
-    id: 'collection.info.lists',
-    defaultMessage: 'Lists',
-  },
-  xref: {
-    id: 'collection.info.xref',
-    defaultMessage: 'Cross-reference',
-  },
-  documents: {
-    id: 'collection.info.browse',
-    defaultMessage: 'Browse documents',
-  },
-  mappings: {
-    id: 'collection.info.mappings',
-    defaultMessage: 'Mappings',
-  },
-  mentions: {
-    id: 'collection.info.mentions',
-    defaultMessage: 'Mentions',
-  },
-});
-
-const collapsedModes = [collectionViewIds.ENTITIES, collectionViewIds.SEARCH, collectionViewIds.XREF];
-
+const collapsedModes = ['entities', 'search', 'xref'];
 
 class InvestigationSidebar extends React.Component {
   constructor(props) {
@@ -64,7 +36,7 @@ class InvestigationSidebar extends React.Component {
       delete parsedHash.type;
     }
 
-    if (!isCollapsed && collapsedModes.indexOf(mode) > 0) {
+    if (!isCollapsed && collectionModes[mode]?.collapsed) {
       parsedHash.collapsed = true;
     }
 
@@ -80,37 +52,6 @@ class InvestigationSidebar extends React.Component {
       intl, schemaCounts
     } = this.props;
 
-    const entityTools = [
-      {
-        id: collectionViewIds.DIAGRAMS,
-        icon: 'graph',
-        rightIcon: <ResultCount result={diagrams} />
-      },
-      {
-        id: collectionViewIds.LISTS,
-        icon: 'list',
-        rightIcon: <ResultCount result={lists} />
-      },
-      {
-        id: collectionViewIds.XREF,
-        icon: 'comparison',
-      },
-    ];
-    const docTools = [
-      {
-        id: collectionViewIds.DOCUMENTS,
-        icon: 'folder-open',
-      },
-      {
-        id: collectionViewIds.MAPPINGS,
-        icon: 'new-object',
-      },
-      {
-        id: collectionViewIds.MENTIONS,
-        icon: 'tag',
-      },
-    ];
-
     return (
       <div className={c('InvestigationSidebar', {static: !activeMode})}>
         <div className="InvestigationSidebar__scroll-container">
@@ -124,19 +65,20 @@ class InvestigationSidebar extends React.Component {
                 <SchemaCounts
                   filterSchemata={schema => !schema.isDocument()}
                   schemaCounts={schemaCounts}
-                  onSelect={schema => this.navigate(collectionViewIds.ENTITIES, schema)}
+                  onSelect={schema => this.navigate('entities', schema)}
                   showSchemaAdd={collection.writeable}
                   activeSchema={activeType}
                   isCollapsed={isCollapsed}
                 />
-                {entityTools.map(({ id, ...rest }) => (
+                {getModesByCategory('entityTool').map(id => (
                   <InvestigationSidebarButton
                     key={id}
-                    text={intl.formatMessage(messages[id])}
+                    text={<CollectionMode.Label id={id} />}
                     onClick={() => this.navigate(id)}
                     active={activeMode === id}
                     isCollapsed={isCollapsed}
-                    {...rest}
+                    icon={<CollectionMode.Icon id={id} />}
+                    rightIcon={this.props[id] && <ResultCount result={id} />}
                   />
                 ))}
               </ButtonGroup>
@@ -146,14 +88,14 @@ class InvestigationSidebar extends React.Component {
                 <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
               </h6>
               <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-                {docTools.map(({ id, ...rest }) => (
+                {getModesByCategory('docTool').map(id => (
                   <InvestigationSidebarButton
                     key={id}
-                    text={intl.formatMessage(messages[id])}
+                    text={<CollectionMode.Label id={id} />}
                     onClick={() => this.navigate(id)}
                     active={activeMode === id}
                     isCollapsed={isCollapsed}
-                    {...rest}
+                    icon={<CollectionMode.Icon id={id} />}
                   />
                 ))}
               </ButtonGroup>

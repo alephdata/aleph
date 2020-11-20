@@ -135,10 +135,16 @@
       margin: $guides-button-margin/2;
       min-height: 48px !important;
       width: calc(33% - #{$guides-button-margin}) !important;
-
+      background-color: rgba(19, 124, 189, 0.09) !important;
+      transition: background-color .05s ease-in-out;
+      color: $blue2 !important;
 
       @media screen and (max-width: $aleph-screen-lg-max-width) {
         width: calc(50% - #{$guides-button-margin}) !important;
+      }
+
+      &:hover {
+        background-color: rgba(19, 124, 189, 0.04) !important;
       }
     }
   }

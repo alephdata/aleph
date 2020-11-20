@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { AnchorButton, ButtonGroup } from '@blueprintjs/core';
+import { AnchorButton, ButtonGroup, Intent } from '@blueprintjs/core';
 
 
 import { SearchBox, Skeleton, Summary } from 'components/common';
@@ -16,7 +16,6 @@ import CollectionInfo from 'components/Collection/CollectionInfo';
 import CollectionStatus from 'components/Collection/CollectionStatus';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
-import collectionViewIds from 'components/Collection/collectionViewIds';
 import { selectNotificationsResult } from 'selectors';
 
 
@@ -39,7 +38,7 @@ class InvestigationOverviewMode extends React.Component {
   onSearch(queryText) {
     const { history, collection, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
-    parsedHash.mode = collectionViewIds.SEARCH;
+    parsedHash.mode = 'search';
     delete parsedHash.type;
 
     const query = {
@@ -95,22 +94,22 @@ class InvestigationOverviewMode extends React.Component {
             </h6>
             <div className="InvestigationOverview__section__content">
               <div className="InvestigationOverview__guides">
-                <AnchorButton outlined alignText="left" icon="people" target="_blank" href={`${guidesURLPrefix}creating-a-personal-dataset#managing-access-to-your-personal-dataset`}>
+                <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="people" target="_blank" href={`${guidesURLPrefix}creating-a-personal-dataset#managing-access-to-your-personal-dataset`}>
                   <FormattedMessage id="investigation.overview.guides" defaultMessage="Managing access" />
                 </AnchorButton>
-                <AnchorButton outlined alignText="left" icon="upload" target="_blank" href={`${guidesURLPrefix}cross-referencing`}>
+                <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="upload" target="_blank" href={`${guidesURLPrefix}cross-referencing`}>
                   <FormattedMessage id="investigation.overview.guides" defaultMessage="Uploading documents" />
                 </AnchorButton>
-                <AnchorButton outlined alignText="left" icon="graph" target="_blank" href={`${guidesURLPrefix}uploading-documents`}>
+                <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="graph" target="_blank" href={`${guidesURLPrefix}uploading-documents`}>
                   <FormattedMessage id="investigation.overview.guides" defaultMessage="Drawing network diagrams" />
                 </AnchorButton>
-                <AnchorButton outlined alignText="left" icon="new-object" target="_blank" href={`${guidesURLPrefix}using-the-table-editor`}>
+                <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="new-object" target="_blank" href={`${guidesURLPrefix}using-the-table-editor`}>
                   <FormattedMessage id="investigation.overview.guides" defaultMessage="Creating & editing entities" />
                 </AnchorButton>
-                <AnchorButton outlined alignText="left" icon="table" target="_blank" href={`${guidesURLPrefix}generating-multiple-entities-from-a-list`}>
+                <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="table" target="_blank" href={`${guidesURLPrefix}generating-multiple-entities-from-a-list`}>
                   <FormattedMessage id="investigation.overview.guides" defaultMessage="Generating entities from a spreadsheet" />
                 </AnchorButton>
-                <AnchorButton outlined alignText="left" icon="comparison" target="_blank" href={`${guidesURLPrefix}cross-referencing`}>
+                <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="comparison" target="_blank" href={`${guidesURLPrefix}cross-referencing`}>
                   <FormattedMessage id="investigation.overview.guides" defaultMessage="Cross-referencing your data" />
                 </AnchorButton>
               </div>

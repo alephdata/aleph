@@ -16,8 +16,8 @@ $sidebar-padding: 15px;
   }
 
   .collapsed & {
-    box-shadow: none;
-    background: $aleph-breadcrumbs-background;
+    // box-shadow: none;
+    // background: $aleph-breadcrumbs-background;
   }
 
   &__scroll-container {
