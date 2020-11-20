@@ -60,8 +60,6 @@ const mapStateToProps = (state, ownProps) => {
   const selectableSchemata = schemata
     .filter((s) => !schemaViews.find((v) => v.id === s));
 
-  console.log('SCHEMA', model.getSchema(activeType))
-
   return {
     activeSchema: activeType ? model.getSchema(activeType) : null,
     schemaViews,

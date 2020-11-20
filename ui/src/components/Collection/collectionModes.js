@@ -1,7 +1,14 @@
 import React, { PureComponent } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Icon } from '@blueprintjs/core';
-
 import { defineMessages, injectIntl } from 'react-intl';
+
+import { queryCollectionDiagrams, queryCollectionDocuments, queryCollectionLists, queryCollectionXrefFacets } from 'queries';
+import { selectEntitiesResult, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
+
+import { ResultCount } from 'components/common';
 
 const messages = defineMessages({
   diagrams: {
@@ -37,7 +44,9 @@ const messages = defineMessages({
 const collectionModes = {
   documents: {
     icon: 'folder-open',
-    category: 'docTool'
+    category: 'docTool',
+    query: queryCollectionDocuments,
+    result: selectEntitiesResult
   },
   entities: {
     collapsed: true,
@@ -49,15 +58,21 @@ const collectionModes = {
   xref: {
     icon: 'comparison',
     collapsed: true,
-    category: 'entityTool'
+    category: 'entityTool',
+    query: queryCollectionXrefFacets,
+    result: selectCollectionXrefResult
   },
   diagrams: {
     icon: 'graph',
-    category: 'entityTool'
+    category: 'entityTool',
+    query: queryCollectionDiagrams,
+    result: selectEntitySetsResult,
   },
   lists: {
     icon: 'list',
-    category: 'entityTool'
+    category: 'entityTool',
+    query: queryCollectionLists,
+    result: selectEntitySetsResult,
   },
   mappings: {
     icon: 'new-object',
@@ -69,6 +84,12 @@ const collectionModes = {
   },
 }
 
+const getModesByCategory = (filterCategory) => {
+  return Object.entries(collectionModes)
+    .filter(([key,{category}]) => filterCategory === category)
+    .map(entry => entry[0]);
+}
+
 const CollectionModeIcon = ({ id, className }) => {
   const icon = collectionModes[id]?.icon;
   if (!icon) { return null; }
@@ -78,7 +99,6 @@ const CollectionModeIcon = ({ id, className }) => {
 class CollectionModeLabel extends PureComponent {
   render() {
     const { icon, id, intl } = this.props;
-    console.log(id);
     if (!id) { return null; }
     const messageKey = messages[id];
     if (!messageKey) { return null; }
@@ -86,25 +106,55 @@ class CollectionModeLabel extends PureComponent {
     return (
       <>
         {icon && <CollectionModeIcon id={id} className="left-icon" />}
-        {intl.formatMessage(messageKey)}
+        <span>{intl.formatMessage(messageKey)}</span>
       </>
     );
   }
 }
 
+class CollectionModeCount extends PureComponent {
+  // componentDidMount() {
+  //   this.fetchIfNeeded();
+  // }
+  //
+  // componentDidUpdate() {
+  //   this.fetchIfNeeded();
+  // }
+  //
+  // fetchIfNeeded() {
+  //   const { query, result } = this.props;
+  //   if (result.shouldLoad) {
+  //     this.props.queryEntities({ query });
+  //   }
+  // }
+
+  render() {
+    const { result } = this.props;
+    if (!result) { return null; }
+
+    return <ResultCount result={result} />
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  const { collection, location, id } = ownProps;
+
+  const collectionMode = collectionModes[id];
+  if (collectionMode && collectionMode.query) {
+    const query = collectionMode.query(location, collection.id);
+    return { result: collectionMode.result(state, query) };
+  }
+  return {};
+};
+
 class CollectionMode {
   static Icon = CollectionModeIcon;
   static Label = injectIntl(CollectionModeLabel);
-  // static Count = injectIntl(CollectionModeLabel);
-
-
+  static Count = compose(
+    withRouter,
+    connect(mapStateToProps),
+  )(CollectionModeCount);
   // static Link = withRouter(CollectionLink);
-}
-
-const getModesByCategory = (filterCategory) => {
-  return Object.entries(collectionModes)
-    .filter(([key,{category}]) => filterCategory === category)
-    .map(entry => entry[0]);
 }
 
 export { CollectionMode, collectionModes, getModesByCategory };

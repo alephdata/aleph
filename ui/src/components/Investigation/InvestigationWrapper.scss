@@ -41,10 +41,12 @@ $transition-duration: .3s;
   &__title {
     font-size: 20px;
     margin: 0 0 $aleph-grid-size;
-    // color: $dark-gray1;
+    display: flex;
+    align-items: center;
 
     .bp3-icon {
-      vertical-align: middle !important;
+      color: $gray1;
+      vertical-align: initial;
     }
   }
 

@@ -49,7 +49,6 @@ class CollectionXrefDialog extends Component {
       await this.props.triggerCollectionXref(collection.id);
       showSuccessToast(intl.formatMessage(messages.processing));
       this.setState({ blocking: false });
-      console.log('triggered', redirectOnSubmit)
       redirectOnSubmit && redirectOnSubmit();
       this.props.toggleDialog();
     } catch (e) {

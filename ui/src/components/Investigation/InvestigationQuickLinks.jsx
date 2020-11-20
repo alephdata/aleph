@@ -33,7 +33,6 @@ const messages = defineMessages({
 class InvestigationQuickLinks extends React.Component {
   onSchemaSelect = (schema) => {
     const { history, location } = this.props;
-    console.log('in schema select', schema)
     history.push({
       pathname: location.pathname,
       hash: queryString.stringify({ mode: 'entities', type: schema.name }),
@@ -42,7 +41,6 @@ class InvestigationQuickLinks extends React.Component {
 
   onXrefSubmit = () => {
     const { history, location } = this.props;
-    console.log('in redirect')
     history.push({
       pathname: location.pathname,
       hash: queryString.stringify({ mode: 'xref' }),

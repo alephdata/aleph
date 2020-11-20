@@ -17,7 +17,7 @@ import CollectionReference from 'components/Collection/CollectionReference';
 import { CollectionMode } from 'components/Collection/collectionModes';
 
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
-import { Breadcrumbs, Collection, Schema, DualPane, ResultText, ResultCount, Summary } from 'components/common';
+import { Breadcrumbs, Collection, Count, Schema, DualPane, ResultText, ResultCount, Summary } from 'components/common';
 import { queryCollectionEntities } from 'queries';
 
 import './InvestigationWrapper.scss';
@@ -50,8 +50,6 @@ class InvestigationWrapper extends React.Component {
     } else {
       this.setState({ sidebarFixed: false });
     }
-    // console.log(ref.pageYOffset, ref.offsetTop)
-
   }
 
   toggleCollapsed = () => {
@@ -69,31 +67,33 @@ class InvestigationWrapper extends React.Component {
   }
 
   render() {
-    const { activeMode, activeSearch, activeType, collection, intl, isCollapsed, result } = this.props;
+    const { activeMode, activeSearch, activeType, activeTypeCount, collection, intl, isCollapsed, query, result } = this.props;
     const { sidebarFixed } = this.state;
     const showBreadcrumbs = !!activeMode;
     const isSearch = activeMode === 'search';
 
-    console.log('in breadcrumbs', activeSearch, result);
+    console.log('in breadcrumbs', activeSearch, result, query, query.hasQuery(), activeTypeCount);
 
     const breadcrumbs = (
       <Breadcrumbs>
         {isCollapsed && <Breadcrumbs.Collection key="collection" collection={collection} />}
         {activeMode && (isSearch || !activeType) && (
           <Breadcrumbs.Text active>
-            <CollectionMode.Label id={activeMode} />
+            <CollectionMode.Label id={activeMode} icon />
+            <CollectionMode.Count id={activeMode} collection={collection} />
           </Breadcrumbs.Text>
         )}
         {(!isSearch && !!activeType) && (
           <Breadcrumbs.Text active>
             <Schema.Label schema={activeType} plural icon />
+            <Count count={activeTypeCount} />
           </Breadcrumbs.Text>
         )}
-
+        {query.hasQuery() && (
           <Breadcrumbs.Text active>
             <ResultText result={result} />
           </Breadcrumbs.Text>
-
+        )}
       </Breadcrumbs>
     );
 
@@ -127,7 +127,9 @@ class InvestigationWrapper extends React.Component {
             <div className="InvestigationWrapper__body-content">
               {!!title && (
                 <div className="InvestigationWrapper__title-container">
-                  <h5 className="InvestigationWrapper__title">{title}</h5>
+                  <h5 className="InvestigationWrapper__title">
+                    <span>{title}</span>
+                  </h5>
                   {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
                 </div>
               )}
@@ -146,7 +148,8 @@ const mapStateToProps = (state, ownProps) => {
   const query = queryCollectionEntities(location, collection.id, activeType);
   const result = selectEntitiesResult(state, query);
   const isCollapsed = hashQuery.collapsed;
-  return { isCollapsed, query, result };
+  const activeTypeCount = activeType && collection?.statistics?.schema?.values?.[activeType];
+  return { isCollapsed, query, result, activeTypeCount };
 };
 
 export default compose(

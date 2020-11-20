@@ -19,8 +19,6 @@ class InvestigationViews extends React.Component {
   renderContent() {
     const { collection, activeMode } = this.props;
 
-    console.log('active moew', activeMode)
-
     switch(activeMode) {
       case 'documents':
         return <InvestigationDocumentsMode collection={collection} />;

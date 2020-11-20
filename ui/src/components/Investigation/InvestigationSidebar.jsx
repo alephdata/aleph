@@ -11,12 +11,8 @@ import { Count, ResultCount, SchemaCounts, SearchBox, Summary } from 'components
 import InvestigationHeading from 'components/Investigation/InvestigationHeading';
 import InvestigationSidebarButton from 'components/Investigation/InvestigationSidebarButton';
 import { CollectionMode, collectionModes, getModesByCategory } from 'components/Collection/collectionModes';
-import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
-import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
 
 import './InvestigationSidebar.scss';
-
-const collapsedModes = ['entities', 'search', 'xref'];
 
 class InvestigationSidebar extends React.Component {
   constructor(props) {
@@ -48,7 +44,7 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, activeType, diagrams, lists, xref, isCollapsed, toggleCollapsed, minimalHeader,
+      collection, activeMode, activeType, isCollapsed, toggleCollapsed, minimalHeader,
       intl, schemaCounts
     } = this.props;
 
@@ -78,7 +74,7 @@ class InvestigationSidebar extends React.Component {
                     active={activeMode === id}
                     isCollapsed={isCollapsed}
                     icon={<CollectionMode.Icon id={id} />}
-                    rightIcon={this.props[id] && <ResultCount result={id} />}
+                    rightIcon={<CollectionMode.Count id={id} collection={collection} />}
                   />
                 ))}
               </ButtonGroup>
@@ -96,6 +92,7 @@ class InvestigationSidebar extends React.Component {
                     active={activeMode === id}
                     isCollapsed={isCollapsed}
                     icon={<CollectionMode.Icon id={id} />}
+                    rightIcon={<CollectionMode.Count id={id} collection={collection} />}
                   />
                 ))}
               </ButtonGroup>
@@ -122,17 +119,10 @@ class InvestigationSidebar extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const model = selectModel(state);
-  const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
-  const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
-  const xrefQuery = queryCollectionXrefFacets(location, collection.id);
   const hashQuery = queryString.parse(location.hash);
 
   return {
     schemaCounts: collection?.statistics?.schema?.values || {},
-    xref: selectCollectionXrefResult(state, xrefQuery),
-    diagrams: selectEntitySetsResult(state, diagramsQuery),
-    lists: selectEntitySetsResult(state, listsQuery),
     activeMode: hashQuery.mode,
     activeType: hashQuery.type,
   };
