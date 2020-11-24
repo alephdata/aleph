@@ -14,7 +14,6 @@ import InvestigationViews from 'components/Investigation/InvestigationViews';
 
 
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import DocumentDropzone from 'components/Document/DocumentDropzone';
 import { Collection, SinglePane, Breadcrumbs } from 'components/common';
 import { selectCollection, selectCollectionStatus } from 'selectors';
 
@@ -23,7 +22,6 @@ export class CollectionScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.onUploadSuccess = this.onUploadSuccess.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
@@ -36,20 +34,6 @@ export class CollectionScreen extends Component {
     history.push({
       pathname: '/search',
       search: queryString.stringify(query),
-    });
-  }
-
-  onUploadSuccess() {
-    const { history, location } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-
-    parsedHash.mode = 'documents';
-    delete parsedHash.type;
-
-    history.push({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
     });
   }
 
@@ -70,26 +54,7 @@ export class CollectionScreen extends Component {
           isPreview={false}
         />
       </InvestigationWrapper>
-    )
-
-    // return (
-    //   <DocumentDropzone
-    //     canDrop={collection.writeable}
-    //     collection={collection}
-    //     onUploadSuccess={this.onUploadSuccess}
-    //   >
-    //     <SinglePane>
-    //       <CollectionHeading collection={collection} />
-    //       <div>
-    //         <InvestigationViews
-    //           collection={collection}
-    //           activeMode={activeMode}
-    //           isPreview={false}
-    //         />
-    //       </div>
-    //     </SinglePane>
-    //   </DocumentDropzone>
-    // );
+    );
   }
 
   renderCollection() {

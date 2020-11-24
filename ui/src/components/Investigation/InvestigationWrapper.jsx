@@ -15,7 +15,7 @@ import CollectionStatus from 'components/Collection/CollectionStatus';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionReference from 'components/Collection/CollectionReference';
 import { CollectionMode } from 'components/Collection/collectionModes';
-
+import DocumentDropzone from 'components/Document/DocumentDropzone';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
 import { Breadcrumbs, Collection, Count, Schema, DualPane, ResultText, ResultCount, Summary } from 'components/common';
 import { queryCollectionEntities } from 'queries';
@@ -29,7 +29,7 @@ class InvestigationWrapper extends React.Component {
     this.state = { sidebarFixed: false };
 
     this.sidebarRef = React.createRef();
-
+    this.onUploadSuccess = this.onUploadSuccess.bind(this);
     this.onScroll = this.onScroll.bind(this);
     this.toggleCollapsed = this.toggleCollapsed.bind(this);
   }
@@ -65,6 +65,21 @@ class InvestigationWrapper extends React.Component {
       hash: queryString.stringify(parsedHash),
     });
   }
+
+  onUploadSuccess() {
+    const { history, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+
+    parsedHash.mode = 'documents';
+    delete parsedHash.type;
+
+    history.push({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
 
   render() {
     const { activeMode, activeSearch, activeType, activeTypeCount, collection, intl, isCollapsed, query, result } = this.props;
@@ -106,36 +121,42 @@ class InvestigationWrapper extends React.Component {
     }
 
     return (
-      <div className="InvestigationWrapper">
-        {isCollapsed && breadcrumbs}
+      <DocumentDropzone
+        canDrop={collection.writeable}
+        collection={collection}
+        onUploadSuccess={this.onUploadSuccess}
+      >
+        <div className="InvestigationWrapper">
+          {isCollapsed && breadcrumbs}
 
-        <DualPane>
-          <div ref={this.sidebarRef} className={c("InvestigationWrapper__sidebar-placeholder", { fixed: sidebarFixed, collapsed: isCollapsed })}>
-            <div className="InvestigationWrapper__sidebar-container">
-              <InvestigationSidebar
-                collection={collection}
-                isCollapsed={isCollapsed}
-                toggleCollapsed={this.toggleCollapsed}
-                onSearch={this.props.onSearch}
-                minimalHeader={sidebarFixed}
-              />
+          <DualPane>
+            <div ref={this.sidebarRef} className={c("InvestigationWrapper__sidebar-placeholder", { fixed: sidebarFixed, collapsed: isCollapsed })}>
+              <div className="InvestigationWrapper__sidebar-container">
+                <InvestigationSidebar
+                  collection={collection}
+                  isCollapsed={isCollapsed}
+                  toggleCollapsed={this.toggleCollapsed}
+                  onSearch={this.props.onSearch}
+                  minimalHeader={sidebarFixed}
+                />
+              </div>
             </div>
-          </div>
-          <DualPane.ContentPane className="InvestigationWrapper__body">
-            <div className="InvestigationWrapper__body-content">
-              {!!title && (
-                <div className="InvestigationWrapper__title-container">
-                  <h5 className="InvestigationWrapper__title">
-                    <span>{title}</span>
-                  </h5>
-                  {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
-                </div>
-              )}
-              {this.props.children}
-            </div>
-          </DualPane.ContentPane>
-        </DualPane>
-      </div>
+            <DualPane.ContentPane className="InvestigationWrapper__body">
+              <div className="InvestigationWrapper__body-content">
+                {!!title && (
+                  <div className="InvestigationWrapper__title-container">
+                    <h5 className="InvestigationWrapper__title">
+                      <span>{title}</span>
+                    </h5>
+                    {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
+                  </div>
+                )}
+                {this.props.children}
+              </div>
+            </DualPane.ContentPane>
+          </DualPane>
+        </div>
+      </DocumentDropzone>
     );
   }
 }
