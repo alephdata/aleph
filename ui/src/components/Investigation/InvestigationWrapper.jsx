@@ -72,8 +72,6 @@ class InvestigationWrapper extends React.Component {
     const showBreadcrumbs = !!activeMode;
     const isSearch = activeMode === 'search';
 
-    console.log('in breadcrumbs', activeSearch, result, query, query.hasQuery(), activeTypeCount);
-
     const breadcrumbs = (
       <Breadcrumbs>
         {isCollapsed && <Breadcrumbs.Collection key="collection" collection={collection} />}

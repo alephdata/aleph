@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Icon } from '@blueprintjs/core';
+import { Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { queryCollectionDiagrams, queryCollectionDocuments, queryCollectionLists, queryCollectionXrefFacets } from 'queries';
@@ -132,7 +132,7 @@ class CollectionModeCount extends PureComponent {
     const { result } = this.props;
     if (!result) { return null; }
 
-    return <ResultCount result={result} />
+    return <ResultCount result={result} intent={Intent.PRIMARY} />
   }
 }
 
