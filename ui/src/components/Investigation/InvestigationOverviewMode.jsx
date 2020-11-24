@@ -118,9 +118,11 @@ class InvestigationOverviewMode extends React.Component {
         </div>
         <div className="InvestigationOverview__secondary">
           <div className="InvestigationOverview__secondary__vertical-container">
-            <div className="InvestigationOverview__secondary__item">
-              <Summary text={collection.summary} />
-            </div>
+            {collection.summary && (
+              <div className="InvestigationOverview__secondary__item">
+                <Summary text={collection.summary} />
+              </div>
+            )}
             <CollectionStatus collection={collection} showCancel={collection.writeable} className="InvestigationOverview__secondary__item" />
           </div>
           <div className="InvestigationOverview__secondary__item">

@@ -8,6 +8,8 @@ $sidebar-padding: 15px;
   box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
   transition: box-shadow $transition-duration ease-in-out;
   padding: 0;
+  height: 100%;
+
 
   &.static {
     box-shadow: none;
@@ -20,14 +22,28 @@ $sidebar-padding: 15px;
     // background: $aleph-breadcrumbs-background;
   }
 
+  .fixed & {
+    min-height: 100vh;
+  }
+
   &__scroll-container {
-    height: calc(100vh);
+    max-height: calc(100vh - #{$aleph-top-nav-height} - #{$aleph-breadcrumbs-height});
     overflow-y: scroll;
     width: 100%;
+    // padding-bottom: $aleph-top-nav-height;
+
+    .collapsed & {
+      max-height: calc(100vh - #{$aleph-top-nav-height} - #{$aleph-breadcrumbs-height*2});
+    }
 
     .static & {
       overflow: visible;
-      height: auto;
+      height: 100%;
+    }
+
+    .fixed & {
+      max-height: calc(100vh - #{$aleph-breadcrumbs-height});
+      // height: calc(100vh - #{$aleph-breadcrumbs-height});
     }
   }
 
@@ -39,9 +55,9 @@ $sidebar-padding: 15px;
     }
   }
 
-  &__content {
-    margin-bottom: 40px;
-  }
+  // &__content {
+  //   margin-bottom: 40px;
+  // }
 
   .SchemaCounts {
     margin-bottom: $aleph-grid-size;
