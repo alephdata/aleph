@@ -8,7 +8,7 @@ const InvestigationSidebarButton = ({ text, rightIcon, isCollapsed, ...rest }) =
   return (
     <Tooltip
       disabled={!isCollapsed}
-      content={<>{text}{rightIcon}</>}
+      content={<>{text}{typeof rightIcon !== 'string' && rightIcon}</>}
       position="right"
       popoverClassName="InvestigationSidebarButton__tooltip"
       modifiers={{

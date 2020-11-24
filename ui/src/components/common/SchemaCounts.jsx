@@ -32,6 +32,7 @@ class SchemaCounts extends React.PureComponent {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
+    parsedHash.mode = 'entities';
 
     history.push({
       pathname: location.pathname,

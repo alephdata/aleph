@@ -23,9 +23,11 @@
 
   .bp3-breadcrumbs {
     height: auto;
+    align-items: stretch;
 
     & > li {
       margin: $aleph-grid-size*1.2 0;
+      align-items: stretch;
 
       &:first-child {
         margin-left: $aleph-content-padding;
