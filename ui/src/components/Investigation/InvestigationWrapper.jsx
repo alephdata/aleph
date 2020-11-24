@@ -45,12 +45,9 @@ class InvestigationWrapper extends React.Component {
   onScroll() {
     const { activeMode } = this.props;
     const ref = this.sidebarRef.current.getBoundingClientRect().y;
-    console.log('ref is', ref)
     if (!!activeMode && ref <= 0) {
-      console.log('fixing')
       this.setState({ sidebarFixed: true });
     } else {
-      console.log('unfixing')
       this.setState({ sidebarFixed: false });
     }
   }

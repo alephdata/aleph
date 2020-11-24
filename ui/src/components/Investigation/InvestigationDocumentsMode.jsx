@@ -19,7 +19,6 @@ class InvestigationDocumentsMode extends React.Component {
   }
 
   onSearch(queryText) {
-    console.log('in on search', queryText)
     const { history, query, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.mode = 'search';

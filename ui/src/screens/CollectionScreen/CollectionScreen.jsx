@@ -11,8 +11,6 @@ import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
 import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 import InvestigationViews from 'components/Investigation/InvestigationViews';
-
-
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { Collection, SinglePane, Breadcrumbs } from 'components/common';
 import { selectCollection, selectCollectionStatus } from 'selectors';
@@ -91,11 +89,13 @@ export class CollectionScreen extends Component {
     const {
       collection, collectionId, activeMode,
     } = this.props;
-    const isInvestigation = collection.casefile;
+
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
     }
+
+    const isInvestigation = collection.casefile;
 
     const searchScope = {
       listItem: <Collection.Label collection={collection} icon truncate={30} />,

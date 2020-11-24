@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionDocuments } from 'queries';
 import { fetchCollection, queryCollectionXref, queryEntitySets, queryEntities, mutate } from 'actions';
 import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitiesResult, selectEntitySetsResult } from 'selectors';
+import LoadingScreen from 'components/Screen/LoadingScreen';
 
 
 class CollectionContextLoader extends PureComponent {
@@ -54,7 +55,15 @@ class CollectionContextLoader extends PureComponent {
     }
   }
 
+
   render() {
+    const { collection } = this.props;
+
+    // TODO: remove this loading spinner when collection.casefile can be determined before initial load
+    if (collection.isPending) {
+      return <LoadingScreen />
+    }
+
     return this.props.children;
   }
 }

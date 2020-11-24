@@ -29,7 +29,6 @@ $transition-duration: .3s;
     transition: width $transition-duration ease-in-out;
     top: 0;
     height: 100%;
-    // height: calc(100% - #{$aleph-top-nav-height});
 
     .fixed & {
       position: fixed;
@@ -37,7 +36,6 @@ $transition-duration: .3s;
     }
     .collapsed & {
       width: $aleph-investigation-sidebar-width-collapsed;
-      // height: auto;
     }
   }
 
