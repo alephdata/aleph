@@ -9,10 +9,9 @@ from aleph.core import db, url_for
 from aleph.search import EntitiesQuery, MatchQuery, DatabaseQueryResult
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
-from aleph.logic.entities import validate_entity, entity_tags
-from aleph.logic.entities import check_write_entity
+from aleph.logic.entities import validate_entity, check_write_entity
 from aleph.logic.profiles import pairwise_judgements
-from aleph.logic.expand import expand_proxies
+from aleph.logic.expand import entity_tags, expand_proxies
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
 from aleph.model.entityset import EntitySet, Judgement
@@ -375,7 +374,7 @@ def tags(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get("collection_id"))
-    results = entity_tags(entity, request.authz)
+    results = entity_tags(model.get_proxy(entity), request.authz)
     return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
@@ -458,7 +457,7 @@ def delete(entity_id):
 
 @blueprint.route("/api/2/entities/<entity_id>/expand", methods=["GET"])
 def expand(entity_id):
-    """Returns a list of diagrams for the role
+    """
     ---
     get:
       summary: Expand an entity to get its adjacent entities
@@ -468,12 +467,6 @@ def expand(entity_id):
       parameters:
       - in: path
         name: entity_id
-        required: true
-        schema:
-          type: string
-      - in: query
-        name: edge_types
-        description: types of edges to expand. Must is a matchable FtM type
         required: true
         schema:
           type: string
@@ -506,15 +499,12 @@ def expand(entity_id):
     """
     entity = get_index_entity(entity_id, request.authz.READ)
     proxy = model.get_proxy(entity)
-    edge_types = request.args.getlist("edge_types")
     collection_id = entity.get("collection_id")
     tag_request(collection_id=collection_id)
     parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
     properties = parser.filters.get("property")
     results = expand_proxies(
         [proxy],
-        collection_ids=[collection_id],
-        edge_types=edge_types,
         properties=properties,
         authz=request.authz,
         limit=parser.limit,

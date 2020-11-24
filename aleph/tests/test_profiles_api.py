@@ -121,3 +121,34 @@ class ProfilesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.json
         assert res.json["total"] == 1, res.json
+
+    def test_profile_expand(self):
+        usg = {
+            "schema": "PublicBody",
+            "properties": {"name": "US Government"},
+        }
+        usg = self.create_entity(usg, self.col2)
+        index_entity(usg)
+        membership = {
+            "schema": "Membership",
+            "properties": {
+                "organization": usg.id,
+                "member": self.ent2.id,
+                "role": "Chief executive",
+            },
+        }
+        membership = self.create_entity(membership, self.col2)
+        index_entity(membership)
+        passport = {
+            "schema": "Passport",
+            "properties": {"holder": self.ent1.id},
+        }
+        passport = self.create_entity(passport, self.col1)
+        index_entity(passport)
+        url = "/api/2/profiles/%s/expand" % self.profile.id
+        res = self.client.get(url)
+        assert res.status_code == 404, res.json
+        _, headers = self.login(foreign_id="rolex")
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.json
+        assert res.json["total"] == 2, res.json

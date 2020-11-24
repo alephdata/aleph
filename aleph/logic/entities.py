@@ -126,33 +126,3 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     aggregator.delete(entity_id=entity_id)
     aggregator.close()
     refresh_entity(collection, entity_id)
-
-
-def entity_tags(entity, authz=None, edge_types=registry.pivots):
-    """Do a search on tags of an entity."""
-    proxy = model.get_proxy(entity)
-    edge_types = registry.get_types(edge_types)
-    edge_types = [t for t in edge_types if t != registry.entity]
-    graph = Graph(edge_types=edge_types)
-    query = graph.query(authz=authz)
-    nodes = set()
-    for prop, value in proxy.itervalues():
-        if prop.type not in graph.edge_types:
-            continue
-        if prop.specificity(value) < 0.1:
-            continue
-        nodes.add(Node(prop.type, value))
-    for node in nodes:
-        query.node(node, count=True)
-    results = []
-    for res in query.execute():
-        if res.count is not None and res.count > 1:
-            item = {
-                "id": res.node.id,
-                "field": res.node.type.group,
-                "value": res.node.value,
-                "count": res.count,
-            }
-            results.append(item)
-    results.sort(key=lambda p: p["count"], reverse=True)
-    return results

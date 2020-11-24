@@ -299,6 +299,7 @@ class ProfileSerializer(Serializer):
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )
+        obj.pop("proxies", None)
         return obj
 
 

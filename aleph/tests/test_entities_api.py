@@ -601,52 +601,19 @@ class EntitiesApiTestCase(TestCase):
             content_type=JSON,
         )
 
-        query_string = "&".join("edge_types=" + t.name for t in registry.pivots)
-
-        url = "/api/2/entities/%s/expand?%s&limit=0" % (
-            person1.json["id"],
-            query_string,
-        )
-        stats = self.client.get(url, headers=headers)
-        assert stats.status_code == 200, (stats.status_code, stats.json)
-        validate(stats.json, "QueryResponse")
-        assert stats.json["total"] == 5, stats.json
-        results = stats.json["results"]
-        for result in results:
-            validate(result, "EntityExpand")
-            assert result["property"] in (
-                "passport",
-                "name",
-                "ownershipOwner",
-                "email",
-            ), stats.json  # noqa
-            if result["property"] == "email":
-                assert result["count"] == 2, results
-            else:
-                assert result["count"] == 1, results
-
-        url = "/api/2/entities/%s/expand?%s" % (
-            person1.json["id"],
-            query_string,
-        )  # noqa
+        url = "/api/2/entities/%s/expand?limit=100" % (person1.json["id"])
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, "EntityExpand")
-        assert res.json["total"] == 5, pformat(res.json)
+        assert res.json["total"] == 2, pformat(res.json)
         results = res.json["results"]
-        assert len(results) == 4, pformat(results)
+        assert len(results) == 2, pformat(results)
         for res in results:
             prop = res["property"]
             assert prop in (
                 "passport",
-                "name",
                 "ownershipOwner",
-                "email",
-            ), results  # noqa
-            if prop == "email":
-                assert res["count"] == 2
-                for ent in res["entities"]:
-                    assert ent["name"] in ("Undercover Osama", "John Doe")
+            ), results
             if prop == "ownershipOwner":
                 assert res["count"] == 1
                 assert len(res["entities"]) == 2
@@ -656,7 +623,7 @@ class EntitiesApiTestCase(TestCase):
                 assert res["count"] == 1
                 assert res["entities"][0]["schema"] == "Passport", res
 
-        url = "/api/2/entities/%s/expand?edge_types=entity" % (company1.json["id"])
+        url = "/api/2/entities/%s/expand" % (company1.json["id"])
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         validate(res.json, "EntityExpand")
@@ -669,7 +636,7 @@ class EntitiesApiTestCase(TestCase):
             assert res["count"] == 1
             # assert res['entities'][0]['name'] == 'Osama bin Laden'
 
-        url = "/api/2/entities/%s/expand?edge_types=entity"
+        url = "/api/2/entities/%s/expand"
         url = url % passport.json["id"]
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)

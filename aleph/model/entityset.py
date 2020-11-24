@@ -335,11 +335,10 @@ class EntitySetItem(db.Model, SoftDeleteModel):
                 "entity_id": self.entity_id,
                 "collection_id": self.collection_id,
                 "added_by_id": self.added_by_id,
+                "judgement": self.judgement,
                 "compared_to_entity_id": self.compared_to_entity_id,
             }
         )
-        if self.judgement:
-            data["judgement"] = self.judgement.value
         return data
 
     def __repr__(self):

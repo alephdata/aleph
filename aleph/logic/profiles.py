@@ -60,13 +60,15 @@ def get_profile(entityset_id, authz=None):
             resolver.queue(stub, Entity, item.get("entity_id"))
     resolver.resolve(stub)
     merged = None
+    data["proxies"] = []
     for item in data["items"]:
         item["entity"] = resolver.get(stub, Entity, item.get("entity_id"))
         if item["entity"] is not None:
             proxy = model.get_proxy(item["entity"])
             proxy.context = {}
+            data["proxies"].append(proxy)
             if merged is None:
-                merged = proxy
+                merged = proxy.clone()
                 merged.context["entities"] = [proxy.id]
             else:
                 merged.merge(proxy)
@@ -78,7 +80,7 @@ def get_profile(entityset_id, authz=None):
     # Polish it a bit:
     merged.id = data.get("id")
     merged = name_entity(merged)
-    data["merged"] = merged.to_dict()
+    data["merged"] = merged
     data["label"] = merged.caption
     return data
 
@@ -134,10 +136,9 @@ def pairwise_judgements(pairs, collection_id):
 
 
 def decide_pairwise(collection, entity, match_collection, match, judgement, authz):
-    """Store user feedback from an Xref result as an profile-type EntitySet
-    The problem here is that we're trying to translate a single pair-wise
-    user judgement into a merge or split judgement regarding a cluster of
-    entities.
+    """Store user feedback from an pairwise judgement as an profile-type EntitySet
+    The problem here is that we're trying to translate a single pair-wise user
+    judgement into a merge or split judgement regarding a cluster of entities.
 
     This works for most cases, with the exception that a profile, once
     established, cannot be split in a way that preserves what entities
