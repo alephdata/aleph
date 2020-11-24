@@ -135,27 +135,39 @@ def entity_tags(proxy, authz, prop_types=registry.pivots):
 
 
 def _counted_msearch(queries, authz, limit=0):
-    # pprint(queries)
-    body = []
+    """Run batched queries to count or retrieve entities with certain
+    property values."""
+    # The default case for this is that we want to retrieve only the
+    # counts for a bunch of filtered sub-queries. In this case, we can
+    # group the queries by the affected index.
+    # In some cases, the expand API wants to actually retrieve entities.
+    # Then, we need to make one query per filter.
+    grouped = {}
     for (index, key), query in sorted(queries.items()):
-        # Optimization hack: when we're not returning entity results, and
-        # multiple facet count queries affect the same index, we can bundle
-        # them into a single combined query in the hopes of better overall
-        # performance:
-        if limit == 0 and len(body) and body[-2]["index"] == index:
-            body[-1]["aggs"]["counts"]["filters"]["filters"][key] = query
-            continue
+        group = index if limit == 0 else (index, key)
+        if group not in grouped:
+            grouped[group] = {
+                "index": index,
+                "filters": [query],
+                "counts": {key: query},
+            }
+        else:
+            grouped[group]["filters"].append(query)
+            grouped[group]["counts"][key] = query
 
-        body.append({"index": index})
-        # TODO: Would it be more efficient to include a pre-filter here for
-        # the facet counting queries?
-        filters = [authz_query(authz)]
-        if limit > 0:
-            filters.append(query)
+    log.debug("Counts: %s queries, %s groups", len(queries), len(grouped))
+
+    body = []
+    for group in grouped.values():
+        body.append({"index": group.get("index")})
+        filters = group.get("filters")
+        if limit == 0 and len(filters) > 1:
+            filters = [{"bool": {"should": filters, "minimum_should_match": 1}}]
+        filters.append(authz_query(authz))
         query = {
             "size": limit,
             "query": {"bool": {"filter": filters}},
-            "aggs": {"counts": {"filters": {"filters": {key: query}}}},
+            "aggs": {"counts": {"filters": {"filters": group.get("counts")}}},
             "_source": ENTITY_SOURCE,
         }
         body.append(query)
