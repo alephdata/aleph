@@ -92,19 +92,6 @@ export class DiagramScreen extends Component {
     this.setState({ updateStatus });
   }
 
-  getSearchScopes() {
-    const { diagram } = this.props;
-    const scopes = [
-      {
-        listItem: <Collection.Label collection={diagram.collection} icon truncate={30} />,
-        label: diagram.collection.label,
-        onSearch: this.onCollectionSearch,
-      },
-    ];
-
-    return scopes;
-  }
-
   fetchIfNeeded() {
     const { diagram, entitySetId } = this.props;
 
@@ -165,7 +152,6 @@ export class DiagramScreen extends Component {
         <Screen
           title={diagram.label}
           description={diagram.summary || ''}
-          searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
           <DiagramEditor

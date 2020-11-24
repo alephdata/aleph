@@ -97,12 +97,6 @@ export class CollectionScreen extends Component {
 
     const isInvestigation = collection.casefile;
 
-    // const searchScope = {
-    //   listItem: <Collection.Label collection={collection} icon truncate={30} />,
-    //   label: collection.label,
-    //   onSearch: this.onSearch,
-    // };
-
     const content = isInvestigation ? this.renderInvestigation() : this.renderCollection();
 
     return (

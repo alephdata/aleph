@@ -42,19 +42,6 @@ export class ListScreen extends Component {
     });
   }
 
-  getSearchScopes() {
-    const { list } = this.props;
-    const scopes = [
-      {
-        listItem: <Collection.Label collection={list.collection} icon truncate={30} />,
-        label: list.collection.label,
-        onSearch: this.onCollectionSearch,
-      },
-    ];
-
-    return scopes;
-  }
-
   fetchIfNeeded() {
     const { list, countsResult, countsQuery, entitySetId } = this.props;
 
@@ -122,7 +109,6 @@ export class ListScreen extends Component {
         <Screen
           title={list.label}
           description={list.summary || ''}
-          searchScopes={list.collection.casefile ? [] : this.getSearchScopes()}
         >
           {breadcrumbs}
           <DualPane>

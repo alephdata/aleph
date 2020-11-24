@@ -73,70 +73,41 @@ class EntityScreen extends Component {
     });
   }
 
-  getEntitySearchScope(entity) {
-    if (!entity || !entity.schema) {
-      return null;
-    }
-    const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
-    if (!hasSearch) {
-      return null;
-    }
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: <Entity.Label entity={entity} icon truncate={30} />,
-      label: entity.getCaption(),
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
-  }
-
-  getReferenceSearchScope(entity) {
-    const { reference } = this.props;
-    if (!reference || reference.count < 10) {
-      return null;
-    }
-    const item = (
-      <>
-        <Entity.Label entity={entity} icon truncate={30} />
-        { ': ' }
-        <Property.Reverse prop={reference.property} />
-      </>
-    );
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: item,
-      label: reference.property.getReverse().label,
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
-  }
-
-  getSearchScopes() {
-    const { entity } = this.props;
-    const scopes = [];
-
-    const referenceScope = this.getReferenceSearchScope(entity);
-    if (referenceScope) {
-      scopes.push(referenceScope);
-    }
-
-    let currEntity = entity;
-    while (currEntity && EntityObject.isEntity(currEntity)) {
-      const entityScope = this.getEntitySearchScope(currEntity);
-      if (entityScope !== null) {
-        scopes.push(entityScope);
-      }
-      currEntity = currEntity.getFirst('parent');
-    }
-
-    if (!entity.collection.casefile) {
-      scopes.push({
-        listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
-        label: entity.collection.label,
-        onSearch: this.onCollectionSearch,
-      });
-    }
-
-    return scopes.reverse();
-  }
+  // getEntitySearchScope(entity) {
+  //   if (!entity || !entity.schema) {
+  //     return null;
+  //   }
+  //   const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
+  //   if (!hasSearch) {
+  //     return null;
+  //   }
+  //   const entityLink = getEntityLink(entity);
+  //   return {
+  //     listItem: <Entity.Label entity={entity} icon truncate={30} />,
+  //     label: entity.getCaption(),
+  //     onSearch: queryText => this.onSearch(queryText, entityLink),
+  //   };
+  // }
+  //
+  // getReferenceSearchScope(entity) {
+  //   const { reference } = this.props;
+  //   if (!reference || reference.count < 10) {
+  //     return null;
+  //   }
+  //   const item = (
+  //     <>
+  //       <Entity.Label entity={entity} icon truncate={30} />
+  //       { ': ' }
+  //       <Property.Reverse prop={reference.property} />
+  //     </>
+  //   );
+  //   const entityLink = getEntityLink(entity);
+  //   return {
+  //     listItem: item,
+  //     label: reference.property.getReverse().label,
+  //     onSearch: queryText => this.onSearch(queryText, entityLink),
+  //   };
+  // }
 
   render() {
     const {
@@ -193,7 +164,7 @@ class EntityScreen extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
+        <Screen title={entity.getCaption()} query={query}>
           {breadcrumbs}
           <DualPane>
             <DualPane.SidePane className="ItemOverview">
