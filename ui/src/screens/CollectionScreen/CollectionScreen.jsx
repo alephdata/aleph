@@ -97,11 +97,11 @@ export class CollectionScreen extends Component {
 
     const isInvestigation = collection.casefile;
 
-    const searchScope = {
-      listItem: <Collection.Label collection={collection} icon truncate={30} />,
-      label: collection.label,
-      onSearch: this.onSearch,
-    };
+    // const searchScope = {
+    //   listItem: <Collection.Label collection={collection} icon truncate={30} />,
+    //   label: collection.label,
+    //   onSearch: this.onSearch,
+    // };
 
     const content = isInvestigation ? this.renderInvestigation() : this.renderCollection();
 
@@ -110,7 +110,6 @@ export class CollectionScreen extends Component {
         <Screen
           title={collection.label}
           description={collection.summary}
-          searchScopes={!isInvestigation && [searchScope]}
         >
           {content}
         </Screen>

@@ -10,6 +10,8 @@ import { Count, ResultCount } from 'components/common';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
+import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
+
 import { collectionModes } from 'components/Collection/collectionModes';
 import { queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectCollectionXrefResult } from 'selectors';
@@ -94,6 +96,16 @@ class CollectionViews extends React.Component {
               <ResultCount result={xref} />
             </>}
           panel={<CollectionXrefMode collection={collection} />}
+        />
+        <Tab
+          id={'search'}
+          className="CollectionViews__tab"
+          title={
+            <>
+              <Icon className="left-icon" icon="search" />
+              <FormattedMessage id="entity.info.search" defaultMessage="Search" />
+            </>}
+          panel={<CollectionSearchMode collection={collection} />}
         />
       </Tabs>
     );

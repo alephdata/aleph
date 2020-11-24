@@ -42,7 +42,7 @@ class InvestigationOverviewMode extends React.Component {
     delete parsedHash.type;
 
     const query = {
-      q: queryText,
+      'entitiesq': queryText,
       'filter:collection_id': collection.id,
     };
 

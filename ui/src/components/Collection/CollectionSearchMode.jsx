@@ -17,6 +17,13 @@ const facetKeys = [
   'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes',
 ];
 
+const messages = defineMessages({
+  placeholder: {
+    id: 'collection.search.placeholder',
+    defaultMessage: 'Search {collection}',
+  },
+});
+
 class CollectionSearchMode extends React.Component {
   constructor(props) {
     super(props);
@@ -54,33 +61,36 @@ class CollectionSearchMode extends React.Component {
   }
 
   render() {
-    const { activeType, collection, query, result } = this.props;
+    const { activeType, collection, intl, query, result } = this.props;
+
+    // <ButtonGroup className="CollectionSearchMode__type-toggle">
+    //   <Button outlined onClick={() => this.toggleType('Thing')} icon="thing" {...(activeType === 'Thing' ? activeProps : {})}>
+    //     <FormattedMessage id="collection.search.entities" defaultMessage="Entities" />
+    //   </Button>
+    //   <Button outlined onClick={() => this.toggleType('Document')} icon="document" {...(activeType === 'Document' ? activeProps : {})}>
+    //     <FormattedMessage id="collection.search.documents" defaultMessage="Documents" />
+    //   </Button>
+    // </ButtonGroup>
 
     const activeProps = { active: true, intent: Intent.PRIMARY, outlined: false };
     return (
       <div className="CollectionSearchMode">
-        <div className="CollectionSearchMode__search-container">
-          <ButtonGroup className="CollectionSearchMode__type-toggle">
-            <Button outlined onClick={() => this.toggleType('Thing')} icon="thing" {...(activeType === 'Thing' ? activeProps : {})}>
-              <FormattedMessage id="collection.search.entities" defaultMessage="Entities" />
-            </Button>
-            <Button outlined onClick={() => this.toggleType('Document')} icon="document" {...(activeType === 'Document' ? activeProps : {})}>
-              <FormattedMessage id="collection.search.documents" defaultMessage="Documents" />
-            </Button>
-          </ButtonGroup>
-          <div className="CollectionSearchMode__search">
-            <SearchBox
-              onSearch={this.onSearch}
-              query={query}
-              inputProps={{ large: true, fill: true }}
-            />
-          </div>
-        </div>
         <FacetedEntitySearch
           facets={facetKeys}
           query={query}
           result={result}
-        />
+        >
+          <div className="CollectionSearchMode__search-container">
+            <div className="CollectionSearchMode__search">
+              <SearchBox
+                onSearch={this.onSearch}
+                query={query}
+                inputProps={{ large: true, fill: true }}
+                placeholder={intl.formatMessage(messages.placeholder, { collection: collection.label })}
+              />
+            </div>
+          </div>
+        </FacetedEntitySearch>
       </div>
     )
   }

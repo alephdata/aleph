@@ -129,7 +129,7 @@ export class FacetedEntitySearch extends React.Component {
   }
 
   render() {
-    const { facets, dateFacetIsOpen, dateFacetIntervals, query, result, intl } = this.props;
+    const { facets, dateFacetIsOpen, dateFacetIntervals, query, result, intl, children } = this.props;
     const { hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
@@ -187,6 +187,7 @@ export class FacetedEntitySearch extends React.Component {
             </div>
           </DualPane.SidePane>
           <DualPane.ContentPane>
+            {children}
             <div className="FacetedEntitySearch__control-bar">
               <div className="FacetedEntitySearch__control-bar__inner-container">
                 {!noResults && (

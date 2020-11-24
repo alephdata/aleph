@@ -3,6 +3,10 @@
 .CollectionHeading {
   margin: 0 0 35px;
 
+  &.padded {
+    margin-top: 25px;
+  }
+
   &__title, &__subtitle {
     margin: 10px 0;
     overflow-wrap: break-word;

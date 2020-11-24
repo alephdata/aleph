@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react';
+import c from 'classnames';
+
 import { Category, Collection, Skeleton } from 'components/common';
 
 import './CollectionHeading.scss';
@@ -22,7 +24,7 @@ class CollectionHeading extends PureComponent {
     const LabelComponent = link ? Collection.Link : Collection.Label;
 
     return (
-      <div className="CollectionHeading">
+      <div className={c("CollectionHeading", { "padded": !collection.casefile })}>
         {showCategory && (
           <div className="bp3-text-muted CollectionHeading__subheading">
             <Collection.Label collection={collection} label={false} />
