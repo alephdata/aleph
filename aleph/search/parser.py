@@ -139,14 +139,21 @@ class SearchQueryParser(QueryParser):
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""
-        return self.getint("facet_size:%s" % name, 50)
+        facet_size = self.getint("facet_size:%s" % name, 20)
+        # Added to mitigate a DDoS by scripted facet bots (2020-11-24):
+        if not self.authz.logged_in:
+            facet_size = min(50, facet_size)
+        return facet_size
 
     def get_facet_total(self, name):
         """Flag to perform a count of the total number of distinct values."""
+        if not self.authz.logged_in:
+            return False
         return self.getbool("facet_total:%s" % name, False)
 
     def get_facet_values(self, name):
         """Flag to disable returning actual values (i.e. count only)."""
+        # Added to mitigate a DDoS by scripted facet bots (2020-11-24):
         if self.get_facet_size(name) == 0:
             return False
         return self.getbool("facet_values:%s" % name, True)
