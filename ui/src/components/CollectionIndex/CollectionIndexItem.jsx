@@ -47,9 +47,11 @@ class CollectionIndexItem extends PureComponent {
           <Summary text={collection.summary} className="index-item__description" truncate={2} />
         )}
         <p className="index-item__details">
-          <span className="index-item__details__item">
-            <Category.Label category={collection.category} icon />
-          </span>
+          {!collection.casefile && (
+            <span className="index-item__details__item">
+              <Category.Label category={collection.category} icon />
+            </span>
+          )}
           <span className="index-item__details__item">
             <Icon icon="time" />
             <FormattedMessage

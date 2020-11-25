@@ -4,7 +4,6 @@ import {
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { ButtonGroup } from '@blueprintjs/core';
 
 import Query from 'app/Query';
 import { queryCollections } from 'actions';
@@ -15,7 +14,6 @@ import {
 import SearchFacets from 'components/Facet/SearchFacets';
 import Screen from 'components/Screen/Screen';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
-import CaseCreateButton from 'components/Toolbar/CaseCreateButton';
 
 import './CollectionIndexScreen.scss';
 
@@ -32,10 +30,6 @@ const messages = defineMessages({
   empty: {
     id: 'collection.index.empty',
     defaultMessage: 'No datasets were found.',
-  },
-  create: {
-    id: 'collection.index.create',
-    defaultMessage: 'New dataset',
   },
   no_results: {
     id: 'collection.index.no_results',
@@ -67,16 +61,9 @@ export class CollectionIndexScreen extends Component {
 
   render() {
     const { result, query, intl } = this.props;
-    const operation = (
-      <ButtonGroup>
-        <CaseCreateButton
-          icon="database"
-          text={intl.formatMessage(messages.create)}
-        />
-      </ButtonGroup>
-    );
+
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs>
         <Breadcrumbs.Text icon="database">
           <FormattedMessage
             id="collection.index.breadcrumb"
