@@ -173,7 +173,7 @@ export class SystemStatusScreen extends React.Component {
                 <thead>
                   <tr>
                     <th>
-                      <FormattedMessage id="collection.status.collection" defaultMessage="Dataset" />
+                      <FormattedMessage id="collection.status.collection" defaultMessage="Dataset/Investigation" />
                     </th>
                     <th className="numeric narrow">
                       <FormattedMessage id="collection.status.jobs" defaultMessage="Jobs" />

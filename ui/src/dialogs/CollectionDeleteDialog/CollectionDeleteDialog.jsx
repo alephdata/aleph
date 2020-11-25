@@ -16,6 +16,14 @@ const messages = defineMessages({
     id: 'collection.delete.cancel',
     defaultMessage: 'Cancel',
   },
+  question: {
+    id: 'collection.delete.question',
+    defaultMessage: 'Are you sure you want to delete this dataset and all contained items?',
+  },
+  question_casefile: {
+    id: 'collection.delete.question_casefile',
+    defaultMessage: 'Are you sure you want to delete this investigation and all contained items?',
+  },
 });
 
 
@@ -33,7 +41,7 @@ class CollectionDeleteDialog extends Component {
   }
 
   render() {
-    const { intl } = this.props;
+    const { collection, intl } = this.props;
     return (
       <Alert
         isOpen={this.props.isOpen}
@@ -44,10 +52,7 @@ class CollectionDeleteDialog extends Component {
         onCancel={this.props.toggleDialog}
         onConfirm={this.onDelete}
       >
-        <FormattedMessage
-          id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete this dataset and all contained items?"
-        />
+        {intl.formatMessage(messages[collection.casefile ? 'question_casefile' : 'question'])}
       </Alert>
     );
   }

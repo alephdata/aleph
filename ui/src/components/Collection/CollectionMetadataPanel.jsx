@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Summary } from 'components/common';
 import CollectionInfo from 'components/Collection/CollectionInfo';
 import CollectionStatus from 'components/Collection/CollectionStatus';

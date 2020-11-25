@@ -17,6 +17,14 @@ const messages = defineMessages({
     id: 'collection.xref.processing',
     defaultMessage: 'Cross-referencing started.',
   },
+  text: {
+    id: 'collection.xref.text',
+    defaultMessage: 'You will now cross-reference this dataset against all other sources. Start this process once and then wait for it to complete.',
+  },
+  text_casefile: {
+    id: 'collection.xref.text_casefile',
+    defaultMessage: 'You will now cross-reference this investigation against all other sources. Start this process once and then wait for it to complete.',
+  },
   cancel_button: {
     id: 'collection.xref.cancel',
     defaultMessage: 'Cancel',
@@ -58,7 +66,7 @@ class CollectionXrefDialog extends Component {
   }
 
   render() {
-    const { intl } = this.props;
+    const { collection, intl } = this.props;
     return (
       <Dialog
         icon="comparison"
@@ -68,10 +76,7 @@ class CollectionXrefDialog extends Component {
         title={intl.formatMessage(messages.title)}
       >
         <div className="bp3-dialog-body">
-          <FormattedMessage
-            id="collection.xref.text"
-            defaultMessage="You will now cross-reference this dataset against all other sources. Start this process once and then wait for it to complete."
-          />
+          {intl.formatMessage(messages[collection.casefile ? 'text_casefile' : 'text'])}
         </div>
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">

@@ -105,7 +105,7 @@ export class EntityMappingMode extends Component {
           <p className="text-page-subtitle">
             <FormattedMessage
               id="mapping.info"
-              defaultMessage="Follow the steps below to map items in this dataset to structured Follow the Money entites. For more information, please refer to the {link}"
+              defaultMessage="Follow the steps below to map items in this spreadsheet to structured Follow the Money entites. For more information, please refer to the {link}"
               values={{
                 link: (
                   <a

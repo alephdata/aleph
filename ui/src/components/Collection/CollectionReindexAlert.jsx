@@ -62,7 +62,7 @@ class CollectionReindexAlert extends Component {
         <p>
           <FormattedMessage
             id="collection.analyze.alert.text"
-            defaultMessage="You're about to re-index the entities in this dataset. This can be helpful if there are inconsistencies in how the data is presented."
+            defaultMessage="You're about to re-index the entities in this investigation. This can be helpful if there are inconsistencies in how the data is presented."
           />
         </p>
         <Checkbox

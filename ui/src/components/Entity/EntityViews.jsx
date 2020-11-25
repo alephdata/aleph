@@ -77,8 +77,8 @@ class EntityViews extends React.Component {
               </>
             )}
             panel={
-              <EntityInfoMode entity={entity} />
-               }
+              <EntityInfoMode entity={entity} isPreview />
+            }
           />
         )}
         {hasViewMode && (

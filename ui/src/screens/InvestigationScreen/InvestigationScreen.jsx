@@ -18,33 +18,22 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import { Collection, SinglePane, Breadcrumbs } from 'components/common';
 import { selectCollection, selectCollectionStatus } from 'selectors';
 
-import './CollectionScreen.scss';
+// import './InvestigationScreen.scss';
 
 
-export class CollectionScreen extends Component {
+export class InvestigationScreen extends Component {
   render() {
     const {
-      collection, collectionId, activeMode, extraBreadcrumbs,
+      activeMode, activeSearch, activeType, collection, collectionId,
     } = this.props;
 
-    if (!collection.isPending && collection.casefile) {
-      return <Redirect to={`/investigations/${collectionId}`} />;
+    if (!collection.isPending && !collection.casefile) {
+      return <Redirect to={`/datasets/${collectionId}`} />;
     }
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
     }
-
-    const operation = (
-      <CollectionManageMenu collection={collection} />
-    );
-
-    const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
-        {extraBreadcrumbs}
-      </Breadcrumbs>
-    );
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
@@ -52,22 +41,19 @@ export class CollectionScreen extends Component {
           title={collection.label}
           description={collection.summary}
         >
-          {breadcrumbs}
-          <SinglePane className="CollectionScreen">
-            <div className="CollectionScreen__main">
-              <CollectionHeading collection={collection} />
-              <div>
-                <CollectionViews
-                  collection={collection}
-                  activeMode={activeMode}
-                  isPreview={false}
-                />
-              </div>
-            </div>
-            <div className="CollectionScreen__secondary">
-              <CollectionMetadataPanel collection={collection} />
-            </div>
-          </SinglePane>
+          <InvestigationWrapper
+            collection={collection}
+            collectionId={collectionId}
+            activeMode={activeMode}
+            activeType={activeType}
+            activeSearch={activeSearch}
+          >
+            <InvestigationViews
+              collection={collection}
+              activeMode={activeMode}
+              isPreview={false}
+            />
+          </InvestigationWrapper>
         </Screen>
       </CollectionContextLoader>
     );
@@ -94,4 +80,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-)(CollectionScreen);
+)(InvestigationScreen);

@@ -1,7 +1,7 @@
 
 import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
+import { Button, ButtonGroup, Intent, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
 import { DialogToggleButton } from 'components/Toolbar'
 import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
@@ -23,6 +23,10 @@ const messages = defineMessages({
   delete: {
     id: 'collection.info.delete',
     defaultMessage: 'Delete dataset',
+  },
+  delete_casefile: {
+    id: 'collection.info.delete_casefile',
+    defaultMessage: 'Delete investigation',
   },
   reingest: {
     id: 'collection.info.reingest',
@@ -65,9 +69,10 @@ class CollectionManageMenu extends PureComponent {
         <DialogToggleButton
           ButtonComponent={MenuItem}
           buttonProps={{
-            text: intl.formatMessage(messages.delete),
+            text: intl.formatMessage(messages[collection.casefile ? 'delete_casefile' : 'delete']),
             icon: "trash",
             shouldDismissPopover: false,
+            intent: Intent.DANGER,
             ...buttonProps
           }}
           Dialog={CollectionDeleteDialog}

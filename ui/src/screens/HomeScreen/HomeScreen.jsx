@@ -11,6 +11,7 @@ import { AnimatedCount, SearchBox, Category, Country, Schema, Statistics } from 
 import { fetchStatistics } from 'actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'selectors';
 import getStatLink from 'util/getStatLink';
+import getCategoryLink from 'util/getCategoryLink';
 import Screen from 'components/Screen/Screen';
 import wordList from 'util/wordList';
 
@@ -153,7 +154,7 @@ export class HomeScreen extends Component {
                     )}
                     statistic={statistics.categories}
                     isPending={statistics.isPending}
-                    itemLink={name => `/datasets?collectionsfilter:category=${name}`}
+                    itemLink={name => getCategoryLink(name)}
                     itemLabel={name => <Category.Label category={name} />}
                   />
                 </div>

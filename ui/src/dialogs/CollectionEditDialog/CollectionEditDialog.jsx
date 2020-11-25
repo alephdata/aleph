@@ -51,6 +51,10 @@ const messages = defineMessages({
     id: 'collection.edit.title',
     defaultMessage: 'Dataset settings',
   },
+  title_casefile: {
+    id: 'collection.edit.title_casefile',
+    defaultMessage: 'Investigation settings',
+  },
   delete_button: {
     id: 'collection.edit.info.delete',
     defaultMessage: 'Delete',
@@ -153,7 +157,7 @@ export class CollectionEditDialog extends Component {
         icon="cog"
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
-        title={intl.formatMessage(messages.title)}
+        title={intl.formatMessage(messages[isCasefile ? 'title_casefile' : 'title'])}
         enforceFocus={false}
       >
         <div className="bp3-dialog-body">

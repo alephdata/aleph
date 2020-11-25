@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   diagram_description: {
     id: 'diagrams.description',
-    defaultMessage: 'Network diagrams let you visualize complex relationships within a dataset.',
+    defaultMessage: 'Network diagrams let you visualize complex relationships within an investigation.',
   },
   list_description: {
     id: 'lists.description',

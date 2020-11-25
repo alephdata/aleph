@@ -49,7 +49,7 @@ export class NotificationsScreen extends React.Component {
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="notification.description"
-                defaultMessage="View the latest updates to datasets, groups and tracking alerts you follow."
+                defaultMessage="View the latest updates to investigations, datasets, groups and tracking alerts you follow."
               />
             </p>
           </div>
