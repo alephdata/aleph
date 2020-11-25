@@ -17,7 +17,6 @@ const statFields = [
 
 
 class CollectionOverviewMode extends React.Component {
-
   renderStatisticsItem({ key, total, values }) {
     const { collection } = this.props;
     return (
@@ -45,27 +44,7 @@ class CollectionOverviewMode extends React.Component {
 
     return (
       <div className="CollectionOverviewMode">
-        <div className="CollectionOverviewMode__item">
-          <div className="CollectionOverviewMode__item__text-content">
-            {collection.summary && (
-              <>
-                <div className="CollectionOverviewMode__summary">
-                  <Summary text={collection.summary} />
-                </div>
-                <div className="CollectionOverviewMode__item__text-content__divider" />
-              </>
-            )}
-            <CollectionInfo collection={collection} />
-            <div className="CollectionOverviewMode__item__text-content__divider" />
-            <CollectionStatus collection={collection} showCancel={collection.writeable} />
-          </div>
-        </div>
         {statsToRender.map((stat) => this.renderStatisticsItem(stat))}
-        <div className="CollectionOverviewMode__item">
-          <div className="CollectionOverviewMode__item__text-content">
-            <CollectionReference collection={collection} />
-          </div>
-        </div>
       </div>
     );
   }

@@ -116,7 +116,6 @@ class InvestigationSidebar extends React.Component {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const hashQuery = queryString.parse(location.hash);

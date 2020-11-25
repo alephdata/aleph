@@ -15,6 +15,8 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import { Collection, SinglePane, Breadcrumbs } from 'components/common';
 import { selectCollection, selectCollectionStatus } from 'selectors';
 
+import './CollectionScreen.scss';
+
 
 export class CollectionScreen extends Component {
   constructor(props) {
@@ -71,14 +73,19 @@ export class CollectionScreen extends Component {
     return (
       <>
         {breadcrumbs}
-        <SinglePane>
-          <CollectionHeading collection={collection} />
-          <div>
-            <CollectionViews
-              collection={collection}
-              activeMode={activeMode}
-              isPreview={false}
-            />
+        <SinglePane className="CollectionScreen">
+          <div className="CollectionScreen__main">
+            <CollectionHeading collection={collection} />
+            <div>
+              <CollectionViews
+                collection={collection}
+                activeMode={activeMode}
+                isPreview={false}
+              />
+            </div>
+          </div>
+          <div className="CollectionScreen__secondary">
+
           </div>
         </SinglePane>
       </>
