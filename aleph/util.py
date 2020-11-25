@@ -27,6 +27,19 @@ def anonymize_email(name, email):
     return "%s <%s>" % (name, email)
 
 
+def get_remote_ip(request):
+    if request is not None:
+        forwarded_for = request.headers.getlist("X-Forwarded-For")
+        if len(forwarded_for):
+            return forwarded_for[0]
+        return request.remote_addr
+
+
+def get_request_path(request):
+    if request is not None:
+        return request.full_path
+
+
 class JSONEncoder(json.JSONEncoder):
     """This encoder will serialize all entities that have a to_dict
     method by calling that method and serializing the result."""

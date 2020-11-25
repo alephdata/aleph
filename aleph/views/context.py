@@ -14,6 +14,7 @@ from aleph.queues import get_rate_limit
 from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Role
+from aleph.util import get_remote_ip
 
 log = logging.getLogger(__name__)
 local = threading.local()
@@ -61,13 +62,6 @@ def enable_cache(vary_user=True, vary=None):
         raise NotModified()
 
 
-def _get_remote_ip():
-    forwarded_for = request.headers.getlist("X-Forwarded-For")
-    if len(forwarded_for):
-        return forwarded_for[0]
-    return request.remote_addr
-
-
 def _get_credential_authz(credential):
     if credential is None or not len(credential):
         return
@@ -100,7 +94,7 @@ def enable_rate_limit(request):
         return
     limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
     request.rate_limit = get_rate_limit(
-        _get_remote_ip(), limit=limit, interval=settings.API_RATE_WINDOW, unit=60
+        get_remote_ip(request), limit=limit, interval=settings.API_RATE_WINDOW, unit=60
     )
     if not request.rate_limit.check():
         raise TooManyRequests("Rate limit exceeded.")
@@ -179,7 +173,7 @@ def generate_request_log(resp, took):
         "method": request.method,
         "endpoint": request.endpoint,
         "referrer": request.referrer,
-        "ip": _get_remote_ip(),
+        "ip": get_remote_ip(request),
         "ua": str(request.user_agent),
         "time": datetime.utcnow().isoformat(),
         "session_id": getattr(request, "_session_id", None),

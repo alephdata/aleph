@@ -16,6 +16,7 @@ from aleph.index.util import (
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.index.entities import get_field_type
+from aleph.util import get_remote_ip, get_request_path
 
 log = logging.getLogger(__name__)
 
@@ -39,7 +40,8 @@ class Query(object):
     SORT_DEFAULT = ["_score"]
     SOURCE = {}
 
-    def __init__(self, parser):
+    def __init__(self, parser, request=None):
+        self.request = request
         self.parser = parser
 
     def get_text_query(self):
@@ -272,7 +274,14 @@ class Query(object):
         """Execute the query as assmbled."""
         # log.info("Search index: %s", self.get_index())
         result = es.search(index=self.get_index(), body=self.get_body())
-        log.info("[%s] took: %sms", self.to_text(), result.get("took"))
+        log.info(
+            "query: [%s] took: %sms - role_id: %s ip: %s path: %s",
+            self.to_text(),
+            result.get("took"),
+            self.parser.authz.id,
+            get_remote_ip(self.request),
+            get_request_path(self.request),
+        )
         # log.info("%s", pformat(self.get_body()))
         # log.info("%s", pformat(self.parser.filters))
         return result
@@ -281,5 +290,5 @@ class Query(object):
     def handle(cls, request, parser=None, **kwargs):
         if parser is None:
             parser = SearchQueryParser(request.args, request.authz)
-        query = cls(parser, **kwargs)
+        query = cls(parser, request=request, **kwargs)
         return SearchQueryResult(request, query)

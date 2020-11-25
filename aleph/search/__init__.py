@@ -54,10 +54,10 @@ class EntitiesQuery(Query):
 class MatchQuery(EntitiesQuery):
     """Given an entity, find the most similar other entities."""
 
-    def __init__(self, parser, entity=None, collection_ids=None):
+    def __init__(self, parser, request=None, entity=None, collection_ids=None):
         self.entity = entity
         self.collection_ids = collection_ids
-        super(MatchQuery, self).__init__(parser)
+        super(MatchQuery, self).__init__(parser, request=request)
 
     def get_index(self):
         # Attempt to find only matches within the "matchable" set of
@@ -80,10 +80,10 @@ class XrefQuery(Query):
     AUTHZ_FIELD = "match_collection_id"
     SOURCE = XREF_SOURCE
 
-    def __init__(self, parser, collection_id=None):
+    def __init__(self, parser, request=None, collection_id=None):
         self.collection_id = collection_id
         parser.highlight = False
-        super(XrefQuery, self).__init__(parser)
+        super(XrefQuery, self).__init__(parser, request=request)
 
     def get_filters(self, **kwargs):
         filters = super(XrefQuery, self).get_filters(**kwargs)
