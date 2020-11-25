@@ -1,7 +1,7 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-.CollectionMetadata {
+.CollectionMetadataPanel {
   &__vertical-container {
     @media screen and (max-width: $aleph-screen-md-max-width) {
       margin-right: 20px;
@@ -17,13 +17,9 @@
   }
 
   &__item {
-    // margin-right: 20px;
     margin-bottom: 20px;
-
     padding: 15px;
-    // flex: 1 1 33%;
     background: $light-gray5;
-    // color: white !important;
     border-radius: 5px;
     flex: 1 1 auto;
 

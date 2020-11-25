@@ -7,15 +7,12 @@ import queryString from 'query-string';
 import { AnchorButton, ButtonGroup, Intent } from '@blueprintjs/core';
 
 
-import { SearchBox, Skeleton, Summary } from 'components/common';
+import { SearchBox, Skeleton } from 'components/common';
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import InvestigationQuickLinks from 'components/Investigation/InvestigationQuickLinks';
-import CollectionReference from 'components/Collection/CollectionReference';
-import CollectionInfo from 'components/Collection/CollectionInfo';
-import CollectionStatus from 'components/Collection/CollectionStatus';
 import CollectionHeading from 'components/Collection/CollectionHeading';
-import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
+import CollectionMetadataPanel from 'components/Collection/CollectionMetadataPanel';
 import { selectNotificationsResult } from 'selectors';
 
 
@@ -117,23 +114,7 @@ class InvestigationOverviewMode extends React.Component {
           </div>
         </div>
         <div className="InvestigationOverview__secondary">
-          <div className="InvestigationOverview__secondary__vertical-container">
-            {collection.summary && (
-              <div className="InvestigationOverview__secondary__item">
-                <Summary text={collection.summary} />
-              </div>
-            )}
-            <CollectionStatus collection={collection} showCancel={collection.writeable} className="InvestigationOverview__secondary__item" />
-          </div>
-          <div className="InvestigationOverview__secondary__item">
-            <CollectionInfo collection={collection} />
-            <div className="InvestigationOverview__secondary__actions">
-              <CollectionManageMenu collection={collection} />
-            </div>
-          </div>
-          <div className="InvestigationOverview__secondary__item mobile-hide">
-            <CollectionReference collection={collection} />
-          </div>
+          <CollectionMetadataPanel collection={collection} />
         </div>
       </div>
     );

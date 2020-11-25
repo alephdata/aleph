@@ -9,6 +9,7 @@ import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
+import CollectionMetadataPanel from 'components/Collection/CollectionMetadataPanel';
 import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 import InvestigationViews from 'components/Investigation/InvestigationViews';
 import ErrorScreen from 'components/Screen/ErrorScreen';
@@ -85,7 +86,7 @@ export class CollectionScreen extends Component {
             </div>
           </div>
           <div className="CollectionScreen__secondary">
-
+            <CollectionMetadataPanel collection={collection} />
           </div>
         </SinglePane>
       </>
