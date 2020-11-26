@@ -205,9 +205,11 @@ def format_proxy(proxy, collection):
     data["origin"] = ensure_list(data.get("origin"))
     # Logical simplifications of dates:
     created_at = ensure_list(data.get("created_at"))
-    data["created_at"] = min(created_at, default=None)
+    if len(created_at):
+        data["created_at"] = min(created_at)
     updated_at = ensure_list(data.get("updated_at")) or created_at
-    data["updated_at"] = max(created_at, default=None)
+    if len(updated_at):
+        data["updated_at"] = max(updated_at)
 
     # log.info("%s", pformat(data))
     entity_id = data.pop("id")
