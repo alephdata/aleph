@@ -115,9 +115,8 @@ const entityEditorWrapper = (EditorComponent) => {
         }
       }
 
-      async deleteEntity(entity) {
+      async deleteEntity(entityId) {
         const { entitySetId, onStatusChange } = this.props;
-        const entityId = entity.id;
 
         onStatusChange(updateStates.IN_PROGRESS);
 
