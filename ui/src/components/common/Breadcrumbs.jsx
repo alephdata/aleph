@@ -111,27 +111,8 @@ export default class Breadcrumbs extends Component {
 
   static Text = TextBreadcrumb;
 
-  renderStatus() {
-    const { text, intent } = this.props.status;
-    let icon;
-
-    if (intent === Intent.PRIMARY) {
-      icon = <Spinner size="16" intent={intent} />;
-    } else if (intent === Intent.SUCCESS) {
-      icon = 'tick';
-    } else {
-      icon = 'error';
-    }
-
-    return (
-      <Tag large minimal intent={intent} className="Breadcrumbs__status" icon={icon}>
-        {text}
-      </Tag>
-    );
-  }
-
   render() {
-    const { collection, children, operation, status } = this.props;
+    const { collection, children, operation } = this.props;
 
     const collectionCrumbs = [];
     if (collection) {
@@ -150,8 +131,6 @@ export default class Breadcrumbs extends Component {
             </ul>
           </div>
           <div className="Breadcrumbs__right">
-            {status && this.renderStatus()}
-            {status && operation && <Divider />}
             {operation}
           </div>
         </div>
