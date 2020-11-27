@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Prompt, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { Intent } from '@blueprintjs/core';
+import { Divider } from '@blueprintjs/core';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
@@ -14,31 +13,8 @@ import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet } from 'components/common';
-import updateStates from 'util/updateStates';
+import { Breadcrumbs, Collection, EntitySet, UpdateStatus } from 'components/common';
 
-const messages = defineMessages({
-  status_success: {
-    id: 'diagram.status_success',
-    defaultMessage: 'Saved',
-  },
-  status_error: {
-    id: 'diagram.status_error',
-    defaultMessage: 'Error saving',
-  },
-  status_in_progress: {
-    id: 'diagram.status_in_progress',
-    defaultMessage: 'Saving...',
-  },
-  error_warning: {
-    id: 'diagram.error_warning',
-    defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
-  },
-  in_progress_warning: {
-    id: 'diagram.in_progress_warning',
-    defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
-  },
-});
 
 export class DiagramScreen extends Component {
   constructor(props) {
@@ -118,22 +94,8 @@ export class DiagramScreen extends Component {
     }
   }
 
-  formatStatus() {
-    const { intl } = this.props;
-    const { updateStatus } = this.state;
-
-    switch (updateStatus) {
-      case updateStates.IN_PROGRESS:
-        return { text: intl.formatMessage(messages.status_in_progress), intent: Intent.PRIMARY };
-      case updateStates.ERROR:
-        return { text: intl.formatMessage(messages.status_error), intent: Intent.DANGER };
-      default:
-        return { text: intl.formatMessage(messages.status_success), intent: Intent.SUCCESS };
-    }
-  }
-
   render() {
-    const { diagram, entitiesResult, intl } = this.props;
+    const { diagram, entitiesResult } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
@@ -145,11 +107,19 @@ export class DiagramScreen extends Component {
     }
 
     const operation = (
-      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch}/>
+      <>
+        {updateStatus && (
+          <>
+            <UpdateStatus status={updateStatus} />
+            <Divider />
+          </>
+        )}
+        <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch}/>
+      </>
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} status={this.formatStatus()}>
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.Text active>
           <EntitySet.Label entitySet={diagram} icon />
@@ -159,14 +129,6 @@ export class DiagramScreen extends Component {
 
     return (
       <>
-        <Prompt
-          when={updateStatus === updateStates.IN_PROGRESS}
-          message={intl.formatMessage(messages.in_progress_warning)}
-        />
-        <Prompt
-          when={updateStatus === updateStates.ERROR}
-          message={intl.formatMessage(messages.error_warning)}
-        />
         <Screen
           title={diagram.label}
           description={diagram.summary || ''}
@@ -204,6 +166,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  injectIntl,
   connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
 )(DiagramScreen);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Boundary, Button, ButtonGroup, ControlGroup, OverflowList, Popover } from '@blueprintjs/core';
-
-import { SearchBox } from 'components/common';
+import { Boundary, Button, ButtonGroup, ControlGroup, Divider, OverflowList, Popover } from '@blueprintjs/core';
+import c from 'classnames';
+import { SearchBox, UpdateStatus } from 'components/common';
 
 import './EntityActionBar.scss';
 
@@ -22,20 +22,27 @@ class EntityActionBar extends Component {
   }
 
   render() {
-    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, writeable } = this.props;
+    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, updateStatus, writeable } = this.props;
+
 
     return (
-      <>
-        <ControlGroup className="EntityActionBar">
-          {writeable && (
-            <OverflowList
-              items={children}
-              collapseFrom={Boundary.END}
-              visibleItemRenderer={(item, i) => <React.Fragment key={i}>{item}</React.Fragment>}
-              overflowRenderer={this.overflowListRenderer}
-              className="bp3-button-group"
-              observeParents
-            />
+      <ControlGroup className={c("EntityActionBar", {"show-status":!!updateStatus})}>
+        {writeable && (
+          <OverflowList
+            items={children}
+            collapseFrom={Boundary.END}
+            visibleItemRenderer={(item, i) => <React.Fragment key={i}>{item}</React.Fragment>}
+            overflowRenderer={this.overflowListRenderer}
+            className="bp3-button-group"
+            observeParents
+          />
+        )}
+        <div className="EntityActionBar__right">
+          {updateStatus && (
+            <>
+              <UpdateStatus status={updateStatus} />
+              <Divider />
+            </>
           )}
           <SearchBox
             onSearch={onSearchSubmit}
@@ -43,8 +50,8 @@ class EntityActionBar extends Component {
             query={query}
             inputProps={{ disabled: searchDisabled }}
           />
-        </ControlGroup>
-      </>
+        </div>
+      </ControlGroup>
     );
   }
 }

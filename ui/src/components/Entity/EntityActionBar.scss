@@ -1,7 +1,8 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-$search-bar-width: 250px;
+$search-bar-width: 200px;
+$status-width: 120px;
 
 .EntityActionBar {
   margin-bottom: $aleph-grid-size;
@@ -11,7 +12,6 @@ $search-bar-width: 250px;
     @include rtlSupportInvertedProp(margin, right, 1px, null);
 
     .bp3-input-group {
-      min-width: $search-bar-width;
       .bp3-input:not(:first-child) {
         @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3, null);
       }
@@ -27,7 +27,13 @@ $search-bar-width: 250px;
   }
 
   .bp3-overflow-list {
-    width: calc(100% - #{$search-bar-width + 10px});
+    width: calc(100% - #{$search-bar-width});
+  }
+
+  &.show-status {
+    .bp3-overflow-list {
+      width: calc(100% - #{$search-bar-width} - #{$status-width});
+    }
   }
 
   &__delete, .bp3-popover-wrapper .bp3-button  {
@@ -43,6 +49,10 @@ $search-bar-width: 250px;
         @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
       }
     }
+  }
+
+  &__right {
+    display: flex;
   }
 
   .prevent-flex-grow.bp3-popover-wrapper {

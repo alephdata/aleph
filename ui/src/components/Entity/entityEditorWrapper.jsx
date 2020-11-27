@@ -16,7 +16,7 @@ import {
   queryEntityExpand,
   updateEntity
 } from 'actions';
-import updateStates from 'util/updateStates';
+import { UpdateStatus } from 'components/common';
 
 const entityEditorWrapper = (EditorComponent) => {
   const WrappedComponent = (
@@ -77,16 +77,16 @@ const entityEditorWrapper = (EditorComponent) => {
 
       async createEntity(entity) {
         const { collection, entitySetId, onStatusChange } = this.props;
-        onStatusChange(updateStates.IN_PROGRESS);
+        onStatusChange(UpdateStatus.IN_PROGRESS);
         try {
           if (entitySetId) {
             await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
           } else {
             await this.props.createEntity({ entity, collection_id: collection.id });
           }
-          onStatusChange(updateStates.SUCCESS);
+          onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(updateStates.ERROR);
+          onStatusChange(UpdateStatus.ERROR);
         }
         return null;
       }
@@ -104,22 +104,21 @@ const entityEditorWrapper = (EditorComponent) => {
 
       async updateEntity(entity) {
         const { collection, onStatusChange } = this.props;
-        onStatusChange(updateStates.IN_PROGRESS);
+        onStatusChange(UpdateStatus.IN_PROGRESS);
 
         try {
           entity.collection = collection;
           await this.props.updateEntity(entity);
-          onStatusChange(updateStates.SUCCESS);
+          onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(updateStates.ERROR);
+          onStatusChange(UpdateStatus.ERROR);
         }
       }
 
-      async deleteEntity(entity) {
+      async deleteEntity(entityId) {
         const { entitySetId, onStatusChange } = this.props;
-        const entityId = entity.id;
 
-        onStatusChange(updateStates.IN_PROGRESS);
+        onStatusChange(UpdateStatus.IN_PROGRESS);
 
         try {
           if (entitySetId) {
@@ -127,9 +126,9 @@ const entityEditorWrapper = (EditorComponent) => {
           } else {
             await this.props.deleteEntity(entityId);
           }
-          onStatusChange(updateStates.SUCCESS);
+          onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(updateStates.ERROR);
+          onStatusChange(UpdateStatus.ERROR);
         }
       }
 
