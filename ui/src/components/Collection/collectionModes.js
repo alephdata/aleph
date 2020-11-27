@@ -5,8 +5,8 @@ import { withRouter } from 'react-router';
 import { Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { queryCollectionDiagrams, queryCollectionDocuments, queryCollectionLists, queryCollectionXrefFacets } from 'queries';
-import { selectEntitiesResult, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
+import { queryCollectionDiagrams, queryCollectionDocuments, queryCollectionLists, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
+import { selectEntitiesResult, selectEntitySetsResult, selectCollectionXrefResult, selectMappingsResult } from 'selectors';
 
 import { ResultCount } from 'components/common';
 
@@ -76,7 +76,9 @@ const collectionModes = {
   },
   mappings: {
     icon: 'new-object',
-    category: 'docTool'
+    category: 'docTool',
+    query: queryCollectionMappings,
+    result: selectMappingsResult,
   },
   mentions: {
     icon: 'tag',

@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionDocuments } from 'queries';
-import { fetchCollection, queryCollectionXref, queryEntitySets, queryEntities, mutate } from 'actions';
-import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitiesResult, selectEntitySetsResult } from 'selectors';
+import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionDocuments, queryCollectionMappings } from 'queries';
+import { fetchCollection, queryCollectionXref, queryEntitySets, queryEntities, queryMappings, mutate } from 'actions';
+import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitiesResult, selectEntitySetsResult, selectMappingsResult } from 'selectors';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 
 
@@ -53,6 +53,11 @@ class CollectionContextLoader extends PureComponent {
     if (docsResult.shouldLoad) {
       this.props.queryEntities({ query: docsQuery });
     }
+
+    const { mappingsQuery, mappingsResult } = this.props;
+    if (docsResult.shouldLoad) {
+      this.props.queryMappings({ query: mappingsQuery });
+    }
   }
 
 
@@ -77,6 +82,8 @@ const mapStateToProps = (state, ownProps) => {
   const listsQuery = entitySetsQuery.setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collectionId);
   const docsQuery = queryCollectionDocuments(location, collectionId);
+  const mappingsQuery = queryCollectionMappings(location, collectionId);
+
   return {
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
@@ -88,6 +95,8 @@ const mapStateToProps = (state, ownProps) => {
     listsResult: selectEntitySetsResult(state, listsQuery),
     docsQuery,
     docsResult: selectEntitiesResult(state, docsQuery),
+    mappingsQuery,
+    mappingsResult: selectMappingsResult(state, mappingsQuery),
   };
 };
 
@@ -97,6 +106,7 @@ const mapDispatchToProps = {
   queryCollectionXref,
   queryEntitySets,
   queryEntities,
+  queryMappings,
 };
 
 export default compose(

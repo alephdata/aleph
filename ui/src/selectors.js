@@ -164,6 +164,10 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
+export function selectMappingsResult(state, query) {
+  return selectResult(state, query, selectEntityMapping);
+}
+
 export function selectExpandResult(state, query) {
   return {
     results: [],

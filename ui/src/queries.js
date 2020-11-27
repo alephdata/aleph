@@ -58,6 +58,10 @@ export function queryCollectionLists(location, collectionId) {
   return queryCollectionEntitySets(location, collectionId).setFilter('type', 'list');
 }
 
+export function queryCollectionMappings(location, collectionId) {
+  return Query.fromLocation(`collections/${collectionId}/mappings`, location, {}, 'mappings');
+}
+
 export function queryCollectionXrefFacets(location, collectionId) {
   const path = `collections/${collectionId}/xref`;
   let query = Query.fromLocation(path, location, {}, 'xref');

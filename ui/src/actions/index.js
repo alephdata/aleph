@@ -38,6 +38,7 @@ export {
   fetchEntityMapping,
   flushEntityMapping,
   updateEntityMapping,
+  queryMappings,
 } from './entityMappingActions';
 export {
   createEntitySetMutate,

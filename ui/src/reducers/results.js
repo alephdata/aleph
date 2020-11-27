@@ -11,6 +11,7 @@ import {
   queryRoles,
   queryEntities,
   queryEntityExpand,
+  queryMappings,
   queryNotifications,
   queryCollectionXref,
 } from 'actions';
@@ -61,6 +62,14 @@ export default createReducer({
   }) => resultLoadError(state, query, error),
 
   [queryEntitySets.COMPLETE]: updateResults,
+
+  [queryMappings.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryMappings.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+
+  [queryMappings.COMPLETE]: updateResults,
 
   [queryCollectionXref.COMPLETE]: updateResults,
 

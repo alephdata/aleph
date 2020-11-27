@@ -8,6 +8,7 @@ import InvestigationOverviewMode from 'components/Investigation/InvestigationOve
 import InvestigationMentionsMode from 'components/Investigation/InvestigationMentionsMode';
 import InvestigationDocumentsMode from 'components/Investigation/InvestigationDocumentsMode';
 
+import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
@@ -28,6 +29,8 @@ class InvestigationViews extends React.Component {
         return <CollectionEntitySetsIndexMode collection={collection} type="diagram" />;
       case 'lists':
         return <CollectionEntitySetsIndexMode collection={collection} type="list" />;
+      case 'mappings':
+        return <CollectionMappingsMode collection={collection} />;
       case 'mentions':
         return <InvestigationMentionsMode collection={collection} />;
       case 'search':

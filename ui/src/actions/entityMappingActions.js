@@ -1,6 +1,8 @@
 import { endpoint } from 'app/api';
 import asyncActionCreator from './asyncActionCreator';
+import { queryEndpoint } from './util';
 
+export const queryMappings = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_MAPPINGS' });
 
 export const fetchEntityMapping = asyncActionCreator(({ id, collection }) => async () => {
   const response = await endpoint.get(`collections/${collection.id}/mappings?filter:table=${id}`, {});
@@ -40,3 +42,8 @@ export const updateEntityMapping = asyncActionCreator(
     return { id, data: response.data };
   }, { name: 'UPDATE_COLLECTION_MAPPING' },
 );
+
+// export const fetchCollectionMappings = asyncActionCreator((collection) => async () => {
+//   const response = await endpoint.get(`collections/${collection.id}/mappings`, {});
+//   return { id, data: response.data };
+// }, { name: 'FETCH_COLLECTION_MAPPINGS' });
