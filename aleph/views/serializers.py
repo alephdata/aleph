@@ -349,9 +349,11 @@ class NotificationSerializer(Serializer):
 class MappingSerializer(Serializer):
     def _collect(self, obj):
         self.queue(EntitySet, obj.get("entityset_id"))
+        self.queue(Entity, obj.get("table_id"))
 
     def _serialize(self, obj):
         obj["links"] = {}
         entityset_id = obj.pop("entityset_id", None)
         obj["entityset"] = self.resolve(EntitySet, entityset_id, EntitySetSerializer)
+        obj["table"] = self.resolve(Entity, obj.get("table_id", None), EntitySerializer)
         return obj
