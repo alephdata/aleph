@@ -2,7 +2,7 @@
 @import "app/mixins.scss";
 
 $search-bar-width: 200px;
-$status-width: 100px;
+$status-width: 120px;
 
 .EntityActionBar {
   margin-bottom: $aleph-grid-size;
@@ -29,7 +29,7 @@ $status-width: 100px;
   .bp3-overflow-list {
     width: calc(100% - #{$search-bar-width});
   }
-  
+
   &.show-status {
     .bp3-overflow-list {
       width: calc(100% - #{$search-bar-width} - #{$status-width});

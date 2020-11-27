@@ -28,7 +28,7 @@ const messages = defineMessages({
 
 export class NotificationsScreen extends React.Component {
   render() {
-    const { query, result, intl, role } = this.props;
+    const { query, intl, role } = this.props;
     const screenProps = {
       title: intl.formatMessage(messages.title),
       requireSession: true,

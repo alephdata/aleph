@@ -2,29 +2,27 @@ import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Prompt, withRouter } from 'react-router';
-import c from 'classnames';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
-
 
 const messages = defineMessages({
   status_success: {
-    id: 'diagram.status_success',
+    id: 'entity.status.success',
     defaultMessage: 'Saved',
   },
   status_error: {
-    id: 'diagram.status_error',
+    id: 'entity.status.error',
     defaultMessage: 'Error saving',
   },
   status_in_progress: {
-    id: 'diagram.status_in_progress',
+    id: 'entity.status.in_progress',
     defaultMessage: 'Saving...',
   },
   error_warning: {
-    id: 'diagram.error_warning',
+    id: 'entity.status.error_warning',
     defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
   },
   in_progress_warning: {
-    id: 'diagram.in_progress_warning',
+    id: 'entity.status.in_progress_warning',
     defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
   },
 });
@@ -57,6 +55,11 @@ class UpdateStatus extends PureComponent {
     }
   }
 
+  showPrompt(location) {
+    const { pathname, hash } = window.location;
+    return location.pathname !== pathname || location.hash !== hash
+  }
+
   render() {
     const { intl, status } = this.props;
     const { text, intent, icon } = this.getStatusValue();
@@ -65,11 +68,19 @@ class UpdateStatus extends PureComponent {
       <>
         <Prompt
           when={status === 'IN_PROGRESS'}
-          message={intl.formatMessage(messages.in_progress_warning)}
+          message={location => {
+            if (this.showPrompt(location)) {
+              return intl.formatMessage(messages.in_progress_warning);
+            }
+          }}
         />
         <Prompt
           when={status === 'ERROR'}
-          message={intl.formatMessage(messages.error_warning)}
+          message={location => {
+            if (this.showPrompt(location)) {
+              return intl.formatMessage(messages.error_warning);
+            }
+          }}
         />
         <Tag large minimal intent={intent} className="UpdateStatus" icon={icon}>
           {intl.formatMessage(text)}
@@ -83,11 +94,3 @@ export default compose(
   withRouter,
   injectIntl
 )(UpdateStatus);
-
-// class UpdateStatus {
-//   static Label = connect(mapStateToProps)(CategoryLabel);
-//
-//   static Link = connect(mapStateToProps)(CategoryLink);
-// }
-//
-// export default Category;

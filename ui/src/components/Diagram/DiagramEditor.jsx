@@ -63,7 +63,6 @@ class DiagramEditor extends React.Component {
     if (options?.propagate) {
       onStatusChange(UpdateStatus.IN_PROGRESS);
       const { selection, ...layoutData } = layout.toJSON();
-      const entities = entityManager.getEntities();
 
       const updatedDiagram = {
         ...diagram,

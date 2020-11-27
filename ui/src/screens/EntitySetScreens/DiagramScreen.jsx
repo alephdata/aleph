@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Prompt, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { Divider, Intent } from '@blueprintjs/core';
+import { Divider } from '@blueprintjs/core';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
@@ -96,7 +95,7 @@ export class DiagramScreen extends Component {
   }
 
   render() {
-    const { diagram, entitiesResult, intl } = this.props;
+    const { diagram, entitiesResult } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
@@ -167,6 +166,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  injectIntl,
   connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
 )(DiagramScreen);
