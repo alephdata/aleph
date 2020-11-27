@@ -1,0 +1,27 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.MappingIndexItem {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin: $aleph-grid-size 0;
+  * {
+    text-decoration: none !important;
+  }
+
+  &__main, &__secondary {
+    width: 50%;
+  }
+
+  &__main {
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  &__secondary {
+    @include rtl(text-align, right, left);
+  }
+
+}
