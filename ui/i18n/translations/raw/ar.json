@@ -1,924 +1,39 @@
 {
-  "auth.bad_request": {
-    "defaultMessage": "لم يقبل الخادم المعلومات المدخلة"
-  },
-  "auth.unauthorized": {
-    "defaultMessage": "غير مخول"
-  },
-  "auth.server_error": {
-    "defaultMessage": "خطأ في الخادم"
-  },
-  "auth.unknown_error": {
-    "defaultMessage": "خطأ غير متوقع"
-  },
-  "auth.success": {
-    "defaultMessage": "نجاح"
-  },
-  "alerts.heading": {
-    "defaultMessage": "إدارة التنبيهات"
-  },
-  "alerts.save": {
-    "defaultMessage": "تحديث"
+  "alert.manager.description": {
+    "defaultMessage": "ستتلقى إشعارات عند إضافة نتيجة جديدة تطابق أي من التنبيهات التي أعددتها أدناه."
   },
   "alerts.add_placeholder": {
     "defaultMessage": "إنشاء تنبيه لتتبع جديد ..."
   },
+  "alerts.heading": {
+    "defaultMessage": "إدارة التنبيهات"
+  },
   "alerts.no_alerts": {
     "defaultMessage": "أنت لا تجري أي عمليات بحث"
+  },
+  "alerts.save": {
+    "defaultMessage": "تحديث"
+  },
+  "alerts.title": {
+    "defaultMessage": "تتبع التنبيهات"
   },
   "alerts.track": {
     "defaultMessage": "تتبع"
   },
-  "pass.auth.not_same": {
-    "defaultMessage": "كلمات السر الخاصة بك ليست هي نفسها!"
+  "auth.bad_request": {
+    "defaultMessage": "لم يقبل الخادم المعلومات المدخلة"
   },
-  "password_auth.email": {
-    "defaultMessage": "البريد الإلكتروني"
+  "auth.server_error": {
+    "defaultMessage": "خطأ في الخادم"
   },
-  "password_auth.name": {
-    "defaultMessage": "اسمك"
+  "auth.success": {
+    "defaultMessage": "نجاح"
   },
-  "password_auth.password": {
-    "defaultMessage": "كلمة المرور"
+  "auth.unauthorized": {
+    "defaultMessage": "غير مخول"
   },
-  "password_auth.confirm": {
-    "defaultMessage": "تأكيد كلمة المرور"
-  },
-  "password_auth.signin": {
-    "defaultMessage": "تسجيل الدخول"
-  },
-  "password_auth.signup": {
-    "defaultMessage": "تسجيل"
-  },
-  "password_auth.activate": {
-    "defaultMessage": "تفعيل"
-  },
-  "nav.view_notifications": {
-    "defaultMessage": "إشعارات"
-  },
-  "nav.casefiles": {
-    "defaultMessage": "مجموعات بيانات شخصية"
-  },
-  "nav.diagrams": {
-    "defaultMessage": "مخططات الشبكة"
-  },
-  "nav.settings": {
-    "defaultMessage": "الإعدادات"
-  },
-  "nav.signout": {
-    "defaultMessage": "تسجيل الخروج"
-  },
-  "nav.signin_register": {
-    "defaultMessage": "تسجيل الدخول / تسجيل"
-  },
-  "nav.querylogs": {
-    "defaultMessage": "سجل البحث"
-  },
-  "nav.alerts": {
-    "defaultMessage": "تنبيهات"
-  },
-  "nav.signin": {
-    "defaultMessage": "تسجيل الدخول"
-  },
-  "collection.addSchema.placeholder": {
-    "defaultMessage": "أضف نوع كيان جديد"
-  },
-  "collection.publisher": {
-    "defaultMessage": "الناشر"
-  },
-  "collection.info_url": {
-    "defaultMessage": "رابط المعلومات"
-  },
-  "collection.data_url": {
-    "defaultMessage": "رابط البيانات"
-  },
-  "collection.creator": {
-    "defaultMessage": "مدير"
-  },
-  "collection.team": {
-    "defaultMessage": "الوصول إلى"
-  },
-  "collection.countries": {
-    "defaultMessage": "الدولة"
-  },
-  "collection.frequency": {
-    "defaultMessage": "تحديث"
-  },
-  "collection.updated_at": {
-    "defaultMessage": "آخر تحديث"
-  },
-  "collection.info.reingest": {
-    "defaultMessage": "إعادة استيعاب المستندات"
-  },
-  "collection.info.reindex": {
-    "defaultMessage": "أعد فهرسة كل المحتوى"
-  },
-  "collection.info.delete": {
-    "defaultMessage": "حذف قاعدة بيانات"
-  },
-  "collection.info.edit": {
-    "defaultMessage": "الإعدادات"
-  },
-  "collection.info.access": {
-    "defaultMessage": "مشاركة"
-  },
-  "collection.foreign_id": {
-    "defaultMessage": "هوية غير معروفة"
-  },
-  "collection.reconcile": {
-    "defaultMessage": "تطابق"
-  },
-  "collection.reconcile.description": {
-    "defaultMessage": "طابق بياناتك الخاصة مع الكيانات في هذه المجموعة باستخدام أداة {openrefine}  المجانية عن طريق إضافة نقطة نهاية التطابق"
-  },
-  "collection.reindex.processing": {
-    "defaultMessage": "بدأت الفهرسة"
-  },
-  "collection.reindex.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "collection.reindex.confirm": {
-    "defaultMessage": "ابدأ الفهرسة"
-  },
-  "collection.reindex.flush": {
-    "defaultMessage": "حذف الفهرس قبل إعادة الفهرسة"
-  },
-  "collection.analyze.alert.text": {
-    "defaultMessage": "على وشك إعادة فهرسة الكيانات في مجموعة البيانات. يمكن أن يكون مفيدًا إذا كان هناك خلل في كيفية تقديم البيانات"
-  },
-  "collection.reingest.processing": {
-    "defaultMessage": "بدء الإعادة"
-  },
-  "collection.analyze.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "collection.reingest.confirm": {
-    "defaultMessage": "بدء المعالجة"
-  },
-  "collection.reingest.index": {
-    "defaultMessage": "فهرسة المستندات فور معالجتها."
-  },
-  "collection.reingest.text": {
-    "defaultMessage": "أنت على وشك إعادة معالجة جميع المستندات في مجموعة البيانات. الامر يستغرق بعض الوقت"
-  },
-  "collection.statistics.showmore": {
-    "defaultMessage": "عرض المزيد"
-  },
-  "collection.status.cancel_button": {
-    "defaultMessage": "إلغاء العملية"
-  },
-  "collection.status.title": {
-    "defaultMessage": "جاري التحديث  ({percent}٪)"
-  },
-  "collection.status.message": {
-    "defaultMessage": "استمر في المرح أثناء معالجة البيانات."
-  },
-  "entity.info.overview": {
-    "defaultMessage": "نظرة عامة"
-  },
-  "entity.info.documents": {
-    "defaultMessage": "الوثائق/ المستندات"
-  },
-  "entity.info.entities": {
-    "defaultMessage": "كيانات"
-  },
-  "collection.info.diagrams": {
-    "defaultMessage": "مخططات الشبكة"
-  },
-  "entity.info.xref": {
-    "defaultMessage": "تطابق"
-  },
-  "xref.compute": {
-    "defaultMessage": "احسب"
-  },
-  "xref.recompute": {
-    "defaultMessage": "إعادة الحساب"
-  },
-  "xref.download": {
-    "defaultMessage": "تحميل ملف إكسل"
-  },
-  "collection.index.no_results": {
-    "defaultMessage": "لم يتم العثور على مجموعات بيانات مطابقة لهذا البحث"
-  },
-  "collection.last_updated": {
-    "defaultMessage": "اخر تاريخ تحذيث"
-  },
-  "footer.aleph": {
-    "defaultMessage": "أَلِف {version}"
-  },
-  "search.facets.no_items": {
-    "defaultMessage": "لا توجد خيارات"
-  },
-  "clipboard.copy.before": {
-    "defaultMessage": "نسخ إلى الحافظة"
-  },
-  "clipboard.copy.after": {
-    "defaultMessage": "تم النسخ إلى الحافظة!"
-  },
-  "file_import.error": {
-    "defaultMessage": "خطأ في استيراد الملف"
-  },
-  "valuelink.tooltip": {
-    "defaultMessage": "ذكرت {count}  في  {appName}"
-  },
-  "restricted.explain": {
-    "defaultMessage": "استخدام مجموعة البيانات مقيد. اقرأ الوصف واتصل بـ {creator} قبل استخدام هذه المادة."
-  },
-  "restricted.explain.creator": {
-    "defaultMessage": "مالك مجموعة البيانات"
-  },
-  "restricted.tag": {
-    "defaultMessage": "مقيد"
-  },
-  "result.searching": {
-    "defaultMessage": "جاري البحث"
-  },
-  "result.error": {
-    "defaultMessage": "خطأ"
-  },
-  "result.more_results": {
-    "defaultMessage": "أكثر من {total} نتيجة"
-  },
-  "result.none": {
-    "defaultMessage": "لم يتم العثور على نتائج"
-  },
-  "result.solo": {
-    "defaultMessage": "تم العثور على نتيجة واحدة"
-  },
-  "result.results": {
-    "defaultMessage": "العثور على {total} من النتائج"
-  },
-  "role.select.user": {
-    "defaultMessage": "اختر اسم المستخدم"
-  },
-  "search.placeholder": {
-    "defaultMessage": "بحث في {label}"
-  },
-  "queryLogs.add_placeholder": {
-    "defaultMessage": "تتبع عمليات البحث ..."
-  },
-  "queryLogs.no_alerts": {
-    "defaultMessage": "أنت لا تتبع أي عمليات بحث"
-  },
-  "queryLogs.query.search": {
-    "defaultMessage": "ابحث عن {query}"
-  },
-  "queryLogs.query.delete.tooltip": {
-    "defaultMessage": "إزالة من {listType}"
-  },
-  "search.callout_message": {
-    "defaultMessage": "بعض المصادر مخفية عن المستخدمين المجهولين. اضغط {signInButton} لعرض جميع النتائج المسموح لك بالوصول إليها."
-  },
-  "search.callout_message.button_text": {
-    "defaultMessage": "تسجيل الدخول"
-  },
-  "collection.index.sort.created_at": {
-    "defaultMessage": "انشاء تاريخ"
-  },
-  "collection.index.sort.updated_at": {
-    "defaultMessage": "تحديث التاريخ"
-  },
-  "collection.index.sort.count": {
-    "defaultMessage": "الحجم"
-  },
-  "collection.index.sort.label": {
-    "defaultMessage": "العنوان"
-  },
-  "collection.index.filter.mine": {
-    "defaultMessage": "تم انشاءه بواسطتي"
-  },
-  "collection.index.filter.all": {
-    "defaultMessage": "الكل"
-  },
-  "sorting.bar.label": {
-    "defaultMessage": "Sort by:"
-  },
-  "sorting.bar.direction": {
-    "defaultMessage": "اتجاه:"
-  },
-  "text.loading": {
-    "defaultMessage": "تحميل..."
-  },
-  "dashboard.notifications": {
-    "defaultMessage": "إشعارات"
-  },
-  "dashboard.history": {
-    "defaultMessage": "سجل البحث"
-  },
-  "dashboard.alerts": {
-    "defaultMessage": "تنبيهات"
-  },
-  "dashboard.cases": {
-    "defaultMessage": "مجموعات بيانات شخصية"
-  },
-  "dashboard.diagrams": {
-    "defaultMessage": "مخططات الشبكة"
-  },
-  "dashboard.settings": {
-    "defaultMessage": "الإعدادات"
-  },
-  "dashboard.status": {
-    "defaultMessage": "حالة النظام"
-  },
-  "dashboard.activity": {
-    "defaultMessage": "نشاط"
-  },
-  "dashboard.workspace": {
-    "defaultMessage": "مكان العمل"
-  },
-  "dashboard.groups": {
-    "defaultMessage": "مجموعات"
-  },
-  "diagrams.no_diagrams": {
-    "defaultMessage": "لا توجد رسوم بيانية للشبكة."
-  },
-  "diagram.last_updated": {
-    "defaultMessage": "تم التحديث {date}"
-  },
-  "entity.document.manager.empty": {
-    "defaultMessage": "لا توجد ملفات أو فهرس"
-  },
-  "entity.document.manager.emptyCanUpload": {
-    "defaultMessage": "لا توجد ملفات أو فهارس. نزل الملفات هنا أو انقر للتحميل"
-  },
-  "entity.document.manager.search_placeholder": {
-    "defaultMessage": "البحث عن الملفات"
-  },
-  "entity.document.manager.cannot_map": {
-    "defaultMessage": "حدد جدول لإنشاء كيانات منتظمة"
-  },
-  "document.upload.button": {
-    "defaultMessage": "تحميل"
-  },
-  "document.mapping.start": {
-    "defaultMessage": "إنشاء كيانات"
-  },
-  "refresh.callout_message": {
-    "defaultMessage": " المستندات قيد المعالجة. ارجوك انتظر..."
-  },
-  "entity.viewer.delete": {
-    "defaultMessage": "حذف"
-  },
-  "infoMode.collection": {
-    "defaultMessage": "مجموعة البيانات"
-  },
-  "infoMode.collection.entries": {
-    "defaultMessage": "{count} الكيانات"
-  },
-  "entity.manager.search_placeholder": {
-    "defaultMessage": "بحث في {schema}"
-  },
-  "entity.manager.search_empty": {
-    "defaultMessage": "لم يتم العثور على نتائج مطابقة لـ {schema}"
-  },
-  "entity.manager.edge_create_success": {
-    "defaultMessage": "تم ربط {source} و {target} بنجاح"
-  },
-  "entity.viewer.bulk_import": {
-    "defaultMessage": "إدخال بالجملة"
-  },
-  "entity.viewer.add_link": {
-    "defaultMessage": "إنشاء رابط"
-  },
-  "entity.viewer.add_to_diagram": {
-    "defaultMessage": "إضافة رسم بياني"
-  },
-  "mapping.title": {
-    "defaultMessage": "إنشاء كيانات منظمة"
-  },
-  "mapping.info": {
-    "defaultMessage": "اتبع الخطوات أدناه لتعيين العناصر في مجموعة البيانات الخاصة بالكيانات المنتظمة لتتبع كيانات المال. لمزيد من المعلومات، يرجى الرجوع إلى {link}"
-  },
-  "mapping.infoLink": {
-    "defaultMessage": "آلف لتوثيق بيانات البحث الشامل"
-  },
-  "entity.properties.missing": {
-    "defaultMessage": "غير معروف"
-  },
-  "entity.references.no_relationships": {
-    "defaultMessage": "هذا الكيان غير مرتبط بالبحث"
-  },
-  "entity.similar.empty": {
-    "defaultMessage": "لا توجد كيانات مشابهة"
-  },
-  "entity.tags.no_tags": {
-    "defaultMessage": "لم تستخرج أي محددات من هذا الكيان"
-  },
-  "tags.title": {
-    "defaultMessage": "المحددات المستخرجة"
-  },
-  "tags.results": {
-    "defaultMessage": "اقتباسات"
-  },
-  "sidebar.open": {
-    "defaultMessage": "توسيع النطاق"
-  },
-  "entity.info.info": {
-    "defaultMessage": "معلومات"
-  },
-  "entity.info.view": {
-    "defaultMessage": "عرض"
-  },
-  "entity.info.text": {
-    "defaultMessage": "النص"
-  },
-  "entity.info.attachments": {
-    "defaultMessage": "مرفقات"
-  },
-  "entity.info.tags": {
-    "defaultMessage": "تذكير"
-  },
-  "entity.info.similar": {
-    "defaultMessage": "مشابه"
-  },
-  "entity.mapping.view": {
-    "defaultMessage": "إنشاء كيانات"
-  },
-  "entity.search.no_results_title": {
-    "defaultMessage": "لم يتم العثور على نتائج"
-  },
-  "entity.search.no_results_description": {
-    "defaultMessage": "حاول أن تجعل بحثك أكثر عمومية"
-  },
-  "entity.search.empty_title": {
-    "defaultMessage": "هذا المجلد فارغ"
-  },
-  "entityset.create.login": {
-    "defaultMessage": "يجب عليك تسجيل الدخول لإنشاء {type}"
-  },
-  "entitysets.index.create": {
-    "defaultMessage": "{type} جديد"
-  },
-  "entitysets.index.import": {
-    "defaultMessage": "استيراد {type}"
-  },
-  "entity_set.menu.search_placeholder": {
-    "defaultMessage": "بحث في {set_name}"
-  },
-  "entityset.info.export": {
-    "defaultMessage": "تصدير"
-  },
-  "entityset.info.delete": {
-    "defaultMessage": "حذف"
-  },
-  "entityset.info.edit": {
-    "defaultMessage": "الإعدادات"
-  },
-  "entity.column.name": {
-    "defaultMessage": "Name"
-  },
-  "entity.column.collection_id": {
-    "defaultMessage": "مجموعة البيانات"
-  },
-  "entity.column.schema": {
-    "defaultMessage": "النوع"
-  },
-  "entity.column.countries": {
-    "defaultMessage": "الدول"
-  },
-  "entity.column.file_size": {
-    "defaultMessage": "الحجم"
-  },
-  "entity.column.dates": {
-    "defaultMessage": "التاريخ"
-  },
-  "search.screen.dates_label": {
-    "defaultMessage": "نتائج"
-  },
-  "search.screen.dates_title": {
-    "defaultMessage": "تواريخ"
-  },
-  "search.facets.filtersSelected": {
-    "defaultMessage": "{count} محدد"
-  },
-  "search.facets.showMore": {
-    "defaultMessage": "اعرض المزيد:"
-  },
-  "mapping.section1.title": {
-    "defaultMessage": "1.اختار أنواع الكيانات المراد إنشاؤها"
-  },
-  "mapping.section2.title": {
-    "defaultMessage": "2. تعيين أعمدة للكيان"
-  },
-  "mapping.section3.title": {
-    "defaultMessage": "3. تحقيق/ تدقيق"
-  },
-  "schemaSelect.button.thing": {
-    "defaultMessage": "أضف موضوعاَ جديداً"
-  },
-  "schemaSelect.button.relationship": {
-    "defaultMessage": "أضف علاقة جديدة"
-  },
-  "mapping.import.button": {
-    "defaultMessage": "استيراد الرسم التخطيطي الموجود"
-  },
-  "mapping.keyAssign.placeholder": {
-    "defaultMessage": "حدد المفاتيح من الأعمدة المتاحة"
-  },
-  "mapping.keyAssign.noResults": {
-    "defaultMessage": "لا توجد نتائج"
-  },
-  "mapping.entityAssign.noResults": {
-    "defaultMessage": "لا توجد مواضيع مطابقة متاحة"
-  },
-  "mapping.entityAssign.placeholder": {
-    "defaultMessage": "حدد موضوع"
-  },
-  "mapping.entityAssign.helpText": {
-    "defaultMessage": "يجب إنشاء كائن من النوع \"{range}\" ليكون {property}"
-  },
-  "mapping.keyAssign.additionalHelpToggle.more": {
-    "defaultMessage": "المزيد عن المفاتيح"
-  },
-  "mapping.keyAssign.additionalHelpToggle.less": {
-    "defaultMessage": "أقل"
-  },
-  "mapping.keyAssign.helpText": {
-    "defaultMessage": "حدد الأعمدة التي سيتم استخدامها لتحديد الكيانات الفريدة"
-  },
-  "mapping.keys": {
-    "defaultMessage": "المفاتيح الرئيسية"
-  },
-  "mapping.actions.create.toast": {
-    "defaultMessage": "الكيانات قيد الإنشاء"
-  },
-  "mapping.actions.save.toast": {
-    "defaultMessage": "إعادة إنشاء الكيانات"
-  },
-  "mapping.actions.delete.toast": {
-    "defaultMessage": "حذف اليحث الشامل وأي كيانات تم إنشاؤها ..."
-  },
-  "mapping.actions.flush.toast": {
-    "defaultMessage": "إزالة الكيانات التي تم إنشاؤها"
-  },
-  "mapping.error.keyMissing": {
-    "defaultMessage": "خطأ رئيسي: يجب أن يحتوي {id} الكيان على مفتاح واحد على الأقل"
-  },
-  "mapping.error.relationshipMissing": {
-    "defaultMessage": "خطأ في العلاقة: {id} يجب أن يكون للكيان {source} و {target} معين"
-  },
-  "mapping.actions.create": {
-    "defaultMessage": "إنشاء كيانات"
-  },
-  "mapping.actions.save": {
-    "defaultMessage": "حفظ التغييرات"
-  },
-  "mapping.actions.export": {
-    "defaultMessage": "تصدير البحث الشامل"
-  },
-  "mapping.actions.flush": {
-    "defaultMessage": "إزالة الكيانات التي تم إنشاؤها"
-  },
-  "mapping.actions.delete": {
-    "defaultMessage": "حذف"
-  },
-  "mapping.propAssign.errorBlank": {
-    "defaultMessage": "الأعمدة بدون عناوين لا يمكن تعيينها"
-  },
-  "mapping.propAssign.errorDuplicate": {
-    "defaultMessage": "الأعمدة بالعناوين المكررة لا يمكن تعيينها"
-  },
-  "mapping.propAssign.other": {
-    "defaultMessage": "آخر"
-  },
-  "mapping.propAssign.placeholder": {
-    "defaultMessage": "تعيين ملكية"
-  },
-  "mapping.types.objects": {
-    "defaultMessage": "مواضيع"
-  },
-  "mapping.types.relationships": {
-    "defaultMessage": "علاقات"
-  },
-  "mapping.status.updated": {
-    "defaultMessage": "آخر تحديث:"
-  },
-  "mapping.status.status": {
-    "defaultMessage": "الحالة:"
-  },
-  "mapping.status.error": {
-    "defaultMessage": "خطأ:"
-  },
-  "mapping.propAssign.literalPlaceholder": {
-    "defaultMessage": "أضف نصاً ثابتاً"
-  },
-  "mapping.propAssign.literalButtonText": {
-    "defaultMessage": "أضف قيمة ثابتة"
-  },
-  "mapping.propRemove": {
-    "defaultMessage": "إزالة هذه الخاصية من البحث الشامل"
-  },
-  "mapping.props": {
-    "defaultMessage": "الخصائص"
-  },
-  "nav.collections": {
-    "defaultMessage": "مجموعات البيانات"
-  },
-  "search.nolabel_placeholder": {
-    "defaultMessage": "ابحث عن شركات وأشخاص ومستندات"
-  },
-  "notifications.no_notifications": {
-    "defaultMessage": "ليس لديك إشعارات غير مرئية"
-  },
-  "search.filterTag.role": {
-    "defaultMessage": "تصفية حسب الوصول"
-  },
-  "search.filterTag.ancestors": {
-    "defaultMessage": "في:"
-  },
-  "search.filterTag.exclude": {
-    "defaultMessage": "ليس:"
-  },
-  "search.filterTag.dates_after": {
-    "defaultMessage": "بعد"
-  },
-  "search.filterTag.dates_before": {
-    "defaultMessage": "قبل"
-  },
-  "queryFilters.clearAll": {
-    "defaultMessage": "حذف الكل"
-  },
-  "navbar.alert_add": {
-    "defaultMessage": "اضغط لتلقي تنبيهات حول النتائج الجديدة بخصوص هذا البحث"
-  },
-  "navbar.alert_remove": {
-    "defaultMessage": "تتلقى تنبيهات حول هذا البحث"
-  },
-  "searchTips.exact.title": {
-    "defaultMessage": "تطابقات تامة"
-  },
-  "searchTips.exact.1": {
-    "defaultMessage": "استخدم \"\" لإستخراج المطابقات التامة فقط. على سبيل المثال ، لن يعرض البحث \"باراك أوباما\" سوى النتائج التي تحتوي على هذه العبارة الدقيقة \"باراك أوباما\""
-  },
-  "searchTips.spelling.title": {
-    "defaultMessage": "تهجئات مختلفة "
-  },
-  "searchTips.spelling.1": {
-    "defaultMessage": "استخدم ~ لزيادة غموض البحث. على سبيل المثال ، سوف يعطي البحث نتائج فلاديمير ~ 2 ليس فقط مصطلح \"فلاديمير\" ولكن أيضًا تهجئات مماثلة مثل \"فلاديماير\" أو \"فلادايمير\". يتم تعريف متغير الإملاء من خلال عدد الأخطاء الإملائية التي يجب القيام بها للانتقال من الكلمة الأصلية إلى المتغير."
-  },
-  "searchTips.composite.title": {
-    "defaultMessage": "دمج الاستعلامات."
-  },
-  "searchTips.composite.1": {
-    "defaultMessage": "The search <em>banana ice cream</em> prioritizes results that contain all three terms: banana, ice, and cream.  Results with one or more of the given terms will follow"
-  },
-  "searchTips.composite.2": {
-    "defaultMessage": "<em>+banana ice cream</em> requires that only results with the term banana will be returned, while ice and cream are optional"
-  },
-  "searchTips.composite.3": {
-    "defaultMessage": "<em>-banana ice cream</em> ensures that no results with the term banana will be returned"
-  },
-  "searchTips.composite.4": {
-    "defaultMessage": "<em> الموز و \"ايس كريم\"</em> يزودك فقط بالنتائج المتعلقة بكل من الموز والايس كريم"
-  },
-  "searchTips.composite.5": {
-    "defaultMessage": "<em> الموز  أو \"ايس كريم\"</em> يزودك فقط بالنتائج المتعلقة إما بالموز أو بالايس كريم"
-  },
-  "searchTips.composite.6": {
-    "defaultMessage": "يمكن دمج هذه العمليات كما تشاء. على سبيل المثال ، الموز و (\"الآيس كريم\" أو \"الجيلاتي\") - ستعرض الشوكولاتة نتائج حيث يظهر الموز مع الآيس كريم أو الجيلاتي في المستند ولكن بدون نتائج عن الشوكولاته."
-  },
-  "searchTips.proximity.title": {
-    "defaultMessage": "عمليات بحث تقريبية"
-  },
-  "searchTips.proximity.1": {
-    "defaultMessage": "للبحث عن مصطلحين على مسافة معينة من بعضهما البعض ، استخدم علامات الاقتباس المزدوجة \"\" حول الكلمتين ورمز ~ في نهاية العبارة. على سبيل المثال ، سيجد \"Bank America\" ~ 2 تطابقات ذات صلة بعبارات \"Bank\" و \"America\" التي تحدث في كلمتين من بعضهما البعض ، مثل \"Bank of America\" و \"Bank in America\" أو حتى \"America has a Bank \"."
-  },
-  "home.statistics.schemata": {
-    "defaultMessage": "البحث عن الكيانات {things}"
-  },
-  "home.statistics.othertypes": {
-    "defaultMessage": "أكثر من {count} من أنواع الكيانات"
-  },
-  "home.statistics.categories": {
-    "defaultMessage": "من مجموعات البيانات {collections}"
-  },
-  "home.statistics.other": {
-    "defaultMessage": "{count} مجموعة بيانات أخرى"
-  },
-  "home.statistics.countries": {
-    "defaultMessage": "في {count} دول"
-  },
-  "home.statistics.territories": {
-    "defaultMessage": "{count} من البلدان والأقاليم"
-  },
-  "case.create.login": {
-    "defaultMessage": "يجب عليك تسجيل الدخول لتحميل بياناتك"
-  },
-  "cases.index.create": {
-    "defaultMessage": "مجموعة بيانات جديدة"
-  },
-  "document.folder.button": {
-    "defaultMessage": "مجلد جديد"
-  },
-  "document.download": {
-    "defaultMessage": "تحميل"
-  },
-  "document.download.tooltip": {
-    "defaultMessage": "تحميل المستند/ الملف الأصلي"
-  },
-  "document.paging": {
-    "defaultMessage": "الصفحة {pageInput} من {numberOfPages}"
-  },
-  "collection.xref.empty": {
-    "defaultMessage": "لا توجد نتائج متطابقة مع مصادر أخرى"
-  },
-  "xref.entity": {
-    "defaultMessage": "مرجع"
-  },
-  "xref.match": {
-    "defaultMessage": "تطابق محتمل"
-  },
-  "xref.score": {
-    "defaultMessage": "نتيجة"
-  },
-  "xref.match_collection": {
-    "defaultMessage": "مجموعة البيانات"
-  },
-  "diagram.add_entities.create_new": {
-    "defaultMessage": "إنشاء رسم بياني جديد"
-  },
-  "diagram.add_entities.title": {
-    "defaultMessage": "أضف الكيانات إلى الرسم البياني"
-  },
-  "diagram.add_entities.select_placeholder": {
-    "defaultMessage": "اختار رسما بيانيا موجود"
-  },
-  "diagram.add_entities.select_empty": {
-    "defaultMessage": "لا يوجد رسم بياني"
-  },
-  "diagram.add_entities.success": {
-    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {diagram}"
-  },
-  "diagram.add_entities.selected_count": {
-    "defaultMessage": "You have selected {count} {count_simple, plural, one {entity} other {entities}} to add to a diagram."
-  },
-  "diagram.add.or": {
-    "defaultMessage": "أو"
-  },
-  "signup.title": {
-    "defaultMessage": "فعل حسابك"
-  },
-  "signup.register": {
-    "defaultMessage": "تسجيل"
-  },
-  "signup.register.question": {
-    "defaultMessage": "ليس لديك حساب؟ سجل!"
-  },
-  "signup.inbox.title": {
-    "defaultMessage": "تحقق من بريدك الوارد"
-  },
-  "signup.inbox.desc": {
-    "defaultMessage": "لقد أرسلنا لك بريدًا إلكترونيًا ، يرجى اتباع الرابط لإتمام عملية التسجيل"
-  },
-  "signup.login": {
-    "defaultMessage": "هل لديك حساب؟ تسجيل الدخول!"
-  },
-  "login.oauth": {
-    "defaultMessage": "تسجيل الدخول عبر OAuth"
-  },
-  "collection.edit.title": {
-    "defaultMessage": "الإعدادات الخاصة بمجموعة البيانات"
-  },
-  "collection.edit.save_success": {
-    "defaultMessage": "تم حفظ التغييرات"
-  },
-  "collection.edit.cancel_button": {
-    "defaultMessage": "الغاء"
-  },
-  "collection.edit.save_button": {
-    "defaultMessage": "حفظ التغييرات"
-  },
-  "collection.edit.permissionstable.view": {
-    "defaultMessage": "عرض"
-  },
-  "collection.edit.permissionstable.edit": {
-    "defaultMessage": "تعديل"
-  },
-  "collection.edit.groups": {
-    "defaultMessage": "مجموعات"
-  },
-  "collection.edit.users": {
-    "defaultMessage": "المستخدمون"
-  },
-  "collection.delete.confirm": {
-    "defaultMessage": "حذف"
-  },
-  "collection.delete.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "collection.delete.question": {
-    "defaultMessage": "هل أنت متاكد من أنك تريد حذف مجموعة البيانات وجميع محتوياتها؟"
-  },
-  "collection.edit.info.placeholder_label": {
-    "defaultMessage": "اسم"
-  },
-  "collection.edit.info.placeholder_summary": {
-    "defaultMessage": "ملخص موجز"
-  },
-  "collection.edit.info.placeholder_publisher": {
-    "defaultMessage": "المنظمة أو الشخص الذي ينشر هذه البيانات"
-  },
-  "collection.edit.info.placeholder_publisher_url": {
-    "defaultMessage": "رابط الناشر"
-  },
-  "collection.edit.info.placeholder_info_url": {
-    "defaultMessage": "رابط لمزيد من المعلومات"
-  },
-  "collection.edit.info.placeholder_data_url": {
-    "defaultMessage": "رابط البيانات الأولية في ملف قابل للتحميل"
-  },
-  "collection.edit.info.placeholder_country": {
-    "defaultMessage": "اختيار الدول"
-  },
-  "collection.edit.info.placeholder_language": {
-    "defaultMessage": "اختيار اللغات"
-  },
-  "collection.edit.info.restricted": {
-    "defaultMessage": "هذه المجموعة محظورة ويجب تنبيه المتصفحين"
-  },
-  "collection.edit.info.delete": {
-    "defaultMessage": "حذف"
-  },
-  "collection.edit.info.analyze": {
-    "defaultMessage": "إعادة المعالجة"
-  },
-  "collection.edit.info.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "collection.edit.info.save": {
-    "defaultMessage": "حفظ التغييرات"
-  },
-  "collection.edit.info.label": {
-    "defaultMessage": "الاسم"
-  },
-  "collection.edit.info.category": {
-    "defaultMessage": "الفئة"
-  },
-  "collection.edit.info.summary": {
-    "defaultMessage": "ملخص"
-  },
-  "collection.edit.info.publisher": {
-    "defaultMessage": "الناشر"
-  },
-  "collection.edit.info.publisher_url": {
-    "defaultMessage": "رابط الناشر"
-  },
-  "collection.edit.info.info_url": {
-    "defaultMessage": "رابط المعلومات"
-  },
-  "collection.edit.info.data_url": {
-    "defaultMessage": "رابط مصدر البيانات"
-  },
-  "collection.edit.info.frequency": {
-    "defaultMessage": "معدل التحديث"
-  },
-  "collection.edit.info.creator": {
-    "defaultMessage": "مدير"
-  },
-  "collection.edit.info.countries": {
-    "defaultMessage": "الدول"
-  },
-  "collection.edit.info.languages": {
-    "defaultMessage": "اللغات"
-  },
-  "case.languages.helper": {
-    "defaultMessage": "تستخدم ميزة التعرف البصري على النصوص  غير اللاتينية"
-  },
-  "collection.edit.info.foreign_id": {
-    "defaultMessage": "هوية أجنبية"
-  },
-  "collection.xref.title": {
-    "defaultMessage": "مطابقة"
-  },
-  "collection.xref.processing": {
-    "defaultMessage": "بدأت  عملية المطابقة"
-  },
-  "collection.xref.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "collection.xref.confirm": {
-    "defaultMessage": "تأكيد"
-  },
-  "collection.xref.text": {
-    "defaultMessage": "ستقوم الآن بمطابقة مجموعة البيانات هذه مع المصادر الأخرى. انتظر حتى إتمام العملية"
-  },
-  "case.label_placeholder": {
-    "defaultMessage": "بيانات غير معنونة\nبيانات بدون عنوان"
-  },
-  "case.language_placeholder": {
-    "defaultMessage": "اختيار اللغة"
-  },
-  "case.summary": {
-    "defaultMessage": "وصف موجز لقاعدة البيانات"
-  },
-  "case.save": {
-    "defaultMessage": "حفظ"
-  },
-  "case.users": {
-    "defaultMessage": "البحث عن المستخدمين"
-  },
-  "case.title": {
-    "defaultMessage": "إنشاء مجموعة بيانات شخصية"
+  "auth.unknown_error": {
+    "defaultMessage": "خطأ غير متوقع"
   },
   "case.choose.name": {
     "defaultMessage": "عنوان"
@@ -929,38 +44,515 @@
   "case.chose.languages": {
     "defaultMessage": "اللغات"
   },
+  "case.create.login": {
+    "defaultMessage": "يجب عليك تسجيل الدخول لتحميل بياناتك"
+  },
+  "case.description": {
+    "defaultMessage": "تتيح لك مجموعات البيانات الشخصية تحميل ومشاركة مستندات وبيانات القصة. يمكنك تحميل ملفات PDF أو بريد إلكتروني أو جداول البيانات ما جعل عملية البحث والتصفح أسهل."
+  },
+  "case.label_placeholder": {
+    "defaultMessage": "بيانات غير معنونة\nبيانات بدون عنوان"
+  },
+  "case.language_placeholder": {
+    "defaultMessage": "اختيار اللغة"
+  },
+  "case.languages.helper": {
+    "defaultMessage": "تستخدم ميزة التعرف البصري على النصوص  غير اللاتينية"
+  },
+  "case.save": {
+    "defaultMessage": "حفظ"
+  },
   "case.share.with": {
     "defaultMessage": "مشاركة مع"
   },
-  "document.folder.title": {
-    "defaultMessage": "مجلد جديد"
+  "case.summary": {
+    "defaultMessage": "وصف موجز لقاعدة البيانات"
   },
-  "document.folder.save": {
-    "defaultMessage": "إنشاء"
+  "case.title": {
+    "defaultMessage": "إنشاء مجموعة بيانات شخصية"
   },
-  "document.folder.untitled": {
-    "defaultMessage": "عنوان المجلد"
+  "case.users": {
+    "defaultMessage": "البحث عن المستخدمين"
+  },
+  "cases.browser.breadcrumb": {
+    "defaultMessage": "نظرة عامة على الحالات"
+  },
+  "cases.create": {
+    "defaultMessage": "New personal dataset"
+  },
+  "cases.empty": {
+    "defaultMessage": "You do not have any personal datasets yet."
+  },
+  "cases.no_results": {
+    "defaultMessage": "No personal datasets were found matching this query."
+  },
+  "cases.placeholder": {
+    "defaultMessage": "البحث في مجموعات البيانات الشخصية ..."
+  },
+  "cases.title": {
+    "defaultMessage": "مجموعات بيانات شخصية"
+  },
+  "clipboard.copy.after": {
+    "defaultMessage": "تم النسخ إلى الحافظة!"
+  },
+  "clipboard.copy.before": {
+    "defaultMessage": "نسخ إلى الحافظة"
+  },
+  "collection.addSchema.placeholder": {
+    "defaultMessage": "أضف نوع كيان جديد"
+  },
+  "collection.analyze.alert.text": {
+    "defaultMessage": "على وشك إعادة فهرسة الكيانات في مجموعة البيانات. يمكن أن يكون مفيدًا إذا كان هناك خلل في كيفية تقديم البيانات"
+  },
+  "collection.analyze.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "collection.cancel.button": {
+    "defaultMessage": "الغاء"
+  },
+  "collection.countries": {
+    "defaultMessage": "الدولة"
+  },
+  "collection.creator": {
+    "defaultMessage": "مدير"
+  },
+  "collection.data_url": {
+    "defaultMessage": "رابط البيانات"
+  },
+  "collection.delete.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "collection.delete.confirm": {
+    "defaultMessage": "حذف"
+  },
+  "collection.delete.question": {
+    "defaultMessage": "هل أنت متاكد من أنك تريد حذف مجموعة البيانات وجميع محتوياتها؟"
+  },
+  "collection.edit.access_title": {
+    "defaultMessage": "Access control"
+  },
+  "collection.edit.cancel_button": {
+    "defaultMessage": "الغاء"
+  },
+  "collection.edit.groups": {
+    "defaultMessage": "مجموعات"
+  },
+  "collection.edit.info.analyze": {
+    "defaultMessage": "إعادة المعالجة"
+  },
+  "collection.edit.info.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "collection.edit.info.category": {
+    "defaultMessage": "الفئة"
+  },
+  "collection.edit.info.countries": {
+    "defaultMessage": "الدول"
+  },
+  "collection.edit.info.creator": {
+    "defaultMessage": "مدير"
+  },
+  "collection.edit.info.data_url": {
+    "defaultMessage": "رابط مصدر البيانات"
+  },
+  "collection.edit.info.delete": {
+    "defaultMessage": "حذف"
+  },
+  "collection.edit.info.foreign_id": {
+    "defaultMessage": "هوية أجنبية"
+  },
+  "collection.edit.info.frequency": {
+    "defaultMessage": "معدل التحديث"
+  },
+  "collection.edit.info.info_url": {
+    "defaultMessage": "رابط المعلومات"
+  },
+  "collection.edit.info.label": {
+    "defaultMessage": "الاسم"
+  },
+  "collection.edit.info.languages": {
+    "defaultMessage": "اللغات"
+  },
+  "collection.edit.info.placeholder_country": {
+    "defaultMessage": "اختيار الدول"
+  },
+  "collection.edit.info.placeholder_data_url": {
+    "defaultMessage": "رابط البيانات الأولية في ملف قابل للتحميل"
+  },
+  "collection.edit.info.placeholder_info_url": {
+    "defaultMessage": "رابط لمزيد من المعلومات"
+  },
+  "collection.edit.info.placeholder_label": {
+    "defaultMessage": "اسم"
+  },
+  "collection.edit.info.placeholder_language": {
+    "defaultMessage": "اختيار اللغات"
+  },
+  "collection.edit.info.placeholder_publisher": {
+    "defaultMessage": "المنظمة أو الشخص الذي ينشر هذه البيانات"
+  },
+  "collection.edit.info.placeholder_publisher_url": {
+    "defaultMessage": "رابط الناشر"
+  },
+  "collection.edit.info.placeholder_summary": {
+    "defaultMessage": "ملخص موجز"
+  },
+  "collection.edit.info.publisher": {
+    "defaultMessage": "الناشر"
+  },
+  "collection.edit.info.publisher_url": {
+    "defaultMessage": "رابط الناشر"
+  },
+  "collection.edit.info.restricted": {
+    "defaultMessage": "هذه المجموعة محظورة ويجب تنبيه المتصفحين"
+  },
+  "collection.edit.info.save": {
+    "defaultMessage": "حفظ التغييرات"
+  },
+  "collection.edit.info.summary": {
+    "defaultMessage": "ملخص"
+  },
+  "collection.edit.permissionstable.edit": {
+    "defaultMessage": "تعديل"
+  },
+  "collection.edit.permissionstable.view": {
+    "defaultMessage": "عرض"
+  },
+  "collection.edit.save_button": {
+    "defaultMessage": "حفظ التغييرات"
+  },
+  "collection.edit.save_success": {
+    "defaultMessage": "تم حفظ التغييرات"
+  },
+  "collection.edit.title": {
+    "defaultMessage": "الإعدادات الخاصة بمجموعة البيانات"
+  },
+  "collection.edit.users": {
+    "defaultMessage": "المستخدمون"
+  },
+  "collection.foreign_id": {
+    "defaultMessage": "هوية غير معروفة"
+  },
+  "collection.frequency": {
+    "defaultMessage": "تحديث"
+  },
+  "collection.index.breadcrumb": {
+    "defaultMessage": "مجموعات البيانات"
+  },
+  "collection.index.create": {
+    "defaultMessage": "New dataset"
+  },
+  "collection.index.empty": {
+    "defaultMessage": "No datasets were found."
+  },
+  "collection.index.filter.all": {
+    "defaultMessage": "الكل"
+  },
+  "collection.index.filter.mine": {
+    "defaultMessage": "تم انشاءه بواسطتي"
+  },
+  "collection.index.no_results": {
+    "defaultMessage": "No datasets were found matching this query."
+  },
+  "collection.index.placeholder": {
+    "defaultMessage": "البحث في مجموعات البيانات ..."
+  },
+  "collection.index.sort.count": {
+    "defaultMessage": "الحجم"
+  },
+  "collection.index.sort.created_at": {
+    "defaultMessage": "انشاء تاريخ"
+  },
+  "collection.index.sort.label": {
+    "defaultMessage": "العنوان"
+  },
+  "collection.index.sort.updated_at": {
+    "defaultMessage": "تحديث التاريخ"
+  },
+  "collection.index.title": {
+    "defaultMessage": "مجموعات البيانات"
+  },
+  "collection.info.access": {
+    "defaultMessage": "مشاركة"
+  },
+  "collection.info.delete": {
+    "defaultMessage": "حذف قاعدة بيانات"
+  },
+  "collection.info.diagrams": {
+    "defaultMessage": "مخططات الشبكة"
+  },
+  "collection.info.edit": {
+    "defaultMessage": "الإعدادات"
+  },
+  "collection.info.lists": {
+    "defaultMessage": "Lists"
+  },
+  "collection.info.reindex": {
+    "defaultMessage": "أعد فهرسة كل المحتوى"
+  },
+  "collection.info.reingest": {
+    "defaultMessage": "إعادة استيعاب المستندات"
+  },
+  "collection.info_url": {
+    "defaultMessage": "رابط المعلومات"
+  },
+  "collection.last_updated": {
+    "defaultMessage": "اخر تاريخ تحذيث"
+  },
+  "collection.publisher": {
+    "defaultMessage": "الناشر"
+  },
+  "collection.reconcile": {
+    "defaultMessage": "تطابق"
+  },
+  "collection.reconcile.description": {
+    "defaultMessage": "Match your own data against the entities in this collection using the free {openrefine} tool by adding the reconciliation endpoint."
+  },
+  "collection.reindex.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "collection.reindex.confirm": {
+    "defaultMessage": "ابدأ الفهرسة"
+  },
+  "collection.reindex.flush": {
+    "defaultMessage": "حذف الفهرس قبل إعادة الفهرسة"
+  },
+  "collection.reindex.processing": {
+    "defaultMessage": "بدأت الفهرسة"
+  },
+  "collection.reingest.confirm": {
+    "defaultMessage": "بدء المعالجة"
+  },
+  "collection.reingest.index": {
+    "defaultMessage": "فهرسة المستندات فور معالجتها."
+  },
+  "collection.reingest.processing": {
+    "defaultMessage": "بدء الإعادة"
+  },
+  "collection.reingest.text": {
+    "defaultMessage": "أنت على وشك إعادة معالجة جميع المستندات في مجموعة البيانات. الامر يستغرق بعض الوقت"
+  },
+  "collection.statistics.showmore": {
+    "defaultMessage": "عرض المزيد"
+  },
+  "collection.status.cancel_button": {
+    "defaultMessage": "إلغاء العملية"
+  },
+  "collection.status.collection": {
+    "defaultMessage": "مجموعة البيانات"
+  },
+  "collection.status.finished_tasks": {
+    "defaultMessage": "تم الإنتهاء"
+  },
+  "collection.status.jobs": {
+    "defaultMessage": "الوظائف"
+  },
+  "collection.status.message": {
+    "defaultMessage": "استمر في المرح أثناء معالجة البيانات."
+  },
+  "collection.status.no_active": {
+    "defaultMessage": "لا توجد مهام حاليا"
+  },
+  "collection.status.pending_tasks": {
+    "defaultMessage": "قيد الانتظار"
+  },
+  "collection.status.progress": {
+    "defaultMessage": "المهام"
+  },
+  "collection.status.title": {
+    "defaultMessage": "جاري التحديث  ({percent}٪)"
+  },
+  "collection.team": {
+    "defaultMessage": "الوصول إلى"
+  },
+  "collection.updated_at": {
+    "defaultMessage": "آخر تحديث"
+  },
+  "collection.xref.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "collection.xref.confirm": {
+    "defaultMessage": "تأكيد"
+  },
+  "collection.xref.empty": {
+    "defaultMessage": "لا توجد نتائج متطابقة مع مصادر أخرى"
+  },
+  "collection.xref.processing": {
+    "defaultMessage": "بدأت  عملية المطابقة"
+  },
+  "collection.xref.text": {
+    "defaultMessage": "ستقوم الآن بمطابقة مجموعة البيانات هذه مع المصادر الأخرى. انتظر حتى إتمام العملية"
+  },
+  "collection.xref.title": {
+    "defaultMessage": "مطابقة"
+  },
+  "dashboard.activity": {
+    "defaultMessage": "نشاط"
+  },
+  "dashboard.alerts": {
+    "defaultMessage": "تنبيهات"
+  },
+  "dashboard.cases": {
+    "defaultMessage": "مجموعات بيانات شخصية"
+  },
+  "dashboard.diagrams": {
+    "defaultMessage": "مخططات الشبكة"
+  },
+  "dashboard.exports": {
+    "defaultMessage": "Exports"
+  },
+  "dashboard.groups": {
+    "defaultMessage": "مجموعات"
+  },
+  "dashboard.lists": {
+    "defaultMessage": "Lists"
+  },
+  "dashboard.notifications": {
+    "defaultMessage": "إشعارات"
+  },
+  "dashboard.settings": {
+    "defaultMessage": "الإعدادات"
+  },
+  "dashboard.status": {
+    "defaultMessage": "حالة النظام"
+  },
+  "dashboard.subheading": {
+    "defaultMessage": "تحقق من سير عملية تحليل البيانات وتحميلها ومعالجتها"
+  },
+  "dashboard.title": {
+    "defaultMessage": "حالة النظام"
+  },
+  "dashboard.workspace": {
+    "defaultMessage": "مكان العمل"
+  },
+  "diagram.create.button": {
+    "defaultMessage": "New diagram"
+  },
+  "diagram.create.label_placeholder": {
+    "defaultMessage": "Untitled diagram"
+  },
+  "diagram.create.login": {
+    "defaultMessage": "You must log in to create a diagram"
+  },
+  "diagram.create.success": {
+    "defaultMessage": "Your diagram has been created successfully."
+  },
+  "diagram.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the diagram"
+  },
+  "diagram.create.title": {
+    "defaultMessage": "Create a diagram"
+  },
+  "diagram.error_warning": {
+    "defaultMessage": "حدث خطأ أثناء حفظ التغييرات الأخيرة، هل أنت متأكد من الخروج"
+  },
+  "diagram.import.button": {
+    "defaultMessage": "Import diagram"
+  },
+  "diagram.import.placeholder": {
+    "defaultMessage": "Drop a .ftm or .vis file here or click to import an existing diagram"
+  },
+  "diagram.import.title": {
+    "defaultMessage": "استيراد رسم بياني من الشبكة"
+  },
+  "diagram.in_progress_warning": {
+    "defaultMessage": "لا تزال التغييرات قيد الحفط ، هل أنت متأكد من الخروج؟"
+  },
+  "diagram.selector.create": {
+    "defaultMessage": "Create a new diagram"
+  },
+  "diagram.selector.select_empty": {
+    "defaultMessage": "No existing diagram"
+  },
+  "diagram.status_error": {
+    "defaultMessage": "خطأ في الحفظ"
+  },
+  "diagram.status_in_progress": {
+    "defaultMessage": "جاري الحفظ"
+  },
+  "diagram.status_success": {
+    "defaultMessage": "تم الحفط"
+  },
+  "diagram.update.label_placeholder": {
+    "defaultMessage": "Untitled diagram"
+  },
+  "diagram.update.success": {
+    "defaultMessage": "Your diagram has been updated successfully."
+  },
+  "diagram.update.summary_placeholder": {
+    "defaultMessage": "A brief description of the diagram"
+  },
+  "diagram.update.title": {
+    "defaultMessage": "Diagram settings"
+  },
+  "diagrams": {
+    "defaultMessage": "Diagrams"
+  },
+  "diagrams.description": {
+    "defaultMessage": "Network diagrams let you visualize complex relationships within a dataset."
+  },
+  "diagrams.no_diagrams": {
+    "defaultMessage": "لا توجد رسوم بيانية للشبكة."
+  },
+  "diagrams.title": {
+    "defaultMessage": "رسوم بيانية الشبكة"
+  },
+  "document.download": {
+    "defaultMessage": "تحميل"
+  },
+  "document.download.cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "document.download.confirm": {
+    "defaultMessage": "Download"
+  },
+  "document.download.dont_warn": {
+    "defaultMessage": "Don't warn me in the future when downloading source documents"
+  },
+  "document.download.tooltip": {
+    "defaultMessage": "تحميل المستند/ الملف الأصلي"
+  },
+  "document.download.warning": {
+    "defaultMessage": "<bold>You’re about to download a source file.</bold> {br}{br} Source files can contain viruses and code that notify the originator when you open them. {br}{br} For sensitive data, we recommend only opening source files on a computer that is permanently disconnected from the internet."
   },
   "document.folder.error": {
     "defaultMessage": "حدث خطأ أثناء إنشاء المجلد."
   },
-  "entity.manager.bulk_import.title": {
-    "defaultMessage": "إدخال بالجملة"
+  "document.folder.new": {
+    "defaultMessage": "New folder"
   },
-  "entity.manager.bulk_import.no_results": {
-    "defaultMessage": "لم يتم العثور على مستندات مطابقة"
+  "document.folder.save": {
+    "defaultMessage": "إنشاء"
   },
-  "entity.manager.bulk_import.placeholder": {
-    "defaultMessage": "حدد جدول المستند"
+  "document.folder.title": {
+    "defaultMessage": "مجلد جديد"
   },
-  "document.upload.title": {
-    "defaultMessage": "تحميل المستندات"
+  "document.folder.untitled": {
+    "defaultMessage": "عنوان المجلد"
   },
-  "document.upload.success": {
-    "defaultMessage": "المستندات قيد المعالجة ..."
+  "document.mapping.start": {
+    "defaultMessage": "إنشاء كيانات"
   },
-  "document.upload.error": {
-    "defaultMessage": "حدث خطأ أثناء تحميل الملف"
+  "document.paging": {
+    "defaultMessage": "الصفحة {pageInput} من {numberOfPages}"
+  },
+  "document.pdf.search.page": {
+    "defaultMessage": "الصفحة {page}"
+  },
+  "document.search.no_match": {
+    "defaultMessage": "لا توجد صفحة واحدة في هذا المستند تتطابق مع جميع مصطلحات البحث الخاصة بك"
+  },
+  "document.upload.button": {
+    "defaultMessage": "تحميل"
+  },
+  "document.upload.cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "document.upload.close": {
+    "defaultMessage": "Close"
+  },
+  "document.upload.errors": {
+    "defaultMessage": "Some files couldn't be transferred. You can use the Retry button to restart all failed uploads."
   },
   "document.upload.files": {
     "defaultMessage": "اختر الملفات المراد تحميلها..."
@@ -971,23 +563,56 @@
   "document.upload.folder-toggle": {
     "defaultMessage": "انقر هنا"
   },
-  "document.upload.progress": {
-    "defaultMessage": "جارٍ التحميل: {file} ..."
-  },
   "document.upload.notice": {
-    "defaultMessage": "بمجرد الإنتهاء من التحميل، تستغرق معالجة المستندات بضع دقائق لتصبح قابلة للبحث"
+    "defaultMessage": "The upload is complete. It will take a few moments for the documents to be processed and become searchable."
+  },
+  "document.upload.progress": {
+    "defaultMessage": "{done} of {total} files done, {errors} errors."
+  },
+  "document.upload.retry": {
+    "defaultMessage": "Retry"
   },
   "document.upload.save": {
     "defaultMessage": "تحميل"
   },
-  "entity.delete.confirm": {
-    "defaultMessage": "حذف"
+  "document.upload.summary": {
+    "defaultMessage": "{numberOfFiles, number} files, {totalSize}"
+  },
+  "document.upload.title": {
+    "defaultMessage": "تحميل المستندات"
+  },
+  "document.viewer.ignored_file": {
+    "defaultMessage": "لا يتعامل النظام مع هذه الأنواع من الملفات. يرجى تنزيله حتى تتمكن من رؤيته"
+  },
+  "document.viewer.no_viewer": {
+    "defaultMessage": "لا تتوفر مراجعة لهذا الملف"
+  },
+  "email.body.empty": {
+    "defaultMessage": "لا يوجد نص الرسالة"
+  },
+  "entity.column.caption": {
+    "defaultMessage": "Name"
+  },
+  "entity.column.collection_id": {
+    "defaultMessage": "مجموعة البيانات"
+  },
+  "entity.column.countries": {
+    "defaultMessage": "الدول"
+  },
+  "entity.column.dates": {
+    "defaultMessage": "التاريخ"
+  },
+  "entity.column.file_size": {
+    "defaultMessage": "الحجم"
+  },
+  "entity.column.schema": {
+    "defaultMessage": "النوع"
   },
   "entity.delete.cancel": {
     "defaultMessage": "الغاء"
   },
-  "entity.delete.success": {
-    "defaultMessage": "تم الحذف بنجاح"
+  "entity.delete.confirm": {
+    "defaultMessage": "حذف"
   },
   "entity.delete.error": {
     "defaultMessage": "حدث خطأ أثناء محاولة حذف هذا الكيان"
@@ -995,29 +620,149 @@
   "entity.delete.progress": {
     "defaultMessage": "حذف"
   },
-  "entityset.create.label_placeholder": {
-    "defaultMessage": "{type} بلا عنوان"
+  "entity.delete.question.multiple": {
+    "defaultMessage": "Are you sure you want to delete the following {count, plural, one {item} other {items}}?"
   },
-  "entityset.create.summary_placeholder": {
-    "defaultMessage": "وصف موجز للنوع {type}"
+  "entity.delete.success": {
+    "defaultMessage": "تم الحذف بنجاح"
   },
-  "entityset.create.submit": {
-    "defaultMessage": "إنشاء"
+  "entity.document.manager.cannot_map": {
+    "defaultMessage": "حدد جدول لإنشاء كيانات منتظمة"
   },
-  "entityset.create.title": {
-    "defaultMessage": "إنشاء {type}"
+  "entity.document.manager.empty": {
+    "defaultMessage": "لا توجد ملفات أو فهرس"
   },
-  "entityset.create.success": {
-    "defaultMessage": "تم إنشاء {type} الخاص بك بنجاح"
+  "entity.document.manager.emptyCanUpload": {
+    "defaultMessage": "لا توجد ملفات أو فهارس. نزل الملفات هنا أو انقر للتحميل"
   },
-  "diagram.import.title": {
-    "defaultMessage": "استيراد رسم بياني من الشبكة"
+  "entity.document.manager.search_placeholder": {
+    "defaultMessage": "البحث عن الملفات"
   },
-  "diagram.import.placeholder": {
-    "defaultMessage": "انزل ملف vis هنا أو اضغط لتحميل رسم بياني من ملفاتك"
+  "entity.info.attachments": {
+    "defaultMessage": "مرفقات"
   },
-  "entityset.create.collection.existing": {
-    "defaultMessage": "اختار مجموعة البيانات"
+  "entity.info.documents": {
+    "defaultMessage": "الوثائق/ المستندات"
+  },
+  "entity.info.entities": {
+    "defaultMessage": "كيانات"
+  },
+  "entity.info.info": {
+    "defaultMessage": "معلومات"
+  },
+  "entity.info.overview": {
+    "defaultMessage": "نظرة عامة"
+  },
+  "entity.info.similar": {
+    "defaultMessage": "مشابه"
+  },
+  "entity.info.tags": {
+    "defaultMessage": "تذكير"
+  },
+  "entity.info.text": {
+    "defaultMessage": "النص"
+  },
+  "entity.info.view": {
+    "defaultMessage": "عرض"
+  },
+  "entity.info.xref": {
+    "defaultMessage": "تطابق"
+  },
+  "entity.manager.bulk_import.description.1": {
+    "defaultMessage": "Select a table below from which to import new {schema} entities."
+  },
+  "entity.manager.bulk_import.description.2": {
+    "defaultMessage": "Once selected, you will be prompted to assign columns from that table to properties of the generated entities."
+  },
+  "entity.manager.bulk_import.description.3": {
+    "defaultMessage": "Don't see the table you're looking for? {link}"
+  },
+  "entity.manager.bulk_import.link_text": {
+    "defaultMessage": "Import a new table"
+  },
+  "entity.manager.bulk_import.no_results": {
+    "defaultMessage": "لم يتم العثور على مستندات مطابقة"
+  },
+  "entity.manager.bulk_import.placeholder": {
+    "defaultMessage": "حدد جدول المستند"
+  },
+  "entity.manager.bulk_import.title": {
+    "defaultMessage": "إدخال بالجملة"
+  },
+  "entity.manager.delete": {
+    "defaultMessage": "Delete"
+  },
+  "entity.manager.edge_create_success": {
+    "defaultMessage": "تم ربط {source} و {target} بنجاح"
+  },
+  "entity.manager.entity_set_add_success": {
+    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
+  },
+  "entity.manager.remove": {
+    "defaultMessage": "Remove"
+  },
+  "entity.manager.search_empty": {
+    "defaultMessage": "لم يتم العثور على نتائج مطابقة لـ {schema}"
+  },
+  "entity.manager.search_placeholder": {
+    "defaultMessage": "بحث في {schema}"
+  },
+  "entity.mapping.view": {
+    "defaultMessage": "إنشاء كيانات"
+  },
+  "entity.properties.missing": {
+    "defaultMessage": "غير معروف"
+  },
+  "entity.references.no_relationships": {
+    "defaultMessage": "هذا الكيان غير مرتبط بالبحث"
+  },
+  "entity.remove.confirm": {
+    "defaultMessage": "Remove"
+  },
+  "entity.remove.error": {
+    "defaultMessage": "An error occured while attempting to remove this entity."
+  },
+  "entity.remove.progress": {
+    "defaultMessage": "Removing..."
+  },
+  "entity.remove.question.multiple": {
+    "defaultMessage": "Are you sure you want to remove the following {count, plural, one {item} other {items}}?"
+  },
+  "entity.remove.success": {
+    "defaultMessage": "Successfully removed"
+  },
+  "entity.search.empty_title": {
+    "defaultMessage": "هذا المجلد فارغ"
+  },
+  "entity.search.no_results_description": {
+    "defaultMessage": "حاول أن تجعل بحثك أكثر عمومية"
+  },
+  "entity.search.no_results_title": {
+    "defaultMessage": "لم يتم العثور على نتائج"
+  },
+  "entity.similar.empty": {
+    "defaultMessage": "لا توجد كيانات مشابهة"
+  },
+  "entity.similar.found_text": {
+    "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
+  },
+  "entity.tags.no_tags": {
+    "defaultMessage": "لم تستخرج أي محددات من هذا الكيان"
+  },
+  "entity.viewer.add_link": {
+    "defaultMessage": "إنشاء رابط"
+  },
+  "entity.viewer.add_to": {
+    "defaultMessage": "Add to..."
+  },
+  "entity.viewer.bulk_import": {
+    "defaultMessage": "إدخال بالجملة"
+  },
+  "entitySet.last_updated": {
+    "defaultMessage": "Updated {date}"
+  },
+  "entity_set.menu.search_placeholder": {
+    "defaultMessage": "بحث في {set_name}"
   },
   "entityset.choose.name": {
     "defaultMessage": "عنوان"
@@ -1028,308 +773,116 @@
   "entityset.create.collection": {
     "defaultMessage": "مجموعة البيانات"
   },
-  "entityset.delete.confirm": {
-    "defaultMessage": "حذف"
+  "entityset.create.collection.existing": {
+    "defaultMessage": "اختار مجموعة البيانات"
+  },
+  "entityset.create.collection.new": {
+    "defaultMessage": "Don't see the dataset you're looking for? {link}"
+  },
+  "entityset.create.collection.new_link": {
+    "defaultMessage": "Create a new personal dataset"
+  },
+  "entityset.create.submit": {
+    "defaultMessage": "إنشاء"
   },
   "entityset.delete.cancel": {
     "defaultMessage": "الغاء"
   },
+  "entityset.delete.confirm": {
+    "defaultMessage": "حذف"
+  },
   "entityset.delete.question": {
     "defaultMessage": "هل أنت متأكد أنك تريد حذف {type}؟"
   },
-  "entityset.update.title": {
+  "entityset.delete.success": {
+    "defaultMessage": "Successfully deleted {title}"
+  },
+  "entityset.info.delete": {
+    "defaultMessage": "حذف"
+  },
+  "entityset.info.edit": {
     "defaultMessage": "الإعدادات"
   },
+  "entityset.info.export": {
+    "defaultMessage": "تصدير"
+  },
+  "entityset.selector.placeholder": {
+    "defaultMessage": "Search existing"
+  },
+  "entityset.selector.success": {
+    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
+  },
+  "entityset.selector.success_toast_button": {
+    "defaultMessage": "View"
+  },
+  "entityset.selector.title": {
+    "defaultMessage": "Add {firstCaption} {titleSecondary} to..."
+  },
+  "entityset.selector.title_default": {
+    "defaultMessage": "Add entities to..."
+  },
+  "entityset.selector.title_other": {
+    "defaultMessage": "and {count} other {count, plural, one {entity} other {entities}}"
+  },
   "entityset.update.submit": {
-    "defaultMessage": "إدخال"
+    "defaultMessage": "Save changes"
   },
-  "entityset.update.success": {
-    "defaultMessage": "تم تحديث {type} بنجاح"
-  },
-  "mapping.create.confirm": {
-    "defaultMessage": "إنشاء"
-  },
-  "mapping.create.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "mapping.create.question": {
-    "defaultMessage": "هل أنت متأكد من أنك مستعد لإنشاء كيانات باستخدام البحث الشامل؟"
-  },
-  "mapping.delete.confirm": {
-    "defaultMessage": "حذف"
-  },
-  "mapping.delete.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "mapping.delete.question": {
-    "defaultMessage": "هل أنت متأكد أنك تريد حذف هذا التعيين وجميع الكيانات التي تم إنشاؤها؟"
-  },
-  "mapping.flush.confirm": {
-    "defaultMessage": "إزالة"
-  },
-  "mapping.flush.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "mapping.flush.question": {
-    "defaultMessage": "هل أنت متأكد من أنك تريد إزالة الكيانات التي تم إنشاؤها باستخدام هذا البحث الشامل؟"
-  },
-  "mapping.import.success": {
-    "defaultMessage": "تم استيراد بحثك الكامل بنجاح"
-  },
-  "mapping.import.submit": {
-    "defaultMessage": "إرسال"
-  },
-  "mapping.import.title": {
-    "defaultMessage": "استيراد البحث الشامل"
-  },
-  "mapping.import.placeholder": {
-    "defaultMessage": "أسقط ملف yml هنا أو اضغط لاستيراد ملف بحث شامل موجود"
-  },
-  "mapping.import.querySelect": {
-    "defaultMessage": "حدد استعلام بحث شامل من هذا الملف للاستيراد:"
-  },
-  "mapping.save.confirm": {
-    "defaultMessage": "تحديث البحث الشامل او إعادة انشائها"
-  },
-  "mapping.save.cancel": {
-    "defaultMessage": "الغاء"
-  },
-  "mapping.save.question": {
-    "defaultMessage": "سيؤدي تحديث هذا التعيين إلى حذف أي كيانات تم إنشاؤها سابقًا وإعادة إنشائها. هل أنت متأكد أنك تريد الاستمرار؟"
-  },
-  "xref.context.title": {
-    "defaultMessage": "مراجعة التطايق"
-  },
-  "xref.context.select": {
-    "defaultMessage": "مشاركة مع:"
-  },
-  "xref.context.private": {
-    "defaultMessage": "التزم بالخصوصية (دون مشاركة)"
-  },
-  "xref.context.submit": {
-    "defaultMessage": "ابدء المراجعة"
-  },
-  "xref.context.explain1": {
-    "defaultMessage": "تساعدك مراجعة مطابقات المراجع  على الإبلاغ عن العملاء المحتملين ومشاركتهم. تعتبر أحكامك معلومات حساسة ، لذا يرجى تحديد مجموعة المستخدمين التي يمكنهم مشاهدتها."
-  },
-  "alerts.title": {
-    "defaultMessage": "تتبع التنبيهات"
-  },
-  "alert.manager.description": {
-    "defaultMessage": "ستتلقى إشعارات عند إضافة نتيجة جديدة تطابق أي من التنبيهات التي أعددتها أدناه."
-  },
-  "cases.title": {
-    "defaultMessage": "مجموعات بيانات شخصية"
-  },
-  "cases.no_results_title": {
-    "defaultMessage": "ليس لديك أي مجموعات بيانات شخصية حتى الآن."
-  },
-  "cases.placeholder": {
-    "defaultMessage": "البحث في مجموعات البيانات الشخصية ..."
-  },
-  "cases.empty": {
-    "defaultMessage": "لم يتم العثور على أي قواعد بيانات شخصية"
-  },
-  "cases.browser.breadcrumb": {
-    "defaultMessage": "نظرة عامة على الحالات"
-  },
-  "case.description": {
-    "defaultMessage": "تتيح لك مجموعات البيانات الشخصية تحميل ومشاركة مستندات وبيانات القصة. يمكنك تحميل ملفات PDF أو بريد إلكتروني أو جداول البيانات ما جعل عملية البحث والتصفح أسهل."
-  },
-  "collection.index.title": {
-    "defaultMessage": "مجموعات البيانات"
-  },
-  "collection.index.placeholder": {
-    "defaultMessage": "البحث في مجموعات البيانات ..."
-  },
-  "collection.index.empty": {
-    "defaultMessage": "لم يتم العثور على مجموعات بيانات"
-  },
-  "collection.index.breadcrumb": {
-    "defaultMessage": "مجموعات البيانات"
-  },
-  "diagrams.title": {
-    "defaultMessage": "رسوم بيانية الشبكة"
-  },
-  "diagrams.no_results_title": {
-    "defaultMessage": "لا يوجد لديك أي رسوم بيانية للشبكة حتى الآن"
-  },
-  "diagrams.browser.breadcrumb": {
-    "defaultMessage": "الرسوم البيانية"
-  },
-  "diagram.description": {
-    "defaultMessage": "تتيح لك الرسوم البيانية تصور العلاقات المعقدة ضمن مجموعة بيانات"
-  },
-  "diagram.status_success": {
-    "defaultMessage": "تم الحفط"
-  },
-  "diagram.status_error": {
-    "defaultMessage": "خطأ في الحفظ"
-  },
-  "diagram.status_in_progress": {
-    "defaultMessage": "جاري الحفظ"
-  },
-  "diagram.error_warning": {
-    "defaultMessage": "حدث خطأ أثناء حفظ التغييرات الأخيرة، هل أنت متأكد من الخروج"
-  },
-  "diagram.in_progress_warning": {
-    "defaultMessage": "لا تزال التغييرات قيد الحفط ، هل أنت متأكد من الخروج؟"
-  },
-  "entity.delete": {
-    "defaultMessage": "حذف"
-  },
-  "sources.index.empty": {
-    "defaultMessage": "هذه المجموعة ليست مرتبطة بأي من مجموعات بيانات."
-  },
-  "sources.index.placeholder": {
-    "defaultMessage": "ابحث في مجموعات بيانات التابعة لـ {group} ..."
-  },
-  "group.page.description": {
-    "defaultMessage": "تعرض القائمة أدناه جميع مجموعات البيانات التي تنتمي إلى هذه المجموعة"
-  },
-  "history.title": {
-    "defaultMessage": "سجل البحث"
-  },
-  "history.screen.subheading": {
-    "defaultMessage": "أدناه قائمة بأحدث عمليات البحث الخاصة بك. لديك خيار حذف عمليات بحث محددة حتى لا تظهر في سجلاتنا"
-  },
-  "home.title": {
-    "defaultMessage": "البحث عن السجلات العامة والتسريبات"
-  },
-  "home.placeholder": {
-    "defaultMessage": "حاول البحث: {samples}"
-  },
-  "logout.success": {
-    "defaultMessage": "تم تسجيل الخروج بنجاح"
+  "entitysets.load_more": {
+    "defaultMessage": "Load more..."
   },
   "error.screen.not_found": {
     "defaultMessage": " لا يمكن العثور على الصفحة المطلوبة"
   },
-  "notifications.title": {
-    "defaultMessage": "اشعارات حديثة"
+  "export.dialog.text": {
+    "defaultMessage": "<bold>Initiate your export.</bold> {br}{br} Exports take some time to generate. You will receive an email once the data is ready. {br}{br} Please trigger this export only once."
   },
-  "notifications.greeting": {
-    "defaultMessage": "ما الجديد {role}؟"
+  "exports.dialog.cancel": {
+    "defaultMessage": "Cancel"
   },
-  "notification.description": {
-    "defaultMessage": "عرض آخر التحديثات لمجموعات البيانات وتتبع الإشارات التي تتابعها"
+  "exports.dialog.confirm": {
+    "defaultMessage": "Export"
   },
-  "pages.not.found": {
-    "defaultMessage": "الصفحة غير موجودة"
+  "exports.dialog.dashboard_link": {
+    "defaultMessage": "View progress"
   },
-  "search.no_results_title": {
-    "defaultMessage": "لم يتم العثور على نتائج"
+  "exports.dialog.success": {
+    "defaultMessage": "Your export has begun."
   },
-  "search.no_results_description": {
-    "defaultMessage": "حاول أن تجعل بحثك أكثر عمومية"
+  "exports.expiration": {
+    "defaultMessage": "Expiration"
   },
-  "search.title": {
-    "defaultMessage": "بحث"
+  "exports.manager.description": {
+    "defaultMessage": "Below is a list of your exports. Make sure to download them before they expire."
   },
-  "search.screen.export_disabled": {
-    "defaultMessage": "لا يمكن تصدير أكثر من 10000 نتيجة في المرة الواحدة"
+  "exports.name": {
+    "defaultMessage": "Name"
   },
-  "search.screen.show_dates": {
-    "defaultMessage": "اطهار تصفية التاريخ"
+  "exports.no_exports": {
+    "defaultMessage": "You have no exports to download"
   },
-  "search.screen.hide_dates": {
-    "defaultMessage": "اخفاء تصقية التاريخ"
+  "exports.size": {
+    "defaultMessage": "Size"
   },
-  "search.screen.export": {
-    "defaultMessage": "تصدير"
+  "exports.status": {
+    "defaultMessage": "Status"
   },
-  "search.screen.breadcrumb": {
-    "defaultMessage": "بحث"
+  "exports.title": {
+    "defaultMessage": "Exports ready for download"
   },
-  "search.screen.filters": {
-    "defaultMessage": "تصفية"
+  "facet.addresses": {
+    "defaultMessage": "{count, plural, zero {عناوين} one {عنوان} two {عناوين} few {عناوين} many {عناوين} other {عناوين}}"
   },
-  "settings.title": {
-    "defaultMessage": "الإعدادات"
-  },
-  "settings.save": {
-    "defaultMessage": "تحديث"
-  },
-  "settings.name": {
-    "defaultMessage": "الاسم"
-  },
-  "settings.locale": {
-    "defaultMessage": "اللغة"
-  },
-  "settings.api_key": {
-    "defaultMessage": "مفتاح API الوصول السري "
-  },
-  "profileinfo.api_desc": {
-    "defaultMessage": "استخدم مفتاح API لقراءة البيانات وكتابتها عبر التطبيقات عن بعد."
-  },
-  "settings.email": {
-    "defaultMessage": "البريد الكتروني"
-  },
-  "settings.email.no_change": {
-    "defaultMessage": "لا يمكن تغيير عنوان بريدك الإلكتروني"
-  },
-  "settings.email.muted": {
-    "defaultMessage": "استلام اشعارات رسائل البريد الإلكتروني"
-  },
-  "settings.email.tester": {
-    "defaultMessage": "اختبر الميزات الجديدة قبل الانتهاء"
-  },
-  "settings.current_password": {
-    "defaultMessage": "كلمة المرور الحالية"
-  },
-  "settings.current_explain": {
-    "defaultMessage": "أدخل كلمة المرور الحالية لتعيين كلمة مرور جديدة."
-  },
-  "settings.new_password": {
-    "defaultMessage": "كلمة سر جديدة"
-  },
-  "settings.confirm": {
-    "defaultMessage": "(تأكيد)"
-  },
-  "settings.password.rules": {
-    "defaultMessage": "استخدم ستة أحرف على الأقل"
-  },
-  "settings.password.missmatch": {
-    "defaultMessage": "كلمة المرور غير مطابقة"
-  },
-  "settings.saved": {
-    "defaultMessage": "إنه رسمي، يتم تحديث ملفك الشخصي."
-  },
-  "settings.password.title": {
-    "defaultMessage": "قم بتغيير كلمة المرور الخاصة بك"
-  },
-  "dashboard.title": {
-    "defaultMessage": "حالة النظام"
-  },
-  "collection.status.no_active": {
-    "defaultMessage": "لا توجد مهام حاليا"
-  },
-  "collection.cancel.button": {
-    "defaultMessage": "الغاء"
-  },
-  "dashboard.subheading": {
-    "defaultMessage": "تحقق من سير عملية تحليل البيانات وتحميلها ومعالجتها"
-  },
-  "collection.status.collection": {
-    "defaultMessage": "مجموعة البيانات"
-  },
-  "collection.status.jobs": {
-    "defaultMessage": "الوظائف"
-  },
-  "collection.status.progress": {
-    "defaultMessage": "المهام"
-  },
-  "collection.status.finished_tasks": {
-    "defaultMessage": "تم الإنتهاء"
-  },
-  "collection.status.pending_tasks": {
-    "defaultMessage": "قيد الانتظار"
-  },
-  "facet.schema": {
-    "defaultMessage": "{count, plural, zero {أنواع} one {نوع} two {أنواع} few {أنواع} many {أنواع} other {أنواع}}"
+  "facet.category": {
+    "defaultMessage": "{count, plural, zero {فئات} one {فئة} two {فئات} few {فئات} many {فئات} other {فئات}}"
   },
   "facet.collection_id": {
     "defaultMessage": "{count, plural, zero {مجموعات بيانات} one {مجموعة بيانات} two {مجموعات بيانات} few {مجموعات بيانات} many {مجموعات بيانات} other {مجموعات بيانات}}"
+  },
+  "facet.countries": {
+    "defaultMessage": "{count, plural, zero {دول} one {دولة} two {دول} few {دول} many {دول} other {دول}}"
+  },
+  "facet.emails": {
+    "defaultMessage": "{count, plural, zero {إيميلات} one {ايميل} two {إيميلات} few {إيميلات} many {إيميلات} other {إيميلات}}"
   },
   "facet.ibans": {
     "defaultMessage": "{count, plural, zero {أرقام الحسابات} one {رقم الحساب} two {أرقام الحسابات} few {أرقام الحسابات} many {أرقام الحسابات} other {أرقام حسابات  IBAN}}"
@@ -1337,40 +890,718 @@
   "facet.languages": {
     "defaultMessage": "{count, plural, zero {لغات} one {لغة} two {لغات} few {لغات} many {لغات} other {لغات}}"
   },
-  "facet.emails": {
-    "defaultMessage": "{count, plural, zero {إيميلات} one {ايميل} two {إيميلات} few {إيميلات} many {إيميلات} other {إيميلات}}"
-  },
-  "facet.phones": {
-    "defaultMessage": "{count, plural, zero {أرقام هواتف} one {رقم الهاتف} two {أرقام هواتف} few {أرقام هواتف} many {أرقام هواتف} other {أرقام هواتف}}"
-  },
-  "facet.countries": {
-    "defaultMessage": "{count, plural, zero {دول} one {دولة} two {دول} few {دول} many {دول} other {دول}}"
+  "facet.mimetypes": {
+    "defaultMessage": "{count, plural, zero {نوع الملفات} one {نوع الملف} two {نوع الملفات} few {نوع الملفات} many {نوع الملفات} other {نوع الملفات}}"
   },
   "facet.names": {
     "defaultMessage": "{count, plural, zero {اسماء} one {اسم} two {اسماء} few {اسماء} many {اسماء} other {اسماء}}"
   },
-  "facet.addresses": {
-    "defaultMessage": "{count, plural, zero {عناوين} one {عنوان} two {عناوين} few {عناوين} many {عناوين} other {عناوين}}"
+  "facet.phones": {
+    "defaultMessage": "{count, plural, zero {أرقام هواتف} one {رقم الهاتف} two {أرقام هواتف} few {أرقام هواتف} many {أرقام هواتف} other {أرقام هواتف}}"
   },
-  "facet.mimetypes": {
-    "defaultMessage": "{count, plural, zero {نوع الملفات} one {نوع الملف} two {نوع الملفات} few {نوع الملفات} many {نوع الملفات} other {نوع الملفات}}"
+  "facet.schema": {
+    "defaultMessage": "{count, plural, zero {أنواع} one {نوع} two {أنواع} few {أنواع} many {أنواع} other {أنواع}}"
   },
-  "facet.category": {
-    "defaultMessage": "{count, plural, zero {فئات} one {فئة} two {فئات} few {فئات} many {فئات} other {فئات}}"
+  "file_import.error": {
+    "defaultMessage": "خطأ في استيراد الملف"
   },
-  "document.viewer.no_viewer": {
-    "defaultMessage": "لا تتوفر مراجعة لهذا الملف"
+  "footer.aleph": {
+    "defaultMessage": "أَلِف {version}"
   },
-  "document.viewer.ignored_file": {
-    "defaultMessage": "لا يتعامل النظام مع هذه الأنواع من الملفات. يرجى تنزيله حتى تتمكن من رؤيته"
+  "group.page.description": {
+    "defaultMessage": "تعرض القائمة أدناه جميع مجموعات البيانات التي تنتمي إلى هذه المجموعة"
   },
-  "email.body.empty": {
-    "defaultMessage": "لا يوجد نص الرسالة"
+  "home.counts.countries": {
+    "defaultMessage": "Countries & territories"
   },
-  "document.search.no_match": {
-    "defaultMessage": "لا توجد صفحة واحدة في هذا المستند تتطابق مع جميع مصطلحات البحث الخاصة بك"
+  "home.counts.datasets": {
+    "defaultMessage": "Public datasets"
   },
-  "document.pdf.search.page": {
-    "defaultMessage": "الصفحة {page}"
+  "home.counts.entities": {
+    "defaultMessage": "Public entities"
+  },
+  "home.placeholder": {
+    "defaultMessage": "حاول البحث: {samples}"
+  },
+  "home.statistics.categories": {
+    "defaultMessage": "Dataset categories"
+  },
+  "home.statistics.countries": {
+    "defaultMessage": "Countries and territories"
+  },
+  "home.statistics.schemata": {
+    "defaultMessage": "Entity types"
+  },
+  "home.stats.title": {
+    "defaultMessage": "Get started exploring public data"
+  },
+  "home.title": {
+    "defaultMessage": "البحث عن السجلات العامة والتسريبات"
+  },
+  "infoMode.collection": {
+    "defaultMessage": "مجموعة البيانات"
+  },
+  "infoMode.collection.entries": {
+    "defaultMessage": "{count} الكيانات"
+  },
+  "list.create.button": {
+    "defaultMessage": "New list"
+  },
+  "list.create.label_placeholder": {
+    "defaultMessage": "Untitled list"
+  },
+  "list.create.login": {
+    "defaultMessage": "You must log in to create a list"
+  },
+  "list.create.success": {
+    "defaultMessage": "Your list has been created successfully."
+  },
+  "list.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the list"
+  },
+  "list.create.title": {
+    "defaultMessage": "Create a list"
+  },
+  "list.selector.create": {
+    "defaultMessage": "Create a new list"
+  },
+  "list.selector.select_empty": {
+    "defaultMessage": "No existing list"
+  },
+  "list.update.label_placeholder": {
+    "defaultMessage": "Untitled list"
+  },
+  "list.update.success": {
+    "defaultMessage": "Your list has been updated successfully."
+  },
+  "list.update.summary_placeholder": {
+    "defaultMessage": "A brief description of the list"
+  },
+  "list.update.title": {
+    "defaultMessage": "List settings"
+  },
+  "lists": {
+    "defaultMessage": "Lists"
+  },
+  "lists.description": {
+    "defaultMessage": "Lists let you organize and group related entities of interest."
+  },
+  "lists.no_lists": {
+    "defaultMessage": "There are no lists."
+  },
+  "lists.title": {
+    "defaultMessage": "Lists"
+  },
+  "login.oauth": {
+    "defaultMessage": "تسجيل الدخول عبر OAuth"
+  },
+  "mapping.actions.create": {
+    "defaultMessage": "إنشاء كيانات"
+  },
+  "mapping.actions.create.toast": {
+    "defaultMessage": "الكيانات قيد الإنشاء"
+  },
+  "mapping.actions.delete": {
+    "defaultMessage": "حذف"
+  },
+  "mapping.actions.delete.toast": {
+    "defaultMessage": "حذف اليحث الشامل وأي كيانات تم إنشاؤها ..."
+  },
+  "mapping.actions.export": {
+    "defaultMessage": "تصدير البحث الشامل"
+  },
+  "mapping.actions.flush": {
+    "defaultMessage": "إزالة الكيانات التي تم إنشاؤها"
+  },
+  "mapping.actions.flush.toast": {
+    "defaultMessage": "إزالة الكيانات التي تم إنشاؤها"
+  },
+  "mapping.actions.save": {
+    "defaultMessage": "حفظ التغييرات"
+  },
+  "mapping.actions.save.toast": {
+    "defaultMessage": "إعادة إنشاء الكيانات"
+  },
+  "mapping.create.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "mapping.create.confirm": {
+    "defaultMessage": "إنشاء"
+  },
+  "mapping.create.question": {
+    "defaultMessage": "هل أنت متأكد من أنك مستعد لإنشاء كيانات باستخدام البحث الشامل؟"
+  },
+  "mapping.delete.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "mapping.delete.confirm": {
+    "defaultMessage": "حذف"
+  },
+  "mapping.delete.question": {
+    "defaultMessage": "هل أنت متأكد أنك تريد حذف هذا التعيين وجميع الكيانات التي تم إنشاؤها؟"
+  },
+  "mapping.entityAssign.helpText": {
+    "defaultMessage": "يجب إنشاء كائن من النوع \"{range}\" ليكون {property}"
+  },
+  "mapping.entityAssign.noResults": {
+    "defaultMessage": "لا توجد مواضيع مطابقة متاحة"
+  },
+  "mapping.entityAssign.placeholder": {
+    "defaultMessage": "حدد موضوع"
+  },
+  "mapping.entity_set_select": {
+    "defaultMessage": "Select a List or Diagram"
+  },
+  "mapping.entityset.remove": {
+    "defaultMessage": "Remove"
+  },
+  "mapping.error.keyMissing": {
+    "defaultMessage": "خطأ رئيسي: يجب أن يحتوي {id} الكيان على مفتاح واحد على الأقل"
+  },
+  "mapping.error.relationshipMissing": {
+    "defaultMessage": "خطأ في العلاقة: {id} يجب أن يكون للكيان {source} و {target} معين"
+  },
+  "mapping.flush.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "mapping.flush.confirm": {
+    "defaultMessage": "إزالة"
+  },
+  "mapping.flush.question": {
+    "defaultMessage": "هل أنت متأكد من أنك تريد إزالة الكيانات التي تم إنشاؤها باستخدام هذا البحث الشامل؟"
+  },
+  "mapping.import.button": {
+    "defaultMessage": "استيراد الرسم التخطيطي الموجود"
+  },
+  "mapping.import.placeholder": {
+    "defaultMessage": "أسقط ملف yml هنا أو اضغط لاستيراد ملف بحث شامل موجود"
+  },
+  "mapping.import.querySelect": {
+    "defaultMessage": "حدد استعلام بحث شامل من هذا الملف للاستيراد:"
+  },
+  "mapping.import.submit": {
+    "defaultMessage": "إرسال"
+  },
+  "mapping.import.success": {
+    "defaultMessage": "تم استيراد بحثك الكامل بنجاح"
+  },
+  "mapping.import.title": {
+    "defaultMessage": "استيراد البحث الشامل"
+  },
+  "mapping.info": {
+    "defaultMessage": "اتبع الخطوات أدناه لتعيين العناصر في مجموعة البيانات الخاصة بالكيانات المنتظمة لتتبع كيانات المال. لمزيد من المعلومات، يرجى الرجوع إلى {link}"
+  },
+  "mapping.infoLink": {
+    "defaultMessage": "آلف لتوثيق بيانات البحث الشامل"
+  },
+  "mapping.keyAssign.additionalHelpText": {
+    "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
+  },
+  "mapping.keyAssign.additionalHelpToggle.less": {
+    "defaultMessage": "أقل"
+  },
+  "mapping.keyAssign.additionalHelpToggle.more": {
+    "defaultMessage": "المزيد عن المفاتيح"
+  },
+  "mapping.keyAssign.helpText": {
+    "defaultMessage": "حدد الأعمدة التي سيتم استخدامها لتحديد الكيانات الفريدة"
+  },
+  "mapping.keyAssign.noResults": {
+    "defaultMessage": "لا توجد نتائج"
+  },
+  "mapping.keyAssign.placeholder": {
+    "defaultMessage": "حدد المفاتيح من الأعمدة المتاحة"
+  },
+  "mapping.keys": {
+    "defaultMessage": "المفاتيح الرئيسية"
+  },
+  "mapping.propAssign.errorBlank": {
+    "defaultMessage": "الأعمدة بدون عناوين لا يمكن تعيينها"
+  },
+  "mapping.propAssign.errorDuplicate": {
+    "defaultMessage": "الأعمدة بالعناوين المكررة لا يمكن تعيينها"
+  },
+  "mapping.propAssign.literalButtonText": {
+    "defaultMessage": "أضف قيمة ثابتة"
+  },
+  "mapping.propAssign.literalPlaceholder": {
+    "defaultMessage": "أضف نصاً ثابتاً"
+  },
+  "mapping.propAssign.other": {
+    "defaultMessage": "آخر"
+  },
+  "mapping.propAssign.placeholder": {
+    "defaultMessage": "تعيين ملكية"
+  },
+  "mapping.propRemove": {
+    "defaultMessage": "إزالة هذه الخاصية من البحث الشامل"
+  },
+  "mapping.props": {
+    "defaultMessage": "الخصائص"
+  },
+  "mapping.save.cancel": {
+    "defaultMessage": "الغاء"
+  },
+  "mapping.save.confirm": {
+    "defaultMessage": "تحديث البحث الشامل او إعادة انشائها"
+  },
+  "mapping.save.question": {
+    "defaultMessage": "سيؤدي تحديث هذا التعيين إلى حذف أي كيانات تم إنشاؤها سابقًا وإعادة إنشائها. هل أنت متأكد أنك تريد الاستمرار؟"
+  },
+  "mapping.section1.title": {
+    "defaultMessage": "1.اختار أنواع الكيانات المراد إنشاؤها"
+  },
+  "mapping.section2.title": {
+    "defaultMessage": "2. تعيين أعمدة للكيان"
+  },
+  "mapping.section3.title": {
+    "defaultMessage": "3. تحقيق/ تدقيق"
+  },
+  "mapping.section4.description": {
+    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the dataset, please click below and select from the available options."
+  },
+  "mapping.section4.title": {
+    "defaultMessage": "4. Select a destination for generated entities (optional)"
+  },
+  "mapping.status.error": {
+    "defaultMessage": "خطأ:"
+  },
+  "mapping.status.status": {
+    "defaultMessage": "الحالة:"
+  },
+  "mapping.status.updated": {
+    "defaultMessage": "آخر تحديث:"
+  },
+  "mapping.title": {
+    "defaultMessage": "إنشاء كيانات منظمة"
+  },
+  "mapping.types.objects": {
+    "defaultMessage": "مواضيع"
+  },
+  "mapping.types.relationships": {
+    "defaultMessage": "علاقات"
+  },
+  "mapping.warning.empty": {
+    "defaultMessage": "You must create at least one entity"
+  },
+  "nav.alerts": {
+    "defaultMessage": "تنبيهات"
+  },
+  "nav.casefiles": {
+    "defaultMessage": "مجموعات بيانات شخصية"
+  },
+  "nav.collections": {
+    "defaultMessage": "مجموعات البيانات"
+  },
+  "nav.diagrams": {
+    "defaultMessage": "مخططات الشبكة"
+  },
+  "nav.exports": {
+    "defaultMessage": "Exports"
+  },
+  "nav.lists": {
+    "defaultMessage": "Lists"
+  },
+  "nav.settings": {
+    "defaultMessage": "الإعدادات"
+  },
+  "nav.signin": {
+    "defaultMessage": "تسجيل الدخول"
+  },
+  "nav.signout": {
+    "defaultMessage": "تسجيل الخروج"
+  },
+  "nav.status": {
+    "defaultMessage": "System status"
+  },
+  "nav.view_notifications": {
+    "defaultMessage": "إشعارات"
+  },
+  "navbar.alert_add": {
+    "defaultMessage": "اضغط لتلقي تنبيهات حول النتائج الجديدة بخصوص هذا البحث"
+  },
+  "navbar.alert_remove": {
+    "defaultMessage": "تتلقى تنبيهات حول هذا البحث"
+  },
+  "notification.description": {
+    "defaultMessage": "عرض آخر التحديثات لمجموعات البيانات وتتبع الإشارات التي تتابعها"
+  },
+  "notifications.greeting": {
+    "defaultMessage": "ما الجديد {role}؟"
+  },
+  "notifications.no_notifications": {
+    "defaultMessage": "ليس لديك إشعارات غير مرئية"
+  },
+  "notifications.title": {
+    "defaultMessage": "اشعارات حديثة"
+  },
+  "notifications.type_filter": {
+    "defaultMessage": "Show:"
+  },
+  "notifications.type_filter.all": {
+    "defaultMessage": "All"
+  },
+  "pages.not.found": {
+    "defaultMessage": "الصفحة غير موجودة"
+  },
+  "pass.auth.not_same": {
+    "defaultMessage": "كلمات السر الخاصة بك ليست هي نفسها!"
+  },
+  "password_auth.activate": {
+    "defaultMessage": "تفعيل"
+  },
+  "password_auth.confirm": {
+    "defaultMessage": "تأكيد كلمة المرور"
+  },
+  "password_auth.email": {
+    "defaultMessage": "البريد الإلكتروني"
+  },
+  "password_auth.name": {
+    "defaultMessage": "اسمك"
+  },
+  "password_auth.password": {
+    "defaultMessage": "كلمة المرور"
+  },
+  "password_auth.signin": {
+    "defaultMessage": "تسجيل الدخول"
+  },
+  "password_auth.signup": {
+    "defaultMessage": "تسجيل"
+  },
+  "profileinfo.api_desc": {
+    "defaultMessage": "استخدم مفتاح API لقراءة البيانات وكتابتها عبر التطبيقات عن بعد."
+  },
+  "queryFilters.clearAll": {
+    "defaultMessage": "حذف الكل"
+  },
+  "queryLogs.add_placeholder": {
+    "defaultMessage": "تتبع عمليات البحث ..."
+  },
+  "queryLogs.no_alerts": {
+    "defaultMessage": "أنت لا تتبع أي عمليات بحث"
+  },
+  "queryLogs.query.delete.tooltip": {
+    "defaultMessage": "إزالة من {listType}"
+  },
+  "queryLogs.query.search": {
+    "defaultMessage": "ابحث عن {query}"
+  },
+  "refresh.callout_message": {
+    "defaultMessage": " المستندات قيد المعالجة. ارجوك انتظر..."
+  },
+  "restricted.explain": {
+    "defaultMessage": "استخدام مجموعة البيانات مقيد. اقرأ الوصف واتصل بـ {creator} قبل استخدام هذه المادة."
+  },
+  "restricted.explain.creator": {
+    "defaultMessage": "مالك مجموعة البيانات"
+  },
+  "restricted.tag": {
+    "defaultMessage": "مقيد"
+  },
+  "result.error": {
+    "defaultMessage": "خطأ"
+  },
+  "result.more_results": {
+    "defaultMessage": "أكثر من {total} نتيجة"
+  },
+  "result.none": {
+    "defaultMessage": "لم يتم العثور على نتائج"
+  },
+  "result.results": {
+    "defaultMessage": "العثور على {total} من النتائج"
+  },
+  "result.searching": {
+    "defaultMessage": "جاري البحث"
+  },
+  "result.solo": {
+    "defaultMessage": "تم العثور على نتيجة واحدة"
+  },
+  "role.select.user": {
+    "defaultMessage": "اختر اسم المستخدم"
+  },
+  "schemaSelect.button.relationship": {
+    "defaultMessage": "أضف علاقة جديدة"
+  },
+  "schemaSelect.button.thing": {
+    "defaultMessage": "أضف موضوعاَ جديداً"
+  },
+  "search.advanced.all.helptext": {
+    "defaultMessage": "Results containing all of the given terms will be prioritized, followed by those with one or more of the terms."
+  },
+  "search.advanced.all.label": {
+    "defaultMessage": "Any of these words"
+  },
+  "search.advanced.clear": {
+    "defaultMessage": "Clear all"
+  },
+  "search.advanced.exact.helptext": {
+    "defaultMessage": "Only results with this exact word or phrase will be returned"
+  },
+  "search.advanced.exact.label": {
+    "defaultMessage": "This exact word/phrase"
+  },
+  "search.advanced.must.helptext": {
+    "defaultMessage": "Only results with these words will be returned"
+  },
+  "search.advanced.must.label": {
+    "defaultMessage": "Must contain these words"
+  },
+  "search.advanced.none.helptext": {
+    "defaultMessage": "Exclude results with these words"
+  },
+  "search.advanced.none.label": {
+    "defaultMessage": "None of these words"
+  },
+  "search.advanced.proximity.distance": {
+    "defaultMessage": "Distance"
+  },
+  "search.advanced.proximity.helptext": {
+    "defaultMessage": "Search for two terms within a certain distance of each other. For example, return results with the terms \"Bank\" and \"America\" occurring within two words from each other, such as \"Bank of America\", \"Bank in America\", even \"America has a Bank\"."
+  },
+  "search.advanced.proximity.label": {
+    "defaultMessage": "Terms in proximity to each other"
+  },
+  "search.advanced.proximity.term": {
+    "defaultMessage": "First term"
+  },
+  "search.advanced.proximity.term2": {
+    "defaultMessage": "Second term"
+  },
+  "search.advanced.submit": {
+    "defaultMessage": "Search"
+  },
+  "search.advanced.title": {
+    "defaultMessage": "Advanced Search"
+  },
+  "search.advanced.variants.distance": {
+    "defaultMessage": "Letters different"
+  },
+  "search.advanced.variants.helptext": {
+    "defaultMessage": "Increase the fuzziness of a search. For example, Wladimir~2 will return not just the term “Wladimir” but also similar spellings such as \"Wladimyr\" or \"Vladimyr\". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant."
+  },
+  "search.advanced.variants.label": {
+    "defaultMessage": "Spelling variations"
+  },
+  "search.advanced.variants.term": {
+    "defaultMessage": "Term"
+  },
+  "search.callout_message": {
+    "defaultMessage": "بعض المصادر مخفية عن المستخدمين المجهولين. اضغط {signInButton} لعرض جميع النتائج المسموح لك بالوصول إليها."
+  },
+  "search.callout_message.button_text": {
+    "defaultMessage": "تسجيل الدخول"
+  },
+  "search.facets.filtersSelected": {
+    "defaultMessage": "{count} محدد"
+  },
+  "search.facets.no_items": {
+    "defaultMessage": "لا توجد خيارات"
+  },
+  "search.facets.showMore": {
+    "defaultMessage": "اعرض المزيد:"
+  },
+  "search.filterTag.ancestors": {
+    "defaultMessage": "في:"
+  },
+  "search.filterTag.dates_after": {
+    "defaultMessage": "After"
+  },
+  "search.filterTag.dates_before": {
+    "defaultMessage": "Before"
+  },
+  "search.filterTag.exclude": {
+    "defaultMessage": "ليس:"
+  },
+  "search.filterTag.role": {
+    "defaultMessage": "تصفية حسب الوصول"
+  },
+  "search.no_results_description": {
+    "defaultMessage": "حاول أن تجعل بحثك أكثر عمومية"
+  },
+  "search.no_results_title": {
+    "defaultMessage": "لم يتم العثور على نتائج"
+  },
+  "search.nolabel_placeholder": {
+    "defaultMessage": "ابحث عن شركات وأشخاص ومستندات"
+  },
+  "search.placeholder": {
+    "defaultMessage": "بحث في {label}"
+  },
+  "search.placeholder_default": {
+    "defaultMessage": "Search…"
+  },
+  "search.screen.breadcrumb": {
+    "defaultMessage": "بحث"
+  },
+  "search.screen.dates_disabled": {
+    "defaultMessage": "No dates available"
+  },
+  "search.screen.dates_label": {
+    "defaultMessage": "نتائج"
+  },
+  "search.screen.dates_title": {
+    "defaultMessage": "تواريخ"
+  },
+  "search.screen.export": {
+    "defaultMessage": "تصدير"
+  },
+  "search.screen.export_disabled": {
+    "defaultMessage": "لا يمكن تصدير أكثر من 10000 نتيجة في المرة الواحدة"
+  },
+  "search.screen.export_disabled_empty": {
+    "defaultMessage": "No results to export."
+  },
+  "search.screen.filters": {
+    "defaultMessage": "تصفية"
+  },
+  "search.screen.hide_dates": {
+    "defaultMessage": "اخفاء تصقية التاريخ"
+  },
+  "search.screen.show_dates": {
+    "defaultMessage": "اطهار تصفية التاريخ"
+  },
+  "search.title": {
+    "defaultMessage": "بحث"
+  },
+  "settings.api_key": {
+    "defaultMessage": "مفتاح API الوصول السري "
+  },
+  "settings.confirm": {
+    "defaultMessage": "(تأكيد)"
+  },
+  "settings.current_explain": {
+    "defaultMessage": "أدخل كلمة المرور الحالية لتعيين كلمة مرور جديدة."
+  },
+  "settings.current_password": {
+    "defaultMessage": "كلمة المرور الحالية"
+  },
+  "settings.email": {
+    "defaultMessage": "البريد الكتروني"
+  },
+  "settings.email.muted": {
+    "defaultMessage": "استلام اشعارات رسائل البريد الإلكتروني"
+  },
+  "settings.email.no_change": {
+    "defaultMessage": "لا يمكن تغيير عنوان بريدك الإلكتروني"
+  },
+  "settings.email.tester": {
+    "defaultMessage": "اختبر الميزات الجديدة قبل الانتهاء"
+  },
+  "settings.locale": {
+    "defaultMessage": "اللغة"
+  },
+  "settings.name": {
+    "defaultMessage": "الاسم"
+  },
+  "settings.new_password": {
+    "defaultMessage": "كلمة سر جديدة"
+  },
+  "settings.password.missmatch": {
+    "defaultMessage": "كلمة المرور غير مطابقة"
+  },
+  "settings.password.rules": {
+    "defaultMessage": "استخدم ستة أحرف على الأقل"
+  },
+  "settings.password.title": {
+    "defaultMessage": "قم بتغيير كلمة المرور الخاصة بك"
+  },
+  "settings.save": {
+    "defaultMessage": "تحديث"
+  },
+  "settings.saved": {
+    "defaultMessage": "إنه رسمي، يتم تحديث ملفك الشخصي."
+  },
+  "settings.title": {
+    "defaultMessage": "الإعدادات"
+  },
+  "sidebar.open": {
+    "defaultMessage": "توسيع النطاق"
+  },
+  "signup.activate": {
+    "defaultMessage": "Activate your account"
+  },
+  "signup.inbox.desc": {
+    "defaultMessage": "لقد أرسلنا لك بريدًا إلكترونيًا ، يرجى اتباع الرابط لإتمام عملية التسجيل"
+  },
+  "signup.inbox.title": {
+    "defaultMessage": "تحقق من بريدك الوارد"
+  },
+  "signup.login": {
+    "defaultMessage": "هل لديك حساب؟ تسجيل الدخول!"
+  },
+  "signup.register": {
+    "defaultMessage": "تسجيل"
+  },
+  "signup.register.question": {
+    "defaultMessage": "ليس لديك حساب؟ سجل!"
+  },
+  "signup.title": {
+    "defaultMessage": "Sign in"
+  },
+  "sorting.bar.created_by": {
+    "defaultMessage": "Show:"
+  },
+  "sorting.bar.direction": {
+    "defaultMessage": "اتجاه:"
+  },
+  "sorting.bar.sort": {
+    "defaultMessage": "Sort by:"
+  },
+  "sources.index.empty": {
+    "defaultMessage": "هذه المجموعة ليست مرتبطة بأي من مجموعات بيانات."
+  },
+  "sources.index.placeholder": {
+    "defaultMessage": "ابحث في مجموعات بيانات التابعة لـ {group} ..."
+  },
+  "status.no_collection": {
+    "defaultMessage": "Other tasks"
+  },
+  "tags.results": {
+    "defaultMessage": "اقتباسات"
+  },
+  "tags.title": {
+    "defaultMessage": "المحددات المستخرجة"
+  },
+  "text.loading": {
+    "defaultMessage": "تحميل..."
+  },
+  "valuelink.tooltip": {
+    "defaultMessage": "ذكرت {count}  في  {appName}"
+  },
+  "xref.compute": {
+    "defaultMessage": "احسب"
+  },
+  "xref.context.explain1": {
+    "defaultMessage": "تساعدك مراجعة مطابقات المراجع  على الإبلاغ عن العملاء المحتملين ومشاركتهم. تعتبر أحكامك معلومات حساسة ، لذا يرجى تحديد مجموعة المستخدمين التي يمكنهم مشاهدتها."
+  },
+  "xref.context.private": {
+    "defaultMessage": "التزم بالخصوصية (دون مشاركة)"
+  },
+  "xref.context.select": {
+    "defaultMessage": "مشاركة مع:"
+  },
+  "xref.context.submit": {
+    "defaultMessage": "ابدء المراجعة"
+  },
+  "xref.context.title": {
+    "defaultMessage": "مراجعة التطايق"
+  },
+  "xref.download": {
+    "defaultMessage": "Export results"
+  },
+  "xref.entity": {
+    "defaultMessage": "مرجع"
+  },
+  "xref.match": {
+    "defaultMessage": "تطابق محتمل"
+  },
+  "xref.match_collection": {
+    "defaultMessage": "مجموعة البيانات"
+  },
+  "xref.recompute": {
+    "defaultMessage": "إعادة الحساب"
+  },
+  "xref.score": {
+    "defaultMessage": "نتيجة"
   }
 }

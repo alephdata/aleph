@@ -71,7 +71,7 @@ class XrefApiTestCase(TestCase):
         self.stage = get_stage(self.residents, OP_XREF)
 
     def test_export(self):
-        xref.xref_collection(self.stage, self.residents)
+        xref.xref_collection(self.residents)
         url = "/api/2/collections/%s/xref.xlsx" % self.obsidian.id
         res = self.client.post(url)
         assert res.status_code == 403, res
@@ -81,7 +81,7 @@ class XrefApiTestCase(TestCase):
         assert res.status_code == 202, res
 
     def test_matches(self):
-        xref.xref_collection(self.stage, self.residents)
+        xref.xref_collection(self.residents)
         url = "/api/2/collections/%s/xref" % self.residents.id
         # Not logged in
         res = self.client.get(url)

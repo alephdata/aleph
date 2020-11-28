@@ -117,6 +117,9 @@ class QueryParser(object):
 class SearchQueryParser(QueryParser):
     """ElasticSearch-specific query parameters."""
 
+    # Facets with known, limited cardinality:
+    SMALL_FACETS = ("schema", "schemata", "collection_id", "countries", "languages")
+
     def __init__(self, args, authz, limit=None):
         super(SearchQueryParser, self).__init__(args, authz, limit=limit)
         self.offset = min(MAX_PAGE, self.offset)
@@ -139,14 +142,21 @@ class SearchQueryParser(QueryParser):
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""
-        return self.getint("facet_size:%s" % name, 50)
+        facet_size = self.getint("facet_size:%s" % name, 20)
+        # Added to mitigate a DDoS by scripted facet bots (2020-11-24):
+        if not self.authz.logged_in and name not in self.SMALL_FACETS:
+            facet_size = min(50, facet_size)
+        return facet_size
 
     def get_facet_total(self, name):
         """Flag to perform a count of the total number of distinct values."""
+        if not self.authz.logged_in and name not in self.SMALL_FACETS:
+            return False
         return self.getbool("facet_total:%s" % name, False)
 
     def get_facet_values(self, name):
         """Flag to disable returning actual values (i.e. count only)."""
+        # Added to mitigate a DDoS by scripted facet bots (2020-11-24):
         if self.get_facet_size(name) == 0:
             return False
         return self.getbool("facet_values:%s" % name, True)

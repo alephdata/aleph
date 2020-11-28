@@ -71,8 +71,10 @@ def handle_oauth(provider, oauth_token):
     if role is None:
         if settings.OAUTH_MIGRATE_SUB:
             role = Role.by_email(email)
-        if role is None:
-            role = Role.load_or_create(role_id, Role.USER, name, email=email)
+    if role is None:
+        role = Role.load_or_create(role_id, Role.USER, name, email=email)
+    if not role.is_actor:
+        return None
     role.foreign_id = role_id
     role.email = email
     role.name = name

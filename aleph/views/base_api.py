@@ -1,6 +1,7 @@
 import logging
 from babel import Locale
 from functools import lru_cache
+from urllib.parse import urlencode
 from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
@@ -36,7 +37,10 @@ def _metadata_locale(locale):
     if settings.OAUTH:
         auth["oauth_uri"] = url_for("sessions_api.oauth_init")
         metadata = oauth.provider.load_server_metadata()
-        auth["logout"] = metadata.get("end_session_endpoint", auth["logout"])
+        logout_endpoint = metadata.get("end_session_endpoint")
+        if logout_endpoint is not None:
+            query = urlencode({"post_logout_redirect_uri": auth["logout"]})
+            auth["logout"] = logout_endpoint + "?" + query
     locales = settings.UI_LANGUAGES
     locales = {loc: Locale(loc).get_language_name(loc) for loc in locales}
 

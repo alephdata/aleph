@@ -43,8 +43,18 @@ class SearchApiTestCase(TestCase):
         res = self.client.get(self.url + "&facet=names&facet_total:names=true")
         assert res.status_code == 200, res
         facet = res.json["facets"]["names"]
-        assert facet["total"] == 2, facet["total"]
-        res = self.client.get(self.url + "&facet=banana&facet_total:banana=true")
+        assert "total" not in facet, facet
+
+        _, headers = self.login(is_admin=True)
+        res = self.client.get(
+            self.url + "&facet=names&facet_total:names=true", headers=headers
+        )
+        assert res.status_code == 200, res
+        facet = res.json["facets"]["names"]
+        assert facet["total"] == 5, facet["total"]
+        res = self.client.get(
+            self.url + "&facet=banana&facet_total:banana=true", headers=headers
+        )
         assert res.status_code == 200, res
         banana_facet = res.json["facets"]["banana"]
         assert banana_facet["total"] == 0, banana_facet["total"]

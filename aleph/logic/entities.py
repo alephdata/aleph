@@ -11,8 +11,10 @@ from followthemoney.exc import InvalidData
 from aleph.core import db, cache
 from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
+from aleph.queues import queue_task, OP_UPDATE_ENTITY, OP_PRUNE_ENTITY
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
+from aleph.logic.xref import xref_entity
 from aleph.logic.util import latin_alt
 from aleph.index import xref as xref_index
 from aleph.logic.aggregator import delete_aggregator_entity
@@ -21,7 +23,7 @@ from aleph.logic.graph import Graph
 log = logging.getLogger(__name__)
 
 
-def upsert_entity(data, collection, authz=None, sync=False):
+def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
     """Create or update an entity in the database. This has a side hustle
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
@@ -45,10 +47,19 @@ def upsert_entity(data, collection, authz=None, sync=False):
     entity.data = proxy.properties
     db.session.add(entity)
 
-    delete_aggregator_entity(collection, entity.id)
     index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(collection, entity.id)
+    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity.id)
     return entity.id
+
+
+def update_entity(collection, entity_id=None, job_id=None):
+    """Update xref and aggregator after an entity has been edited."""
+    log.info("[%s] Prune entity: %s", collection, entity_id)
+    delete_aggregator_entity(collection, entity_id)
+    entity = index.get_entity(entity_id)
+    proxy = model.get_proxy(entity)
+    xref_entity(collection, proxy)
 
 
 def validate_entity(data):
@@ -90,15 +101,23 @@ def refresh_entity(collection, entity_id):
     refresh_collection(collection.id)
 
 
-def delete_entity(collection, entity, deleted_at=None, sync=False):
+def delete_entity(collection, entity, sync=False, job_id=None):
+    """Delete entity from index and redis, queue full prune."""
+    entity_id = collection.ns.sign(entity.get("id"))
+    index.delete_entity(entity_id, sync=sync)
+    refresh_entity(collection, entity_id)
+    queue_task(collection, OP_PRUNE_ENTITY, job_id=job_id, entity_id=entity_id)
+
+
+def prune_entity(collection, entity_id=None, job_id=None):
     # This is recursive and will also delete any entities which
     # reference the given entity. Usually this is going to be child
     # documents, or directoships referencing a person. It's a pretty
     # dangerous operation, though.
-    entity_id = collection.ns.sign(entity.get("id"))
-    for adjacent in index.iter_adjacent(entity):
-        log.warning("Recursive delete: %r", adjacent)
-        delete_entity(collection, adjacent, deleted_at=deleted_at, sync=sync)
+    log.info("[%s] Prune entity: %s", collection, entity_id)
+    for adjacent in index.iter_adjacent(collection.id, entity_id):
+        log.warning("Recursive delete: %s", adjacent.get("id"))
+        delete_entity(collection, adjacent, job_id=job_id)
     flush_notifications(entity_id, clazz=Entity)
     obj = Entity.by_id(entity_id, collection=collection)
     if obj is not None:
@@ -106,12 +125,12 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     doc = Document.by_id(entity_id, collection=collection)
     if doc is not None:
         doc.delete()
-    index.delete_entity(entity_id, sync=sync)
     EntitySetItem.delete_by_entity(entity_id)
     Mapping.delete_by_table(entity_id)
-    xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
+    xref_index.delete_xref(collection, entity_id=entity_id)
     delete_aggregator_entity(collection, entity_id)
     refresh_entity(collection, entity_id)
+    db.session.commit()
 
 
 def entity_references(entity, authz=None):

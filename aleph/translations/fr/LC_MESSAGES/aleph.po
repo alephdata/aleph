@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-13 15:36+0100\n"
+"POT-Creation-Date: 2020-11-16 08:52+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Mathieu Morey <mathieu@datactivi.st>, 2020\n"
 "Language-Team: French (https://www.transifex.com/aleph/teams/76591/fr/)\n"
@@ -346,19 +346,19 @@ msgstr "Nom de schéma invalide: %s"
 msgid "Invalid date: %s"
 msgstr "Date invalide: %s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Vous n'êtes pas autorisé à faire ceci."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Ce chemin n'existe pas."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Erreur interne du serveur."
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:245
 msgid "Access token is invalid."
 msgstr "Le jeton d'accès est invalide."
 
@@ -391,10 +391,10 @@ msgstr "Mot de passe incorrect."
 msgid "Invalid user or password."
 msgstr "Nom d'utilisateur ou mot de passe invalide."
 
-#: aleph/views/sessions_api.py:91
+#: aleph/views/sessions_api.py:90
 msgid "Authentication has failed."
 msgstr "L'authentification a échoué."
 
-#: aleph/views/util.py:73
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "Erreur pendant la validation des données"

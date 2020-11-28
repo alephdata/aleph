@@ -30,6 +30,8 @@ setup(
             "reindex = aleph.task_handlers:op_reindex_handler",
             "loadmapping = aleph.task_handlers:op_load_mapping_handler",
             "flushmapping = aleph.task_handlers:op_flush_mapping_handler",
+            "updateentity = aleph.task_handlers:op_update_entity_handler",
+            "pruneentity = aleph.task_handlers:op_prune_entity_handler",
             "exportsearch = aleph.task_handlers:op_export_search_results_handler",
             "exportxref = aleph.task_handlers:op_export_xref_results_handler",
         ],

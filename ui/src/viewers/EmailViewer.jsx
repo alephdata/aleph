@@ -18,6 +18,7 @@ class EmailViewer extends React.Component {
         const normValue = value.toLowerCase().trim();
         const eprop = document.schema.getProperty(entitiesProp);
         document.getProperty(eprop).forEach((entity) => {
+          if (!entity?.id) { return; }
           entity.getProperty('email').forEach((email) => {
             if (normValue.indexOf(email.toLowerCase().trim()) !== -1) {
               result = <Property.Value key={entity.id} prop={eprop} value={entity} translitLookup={entity.latinized} />;

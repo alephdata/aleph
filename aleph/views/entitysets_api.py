@@ -15,7 +15,7 @@ from aleph.views.entities_api import view as entity_view
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
-from aleph.views.util import parse_request, get_db_collection, get_flag
+from aleph.views.util import parse_request, get_db_collection, get_flag, get_session_id
 
 
 blueprint = Blueprint("entitysets_api", __name__)
@@ -275,7 +275,9 @@ def entities_update(entityset_id):
         if get_flag("validate", default=False):
             validate_entity(data)
         sync = get_flag("sync", default=True)
-        entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
+        entity_id = upsert_entity(
+            data, collection, authz=request.authz, sync=sync, job_id=get_session_id()
+        )
     EntitySetItem.save(
         entityset,
         entity_id,

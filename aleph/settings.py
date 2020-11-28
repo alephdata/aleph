@@ -6,6 +6,7 @@
 import os
 import uuid
 from servicelayer import env
+from urllib.parse import urlparse
 from flask_babel import lazy_gettext
 from datetime import timedelta
 
@@ -42,6 +43,10 @@ APP_BANNER = env.get("ALEPH_APP_BANNER")
 FORCE_HTTPS = True if APP_UI_URL.lower().startswith("https") else False
 FORCE_HTTPS = env.to_bool("ALEPH_FORCE_HTTPS", FORCE_HTTPS)
 PREFERRED_URL_SCHEME = "https" if FORCE_HTTPS else "http"
+PREFERRED_URL_SCHEME = env.get("ALEPH_URL_SCHEME", PREFERRED_URL_SCHEME)
+# Apply HTTPS rules to the UI URL:
+APP_PARSED_UI_URL = urlparse(APP_UI_URL)._replace(scheme=PREFERRED_URL_SCHEME)
+APP_UI_URL = APP_PARSED_UI_URL.geturl()
 
 # Content security policy:
 CONTENT_POLICY = "default-src: 'self' 'unsafe-inline' 'unsafe-eval' data: *"

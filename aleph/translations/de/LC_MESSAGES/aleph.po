@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-13 15:36+0100\n"
+"POT-Creation-Date: 2020-11-16 08:52+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -144,7 +144,7 @@ msgstr "aktiv"
 
 #: aleph/model/common.py:117
 msgid "successful"
-msgstr ""
+msgstr "erfolgreich"
 
 #: aleph/model/common.py:118
 msgid "failed"
@@ -156,7 +156,7 @@ msgstr "Ungültige Entity-ID"
 
 #: aleph/model/event.py:49
 msgid "New datasets"
-msgstr ""
+msgstr "Neue Datensätze"
 
 #: aleph/model/event.py:50
 msgid "{{actor}} created {{collection}}"
@@ -164,7 +164,7 @@ msgstr "{{actor}} legte {{collection}} an"
 
 #: aleph/model/event.py:57
 msgid "Document uploads"
-msgstr ""
+msgstr "Dokumentenuploads"
 
 #: aleph/model/event.py:58
 msgid "{{actor}} added {{document}} to {{collection}}"
@@ -172,7 +172,7 @@ msgstr "{{actor}} fügte {{document}} zu {{collection}} hinzu"
 
 #: aleph/model/event.py:65
 msgid "Entities generated"
-msgstr ""
+msgstr "Generierte Objekte"
 
 #: aleph/model/event.py:66
 msgid "{{actor}} generated entities from {{table}} in {{collection}}"
@@ -181,7 +181,7 @@ msgstr ""
 
 #: aleph/model/event.py:75
 msgid "New network diagram"
-msgstr ""
+msgstr "Neues Netzwerkdiagramm"
 
 #: aleph/model/event.py:76
 msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
@@ -189,7 +189,7 @@ msgstr "{{actor}} skizzierte das Netzwerk {{diagram}} in {{collection}}"
 
 #: aleph/model/event.py:85
 msgid "New diagrams and lists"
-msgstr ""
+msgstr "Neue Diagramme und Listen"
 
 #: aleph/model/event.py:86
 msgid "{{actor}} created {{entityset}} in {{collection}}"
@@ -197,7 +197,7 @@ msgstr "{{actor}} lefte {{entityset}} in {{collection}} an."
 
 #: aleph/model/event.py:93
 msgid "Alert notifications"
-msgstr ""
+msgstr "Benachrichtigungen"
 
 #: aleph/model/event.py:94
 msgid "{{entity}} matches your alert for {{alert}}"
@@ -205,7 +205,7 @@ msgstr "{{entity}} erwähnt ihr Abo-Schlagwort {{alert}}"
 
 #: aleph/model/event.py:101
 msgid "Dataset access change"
-msgstr ""
+msgstr "Änderung von Zugriffsrechten"
 
 #: aleph/model/event.py:102
 msgid "{{actor}} gave {{role}} access to {{collection}}"
@@ -213,7 +213,7 @@ msgstr "{{actor}} hat {{role}} Zugriff zu {{collection}} erteilt"
 
 #: aleph/model/event.py:111
 msgid "Dataset published"
-msgstr ""
+msgstr "Datensatz veröffentlicht"
 
 #: aleph/model/event.py:112
 msgid "{{actor}} published {{collection}}"
@@ -221,11 +221,11 @@ msgstr "{{actor}} veröffentlichte {{collection}}"
 
 #: aleph/model/event.py:119
 msgid "Exports completed"
-msgstr ""
+msgstr "Vollständige Exporte"
 
 #: aleph/model/event.py:120
 msgid "{{export}} is ready for download"
-msgstr ""
+msgstr "{{export}} ist zum Download bereit"
 
 #: aleph/search/__init__.py:50
 msgid "No schema is specified for the query."
@@ -237,6 +237,9 @@ msgid ""
 "    The following export is ready for download:\n"
 "    "
 msgstr ""
+"\n"
+"    Der folgende Export ist zum herunterladen bereit:\n"
+"    "
 
 #: aleph/templates/email/export.html:13
 #, python-format
@@ -246,6 +249,10 @@ msgid ""
 "    Browse all of your available exports here:\n"
 "    "
 msgstr ""
+"\n"
+"    Dieser Download-Link wird am %(expiration_date)s verfallen.\n"
+"    Sehen sie alle verfügbaren Exporte hier:\n"
+"    "
 
 #: aleph/templates/email/layout.html:45
 #, python-format
@@ -347,26 +354,26 @@ msgstr "Ungültige Schemakennung: %s"
 msgid "Invalid date: %s"
 msgstr "Ungültiges Datum: %s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Ihnen fehlt das Recht, dies zu tun."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Dieser Pfad existiert nicht."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Interner Server-Fehler"
 
-#: aleph/views/base_api.py:243
+#: aleph/views/base_api.py:245
 msgid "Access token is invalid."
 msgstr "Ungültiger Zugriffstoken"
 
 #: aleph/views/entities_api.py:167
 #, python-format
 msgid "Search: %s"
-msgstr ""
+msgstr "Suche: %s"
 
 #: aleph/views/roles_api.py:61
 msgid "prefix filter is too short"
@@ -392,10 +399,10 @@ msgstr "Falsches Passwort."
 msgid "Invalid user or password."
 msgstr "Der Nutzername oder das Passwort ist falsch."
 
-#: aleph/views/sessions_api.py:91
+#: aleph/views/sessions_api.py:90
 msgid "Authentication has failed."
 msgstr "Die Anmeldung ist fehlgeschlagen."
 
-#: aleph/views/util.py:73
+#: aleph/views/util.py:75
 msgid "Error during data validation"
 msgstr "Validierungsfehler"

@@ -5,7 +5,7 @@ import { InputGroup } from '@blueprintjs/core';
 
 const messages = defineMessages({
   search_placeholder: {
-    id: 'search.placeholder',
+    id: 'search.placeholder_default',
     defaultMessage: 'Search…',
   },
 });

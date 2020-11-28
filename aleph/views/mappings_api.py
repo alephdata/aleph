@@ -262,8 +262,7 @@ def trigger(collection_id, mapping_id):
     mapping.set_status(Status.PENDING)
     db.session.commit()
     job_id = get_session_id()
-    payload = {"mapping_id": mapping.id}
-    queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
+    queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, mapping_id=mapping.id)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping, status=202)
 
@@ -312,7 +311,7 @@ def flush(collection_id, mapping_id):
         collection,
         OP_FLUSH_MAPPING,
         job_id=get_session_id(),
-        payload={"mapping_id": mapping_id},
+        mapping_id=mapping_id,
     )
     return ("", 202)
 
@@ -358,6 +357,6 @@ def delete(collection_id, mapping_id):
         collection,
         OP_FLUSH_MAPPING,
         job_id=get_session_id(),
-        payload={"mapping_id": mapping_id},
+        mapping_id=mapping_id,
     )
     return ("", 204)

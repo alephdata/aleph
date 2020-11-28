@@ -1,7 +1,7 @@
 # Dependencies maintained by OCCRP
 banal==1.0.1
 urlnormalizer==1.2.5
-followthemoney==2.1.11
+followthemoney==2.1.13
 followthemoney-store[postgresql]==2.2.3
 fingerprints==1.0.1
 servicelayer[google,amazon]==1.15.1
@@ -39,11 +39,11 @@ zipstream-new==1.1.8
 
 # Testing dependencies
 factory-boy==3.1.0
-Faker==4.14.2
+Faker==4.17.1
 nose
 coverage
 coveralls
 
 # Tracing and logging libraries
 python-json-logger==2.0.1
-google-cloud-logging==1.15.1
+google-cloud-logging==2.0.0

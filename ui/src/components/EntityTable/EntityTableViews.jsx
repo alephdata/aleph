@@ -23,7 +23,12 @@ const messages = defineMessages({
 class EntityTableViews extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      updateStatus: null,
+    };
+
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.onStatusChange = this.onStatusChange.bind(this);
   }
 
   handleTabChange(type) {
@@ -38,13 +43,20 @@ class EntityTableViews extends React.PureComponent {
     });
   }
 
+  onStatusChange(updateStatus) {
+    this.setState({ updateStatus });
+  }
+
   renderTable() {
     const { collection, activeSchema, querySchemaEntities, isEntitySet, writeable } = this.props;
+    const { updateStatus } = this.state;
+
     return <EntityTable
       query={querySchemaEntities(activeSchema)}
       collection={collection}
       schema={activeSchema}
-      onStatusChange={() => { }}
+      onStatusChange={this.onStatusChange}
+      updateStatus={updateStatus}
       writeable={writeable}
       isEntitySet={isEntitySet}
     />;

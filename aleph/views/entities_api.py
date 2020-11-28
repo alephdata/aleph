@@ -23,7 +23,7 @@ from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
-from aleph.queues import queue_task, OP_EXPORT_SEARCH_RESULTS
+from aleph.queues import queue_task, OP_EXPORT_SEARCH
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)
@@ -141,7 +141,7 @@ def index():
     return EntitySerializer.jsonify_result(result, extra={"links": links})
 
 
-@blueprint.route("/api/2/search/export", methods=["POST"])  # noqa
+@blueprint.route("/api/2/search/export", methods=["POST"])
 def export():
     """
     ---
@@ -166,15 +166,14 @@ def export():
     query = EntitiesQuery(parser)
     label = gettext("Search: %s") % query.to_text()
     export = create_export(
-        operation=OP_EXPORT_SEARCH_RESULTS,
+        operation=OP_EXPORT_SEARCH,
         role_id=request.authz.id,
         label=label,
         mime_type=ZIP,
         meta={"query": query.get_full_query()},
     )
     job_id = get_session_id()
-    payload = {"export_id": export.id}
-    queue_task(None, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
+    queue_task(None, OP_EXPORT_SEARCH, job_id=job_id, export_id=export.id)
     return ("", 202)
 
 
@@ -249,7 +248,13 @@ def create():
     data.pop("id", None)
     if get_flag("validate", default=False):
         validate_entity(data)
-    entity_id = upsert_entity(data, collection, authz=request.authz, sync=True)
+    entity_id = upsert_entity(
+        data,
+        collection,
+        authz=request.authz,
+        sync=True,
+        job_id=get_session_id(),
+    )
     db.session.commit()
     tag_request(entity_id=entity_id, collection_id=collection.id)
     entity = get_index_entity(entity_id, request.authz.READ)
@@ -466,8 +471,13 @@ def update(entity_id):
     data["id"] = entity_id
     if get_flag("validate", default=False):
         validate_entity(data)
-    sync = get_flag("sync", default=True)
-    entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
+    entity_id = upsert_entity(
+        data,
+        collection,
+        authz=request.authz,
+        sync=get_flag("sync", default=True),
+        job_id=get_session_id(),
+    )
     db.session.commit()
     return view(entity_id)
 
@@ -495,8 +505,8 @@ def delete(entity_id):
     collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
     tag_request(collection_id=collection.id)
     sync = get_flag("sync", default=True)
-    delete_entity(collection, entity, sync=sync)
-    db.session.commit()
+    job_id = get_session_id()
+    delete_entity(collection, entity, sync=sync, job_id=job_id)
     return ("", 204)
 
 

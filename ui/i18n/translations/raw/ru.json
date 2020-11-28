@@ -1,924 +1,39 @@
 {
-  "auth.bad_request": {
-    "defaultMessage": "Серверу не понравился ваш запрос"
-  },
-  "auth.unauthorized": {
-    "defaultMessage": "Требуется авторизация"
-  },
-  "auth.server_error": {
-    "defaultMessage": "Ошибка сервера"
-  },
-  "auth.unknown_error": {
-    "defaultMessage": "Произошла ошибка"
-  },
-  "auth.success": {
-    "defaultMessage": "Вы успешно авторизованы"
-  },
-  "alerts.heading": {
-    "defaultMessage": "Оповещения о новых результатах поиска"
-  },
-  "alerts.save": {
-    "defaultMessage": "Обновить"
+  "alert.manager.description": {
+    "defaultMessage": "Укажите искомые слова и, в случае, если они будут найдены в новых документах, вы получите уведомление."
   },
   "alerts.add_placeholder": {
     "defaultMessage": "Создать новое оповещение"
   },
+  "alerts.heading": {
+    "defaultMessage": "Оповещения о новых результатах поиска"
+  },
   "alerts.no_alerts": {
     "defaultMessage": "Вы не подписаны на оповещения"
+  },
+  "alerts.save": {
+    "defaultMessage": "Обновить"
+  },
+  "alerts.title": {
+    "defaultMessage": "Управление оповещениями"
   },
   "alerts.track": {
     "defaultMessage": "Отслеживать"
   },
-  "pass.auth.not_same": {
-    "defaultMessage": "Пароли не совпадают!"
+  "auth.bad_request": {
+    "defaultMessage": "Серверу не понравился ваш запрос"
   },
-  "password_auth.email": {
-    "defaultMessage": "Электронный адрес"
+  "auth.server_error": {
+    "defaultMessage": "Ошибка сервера"
   },
-  "password_auth.name": {
-    "defaultMessage": "Ваше имя"
+  "auth.success": {
+    "defaultMessage": "Вы успешно авторизованы"
   },
-  "password_auth.password": {
-    "defaultMessage": "Пароль"
+  "auth.unauthorized": {
+    "defaultMessage": "Требуется авторизация"
   },
-  "password_auth.confirm": {
-    "defaultMessage": "Подтвердить пароль"
-  },
-  "password_auth.signin": {
-    "defaultMessage": "Войти"
-  },
-  "password_auth.signup": {
-    "defaultMessage": "Зарегистрироваться"
-  },
-  "password_auth.activate": {
-    "defaultMessage": "Активировать"
-  },
-  "nav.view_notifications": {
-    "defaultMessage": "Уведомления"
-  },
-  "nav.casefiles": {
-    "defaultMessage": "Персональные наборы данных"
-  },
-  "nav.diagrams": {
-    "defaultMessage": "Диаграммы"
-  },
-  "nav.settings": {
-    "defaultMessage": "Настройки"
-  },
-  "nav.signout": {
-    "defaultMessage": "Выйти"
-  },
-  "nav.signin_register": {
-    "defaultMessage": "Войти / Зарегистрироваться"
-  },
-  "nav.querylogs": {
-    "defaultMessage": "История поиска"
-  },
-  "nav.alerts": {
-    "defaultMessage": "Оповещения"
-  },
-  "nav.signin": {
-    "defaultMessage": "Войти"
-  },
-  "collection.addSchema.placeholder": {
-    "defaultMessage": "Добавить новый тип сущности"
-  },
-  "collection.publisher": {
-    "defaultMessage": "Издатель"
-  },
-  "collection.info_url": {
-    "defaultMessage": "Ссылка на описание"
-  },
-  "collection.data_url": {
-    "defaultMessage": "Ссылка на данные"
-  },
-  "collection.creator": {
-    "defaultMessage": "Автор"
-  },
-  "collection.team": {
-    "defaultMessage": "Доступ"
-  },
-  "collection.countries": {
-    "defaultMessage": "Страна"
-  },
-  "collection.frequency": {
-    "defaultMessage": "Обновления"
-  },
-  "collection.updated_at": {
-    "defaultMessage": "Последнее изменение"
-  },
-  "collection.info.reingest": {
-    "defaultMessage": "Перезагрузить документы"
-  },
-  "collection.info.reindex": {
-    "defaultMessage": "Переиндексировать всё содержимое"
-  },
-  "collection.info.delete": {
-    "defaultMessage": "Удалить набор данных"
-  },
-  "collection.info.edit": {
-    "defaultMessage": "Настройки"
-  },
-  "collection.info.access": {
-    "defaultMessage": "Доступ"
-  },
-  "collection.foreign_id": {
-    "defaultMessage": "Внешний ID"
-  },
-  "collection.reconcile": {
-    "defaultMessage": "Объединение данных"
-  },
-  "collection.reconcile.description": {
-    "defaultMessage": "Сопоставить пользовательские данные с сущностями из этой коллекции с помощью свободного инструмента {openrefine}\nпутём добавления следующих точек совмещения:"
-  },
-  "collection.reindex.processing": {
-    "defaultMessage": "Индексирование запущено."
-  },
-  "collection.reindex.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "collection.reindex.confirm": {
-    "defaultMessage": "Запустить индексирование"
-  },
-  "collection.reindex.flush": {
-    "defaultMessage": "Очистить индекс перед переиндексацией"
-  },
-  "collection.analyze.alert.text": {
-    "defaultMessage": "Все сущности в наборе данных будут переиндексированы. Иногда это позволяет исправить ошибки в представлении данных."
-  },
-  "collection.reingest.processing": {
-    "defaultMessage": "Перезагрузка документов запущена."
-  },
-  "collection.analyze.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "collection.reingest.confirm": {
-    "defaultMessage": "Запустить анализ"
-  },
-  "collection.reingest.index": {
-    "defaultMessage": "Проиндексировать документы в процессе обработки."
-  },
-  "collection.reingest.text": {
-    "defaultMessage": "Все документы в этом наборе данных будут проанализированы повторно. Это займёт некоторое время."
-  },
-  "collection.statistics.showmore": {
-    "defaultMessage": "Ещё"
-  },
-  "collection.status.cancel_button": {
-    "defaultMessage": "Отменить процесс"
-  },
-  "collection.status.title": {
-    "defaultMessage": "Обновлено {percent}%"
-  },
-  "collection.status.message": {
-    "defaultMessage": "Данные загружаются."
-  },
-  "entity.info.overview": {
-    "defaultMessage": "Информация"
-  },
-  "entity.info.documents": {
-    "defaultMessage": "Документы"
-  },
-  "entity.info.entities": {
-    "defaultMessage": "Сущности"
-  },
-  "collection.info.diagrams": {
-    "defaultMessage": "Диаграммы"
-  },
-  "entity.info.xref": {
-    "defaultMessage": "Перекрёстное сравнение"
-  },
-  "xref.compute": {
-    "defaultMessage": "Обработать"
-  },
-  "xref.recompute": {
-    "defaultMessage": "Перезапустить"
-  },
-  "xref.download": {
-    "defaultMessage": "Скачать в формате Excel"
-  },
-  "collection.index.no_results": {
-    "defaultMessage": "Наборы данных, соответствующие поиску, не найдены"
-  },
-  "collection.last_updated": {
-    "defaultMessage": "Обновлено {date}"
-  },
-  "footer.aleph": {
-    "defaultMessage": "Алеф {version}"
-  },
-  "search.facets.no_items": {
-    "defaultMessage": "Варианты отсутствуют"
-  },
-  "clipboard.copy.before": {
-    "defaultMessage": "Скопировать в буфер"
-  },
-  "clipboard.copy.after": {
-    "defaultMessage": "Скопировано в буфер"
-  },
-  "file_import.error": {
-    "defaultMessage": "Ошибка импорта файла"
-  },
-  "valuelink.tooltip": {
-    "defaultMessage": "Упоминаний в {appName}: {count}"
-  },
-  "restricted.explain": {
-    "defaultMessage": "Использование этого набора данных ограничено. Прочтите описание и свяжитесь с {creator}, прежде чем использовать эти материалы."
-  },
-  "restricted.explain.creator": {
-    "defaultMessage": "владелец набора данных"
-  },
-  "restricted.tag": {
-    "defaultMessage": "ОГРАНИЧЕНО"
-  },
-  "result.searching": {
-    "defaultMessage": "Поиск..."
-  },
-  "result.error": {
-    "defaultMessage": "Ошибка"
-  },
-  "result.more_results": {
-    "defaultMessage": "Найдено результатов: более {total}"
-  },
-  "result.none": {
-    "defaultMessage": "Ничего не найдено"
-  },
-  "result.solo": {
-    "defaultMessage": "Один результат"
-  },
-  "result.results": {
-    "defaultMessage": "Результатов поиска: {total}"
-  },
-  "role.select.user": {
-    "defaultMessage": "Выберите пользователя"
-  },
-  "search.placeholder": {
-    "defaultMessage": "Поиск в {label}"
-  },
-  "queryLogs.add_placeholder": {
-    "defaultMessage": "Оповещать о новых результатах поиска..."
-  },
-  "queryLogs.no_alerts": {
-    "defaultMessage": "Вы не подписаны на оповещения"
-  },
-  "queryLogs.query.search": {
-    "defaultMessage": "Искть {query}"
-  },
-  "queryLogs.query.delete.tooltip": {
-    "defaultMessage": "Удалить из {listType}"
-  },
-  "search.callout_message": {
-    "defaultMessage": "Некоторые коллекции данных недоступны анонимным пользователям — нажмите {signInButton}, чтобы авторизоваться!"
-  },
-  "search.callout_message.button_text": {
-    "defaultMessage": "Войти"
-  },
-  "collection.index.sort.created_at": {
-    "defaultMessage": "Дата создания"
-  },
-  "collection.index.sort.updated_at": {
-    "defaultMessage": "Дата обновления"
-  },
-  "collection.index.sort.count": {
-    "defaultMessage": "Размер"
-  },
-  "collection.index.sort.label": {
-    "defaultMessage": "Название"
-  },
-  "collection.index.filter.mine": {
-    "defaultMessage": "Созданы мной"
-  },
-  "collection.index.filter.all": {
-    "defaultMessage": "Все"
-  },
-  "sorting.bar.label": {
-    "defaultMessage": "Sort by:"
-  },
-  "sorting.bar.direction": {
-    "defaultMessage": "Направление:"
-  },
-  "text.loading": {
-    "defaultMessage": "Загрузка..."
-  },
-  "dashboard.notifications": {
-    "defaultMessage": "Уведомления"
-  },
-  "dashboard.history": {
-    "defaultMessage": "История поиска"
-  },
-  "dashboard.alerts": {
-    "defaultMessage": "Оповещения"
-  },
-  "dashboard.cases": {
-    "defaultMessage": "Персональные наборы данных"
-  },
-  "dashboard.diagrams": {
-    "defaultMessage": "Диаграммы"
-  },
-  "dashboard.settings": {
-    "defaultMessage": "Настройки"
-  },
-  "dashboard.status": {
-    "defaultMessage": "Системный статус"
-  },
-  "dashboard.activity": {
-    "defaultMessage": "События"
-  },
-  "dashboard.workspace": {
-    "defaultMessage": "Рабочая среда"
-  },
-  "dashboard.groups": {
-    "defaultMessage": "Группы"
-  },
-  "diagrams.no_diagrams": {
-    "defaultMessage": "Диаграммы отсутствуют."
-  },
-  "diagram.last_updated": {
-    "defaultMessage": "Обновлено {date}"
-  },
-  "entity.document.manager.empty": {
-    "defaultMessage": "Здесь ничего нет."
-  },
-  "entity.document.manager.emptyCanUpload": {
-    "defaultMessage": "Файлы или папки отсутствуют. Перетащите файлы сюда или кликните, чтобы загрузить."
-  },
-  "entity.document.manager.search_placeholder": {
-    "defaultMessage": "Поиск по документам"
-  },
-  "entity.document.manager.cannot_map": {
-    "defaultMessage": "Выберите документ с таблицей для создания сущностей"
-  },
-  "document.upload.button": {
-    "defaultMessage": "Загрузить"
-  },
-  "document.mapping.start": {
-    "defaultMessage": "Создать сущности"
-  },
-  "refresh.callout_message": {
-    "defaultMessage": "Обрабатываем документы. Пожалуйста, подождите..."
-  },
-  "entity.viewer.delete": {
-    "defaultMessage": "Удалить"
-  },
-  "infoMode.collection": {
-    "defaultMessage": "Набор данных"
-  },
-  "infoMode.collection.entries": {
-    "defaultMessage": "{count} записей"
-  },
-  "entity.manager.search_placeholder": {
-    "defaultMessage": "Искать {schema}"
-  },
-  "entity.manager.search_empty": {
-    "defaultMessage": "Никаких совпадений с {schema} не найдено"
-  },
-  "entity.manager.edge_create_success": {
-    "defaultMessage": "{source} и {target} связаны"
-  },
-  "entity.viewer.bulk_import": {
-    "defaultMessage": "Массовый импорт"
-  },
-  "entity.viewer.add_link": {
-    "defaultMessage": "Связать"
-  },
-  "entity.viewer.add_to_diagram": {
-    "defaultMessage": "Добавить к диаграмме"
-  },
-  "mapping.title": {
-    "defaultMessage": "Создание структурированных сущностей"
-  },
-  "mapping.info": {
-    "defaultMessage": "Выполните нижследующие действия для маппинга ваших данных с сущностями модели Follow the Money. Подробнее см. {link}"
-  },
-  "mapping.infoLink": {
-    "defaultMessage": "Маппинг данных в Алефе"
-  },
-  "entity.properties.missing": {
-    "defaultMessage": "неизвестно"
-  },
-  "entity.references.no_relationships": {
-    "defaultMessage": "У этой сущности отсутствуют связи"
-  },
-  "entity.similar.empty": {
-    "defaultMessage": "Нет похожих записей"
-  },
-  "entity.tags.no_tags": {
-    "defaultMessage": "В данной записи селекторов нет"
-  },
-  "tags.title": {
-    "defaultMessage": "Найденные селекторы"
-  },
-  "tags.results": {
-    "defaultMessage": "Количество упоминаний"
-  },
-  "sidebar.open": {
-    "defaultMessage": "Развернуть"
-  },
-  "entity.info.info": {
-    "defaultMessage": "Информация"
-  },
-  "entity.info.view": {
-    "defaultMessage": "Просмотр"
-  },
-  "entity.info.text": {
-    "defaultMessage": "Текст"
-  },
-  "entity.info.attachments": {
-    "defaultMessage": "Вложения"
-  },
-  "entity.info.tags": {
-    "defaultMessage": "Упоминания"
-  },
-  "entity.info.similar": {
-    "defaultMessage": "Совпадения"
-  },
-  "entity.mapping.view": {
-    "defaultMessage": "Создать сущности"
-  },
-  "entity.search.no_results_title": {
-    "defaultMessage": "Ничего не найдено"
-  },
-  "entity.search.no_results_description": {
-    "defaultMessage": "Попробуйте расширить критерии поиска"
-  },
-  "entity.search.empty_title": {
-    "defaultMessage": "Эта папка пуста"
-  },
-  "entityset.create.login": {
-    "defaultMessage": "Для создания {type} необходимо авторизоваться"
-  },
-  "entitysets.index.create": {
-    "defaultMessage": "Новый {type}"
-  },
-  "entitysets.index.import": {
-    "defaultMessage": "Импортировать {type}"
-  },
-  "entity_set.menu.search_placeholder": {
-    "defaultMessage": "Поиск в {set_name}"
-  },
-  "entityset.info.export": {
-    "defaultMessage": "Экспорт"
-  },
-  "entityset.info.delete": {
-    "defaultMessage": "Удалить"
-  },
-  "entityset.info.edit": {
-    "defaultMessage": "Настройки"
-  },
-  "entity.column.name": {
-    "defaultMessage": "Name"
-  },
-  "entity.column.collection_id": {
-    "defaultMessage": "Набор данных"
-  },
-  "entity.column.schema": {
-    "defaultMessage": "Тип"
-  },
-  "entity.column.countries": {
-    "defaultMessage": "Страны"
-  },
-  "entity.column.file_size": {
-    "defaultMessage": "Размер"
-  },
-  "entity.column.dates": {
-    "defaultMessage": "Дата"
-  },
-  "search.screen.dates_label": {
-    "defaultMessage": "результаты"
-  },
-  "search.screen.dates_title": {
-    "defaultMessage": "Даты"
-  },
-  "search.facets.filtersSelected": {
-    "defaultMessage": "{count} выбрано"
-  },
-  "search.facets.showMore": {
-    "defaultMessage": "Ещё..."
-  },
-  "mapping.section1.title": {
-    "defaultMessage": "1. Выберите типы сущностей"
-  },
-  "mapping.section2.title": {
-    "defaultMessage": "2. Соотнесите колонки свойствам сущностей"
-  },
-  "mapping.section3.title": {
-    "defaultMessage": "3. Проверьте результат"
-  },
-  "schemaSelect.button.thing": {
-    "defaultMessage": "Добавить новый объект"
-  },
-  "schemaSelect.button.relationship": {
-    "defaultMessage": "Добавить новую связь"
-  },
-  "mapping.import.button": {
-    "defaultMessage": "Импортировать существующие маппинги"
-  },
-  "mapping.keyAssign.placeholder": {
-    "defaultMessage": "Выбрать ключи из доступных колонок"
-  },
-  "mapping.keyAssign.noResults": {
-    "defaultMessage": "Результатов нет"
-  },
-  "mapping.entityAssign.noResults": {
-    "defaultMessage": "Нет совпадений с другими объектами"
-  },
-  "mapping.entityAssign.placeholder": {
-    "defaultMessage": "Выбрать объект"
-  },
-  "mapping.entityAssign.helpText": {
-    "defaultMessage": "Необходимо создать объект типа \"{range}\" для {property}"
-  },
-  "mapping.keyAssign.additionalHelpToggle.more": {
-    "defaultMessage": "Подробнее о ключах"
-  },
-  "mapping.keyAssign.additionalHelpToggle.less": {
-    "defaultMessage": "Меньше"
-  },
-  "mapping.keyAssign.helpText": {
-    "defaultMessage": "Укажите, какие колонки из исходных данных следует использовать для определения уникальных сущностей."
-  },
-  "mapping.keys": {
-    "defaultMessage": "Ключи"
-  },
-  "mapping.actions.create.toast": {
-    "defaultMessage": "Создание сущностей..."
-  },
-  "mapping.actions.save.toast": {
-    "defaultMessage": "Пересоздать сущности..."
-  },
-  "mapping.actions.delete.toast": {
-    "defaultMessage": "Удаление маппинга и созданных сущностей..."
-  },
-  "mapping.actions.flush.toast": {
-    "defaultMessage": "Удаление созданных сущностей"
-  },
-  "mapping.error.keyMissing": {
-    "defaultMessage": "Ошибка ключа: для сущности {id} должен быть задан хотя бы один ключ"
-  },
-  "mapping.error.relationshipMissing": {
-    "defaultMessage": "Ошибка связи: для сущности {id} должны быть заданы {source} и {target}."
-  },
-  "mapping.actions.create": {
-    "defaultMessage": "Создать сущности"
-  },
-  "mapping.actions.save": {
-    "defaultMessage": "Сохранить изменения"
-  },
-  "mapping.actions.export": {
-    "defaultMessage": "Экспорт маппинга"
-  },
-  "mapping.actions.flush": {
-    "defaultMessage": "Удалить созданные сущности"
-  },
-  "mapping.actions.delete": {
-    "defaultMessage": "Удалить"
-  },
-  "mapping.propAssign.errorBlank": {
-    "defaultMessage": "Нельзя назначить свойства колонкам без заголовка"
-  },
-  "mapping.propAssign.errorDuplicate": {
-    "defaultMessage": "Нельзя назначить свойства колонкам с неуникальными заголовками"
-  },
-  "mapping.propAssign.other": {
-    "defaultMessage": "Прочее"
-  },
-  "mapping.propAssign.placeholder": {
-    "defaultMessage": "Назначить свойство"
-  },
-  "mapping.types.objects": {
-    "defaultMessage": "Объекты"
-  },
-  "mapping.types.relationships": {
-    "defaultMessage": "Связи"
-  },
-  "mapping.status.updated": {
-    "defaultMessage": "Последнее обновление:"
-  },
-  "mapping.status.status": {
-    "defaultMessage": "Статус:"
-  },
-  "mapping.status.error": {
-    "defaultMessage": "Ошибка:"
-  },
-  "mapping.propAssign.literalPlaceholder": {
-    "defaultMessage": "Задать значение"
-  },
-  "mapping.propAssign.literalButtonText": {
-    "defaultMessage": "Добавить заданное значение"
-  },
-  "mapping.propRemove": {
-    "defaultMessage": "Удалить свойство из маппинга"
-  },
-  "mapping.props": {
-    "defaultMessage": "Свойства"
-  },
-  "nav.collections": {
-    "defaultMessage": "Наборы данных"
-  },
-  "search.nolabel_placeholder": {
-    "defaultMessage": "Искать людей, компании или документы"
-  },
-  "notifications.no_notifications": {
-    "defaultMessage": "У вас нет непросмотренных уведомлений"
-  },
-  "search.filterTag.role": {
-    "defaultMessage": "Фильтровать по доступу"
-  },
-  "search.filterTag.ancestors": {
-    "defaultMessage": "в:"
-  },
-  "search.filterTag.exclude": {
-    "defaultMessage": "не:"
-  },
-  "search.filterTag.dates_after": {
-    "defaultMessage": "После"
-  },
-  "search.filterTag.dates_before": {
-    "defaultMessage": "До"
-  },
-  "queryFilters.clearAll": {
-    "defaultMessage": "Очистить все"
-  },
-  "navbar.alert_add": {
-    "defaultMessage": "Вам будут приходить оповещения о новых результатах этого поискового запроса."
-  },
-  "navbar.alert_remove": {
-    "defaultMessage": "Вы подписаны на оповещения для этого поискового запроса."
-  },
-  "searchTips.exact.title": {
-    "defaultMessage": "Точные соответствия"
-  },
-  "searchTips.exact.1": {
-    "defaultMessage": "Используйте <em> \"\" </em>, чтобы получить только точные соответствия. Например, в ответ на запрос<em> \"барак обама\" </em> вы получите только те результаты, которые содержат искомую фразу в точном соответствии."
-  },
-  "searchTips.spelling.title": {
-    "defaultMessage": "Варианты написания"
-  },
-  "searchTips.spelling.1": {
-    "defaultMessage": "Используйте <em>~</em> для нечёткого поиска. Например, в ответ на запрос <em>Wladimir~2</em> вы получите результаты не только соодержащие «Wladimir», но и такие варианты написания, как «Wladimyr» или «Vladimyr». Варианты написания определяются количеством ошибок или побуквенных изменений для получения варианта из исходного слова."
-  },
-  "searchTips.composite.title": {
-    "defaultMessage": "Сложносоставные запросы"
-  },
-  "searchTips.composite.1": {
-    "defaultMessage": "В ответ на запрос <em> банановое мороженое </em> сначала будут представлены результаты с упоминанием обоих слов, а затем — результаты с одним из искомых слов."
-  },
-  "searchTips.composite.2": {
-    "defaultMessage": "В поисковом запросе <em>+банановое мороженое</em>«банановое» является обязательной частью, а «мороженое» — опциональной "
-  },
-  "searchTips.composite.3": {
-    "defaultMessage": "Запрос<em> -банановое мороженое </em> позволяет получить только те результаты поиска, в которых не встречается слово «банановое»"
-  },
-  "searchTips.composite.4": {
-    "defaultMessage": "Запрос <em>банановое AND “мороженое” </em>возвращает только те результаты, в которых встречаются оба слова"
-  },
-  "searchTips.composite.5": {
-    "defaultMessage": "Запрос <em> банановое OR “морожение” </em> возвращает только те результаты, в которых встречается слово «банановое» или слово «мороженое»"
-  },
-  "searchTips.composite.6": {
-    "defaultMessage": "Эти операции можно сочетать любым способом. Например, в ответ на запрос <em> банановое AND (“мороженое” OR “джелато”) -шоколад </em> вы получите документы, в которых слово «банановый» встречается вместе со словами «мороженое» или «джелато», но которые не будут содержать слово «шоколад»."
-  },
-  "searchTips.proximity.title": {
-    "defaultMessage": "Поиск с расстоянием"
-  },
-  "searchTips.proximity.1": {
-    "defaultMessage": "Для поиска фраз состоящих из заданных слов, находящихся на некотором расстоянии друг от друга, используйте двойные кавычки <em>\"\" </em> вокруг искомых слов и знак тильды <em>~</em>в конце фразы. Например, на запрос <em>“Bank America”~2</em> вы получите все результаты, в которых слова \"Bank\" и \"America\" будут расположены на расстоянии двух слов друг от друга, такие как \"Bank of America\", \"Bank in America\" и даже \"America has a Bank\"."
-  },
-  "home.statistics.schemata": {
-    "defaultMessage": "Всего записей: {things}"
-  },
-  "home.statistics.othertypes": {
-    "defaultMessage": "Прочих записей: {count}"
-  },
-  "home.statistics.categories": {
-    "defaultMessage": "Наборов данных: {collections}"
-  },
-  "home.statistics.other": {
-    "defaultMessage": "Прочие наборы данных: {count}"
-  },
-  "home.statistics.countries": {
-    "defaultMessage": "Стран {count}"
-  },
-  "home.statistics.territories": {
-    "defaultMessage": "Остальные страны и территории: {count}"
-  },
-  "case.create.login": {
-    "defaultMessage": "Для загрузки данных необходимо авторизоваться."
-  },
-  "cases.index.create": {
-    "defaultMessage": "Новый набор данных"
-  },
-  "document.folder.button": {
-    "defaultMessage": "Новая папка"
-  },
-  "document.download": {
-    "defaultMessage": "Скачать"
-  },
-  "document.download.tooltip": {
-    "defaultMessage": "Скачать оригинальный документ"
-  },
-  "document.paging": {
-    "defaultMessage": "Страница {pageInput} из {numberOfPages}"
-  },
-  "collection.xref.empty": {
-    "defaultMessage": "Результаты перекрёстного сравнения отсутствуют."
-  },
-  "xref.entity": {
-    "defaultMessage": "Запись"
-  },
-  "xref.match": {
-    "defaultMessage": "Вероятное совпадение"
-  },
-  "xref.score": {
-    "defaultMessage": "Оценка"
-  },
-  "xref.match_collection": {
-    "defaultMessage": "Набор данных"
-  },
-  "diagram.add_entities.create_new": {
-    "defaultMessage": "Создать диаграмму"
-  },
-  "diagram.add_entities.title": {
-    "defaultMessage": "Добавить к диаграмме сущности"
-  },
-  "diagram.add_entities.select_placeholder": {
-    "defaultMessage": "Выберите диаграмму"
-  },
-  "diagram.add_entities.select_empty": {
-    "defaultMessage": "Диаграммы отсутствуют"
-  },
-  "diagram.add_entities.success": {
-    "defaultMessage": "{count} {count, plural, one {Cущность} other {Сущности}} добавлены к {диаграмме}"
-  },
-  "diagram.add_entities.selected_count": {
-    "defaultMessage": "Вы выбрали {count} {count_simple, plural, one {сущность} other {сущности}}, которые будут добавлены к диаграмме."
-  },
-  "diagram.add.or": {
-    "defaultMessage": "или"
-  },
-  "signup.title": {
-    "defaultMessage": "Активирируйте учётную запись"
-  },
-  "signup.register": {
-    "defaultMessage": "Зарегистрироваться"
-  },
-  "signup.register.question": {
-    "defaultMessage": "У вас нет учётной записи? Зарегистрируйтесь!"
-  },
-  "signup.inbox.title": {
-    "defaultMessage": "Проверьте почту"
-  },
-  "signup.inbox.desc": {
-    "defaultMessage": "Мы отправили вам письмо с ссылкой для завершения регистрации"
-  },
-  "signup.login": {
-    "defaultMessage": "Вы уже зарегистрированы? Авторизуйтесь!"
-  },
-  "login.oauth": {
-    "defaultMessage": "Войти с помощью OAuth"
-  },
-  "collection.edit.title": {
-    "defaultMessage": "Настройки набора данных"
-  },
-  "collection.edit.save_success": {
-    "defaultMessage": "Изменения сохранены"
-  },
-  "collection.edit.cancel_button": {
-    "defaultMessage": "Отменить"
-  },
-  "collection.edit.save_button": {
-    "defaultMessage": "Сохранить изменения"
-  },
-  "collection.edit.permissionstable.view": {
-    "defaultMessage": "Просмотр"
-  },
-  "collection.edit.permissionstable.edit": {
-    "defaultMessage": "Редактирование"
-  },
-  "collection.edit.groups": {
-    "defaultMessage": "Группы"
-  },
-  "collection.edit.users": {
-    "defaultMessage": "Пользователи"
-  },
-  "collection.delete.confirm": {
-    "defaultMessage": "Удалить"
-  },
-  "collection.delete.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "collection.delete.question": {
-    "defaultMessage": "Вы хотите удалить этот набор данных и всё содержимое?"
-  },
-  "collection.edit.info.placeholder_label": {
-    "defaultMessage": "Название"
-  },
-  "collection.edit.info.placeholder_summary": {
-    "defaultMessage": "Краткое описание"
-  },
-  "collection.edit.info.placeholder_publisher": {
-    "defaultMessage": "Организация или лицо, опубликовавшее данные"
-  },
-  "collection.edit.info.placeholder_publisher_url": {
-    "defaultMessage": "Ссылка на источник"
-  },
-  "collection.edit.info.placeholder_info_url": {
-    "defaultMessage": "Ссылка на более подробное описание"
-  },
-  "collection.edit.info.placeholder_data_url": {
-    "defaultMessage": "Ссылка на исходные данные в скачиваемом формате"
-  },
-  "collection.edit.info.placeholder_country": {
-    "defaultMessage": "Выбрать страны"
-  },
-  "collection.edit.info.placeholder_language": {
-    "defaultMessage": "Выбрать языки"
-  },
-  "collection.edit.info.restricted": {
-    "defaultMessage": "Доступ к этому набору данных ограничен, о чём необходимо предупреждать новых пользователей."
-  },
-  "collection.edit.info.delete": {
-    "defaultMessage": "Удалить"
-  },
-  "collection.edit.info.analyze": {
-    "defaultMessage": "Повторный анализ"
-  },
-  "collection.edit.info.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "collection.edit.info.save": {
-    "defaultMessage": "Сохранить изменения"
-  },
-  "collection.edit.info.label": {
-    "defaultMessage": "Название"
-  },
-  "collection.edit.info.category": {
-    "defaultMessage": "Категория"
-  },
-  "collection.edit.info.summary": {
-    "defaultMessage": "Краткое описание"
-  },
-  "collection.edit.info.publisher": {
-    "defaultMessage": "Издатель"
-  },
-  "collection.edit.info.publisher_url": {
-    "defaultMessage": "Ссылка на издателя"
-  },
-  "collection.edit.info.info_url": {
-    "defaultMessage": "Ссылка на описание"
-  },
-  "collection.edit.info.data_url": {
-    "defaultMessage": "Ссылка на исходные данные"
-  },
-  "collection.edit.info.frequency": {
-    "defaultMessage": "Частота обновления"
-  },
-  "collection.edit.info.creator": {
-    "defaultMessage": "Автор"
-  },
-  "collection.edit.info.countries": {
-    "defaultMessage": "Страны"
-  },
-  "collection.edit.info.languages": {
-    "defaultMessage": "Языки"
-  },
-  "case.languages.helper": {
-    "defaultMessage": "Для распознавания текстов нелатинских алфавитов."
-  },
-  "collection.edit.info.foreign_id": {
-    "defaultMessage": "Внешний ID"
-  },
-  "collection.xref.title": {
-    "defaultMessage": "Перекрёстное сравнение"
-  },
-  "collection.xref.processing": {
-    "defaultMessage": "Перекрёстное сравнение запущено."
-  },
-  "collection.xref.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "collection.xref.confirm": {
-    "defaultMessage": "Подтвердить"
-  },
-  "collection.xref.text": {
-    "defaultMessage": "Сейчас будет произведено перекрёстное сравнение со всеми источниками. Запустите и дождитесь завершения."
-  },
-  "case.label_placeholder": {
-    "defaultMessage": "Безымянный набор данных"
-  },
-  "case.language_placeholder": {
-    "defaultMessage": "Выбрать языки"
-  },
-  "case.summary": {
-    "defaultMessage": "Краткое описание набора данных"
-  },
-  "case.save": {
-    "defaultMessage": "Сохранить"
-  },
-  "case.users": {
-    "defaultMessage": "Искать пользователей"
-  },
-  "case.title": {
-    "defaultMessage": "Создать персональный набор данных"
+  "auth.unknown_error": {
+    "defaultMessage": "Произошла ошибка"
   },
   "case.choose.name": {
     "defaultMessage": "Название"
@@ -929,38 +44,515 @@
   "case.chose.languages": {
     "defaultMessage": "Языки"
   },
+  "case.create.login": {
+    "defaultMessage": "Для загрузки данных необходимо авторизоваться."
+  },
+  "case.description": {
+    "defaultMessage": "Персональные наборы данных позволяют вам группировать документы и данные, относящиеся к определённому расследованию. Загруженные PDF-файлы, email-архивы или таблицы будут проиндексированы и доступны для полнотекстового поиска."
+  },
+  "case.label_placeholder": {
+    "defaultMessage": "Безымянный набор данных"
+  },
+  "case.language_placeholder": {
+    "defaultMessage": "Выбрать языки"
+  },
+  "case.languages.helper": {
+    "defaultMessage": "Для распознавания текстов нелатинских алфавитов."
+  },
+  "case.save": {
+    "defaultMessage": "Сохранить"
+  },
   "case.share.with": {
     "defaultMessage": "Предоставить доступ"
   },
-  "document.folder.title": {
-    "defaultMessage": "Новая папка"
+  "case.summary": {
+    "defaultMessage": "Краткое описание набора данных"
   },
-  "document.folder.save": {
-    "defaultMessage": "Создать"
+  "case.title": {
+    "defaultMessage": "Создать персональный набор данных"
   },
-  "document.folder.untitled": {
-    "defaultMessage": "Название папки"
+  "case.users": {
+    "defaultMessage": "Искать пользователей"
+  },
+  "cases.browser.breadcrumb": {
+    "defaultMessage": "Обзор кейсов"
+  },
+  "cases.create": {
+    "defaultMessage": "New personal dataset"
+  },
+  "cases.empty": {
+    "defaultMessage": "You do not have any personal datasets yet."
+  },
+  "cases.no_results": {
+    "defaultMessage": "No personal datasets were found matching this query."
+  },
+  "cases.placeholder": {
+    "defaultMessage": "Поиск по персональным наборам данных..."
+  },
+  "cases.title": {
+    "defaultMessage": "Персональные наборы данных"
+  },
+  "clipboard.copy.after": {
+    "defaultMessage": "Скопировано в буфер"
+  },
+  "clipboard.copy.before": {
+    "defaultMessage": "Скопировать в буфер"
+  },
+  "collection.addSchema.placeholder": {
+    "defaultMessage": "Добавить новый тип сущности"
+  },
+  "collection.analyze.alert.text": {
+    "defaultMessage": "Все сущности в наборе данных будут переиндексированы. Иногда это позволяет исправить ошибки в представлении данных."
+  },
+  "collection.analyze.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "collection.cancel.button": {
+    "defaultMessage": "Отменить"
+  },
+  "collection.countries": {
+    "defaultMessage": "Страна"
+  },
+  "collection.creator": {
+    "defaultMessage": "Автор"
+  },
+  "collection.data_url": {
+    "defaultMessage": "Ссылка на данные"
+  },
+  "collection.delete.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "collection.delete.confirm": {
+    "defaultMessage": "Удалить"
+  },
+  "collection.delete.question": {
+    "defaultMessage": "Вы хотите удалить этот набор данных и всё содержимое?"
+  },
+  "collection.edit.access_title": {
+    "defaultMessage": "Access control"
+  },
+  "collection.edit.cancel_button": {
+    "defaultMessage": "Отменить"
+  },
+  "collection.edit.groups": {
+    "defaultMessage": "Группы"
+  },
+  "collection.edit.info.analyze": {
+    "defaultMessage": "Повторный анализ"
+  },
+  "collection.edit.info.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "collection.edit.info.category": {
+    "defaultMessage": "Категория"
+  },
+  "collection.edit.info.countries": {
+    "defaultMessage": "Страны"
+  },
+  "collection.edit.info.creator": {
+    "defaultMessage": "Автор"
+  },
+  "collection.edit.info.data_url": {
+    "defaultMessage": "Ссылка на исходные данные"
+  },
+  "collection.edit.info.delete": {
+    "defaultMessage": "Удалить"
+  },
+  "collection.edit.info.foreign_id": {
+    "defaultMessage": "Внешний ID"
+  },
+  "collection.edit.info.frequency": {
+    "defaultMessage": "Частота обновления"
+  },
+  "collection.edit.info.info_url": {
+    "defaultMessage": "Ссылка на описание"
+  },
+  "collection.edit.info.label": {
+    "defaultMessage": "Название"
+  },
+  "collection.edit.info.languages": {
+    "defaultMessage": "Языки"
+  },
+  "collection.edit.info.placeholder_country": {
+    "defaultMessage": "Выбрать страны"
+  },
+  "collection.edit.info.placeholder_data_url": {
+    "defaultMessage": "Ссылка на исходные данные в скачиваемом формате"
+  },
+  "collection.edit.info.placeholder_info_url": {
+    "defaultMessage": "Ссылка на более подробное описание"
+  },
+  "collection.edit.info.placeholder_label": {
+    "defaultMessage": "Название"
+  },
+  "collection.edit.info.placeholder_language": {
+    "defaultMessage": "Выбрать языки"
+  },
+  "collection.edit.info.placeholder_publisher": {
+    "defaultMessage": "Организация или лицо, опубликовавшее данные"
+  },
+  "collection.edit.info.placeholder_publisher_url": {
+    "defaultMessage": "Ссылка на источник"
+  },
+  "collection.edit.info.placeholder_summary": {
+    "defaultMessage": "Краткое описание"
+  },
+  "collection.edit.info.publisher": {
+    "defaultMessage": "Издатель"
+  },
+  "collection.edit.info.publisher_url": {
+    "defaultMessage": "Ссылка на издателя"
+  },
+  "collection.edit.info.restricted": {
+    "defaultMessage": "Доступ к этому набору данных ограничен, о чём необходимо предупреждать новых пользователей."
+  },
+  "collection.edit.info.save": {
+    "defaultMessage": "Сохранить изменения"
+  },
+  "collection.edit.info.summary": {
+    "defaultMessage": "Краткое описание"
+  },
+  "collection.edit.permissionstable.edit": {
+    "defaultMessage": "Редактирование"
+  },
+  "collection.edit.permissionstable.view": {
+    "defaultMessage": "Просмотр"
+  },
+  "collection.edit.save_button": {
+    "defaultMessage": "Сохранить изменения"
+  },
+  "collection.edit.save_success": {
+    "defaultMessage": "Изменения сохранены"
+  },
+  "collection.edit.title": {
+    "defaultMessage": "Настройки набора данных"
+  },
+  "collection.edit.users": {
+    "defaultMessage": "Пользователи"
+  },
+  "collection.foreign_id": {
+    "defaultMessage": "Внешний ID"
+  },
+  "collection.frequency": {
+    "defaultMessage": "Обновления"
+  },
+  "collection.index.breadcrumb": {
+    "defaultMessage": "Наборы данных"
+  },
+  "collection.index.create": {
+    "defaultMessage": "New dataset"
+  },
+  "collection.index.empty": {
+    "defaultMessage": "No datasets were found."
+  },
+  "collection.index.filter.all": {
+    "defaultMessage": "Все"
+  },
+  "collection.index.filter.mine": {
+    "defaultMessage": "Созданы мной"
+  },
+  "collection.index.no_results": {
+    "defaultMessage": "No datasets were found matching this query."
+  },
+  "collection.index.placeholder": {
+    "defaultMessage": "Поиск наборов данных..."
+  },
+  "collection.index.sort.count": {
+    "defaultMessage": "Размер"
+  },
+  "collection.index.sort.created_at": {
+    "defaultMessage": "Дата создания"
+  },
+  "collection.index.sort.label": {
+    "defaultMessage": "Название"
+  },
+  "collection.index.sort.updated_at": {
+    "defaultMessage": "Дата обновления"
+  },
+  "collection.index.title": {
+    "defaultMessage": "Наборы данных"
+  },
+  "collection.info.access": {
+    "defaultMessage": "Доступ"
+  },
+  "collection.info.delete": {
+    "defaultMessage": "Удалить набор данных"
+  },
+  "collection.info.diagrams": {
+    "defaultMessage": "Диаграммы"
+  },
+  "collection.info.edit": {
+    "defaultMessage": "Настройки"
+  },
+  "collection.info.lists": {
+    "defaultMessage": "Lists"
+  },
+  "collection.info.reindex": {
+    "defaultMessage": "Переиндексировать всё содержимое"
+  },
+  "collection.info.reingest": {
+    "defaultMessage": "Перезагрузить документы"
+  },
+  "collection.info_url": {
+    "defaultMessage": "Ссылка на описание"
+  },
+  "collection.last_updated": {
+    "defaultMessage": "Обновлено {date}"
+  },
+  "collection.publisher": {
+    "defaultMessage": "Издатель"
+  },
+  "collection.reconcile": {
+    "defaultMessage": "Объединение данных"
+  },
+  "collection.reconcile.description": {
+    "defaultMessage": "Match your own data against the entities in this collection using the free {openrefine} tool by adding the reconciliation endpoint."
+  },
+  "collection.reindex.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "collection.reindex.confirm": {
+    "defaultMessage": "Запустить индексирование"
+  },
+  "collection.reindex.flush": {
+    "defaultMessage": "Очистить индекс перед переиндексацией"
+  },
+  "collection.reindex.processing": {
+    "defaultMessage": "Индексирование запущено."
+  },
+  "collection.reingest.confirm": {
+    "defaultMessage": "Запустить анализ"
+  },
+  "collection.reingest.index": {
+    "defaultMessage": "Проиндексировать документы в процессе обработки."
+  },
+  "collection.reingest.processing": {
+    "defaultMessage": "Перезагрузка документов запущена."
+  },
+  "collection.reingest.text": {
+    "defaultMessage": "Все документы в этом наборе данных будут проанализированы повторно. Это займёт некоторое время."
+  },
+  "collection.statistics.showmore": {
+    "defaultMessage": "Ещё"
+  },
+  "collection.status.cancel_button": {
+    "defaultMessage": "Отменить процесс"
+  },
+  "collection.status.collection": {
+    "defaultMessage": "Набор данных"
+  },
+  "collection.status.finished_tasks": {
+    "defaultMessage": "Выполнено"
+  },
+  "collection.status.jobs": {
+    "defaultMessage": "Задачи"
+  },
+  "collection.status.message": {
+    "defaultMessage": "Данные загружаются."
+  },
+  "collection.status.no_active": {
+    "defaultMessage": "Нет активных задач"
+  },
+  "collection.status.pending_tasks": {
+    "defaultMessage": "Обрабатывается"
+  },
+  "collection.status.progress": {
+    "defaultMessage": "Ход выполнения"
+  },
+  "collection.status.title": {
+    "defaultMessage": "Обновлено {percent}%"
+  },
+  "collection.team": {
+    "defaultMessage": "Доступ"
+  },
+  "collection.updated_at": {
+    "defaultMessage": "Последнее изменение"
+  },
+  "collection.xref.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "collection.xref.confirm": {
+    "defaultMessage": "Подтвердить"
+  },
+  "collection.xref.empty": {
+    "defaultMessage": "Результаты перекрёстного сравнения отсутствуют."
+  },
+  "collection.xref.processing": {
+    "defaultMessage": "Перекрёстное сравнение запущено."
+  },
+  "collection.xref.text": {
+    "defaultMessage": "Сейчас будет произведено перекрёстное сравнение со всеми источниками. Запустите и дождитесь завершения."
+  },
+  "collection.xref.title": {
+    "defaultMessage": "Перекрёстное сравнение"
+  },
+  "dashboard.activity": {
+    "defaultMessage": "События"
+  },
+  "dashboard.alerts": {
+    "defaultMessage": "Оповещения"
+  },
+  "dashboard.cases": {
+    "defaultMessage": "Персональные наборы данных"
+  },
+  "dashboard.diagrams": {
+    "defaultMessage": "Диаграммы"
+  },
+  "dashboard.exports": {
+    "defaultMessage": "Exports"
+  },
+  "dashboard.groups": {
+    "defaultMessage": "Группы"
+  },
+  "dashboard.lists": {
+    "defaultMessage": "Lists"
+  },
+  "dashboard.notifications": {
+    "defaultMessage": "Уведомления"
+  },
+  "dashboard.settings": {
+    "defaultMessage": "Настройки"
+  },
+  "dashboard.status": {
+    "defaultMessage": "Системный статус"
+  },
+  "dashboard.subheading": {
+    "defaultMessage": "Статус операций анализа, загрузки или обработки данных."
+  },
+  "dashboard.title": {
+    "defaultMessage": "Системный статус"
+  },
+  "dashboard.workspace": {
+    "defaultMessage": "Рабочая среда"
+  },
+  "diagram.create.button": {
+    "defaultMessage": "New diagram"
+  },
+  "diagram.create.label_placeholder": {
+    "defaultMessage": "Untitled diagram"
+  },
+  "diagram.create.login": {
+    "defaultMessage": "You must log in to create a diagram"
+  },
+  "diagram.create.success": {
+    "defaultMessage": "Your diagram has been created successfully."
+  },
+  "diagram.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the diagram"
+  },
+  "diagram.create.title": {
+    "defaultMessage": "Create a diagram"
+  },
+  "diagram.error_warning": {
+    "defaultMessage": "Произошла ошибка при сохранении последних изменений, вы хотите уйти?"
+  },
+  "diagram.import.button": {
+    "defaultMessage": "Import diagram"
+  },
+  "diagram.import.placeholder": {
+    "defaultMessage": "Drop a .ftm or .vis file here or click to import an existing diagram"
+  },
+  "diagram.import.title": {
+    "defaultMessage": "Импортировать диаграмму"
+  },
+  "diagram.in_progress_warning": {
+    "defaultMessage": "Вы уверены, что не хотите дождаться сохранения изменений?"
+  },
+  "diagram.selector.create": {
+    "defaultMessage": "Create a new diagram"
+  },
+  "diagram.selector.select_empty": {
+    "defaultMessage": "No existing diagram"
+  },
+  "diagram.status_error": {
+    "defaultMessage": "Ошибка сохранения"
+  },
+  "diagram.status_in_progress": {
+    "defaultMessage": "Сохраняется..."
+  },
+  "diagram.status_success": {
+    "defaultMessage": "Сохранено"
+  },
+  "diagram.update.label_placeholder": {
+    "defaultMessage": "Untitled diagram"
+  },
+  "diagram.update.success": {
+    "defaultMessage": "Your diagram has been updated successfully."
+  },
+  "diagram.update.summary_placeholder": {
+    "defaultMessage": "A brief description of the diagram"
+  },
+  "diagram.update.title": {
+    "defaultMessage": "Diagram settings"
+  },
+  "diagrams": {
+    "defaultMessage": "Diagrams"
+  },
+  "diagrams.description": {
+    "defaultMessage": "Network diagrams let you visualize complex relationships within a dataset."
+  },
+  "diagrams.no_diagrams": {
+    "defaultMessage": "Диаграммы отсутствуют."
+  },
+  "diagrams.title": {
+    "defaultMessage": "Диаграммы"
+  },
+  "document.download": {
+    "defaultMessage": "Скачать"
+  },
+  "document.download.cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "document.download.confirm": {
+    "defaultMessage": "Download"
+  },
+  "document.download.dont_warn": {
+    "defaultMessage": "Don't warn me in the future when downloading source documents"
+  },
+  "document.download.tooltip": {
+    "defaultMessage": "Скачать оригинальный документ"
+  },
+  "document.download.warning": {
+    "defaultMessage": "<bold>You’re about to download a source file.</bold> {br}{br} Source files can contain viruses and code that notify the originator when you open them. {br}{br} For sensitive data, we recommend only opening source files on a computer that is permanently disconnected from the internet."
   },
   "document.folder.error": {
     "defaultMessage": "При создании папки возникла ошибка."
   },
-  "entity.manager.bulk_import.title": {
-    "defaultMessage": "Массовый импорт"
+  "document.folder.new": {
+    "defaultMessage": "New folder"
   },
-  "entity.manager.bulk_import.no_results": {
-    "defaultMessage": "Совпадений с другими документами нет"
+  "document.folder.save": {
+    "defaultMessage": "Создать"
   },
-  "entity.manager.bulk_import.placeholder": {
-    "defaultMessage": "Выберите документ, содержащий таблицу"
+  "document.folder.title": {
+    "defaultMessage": "Новая папка"
   },
-  "document.upload.title": {
-    "defaultMessage": "Загрузить документы"
+  "document.folder.untitled": {
+    "defaultMessage": "Название папки"
   },
-  "document.upload.success": {
-    "defaultMessage": "Обрабатываем документы..."
+  "document.mapping.start": {
+    "defaultMessage": "Создать сущности"
   },
-  "document.upload.error": {
-    "defaultMessage": "При загрузке файла возникла ошибка"
+  "document.paging": {
+    "defaultMessage": "Страница {pageInput} из {numberOfPages}"
+  },
+  "document.pdf.search.page": {
+    "defaultMessage": "Страница {page}"
+  },
+  "document.search.no_match": {
+    "defaultMessage": "Искомых слов в документе не найдено."
+  },
+  "document.upload.button": {
+    "defaultMessage": "Загрузить"
+  },
+  "document.upload.cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "document.upload.close": {
+    "defaultMessage": "Close"
+  },
+  "document.upload.errors": {
+    "defaultMessage": "Some files couldn't be transferred. You can use the Retry button to restart all failed uploads."
   },
   "document.upload.files": {
     "defaultMessage": "Выберите файлы для загрузки"
@@ -971,23 +563,56 @@
   "document.upload.folder-toggle": {
     "defaultMessage": "нажмите здесь"
   },
-  "document.upload.progress": {
-    "defaultMessage": "Загружается: {file}"
-  },
   "document.upload.notice": {
-    "defaultMessage": "После загрузки документы будут проиндексированы и доступны для полнотекстового поиска."
+    "defaultMessage": "The upload is complete. It will take a few moments for the documents to be processed and become searchable."
+  },
+  "document.upload.progress": {
+    "defaultMessage": "{done} of {total} files done, {errors} errors."
+  },
+  "document.upload.retry": {
+    "defaultMessage": "Retry"
   },
   "document.upload.save": {
     "defaultMessage": "Загрузить"
   },
-  "entity.delete.confirm": {
-    "defaultMessage": "Удалить"
+  "document.upload.summary": {
+    "defaultMessage": "{numberOfFiles, number} files, {totalSize}"
+  },
+  "document.upload.title": {
+    "defaultMessage": "Загрузить документы"
+  },
+  "document.viewer.ignored_file": {
+    "defaultMessage": "Работа с данным типом файлов не поддерживается. Для просмотра попробуйте скачать файл."
+  },
+  "document.viewer.no_viewer": {
+    "defaultMessage": "Просмотр документа невозможен"
+  },
+  "email.body.empty": {
+    "defaultMessage": "Текст письма отсутствует"
+  },
+  "entity.column.caption": {
+    "defaultMessage": "Name"
+  },
+  "entity.column.collection_id": {
+    "defaultMessage": "Набор данных"
+  },
+  "entity.column.countries": {
+    "defaultMessage": "Страны"
+  },
+  "entity.column.dates": {
+    "defaultMessage": "Дата"
+  },
+  "entity.column.file_size": {
+    "defaultMessage": "Размер"
+  },
+  "entity.column.schema": {
+    "defaultMessage": "Тип"
   },
   "entity.delete.cancel": {
     "defaultMessage": "Отменить"
   },
-  "entity.delete.success": {
-    "defaultMessage": "Успешно удалено"
+  "entity.delete.confirm": {
+    "defaultMessage": "Удалить"
   },
   "entity.delete.error": {
     "defaultMessage": "При удалении сущности возникла ошибка."
@@ -995,29 +620,149 @@
   "entity.delete.progress": {
     "defaultMessage": "Удаляем..."
   },
-  "entityset.create.label_placeholder": {
-    "defaultMessage": "{type} без названия"
+  "entity.delete.question.multiple": {
+    "defaultMessage": "Are you sure you want to delete the following {count, plural, one {item} other {items}}?"
   },
-  "entityset.create.summary_placeholder": {
-    "defaultMessage": "{type} — краткое описание"
+  "entity.delete.success": {
+    "defaultMessage": "Успешно удалено"
   },
-  "entityset.create.submit": {
-    "defaultMessage": "Создать"
+  "entity.document.manager.cannot_map": {
+    "defaultMessage": "Выберите документ с таблицей для создания сущностей"
   },
-  "entityset.create.title": {
-    "defaultMessage": "Создать {type}"
+  "entity.document.manager.empty": {
+    "defaultMessage": "Здесь ничего нет."
   },
-  "entityset.create.success": {
-    "defaultMessage": "Вы создали {type}."
+  "entity.document.manager.emptyCanUpload": {
+    "defaultMessage": "Файлы или папки отсутствуют. Перетащите файлы сюда или кликните, чтобы загрузить."
   },
-  "diagram.import.title": {
-    "defaultMessage": "Импортировать диаграмму"
+  "entity.document.manager.search_placeholder": {
+    "defaultMessage": "Поиск по документам"
   },
-  "diagram.import.placeholder": {
-    "defaultMessage": "Перенесите .vis файл сюда или кликните, чтобы импортировать готовую диаграмму"
+  "entity.info.attachments": {
+    "defaultMessage": "Вложения"
   },
-  "entityset.create.collection.existing": {
-    "defaultMessage": "Выберите набор данных"
+  "entity.info.documents": {
+    "defaultMessage": "Документы"
+  },
+  "entity.info.entities": {
+    "defaultMessage": "Сущности"
+  },
+  "entity.info.info": {
+    "defaultMessage": "Информация"
+  },
+  "entity.info.overview": {
+    "defaultMessage": "Информация"
+  },
+  "entity.info.similar": {
+    "defaultMessage": "Совпадения"
+  },
+  "entity.info.tags": {
+    "defaultMessage": "Упоминания"
+  },
+  "entity.info.text": {
+    "defaultMessage": "Текст"
+  },
+  "entity.info.view": {
+    "defaultMessage": "Просмотр"
+  },
+  "entity.info.xref": {
+    "defaultMessage": "Перекрёстное сравнение"
+  },
+  "entity.manager.bulk_import.description.1": {
+    "defaultMessage": "Select a table below from which to import new {schema} entities."
+  },
+  "entity.manager.bulk_import.description.2": {
+    "defaultMessage": "Once selected, you will be prompted to assign columns from that table to properties of the generated entities."
+  },
+  "entity.manager.bulk_import.description.3": {
+    "defaultMessage": "Don't see the table you're looking for? {link}"
+  },
+  "entity.manager.bulk_import.link_text": {
+    "defaultMessage": "Import a new table"
+  },
+  "entity.manager.bulk_import.no_results": {
+    "defaultMessage": "Совпадений с другими документами нет"
+  },
+  "entity.manager.bulk_import.placeholder": {
+    "defaultMessage": "Выберите документ, содержащий таблицу"
+  },
+  "entity.manager.bulk_import.title": {
+    "defaultMessage": "Массовый импорт"
+  },
+  "entity.manager.delete": {
+    "defaultMessage": "Delete"
+  },
+  "entity.manager.edge_create_success": {
+    "defaultMessage": "{source} и {target} связаны"
+  },
+  "entity.manager.entity_set_add_success": {
+    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
+  },
+  "entity.manager.remove": {
+    "defaultMessage": "Remove"
+  },
+  "entity.manager.search_empty": {
+    "defaultMessage": "Никаких совпадений с {schema} не найдено"
+  },
+  "entity.manager.search_placeholder": {
+    "defaultMessage": "Искать {schema}"
+  },
+  "entity.mapping.view": {
+    "defaultMessage": "Создать сущности"
+  },
+  "entity.properties.missing": {
+    "defaultMessage": "неизвестно"
+  },
+  "entity.references.no_relationships": {
+    "defaultMessage": "У этой сущности отсутствуют связи"
+  },
+  "entity.remove.confirm": {
+    "defaultMessage": "Remove"
+  },
+  "entity.remove.error": {
+    "defaultMessage": "An error occured while attempting to remove this entity."
+  },
+  "entity.remove.progress": {
+    "defaultMessage": "Removing..."
+  },
+  "entity.remove.question.multiple": {
+    "defaultMessage": "Are you sure you want to remove the following {count, plural, one {item} other {items}}?"
+  },
+  "entity.remove.success": {
+    "defaultMessage": "Successfully removed"
+  },
+  "entity.search.empty_title": {
+    "defaultMessage": "Эта папка пуста"
+  },
+  "entity.search.no_results_description": {
+    "defaultMessage": "Попробуйте расширить критерии поиска"
+  },
+  "entity.search.no_results_title": {
+    "defaultMessage": "Ничего не найдено"
+  },
+  "entity.similar.empty": {
+    "defaultMessage": "Нет похожих записей"
+  },
+  "entity.similar.found_text": {
+    "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
+  },
+  "entity.tags.no_tags": {
+    "defaultMessage": "В данной записи селекторов нет"
+  },
+  "entity.viewer.add_link": {
+    "defaultMessage": "Связать"
+  },
+  "entity.viewer.add_to": {
+    "defaultMessage": "Add to..."
+  },
+  "entity.viewer.bulk_import": {
+    "defaultMessage": "Массовый импорт"
+  },
+  "entitySet.last_updated": {
+    "defaultMessage": "Updated {date}"
+  },
+  "entity_set.menu.search_placeholder": {
+    "defaultMessage": "Поиск в {set_name}"
   },
   "entityset.choose.name": {
     "defaultMessage": "Название"
@@ -1028,308 +773,116 @@
   "entityset.create.collection": {
     "defaultMessage": "Набор данных"
   },
-  "entityset.delete.confirm": {
-    "defaultMessage": "Удалить"
+  "entityset.create.collection.existing": {
+    "defaultMessage": "Выберите набор данных"
+  },
+  "entityset.create.collection.new": {
+    "defaultMessage": "Don't see the dataset you're looking for? {link}"
+  },
+  "entityset.create.collection.new_link": {
+    "defaultMessage": "Create a new personal dataset"
+  },
+  "entityset.create.submit": {
+    "defaultMessage": "Создать"
   },
   "entityset.delete.cancel": {
     "defaultMessage": "Отменить"
   },
+  "entityset.delete.confirm": {
+    "defaultMessage": "Удалить"
+  },
   "entityset.delete.question": {
     "defaultMessage": "Вы уверены, что хотите удалить {type}?"
   },
-  "entityset.update.title": {
+  "entityset.delete.success": {
+    "defaultMessage": "Successfully deleted {title}"
+  },
+  "entityset.info.delete": {
+    "defaultMessage": "Удалить"
+  },
+  "entityset.info.edit": {
     "defaultMessage": "Настройки"
   },
+  "entityset.info.export": {
+    "defaultMessage": "Экспорт"
+  },
+  "entityset.selector.placeholder": {
+    "defaultMessage": "Search existing"
+  },
+  "entityset.selector.success": {
+    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
+  },
+  "entityset.selector.success_toast_button": {
+    "defaultMessage": "View"
+  },
+  "entityset.selector.title": {
+    "defaultMessage": "Add {firstCaption} {titleSecondary} to..."
+  },
+  "entityset.selector.title_default": {
+    "defaultMessage": "Add entities to..."
+  },
+  "entityset.selector.title_other": {
+    "defaultMessage": "and {count} other {count, plural, one {entity} other {entities}}"
+  },
   "entityset.update.submit": {
-    "defaultMessage": "Сохранить"
+    "defaultMessage": "Save changes"
   },
-  "entityset.update.success": {
-    "defaultMessage": "{type} обновлён"
-  },
-  "mapping.create.confirm": {
-    "defaultMessage": "Создать"
-  },
-  "mapping.create.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "mapping.create.question": {
-    "defaultMessage": "Вы уверены, что готовы создать сущности, используя этот маппинг?"
-  },
-  "mapping.delete.confirm": {
-    "defaultMessage": "Удалить"
-  },
-  "mapping.delete.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "mapping.delete.question": {
-    "defaultMessage": "Вы уверены, что хотите удалить этот маппинг и все созданные сущности?"
-  },
-  "mapping.flush.confirm": {
-    "defaultMessage": "Удалить маппинг"
-  },
-  "mapping.flush.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "mapping.flush.question": {
-    "defaultMessage": "Вы уверены, что хотите удалить все созданные с помощью этого маппинга сущности?"
-  },
-  "mapping.import.success": {
-    "defaultMessage": "Ваш маппинг импортирован."
-  },
-  "mapping.import.submit": {
-    "defaultMessage": "Сохранить"
-  },
-  "mapping.import.title": {
-    "defaultMessage": "Импорт маппинга"
-  },
-  "mapping.import.placeholder": {
-    "defaultMessage": "Перенесите .yml файл сюда или кликните, чтобы импортировать существующий маппинг-файл"
-  },
-  "mapping.import.querySelect": {
-    "defaultMessage": "Выберите маппинг-запрос для импорта из этого файла:"
-  },
-  "mapping.save.confirm": {
-    "defaultMessage": "Обновить маппинг и пересоздать сущности"
-  },
-  "mapping.save.cancel": {
-    "defaultMessage": "Отменить"
-  },
-  "mapping.save.question": {
-    "defaultMessage": "При обновлении маппинга ранее созданные сущности будет удалены и созданы снова. Продолжить?"
-  },
-  "xref.context.title": {
-    "defaultMessage": "Проверка совпадений"
-  },
-  "xref.context.select": {
-    "defaultMessage": "Предоставить доступ:"
-  },
-  "xref.context.private": {
-    "defaultMessage": "Никому не показывать"
-  },
-  "xref.context.submit": {
-    "defaultMessage": "Начать проверку"
-  },
-  "xref.context.explain1": {
-    "defaultMessage": "Проверяйте результаты и находите новые совпадения и связи. Ваши решения могут быть ценной информацией, поэтому будьте осторожны в выборе групп пользователей, которым предоставляете доступ."
-  },
-  "alerts.title": {
-    "defaultMessage": "Управление оповещениями"
-  },
-  "alert.manager.description": {
-    "defaultMessage": "Укажите искомые слова и, в случае, если они будут найдены в новых документах, вы получите уведомление."
-  },
-  "cases.title": {
-    "defaultMessage": "Персональные наборы данных"
-  },
-  "cases.no_results_title": {
-    "defaultMessage": "У вас пока нет персональных наборов данных."
-  },
-  "cases.placeholder": {
-    "defaultMessage": "Поиск по персональным наборам данных..."
-  },
-  "cases.empty": {
-    "defaultMessage": "Персональные наборы данных не найдены"
-  },
-  "cases.browser.breadcrumb": {
-    "defaultMessage": "Обзор кейсов"
-  },
-  "case.description": {
-    "defaultMessage": "Персональные наборы данных позволяют вам группировать документы и данные, относящиеся к определённому расследованию. Загруженные PDF-файлы, email-архивы или таблицы будут проиндексированы и доступны для полнотекстового поиска."
-  },
-  "collection.index.title": {
-    "defaultMessage": "Наборы данных"
-  },
-  "collection.index.placeholder": {
-    "defaultMessage": "Поиск наборов данных..."
-  },
-  "collection.index.empty": {
-    "defaultMessage": "Ничего нет"
-  },
-  "collection.index.breadcrumb": {
-    "defaultMessage": "Наборы данных"
-  },
-  "diagrams.title": {
-    "defaultMessage": "Диаграммы"
-  },
-  "diagrams.no_results_title": {
-    "defaultMessage": "У вас пока нет диаграмм"
-  },
-  "diagrams.browser.breadcrumb": {
-    "defaultMessage": "Диаграммы"
-  },
-  "diagram.description": {
-    "defaultMessage": "С помощью диаграмм вы можете визуализировать сложные связи внутри набора данных."
-  },
-  "diagram.status_success": {
-    "defaultMessage": "Сохранено"
-  },
-  "diagram.status_error": {
-    "defaultMessage": "Ошибка сохранения"
-  },
-  "diagram.status_in_progress": {
-    "defaultMessage": "Сохраняется..."
-  },
-  "diagram.error_warning": {
-    "defaultMessage": "Произошла ошибка при сохранении последних изменений, вы хотите уйти?"
-  },
-  "diagram.in_progress_warning": {
-    "defaultMessage": "Вы уверены, что не хотите дождаться сохранения изменений?"
-  },
-  "entity.delete": {
-    "defaultMessage": "Удалить"
-  },
-  "sources.index.empty": {
-    "defaultMessage": "Эта группа не привязана к какому-либо набору данных."
-  },
-  "sources.index.placeholder": {
-    "defaultMessage": "Поиск по наборам данных, относящимся к {group}..."
-  },
-  "group.page.description": {
-    "defaultMessage": "Список всех наборов данных, принадлежащих этой группе."
-  },
-  "history.title": {
-    "defaultMessage": "История поиска"
-  },
-  "history.screen.subheading": {
-    "defaultMessage": "Ниже приведён список ваших недавних поисковых запросов. Вы можете удалить отдельные запросы из истории поиска."
-  },
-  "home.title": {
-    "defaultMessage": "Искать публичные записи и секретные документы"
-  },
-  "home.placeholder": {
-    "defaultMessage": "Например, {samples}"
-  },
-  "logout.success": {
-    "defaultMessage": "Вы вышли из системы"
+  "entitysets.load_more": {
+    "defaultMessage": "Load more..."
   },
   "error.screen.not_found": {
     "defaultMessage": "Запрашиваемая страница не найдена"
   },
-  "notifications.title": {
-    "defaultMessage": "Последние уведомления"
+  "export.dialog.text": {
+    "defaultMessage": "<bold>Initiate your export.</bold> {br}{br} Exports take some time to generate. You will receive an email once the data is ready. {br}{br} Please trigger this export only once."
   },
-  "notifications.greeting": {
-    "defaultMessage": "Что нового, {role}?"
+  "exports.dialog.cancel": {
+    "defaultMessage": "Cancel"
   },
-  "notification.description": {
-    "defaultMessage": "Показать последние обновления для наборов данных, групп и оповещений, на которые вы подписаны"
+  "exports.dialog.confirm": {
+    "defaultMessage": "Export"
   },
-  "pages.not.found": {
-    "defaultMessage": "Страница не найдена"
+  "exports.dialog.dashboard_link": {
+    "defaultMessage": "View progress"
   },
-  "search.no_results_title": {
-    "defaultMessage": "Ничего не найдено"
+  "exports.dialog.success": {
+    "defaultMessage": "Your export has begun."
   },
-  "search.no_results_description": {
-    "defaultMessage": "Попробуйте расширить критерии поиска"
+  "exports.expiration": {
+    "defaultMessage": "Expiration"
   },
-  "search.title": {
-    "defaultMessage": "Поиск"
+  "exports.manager.description": {
+    "defaultMessage": "Below is a list of your exports. Make sure to download them before they expire."
   },
-  "search.screen.export_disabled": {
-    "defaultMessage": "За один раз можно экспортировать не более 10.000 записей"
+  "exports.name": {
+    "defaultMessage": "Name"
   },
-  "search.screen.show_dates": {
-    "defaultMessage": "Отобразить фильтр для дат"
+  "exports.no_exports": {
+    "defaultMessage": "You have no exports to download"
   },
-  "search.screen.hide_dates": {
-    "defaultMessage": "Скрыть фильтр для дат"
+  "exports.size": {
+    "defaultMessage": "Size"
   },
-  "search.screen.export": {
-    "defaultMessage": "Экспорт"
+  "exports.status": {
+    "defaultMessage": "Status"
   },
-  "search.screen.breadcrumb": {
-    "defaultMessage": "Поиск"
+  "exports.title": {
+    "defaultMessage": "Exports ready for download"
   },
-  "search.screen.filters": {
-    "defaultMessage": "Фильтры"
+  "facet.addresses": {
+    "defaultMessage": "{count, plural, one {Адрес} few {Адреса} many {Адреса} other {Адреса}}"
   },
-  "settings.title": {
-    "defaultMessage": "Настройки"
-  },
-  "settings.save": {
-    "defaultMessage": "Обновить"
-  },
-  "settings.name": {
-    "defaultMessage": "Название"
-  },
-  "settings.locale": {
-    "defaultMessage": "Язык"
-  },
-  "settings.api_key": {
-    "defaultMessage": "API-ключ"
-  },
-  "profileinfo.api_desc": {
-    "defaultMessage": "API-ключ для редактирования данных через сторонние приложения"
-  },
-  "settings.email": {
-    "defaultMessage": "Электронный адрес"
-  },
-  "settings.email.no_change": {
-    "defaultMessage": "Ваш эл. адрес не изменён"
-  },
-  "settings.email.muted": {
-    "defaultMessage": "Получать ежедневные уведомления по эл. почте"
-  },
-  "settings.email.tester": {
-    "defaultMessage": "Принимать участие в тестировании новых функций"
-  },
-  "settings.current_password": {
-    "defaultMessage": "Действующий пароль"
-  },
-  "settings.current_explain": {
-    "defaultMessage": "Введите текущий пароль для установки нового."
-  },
-  "settings.new_password": {
-    "defaultMessage": "Новый пароль"
-  },
-  "settings.confirm": {
-    "defaultMessage": "(подтверждение)"
-  },
-  "settings.password.rules": {
-    "defaultMessage": "Минимум 6 символов"
-  },
-  "settings.password.missmatch": {
-    "defaultMessage": "Пароли не совпадают"
-  },
-  "settings.saved": {
-    "defaultMessage": "Ваша учётная запись обновлена"
-  },
-  "settings.password.title": {
-    "defaultMessage": "Поменять пароль"
-  },
-  "dashboard.title": {
-    "defaultMessage": "Системный статус"
-  },
-  "collection.status.no_active": {
-    "defaultMessage": "Нет активных задач"
-  },
-  "collection.cancel.button": {
-    "defaultMessage": "Отменить"
-  },
-  "dashboard.subheading": {
-    "defaultMessage": "Статус операций анализа, загрузки или обработки данных."
-  },
-  "collection.status.collection": {
-    "defaultMessage": "Набор данных"
-  },
-  "collection.status.jobs": {
-    "defaultMessage": "Задачи"
-  },
-  "collection.status.progress": {
-    "defaultMessage": "Ход выполнения"
-  },
-  "collection.status.finished_tasks": {
-    "defaultMessage": "Выполнено"
-  },
-  "collection.status.pending_tasks": {
-    "defaultMessage": "Обрабатывается"
-  },
-  "facet.schema": {
-    "defaultMessage": "{count, plural, one {Тип} few {Типы} many {Типы} other {Типы}}"
+  "facet.category": {
+    "defaultMessage": "{count, plural, one {Категория} few {Категории} many {Категории} other {Категории}}"
   },
   "facet.collection_id": {
     "defaultMessage": "{count, plural, one {Набор данных} few {Наборы данных} many {Наборы данных} other {Наборы данных}}"
+  },
+  "facet.countries": {
+    "defaultMessage": "{count, plural, one {Страна} few {Страны} many {Страны} other {Страны}}"
+  },
+  "facet.emails": {
+    "defaultMessage": "{count, plural, one {E-мэйл} few {E-мэйлы} many {E-мэйлы} other {E-мэйлы}}"
   },
   "facet.ibans": {
     "defaultMessage": "{count, plural, one {IBAN-код} few {IBAN-коды} many {IBAN-коды} other {IBAN-коды}}"
@@ -1337,40 +890,718 @@
   "facet.languages": {
     "defaultMessage": "{count, plural, one {Язык} few {Языки} many {Языки} other {Языки}}"
   },
-  "facet.emails": {
-    "defaultMessage": "{count, plural, one {E-мэйл} few {E-мэйлы} many {E-мэйлы} other {E-мэйлы}}"
-  },
-  "facet.phones": {
-    "defaultMessage": "{count, plural, one {Номер телефона} few {Номера телефонов} many {Номера телефонов} other {Номера телефонов}}"
-  },
-  "facet.countries": {
-    "defaultMessage": "{count, plural, one {Страна} few {Страны} many {Страны} other {Страны}}"
+  "facet.mimetypes": {
+    "defaultMessage": "{count, plural, one {Тип файла} few {Типы файлов} many {Типы файлов} other {Типы файлов}}"
   },
   "facet.names": {
     "defaultMessage": "{count, plural, one {Имя} few {Имена} many {Имена} other {Имена}}"
   },
-  "facet.addresses": {
-    "defaultMessage": "{count, plural, one {Адрес} few {Адреса} many {Адреса} other {Адреса}}"
+  "facet.phones": {
+    "defaultMessage": "{count, plural, one {Номер телефона} few {Номера телефонов} many {Номера телефонов} other {Номера телефонов}}"
   },
-  "facet.mimetypes": {
-    "defaultMessage": "{count, plural, one {Тип файла} few {Типы файлов} many {Типы файлов} other {Типы файлов}}"
+  "facet.schema": {
+    "defaultMessage": "{count, plural, one {Тип} few {Типы} many {Типы} other {Типы}}"
   },
-  "facet.category": {
-    "defaultMessage": "{count, plural, one {Категория} few {Категории} many {Категории} other {Категории}}"
+  "file_import.error": {
+    "defaultMessage": "Ошибка импорта файла"
   },
-  "document.viewer.no_viewer": {
-    "defaultMessage": "Просмотр документа невозможен"
+  "footer.aleph": {
+    "defaultMessage": "Алеф {version}"
   },
-  "document.viewer.ignored_file": {
-    "defaultMessage": "Работа с данным типом файлов не поддерживается. Для просмотра попробуйте скачать файл."
+  "group.page.description": {
+    "defaultMessage": "Список всех наборов данных, принадлежащих этой группе."
   },
-  "email.body.empty": {
-    "defaultMessage": "Текст письма отсутствует"
+  "home.counts.countries": {
+    "defaultMessage": "Countries & territories"
   },
-  "document.search.no_match": {
-    "defaultMessage": "Искомых слов в документе не найдено."
+  "home.counts.datasets": {
+    "defaultMessage": "Public datasets"
   },
-  "document.pdf.search.page": {
-    "defaultMessage": "Страница {page}"
+  "home.counts.entities": {
+    "defaultMessage": "Public entities"
+  },
+  "home.placeholder": {
+    "defaultMessage": "Например, {samples}"
+  },
+  "home.statistics.categories": {
+    "defaultMessage": "Dataset categories"
+  },
+  "home.statistics.countries": {
+    "defaultMessage": "Countries and territories"
+  },
+  "home.statistics.schemata": {
+    "defaultMessage": "Entity types"
+  },
+  "home.stats.title": {
+    "defaultMessage": "Get started exploring public data"
+  },
+  "home.title": {
+    "defaultMessage": "Искать публичные записи и секретные документы"
+  },
+  "infoMode.collection": {
+    "defaultMessage": "Набор данных"
+  },
+  "infoMode.collection.entries": {
+    "defaultMessage": "{count} записей"
+  },
+  "list.create.button": {
+    "defaultMessage": "New list"
+  },
+  "list.create.label_placeholder": {
+    "defaultMessage": "Untitled list"
+  },
+  "list.create.login": {
+    "defaultMessage": "You must log in to create a list"
+  },
+  "list.create.success": {
+    "defaultMessage": "Your list has been created successfully."
+  },
+  "list.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the list"
+  },
+  "list.create.title": {
+    "defaultMessage": "Create a list"
+  },
+  "list.selector.create": {
+    "defaultMessage": "Create a new list"
+  },
+  "list.selector.select_empty": {
+    "defaultMessage": "No existing list"
+  },
+  "list.update.label_placeholder": {
+    "defaultMessage": "Untitled list"
+  },
+  "list.update.success": {
+    "defaultMessage": "Your list has been updated successfully."
+  },
+  "list.update.summary_placeholder": {
+    "defaultMessage": "A brief description of the list"
+  },
+  "list.update.title": {
+    "defaultMessage": "List settings"
+  },
+  "lists": {
+    "defaultMessage": "Lists"
+  },
+  "lists.description": {
+    "defaultMessage": "Lists let you organize and group related entities of interest."
+  },
+  "lists.no_lists": {
+    "defaultMessage": "There are no lists."
+  },
+  "lists.title": {
+    "defaultMessage": "Lists"
+  },
+  "login.oauth": {
+    "defaultMessage": "Войти с помощью OAuth"
+  },
+  "mapping.actions.create": {
+    "defaultMessage": "Создать сущности"
+  },
+  "mapping.actions.create.toast": {
+    "defaultMessage": "Создание сущностей..."
+  },
+  "mapping.actions.delete": {
+    "defaultMessage": "Удалить"
+  },
+  "mapping.actions.delete.toast": {
+    "defaultMessage": "Удаление маппинга и созданных сущностей..."
+  },
+  "mapping.actions.export": {
+    "defaultMessage": "Экспорт маппинга"
+  },
+  "mapping.actions.flush": {
+    "defaultMessage": "Удалить созданные сущности"
+  },
+  "mapping.actions.flush.toast": {
+    "defaultMessage": "Удаление созданных сущностей"
+  },
+  "mapping.actions.save": {
+    "defaultMessage": "Сохранить изменения"
+  },
+  "mapping.actions.save.toast": {
+    "defaultMessage": "Пересоздать сущности..."
+  },
+  "mapping.create.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "mapping.create.confirm": {
+    "defaultMessage": "Создать"
+  },
+  "mapping.create.question": {
+    "defaultMessage": "Вы уверены, что готовы создать сущности, используя этот маппинг?"
+  },
+  "mapping.delete.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "mapping.delete.confirm": {
+    "defaultMessage": "Удалить"
+  },
+  "mapping.delete.question": {
+    "defaultMessage": "Вы уверены, что хотите удалить этот маппинг и все созданные сущности?"
+  },
+  "mapping.entityAssign.helpText": {
+    "defaultMessage": "Необходимо создать объект типа \"{range}\" для {property}"
+  },
+  "mapping.entityAssign.noResults": {
+    "defaultMessage": "Нет совпадений с другими объектами"
+  },
+  "mapping.entityAssign.placeholder": {
+    "defaultMessage": "Выбрать объект"
+  },
+  "mapping.entity_set_select": {
+    "defaultMessage": "Select a List or Diagram"
+  },
+  "mapping.entityset.remove": {
+    "defaultMessage": "Remove"
+  },
+  "mapping.error.keyMissing": {
+    "defaultMessage": "Ошибка ключа: для сущности {id} должен быть задан хотя бы один ключ"
+  },
+  "mapping.error.relationshipMissing": {
+    "defaultMessage": "Ошибка связи: для сущности {id} должны быть заданы {source} и {target}."
+  },
+  "mapping.flush.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "mapping.flush.confirm": {
+    "defaultMessage": "Удалить маппинг"
+  },
+  "mapping.flush.question": {
+    "defaultMessage": "Вы уверены, что хотите удалить все созданные с помощью этого маппинга сущности?"
+  },
+  "mapping.import.button": {
+    "defaultMessage": "Импортировать существующие маппинги"
+  },
+  "mapping.import.placeholder": {
+    "defaultMessage": "Перенесите .yml файл сюда или кликните, чтобы импортировать существующий маппинг-файл"
+  },
+  "mapping.import.querySelect": {
+    "defaultMessage": "Выберите маппинг-запрос для импорта из этого файла:"
+  },
+  "mapping.import.submit": {
+    "defaultMessage": "Сохранить"
+  },
+  "mapping.import.success": {
+    "defaultMessage": "Ваш маппинг импортирован."
+  },
+  "mapping.import.title": {
+    "defaultMessage": "Импорт маппинга"
+  },
+  "mapping.info": {
+    "defaultMessage": "Выполните нижследующие действия для маппинга ваших данных с сущностями модели Follow the Money. Подробнее см. {link}"
+  },
+  "mapping.infoLink": {
+    "defaultMessage": "Маппинг данных в Алефе"
+  },
+  "mapping.keyAssign.additionalHelpText": {
+    "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
+  },
+  "mapping.keyAssign.additionalHelpToggle.less": {
+    "defaultMessage": "Меньше"
+  },
+  "mapping.keyAssign.additionalHelpToggle.more": {
+    "defaultMessage": "Подробнее о ключах"
+  },
+  "mapping.keyAssign.helpText": {
+    "defaultMessage": "Укажите, какие колонки из исходных данных следует использовать для определения уникальных сущностей."
+  },
+  "mapping.keyAssign.noResults": {
+    "defaultMessage": "Результатов нет"
+  },
+  "mapping.keyAssign.placeholder": {
+    "defaultMessage": "Выбрать ключи из доступных колонок"
+  },
+  "mapping.keys": {
+    "defaultMessage": "Ключи"
+  },
+  "mapping.propAssign.errorBlank": {
+    "defaultMessage": "Нельзя назначить свойства колонкам без заголовка"
+  },
+  "mapping.propAssign.errorDuplicate": {
+    "defaultMessage": "Нельзя назначить свойства колонкам с неуникальными заголовками"
+  },
+  "mapping.propAssign.literalButtonText": {
+    "defaultMessage": "Добавить заданное значение"
+  },
+  "mapping.propAssign.literalPlaceholder": {
+    "defaultMessage": "Задать значение"
+  },
+  "mapping.propAssign.other": {
+    "defaultMessage": "Прочее"
+  },
+  "mapping.propAssign.placeholder": {
+    "defaultMessage": "Назначить свойство"
+  },
+  "mapping.propRemove": {
+    "defaultMessage": "Удалить свойство из маппинга"
+  },
+  "mapping.props": {
+    "defaultMessage": "Свойства"
+  },
+  "mapping.save.cancel": {
+    "defaultMessage": "Отменить"
+  },
+  "mapping.save.confirm": {
+    "defaultMessage": "Обновить маппинг и пересоздать сущности"
+  },
+  "mapping.save.question": {
+    "defaultMessage": "При обновлении маппинга ранее созданные сущности будет удалены и созданы снова. Продолжить?"
+  },
+  "mapping.section1.title": {
+    "defaultMessage": "1. Выберите типы сущностей"
+  },
+  "mapping.section2.title": {
+    "defaultMessage": "2. Соотнесите колонки свойствам сущностей"
+  },
+  "mapping.section3.title": {
+    "defaultMessage": "3. Проверьте результат"
+  },
+  "mapping.section4.description": {
+    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the dataset, please click below and select from the available options."
+  },
+  "mapping.section4.title": {
+    "defaultMessage": "4. Select a destination for generated entities (optional)"
+  },
+  "mapping.status.error": {
+    "defaultMessage": "Ошибка:"
+  },
+  "mapping.status.status": {
+    "defaultMessage": "Статус:"
+  },
+  "mapping.status.updated": {
+    "defaultMessage": "Последнее обновление:"
+  },
+  "mapping.title": {
+    "defaultMessage": "Создание структурированных сущностей"
+  },
+  "mapping.types.objects": {
+    "defaultMessage": "Объекты"
+  },
+  "mapping.types.relationships": {
+    "defaultMessage": "Связи"
+  },
+  "mapping.warning.empty": {
+    "defaultMessage": "You must create at least one entity"
+  },
+  "nav.alerts": {
+    "defaultMessage": "Оповещения"
+  },
+  "nav.casefiles": {
+    "defaultMessage": "Персональные наборы данных"
+  },
+  "nav.collections": {
+    "defaultMessage": "Наборы данных"
+  },
+  "nav.diagrams": {
+    "defaultMessage": "Диаграммы"
+  },
+  "nav.exports": {
+    "defaultMessage": "Exports"
+  },
+  "nav.lists": {
+    "defaultMessage": "Lists"
+  },
+  "nav.settings": {
+    "defaultMessage": "Настройки"
+  },
+  "nav.signin": {
+    "defaultMessage": "Войти"
+  },
+  "nav.signout": {
+    "defaultMessage": "Выйти"
+  },
+  "nav.status": {
+    "defaultMessage": "System status"
+  },
+  "nav.view_notifications": {
+    "defaultMessage": "Уведомления"
+  },
+  "navbar.alert_add": {
+    "defaultMessage": "Вам будут приходить оповещения о новых результатах этого поискового запроса."
+  },
+  "navbar.alert_remove": {
+    "defaultMessage": "Вы подписаны на оповещения для этого поискового запроса."
+  },
+  "notification.description": {
+    "defaultMessage": "Показать последние обновления для наборов данных, групп и оповещений, на которые вы подписаны"
+  },
+  "notifications.greeting": {
+    "defaultMessage": "Что нового, {role}?"
+  },
+  "notifications.no_notifications": {
+    "defaultMessage": "У вас нет непросмотренных уведомлений"
+  },
+  "notifications.title": {
+    "defaultMessage": "Последние уведомления"
+  },
+  "notifications.type_filter": {
+    "defaultMessage": "Show:"
+  },
+  "notifications.type_filter.all": {
+    "defaultMessage": "All"
+  },
+  "pages.not.found": {
+    "defaultMessage": "Страница не найдена"
+  },
+  "pass.auth.not_same": {
+    "defaultMessage": "Пароли не совпадают!"
+  },
+  "password_auth.activate": {
+    "defaultMessage": "Активировать"
+  },
+  "password_auth.confirm": {
+    "defaultMessage": "Подтвердить пароль"
+  },
+  "password_auth.email": {
+    "defaultMessage": "Электронный адрес"
+  },
+  "password_auth.name": {
+    "defaultMessage": "Ваше имя"
+  },
+  "password_auth.password": {
+    "defaultMessage": "Пароль"
+  },
+  "password_auth.signin": {
+    "defaultMessage": "Войти"
+  },
+  "password_auth.signup": {
+    "defaultMessage": "Зарегистрироваться"
+  },
+  "profileinfo.api_desc": {
+    "defaultMessage": "API-ключ для редактирования данных через сторонние приложения"
+  },
+  "queryFilters.clearAll": {
+    "defaultMessage": "Очистить все"
+  },
+  "queryLogs.add_placeholder": {
+    "defaultMessage": "Оповещать о новых результатах поиска..."
+  },
+  "queryLogs.no_alerts": {
+    "defaultMessage": "Вы не подписаны на оповещения"
+  },
+  "queryLogs.query.delete.tooltip": {
+    "defaultMessage": "Удалить из {listType}"
+  },
+  "queryLogs.query.search": {
+    "defaultMessage": "Искть {query}"
+  },
+  "refresh.callout_message": {
+    "defaultMessage": "Обрабатываем документы. Пожалуйста, подождите..."
+  },
+  "restricted.explain": {
+    "defaultMessage": "Использование этого набора данных ограничено. Прочтите описание и свяжитесь с {creator}, прежде чем использовать эти материалы."
+  },
+  "restricted.explain.creator": {
+    "defaultMessage": "владелец набора данных"
+  },
+  "restricted.tag": {
+    "defaultMessage": "ОГРАНИЧЕНО"
+  },
+  "result.error": {
+    "defaultMessage": "Ошибка"
+  },
+  "result.more_results": {
+    "defaultMessage": "Найдено результатов: более {total}"
+  },
+  "result.none": {
+    "defaultMessage": "Ничего не найдено"
+  },
+  "result.results": {
+    "defaultMessage": "Результатов поиска: {total}"
+  },
+  "result.searching": {
+    "defaultMessage": "Поиск..."
+  },
+  "result.solo": {
+    "defaultMessage": "Один результат"
+  },
+  "role.select.user": {
+    "defaultMessage": "Выберите пользователя"
+  },
+  "schemaSelect.button.relationship": {
+    "defaultMessage": "Добавить новую связь"
+  },
+  "schemaSelect.button.thing": {
+    "defaultMessage": "Добавить новый объект"
+  },
+  "search.advanced.all.helptext": {
+    "defaultMessage": "Results containing all of the given terms will be prioritized, followed by those with one or more of the terms."
+  },
+  "search.advanced.all.label": {
+    "defaultMessage": "Any of these words"
+  },
+  "search.advanced.clear": {
+    "defaultMessage": "Clear all"
+  },
+  "search.advanced.exact.helptext": {
+    "defaultMessage": "Only results with this exact word or phrase will be returned"
+  },
+  "search.advanced.exact.label": {
+    "defaultMessage": "This exact word/phrase"
+  },
+  "search.advanced.must.helptext": {
+    "defaultMessage": "Only results with these words will be returned"
+  },
+  "search.advanced.must.label": {
+    "defaultMessage": "Must contain these words"
+  },
+  "search.advanced.none.helptext": {
+    "defaultMessage": "Exclude results with these words"
+  },
+  "search.advanced.none.label": {
+    "defaultMessage": "None of these words"
+  },
+  "search.advanced.proximity.distance": {
+    "defaultMessage": "Distance"
+  },
+  "search.advanced.proximity.helptext": {
+    "defaultMessage": "Search for two terms within a certain distance of each other. For example, return results with the terms \"Bank\" and \"America\" occurring within two words from each other, such as \"Bank of America\", \"Bank in America\", even \"America has a Bank\"."
+  },
+  "search.advanced.proximity.label": {
+    "defaultMessage": "Terms in proximity to each other"
+  },
+  "search.advanced.proximity.term": {
+    "defaultMessage": "First term"
+  },
+  "search.advanced.proximity.term2": {
+    "defaultMessage": "Second term"
+  },
+  "search.advanced.submit": {
+    "defaultMessage": "Search"
+  },
+  "search.advanced.title": {
+    "defaultMessage": "Advanced Search"
+  },
+  "search.advanced.variants.distance": {
+    "defaultMessage": "Letters different"
+  },
+  "search.advanced.variants.helptext": {
+    "defaultMessage": "Increase the fuzziness of a search. For example, Wladimir~2 will return not just the term “Wladimir” but also similar spellings such as \"Wladimyr\" or \"Vladimyr\". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant."
+  },
+  "search.advanced.variants.label": {
+    "defaultMessage": "Spelling variations"
+  },
+  "search.advanced.variants.term": {
+    "defaultMessage": "Term"
+  },
+  "search.callout_message": {
+    "defaultMessage": "Некоторые коллекции данных недоступны анонимным пользователям — нажмите {signInButton}, чтобы авторизоваться!"
+  },
+  "search.callout_message.button_text": {
+    "defaultMessage": "Войти"
+  },
+  "search.facets.filtersSelected": {
+    "defaultMessage": "{count} выбрано"
+  },
+  "search.facets.no_items": {
+    "defaultMessage": "Варианты отсутствуют"
+  },
+  "search.facets.showMore": {
+    "defaultMessage": "Ещё..."
+  },
+  "search.filterTag.ancestors": {
+    "defaultMessage": "в:"
+  },
+  "search.filterTag.dates_after": {
+    "defaultMessage": "After"
+  },
+  "search.filterTag.dates_before": {
+    "defaultMessage": "Before"
+  },
+  "search.filterTag.exclude": {
+    "defaultMessage": "не:"
+  },
+  "search.filterTag.role": {
+    "defaultMessage": "Фильтровать по доступу"
+  },
+  "search.no_results_description": {
+    "defaultMessage": "Попробуйте расширить критерии поиска"
+  },
+  "search.no_results_title": {
+    "defaultMessage": "Ничего не найдено"
+  },
+  "search.nolabel_placeholder": {
+    "defaultMessage": "Искать людей, компании или документы"
+  },
+  "search.placeholder": {
+    "defaultMessage": "Поиск в {label}"
+  },
+  "search.placeholder_default": {
+    "defaultMessage": "Search…"
+  },
+  "search.screen.breadcrumb": {
+    "defaultMessage": "Поиск"
+  },
+  "search.screen.dates_disabled": {
+    "defaultMessage": "No dates available"
+  },
+  "search.screen.dates_label": {
+    "defaultMessage": "результаты"
+  },
+  "search.screen.dates_title": {
+    "defaultMessage": "Даты"
+  },
+  "search.screen.export": {
+    "defaultMessage": "Экспорт"
+  },
+  "search.screen.export_disabled": {
+    "defaultMessage": "За один раз можно экспортировать не более 10.000 записей"
+  },
+  "search.screen.export_disabled_empty": {
+    "defaultMessage": "No results to export."
+  },
+  "search.screen.filters": {
+    "defaultMessage": "Фильтры"
+  },
+  "search.screen.hide_dates": {
+    "defaultMessage": "Скрыть фильтр для дат"
+  },
+  "search.screen.show_dates": {
+    "defaultMessage": "Отобразить фильтр для дат"
+  },
+  "search.title": {
+    "defaultMessage": "Поиск"
+  },
+  "settings.api_key": {
+    "defaultMessage": "API-ключ"
+  },
+  "settings.confirm": {
+    "defaultMessage": "(подтверждение)"
+  },
+  "settings.current_explain": {
+    "defaultMessage": "Введите текущий пароль для установки нового."
+  },
+  "settings.current_password": {
+    "defaultMessage": "Действующий пароль"
+  },
+  "settings.email": {
+    "defaultMessage": "Электронный адрес"
+  },
+  "settings.email.muted": {
+    "defaultMessage": "Получать ежедневные уведомления по эл. почте"
+  },
+  "settings.email.no_change": {
+    "defaultMessage": "Ваш эл. адрес не изменён"
+  },
+  "settings.email.tester": {
+    "defaultMessage": "Принимать участие в тестировании новых функций"
+  },
+  "settings.locale": {
+    "defaultMessage": "Язык"
+  },
+  "settings.name": {
+    "defaultMessage": "Название"
+  },
+  "settings.new_password": {
+    "defaultMessage": "Новый пароль"
+  },
+  "settings.password.missmatch": {
+    "defaultMessage": "Пароли не совпадают"
+  },
+  "settings.password.rules": {
+    "defaultMessage": "Минимум 6 символов"
+  },
+  "settings.password.title": {
+    "defaultMessage": "Поменять пароль"
+  },
+  "settings.save": {
+    "defaultMessage": "Обновить"
+  },
+  "settings.saved": {
+    "defaultMessage": "Ваша учётная запись обновлена"
+  },
+  "settings.title": {
+    "defaultMessage": "Настройки"
+  },
+  "sidebar.open": {
+    "defaultMessage": "Развернуть"
+  },
+  "signup.activate": {
+    "defaultMessage": "Activate your account"
+  },
+  "signup.inbox.desc": {
+    "defaultMessage": "Мы отправили вам письмо с ссылкой для завершения регистрации"
+  },
+  "signup.inbox.title": {
+    "defaultMessage": "Проверьте почту"
+  },
+  "signup.login": {
+    "defaultMessage": "Вы уже зарегистрированы? Авторизуйтесь!"
+  },
+  "signup.register": {
+    "defaultMessage": "Зарегистрироваться"
+  },
+  "signup.register.question": {
+    "defaultMessage": "У вас нет учётной записи? Зарегистрируйтесь!"
+  },
+  "signup.title": {
+    "defaultMessage": "Sign in"
+  },
+  "sorting.bar.created_by": {
+    "defaultMessage": "Show:"
+  },
+  "sorting.bar.direction": {
+    "defaultMessage": "Направление:"
+  },
+  "sorting.bar.sort": {
+    "defaultMessage": "Sort by:"
+  },
+  "sources.index.empty": {
+    "defaultMessage": "Эта группа не привязана к какому-либо набору данных."
+  },
+  "sources.index.placeholder": {
+    "defaultMessage": "Поиск по наборам данных, относящимся к {group}..."
+  },
+  "status.no_collection": {
+    "defaultMessage": "Other tasks"
+  },
+  "tags.results": {
+    "defaultMessage": "Количество упоминаний"
+  },
+  "tags.title": {
+    "defaultMessage": "Найденные селекторы"
+  },
+  "text.loading": {
+    "defaultMessage": "Загрузка..."
+  },
+  "valuelink.tooltip": {
+    "defaultMessage": "Упоминаний в {appName}: {count}"
+  },
+  "xref.compute": {
+    "defaultMessage": "Обработать"
+  },
+  "xref.context.explain1": {
+    "defaultMessage": "Проверяйте результаты и находите новые совпадения и связи. Ваши решения могут быть ценной информацией, поэтому будьте осторожны в выборе групп пользователей, которым предоставляете доступ."
+  },
+  "xref.context.private": {
+    "defaultMessage": "Никому не показывать"
+  },
+  "xref.context.select": {
+    "defaultMessage": "Предоставить доступ:"
+  },
+  "xref.context.submit": {
+    "defaultMessage": "Начать проверку"
+  },
+  "xref.context.title": {
+    "defaultMessage": "Проверка совпадений"
+  },
+  "xref.download": {
+    "defaultMessage": "Export results"
+  },
+  "xref.entity": {
+    "defaultMessage": "Запись"
+  },
+  "xref.match": {
+    "defaultMessage": "Вероятное совпадение"
+  },
+  "xref.match_collection": {
+    "defaultMessage": "Набор данных"
+  },
+  "xref.recompute": {
+    "defaultMessage": "Перезапустить"
+  },
+  "xref.score": {
+    "defaultMessage": "Оценка"
   }
 }
