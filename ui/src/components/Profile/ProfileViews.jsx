@@ -8,9 +8,9 @@ import { withRouter } from 'react-router';
 import {
     Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
-import { profileSimilarQuery } from 'queries';
+import { profileSimilarQuery, profileReferenceQuery } from 'queries';
 import {
-    selectEntitiesResult, selectProfileReferences, selectProfileTags,
+    selectEntitiesResult, selectProfileReferences, selectProfileReference, selectProfileTags,
 } from 'selectors';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
@@ -35,13 +35,11 @@ class ProfileViews extends React.Component {
 
     render() {
         const {
-            activeMode, profile, references, similar
+            activeMode, profile, references, similar, reference, referenceQuery
         } = this.props;
         if (references.isPending) {
             return <SectionLoading />;
         }
-
-        console.log(references);
 
         return (
             <Tabs
@@ -56,7 +54,7 @@ class ProfileViews extends React.Component {
                     title={(
                         <TextLoading loading={similar.isPending}>
                             <Icon icon="similar" className="left-icon" />
-                            <FormattedMessage id="profile.info.items" defaultMessage="Components" />
+                            <FormattedMessage id="profile.info.items" defaultMessage="Profile entities" />
                             <ResultCount result={similar} />
                         </TextLoading>
                     )}
@@ -74,7 +72,12 @@ class ProfileViews extends React.Component {
                             </>
                         )}
                         panel={
-                            <EntityReferencesMode entity={profile.merged} mode={activeMode} />
+                            <EntityReferencesMode
+                                entity={profile.merged}
+                                mode={activeMode}
+                                reference={reference}
+                                query={referenceQuery}
+                            />
                         }
                     />
                 ))}
@@ -84,9 +87,12 @@ class ProfileViews extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const { profile, location } = ownProps;
+    const { profile, location, activeMode } = ownProps;
+    const reference = selectProfileReference(state, profile.id, activeMode);
     return {
+        reference,
         references: selectProfileReferences(state, profile.id),
+        referenceQuery: profileReferenceQuery(location, profile, reference),
         tags: selectProfileTags(state, profile.id),
         similar: selectEntitiesResult(state, profileSimilarQuery(location, profile.id)),
     };

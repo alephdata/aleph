@@ -22,7 +22,7 @@ import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
 import { deleteEntity } from 'actions';
-import { queryEntityReference } from 'queries';
+import { entityReferenceQuery } from 'queries';
 import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'selectors';
@@ -222,7 +222,7 @@ const mapStateToProps = (state, ownProps) => {
   const hashQuery = queryString.parse(location.hash);
   const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
   const reference = selectEntityReference(state, entityId, activeMode);
-  const referenceQuery = queryEntityReference(location, entity, reference);
+  const referenceQuery = entityReferenceQuery(location, entity, reference);
   const documentQuery = Query.fromLocation('entities', location, {}, 'document');
 
   return {

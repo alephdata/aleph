@@ -78,17 +78,6 @@ export function queryFolderDocuments(location, documentId, queryText) {
   return query;
 }
 
-export function queryEntityReference(location, entity, reference) {
-  if (!reference) {
-    return null;
-  }
-  const context = {
-    [`filter:properties.${reference.property.name}`]: entity.id,
-    'filter:schemata': reference.schema,
-  };
-  return Query.fromLocation('entities', location, context, reference.property.name);
-}
-
 export function entitySimilarQuery(location, entityId) {
   const path = entityId ? `entities/${entityId}/similar` : undefined;
   return Query.fromLocation(path, location, {}, 'similar')
@@ -125,6 +114,16 @@ export function entityReferencesQuery(entityId) {
   return entityExpandQuery(entityId, [], 0);
 }
 
+export function entityReferenceQuery(location, entity, reference) {
+  if (!!reference) {
+    const context = {
+      [`filter:properties.${reference.property.name}`]: entity.id,
+      'filter:schemata': reference.schema,
+    };
+    return Query.fromLocation('entities', location, context, reference.property.name);
+  }
+}
+
 export function profileExpandQuery(profileId, properties, limit = 200) {
   const context = {
     'filter:property': properties
@@ -135,4 +134,17 @@ export function profileExpandQuery(profileId, properties, limit = 200) {
 
 export function profileReferencesQuery(profileId) {
   return profileExpandQuery(profileId, [], 0);
+}
+
+export function profileReferenceQuery(location, profile, reference) {
+  if (reference) {
+    const entities = profile.items
+      .filter((i) => i.judgement === 'positive')
+      .map(i => i.entity_id);
+    const context = {
+      [`filter:properties.${reference.property.name}`]: entities,
+      'filter:schemata': reference.schema,
+    };
+    return Query.fromLocation('entities', location, context, reference.property.name);
+  }
 }

@@ -8,9 +8,11 @@ import { withRouter } from 'react-router';
 import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
-import { entitySimilarQuery, queryFolderDocuments } from 'queries';
 import {
-  selectEntitiesResult, selectEntityReferences, selectEntityTags,
+  entityReferenceQuery, entitySimilarQuery, queryFolderDocuments
+} from 'queries';
+import {
+  selectEntitiesResult, selectEntityReferences, selectEntityTags, selectEntityReference
 } from 'selectors';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'components/Entity/EntityTagsMode';
@@ -43,7 +45,7 @@ class EntityViews extends React.Component {
 
   render() {
     const {
-      isPreview, activeMode, entity, references, tags, similar, children,
+      isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery
     } = this.props;
     if (references.isPending) {
       return <SectionLoading />;
@@ -137,7 +139,12 @@ class EntityViews extends React.Component {
               </>
             )}
             panel={
-              <EntityReferencesMode entity={entity} mode={activeMode} />
+              <EntityReferencesMode
+                entity={entity}
+                mode={activeMode}
+                query={referenceQuery}
+                reference={reference}
+              />
             }
           />
         ))}
@@ -186,10 +193,13 @@ class EntityViews extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entity, location } = ownProps;
+  const { entity, location, activeMode } = ownProps;
   const childrenQuery = queryFolderDocuments(location, entity.id, undefined);
+  const reference = selectEntityReference(state, entity.id, activeMode);
   return {
+    reference,
     references: selectEntityReferences(state, entity.id),
+    referenceQuery: entityReferenceQuery(location, entity, reference),
     tags: selectEntityTags(state, entity.id),
     similar: selectEntitiesResult(state, entitySimilarQuery(location, entity.id)),
     children: selectEntitiesResult(state, childrenQuery),

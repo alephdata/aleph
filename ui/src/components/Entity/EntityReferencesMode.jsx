@@ -10,7 +10,7 @@ import queryString from 'query-string';
 import c from 'classnames';
 
 import {
-  selectEntitiesResult, selectEntityReference, selectSchema,
+  selectEntitiesResult, selectSchema,
 } from 'selectors';
 import {
   Entity, ErrorSection, Property, SectionLoading,
@@ -18,7 +18,6 @@ import {
 import EntityProperties from 'components/Entity/EntityProperties';
 import ensureArray from 'util/ensureArray';
 import { queryEntities } from 'actions/index';
-import { queryEntityReference } from 'queries';
 
 const messages = defineMessages({
   no_relationships: {
@@ -123,7 +122,7 @@ class EntityReferencesMode extends React.Component {
         <table className="data-table references-data-table">
           <thead>
             <tr>
-              { !isThing && (
+              {!isThing && (
                 <th key="expand" />
               )}
               {columns.map(prop => (
@@ -151,17 +150,10 @@ class EntityReferencesMode extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entity, mode, location } = ownProps;
+  const { location, reference, query } = ownProps;
   const parsedHash = queryString.parse(location.hash);
-  const reference = selectEntityReference(state, entity.id, mode);
-  if (!reference) {
-    return {};
-  }
-  const query = queryEntityReference(location, entity, reference);
   const schema = selectSchema(state, reference.schema);
   return {
-    reference,
-    query,
     schema,
     parsedHash,
     expandedId: parsedHash.expand,
