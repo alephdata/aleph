@@ -38,10 +38,3 @@ XrefResponse:
       items:
         $ref: "#/components/schemas/Xref"
       type: array
-
-XrefDecide:
-  type: object
-  properties:
-    decision:
-      allOf:
-        - $ref: "#/components/schemas/Judgement"

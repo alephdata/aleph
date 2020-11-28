@@ -6,6 +6,7 @@ from aleph.views.groups_api import blueprint as groups_api
 from aleph.views.permissions_api import blueprint as permissions_api
 from aleph.views.collections_api import blueprint as collections_api
 from aleph.views.entities_api import blueprint as entities_api
+from aleph.views.profiles_api import blueprint as profiles_api
 from aleph.views.alerts_api import blueprint as alerts_api
 from aleph.views.ingest_api import blueprint as ingest_api
 from aleph.views.notifications_api import blueprint as notifications_api
@@ -28,6 +29,7 @@ def mount_app_blueprints(app):
     app.register_blueprint(permissions_api, url_prefix="/api/2/collections")
     app.register_blueprint(collections_api, url_prefix="/api/2/collections")
     app.register_blueprint(entities_api)
+    app.register_blueprint(profiles_api)
     app.register_blueprint(alerts_api)
     app.register_blueprint(ingest_api, url_prefix="/api/2/collections")
     app.register_blueprint(reconcile_api)

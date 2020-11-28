@@ -118,6 +118,7 @@ def configure_schema(schema, version):
             "properties": {"type": "object", "properties": schema_mapping},
             "numeric": {"type": "object", "properties": numeric_mapping},
             "role_id": KEYWORD,
+            "profile_id": KEYWORD,
             "collection_id": KEYWORD,
             "origin": KEYWORD,
             "created_at": {"type": "date"},

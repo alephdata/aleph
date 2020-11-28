@@ -134,6 +134,7 @@ def reingest_collection(collection, job_id=None, index=False, flush=True):
 def reindex_collection(collection, skip_errors=True, sync=False, flush=False):
     """Re-index all entities from the model, mappings and aggregator cache."""
     from aleph.logic.mapping import map_to_aggregator
+    from aleph.logic.profiles import profile_fragments
 
     aggregator = get_aggregator(collection)
     for mapping in collection.mappings:
@@ -146,6 +147,7 @@ def reindex_collection(collection, skip_errors=True, sync=False, flush=False):
             # More or less ignore broken models.
             log.exception("Failed mapping: %r", mapping)
     aggregate_model(collection, aggregator)
+    profile_fragments(collection, aggregator)
     if flush:
         log.debug("[%s] Flushing...", collection)
         index.delete_entities(collection.id, sync=True)

@@ -303,7 +303,7 @@ class EntitySetAPITest(TestCase):
             validate(res.json, "QueryResponse")
             assert len(res.json["results"]) == 1
 
-        qurl = url + f"?filter:type=timeline&filter:type=diagram"
+        qurl = url + "?filter:type=timeline&filter:type=diagram"
         res = self.client.get(qurl, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "QueryResponse")

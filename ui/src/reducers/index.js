@@ -6,7 +6,6 @@ import session from './session';
 import config from './config';
 import statistics from './statistics';
 import entities from './entities';
-import entityReferences from './entityReferences';
 import entityTags from './entityTags';
 import values from './values';
 import collections from './collections';
@@ -31,7 +30,6 @@ const rootReducer = combineReducers({
   config,
   statistics,
   entities,
-  entityReferences,
   entityTags,
   values,
   alerts,

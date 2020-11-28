@@ -1,5 +1,5 @@
 import logging
-from banal import ensure_list, ensure_dict
+from banal import ensure_dict
 from pprint import pformat  # noqa
 from flask_babel import gettext
 from followthemoney import model
@@ -13,11 +13,11 @@ from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
 from aleph.queues import queue_task, OP_UPDATE_ENTITY, OP_PRUNE_ENTITY
 from aleph.logic.notifications import flush_notifications
-from aleph.logic.collections import refresh_collection
+from aleph.logic.collections import MODEL_ORIGIN, refresh_collection
 from aleph.logic.xref import xref_entity
 from aleph.logic.util import latin_alt
 from aleph.index import xref as xref_index
-from aleph.logic.aggregator import delete_aggregator_entity
+from aleph.logic.aggregator import get_aggregator
 from aleph.logic.graph import Graph
 
 log = logging.getLogger(__name__)
@@ -28,6 +28,8 @@ def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
     """
+    from aleph.logic.profiles import profile_fragments
+
     entity = None
     entity_id = collection.ns.sign(data.get("id"))
     if entity_id is not None:
@@ -47,6 +49,17 @@ def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
     entity.data = proxy.properties
     db.session.add(entity)
 
+    aggregator = get_aggregator(collection)
+    aggregator.delete(entity_id=entity.id)
+    aggregator.put(proxy, origin=MODEL_ORIGIN)
+
+    # If the entity is part of a profile, tag it.
+    profile_id = profile_fragments(collection, aggregator, entity_id=entity.id)
+    if profile_id is not None:
+        proxy.context["profile_id"] = [profile_id]
+
+    aggregator.close()
+
     index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(collection, entity.id)
     queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity.id)
@@ -56,7 +69,6 @@ def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
 def update_entity(collection, entity_id=None, job_id=None):
     """Update xref and aggregator after an entity has been edited."""
     log.info("[%s] Prune entity: %s", collection, entity_id)
-    delete_aggregator_entity(collection, entity_id)
     entity = index.get_entity(entity_id)
     proxy = model.get_proxy(entity)
     xref_entity(collection, proxy)
@@ -128,96 +140,8 @@ def prune_entity(collection, entity_id=None, job_id=None):
     EntitySetItem.delete_by_entity(entity_id)
     Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id)
-    delete_aggregator_entity(collection, entity_id)
+    aggregator = get_aggregator(collection)
+    aggregator.delete(entity_id=entity_id)
+    aggregator.close()
     refresh_entity(collection, entity_id)
     db.session.commit()
-
-
-def entity_references(entity, authz=None):
-    """Given a particular entity, find all the references to it from other
-    entities, grouped by the property where they are used."""
-    proxy = model.get_proxy(entity)
-    node = Node.from_proxy(proxy)
-    graph = Graph()
-    query = graph.query(authz=authz)
-    for prop in proxy.schema.properties.values():
-        if not prop.stub:
-            continue
-        query.edge(node, prop.reverse, count=True)
-    for res in query.execute():
-        if res.count > 0:
-            yield (res.prop, res.count)
-
-
-def entity_tags(entity, authz=None, edge_types=registry.pivots):
-    """Do a search on tags of an entity."""
-    proxy = model.get_proxy(entity)
-    edge_types = registry.get_types(edge_types)
-    edge_types = [t for t in edge_types if t != registry.entity]
-    graph = Graph(edge_types=edge_types)
-    query = graph.query(authz=authz)
-    nodes = set()
-    for prop, value in proxy.itervalues():
-        if prop.type not in graph.edge_types:
-            continue
-        if prop.specificity(value) < 0.1:
-            continue
-        nodes.add(Node(prop.type, value))
-    for node in nodes:
-        query.node(node, count=True)
-    for res in query.execute():
-        field = res.node.type.group
-        if res.count is not None and res.count > 1:
-            yield (field, res.node.value, res.count)
-
-
-def entity_expand(
-    entity, collection_ids, edge_types, limit, properties=None, authz=None
-):
-    """Expand an entity's graph to find adjacent entities that are connected
-    by a common property value(eg: having the same email or phone number), a
-    property (eg: Passport entity linked to a Person) or an Entity type edge.
-    (eg: Person connected to Company through Directorship)
-
-    collection_ids: list of collection_ids to search
-    edge_types: list of FtM Types to expand as edges
-    properties: list of FtM Properties to expand as edges.
-    limit: max number of entities to return
-    """
-    proxy = model.get_proxy(entity)
-    node = Node.from_proxy(proxy)
-    graph = Graph(edge_types=edge_types)
-    graph.add(proxy)
-    query = graph.query(authz=authz, collection_ids=collection_ids)
-
-    # Get relevant property set
-    props = set(proxy.schema.properties.values())
-    props = [p for p in props if p.type in graph.edge_types]
-    properties = ensure_list(properties)
-    if len(properties):
-        props = [p for p in props if p.name in properties]
-
-    # Query for reverse properties
-    for prop in props:
-        if prop.stub:
-            query.edge(node, prop.reverse, limit=limit, count=True)
-    query.execute()
-
-    # Fill in missing graph entities:
-    if limit > 0:
-        graph.resolve()
-
-    for prop in props:
-        count = len(proxy.get(prop))
-        if prop.stub:
-            for res in query.patterns:
-                if res.prop == prop.reverse:
-                    count = res.count
-        proxies = set()
-        # Too much effort to do this right. This works, too:
-        for edge in graph.get_adjacent(node, prop=prop):
-            for part in (edge.proxy, edge.source.proxy, edge.target.proxy):
-                if part is not None and part != proxy:
-                    proxies.add(part)
-        if count > 0:
-            yield (prop, count, proxies)

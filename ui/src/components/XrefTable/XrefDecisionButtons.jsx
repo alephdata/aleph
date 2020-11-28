@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 
-import { decideCollectionXref } from 'actions';
+import { pairwiseJudgement } from 'actions';
 import { showWarningToast } from 'app/toast';
 
 
@@ -13,12 +13,12 @@ class XrefDecisionButtons extends Component {
     this.state = { blocking: false };
   }
 
-  async onDecide(decision) {
+  async onDecide(judgement) {
     const { xref } = this.props;
-    const data = { ...xref, decision: decision };
+    xref.judgement = xref.judgement === judgement ? 'no_judgement' : judgement;
     this.setState({ blocking: true });
     try {
-      await this.props.decideCollectionXref(data);
+      await this.props.pairwiseJudgement(xref);
     } catch (e) {
       showWarningToast(e.message);
     }
@@ -36,22 +36,22 @@ class XrefDecisionButtons extends Component {
       <ButtonGroup className="XrefDecisionButtons" vertical>
         <Button icon="tick"
           disabled={blocking}
-          intent={xref.decision === 'positive' ? Intent.SUCCESS : Intent.NONE}
-          active={xref.decision === 'positive'}
+          intent={xref.judgement === 'positive' ? Intent.SUCCESS : Intent.NONE}
+          active={xref.judgement === 'positive'}
           onClick={(e) => this.onDecide('positive')} />
         <Button icon="help"
           disabled={blocking}
-          active={xref.decision === 'unsure'}
+          active={xref.judgement === 'unsure'}
           onClick={(e) => this.onDecide('unsure')} />
         <Button icon="cross"
           disabled={blocking}
-          intent={xref.decision === 'negative' ? Intent.DANGER : Intent.NONE}
-          active={xref.decision === 'negative'}
+          intent={xref.judgement === 'negative' ? Intent.DANGER : Intent.NONE}
+          active={xref.judgement === 'negative'}
           onClick={(e) => this.onDecide('negative')} />
       </ButtonGroup>
     );
   }
 }
 
-XrefDecisionButtons = connect(null, { decideCollectionXref })(XrefDecisionButtons);
+XrefDecisionButtons = connect(null, { pairwiseJudgement })(XrefDecisionButtons);
 export default injectIntl(XrefDecisionButtons);

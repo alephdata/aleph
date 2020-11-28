@@ -1,0 +1,27 @@
+Profile:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/EntitySet"
+  properties:
+    items:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: "#/components/schemas/EntitySetItem"
+    merged:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Entity"
+
+Pairwise:
+  type: object
+  properties:
+    entity_id:
+      type: string
+    match_id:
+      type: string
+    judgement:
+      allOf:
+        - $ref: "#/components/schemas/Judgement"
+  required: ["entity_id", "match_id", "judgement"]

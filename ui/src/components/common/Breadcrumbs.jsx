@@ -2,7 +2,7 @@ import React, { PureComponent, Component } from 'react';
 import { Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Category, Collection, Entity, Skeleton, Restricted } from 'components/common';
+import { Category, Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
 
 import './Breadcrumbs.scss';
 
@@ -85,6 +85,17 @@ class EntityBreadcrumb extends PureComponent {
   }
 }
 
+class EntitySetBreadcrumb extends PureComponent {
+  render() {
+    const { entitySet } = this.props;
+    return (
+      <li key={entitySet.id}>
+        <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
+      </li>
+    );
+  }
+}
+
 
 class TextBreadcrumb extends PureComponent {
   render() {
@@ -108,6 +119,8 @@ export default class Breadcrumbs extends Component {
   static Collection = CollectionBreadcrumb;
 
   static Entity = EntityBreadcrumb;
+
+  static EntitySet = EntitySetBreadcrumb;
 
   static Text = TextBreadcrumb;
 

@@ -3,11 +3,12 @@ from followthemoney import model
 from followthemoney.helpers import remove_checksums
 
 from aleph.core import db, archive
-from aleph.model import Mapping, Events, EntitySetItem, Status
+from aleph.model import Mapping, Events, Status
 from aleph.index.entities import get_entity
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.collections import delete_entities
 from aleph.logic.collections import update_collection, index_aggregator, aggregate_model
+from aleph.logic.entitysets import save_entityset_item
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -55,10 +56,10 @@ def map_to_aggregator(collection, mapping, aggregator):
             entity = remove_checksums(entity)
             writer.put(entity, fragment=idx, origin=origin)
             if mapping.entityset is not None:
-                EntitySetItem.save(
+                save_entityset_item(
                     mapping.entityset,
+                    collection,
                     entity.id,
-                    collection_id=collection.id,
                     added_by_id=mapping.role_id,
                 )
     writer.flush()

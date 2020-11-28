@@ -3,7 +3,7 @@ from unittest import skip  # noqa
 
 from aleph.core import db
 from aleph.authz import Authz
-from aleph.tests.util import TestCase
+from aleph.tests.util import TestCase, JSON
 from aleph.logic.xref import xref_collection
 from aleph.index.xref import iter_matches
 from aleph.queues import get_stage, OP_XREF
@@ -32,7 +32,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         entity = {
             "schema": "Person",
@@ -43,7 +43,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         entity = {
             "schema": "LegalEntity",
@@ -54,7 +54,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         entity = {
             "schema": "Person",
@@ -65,7 +65,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
 
         entity = {
@@ -77,7 +77,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
 
     def test_xref(self):

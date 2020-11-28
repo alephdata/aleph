@@ -5,7 +5,7 @@ from aleph.authz import Authz
 from aleph.model import EntitySet
 from aleph.logic.collections import compute_collection
 from aleph.views.util import validate
-from aleph.tests.util import TestCase
+from aleph.tests.util import TestCase, JSON
 
 
 class CollectionsApiTestCase(TestCase):
@@ -68,7 +68,7 @@ class CollectionsApiTestCase(TestCase):
         data = res.json
         data["label"] = "Collected Collection"
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 200, res.json
         assert "Collected" in res.json["label"], res.json
@@ -81,7 +81,7 @@ class CollectionsApiTestCase(TestCase):
         data = res.json
         data["label"] = ""
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 400, res.json
 
@@ -89,7 +89,7 @@ class CollectionsApiTestCase(TestCase):
         data = res.json
         data["category"] = "banana"
         res = self.client.post(
-            url, data=json.dumps(data), headers=headers, content_type="application/json"
+            url, data=json.dumps(data), headers=headers, content_type=JSON
         )
         assert res.status_code == 400, res.json
 

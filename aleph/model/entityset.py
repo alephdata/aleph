@@ -26,6 +26,9 @@ class Judgement(Enum):
             return Judgement.NEGATIVE
         return Judgement.UNSURE
 
+    def to_dict(self):
+        return str(self.value)
+
 
 class EntitySet(db.Model, SoftDeleteModel):
     __tablename__ = "entityset"
@@ -68,6 +71,7 @@ class EntitySet(db.Model, SoftDeleteModel):
         entityset.layout = {}
         entityset.role_id = authz.id
         entityset.collection_id = collection.id
+        entityset.created_at = datetime.utcnow()
         entityset.update(data)
         return entityset
 
@@ -114,6 +118,20 @@ class EntitySet(db.Model, SoftDeleteModel):
             q = q.filter(EntitySet.collection_id.in_(collection_ids))
         if judgements is not None:
             q = q.filter(EntitySetItem.judgement.in_(ensure_list(judgements)))
+        return q
+
+    @classmethod
+    def all_profiles(cls, collection_id, entity_id=None):
+        q = EntitySet.all_ids()
+        q = q.filter(EntitySet.type == EntitySet.PROFILE)
+        q = q.filter(EntitySet.collection_id == collection_id)
+        q = q.join(EntitySetItem)
+        q = q.filter(EntitySetItem.deleted_at == None)  # NOQA
+        q = q.filter(EntitySetItem.judgement == Judgement.POSITIVE)
+        q = q.filter(EntitySetItem.collection_id == collection_id)
+        if entity_id is not None:
+            q = q.filter(EntitySetItem.entity_id == entity_id)
+        q = q.add_columns(EntitySetItem.entity_id)
         return q
 
     @classmethod
@@ -254,15 +272,35 @@ class EntitySetItem(db.Model, SoftDeleteModel):
             judgement = Judgement.POSITIVE
         else:
             judgement = Judgement(judgement)
+
+        # Special case for profiles: an entity can only be part of one profile
+        # in any given collection. An attempt to add it to a second profile must
+        # result in a merging of both profiles.
+        if entityset.type == EntitySet.PROFILE and judgement == Judgement.POSITIVE:
+            for existing in EntitySet.by_entity_id(
+                entity_id,
+                collection_ids=[entityset.collection_id],
+                judgements=[Judgement.POSITIVE],
+                types=[EntitySet.PROFILE],
+            ):
+                entityset = entityset.merge(existing, entity_id)
+
+        # Check if there is an existing relationship between the entity and the
+        # entity set. If the judgement matches, no-op - otherwise delete the
+        # previous relationship item.
         existing = cls.by_entity_id(entityset, entity_id)
         if existing is not None:
             if existing.judgement == judgement:
                 return existing
             existing.delete()
+
+        # There is no judgement information to be stored, so let's keep that out
+        # of the database:
         if judgement == Judgement.NO_JUDGEMENT:
             return
+
         item = cls(
-            entityset_id=entityset.id,
+            entityset=entityset,
             entity_id=entity_id,
             judgement=judgement,
             compared_to_entity_id=data.get("compared_to_entity_id"),
@@ -297,11 +335,10 @@ class EntitySetItem(db.Model, SoftDeleteModel):
                 "entity_id": self.entity_id,
                 "collection_id": self.collection_id,
                 "added_by_id": self.added_by_id,
+                "judgement": self.judgement,
                 "compared_to_entity_id": self.compared_to_entity_id,
             }
         )
-        if self.judgement:
-            data["judgement"] = self.judgement.value
         return data
 
     def __repr__(self):

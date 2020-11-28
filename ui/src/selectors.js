@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { loadState } from 'reducers/util';
-
+import { queryEntityReferences } from 'queries';
 
 function selectTimestamp(state) {
   return state.mutation;
@@ -140,12 +140,22 @@ export function selectEntity(state, entityId) {
   result.collection = entity.collection;
   result.highlight = entity.highlight;
   result.latinized = entity.latinized;
+  result.profileId = entity.profile_id
 
   return result;
 }
 
 export function selectEntitySet(state, entitySetId) {
   return selectObject(state, state.entitySets, entitySetId);
+}
+
+export function selectProfile(state, entitySetId) {
+  const profile = selectObject(state, state.entitySets, entitySetId);
+  if (profile?.merged?.id && profile?.merged?.schema) {
+    const model = selectModel(state);
+    profile.merged = model.getEntity(profile.merged);
+  }
+  return profile;
 }
 
 export function selectDocumentContent(state, documentId) {
@@ -164,11 +174,34 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
-export function selectExpandResult(state, query) {
+export function selectEntityExpandResult(state, query) {
   return {
     results: [],
     ...selectObject(state, state.results, query.toKey()),
   };
+}
+
+export function selectEntityReferences(state, entityId) {
+  const entity = selectEntity(state, entityId);
+  const query = queryEntityReferences(entity.id);
+  const references = selectEntityExpandResult(state, query);
+  references.results = references.results || [];
+  references.results = references.results.map((ref) => {
+    const reverse = entity.schema.getProperty(ref.property);
+    const property = reverse.getReverse();
+    return {
+      schema: property.schema, property, reverse, count: ref.count,
+    };
+  });
+  references.results = references.results.filter((ref) => ref.reverse.stub);
+  return references;
+}
+
+export function selectEntityReference(state, entityId, qname) {
+  const references = selectEntityReferences(state, entityId);
+  if (references?.results?.length) {
+    return references.results.find(ref => ref.property.qname === qname);
+  }
 }
 
 export function selectNotificationsResult(state, query) {
@@ -192,6 +225,10 @@ export function selectEntityTags(state, entityId) {
   return selectObject(state, state.entityTags, entityId);
 }
 
+export function selectProfileTags(state, profileId) {
+  return selectEntityTags(state, profileId);
+}
+
 export function selectExports(state) {
   return state.exports;
 }
@@ -201,29 +238,6 @@ export function selectValueCount(state, prop, value) {
     return null;
   }
   return state.values[`${prop.type.group}:${value}`] || null;
-}
-
-export function selectEntityReferences(state, entityId) {
-  const model = selectModel(state);
-  const references = selectObject(state, state.entityReferences, entityId);
-  references.results = references.results || [];
-  references.results = references.results.map((ref) => {
-    const schema = model.getSchema(ref.schema);
-    const property = schema.getProperty(ref.property.name);
-    const reverse = property.getReverse();
-    return {
-      schema, property, reverse, count: ref.count,
-    };
-  });
-  return references;
-}
-
-export function selectEntityReference(state, entityId, qname) {
-  const references = selectEntityReferences(state, entityId);
-  if (!references.total) {
-    return undefined;
-  }
-  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectEntityView(state, entityId, mode, isPreview) {
@@ -244,7 +258,7 @@ export function selectEntityView(state, entityId, mode, isPreview) {
     return 'info';
   }
   const references = selectEntityReferences(state, entityId);
-  if (references.total) {
+  if (references?.results?.length) {
     return references.results[0].property.qname;
   }
   return undefined;

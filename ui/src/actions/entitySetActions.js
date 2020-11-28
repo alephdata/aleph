@@ -42,8 +42,8 @@ export const entitySetAddEntity = asyncActionCreator(({ entity, entitySetId, syn
 }, { name: 'CREATE_ENTITY' });
 
 export const entitySetDeleteEntity = asyncActionCreator(({ entityId, entitySetId }) => async () => {
-  const config = { params: { sync: true }};
-  const payload = {"entity_id": entityId, "judgement": "no_judgement"};
+  const config = { params: { sync: true } };
+  const payload = { "entity_id": entityId, "judgement": "no_judgement" };
   await endpoint.post(`entitysets/${entitySetId}/items`, payload, config);
   return { id: entityId };
 }, { name: 'DELETE_ENTITY' });

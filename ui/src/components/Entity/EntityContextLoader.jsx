@@ -3,12 +3,12 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
+  fetchEntity, fetchEntityTags, queryEntities, queryEntityExpand,
 } from 'actions';
 import {
-  selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
+  selectEntity, selectEntityTags, selectEntitiesResult, selectEntityExpandResult
 } from 'selectors';
-import { queryEntitySimilar, queryFolderDocuments } from 'queries';
+import { queryEntitySimilar, queryFolderDocuments, queryEntityReferences } from 'queries';
 
 
 class EntityContextLoader extends PureComponent {
@@ -21,7 +21,7 @@ class EntityContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const { entityId, entity, tagsResult, referencesResult } = this.props;
+    const { entityId, entity, tagsResult } = this.props;
 
     const loadDeep = entity.shallow && !entity.isPending;
     if (entity.shouldLoad || loadDeep) {
@@ -32,8 +32,9 @@ class EntityContextLoader extends PureComponent {
       this.props.fetchEntityTags({ id: entityId });
     }
 
-    if (referencesResult.shouldLoad) {
-      this.props.fetchEntityReferences({ id: entityId });
+    const { expandQuery, expandResult } = this.props;
+    if (expandResult.shouldLoad) {
+      this.props.queryEntityExpand({ query: expandQuery });
     }
 
     const { similarQuery, similarResult } = this.props;
@@ -57,12 +58,14 @@ const mapStateToProps = (state, ownProps) => {
   const { entityId, location } = ownProps;
   const similarQuery = queryEntitySimilar(location, entityId);
   const childrenQuery = queryFolderDocuments(location, entityId, undefined);
+  const expandQuery = queryEntityReferences(entityId);
   return {
     entity: selectEntity(state, entityId),
     tagsResult: selectEntityTags(state, entityId),
-    referencesResult: selectEntityReferences(state, entityId),
     similarQuery,
     similarResult: selectEntitiesResult(state, similarQuery),
+    expandQuery,
+    expandResult: selectEntityExpandResult(state, expandQuery),
     childrenQuery,
     childrenResult: selectEntitiesResult(state, childrenQuery),
   };
@@ -70,9 +73,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   queryEntities,
+  queryEntityExpand,
   fetchEntity,
   fetchEntityTags,
-  fetchEntityReferences,
 };
 
 export default compose(

@@ -20,6 +20,7 @@ PROXY_INCLUDES = [
     "schema",
     "properties",
     "collection_id",
+    "profile_id",
     "role_id",
     "mutable",
     "created_at",
@@ -162,6 +163,7 @@ def index_proxy(collection, proxy, sync=False):
 def index_bulk(collection, entities, sync=False):
     """Index a set of entities."""
     entities = (format_proxy(p, collection) for p in entities)
+    entities = (e for e in entities if e is not None)
     bulk_actions(entities, sync=sync)
 
 
@@ -172,6 +174,11 @@ def _numeric_values(type_, values):
 
 def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
+    # Abstract entities can appear when profile fragments for a missing entity
+    # are present.
+    if proxy.schema.abstract:
+        return None
+
     data = proxy.to_full_dict()
     data["schemata"] = list(proxy.schema.names)
     data["caption"] = proxy.caption
@@ -200,6 +207,7 @@ def format_proxy(proxy, collection):
     data["collection_id"] = collection.id
     # FIXME: Can there ever really be multiple role_ids?
     data["role_id"] = first(data.get("role_id"))
+    data["profile_id"] = first(data.get("profile_id"))
     data["mutable"] = max(ensure_list(data.get("mutable")), default=False)
     data["origin"] = ensure_list(data.get("origin"))
     # Logical simplifications of dates:

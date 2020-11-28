@@ -1,14 +1,14 @@
 Permission:
   type: object
   allOf:
-  - $ref: '#/components/schemas/DatedModel'
+    - $ref: "#/components/schemas/DatedModel"
   properties:
     read:
       type: boolean
     write:
       type: boolean
     role:
-      $ref: '#/components/schemas/Role'
+      $ref: "#/components/schemas/Role"
 
 PermissionUpdate:
   required: ["write", "read"]
@@ -21,9 +21,9 @@ PermissionUpdate:
     role_id:
       type: string
     role:
-      $ref: '#/components/schemas/Role'
-  
+      $ref: "#/components/schemas/Role"
+
 PermissionUpdateList:
   type: array
   items:
-    $ref: '#/components/schemas/PermissionUpdate'
+    $ref: "#/components/schemas/PermissionUpdate"
