@@ -95,13 +95,12 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def iter_adjacent(entity):
+def iter_adjacent(collection_id, entity_id):
     """Used for recursively deleting entities and their linked associations."""
-    query = {"term": {"entities": entity.get("id")}}
     yield from iter_entities(
         includes=["collection_id"],
-        collection_id=entity.get("collection_id"),
-        filters=[query],
+        collection_id=collection_id,
+        filters=[{"term": {"entities": entity_id}}],
     )
 
 

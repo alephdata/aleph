@@ -151,7 +151,7 @@ def delete_expired_exports():
 
 def retry_exports():
     for export in Export.get_pending():
-        queue_task(None, export.operation, payload={"export_id": export.id})
+        queue_task(None, export.operation, export_id=export.id)
 
 
 def send_export_notification(export):

@@ -8,7 +8,7 @@ from aleph.index.xref import get_xref
 from aleph.logic.profiles import decide_xref, pairwise_decisions
 from aleph.logic.export import create_export
 from aleph.views.serializers import XrefSerializer
-from aleph.queues import queue_task, OP_XREF, OP_EXPORT_XREF_RESULTS
+from aleph.queues import queue_task, OP_XREF, OP_EXPORT_XREF
 from aleph.views.util import (
     get_db_collection,
     get_index_collection,
@@ -127,15 +127,14 @@ def export(collection_id):
     collection = get_db_collection(collection_id, request.authz.READ)
     label = "%s - Crossreference results" % collection.label
     export = create_export(
-        operation=OP_EXPORT_XREF_RESULTS,
+        operation=OP_EXPORT_XREF,
         role_id=request.authz.id,
         label=label,
         collection=collection,
         mime_type=XLSX,
     )
     job_id = get_session_id()
-    payload = {"export_id": export.id}
-    queue_task(None, OP_EXPORT_XREF_RESULTS, job_id=job_id, payload=payload)
+    queue_task(None, OP_EXPORT_XREF, job_id=job_id, export_id=export.id)
     return ("", 202)
 
 

@@ -186,9 +186,8 @@ def reingest(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    job_id = get_session_id()
-    data = {"index": get_flag("index", False)}
-    queue_task(collection, OP_REINGEST, job_id=job_id, payload=data)
+    index = get_flag("index", False)
+    queue_task(collection, OP_REINGEST, job_id=get_session_id(), index=index)
     return ("", 202)
 
 
@@ -220,9 +219,8 @@ def reindex(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    job_id = get_session_id()
-    data = {"flush": get_flag("flush", False)}
-    queue_task(collection, OP_REINDEX, job_id=job_id, payload=data)
+    flush = get_flag("flush", False)
+    queue_task(collection, OP_REINDEX, job_id=get_session_id(), flush=flush)
     return ("", 202)
 
 
@@ -296,8 +294,7 @@ def bulk(collection_id):
             )
     collection.touch()
     db.session.commit()
-    data = {"entity_ids": entity_ids}
-    queue_task(collection, OP_INDEX, job_id=job_id, payload=data)
+    queue_task(collection, OP_INDEX, job_id=job_id, entity_ids=entity_ids)
     return ("", 204)
 
 

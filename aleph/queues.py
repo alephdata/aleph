@@ -1,7 +1,7 @@
 import logging
 
 from servicelayer.rate_limit import RateLimit
-from servicelayer.jobs import Job, Dataset
+from servicelayer.jobs import Job, Dataset, Stage
 
 from aleph.core import kv, settings
 
@@ -15,8 +15,10 @@ OP_REINGEST = "reingest"
 OP_REINDEX = "reindex"
 OP_LOAD_MAPPING = "loadmapping"
 OP_FLUSH_MAPPING = "flushmapping"
-OP_EXPORT_SEARCH_RESULTS = "exportsearch"
-OP_EXPORT_XREF_RESULTS = "exportxref"
+OP_EXPORT_SEARCH = "exportsearch"
+OP_EXPORT_XREF = "exportxref"
+OP_UPDATE_ENTITY = "updateentity"
+OP_PRUNE_ENTITY = "pruneentity"
 
 NO_COLLECTION = "null"
 
@@ -46,14 +48,19 @@ def get_stage(collection, stage, job_id=None):
     return job.get_stage(stage)
 
 
-def queue_task(dataset, stage, job_id=None, payload=None, context=None):
+def queue_task(dataset, stage, job_id=None, context=None, **payload):
     stage = get_stage(dataset, stage, job_id=job_id)
     stage.queue(payload or {}, context or {})
     if settings.TESTING:
         from aleph.worker import get_worker
 
         worker = get_worker()
-        worker.sync()
+        while True:
+            stages = worker.get_stages()
+            task = Stage.get_task(worker.conn, stages, timeout=None)
+            if task is None:
+                break
+            worker.dispatch_task(task)
 
 
 def get_status(collection):

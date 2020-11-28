@@ -122,7 +122,16 @@ def _query_entities(collection):
         yield from _query_item(proxy)
 
 
-def xref_collection(stage, collection):
+def xref_entity(collection, proxy):
+    """Cross-reference a single proxy in the context of a collection."""
+    if not proxy.schema.matchable:
+        return
+    log.info("[%s] Generating xref: %s...", collection, proxy.id)
+    delete_xref(collection, entity_id=proxy.id, sync=True)
+    index_matches(collection, _query_item(proxy))
+
+
+def xref_collection(collection):
     """Cross-reference all the entities and documents in a collection."""
     log.info("[%s] Clearing previous xref state....", collection)
     delete_xref(collection, sync=True)

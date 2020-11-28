@@ -186,8 +186,7 @@ def update():
 def xref(foreign_id):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
-    stage = get_stage(collection, OP_XREF)
-    xref_collection(stage, collection)
+    xref_collection(collection)
 
 
 @cli.command("load-entities")

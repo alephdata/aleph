@@ -1,6 +1,7 @@
 from aleph.logic.processing import index_many
 from aleph.logic.xref import xref_collection, export_matches
 from aleph.logic.collections import reingest_collection, reindex_collection
+from aleph.logic.entities import update_entity, prune_entity
 from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.export import export_entities
 
@@ -11,7 +12,7 @@ def op_index_handler(collection, task):
 
 
 def op_xref_handler(collection, task):
-    xref_collection(task.stage, collection)
+    xref_collection(collection)
 
 
 def op_reingest_handler(collection, task):
@@ -30,6 +31,14 @@ def op_load_mapping_handler(collection, task):
 def op_flush_mapping_handler(collection, task):
     sync = task.context.get("sync", False)
     flush_mapping(collection, sync=sync, **task.payload)
+
+
+def op_update_entity_handler(collection, task):
+    update_entity(collection, job_id=task.stage.job.id, **task.payload)
+
+
+def op_prune_entity_handler(collection, task):
+    prune_entity(collection, job_id=task.stage.job.id, **task.payload)
 
 
 def op_export_search_results_handler(_, task):
