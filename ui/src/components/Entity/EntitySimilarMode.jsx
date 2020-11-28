@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'components/common';
-import { queryEntitySimilar } from 'queries';
+import { entitySimilarQuery } from 'queries';
 
 const messages = defineMessages({
   empty: {
@@ -48,7 +48,7 @@ class EntitySimilarMode extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
-  return { query: queryEntitySimilar(location, entity.id) };
+  return { query: entitySimilarQuery(location, entity.id) };
 };
 
 EntitySimilarMode = connect(mapStateToProps, {})(EntitySimilarMode);

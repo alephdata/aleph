@@ -138,7 +138,7 @@ class EntityScreen extends Component {
 
   render() {
     const {
-      entity, entityId, activeMode, query, isDocument, intl,
+      entity, entityId, activeMode, query, intl,
     } = this.props;
 
     if (entity.isError) {
@@ -220,7 +220,6 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const entity = selectEntity(state, entityId);
   const hashQuery = queryString.parse(location.hash);
-  const isDocument = entity?.schema?.isDocument();
   const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
   const reference = selectEntityReference(state, entityId, activeMode);
   const referenceQuery = queryEntityReference(location, entity, reference);
@@ -231,7 +230,6 @@ const mapStateToProps = (state, ownProps) => {
     entityId,
     reference,
     activeMode,
-    isDocument,
     query: referenceQuery || documentQuery,
   };
 };

@@ -49,6 +49,7 @@ export {
   updateEntitySet,
 } from './entitySetActions';
 export {
+  queryProfileExpand,
   fetchProfile,
   fetchProfileTags,
   pairwiseJudgement,

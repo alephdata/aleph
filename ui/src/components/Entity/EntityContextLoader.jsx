@@ -8,7 +8,7 @@ import {
 import {
   selectEntity, selectEntityTags, selectEntitiesResult, selectEntityExpandResult
 } from 'selectors';
-import { queryEntitySimilar, queryFolderDocuments, queryEntityReferences } from 'queries';
+import { entitySimilarQuery, queryFolderDocuments, entityReferencesQuery } from 'queries';
 
 
 class EntityContextLoader extends PureComponent {
@@ -56,9 +56,9 @@ class EntityContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId, location } = ownProps;
-  const similarQuery = queryEntitySimilar(location, entityId);
+  const similarQuery = entitySimilarQuery(location, entityId);
   const childrenQuery = queryFolderDocuments(location, entityId, undefined);
-  const expandQuery = queryEntityReferences(entityId);
+  const expandQuery = entityReferencesQuery(entityId);
   return {
     entity: selectEntity(state, entityId),
     tagsResult: selectEntityTags(state, entityId),

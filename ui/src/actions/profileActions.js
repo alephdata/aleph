@@ -1,6 +1,8 @@
 import { endpoint } from 'app/api';
 import asyncActionCreator from './asyncActionCreator';
+import { queryEndpoint } from './util';
 
+export const queryProfileExpand = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_PROFILE_EXPAND' });
 
 export const fetchProfile = asyncActionCreator(({ id }) => async () => {
     const response = await endpoint.get(`profiles/${id}`);

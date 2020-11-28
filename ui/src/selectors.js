@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { loadState } from 'reducers/util';
-import { queryEntityReferences } from 'queries';
+import { entityReferencesQuery, profileReferencesQuery } from 'queries';
 
 function selectTimestamp(state) {
   return state.mutation;
@@ -174,34 +174,53 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
-export function selectEntityExpandResult(state, query) {
-  return {
-    results: [],
-    ...selectObject(state, state.results, query.toKey()),
-  };
-}
-
-export function selectEntityReferences(state, entityId) {
-  const entity = selectEntity(state, entityId);
-  const query = queryEntityReferences(entity.id);
-  const references = selectEntityExpandResult(state, query);
+function buildReferences(references, schema) {
   references.results = references.results || [];
   references.results = references.results.map((ref) => {
-    const reverse = entity.schema.getProperty(ref.property);
+    if (!!ref.schema) {
+      return ref;
+    }
+    const reverse = schema.getProperty(ref.property);
     const property = reverse.getReverse();
     return {
       schema: property.schema, property, reverse, count: ref.count,
     };
   });
-  references.results = references.results.filter((ref) => ref.reverse.stub);
+  references.results = references.results.filter((ref) => (ref.reverse.stub && !ref.reverse.hidden));
+  references.total = references.results.length;
   return references;
+}
+
+export function selectEntityExpandResult(state, query) {
+  return selectObject(state, state.results, query.toKey());
+}
+
+export function selectEntityReferences(state, entityId) {
+  const entity = selectEntity(state, entityId);
+  const query = entityReferencesQuery(entity.id);
+  const references = selectEntityExpandResult(state, query);
+  return buildReferences(references, entity.schema);
 }
 
 export function selectEntityReference(state, entityId, qname) {
   const references = selectEntityReferences(state, entityId);
-  if (references?.results?.length) {
-    return references.results.find(ref => ref.property.qname === qname);
-  }
+  return references.results.find(ref => ref.property.qname === qname);
+}
+
+export function selectProfileExpandResult(state, query) {
+  return selectObject(state, state.results, query.toKey());
+}
+
+export function selectProfileReferences(state, profileId) {
+  const profile = selectProfile(state, profileId);
+  const query = profileReferencesQuery(profile.merged.id);
+  const references = selectProfileExpandResult(state, query);
+  return buildReferences(references, profile.merged.schema);
+}
+
+export function selectProfileReference(state, profileId, qname) {
+  const references = selectProfileReferences(state, profileId);
+  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectNotificationsResult(state, query) {
@@ -262,6 +281,13 @@ export function selectEntityView(state, entityId, mode, isPreview) {
     return references.results[0].property.qname;
   }
   return undefined;
+}
+
+export function selectProfileView(state, profileId, mode) {
+  if (mode) {
+    return mode;
+  }
+  return 'items';
 }
 
 export function selectCollectionStatus(state, collectionId) {

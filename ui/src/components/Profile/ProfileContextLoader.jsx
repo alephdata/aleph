@@ -5,12 +5,16 @@ import { withRouter } from 'react-router';
 import {
     fetchProfile,
     fetchProfileTags,
+    queryEntities,
+    queryProfileExpand,
 } from 'actions';
 import {
     selectProfile,
     selectProfileTags,
+    selectEntitiesResult,
+    selectProfileExpandResult,
 } from 'selectors';
-// import { queryEntitySimilar, queryEntityReferences } from 'queries';
+import { profileSimilarQuery, profileReferencesQuery } from 'queries';
 
 
 class ProfileContextLoader extends PureComponent {
@@ -34,15 +38,15 @@ class ProfileContextLoader extends PureComponent {
             this.props.fetchProfileTags({ id: profileId });
         }
 
-        // const { expandQuery, expandResult } = this.props;
-        // if (expandResult.shouldLoad) {
-        //     this.props.queryEntityExpand({ query: expandQuery });
-        // }
+        const { expandQuery, expandResult } = this.props;
+        if (expandResult.shouldLoad) {
+            this.props.queryProfileExpand({ query: expandQuery });
+        }
 
-        // const { similarQuery, similarResult } = this.props;
-        // if (entity?.schema?.matchable && similarResult.shouldLoad) {
-        //     this.props.queryEntities({ query: similarQuery });
-        // }
+        const { similarQuery, similarResult } = this.props;
+        if (similarResult.shouldLoad) {
+            this.props.queryEntities({ query: similarQuery });
+        }
     }
 
     render() {
@@ -53,21 +57,21 @@ class ProfileContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
     const { profileId, location } = ownProps;
-    // const similarQuery = queryEntitySimilar(location, entityId);
-    // const expandQuery = queryEntityReferences(entityId);
+    const similarQuery = profileSimilarQuery(location, profileId);
+    const expandQuery = profileReferencesQuery(profileId);
     return {
         profile: selectProfile(state, profileId),
         tagsResult: selectProfileTags(state, profileId),
-        // similarQuery,
-        // similarResult: selectEntitiesResult(state, similarQuery),
-        // expandQuery,
-        // expandResult: selectEntityExpandResult(state, expandQuery),
+        similarQuery,
+        similarResult: selectEntitiesResult(state, similarQuery),
+        expandQuery,
+        expandResult: selectProfileExpandResult(state, expandQuery),
     };
 };
 
 const mapDispatchToProps = {
-    // queryEntities,
-    // queryEntityExpand,
+    queryEntities,
+    queryProfileExpand,
     fetchProfile,
     fetchProfileTags,
 };

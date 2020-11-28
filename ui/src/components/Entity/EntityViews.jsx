@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
-import { queryEntitySimilar, queryFolderDocuments } from 'queries';
+import { entitySimilarQuery, queryFolderDocuments } from 'queries';
 import {
   selectEntitiesResult, selectEntityReferences, selectEntityTags,
 } from 'selectors';
@@ -54,7 +54,6 @@ class EntityViews extends React.Component {
     const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
-    const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
     const processingError = entity.getProperty('processingError');
 
     return (
@@ -78,7 +77,7 @@ class EntityViews extends React.Component {
             )}
             panel={
               <EntityInfoMode entity={entity} />
-               }
+            }
           />
         )}
         {hasViewMode && (
@@ -120,13 +119,13 @@ class EntityViews extends React.Component {
                 )}
                 <ResultCount result={children} />
               </TextLoading>
-              )}
+            )}
             panel={
               <DocumentViewMode document={entity} activeMode={activeMode} />
             }
           />
         )}
-        {refs.map(ref => (
+        {references.results.map(ref => (
           <Tab
             id={ref.property.qname}
             key={ref.property.qname}
@@ -192,7 +191,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),
-    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
+    similar: selectEntitiesResult(state, entitySimilarQuery(location, entity.id)),
     children: selectEntitiesResult(state, childrenQuery),
   };
 };

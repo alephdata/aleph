@@ -89,8 +89,14 @@ export function queryEntityReference(location, entity, reference) {
   return Query.fromLocation('entities', location, context, reference.property.name);
 }
 
-export function queryEntitySimilar(location, entityId) {
+export function entitySimilarQuery(location, entityId) {
   const path = entityId ? `entities/${entityId}/similar` : undefined;
+  return Query.fromLocation(path, location, {}, 'similar')
+    .defaultFacet('collection_id', true);
+}
+
+export function profileSimilarQuery(location, profileId) {
+  const path = profileId ? `profiles/${profileId}/similar` : undefined;
   return Query.fromLocation(path, location, {}, 'similar')
     .defaultFacet('collection_id', true);
 }
@@ -107,15 +113,26 @@ export function queryEntitySuggest(location, collection, schemaName, queryText) 
     .sortBy('caption', 'asc');
 }
 
-export function queryExpand(entityId, properties, limit = 200) {
+export function entityExpandQuery(entityId, properties, limit = 200) {
   const context = {
-    'edge_types': ['entity'],
     'filter:property': properties
   };
   const query = new Query(`entities/${entityId}/expand`, {}, context, 'expand');
   return query.limit(limit);
 }
 
-export function queryEntityReferences(entityId) {
-  return queryExpand(entityId, null, 0);
+export function entityReferencesQuery(entityId) {
+  return entityExpandQuery(entityId, [], 0);
+}
+
+export function profileExpandQuery(profileId, properties, limit = 200) {
+  const context = {
+    'filter:property': properties
+  };
+  const query = new Query(`profiles/${profileId}/expand`, {}, context, 'expand');
+  return query.limit(limit);
+}
+
+export function profileReferencesQuery(profileId) {
+  return profileExpandQuery(profileId, [], 0);
 }
