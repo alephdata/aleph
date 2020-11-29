@@ -47,18 +47,21 @@ class XrefTableRow extends Component {
     const properties = this.getCommonProperties();
 
     return (
-      <div className="XrefTableRow__properties">
-        {properties.map((prop) => (
-          <div className="XrefTableRow__property" key={prop.name}>
-            <span className="XrefTableRow__property__name text-muted">
-              <Property.Name prop={prop} />
-            </span>
-            <span className="XrefTableRow__property__value">
-              <Property.Values prop={prop} values={entity.getProperty(prop)} translitLookup={entity.latinized} />
-            </span>
-          </div>
-        ))}
-      </div>
+      <>
+        <Entity.Link entity={entity} preview icon />
+        <div className="XrefTableRow__properties">
+          {properties.map((prop) => (
+            <div className="XrefTableRow__property" key={prop.name}>
+              <span className="XrefTableRow__property__name text-muted">
+                <Property.Name prop={prop} />
+              </span>
+              <span className="XrefTableRow__property__value">
+                <Property.Values prop={prop} values={entity.getProperty(prop)} translitLookup={entity.latinized} />
+              </span>
+            </div>
+          ))}
+        </div>
+      </>
     );
   }
 
@@ -78,11 +81,9 @@ class XrefTableRow extends Component {
           <XrefDecisionButtons xref={xref} />
         </td>
         <td className="entity bordered">
-          <Entity.Link entity={xref.entity} preview icon />
           {this.renderProperties(xref.entity)}
         </td>
         <td className="entity">
-          <Entity.Link entity={xref.match} preview icon />
           {this.renderProperties(xref.match)}
         </td>
         <td className="numeric narrow">

@@ -41,9 +41,7 @@ export function entitySetEntitiesQuery(location, entitySetId, schema, limit) {
 }
 
 export function queryCollectionEntitySets(location, collectionId) {
-  const context = {
-    'filter:collection_id': collectionId,
-  };
+  const context = { 'filter:collection_id': collectionId };
   return Query.fromLocation('entitysets', location, context, 'entitySets');
 }
 

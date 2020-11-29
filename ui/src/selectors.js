@@ -141,7 +141,6 @@ export function selectEntity(state, entityId) {
   result.highlight = entity.highlight;
   result.latinized = entity.latinized;
   result.profileId = entity.profile_id
-
   return result;
 }
 
@@ -153,7 +152,9 @@ export function selectProfile(state, entitySetId) {
   const profile = selectObject(state, state.entitySets, entitySetId);
   if (profile?.merged?.id && profile?.merged?.schema) {
     const model = selectModel(state);
-    profile.merged = model.getEntity(profile.merged);
+    const entity = model.getEntity(profile.merged);
+    entity.latinized = profile.merged.latinized;
+    profile.merged = entity;
   }
   return profile;
 }

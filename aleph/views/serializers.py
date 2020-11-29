@@ -299,6 +299,10 @@ class ProfileSerializer(Serializer):
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )
+        proxy = obj.pop("merged")
+        data = proxy.to_dict()
+        data["latinized"] = transliterate_values(proxy)
+        obj["merged"] = data
         obj.pop("proxies", None)
         return obj
 
