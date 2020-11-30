@@ -36,6 +36,7 @@ import ResultText from './ResultText';
 import SelectWrapper from './SelectWrapper';
 import ExportLink from './ExportLink';
 import UpdateStatus from './UpdateStatus';
+import JudgementButtons from './JudgementButtons';
 
 
 export {
@@ -77,6 +78,7 @@ export {
   SelectWrapper,
   ExportLink,
   UpdateStatus,
+  JudgementButtons,
 };
 
 export * from './types';

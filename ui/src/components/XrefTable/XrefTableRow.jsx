@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { injectIntl, FormattedNumber } from 'react-intl';
 
 import {
-  Collection, Entity, Property, Skeleton,
+  Collection, Entity, Property, Skeleton, JudgementButtons,
 } from 'components/common';
-import XrefDecisionButtons from 'components/XrefTable/XrefDecisionButtons';
+import { showWarningToast } from 'app/toast';
+import { pairwiseJudgement } from 'actions';
 
 
 class XrefTableRow extends Component {
+  constructor(props) {
+    super(props);
+    this.onDecide = this.onDecide.bind(this);
+  }
+
+  async onDecide(xref) {
+    try {
+      await this.props.pairwiseJudgement(xref);
+    } catch (e) {
+      showWarningToast(e.message);
+    }
+  }
+
   renderSkeleton() {
     return (
       <tr>
@@ -78,7 +93,7 @@ class XrefTableRow extends Component {
     return (
       <tr className="XrefTableRow">
         <td className="numeric narrow">
-          <XrefDecisionButtons xref={xref} />
+          <JudgementButtons obj={xref} onChange={this.onDecide} />
         </td>
         <td className="entity bordered">
           {this.renderProperties(xref.entity)}
@@ -97,4 +112,5 @@ class XrefTableRow extends Component {
   }
 }
 
+XrefTableRow = connect(null, { pairwiseJudgement })(XrefTableRow);
 export default injectIntl(XrefTableRow);
