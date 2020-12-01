@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Card } from '@blueprintjs/core';
 
 import { Count, Collection, Summary } from 'components/common';
