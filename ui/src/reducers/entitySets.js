@@ -11,8 +11,8 @@ export default createReducer({
   [fetchEntitySet.START]: (state, { id }) => objectLoadStart(state, id),
 
   [fetchEntitySet.ERROR]: (state, {
-    error, args,
-  }) => objectLoadError(state, args, error),
+    error, args: { id },
+  }) => objectLoadError(state, id, error),
 
   [fetchEntitySet.COMPLETE]: (state, {
     id, data,
