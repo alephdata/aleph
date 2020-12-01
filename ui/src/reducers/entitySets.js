@@ -23,8 +23,8 @@ export default createReducer({
   }) => objectLoadStart(state, id),
 
   [fetchProfile.ERROR]: (state, {
-    error, args,
-  }) => objectLoadError(state, args, error),
+    error, args: { id },
+  }) => objectLoadError(state, id, error),
 
   [fetchProfile.COMPLETE]: (state, {
     id, data,
