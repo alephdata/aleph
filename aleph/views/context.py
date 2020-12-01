@@ -2,12 +2,14 @@ import math
 import time
 import logging
 import threading
+import uuid
 from pprint import pformat  # noqa
 from banal import hash_data
 from datetime import datetime
 from flask_babel import get_locale
 from flask import request, Response, Blueprint
 from werkzeug.exceptions import TooManyRequests
+from structlog.contextvars import clear_contextvars, bind_contextvars
 
 from aleph import __version__
 from aleph.queues import get_rate_limit
@@ -118,7 +120,9 @@ def setup_request():
     request._http_revalidate = False
     request._http_etag = None
     request._log_tags = {}
+    request._trace_id = str(uuid.uuid4())
 
+    setup_logging_context(request)
     enable_authz(request)
     enable_rate_limit(request)
 
@@ -166,6 +170,25 @@ def finalize_response(resp):
         resp.cache_control.public = None
         resp.cache_control.private = True
     return resp
+
+
+def setup_logging_context(request):
+    # Set up context varibales for structured logging
+    clear_contextvars()
+    bind_contextvars(
+        version=__version__,
+        method=request.method,
+        endpoint=request.endpoint,
+        referrer=request.referrer,
+        ip=_get_remote_ip(),
+        ua=str(request.user_agent),
+        begin_time=request._begin_time,
+        session_id=getattr(request, "_session_id", None),
+        locale=getattr(request, "_app_locale", None),
+        url=request.url,
+        path=request.full_path,
+        request_trace_id=request._trace_id,
+    )
 
 
 def generate_request_log(resp, took):

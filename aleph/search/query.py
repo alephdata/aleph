@@ -1,7 +1,7 @@
-import logging
 from pprint import pprint, pformat  # noqa
 from followthemoney.types import registry
 from banal import ensure_list
+import structlog
 
 from aleph.core import es
 from aleph.index.util import (
@@ -17,7 +17,7 @@ from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.index.entities import get_field_type
 
-log = logging.getLogger(__name__)
+log = structlog.get_logger(__name__)
 
 
 def convert_filters(filters):
@@ -272,7 +272,11 @@ class Query(object):
         """Execute the query as assmbled."""
         # log.info("Search index: %s", self.get_index())
         result = es.search(index=self.get_index(), body=self.get_body())
-        log.info("[%s] took: %sms", self.to_text(), result.get("took"))
+        log.info(
+            f"Elasticsearch query [{self.to_text()}] took {result.get('took')}ms",
+            query=self.to_text(),
+            took=result.get("took"),
+        )
         # log.info("%s", pformat(self.get_body()))
         # log.info("%s", pformat(self.parser.filters))
         return result
