@@ -5,7 +5,8 @@ import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { queryExpand, queryEntitySuggest } from 'queries';
-import { selectLocale, selectModel, selectEntitiesResult, selectExpandResult } from 'selectors';
+import { processApiEntity } from 'components/EntitySet/util';
+import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
 import {
   createEntity,
   deleteEntity,
@@ -15,7 +16,7 @@ import {
   queryEntityExpand,
   updateEntity
 } from 'actions';
-import updateStates from 'util/updateStates';
+import { UpdateStatus } from 'components/common';
 
 const entityEditorWrapper = (EditorComponent) => {
   const WrappedComponent = (
@@ -34,13 +35,12 @@ const entityEditorWrapper = (EditorComponent) => {
           updateEntity: this.updateEntity.bind(this),
           getEntitySuggestions: this.getEntitySuggestions.bind(this),
         };
+        this.entityManager = new EntityManager(config);
 
         if (entities) {
-          this.entityManager = EntityManager.fromJSON(config, entities);
-        } else {
-          this.entityManager = new EntityManager(config);
+          const processedEntities = entities.map(processApiEntity);
+          this.entityManager.addEntities(processedEntities);
         }
-
         this.pendingPromises = [];
       }
 
@@ -77,26 +77,23 @@ const entityEditorWrapper = (EditorComponent) => {
 
       async createEntity(entity) {
         const { collection, entitySetId, onStatusChange } = this.props;
-        onStatusChange(updateStates.IN_PROGRESS);
+        onStatusChange(UpdateStatus.IN_PROGRESS);
         try {
           if (entitySetId) {
             await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
           } else {
             await this.props.createEntity({ entity, collection_id: collection.id });
           }
-          onStatusChange(updateStates.SUCCESS);
+          onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(updateStates.ERROR);
+          onStatusChange(UpdateStatus.ERROR);
         }
         return null;
       }
 
       async expandEntity(entityId, properties, limit) {
-        const { location } = this.props;
-        const query = queryExpand(location, entityId, properties, limit);
-
+        const query = queryExpand(entityId, properties, limit);
         this.props.queryEntityExpand({ query });
-
         return new Promise((resolve) => {
           this.pendingPromises.push({ query, promiseResolve: resolve });
         });
@@ -104,22 +101,21 @@ const entityEditorWrapper = (EditorComponent) => {
 
       async updateEntity(entity) {
         const { collection, onStatusChange } = this.props;
-        onStatusChange(updateStates.IN_PROGRESS);
+        onStatusChange(UpdateStatus.IN_PROGRESS);
 
         try {
           entity.collection = collection;
           await this.props.updateEntity(entity);
-          onStatusChange(updateStates.SUCCESS);
+          onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(updateStates.ERROR);
+          onStatusChange(UpdateStatus.ERROR);
         }
       }
 
-      async deleteEntity(entity) {
+      async deleteEntity(entityId) {
         const { entitySetId, onStatusChange } = this.props;
-        const entityId = entity.id;
 
-        onStatusChange(updateStates.IN_PROGRESS);
+        onStatusChange(UpdateStatus.IN_PROGRESS);
 
         try {
           if (entitySetId) {
@@ -127,9 +123,9 @@ const entityEditorWrapper = (EditorComponent) => {
           } else {
             await this.props.deleteEntity(entityId);
           }
-          onStatusChange(updateStates.SUCCESS);
+          onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(updateStates.ERROR);
+          onStatusChange(UpdateStatus.ERROR);
         }
       }
 
@@ -162,7 +158,7 @@ const mapStateToProps = (state, ownProps) => {
       let result;
 
       if (query.queryName === 'expand') {
-        result = selectExpandResult(state, query);
+        result = selectEntityExpandResult(state, query);
       } else {
         result = selectEntitiesResult(state, query);
       }

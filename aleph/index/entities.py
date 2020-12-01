@@ -20,6 +20,7 @@ PROXY_INCLUDES = [
     "schema",
     "properties",
     "collection_id",
+    "profile_id",
     "role_id",
     "mutable",
     "created_at",
@@ -95,13 +96,12 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def iter_adjacent(entity):
+def iter_adjacent(collection_id, entity_id):
     """Used for recursively deleting entities and their linked associations."""
-    query = {"term": {"entities": entity.get("id")}}
     yield from iter_entities(
         includes=["collection_id"],
-        collection_id=entity.get("collection_id"),
-        filters=[query],
+        collection_id=collection_id,
+        filters=[{"term": {"entities": entity_id}}],
     )
 
 
@@ -163,6 +163,7 @@ def index_proxy(collection, proxy, sync=False):
 def index_bulk(collection, entities, sync=False):
     """Index a set of entities."""
     entities = (format_proxy(p, collection) for p in entities)
+    entities = (e for e in entities if e is not None)
     bulk_actions(entities, sync=sync)
 
 
@@ -173,6 +174,11 @@ def _numeric_values(type_, values):
 
 def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
+    # Abstract entities can appear when profile fragments for a missing entity
+    # are present.
+    if proxy.schema.abstract:
+        return None
+
     data = proxy.to_full_dict()
     data["schemata"] = list(proxy.schema.names)
     data["caption"] = proxy.caption
@@ -198,14 +204,20 @@ def format_proxy(proxy, collection):
     data["numeric"] = numeric
 
     # Context data - from aleph system, not followthemoney.
+    data["collection_id"] = collection.id
     # FIXME: Can there ever really be multiple role_ids?
     data["role_id"] = first(data.get("role_id"))
+    data["profile_id"] = first(data.get("profile_id"))
     data["mutable"] = max(ensure_list(data.get("mutable")), default=False)
     data["origin"] = ensure_list(data.get("origin"))
-    created_at = data.get("created_at")
-    if created_at:
-        data["updated_at"] = data.get("updated_at", created_at)
-    data["collection_id"] = collection.id
+    # Logical simplifications of dates:
+    created_at = ensure_list(data.get("created_at"))
+    if len(created_at):
+        data["created_at"] = min(created_at)
+    updated_at = ensure_list(data.get("updated_at")) or created_at
+    if len(updated_at):
+        data["updated_at"] = max(updated_at)
+
     # log.info("%s", pformat(data))
     entity_id = data.pop("id")
     return {

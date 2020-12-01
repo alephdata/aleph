@@ -1,43 +1,20 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Prompt, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { Intent } from '@blueprintjs/core';
+import { Divider } from '@blueprintjs/core';
 
-import { fetchEntitySet } from 'actions';
-import { selectEntitySet } from 'selectors';
+import { fetchEntitySet, queryEntitySetEntities } from 'actions';
+import { selectEntitySet, selectEntitiesResult } from 'selectors';
+import { entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, EntitySet } from 'components/common';
-import updateStates from 'util/updateStates';
+import { Breadcrumbs, Collection, UpdateStatus } from 'components/common';
 
-const messages = defineMessages({
-  status_success: {
-    id: 'diagram.status_success',
-    defaultMessage: 'Saved',
-  },
-  status_error: {
-    id: 'diagram.status_error',
-    defaultMessage: 'Error saving',
-  },
-  status_in_progress: {
-    id: 'diagram.status_in_progress',
-    defaultMessage: 'Saving...',
-  },
-  error_warning: {
-    id: 'diagram.error_warning',
-    defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
-  },
-  in_progress_warning: {
-    id: 'diagram.in_progress_warning',
-    defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
-  },
-});
 
 export class DiagramScreen extends Component {
   constructor(props) {
@@ -93,62 +70,50 @@ export class DiagramScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { diagram, entitySetId } = this.props;
+    const { diagram, entitiesQuery, entitiesResult, entitySetId } = this.props;
 
     if (diagram.shouldLoad || diagram.shallow) {
-      this.props.fetchEntitySet(entitySetId);
+      this.props.fetchEntitySet({ id: entitySetId });
     }
-  }
 
-  formatStatus() {
-    const { intl } = this.props;
-    const { updateStatus } = this.state;
-
-    switch (updateStatus) {
-      case updateStates.IN_PROGRESS:
-        return { text: intl.formatMessage(messages.status_in_progress), intent: Intent.PRIMARY };
-      case updateStates.ERROR:
-        return { text: intl.formatMessage(messages.status_error), intent: Intent.DANGER };
-      default:
-        return { text: intl.formatMessage(messages.status_success), intent: Intent.SUCCESS };
+    if (entitiesResult.shouldLoad) {
+      this.props.queryEntitySetEntities({ query: entitiesQuery });
     }
   }
 
   render() {
-    const { diagram, intl } = this.props;
+    const { diagram, entitiesResult } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
       return <ErrorScreen error={diagram.error} />;
     }
 
-    if ((!diagram.id) || diagram.shallow) {
+    if (!diagram.id || diagram.shallow || entitiesResult.total === undefined) {
       return <LoadingScreen />;
     }
 
     const operation = (
-      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch}/>
+      <>
+        {updateStatus && (
+          <>
+            <UpdateStatus status={updateStatus} />
+            <Divider />
+          </>
+        )}
+        <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch} />
+      </>
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} status={this.formatStatus()}>
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
-        <Breadcrumbs.Text active>
-          <EntitySet.Label entitySet={diagram} icon />
-        </Breadcrumbs.Text>
+        <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} />
       </Breadcrumbs>
     );
 
     return (
       <>
-        <Prompt
-          when={updateStatus === updateStates.IN_PROGRESS}
-          message={intl.formatMessage(messages.in_progress_warning)}
-        />
-        <Prompt
-          when={updateStatus === updateStates.ERROR}
-          message={intl.formatMessage(messages.error_warning)}
-        />
         <Screen
           title={diagram.label}
           description={diagram.summary || ''}
@@ -158,7 +123,7 @@ export class DiagramScreen extends Component {
             collection={diagram.collection}
             onStatusChange={this.onStatusChange}
             diagram={diagram}
-            entities={diagram?.entities}
+            entities={entitiesResult?.results}
             downloadTriggered={downloadTriggered}
             filterText={filterText}
             onDownloadComplete={this.onDownloadComplete}
@@ -170,17 +135,20 @@ export class DiagramScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entitySetId } = ownProps.match.params;
+  const { location, match } = ownProps;
+  const { entitySetId } = match.params;
+  const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000);
 
   return {
     entitySetId,
     diagram: selectEntitySet(state, entitySetId),
+    entitiesQuery,
+    entitiesResult: selectEntitiesResult(state, entitiesQuery),
   };
 };
 
 
 export default compose(
   withRouter,
-  injectIntl,
-  connect(mapStateToProps, { fetchEntitySet }),
+  connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
 )(DiagramScreen);

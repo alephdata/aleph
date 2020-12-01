@@ -1,33 +1,21 @@
 import logging
 
-from aleph.model import EntitySet, EntitySetItem, Events, Judgement
-from aleph.logic.entities import upsert_entity
+from aleph.core import cache
+from aleph.model import EntitySet, EntitySetItem, Events
+from aleph.logic.entities import upsert_entity, refresh_entity
+from aleph.logic.collections import index_aggregator
+from aleph.logic.aggregator import get_aggregator
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
-
-
-def get_entitysets_by_entity(
-    entity_id, collection_ids=None, judgements=None, types=None, labels=None
-):
-    if judgements is not None:
-        judgements = list(map(Judgement, judgements))
-    entitysets = EntitySet.by_entity_id(
-        entity_id,
-        collection_ids=collection_ids,
-        judgements=judgements,
-        types=types,
-        labels=labels,
-    )
-    return entitysets
 
 
 def get_entityset(entityset_id):
     return EntitySet.by_id(entityset_id)
 
 
-def get_entitysetitem(entitysetitem_id):
-    return EntitySetItem.by_id(entitysetitem_id)
+def refresh_entityset(entityset_id):
+    cache.kv.delete(cache.object_key(EntitySet, entityset_id))
 
 
 def create_entityset(collection, data, authz):
@@ -41,10 +29,11 @@ def create_entityset(collection, data, authz):
         new_id = upsert_entity(entity, collection, sync=True)
         old_to_new_id_map[old_id] = new_id
         entity_ids.append(new_id)
-    data["entities"] = entity_ids
     layout = data.get("layout", {})
     data["layout"] = replace_layout_ids(layout, old_to_new_id_map)
     entityset = EntitySet.create(data, collection, authz)
+    for entity_id in entity_ids:
+        save_entityset_item(entityset, collection, entity_id)
     publish(
         Events.CREATE_ENTITYSET,
         params={"collection": collection, "entityset": entityset},
@@ -52,6 +41,24 @@ def create_entityset(collection, data, authz):
         actor_id=authz.id,
     )
     return entityset
+
+
+def save_entityset_item(entityset, collection, entity_id, **data):
+    """Change the association between an entity and an entityset. In the case of
+    a profile, this may require re-indexing of the entity to update the associated
+    profile_id.
+    """
+    item = EntitySetItem.save(entityset, entity_id, collection_id=collection.id, **data)
+    if entityset.type == EntitySet.PROFILE and entityset.collection_id == collection.id:
+        from aleph.logic.profiles import profile_fragments
+
+        aggregator = get_aggregator(collection)
+        profile_fragments(collection, aggregator, entity_id=entity_id)
+        index_aggregator(collection, aggregator, entity_ids=[entity_id])
+        refresh_entity(collection, entity_id)
+        aggregator.close()
+    refresh_entityset(entityset.id)
+    return item
 
 
 def replace_layout_ids(layout, old_to_new_id_map):

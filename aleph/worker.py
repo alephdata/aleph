@@ -11,10 +11,12 @@ from aleph.queues import (
     OP_REINDEX,
     OP_REINGEST,
     OP_XREF,
-    OP_EXPORT_SEARCH_RESULTS,
-    OP_EXPORT_XREF_RESULTS,
+    OP_EXPORT_SEARCH,
+    OP_EXPORT_XREF,
     OP_LOAD_MAPPING,
     OP_FLUSH_MAPPING,
+    OP_UPDATE_ENTITY,
+    OP_PRUNE_ENTITY,
 )
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import compute_collections, refresh_collection
@@ -34,8 +36,10 @@ OPERATIONS = (
     OP_REINDEX,
     OP_LOAD_MAPPING,
     OP_FLUSH_MAPPING,
-    OP_EXPORT_SEARCH_RESULTS,
-    OP_EXPORT_XREF_RESULTS,
+    OP_EXPORT_SEARCH,
+    OP_EXPORT_XREF,
+    OP_UPDATE_ENTITY,
+    OP_PRUNE_ENTITY,
 )
 
 
@@ -69,7 +73,10 @@ class AlephWorker(Worker):
                 self.often.update()
                 self.run_often()
 
-    def dispatch_task(self, collection, task):
+    def dispatch_task(self, task):
+        collection = get_dataset_collection_id(task.job.dataset.name)
+        if collection is not None:
+            collection = Collection.by_id(collection, deleted=True)
         handler = get_entry_point("aleph.task_handlers", task.stage.stage)
         if handler is None:
             log.warning(
@@ -83,10 +90,7 @@ class AlephWorker(Worker):
 
     def handle(self, task):
         with app.app_context():
-            collection = get_dataset_collection_id(task.job.dataset.name)
-            if collection is not None:
-                collection = Collection.by_id(collection, deleted=True)
-            self.dispatch_task(collection, task)
+            self.dispatch_task(task)
 
     def cleanup_job(self, job):
         if job.is_done():

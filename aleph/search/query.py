@@ -133,12 +133,12 @@ class Query(object):
             facet_aggregations = {}
             if self.parser.get_facet_values(facet_name):
                 agg_name = "%s.values" % facet_name
-                facet_aggregations[agg_name] = {
-                    "terms": {
-                        "field": facet_name,
-                        "size": self.parser.get_facet_size(facet_name),
-                    }
+                terms = {
+                    "field": facet_name,
+                    "size": self.parser.get_facet_size(facet_name),
+                    "execution_hint": "map",
                 }
+                facet_aggregations[agg_name] = {"terms": terms}
 
             if self.parser.get_facet_total(facet_name):
                 # Option to return total distinct value counts for

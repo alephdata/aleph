@@ -1,6 +1,4 @@
 import logging
-from urllib.parse import quote
-from urlnormalizer import query_string
 from flask import Blueprint, request
 from flask_babel import gettext
 from werkzeug.exceptions import NotFound
@@ -11,8 +9,9 @@ from aleph.core import db, url_for
 from aleph.search import EntitiesQuery, MatchQuery, DatabaseQueryResult
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
-from aleph.logic.entities import entity_references, entity_tags, entity_expand
 from aleph.logic.entities import validate_entity, check_write_entity
+from aleph.logic.profiles import pairwise_judgements
+from aleph.logic.expand import entity_tags, expand_proxies
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
 from aleph.model.entityset import EntitySet, Judgement
@@ -23,13 +22,13 @@ from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
-from aleph.queues import queue_task, OP_EXPORT_SEARCH_RESULTS
+from aleph.queues import queue_task, OP_EXPORT_SEARCH
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)
 
 
-@blueprint.route("/api/2/search", methods=["GET"])
+@blueprint.route("/api/2/search", methods=["GET", "POST", "PUT"])
 @blueprint.route("/api/2/entities", methods=["GET"])
 def index():
     """
@@ -131,7 +130,7 @@ def index():
       - Entity
     """
     # enable_cache(vary_user=True)
-    parser = SearchQueryParser(request.args, request.authz)
+    parser = SearchQueryParser(request.values, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
     tag_request(query=result.query.to_text(), prefix=parser.prefix)
     links = {}
@@ -141,7 +140,7 @@ def index():
     return EntitySerializer.jsonify_result(result, extra={"links": links})
 
 
-@blueprint.route("/api/2/search/export", methods=["POST"])  # noqa
+@blueprint.route("/api/2/search/export", methods=["POST"])
 def export():
     """
     ---
@@ -166,15 +165,14 @@ def export():
     query = EntitiesQuery(parser)
     label = gettext("Search: %s") % query.to_text()
     export = create_export(
-        operation=OP_EXPORT_SEARCH_RESULTS,
+        operation=OP_EXPORT_SEARCH,
         role_id=request.authz.id,
         label=label,
         mime_type=ZIP,
         meta={"query": query.get_full_query()},
     )
     job_id = get_session_id()
-    payload = {"export_id": export.id}
-    queue_task(None, OP_EXPORT_SEARCH_RESULTS, job_id=job_id, payload=payload)
+    queue_task(None, OP_EXPORT_SEARCH, job_id=job_id, export_id=export.id)
     return ("", 202)
 
 
@@ -249,7 +247,13 @@ def create():
     data.pop("id", None)
     if get_flag("validate", default=False):
         validate_entity(data)
-    entity_id = upsert_entity(data, collection, authz=request.authz, sync=True)
+    entity_id = upsert_entity(
+        data,
+        collection,
+        authz=request.authz,
+        sync=True,
+        job_id=get_session_id(),
+    )
     db.session.commit()
     tag_request(entity_id=entity_id, collection_id=collection.id)
     entity = get_index_entity(entity_id, request.authz.READ)
@@ -332,50 +336,13 @@ def similar(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get("collection_id"))
-    entity = model.get_proxy(entity)
-    result = MatchQuery.handle(request, entity=entity)
+    proxy = model.get_proxy(entity)
+    result = MatchQuery.handle(request, entity=proxy)
+    pairs = [(entity_id, s.get("id")) for s in result.results]
+    judgements = pairwise_judgements(pairs, entity.get("collection_id"))
+    for similar in result.results:
+        similar["judgement"] = judgements.get((entity_id, similar.get("id")))
     return EntitySerializer.jsonify_result(result)
-
-
-@blueprint.route("/api/2/entities/<entity_id>/references", methods=["GET"])
-def references(entity_id):
-    """
-    ---
-    get:
-      summary: Get entity references
-      description: >-
-        Get the schema-wise aggregation of references to the entity with id
-        `entity_id`. This can be used to find and display adjacent entities.
-      parameters:
-      - in: path
-        name: entity_id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                allOf:
-                - $ref: '#/components/schemas/QueryResponse'
-                properties:
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/EntityReference'
-      tags:
-      - Entity
-    """
-    enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ)
-    tag_request(collection_id=entity.get("collection_id"))
-    results = []
-    for prop, total in entity_references(entity, request.authz):
-        results.append({"count": total, "property": prop, "schema": prop.schema.name})
-    return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
 @blueprint.route("/api/2/entities/<entity_id>/tags", methods=["GET"])
@@ -385,8 +352,7 @@ def tags(entity_id):
     get:
       summary: Get entity tags
       description: >-
-        Get tags for the entity with id `entity_id`. Tags include the query
-        string to make a search by that particular tag.
+        Get tags for the entity with id `entity_id`.
       parameters:
       - in: path
         name: entity_id
@@ -413,13 +379,7 @@ def tags(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get("collection_id"))
-    results = []
-    for (field, value, total) in entity_tags(entity, request.authz):
-        qvalue = quote(value.encode("utf-8"))
-        key = ("filter:%s" % field, qvalue)
-        qid = query_string([key])
-        results.append({"id": qid, "value": value, "field": field, "count": total})
-    results.sort(key=lambda p: p["count"], reverse=True)
+    results = entity_tags(model.get_proxy(entity), request.authz)
     return jsonify({"status": "ok", "total": len(results), "results": results})
 
 
@@ -466,8 +426,13 @@ def update(entity_id):
     data["id"] = entity_id
     if get_flag("validate", default=False):
         validate_entity(data)
-    sync = get_flag("sync", default=True)
-    entity_id = upsert_entity(data, collection, authz=request.authz, sync=sync)
+    entity_id = upsert_entity(
+        data,
+        collection,
+        authz=request.authz,
+        sync=get_flag("sync", default=True),
+        job_id=get_session_id(),
+    )
     db.session.commit()
     return view(entity_id)
 
@@ -495,14 +460,14 @@ def delete(entity_id):
     collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
     tag_request(collection_id=collection.id)
     sync = get_flag("sync", default=True)
-    delete_entity(collection, entity, sync=sync)
-    db.session.commit()
+    job_id = get_session_id()
+    delete_entity(collection, entity, sync=sync, job_id=job_id)
     return ("", 204)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/expand", methods=["GET"])
 def expand(entity_id):
-    """Returns a list of diagrams for the role
+    """
     ---
     get:
       summary: Expand an entity to get its adjacent entities
@@ -512,12 +477,6 @@ def expand(entity_id):
       parameters:
       - in: path
         name: entity_id
-        required: true
-        schema:
-          type: string
-      - in: query
-        name: edge_types
-        description: types of edges to expand. Must is a matchable FtM type
         required: true
         schema:
           type: string
@@ -549,38 +508,27 @@ def expand(entity_id):
       - Entity
     """
     entity = get_index_entity(entity_id, request.authz.READ)
-    edge_types = request.args.getlist("edge_types")
+    proxy = model.get_proxy(entity)
     collection_id = entity.get("collection_id")
     tag_request(collection_id=collection_id)
     parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
     properties = parser.filters.get("property")
-    results = []
-    for (prop, total, proxies) in entity_expand(
-        entity,
-        collection_ids=[collection_id],
-        edge_types=edge_types,
+    results = expand_proxies(
+        [proxy],
         properties=properties,
         authz=request.authz,
         limit=parser.limit,
-    ):
-        results.append(
-            {
-                "count": total,
-                "property": prop.name,
-                "entities": [proxy.to_dict() for proxy in proxies],
-            }
-        )
-    return jsonify(
-        {
-            "status": "ok",
-            "total": sum(result["count"] for result in results),
-            "results": results,
-        }
     )
+    result = {
+        "status": "ok",
+        "total": sum(result["count"] for result in results),
+        "results": results,
+    }
+    return jsonify(result)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/entitysets", methods=["GET"])
-def entity_entitysets(entity_id):
+def entitysets(entity_id):
     """Returns a list of entitysets which the entity has references in
     ---
     get:
@@ -637,7 +585,7 @@ def entity_entitysets(entity_id):
           description: OK
       tags:
       - Entity
-      - Profiles
+      - Profile
     """
     entity = get_index_entity(entity_id, request.authz.READ)
 
@@ -663,6 +611,5 @@ def entity_entitysets(entity_id):
         types=types,
         labels=labels,
     )
-
     result = DatabaseQueryResult(request, entitysets, parser=parser)
     return EntitySetSerializer.jsonify_result(result)

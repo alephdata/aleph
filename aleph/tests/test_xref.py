@@ -3,7 +3,7 @@ from unittest import skip  # noqa
 
 from aleph.core import db
 from aleph.authz import Authz
-from aleph.tests.util import TestCase
+from aleph.tests.util import TestCase, JSON
 from aleph.logic.xref import xref_collection
 from aleph.index.xref import iter_matches
 from aleph.queues import get_stage, OP_XREF
@@ -32,7 +32,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         entity = {
             "schema": "Person",
@@ -43,7 +43,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         entity = {
             "schema": "LegalEntity",
@@ -54,7 +54,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         entity = {
             "schema": "Person",
@@ -65,7 +65,7 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
 
         entity = {
@@ -77,12 +77,12 @@ class XrefTestCase(TestCase):
             url,
             data=json.dumps(entity),
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
 
     def test_xref(self):
         matches = list(iter_matches(self.coll_a, self.authz))
         assert 0 == len(matches), len(matches)
-        xref_collection(self.stage, self.coll_a)
+        xref_collection(self.coll_a)
         matches = list(iter_matches(self.coll_a, self.authz))
         assert 3 == len(matches), len(matches)

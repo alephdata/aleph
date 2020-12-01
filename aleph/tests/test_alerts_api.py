@@ -3,7 +3,7 @@ import json
 from aleph.core import db
 from aleph.model import Alert
 from aleph.views.util import validate
-from aleph.tests.util import TestCase
+from aleph.tests.util import TestCase, JSON
 
 
 class AlertsApiTestCase(TestCase):
@@ -22,16 +22,14 @@ class AlertsApiTestCase(TestCase):
     def test_create(self):
         data = {"query": "banana pumpkin"}
         jdata = json.dumps(data)
-        res = self.client.post(
-            "/api/2/alerts", data=jdata, content_type="application/json"
-        )
+        res = self.client.post("/api/2/alerts", data=jdata, content_type=JSON)
         assert res.status_code == 403, res
         _, headers = self.login()
         res = self.client.post(
             "/api/2/alerts",
             data=jdata,
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         assert res.status_code == 200, res.json
         validate(res.json, "Alert")
@@ -42,7 +40,7 @@ class AlertsApiTestCase(TestCase):
                 "/api/2/alerts",
                 data=wdata,
                 headers=headers,
-                content_type="application/json",
+                content_type=JSON,
             )
             assert res.status_code == 400, res.json
 
@@ -54,7 +52,7 @@ class AlertsApiTestCase(TestCase):
             "/api/2/alerts",
             data=jdata,
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         assert res.status_code == 200, res.json
         validate(res.json, "Alert")
@@ -68,7 +66,7 @@ class AlertsApiTestCase(TestCase):
             "/api/2/alerts",
             data=jdata,
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         url = "/api/2/alerts/%s" % res.json["id"]
         res2 = self.client.get(url, headers=headers)
@@ -86,7 +84,7 @@ class AlertsApiTestCase(TestCase):
             "/api/2/alerts",
             data=jdata,
             headers=headers,
-            content_type="application/json",
+            content_type=JSON,
         )
         assert res.status_code == 200, res.status_code
 

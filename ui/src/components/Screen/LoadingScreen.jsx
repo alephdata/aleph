@@ -5,8 +5,8 @@ import Screen from 'components/Screen/Screen';
 
 import './LoadingScreen.scss';
 
-const LoadingScreen = () => (
-  <Screen>
+const LoadingScreen = props => (
+  <Screen {...props}>
     <div className="LoadingScreen">
       <div className="spinner">
         <Spinner className="bp3-large" />

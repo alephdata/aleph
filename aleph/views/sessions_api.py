@@ -1,11 +1,11 @@
 import logging
 from flask_babel import gettext
-from flask import Blueprint, redirect, request
+from flask import Blueprint, redirect, request, session
 from authlib.common.errors import AuthlibBaseError
 from werkzeug.exceptions import Unauthorized, BadRequest
 
 from aleph import settings
-from aleph.core import db, url_for
+from aleph.core import db, url_for, cache
 from aleph.authz import Authz
 from aleph.oauth import oauth, handle_oauth
 from aleph.model import Role
@@ -58,6 +58,10 @@ def password_login():
     return jsonify({"status": "ok", "token": authz.to_token()})
 
 
+def _oauth_session(token):
+    return cache.key("oauth-sess", token)
+
+
 @blueprint.route("/api/2/sessions/oauth")
 def oauth_init():
     """Init OAuth auth flow.
@@ -73,35 +77,44 @@ def oauth_init():
     """
     require(settings.OAUTH)
     url = url_for(".oauth_callback")
-    state = request.args.get("next", request.referrer)
-    return oauth.provider.authorize_redirect(url, state=state)
+    state = oauth.provider.create_authorization_url(url)
+    state["next_url"] = request.args.get("next", request.referrer)
+    state["redirect_uri"] = url
+    cache.set_complex(_oauth_session(state.get("state")), state, expires=3600)
+    return redirect(state["url"])
 
 
 @blueprint.route("/api/2/sessions/callback")
 def oauth_callback():
     require(settings.OAUTH)
+    err = Unauthorized(gettext("Authentication has failed."))
+    state = cache.get_complex(_oauth_session(request.args.get("state")))
+    if state is None:
+        raise err
+
     try:
-        token = oauth.provider.authorize_access_token()
+        oauth.provider.framework.set_session_data(request, "state", state.get("state"))
+        uri = state.get("redirect_uri")
+        token = oauth.provider.authorize_access_token(redirect_uri=uri)
     except AuthlibBaseError as err:
         log.warning("Failed OAuth: %r", err)
-        raise Unauthorized(gettext("Authentication has failed."))
+        raise err
     if token is None or isinstance(token, AuthlibBaseError):
         log.warning("Failed OAuth: %r", token)
-        raise Unauthorized(gettext("Authentication has failed."))
+        raise err
 
     role = handle_oauth(oauth.provider, token)
     if role is None:
-        log.error("No OAuth handler was installed.")
-        raise Unauthorized(gettext("Authentication has failed."))
+        raise err
 
     db.session.commit()
     update_role(role)
-    log.info("Logged in: %r", role)
+    log.debug("Logged in: %r", role)
     request.authz = Authz.from_role(role)
-    token = request.authz.to_token()
-    next_path = get_url_path(request.args.get("state"))
-    next_url = ui_url(settings.OAUTH_UI_CALLBACK, next=next_path)
-    next_url = "%s#token=%s" % (next_url, token)
+    next_path = get_url_path(state.get("next_url"))
+    next_url = ui_url("oauth", next=next_path)
+    next_url = "%s#token=%s" % (next_url, request.authz.to_token())
+    session.clear()
     return redirect(next_url)
 
 

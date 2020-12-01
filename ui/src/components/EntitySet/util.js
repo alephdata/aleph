@@ -1,17 +1,17 @@
 // convert any entity references contained in entity properties to entityIds instead of
 //  full Entity objects
-const processApiEntity = (entity) => {
-  const { properties } = entity;
-  if (properties) {
-    Object.entries(properties).forEach(([key, values]) => {
-      properties[key] = values.map((value) => (value?.id ? value.id : value));
-    });
-  }
+const processApiEntity = (entity, model) => {
+  const props = entity.getProperties();
 
-  return {
-    ...entity,
-    properties,
-  };
+  props.forEach(prop => {
+    const type = prop.type.name;
+    if (type === 'entity') {
+      const values = entity.getProperty(prop);
+      entity.properties.set(prop, values.map((value) => (value?.id ? value.id : value)));
+    }
+  })
+
+  return entity.clone();
 };
 
 export {

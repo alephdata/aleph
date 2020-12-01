@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react';
-import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InputGroup } from '@blueprintjs/core';
 
 
 const messages = defineMessages({
   search_placeholder: {
-    id: 'search.placeholder',
+    id: 'search.placeholder_default',
     defaultMessage: 'Search…',
   },
 });

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const READ_DIR = './i18n/translations/';
+const READ_DIR = './i18n/translations/compiled/';
 const WRITE_DIR = './src/content/';
 
 fs.readdir(READ_DIR, (err, filenames) => {

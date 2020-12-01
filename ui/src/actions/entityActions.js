@@ -12,18 +12,13 @@ export const fetchEntity = asyncActionCreator(({ id }) => async () => {
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY' });
 
-export const fetchEntityReferences = asyncActionCreator(({ id }) => async () => {
-  const response = await endpoint.get(`entities/${id}/references`);
-  return { id, data: response.data };
-}, { name: 'FETCH_ENTITY_REFERENCES' });
-
 export const fetchEntityTags = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`entities/${id}/tags`);
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY_TAGS' });
 
 export const createEntity = asyncActionCreator(({ entity, collection_id }) => async () => {
-  const config = { params: { sync: true }};
+  const config = { params: { sync: true } };
   const payload = entity.toJSON();
   payload.collection_id = collection_id;
   const response = await endpoint.put(`entities/${entity.id}`, payload, config);
@@ -31,14 +26,14 @@ export const createEntity = asyncActionCreator(({ entity, collection_id }) => as
 }, { name: 'CREATE_ENTITY' });
 
 export const updateEntity = asyncActionCreator(entity => async () => {
-  const config = { params: { sync: true }};
+  const config = { params: { sync: true } };
   const payload = entity.toJSON();
   const response = await endpoint.put(`entities/${entity.id}`, payload, config);
   return { id: response.data.id, data: response.data };
 }, { name: 'UPDATE_ENTITY' });
 
 export const deleteEntity = asyncActionCreator(entityId => async () => {
-  const config = { params: { sync: true }};
+  const config = { params: { sync: true } };
   await endpoint.delete(`entities/${entityId}`, config);
   return { id: entityId };
 }, { name: 'DELETE_ENTITY' });

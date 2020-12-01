@@ -36,11 +36,14 @@ export function entitySetSchemaCountsQuery(entitySetId) {
     .limit(0);
 }
 
-export function entitySetEntitiesQuery(location, entitySetId, schema) {
-  const context = {
-    'filter:schema': schema,
-  };
-  return Query.fromLocation(`entitysets/${entitySetId}/entities`, location, context, 'entitySetEntities');
+export function entitySetEntitiesQuery(location, entitySetId, schema, limit) {
+  const context = {}
+  if (schema) {
+    context['filter:schema'] = schema;
+  }
+  return Query
+    .fromLocation(`entitysets/${entitySetId}/entities`, location, context, 'entitySetEntities')
+    .limit(limit);
 }
 
 export function queryCollectionEntitySets(location, collectionId) {
@@ -122,12 +125,15 @@ export function queryEntitySuggest(location, collection, schemaName, queryText) 
     .sortBy('caption', 'asc');
 }
 
-export function queryExpand(location, entityId, properties, limit = 200) {
-  const path = `entities/${entityId}/expand`;
+export function queryExpand(entityId, properties, limit = 200) {
   const context = {
     'edge_types': ['entity'],
     'filter:property': properties
   };
+  const query = new Query(`entities/${entityId}/expand`, {}, context, 'expand');
+  return query.limit(limit);
+}
 
-  return Query.fromLocation(path, location, context, 'expand').limit(limit);
+export function queryEntityReferences(entityId) {
+  return queryExpand(entityId, null, 0);
 }

@@ -31,6 +31,7 @@ APP_NAME = "aleph-test"
 UI_URL = "http://aleph.ui/"
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
 DB_URI = settings.DATABASE_URI + "_test"
+JSON = "application/json"
 
 
 def read_entities(file_name):
@@ -134,7 +135,9 @@ class TestCase(unittest.TestCase):
         return collection
 
     def create_entity(self, data, collection):
-        return Entity.create(data, collection)
+        entity = Entity.create(data, collection)
+        entity.collection = collection
+        return entity
 
     def grant(self, collection, role, read, write):
         Permission.grant(collection, role, read, write)

@@ -15,7 +15,6 @@ export {
   queryCollectionXref,
   triggerCollectionXref,
   triggerCollectionXrefDownload,
-  decideCollectionXref,
   triggerCollectionReingest,
   triggerCollectionReindex,
   triggerCollectionCancel,
@@ -26,7 +25,6 @@ export {
   createEntity,
   deleteEntity,
   fetchEntity,
-  fetchEntityReferences,
   fetchEntityTags,
   queryEntities,
   queryEntityExpand,
@@ -51,6 +49,11 @@ export {
   queryEntitySetEntities,
   updateEntitySet,
 } from './entitySetActions';
+export {
+  fetchProfile,
+  fetchProfileTags,
+  pairwiseJudgement,
+} from './profileActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';

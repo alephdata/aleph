@@ -1,6 +1,7 @@
 import logging
 from babel import Locale
 from functools import lru_cache
+from urllib.parse import urlencode
 from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
@@ -9,6 +10,7 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
+from aleph.oauth import oauth
 from aleph.core import settings, url_for, cache
 from aleph.authz import Authz
 from aleph.model import Collection, Role
@@ -27,16 +29,26 @@ def _metadata_locale(locale):
     # This is cached in part because latency on this endpoint is
     # particularly relevant to the first render being shown to a
     # user.
-    auth = {}
+    auth = {"logout": settings.APP_UI_URL}
     if settings.PASSWORD_LOGIN:
         auth["password_login_uri"] = url_for("sessions_api.password_login")
     if settings.PASSWORD_LOGIN and not settings.MAINTENANCE:
         auth["registration_uri"] = url_for("roles_api.create_code")
     if settings.OAUTH:
         auth["oauth_uri"] = url_for("sessions_api.oauth_init")
-
+        metadata = oauth.provider.load_server_metadata()
+        logout_endpoint = metadata.get("end_session_endpoint")
+        if logout_endpoint is not None:
+            query = urlencode({"post_logout_redirect_uri": auth["logout"]})
+            auth["logout"] = logout_endpoint + "?" + query
     locales = settings.UI_LANGUAGES
     locales = {loc: Locale(loc).get_language_name(loc) for loc in locales}
+
+    # This is dumb but we agreed it with ARIJ
+    # https://github.com/alephdata/aleph/issues/1432
+    app_logo = settings.APP_LOGO
+    if locale.startswith("ar"):
+        app_logo = settings.APP_LOGO_AR or app_logo
 
     return {
         "status": "ok",
@@ -46,7 +58,7 @@ def _metadata_locale(locale):
             "version": __version__,
             "banner": settings.APP_BANNER,
             "ui_uri": settings.APP_UI_URL,
-            "logo": settings.APP_LOGO,
+            "logo": app_logo,
             "favicon": settings.APP_FAVICON,
             "locale": locale,
             "locales": locales,

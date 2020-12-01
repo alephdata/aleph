@@ -67,9 +67,11 @@ fixtures:
 
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev
+	npm run --prefix ui messages
 	pybabel extract -F babel.cfg -k lazy_gettext -o aleph/translations/messages.pot aleph
 	tx push --source
 	tx pull -a -f
+	npm run --prefix ui translate
 	pybabel compile -d aleph/translations -D aleph -f
 
 .PHONY: build services

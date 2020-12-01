@@ -34,8 +34,6 @@ Entity:
       type: array
       items:
         type: string
-    job_id:
-      type: string
     links:
       properties:
         tags:
@@ -109,20 +107,6 @@ EntityCreate:
       $ref: "#/components/schemas/Collection"
     foreign_id:
       type: string
-
-EntityReference:
-  type: object
-  properties:
-    schema:
-      type: string
-      format: schema
-      example: Directorship
-    property:
-      type: object
-      example: director
-    count:
-      type: integer
-      example: 1
 
 EntityTag:
   type: object

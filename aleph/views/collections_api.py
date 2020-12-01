@@ -3,12 +3,12 @@ from flask import Blueprint, request
 
 from aleph.core import db
 from aleph.search import CollectionsQuery
-from aleph.model import EntitySetItem
 from aleph.queues import queue_task, get_status, cancel_queue
 from aleph.queues import OP_REINGEST, OP_REINDEX, OP_INDEX
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, refresh_collection
+from aleph.logic.entitysets import save_entityset_item
 from aleph.index.collections import update_collection_stats
 from aleph.logic.processing import bulk_write
 from aleph.views.serializers import CollectionSerializer
@@ -186,9 +186,8 @@ def reingest(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    job_id = get_session_id()
-    data = {"index": get_flag("index", False)}
-    queue_task(collection, OP_REINGEST, job_id=job_id, payload=data)
+    index = get_flag("index", False)
+    queue_task(collection, OP_REINGEST, job_id=get_session_id(), index=index)
     return ("", 202)
 
 
@@ -220,9 +219,8 @@ def reindex(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    job_id = get_session_id()
-    data = {"flush": get_flag("flush", False)}
-    queue_task(collection, OP_REINDEX, job_id=job_id, payload=data)
+    flush = get_flag("flush", False)
+    queue_task(collection, OP_REINDEX, job_id=get_session_id(), flush=flush)
     return ("", 202)
 
 
@@ -288,16 +286,15 @@ def bulk(collection_id):
     ):
         entity_ids.append(entity_id)
         if entityset is not None:
-            EntitySetItem.save(
+            save_entityset_item(
                 entityset,
+                collection,
                 entity_id,
-                collection_id=collection.id,
                 added_by_id=request.authz.id,
             )
     collection.touch()
     db.session.commit()
-    data = {"entity_ids": entity_ids}
-    queue_task(collection, OP_INDEX, job_id=job_id, payload=data)
+    queue_task(collection, OP_INDEX, job_id=job_id, entity_ids=entity_ids)
     return ("", 204)
 
 

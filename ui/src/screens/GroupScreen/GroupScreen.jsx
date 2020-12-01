@@ -49,7 +49,7 @@ export class GroupScreen extends Component {
   render() {
     const { group, query, intl } = this.props;
     if (group.isPending) {
-      return <LoadingScreen />;
+      return <LoadingScreen requireSession />;
     }
     return (
       <Screen className="GroupScreen" title={group.label} requireSession>

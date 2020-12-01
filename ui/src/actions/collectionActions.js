@@ -58,14 +58,6 @@ export const triggerCollectionXrefDownload = asyncActionCreator((id) => async ()
   return { data: response.data };
 }, { name: 'TRIGGER_XREF_DOWNLOAD' });
 
-export const decideCollectionXref = asyncActionCreator((xref) => async () => {
-  const { id, collection_id, decision } = xref;
-  const url = `collections/${collection_id}/xref/${id}`
-  const data = { decision: decision };
-  await endpoint.post(url, data);
-  return { id, data: xref };
-}, { name: 'DECIDE_XREF' });
-
 export const triggerCollectionReingest = asyncActionCreator((id, index) => async () => {
   const config = { params: { index } };
   const response = await endpoint.post(`collections/${id}/reingest`, null, config);

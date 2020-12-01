@@ -37,6 +37,7 @@ import ResultCount from './ResultCount';
 import ResultText from './ResultText';
 import SelectWrapper from './SelectWrapper';
 import ExportLink from './ExportLink';
+import UpdateStatus from './UpdateStatus';
 
 
 export {
@@ -79,6 +80,7 @@ export {
   ResultText,
   SelectWrapper,
   ExportLink,
+  UpdateStatus,
 };
 
 export * from './types';

@@ -1,8 +1,8 @@
 import React, { PureComponent, Component } from 'react';
-import { Divider, Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Category, Collection, Entity, Skeleton, Restricted } from 'components/common';
+import { Category, Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
 
 import './Breadcrumbs.scss';
 
@@ -86,6 +86,17 @@ class EntityBreadcrumb extends PureComponent {
   }
 }
 
+class EntitySetBreadcrumb extends PureComponent {
+  render() {
+    const { entitySet } = this.props;
+    return (
+      <li key={entitySet.id}>
+        <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
+      </li>
+    );
+  }
+}
+
 
 class TextBreadcrumb extends PureComponent {
   render() {
@@ -110,29 +121,12 @@ export default class Breadcrumbs extends Component {
 
   static Entity = EntityBreadcrumb;
 
+  static EntitySet = EntitySetBreadcrumb;
+
   static Text = TextBreadcrumb;
 
-  renderStatus() {
-    const { text, intent } = this.props.status;
-    let icon;
-
-    if (intent === Intent.PRIMARY) {
-      icon = <Spinner size="16" intent={intent} />;
-    } else if (intent === Intent.SUCCESS) {
-      icon = 'tick';
-    } else {
-      icon = 'error';
-    }
-
-    return (
-      <Tag large minimal intent={intent} className="Breadcrumbs__status" icon={icon}>
-        {text}
-      </Tag>
-    );
-  }
-
   render() {
-    const { collection, children, operation, status } = this.props;
+    const { collection, children, operation } = this.props;
 
     const collectionCrumbs = [];
     if (collection) {
@@ -151,8 +145,6 @@ export default class Breadcrumbs extends Component {
             </ul>
           </div>
           <div className="Breadcrumbs__right">
-            {status && this.renderStatus()}
-            {status && operation && <Divider />}
             {operation}
           </div>
         </div>

@@ -62,11 +62,11 @@ class NotificationList extends Component {
     const { query, result, intl, showCollectionLinks } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
-    if (result.total === 0) {
+    if (result.isError || result.total === 0) {
       return (
         <ErrorSection
           icon="notifications"
-          title={intl.formatMessage(messages.no_notifications)}
+          title={result.isError ? result.error.message : intl.formatMessage(messages.no_notifications)}
         />
       );
     }

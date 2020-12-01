@@ -4,11 +4,8 @@ from pprint import pprint, pformat  # noqa
 from aleph.core import es
 from aleph.index.indexes import entities_read_index, configure_entities
 from aleph.index.collections import collections_index, configure_collections
-from aleph.index.notifications import (
-    notifications_index,
-    configure_notifications,
-)  # noqa
-from aleph.index.xref import xref_index, configure_xref  # noqa
+from aleph.index.notifications import notifications_index, configure_notifications
+from aleph.index.xref import xref_index, configure_xref
 
 log = logging.getLogger(__name__)
 

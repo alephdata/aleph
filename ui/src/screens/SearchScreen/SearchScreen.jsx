@@ -28,9 +28,13 @@ const messages = defineMessages({
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
   },
-  page_title: {
+  title: {
     id: 'search.title',
-    defaultMessage: 'Search',
+    defaultMessage: 'Search: {title}',
+  },
+  loading: {
+    id: 'search.loading',
+    defaultMessage: 'Loading...',
   },
   export: {
     id: 'search.screen.export',
@@ -72,8 +76,12 @@ export class SearchScreen extends React.Component {
   }
 
   render() {
-    const { query, result, intl } = this.props;
-    const title = query.getString('q') || intl.formatMessage(messages.page_title);
+    const { dateFacetIsOpen, dateFacetIntervals, query, result, intl } = this.props;
+    const { hideFacets } = this.state;
+    const titleStatus = result.query_text ? result.query_text : intl.formatMessage(messages.loading);
+    const title = intl.formatMessage(messages.title, { title: titleStatus });
+    const hideFacetsClass = hideFacets ? 'show' : 'hide';
+    const plusMinusIcon = hideFacets ? 'minus' : 'plus';
     const exportLink = result?.total > 0 ? result?.links?.export : null;
     const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
     const noResults = !result.isPending && result.total === 0;

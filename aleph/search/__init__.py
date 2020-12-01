@@ -1,4 +1,5 @@
 import logging
+from banal import ensure_list
 from flask_babel import gettext
 from werkzeug.exceptions import BadRequest
 
@@ -54,8 +55,9 @@ class EntitiesQuery(Query):
 class MatchQuery(EntitiesQuery):
     """Given an entity, find the most similar other entities."""
 
-    def __init__(self, parser, entity=None, collection_ids=None):
+    def __init__(self, parser, entity=None, exclude=None, collection_ids=None):
         self.entity = entity
+        self.exclude = ensure_list(exclude)
         self.collection_ids = collection_ids
         super(MatchQuery, self).__init__(parser)
 
@@ -71,7 +73,13 @@ class MatchQuery(EntitiesQuery):
 
     def get_query(self):
         query = super(MatchQuery, self).get_query()
-        return match_query(self.entity, collection_ids=self.collection_ids, query=query)
+        query = match_query(
+            self.entity, collection_ids=self.collection_ids, query=query
+        )
+        if len(self.exclude):
+            exclude = {"ids": {"values": self.exclude}}
+            query["bool"]["must_not"].append(exclude)
+        return query
 
 
 class XrefQuery(Query):

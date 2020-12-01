@@ -25,6 +25,14 @@ class SearchApiTestCase(TestCase):
         assert len(res.json["results"]) == 3, res.json
         assert b"Banana" in res.data, res.json
 
+    def test_post_search(self):
+        query = {"q": "kwazulu", "filter:schema": "Thing", "facet": "collection_id"}
+        res = self.client.post("/api/2/search", data=query)
+        assert res.status_code == 200, res.json
+        assert res.json["total"] == 1, res.json
+        assert b"Public Collection" in res.data, res.json
+        assert b"Secret Document" not in res.data, res.json
+
     def test_facet_attribute(self):
         res = self.client.get(self.url + "&facet=names")
         assert res.status_code == 200, res
@@ -32,13 +40,21 @@ class SearchApiTestCase(TestCase):
         assert len(facet["values"]) == 2, facet["values"]
 
     def test_facet_counts(self):
-        res = self.client.get(self.url + "&facet=names&facet_total:names=true")  # noqa
+        res = self.client.get(self.url + "&facet=names&facet_total:names=true")
         assert res.status_code == 200, res
         facet = res.json["facets"]["names"]
-        assert facet["total"] == 2, facet["total"]
+        assert "total" not in facet, facet
+
+        _, headers = self.login(is_admin=True)
         res = self.client.get(
-            self.url + "&facet=banana&facet_total:banana=true"
-        )  # noqa
+            self.url + "&facet=names&facet_total:names=true", headers=headers
+        )
+        assert res.status_code == 200, res
+        facet = res.json["facets"]["names"]
+        assert facet["total"] == 5, facet["total"]
+        res = self.client.get(
+            self.url + "&facet=banana&facet_total:banana=true", headers=headers
+        )
         assert res.status_code == 200, res
         banana_facet = res.json["facets"]["banana"]
         assert banana_facet["total"] == 0, banana_facet["total"]
@@ -55,7 +71,7 @@ class SearchApiTestCase(TestCase):
 
         res = self.client.get(
             self.url + "&facet=schema&filter:schema=Company", headers=headers
-        )  # noqa
+        )
         assert res.status_code == 200, res
         facet = res.json["facets"]["schema"]
         assert len(facet["values"]) == 1, facet["values"]
@@ -76,15 +92,14 @@ class SearchApiTestCase(TestCase):
     def test_date_filters(self):
         _, headers = self.login(is_admin=True)
         res = self.client.get(
-            self.url + "&q=banana&filter:gte:properties.birthDate=1970-08-08",  # noqa
+            self.url + "&q=banana&filter:gte:properties.birthDate=1970-08-08",
             headers=headers,
         )
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json
 
         res = self.client.get(
-            self.url + "&filter:gte:dates=1970||/y"  # noqa
-            "&filter:lte:dates=1970||/y",
+            self.url + "&filter:gte:dates=1970||/y&filter:lte:dates=1970||/y",
             headers=headers,
         )
         assert res.status_code == 200, res

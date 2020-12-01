@@ -1,7 +1,8 @@
 import io
 import csv
+import string
 import logging
-from banal import as_bool, ensure_dict
+from banal import as_bool, ensure_dict, is_mapping, is_listish
 from normality import stringify
 from flask import Response, request, render_template
 from flask_babel import gettext
@@ -18,6 +19,7 @@ from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
 
 log = logging.getLogger(__name__)
+CALLBACK_VALID = string.ascii_letters + string.digits + "_"
 
 
 def require(*predicates):
@@ -57,6 +59,7 @@ def parse_request(schema):
 def validate(data, schema):
     """Validate the data inside a request against a schema."""
     validator = get_validator(schema)
+    # data = clean_object(data)
     errors = {}
     for error in validator.iter_errors(data):
         path = ".".join((str(c) for c in error.path))
@@ -75,6 +78,24 @@ def validate(data, schema):
         status=400,
     )
     raise BadRequest(response=resp)
+
+
+def clean_object(data):
+    """Remove unset values from the response to save some bandwidth."""
+    if is_mapping(data):
+        out = {}
+        for k, v in data.items():
+            v = clean_object(v)
+            if v is not None:
+                out[k] = v
+        return out if len(out) else None
+    elif is_listish(data):
+        data = [clean_object(d) for d in data]
+        data = [d for d in data if d is not None]
+        return data if len(data) else None
+    elif isinstance(data, str):
+        return data if len(data) else None
+    return data
 
 
 def get_index_entity(entity_id, action=Authz.READ, **kwargs):
@@ -124,6 +145,7 @@ def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
     mimetype = "application/json"
     if "callback" in request.args:
         cb = request.args.get("callback")
+        cb = "".join((c for c in cb if c in CALLBACK_VALID))
         data = "%s && %s(%s)" % (cb, cb, data)
         # mime cf. https://stackoverflow.com/questions/24528211/
         mimetype = "application/javascript"

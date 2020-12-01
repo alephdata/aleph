@@ -40,12 +40,11 @@ def bulk_write(collection, entities, safe=False, role_id=None, mutable=True):
         if safe:
             entity = remove_checksums(entity)
         entity.context = {"role_id": role_id, "mutable": mutable}
-        for field in ("created_at", "updated_at"):
-            timestamp = data.get(field)
-            if timestamp is not None:
-                dt = registry.date.to_datetime(timestamp)
-                if dt is not None:
-                    entity.context[field] = dt.isoformat()
+        for field, func in (("created_at", min), ("updated_at", max)):
+            ts = func(ensure_list(data.get(field)), default=None)
+            dt = registry.date.to_datetime(ts)
+            if dt is not None:
+                entity.context[field] = dt.isoformat()
         writer.put(entity, origin="bulk")
         yield entity.id
     writer.flush()

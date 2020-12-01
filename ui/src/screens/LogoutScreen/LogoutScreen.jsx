@@ -1,29 +1,27 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
 
+import LoadingScreen from 'components/Screen/LoadingScreen';
 import { logout } from 'actions/sessionActions';
-import { showSuccessToast } from 'app/toast';
-
-const messages = defineMessages({
-  success: {
-    id: 'logout.success',
-    defaultMessage: 'Logout successful',
-  },
-});
+import { selectSession, selectMetadata } from 'selectors';
 
 class LogoutScreen extends Component {
   componentDidMount() {
-    const { history, intl } = this.props;
     this.props.logout();
-    showSuccessToast(intl.formatMessage(messages.success));
-    history.push('/');
   }
 
   render() {
-    return null;
+    const { session, metadata } = this.props;
+    if (session.loggedIn) {
+      return <LoadingScreen {...this.props} />
+    }
+    window.location = metadata.auth.logout;
   }
 }
 
-export default connect(null, { logout })(withRouter(injectIntl(LogoutScreen)));
+const mapStateToProps = (state) => ({
+  session: selectSession(state),
+  metadata: selectMetadata(state),
+});
+
+export default connect(mapStateToProps, { logout })(LogoutScreen);

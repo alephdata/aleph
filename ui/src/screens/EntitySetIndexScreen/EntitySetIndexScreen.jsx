@@ -9,7 +9,6 @@ import { selectEntitySetsResult } from 'selectors';
 import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
-import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
 import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 
@@ -67,10 +66,6 @@ export class EntitySetIndexScreen extends Component {
     const { intl, query, result, type } = this.props;
     const title = intl.formatMessage(messages[`${type}_title`])
     const description = intl.formatMessage(messages[`${type}_description`])
-
-    if (result.isError) {
-      return <ErrorScreen error={result.error} />;
-    }
 
     return (
       <Screen

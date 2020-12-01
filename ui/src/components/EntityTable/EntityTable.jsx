@@ -188,7 +188,7 @@ export class EntityTable extends Component {
   }
 
   render() {
-    const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, writeable } = this.props;
+    const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, updateStatus, writeable } = this.props;
     const { selection } = this.state;
     const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
     const showEmptyComponent = result.total === 0 && query.hasQuery();
@@ -200,6 +200,7 @@ export class EntityTable extends Component {
           query={query}
           writeable={writeable}
           onSearchSubmit={this.onSearchSubmit}
+          updateStatus={updateStatus}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >

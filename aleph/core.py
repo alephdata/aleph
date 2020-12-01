@@ -1,5 +1,5 @@
 import logging
-from urllib.parse import urlparse, urljoin, urlencode
+from urllib.parse import urljoin, urlencode
 from werkzeug.local import LocalProxy
 from werkzeug.middleware.profiler import ProfilerMiddleware
 from flask import Flask, request
@@ -161,16 +161,8 @@ def url_for(*a, **kw):
 
 def url_external(path, query, relative=False):
     """Generate external URLs with HTTPS (if configured)."""
-    try:
-        if query is not None:
-            path = "%s?%s" % (path, urlencode(query))
-        if relative:
-            return path
-
-        api_url = settings.APP_UI_URL
-        if settings.FORCE_HTTPS:
-            parsed = urlparse(api_url)._replace(scheme="https")
-            api_url = parsed.geturl()
-        return urljoin(api_url, path)
-    except RuntimeError:
-        return None
+    if query is not None:
+        path = "%s?%s" % (path, urlencode(query))
+    if relative:
+        return path
+    return urljoin(settings.APP_UI_URL, path)

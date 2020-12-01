@@ -277,7 +277,7 @@ class EntitySetCreateDialog extends Component {
                           /* eslint-disable */
                           <a onClick={() => this.toggleCollectionCreateDialog()}>
                             <FormattedMessage
-                              id='entity.manager.bulk_import.link_text'
+                              id='entityset.create.collection.new_link'
                               defaultMessage={
                                 `Create a new investigation`
                               }

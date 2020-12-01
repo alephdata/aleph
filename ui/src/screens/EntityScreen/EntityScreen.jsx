@@ -73,42 +73,6 @@ class EntityScreen extends Component {
     });
   }
 
-  // getEntitySearchScope(entity) {
-  //   if (!entity || !entity.schema) {
-  //     return null;
-  //   }
-  //   const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
-  //   if (!hasSearch) {
-  //     return null;
-  //   }
-  //   const entityLink = getEntityLink(entity);
-  //   return {
-  //     listItem: <Entity.Label entity={entity} icon truncate={30} />,
-  //     label: entity.getCaption(),
-  //     onSearch: queryText => this.onSearch(queryText, entityLink),
-  //   };
-  // }
-  //
-  // getReferenceSearchScope(entity) {
-  //   const { reference } = this.props;
-  //   if (!reference || reference.count < 10) {
-  //     return null;
-  //   }
-  //   const item = (
-  //     <>
-  //       <Entity.Label entity={entity} icon truncate={30} />
-  //       { ': ' }
-  //       <Property.Reverse prop={reference.property} />
-  //     </>
-  //   );
-  //   const entityLink = getEntityLink(entity);
-  //   return {
-  //     listItem: item,
-  //     label: reference.property.getReverse().label,
-  //     onSearch: queryText => this.onSearch(queryText, entityLink),
-  //   };
-  // }
-
   render() {
     const {
       entity, entityId, activeMode, query, isDocument, intl,
@@ -125,12 +89,11 @@ class EntityScreen extends Component {
       );
     }
 
-    const showDownloadButton = isDocument && entity && entity.links && entity.links.file;
     const { writeable } = entity.collection;
 
     const operation = (
       <ButtonGroup>
-        {showDownloadButton && <DownloadButton document={entity} /> }
+        <DownloadButton document={entity} />
         {writeable && (
           <>
             <DialogToggleButton
@@ -194,7 +157,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const entity = selectEntity(state, entityId);
   const hashQuery = queryString.parse(location.hash);
-  const isDocument = entity && entity.id && entity.schema.isDocument();
+  const isDocument = entity?.schema?.isDocument();
   const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
   const reference = selectEntityReference(state, entityId, activeMode);
   const referenceQuery = queryEntityReference(location, entity, reference);

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
-import updateStates from 'util/updateStates';
+import { UpdateStatus } from 'components/common';
 
 import './DiagramEditor.scss';
 
@@ -20,6 +20,7 @@ class DiagramEditor extends React.Component {
 
     if (diagram) {
       const layoutData = { vertices: [], edges: [], selection: [] };
+
       initialLayout = GraphLayout.fromJSON(
         config,
         {...layoutData, ...diagram.layout}
@@ -60,22 +61,20 @@ class DiagramEditor extends React.Component {
     this.setState({ layout });
 
     if (options?.propagate) {
-      onStatusChange(updateStates.IN_PROGRESS);
+      onStatusChange(UpdateStatus.IN_PROGRESS);
       const { selection, ...layoutData } = layout.toJSON();
-      const entities = entityManager.getEntities();
 
       const updatedDiagram = {
         ...diagram,
         layout: layoutData,
-        entities: entities ? entities.map(entity => entity.id) : [],
       };
 
       this.props.updateEntitySet(updatedDiagram.id, updatedDiagram)
         .then(() => {
-          onStatusChange(updateStates.SUCCESS);
+          onStatusChange(UpdateStatus.SUCCESS);
         })
         .catch(() => {
-          onStatusChange(updateStates.ERROR);
+          onStatusChange(UpdateStatus.ERROR);
         });
     }
   }
