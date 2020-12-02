@@ -88,6 +88,7 @@ class AlephWorker(Worker):
                 f"Task handler not found for task [task.job.dataset]: task.stage.stage",
             )
             return
+        log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (started)")
         handler(collection, task)
         log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (done)")
 
@@ -119,7 +120,7 @@ class AlephWorker(Worker):
             version=__version__,
             job_id=task.job.id,
             stage=task.stage.stage,
-            dataset=task.job.dataset,
+            dataset=task.job.dataset.name,
             start_time=time.time(),
             task_trace_id=str(uuid.uuid4()),
         )
