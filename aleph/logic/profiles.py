@@ -14,6 +14,7 @@ APIs designed for entities have to be re-implemented for profiles.
 Outside of its own collection, any entity can be linked to any number of profiles.
 """
 import logging
+from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 from followthemoney import model
 from followthemoney.helpers import name_entity
@@ -121,6 +122,9 @@ def pairwise_judgements(pairs, collection_id):
     q = q.filter(EntitySet.type == EntitySet.PROFILE)
     q = q.filter(EntitySet.id == left.entityset_id)
     q = q.filter(EntitySet.id == right.entityset_id)
+    q = q.filter(
+        or_(left.judgement == Judgement.POSITIVE, right.judgement == Judgement.POSITIVE)
+    )
     q = q.filter(db.tuple_(left.entity_id, right.entity_id).in_(pairs))
 
     judgements = {}
