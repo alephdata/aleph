@@ -46,4 +46,4 @@ coveralls
 
 # Tracing and logging libraries
 python-json-logger==2.0.1
-google-cloud-logging==2.0.0
+google-cloud-logging==2.0.1
