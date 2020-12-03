@@ -11,6 +11,8 @@ import {
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySimilarQuery } from 'queries';
+import { pairwiseJudgement } from 'actions';
+import { showWarningToast } from 'app/toast';
 
 const messages = defineMessages({
   empty: {
@@ -153,7 +155,7 @@ const mapStateToProps = (state, ownProps) => {
   return { query, result };
 };
 
-EntitySimilarMode = connect(mapStateToProps, { querySimilar })(EntitySimilarMode);
+EntitySimilarMode = connect(mapStateToProps, { querySimilar, pairwiseJudgement })(EntitySimilarMode);
 EntitySimilarMode = withRouter(EntitySimilarMode);
 EntitySimilarMode = injectIntl(EntitySimilarMode);
 export default EntitySimilarMode;

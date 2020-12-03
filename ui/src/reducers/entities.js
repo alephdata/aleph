@@ -9,6 +9,7 @@ import {
   createEntity,
   updateEntity,
   deleteEntity,
+  pairwiseJudgement,
 } from 'actions';
 import {
   objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects, loadComplete
@@ -29,6 +30,13 @@ function nestedEntityObjects(state, result) {
         state[result.matchId] = loadComplete(result.match);
       }
     });
+  }
+  return state;
+}
+
+function updateEntityProfile(state, entity, data) {
+  if (state[entity.id] && data.profile_id) {
+    state[entity.id].profile_id = data.profile_id;
   }
   return state;
 }
@@ -59,5 +67,7 @@ export default createReducer({
   [queryEntitySetEntities.COMPLETE]: (state, { result }) => resultObjects(state, result),
 
   [deleteEntity.COMPLETE]: (state, { id }) => objectDelete(state, id),
+
+  [pairwiseJudgement.COMPLETE]: (state, { entity, data }) => updateEntityProfile(state, entity, data),
 
 }, initialState);

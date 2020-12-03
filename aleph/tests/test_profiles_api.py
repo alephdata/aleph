@@ -90,7 +90,7 @@ class ProfilesApiTestCase(TestCase):
         self.grant_publish(self.col3)
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.json
-        assert len(res.json.get("items")) == 4, res.json.get("items")
+        assert len(res.json.get("entities")) == 3, res.json
 
     def test_profile_tags(self):
         url = "/api/2/profiles/%s/tags" % self.profile.id
