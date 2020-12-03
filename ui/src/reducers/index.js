@@ -15,6 +15,7 @@ import collectionPermissions from './collectionPermissions';
 import results from './results';
 import alerts from './alerts';
 import entitySets from './entitySets';
+import entitySetItems from './entitySetItems';
 import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   collectionStatus,
   collectionPermissions,
   entitySets,
+  entitySetItems,
   entityMappings,
   queryLogs,
   results,

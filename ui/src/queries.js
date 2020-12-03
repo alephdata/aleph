@@ -30,13 +30,19 @@ export function entitySetSchemaCountsQuery(entitySetId) {
     .limit(0);
 }
 
-export function entitySetEntitiesQuery(location, entitySetId, schema, limit) {
+export function entitySetEntitiesQuery(location, entitySetId, schema, limit = 9999) {
   const context = {}
   if (schema) {
     context['filter:schema'] = schema;
   }
   return Query
     .fromLocation(`entitysets/${entitySetId}/entities`, location, context, 'entitySetEntities')
+    .limit(limit);
+}
+
+export function entitySetItemsQuery(location, entitySetId, limit = 9999) {
+  return Query
+    .fromLocation(`entitysets/${entitySetId}/items`, location, {}, 'items')
     .limit(limit);
 }
 
@@ -136,11 +142,8 @@ export function profileReferencesQuery(profileId) {
 
 export function profileReferenceQuery(location, profile, reference) {
   if (reference) {
-    const entities = profile.items
-      .filter((i) => i.judgement === 'positive')
-      .map(i => i.entity_id);
     const context = {
-      [`filter:properties.${reference.property.name}`]: entities,
+      [`filter:properties.${reference.property.name}`]: profile.entities,
       'filter:schemata': reference.schema,
     };
     return Query.fromLocation('entities', location, context, reference.property.name);

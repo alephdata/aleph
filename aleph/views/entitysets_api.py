@@ -4,7 +4,7 @@ from flask import Blueprint, request
 from werkzeug.exceptions import NotFound
 
 from aleph.core import db
-from aleph.model import EntitySet
+from aleph.model import EntitySet, Judgement
 from aleph.model.common import make_textid
 from aleph.logic.entitysets import create_entityset, refresh_entityset
 from aleph.logic.entitysets import save_entityset_item
@@ -369,5 +369,11 @@ def item_update(entityset_id):
     item = save_entityset_item(entityset, collection, entity_id, **data)
     db.session.commit()
     if item is None:
-        return ("", 204)
+        item = {
+            "id": "$".join((entityset_id, entity_id)),
+            "entityset_id": entityset_id,
+            "entity_id": entity_id,
+            "collection_id": entity["collection_id"],
+            "judgement": Judgement.NO_JUDGEMENT,
+        }
     return EntitySetItemSerializer.jsonify(item)

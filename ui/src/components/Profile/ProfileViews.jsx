@@ -8,9 +8,9 @@ import { withRouter } from 'react-router';
 import {
     Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
-import { profileSimilarQuery, profileReferenceQuery } from 'queries';
+import { profileSimilarQuery, profileReferenceQuery, entitySetItemsQuery } from 'queries';
 import {
-    selectEntitiesResult, selectProfileReferences, selectProfileReference, selectProfileTags,
+    selectEntitiesResult, selectProfileReferences, selectProfileReference, selectProfileTags, selectEntitySetItemsResult,
 } from 'selectors';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
@@ -35,7 +35,7 @@ class ProfileViews extends React.Component {
 
     render() {
         const {
-            activeMode, profile, references, similar, reference, referenceQuery
+            activeMode, profile, references, items, reference, referenceQuery
         } = this.props;
         if (references.isPending) {
             return <SectionLoading />;
@@ -52,10 +52,10 @@ class ProfileViews extends React.Component {
                 <Tab
                     id="items"
                     title={(
-                        <TextLoading loading={similar.isPending}>
+                        <TextLoading loading={items.isPending}>
                             <Icon icon="similar" className="left-icon" />
                             <FormattedMessage id="profile.info.items" defaultMessage="Profile entities" />
-                            <ResultCount result={similar} />
+                            <ResultCount result={items} />
                         </TextLoading>
                     )}
                     panel={<EntitySimilarMode entity={profile.merged} />}
@@ -95,6 +95,7 @@ const mapStateToProps = (state, ownProps) => {
         referenceQuery: profileReferenceQuery(location, profile, reference),
         tags: selectProfileTags(state, profile.id),
         similar: selectEntitiesResult(state, profileSimilarQuery(location, profile.id)),
+        items: selectEntitySetItemsResult(state, entitySetItemsQuery(location, profile.id)),
     };
 };
 

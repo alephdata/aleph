@@ -10,7 +10,7 @@ import {
   createEntity,
   deleteEntity,
   entitySetAddEntity,
-  entitySetDeleteEntity,
+  updateEntitySetItem,
   queryEntities,
   queryEntityExpand,
   updateEntity
@@ -118,7 +118,7 @@ const entityEditorWrapper = (EditorComponent) => {
 
         try {
           if (entitySetId) {
-            await this.props.entitySetDeleteEntity({ entityId, entitySetId });
+            await this.props.updateEntitySetItem({ entityId, entitySetId, judgement: 'no_judgement' });
           } else {
             await this.props.deleteEntity(entityId);
           }
@@ -174,7 +174,7 @@ const mapDispatchToProps = {
   createEntity,
   deleteEntity,
   entitySetAddEntity,
-  entitySetDeleteEntity,
+  updateEntitySetItem,
   queryEntities,
   queryEntityExpand,
   updateEntity,

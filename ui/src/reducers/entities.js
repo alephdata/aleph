@@ -5,6 +5,7 @@ import {
   querySimilar,
   queryCollectionXref,
   queryEntitySetEntities,
+  queryEntitySetItems,
   fetchEntity,
   createEntity,
   updateEntity,
@@ -23,6 +24,7 @@ function nestedEntityObjects(state, result) {
     result.results.forEach(result => {
       if (result.entity?.id) {
         result.entityId = result.entity.id;
+        result.entity.collection = result.entity.collection || result.collection;
         state[result.entityId] = loadComplete(result.entity);
       }
       if (result.match?.id) {
@@ -63,6 +65,8 @@ export default createReducer({
   [querySimilar.COMPLETE]: (state, { result }) => nestedEntityObjects(state, result),
 
   [queryCollectionXref.COMPLETE]: (state, { result }) => nestedEntityObjects(state, result),
+
+  [queryEntitySetItems.COMPLETE]: (state, { result }) => nestedEntityObjects(state, result),
 
   [queryEntitySetEntities.COMPLETE]: (state, { result }) => resultObjects(state, result),
 

@@ -155,6 +155,12 @@ export function selectEntitySet(state, entitySetId) {
   return selectObject(state, state.entitySets, entitySetId);
 }
 
+export function selectEntitySetItem(state, itemId) {
+  const item = selectObject(state, state.entitySetItems, itemId);
+  item.entity = selectEntity(state, item.entityId);
+  return item;
+}
+
 export function selectProfile(state, entitySetId) {
   const profile = selectObject(state, state.entitySets, entitySetId);
   if (profile?.merged?.id && profile?.merged?.schema) {
@@ -248,6 +254,10 @@ export function selectEntitySetsResult(state, query) {
   return selectResult(state, query, selectEntitySet);
 }
 
+export function selectEntitySetItemsResult(state, query) {
+  return selectResult(state, query, selectEntitySetItem);
+}
+
 export function selectEntityTags(state, entityId) {
   return selectObject(state, state.entityTags, entityId);
 }
@@ -292,10 +302,7 @@ export function selectEntityView(state, entityId, mode, isPreview) {
 }
 
 export function selectProfileView(state, profileId, mode) {
-  if (mode) {
-    return mode;
-  }
-  return 'items';
+  return mode ? mode : 'items';
 }
 
 export function selectCollectionStatus(state, collectionId) {

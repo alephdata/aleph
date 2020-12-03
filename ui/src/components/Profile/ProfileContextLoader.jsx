@@ -8,15 +8,16 @@ import {
     queryEntities,
     querySimilar,
     queryProfileExpand,
+    queryEntitySetItems,
 } from 'actions';
 import {
     selectProfile,
     selectProfileTags,
-    selectEntitiesResult,
     selectSimilarResult,
     selectProfileExpandResult,
+    selectEntitySetItemsResult,
 } from 'selectors';
-import { profileSimilarQuery, profileReferencesQuery } from 'queries';
+import { profileSimilarQuery, profileReferencesQuery, entitySetItemsQuery } from 'queries';
 
 
 class ProfileContextLoader extends PureComponent {
@@ -49,6 +50,11 @@ class ProfileContextLoader extends PureComponent {
         if (similarResult.shouldLoad) {
             this.props.querySimilar({ query: similarQuery });
         }
+
+        const { itemsQuery, itemsResult } = this.props;
+        if (itemsResult.shouldLoad) {
+            this.props.queryEntitySetItems({ query: itemsQuery });
+        }
     }
 
     render() {
@@ -61,6 +67,7 @@ const mapStateToProps = (state, ownProps) => {
     const { profileId, location } = ownProps;
     const similarQuery = profileSimilarQuery(location, profileId);
     const expandQuery = profileReferencesQuery(profileId);
+    const itemsQuery = entitySetItemsQuery(location, profileId);
     return {
         profile: selectProfile(state, profileId),
         tagsResult: selectProfileTags(state, profileId),
@@ -68,6 +75,8 @@ const mapStateToProps = (state, ownProps) => {
         similarResult: selectSimilarResult(state, similarQuery),
         expandQuery,
         expandResult: selectProfileExpandResult(state, expandQuery),
+        itemsQuery,
+        itemsResult: selectEntitySetItemsResult(state, itemsQuery),
     };
 };
 
@@ -75,6 +84,7 @@ const mapDispatchToProps = {
     queryEntities,
     querySimilar,
     queryProfileExpand,
+    queryEntitySetItems,
     fetchProfile,
     fetchProfileTags,
 };

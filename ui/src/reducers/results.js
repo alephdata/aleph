@@ -15,6 +15,7 @@ import {
   queryProfileExpand,
   queryNotifications,
   queryCollectionXref,
+  queryEntitySetItems,
 } from 'actions';
 
 const initialState = {};
@@ -60,6 +61,12 @@ export default createReducer({
     error, args: { query },
   }) => resultLoadError(state, query, error),
   [queryEntitySets.COMPLETE]: updateResultIds,
+
+  [queryEntitySetItems.START]: (state, { query }) => resultLoadStart(state, query),
+  [queryEntitySetItems.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+  [queryEntitySetItems.COMPLETE]: updateResultIds,
 
   [queryCollectionXref.COMPLETE]: updateResults,
   [queryCollectionXref.START]: (state, { query }) => resultLoadStart(state, query),
