@@ -74,7 +74,7 @@ class ProfileScreen extends Component {
     if (profile.isError) {
       return <ErrorScreen error={profile.error} />;
     }
-    if (profile.isPending || profile.shouldLoad) {
+    if (!profile?.id || !profile?.merged) {
       return <LoadingScreen />;
     }
 

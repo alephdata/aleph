@@ -42,8 +42,11 @@ export const entitySetAddEntity = asyncActionCreator(({ entity, entitySetId, syn
 
 export const queryEntitySetItems = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITYSET_ITEMS' });
 
-export const updateEntitySetItem = asyncActionCreator(({ entityId, entitySetId, judgement }) => async () => {
+const updateEntitySetItem = ({ entityId, entitySetId, judgement }) => async () => {
   const payload = { "entity_id": entityId, "judgement": judgement };
   const response = await endpoint.post(`entitysets/${entitySetId}/items`, payload);
   return { data: response.data };
-}, { name: 'UPDATE_ENTITYSET_ITEM' });
+};
+
+export const updateEntitySetItemMutate = asyncActionCreator(updateEntitySetItem, { name: 'UPDATE_ESI_MUTATE' });
+export const updateEntitySetItemNoMutate = asyncActionCreator(updateEntitySetItem, { name: 'UPDATE_ESI_NO_MUTATE' });

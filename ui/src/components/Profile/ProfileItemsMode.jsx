@@ -10,7 +10,7 @@ import {
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySetItemsQuery } from 'queries';
-import { updateEntitySetItem } from 'actions';
+import { updateEntitySetItemMutate } from 'actions';
 import { showWarningToast } from 'app/toast';
 
 
@@ -22,7 +22,7 @@ class ProfileItemsMode extends Component {
 
   async onDecide(obj) {
     try {
-      await this.props.updateEntitySetItem({
+      await this.props.updateEntitySetItemMutate({
         judgement: obj.judgement,
         entitySetId: this.props.profile.id,
         entityId: obj.entity.id,
@@ -92,7 +92,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-ProfileItemsMode = connect(mapStateToProps, { updateEntitySetItem })(ProfileItemsMode);
+ProfileItemsMode = connect(mapStateToProps, { updateEntitySetItemMutate })(ProfileItemsMode);
 ProfileItemsMode = withRouter(ProfileItemsMode);
 ProfileItemsMode = injectIntl(ProfileItemsMode);
 export default ProfileItemsMode;

@@ -38,7 +38,7 @@ class ProfileViews extends React.Component {
     const {
       activeMode, profile, references, items, similar, reference, referenceQuery
     } = this.props;
-    if (references.isPending) {
+    if (references.total === undefined) {
       return <SectionLoading />;
     }
 
@@ -53,7 +53,7 @@ class ProfileViews extends React.Component {
         <Tab
           id="items"
           title={(
-            <TextLoading loading={items.isPending}>
+            <TextLoading loading={items.total === undefined}>
               <Icon icon="layers" className="left-icon" />
               <FormattedMessage id="profile.info.items" defaultMessage="Profile" />
               <ResultCount result={items} />
@@ -64,8 +64,8 @@ class ProfileViews extends React.Component {
         <Tab
           id="similar"
           title={(
-            <TextLoading loading={similar.isPending}>
-              <Icon icon="similar" className="left-icon" />
+            <TextLoading loading={similar.total === undefined}>
+              <Icon icon="layer-outline" className="left-icon" />
               <FormattedMessage id="profile.info.similar" defaultMessage="Suggested" />
               <ResultCount result={similar} />
             </TextLoading>
