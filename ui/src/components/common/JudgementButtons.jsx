@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent, Tooltip, Position } from '@blueprintjs/core';
 
+import './JudgementButtons.scss';
+
 const messages = defineMessages({
     positive: {
         id: 'judgement.positive',

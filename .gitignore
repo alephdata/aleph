@@ -27,6 +27,7 @@ npm-debug.log*
 .idea/
 ui/.idea/
 node_modules/*
+.eslintcache
 
 # C extensions
 *.so
