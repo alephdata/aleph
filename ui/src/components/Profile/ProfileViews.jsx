@@ -13,7 +13,7 @@ import {
   selectProfileReferences, selectProfileReference, selectProfileTags, selectEntitySetItemsResult, selectSimilarResult,
 } from 'selectors';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
-import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
+import ProfileSimilarMode from 'components/Profile/ProfileSimilarMode';
 import ProfileItemsMode from './ProfileItemsMode';
 
 
@@ -36,7 +36,7 @@ class ProfileViews extends React.Component {
 
   render() {
     const {
-      activeMode, profile, references, items, reference, referenceQuery
+      activeMode, profile, references, items, similar, reference, referenceQuery
     } = this.props;
     if (references.isPending) {
       return <SectionLoading />;
@@ -54,12 +54,23 @@ class ProfileViews extends React.Component {
           id="items"
           title={(
             <TextLoading loading={items.isPending}>
-              <Icon icon="similar" className="left-icon" />
-              <FormattedMessage id="profile.info.items" defaultMessage="Profile entities" />
+              <Icon icon="layers" className="left-icon" />
+              <FormattedMessage id="profile.info.items" defaultMessage="Profile" />
               <ResultCount result={items} />
             </TextLoading>
           )}
           panel={<ProfileItemsMode profile={profile} />}
+        />
+        <Tab
+          id="similar"
+          title={(
+            <TextLoading loading={similar.isPending}>
+              <Icon icon="similar" className="left-icon" />
+              <FormattedMessage id="profile.info.similar" defaultMessage="Suggested" />
+              <ResultCount result={similar} />
+            </TextLoading>
+          )}
+          panel={<ProfileSimilarMode profile={profile} />}
         />
         {references.results.map(ref => (
           <Tab

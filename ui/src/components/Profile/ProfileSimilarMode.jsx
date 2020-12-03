@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
 
-import { selectEntitySetItemsResult } from 'selectors';
+import { selectSimilarResult } from 'selectors';
 import {
-  JudgementButtons, Collection,
+  QueryInfiniteLoad, JudgementButtons, Score, Collection,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
-import { entitySetItemsQuery } from 'queries';
-import { updateEntitySetItem } from 'actions';
+import { profileSimilarQuery } from 'queries';
+import { querySimilar, updateEntitySetItem } from 'actions';
 import { showWarningToast } from 'app/toast';
 
 
@@ -41,6 +41,9 @@ class ProfileItemsMode extends Component {
         <td className="entity bordered">
           <EntityCompare entity={item.entity} other={this.props.profile.merged} />
         </td>
+        <td className="numeric narrow">
+          <Score score={item.score} />
+        </td>
         <td className="collection">
           <Collection.Link collection={item.entity.collection} icon />
         </td>
@@ -49,9 +52,19 @@ class ProfileItemsMode extends Component {
   }
 
   render() {
-    const { result } = this.props;
+    const { query, result } = this.props;
+    if (result.total === 0) {
+      return (
+        <Callout icon="snowflake" intent="primary">
+          <FormattedMessage
+            id="profile.similar.no_results"
+            defaultMessage="No suggested additions for this profile were found."
+          />
+        </Callout>
+      );
+    }
     return (
-      <div className="ProfileItemsMode">
+      <div className="ProfileSimilarMode">
         <table className="data-table">
           <thead>
             <tr>
@@ -59,8 +72,16 @@ class ProfileItemsMode extends Component {
               <th>
                 <span className="value">
                   <FormattedMessage
-                    id="profile.items.entity"
-                    defaultMessage="Part of this profile"
+                    id="entity.similar.entity"
+                    defaultMessage="Similar entity"
+                  />
+                </span>
+              </th>
+              <th className="numeric narrow">
+                <span className="value">
+                  <FormattedMessage
+                    id="xref.score"
+                    defaultMessage="Score"
                   />
                 </span>
               </th>
@@ -78,6 +99,11 @@ class ProfileItemsMode extends Component {
             {result.results?.map(res => this.renderRow(res))}
           </tbody>
         </table>
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={this.props.querySimilar}
+        />
       </div>
     );
   }
@@ -85,14 +111,14 @@ class ProfileItemsMode extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { profile, location } = ownProps;
-  const query = entitySetItemsQuery(location, profile.id);
+  const query = profileSimilarQuery(location, profile.id);
   return {
     query,
-    result: selectEntitySetItemsResult(state, query)
+    result: selectSimilarResult(state, query),
   };
 };
 
-ProfileItemsMode = connect(mapStateToProps, { updateEntitySetItem })(ProfileItemsMode);
+ProfileItemsMode = connect(mapStateToProps, { querySimilar, updateEntitySetItem })(ProfileItemsMode);
 ProfileItemsMode = withRouter(ProfileItemsMode);
 ProfileItemsMode = injectIntl(ProfileItemsMode);
 export default ProfileItemsMode;

@@ -144,6 +144,7 @@ class EntityViews extends React.Component {
                 mode={activeMode}
                 query={referenceQuery}
                 reference={reference}
+                hideCollection={true}
               />
             }
           />

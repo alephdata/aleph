@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { Waypoint } from 'react-waypoint';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -13,11 +12,12 @@ import {
   selectEntitiesResult, selectSchema,
 } from 'selectors';
 import {
-  Entity, ErrorSection, Property, SectionLoading,
+  Entity, ErrorSection, Property, SectionLoading, QueryInfiniteLoad
 } from 'components/common';
 import EntityProperties from 'components/Entity/EntityProperties';
 import ensureArray from 'util/ensureArray';
 import { queryEntities } from 'actions/index';
+import Collection from 'components/common/Collection';
 
 const messages = defineMessages({
   no_relationships: {
@@ -28,18 +28,6 @@ const messages = defineMessages({
 
 
 class EntityReferencesMode extends React.Component {
-  constructor(props) {
-    super(props);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
 
   onExpand(entity) {
     const { expandedId, parsedHash, history, location } = this.props;
@@ -49,20 +37,6 @@ class EntityReferencesMode extends React.Component {
       search: location.search,
       hash: queryString.stringify(parsedHash),
     });
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryEntities({ query, next: result.next });
-    }
-  }
-
-  fetchIfNeeded() {
-    const { reference, query, result } = this.props;
-    if (reference && result.shouldLoad) {
-      this.props.queryEntities({ query });
-    }
   }
 
   renderCell(prop, entity) {
@@ -79,7 +53,7 @@ class EntityReferencesMode extends React.Component {
   }
 
   renderRow(columns, entity) {
-    const { isThing, expandedId } = this.props;
+    const { isThing, expandedId, hideCollection } = this.props;
     const isExpanded = entity.id === expandedId;
     const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
     const mainRow = (
@@ -90,16 +64,22 @@ class EntityReferencesMode extends React.Component {
           </td>
         )}
         {columns.map(prop => this.renderCell(prop, entity))}
+        { !hideCollection && (
+          <td key={entity.collection?.id}>
+            <Collection.Link collection={entity.collection} />
+          </td>
+        )}
       </tr>
     );
     if (!isExpanded) {
       return mainRow;
     }
+    const colSpan = hideCollection ? columns.length : columns.length + 1;
     return [
       mainRow,
       <tr key={`${entity.id}-expanded`}>
         <td />
-        <td colSpan={columns.length}>
+        <td colSpan={colSpan}>
           <EntityProperties entity={entity} />
         </td>
       </tr>,
@@ -108,7 +88,7 @@ class EntityReferencesMode extends React.Component {
 
   render() {
     const {
-      intl, reference, result, schema, isThing,
+      intl, reference, query, result, schema, isThing, hideCollection
     } = this.props;
 
     if (!reference) {
@@ -130,16 +110,24 @@ class EntityReferencesMode extends React.Component {
                   <Property.Name prop={prop} />
                 </th>
               ))}
+              {!hideCollection && (
+                <th>
+                  <FormattedMessage
+                    id="xref.match_collection"
+                    defaultMessage="Dataset"
+                  />
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {results.map(entity => this.renderRow(columns, entity))}
           </tbody>
         </table>
-        <Waypoint
-          onEnter={this.getMoreResults}
-          bottomOffset="-300px"
-          scrollableAncestor={window}
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={this.props.queryEntities}
         />
         { result.isPending && (
           <SectionLoading />

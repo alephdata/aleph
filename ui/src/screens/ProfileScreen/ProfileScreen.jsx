@@ -1,22 +1,72 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import queryString from 'query-string';
-import { ButtonGroup } from '@blueprintjs/core';
-
-import Screen from 'components/Screen/Screen';
-import ProfileContextLoader from 'components/Profile/ProfileContextLoader';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import queryString from 'query-string';
+
+import Screen from 'components/Screen/Screen';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityInfoMode from 'components/Entity/EntityInfoMode';
 import ProfileViews from 'components/Profile/ProfileViews';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { Breadcrumbs, DualPane } from 'components/common';
-import { selectProfile, selectProfileView } from 'selectors';
+
+import {
+  fetchProfile,
+  fetchProfileTags,
+  queryEntities,
+  querySimilar,
+  queryProfileExpand,
+  queryEntitySetItems,
+} from 'actions';
+import {
+  selectProfile,
+  selectProfileView,
+  selectProfileTags,
+  selectSimilarResult,
+  selectProfileExpandResult,
+  selectEntitySetItemsResult,
+} from 'selectors';
+import { profileSimilarQuery, profileReferencesQuery, entitySetItemsQuery } from 'queries';
 
 
 class ProfileScreen extends Component {
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { profileId, profile, tagsResult } = this.props;
+
+    const loadDeep = !profile?.merged?.id && !profile.isPending;
+    if (profile.shouldLoad || loadDeep) {
+      this.props.fetchProfile({ id: profileId });
+    }
+
+    if (tagsResult.shouldLoad) {
+      this.props.fetchProfileTags({ id: profileId });
+    }
+
+    const { expandQuery, expandResult } = this.props;
+    if (expandResult.shouldLoad) {
+      this.props.queryProfileExpand({ query: expandQuery });
+    }
+
+    const { similarQuery, similarResult } = this.props;
+    if (similarResult.shouldLoad) {
+      this.props.querySimilar({ query: similarQuery });
+    }
+
+    const { itemsQuery, itemsResult } = this.props;
+    if (itemsResult.shouldLoad) {
+      this.props.queryEntitySetItems({ query: itemsQuery });
+    }
+  }
 
   render() {
     const { profile, profileId, activeMode } = this.props;
@@ -25,11 +75,7 @@ class ProfileScreen extends Component {
       return <ErrorScreen error={profile.error} />;
     }
     if (profile.isPending || profile.shouldLoad) {
-      return (
-        <ProfileContextLoader profileId={profileId}>
-          <LoadingScreen />
-        </ProfileContextLoader>
-      );
+      return <LoadingScreen />;
     }
 
     const breadcrumbs = (
@@ -40,24 +86,22 @@ class ProfileScreen extends Component {
     );
 
     return (
-      <ProfileContextLoader profileId={profileId}>
-        <Screen title={profile.label}>
-          {breadcrumbs}
-          <DualPane>
-            <DualPane.SidePane className="ItemOverview">
-              <div className="ItemOverview__heading">
-                <EntityHeading entity={profile.merged} isPreview={false} />
-              </div>
-              <div className="ItemOverview__content">
-                <EntityInfoMode entity={profile.merged} isPreview={false} />
-              </div>
-            </DualPane.SidePane>
-            <DualPane.ContentPane>
-              <ProfileViews profile={profile} activeMode={activeMode} />
-            </DualPane.ContentPane>
-          </DualPane>
-        </Screen>
-      </ProfileContextLoader>
+      <Screen title={profile.label}>
+        {breadcrumbs}
+        <DualPane>
+          <DualPane.SidePane className="ItemOverview">
+            <div className="ItemOverview__heading">
+              <EntityHeading entity={profile.merged} isPreview={false} />
+            </div>
+            <div className="ItemOverview__content">
+              <EntityInfoMode entity={profile.merged} isPreview={false} />
+            </div>
+          </DualPane.SidePane>
+          <DualPane.ContentPane>
+            <ProfileViews profile={profile} activeMode={activeMode} />
+          </DualPane.ContentPane>
+        </DualPane>
+      </Screen>
     );
   }
 }
@@ -66,14 +110,33 @@ const mapStateToProps = (state, ownProps) => {
   const { profileId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+  const similarQuery = profileSimilarQuery(location, profileId);
+  const expandQuery = profileReferencesQuery(profileId);
+  const itemsQuery = entitySetItemsQuery(location, profileId);
   return {
     profile: selectProfile(state, profileId),
     profileId,
-    activeMode: selectProfileView(state, profileId, hashQuery.mode)
+    activeMode: selectProfileView(state, profileId, hashQuery.mode),
+    tagsResult: selectProfileTags(state, profileId),
+    similarQuery,
+    similarResult: selectSimilarResult(state, similarQuery),
+    expandQuery,
+    expandResult: selectProfileExpandResult(state, expandQuery),
+    itemsQuery,
+    itemsResult: selectEntitySetItemsResult(state, itemsQuery),
   };
+};
+
+const mapDispatchToProps = {
+  queryEntities,
+  querySimilar,
+  queryProfileExpand,
+  queryEntitySetItems,
+  fetchProfile,
+  fetchProfileTags,
 };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )(ProfileScreen);
