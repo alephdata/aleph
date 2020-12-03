@@ -29,13 +29,12 @@ class EntitySimilarMode extends Component {
   }
 
   async onDecide(obj) {
-    const xref = {
-      judgement: obj.judgement,
-      entity: this.props.entity,
-      match: obj.entity,
-    }
     try {
-      await this.props.pairwiseJudgement(xref);
+      await this.props.pairwiseJudgement({
+        judgement: obj.judgement,
+        entity: this.props.entity,
+        match: obj.entity
+      });
     } catch (e) {
       showWarningToast(e.message);
     }

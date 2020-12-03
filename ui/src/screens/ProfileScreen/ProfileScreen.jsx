@@ -13,7 +13,6 @@ import ProfileViews from 'components/Profile/ProfileViews';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { Breadcrumbs, DualPane } from 'components/common';
-import { DownloadButton } from 'components/Toolbar';
 import { selectProfile, selectProfileView } from 'selectors';
 
 
@@ -33,14 +32,8 @@ class ProfileScreen extends Component {
       );
     }
 
-    const operation = (
-      <ButtonGroup>
-        <DownloadButton document={profile.merged} />
-      </ButtonGroup>
-    );
-
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs>
         <Breadcrumbs.Collection collection={profile.collection} />
         <Breadcrumbs.EntitySet key="profile" entitySet={profile} />
       </Breadcrumbs>

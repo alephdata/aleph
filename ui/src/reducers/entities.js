@@ -23,7 +23,7 @@ function nestedEntityObjects(state, result) {
   if (result.results && result.results.length) {
     result.results.forEach(result => {
       if (result.entity?.id) {
-        result.entityId = result.entity.id;
+        result.entityId = result.entity.id || result.entity_id;
         result.entity.collection = result.entity.collection || result.collection;
         state[result.entityId] = loadComplete(result.entity);
       }

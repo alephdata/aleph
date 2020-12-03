@@ -157,7 +157,7 @@ export function selectEntitySet(state, entitySetId) {
 
 export function selectEntitySetItem(state, itemId) {
   const item = selectObject(state, state.entitySetItems, itemId);
-  item.entity = selectEntity(state, item.entityId);
+  item.entity = selectEntity(state, item.entityId || item.entity?.id);
   return item;
 }
 
