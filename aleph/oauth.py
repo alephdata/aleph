@@ -44,6 +44,9 @@ def _get_groups(provider, oauth_token, id_token):
 
     # Amazon Cognito
     groups.extend(access_token.get("cognito:groups", []))
+    
+    # Okta
+    groups.extend(id_token.get("groups", []));
 
     # ADFS
     groups.append(id_token.get("group"))

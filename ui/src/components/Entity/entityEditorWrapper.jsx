@@ -5,7 +5,6 @@ import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
 import { entityExpandQuery, queryEntitySuggest } from 'queries';
-import { processApiEntity } from 'components/EntitySet/util';
 import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
 import {
   createEntity,
@@ -38,7 +37,7 @@ const entityEditorWrapper = (EditorComponent) => {
         this.entityManager = new EntityManager(config);
 
         if (entities) {
-          const processedEntities = entities.map(processApiEntity);
+          const processedEntities = entities.map(e => e.clone());
           this.entityManager.addEntities(processedEntities);
         }
         this.pendingPromises = [];

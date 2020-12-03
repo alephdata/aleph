@@ -111,12 +111,20 @@ export class DocumentManager extends Component {
     const canMap = selection.length === 1 && selection[0].schema.isA('Table');
 
     const emptyComponent = (
-      // eslint-disable-next-line
-      <div className="DocumentManager__content__empty" onClick={this.toggleUpload}>
-        <ErrorSection
-          icon={canUpload ? 'plus' : 'folder-open'}
-          title={intl.formatMessage(canUpload ? messages.emptyCanUpload : messages.empty)}
-        />
+      <div className="DocumentManager__content__empty">
+        <DialogToggleButton
+          buttonProps={{
+            minimal: true,
+            fill: true,
+          }}
+          Dialog={DocumentUploadDialog}
+          dialogProps={{ collection, parent: document }}
+        >
+          <ErrorSection
+            icon={canUpload ? 'plus' : 'folder-open'}
+            title={intl.formatMessage(canUpload ? messages.emptyCanUpload : messages.empty)}
+          />
+        </DialogToggleButton>
       </div>
     );
 
