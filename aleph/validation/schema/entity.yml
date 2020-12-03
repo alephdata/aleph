@@ -135,3 +135,27 @@ EntityExpand:
       type: array
       items:
         $ref: "#/components/schemas/Entity"
+
+Similar:
+  type: object
+  properties:
+    judgement:
+      type: string
+      allOf:
+        - $ref: "#/components/schemas/Judgement"
+    score:
+      type: number
+    entity:
+      type: object
+      items:
+        $ref: "#/components/schemas/Entity"
+
+SimilarResponse:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/QueryResponse"
+  properties:
+    results:
+      items:
+        $ref: "#/components/schemas/Similar"
+      type: array

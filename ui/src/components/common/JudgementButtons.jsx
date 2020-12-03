@@ -3,7 +3,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent, Tooltip, Position } from '@blueprintjs/core';
 
 import './JudgementButtons.scss';
-import { isObject } from 'lodash';
 
 const messages = defineMessages({
     positive: {

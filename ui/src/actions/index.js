@@ -27,6 +27,7 @@ export {
   fetchEntity,
   fetchEntityTags,
   queryEntities,
+  querySimilar,
   queryEntityExpand,
   updateEntity,
 } from './entityActions';

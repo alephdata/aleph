@@ -24,9 +24,11 @@ function selectResult(state, query, expand) {
     results: [],
     ...selectObject(state, state.results, query.toKey()),
   };
-  result.results = result.results
-    .map(id => expand(state, id))
-    .filter((r) => r.id !== undefined);
+  if (expand) {
+    result.results = result.results
+      .map(id => expand(state, id))
+      .filter((r) => r.id !== undefined);
+  }
   return result;
 }
 
@@ -127,22 +129,25 @@ export function selectCollection(state, collectionId) {
 
 export function selectEntity(state, entityId) {
   const entity = selectObject(state, state.entities, entityId);
-  const model = selectModel(state);
-  const hasModel = entity.schema !== undefined && model !== undefined;
-  const result = hasModel ? model.getEntity(entity) : {};
+  if (!entity.selectorCache) {
+    const model = selectModel(state);
+    if (!entity.schema || !model) {
+      return entity;
+    }
+    entity.selectorCache = model.getEntity(entity);
+  }
+  const result = entity.selectorCache;
+  result.safeHtml = entity.safeHtml;
+  result.collection = entity.collection;
+  result.highlight = entity.highlight;
+  result.latinized = entity.latinized;
   result.isPending = !!entity.isPending;
   result.isError = !!entity.isError;
   result.shouldLoad = !!entity.shouldLoad;
   result.shallow = !!entity.shallow;
   result.error = entity.error;
   result.links = entity.links;
-  result.safeHtml = entity.safeHtml;
-  result.collection = entity.collection;
-  result.highlight = entity.highlight;
-  result.latinized = entity.latinized;
   result.profileId = entity.profile_id;
-  result.score = entity.score;
-  result.judgement = entity.judgement;
   return result;
 }
 
@@ -315,11 +320,18 @@ export function selectCollectionXref(state, xrefId) {
 }
 
 export function selectCollectionXrefResult(state, query) {
-  const model = selectModel(state);
-  const result = selectResult(state, query, (stateInner, id) => stateInner.collectionXref[id]);
+  const result = selectResult(state, query, undefined);
   result.results.forEach((xref) => {
-    xref.match = model.getEntity(xref.match);
-    xref.entity = model.getEntity(xref.entity);
+    xref.match = selectEntity(state, xref.matchId);
+    xref.entity = selectEntity(state, xref.entityId);
+  });
+  return result;
+}
+
+export function selectSimilarResult(state, query) {
+  const result = selectResult(state, query, undefined);
+  result.results.forEach((obj) => {
+    obj.entity = selectEntity(state, obj.entityId);
   });
   return result;
 }

@@ -4,8 +4,8 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
 
-import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
+import { querySimilar } from 'actions';
+import { selectSimilarResult } from 'selectors';
 import {
   ErrorSection, QueryInfiniteLoad, JudgementButtons, Score, Collection,
 } from 'components/common';
@@ -23,6 +23,20 @@ const messages = defineMessages({
 class EntitySimilarMode extends Component {
   constructor(props) {
     super(props);
+    this.onDecide = this.onDecide.bind(this);
+  }
+
+  async onDecide(obj) {
+    const xref = {
+      judgement: obj.judgement,
+      entity: this.props.entity,
+      match: obj.entity,
+    }
+    try {
+      await this.props.pairwiseJudgement(xref);
+    } catch (e) {
+      showWarningToast(e.message);
+    }
   }
 
   renderSummary() {
@@ -86,18 +100,18 @@ class EntitySimilarMode extends Component {
 
   renderRow(similar) {
     return (
-      <tr key={similar.id}>
+      <tr key={similar.entity.id}>
         <td className="numeric narrow">
           <JudgementButtons obj={similar} onChange={this.onDecide} />
         </td>
         <td className="entity bordered">
-          <EntityCompare entity={similar} other={this.props.entity} />
+          <EntityCompare entity={similar.entity} other={this.props.entity} />
         </td>
         <td className="numeric narrow">
           <Score score={similar.score} />
         </td>
         <td className="collection">
-          <Collection.Link preview collection={similar.collection} icon />
+          <Collection.Link collection={similar.entity.collection} icon />
         </td>
       </tr>
     );
@@ -113,7 +127,6 @@ class EntitySimilarMode extends Component {
       />
     }
 
-    console.log("Result", result);
     return (
       <div className="EntitySimilarMode">
         {this.renderSummary()}
@@ -126,7 +139,7 @@ class EntitySimilarMode extends Component {
         <QueryInfiniteLoad
           query={query}
           result={result}
-          fetch={this.props.queryEntities}
+          fetch={this.props.querySimilar}
         />
       </div>
     );
@@ -136,11 +149,11 @@ class EntitySimilarMode extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
   const query = entitySimilarQuery(location, entity.id);
-  const result = selectEntitiesResult(state, query);
+  const result = selectSimilarResult(state, query);
   return { query, result };
 };
 
-EntitySimilarMode = connect(mapStateToProps, { queryEntities })(EntitySimilarMode);
+EntitySimilarMode = connect(mapStateToProps, { querySimilar })(EntitySimilarMode);
 EntitySimilarMode = withRouter(EntitySimilarMode);
 EntitySimilarMode = injectIntl(EntitySimilarMode);
 export default EntitySimilarMode;

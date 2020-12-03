@@ -3,7 +3,6 @@ from banal import ensure_dict
 from pprint import pformat  # noqa
 from flask_babel import gettext
 from followthemoney import model
-from followthemoney.graph import Node
 from followthemoney.types import registry
 from followthemoney.helpers import inline_names
 from followthemoney.exc import InvalidData
@@ -14,11 +13,9 @@ from aleph.index import entities as index
 from aleph.queues import queue_task, OP_UPDATE_ENTITY, OP_PRUNE_ENTITY
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import MODEL_ORIGIN, refresh_collection
-from aleph.logic.xref import xref_entity
 from aleph.logic.util import latin_alt
 from aleph.index import xref as xref_index
 from aleph.logic.aggregator import get_aggregator
-from aleph.logic.graph import Graph
 
 log = logging.getLogger(__name__)
 
@@ -68,6 +65,8 @@ def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
 
 def update_entity(collection, entity_id=None, job_id=None):
     """Update xref and aggregator after an entity has been edited."""
+    from aleph.logic.xref import xref_entity
+
     log.info("[%s] Prune entity: %s", collection, entity_id)
     entity = index.get_entity(entity_id)
     proxy = model.get_proxy(entity)

@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
 import {
-  resultLoadStart, resultLoadError, updateResults, updateExpandResults,
+  resultLoadStart, resultLoadError, updateResultIds, updateResults,
 } from 'reducers/util';
 
 import {
@@ -10,6 +10,7 @@ import {
   queryEntitySetEntities,
   queryRoles,
   queryEntities,
+  querySimilar,
   queryEntityExpand,
   queryProfileExpand,
   queryNotifications,
@@ -22,38 +23,43 @@ export default createReducer({
   [queryCollections.START]: (state, { query }) => resultLoadStart(state, query),
   [queryCollections.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryCollections.COMPLETE]: updateResults,
+  [queryCollections.COMPLETE]: updateResultIds,
 
   [queryEntities.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntities.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryEntities.COMPLETE]: updateResults,
+  [queryEntities.COMPLETE]: updateResultIds,
+
+  [querySimilar.START]: (state, { query }) => resultLoadStart(state, query),
+  [querySimilar.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
+  [querySimilar.COMPLETE]: updateResults,
 
   [queryEntityExpand.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntityExpand.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryEntityExpand.COMPLETE]: updateExpandResults,
+  [queryEntityExpand.COMPLETE]: updateResults,
 
   [queryProfileExpand.START]: (state, { query }) => resultLoadStart(state, query),
   [queryProfileExpand.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryProfileExpand.COMPLETE]: updateExpandResults,
+  [queryProfileExpand.COMPLETE]: updateResults,
 
   [queryNotifications.START]: (state, { query }) => resultLoadStart(state, query),
   [queryNotifications.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryNotifications.COMPLETE]: updateResults,
+  [queryNotifications.COMPLETE]: updateResultIds,
 
   [queryEntitySetEntities.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntitySetEntities.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryEntitySetEntities.COMPLETE]: updateResults,
+  [queryEntitySetEntities.COMPLETE]: updateResultIds,
 
   [queryEntitySets.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntitySets.ERROR]: (state, {
     error, args: { query },
   }) => resultLoadError(state, query, error),
-  [queryEntitySets.COMPLETE]: updateResults,
+  [queryEntitySets.COMPLETE]: updateResultIds,
 
   [queryCollectionXref.COMPLETE]: updateResults,
   [queryCollectionXref.START]: (state, { query }) => resultLoadStart(state, query),
@@ -61,7 +67,7 @@ export default createReducer({
     error, args: { query },
   }) => resultLoadError(state, query, error),
 
-  [queryRoles.COMPLETE]: updateResults,
+  [queryRoles.COMPLETE]: updateResultIds,
   [queryRoles.START]: (state, { query }) => resultLoadStart(state, query),
   [queryRoles.ERROR]: (state, {
     error, args: { query },

@@ -12,7 +12,7 @@ import {
   entityReferenceQuery, entitySimilarQuery, queryFolderDocuments
 } from 'queries';
 import {
-  selectEntitiesResult, selectEntityReferences, selectEntityTags, selectEntityReference
+  selectEntitiesResult, selectEntityReferences, selectEntityTags, selectEntityReference, selectSimilarResult
 } from 'selectors';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'components/Entity/EntityTagsMode';
@@ -201,7 +201,7 @@ const mapStateToProps = (state, ownProps) => {
     references: selectEntityReferences(state, entity.id),
     referenceQuery: entityReferenceQuery(location, entity, reference),
     tags: selectEntityTags(state, entity.id),
-    similar: selectEntitiesResult(state, entitySimilarQuery(location, entity.id)),
+    similar: selectSimilarResult(state, entitySimilarQuery(location, entity.id)),
     children: selectEntitiesResult(state, childrenQuery),
   };
 };

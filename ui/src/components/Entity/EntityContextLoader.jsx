@@ -3,10 +3,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  fetchEntity, fetchEntityTags, queryEntities, queryEntityExpand,
+  fetchEntity, fetchEntityTags, queryEntities, querySimilar, queryEntityExpand,
 } from 'actions';
 import {
-  selectEntity, selectEntityTags, selectEntitiesResult, selectEntityExpandResult
+  selectEntity, selectEntityTags, selectEntitiesResult, selectSimilarResult, selectEntityExpandResult
 } from 'selectors';
 import { entitySimilarQuery, queryFolderDocuments, entityReferencesQuery } from 'queries';
 
@@ -39,7 +39,7 @@ class EntityContextLoader extends PureComponent {
 
     const { similarQuery, similarResult } = this.props;
     if (entity?.schema?.matchable && similarResult.shouldLoad) {
-      this.props.queryEntities({ query: similarQuery });
+      this.props.querySimilar({ query: similarQuery });
     }
 
     const { childrenResult, childrenQuery } = this.props;
@@ -63,7 +63,7 @@ const mapStateToProps = (state, ownProps) => {
     entity: selectEntity(state, entityId),
     tagsResult: selectEntityTags(state, entityId),
     similarQuery,
-    similarResult: selectEntitiesResult(state, similarQuery),
+    similarResult: selectSimilarResult(state, similarQuery),
     expandQuery,
     expandResult: selectEntityExpandResult(state, expandQuery),
     childrenQuery,
@@ -73,6 +73,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   queryEntities,
+  querySimilar,
   queryEntityExpand,
   fetchEntity,
   fetchEntityTags,

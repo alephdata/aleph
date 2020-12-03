@@ -6,12 +6,14 @@ import {
     fetchProfile,
     fetchProfileTags,
     queryEntities,
+    querySimilar,
     queryProfileExpand,
 } from 'actions';
 import {
     selectProfile,
     selectProfileTags,
     selectEntitiesResult,
+    selectSimilarResult,
     selectProfileExpandResult,
 } from 'selectors';
 import { profileSimilarQuery, profileReferencesQuery } from 'queries';
@@ -45,7 +47,7 @@ class ProfileContextLoader extends PureComponent {
 
         const { similarQuery, similarResult } = this.props;
         if (similarResult.shouldLoad) {
-            this.props.queryEntities({ query: similarQuery });
+            this.props.querySimilar({ query: similarQuery });
         }
     }
 
@@ -63,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
         profile: selectProfile(state, profileId),
         tagsResult: selectProfileTags(state, profileId),
         similarQuery,
-        similarResult: selectEntitiesResult(state, similarQuery),
+        similarResult: selectSimilarResult(state, similarQuery),
         expandQuery,
         expandResult: selectProfileExpandResult(state, expandQuery),
     };
@@ -71,6 +73,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
     queryEntities,
+    querySimilar,
     queryProfileExpand,
     fetchProfile,
     fetchProfileTags,

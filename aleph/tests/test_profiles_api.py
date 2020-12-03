@@ -85,7 +85,7 @@ class ProfilesApiTestCase(TestCase):
         assert "Fifth" in merged.first("address"), merged.to_dict()
         assert not merged.has("email"), merged.to_dict()
         assert not merged.has("birthDate"), merged.to_dict()
-        assert len(res.json.get("items")) == 3, res.json.get("items")
+        assert len(res.json.get("entities")) == 2, res.json
 
         self.grant_publish(self.col3)
         res = self.client.get(url, headers=headers)
