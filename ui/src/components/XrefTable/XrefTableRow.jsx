@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormattedNumber } from 'react-intl';
 
 import {
-  Collection, Skeleton, JudgementButtons,
+  Collection, Skeleton, JudgementButtons, Score,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { showWarningToast } from 'app/toast';
@@ -66,7 +65,7 @@ class XrefTableRow extends Component {
           <EntityCompare entity={xref.match} other={xref.entity} />
         </td>
         <td className="numeric narrow">
-          <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
+          <Score score={xref.score} />
         </td>
         <td className="collection">
           <Collection.Link preview collection={xref.match_collection} icon />

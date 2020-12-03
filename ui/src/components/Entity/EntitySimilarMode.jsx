@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { Callout } from '@blueprintjs/core';
 
-import EntitySearch from 'components/EntitySearch/EntitySearch';
-import { ErrorSection } from 'components/common';
+import { queryEntities } from 'actions';
+import { selectEntitiesResult } from 'selectors';
+import {
+  ErrorSection, QueryInfiniteLoad, JudgementButtons, Score, Collection,
+} from 'components/common';
+import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySimilarQuery } from 'queries';
 
 const messages = defineMessages({
@@ -16,42 +21,126 @@ const messages = defineMessages({
 
 
 class EntitySimilarMode extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  renderSummary() {
+    const { result } = this.props;
+    if (result.isPending || result.total === 0
+      || !result.facets || !result.facets.collection_id) {
+      return null;
+    }
+
+    return (
+      <Callout icon={null} intent="primary">
+        <FormattedMessage
+          id="entity.similar.found_text"
+          defaultMessage={`Found {resultCount}
+            {resultCount, plural, one {similar entity} other {similar entities}}
+            from {datasetCount}
+            {datasetCount, plural, one {dataset} other {datasets}}
+          `}
+          values={{
+            resultCount: result.total,
+            datasetCount: result.facets.collection_id.total,
+          }}
+        />
+      </Callout>
+    );
+  }
+
+  renderHeader() {
+    return (
+      <thead>
+        <tr>
+          <th className="numeric narrow" />
+          <th>
+            <span className="value">
+              <FormattedMessage
+                id="entity.similar.entity"
+                defaultMessage="Similar entity"
+              />
+            </span>
+          </th>
+          <th className="numeric narrow">
+            <span className="value">
+              <FormattedMessage
+                id="xref.score"
+                defaultMessage="Score"
+              />
+            </span>
+          </th>
+          <th className="collection">
+            <span className="value">
+              <FormattedMessage
+                id="xref.match_collection"
+                defaultMessage="Dataset"
+              />
+            </span>
+          </th>
+        </tr>
+      </thead>
+    );
+  }
+
+  renderRow(similar) {
+    return (
+      <tr key={similar.id}>
+        <td className="numeric narrow">
+          <JudgementButtons obj={similar} onChange={this.onDecide} />
+        </td>
+        <td className="entity bordered">
+          <EntityCompare entity={similar} other={this.props.entity} />
+        </td>
+        <td className="numeric narrow">
+          <Score score={similar.score} />
+        </td>
+        <td className="collection">
+          <Collection.Link preview collection={similar.collection} icon />
+        </td>
+      </tr>
+    );
+  }
+
   render() {
-    const { intl } = this.props;
-    const emptyComponent = (
-      <ErrorSection
+    const { intl, query, result } = this.props;
+
+    if (result.total === 0) {
+      return <ErrorSection
         icon="snowflake"
         title={intl.formatMessage(messages.empty)}
       />
-    );
+    }
+
+    console.log("Result", result);
     return (
-      <EntitySearch
-        query={this.props.query}
-        emptyComponent={emptyComponent}
-        foundTextGenerator={
-          ({ resultCount, datasetCount }) => (
-            <FormattedMessage
-              id="entity.similar.found_text"
-              defaultMessage={`Found {resultCount}
-                {resultCount, plural, one {similar entity} other {similar entities}}
-                from {datasetCount}
-                {datasetCount, plural, one {dataset} other {datasets}}
-              `}
-              values={{ resultCount, datasetCount }}
-            />
-          )
-        }
-      />
+      <div className="EntitySimilarMode">
+        {this.renderSummary()}
+        <table className="data-table">
+          {this.renderHeader()}
+          <tbody>
+            {result.results?.map(res => this.renderRow(res))}
+          </tbody>
+        </table>
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={this.props.queryEntities}
+        />
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
-  return { query: entitySimilarQuery(location, entity.id) };
+  const query = entitySimilarQuery(location, entity.id);
+  const result = selectEntitiesResult(state, query);
+  return { query, result };
 };
 
-EntitySimilarMode = connect(mapStateToProps, {})(EntitySimilarMode);
+EntitySimilarMode = connect(mapStateToProps, { queryEntities })(EntitySimilarMode);
 EntitySimilarMode = withRouter(EntitySimilarMode);
 EntitySimilarMode = injectIntl(EntitySimilarMode);
 export default EntitySimilarMode;

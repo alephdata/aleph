@@ -140,7 +140,9 @@ export function selectEntity(state, entityId) {
   result.collection = entity.collection;
   result.highlight = entity.highlight;
   result.latinized = entity.latinized;
-  result.profileId = entity.profile_id
+  result.profileId = entity.profile_id;
+  result.score = entity.score;
+  result.judgement = entity.judgement;
   return result;
 }
 

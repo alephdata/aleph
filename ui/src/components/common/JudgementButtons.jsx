@@ -3,6 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent, Tooltip, Position } from '@blueprintjs/core';
 
 import './JudgementButtons.scss';
+import { isObject } from 'lodash';
 
 const messages = defineMessages({
     positive: {
@@ -36,28 +37,25 @@ class JudgementButtons extends Component {
     render() {
         const { obj, intl } = this.props;
         const { blocking } = this.state;
-
-        if (!obj.writeable) {
-            return null;
-        }
+        const disabled = blocking || !obj.writeable;
         return (
             <ButtonGroup className="JudgementButtons" vertical>
-                <Tooltip content={intl.formatMessage(messages.positive)} position={Position.RIGHT}>
+                <Tooltip content={intl.formatMessage(messages.positive)} position={Position.RIGHT} disabled={disabled}>
                     <Button icon="tick"
-                        disabled={blocking}
+                        disabled={disabled}
                         intent={obj.judgement === 'positive' ? Intent.SUCCESS : Intent.NONE}
                         active={obj.judgement === 'positive'}
                         onClick={(e) => this.onChange('positive')} />
                 </Tooltip>
-                <Tooltip content={intl.formatMessage(messages.unsure)} position={Position.RIGHT}>
+                <Tooltip content={intl.formatMessage(messages.unsure)} position={Position.RIGHT} disabled={disabled}>
                     <Button icon="help"
-                        disabled={blocking}
+                        disabled={disabled}
                         active={obj.judgement === 'unsure'}
                         onClick={(e) => this.onChange('unsure')} />
                 </Tooltip>
-                <Tooltip content={intl.formatMessage(messages.negative)} position={Position.RIGHT}>
+                <Tooltip content={intl.formatMessage(messages.negative)} position={Position.RIGHT} disabled={disabled}>
                     <Button icon="cross"
-                        disabled={blocking}
+                        disabled={disabled}
                         intent={obj.judgement === 'negative' ? Intent.DANGER : Intent.NONE}
                         active={obj.judgement === 'negative'}
                         onClick={(e) => this.onChange('negative')} />
