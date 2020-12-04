@@ -65,17 +65,16 @@ class MappingIndex extends Component {
       <div className="MappingIndex">
         <ul className="MappingIndex__items">
           {result.results && result.results.map(mapping => (
-            <li>
+            <li key={mapping.id}>
               <MappingIndexItem
-                key={mapping.id}
                 mapping={mapping}
                 link={mapping.table_id && `${getEntityLink(mapping.table_id)}#mode=mapping`}
               />
             </li>
           ))}
           {result.isPending && skeletonItems.map(item => (
-            <li>
-              <MappingIndexItem key={item} isPending />
+            <li key={item}>
+              <MappingIndexItem isPending />
             </li>
           ))}
         </ul>

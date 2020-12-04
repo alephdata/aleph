@@ -35,6 +35,12 @@ class CollectionMappingsMode extends React.Component {
 
     return (
       <div className="CollectionMappingsMode">
+        <h5 className="CollectionMappingsMode__title">
+          <FormattedMessage
+            id="collection.mappings.title"
+            defaultMessage="Entity mappings"
+          />
+        </h5>
         <div className="CollectionMappingsMode__description">
           <p>
             <FormattedMessage
@@ -63,7 +69,6 @@ class CollectionMappingsMode extends React.Component {
             />
           </p>
         </div>
-
         {collection.writeable && (
           <div className="CollectionMappingsMode__actions">
             <DialogToggleButton
