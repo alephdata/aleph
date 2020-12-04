@@ -1,6 +1,5 @@
 import logging
 import sys
-import uuid
 
 import structlog
 from structlog.contextvars import merge_contextvars, clear_contextvars, bind_contextvars
