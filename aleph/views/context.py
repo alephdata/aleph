@@ -191,7 +191,7 @@ def setup_logging_context(request):
         locale=getattr(request, "_app_locale", None),
         url=request.url,
         path=request.full_path,
-        request_trace_id=request._trace_id,
+        trace_id=request._trace_id,
     )
 
 

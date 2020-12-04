@@ -122,7 +122,7 @@ class AlephWorker(Worker):
             stage=task.stage.stage,
             dataset=task.job.dataset.name,
             start_time=time.time(),
-            task_trace_id=str(uuid.uuid4()),
+            trace_id=str(uuid.uuid4()),
         )
 
 
