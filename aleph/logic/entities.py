@@ -12,7 +12,8 @@ from aleph.model import Entity, Document, EntitySetItem, Mapping
 from aleph.index import entities as index
 from aleph.queues import queue_task, OP_UPDATE_ENTITY, OP_PRUNE_ENTITY
 from aleph.logic.notifications import flush_notifications
-from aleph.logic.collections import MODEL_ORIGIN, refresh_collection
+from aleph.logic.collections import index_aggregator, refresh_collection
+from aleph.logic.collections import MODEL_ORIGIN
 from aleph.logic.util import latin_alt
 from aleph.index import xref as xref_index
 from aleph.logic.aggregator import get_aggregator
@@ -66,11 +67,16 @@ def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
 def update_entity(collection, entity_id=None, job_id=None):
     """Update xref and aggregator after an entity has been edited."""
     from aleph.logic.xref import xref_entity
+    from aleph.logic.profiles import profile_fragments
 
     log.info("[%s] Prune entity: %s", collection, entity_id)
     entity = index.get_entity(entity_id)
     proxy = model.get_proxy(entity)
     xref_entity(collection, proxy)
+    aggregator = get_aggregator(collection)
+    profile_fragments(collection, aggregator, entity_id=entity_id)
+    index_aggregator(collection, aggregator, entity_ids=[entity_id])
+    aggregator.close()
 
 
 def validate_entity(data):
