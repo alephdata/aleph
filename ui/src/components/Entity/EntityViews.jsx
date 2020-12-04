@@ -166,8 +166,9 @@ class EntityViews extends React.Component {
         { isMatchable && (
           <Tab
             id="similar"
+            disabled={similar.total === 0}
             title={(
-              <TextLoading loading={similar.isPending}>
+              <TextLoading loading={similar.total === undefined}>
                 <Icon icon="similar" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
                 <ResultCount result={similar} />

@@ -5,7 +5,7 @@ import './EntityCompare.scss';
 
 class EntityCompare extends PureComponent {
 
-    getCommonProperties(entity, other) {
+    getCommonProperties(entity, other, showEmpty) {
         const properties = [...entity.schema.getFeaturedProperties()];
 
         other.schema.getFeaturedProperties().forEach((prop) => {
@@ -15,13 +15,13 @@ class EntityCompare extends PureComponent {
         });
 
         return properties.filter((prop) => {
-            return entity.hasProperty(prop) || other.hasProperty(prop);
+            return entity.hasProperty(prop) || (showEmpty && other.hasProperty(prop));
         });
     }
 
     render() {
-        const { entity, other } = this.props;
-        const properties = this.getCommonProperties(entity, other);
+        const { entity, other, showEmpty = false } = this.props;
+        const properties = this.getCommonProperties(entity, other, showEmpty);
 
         return (
             <>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup } from '@blueprintjs/core';
@@ -138,8 +138,14 @@ class EntityScreen extends Component {
 
   render() {
     const {
-      entity, entityId, activeMode, query, intl,
+      entity, entityId, query, intl, parsedHash,
     } = this.props;
+
+    if (entity.profileId && parsedHash.profile === undefined) {
+      parsedHash.via = entity.id;
+      const fragment = queryString.stringify(parsedHash);
+      return <Redirect to={`/profiles/${entity.profileId}#${fragment}`} />;
+    }
 
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
@@ -204,7 +210,7 @@ class EntityScreen extends Component {
             <DualPane.ContentPane>
               <EntityViews
                 entity={entity}
-                activeMode={activeMode}
+                activeMode={parsedHash.mode}
                 isPreview={false}
               />
             </DualPane.ContentPane>
@@ -219,9 +225,9 @@ const mapStateToProps = (state, ownProps) => {
   const { entityId } = ownProps.match.params;
   const { location } = ownProps;
   const entity = selectEntity(state, entityId);
-  const hashQuery = queryString.parse(location.hash);
-  const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
-  const reference = selectEntityReference(state, entityId, activeMode);
+  const parsedHash = queryString.parse(location.hash);
+  parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);
+  const reference = selectEntityReference(state, entityId, parsedHash.mode);
   const referenceQuery = entityReferenceQuery(location, entity, reference);
   const documentQuery = Query.fromLocation('entities', location, {}, 'document');
 
@@ -229,7 +235,7 @@ const mapStateToProps = (state, ownProps) => {
     entity,
     entityId,
     reference,
-    activeMode,
+    parsedHash,
     query: referenceQuery || documentQuery,
   };
 };

@@ -59,10 +59,10 @@ class XrefTableRow extends Component {
           <JudgementButtons obj={xref} onChange={this.onDecide} />
         </td>
         <td className="entity bordered">
-          <EntityCompare entity={xref.entity} other={xref.match} />
+          <EntityCompare entity={xref.entity} other={xref.match} showEmpty={true} />
         </td>
         <td className="entity">
-          <EntityCompare entity={xref.match} other={xref.entity} />
+          <EntityCompare entity={xref.match} other={xref.entity} showEmpty={true} />
         </td>
         <td className="numeric narrow">
           <Score score={xref.score} />

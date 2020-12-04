@@ -36,7 +36,7 @@ class ProfileViews extends React.Component {
 
   render() {
     const {
-      activeMode, profile, references, items, similar, reference, referenceQuery
+      activeMode, profile, references, items, similar, reference, referenceQuery, viaEntityId
     } = this.props;
     if (references.total === undefined) {
       return <SectionLoading />;
@@ -59,10 +59,16 @@ class ProfileViews extends React.Component {
               <ResultCount result={items} />
             </TextLoading>
           )}
-          panel={<ProfileItemsMode profile={profile} />}
+          panel={
+            <ProfileItemsMode
+              profile={profile}
+              viaEntityId={viaEntityId}
+            />
+          }
         />
         <Tab
           id="similar"
+          disabled={similar.total === 0}
           title={(
             <TextLoading loading={similar.total === undefined}>
               <Icon icon="layer-outline" className="left-icon" />

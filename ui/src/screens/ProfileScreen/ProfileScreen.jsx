@@ -69,7 +69,7 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    const { profile, profileId, activeMode } = this.props;
+    const { profile, viaEntityId, activeMode } = this.props;
 
     if (profile.isError) {
       return <ErrorScreen error={profile.error} />;
@@ -98,7 +98,11 @@ class ProfileScreen extends Component {
             </div>
           </DualPane.SidePane>
           <DualPane.ContentPane>
-            <ProfileViews profile={profile} activeMode={activeMode} />
+            <ProfileViews
+              profile={profile}
+              activeMode={activeMode}
+              viaEntityId={viaEntityId}
+            />
           </DualPane.ContentPane>
         </DualPane>
       </Screen>
@@ -109,14 +113,15 @@ class ProfileScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { profileId } = ownProps.match.params;
   const { location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
+  const parsedHash = queryString.parse(location.hash);
   const similarQuery = profileSimilarQuery(location, profileId);
   const expandQuery = profileReferencesQuery(profileId);
   const itemsQuery = entitySetItemsQuery(location, profileId);
   return {
     profile: selectProfile(state, profileId),
     profileId,
-    activeMode: selectProfileView(state, profileId, hashQuery.mode),
+    viaEntityId: parsedHash.via,
+    activeMode: selectProfileView(state, profileId, parsedHash.mode),
     tagsResult: selectProfileTags(state, profileId),
     similarQuery,
     similarResult: selectSimilarResult(state, similarQuery),

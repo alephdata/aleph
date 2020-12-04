@@ -38,7 +38,10 @@ function nestedEntityObjects(state, result) {
 
 function updateEntityProfile(state, entity, data) {
   if (state[entity.id] && data.profile_id) {
-    state[entity.id].profile_id = data.profile_id;
+    state[entity.id] = {
+      ...state[entity.id],
+      profile_id: data.profile_id
+    };
   }
   return state;
 }

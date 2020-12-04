@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
@@ -12,6 +13,10 @@ import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySetItemsQuery } from 'queries';
 import { updateEntitySetItemMutate } from 'actions';
 import { showWarningToast } from 'app/toast';
+import { Entity } from '@alephdata/react-ftm';
+import getEntityLink from 'util/getEntityLink';
+
+import './ProfileItemsMode.scss';
 
 
 class ProfileItemsMode extends Component {
@@ -49,9 +54,36 @@ class ProfileItemsMode extends Component {
   }
 
   render() {
-    const { result } = this.props;
+    const { profile, result, viaEntityId } = this.props;
     return (
       <div className="ProfileItemsMode">
+        <Callout intent="primary" className="ProfileItemsMode__callout">
+          <strong>
+            <FormattedMessage
+              id="profile.items.intro"
+              defaultMessage={"You're viewing {entity} as a profile. "}
+              values={{
+                entity: <Entity.Label entity={profile.merged} />,
+              }}
+            />
+          </strong>
+          <FormattedMessage
+            id="profile.items.intro"
+            defaultMessage={"The profile aggregates attributes and relationships from {count} entities across different datasets. You can select what source entities to include in the list below. "}
+            values={{
+              count: profile.entities.length,
+            }}
+          />
+          {viaEntityId && (
+            <FormattedMessage
+              id="profile.items.intro"
+              defaultMessage={"View the <link>original entity</link>."}
+              values={{
+                link: chunks => <Link to={getEntityLink(viaEntityId, false)}>{chunks}</Link >,
+              }}
+            />
+          )}
+        </Callout>
         <table className="data-table">
           <thead>
             <tr>
@@ -60,7 +92,7 @@ class ProfileItemsMode extends Component {
                 <span className="value">
                   <FormattedMessage
                     id="profile.items.entity"
-                    defaultMessage="Part of this profile"
+                    defaultMessage="Combined entities"
                   />
                 </span>
               </th>
@@ -78,7 +110,7 @@ class ProfileItemsMode extends Component {
             {result.results?.map(res => this.renderRow(res))}
           </tbody>
         </table>
-      </div>
+      </div >
     );
   }
 }
