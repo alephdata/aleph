@@ -8,8 +8,12 @@ import MappingIndex from 'components/MappingIndex/MappingIndex';
 class CollectionMappingsMode extends React.Component {
   render() {
     const { collection, query } = this.props;
-    return null;
-    // return <MappingIndex query={query} />;
+
+    return (
+      <div>
+        <MappingIndex query={query} />
+      </div>
+    );
   }
 }
 
