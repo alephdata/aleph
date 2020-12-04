@@ -155,6 +155,10 @@ export function selectEntitySet(state, entitySetId) {
   return selectObject(state, state.entitySets, entitySetId);
 }
 
+export function selectMappingsResult(state, query) {
+  return selectResult(state, query, selectEntityMapping);
+}
+
 export function selectProfile(state, entitySetId) {
   const profile = selectObject(state, state.entitySets, entitySetId);
   if (profile?.merged?.id && profile?.merged?.schema) {

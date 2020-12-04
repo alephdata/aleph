@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import { fetchEntityMapping, createEntityMapping, deleteEntityMapping, updateEntityMapping } from 'actions';
-import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete } from 'reducers/util';
+import { fetchEntityMapping, createEntityMapping, deleteEntityMapping, queryMappings, updateEntityMapping } from 'actions';
+import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects } from 'reducers/util';
 
 const initialState = {};
 
@@ -29,5 +29,7 @@ export default createReducer({
   [deleteEntityMapping.COMPLETE]: (state, {
     id,
   }) => objectDelete(state, id),
+
+  [queryMappings.COMPLETE]: (state, { result }) => resultObjects(state, result),
 
 }, initialState);
