@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -12,9 +12,11 @@ import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDia
 import { DialogToggleButton } from 'components/Toolbar';
 import MappingIndex from 'components/MappingIndex/MappingIndex';
 
+import './CollectionMappingsMode.scss';
+
 const messages = defineMessages({
   create: {
-    id: 'mappings.create',
+    id: 'collection.mappings.create',
     defaultMessage: 'Create a new entity mapping',
   },
 });
@@ -32,9 +34,38 @@ class CollectionMappingsMode extends React.Component {
     const { collection, intl, query } = this.props;
 
     return (
-      <div>
+      <div className="CollectionMappingsMode">
+        <div className="CollectionMappingsMode__description">
+          <p>
+            <FormattedMessage
+              id="collection.mappings.create_description"
+              defaultMessage="Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document."
+            />
+          </p>
+          <p>
+            <FormattedMessage
+              id="collection.mappings.create_docs_link"
+              defaultMessage="For more information, please refer to the {link}"
+              values={{
+                link: (
+                  <a
+                    href="https://docs.alephdata.org/developers/mappings"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id="mapping.infoLink"
+                      defaultMessage="Aleph entity mapping documentation"
+                    />
+                  </a>
+                ),
+              }}
+            />
+          </p>
+        </div>
+
         {collection.writeable && (
-          <div style={{ marginBottom: '20px' }}>
+          <div className="CollectionMappingsMode__actions">
             <DialogToggleButton
               buttonProps={{
                 text: intl.formatMessage(messages.create),
@@ -50,7 +81,9 @@ class CollectionMappingsMode extends React.Component {
             />
           </div>
         )}
-        <MappingIndex query={query} />
+        <div className="CollectionMappingsMode__items">
+          <MappingIndex query={query} />
+        </div>
       </div>
     );
   }

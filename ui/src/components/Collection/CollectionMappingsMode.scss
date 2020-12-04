@@ -1,0 +1,10 @@
+@import "app/mixins.scss";
+@import "app/variables.scss";
+
+.CollectionMappingsMode {
+  max-width: $aleph-content-width-limit;
+
+  &__description, &__actions {
+    margin-bottom: $aleph-content-padding;
+  }
+}
