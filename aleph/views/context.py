@@ -122,8 +122,8 @@ def setup_request():
     request._log_tags = {}
     request._trace_id = str(uuid.uuid4())
 
-    setup_logging_context(request)
     enable_authz(request)
+    setup_logging_context(request)
     enable_rate_limit(request)
 
 
