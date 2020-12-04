@@ -4,6 +4,7 @@ const viewIds = {
   ENTITIES: 'entities',
   XREF: 'xref',
   DIAGRAMS: 'diagrams',
+  MAPPINGS: 'mappings',
   LISTS: 'lists',
 };
 

@@ -8,12 +8,13 @@ import queryString from 'query-string';
 import { Count, ResultCount } from 'components/common';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
+import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
-import { selectModel, selectEntitySetsResult, selectCollectionXrefResult } from 'selectors';
+import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
+import { selectModel, selectEntitySetsResult, selectMappingsResult, selectCollectionXrefResult } from 'selectors';
 
 import './CollectionViews.scss';
 
@@ -45,7 +46,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, lists, xref,
+      collection, activeMode, diagrams, lists, mappings, xref,
       isCasefile, showDocumentsTab,
       documentTabCount, entitiesTabCount
     } = this.props;
@@ -122,6 +123,20 @@ class CollectionViews extends React.Component {
             panel={<CollectionEntitySetsIndexMode collection={collection} type="list" />}
           />
         )}
+        {isCasefile && (
+          <Tab
+            id={collectionViewIds.MAPPINGS}
+            className="CollectionViews__tab"
+            title={
+              <>
+                <Icon className="left-icon" icon="new-object" />
+                <FormattedMessage id="collection.info.mappings" defaultMessage="Entity mappings" />
+                <ResultCount result={mappings} />
+              </>
+            }
+            panel={<CollectionMappingsMode collection={collection} />}
+          />
+        )}
         <Tab
           id={collectionViewIds.XREF}
           className="CollectionViews__tab"
@@ -145,6 +160,7 @@ const mapStateToProps = (state, ownProps) => {
   const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
   const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
+  const mappingsQuery = queryCollectionMappings(location, collection.id);
   const schemata = collection?.statistics?.schema?.values;
   let documentTabCount, entitiesTabCount;
 
@@ -171,6 +187,7 @@ const mapStateToProps = (state, ownProps) => {
     xref: selectCollectionXrefResult(state, xrefQuery),
     diagrams: selectEntitySetsResult(state, diagramsQuery),
     lists: selectEntitySetsResult(state, listsQuery),
+    mappings: selectMappingsResult(state, mappingsQuery),
   };
 };
 
