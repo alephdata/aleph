@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { isEntityRtl } from '@alephdata/react-ftm';
 
 import { loadState } from 'reducers/util';
 import { queryEntityReferences } from 'queries';
@@ -143,6 +144,11 @@ export function selectEntity(state, entityId) {
   result.profileId = entity.profile_id
 
   return result;
+}
+
+export function selectEntityDirectionality(state, entity) {
+  const isRtl = isEntityRtl(entity, selectLocale(state), selectModel(state));
+  return isRtl ? "rtl" : "ltr";
 }
 
 export function selectEntitySet(state, entitySetId) {

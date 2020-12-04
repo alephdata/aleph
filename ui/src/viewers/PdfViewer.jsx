@@ -151,7 +151,7 @@ export class PdfViewer extends Component {
 
   render() {
     const {
-      document, activeMode, baseQuery, page, queryText, numPages,
+      document, dir, activeMode, baseQuery, page, queryText, numPages,
     } = this.props;
     if (document.isPending || numPages === undefined || numPages === null) {
       return <SectionLoading />;
@@ -163,6 +163,7 @@ export class PdfViewer extends Component {
             <div className="document">
               <PdfViewerSearch
                 document={document}
+                dir={dir}
                 activeMode={activeMode}
                 queryText={queryText}
                 baseQuery={baseQuery}
@@ -170,6 +171,7 @@ export class PdfViewer extends Component {
                 {activeMode === 'text' && (
                   <PdfViewerPage
                     document={document}
+                    dir={dir}
                     page={page}
                     numPages={numPages}
                     baseQuery={baseQuery}

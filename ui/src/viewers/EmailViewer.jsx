@@ -74,7 +74,7 @@ class EmailViewer extends React.Component {
   }
 
   render() {
-    const { document } = this.props;
+    const { document, dir } = this.props;
     if (document.isPending) {
       return <SectionLoading />;
     }
@@ -82,7 +82,7 @@ class EmailViewer extends React.Component {
       <div className="outer">
         <div className="inner EmailViewer">
           {this.renderHeaders()}
-          <div className="email-body">
+          <div className="email-body" dir={dir}>
             {this.renderBody()}
           </div>
         </div>

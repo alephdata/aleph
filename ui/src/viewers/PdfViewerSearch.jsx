@@ -41,7 +41,7 @@ class PdfViewerSearch extends Component {
   }
 
   render() {
-    const { page, query, result } = this.props;
+    const { page, dir, query, result } = this.props;
     if (!query.getString('q')) {
       return this.props.children;
     }
@@ -64,7 +64,7 @@ class PdfViewerSearch extends Component {
         <ul>
           {result.results.map(res => (
             <li key={`page-${res.id}`}>
-              <p>
+              <p dir={dir}>
                 <Link
                   to={this.getResultLink(res)}
                   className={classNames({ active: page === res.index })}

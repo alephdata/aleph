@@ -8,7 +8,7 @@ function ImageViewer(props) {
   return (
     <div className="outer">
       <div className="inner ImageViewer">
-        <img src={document.links.file} alt={document.file_name} />
+        <img src={document.links.file} alt={document.getCaption()} />
       </div>
     </div>
   );
