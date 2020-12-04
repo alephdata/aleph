@@ -1,67 +1,115 @@
 import React, { PureComponent } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Callout, Intent } from '@blueprintjs/core';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { Callout, Icon, Intent, Spinner } from '@blueprintjs/core';
+import { Link } from 'react-router-dom';
+import c from 'classnames';
 
+import { fetchEntity } from 'actions';
+import { selectEntity } from 'selectors';
 import {
-  Date, Entity, Skeleton, Schema,
+  Date, Entity, Skeleton, Schema
 } from 'src/components/common';
 
 import './MappingIndexItem.scss';
 
 
 class MappingIndexItem extends PureComponent {
-  renderSkeleton = () => (
-    <div className="MappingIndexItem">
+  constructor(props) {
+    super(props);
+    this.getIntent = this.getIntent.bind(this);
+  }
 
-    </div>
+  renderSkeleton = () => (
+    <Callout
+      className="MappingIndexItem"
+      icon={null}
+    >
+      <div className="MappingIndexItem__section">
+        <Skeleton.Text type="h4" length={10} className="MappingIndexItem__title bp3-heading" />
+      </div>
+      <div className="MappingIndexItem__section">
+        <div className="MappingIndexItem__schemata">
+          <Skeleton.Text type="span" length={10} className="SchemaLabel" />
+        </div>
+      </div>
+      <div className="MappingIndexItem__section">
+        <Skeleton.Text type="p" length={10} className="MappingIndexItem__statusItem bp3-text-muted" />
+        <Skeleton.Text type="p" length={10} className="MappingIndexItem__statusItem bp3-text-muted" />
+      </div>
+    </Callout>
   )
 
-  render() {
-    const { isPending, mapping } = this.props;
+  componentDidUpdate() {
+    const { mapping, tableEntity } = this.props;
+    if (mapping?.table_id && tableEntity?.shouldLoad) {
+      this.props.fetchEntity({ id: mapping?.table_id });
+    }
+  }
 
+  getIntent() {
+    const status = this.props.mapping?.last_run_status;
+    switch(status) {
+      case 'successful':
+        return Intent.PRIMARY;
+      case 'error':
+        return Intent.DANGER;
+      default:
+        return null;
+    }
+  }
+
+  renderContent() {
+    const { isPending, mapping, tableEntity } = this.props;
     if (isPending) {
       return this.renderSkeleton();
     }
-    const { entityset, last_run_status, last_run_err_msg, query, showTableLink, table, updated_at } = mapping;
-    const title = (showTableLink && table) ? <Entity.Link entity={table} icon /> : 'Test Title';
-    console.log('mapping', mapping);
+
+    const { entityset, last_run_status, last_run_err_msg, query, updated_at } = mapping;
+    const title = tableEntity && <Entity.Link entity={tableEntity} icon />;
+
     return (
       <Callout
         className="MappingIndexItem"
+        icon={null}
+        intent={this.getIntent()}
       >
-        <div className="MappingIndexItem__main">
-          <h4 className="bp3-heading">{title}</h4>
+        <div className="MappingIndexItem__section">
+          <h4 className="MappingIndexItem__title bp3-heading">{title}</h4>
+        </div>
+        <div className="MappingIndexItem__section">
           <div className="MappingIndexItem__schemata">
             {Object.keys(query).map(schema => <Schema.Label schema={schema} icon plural />)}
           </div>
         </div>
-        <div className="MappingIndexItem__secondary">
-          <h6 className="bp3-heading MappingIndexItem__statusItem">
+        <div className="MappingIndexItem__section">
+          <p className="MappingIndexItem__statusItem bp3-text-muted">
             <span>
               <FormattedMessage
                 id="mapping.status.updated"
-                defaultMessage="Last updated:"
+                defaultMessage="Last updated: "
               />
             </span>
             <span>
               <Date value={updated_at} showTime />
             </span>
-          </h6>
+          </p>
           {last_run_status && (
-            <h6 className="bp3-heading MappingIndexItem__statusItem">
+            <p className="MappingIndexItem__statusItem bp3-text-muted">
               <span>
                 <FormattedMessage
                   id="mapping.status.status"
-                  defaultMessage="Status:"
+                  defaultMessage="Status: "
                 />
               </span>
               <span>
                 {mapping.last_run_status}
               </span>
-            </h6>
+            </p>
           )}
           {last_run_err_msg && (
-            <h6 className="bp3-heading MappingIndexItem__statusItem">
+            <p className="MappingIndexItem__statusItem bp3-text-muted">
               <span>
                 <FormattedMessage
                   id="mapping.status.error"
@@ -71,12 +119,33 @@ class MappingIndexItem extends PureComponent {
               <span>
                 {last_run_err_msg}
               </span>
-            </h6>
+            </p>
           )}
         </div>
       </Callout>
     );
   }
+
+  render() {
+    const { link } = this.props;
+    if (link) {
+      return (
+        <Link to={link}>
+          {this.renderContent()}
+        </Link>
+      );
+    }
+    return this.renderContent();
+  }
 }
 
-export default MappingIndexItem;
+const mapStateToProps = (state, ownProps) => {
+  const { mapping } = ownProps;
+  return { tableEntity: mapping?.table_id && selectEntity(state, mapping.table_id) };
+};
+const mapDispatchToProps = { fetchEntity };
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(MappingIndexItem);

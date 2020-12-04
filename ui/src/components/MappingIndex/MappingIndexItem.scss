@@ -6,22 +6,45 @@
   width: 100%;
   justify-content: space-between;
   margin: $aleph-grid-size 0;
-  * {
-    text-decoration: none !important;
+  box-shadow: $pt-elevation-shadow-1;
+  transition: box-shadow .1s ease-in-out;
+  opacity: .6;
+
+  &.bp3-intent-primary {
+    opacity: 1;
+    background: $light-gray5 !important;
+  }
+  &.bp3-intent-warning {
+    opacity: 1;
   }
 
-  &__main, &__secondary {
-    width: 50%;
+  &:hover {
+    box-shadow: $pt-elevation-shadow-2;
   }
 
-  &__main {
-    background: white;
-    border-radius: 5px;
-    padding: 10px;
+  &__section {
+    width: 33%;
+    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*2, none);
+
+    &:last-child {
+      margin: 0;
+      @include rtl(text-align, right, left);
+    }
+    span {
+      text-decoration: none !important;
+    }
   }
 
-  &__secondary {
-    @include rtl(text-align, right, left);
+  &__schemata {
+    .SchemaLabel {
+      display: block;
+      white-space: nowrap;
+      margin-bottom: 5px;
+      font-weight: bolder;
+    }
   }
 
+  &__statusItem {
+    margin-bottom: 5px;
+  }
 }

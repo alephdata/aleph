@@ -3,7 +3,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { ErrorSection } from 'components/common';
 import { queryMappings } from 'actions';
@@ -65,33 +64,20 @@ class MappingIndex extends Component {
     return (
       <div className="MappingIndex">
         <ul className="MappingIndex__items">
-          {result.results && result.results.map(mapping => {
-            const link = mapping.table_id && `${getEntityLink(mapping.table_id)}#mode=mapping`;
-            const content = (
+          {result.results && result.results.map(mapping => (
+            <li>
               <MappingIndexItem
                 key={mapping.id}
                 mapping={mapping}
-                showTableLink
+                link={mapping.table_id && `${getEntityLink(mapping.table_id)}#mode=mapping`}
               />
-            );
-            if (link) {
-              return (
-                <li>
-                  <Link to={link}>
-                    {content}
-                  </Link>
-                </li>
-              );
-            } else {
-              return (
-                <li>{content}</li>
-              )
-            }
-
-          })}
-          {result.isPending && skeletonItems.map(
-            item => <MappingIndexItem key={item} showTableLink isPending />,
-          )}
+            </li>
+          ))}
+          {result.isPending && skeletonItems.map(item => (
+            <li>
+              <MappingIndexItem key={item} isPending />
+            </li>
+          ))}
         </ul>
         <Waypoint
           onEnter={this.getMoreResults}
