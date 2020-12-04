@@ -2,9 +2,8 @@ import React, { PureComponent } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Callout, Icon, Intent, Spinner } from '@blueprintjs/core';
+import { Callout, Intent } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
-import c from 'classnames';
 
 import { fetchEntity } from 'actions';
 import { selectEntity } from 'selectors';
@@ -66,7 +65,7 @@ class MappingIndexItem extends PureComponent {
       return this.renderSkeleton();
     }
 
-    const { entityset, last_run_status, last_run_err_msg, query, updated_at } = mapping;
+    const { last_run_status, last_run_err_msg, query, updated_at } = mapping;
     const title = tableEntity && <Entity.Link entity={tableEntity} icon />;
 
     return (

@@ -49,7 +49,7 @@ class MappingIndex extends Component {
   }
 
   render() {
-    const { query, result, intl, showCollectionLinks } = this.props;
+    const { result, intl } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
     if (result.total === 0) {

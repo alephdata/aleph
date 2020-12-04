@@ -2,9 +2,9 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionDocuments, queryCollectionMappings } from 'queries';
-import { fetchCollection, queryCollectionXref, queryEntitySets, queryEntities, queryMappings, mutate } from 'actions';
-import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitiesResult, selectEntitySetsResult, selectMappingsResult } from 'selectors';
+import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
+import { fetchCollection, queryCollectionXref, queryEntitySets, queryMappings, mutate } from 'actions';
+import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitySetsResult, selectMappingsResult } from 'selectors';
 
 
 class CollectionContextLoader extends PureComponent {
