@@ -16,10 +16,6 @@ import './DocumentSelectDialog.scss';
 
 
 const messages = defineMessages({
-  title: {
-    id: 'entity.manager.bulk_import.title',
-    defaultMessage: 'Bulk import',
-  },
   no_results: {
     id: 'entity.manager.bulk_import.no_results',
     defaultMessage: 'No matching documents found',
@@ -56,7 +52,7 @@ class DocumentSelectDialog extends Component {
   }
 
   render() {
-    const { collection, intl, schema, toggleDialog, isOpen, onSelect } = this.props;
+    const { collection, intl, schema, title, toggleDialog, isOpen, onSelect } = this.props;
     const { query } = this.state;
 
     return (
@@ -64,7 +60,7 @@ class DocumentSelectDialog extends Component {
         icon="import"
         className="DocumentSelectDialog"
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title)}
+        title={title}
         onClose={toggleDialog}
       >
         <div className={Classes.DIALOG_BODY}>
@@ -74,7 +70,7 @@ class DocumentSelectDialog extends Component {
               defaultMessage={
                 `Select a table below from which to import new {schema} entities.`
               }
-              values={{ schema: <strong><Schema.Label schema={schema} /></strong> }}
+              values={{ schema: schema && <strong><Schema.Label schema={schema} /></strong> }}
             />
           </p>
           <p>
@@ -105,7 +101,7 @@ class DocumentSelectDialog extends Component {
                     <FormattedMessage
                       id='entity.manager.bulk_import.link_text'
                       defaultMessage={
-                        `Import a new table`
+                        `Upload a new table document`
                       }
                     />
                   </Link>
