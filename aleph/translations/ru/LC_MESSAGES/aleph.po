@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-16 08:52+0100\n"
+"POT-Creation-Date: 2020-12-04 11:12+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -22,11 +22,11 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:32
 msgid "Aleph"
 msgstr "Алеф"
 
-#: aleph/logic/entities.py:58
+#: aleph/logic/entities.py:81
 msgid "No schema on entity"
 msgstr "Отсутствует схема для сущности"
 
@@ -227,7 +227,7 @@ msgstr "Экспорт завершён"
 msgid "{{export}} is ready for download"
 msgstr "{{export}} можно скачать"
 
-#: aleph/search/__init__.py:50
+#: aleph/search/__init__.py:51
 msgid "No schema is specified for the query."
 msgstr "Отсутствует схема данных для запроса."
 
@@ -348,23 +348,23 @@ msgstr "Некорректное имя схемы: %s"
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:220
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:225
+#: aleph/views/base_api.py:229
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:232
+#: aleph/views/base_api.py:236
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:245
+#: aleph/views/base_api.py:249
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 
-#: aleph/views/entities_api.py:167
+#: aleph/views/entities_api.py:166
 #, python-format
 msgid "Search: %s"
 msgstr "Найти: %s"
@@ -397,6 +397,6 @@ msgstr "Неверное имя пользователя или пароль."
 msgid "Authentication has failed."
 msgstr "Ошибка авторизации."
 
-#: aleph/views/util.py:75
+#: aleph/views/util.py:76
 msgid "Error during data validation"
 msgstr "Ошибка проверки данных"

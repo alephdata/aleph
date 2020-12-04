@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-16 08:52+0100\n"
+"POT-Creation-Date: 2020-12-04 11:12+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Mathieu Morey <mathieu@datactivi.st>, 2020\n"
 "Language-Team: French (https://www.transifex.com/aleph/teams/76591/fr/)\n"
@@ -22,11 +22,11 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:32
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/logic/entities.py:58
+#: aleph/logic/entities.py:81
 msgid "No schema on entity"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 msgid "{{export}} is ready for download"
 msgstr ""
 
-#: aleph/search/__init__.py:50
+#: aleph/search/__init__.py:51
 msgid "No schema is specified for the query."
 msgstr "Aucun schéma n'est spécifié pour la requête."
 
@@ -346,23 +346,23 @@ msgstr "Nom de schéma invalide: %s"
 msgid "Invalid date: %s"
 msgstr "Date invalide: %s"
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:220
 msgid "You are not authorized to do this."
 msgstr "Vous n'êtes pas autorisé à faire ceci."
 
-#: aleph/views/base_api.py:225
+#: aleph/views/base_api.py:229
 msgid "This path does not exist."
 msgstr "Ce chemin n'existe pas."
 
-#: aleph/views/base_api.py:232
+#: aleph/views/base_api.py:236
 msgid "Internal server error."
 msgstr "Erreur interne du serveur."
 
-#: aleph/views/base_api.py:245
+#: aleph/views/base_api.py:249
 msgid "Access token is invalid."
 msgstr "Le jeton d'accès est invalide."
 
-#: aleph/views/entities_api.py:167
+#: aleph/views/entities_api.py:166
 #, python-format
 msgid "Search: %s"
 msgstr ""
@@ -395,6 +395,6 @@ msgstr "Nom d'utilisateur ou mot de passe invalide."
 msgid "Authentication has failed."
 msgstr "L'authentification a échoué."
 
-#: aleph/views/util.py:75
+#: aleph/views/util.py:76
 msgid "Error during data validation"
 msgstr "Erreur pendant la validation des données"

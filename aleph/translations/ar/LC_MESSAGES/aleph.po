@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-16 08:52+0100\n"
+"POT-Creation-Date: 2020-12-04 11:12+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Mohammed AlKawmani <komani@arij.net>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
@@ -24,11 +24,11 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:32
 msgid "Aleph"
 msgstr "ألف"
 
-#: aleph/logic/entities.py:58
+#: aleph/logic/entities.py:81
 msgid "No schema on entity"
 msgstr "لا جزئية في هذا الكل "
 
@@ -228,7 +228,7 @@ msgstr ""
 msgid "{{export}} is ready for download"
 msgstr ""
 
-#: aleph/search/__init__.py:50
+#: aleph/search/__init__.py:51
 msgid "No schema is specified for the query."
 msgstr "لم يتم تحديد مخطط للاستعلام."
 
@@ -342,23 +342,23 @@ msgstr "اسم مخطط غير صحيح : 1%s"
 msgid "Invalid date: %s"
 msgstr "تاريخ خاطئ 1%s"
 
-#: aleph/views/base_api.py:216
+#: aleph/views/base_api.py:220
 msgid "You are not authorized to do this."
 msgstr "غير مخول للقيام بذلك."
 
-#: aleph/views/base_api.py:225
+#: aleph/views/base_api.py:229
 msgid "This path does not exist."
 msgstr "هذا المسار غير موجود."
 
-#: aleph/views/base_api.py:232
+#: aleph/views/base_api.py:236
 msgid "Internal server error."
 msgstr "خطأ في الخادم الداخلي."
 
-#: aleph/views/base_api.py:245
+#: aleph/views/base_api.py:249
 msgid "Access token is invalid."
 msgstr "رمز الدخول غير صحيح"
 
-#: aleph/views/entities_api.py:167
+#: aleph/views/entities_api.py:166
 #, python-format
 msgid "Search: %s"
 msgstr ""
@@ -391,6 +391,6 @@ msgstr "اسم مستخدم أو كلمة مرور غير صحيحة"
 msgid "Authentication has failed."
 msgstr "فشل التوثيق "
 
-#: aleph/views/util.py:75
+#: aleph/views/util.py:76
 msgid "Error during data validation"
 msgstr "حدث خطأ أثناء التحقق من صحة البيانات"

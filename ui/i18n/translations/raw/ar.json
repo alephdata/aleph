@@ -443,9 +443,6 @@
   "diagram.create.title": {
     "defaultMessage": "Create a diagram"
   },
-  "diagram.error_warning": {
-    "defaultMessage": "حدث خطأ أثناء حفظ التغييرات الأخيرة، هل أنت متأكد من الخروج"
-  },
   "diagram.import.button": {
     "defaultMessage": "Import diagram"
   },
@@ -455,23 +452,11 @@
   "diagram.import.title": {
     "defaultMessage": "استيراد رسم بياني من الشبكة"
   },
-  "diagram.in_progress_warning": {
-    "defaultMessage": "لا تزال التغييرات قيد الحفط ، هل أنت متأكد من الخروج؟"
-  },
   "diagram.selector.create": {
     "defaultMessage": "Create a new diagram"
   },
   "diagram.selector.select_empty": {
     "defaultMessage": "No existing diagram"
-  },
-  "diagram.status_error": {
-    "defaultMessage": "خطأ في الحفظ"
-  },
-  "diagram.status_in_progress": {
-    "defaultMessage": "جاري الحفظ"
-  },
-  "diagram.status_success": {
-    "defaultMessage": "تم الحفط"
   },
   "diagram.update.label_placeholder": {
     "defaultMessage": "Untitled diagram"
@@ -745,6 +730,21 @@
   },
   "entity.similar.found_text": {
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
+  },
+  "entity.status.error": {
+    "defaultMessage": "Error saving"
+  },
+  "entity.status.error_warning": {
+    "defaultMessage": "There was an error saving your latest changes, are you sure you want to leave?"
+  },
+  "entity.status.in_progress": {
+    "defaultMessage": "Saving..."
+  },
+  "entity.status.in_progress_warning": {
+    "defaultMessage": "Changes are still being saved, are you sure you want to leave?"
+  },
+  "entity.status.success": {
+    "defaultMessage": "Saved"
   },
   "entity.tags.no_tags": {
     "defaultMessage": "لم تستخرج أي محددات من هذا الكيان"
@@ -1415,6 +1415,9 @@
   "search.filterTag.role": {
     "defaultMessage": "تصفية حسب الوصول"
   },
+  "search.loading": {
+    "defaultMessage": "Loading..."
+  },
   "search.no_results_description": {
     "defaultMessage": "حاول أن تجعل بحثك أكثر عمومية"
   },
@@ -1461,7 +1464,7 @@
     "defaultMessage": "اطهار تصفية التاريخ"
   },
   "search.title": {
-    "defaultMessage": "بحث"
+    "defaultMessage": "Search: {title}"
   },
   "settings.api_key": {
     "defaultMessage": "مفتاح API الوصول السري "
