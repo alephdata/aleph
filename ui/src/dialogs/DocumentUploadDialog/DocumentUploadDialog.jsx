@@ -34,6 +34,8 @@ export class DocumentUploadDialog extends Component {
     this.onFilesChange = this.onFilesChange.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onRetry = this.onRetry.bind(this);
+    this.uploadConcurrencyLimit = 10;
+    this.uploadPromises = [];
   }
 
   onFilesChange(files) {
@@ -56,6 +58,7 @@ export class DocumentUploadDialog extends Component {
       uploadTraces: []
     })
 
+    this.uploadPromises.length = 0;
     await this.traverseFileTree(fileTree, parent);
     this.onUploadDone();
   }
@@ -91,6 +94,7 @@ export class DocumentUploadDialog extends Component {
       }),
       uploadTraces: uploadTraces.filter(trace => trace.status !== UPLOAD_STATUS.ERROR)
     });
+    this.uploadPromises.length = 0;
     return Promise.all(errorTraces.map(trace => trace.retryFn()))
       .then(() => this.onUploadDone());
   }
@@ -118,7 +122,7 @@ export class DocumentUploadDialog extends Component {
         // base case
         if (value instanceof File) {
           return this.uploadFile(value, parent);
-        }
+      }
         // recursive case
         return this.uploadFolderRecursive(key, parent, value);
       });
@@ -155,18 +159,32 @@ export class DocumentUploadDialog extends Component {
     const { uploadMeta } = this.state;
 
     this.addUploadTrace(uploadTrace);
-    return ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev), uploadMeta.cancelSource.token)
-      .then((result) => {
-        uploadTrace.status = UPLOAD_STATUS.SUCCESS;
-        this.updateUploadTraces();
-        return result;
+
+    const execute = async () => {
+      while (this.uploadPromises.length >= this.uploadConcurrencyLimit) {
+        await Promise.race(this.uploadPromises); // wait until the next promise is done
+      }
+
+      const promise = ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev), uploadMeta.cancelSource.token)
+        .then((result) => {
+          uploadTrace.status = UPLOAD_STATUS.SUCCESS;
+          this.updateUploadTraces();
+          return result;
+        })
+        .catch((e) => {
+          console.error(`failure uploading ${uploadTrace.name}`, e);
+          uploadTrace.status = UPLOAD_STATUS.ERROR;
+          uploadTrace.retryFn = retryFn;
+          this.updateUploadTraces();
+        });
+      this.uploadPromises.push(promise);
+      promise.then(() => {
+        this.uploadPromises.splice(this.uploadPromises.indexOf(promise), 1)
       })
-      .catch((e) => {
-        console.error(`failure uploading ${uploadTrace.name}`, e);
-        uploadTrace.status = UPLOAD_STATUS.ERROR;
-        uploadTrace.retryFn = retryFn;
-        this.updateUploadTraces();
-      });
+      return promise;
+    }
+
+    return execute();
   }
 
   uploadFile(file, parent) {
