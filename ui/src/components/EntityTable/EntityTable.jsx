@@ -214,6 +214,7 @@ export class EntityTable extends Component {
                 Dialog={DocumentSelectDialog}
                 dialogProps={{
                   schema,
+                  title: intl.formatMessage(messages.bulk_import),
                   collection,
                   onSelect: this.onDocSelected
                 }}
