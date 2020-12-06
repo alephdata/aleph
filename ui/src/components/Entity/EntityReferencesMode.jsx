@@ -18,6 +18,7 @@ import EntityProperties from 'components/Entity/EntityProperties';
 import ensureArray from 'util/ensureArray';
 import { queryEntities } from 'actions/index';
 import Collection from 'components/common/Collection';
+import Skeleton from 'components/common/Skeleton';
 
 const messages = defineMessages({
   no_relationships: {
@@ -86,6 +87,25 @@ class EntityReferencesMode extends React.Component {
     ];
   }
 
+  renderSkeleton(columns, idx) {
+    const { isThing, hideCollection } = this.props;
+    return (
+      <tr key={idx} className='nowrap'>
+        {!isThing && (
+          <td className="expand">
+            <Button disabled small minimal icon='chevron-down' />
+          </td>
+        )}
+        {columns.map(c => <td><Skeleton.Text type="span" length={10} /></td>)}
+        {!hideCollection && (
+          <td key="collection">
+            <Skeleton.Text type="span" length={20} />
+          </td>
+        )}
+      </tr>
+    );
+  }
+
   render() {
     const {
       intl, reference, query, result, schema, isThing, hideCollection
@@ -97,6 +117,7 @@ class EntityReferencesMode extends React.Component {
     const { property } = reference;
     const results = _.uniqBy(ensureArray(result.results), 'id');
     const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
+    const skeletonItems = [...Array(15).keys()];
     return (
       <section className="EntityReferencesTable">
         <table className="data-table references-data-table">
@@ -122,6 +143,7 @@ class EntityReferencesMode extends React.Component {
           </thead>
           <tbody>
             {results.map(entity => this.renderRow(columns, entity))}
+            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(columns, idx))}
           </tbody>
         </table>
         <QueryInfiniteLoad
@@ -129,9 +151,6 @@ class EntityReferencesMode extends React.Component {
           result={result}
           fetch={this.props.queryEntities}
         />
-        { result.isPending && (
-          <SectionLoading />
-        )}
       </section>
     );
   }

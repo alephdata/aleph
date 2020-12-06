@@ -17,6 +17,7 @@ import { Entity } from '@alephdata/react-ftm';
 import getEntityLink from 'util/getEntityLink';
 
 import './ProfileItemsMode.scss';
+import Skeleton from 'components/common/Skeleton';
 
 
 class ProfileItemsMode extends Component {
@@ -53,8 +54,26 @@ class ProfileItemsMode extends Component {
     );
   }
 
+  renderSkeleton(idx) {
+    const obj = { writeable: false, judgement: 'no_judgement' };
+    return (
+      <tr key={idx}>
+        <td className="numeric narrow">
+          <JudgementButtons obj={obj} onChange={this.onDecide} />
+        </td>
+        <td className="entity bordered">
+          <EntityCompare isPending={true} />
+        </td>
+        <td className="collection">
+          <Skeleton.Text type="span" length="20" />
+        </td>
+      </tr>
+    );
+  }
+
   render() {
     const { profile, result, viaEntityId } = this.props;
+    const skeletonItems = [...Array(15).keys()];
     return (
       <div className="ProfileItemsMode">
         <Callout intent="primary" className="ProfileItemsMode__callout">
@@ -108,6 +127,7 @@ class ProfileItemsMode extends Component {
           </thead>
           <tbody>
             {result.results?.map(res => this.renderRow(res))}
+            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
           </tbody>
         </table>
       </div >
