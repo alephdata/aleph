@@ -4,7 +4,6 @@ from pprint import pformat  # noqa
 from flask_babel import gettext
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.helpers import inline_names
 from followthemoney.exc import InvalidData
 
 from aleph.core import db, cache
@@ -38,24 +37,10 @@ def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
     else:
         entity.update(data, collection)
 
-    # Inline name properties from adjacent entities. See the
-    # docstring on `inline_names` for a more detailed discussion.
     proxy = entity.to_proxy()
-    entity_ids = proxy.get_type_values(registry.entity)
-    for rel in index.entities_by_ids(entity_ids):
-        inline_names(proxy, model.get_proxy(rel))
-    entity.data = proxy.properties
-    db.session.add(entity)
-
     aggregator = get_aggregator(collection)
     aggregator.delete(entity_id=entity.id)
     aggregator.put(proxy, origin=MODEL_ORIGIN)
-
-    # If the entity is part of a profile, tag it.
-    profile_id = profile_fragments(collection, aggregator, entity_id=entity.id)
-    if profile_id is not None:
-        proxy.context["profile_id"] = [profile_id]
-
     aggregator.close()
 
     index.index_proxy(collection, proxy, sync=sync)
@@ -64,19 +49,38 @@ def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
     return entity.id
 
 
-def update_entity(collection, entity_id=None, job_id=None):
+def update_entity(collection, entity_id=None):
     """Update xref and aggregator after an entity has been edited."""
     from aleph.logic.xref import xref_entity
     from aleph.logic.profiles import profile_fragments
 
-    log.info("[%s] Prune entity: %s", collection, entity_id)
+    log.info("[%s] Update entity: %s", collection, entity_id)
     entity = index.get_entity(entity_id)
     proxy = model.get_proxy(entity)
     xref_entity(collection, proxy)
-    aggregator = get_aggregator(collection)
+
+    aggregator = get_aggregator(collection, origin=MODEL_ORIGIN)
     profile_fragments(collection, aggregator, entity_id=entity_id)
+
+    # Inline name properties from adjacent entities. See the
+    # docstring on `inline_names` for a more detailed discussion.
+    prop = proxy.schema.get("namesMentioned")
+    if prop is not None:
+        entity_ids = proxy.get_type_values(registry.entity)
+        names = set()
+        for related in index.entities_by_ids(entity_ids):
+            related = model.get_proxy(related)
+            names.update(related.get_type_values(registry.name))
+
+        if len(names) > 0:
+            name_proxy = model.make_entity(proxy.schema)
+            name_proxy.id = proxy.id
+            name_proxy.add(prop, names)
+            aggregator.put(name_proxy, fragment="names")
+
     index_aggregator(collection, aggregator, entity_ids=[entity_id])
     aggregator.close()
+    refresh_entity(collection, proxy.id)
 
 
 def validate_entity(data):
