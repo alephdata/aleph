@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { SectionLoading } from 'components/common';
 import { PagingButtons } from 'components/Toolbar';
 import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
+import { selectEntitiesResult, selectEntity } from 'selectors';
 import TextViewer from 'viewers/TextViewer';
 
 
@@ -20,23 +20,19 @@ class PdfViewerPage extends Component {
   }
 
   fetchPage() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
+    const { numPages, query, result } = this.props;
+    if (numPages !== undefined && result.shouldLoad) {
       this.props.queryEntities({ query });
     }
   }
 
   render() {
     const { document, dir, entity, numPages, page } = this.props;
-    if (document.isPending || numPages === undefined) {
-      return <SectionLoading />;
-    }
+
     return (
       <>
         <PagingButtons document={document} numberOfPages={numPages} page={page} />
-        {entity && (
-          <TextViewer document={entity} dir={dir} noStyle />
-        )}
+        <TextViewer document={entity} dir={dir} noStyle />
       </>
     );
   }
@@ -48,7 +44,9 @@ const mapStateToProps = (state, ownProps) => {
     .setString('q', undefined)
     .setFilter('properties.index', page);
   const result = selectEntitiesResult(state, query);
-  const entity = result.results.length ? result.results[0] : null;
+  const entity = result.results.length
+    ? result.results[0]
+    : selectEntity(state, undefined);
   return {
     query,
     result,

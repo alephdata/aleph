@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Pre } from '@blueprintjs/core';
 
-import { Property, SectionLoading } from 'components/common';
+import { Property, SectionLoading, Skeleton } from 'components/common';
 import wordList from 'util/wordList';
 
 import './EmailViewer.scss';
 
 
-class EmailViewer extends React.Component {
+class EmailViewer extends PureComponent {
   headerProperty(name, entitiesProp) {
     const { document } = this.props;
     const prop = document.schema.getProperty(name);
@@ -40,6 +40,9 @@ class EmailViewer extends React.Component {
   }
 
   renderHeaders() {
+    if (document.isPending) {
+      return null;
+    }
     return (
       <div className="email-header">
         <table className="bp3-html-table">
@@ -59,6 +62,9 @@ class EmailViewer extends React.Component {
 
   renderBody() {
     const { document } = this.props;
+    if (document.isPending) {
+      return <Skeleton.Text type="span" length={1000} />;
+    }
     if (document.safeHtml && document.safeHtml.length) {
       return <span dangerouslySetInnerHTML={{ __html: document.safeHtml }} />;
     }
@@ -75,9 +81,6 @@ class EmailViewer extends React.Component {
 
   render() {
     const { document, dir } = this.props;
-    if (document.isPending) {
-      return <SectionLoading />;
-    }
     return (
       <div className="outer">
         <div className="inner EmailViewer">

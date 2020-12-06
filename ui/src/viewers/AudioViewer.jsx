@@ -11,10 +11,7 @@ const AudioViewer = ({ document }) => {
 
   return (
     <div className="AudioViewer">
-      <audio
-        controls
-        src={src}
-      />
+      <audio controls src={src} />
     </div>
   );
 }
