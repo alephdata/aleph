@@ -3,8 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Waypoint } from 'react-waypoint';
-import { ErrorSection } from 'components/common';
+import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryMappings } from 'actions';
 import { selectMappingsResult } from 'selectors';
 import MappingIndexItem from 'components/MappingIndex/MappingIndexItem';
@@ -21,35 +20,9 @@ const messages = defineMessages({
 });
 
 class MappingIndex extends Component {
-  constructor(props) {
-    super(props);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryMappings({ query, next: result.next });
-    }
-  }
-
-  fetchIfNeeded() {
-    const { result, query } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryMappings({ query });
-    }
-  }
 
   render() {
-    const { result, intl } = this.props;
+    const { query, result, intl } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
     if (result.total === 0) {
@@ -78,10 +51,10 @@ class MappingIndex extends Component {
             </li>
           ))}
         </ul>
-        <Waypoint
-          onEnter={this.getMoreResults}
-          bottomOffset="-300px"
-          scrollableAncestor={window}
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={this.props.queryMappings}
         />
       </div>
     );
@@ -90,14 +63,11 @@ class MappingIndex extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
-
-  console.log('state', state);
-  return { result: selectMappingsResult(state, query) };
+  return { query, result: selectMappingsResult(state, query) };
 };
-const mapDispatchToProps = { queryMappings };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryMappings }),
   injectIntl,
 )(MappingIndex);
