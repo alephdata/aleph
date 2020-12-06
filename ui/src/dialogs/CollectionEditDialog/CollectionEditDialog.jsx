@@ -83,7 +83,7 @@ export class CollectionEditDialog extends Component {
       blocking: false,
     };
 
-    this.onSave = this.onSave.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.onToggleRestricted = this.onToggleRestricted.bind(this);
     this.onSelectCountries = this.onSelectCountries.bind(this);
     this.onSelectLanguages = this.onSelectLanguages.bind(this);
@@ -125,21 +125,19 @@ export class CollectionEditDialog extends Component {
     this.setState({ collection });
   }
 
-  async onSave() {
+  async onSubmit() {
     const { intl } = this.props;
-    const { collection, blocking } = this.state;
-    if (blocking) return;
+    const { collection } = this.state;
     this.setState({ blocking: true });
 
     try {
       await this.props.updateCollection(collection);
       showSuccessToast(intl.formatMessage(messages.save_success));
       this.props.toggleDialog();
-      this.setState({ blocking: false });
     } catch (e) {
       showWarningToast(e.message);
-      this.setState({ blocking: false });
     }
+    this.setState({ blocking: false });
   }
 
   render() {
@@ -151,6 +149,7 @@ export class CollectionEditDialog extends Component {
       <FormDialog
         processing={blocking}
         icon="cog"
+        onSubmit={this.onSubmit}
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
         title={intl.formatMessage(messages.title)}
@@ -172,7 +171,7 @@ export class CollectionEditDialog extends Component {
               />
             </div>
           </div>
-          { isAdmin && (
+          {isAdmin && (
             <div className="bp3-form-group">
               <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category" />
@@ -180,7 +179,7 @@ export class CollectionEditDialog extends Component {
               <div className="bp3-select bp3-fill">
                 <select id="category" onChange={this.onFieldChange} value={collection.category}>
                   {!collection.category && <option key="--" value="" selected>--</option>}
-                  { Object.keys(categories).map(key => (
+                  {Object.keys(categories).map(key => (
                     <option key={key} value={key}>
                       {categories[key]}
                     </option>
@@ -204,7 +203,7 @@ export class CollectionEditDialog extends Component {
               />
             </div>
           </div>
-          { !isCasefile && (
+          {!isCasefile && (
             <>
               <div className="bp3-form-group">
                 <label className="bp3-label">
@@ -272,7 +271,7 @@ export class CollectionEditDialog extends Component {
                 </label>
                 <div className="bp3-select bp3-fill">
                   <select id="frequency" onChange={this.onFieldChange} value={collection.frequency || ''}>
-                    { Object.keys(frequencies).map(key => (
+                    {Object.keys(frequencies).map(key => (
                       <option key={key} value={key || ''}>
                         {frequencies[key]}
                       </option>
@@ -282,7 +281,7 @@ export class CollectionEditDialog extends Component {
               </div>
             </>
           )}
-          { isAdmin && (
+          {isAdmin && (
             <div className="bp3-form-group">
               <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.creator" defaultMessage="Manager" />
@@ -327,7 +326,7 @@ export class CollectionEditDialog extends Component {
               />
             </div>
           </div>
-          { !isCasefile && (
+          {!isCasefile && (
             <>
               <div className="bp3-form-group">
                 <label className="bp3-label">
@@ -357,8 +356,8 @@ export class CollectionEditDialog extends Component {
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
             <Button
+              type="submit"
               intent={Intent.PRIMARY}
-              onClick={this.onSave}
               disabled={blocking}
               text={intl.formatMessage(messages.save_button)}
             />
