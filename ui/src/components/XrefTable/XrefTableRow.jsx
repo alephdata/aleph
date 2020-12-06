@@ -28,10 +28,10 @@ class XrefTableRow extends Component {
       <tr>
         <td className="decision" />
         <td className="entity bordered">
-          <Skeleton.Text type="span" length={15} />
+          <EntityCompare isPending={true} />
         </td>
         <td className="entity">
-          <Skeleton.Text type="span" length={15} />
+          <EntityCompare isPending={true} />
         </td>
         <td className="numeric narrow">
           <Skeleton.Text type="span" length={2} />

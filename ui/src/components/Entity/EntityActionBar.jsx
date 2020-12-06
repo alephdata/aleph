@@ -24,9 +24,8 @@ class EntityActionBar extends Component {
   render() {
     const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, updateStatus, writeable } = this.props;
 
-
     return (
-      <ControlGroup className={c("EntityActionBar", {"show-status":!!updateStatus})}>
+      <ControlGroup className={c("EntityActionBar", { "show-status": !!updateStatus })}>
         {writeable && (
           <OverflowList
             items={children}

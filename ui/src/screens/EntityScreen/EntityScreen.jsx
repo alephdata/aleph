@@ -17,14 +17,14 @@ import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
+import { Breadcrumbs, Collection, DualPane, Entity } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
 import { deleteEntity } from 'actions';
 import { entityReferenceQuery } from 'queries';
 import {
-  selectEntity, selectEntityReference, selectEntityView,
+  selectEntity, selectEntityView,
 } from 'selectors';
 
 import 'components/common/ItemOverview.scss';
@@ -89,34 +89,9 @@ class EntityScreen extends Component {
     };
   }
 
-  getReferenceSearchScope(entity) {
-    const { reference } = this.props;
-    if (!reference || reference.count < 10) {
-      return null;
-    }
-    const item = (
-      <>
-        <Entity.Label entity={entity} icon truncate={30} />
-        { ': '}
-        <Property.Reverse prop={reference.property} />
-      </>
-    );
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: item,
-      label: reference.property.getReverse().label,
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
-  }
-
   getSearchScopes() {
     const { entity } = this.props;
     const scopes = [];
-
-    const referenceScope = this.getReferenceSearchScope(entity);
-    if (referenceScope) {
-      scopes.push(referenceScope);
-    }
 
     let currEntity = entity;
     while (currEntity && EntityObject.isEntity(currEntity)) {
@@ -227,16 +202,13 @@ const mapStateToProps = (state, ownProps) => {
   const entity = selectEntity(state, entityId);
   const parsedHash = queryString.parse(location.hash);
   parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);
-  const reference = selectEntityReference(state, entityId, parsedHash.mode);
-  const referenceQuery = entityReferenceQuery(location, entity, reference);
-  const documentQuery = Query.fromLocation('entities', location, {}, 'document');
+  const query = Query.fromLocation('entities', location, {}, 'document');
 
   return {
     entity,
     entityId,
-    reference,
     parsedHash,
-    query: referenceQuery || documentQuery,
+    query,
   };
 };
 
