@@ -7,7 +7,7 @@ import { Entity as VLEntity } from '@alephdata/react-ftm';
 
 import EntitySelect from 'components/common/EntitySelect';
 import togglePreview from 'util/togglePreview';
-import { fetchEntity as fetchEntityAction } from 'actions';
+import { fetchEntity } from 'actions';
 import { selectEntity } from 'selectors';
 import getEntityLink from 'util/getEntityLink';
 
@@ -57,9 +57,9 @@ class EntityLoad extends Component {
   }
 
   fetchIfNeeded() {
-    const { id, entity, fetchEntity } = this.props;
+    const { id, entity } = this.props;
     if (entity.shouldLoad) {
-      fetchEntity({ id });
+      this.props.fetchEntity({ id });
     }
   }
 
@@ -81,7 +81,7 @@ class Entity {
 
   static Link = withRouter(EntityLink);
 
-  static Load = connect(mapStateToProps, { fetchEntity: fetchEntityAction })(EntityLoad);
+  static Load = connect(mapStateToProps, { fetchEntity })(EntityLoad);
 
   static Select = EntitySelect;
 }
