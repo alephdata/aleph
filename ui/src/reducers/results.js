@@ -16,6 +16,7 @@ import {
   queryNotifications,
   queryCollectionXref,
   queryEntitySetItems,
+  queryMappings,
 } from 'actions';
 
 const initialState = {};
@@ -77,6 +78,12 @@ export default createReducer({
   [queryRoles.COMPLETE]: updateResultIds,
   [queryRoles.START]: (state, { query }) => resultLoadStart(state, query),
   [queryRoles.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+
+  [queryMappings.COMPLETE]: updateResultIds,
+  [queryMappings.START]: (state, { query }) => resultLoadStart(state, query),
+  [queryMappings.ERROR]: (state, {
     error, args: { query },
   }) => resultLoadError(state, query, error),
 

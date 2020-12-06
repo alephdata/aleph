@@ -51,6 +51,10 @@ export function queryCollectionEntitySets(location, collectionId) {
   return Query.fromLocation('entitysets', location, context, 'entitySets');
 }
 
+export function queryCollectionMappings(location, collectionId) {
+  return Query.fromLocation(`collections/${collectionId}/mappings`, location, {}, 'mappings');
+}
+
 export function queryCollectionXrefFacets(location, collectionId) {
   const path = `collections/${collectionId}/xref`;
   let query = Query.fromLocation(path, location, {}, 'xref');

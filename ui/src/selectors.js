@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { isEntityRtl } from '@alephdata/react-ftm';
 
 import { loadState } from 'reducers/util';
 import { entityReferencesQuery, profileReferencesQuery } from 'queries';
@@ -151,6 +152,11 @@ export function selectEntity(state, entityId) {
   return result;
 }
 
+export function selectEntityDirectionality(state, entity) {
+  const isRtl = isEntityRtl(entity, selectLocale(state), selectModel(state));
+  return isRtl ? "rtl" : "ltr";
+}
+
 export function selectEntitySet(state, entitySetId) {
   return selectObject(state, state.entitySets, entitySetId);
 }
@@ -159,6 +165,10 @@ export function selectEntitySetItem(state, itemId) {
   const item = selectObject(state, state.entitySetItems, itemId);
   item.entity = selectEntity(state, item.entityId || item.entity?.id);
   return item;
+}
+
+export function selectMappingsResult(state, query) {
+  return selectResult(state, query, selectEntityMapping);
 }
 
 export function selectProfile(state, entitySetId) {

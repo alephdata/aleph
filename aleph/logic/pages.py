@@ -22,12 +22,13 @@ def load_pages(locale):
         page = frontmatter.load(path).to_dict()
         name, lang, _ = path.name.split(".", 2)
         page["name"] = name
-        page["lang"] = lang
+        page["lang"] = page.get("lang", lang)
         page["title"] = page.get("title", name)
         page["short"] = page.get("short", page["title"])
         page["icon"] = page.get("icon", "book")
         page["menu"] = page.get("menu", False)
         page["home"] = page.get("home", False)
+        page["sidebar"] = page.get("sidebar", not page["home"])
         candidates.setdefault(name, {})
         candidates[name][lang] = page
     pages = []

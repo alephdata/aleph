@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { isLangRtl } from '@alephdata/react-ftm';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -42,16 +43,18 @@ export class PagesScreen extends React.Component {
     if (!page) {
       return <ErrorScreen error={intl.formatMessage(messages.not_found)} />;
     }
-    const menuPages = pages.filter((page) => !page.home)
+    const menuPages = pages.filter((page) => page.sidebar)
       .sort((a, b) => a.short.localeCompare(b.short));
+
+    const contentDir = isLangRtl(page.lang) ? "rtl" : "ltr";
 
     return (
       <Screen title={page.title}>
         <div className="Pages">
           <div className="Pages__body">
-            <h5 className="Pages__title">{page.title}</h5>
+            <h5 className="Pages__title" dir={contentDir}>{page.title}</h5>
             <div className="Pages__content-container">
-              <div className="Pages__content">
+              <div className="Pages__content" dir={contentDir}>
                 <ReactMarkdown>
                   {page.content}
                 </ReactMarkdown>

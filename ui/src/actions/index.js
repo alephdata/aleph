@@ -36,6 +36,7 @@ export {
   deleteEntityMapping,
   fetchEntityMapping,
   flushEntityMapping,
+  queryMappings,
   updateEntityMapping,
 } from './entityMappingActions';
 export {

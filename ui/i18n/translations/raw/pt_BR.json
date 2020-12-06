@@ -443,9 +443,6 @@
   "diagram.create.title": {
     "defaultMessage": "Create a diagram"
   },
-  "diagram.error_warning": {
-    "defaultMessage": "There was an error saving your latest changes, are you sure you want to leave?"
-  },
   "diagram.import.button": {
     "defaultMessage": "Import diagram"
   },
@@ -455,23 +452,11 @@
   "diagram.import.title": {
     "defaultMessage": "Import a network diagram"
   },
-  "diagram.in_progress_warning": {
-    "defaultMessage": "Changes are still being saved, are you sure you want to leave?"
-  },
   "diagram.selector.create": {
     "defaultMessage": "Create a new diagram"
   },
   "diagram.selector.select_empty": {
     "defaultMessage": "No existing diagram"
-  },
-  "diagram.status_error": {
-    "defaultMessage": "Error saving"
-  },
-  "diagram.status_in_progress": {
-    "defaultMessage": "Saving..."
-  },
-  "diagram.status_success": {
-    "defaultMessage": "Saved"
   },
   "diagram.update.label_placeholder": {
     "defaultMessage": "Untitled diagram"
@@ -745,6 +730,21 @@
   },
   "entity.similar.found_text": {
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
+  },
+  "entity.status.error": {
+    "defaultMessage": "Error saving"
+  },
+  "entity.status.error_warning": {
+    "defaultMessage": "There was an error saving your latest changes, are you sure you want to leave?"
+  },
+  "entity.status.in_progress": {
+    "defaultMessage": "Saving..."
+  },
+  "entity.status.in_progress_warning": {
+    "defaultMessage": "Changes are still being saved, are you sure you want to leave?"
+  },
+  "entity.status.success": {
+    "defaultMessage": "Saved"
   },
   "entity.tags.no_tags": {
     "defaultMessage": "Nenhum seletor foi extraído dessa entidade."
@@ -1415,6 +1415,9 @@
   "search.filterTag.role": {
     "defaultMessage": "Filtrar por acesso"
   },
+  "search.loading": {
+    "defaultMessage": "Loading..."
+  },
   "search.no_results_description": {
     "defaultMessage": "Tente refazer sua pesquisa de forma mais genérica"
   },
@@ -1461,7 +1464,7 @@
     "defaultMessage": "Show date filter"
   },
   "search.title": {
-    "defaultMessage": "Pesquisar"
+    "defaultMessage": "Search: {title}"
   },
   "settings.api_key": {
     "defaultMessage": "Chave Secreta de Acesso à API"
