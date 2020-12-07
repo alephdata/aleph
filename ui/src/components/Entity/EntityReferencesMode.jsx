@@ -66,6 +66,26 @@ class EntityReferencesMode extends React.Component {
     }
   }
 
+  getReferenceSearchScope(entity) {
+    const { reference } = this.props;
+    if (!reference || reference.count < 10) {
+      return null;
+    }
+    const item = (
+      <>
+        <Entity.Label entity={entity} icon truncate={30} />
+        { ': '}
+        <Property.Reverse prop={reference.property} />
+      </>
+    );
+    const entityLink = getEntityLink(entity);
+    return {
+      listItem: item,
+      label: reference.property.getReverse().label,
+      onSearch: queryText => this.onSearch(queryText, entityLink),
+    };
+  }
+
   renderCell(prop, entity) {
     const { schema, isThing } = this.props;
     let content = <Property.Values prop={prop} values={entity.getProperty(prop.name)} translitLookup={entity.latinized} />;

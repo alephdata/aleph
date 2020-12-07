@@ -82,7 +82,7 @@
   &__search-container {
     flex: 4 1 auto;
     padding: $aleph-grid-size $aleph-grid-size/2;
-    max-width: 600px;
+    max-width: $aleph-grid-size*50;
     @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*1.5, null);
 
     &__content {
@@ -91,6 +91,15 @@
 
     &__searchbar {
       flex-grow: 4;
+      
+      input.bp3-input {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-radius: 0!important;
+        box-shadow: none!important;
+        padding: 0 30px!important;
+      }
     }
 
     &__search-tips {

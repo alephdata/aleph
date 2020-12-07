@@ -47,20 +47,7 @@ class EntityScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
-  }
-
-  onCollectionSearch(queryText) {
-    const { history, entity } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': entity.collection.id,
-    };
-    history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
-    });
   }
 
   onSearch(queryText, entityLink) {
