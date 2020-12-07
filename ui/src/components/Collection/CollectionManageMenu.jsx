@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
+import { Button, ButtonGroup, Popover, Menu, MenuItem, Intent } from '@blueprintjs/core';
 
 import { DialogToggleButton } from 'components/Toolbar'
 import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
@@ -35,75 +35,109 @@ const messages = defineMessages({
 
 
 class CollectionManageMenu extends PureComponent {
-  renderMenu() {
+  getButtons = () => {
     const { collection, intl } = this.props;
-    return (
-      <Menu>
-        <DialogToggleButton
-          ButtonComponent={MenuItem}
-          buttonProps={{
-            text: intl.formatMessage(messages.reingest),
-            icon: "automatic-updates",
-            shouldDismissPopover: false
-          }}
-          Dialog={CollectionReingestAlert}
-          dialogProps={{ collection }}
-        />
-        <DialogToggleButton
-          ButtonComponent={MenuItem}
-          buttonProps={{
-            text: intl.formatMessage(messages.reindex),
-            icon: "search-template",
-            shouldDismissPopover: false
-          }}
-          Dialog={CollectionReindexAlert}
-          dialogProps={{ collection }}
-        />
-        <DialogToggleButton
-          ButtonComponent={MenuItem}
-          buttonProps={{
-            text: intl.formatMessage(messages.delete),
-            icon: "trash",
-            shouldDismissPopover: false
-          }}
-          Dialog={CollectionDeleteDialog}
-          dialogProps={{ collection }}
-        />
-      </Menu>
-    );
+
+    return [
+      {
+        buttonProps: {
+          text: intl.formatMessage(messages.edit),
+          icon: "cog",
+        },
+        Dialog: CollectionEditDialog,
+        primary: true,
+      },
+      {
+        buttonProps: {
+          text: intl.formatMessage(messages.access),
+          icon: "key",
+        },
+        Dialog: CollectionAccessDialog,
+        primary: true,
+      },
+      {
+        buttonProps: {
+          text: intl.formatMessage(messages.reingest),
+          icon: "automatic-updates",
+        },
+        Dialog: CollectionReingestAlert,
+      },
+      {
+        buttonProps: {
+          text: intl.formatMessage(messages.reindex),
+          icon: "search-template",
+        },
+        Dialog: CollectionReindexAlert,
+      },
+      {
+        buttonProps: {
+          text: intl.formatMessage(messages.delete),
+          icon: "trash",
+          intent: Intent.DANGER,
+        },
+        Dialog: CollectionDeleteDialog,
+      },
+    ]
   }
 
+  renderMenuItem = ({ buttonProps, Dialog }) => (
+    <DialogToggleButton
+      ButtonComponent={MenuItem}
+      buttonProps={{
+        shouldDismissPopover: false,
+        ...buttonProps,
+        ...(this.props.buttonProps)
+      }}
+      Dialog={Dialog}
+      dialogProps={{ collection: this.props.collection }}
+    />
+  );
+
+  renderButton = ({ buttonProps, Dialog }) => (
+    <DialogToggleButton
+      buttonProps={{
+        ...buttonProps,
+        ...(this.props.buttonProps)
+      }}
+      Dialog={Dialog}
+      dialogProps={{ collection: this.props.collection }}
+    />
+  );
+
   render() {
-    const { collection, intl } = this.props;
+    const { collection, intl, buttonGroupProps = {}, buttonProps = {}, view = "default" } = this.props;
     if (!collection.writeable) {
       return null;
     }
-    return (
-      <>
-        <ButtonGroup>
-          <DialogToggleButton
-            buttonProps={{
-              text: intl.formatMessage(messages.edit),
-              icon: "cog"
-            }}
-            Dialog={CollectionEditDialog}
-            dialogProps={{ collection }}
-          />
-          <DialogToggleButton
-            buttonProps={{
-              text: intl.formatMessage(messages.access),
-              icon: "key"
-            }}
-            Dialog={CollectionAccessDialog}
-            dialogProps={{ collection }}
-          />
+    const buttons = this.getButtons();
+
+    if (view === 'collapsed') {
+      return (
+        <Popover>
+          <Button icon="cog" rightIcon="caret-down" {...buttonProps} />
+          <Menu>
+            {buttons.map(this.renderMenuItem)}
+          </Menu>
+
+        </Popover>
+      );
+    } else if (view === 'semi-collapsed') {
+      return (
+        <ButtonGroup fill {...buttonGroupProps}>
+          {buttons.filter(button => button.primary).map(this.renderButton)}
           <Popover>
-            <Button icon="caret-down" />
-            {this.renderMenu()}
+            <Button icon="caret-down" {...buttonProps} />
+            {buttons.filter(button => !button.primary).map(this.renderMenuItem)}
           </Popover>
         </ButtonGroup>
-      </>
-    );
+      );
+    } else {
+      return (
+        <ButtonGroup fill {...buttonGroupProps}>
+          {buttons.map(this.renderButton)}
+        </ButtonGroup>
+      );
+    }
   }
 }
 

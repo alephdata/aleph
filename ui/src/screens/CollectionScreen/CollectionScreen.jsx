@@ -86,7 +86,7 @@ export class CollectionScreen extends Component {
           query={query}
         />
         <Divider />
-        <CollectionManageMenu collection={collection} />
+        <CollectionManageMenu collection={collection} view="collapsed" />
       </ControlGroup>
     );
 
