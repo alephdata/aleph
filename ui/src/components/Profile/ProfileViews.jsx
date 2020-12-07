@@ -91,7 +91,7 @@ class ProfileViews extends React.Component {
             )}
             panel={
               <EntityReferencesMode
-                entity={profile.merged}
+                entity={profile.entity}
                 mode={activeMode}
                 reference={reference}
                 query={referenceQuery}

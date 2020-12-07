@@ -26,7 +26,7 @@ class EntityCompare extends PureComponent {
         <Skeleton.Text type="span" length={30} />
         <div className="EntityCompare__properties">
           {[1, 2, 3].map((prop) => (
-            <div className="EntityCompare__property" key={prop.name}>
+            <div className="EntityCompare__property" key={prop}>
               <span className="EntityCompare__property__name text-muted">
                 <Skeleton.Text type="span" length={10} />
               </span>

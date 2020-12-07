@@ -91,10 +91,10 @@ class ProfileScreen extends Component {
         <DualPane>
           <DualPane.SidePane className="ItemOverview">
             <div className="ItemOverview__heading">
-              <EntityHeading entity={profile.merged} isPreview={false} />
+              <EntityHeading entity={profile.entity} isPreview={false} />
             </div>
             <div className="ItemOverview__content">
-              <EntityInfoMode entity={profile.merged} isPreview={false} />
+              <EntityInfoMode entity={profile.entity} isPreview={false} />
             </div>
           </DualPane.SidePane>
           <DualPane.ContentPane>

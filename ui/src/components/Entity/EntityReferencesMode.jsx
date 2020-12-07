@@ -119,7 +119,7 @@ class EntityReferencesMode extends React.Component {
             <Button disabled small minimal icon='chevron-down' />
           </td>
         )}
-        {columns.map(c => <td><Skeleton.Text type="span" length={10} /></td>)}
+        {columns.map(c => <td key={c}><Skeleton.Text type="span" length={10} /></td>)}
         {!hideCollection && (
           <td key="collection">
             <Skeleton.Text type="span" length={20} />
@@ -174,7 +174,6 @@ class EntityReferencesMode extends React.Component {
           <tbody>
             {results.map(entity => this.renderRow(columns, entity))}
             {result.isPending && skeletonItems.map(idx => this.renderSkeleton(columns, idx))}
-
           </tbody>
         </table>
         <QueryInfiniteLoad

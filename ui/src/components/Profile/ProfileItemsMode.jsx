@@ -45,7 +45,7 @@ class ProfileItemsMode extends Component {
           <JudgementButtons obj={item} onChange={this.onDecide} />
         </td>
         <td className="entity bordered">
-          <EntityCompare entity={item.entity} other={this.props.profile.merged} />
+          <EntityCompare entity={item.entity} other={this.props.profile.entity} />
         </td>
         <td className="collection">
           <Collection.Link collection={item.entity.collection} icon />
@@ -82,7 +82,7 @@ class ProfileItemsMode extends Component {
               id="profile.items.intro"
               defaultMessage={"You're viewing {entity} as a profile. "}
               values={{
-                entity: <Entity.Label entity={profile.merged} />,
+                entity: <Entity.Label entity={profile.entity} />,
               }}
             />
           </strong>

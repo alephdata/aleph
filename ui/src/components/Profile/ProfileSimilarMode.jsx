@@ -39,7 +39,7 @@ class ProfileItemsMode extends Component {
           <JudgementButtons obj={item} onChange={this.onDecide} />
         </td>
         <td className="entity bordered">
-          <EntityCompare entity={item.entity} other={this.props.profile.merged} />
+          <EntityCompare entity={item.entity} other={this.props.profile.entity} />
         </td>
         <td className="numeric narrow">
           <Score score={item.score} />

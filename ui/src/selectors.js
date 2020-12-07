@@ -173,11 +173,10 @@ export function selectMappingsResult(state, query) {
 
 export function selectProfile(state, entitySetId) {
   const profile = selectObject(state, state.entitySets, entitySetId);
-  if (profile?.merged?.id && profile?.merged?.schema) {
+  if (profile?.merged?.schema && !profile?.entity?.id) {
     const model = selectModel(state);
-    const entity = model.getEntity(profile.merged);
-    entity.latinized = profile.merged.latinized;
-    profile.merged = entity;
+    profile.entity = model.getEntity(profile.merged);
+    profile.entity.latinized = profile.merged.latinized;
   }
   return profile;
 }
@@ -237,9 +236,9 @@ export function selectProfileExpandResult(state, query) {
 
 export function selectProfileReferences(state, profileId) {
   const profile = selectProfile(state, profileId);
-  const query = profileReferencesQuery(profile.merged.id);
+  const query = profileReferencesQuery(profile?.entity?.id);
   const references = selectProfileExpandResult(state, query);
-  return buildReferences(references, profile.merged.schema);
+  return buildReferences(references, profile.entity.schema);
 }
 
 export function selectProfileReference(state, profileId, qname) {
