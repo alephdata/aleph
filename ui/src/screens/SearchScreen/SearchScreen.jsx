@@ -61,35 +61,6 @@ export class SearchScreen extends React.Component {
     this.updateQuery = this.updateQuery.bind(this);
   }
 
-  getSearchScopes() {
-    const { query } = this.props;
-    const activeCollections = query ? query.getFilter('collection_id') : [];
-
-    const collectionScopeList = activeCollections.map(collectionId => (
-      {
-        listItem: (
-          <Collection.Load id={collectionId} renderWhenLoading="...">
-            {collection => (
-              <Collection.Label collection={collection} icon truncate={30} />
-            )}
-          </Collection.Load>
-        ),
-        onSearch: (queryText) => {
-          const newQuery = query.set('q', queryText).setFilter('collection_id', collectionId);
-          this.updateQuery(newQuery);
-        },
-      }
-    ));
-
-    if (activeCollections.length > 1) {
-      collectionScopeList.push({
-        listItem: <span>{`Search ${activeCollections.length} datasets`}</span>,
-        onSearch: queryText => this.updateQuery(query.set('q', queryText)),
-      });
-    }
-    return collectionScopeList;
-  }
-
   updateQuery(newQuery) {
     const { history, location } = this.props;
     // make it so the preview disappears if the query is changed.
@@ -140,13 +111,11 @@ export class SearchScreen extends React.Component {
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
-    const searchScopes = this.getSearchScopes();
 
     return (
       <Screen
         query={query}
         title={title}
-        searchScopes={searchScopes}
       >
         {breadcrumbs}
         <SignInCallout />

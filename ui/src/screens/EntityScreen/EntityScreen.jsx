@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { ButtonGroup } from '@blueprintjs/core';
+import { ButtonGroup, Divider } from '@blueprintjs/core';
 import { Entity as EntityObject } from '@alephdata/followthemoney';
 
 import Query from 'app/Query';
@@ -17,7 +17,7 @@ import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
+import { Breadcrumbs, Collection, DualPane, Entity, SearchBox, Property } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
@@ -36,6 +36,10 @@ const messages = defineMessages({
   add_to: {
     id: 'entity.viewer.add_to',
     defaultMessage: 'Add to...',
+  },
+  searchPlaceholder: {
+    id: 'entity.viewer.search_placeholder',
+    defaultMessage: 'Search in {entity}',
   },
 });
 
@@ -73,69 +77,6 @@ class EntityScreen extends Component {
     });
   }
 
-  getEntitySearchScope(entity) {
-    if (!entity || !entity.schema) {
-      return null;
-    }
-    const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
-    if (!hasSearch) {
-      return null;
-    }
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: <Entity.Label entity={entity} icon truncate={30} />,
-      label: entity.getCaption(),
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
-  }
-
-  getReferenceSearchScope(entity) {
-    const { reference } = this.props;
-    if (!reference || reference.count < 10) {
-      return null;
-    }
-    const item = (
-      <>
-        <Entity.Label entity={entity} icon truncate={30} />
-        { ': '}
-        <Property.Reverse prop={reference.property} />
-      </>
-    );
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: item,
-      label: reference.property.getReverse().label,
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
-  }
-
-  getSearchScopes() {
-    const { entity } = this.props;
-    const scopes = [];
-
-    const referenceScope = this.getReferenceSearchScope(entity);
-    if (referenceScope) {
-      scopes.push(referenceScope);
-    }
-
-    let currEntity = entity;
-    while (currEntity && EntityObject.isEntity(currEntity)) {
-      const entityScope = this.getEntitySearchScope(currEntity);
-      if (entityScope !== null) {
-        scopes.push(entityScope);
-      }
-      currEntity = currEntity.getFirst('parent');
-    }
-
-    scopes.push({
-      listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
-      label: entity.collection.label,
-      onSearch: this.onCollectionSearch,
-    });
-
-    return scopes.reverse();
-  }
-
   render() {
     const {
       entity, entityId, activeMode, query, isDocument, intl,
@@ -153,9 +94,20 @@ class EntityScreen extends Component {
     }
 
     const { writeable } = entity.collection;
+    const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
 
     const operation = (
       <ButtonGroup>
+        {hasSearch && (
+          <>
+            <SearchBox
+              onSearch={this.onSearch}
+              placeholder={intl.formatMessage(messages.searchPlaceholder, { entity: entity.getCaption() })}
+              query={query}
+            />
+            <Divider />
+          </>
+        )}
         <DownloadButton document={entity} />
         {writeable && (
           <>
@@ -190,7 +142,7 @@ class EntityScreen extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
+        <Screen title={entity.getCaption()} query={query}>
           {breadcrumbs}
           <DualPane>
             <DualPane.SidePane className="ItemOverview">

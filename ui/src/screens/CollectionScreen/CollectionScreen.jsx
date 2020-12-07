@@ -23,7 +23,7 @@ import { selectCollection, selectCollectionStatus } from 'selectors';
 const messages = defineMessages({
   searchPlaceholder: {
     id: 'collection.navbar.search',
-    defaultMessage: 'Search {collection}',
+    defaultMessage: 'Search in {collection}',
   }
 });
 
@@ -72,12 +72,6 @@ export class CollectionScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
-    const searchScope = {
-      listItem: <Collection.Label collection={collection} icon truncate={30} />,
-      label: collection.label,
-      onSearch: this.onSearch,
-    };
-
     const operation = (
       <ControlGroup>
         <SearchBox
@@ -102,7 +96,6 @@ export class CollectionScreen extends Component {
         <Screen
           title={collection.label}
           description={collection.summary}
-          searchScopes={[searchScope]}
         >
           {breadcrumbs}
           <DocumentDropzone

@@ -42,7 +42,7 @@ export class ScreenBase extends React.Component {
   render() {
     const {
       session, metadata, query, requireSession,
-      isHomepage, title, description, className, searchScopes,
+      isHomepage, title, description, className,
     } = this.props;
     const { advancedSearchOpen } = this.state;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
@@ -70,7 +70,6 @@ export class ScreenBase extends React.Component {
           session={session}
           query={query}
           isHomepage={isHomepage}
-          searchScopes={searchScopes}
           onToggleAdvancedSearch={this.onToggleAdvancedSearch}
         />
         { (hasMetadata && !!metadata.app.banner) && (

@@ -41,18 +41,6 @@ export class DiagramScreen extends Component {
     this.fetchIfNeeded();
   }
 
-  onCollectionSearch(queryText) {
-    const { history, diagram } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': diagram.collection.id,
-    };
-    history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
-    });
-  }
-
   onDiagramSearch(filterText) {
     this.setState({ filterText });
   }
@@ -67,19 +55,6 @@ export class DiagramScreen extends Component {
 
   onStatusChange(updateStatus) {
     this.setState({ updateStatus });
-  }
-
-  getSearchScopes() {
-    const { diagram } = this.props;
-    const scopes = [
-      {
-        listItem: <Collection.Label collection={diagram.collection} icon truncate={30} />,
-        label: diagram.collection.label,
-        onSearch: this.onCollectionSearch,
-      },
-    ];
-
-    return scopes;
   }
 
   fetchIfNeeded() {
@@ -130,7 +105,6 @@ export class DiagramScreen extends Component {
         <Screen
           title={diagram.label}
           description={diagram.summary || ''}
-          searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
           <DiagramEditor
