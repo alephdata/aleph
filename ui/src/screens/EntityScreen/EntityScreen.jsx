@@ -129,7 +129,7 @@ class EntityScreen extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={entity.getCaption()} query={query}>
+        <Screen title={entity.getCaption()}>
           {breadcrumbs}
           <DualPane>
             <DualPane.SidePane className="ItemOverview">

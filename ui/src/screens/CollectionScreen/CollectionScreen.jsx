@@ -125,6 +125,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const query = queryCollectionEntities(location, collectionId);
+  console.log('location', location)
 
   return {
     collectionId,

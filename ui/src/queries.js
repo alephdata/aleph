@@ -23,7 +23,13 @@ export function queryCollectionEntities(location, collectionId, schema) {
   } else {
     context['filter:schemata'] = 'Thing';
   }
-  return Query.fromLocation('entities', location, context, 'entities').limit(200);
+
+  if (location) {
+    return Query.fromLocation('entities', location, context, 'entities').limit(200);
+  } else {
+    return new Query('entities', {}, context, 'entities')
+      .limit(200);
+  }
 }
 
 export function entitySetSchemaCountsQuery(entitySetId) {
