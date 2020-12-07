@@ -31,6 +31,10 @@
     .bp3-divider:last-child {
       display: none;
     }
+
+    .bp3-control-group, .bp3-input, .bp3-button-group {
+      border-radius: $aleph-border-radius !important;
+    }
   }
 
   .bp3-breadcrumbs {
