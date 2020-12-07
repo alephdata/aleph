@@ -73,7 +73,7 @@ export class CollectionScreen extends Component {
       />
     );
 
-    const operation = (
+    const operation = collection.writeable && (
       <CollectionManageMenu collection={collection} view="collapsed" />
     );
 

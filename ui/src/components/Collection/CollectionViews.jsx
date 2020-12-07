@@ -155,7 +155,7 @@ class CollectionViews extends React.Component {
           title={collectionViewIds.SEARCH === activeMode && (
             <>
               <Icon className="left-icon" icon="search" />
-              <FormattedMessage id="entity.info.search" defaultMessage="Search" />
+              <FormattedMessage id="entity.info.search" defaultMessage="Search results" />
             </>
           )}
           panel={<CollectionSearchMode collection={collection} />}

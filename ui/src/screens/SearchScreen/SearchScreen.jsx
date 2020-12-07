@@ -118,12 +118,13 @@ export class SearchScreen extends React.Component {
         title={title}
       >
         {breadcrumbs}
-        <SignInCallout />
         <FacetedEntitySearch
           facets={facetKeys}
           query={query}
           result={result}
-        />
+        >
+          <SignInCallout />
+        </FacetedEntitySearch>
       </Screen>
     );
   }
