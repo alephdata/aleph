@@ -22,6 +22,7 @@ class FolderViewer extends Component {
             query={query}
             collection={document.collection}
             document={document}
+            showSearch={false}
           />
         </DocumentDropzone>
       </div>

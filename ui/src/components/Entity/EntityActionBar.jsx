@@ -22,7 +22,7 @@ class EntityActionBar extends Component {
   }
 
   render() {
-    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, updateStatus, writeable } = this.props;
+    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, showSearch = true, updateStatus, writeable } = this.props;
 
 
     return (
@@ -44,12 +44,14 @@ class EntityActionBar extends Component {
               <Divider />
             </>
           )}
-          <SearchBox
-            onSearch={onSearchSubmit}
-            placeholder={searchPlaceholder}
-            query={query}
-            inputProps={{ disabled: searchDisabled }}
-          />
+          {showSearch && (
+            <SearchBox
+              onSearch={onSearchSubmit}
+              placeholder={searchPlaceholder}
+              query={query}
+              inputProps={{ disabled: searchDisabled }}
+            />
+          )}
         </div>
       </ControlGroup>
     );

@@ -101,7 +101,7 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, query, result, hasPending, intl,
+      collection, document, query, result, hasPending, intl, showSearch = true,
     } = this.props;
     const { selection } = this.state;
     const mutableCollection = collection !== undefined && collection.writeable;
@@ -138,6 +138,7 @@ export class DocumentManager extends Component {
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
           searchDisabled={result.total === 0 && !query.hasQuery()}
+          showSearch={showSearch}
         >
           {canUpload && (
             <DialogToggleButton
