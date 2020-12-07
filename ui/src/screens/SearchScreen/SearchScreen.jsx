@@ -12,11 +12,8 @@ import {
   Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
 } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
+import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
-import EntitySearch from 'components/EntitySearch/EntitySearch';
-import SearchFacets from 'components/Facet/SearchFacets';
-import DateFacet from 'components/Facet/DateFacet';
-import QueryTags from 'components/QueryTags/QueryTags';
 import Screen from 'components/Screen/Screen';
 import togglePreview from 'util/togglePreview';
 
@@ -51,18 +48,6 @@ const messages = defineMessages({
     id: 'search.screen.export_disabled_empty',
     defaultMessage: 'No results to export.',
   },
-  date_facet_show: {
-    id: 'search.screen.show_dates',
-    defaultMessage: 'Show date filter',
-  },
-  date_facet_hide: {
-    id: 'search.screen.hide_dates',
-    defaultMessage: 'Hide date filter',
-  },
-  date_facet_disabled: {
-    id: 'search.screen.dates_disabled',
-    defaultMessage: 'No dates available',
-  },
 });
 
 const facetKeys = [
@@ -72,26 +57,8 @@ const facetKeys = [
 export class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      facets: facetKeys,
-      hideFacets: false,
-    };
 
     this.updateQuery = this.updateQuery.bind(this);
-    this.toggleFacets = this.toggleFacets.bind(this);
-    this.toggleDateFacet = this.toggleDateFacet.bind(this);
-    this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
-    this.showNextPreview = this.showNextPreview.bind(this);
-    this.showPreviousPreview = this.showPreviousPreview.bind(this);
-    this.showPreview = this.showPreview.bind(this);
-  }
-
-  getCurrentPreviewIndex() {
-    const { location } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    return this.props.result.results.findIndex(
-      entity => entity.id === parsedHash['preview:id'],
-    );
   }
 
   getSearchScopes() {
@@ -137,58 +104,13 @@ export class SearchScreen extends React.Component {
     });
   }
 
-  showNextPreview(event) {
-    const currentSelectionIndex = this.getCurrentPreviewIndex();
-    const nextEntity = this.props.result.results[1 + currentSelectionIndex];
-
-    if (nextEntity && currentSelectionIndex >= 0) {
-      event.preventDefault();
-      this.showPreview(nextEntity);
-    }
-  }
-
-  showPreviousPreview(event) {
-    event.preventDefault();
-    const currentSelectionIndex = this.getCurrentPreviewIndex();
-    const nextEntity = this.props.result.results[currentSelectionIndex - 1];
-    if (nextEntity && currentSelectionIndex >= 0) {
-      event.preventDefault();
-      this.showPreview(nextEntity);
-    }
-  }
-
-  showPreview(entity) {
-    togglePreview(this.props.history, entity);
-  }
-
-  toggleFacets() {
-    this.setState(({ hideFacets }) => ({ hideFacets: !hideFacets }));
-  }
-
-  toggleDateFacet() {
-    const { dateFacetIsOpen, query } = this.props;
-    let newQuery;
-    if (dateFacetIsOpen) {
-      newQuery = query.remove('facet', 'dates')
-        .remove('facet_interval:dates', 'year');
-    } else {
-      newQuery = query.add('facet', 'dates')
-        .add('facet_interval:dates', 'year');
-    }
-    this.updateQuery(newQuery);
-  }
-
   render() {
-    const { dateFacetIsOpen, dateFacetIntervals, query, result, intl } = this.props;
-    const { hideFacets } = this.state;
+    const { query, result, intl } = this.props;
     const titleStatus = result.query_text ? result.query_text : intl.formatMessage(messages.loading);
     const title = intl.formatMessage(messages.title, { title: titleStatus });
-    const hideFacetsClass = hideFacets ? 'show' : 'hide';
-    const plusMinusIcon = hideFacets ? 'minus' : 'plus';
     const exportLink = result?.total > 0 ? result?.links?.export : null;
     const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
     const noResults = !result.isPending && result.total === 0;
-    const dateFacetDisabled = dateFacetIntervals && (noResults || dateFacetIntervals.length <= 1);
 
     const operation = (
       <ButtonGroup>
@@ -218,14 +140,6 @@ export class SearchScreen extends React.Component {
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
-    const empty = (
-      <ErrorSection
-        icon="search"
-        title={intl.formatMessage(messages.no_results_title)}
-        description={intl.formatMessage(messages.no_results_description)}
-      />
-    );
-
     const searchScopes = this.getSearchScopes();
 
     return (
@@ -233,87 +147,14 @@ export class SearchScreen extends React.Component {
         query={query}
         title={title}
         searchScopes={searchScopes}
-        hotKeys={[
-          {
-            combo: 'j', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
-          },
-          {
-            combo: 'k', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
-          },
-          {
-            combo: 'up', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
-          },
-          {
-            combo: 'down', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
-          },
-        ]}
       >
         {breadcrumbs}
-        <DualPane className="SearchScreen">
-          <DualPane.SidePane>
-            <div
-              role="switch"
-              aria-checked={!hideFacets}
-              tabIndex={0}
-              className="visible-sm-flex facets total-count bp3-text-muted"
-              onClick={this.toggleFacets}
-              onKeyPress={this.toggleFacets}
-            >
-              <Icon icon={plusMinusIcon} />
-              <span className="total-count-span">
-                <FormattedMessage id="search.screen.filters" defaultMessage="Filters" />
-              </span>
-            </div>
-            <div className={hideFacetsClass}>
-              <SearchFacets
-                query={query}
-                result={result}
-                updateQuery={this.updateQuery}
-                facets={this.state.facets}
-                isCollapsible
-              />
-            </div>
-          </DualPane.SidePane>
-          <DualPane.ContentPane>
-            <SignInCallout />
-            <div className="SearchScreen__control-bar">
-              <div className="SearchScreen__control-bar__inner-container">
-                {!noResults && (
-                  <div className="SearchScreen__control-bar__button">
-                    <Tooltip
-                      content={intl.formatMessage(
-                        dateFacetDisabled ? messages.date_facet_disabled : (
-                          dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
-                        )
-                      )}
-                    >
-                      <AnchorButton
-                        outlined
-                        icon="calendar"
-                        onClick={this.toggleDateFacet}
-                        disabled={dateFacetDisabled}
-                        active={dateFacetIsOpen}
-                      />
-                    </Tooltip>
-                  </div>
-                )}
-                <QueryTags query={query} updateQuery={this.updateQuery} />
-              </div>
-            </div>
-            <DateFacet
-              isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
-              intervals={dateFacetIntervals}
-              query={query}
-              updateQuery={this.updateQuery}
-            />
-            <EntitySearch
-              query={query}
-              updateQuery={this.updateQuery}
-              result={result}
-              emptyComponent={empty}
-            />
-          </DualPane.ContentPane>
-        </DualPane>
+        <SignInCallout />
+        <FacetedEntitySearch
+          facets={facetKeys}
+          query={query}
+          result={result}
+        />
       </Screen>
     );
   }
@@ -328,9 +169,8 @@ const mapStateToProps = (state, ownProps) => {
 
   const query = Query.fromLocation('entities', location, context, '');
   const result = selectEntitiesResult(state, query);
-  const dateFacetIsOpen = query.hasFacet('dates')
-  const dateFacetIntervals = result?.facets?.dates?.intervals;
-  return { dateFacetIsOpen, dateFacetIntervals, query, result };
+
+  return { query, result };
 };
 
 export default compose(
