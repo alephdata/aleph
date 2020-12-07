@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { ControlGroup, Divider } from '@blueprintjs/core';
 
+import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
@@ -12,8 +15,17 @@ import CollectionViews from 'components/Collection/CollectionViews';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { Collection, SinglePane, Breadcrumbs } from 'components/common';
+import { Breadcrumbs, Collection, SearchBox, SinglePane,  } from 'components/common';
+import { queryCollectionEntities } from 'queries';
 import { selectCollection, selectCollectionStatus } from 'selectors';
+
+
+const messages = defineMessages({
+  searchPlaceholder: {
+    id: 'collection.navbar.search',
+    defaultMessage: 'Search {collection}',
+  }
+});
 
 
 export class CollectionScreen extends Component {
@@ -25,15 +37,16 @@ export class CollectionScreen extends Component {
   }
 
   onSearch(queryText) {
-    const { history, collection } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': collection.id,
-    };
+    const { history, collection, location, query } = this.props;
+
+    const newQuery = query.set('q', queryText);
+
     history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
+      pathname: location.pathname,
+      hash: queryString.stringify({mode: 'search'}),
+      search: newQuery.toLocation()
     });
+
   }
 
   onUploadSuccess() {
@@ -52,9 +65,8 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      collection, collectionId, activeMode,
+      collection, collectionId, activeMode, query, intl, extraBreadcrumbs,
     } = this.props;
-    const { extraBreadcrumbs } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -67,7 +79,15 @@ export class CollectionScreen extends Component {
     };
 
     const operation = (
-      <CollectionManageMenu collection={collection} />
+      <ControlGroup>
+        <SearchBox
+          onSearch={this.onSearch}
+          placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
+          query={query}
+        />
+        <Divider />
+        <CollectionManageMenu collection={collection} />
+      </ControlGroup>
     );
 
     const breadcrumbs = (
@@ -111,10 +131,12 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+  const query = queryCollectionEntities(location, collectionId);
 
   return {
     collectionId,
     collection: selectCollection(state, collectionId),
+    query,
     status: selectCollectionStatus(state, collectionId),
     activeMode: hashQuery.mode || collectionViewIds.OVERVIEW,
   };
@@ -124,4 +146,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
+  injectIntl,
 )(CollectionScreen);
