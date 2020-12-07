@@ -11,6 +11,7 @@ import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMo
 import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
+import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
@@ -137,6 +138,16 @@ class CollectionViews extends React.Component {
             panel={<CollectionMappingsMode collection={collection} />}
           />
         )}
+        <Tab
+          id={collectionViewIds.SEARCH}
+          className="CollectionViews__tab"
+          title={
+            <>
+              <Icon className="left-icon" icon="search" />
+              <FormattedMessage id="entity.info.search" defaultMessage="Search" />
+            </>}
+          panel={<CollectionSearchMode collection={collection} />}
+        />
         <Tab
           id={collectionViewIds.XREF}
           className="CollectionViews__tab"
