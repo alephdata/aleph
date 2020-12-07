@@ -8,6 +8,7 @@ import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAcc
 import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionReingestAlert from './CollectionReingestAlert';
 import CollectionReindexAlert from './CollectionReindexAlert';
+import { Skeleton } from 'components/common';
 
 
 const messages = defineMessages({
@@ -35,6 +36,20 @@ const messages = defineMessages({
 
 
 class CollectionManageMenu extends PureComponent {
+  renderSkeletonButton = () => (
+    <Skeleton.Text type="span" length={5} className="bp3-button" />
+  )
+
+  renderSkeleton = () => {
+    if (this.props.view) {
+      return this.renderSkeletonButton();
+    } else {
+      return (
+        <ButtonGroup>{[...Array(3).keys()].map(this.renderSkeletonButton)}</ButtonGroup>
+      );
+    };
+  }
+
   getButtons = () => {
     const { collection, intl } = this.props;
 
@@ -106,6 +121,9 @@ class CollectionManageMenu extends PureComponent {
 
   render() {
     const { collection, intl, buttonGroupProps = {}, buttonProps = {}, view = "default" } = this.props;
+    if (collection.isPending) {
+      return this.renderSkeleton();
+    }
     if (!collection.writeable) {
       return null;
     }
@@ -118,7 +136,6 @@ class CollectionManageMenu extends PureComponent {
           <Menu>
             {buttons.map(this.renderMenuItem)}
           </Menu>
-
         </Popover>
       );
     } else if (view === 'semi-collapsed') {

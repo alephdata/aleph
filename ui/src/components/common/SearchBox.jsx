@@ -51,13 +51,16 @@ export class SearchBox extends PureComponent {
     if (!this.props.onSearch) {
       return null;
     }
+
     let searchPlaceholder = intl.formatMessage(messages.placeholder);
     if (placeholder) {
       searchPlaceholder = placeholder
     } else if (placeholderLabel) {
       searchPlaceholder = intl.formatMessage(messages.placeholder_label, { label: placeholderLabel })
     }
-    
+
+    console.log('placeholder', placeholder, placeholderLabel)
+
     return (
       <form onSubmit={this.onSubmitSearch} className={className}>
         <InputGroup

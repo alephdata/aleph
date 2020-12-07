@@ -69,6 +69,7 @@ export class CollectionScreen extends Component {
         onSearch={this.onSearch}
         placeholderLabel={collection.label}
         query={query}
+        inputProps={{disabled: collection.isPending}}
       />
     );
 
@@ -77,7 +78,7 @@ export class CollectionScreen extends Component {
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} search={search} >
+      <Breadcrumbs operation={operation} search={search}>
         <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
         {extraBreadcrumbs}
       </Breadcrumbs>
