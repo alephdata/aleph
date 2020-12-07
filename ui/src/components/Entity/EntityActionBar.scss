@@ -27,9 +27,14 @@ $status-width: 120px;
   }
 
   .bp3-overflow-list {
-    width: calc(100% - #{$search-bar-width});
+    width: 100%;
   }
 
+  &.show-search {
+    .bp3-overflow-list {
+      width: calc(100% - #{$search-bar-width});
+    }
+  }
   &.show-status {
     .bp3-overflow-list {
       width: calc(100% - #{$search-bar-width} - #{$status-width});
