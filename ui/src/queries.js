@@ -17,8 +17,12 @@ export function queryCollectionDocuments(location, collectionId) {
 export function queryCollectionEntities(location, collectionId, schema) {
   const context = {
     'filter:collection_id': collectionId,
-    'filter:schema': schema,
   };
+  if (schema) {
+    context['filter:schema'] = schema;
+  } else {
+    context['filter:schemata'] = 'Thing';
+  }
   return Query.fromLocation('entities', location, context, 'entities').limit(200);
 }
 

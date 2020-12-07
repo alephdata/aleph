@@ -9,7 +9,7 @@ import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
 
 const facetKeys = [
-  'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes',
+  'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes',
 ];
 
 

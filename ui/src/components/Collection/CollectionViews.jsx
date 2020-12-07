@@ -139,16 +139,6 @@ class CollectionViews extends React.Component {
           />
         )}
         <Tab
-          id={collectionViewIds.SEARCH}
-          className="CollectionViews__tab"
-          title={
-            <>
-              <Icon className="left-icon" icon="search" />
-              <FormattedMessage id="entity.info.search" defaultMessage="Search" />
-            </>}
-          panel={<CollectionSearchMode collection={collection} />}
-        />
-        <Tab
           id={collectionViewIds.XREF}
           className="CollectionViews__tab"
           title={
@@ -158,6 +148,17 @@ class CollectionViews extends React.Component {
               <ResultCount result={xref} />
             </>}
           panel={<CollectionXrefMode collection={collection} />}
+        />
+        <Tab
+          id={collectionViewIds.SEARCH}
+          className="CollectionViews__tab"
+          title={collectionViewIds.SEARCH === activeMode && (
+            <>
+              <Icon className="left-icon" icon="search" />
+              <FormattedMessage id="entity.info.search" defaultMessage="Search" />
+            </>
+          )}
+          panel={<CollectionSearchMode collection={collection} />}
         />
       </Tabs>
     );
