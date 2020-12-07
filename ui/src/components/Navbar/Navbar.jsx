@@ -56,7 +56,7 @@ export class Navbar extends React.Component {
       listItem: metadata.app.title,
       onSearch: this.onDefaultSearch,
     };
-    
+
     const queryText = query?.getString('q');
     const menuPages = pages.filter((page) => page.menu);
 
@@ -64,8 +64,8 @@ export class Navbar extends React.Component {
       <Bp3Navbar id="Navbar" className="Navbar bp3-dark">
         <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
           <Link to="/" className="Navbar__home-link">
-            <img src={metadata.app.logo} alt={metadata.app.title} />
-            {metadata.app.title}
+            {!!metadata.app.logo && <img src={metadata.app.logo} alt={metadata.app.title} />}
+            {!!metadata.app.title && <span className="Navbar__home-link__text">{metadata.app.title}</span>}
           </Link>
         </Bp3Navbar.Group>
         <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>

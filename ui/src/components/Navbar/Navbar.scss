@@ -74,10 +74,22 @@
 
   &__home-link {
     height: 28px;
+    display: table;
+
+    &__text {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: middle;
+      display: table-cell;
+      @include rtlSupportInvertedProp(padding, left, 8px, null);
+    }
+
     img {
       height: 28px;
+      display: table-cell;
     }
   }
+
 
   &__search-container {
     flex: 4 1 auto;
@@ -91,7 +103,7 @@
 
     &__searchbar {
       flex-grow: 4;
-      
+
       input.bp3-input {
         overflow: hidden;
         text-overflow: ellipsis;
