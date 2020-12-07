@@ -37,10 +37,6 @@ const messages = defineMessages({
     id: 'entity.viewer.add_to',
     defaultMessage: 'Add to...',
   },
-  searchPlaceholder: {
-    id: 'entity.viewer.search_placeholder',
-    defaultMessage: 'Search in {entity}',
-  },
 });
 
 class EntityScreen extends Component {
@@ -83,18 +79,16 @@ class EntityScreen extends Component {
     const { writeable } = entity.collection;
     const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
 
+    const search = hasSearch && (
+      <SearchBox
+        onSearch={this.onSearch}
+        placeholderLabel={entity.getCaption()}
+        query={query}
+      />
+    );
+
     const operation = (
       <ButtonGroup>
-        {hasSearch && (
-          <>
-            <SearchBox
-              onSearch={this.onSearch}
-              placeholder={intl.formatMessage(messages.searchPlaceholder, { entity: entity.getCaption() })}
-              query={query}
-            />
-            <Divider />
-          </>
-        )}
         <DownloadButton document={entity} />
         {writeable && (
           <>
@@ -121,7 +115,7 @@ class EntityScreen extends Component {
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} search={search} >
         <Breadcrumbs.Collection collection={entity.collection} />
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>

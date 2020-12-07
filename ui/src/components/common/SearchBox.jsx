@@ -4,9 +4,13 @@ import { InputGroup } from '@blueprintjs/core';
 
 
 const messages = defineMessages({
-  search_placeholder: {
+  placeholder: {
     id: 'search.placeholder_default',
     defaultMessage: 'Search…',
+  },
+  placeholder_label: {
+    id: 'search.placeholder_label',
+    defaultMessage: 'Search in {label}',
   },
 });
 
@@ -42,12 +46,18 @@ export class SearchBox extends PureComponent {
   }
 
   render() {
-    const { intl, placeholder, className, inputProps } = this.props;
+    const { intl, placeholder, placeholderLabel, className, inputProps } = this.props;
     const { queryText } = this.state;
-    const searchPlaceholder = placeholder || intl.formatMessage(messages.search_placeholder);
     if (!this.props.onSearch) {
       return null;
     }
+    let searchPlaceholder = intl.formatMessage(messages.placeholder);
+    if (placeholder) {
+      searchPlaceholder = placeholder
+    } else if (placeholderLabel) {
+      searchPlaceholder = intl.formatMessage(messages.placeholder_label, { label: placeholderLabel })
+    }
+    
     return (
       <form onSubmit={this.onSubmitSearch} className={className}>
         <InputGroup

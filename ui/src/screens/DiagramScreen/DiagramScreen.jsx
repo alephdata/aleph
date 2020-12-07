@@ -13,7 +13,7 @@ import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, UpdateStatus } from 'components/common';
+import { Breadcrumbs, Collection, SearchBox, UpdateStatus } from 'components/common';
 
 
 export class DiagramScreen extends Component {
@@ -81,20 +81,21 @@ export class DiagramScreen extends Component {
       return <LoadingScreen />;
     }
 
+    const search = (
+      <SearchBox
+        onSearch={this.onDiagramSearch}
+        placeholderLabel={diagram.label}
+      />
+    );
+
+    const status = <UpdateStatus status={updateStatus} />;
+
     const operation = (
-      <>
-        {updateStatus && (
-          <>
-            <UpdateStatus status={updateStatus} />
-            <Divider />
-          </>
-        )}
-        <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch} />
-      </>
+      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} />
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} search={search} status={status}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} />
       </Breadcrumbs>

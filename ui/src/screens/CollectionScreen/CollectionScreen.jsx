@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -18,14 +18,6 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, Collection, SearchBox, SinglePane,  } from 'components/common';
 import { queryCollectionEntities } from 'queries';
 import { selectCollection, selectCollectionStatus } from 'selectors';
-
-
-const messages = defineMessages({
-  searchPlaceholder: {
-    id: 'collection.navbar.search',
-    defaultMessage: 'Search in {collection}',
-  }
-});
 
 
 export class CollectionScreen extends Component {
@@ -72,20 +64,20 @@ export class CollectionScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
+    const search = (
+      <SearchBox
+        onSearch={this.onSearch}
+        placeholderLabel={collection.label}
+        query={query}
+      />
+    );
+
     const operation = (
-      <ControlGroup>
-        <SearchBox
-          onSearch={this.onSearch}
-          placeholder={intl.formatMessage(messages.searchPlaceholder, { collection: collection.label })}
-          query={query}
-        />
-        <Divider />
-        <CollectionManageMenu collection={collection} view="collapsed" />
-      </ControlGroup>
+      <CollectionManageMenu collection={collection} view="collapsed" />
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} search={search} >
         <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
         {extraBreadcrumbs}
       </Breadcrumbs>
@@ -124,15 +116,15 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
-  const query = queryCollectionEntities(location, collectionId);
-  console.log('location', location)
+  const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
+  const query = queryCollectionEntities(activeMode === 'search' && location, collectionId);
 
   return {
     collectionId,
     collection: selectCollection(state, collectionId),
     query,
     status: selectCollectionStatus(state, collectionId),
-    activeMode: hashQuery.mode || collectionViewIds.OVERVIEW,
+    activeMode,
   };
 };
 

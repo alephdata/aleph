@@ -27,6 +27,10 @@
     .bp3-button-group {
       align-items: center;
     }
+
+    .bp3-divider:last-child {
+      display: none;
+    }
   }
 
   .bp3-breadcrumbs {
