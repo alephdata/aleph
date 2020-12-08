@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { ButtonGroup, Divider } from '@blueprintjs/core';
-import { Entity as EntityObject } from '@alephdata/followthemoney';
+import { ButtonGroup } from '@blueprintjs/core';
 
 import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
@@ -17,10 +16,9 @@ import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import { Breadcrumbs, Collection, DualPane, Entity, SearchBox, Property } from 'components/common';
+import { Breadcrumbs, DualPane, SearchBox } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
-import getEntityLink from 'util/getEntityLink';
 import { deleteEntity } from 'actions';
 import { queryEntityReference } from 'queries';
 import {
@@ -62,7 +60,7 @@ class EntityScreen extends Component {
 
   render() {
     const {
-      entity, entityId, activeMode, query, isDocument, intl,
+      entity, entityId, activeMode, query, intl,
     } = this.props;
 
     if (entity.isError) {

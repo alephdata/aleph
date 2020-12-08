@@ -12,6 +12,7 @@ import c from 'classnames';
 import {
   selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'selectors';
+import getEntityLink from 'util/getEntityLink';
 import {
   Entity, ErrorSection, Property, SectionLoading,
 } from 'components/common';

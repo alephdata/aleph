@@ -4,9 +4,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { ControlGroup, Divider } from '@blueprintjs/core';
 
-import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
@@ -15,7 +13,7 @@ import CollectionViews from 'components/Collection/CollectionViews';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { Breadcrumbs, Collection, SearchBox, SinglePane,  } from 'components/common';
+import { Breadcrumbs, SearchBox, SinglePane,  } from 'components/common';
 import { queryCollectionEntities } from 'queries';
 import { selectCollection, selectCollectionStatus } from 'selectors';
 
@@ -29,7 +27,7 @@ export class CollectionScreen extends Component {
   }
 
   onSearch(queryText) {
-    const { history, collection, location, query } = this.props;
+    const { history, location, query } = this.props;
 
     const newQuery = query.set('q', queryText);
 
@@ -38,7 +36,6 @@ export class CollectionScreen extends Component {
       hash: queryString.stringify({mode: 'search'}),
       search: newQuery.toLocation()
     });
-
   }
 
   onUploadSuccess() {
@@ -57,7 +54,7 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      collection, collectionId, activeMode, query, intl, extraBreadcrumbs,
+      collection, collectionId, activeMode, query, extraBreadcrumbs,
     } = this.props;
 
     if (collection.isError) {

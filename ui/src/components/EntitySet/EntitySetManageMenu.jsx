@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Divider, Menu, MenuItem, Popover } from '@blueprintjs/core';
+import { Button, ButtonGroup, Menu, MenuItem, Popover } from '@blueprintjs/core';
 
-import { SearchBox } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetEditDialog from 'dialogs/EntitySetEditDialog/EntitySetEditDialog';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';

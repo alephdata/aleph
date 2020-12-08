@@ -1,7 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { AnchorButton, Icon, ButtonGroup, Tooltip } from '@blueprintjs/core';
+import { ButtonGroup, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -9,13 +9,12 @@ import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
 import { triggerQueryExport } from 'src/actions';
 import {
-  Collection, DualPane, SignInCallout, ErrorSection, Breadcrumbs, ResultText,
+  SignInCallout, Breadcrumbs, ResultText,
 } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import Screen from 'components/Screen/Screen';
-import togglePreview from 'util/togglePreview';
 
 import './SearchScreen.scss';
 
@@ -81,7 +80,6 @@ export class SearchScreen extends React.Component {
     const title = intl.formatMessage(messages.title, { title: titleStatus });
     const exportLink = result?.total > 0 ? result?.links?.export : null;
     const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
-    const noResults = !result.isPending && result.total === 0;
 
     const operation = (
       <ButtonGroup>

@@ -12,7 +12,7 @@ import EntityTableViews from 'components/EntityTable/EntityTableViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, SinglePane } from 'components/common';
+import { Breadcrumbs, SinglePane } from 'components/common';
 
 
 export class ListScreen extends Component {

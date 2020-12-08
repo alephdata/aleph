@@ -91,7 +91,6 @@ class MappingIndex extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
 
-  console.log('state', state);
   return { result: selectMappingsResult(state, query) };
 };
 const mapDispatchToProps = { queryMappings };

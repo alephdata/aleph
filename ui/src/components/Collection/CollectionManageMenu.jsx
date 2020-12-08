@@ -51,7 +51,7 @@ class CollectionManageMenu extends PureComponent {
   }
 
   getButtons = () => {
-    const { collection, intl } = this.props;
+    const { intl } = this.props;
 
     return [
       {
@@ -120,7 +120,7 @@ class CollectionManageMenu extends PureComponent {
   );
 
   render() {
-    const { collection, intl, buttonGroupProps = {}, buttonProps = {}, view = "default" } = this.props;
+    const { collection, buttonGroupProps = {}, buttonProps = {}, view = "default" } = this.props;
     if (collection.isPending) {
       return this.renderSkeleton();
     }

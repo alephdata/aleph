@@ -40,9 +40,15 @@ export class Navbar extends React.Component {
 
   onSearchSubmit(queryText) {
     const { history, query } = this.props;
+    let search = queryString.stringify({ q: queryText });
+    if (query) {
+      const newQuery = query.set('q', queryText);
+      search = newQuery.toLocation();
+    }
+
     history.push({
       pathname: '/search',
-      search: queryString.stringify({ q: queryText }),
+      search
     });
   }
 
@@ -51,11 +57,6 @@ export class Navbar extends React.Component {
       metadata, pages, query, isHomepage, intl,
     } = this.props;
     const { mobileSearchOpen } = this.state;
-
-    const defaultScope = {
-      listItem: metadata.app.title,
-      onSearch: this.onDefaultSearch,
-    };
 
     const queryText = query?.getString('q');
     const menuPages = pages.filter((page) => page.menu);
@@ -132,10 +133,15 @@ export class Navbar extends React.Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
-  session: selectSession(state),
-  pages: selectPages(state)
-});
+const mapStateToProps = (state, ownProps) => {
+  const { query } = ownProps;
+
+  return ({
+    query,
+    session: selectSession(state),
+    pages: selectPages(state),
+  });
+};
 
 export default compose(
   withRouter,

@@ -12,7 +12,7 @@ import { selectSession, selectMetadata } from 'selectors';
 
 import './Screen.scss';
 
-export class ScreenBase extends React.Component {
+export class Screen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -110,4 +110,4 @@ const mapStateToProps = state => ({
 export default compose(
   withRouter,
   connect(mapStateToProps),
-)(ScreenBase);
+)(Screen);
