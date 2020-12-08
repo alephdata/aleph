@@ -184,8 +184,8 @@ export class FacetedEntitySearch extends React.Component {
             {children}
             <div className="FacetedEntitySearch__control-bar">
               <div className="FacetedEntitySearch__control-bar__inner-container">
-                {!noResults && (
-                  <div className="FacetedEntitySearch__control-bar__button">
+                <div className="FacetedEntitySearch__control-bar__button">
+                  {!noResults && (
                     <Tooltip
                       content={intl.formatMessage(
                         dateFacetDisabled ? messages.date_facet_disabled : (
@@ -201,8 +201,8 @@ export class FacetedEntitySearch extends React.Component {
                         active={dateFacetIsOpen}
                       />
                     </Tooltip>
-                  </div>
-                )}
+                  )}
+                </div>
                 <QueryTags query={query} updateQuery={this.updateQuery} />
               </div>
             </div>
