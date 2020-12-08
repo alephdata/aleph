@@ -24,8 +24,7 @@ export class DiagramScreen extends Component {
       downloadTriggered: false,
     };
 
-    this.onCollectionSearch = this.onCollectionSearch.bind(this);
-    this.onDiagramSearch = this.onDiagramSearch.bind(this);
+    this.onSearch = this.onSearch.bind(this);
     this.onDiagramDownload = this.onDiagramDownload.bind(this);
     this.onDownloadComplete = this.onDownloadComplete.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
@@ -39,7 +38,7 @@ export class DiagramScreen extends Component {
     this.fetchIfNeeded();
   }
 
-  onDiagramSearch(filterText) {
+  onSearch(filterText) {
     this.setState({ filterText });
   }
 
@@ -81,7 +80,7 @@ export class DiagramScreen extends Component {
 
     const search = (
       <SearchBox
-        onSearch={this.onDiagramSearch}
+        onSearch={this.onSearch}
         placeholderLabel={diagram.label}
       />
     );
