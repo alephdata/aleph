@@ -22,10 +22,10 @@ class EntityActionBar extends Component {
   }
 
   render() {
-    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, showSearch = true, updateStatus, writeable } = this.props;
+    const { children, query, onSearchSubmit, searchDisabled, searchPlaceholder, updateStatus, writeable } = this.props;
 
     return (
-      <ControlGroup className={c("EntityActionBar", {"show-status":!!updateStatus, "show-search": showSearch})}>
+      <ControlGroup className={c("EntityActionBar", {"show-status":!!updateStatus})}>
         {writeable && (
           <OverflowList
             items={children}
@@ -43,14 +43,12 @@ class EntityActionBar extends Component {
               <Divider />
             </>
           )}
-          {showSearch && (
-            <SearchBox
-              onSearch={onSearchSubmit}
-              placeholder={searchPlaceholder}
-              query={query}
-              inputProps={{ disabled: searchDisabled }}
-            />
-          )}
+          <SearchBox
+            onSearch={onSearchSubmit}
+            placeholder={searchPlaceholder}
+            query={query}
+            inputProps={{ disabled: searchDisabled }}
+          />
         </div>
       </ControlGroup>
     );

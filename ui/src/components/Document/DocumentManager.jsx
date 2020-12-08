@@ -33,6 +33,10 @@ const messages = defineMessages({
     id: 'entity.document.manager.search_placeholder',
     defaultMessage: 'Search documents',
   },
+  search_placeholder_document: {
+    id: 'entity.document.manager.search_placeholder_document',
+    defaultMessage: 'Search in {label}',
+  },
   cannot_map: {
     id: 'entity.document.manager.cannot_map',
     defaultMessage: 'Select a table document to generate structured entities',
@@ -101,7 +105,7 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, query, result, hasPending, intl, showSearch = true,
+      collection, document, query, result, hasPending, intl,
     } = this.props;
     const { selection } = this.state;
     const mutableCollection = collection !== undefined && collection.writeable;
@@ -109,6 +113,10 @@ export class DocumentManager extends Component {
     const showActions = mutableCollection && mutableDocument;
     const canUpload = this.canUpload();
     const canMap = selection.length === 1 && selection[0].schema.isA('Table');
+
+    const searchPlaceholder = !!document
+      ? intl.formatMessage(messages.search_placeholder_document, { label: document.getCaption() })
+      : intl.formatMessage(messages.search_placeholder);
 
     const emptyComponent = (
       <div className="DocumentManager__content__empty">
@@ -136,9 +144,8 @@ export class DocumentManager extends Component {
           selection={selection}
           resetSelection={() => this.setState({ selection: [] })}
           onSearchSubmit={this.onSearchSubmit}
-          searchPlaceholder={intl.formatMessage(messages.search_placeholder)}
+          searchPlaceholder={searchPlaceholder}
           searchDisabled={result.total === 0 && !query.hasQuery()}
-          showSearch={showSearch}
         >
           {canUpload && (
             <DialogToggleButton

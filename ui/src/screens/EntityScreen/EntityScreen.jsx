@@ -75,7 +75,7 @@ class EntityScreen extends Component {
     }
 
     const { writeable } = entity.collection;
-    const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
+    const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email') && !entity.schema.isA('Folder');
 
     const search = hasSearch && (
       <SearchBox
