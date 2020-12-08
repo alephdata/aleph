@@ -130,7 +130,7 @@ export default class Breadcrumbs extends Component {
 
     return (
       <ControlGroup>
-        {items.map(item => item && <>{item}<Divider /></>)}
+        {items.map((item, i) => item && <React.Fragment key={i}>{item}<Divider /></React.Fragment>)}
       </ControlGroup>
     );
   }

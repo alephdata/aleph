@@ -97,6 +97,7 @@ class CollectionManageMenu extends PureComponent {
 
   renderMenuItem = ({ buttonProps, Dialog }) => (
     <DialogToggleButton
+      key={buttonProps.icon}
       ButtonComponent={MenuItem}
       buttonProps={{
         shouldDismissPopover: false,
@@ -110,6 +111,7 @@ class CollectionManageMenu extends PureComponent {
 
   renderButton = ({ buttonProps, Dialog }) => (
     <DialogToggleButton
+      key={buttonProps.icon}
       buttonProps={{
         ...buttonProps,
         ...(this.props.buttonProps)
