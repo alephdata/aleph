@@ -11,11 +11,11 @@ import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMo
 import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
-import CollectionSearchMode from 'components/Collection/CollectionSearchMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
+import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
-import { selectModel, selectEntitySetsResult, selectMappingsResult, selectCollectionXrefResult } from 'selectors';
+import { queryCollectionEntities, queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
+import { selectModel, selectEntitiesResult, selectEntitySetsResult, selectMappingsResult, selectCollectionXrefResult } from 'selectors';
 
 import './CollectionViews.scss';
 
@@ -49,7 +49,7 @@ class CollectionViews extends React.Component {
     const {
       collection, activeMode, diagrams, lists, mappings, xref,
       isCasefile, showDocumentsTab,
-      documentTabCount, entitiesTabCount
+      documentTabCount, entitiesTabCount, searchQuery, searchResult
     } = this.props;
 
     return (
@@ -156,15 +156,15 @@ class CollectionViews extends React.Component {
             <>
               <Icon className="left-icon" icon="search" />
               <FormattedMessage id="entity.info.search" defaultMessage="Search results" />
+              <ResultCount result={searchResult} />
             </>
           )}
-          panel={<CollectionSearchMode collection={collection} />}
+          panel={<FacetedEntitySearch query={searchQuery} result={searchResult} />}
         />
       </Tabs>
     );
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
@@ -173,6 +173,7 @@ const mapStateToProps = (state, ownProps) => {
   const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
   const mappingsQuery = queryCollectionMappings(location, collection.id);
+  const searchQuery = queryCollectionEntities(location, collection.id);
   const schemata = collection?.statistics?.schema?.values;
   let documentTabCount, entitiesTabCount;
 
@@ -200,6 +201,8 @@ const mapStateToProps = (state, ownProps) => {
     diagrams: selectEntitySetsResult(state, diagramsQuery),
     lists: selectEntitySetsResult(state, listsQuery),
     mappings: selectMappingsResult(state, mappingsQuery),
+    searchQuery,
+    searchResult: selectEntitiesResult(state, searchQuery)
   };
 };
 

@@ -16,6 +16,10 @@ import togglePreview from 'util/togglePreview';
 
 import './FacetedEntitySearch.scss';
 
+const defaultFacets = [
+  'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes',
+];
+
 const messages = defineMessages({
   no_results_title: {
     id: 'search.no_results_title',
@@ -123,12 +127,13 @@ export class FacetedEntitySearch extends React.Component {
   }
 
   render() {
-    const { children, facets, dateFacetIsOpen, dateFacetIntervals, query, result, intl } = this.props;
+    const { additionalFacets = [], children, dateFacetIsOpen, dateFacetIntervals, query, result, intl } = this.props;
     const { hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
     const noResults = !result.isPending && result.total === 0;
     const dateFacetDisabled = dateFacetIntervals && (noResults || dateFacetIntervals.length <= 1);
+    const facets = [...additionalFacets, ...defaultFacets];
 
     const empty = (
       <ErrorSection

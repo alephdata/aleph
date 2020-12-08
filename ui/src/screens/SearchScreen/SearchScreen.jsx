@@ -49,10 +49,6 @@ const messages = defineMessages({
   },
 });
 
-const facetKeys = [
-  'collection_id', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes',
-];
-
 export class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -117,9 +113,9 @@ export class SearchScreen extends React.Component {
       >
         {breadcrumbs}
         <FacetedEntitySearch
-          facets={facetKeys}
           query={query}
           result={result}
+          additionalFacets={['collection_id']}
         >
           <SignInCallout />
         </FacetedEntitySearch>
