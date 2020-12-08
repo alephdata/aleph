@@ -182,7 +182,7 @@ def setup_logging_context(request):
     # with every log entry produced by this particular request
     clear_contextvars()
     bind_contextvars(
-        version=__version__,
+        v=__version__,
         method=request.method,
         endpoint=request.endpoint,
         referrer=request.referrer,
@@ -203,7 +203,7 @@ def generate_request_log(resp, took):
     # Only add the context info that hasn't been already set in the beginning
     # of the request
     payload = {
-        "end_time": datetime.utcnow().isoformat(),
+        "time": datetime.utcnow().isoformat(),
         "took": took,
         "status": resp.status_code,
     }
