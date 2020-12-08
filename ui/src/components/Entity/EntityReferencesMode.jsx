@@ -12,7 +12,6 @@ import c from 'classnames';
 import {
   selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'selectors';
-import getEntityLink from 'util/getEntityLink';
 import {
   Entity, ErrorSection, Property, SectionLoading,
 } from 'components/common';
@@ -65,26 +64,6 @@ class EntityReferencesMode extends React.Component {
     if (reference && result.shouldLoad) {
       this.props.queryEntities({ query });
     }
-  }
-
-  getReferenceSearchScope(entity) {
-    const { reference } = this.props;
-    if (!reference || reference.count < 10) {
-      return null;
-    }
-    const item = (
-      <>
-        <Entity.Label entity={entity} icon truncate={30} />
-        { ': '}
-        <Property.Reverse prop={reference.property} />
-      </>
-    );
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: item,
-      label: reference.property.getReverse().label,
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
   }
 
   renderCell(prop, entity) {
