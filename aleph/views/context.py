@@ -122,6 +122,8 @@ def setup_request():
     request._log_tags = {}
     request._trace_id = str(uuid.uuid4())
 
+    # First set up auth context so that we know who we are dealing with
+    # when we log their activity or enforce rate limits
     enable_authz(request)
     setup_logging_context(request)
     enable_rate_limit(request)
@@ -176,7 +178,8 @@ def setup_logging_context(request):
     role_id = None
     if hasattr(request, "authz"):
         role_id = request.authz.id
-    # Set up context varibales for structured logging
+    # Set up context varibales for structured logging. The context is included
+    # with every log entry produced by this particular request
     clear_contextvars()
     bind_contextvars(
         version=__version__,
@@ -197,7 +200,8 @@ def setup_logging_context(request):
 
 def generate_request_log(resp, took):
     """Collect data about the request for analytical purposes."""
-    # Only add the context info that hasn't been set yet
+    # Only add the context info that hasn't been already set in the beginning
+    # of the request
     payload = {
         "end_time": datetime.utcnow().isoformat(),
         "took": took,
@@ -210,4 +214,6 @@ def generate_request_log(resp, took):
         if value is not None and tag not in payload:
             payload[tag] = value
     bind_contextvars(**payload)
-    log.info("Request handled", **payload)
+    # This logging statement is here to make sure we log the context of every
+    # request for analytics purposes
+    log.info("Request handled")
