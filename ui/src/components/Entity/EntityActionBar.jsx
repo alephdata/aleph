@@ -26,16 +26,14 @@ class EntityActionBar extends Component {
 
     return (
       <ControlGroup className={c("EntityActionBar", {"show-status":!!updateStatus})}>
-        {writeable && (
-          <OverflowList
-            items={children}
-            collapseFrom={Boundary.END}
-            visibleItemRenderer={(item, i) => <React.Fragment key={i}>{item}</React.Fragment>}
-            overflowRenderer={this.overflowListRenderer}
-            className="bp3-button-group"
-            observeParents
-          />
-        )}
+        <OverflowList
+          items={writeable ? children : []}
+          collapseFrom={Boundary.END}
+          visibleItemRenderer={(item, i) => <React.Fragment key={i}>{item}</React.Fragment>}
+          overflowRenderer={this.overflowListRenderer}
+          className="bp3-button-group"
+          observeParents
+        />
         <div className="EntityActionBar__right">
           {updateStatus && (
             <>
