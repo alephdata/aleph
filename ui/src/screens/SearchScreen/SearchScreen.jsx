@@ -8,12 +8,8 @@ import { withRouter } from 'react-router';
 import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
 import { triggerQueryExport } from 'src/actions';
-import {
-  SignInCallout, Breadcrumbs, ResultText,
-} from 'components/common';
-import { DialogToggleButton } from 'components/Toolbar';
+import { SignInCallout, ResultText } from 'components/common';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
-import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import Screen from 'components/Screen/Screen';
 
 import './SearchScreen.scss';
@@ -35,83 +31,19 @@ const messages = defineMessages({
     id: 'search.loading',
     defaultMessage: 'Loading...',
   },
-  export: {
-    id: 'search.screen.export',
-    defaultMessage: 'Export',
-  },
-  alert_export_disabled: {
-    id: 'search.screen.export_disabled',
-    defaultMessage: 'Cannot export more than 10,000 results at a time',
-  },
-  alert_export_disabled_empty: {
-    id: 'search.screen.export_disabled_empty',
-    defaultMessage: 'No results to export.',
-  },
 });
 
 export class SearchScreen extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.updateQuery = this.updateQuery.bind(this);
-  }
-
-  updateQuery(newQuery) {
-    const { history, location } = this.props;
-    // make it so the preview disappears if the query is changed.
-    const parsedHash = queryString.parse(location.hash);
-    parsedHash['preview:id'] = undefined;
-    parsedHash['preview:type'] = undefined;
-
-    history.push({
-      pathname: location.pathname,
-      search: newQuery.toLocation(),
-      hash: queryString.stringify(parsedHash),
-    });
-  }
-
   render() {
     const { query, result, intl } = this.props;
     const titleStatus = result.query_text ? result.query_text : intl.formatMessage(messages.loading);
     const title = intl.formatMessage(messages.title, { title: titleStatus });
-    const exportLink = result?.total > 0 ? result?.links?.export : null;
-    const tooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
-
-    const operation = (
-      <ButtonGroup>
-        <Tooltip content={tooltip} disabled={exportLink}>
-          <DialogToggleButton
-            buttonProps={{
-              text: intl.formatMessage(messages.export),
-              icon: "export",
-              disabled: !exportLink,
-              className: "bp3-intent-primary"
-            }}
-            Dialog={ExportDialog}
-            dialogProps={{
-              onExport: () => this.props.triggerQueryExport(exportLink)
-            }}
-          />
-        </Tooltip>
-      </ButtonGroup>
-    );
-    const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Text icon="search">
-          <FormattedMessage id="search.screen.breadcrumb" defaultMessage="Search" />
-        </Breadcrumbs.Text>
-        <Breadcrumbs.Text active>
-          <ResultText result={result} />
-        </Breadcrumbs.Text>
-      </Breadcrumbs>
-    );
 
     return (
       <Screen
         query={query}
         title={title}
       >
-        {breadcrumbs}
         <FacetedEntitySearch
           query={query}
           result={result}

@@ -6,9 +6,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { triggerQueryExport } from 'src/actions';
 import { DualPane, ErrorSection, HotKeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
+import SearchActionBar from 'components/EntitySearch/SearchActionBar';
 import SearchFacets from 'components/Facet/SearchFacets';
 import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
@@ -29,22 +29,6 @@ const messages = defineMessages({
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
   },
-  page_title: {
-    id: 'search.title',
-    defaultMessage: 'Search',
-  },
-  date_facet_show: {
-    id: 'search.screen.show_dates',
-    defaultMessage: 'Show date filter',
-  },
-  date_facet_hide: {
-    id: 'search.screen.hide_dates',
-    defaultMessage: 'Hide date filter',
-  },
-  date_facet_disabled: {
-    id: 'search.screen.dates_disabled',
-    defaultMessage: 'No dates available',
-  },
 });
 
 export class FacetedEntitySearch extends React.Component {
@@ -56,7 +40,6 @@ export class FacetedEntitySearch extends React.Component {
 
     this.updateQuery = this.updateQuery.bind(this);
     this.toggleFacets = this.toggleFacets.bind(this);
-    this.toggleDateFacet = this.toggleDateFacet.bind(this);
     this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);
@@ -111,19 +94,6 @@ export class FacetedEntitySearch extends React.Component {
 
   toggleFacets() {
     this.setState(({ hideFacets }) => ({ hideFacets: !hideFacets }));
-  }
-
-  toggleDateFacet() {
-    const { dateFacetIsOpen, query } = this.props;
-    let newQuery;
-    if (dateFacetIsOpen) {
-      newQuery = query.remove('facet', 'dates')
-        .remove('facet_interval:dates', 'year');
-    } else {
-      newQuery = query.add('facet', 'dates')
-        .add('facet_interval:dates', 'year');
-    }
-    this.updateQuery(newQuery);
   }
 
   render() {
@@ -187,30 +157,20 @@ export class FacetedEntitySearch extends React.Component {
           </DualPane.SidePane>
           <DualPane.ContentPane>
             {children}
+
             <div className="FacetedEntitySearch__control-bar">
               <div className="FacetedEntitySearch__control-bar__inner-container">
-                <div className="FacetedEntitySearch__control-bar__button">
-                  {!noResults && (
-                    <Tooltip
-                      content={intl.formatMessage(
-                        dateFacetDisabled ? messages.date_facet_disabled : (
-                          dateFacetIsOpen ? messages.date_facet_hide : messages.date_facet_show
-                        )
-                      )}
-                    >
-                      <AnchorButton
-                        outlined
-                        icon="calendar"
-                        onClick={this.toggleDateFacet}
-                        disabled={dateFacetDisabled}
-                        active={dateFacetIsOpen}
-                      />
-                    </Tooltip>
-                  )}
-                </div>
                 <QueryTags query={query} updateQuery={this.updateQuery} />
               </div>
             </div>
+            <SearchActionBar
+              query={query}
+              result={result}
+              dateFacetDisabled={dateFacetDisabled}
+              dateFacetIsOpen={dateFacetIsOpen}
+              updateQuery={this.updateQuery}
+            />
+
             <DateFacet
               isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
               intervals={dateFacetIntervals}
@@ -239,6 +199,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { triggerQueryExport }),
+  connect(mapStateToProps),
   injectIntl,
 )(FacetedEntitySearch);

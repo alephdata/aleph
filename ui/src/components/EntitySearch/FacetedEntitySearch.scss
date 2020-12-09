@@ -28,11 +28,10 @@
   }
 
   &__control-bar {
-    margin-bottom: $aleph-grid-size;
 
     &__inner-container {
       display: flex;
-      flex-flow: row-reverse nowrap;
+      flex-flow: row nowrap;
       justify-content: space-between;
     }
 
@@ -44,6 +43,8 @@
     }
 
     .QueryTags {
+      margin-bottom: $aleph-grid-size/2;
+
       .bp3-tag {
         @include rtlSupportInvertedProp(margin, right, 4px, 0);
       }
