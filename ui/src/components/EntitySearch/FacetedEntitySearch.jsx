@@ -102,7 +102,7 @@ export class FacetedEntitySearch extends React.Component {
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
     const noResults = !result.isPending && result.total === 0;
-    const dateFacetDisabled = dateFacetIntervals && (noResults || dateFacetIntervals.length <= 1);
+    const dateFacetDisabled = result.isPending || noResults || (dateFacetIsOpen && (!dateFacetIntervals || dateFacetIntervals.length <= 1));
     const facets = [...additionalFacets, ...defaultFacets];
 
     const empty = (

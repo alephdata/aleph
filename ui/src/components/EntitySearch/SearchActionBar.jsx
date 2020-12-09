@@ -27,13 +27,9 @@ const messages = defineMessages({
     id: 'search.screen.export_disabled_empty',
     defaultMessage: 'No results to export.',
   },
-  date_facet_show: {
-    id: 'search.screen.show_dates',
-    defaultMessage: 'Show dates',
-  },
-  date_facet_hide: {
-    id: 'search.screen.hide_dates',
-    defaultMessage: 'Hide dates',
+  dates: {
+    id: 'search.screen.dates',
+    defaultMessage: 'Date distribution',
   },
   date_facet_disabled: {
     id: 'search.screen.dates_disabled',
@@ -65,7 +61,6 @@ class SearchActionBar extends Component {
   render() {
     const { dateFacetDisabled, dateFacetIsOpen, query, intl, result } = this.props;
 
-    const dateText = intl.formatMessage(messages[(dateFacetIsOpen && !dateFacetDisabled) ? 'date_facet_hide' : 'date_facet_show'])
     const dateTooltip = intl.formatMessage(messages.date_facet_disabled);
     const exportLink = result?.total > 0 ? result?.links?.export : null;
     const exportTooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
@@ -82,7 +77,7 @@ class SearchActionBar extends Component {
                 onClick={this.toggleDateFacet}
                 disabled={dateFacetDisabled}
                 active={dateFacetIsOpen}
-                text={dateText}
+                text={intl.formatMessage(messages.dates)}
                 outlined={true}
               />
             </Tooltip>
