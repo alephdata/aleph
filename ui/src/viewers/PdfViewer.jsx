@@ -64,6 +64,7 @@ export class PdfViewer extends Component {
     window.removeEventListener('resize', throttle(this.onResize, 500));
   }
 
+  onDocumentLoad(pdf) {
     // Handle a resize event (to check document width) after loading
     // Note: onDocumentLoad actualy happens *before* rendering, but the
     // rendering calls happen a bit too often as we don't have sophisticated
@@ -85,7 +86,8 @@ export class PdfViewer extends Component {
   }
 
   setRotation() {
-    const { page, rotate } = this.props;
+    const { rotate } = this.props;
+    // For reference: https://github.com/wojtekmaj/react-pdf/issues/277#issuecomment-424464542
     if (this.pageData) {
       this.setState({
         effectiveRotation: normalizeDegreeValue(this.pageData.rotate + (rotate || 0))
@@ -131,6 +133,7 @@ export class PdfViewer extends Component {
     const { effectiveRotation, width } = this.state;
     const { Document, Page } = this.state.components;
     const loading = <Skeleton.Text type="div" length={4000} />;
+
     return (
       <>
         {numPages !== null && numPages > 0 && (

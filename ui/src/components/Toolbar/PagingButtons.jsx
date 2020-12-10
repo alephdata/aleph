@@ -61,7 +61,7 @@ class PagingButtons extends React.Component {
   }
 
   render() {
-    const { document, numberOfPages, page, rotate, showRotateButtons } = this.props;
+    const { document, numberOfPages, page, showRotateButtons } = this.props;
     const { pageInputVal } = this.state;
 
     if (document.isPending || !document.links) {
