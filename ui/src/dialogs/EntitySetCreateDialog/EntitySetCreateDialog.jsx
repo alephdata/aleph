@@ -20,7 +20,7 @@ const messages = defineMessages({
   },
   collection_select_placeholder: {
     id: 'entityset.create.collection.existing',
-    defaultMessage: 'Select a dataset',
+    defaultMessage: 'Select an investigation',
   },
   list_title: {
     id: 'list.create.title',
@@ -256,7 +256,7 @@ class EntitySetCreateDialog extends Component {
                 <div className="bp3-label">
                   <FormattedMessage
                     id="entityset.create.collection"
-                    defaultMessage="Dataset"
+                    defaultMessage="Investigation"
                   />
                   <Collection.Select
                     collection={collection}
@@ -270,7 +270,7 @@ class EntitySetCreateDialog extends Component {
                     <FormattedMessage
                       id='entityset.create.collection.new'
                       defaultMessage={
-                        `Don't see the dataset you're looking for? {link}`
+                        `Don't see the investigation you're looking for? {link}`
                       }
                       values={{
                          link: (

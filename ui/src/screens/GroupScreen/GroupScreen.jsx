@@ -21,11 +21,11 @@ import './GroupScreen.scss';
 const messages = defineMessages({
   empty: {
     id: 'sources.index.empty',
-    defaultMessage: 'This group is not linked to any datasets.',
+    defaultMessage: 'This group is not linked to any datasets or investigations.',
   },
   placeholder: {
     id: 'sources.index.placeholder',
-    defaultMessage: 'Search datasets belonging to {group}...',
+    defaultMessage: 'Search datasets and investigations belonging to {group}...',
   },
 });
 
@@ -59,7 +59,7 @@ export class GroupScreen extends Component {
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="group.page.description"
-                defaultMessage="The list below shows all datasets that belong to this group."
+                defaultMessage="The list below shows all datasets and investigations that belong to this group."
               />
             </p>
           </div>
