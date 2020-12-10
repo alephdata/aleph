@@ -47,7 +47,7 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, pages, searchScopes, navbarRef, query, isHomepage,
+      metadata, pages, searchScopes, navbarRef, query, isHomepage, session,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
@@ -109,11 +109,13 @@ export class Navbar extends React.Component {
                     <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
                   </Button>
                 </Link>
-                <Link to="/investigations">
-                  <Button icon="briefcase" className="Navbar_collections-button bp3-minimal">
-                    <FormattedMessage id="nav.cases" defaultMessage="Investigations" />
-                  </Button>
-                </Link>
+                {session.loggedIn && (
+                  <Link to="/investigations">
+                    <Button icon="briefcase" className="Navbar_collections-button bp3-minimal">
+                      <FormattedMessage id="nav.cases" defaultMessage="Investigations" />
+                    </Button>
+                  </Link>
+                )}
                 {menuPages.map(page => (
                   <Link to={getPageLink(page)} key={page.name}>
                     <Button icon={page.icon} className="Navbar_collections-button bp3-minimal">
