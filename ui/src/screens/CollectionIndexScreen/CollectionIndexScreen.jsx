@@ -122,7 +122,10 @@ export class CollectionIndexScreen extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  let query = Query.fromLocation('collections', location, {}, 'collections')
+  const context = {
+    'exclude:category': 'casefile'
+  };
+  let query = Query.fromLocation('collections', location, context, 'collections')
     .defaultFacet('countries')
     .defaultFacet('category')
     .limit(40);
