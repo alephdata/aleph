@@ -104,7 +104,7 @@
     }
   }
 
-  &__collections-button {
+  &__collections-button.mobile-hide {
     @media screen and (max-width: $aleph-screen-sm-max-width) {
       display: none !important;
     }

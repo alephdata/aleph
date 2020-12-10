@@ -105,20 +105,20 @@ export class Navbar extends React.Component {
             {!mobileSearchOpen && (
               <>
                 <Link to="/datasets">
-                  <Button icon="database" className="Navbar_collections-button bp3-minimal">
+                  <Button icon="database" className="Navbar__collections-button bp3-minimal">
                     <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
                   </Button>
                 </Link>
                 {session.loggedIn && (
                   <Link to="/investigations">
-                    <Button icon="briefcase" className="Navbar_collections-button bp3-minimal">
+                    <Button icon="briefcase" className="Navbar__collections-button mobile-hide bp3-minimal">
                       <FormattedMessage id="nav.cases" defaultMessage="Investigations" />
                     </Button>
                   </Link>
                 )}
                 {menuPages.map(page => (
                   <Link to={getPageLink(page)} key={page.name}>
-                    <Button icon={page.icon} className="Navbar_collections-button bp3-minimal">
+                    <Button icon={page.icon} className="Navbar__collections-button mobile-hide bp3-minimal">
                       {page.short}
                     </Button>
                   </Link>
