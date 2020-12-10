@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup, AnchorButton, Divider, InputGroup } from '@blueprintjs/core';
 
+import normalizeDegreeValue from 'util/normalizeDegreeValue';
+
 import './PagingButtons.scss';
 
 
@@ -34,11 +36,11 @@ class PagingButtons extends React.Component {
     return queryString.stringify(parsedHash);
   }
 
-  getRotateLink(rotation) {
-    const { location } = this.props;
+  getRotateLink(rotateDelta) {
+    const { location, rotate } = this.props;
 
     const parsedHash = queryString.parse(location.hash);
-    parsedHash.rotate = rotation < 0 ? (360 + rotation) % 360 : rotation % 360;
+    parsedHash.rotate = normalizeDegreeValue((rotate || 0) + rotateDelta);
     return queryString.stringify(parsedHash);
   }
 
@@ -59,13 +61,12 @@ class PagingButtons extends React.Component {
   }
 
   render() {
-    const { document, numberOfPages, page, rotate } = this.props;
+    const { document, numberOfPages, page, rotate, showRotateButtons } = this.props;
     const { pageInputVal } = this.state;
 
     if (document.isPending || !document.links) {
       return null;
     }
-    const showRotateButtons = rotate !== undefined;
 
     // Only displays paging buttons on PDF docs
     // Having the logic here makes it easier to use this component.
@@ -97,8 +98,8 @@ class PagingButtons extends React.Component {
           </div>
           {showRotateButtons && (
             <>
-              <AnchorButton minimal href={`#${this.getRotateLink(rotate - 90)}`} icon="image-rotate-left" />
-              <AnchorButton minimal href={`#${this.getRotateLink(rotate + 90)}`} icon="image-rotate-right" />
+              <AnchorButton minimal href={`#${this.getRotateLink(-90)}`} icon="image-rotate-left" />
+              <AnchorButton minimal href={`#${this.getRotateLink(90)}`} icon="image-rotate-right" />
               <Divider />
             </>
           )}
