@@ -2,11 +2,12 @@ import logging
 from enum import Enum
 from datetime import datetime
 from normality import stringify
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 from banal import ensure_list
 
 from aleph.core import db
-from aleph.model import Role, Collection
+from aleph.model import Role, Collection, Permission
 from aleph.model.common import SoftDeleteModel
 from aleph.model.common import ENTITY_ID_LEN, make_textid, query_like
 
@@ -142,6 +143,19 @@ class EntitySet(db.Model, SoftDeleteModel):
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
         pq.update({cls.deleted_at: deleted_at}, synchronize_session=False)
+
+    @classmethod
+    def type_counts(cls, authz=None, collection_id=None):
+        q = db.session.query(cls.type, func.count(cls.id))
+        q = q.filter(cls.deleted_at == None)  # noqa
+        if collection_id is not None:
+            q = q.filter(cls.collection_id == collection_id)
+        elif authz is not None and not authz.is_admin:
+            q = q.join(Permission, cls.collection_id == Permission.collection_id)
+            q = q.filter(Permission.read == True)  # noqa
+            q = q.filter(Permission.role_id.in_(authz.roles))
+        q = q.group_by(cls.type)
+        return dict(q.all())
 
     def items(self, authz=None, deleted=False):
         q = EntitySetItem.all(deleted=deleted)

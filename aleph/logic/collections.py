@@ -5,7 +5,7 @@ from servicelayer.jobs import Job
 
 from aleph.core import db, cache
 from aleph.authz import Authz
-from aleph.queues import cancel_queue, ingest_entity
+from aleph.queues import cancel_queue, ingest_entity, get_status
 from aleph.model import Collection, Entity, Document, Mapping
 from aleph.model import Permission, Events, EntitySet
 from aleph.index import collections as index
@@ -47,6 +47,17 @@ def refresh_collection(collection_id):
         cache.object_key(Collection, collection_id),
         cache.object_key(Collection, collection_id, "stats"),
     )
+
+
+def get_deep_collection(collection):
+    mappings = Mapping.by_collection(collection.id).count()
+    entitysets = EntitySet.type_counts(collection_id=collection.id)
+    return {
+        "statistics": index.get_collection_stats(collection.id),
+        "counts": {"mappings": mappings, "entitysets": entitysets},
+        "status": get_status(collection),
+        "shallow": False,
+    }
 
 
 def compute_collections():

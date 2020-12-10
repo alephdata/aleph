@@ -78,6 +78,7 @@ class MappingIndex extends Component {
             </li>
           ))}
         </ul>
+
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-300px"
@@ -90,14 +91,11 @@ class MappingIndex extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
-
-  console.log('state', state);
   return { result: selectMappingsResult(state, query) };
 };
-const mapDispatchToProps = { queryMappings };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryMappings }),
   injectIntl,
 )(MappingIndex);
