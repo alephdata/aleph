@@ -50,7 +50,6 @@ class EntityViews extends React.Component {
     if (references.isPending) {
       return <SectionLoading />;
     }
-    const isMatchable = entity && entity.schema && entity.schema.matchable;
     const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
     const hasBrowseMode = entity.schema.isA('Folder');
     const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
@@ -78,7 +77,7 @@ class EntityViews extends React.Component {
               </>
             )}
             panel={
-              <EntityInfoMode entity={entity} />
+              <EntityInfoMode entity={entity} isPreview={isPreview} />
             }
           />
         )}
@@ -163,7 +162,7 @@ class EntityViews extends React.Component {
             panel={<EntityTagsMode entity={entity} />}
           />
         )}
-        { isMatchable && (
+        { entity?.schema?.matchable && (
           <Tab
             id="similar"
             disabled={similar.total === 0}
@@ -177,7 +176,7 @@ class EntityViews extends React.Component {
             panel={<EntitySimilarMode entity={entity} />}
           />
         )}
-        { (entity.collection.writeable && entity.schema.isA('Table')) && (
+        { (entity?.collection?.writeable && entity.schema.isA('Table')) && (
           <Tab
             id="mapping"
             title={(

@@ -2,7 +2,7 @@ import React, { PureComponent, Component } from 'react';
 import { Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Category, Collection, Entity, EntitySet, Skeleton, Restricted, ProfileTag } from 'components/common';
+import { Category, Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
 
 import './Breadcrumbs.scss';
 
@@ -91,7 +91,6 @@ class EntitySetBreadcrumb extends PureComponent {
     return (
       <li key={entitySet.id}>
         <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
-        <ProfileTag entitySet={entitySet} />
       </li>
     );
   }

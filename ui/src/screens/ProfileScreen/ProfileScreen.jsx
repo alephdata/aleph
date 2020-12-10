@@ -3,6 +3,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
+import { defineMessages, injectIntl } from 'react-intl';
+import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
 
 import Screen from 'components/Screen/Screen';
 import EntityHeading from 'components/Entity/EntityHeading';
@@ -10,6 +12,8 @@ import EntityInfoMode from 'components/Entity/EntityInfoMode';
 import ProfileViews from 'components/Profile/ProfileViews';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
+import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
+import { DialogToggleButton } from 'components/Toolbar';
 import { Breadcrumbs, DualPane } from 'components/common';
 
 import {
@@ -30,6 +34,15 @@ import {
 } from 'selectors';
 import { profileSimilarQuery, profileReferencesQuery, entitySetItemsQuery } from 'queries';
 
+import './ProfileScreen.scss';
+
+const messages = defineMessages({
+  delete: {
+    id: 'entityset.info.delete',
+    defaultMessage: 'Delete',
+  },
+});
+
 
 class ProfileScreen extends Component {
   componentDidMount() {
@@ -43,7 +56,7 @@ class ProfileScreen extends Component {
   fetchIfNeeded() {
     const { profileId, profile, tagsResult } = this.props;
 
-    const loadDeep = !profile?.merged?.id && !profile.isPending;
+    const loadDeep = !profile?.entity?.id && !profile.isPending && !profile.isError;
     if (profile.shouldLoad || loadDeep) {
       this.props.fetchProfile({ id: profileId });
     }
@@ -68,18 +81,39 @@ class ProfileScreen extends Component {
     }
   }
 
+  renderOperations() {
+    const { intl, profile } = this.props;
+    return (
+      <ControlGroup className="EntitySetManageMenu">
+        {profile.writeable && (
+          <ButtonGroup>
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.delete),
+                icon: "trash"
+              }}
+              Dialog={EntitySetDeleteDialog}
+              dialogProps={{ entitySet: profile }}
+            />
+          </ButtonGroup>
+        )}
+      </ControlGroup>
+
+    );
+  }
+
   render() {
     const { profile, viaEntityId, activeMode } = this.props;
 
     if (profile.isError) {
       return <ErrorScreen error={profile.error} />;
     }
-    if (!profile?.id || !profile?.merged) {
+    if (!profile?.id || !profile?.entity) {
       return <LoadingScreen />;
     }
 
     const breadcrumbs = (
-      <Breadcrumbs>
+      <Breadcrumbs operation={this.renderOperations()}>
         <Breadcrumbs.Collection collection={profile.collection} />
         <Breadcrumbs.EntitySet key="profile" entitySet={profile} />
       </Breadcrumbs>
@@ -90,8 +124,8 @@ class ProfileScreen extends Component {
         {breadcrumbs}
         <DualPane>
           <DualPane.SidePane className="ItemOverview">
-            <div className="ItemOverview__heading">
-              <EntityHeading entity={profile.entity} isPreview={false} />
+            <div className="ItemOverview__heading profile">
+              <EntityHeading entity={profile.entity} isPreview={false} isProfile={true} />
             </div>
             <div className="ItemOverview__content">
               <EntityInfoMode entity={profile.entity} isPreview={false} />
@@ -143,5 +177,6 @@ const mapDispatchToProps = {
 
 export default compose(
   withRouter,
+  injectIntl,
   connect(mapStateToProps, mapDispatchToProps),
 )(ProfileScreen);

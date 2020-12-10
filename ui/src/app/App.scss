@@ -241,3 +241,19 @@ a {
     display: none !important;
   }
 }
+
+// Profile callout
+.ProfileCallout {
+  &.bp3-callout {
+    background-color: $aleph-profile-dark;
+    color: white;
+
+    a {
+      color: $aleph-profile-light;
+    }
+
+    .bp3-icon {
+      color: white !important;
+    }
+  }
+}

@@ -55,7 +55,7 @@ class ProfileViews extends React.Component {
           title={(
             <TextLoading loading={items.total === undefined}>
               <Icon icon="layers" className="left-icon" />
-              <FormattedMessage id="profile.info.items" defaultMessage="Profile" />
+              <FormattedMessage id="profile.info.items" defaultMessage="Entity decisions" />
               <ResultCount result={items} />
             </TextLoading>
           )}

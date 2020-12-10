@@ -15,7 +15,6 @@ import Entity from './Entity';
 import Facet from './Facet';
 import FileImport from './FileImport';
 import Mention from './Mention';
-import ProfileTag from './ProfileTag';
 import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
@@ -68,7 +67,6 @@ export {
   SinglePane,
   SortableTH,
   Statistics,
-  ProfileTag,
   Summary,
   Count,
   Score,

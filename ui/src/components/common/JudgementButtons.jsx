@@ -36,7 +36,7 @@ class JudgementButtons extends Component {
     render() {
         const { obj, intl } = this.props;
         const { blocking } = this.state;
-        const disabled = blocking || !obj.writeable;
+        const disabled = this.props.disabled || blocking || !obj.writeable;
         return (
             <ButtonGroup className="JudgementButtons" vertical>
                 <Tooltip content={intl.formatMessage(messages.positive)} position={Position.RIGHT} disabled={disabled}>

@@ -1,47 +1,65 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Card } from '@blueprintjs/core';
+import { Link } from 'react-router-dom';
+import { Callout } from '@blueprintjs/core';
 
-import { Count, Collection, Summary } from 'components/common';
+import { Count, Collection, Summary, Entity } from 'components/common';
 import EntityProperties from 'components/Entity/EntityProperties';
+import getEntitySetLink from 'util/getEntitySetLink';
 
 import './EntityInfoMode.scss';
 
 
 function EntityInfoMode(props) {
-  const { entity } = props;
+  const { entity, isPreview } = props;
+  const profileLink = getEntitySetLink({ 'id': entity.profileId, 'type': 'profile' });
   return (
-    <EntityProperties entity={entity}>
-      {entity.collection && (
-        <li>
-          <span className="key">
-            <span>
-              <FormattedMessage
-                id="infoMode.collection"
-                defaultMessage="Dataset"
-              />
-            </span>
-          </span>
-          <Card elevation={0} className="value collection-info">
-            <span className="collection-info__item">
-              <Collection.Status collection={entity.collection} showPopover icon LabelComponent={Collection.Link} />
-            </span>
-            {entity.collection.summary && (
-              <Summary text={entity.collection.summary} className="collection-info__item" truncate={4} />
-            )}
-            <span className="collection-info__item">
-              <FormattedMessage
-                id="infoMode.collection.entries"
-                defaultMessage="{count} entries"
-                values={{
-                  count: <Count count={entity.collection.count} className="bp3-intent-primary" />,
-                }}
-              />
-            </span>
-          </Card>
-        </li>
+    <>
+      {isPreview && entity.profileId && (
+        <Callout icon="layers" intent="primary" className="ProfileCallout">
+          <FormattedMessage
+            id="profile.items.intro"
+            defaultMessage={"{entity} combines entities from other datasets <link>into a profile</link>. "}
+            values={{
+              entity: <Entity.Label entity={entity} />,
+              link: chunks => <Link to={profileLink}>{chunks}</Link >,
+            }}
+          />
+        </Callout>
       )}
-    </EntityProperties>
+      <EntityProperties entity={entity}>
+        {entity.collection && (
+          <li>
+            <span className="key">
+              <span>
+                <FormattedMessage
+                  id="infoMode.collection"
+                  defaultMessage="Dataset"
+                />
+              </span>
+            </span>
+            <Card elevation={0} className="value collection-info">
+              <span className="collection-info__item">
+                <Collection.Status collection={entity.collection} showPopover icon LabelComponent={Collection.Link} />
+              </span>
+              {entity.collection.summary && (
+                <Summary text={entity.collection.summary} className="collection-info__item" truncate={4} />
+              )}
+              <span className="collection-info__item">
+                <FormattedMessage
+                  id="infoMode.collection.entries"
+                  defaultMessage="{count} entries"
+                  values={{
+                    count: <Count count={entity.collection.count} className="bp3-intent-primary" />,
+                  }}
+                />
+              </span>
+            </Card>
+          </li>
+        )}
+      </EntityProperties>
+    </>
   );
 }
 

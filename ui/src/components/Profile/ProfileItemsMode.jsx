@@ -39,6 +39,10 @@ class ProfileItemsMode extends Component {
   }
 
   renderRow(item) {
+    const { viaEntityId } = this.props;
+    if (item.entity.id === viaEntityId) {
+      return null;
+    }
     return (
       <tr key={item.id || item.entity.id}>
         <td className="numeric narrow">
@@ -90,7 +94,7 @@ class ProfileItemsMode extends Component {
             id="profile.items.intro"
             defaultMessage={"The profile aggregates attributes and relationships from {count} entities across different datasets. You can select what source entities to include in the list below. "}
             values={{
-              count: profile.entities.length,
+              count: profile.entities ? profile.entities.length : 0,
             }}
           />
           {viaEntityId && (

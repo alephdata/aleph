@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withRouter, Redirect } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
@@ -8,8 +10,6 @@ import { Entity as EntityObject } from '@alephdata/followthemoney';
 import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import EntityContextLoader from 'components/Entity/EntityContextLoader';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityInfoMode from 'components/Entity/EntityInfoMode';
 import EntityViews from 'components/Entity/EntityViews';
@@ -22,7 +22,6 @@ import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
 import { deleteEntity } from 'actions';
-import { entityReferenceQuery } from 'queries';
 import {
   selectEntity, selectEntityView,
 } from 'selectors';
@@ -203,13 +202,7 @@ const mapStateToProps = (state, ownProps) => {
   const parsedHash = queryString.parse(location.hash);
   parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);
   const query = Query.fromLocation('entities', location, {}, 'document');
-
-  return {
-    entity,
-    entityId,
-    parsedHash,
-    query,
-  };
+  return { entity, entityId, parsedHash, query };
 };
 
 export default compose(

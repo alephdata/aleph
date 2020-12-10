@@ -34,12 +34,12 @@ class EntityLink extends PureComponent {
     if (!link) {
       return content;
     }
-    const profileClass = entity.profileId ? 'profile' : undefined;
+    // const profileClass = entity.profileId ? 'profile' : undefined;
     return (
       <Link
         to={link}
         onClick={preview ? this.onClick : undefined}
-        className={c('EntityLink', className, profileClass)}>
+        className={c('EntityLink', className)}>
         {content}
       </Link>
     );
