@@ -10,16 +10,25 @@ import './EntityInfoMode.scss';
 
 function EntityInfoMode(props) {
   const { entity } = props;
+  const isCasefile = entity.collection?.casefile;
   return (
     <EntityProperties entity={entity}>
       {entity.collection && (
         <li>
           <span className="key">
             <span>
-              <FormattedMessage
-                id="infoMode.collection"
-                defaultMessage="Dataset"
-              />
+              {isCasefile && (
+                <FormattedMessage
+                  id="infoMode.collection_casefile"
+                  defaultMessage="Investigation"
+                />
+              )}
+              {!isCasefile && (
+                <FormattedMessage
+                  id="infoMode.collection"
+                  defaultMessage="Dataset"
+                />
+              )}
             </span>
           </span>
           <Card elevation={0} className="value collection-info">

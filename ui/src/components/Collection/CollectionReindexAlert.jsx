@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { triggerCollectionReindex } from 'actions';
 import { showSuccessToast } from 'app/toast';
+import { Collection } from 'components/common';
 
 
 const messages = defineMessages({
@@ -46,7 +47,7 @@ class CollectionReindexAlert extends Component {
   }
 
   render() {
-    const { intl, isOpen } = this.props;
+    const { collection, intl, isOpen } = this.props;
     return (
       <Alert
         cancelButtonText={intl.formatMessage(messages.cancel)}
@@ -62,7 +63,8 @@ class CollectionReindexAlert extends Component {
         <p>
           <FormattedMessage
             id="collection.analyze.alert.text"
-            defaultMessage="You're about to re-index the entities in this dataset. This can be helpful if there are inconsistencies in how the data is presented."
+            defaultMessage="You're about to re-index the entities in {collectionLabel}. This can be helpful if there are inconsistencies in how the data is presented."
+            values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
           />
         </p>
         <Checkbox

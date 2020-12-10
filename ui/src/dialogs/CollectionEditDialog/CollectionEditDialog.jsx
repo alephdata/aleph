@@ -45,11 +45,11 @@ const messages = defineMessages({
   },
   check_restricted: {
     id: 'collection.edit.info.restricted',
-    defaultMessage: 'This collection is restricted and viewers should be warned.',
+    defaultMessage: 'This dataset is restricted and viewers should be warned.',
   },
   title: {
     id: 'collection.edit.title',
-    defaultMessage: 'Dataset settings',
+    defaultMessage: 'Settings',
   },
   delete_button: {
     id: 'collection.edit.info.delete',
