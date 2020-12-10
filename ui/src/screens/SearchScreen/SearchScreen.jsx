@@ -1,14 +1,12 @@
 import React from 'react';
-import queryString from 'query-string';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { ButtonGroup, Tooltip } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'app/Query';
 import { selectEntitiesResult } from 'selectors';
 import { triggerQueryExport } from 'src/actions';
-import { SignInCallout, ResultText } from 'components/common';
+import { SignInCallout } from 'components/common';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import Screen from 'components/Screen/Screen';
 

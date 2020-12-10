@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { AnchorButton, Button, ButtonGroup, Callout, Classes, ControlGroup, Divider, Intent, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, ButtonGroup, Classes, ControlGroup, Tooltip } from '@blueprintjs/core';
 
 import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import { triggerQueryExport } from 'src/actions';
 import { DialogToggleButton } from 'components/Toolbar';
-import { SignInCallout, ResultText } from 'components/common';
+import { ResultText } from 'components/common';
 
 
 import './SearchActionBar.scss';
@@ -59,7 +58,7 @@ class SearchActionBar extends Component {
   }
 
   render() {
-    const { dateFacetDisabled, dateFacetIsOpen, query, intl, result } = this.props;
+    const { dateFacetDisabled, dateFacetIsOpen, intl, result } = this.props;
 
     const dateTooltip = intl.formatMessage(messages.date_facet_disabled);
     const exportLink = result?.total > 0 ? result?.links?.export : null;

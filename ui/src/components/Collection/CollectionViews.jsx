@@ -156,7 +156,6 @@ class CollectionViews extends React.Component {
             <>
               <Icon className="left-icon" icon="search" />
               <FormattedMessage id="entity.info.search" defaultMessage='Search: "{qText}"' values={{ qText: searchQuery?.getString('q') }} />
-              <ResultCount result={searchResult} />
             </>
           )}
           panel={<FacetedEntitySearch query={searchQuery} result={searchResult} />}

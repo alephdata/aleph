@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -17,6 +17,16 @@ import { Breadcrumbs, SearchBox, SinglePane,  } from 'components/common';
 import { queryCollectionEntities } from 'queries';
 import { selectCollection, selectCollectionStatus } from 'selectors';
 
+const messages = defineMessages({
+  placeholder: {
+    id: 'collection.search.placeholder',
+    defaultMessage: 'Search this dataset',
+  },
+  placeholder_casefile: {
+    id: 'collection.search.placeholder',
+    defaultMessage: 'Search this personal dataset',
+  },
+});
 
 export class CollectionScreen extends Component {
   constructor(props) {
@@ -54,7 +64,7 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      collection, collectionId, activeMode, query, extraBreadcrumbs,
+      collection, collectionId, activeMode, query, extraBreadcrumbs, intl,
     } = this.props;
 
     if (collection.isError) {
@@ -64,7 +74,7 @@ export class CollectionScreen extends Component {
     const search = (
       <SearchBox
         onSearch={this.onSearch}
-        placeholderLabel={collection.label}
+        placeholderd={intl.formatMessage(messages[collection.casefile ? 'placeholder_casefile' : 'placeholder'])}
         query={query}
         inputProps={{disabled: collection.isPending}}
       />

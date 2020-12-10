@@ -1,7 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { AnchorButton, Icon, Tooltip } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
