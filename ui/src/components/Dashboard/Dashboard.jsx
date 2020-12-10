@@ -28,7 +28,7 @@ const messages = defineMessages({
   },
   cases: {
     id: 'dashboard.cases',
-    defaultMessage: 'Personal datasets',
+    defaultMessage: 'Investigations',
   },
   diagrams: {
     id: 'dashboard.diagrams',

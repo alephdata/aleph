@@ -279,7 +279,7 @@ class EntitySetCreateDialog extends Component {
                             <FormattedMessage
                               id='entityset.create.collection.new_link'
                               defaultMessage={
-                                `Create a new personal dataset`
+                                `Create a new investigation`
                               }
                             />
                           </a>

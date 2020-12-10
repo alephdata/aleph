@@ -20,7 +20,7 @@ const messages = defineMessages({
   },
   casefiles: {
     id: 'nav.casefiles',
-    defaultMessage: 'Personal datasets',
+    defaultMessage: 'Investigations',
   },
   diagrams: {
     id: 'nav.diagrams',

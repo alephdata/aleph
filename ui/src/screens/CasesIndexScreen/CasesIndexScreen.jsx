@@ -15,23 +15,23 @@ import CaseCreateButton from 'components/Toolbar/CaseCreateButton';
 const messages = defineMessages({
   title: {
     id: 'cases.title',
-    defaultMessage: 'Personal datasets',
+    defaultMessage: 'Investigations',
   },
   empty: {
     id: 'cases.empty',
-    defaultMessage: 'You do not have any personal datasets yet.',
+    defaultMessage: 'You do not have any investigations yet.',
   },
   create: {
     id: 'cases.create',
-    defaultMessage: 'New personal dataset',
+    defaultMessage: 'New investigation',
   },
   placeholder: {
     id: 'cases.placeholder',
-    defaultMessage: 'Search personal datasets...',
+    defaultMessage: 'Search investigations...',
   },
   no_results: {
     id: 'cases.no_results',
-    defaultMessage: 'No personal datasets were found matching this query.',
+    defaultMessage: 'No investigations were found matching this query.',
   },
 });
 
@@ -63,7 +63,7 @@ export class CasesIndexScreen extends Component {
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="case.description"
-                defaultMessage="Personal datasets let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+                defaultMessage="Investigations let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
               />
             </p>
             <div className="Dashboard__actions">
