@@ -73,9 +73,11 @@ class ProfilesApiTestCase(TestCase):
         db.session.commit()
 
     def test_profile_view(self):
+        res = self.client.get("/api/2/profiles/bananana")
+        assert res.status_code == 404, res.json
         url = "/api/2/profiles/%s" % self.profile.id
         res = self.client.get(url)
-        assert res.status_code == 404, res.json
+        assert res.status_code == 403, res.status_code
         _, headers = self.login(foreign_id="rolex")
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.json
@@ -95,7 +97,7 @@ class ProfilesApiTestCase(TestCase):
     def test_profile_tags(self):
         url = "/api/2/profiles/%s/tags" % self.profile.id
         res = self.client.get(url)
-        assert res.status_code == 404, res.json
+        assert res.status_code == 403, res.json
         _, headers = self.login(foreign_id="rolex")
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.json
@@ -105,7 +107,7 @@ class ProfilesApiTestCase(TestCase):
     def test_profile_similar(self):
         url = "/api/2/profiles/%s/similar" % self.profile.id
         res = self.client.get(url)
-        assert res.status_code == 404, res.json
+        assert res.status_code == 403, res.json
         _, headers = self.login(foreign_id="rolex")
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.json
@@ -147,7 +149,7 @@ class ProfilesApiTestCase(TestCase):
         index_entity(passport)
         url = "/api/2/profiles/%s/expand" % self.profile.id
         res = self.client.get(url)
-        assert res.status_code == 404, res.json
+        assert res.status_code == 403, res.json
         _, headers = self.login(foreign_id="rolex")
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.json

@@ -41,6 +41,8 @@ def get_profile(entityset_id, authz=None):
     stub = Stub()
     if data is None:
         entityset = get_entityset(entityset_id)
+        if entityset is None:
+            return
         data = entityset.to_dict()
         data["items"] = []
         for item in entityset.items():
@@ -49,8 +51,6 @@ def get_profile(entityset_id, authz=None):
 
     # Filter the subset of items the current user can access
     if authz is not None:
-        if not authz.can(data["collection_id"], authz.READ):
-            return
         items = [i for i in data["items"] if authz.can(i["collection_id"], authz.READ)]
         data["items"] = items
 
@@ -76,7 +76,7 @@ def get_profile(entityset_id, authz=None):
                 merged.context["entities"].append(proxy.id)
 
     if merged is None:
-        return
+        merged = model.make_entity(Entity.LEGAL_ENTITY)
 
     # Polish it a bit:
     merged.id = data.get("id")

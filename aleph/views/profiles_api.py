@@ -13,6 +13,7 @@ from aleph.views.serializers import ProfileSerializer, SimilarSerializer
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.util import obj_or_404, jsonify, parse_request, get_session_id
 from aleph.views.util import get_index_entity, get_db_collection
+from aleph.views.util import require
 
 blueprint = Blueprint("profiles_api", __name__)
 log = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ def view(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     return ProfileSerializer.jsonify(profile)
 
 
@@ -72,6 +74,7 @@ def tags(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     tag_request(collection_id=profile.get("collection_id"))
     results = entity_tags(profile["merged"], request.authz)
     return jsonify({"status": "ok", "total": len(results), "results": results})
@@ -115,6 +118,7 @@ def similar(profile_id):
     """
     enable_cache()
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     tag_request(collection_id=profile.get("collection_id"))
     exclude = [item["entity_id"] for item in profile["items"]]
     result = MatchQuery.handle(request, entity=profile["merged"], exclude=exclude)
@@ -173,6 +177,7 @@ def expand(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     tag_request(collection_id=profile.get("collection_id"))
     parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
     properties = parser.filters.get("property")

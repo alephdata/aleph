@@ -17,5 +17,5 @@ export const fetchProfileTags = asyncActionCreator(({ id }) => async () => {
 export const pairwiseJudgement = asyncActionCreator(({ entity, match, judgement }) => async () => {
     const data = { entity_id: entity.id, match_id: match.id, judgement };
     const response = await endpoint.post('profiles/_pairwise', data);
-    return { entity, data: response.data };
+    return { entityId: entity.id, profileId: response.data.profile_id };
 }, { name: 'PAIRWISE_JUDGEMENT' });

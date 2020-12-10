@@ -36,14 +36,14 @@ function nestedEntityObjects(state, result) {
   return state;
 }
 
-function updateEntityProfile(state, entity, data) {
-  if (state[entity.id] && data.profile_id) {
-    state[entity.id] = {
-      ...state[entity.id],
-      profile_id: data.profile_id
-    };
-  }
-  return state;
+function updateEntityProfile(state, entityId, profileId) {
+  return {
+    ...state,
+    [entityId]: {
+      ...state[entityId],
+      profile_id: profileId
+    }
+  };
 }
 
 export default createReducer({
@@ -75,6 +75,6 @@ export default createReducer({
 
   [deleteEntity.COMPLETE]: (state, { id }) => objectDelete(state, id),
 
-  [pairwiseJudgement.COMPLETE]: (state, { entity, data }) => updateEntityProfile(state, entity, data),
+  [pairwiseJudgement.COMPLETE]: (state, { entityId, profileId }) => updateEntityProfile(state, entityId, profileId),
 
 }, initialState);
