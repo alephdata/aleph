@@ -1,3 +1,10 @@
 export default function getCollectionLink(collection) {
-  return (collection && collection.id) ? `/datasets/${collection.id}` : null;
+  if (collection && collection.id) {
+    if (collection.casefile) {
+      return `/investigations/${collection.id}`;
+    } else {
+      return `/datasets/${collection.id}`;
+    }
+  }
+  return null;
 }
