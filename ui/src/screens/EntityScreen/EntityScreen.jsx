@@ -21,6 +21,7 @@ import { Breadcrumbs, Collection, DualPane, Entity } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
+import getProfileLink from 'util/getProfileLink';
 import { deleteEntity } from 'actions';
 import {
   selectEntity, selectEntityView,
@@ -117,8 +118,7 @@ class EntityScreen extends Component {
 
     if (entity.profileId && parsedHash.profile === undefined) {
       parsedHash.via = entity.id;
-      const fragment = queryString.stringify(parsedHash);
-      return <Redirect to={`/profiles/${entity.profileId}#${fragment}`} />;
+      return <Redirect to={getProfileLink(entity.profileId, parsedHash)} />;
     }
 
     if (entity.isError) {

@@ -6,17 +6,17 @@ import { Callout } from '@blueprintjs/core';
 
 import { Count, Collection, Summary, Entity } from 'components/common';
 import EntityProperties from 'components/Entity/EntityProperties';
-import getEntitySetLink from 'util/getEntitySetLink';
+import getProfileLink from 'util/getProfileLink';
 
 import './EntityInfoMode.scss';
 
 
 function EntityInfoMode(props) {
-  const { entity, isPreview } = props;
-  const profileLink = getEntitySetLink({ 'id': entity.profileId, 'type': 'profile' });
+  const { entity } = props;
+  const profileLink = getProfileLink(entity.profileId, { via: entity.id });
   return (
     <>
-      {isPreview && entity.profileId && (
+      {entity.profileId && (
         <Callout icon="layers" intent="primary" className="ProfileCallout">
           <FormattedMessage
             id="profile.items.intro"
