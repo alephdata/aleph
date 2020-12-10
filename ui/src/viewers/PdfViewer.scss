@@ -7,7 +7,7 @@ $pagesWidth: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   .outer {
     position: relative;
     background: transparent !important;
@@ -17,7 +17,7 @@ $pagesWidth: 150px;
     flex: 1;
     overflow-x: hidden;
     overflow-y: visible;
-      
+
     .pages {
       display: none;
 
@@ -31,7 +31,7 @@ $pagesWidth: 150px;
     .pages {
       display: block;
 
-      .ErrorSection { 
+      .ErrorSection {
         padding-top: $aleph-grid-size * 2;
       }
 
@@ -47,7 +47,7 @@ $pagesWidth: 150px;
           text-overflow: ellipsis;
           width: 100%;
 
-          p { 
+          p {
             margin-bottom: 0;
 
             .bp3-icon {
@@ -63,8 +63,8 @@ $pagesWidth: 150px;
               font-style: normal;
             }
           }
-          
-          p:first-child { 
+
+          p:first-child {
             margin-bottom: $aleph-grid-size;
             font-weight: bold;
           }
@@ -76,7 +76,7 @@ $pagesWidth: 150px;
       flex: 1;
       width: auto;
       overflow-x: hidden;
-      
+
       .document {
         width: 100%;
 
