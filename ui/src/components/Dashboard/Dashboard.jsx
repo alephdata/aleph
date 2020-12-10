@@ -132,8 +132,8 @@ class Dashboard extends React.Component {
                 icon="briefcase"
                 text={intl.formatMessage(messages.cases)}
                 label={<ResultCount result={casesCountResult} />}
-                onClick={() => this.navigate('/cases')}
-                active={current === '/cases'}
+                onClick={() => this.navigate('/investigations')}
+                active={current === '/investigations'}
               />
               <MenuItem
                 icon="graph"

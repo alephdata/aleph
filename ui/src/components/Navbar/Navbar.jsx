@@ -109,7 +109,7 @@ export class Navbar extends React.Component {
                     <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
                   </Button>
                 </Link>
-                <Link to="/cases">
+                <Link to="/investigations">
                   <Button icon="briefcase" className="Navbar_collections-button bp3-minimal">
                     <FormattedMessage id="nav.cases" defaultMessage="Investigations" />
                   </Button>
