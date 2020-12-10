@@ -9,6 +9,7 @@ import { PagingButtons } from 'components/Toolbar';
 import { SectionLoading, Skeleton } from 'components/common';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
+import normalizeDegreeValue from 'util/normalizeDegreeValue';
 import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
@@ -26,6 +27,7 @@ export class PdfViewer extends Component {
       },
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
+    this.onPageLoad = this.onPageLoad.bind(this);
     this.onResize = this.onResize.bind(this);
   }
 
@@ -48,6 +50,9 @@ export class PdfViewer extends Component {
         this.onResize();
       }, 350);
     }
+    if (prevProps.rotate !== this.props.rotate) {
+      this.setRotation();
+    }
     if (!countQuery.sameAs(prevProps.countQuery)) {
       this.onResize();
       this.fetchPage();
@@ -59,7 +64,7 @@ export class PdfViewer extends Component {
     window.removeEventListener('resize', throttle(this.onResize, 500));
   }
 
-  onDocumentLoad() {
+  onDocumentLoad(pdf) {
     // Handle a resize event (to check document width) after loading
     // Note: onDocumentLoad actualy happens *before* rendering, but the
     // rendering calls happen a bit too often as we don't have sophisticated
@@ -73,6 +78,21 @@ export class PdfViewer extends Component {
       // it by a 1 or 2 pixels.
       this.onResize();
     }, 350);
+  }
+
+  onPageLoad(page) {
+    this.pageData = page;
+    this.setRotation();
+  }
+
+  setRotation() {
+    const { rotate } = this.props;
+    // For reference: https://github.com/wojtekmaj/react-pdf/issues/277#issuecomment-424464542
+    if (this.pageData) {
+      this.setState({
+        effectiveRotation: normalizeDegreeValue(this.pageData.rotate + (rotate || 0))
+      });
+    }
   }
 
   onResize() {
@@ -110,9 +130,10 @@ export class PdfViewer extends Component {
     const {
       document, page, rotate, numPages, pdfUrl,
     } = this.props;
-    const { width } = this.state;
+    const { effectiveRotation, width } = this.state;
     const { Document, Page } = this.state.components;
     const loading = <Skeleton.Text type="div" length={4000} />;
+
     return (
       <>
         {numPages !== null && numPages > 0 && (
@@ -121,6 +142,7 @@ export class PdfViewer extends Component {
             rotate={rotate}
             document={document}
             numberOfPages={numPages}
+            showRotateButtons
           />
         )}
         <div key={pdfUrl}>
@@ -139,8 +161,9 @@ export class PdfViewer extends Component {
                 pageNumber={page}
                 className="page"
                 width={width}
-                rotate={rotate}
+                rotate={effectiveRotation}
                 loading={loading}
+                onLoadSuccess={this.onPageLoad}
               />
             )}
           </Document>
@@ -191,7 +214,7 @@ const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
-  const rotate = parseInt(hashQuery.rotate, 10) || 0;
+  const rotate = hashQuery.rotate && parseInt(hashQuery.rotate, 10);
 
   const baseQuery = Query.fromLocation('entities', location, {}, 'document')
     .setFilter('properties.document', document.id)
