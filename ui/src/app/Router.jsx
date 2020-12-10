@@ -73,7 +73,8 @@ class Router extends Component {
           <Redirect from="/documents/:documentId" to="/entities/:documentId" />
           <Route path="/datasets" exact component={CollectionIndexScreen} />
           <Redirect from="/sources" to="/datasets" />
-          <Route path="/cases" exact component={CasesIndexScreen} />
+          <Route path="/investigations" exact component={CasesIndexScreen} />
+          <Redirect from="/cases" to="/investigations" />
           <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
           <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
           <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
