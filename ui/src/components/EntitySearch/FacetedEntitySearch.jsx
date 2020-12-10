@@ -157,7 +157,6 @@ export class FacetedEntitySearch extends React.Component {
           </DualPane.SidePane>
           <DualPane.ContentPane>
             {children}
-
             <div className="FacetedEntitySearch__control-bar">
               <div className="FacetedEntitySearch__control-bar__inner-container">
                 <QueryTags query={query} updateQuery={this.updateQuery} />
