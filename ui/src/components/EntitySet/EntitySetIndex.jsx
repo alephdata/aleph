@@ -27,6 +27,21 @@ class EntitySetIndex extends Component {
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { query, result } = this.props;
+    if (result.shouldLoad) {
+      this.props.queryEntitySets({ query });
+    }
+  }
+
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isPending && result.next && !result.isError) {

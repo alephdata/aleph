@@ -14,8 +14,8 @@ import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { queryCollectionEntities, queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
-import { selectModel, selectEntitiesResult, selectEntitySetsResult, selectMappingsResult, selectCollectionXrefResult } from 'selectors';
+import { queryCollectionEntities, queryCollectionXrefFacets } from 'queries';
+import { selectModel, selectEntitiesResult, selectCollectionXrefResult } from 'selectors';
 
 import './CollectionViews.scss';
 
@@ -47,7 +47,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, lists, mappings, xref,
+      collection, activeMode, xref,
       isCasefile, showDocumentsTab,
       documentTabCount, entitiesTabCount, searchQuery, searchResult
     } = this.props;
@@ -104,7 +104,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
-                <ResultCount result={diagrams} />
+                <Count count={collection?.counts?.entitysets?.diagram} />
               </>
             }
             panel={<CollectionEntitySetsIndexMode collection={collection} type="diagram" />}
@@ -118,7 +118,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon className="left-icon" icon="list" />
                 <FormattedMessage id="collection.info.lists" defaultMessage="Lists" />
-                <ResultCount result={lists} />
+                <Count count={collection?.counts?.entitysets?.list} />
               </>
             }
             panel={<CollectionEntitySetsIndexMode collection={collection} type="list" />}
@@ -132,7 +132,7 @@ class CollectionViews extends React.Component {
               <>
                 <Icon className="left-icon" icon="new-object" />
                 <FormattedMessage id="collection.info.mappings" defaultMessage="Entity mappings" />
-                <ResultCount result={mappings} />
+                <Count count={collection?.counts?.mappings} />
               </>
             }
             panel={<CollectionMappingsMode collection={collection} />}
@@ -168,10 +168,7 @@ class CollectionViews extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const model = selectModel(state);
-  const diagramsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'diagram');
-  const listsQuery = queryCollectionEntitySets(location, collection.id).setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collection.id);
-  const mappingsQuery = queryCollectionMappings(location, collection.id);
   const searchQuery = queryCollectionEntities(location, collection.id);
   const schemata = collection?.statistics?.schema?.values;
   let documentTabCount, entitiesTabCount;
@@ -197,9 +194,6 @@ const mapStateToProps = (state, ownProps) => {
     isCasefile: collection.casefile,
     showDocumentsTab: (documentTabCount > 0 || collection.writeable),
     xref: selectCollectionXrefResult(state, xrefQuery),
-    diagrams: selectEntitySetsResult(state, diagramsQuery),
-    lists: selectEntitySetsResult(state, listsQuery),
-    mappings: selectMappingsResult(state, mappingsQuery),
     searchQuery,
     searchResult: selectEntitiesResult(state, searchQuery)
   };

@@ -1,9 +1,9 @@
 import logging
 from banal import ensure_list
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect
 from werkzeug.exceptions import NotFound
 
-from aleph.core import db
+from aleph.core import db, url_for
 from aleph.model import EntitySet, Judgement
 from aleph.model.common import make_textid
 from aleph.logic.entitysets import create_entityset, refresh_entityset
@@ -126,7 +126,11 @@ def view(entityset_id):
       - EntitySet
     """
     entityset = get_entityset(entityset_id, request.authz.READ)
-    return EntitySetSerializer.jsonify(entityset)
+    if entityset.type == EntitySet.PROFILE:
+        return redirect(url_for("profile_api.view", profile_id=entityset_id))
+    data = entityset.to_dict()
+    data["shallow"] = False
+    return EntitySetSerializer.jsonify(data)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["POST", "PUT"])
@@ -163,7 +167,7 @@ def update(entityset_id):
     entityset.update(data)
     db.session.commit()
     refresh_entityset(entityset_id)
-    return EntitySetSerializer.jsonify(entityset)
+    return view(entityset_id)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["DELETE"])

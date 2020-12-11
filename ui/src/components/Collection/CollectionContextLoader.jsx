@@ -2,9 +2,9 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { queryCollectionEntitySets, queryCollectionXrefFacets, queryCollectionMappings } from 'queries';
-import { fetchCollection, queryCollectionXref, queryEntitySets, queryMappings, mutate } from 'actions';
-import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitySetsResult, selectMappingsResult } from 'selectors';
+import { queryCollectionXrefFacets } from 'queries';
+import { fetchCollection, queryCollectionXref, mutate } from 'actions';
+import { selectCollection, selectCollectionStatus, selectCollectionXrefResult } from 'selectors';
 
 
 class CollectionContextLoader extends PureComponent {
@@ -36,22 +36,6 @@ class CollectionContextLoader extends PureComponent {
     if (xrefResult.shouldLoad) {
       this.props.queryCollectionXref({ query: xrefQuery });
     }
-
-    const { diagramsQuery, diagramsResult } = this.props;
-    if (diagramsResult.shouldLoad) {
-      this.props.queryEntitySets({ query: diagramsQuery });
-    }
-
-    const { listsQuery, listsResult } = this.props;
-    if (listsResult.shouldLoad) {
-      this.props.queryEntitySets({ query: listsQuery });
-    }
-
-    const { mappingsQuery, mappingsResult } = this.props;
-    if (mappingsResult.shouldLoad) {
-      this.props.queryMappings({ query: mappingsQuery });
-    }
-
   }
 
   render() {
@@ -62,33 +46,20 @@ class CollectionContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
-
-  const entitySetsQuery = queryCollectionEntitySets(location, collectionId);
-  const diagramsQuery = entitySetsQuery.setFilter('type', 'diagram');
-  const listsQuery = entitySetsQuery.setFilter('type', 'list');
   const xrefQuery = queryCollectionXrefFacets(location, collectionId);
-  const mappingsQuery = queryCollectionMappings(location, collectionId);
 
   return {
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
     xrefQuery,
     xrefResult: selectCollectionXrefResult(state, xrefQuery),
-    diagramsQuery,
-    diagramsResult: selectEntitySetsResult(state, diagramsQuery),
-    listsQuery,
-    listsResult: selectEntitySetsResult(state, listsQuery),
-    mappingsQuery,
-    mappingsResult: selectMappingsResult(state, mappingsQuery),
   };
 };
 
 const mapDispatchToProps = {
   mutate,
   fetchCollection,
-  queryCollectionXref,
-  queryEntitySets,
-  queryMappings,
+  queryCollectionXref
 };
 
 export default compose(

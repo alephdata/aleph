@@ -13,18 +13,10 @@ import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 export class CollectionEntitySetsIndexMode extends Component {
   constructor(props) {
     super(props);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryEntitySets({ query, next: result.next });
-    }
   }
 
   render() {
-    const { collection, result, type } = this.props;
+    const { collection, query, result, type } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -38,8 +30,8 @@ export class CollectionEntitySetsIndexMode extends Component {
           </div>
         )}
         <EntitySetIndex
+          query={query}
           result={result}
-          getMoreItems={this.getMoreResults}
           showCollection={false}
           type={type}
           loadMoreOnScroll
