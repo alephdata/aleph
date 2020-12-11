@@ -1,0 +1,6 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.JudgementButtons {
+  @include rtlSupportInvertedProp(margin, left, $aleph-grid-size * -1, null);
+}

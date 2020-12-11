@@ -1,6 +1,8 @@
 import { endpoint } from 'app/api';
 import asyncActionCreator from './asyncActionCreator';
+import { queryEndpoint } from './util';
 
+export const queryProfileExpand = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_PROFILE_EXPAND' });
 
 export const fetchProfile = asyncActionCreator(({ id }) => async () => {
     const response = await endpoint.get(`profiles/${id}`);
@@ -15,6 +17,5 @@ export const fetchProfileTags = asyncActionCreator(({ id }) => async () => {
 export const pairwiseJudgement = asyncActionCreator(({ entity, match, judgement }) => async () => {
     const data = { entity_id: entity.id, match_id: match.id, judgement };
     const response = await endpoint.post('profiles/_pairwise', data);
-    entity.profile_id = response.data.profile_id;
-    return { entity, match, judgement };
+    return { entityId: entity.id, profileId: response.data.profile_id };
 }, { name: 'PAIRWISE_JUDGEMENT' });

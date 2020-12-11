@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import Query from 'app/Query';
 import AudioViewer from 'viewers/AudioViewer';
 import DefaultViewer from 'viewers/DefaultViewer';
@@ -12,10 +13,9 @@ import ImageViewer from 'viewers/ImageViewer';
 import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
 import VideoViewer from 'viewers/VideoViewer';
-
+import { selectEntityDirectionality } from 'selectors';
 
 import './DocumentViewMode.scss';
-import { selectEntityDirectionality } from 'selectors';
 
 const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer'));
 

@@ -249,7 +249,7 @@ class EntitiesApiTestCase(TestCase):
         assert obj.json["id"] not in text, obj.id
         data = similar.json
         assert len(data["results"]) == 1, data
-        assert "Laden" in get_caption(data["results"][0]), data
+        assert "Laden" in get_caption(data["results"][0]["entity"]), data
         assert b"Pooh" not in res.data, res.data
         validate(data["results"][0], "Entity")
 

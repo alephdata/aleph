@@ -1,22 +1,37 @@
 import React, { Component } from 'react';
-import { injectIntl, FormattedNumber } from 'react-intl';
+import { connect } from 'react-redux';
 
 import {
-  Collection, Entity, Property, Skeleton,
+  Collection, Skeleton, JudgementButtons, Score,
 } from 'components/common';
-import XrefDecisionButtons from 'components/XrefTable/XrefDecisionButtons';
+import EntityCompare from 'components/Entity/EntityCompare';
+import { showWarningToast } from 'app/toast';
+import { pairwiseJudgement } from 'actions';
 
 
 class XrefTableRow extends Component {
+  constructor(props) {
+    super(props);
+    this.onDecide = this.onDecide.bind(this);
+  }
+
+  async onDecide(xref) {
+    try {
+      await this.props.pairwiseJudgement(xref);
+    } catch (e) {
+      showWarningToast(e.message);
+    }
+  }
+
   renderSkeleton() {
     return (
       <tr>
         <td className="decision" />
         <td className="entity bordered">
-          <Skeleton.Text type="span" length={15} />
+          <EntityCompare isPending={true} />
         </td>
         <td className="entity">
-          <Skeleton.Text type="span" length={15} />
+          <EntityCompare isPending={true} />
         </td>
         <td className="numeric narrow">
           <Skeleton.Text type="span" length={2} />
@@ -25,40 +40,6 @@ class XrefTableRow extends Component {
           <Skeleton.Text type="span" length={15} />
         </td>
       </tr>
-    );
-  }
-
-  getCommonProperties() {
-    const { entity, match } = this.props.xref;
-    const properties = [...entity.schema.getFeaturedProperties()];
-
-    match.schema.getFeaturedProperties().forEach((prop) => {
-      if (properties.indexOf(prop) === -1) {
-        properties.push(prop);
-      }
-    });
-
-    return properties.filter((prop) => {
-      return entity.hasProperty(prop) || match.hasProperty(prop);
-    });
-  }
-
-  renderProperties(entity) {
-    const properties = this.getCommonProperties();
-
-    return (
-      <div className="XrefTableRow__properties">
-        {properties.map((prop) => (
-          <div className="XrefTableRow__property" key={prop.name}>
-            <span className="XrefTableRow__property__name text-muted">
-              <Property.Name prop={prop} />
-            </span>
-            <span className="XrefTableRow__property__value">
-              <Property.Values prop={prop} values={entity.getProperty(prop)} translitLookup={entity.latinized} />
-            </span>
-          </div>
-        ))}
-      </div>
     );
   }
 
@@ -75,18 +56,16 @@ class XrefTableRow extends Component {
     return (
       <tr className="XrefTableRow">
         <td className="numeric narrow">
-          <XrefDecisionButtons xref={xref} />
+          <JudgementButtons obj={xref} onChange={this.onDecide} />
         </td>
         <td className="entity bordered">
-          <Entity.Link entity={xref.entity} preview icon />
-          {this.renderProperties(xref.entity)}
+          <EntityCompare entity={xref.entity} other={xref.match} showEmpty={true} />
         </td>
         <td className="entity">
-          <Entity.Link entity={xref.match} preview icon />
-          {this.renderProperties(xref.match)}
+          <EntityCompare entity={xref.match} other={xref.entity} showEmpty={true} />
         </td>
         <td className="numeric narrow">
-          <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
+          <Score score={xref.score} />
         </td>
         <td className="collection">
           <Collection.Link preview collection={xref.match_collection} icon />
@@ -96,4 +75,5 @@ class XrefTableRow extends Component {
   }
 }
 
-export default injectIntl(XrefTableRow);
+XrefTableRow = connect(null, { pairwiseJudgement })(XrefTableRow);
+export default XrefTableRow;

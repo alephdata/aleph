@@ -56,7 +56,7 @@ class CreateCaseDialog extends Component {
       blocking: false,
     };
 
-    this.onAddCase = this.onAddCase.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.onChangeLabel = this.onChangeLabel.bind(this);
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onAddRole = this.onAddRole.bind(this);
@@ -83,11 +83,10 @@ class CreateCaseDialog extends Component {
   }
 
 
-  async onAddCase(event) {
+  async onSubmit() {
     const { history, createCollection, toggleDialog, updateCollectionPermissions, preventRedirect } = this.props;
-    const { collection, permissions, blocking } = this.state;
-    event.preventDefault();
-    if (blocking || !this.checkValid()) return;
+    const { collection, permissions } = this.state;
+    if (!this.checkValid()) return;
     this.setState({ blocking: true });
     try {
       const response = await createCollection(collection);
@@ -136,6 +135,7 @@ class CreateCaseDialog extends Component {
         icon="briefcase"
         className="CreateCaseDialog"
         isOpen={isOpen}
+        onSubmit={this.onSubmit}
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
         enforceFocus={false}
@@ -230,7 +230,6 @@ class CreateCaseDialog extends Component {
             <Button
               type="submit"
               intent={Intent.PRIMARY}
-              onClick={this.onAddCase}
               disabled={disabled}
               text={intl.formatMessage(messages.save)}
             />

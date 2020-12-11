@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
-import { queryExpand, queryEntitySuggest } from 'queries';
+import { entityExpandQuery, queryEntitySuggest } from 'queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
 import {
   createEntity,
   deleteEntity,
   entitySetAddEntity,
-  entitySetDeleteEntity,
+  updateEntitySetItemNoMutate,
   queryEntities,
   queryEntityExpand,
   updateEntity
@@ -91,7 +91,7 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async expandEntity(entityId, properties, limit) {
-        const query = queryExpand(entityId, properties, limit);
+        const query = entityExpandQuery(entityId, properties, limit);
         this.props.queryEntityExpand({ query });
         return new Promise((resolve) => {
           this.pendingPromises.push({ query, promiseResolve: resolve });
@@ -118,7 +118,11 @@ const entityEditorWrapper = (EditorComponent) => {
 
         try {
           if (entitySetId) {
-            await this.props.entitySetDeleteEntity({ entityId, entitySetId });
+            await this.props.updateEntitySetItemNoMutate({
+              entityId,
+              entitySetId,
+              judgement: 'no_judgement'
+            });
           } else {
             await this.props.deleteEntity(entityId);
           }
@@ -174,7 +178,7 @@ const mapDispatchToProps = {
   createEntity,
   deleteEntity,
   entitySetAddEntity,
-  entitySetDeleteEntity,
+  updateEntitySetItemNoMutate,
   queryEntities,
   queryEntityExpand,
   updateEntity,

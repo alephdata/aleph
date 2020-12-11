@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Cell, Column, Table, TruncatedFormat,
 } from '@blueprintjs/table';
@@ -7,7 +7,7 @@ import { csvContextLoader } from 'components/common';
 import './TableViewer.scss';
 
 
-class TableViewer extends React.Component {
+class TableViewer extends Component {
   constructor(props) {
     super(props);
     this.renderCell = this.renderCell.bind(this);

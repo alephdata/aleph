@@ -58,6 +58,11 @@ class Serializer(object):
             resolver.resolve(request)
             return self._serialize_common(obj)
 
+    def shallow(self, obj):
+        obj = self._to_dict(obj)
+        if obj is not None:
+            return self._serialize_common(obj)
+
     def serialize_many(self, objs):
         collected = []
         for obj in ensure_list(objs):
@@ -248,6 +253,22 @@ class XrefSerializer(Serializer):
             return obj
 
 
+class SimilarSerializer(Serializer):
+    def _collect(self, obj):
+        entity = obj.get("entity", {})
+        self.queue(Collection, entity.get("collection_id"))
+
+    def _serialize(self, obj):
+        entity = obj.get("entity", {})
+        entity["collection"] = self.resolve(
+            Collection, entity.get("collection_id"), CollectionSerializer
+        )
+        obj["entity"] = EntitySerializer().shallow(entity)
+        collection_id = obj.get("collection_id")
+        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        return obj
+
+
 class ExportSerializer(Serializer):
     def _serialize(self, obj):
         if obj.get("content_hash") and not obj.get("deleted"):
@@ -300,6 +321,13 @@ class ProfileSerializer(Serializer):
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )
+        proxy = obj.pop("merged")
+        data = proxy.to_dict()
+        data["latinized"] = transliterate_values(proxy)
+        obj["merged"] = data
+        items = obj.pop("items", [])
+        entities = [i.get("entity") for i in items]
+        obj["entities"] = [e.get("id") for e in entities if e is not None]
         obj.pop("proxies", None)
         return obj
 

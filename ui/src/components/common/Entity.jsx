@@ -7,7 +7,7 @@ import { Entity as VLEntity } from '@alephdata/react-ftm';
 
 import EntitySelect from 'components/common/EntitySelect';
 import togglePreview from 'util/togglePreview';
-import { fetchEntity as fetchEntityAction } from 'actions';
+import { fetchEntity } from 'actions';
 import { selectEntity } from 'selectors';
 import getEntityLink from 'util/getEntityLink';
 
@@ -34,8 +34,12 @@ class EntityLink extends PureComponent {
     if (!link) {
       return content;
     }
+    // const profileClass = entity.profileId ? 'profile' : undefined;
     return (
-      <Link to={link} onClick={preview ? this.onClick : undefined} className={c('EntityLink', className)}>
+      <Link
+        to={link}
+        onClick={preview ? this.onClick : undefined}
+        className={c('EntityLink', className)}>
         {content}
       </Link>
     );
@@ -53,9 +57,9 @@ class EntityLoad extends Component {
   }
 
   fetchIfNeeded() {
-    const { id, entity, fetchEntity } = this.props;
+    const { id, entity } = this.props;
     if (entity.shouldLoad) {
-      fetchEntity({ id });
+      this.props.fetchEntity({ id });
     }
   }
 
@@ -77,7 +81,7 @@ class Entity {
 
   static Link = withRouter(EntityLink);
 
-  static Load = connect(mapStateToProps, { fetchEntity: fetchEntityAction })(EntityLoad);
+  static Load = connect(mapStateToProps, { fetchEntity })(EntityLoad);
 
   static Select = EntitySelect;
 }

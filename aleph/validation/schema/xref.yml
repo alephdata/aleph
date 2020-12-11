@@ -23,6 +23,10 @@ Xref:
         example: at
     score:
       type: number
+    judgement:
+      type: string
+      allOf:
+        - $ref: "#/components/schemas/Judgement"
 
 XrefResponse:
   type: object

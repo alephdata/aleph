@@ -36,7 +36,7 @@ export class DocumentFolderDialog extends Component {
       blocking: false,
     };
 
-    this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
   }
 
@@ -44,7 +44,7 @@ export class DocumentFolderDialog extends Component {
     this.setState({ title: event.target.value });
   }
 
-  async onFormSubmit(event) {
+  async onSubmit(event) {
     event.preventDefault();
     const {
       intl, collection, parent, history,
@@ -82,37 +82,36 @@ export class DocumentFolderDialog extends Component {
         icon="folder-new"
         className="DocumentFolderDialog"
         isOpen={isOpen}
+        onSubmit={this.onSubmit}
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
       >
-        <form onSubmit={this.onFormSubmit}>
-          <div className="bp3-dialog-body">
-            <div className="bp3-form-group">
-              <div className="bp3-input-group bp3-large bp3-fill">
-                <input
-                  id="label"
-                  type="text"
-                  className="bp3-input"
-                  autoComplete="off"
-                  placeholder={intl.formatMessage(messages.untitled)}
-                  onChange={this.onChangeTitle}
-                  value={title}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="bp3-dialog-footer">
-            <div className="bp3-dialog-footer-actions">
-              <Button
-                type="submit"
-                disabled={blocking}
-                intent={Intent.PRIMARY}
-                text={intl.formatMessage(messages.save)}
+        <div className="bp3-dialog-body">
+          <div className="bp3-form-group">
+            <div className="bp3-input-group bp3-large bp3-fill">
+              <input
+                id="label"
+                type="text"
+                className="bp3-input"
+                autoComplete="off"
+                placeholder={intl.formatMessage(messages.untitled)}
+                onChange={this.onChangeTitle}
+                value={title}
               />
             </div>
           </div>
-        </form>
-      </FormDialog>
+        </div>
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
+            <Button
+              type="submit"
+              disabled={blocking}
+              intent={Intent.PRIMARY}
+              text={intl.formatMessage(messages.save)}
+            />
+          </div>
+        </div>
+      </FormDialog >
     );
   }
 }

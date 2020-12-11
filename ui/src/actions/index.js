@@ -27,6 +27,7 @@ export {
   fetchEntity,
   fetchEntityTags,
   queryEntities,
+  querySimilar,
   queryEntityExpand,
   updateEntity,
 } from './entityActions';
@@ -43,13 +44,16 @@ export {
   createEntitySetNoMutate,
   deleteEntitySet,
   entitySetAddEntity,
-  entitySetDeleteEntity,
+  queryEntitySetItems,
+  updateEntitySetItemMutate,
+  updateEntitySetItemNoMutate,
   fetchEntitySet,
   queryEntitySets,
   queryEntitySetEntities,
   updateEntitySet,
 } from './entitySetActions';
 export {
+  queryProfileExpand,
   fetchProfile,
   fetchProfileTags,
   pairwiseJudgement,

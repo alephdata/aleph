@@ -4,11 +4,12 @@ from flask import Blueprint, request
 from werkzeug.exceptions import NotFound
 
 from aleph.core import db
-from aleph.model import EntitySet
+from aleph.model import EntitySet, Judgement
 from aleph.model.common import make_textid
 from aleph.logic.entitysets import create_entityset, refresh_entityset
 from aleph.logic.entitysets import save_entityset_item
 from aleph.logic.entities import upsert_entity, validate_entity, check_write_entity
+from aleph.queues import queue_task, OP_UPDATE_ENTITY
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.context import tag_request
@@ -368,6 +369,14 @@ def item_update(entityset_id):
     data.pop("collection", None)
     item = save_entityset_item(entityset, collection, entity_id, **data)
     db.session.commit()
+    job_id = get_session_id()
+    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity_id)
     if item is None:
-        return ("", 204)
+        item = {
+            "id": "$".join((entityset_id, entity_id)),
+            "entityset_id": entityset_id,
+            "entity_id": entity_id,
+            "collection_id": entity["collection_id"],
+            "judgement": Judgement.NO_JUDGEMENT,
+        }
     return EntitySetItemSerializer.jsonify(item)

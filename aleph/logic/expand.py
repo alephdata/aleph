@@ -103,7 +103,7 @@ def entity_tags(proxy, authz, prop_types=registry.pivots):
     queries = {}
     values = {}
     for type_ in prop_types:
-        if type_.group is None:
+        if type_.group is None or type_ == registry.entity:
             continue
         # Determine which indexes may contain further mentions (only things).
         schemata = model.get_type_schemata(type_)

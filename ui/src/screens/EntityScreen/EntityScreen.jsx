@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter, Redirect } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup } from '@blueprintjs/core';
@@ -8,8 +10,6 @@ import { Entity as EntityObject } from '@alephdata/followthemoney';
 import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import EntityContextLoader from 'components/Entity/EntityContextLoader';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityInfoMode from 'components/Entity/EntityInfoMode';
 import EntityViews from 'components/Entity/EntityViews';
@@ -17,14 +17,14 @@ import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
+import { Breadcrumbs, Collection, DualPane, Entity } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
+import getProfileLink from 'util/getProfileLink';
 import { deleteEntity } from 'actions';
-import { queryEntityReference } from 'queries';
 import {
-  selectEntity, selectEntityReference, selectEntityView,
+  selectEntity, selectEntityView,
 } from 'selectors';
 
 import 'components/common/ItemOverview.scss';
@@ -89,34 +89,9 @@ class EntityScreen extends Component {
     };
   }
 
-  getReferenceSearchScope(entity) {
-    const { reference } = this.props;
-    if (!reference || reference.count < 10) {
-      return null;
-    }
-    const item = (
-      <>
-        <Entity.Label entity={entity} icon truncate={30} />
-        { ': '}
-        <Property.Reverse prop={reference.property} />
-      </>
-    );
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: item,
-      label: reference.property.getReverse().label,
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
-  }
-
   getSearchScopes() {
     const { entity } = this.props;
     const scopes = [];
-
-    const referenceScope = this.getReferenceSearchScope(entity);
-    if (referenceScope) {
-      scopes.push(referenceScope);
-    }
 
     let currEntity = entity;
     while (currEntity && EntityObject.isEntity(currEntity)) {
@@ -138,8 +113,13 @@ class EntityScreen extends Component {
 
   render() {
     const {
-      entity, entityId, activeMode, query, isDocument, intl,
+      entity, entityId, query, intl, parsedHash,
     } = this.props;
+
+    if (entity.profileId && parsedHash.profile === undefined) {
+      parsedHash.via = entity.id;
+      return <Redirect to={getProfileLink(entity.profileId, parsedHash)} />;
+    }
 
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
@@ -204,7 +184,7 @@ class EntityScreen extends Component {
             <DualPane.ContentPane>
               <EntityViews
                 entity={entity}
-                activeMode={activeMode}
+                activeMode={parsedHash.mode}
                 isPreview={false}
               />
             </DualPane.ContentPane>
@@ -219,21 +199,10 @@ const mapStateToProps = (state, ownProps) => {
   const { entityId } = ownProps.match.params;
   const { location } = ownProps;
   const entity = selectEntity(state, entityId);
-  const hashQuery = queryString.parse(location.hash);
-  const isDocument = entity?.schema?.isDocument();
-  const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
-  const reference = selectEntityReference(state, entityId, activeMode);
-  const referenceQuery = queryEntityReference(location, entity, reference);
-  const documentQuery = Query.fromLocation('entities', location, {}, 'document');
-
-  return {
-    entity,
-    entityId,
-    reference,
-    activeMode,
-    isDocument,
-    query: referenceQuery || documentQuery,
-  };
+  const parsedHash = queryString.parse(location.hash);
+  parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);
+  const query = Query.fromLocation('entities', location, {}, 'document');
+  return { entity, entityId, parsedHash, query };
 };
 
 export default compose(

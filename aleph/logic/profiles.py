@@ -14,6 +14,7 @@ APIs designed for entities have to be re-implemented for profiles.
 Outside of its own collection, any entity can be linked to any number of profiles.
 """
 import logging
+from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 from followthemoney import model
 from followthemoney.helpers import name_entity
@@ -40,6 +41,8 @@ def get_profile(entityset_id, authz=None):
     stub = Stub()
     if data is None:
         entityset = get_entityset(entityset_id)
+        if entityset is None:
+            return
         data = entityset.to_dict()
         data["items"] = []
         for item in entityset.items():
@@ -48,8 +51,6 @@ def get_profile(entityset_id, authz=None):
 
     # Filter the subset of items the current user can access
     if authz is not None:
-        if not authz.can(data["collection_id"], authz.READ):
-            return
         items = [i for i in data["items"] if authz.can(i["collection_id"], authz.READ)]
         data["items"] = items
 
@@ -75,7 +76,7 @@ def get_profile(entityset_id, authz=None):
                 merged.context["entities"].append(proxy.id)
 
     if merged is None:
-        return
+        merged = model.make_entity(Entity.LEGAL_ENTITY)
 
     # Polish it a bit:
     merged.id = data.get("id")
@@ -121,6 +122,9 @@ def pairwise_judgements(pairs, collection_id):
     q = q.filter(EntitySet.type == EntitySet.PROFILE)
     q = q.filter(EntitySet.id == left.entityset_id)
     q = q.filter(EntitySet.id == right.entityset_id)
+    q = q.filter(
+        or_(left.judgement == Judgement.POSITIVE, right.judgement == Judgement.POSITIVE)
+    )
     q = q.filter(db.tuple_(left.entity_id, right.entity_id).in_(pairs))
 
     judgements = {}
