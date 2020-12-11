@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 
 import Screen from 'components/Screen/Screen';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
@@ -52,12 +52,22 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      collection, collectionId, activeMode,
+      collection, collectionId, activeMode, location,
     } = this.props;
     const { extraBreadcrumbs } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
+    }
+
+    if (!collection.isPending) {
+      const isCasefile = collection.casefile;
+      const pathPrefix = location.pathname.split('/')[1];
+      if (isCasefile && pathPrefix === 'datasets') {
+        return <Redirect to={`/investigations/${collectionId}`} />;
+      } else if (!isCasefile && pathPrefix === 'investigations') {
+        return <Redirect to={`/datasets/${collectionId}`} />;
+      }
     }
 
     const searchScope = {

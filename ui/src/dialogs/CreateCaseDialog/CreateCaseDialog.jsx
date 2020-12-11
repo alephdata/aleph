@@ -16,7 +16,7 @@ import getCollectionLink from 'util/getCollectionLink';
 const messages = defineMessages({
   label_placeholder: {
     id: 'case.label_placeholder',
-    defaultMessage: 'Untitled dataset',
+    defaultMessage: 'Untitled investigation',
   },
   language_placeholder: {
     id: 'case.language_placeholder',
@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
   summary_placeholder: {
     id: 'case.summary',
-    defaultMessage: 'A brief description of the dataset',
+    defaultMessage: 'A brief description of the investigation',
   },
   save: {
     id: 'case.save',
@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'case.title',
-    defaultMessage: 'Create a personal dataset',
+    defaultMessage: 'Create an investigation',
   },
 });
 

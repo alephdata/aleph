@@ -211,7 +211,7 @@ export class MappingEditor extends Component {
                   <p className="MappingEditor__section__description">
                     <FormattedMessage
                       id="mapping.section4.description"
-                      defaultMessage="Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the dataset, please click below and select from the available options."
+                      defaultMessage="Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the investigation, please click below and select from the available options."
                       values={{ collection: <Collection.Label collection={document.collection} icon={false} /> }}
                     />
                   </p>

@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { triggerCollectionReingest } from 'actions';
 import { showSuccessToast } from 'app/toast';
+import { Collection } from 'components/common';
 
 
 const messages = defineMessages({
@@ -46,7 +47,7 @@ class CollectionReingestAlert extends Component {
   }
 
   render() {
-    const { intl, isOpen } = this.props;
+    const { collection, intl, isOpen } = this.props;
     return (
       <Alert
         cancelButtonText={intl.formatMessage(messages.cancel)}
@@ -62,7 +63,8 @@ class CollectionReingestAlert extends Component {
         <p>
           <FormattedMessage
             id="collection.reingest.text"
-            defaultMessage="You're about to re-process all documents in this dataset. This might take some time."
+            defaultMessage="You're about to re-process all documents in {collectionLabel}. This might take some time."
+            values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
           />
         </p>
         <Checkbox

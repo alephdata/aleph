@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteCollection } from 'actions';
+import { Collection } from 'components/common';
 
 
 const messages = defineMessages({
@@ -27,13 +28,13 @@ class CollectionDeleteDialog extends Component {
 
   async onDelete() {
     const { collection, history } = this.props;
-    const path = collection.casefile ? '/cases' : '/datasets';
+    const path = collection.casefile ? '/investigations' : '/datasets';
     await this.props.deleteCollection(collection);
     history.push({ pathname: path });
   }
 
   render() {
-    const { intl } = this.props;
+    const { collection, intl } = this.props;
     return (
       <Alert
         isOpen={this.props.isOpen}
@@ -46,7 +47,8 @@ class CollectionDeleteDialog extends Component {
       >
         <FormattedMessage
           id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete this dataset and all contained items?"
+          defaultMessage="Are you sure you want to delete {collectionLabel} and all contained items?"
+          values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
         />
       </Alert>
     );

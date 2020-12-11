@@ -27,7 +27,7 @@ const messages = defineMessages({
   },
   cases: {
     id: 'dashboard.cases',
-    defaultMessage: 'Personal datasets',
+    defaultMessage: 'Investigations',
   },
   diagrams: {
     id: 'dashboard.diagrams',
@@ -117,8 +117,8 @@ class Dashboard extends React.Component {
                 icon="briefcase"
                 text={intl.formatMessage(messages.cases)}
                 label={<Count count={role?.counts?.casefiles} />}
-                onClick={() => this.navigate('/cases')}
-                active={current === '/cases'}
+                onClick={() => this.navigate('/investigations')}
+                active={current === '/investigations'}
               />
               <MenuItem
                 icon="graph"
