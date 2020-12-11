@@ -1,0 +1,20 @@
+@import "app/variables.scss";
+
+.SchemaCounts {
+  border-radius: 5px;
+  border: 1px solid $aleph-border-color;
+  background: white;
+
+  .collapsed & {
+    background: none;
+  }
+
+  .bp3-divider {
+    border-bottom: 1px dashed $aleph-border-color;
+    margin: 3px;
+  }
+
+  .bp3-popover-target > div {
+    width: 100%;
+  }
+}

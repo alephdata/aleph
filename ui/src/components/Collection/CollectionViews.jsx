@@ -139,7 +139,7 @@ class CollectionViews extends React.Component {
           title={
             <>
               <CollectionView.Label id={collectionViewIds.XREF} icon />
-              <ResultCount result={xref} />
+              <CollectionView.Count id={collectionViewIds.XREF} collection={collection} />
             </>}
           panel={<CollectionXrefMode collection={collection} />}
         />

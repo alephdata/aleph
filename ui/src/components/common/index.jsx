@@ -26,6 +26,7 @@ import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
 import Score from './Score';
 import Tag from './Tag';
+import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
@@ -73,6 +74,7 @@ export {
   Count,
   Score,
   Tag,
+  SchemaCounts,
   SearchBox,
   SearchListings,
   Skeleton,
