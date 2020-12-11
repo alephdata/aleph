@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 
 import CollectionHeading from 'components/Collection/CollectionHeading';
-import CollectionViews from 'components/Collection/CollectionViews';
+import InvestigationViews from 'components/Investigation/InvestigationViews';
 import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
@@ -29,7 +29,7 @@ export class CollectionScreen extends Component {
 
     return (
       <InvestigationWrapper collection={collection}>
-        <CollectionViews
+        <InvestigationViews
           collection={collection}
           activeMode={activeMode}
           isPreview={false}

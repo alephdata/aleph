@@ -6,10 +6,8 @@ import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import { Count, ResultCount } from 'components/common';
-import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
-import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
-import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
+import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
@@ -82,57 +80,6 @@ class CollectionViews extends React.Component {
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.ENTITIES}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <CollectionView.Label id={collectionViewIds.ENTITIES} icon />
-                <CollectionView.Count id={collectionViewIds.ENTITIES} collection={collection} />
-              </>}
-            panel={<CollectionEntitiesMode collection={collection} />}
-          />
-        )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.DIAGRAMS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <CollectionView.Label id={collectionViewIds.DIAGRAMS} icon />
-                <CollectionView.Count id={collectionViewIds.DIAGRAMS} collection={collection} />
-              </>
-            }
-            panel={<CollectionEntitySetsIndexMode collection={collection} type="diagram" />}
-          />
-        )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.LISTS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <CollectionView.Label id={collectionViewIds.LISTS} icon />
-                <CollectionView.Count id={collectionViewIds.LISTS} collection={collection} />
-              </>
-            }
-            panel={<CollectionEntitySetsIndexMode collection={collection} type="list" />}
-          />
-        )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.MAPPINGS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <CollectionView.Label id={collectionViewIds.MAPPINGS} icon />
-                <CollectionView.Count id={collectionViewIds.MAPPINGS} collection={collection} />
-              </>
-            }
-            panel={<CollectionMappingsMode collection={collection} />}
-          />
-        )}
         <Tab
           id={collectionViewIds.XREF}
           className="CollectionViews__tab"
@@ -158,11 +105,9 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const model = selectModel(state);
   const searchQuery = queryCollectionEntities(location, collection.id);
 
   return {
-    isCasefile: collection.casefile,
     searchQuery,
     searchResult: selectEntitiesResult(state, searchQuery)
   };
