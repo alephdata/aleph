@@ -43,8 +43,7 @@ export class ListScreen extends Component {
 
   fetchIfNeeded() {
     const { list, countsResult, countsQuery, entitySetId } = this.props;
-
-    if (list.shouldLoad || list.shallow) {
+    if (list.shouldLoadDeep) {
       this.props.fetchEntitySet({ id: entitySetId });
     }
     if (countsResult.shouldLoad) {

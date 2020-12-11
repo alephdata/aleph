@@ -55,9 +55,7 @@ class ProfileScreen extends Component {
 
   fetchIfNeeded() {
     const { profileId, profile, tagsResult } = this.props;
-
-    const loadDeep = !profile?.entity?.id && !profile.isPending && !profile.isError;
-    if (profile.shouldLoad || loadDeep) {
+    if (profile.shouldLoadDeep) {
       this.props.fetchProfile({ id: profileId });
     }
 

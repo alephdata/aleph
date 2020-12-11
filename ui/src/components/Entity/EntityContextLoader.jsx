@@ -22,9 +22,7 @@ class EntityContextLoader extends PureComponent {
 
   fetchIfNeeded() {
     const { entityId, entity, tagsResult } = this.props;
-
-    const loadDeep = entity.shallow !== false && !entity.isPending;
-    if (entity.shouldLoad || loadDeep) {
+    if (entity.shouldLoadDeep) {
       this.props.fetchEntity({ id: entityId });
     }
 

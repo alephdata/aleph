@@ -62,7 +62,7 @@ export class AuthButtons extends Component {
 
   fetchIfNeeded() {
     const { role, roleId } = this.props;
-    if (role.shouldLoad) {
+    if (role.shouldLoadDeep) {
       this.props.fetchRole({ id: roleId });
     }
   }

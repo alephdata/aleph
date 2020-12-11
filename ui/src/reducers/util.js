@@ -32,6 +32,9 @@ export function objectLoadComplete(state, id, data = {}) {
 }
 
 export function updateResultsKeyed(state, { query, result }) {
+  if (!result?.results) {
+    return updateResultsFull(state, { query, result });
+  }
   const key = query.toKey();
   const res = { ...result, results: result.results.map(r => r.id) };
   return objectLoadComplete(state, key, mergeResults(state[key], res));
@@ -44,7 +47,7 @@ export function updateResultsFull(state, { query, result }) {
 
 export function loadState(data) {
   const state = data || {};
-  return { ...state, isPending: true, shouldLoad: true, isError: false };
+  return { ...state, isPending: true, shouldLoad: true, shouldLoadDeep: true, isError: false };
 }
 
 export function loadStart(state) {

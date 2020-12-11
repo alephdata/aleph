@@ -287,7 +287,7 @@ class EntitySetSerializer(Serializer):
 
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
-        obj["shallow"] = False
+        obj["shallow"] = obj.get("shallow", True)
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
@@ -318,6 +318,7 @@ class ProfileSerializer(Serializer):
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["shallow"] = obj.get("shallow", True)
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )

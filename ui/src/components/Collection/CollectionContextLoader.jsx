@@ -27,8 +27,7 @@ class CollectionContextLoader extends PureComponent {
   fetchIfNeeded() {
     const { collectionId, collection } = this.props;
 
-    const loadDeep = (collection.shallow && !collection.isPending);
-    if (collection.shouldLoad || loadDeep) {
+    if (collection.shouldLoadDeep) {
       const refresh = collection.shallow === false;
       this.props.fetchCollection({ id: collectionId, refresh });
     }

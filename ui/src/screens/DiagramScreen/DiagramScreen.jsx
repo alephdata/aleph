@@ -56,8 +56,7 @@ export class DiagramScreen extends Component {
 
   fetchIfNeeded() {
     const { diagram, entitiesQuery, entitiesResult, entitySetId } = this.props;
-
-    if (diagram.shouldLoad || diagram.shallow) {
+    if (diagram.shouldLoadDeep) {
       this.props.fetchEntitySet({ id: entitySetId });
     }
 

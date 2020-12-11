@@ -83,6 +83,7 @@ def get_profile(entityset_id, authz=None):
     merged = name_entity(merged)
     data["merged"] = merged
     data["label"] = merged.caption
+    data["shallow"] = False
     return data
 
 

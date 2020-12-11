@@ -13,10 +13,12 @@ function selectObject(state, objects, id) {
     return loadState();
   }
   const obj = objects[id];
-  if (!obj.isError && !obj.isPending) {
+  const isLoadable = !obj.isError && !obj.isPending;
+  if (isLoadable) {
     const outdated = obj.loadedAt && obj.loadedAt < selectTimestamp(state);
     obj.shouldLoad = obj.shouldLoad || outdated;
   }
+  obj.shouldLoadDeep = obj.shouldLoad || (isLoadable && obj.shallow !== false);
   return obj;
 }
 
@@ -238,7 +240,7 @@ export function selectProfileReferences(state, profileId) {
   const profile = selectProfile(state, profileId);
   const query = profileReferencesQuery(profile?.entity?.id);
   const references = selectProfileExpandResult(state, query);
-  return buildReferences(references, profile.entity.schema);
+  return buildReferences(references, profile?.entity?.schema);
 }
 
 export function selectProfileReference(state, profileId, qname) {
