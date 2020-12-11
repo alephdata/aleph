@@ -14,6 +14,8 @@ import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
+import CollectionView from 'components/Collection/CollectionView';
+
 import { queryCollectionEntities, queryCollectionXrefFacets } from 'queries';
 import { selectModel, selectEntitiesResult, selectCollectionXrefResult } from 'selectors';
 
@@ -63,11 +65,9 @@ class CollectionViews extends React.Component {
         <Tab
           id={collectionViewIds.OVERVIEW}
           className="CollectionViews__tab"
-          title={
-            <>
-              <Icon icon="grouped-bar-chart" className="left-icon" />
-              <FormattedMessage id="entity.info.overview" defaultMessage="Overview" />
-            </>}
+          title={(
+            <CollectionView.Label id={collectionViewIds.OVERVIEW} icon />
+          )}
           panel={<CollectionOverviewMode collection={collection} />}
         />
         {showDocumentsTab && (
@@ -76,8 +76,7 @@ class CollectionViews extends React.Component {
             className="CollectionViews__tab"
             title={
               <>
-                <Icon icon="document" className="left-icon" />
-                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon />
                 <Count count={documentTabCount} />
               </>}
             panel={<CollectionDocumentsMode collection={collection} />}
@@ -89,8 +88,7 @@ class CollectionViews extends React.Component {
             className="CollectionViews__tab"
             title={
               <>
-                <Icon icon="list-columns" className="left-icon" />
-                <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
+                <CollectionView.Label id={collectionViewIds.ENTITIES} icon />
                 <Count count={entitiesTabCount} />
               </>}
             panel={<CollectionEntitiesMode collection={collection} />}
@@ -102,8 +100,7 @@ class CollectionViews extends React.Component {
             className="CollectionViews__tab"
             title={
               <>
-                <Icon className="left-icon" icon="graph" />
-                <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
+                <CollectionView.Label id={collectionViewIds.DIAGRAMS} icon />
                 <Count count={collection?.counts?.entitysets?.diagram} />
               </>
             }
@@ -116,8 +113,7 @@ class CollectionViews extends React.Component {
             className="CollectionViews__tab"
             title={
               <>
-                <Icon className="left-icon" icon="list" />
-                <FormattedMessage id="collection.info.lists" defaultMessage="Lists" />
+                <CollectionView.Label id={collectionViewIds.LISTS} icon />
                 <Count count={collection?.counts?.entitysets?.list} />
               </>
             }
@@ -130,8 +126,7 @@ class CollectionViews extends React.Component {
             className="CollectionViews__tab"
             title={
               <>
-                <Icon className="left-icon" icon="new-object" />
-                <FormattedMessage id="collection.info.mappings" defaultMessage="Entity mappings" />
+                <CollectionView.Label id={collectionViewIds.MAPPINGS} icon />
                 <Count count={collection?.counts?.mappings} />
               </>
             }
@@ -143,8 +138,7 @@ class CollectionViews extends React.Component {
           className="CollectionViews__tab"
           title={
             <>
-              <Icon className="left-icon" icon="comparison" />
-              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
+              <CollectionView.Label id={collectionViewIds.XREF} icon />
               <ResultCount result={xref} />
             </>}
           panel={<CollectionXrefMode collection={collection} />}
@@ -153,10 +147,7 @@ class CollectionViews extends React.Component {
           id={collectionViewIds.SEARCH}
           className="CollectionViews__tab"
           title={collectionViewIds.SEARCH === activeMode && (
-            <>
-              <Icon className="left-icon" icon="search" />
-              <FormattedMessage id="entity.info.search" defaultMessage='Search: "{qText}"' values={{ qText: searchQuery?.getString('q') }} />
-            </>
+            <CollectionView.Label id={collectionViewIds.SEARCH} icon />
           )}
           panel={<FacetedEntitySearch query={searchQuery} result={searchResult} />}
         />
