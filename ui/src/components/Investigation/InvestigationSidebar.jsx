@@ -7,6 +7,8 @@ import { Alignment, Classes, ButtonGroup, Button, Divider, Tooltip } from '@blue
 import queryString from 'query-string';
 import c from 'classnames';
 
+import collectionViewIds from 'components/Collection/collectionViewIds';
+import CollectionView from 'components/Collection/CollectionView';
 import { Count, ResultCount, SearchBox, Summary } from 'components/common';
 import InvestigationHeading from 'components/Investigation/InvestigationHeading';
 
@@ -36,24 +38,34 @@ class InvestigationSidebar extends React.Component {
     });
   }
 
+  renderButtonGroup(items) {
+    const { activeMode, collection } = this.props;
+
+    return (
+      <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
+        {items.map(id => (
+          <Button
+            icon={<CollectionView.Icon id={id} />}
+            text={<CollectionView.Label id={id} />}
+            rightIcon={<CollectionView.Count id={id} collection={collection} />}
+            onClick={() => this.navigate(id)}
+            active={activeMode === id}
+            alignText={Alignment.LEFT}
+            fill
+          />
+        ))}
+      </ButtonGroup>
+    );
+  }
+
   render() {
     const {
       collection, activeMode, activeType, isCollapsed, toggleCollapsed, minimalHeader,
       intl, schemaCounts
     } = this.props;
 
-    // {!!activeMode && (
-    //   <div className="InvestigationSidebar__footer">
-    //     <Button
-    //       minimal
-    //       fill
-    //       icon={isCollapsed ? 'chevron-right' : 'chevron-left'}
-    //       onClick={toggleCollapsed}
-    //       text={isCollapsed ? null : 'Collapse'}
-    //       className="InvestigationSidebar__collapse-toggle"
-    //     />
-    //   </div>
-    // )}
+    const entityTools = [collectionViewIds.DIAGRAMS, collectionViewIds.LISTS, collectionViewIds.XREF];
+    const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS];
 
     return (
       <div className={c('InvestigationSidebar', {static: true})}>
@@ -64,17 +76,13 @@ class InvestigationSidebar extends React.Component {
               <h6 className="bp3-heading InvestigationSidebar__section__title">
                 <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
               </h6>
-              <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-
-              </ButtonGroup>
+              {this.renderButtonGroup(entityTools)}
             </div>
             <div className="InvestigationSidebar__section">
               <h6 className="bp3-heading InvestigationSidebar__section__title">
                 <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
               </h6>
-              <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-
-              </ButtonGroup>
+              {this.renderButtonGroup(docTools)}
             </div>
           </div>
         </div>

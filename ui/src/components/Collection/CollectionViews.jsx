@@ -70,14 +70,14 @@ class CollectionViews extends React.Component {
           )}
           panel={<CollectionOverviewMode collection={collection} />}
         />
-        {showDocumentsTab && (
+        {collection.writeable && (
           <Tab
             id={collectionViewIds.DOCUMENTS}
             className="CollectionViews__tab"
             title={
               <>
                 <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon />
-                <Count count={documentTabCount} />
+                <CollectionView.Count id={collectionViewIds.DOCUMENTS} collection={collection} />
               </>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
@@ -89,7 +89,7 @@ class CollectionViews extends React.Component {
             title={
               <>
                 <CollectionView.Label id={collectionViewIds.ENTITIES} icon />
-                <Count count={entitiesTabCount} />
+                <CollectionView.Count id={collectionViewIds.ENTITIES} collection={collection} />
               </>}
             panel={<CollectionEntitiesMode collection={collection} />}
           />
@@ -101,7 +101,7 @@ class CollectionViews extends React.Component {
             title={
               <>
                 <CollectionView.Label id={collectionViewIds.DIAGRAMS} icon />
-                <Count count={collection?.counts?.entitysets?.diagram} />
+                <CollectionView.Count id={collectionViewIds.DIAGRAMS} collection={collection} />
               </>
             }
             panel={<CollectionEntitySetsIndexMode collection={collection} type="diagram" />}
@@ -114,7 +114,7 @@ class CollectionViews extends React.Component {
             title={
               <>
                 <CollectionView.Label id={collectionViewIds.LISTS} icon />
-                <Count count={collection?.counts?.entitysets?.list} />
+                <CollectionView.Count id={collectionViewIds.LISTS} collection={collection} />
               </>
             }
             panel={<CollectionEntitySetsIndexMode collection={collection} type="list" />}
@@ -127,7 +127,7 @@ class CollectionViews extends React.Component {
             title={
               <>
                 <CollectionView.Label id={collectionViewIds.MAPPINGS} icon />
-                <Count count={collection?.counts?.mappings} />
+                <CollectionView.Count id={collectionViewIds.MAPPINGS} collection={collection} />
               </>
             }
             panel={<CollectionMappingsMode collection={collection} />}
@@ -159,32 +159,10 @@ class CollectionViews extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const model = selectModel(state);
-  const xrefQuery = queryCollectionXrefFacets(location, collection.id);
   const searchQuery = queryCollectionEntities(location, collection.id);
-  const schemata = collection?.statistics?.schema?.values;
-  let documentTabCount, entitiesTabCount;
-
-  if (schemata) {
-    documentTabCount = 0;
-    entitiesTabCount = 0;
-
-    for (const key in schemata) {
-      const schema = model.getSchema(key);
-      if (schema.isDocument()) {
-        documentTabCount += schemata[key];
-      }
-      if (!(schema.isDocument() || schema.hidden)) {
-        entitiesTabCount += schemata[key];
-      }
-    }
-  }
 
   return {
-    entitiesTabCount: entitiesTabCount,
-    documentTabCount: documentTabCount,
     isCasefile: collection.casefile,
-    showDocumentsTab: (documentTabCount > 0 || collection.writeable),
-    xref: selectCollectionXrefResult(state, xrefQuery),
     searchQuery,
     searchResult: selectEntitiesResult(state, searchQuery)
   };
