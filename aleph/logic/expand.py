@@ -109,9 +109,11 @@ def entity_tags(proxy, authz, prop_types=registry.pivots):
         schemata = model.get_type_schemata(type_)
         schemata = [s for s in schemata if s.is_a(Entity.THING)]
         index = entities_read_index(schemata)
-        for value in proxy.get_type_values(type_):
-            if type_.specificity(value) < 0.1:
-                continue
+        propvalues = set()
+        for prop, value in proxy.itervalues():
+            if prop.specificity(value) > 0.1:
+                propvalues.add((prop.type, value))
+        for (type_, value) in propvalues:
             key = type_.node_id(value)
             values[key] = (type_, value)
             queries[(index, key)] = field_filter_query(type_.group, value)

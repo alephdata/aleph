@@ -200,6 +200,9 @@ export function selectEntitiesResult(state, query) {
 }
 
 function buildReferences(references, schema) {
+  if (!schema) {
+    return { ...references, results: [] };
+  }
   references.results = references.results || [];
   references.results = references.results.map((ref) => {
     if (!!ref.schema) {
@@ -222,9 +225,9 @@ export function selectEntityExpandResult(state, query) {
 
 export function selectEntityReferences(state, entityId) {
   const entity = selectEntity(state, entityId);
-  const query = entityReferencesQuery(entity.id);
+  const query = entityReferencesQuery(entityId);
   const references = selectEntityExpandResult(state, query);
-  return buildReferences(references, entity.schema);
+  return buildReferences(references, entity?.schema);
 }
 
 export function selectEntityReference(state, entityId, qname) {
@@ -238,7 +241,7 @@ export function selectProfileExpandResult(state, query) {
 
 export function selectProfileReferences(state, profileId) {
   const profile = selectProfile(state, profileId);
-  const query = profileReferencesQuery(profile?.entity?.id);
+  const query = profileReferencesQuery(profileId);
   const references = selectProfileExpandResult(state, query);
   return buildReferences(references, profile?.entity?.schema);
 }

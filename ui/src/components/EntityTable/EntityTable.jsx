@@ -119,7 +119,7 @@ export class EntityTable extends Component {
     if (entity) {
       const { history } = this.props;
       const pathname = getEntityLink(entity);
-      history.push({ pathname });
+      history.push(pathname);
     }
   }
 
