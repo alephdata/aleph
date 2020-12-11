@@ -6,7 +6,7 @@ import { Redirect, withRouter } from 'react-router';
 
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
+import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { SinglePane } from 'components/common';
@@ -28,16 +28,13 @@ export class CollectionScreen extends Component {
     }
 
     return (
-      <CollectionWrapper collection={collection}>
-        <SinglePane>
-          <CollectionHeading collection={collection} />
-          <CollectionViews
-            collection={collection}
-            activeMode={activeMode}
-            isPreview={false}
-          />
-        </SinglePane>
-      </CollectionWrapper>
+      <InvestigationWrapper collection={collection}>
+        <CollectionViews
+          collection={collection}
+          activeMode={activeMode}
+          isPreview={false}
+        />
+      </InvestigationWrapper>
     );
   }
 }
