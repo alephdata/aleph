@@ -10,7 +10,6 @@ import './Breadcrumbs.scss';
 class CollectionBreadcrumb extends PureComponent {
   renderSkeleton() {
     const { showCategory } = this.props;
-
     return (
       <>
         {showCategory && (
@@ -28,8 +27,7 @@ class CollectionBreadcrumb extends PureComponent {
   render() {
     const { collection, active, showCategory } = this.props;
 
-    const isPending = collection.isPending && !collection.label;
-    if (isPending) {
+    if (!collection || !collection.id) {
       return this.renderSkeleton();
     }
 

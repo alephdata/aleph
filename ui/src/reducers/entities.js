@@ -29,6 +29,7 @@ function nestedEntityObjects(state, result) {
       }
       if (result.match?.id) {
         result.matchId = result.match.id;
+        result.match.collection = result.match.collection || result.match_collection;
         state[result.matchId] = loadComplete(result.match);
       }
     });
