@@ -33,7 +33,7 @@ class PdfViewerPage extends Component {
     }
     return (
       <>
-        <PagingButtons document={document} numberOfPages={numPages} page={page} />
+        <PagingButtons document={document} numberOfPages={numPages} page={page} showRotateButtons={false} />
         {entity && (
           <TextViewer document={entity} dir={dir} noStyle />
         )}

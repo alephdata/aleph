@@ -4,7 +4,7 @@ from flask import render_template
 
 from aleph.core import db, settings, cache
 from aleph.authz import Authz
-from aleph.model import Role, Alert, Permission, EntitySet
+from aleph.model import Role, Alert, Permission, EntitySet, Export
 from aleph.model import Collection, Document, Entity, EntitySetItem, Mapping
 from aleph.model.role import membership
 from aleph.logic.mail import email_role
@@ -25,6 +25,23 @@ def get_role(role_id):
         data = role.to_dict()
         cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
+
+
+def get_deep_role(role):
+    authz = Authz.from_role(role)
+    alerts = Alert.by_role_id(role.id).count()
+    exports = Export.by_role_id(role.id).count()
+    casefiles = Collection.all_casefiles(authz=authz).count()
+    entitysets = EntitySet.type_counts(authz=authz)
+    return {
+        "counts": {
+            "alerts": alerts,
+            "entitysets": entitysets,
+            "casefiles": casefiles,
+            "exports": exports,
+        },
+        "shallow": False,
+    }
 
 
 def challenge_role(data):
