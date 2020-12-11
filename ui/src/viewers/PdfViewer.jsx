@@ -116,6 +116,7 @@ export class PdfViewer extends Component {
 
   fetchPage() {
     const { countQuery, countResult } = this.props;
+
     if (countResult.shouldLoad) {
       this.props.queryEntities({ query: countQuery });
     }
@@ -176,6 +177,7 @@ export class PdfViewer extends Component {
     const {
       document, dir, activeMode, baseQuery, page, queryText, numPages,
     } = this.props;
+
     if (document.isPending || numPages === undefined || numPages === null) {
       return <SectionLoading />;
     }
@@ -200,7 +202,7 @@ export class PdfViewer extends Component {
                     baseQuery={baseQuery}
                   />
                 )}
-                {activeMode === 'view' && this.renderPdf()}
+                {activeMode === 'view' && !queryText && this.renderPdf()}
               </PdfViewerSearch>
             </div>
           </div>

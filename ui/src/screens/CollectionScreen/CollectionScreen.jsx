@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -12,9 +13,20 @@ import CollectionViews from 'components/Collection/CollectionViews';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { Collection, SinglePane, Breadcrumbs } from 'components/common';
+import { Breadcrumbs, SearchBox, SinglePane } from 'components/common';
+import { queryCollectionEntities } from 'queries';
 import { selectCollection, selectCollectionStatus } from 'selectors';
 
+const messages = defineMessages({
+  placeholder: {
+    id: 'collection.search.placeholder',
+    defaultMessage: 'Search this dataset',
+  },
+  placeholder_casefile: {
+    id: 'collection.search.placeholder',
+    defaultMessage: 'Search this personal dataset',
+  },
+});
 
 export class CollectionScreen extends Component {
   constructor(props) {
@@ -25,14 +37,14 @@ export class CollectionScreen extends Component {
   }
 
   onSearch(queryText) {
-    const { history, collection } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': collection.id,
-    };
+    const { history, location, query } = this.props;
+
+    const newQuery = query.set('q', queryText);
+
     history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
+      pathname: location.pathname,
+      hash: queryString.stringify({ mode: 'search' }),
+      search: newQuery.toLocation()
     });
   }
 
@@ -52,9 +64,8 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      collection, collectionId, activeMode, location,
+      collection, collectionId, activeMode, query, extraBreadcrumbs, intl,
     } = this.props;
-    const { extraBreadcrumbs } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -70,18 +81,21 @@ export class CollectionScreen extends Component {
       }
     }
 
-    const searchScope = {
-      listItem: <Collection.Label collection={collection} icon truncate={30} />,
-      label: collection.label,
-      onSearch: this.onSearch,
-    };
+    const search = (
+      <SearchBox
+        onSearch={this.onSearch}
+        placeholderd={intl.formatMessage(messages[collection.casefile ? 'placeholder_casefile' : 'placeholder'])}
+        query={query}
+        inputProps={{ disabled: collection.isPending }}
+      />
+    );
 
-    const operation = (
-      <CollectionManageMenu collection={collection} />
+    const operation = collection.writeable && (
+      <CollectionManageMenu collection={collection} view="collapsed" />
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} search={search}>
         <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
         {extraBreadcrumbs}
       </Breadcrumbs>
@@ -92,7 +106,6 @@ export class CollectionScreen extends Component {
         <Screen
           title={collection.label}
           description={collection.summary}
-          searchScopes={[searchScope]}
         >
           {breadcrumbs}
           <DocumentDropzone
@@ -121,12 +134,15 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+  const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
+  const query = queryCollectionEntities(activeMode === 'search' && location, collectionId);
 
   return {
     collectionId,
     collection: selectCollection(state, collectionId),
+    query,
     status: selectCollectionStatus(state, collectionId),
-    activeMode: hashQuery.mode || collectionViewIds.OVERVIEW,
+    activeMode,
   };
 };
 
@@ -134,4 +150,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
+  injectIntl,
 )(CollectionScreen);

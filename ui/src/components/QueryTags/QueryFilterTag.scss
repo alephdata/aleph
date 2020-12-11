@@ -9,7 +9,7 @@
   @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
   margin-bottom: $aleph-grid-size;
   font-weight: bold;
-
+  height: $aleph-query-tag-height;
 
   &.bp3-tag {
     background-color: $aleph-theme-intent;

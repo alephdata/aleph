@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, ControlGroup, Divider, Menu, MenuItem, Popover } from '@blueprintjs/core';
+import { Button, ButtonGroup, Menu, MenuItem, Popover } from '@blueprintjs/core';
 
-import { SearchBox } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetEditDialog from 'dialogs/EntitySetEditDialog/EntitySetEditDialog';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
@@ -10,10 +9,6 @@ import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDelete
 import './EntitySetManageMenu.scss';
 
 const messages = defineMessages({
-  placeholder: {
-    id: 'entity_set.menu.search_placeholder',
-    defaultMessage: 'Search in {set_name}',
-  },
   edit: {
     id: 'entityset.info.edit',
     defaultMessage: 'Settings',
@@ -48,53 +43,44 @@ class EntitySetManageMenu extends Component {
   }
 
   render() {
-    const { entitySet, intl, onSearch, triggerDownload } = this.props;
+    const { entitySet, intl, triggerDownload } = this.props;
     const showMenu = entitySet.type === 'diagram';
 
     return (
-      <>
-        <ControlGroup className="EntitySetManageMenu">
-          {onSearch && (
-            <SearchBox
-              onSearch={onSearch}
-              placeholder={intl.formatMessage(messages.placeholder, { set_name: entitySet.label })}
+      <ButtonGroup className="EntitySetManageMenu">
+        {entitySet.writeable && (
+          <>
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.edit),
+                icon: "cog"
+              }}
+              Dialog={EntitySetEditDialog}
+              dialogProps={{ entitySet, canChangeCollection: false }}
             />
-          )}
-          {onSearch && (entitySet.writeable || triggerDownload) && <Divider />}
-          {entitySet.writeable && (
-            <ButtonGroup>
+            {!showMenu && (
               <DialogToggleButton
                 buttonProps={{
-                  text: intl.formatMessage(messages.edit),
-                  icon: "cog"
+                  text: intl.formatMessage(messages.delete),
+                  icon: "trash"
                 }}
-                Dialog={EntitySetEditDialog}
-                dialogProps={{ entitySet, canChangeCollection: false }}
+                Dialog={EntitySetDeleteDialog}
+                dialogProps={{ entitySet }}
               />
-              {!showMenu && (
-                <DialogToggleButton
-                  buttonProps={{
-                    text: intl.formatMessage(messages.delete),
-                    icon: "trash"
-                  }}
-                  Dialog={EntitySetDeleteDialog}
-                  dialogProps={{ entitySet }}
-                />
-              )}
-              {showMenu && (
-                <Popover minimal content={this.renderMenu()}>
-                  <Button rightIcon="caret-down" />
-                </Popover>
-              )}
-            </ButtonGroup>
-          )}
-          {!entitySet.writeable && triggerDownload && (
-            <Button icon="export" onClick={triggerDownload}>
-              <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
-            </Button>
-          )}
-        </ControlGroup>
-      </>
+            )}
+            {showMenu && (
+              <Popover minimal content={this.renderMenu()}>
+                <Button rightIcon="caret-down" />
+              </Popover>
+            )}
+          </>
+        )}
+        {!entitySet.writeable && triggerDownload && (
+          <Button icon="export" onClick={triggerDownload}>
+            <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
+          </Button>
+        )}
+      </ButtonGroup>
     );
   }
 }

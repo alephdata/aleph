@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react';
-import { Icon } from '@blueprintjs/core';
+import { ControlGroup, Divider, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { Category, Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
@@ -124,8 +124,19 @@ export default class Breadcrumbs extends Component {
 
   static Text = TextBreadcrumb;
 
+  renderOperations() {
+    const { operation, search, status } = this.props;
+    const items = [status, search, operation];
+
+    return (
+      <ControlGroup>
+        {items.map((item, i) => item && <React.Fragment key={i}>{item}<Divider /></React.Fragment>)}
+      </ControlGroup>
+    );
+  }
+
   render() {
-    const { collection, children, operation } = this.props;
+    const { collection, children } = this.props;
 
     const collectionCrumbs = [];
     if (collection) {
@@ -144,7 +155,7 @@ export default class Breadcrumbs extends Component {
             </ul>
           </div>
           <div className="Breadcrumbs__right">
-            {operation}
+            {this.renderOperations()}
           </div>
         </div>
       </nav>

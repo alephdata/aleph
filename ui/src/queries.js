@@ -17,9 +17,19 @@ export function queryCollectionDocuments(location, collectionId) {
 export function queryCollectionEntities(location, collectionId, schema) {
   const context = {
     'filter:collection_id': collectionId,
-    'filter:schema': schema,
   };
-  return Query.fromLocation('entities', location, context, 'entities').limit(200);
+  if (schema) {
+    context['filter:schema'] = schema;
+  } else {
+    context['filter:schemata'] = 'Thing';
+  }
+
+  if (location) {
+    return Query.fromLocation('entities', location, context, 'entities').limit(200);
+  } else {
+    return new Query('entities', {}, context, 'entities')
+      .limit(200);
+  }
 }
 
 export function entitySetSchemaCountsQuery(entitySetId) {

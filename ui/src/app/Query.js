@@ -143,7 +143,8 @@ class Query {
     const state = _.cloneDeep(this.state);
     const filters = this.filters();
 
-    filters.forEach((filterName) => { state[`filter:${filterName}`] = []; });
+    const filterPrefix = `${this.queryName}filter:`;
+    filters.forEach((filterName) => { state[`${filterPrefix}${filterName}`] = []; });
 
     return new Query(this.path, state, this.context, this.queryName);
   }

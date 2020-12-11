@@ -12,7 +12,7 @@ import EntityTableViews from 'components/EntityTable/EntityTableViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, SinglePane } from 'components/common';
+import { Breadcrumbs, SinglePane } from 'components/common';
 
 
 export class ListScreen extends Component {
@@ -39,19 +39,6 @@ export class ListScreen extends Component {
       pathname: '/search',
       search: queryString.stringify(query),
     });
-  }
-
-  getSearchScopes() {
-    const { list } = this.props;
-    const scopes = [
-      {
-        listItem: <Collection.Label collection={list.collection} icon truncate={30} />,
-        label: list.collection.label,
-        onSearch: this.onCollectionSearch,
-      },
-    ];
-
-    return scopes;
   }
 
   fetchIfNeeded() {
@@ -92,7 +79,6 @@ export class ListScreen extends Component {
         <Screen
           title={list.label}
           description={list.summary || ''}
-          searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
           <SinglePane>

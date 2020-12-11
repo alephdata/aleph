@@ -5,9 +5,7 @@ import { withRouter, Redirect } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup } from '@blueprintjs/core';
-import { Entity as EntityObject } from '@alephdata/followthemoney';
 
-import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import EntityHeading from 'components/Entity/EntityHeading';
@@ -20,17 +18,12 @@ import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import { Breadcrumbs, Collection, DualPane, Entity } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
+import { deleteEntity } from 'actions';
+import { selectEntity, selectEntityView } from 'selectors';
 import getEntityLink from 'util/getEntityLink';
 import getProfileLink from 'util/getProfileLink';
-import { deleteEntity } from 'actions';
-import {
-  selectEntity, selectEntityView,
-} from 'selectors';
 
 import 'components/common/ItemOverview.scss';
-
-const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
-
 
 const messages = defineMessages({
   add_to: {
@@ -40,6 +33,7 @@ const messages = defineMessages({
 });
 
 class EntityScreen extends Component {
+
   constructor(props) {
     super(props);
 
@@ -113,7 +107,7 @@ class EntityScreen extends Component {
 
   render() {
     const {
-      entity, entityId, query, intl, parsedHash,
+      entity, entityId, intl, parsedHash
     } = this.props;
 
     if (entity.profileId && parsedHash.profile === undefined) {
@@ -132,7 +126,7 @@ class EntityScreen extends Component {
       );
     }
 
-    const { writeable } = entity.collection;
+    const { writeable } = entity?.collection || false;
 
     const operation = (
       <ButtonGroup>
@@ -162,7 +156,7 @@ class EntityScreen extends Component {
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} >
         <Breadcrumbs.Collection collection={entity.collection} />
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
@@ -170,7 +164,7 @@ class EntityScreen extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
+        <Screen title={entity.getCaption()}>
           {breadcrumbs}
           <DualPane>
             <DualPane.SidePane className="ItemOverview">
@@ -196,8 +190,8 @@ class EntityScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entityId } = ownProps.match.params;
-  const { location } = ownProps;
+  const { location, match } = ownProps;
+  const { entityId } = match.params;
   const entity = selectEntity(state, entityId);
   const parsedHash = queryString.parse(location.hash);
   parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);

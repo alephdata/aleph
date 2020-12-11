@@ -4,6 +4,7 @@ import SignInCallout from './SignInCallout';
 import Category from './Category';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
+import HotKeysContainer from './HotKeysContainer';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Count from './Count';
@@ -53,6 +54,7 @@ export {
   Collection,
   EntitySet,
   DualPane,
+  HotKeysContainer,
   Entity,
   AppItem,
   Facet,
