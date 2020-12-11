@@ -1,12 +1,14 @@
 # coding: utf-8
 import json
-import logging
-from normality import stringify
 from datetime import datetime, date
+
+import structlog
+from normality import stringify
 from flask_babel.speaklater import LazyString
+from elasticsearch import Transport
 
 
-log = logging.getLogger(__name__)
+log = structlog.get_logger(__name__)
 
 
 def anonymize_email(name, email):
@@ -46,3 +48,22 @@ class JSONEncoder(json.JSONEncoder):
 
 class Stub(object):
     pass
+
+
+class LoggingTransport(Transport):
+    def __init__(self, *args, **kwargs):
+        super(LoggingTransport, self).__init__(*args, **kwargs)
+
+    def perform_request(self, method, url, headers=None, params=None, body=None):
+        result = super(LoggingTransport, self).perform_request(
+            method, url, headers, params, body
+        )
+        payload = {
+            "es_req_method": method,
+            "es_url": url,
+            "es_req_params": params,
+            "es_req_body": body,
+            "took": result.get("took"),
+        }
+        log.info("Performed ES request", **payload)
+        return result
