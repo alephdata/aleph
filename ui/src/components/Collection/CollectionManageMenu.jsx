@@ -59,7 +59,7 @@ class CollectionManageMenu extends PureComponent {
   }
 
   getButtons = () => {
-    const { intl } = this.props;
+    const { intl, collection } = this.props;
 
     return [
       {
@@ -94,7 +94,7 @@ class CollectionManageMenu extends PureComponent {
       },
       {
         buttonProps: {
-          text: intl.formatMessage(messages[collection.casefile ? 'delete_casefile' : 'delete']),
+          text: intl.formatMessage(messages[collection?.casefile ? 'delete_casefile' : 'delete']),
           icon: "trash",
           intent: Intent.DANGER,
         },

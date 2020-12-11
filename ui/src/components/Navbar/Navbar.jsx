@@ -53,7 +53,7 @@ export class Navbar extends React.Component {
   }
 
   render() {
-    const { metadata, pages, query, isHomepage, intl } = this.props;
+    const { metadata, pages, session, query, isHomepage, intl } = this.props;
     const { mobileSearchOpen } = this.state;
 
     const queryText = query?.getString('q');

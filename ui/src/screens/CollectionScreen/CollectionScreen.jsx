@@ -64,7 +64,7 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      collection, collectionId, activeMode, query, extraBreadcrumbs, intl,
+      location, collection, collectionId, activeMode, query, extraBreadcrumbs, intl,
     } = this.props;
 
     if (collection.isError) {
@@ -90,10 +90,7 @@ export class CollectionScreen extends Component {
       />
     );
 
-    const operation = collection.writeable && (
-      <CollectionManageMenu collection={collection} view="collapsed" />
-    );
-
+    const operation = <CollectionManageMenu collection={collection} view="collapsed" />;
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search}>
         <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
