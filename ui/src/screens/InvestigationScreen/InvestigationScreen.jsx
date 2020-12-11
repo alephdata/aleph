@@ -22,8 +22,8 @@ export class CollectionScreen extends Component {
 
     if (!collection.isPending) {
       const isCasefile = collection.casefile;
-      if (isCasefile) {
-        return <Redirect to={`/investigations/${collection.id}`} />;
+      if (!isCasefile) {
+        return <Redirect to={`/datasets/${collection.id}`} />;
       }
     }
 

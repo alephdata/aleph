@@ -21,6 +21,7 @@ import GroupScreen from 'screens/GroupScreen/GroupScreen';
 import CasesIndexScreen from 'screens/CasesIndexScreen/CasesIndexScreen';
 import CollectionIndexScreen from 'screens/CollectionIndexScreen/CollectionIndexScreen';
 import CollectionScreen from 'screens/CollectionScreen/CollectionScreen';
+import InvestigationScreen from 'screens/InvestigationScreen/InvestigationScreen';
 import EntitySetIndexScreen from 'screens/EntitySetIndexScreen/EntitySetIndexScreen';
 import DiagramScreen from 'screens/DiagramScreen/DiagramScreen';
 import ProfileScreen from 'screens/ProfileScreen/ProfileScreen';
@@ -77,7 +78,7 @@ class Router extends Component {
           <Redirect from="/cases" to="/investigations" />
           <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
           <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
-          <Route path="/investigations/:collectionId" exact component={CollectionScreen} />
+          <Route path="/investigations/:collectionId" exact component={InvestigationScreen} />
           <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
           <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
           <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
