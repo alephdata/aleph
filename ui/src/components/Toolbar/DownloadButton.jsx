@@ -17,6 +17,10 @@ const messages = defineMessages({
     id: 'document.download.tooltip',
     defaultMessage: 'Download the original document',
   },
+  dialog_title: {
+    id: 'document.download.dialog.title',
+    defaultMessage: 'Download warning',
+  },
   button_cancel: {
     id: 'document.download.cancel',
     defaultMessage: 'Cancel',
@@ -101,6 +105,7 @@ class DownloadButton extends React.PureComponent {
         <Dialog
           isOpen={isOpen}
           icon="download"
+          title={intl.formatMessage(messages.dialog_title)}
           className={Classes.ALERT}
         >
           <div className={Classes.ALERT_BODY}>

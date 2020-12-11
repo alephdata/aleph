@@ -15,12 +15,11 @@ import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import { Breadcrumbs, Collection, DualPane, Entity } from 'components/common';
+import { Breadcrumbs, DualPane } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
-import getEntityLink from 'util/getEntityLink';
 import getProfileLink from 'util/getProfileLink';
 
 import 'components/common/ItemOverview.scss';
@@ -34,82 +33,8 @@ const messages = defineMessages({
 
 class EntityScreen extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.onCollectionSearch = this.onCollectionSearch.bind(this);
-    this.onSearch = this.onSearch.bind(this);
-  }
-
-  onCollectionSearch(queryText) {
-    const { history, entity } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': entity.collection.id,
-    };
-    history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
-    });
-  }
-
-  onSearch(queryText, entityLink) {
-    const { history, location, query } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    const newQuery = query.setString('q', queryText);
-    parsedHash['preview:id'] = undefined;
-    parsedHash['preview:mode'] = undefined;
-    parsedHash.page = undefined;
-    history.push({
-      pathname: entityLink,
-      search: newQuery.toLocation(),
-      hash: queryString.stringify(parsedHash),
-    });
-  }
-
-  getEntitySearchScope(entity) {
-    if (!entity || !entity.schema) {
-      return null;
-    }
-    const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
-    if (!hasSearch) {
-      return null;
-    }
-    const entityLink = getEntityLink(entity);
-    return {
-      listItem: <Entity.Label entity={entity} icon truncate={30} />,
-      label: entity.getCaption(),
-      onSearch: queryText => this.onSearch(queryText, entityLink),
-    };
-  }
-
-  getSearchScopes() {
-    const { entity } = this.props;
-    const scopes = [];
-
-    let currEntity = entity;
-    while (currEntity && EntityObject.isEntity(currEntity)) {
-      const entityScope = this.getEntitySearchScope(currEntity);
-      if (entityScope !== null) {
-        scopes.push(entityScope);
-      }
-      currEntity = currEntity.getFirst('parent');
-    }
-
-    scopes.push({
-      listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
-      label: entity.collection.label,
-      onSearch: this.onCollectionSearch,
-    });
-
-    return scopes.reverse();
-  }
-
   render() {
-    const {
-      entity, entityId, intl, parsedHash
-    } = this.props;
-
+    const { entity, entityId, intl, parsedHash } = this.props;
     if (entity.profileId && parsedHash.profile === undefined) {
       parsedHash.via = entity.id;
       return <Redirect to={getProfileLink(entity.profileId, parsedHash)} />;
@@ -126,12 +51,10 @@ class EntityScreen extends Component {
       );
     }
 
-    const { writeable } = entity?.collection || false;
-
     const operation = (
       <ButtonGroup>
         <DownloadButton document={entity} />
-        {writeable && (
+        {entity?.collection?.writeable && (
           <>
             <DialogToggleButton
               buttonProps={{
@@ -195,8 +118,7 @@ const mapStateToProps = (state, ownProps) => {
   const entity = selectEntity(state, entityId);
   const parsedHash = queryString.parse(location.hash);
   parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);
-  const query = Query.fromLocation('entities', location, {}, 'document');
-  return { entity, entityId, parsedHash, query };
+  return { entity, entityId, parsedHash };
 };
 
 export default compose(
