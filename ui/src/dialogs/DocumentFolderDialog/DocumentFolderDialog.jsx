@@ -44,13 +44,11 @@ export class DocumentFolderDialog extends Component {
     this.setState({ title: event.target.value });
   }
 
-  async onSubmit(event) {
-    event.preventDefault();
+  async onSubmit() {
     const {
       intl, collection, parent, history,
     } = this.props;
-    const { title, blocking } = this.state;
-    if (blocking) return;
+    const { title } = this.state;
     this.setState({ blocking: true });
     try {
       const metadata = {

@@ -15,7 +15,7 @@ import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox, SinglePane } from 'components/common';
 import { queryCollectionEntities } from 'queries';
-import { selectCollection, selectCollectionStatus } from 'selectors';
+import { selectCollection } from 'selectors';
 
 const messages = defineMessages({
   placeholder: {
@@ -138,7 +138,6 @@ const mapStateToProps = (state, ownProps) => {
     collectionId,
     collection: selectCollection(state, collectionId),
     query,
-    status: selectCollectionStatus(state, collectionId),
     activeMode,
   };
 };
