@@ -14,7 +14,7 @@ import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { queryCollectionEntities, queryCollectionXrefFacets } from 'queries';
+import { queryCollectionEntities, collectionXrefFacetsQuery } from 'queries';
 import { selectModel, selectEntitiesResult, selectCollectionXrefResult } from 'selectors';
 
 import './CollectionViews.scss';
@@ -168,7 +168,7 @@ class CollectionViews extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const model = selectModel(state);
-  const xrefQuery = queryCollectionXrefFacets(location, collection.id);
+  const xrefQuery = collectionXrefFacetsQuery(location, collection.id);
   const searchQuery = queryCollectionEntities(location, collection.id);
   const schemata = collection?.statistics?.schema?.values;
   let documentTabCount, entitiesTabCount;

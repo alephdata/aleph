@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Pre } from '@blueprintjs/core';
 
-import { Property, SectionLoading, Skeleton } from 'components/common';
+import { Property, Skeleton } from 'components/common';
 import wordList from 'util/wordList';
 
 import './EmailViewer.scss';
@@ -40,6 +40,7 @@ class EmailViewer extends PureComponent {
   }
 
   renderHeaders() {
+    const { document } = this.props;
     if (document.isPending) {
       return null;
     }
@@ -80,7 +81,7 @@ class EmailViewer extends PureComponent {
   }
 
   render() {
-    const { document, dir } = this.props;
+    const { dir } = this.props;
     return (
       <div className="outer">
         <div className="inner EmailViewer">

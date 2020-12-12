@@ -162,7 +162,7 @@ class EntityViews extends React.Component {
             panel={<EntityTagsMode entity={entity} />}
           />
         )}
-        { entity?.schema?.matchable && (
+        { entity?.schema?.matchable && !isPreview && (
           <Tab
             id="similar"
             disabled={similar.total === 0}

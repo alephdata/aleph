@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SectionLoading } from 'components/common';
 import { PagingButtons } from 'components/Toolbar';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult, selectEntity } from 'selectors';

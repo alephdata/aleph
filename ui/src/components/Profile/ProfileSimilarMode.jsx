@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
@@ -120,5 +120,4 @@ const mapStateToProps = (state, ownProps) => {
 
 ProfileItemsMode = connect(mapStateToProps, { querySimilar, updateEntitySetItemMutate })(ProfileItemsMode);
 ProfileItemsMode = withRouter(ProfileItemsMode);
-ProfileItemsMode = injectIntl(ProfileItemsMode);
 export default ProfileItemsMode;

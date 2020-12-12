@@ -23,6 +23,15 @@ function selectObject(state, objects, id) {
 }
 
 function selectResult(state, query, expand) {
+  if (!query || !query.path) {
+    return {
+      ...loadState(),
+      results: [],
+      shouldLoad: false,
+      shouldLoadDeep: false,
+      isPending: true
+    };
+  }
   const result = {
     results: [],
     ...selectObject(state, state.results, query.toKey()),

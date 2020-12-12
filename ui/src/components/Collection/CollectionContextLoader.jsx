@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { queryCollectionXrefFacets } from 'queries';
+import { collectionXrefFacetsQuery } from 'queries';
 import { fetchCollection, queryCollectionXref, mutate } from 'actions';
 import { selectCollection, selectCollectionStatus, selectCollectionXrefResult } from 'selectors';
 
@@ -46,7 +46,7 @@ class CollectionContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
-  const xrefQuery = queryCollectionXrefFacets(location, collectionId);
+  const xrefQuery = collectionXrefFacetsQuery(location, collectionId);
 
   return {
     collection: selectCollection(state, collectionId),

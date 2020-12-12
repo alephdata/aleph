@@ -52,7 +52,7 @@ class EntityCompare extends PureComponent {
         <Entity.Link entity={entity} preview icon />
         <div className="EntityCompare__properties">
           {properties.map((prop) => (
-            <div className="EntityCompare__property" key={prop.name}>
+            <div className="EntityCompare__property" key={prop.qname}>
               <span className="EntityCompare__property__name text-muted">
                 <Property.Name prop={prop} />
               </span>

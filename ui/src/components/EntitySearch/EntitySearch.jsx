@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Waypoint } from 'react-waypoint';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
