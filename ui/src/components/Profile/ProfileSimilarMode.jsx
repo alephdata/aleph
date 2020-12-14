@@ -21,12 +21,20 @@ class ProfileItemsMode extends Component {
   }
 
   async onDecide(obj) {
+    const { profile, location, history } = this.props;
     try {
-      await this.props.updateEntitySetItemMutate({
+      const item = await this.props.updateEntitySetItemMutate({
         judgement: obj.judgement,
-        entitySetId: this.props.profile.id,
+        entitySetId: profile.id,
         entityId: obj.entity.id,
       });
+      if (profile.id !== item.data.entityset_id) {
+        history.replace({
+          pathname: `/profiles/${item.data.entityset_id}`,
+          search: location.search,
+          hash: location.hash,
+        });
+      }
     } catch (e) {
       showWarningToast(e.message);
     }

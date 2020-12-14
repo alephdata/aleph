@@ -32,7 +32,7 @@ class EmailViewer extends PureComponent {
       return null;
     }
     return (
-      <tr key={prop.name}>
+      <tr key={prop.qname}>
         <th>{prop.label}</th>
         <td>{wordList(values, ', ')}</td>
       </tr>
