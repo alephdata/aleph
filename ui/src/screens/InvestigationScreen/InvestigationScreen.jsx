@@ -12,7 +12,7 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import { SinglePane } from 'components/common';
 import { selectCollection } from 'selectors';
 
-export class CollectionScreen extends Component {
+export class InvestigationScreen extends Component {
   render() {
     const { collection, activeMode } = this.props;
 
@@ -55,4 +55,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-)(CollectionScreen);
+)(InvestigationScreen);

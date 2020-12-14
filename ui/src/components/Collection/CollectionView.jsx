@@ -7,7 +7,7 @@ import { Icon } from '@blueprintjs/core';
 
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Count, ResultCount } from 'components/common';
-import { queryCollectionEntities, queryCollectionXrefFacets } from 'queries';
+import { queryCollectionEntities, collectionXrefFacetsQuery } from 'queries';
 import { selectModel, selectEntitiesResult, selectCollectionXrefResult } from 'selectors';
 
 const messages = defineMessages({
@@ -126,7 +126,7 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const xrefQuery = queryCollectionXrefFacets(location, collection.id);
+  const xrefQuery = collectionXrefFacetsQuery(location, collection.id);
 
   return ({
     model: selectModel(state),

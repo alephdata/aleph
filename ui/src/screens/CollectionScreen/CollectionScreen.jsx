@@ -13,16 +13,6 @@ import { Breadcrumbs, SearchBox, SinglePane } from 'components/common';
 import { queryCollectionEntities } from 'queries';
 import { selectCollection } from 'selectors';
 
-const messages = defineMessages({
-  placeholder: {
-    id: 'collection.search.placeholder',
-    defaultMessage: 'Search this dataset',
-  },
-  placeholder_casefile: {
-    id: 'collection.search.placeholder',
-    defaultMessage: 'Search this personal dataset',
-  },
-});
 
 export class CollectionScreen extends Component {
   render() {
