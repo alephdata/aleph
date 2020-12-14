@@ -20,11 +20,7 @@ const messages = defineMessages({
     id: 'collection.info.edit',
     defaultMessage: 'Settings',
   },
-  delete: {
-    id: 'collection.info.delete',
-    defaultMessage: 'Delete dataset',
-  },
-  delete: {
+  delete_dataset: {
     id: 'collection.info.delete',
     defaultMessage: 'Delete dataset',
   },
@@ -94,7 +90,7 @@ class CollectionManageMenu extends PureComponent {
       },
       {
         buttonProps: {
-          text: intl.formatMessage(messages[collection?.casefile ? 'delete_casefile' : 'delete']),
+          text: intl.formatMessage(messages[collection?.casefile ? 'delete_casefile' : 'delete_dataset']),
           icon: "trash",
           intent: Intent.DANGER,
         },

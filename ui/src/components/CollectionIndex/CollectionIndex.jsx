@@ -7,6 +7,7 @@ import { queryCollections } from 'actions';
 import { selectCollectionsResult } from 'selectors';
 import { ErrorSection, SearchBox, SortingBar, QueryInfiniteLoad } from 'components/common';
 import QueryTags from 'components/QueryTags/QueryTags';
+import SearchActionBar from 'components/common/SearchActionBar';
 import CollectionIndexItem from './CollectionIndexItem';
 
 import './CollectionIndex.scss';
@@ -79,14 +80,16 @@ export class CollectionIndex extends Component {
             query={query}
             inputProps={{ large: true, autoFocus: true }}
           />
-          <SortingBar
-            query={query}
-            updateQuery={this.updateQuery}
-            showCreatedByFilter
-          />
           {showQueryTags && (
             <QueryTags query={query} updateQuery={this.updateQuery} />
           )}
+          <SearchActionBar result={result}>
+            <SortingBar
+              query={query}
+              updateQuery={this.updateQuery}
+              showCreatedByFilter
+            />
+          </SearchActionBar>
         </div>
         {this.renderErrors()}
         {this.renderResults()}

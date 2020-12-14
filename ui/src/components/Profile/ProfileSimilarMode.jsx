@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
@@ -21,12 +21,20 @@ class ProfileItemsMode extends Component {
   }
 
   async onDecide(obj) {
+    const { profile, location, history } = this.props;
     try {
-      await this.props.updateEntitySetItemMutate({
+      const item = await this.props.updateEntitySetItemMutate({
         judgement: obj.judgement,
-        entitySetId: this.props.profile.id,
+        entitySetId: profile.id,
         entityId: obj.entity.id,
       });
+      if (profile.id !== item.data.entityset_id) {
+        history.replace({
+          pathname: `/profiles/${item.data.entityset_id}`,
+          search: location.search,
+          hash: location.hash,
+        });
+      }
     } catch (e) {
       showWarningToast(e.message);
     }
@@ -120,5 +128,4 @@ const mapStateToProps = (state, ownProps) => {
 
 ProfileItemsMode = connect(mapStateToProps, { querySimilar, updateEntitySetItemMutate })(ProfileItemsMode);
 ProfileItemsMode = withRouter(ProfileItemsMode);
-ProfileItemsMode = injectIntl(ProfileItemsMode);
 export default ProfileItemsMode;

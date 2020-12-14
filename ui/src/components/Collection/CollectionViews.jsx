@@ -13,8 +13,7 @@ import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntit
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-
-import { queryCollectionEntities, queryCollectionXrefFacets } from 'queries';
+import { queryCollectionEntities, queryCollectionXrefFacets, collectionXrefFacetsQuery } from 'queries';
 import { selectModel, selectEntitiesResult, selectCollectionXrefResult } from 'selectors';
 
 import './CollectionViews.scss';
@@ -105,6 +104,8 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
+  const model = selectModel(state);
+  const xrefQuery = collectionXrefFacetsQuery(location, collection.id);
   const searchQuery = queryCollectionEntities(location, collection.id);
 
   return {

@@ -1,8 +1,13 @@
-import logging
+import time
+import uuid
+
+import structlog
+from structlog.contextvars import clear_contextvars, bind_contextvars
 from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
 from servicelayer.extensions import get_entry_point
 
+from aleph import __version__
 from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
 from aleph.queues import get_rate_limit, get_dataset_collection_id
@@ -24,7 +29,7 @@ from aleph.logic.notifications import generate_digest
 from aleph.logic.roles import update_roles
 from aleph.logic.export import delete_expired_exports
 
-log = logging.getLogger(__name__)
+log = structlog.get_logger(__name__)
 app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
 
 # All stages that aleph should listen for. Does not include ingest,
@@ -80,16 +85,16 @@ class AlephWorker(Worker):
         handler = get_entry_point("aleph.task_handlers", task.stage.stage)
         if handler is None:
             log.warning(
-                "Task handler not found for task [%s]: %s",
-                task.job.dataset,
-                task.stage.stage,
+                f"Task handler not found for task [task.job.dataset]: task.stage.stage",
             )
             return
+        log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (started)")
         handler(collection, task)
-        log.info("Task [%s]: %s (done)", task.job.dataset, task.stage.stage)
+        log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (done)")
 
     def handle(self, task):
         with app.app_context():
+            self.setup_logging_context(task)
             self.dispatch_task(task)
 
     def cleanup_job(self, job):
@@ -108,7 +113,19 @@ class AlephWorker(Worker):
         with app.app_context():
             self.cleanup_job(task.job)
 
+    def setup_logging_context(self, task):
+        # Setup context for structured logging
+        clear_contextvars()
+        bind_contextvars(
+            version=__version__,
+            job_id=task.job.id,
+            stage=task.stage.stage,
+            dataset=task.job.dataset.name,
+            start_time=time.time(),
+            trace_id=str(uuid.uuid4()),
+        )
+
 
 def get_worker():
-    log.info("Worker active, stages: %s", OPERATIONS)
+    log.info(f"Worker active, stages: {OPERATIONS}")
     return AlephWorker(conn=kv, stages=OPERATIONS, num_threads=None)

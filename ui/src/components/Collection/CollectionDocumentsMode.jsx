@@ -1,26 +1,16 @@
-import React from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import DocumentManager from 'components/Document/DocumentManager';
 import { queryCollectionDocuments } from 'queries';
 
 
-class CollectionDocumentsMode extends React.Component {
+class CollectionDocumentsMode extends Component {
   render() {
-    const { collection, query } = this.props;
+    const { collection, location } = this.props;
+    const query = queryCollectionDocuments(location, collection.id);
     return <DocumentManager query={query} collection={collection} />;
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  return {
-    query: queryCollectionDocuments(location, collection.id),
-  };
-};
-
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(CollectionDocumentsMode);
+CollectionDocumentsMode = withRouter(CollectionDocumentsMode);
+export default CollectionDocumentsMode;

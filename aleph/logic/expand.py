@@ -13,6 +13,8 @@ from aleph.index.indexes import entities_read_index
 from aleph.index.util import field_filter_query, authz_query, unpack_result
 
 log = logging.getLogger(__name__)
+DEFAULT_TAGS = set(registry.pivots)
+DEFAULT_TAGS.remove(registry.entity)
 
 
 def _expand_properties(proxies, properties):
@@ -97,32 +99,33 @@ def expand_proxies(proxies, authz, properties=None, limit=0):
     return results
 
 
-def entity_tags(proxy, authz, prop_types=registry.pivots):
+def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
     """For a given proxy, determine how many other mentions exist for each
     property value associated, if it is one of a set of types."""
     queries = {}
-    values = {}
-    for type_ in prop_types:
-        if type_.group is None or type_ == registry.entity:
+    lookup = {}
+    values = set()
+    for prop, value in proxy.itervalues():
+        if prop.type not in prop_types:
             continue
+        if prop.specificity(value) > 0.1:
+            values.add((prop.type, value))
+
+    log.debug("Tags[%s]: %s values", prop_types, len(values))
+    for (type_, value) in values:
+        key = type_.node_id(value)
+        lookup[key] = (type_, value)
         # Determine which indexes may contain further mentions (only things).
         schemata = model.get_type_schemata(type_)
         schemata = [s for s in schemata if s.is_a(Entity.THING)]
         index = entities_read_index(schemata)
-        propvalues = set()
-        for prop, value in proxy.itervalues():
-            if prop.specificity(value) > 0.1:
-                propvalues.add((prop.type, value))
-        for (type_, value) in propvalues:
-            key = type_.node_id(value)
-            values[key] = (type_, value)
-            queries[(index, key)] = field_filter_query(type_.group, value)
+        queries[(index, key)] = field_filter_query(type_.group, value)
 
     _, counts = _counted_msearch(queries, authz)
     results = []
     for key, count in counts.items():
         if count > 1:
-            type_, value = values[key]
+            type_, value = lookup[key]
             result = {
                 "id": key,
                 "field": type_.group,

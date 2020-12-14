@@ -108,9 +108,8 @@ export class DocumentManager extends Component {
       collection, document, query, result, hasPending, intl,
     } = this.props;
     const { selection } = this.state;
-    const mutableCollection = collection !== undefined && collection.writeable;
-    const mutableDocument = document === undefined || (document.schema && document.schema.name === 'Folder');
-    const showActions = mutableCollection && mutableDocument;
+    const mutableDocument = document === undefined || document?.schema?.name === 'Folder';
+    const showActions = collection?.writeable && mutableDocument;
     const canUpload = this.canUpload();
     const canMap = selection.length === 1 && selection[0].schema.isA('Table');
 

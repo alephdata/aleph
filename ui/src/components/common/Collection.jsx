@@ -8,13 +8,12 @@ import c from 'classnames';
 
 import { fetchCollection, fetchCollectionStatus, queryCollections } from 'actions';
 import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'selectors';
-import getCollectionLink from 'util/getCollectionLink';
-import { Skeleton } from 'components/common';
+import { Skeleton, SelectWrapper } from 'components/common';
 import CollectionStatus from 'components/Collection/CollectionStatus';
-import SelectWrapper from 'components/common/SelectWrapper';
-
+import getCollectionLink from 'util/getCollectionLink';
 
 import './Collection.scss';
+
 
 class CollectionLabel extends PureComponent {
   render() {
@@ -50,8 +49,8 @@ class CollectionLabel extends PureComponent {
 
     return (
       <span className={c('CollectionLabel', className)} title={collection.label}>
-        { renderedIcon }
-        <span>{ label && text }</span>
+        { renderedIcon}
+        <span>{label && text}</span>
       </span>
     );
   }

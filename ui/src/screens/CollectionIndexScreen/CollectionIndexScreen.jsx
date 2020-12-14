@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
-import {
-  defineMessages, FormattedMessage, injectIntl,
-} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import Query from 'app/Query';
 import { queryCollections } from 'actions';
 import { selectCollectionsResult } from 'selectors';
-import {
-  Breadcrumbs, DualPane, SignInCallout, ResultText,
-} from 'components/common';
+import { DualPane, SignInCallout } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
 import Screen from 'components/Screen/Screen';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
@@ -61,26 +57,12 @@ export class CollectionIndexScreen extends Component {
 
   render() {
     const { result, query, intl } = this.props;
-    const breadcrumbs = (
-      <Breadcrumbs>
-        <Breadcrumbs.Text icon="database">
-          <FormattedMessage
-            id="collection.index.breadcrumb"
-            defaultMessage="Datasets"
-          />
-        </Breadcrumbs.Text>
-        <Breadcrumbs.Text active>
-          <ResultText result={result} />
-        </Breadcrumbs.Text>
-      </Breadcrumbs>
-    );
 
     return (
       <Screen
         className="CollectionIndexScreen"
         title={intl.formatMessage(messages.title)}
       >
-        {breadcrumbs}
         <DualPane>
           <DualPane.SidePane>
             <SearchFacets

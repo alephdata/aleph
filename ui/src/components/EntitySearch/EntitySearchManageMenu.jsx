@@ -3,15 +3,12 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { AnchorButton, ButtonGroup, Classes, ControlGroup, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, ButtonGroup, Classes, Tooltip } from '@blueprintjs/core';
 
 import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import { triggerQueryExport } from 'src/actions';
 import { DialogToggleButton } from 'components/Toolbar';
-import { ResultText } from 'components/common';
 
-
-import './SearchActionBar.scss';
 
 const messages = defineMessages({
   export: {
@@ -37,7 +34,7 @@ const messages = defineMessages({
 });
 
 
-class SearchActionBar extends Component {
+class EntitySearchManageMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -65,38 +62,31 @@ class SearchActionBar extends Component {
     const exportTooltip = intl.formatMessage(result?.total > 0 ? messages.alert_export_disabled : messages.alert_export_disabled_empty);
 
     return (
-        <ControlGroup className="SearchActionBar" fill>
-          <div className="SearchActionBar__main text-muted">
-            <ResultText result={result} />
-          </div>
-          <ButtonGroup className={Classes.FIXED}>
-            <Tooltip content={dateTooltip} disabled={!dateFacetDisabled}>
-              <AnchorButton
-                icon="calendar"
-                onClick={this.toggleDateFacet}
-                disabled={dateFacetDisabled}
-                active={dateFacetIsOpen}
-                text={intl.formatMessage(messages.dates)}
-                outlined={true}
-              />
-            </Tooltip>
-            <Tooltip content={exportTooltip} disabled={exportLink}>
-              <DialogToggleButton
-                ButtonComponent={AnchorButton}
-                buttonProps={{
-                  text: intl.formatMessage(messages.export),
-                  icon: "export",
-                  disabled: !exportLink,
-                  outlined: true,
-                }}
-                Dialog={ExportDialog}
-                dialogProps={{
-                  onExport: () => this.props.triggerQueryExport(exportLink)
-                }}
-              />
-            </Tooltip>
-          </ButtonGroup>
-        </ControlGroup>
+      <ButtonGroup className={Classes.FIXED}>
+        <Tooltip content={dateTooltip} disabled={!dateFacetDisabled}>
+          <AnchorButton
+            icon="calendar"
+            onClick={this.toggleDateFacet}
+            disabled={dateFacetDisabled}
+            active={dateFacetIsOpen}
+            text={intl.formatMessage(messages.dates)}
+          />
+        </Tooltip>
+        <Tooltip content={exportTooltip} disabled={exportLink}>
+          <DialogToggleButton
+            ButtonComponent={AnchorButton}
+            buttonProps={{
+              text: intl.formatMessage(messages.export),
+              icon: "export",
+              disabled: !exportLink,
+            }}
+            Dialog={ExportDialog}
+            dialogProps={{
+              onExport: () => this.props.triggerQueryExport(exportLink)
+            }}
+          />
+        </Tooltip>
+      </ButtonGroup>
     );
   }
 }
@@ -105,4 +95,4 @@ export default compose(
   withRouter,
   connect(null, { triggerQueryExport }),
   injectIntl,
-)(SearchActionBar);
+)(EntitySearchManageMenu);

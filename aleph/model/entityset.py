@@ -190,7 +190,7 @@ class EntitySet(db.Model, SoftDeleteModel):
                 remote.updated_at = datetime.utcnow()
                 db.session.add(remote)
                 continue
-            judgement = local.judgment + remote.judgement
+            judgement = local.judgement + remote.judgement
             if judgement == local.judgement:
                 remote.delete()
                 continue

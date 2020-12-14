@@ -11,10 +11,6 @@ import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
 import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
 
 export class CollectionEntitySetsIndexMode extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { collection, query, result, type } = this.props;
 

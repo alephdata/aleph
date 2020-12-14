@@ -47,7 +47,7 @@ class EntityViews extends React.Component {
     const {
       isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery
     } = this.props;
-    if (references.isPending) {
+    if (references.total === undefined) {
       return <SectionLoading />;
     }
     const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
@@ -162,7 +162,7 @@ class EntityViews extends React.Component {
             panel={<EntityTagsMode entity={entity} />}
           />
         )}
-        { entity?.schema?.matchable && (
+        { entity?.schema?.matchable && !isPreview && (
           <Tab
             id="similar"
             disabled={similar.total === 0}

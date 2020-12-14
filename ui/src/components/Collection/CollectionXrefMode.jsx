@@ -2,13 +2,13 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Waypoint } from 'react-waypoint';
 import { withRouter } from 'react-router';
 
 import SearchFacets from 'components/Facet/SearchFacets';
+import { QueryInfiniteLoad } from 'components/common';
 import CollectionXrefManageMenu from 'components/Collection/CollectionXrefManageMenu';
 import XrefTable from 'components/XrefTable/XrefTable';
-import { queryCollectionXrefFacets } from 'queries';
+import { collectionXrefFacetsQuery } from 'queries';
 import { selectCollectionXrefResult } from 'selectors';
 import { queryCollectionXref, queryRoles } from 'actions';
 
@@ -18,22 +18,6 @@ export class CollectionXrefMode extends React.Component {
   constructor(props) {
     super(props);
     this.updateQuery = this.updateQuery.bind(this);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && result.next) {
-      this.props.queryCollectionXref({ query, result, next: result.next });
-    }
   }
 
   updateQuery(newQuery) {
@@ -43,13 +27,6 @@ export class CollectionXrefMode extends React.Component {
       search: newQuery.toLocation(),
       hash: location.hash,
     });
-  }
-
-  fetchIfNeeded() {
-    const { collection, query, result } = this.props;
-    if (result.shouldLoad && collection.id) {
-      this.props.queryCollectionXref({ query });
-    }
   }
 
   render() {
@@ -71,10 +48,10 @@ export class CollectionXrefMode extends React.Component {
               result={result}
             />
             <XrefTable result={result} />
-            <Waypoint
-              onEnter={this.getMoreResults}
-              bottomOffset="-300px"
-              scrollableAncestor={window}
+            <QueryInfiniteLoad
+              query={query}
+              result={result}
+              fetch={this.props.queryCollectionXref}
             />
           </div>
         </div>
@@ -85,7 +62,7 @@ export class CollectionXrefMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const query = queryCollectionXrefFacets(location, collection.id);
+  const query = collectionXrefFacetsQuery(location, collection.id);
   return {
     query,
     result: selectCollectionXrefResult(state, query),

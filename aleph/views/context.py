@@ -1,13 +1,15 @@
 import math
 import time
-import logging
 import threading
+import uuid
 from pprint import pformat  # noqa
 from banal import hash_data
 from datetime import datetime
 from flask_babel import get_locale
 from flask import request, Response, Blueprint
 from werkzeug.exceptions import TooManyRequests
+import structlog
+from structlog.contextvars import clear_contextvars, bind_contextvars
 
 from aleph import __version__
 from aleph.queues import get_rate_limit
@@ -15,7 +17,7 @@ from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Role
 
-log = logging.getLogger(__name__)
+log = structlog.get_logger(__name__)
 local = threading.local()
 blueprint = Blueprint("context", __name__)
 
@@ -118,8 +120,12 @@ def setup_request():
     request._http_revalidate = False
     request._http_etag = None
     request._log_tags = {}
+    request._trace_id = str(uuid.uuid4())
 
+    # First set up auth context so that we know who we are dealing with
+    # when we log their activity or enforce rate limits
     enable_authz(request)
+    setup_logging_context(request)
     enable_rate_limit(request)
 
 
@@ -168,41 +174,46 @@ def finalize_response(resp):
     return resp
 
 
+def setup_logging_context(request):
+    role_id = None
+    if hasattr(request, "authz"):
+        role_id = request.authz.id
+    # Set up context varibales for structured logging. The context is included
+    # with every log entry produced by this particular request
+    clear_contextvars()
+    bind_contextvars(
+        v=__version__,
+        method=request.method,
+        endpoint=request.endpoint,
+        referrer=request.referrer,
+        ip=_get_remote_ip(),
+        ua=str(request.user_agent),
+        begin_time=datetime.utcfromtimestamp(request._begin_time).isoformat(),
+        role_id=role_id,
+        session_id=getattr(request, "_session_id", None),
+        locale=getattr(request, "_app_locale", None),
+        url=request.url,
+        path=request.full_path,
+        trace_id=request._trace_id,
+    )
+
+
 def generate_request_log(resp, took):
     """Collect data about the request for analytical purposes."""
-    # Move this down once we have multiple collectors.
-    if settings.GOOGLE_REQUEST_LOGGING is False:
-        return
-
+    # Only add the context info that hasn't been already set in the beginning
+    # of the request
     payload = {
-        "v": __version__,
-        "method": request.method,
-        "endpoint": request.endpoint,
-        "referrer": request.referrer,
-        "ip": _get_remote_ip(),
-        "ua": str(request.user_agent),
         "time": datetime.utcnow().isoformat(),
-        "session_id": getattr(request, "_session_id", None),
-        "locale": getattr(request, "_app_locale", None),
         "took": took,
-        "url": request.url,
-        "path": request.full_path,
         "status": resp.status_code,
     }
-    if hasattr(request, "authz"):
-        payload["role_id"] = request.authz.id
     tags = dict(request.view_args or ())
     if hasattr(request, "_log_tags"):
         tags.update(request._log_tags)
     for tag, value in tags.items():
         if value is not None and tag not in payload:
             payload[tag] = value
-
-    # log.info("Log: %s", pformat(payload))
-    if not hasattr(local, "_gcp_logger"):
-        from google.cloud.logging import Client
-
-        client = Client()
-        logger_name = "%s-api" % settings.APP_NAME
-        local._gcp_logger = client.logger(logger_name)
-    local._gcp_logger.log_struct(payload)
+    bind_contextvars(**payload)
+    # This logging statement is here to make sure we log the context of every
+    # request for analytics purposes
+    log.info("Request handled", request_logging=True)

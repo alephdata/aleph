@@ -3,7 +3,7 @@ import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 
 class ResultText extends PureComponent {
-  render() {
+  renderText() {
     const { result } = this.props;
     if (!result || result.isPending) {
       return <FormattedMessage id="result.searching" defaultMessage="Searching..." />;
@@ -37,6 +37,14 @@ class ResultText extends PureComponent {
         }}
       />
     );
+  }
+
+  render() {
+    return (
+      <span className="ResultText">
+        {this.renderText()}
+      </span>
+    )
   }
 }
 
