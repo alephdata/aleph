@@ -21,7 +21,7 @@ const messages = defineMessages({
   },
   placeholder_casefile: {
     id: 'collection.search.placeholder',
-    defaultMessage: 'Search this personal dataset',
+    defaultMessage: 'Search this investigation',
   },
 });
 
@@ -67,7 +67,7 @@ export class CollectionWrapper extends Component {
     const search = (
       <SearchBox
         onSearch={this.onSearch}
-        placeholderd={intl.formatMessage(messages[collection.casefile ? 'placeholder_casefile' : 'placeholder'])}
+        placeholder={intl.formatMessage(messages[collection.casefile ? 'placeholder_casefile' : 'placeholder'])}
         query={query}
         inputProps={{ disabled: collection.isPending }}
       />

@@ -110,9 +110,9 @@ $sidebar-padding: 15px;
 
   &__metadata-toggle.bp3-button {
     width: 100%;
-    margin-top: 10px;
     transition: height .3s ease-in-out;
     overflow: hidden;
+    margin-top: $aleph-grid-size;
     background: rgba($white, .1) !important;
 
     &:hover {

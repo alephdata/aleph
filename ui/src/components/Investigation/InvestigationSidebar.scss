@@ -22,7 +22,7 @@ $sidebar-padding: $aleph-grid-size*2;
   }
 
   &__scroll-container {
-    max-height: calc(100vh - #{$aleph-top-nav-height});
+    // max-height: calc(100vh - #{$aleph-top-nav-height});
     overflow-y: scroll;
     width: 100%;
     // padding-bottom: $aleph-top-nav-height;

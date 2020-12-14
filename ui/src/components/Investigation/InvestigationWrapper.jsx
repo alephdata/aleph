@@ -12,6 +12,7 @@ import CollectionInfo from 'components/Collection/CollectionInfo';
 import CollectionStatus from 'components/Collection/CollectionStatus';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionReference from 'components/Collection/CollectionReference';
+import collectionViewIds from 'components/Collection/collectionViewIds';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
 import { Breadcrumbs, Collection, Count, Schema, DualPane, ResultText, ResultCount, Summary } from 'components/common';
 import { queryCollectionEntities } from 'queries';
@@ -32,22 +33,28 @@ import CollectionWrapper from 'components/Collection/CollectionWrapper';
 
 import './InvestigationWrapper.scss';
 
+const sidebarHiddenViews = [];
+
 export class InvestigationWrapper extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { children, collection } = this.props;
+    const { activeMode, children, collection } = this.props;
+
+    const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
 
     return (
       <CollectionWrapper collection={collection}>
         <DualPane className="InvestigationWrapper">
-          <div className="InvestigationWrapper__sidebar-container">
-            <InvestigationSidebar
-              collection={collection}
-            />
-          </div>
+          {showSidebar && (
+            <div className="InvestigationWrapper__sidebar-container">
+              <InvestigationSidebar
+                collection={collection}
+              />
+            </div>
+          )}
           <DualPane.ContentPane className="InvestigationWrapper__body">
             <div className="InvestigationWrapper__body-content">
               {children}
@@ -59,23 +66,19 @@ export class InvestigationWrapper extends Component {
   }
 }
 
-// const mapStateToProps = (state, ownProps) => {
-//   const { collectionId } = ownProps.match.params;
-//   const { collection, location } = ownProps;
-//   const hashQuery = queryString.parse(location.hash);
-//   const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
-//   const query = queryCollectionEntities(activeMode === 'search' && location, collectionId);
-//
-//   return {
-//     collectionId,
-//     query,
-//     status: selectCollectionStatus(state, collectionId),
-//   };
-// };
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+  const activeMode = hashQuery.mode;
+
+  return {
+    activeMode: hashQuery.mode
+  };
+};
 
 
 export default compose(
-  // withRouter,
-  // connect(mapStateToProps),
+  withRouter,
+  connect(mapStateToProps),
   // injectIntl,
 )(InvestigationWrapper);
