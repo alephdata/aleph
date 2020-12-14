@@ -62,22 +62,23 @@ class InvestigationViews extends React.Component {
       subheading = <Schema.Description schema={activeType} />
     } else if (!!activeMode) {
       title = <CollectionView.Label id={activeMode} icon />;
+      subheading = <CollectionView.Description id={activeMode} />
     }
 
     return (
-      <>
+      <div className="InvestigationViews">
         {!!title && (
           <div className="InvestigationViews__title-container">
             <h5 className="InvestigationViews__title">
               <span>{title}</span>
             </h5>
-            {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
+            {subheading && <p className="InvestigationViews__subheading">{subheading}</p>}
           </div>
         )}
         <div className="InvestigationViews__content">
           {this.renderContent()}
         </div>
-      </>
+      </div>
     )
   }
 }

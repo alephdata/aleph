@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { Icon } from '@blueprintjs/core';
 
@@ -15,9 +15,17 @@ const messages = defineMessages({
     id: 'collection.info.diagrams',
     defaultMessage: 'Network diagrams',
   },
+  diagrams_description: {
+    id: 'collection.info.diagrams_description',
+    defaultMessage: 'Network diagrams let you visualize complex relationships within an investigation.',
+  },
   lists: {
     id: 'collection.info.lists',
     defaultMessage: 'Lists',
+  },
+  lists_description: {
+    id: 'collection.info.lists_description',
+    defaultMessage: 'Lists let you organize and group related entities of interest.',
   },
   xref: {
     id: 'collection.info.xref',
@@ -37,7 +45,11 @@ const messages = defineMessages({
   },
   mappings: {
     id: 'collection.info.mappings',
-    defaultMessage: 'Mappings',
+    defaultMessage: 'Entity mappings',
+  },
+  mappings_description: {
+    id: 'collection.info.mappings_description',
+    defaultMessage: 'Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document',
   },
   mentions: {
     id: 'collection.info.mentions',
@@ -124,6 +136,21 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
   }
 }
 
+class CollectionViewDescription extends PureComponent {
+  render() {
+    const { id, intl } = this.props;
+    console.log(messages, id)
+    if (!id) { return null; }
+    const messageKey = messages[`${id}_description`];
+    console.log(messageKey);
+    if (!messageKey) { return null; }
+
+    return (
+      <span>{intl.formatMessage(messageKey)}</span>
+    );
+  }
+}
+
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   const xrefQuery = collectionXrefFacetsQuery(location, collection.id);
@@ -138,4 +165,5 @@ export default class CollectionView {
   static Icon = CollectionViewIcon;
   static Label = injectIntl(CollectionViewLabel);
   static Count = compose(withRouter, connect(mapStateToProps))(CollectionViewCount);
+  static Description = injectIntl(CollectionViewDescription);
 }

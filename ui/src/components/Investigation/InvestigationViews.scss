@@ -19,8 +19,13 @@
 
   &__subheading {
     color: $dark-gray5;
-    line-height: 1.5;
+    line-height: 1.4;
     clear: both;
     max-width: $aleph-content-width-limit;
+    margin-top: $aleph-grid-size*2;
+  }
+
+  .DualPane {
+    padding: 0;
   }
 }
