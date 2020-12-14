@@ -8,7 +8,8 @@ import { withRouter } from 'react-router';
 
 import { DualPane, ErrorSection, HotKeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
-import SearchActionBar from 'components/EntitySearch/SearchActionBar';
+import EntitySearchManageMenu from 'components/EntitySearch/EntitySearchManageMenu';
+import SearchActionBar from 'components/common/SearchActionBar';
 import SearchFacets from 'components/Facet/SearchFacets';
 import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
@@ -162,14 +163,15 @@ export class FacetedEntitySearch extends React.Component {
                 <QueryTags query={query} updateQuery={this.updateQuery} />
               </div>
             </div>
-            <SearchActionBar
-              query={query}
-              result={result}
-              dateFacetDisabled={dateFacetDisabled}
-              dateFacetIsOpen={dateFacetIsOpen}
-              updateQuery={this.updateQuery}
-            />
-
+            <SearchActionBar result={result}>
+              <EntitySearchManageMenu
+                query={query}
+                result={result}
+                dateFacetDisabled={dateFacetDisabled}
+                dateFacetIsOpen={dateFacetIsOpen}
+                updateQuery={this.updateQuery}
+              />
+            </SearchActionBar>
             <DateFacet
               isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
               intervals={dateFacetIntervals}
