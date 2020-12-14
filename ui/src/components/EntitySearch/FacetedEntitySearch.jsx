@@ -158,20 +158,18 @@ export class FacetedEntitySearch extends React.Component {
           </DualPane.SidePane>
           <DualPane.ContentPane>
             {children}
-            <div className="FacetedEntitySearch__control-bar">
-              <div className="FacetedEntitySearch__control-bar__inner-container">
-                <QueryTags query={query} updateQuery={this.updateQuery} />
-              </div>
+            <div className="FacetedEntitySearch__controls">
+              <QueryTags query={query} updateQuery={this.updateQuery} />
+              <SearchActionBar result={result}>
+                <EntitySearchManageMenu
+                  query={query}
+                  result={result}
+                  dateFacetDisabled={dateFacetDisabled}
+                  dateFacetIsOpen={dateFacetIsOpen}
+                  updateQuery={this.updateQuery}
+                />
+              </SearchActionBar>
             </div>
-            <SearchActionBar result={result}>
-              <EntitySearchManageMenu
-                query={query}
-                result={result}
-                dateFacetDisabled={dateFacetDisabled}
-                dateFacetIsOpen={dateFacetIsOpen}
-                updateQuery={this.updateQuery}
-              />
-            </SearchActionBar>
             <DateFacet
               isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
               intervals={dateFacetIntervals}
