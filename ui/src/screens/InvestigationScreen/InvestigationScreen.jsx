@@ -44,7 +44,7 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
-  const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
+  const activeMode = hashQuery.mode;
   const activeType = hashQuery.type;
 
   return {
