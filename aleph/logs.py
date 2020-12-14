@@ -54,8 +54,10 @@ def configure_logging():
 
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
-    root_logger.addHandler(info_handler)
-    root_logger.addHandler(error_handler)
+    # check to prevent adding duplicate handlers
+    if not root_logger.handlers:
+        root_logger.addHandler(info_handler)
+        root_logger.addHandler(error_handler)
 
 
 def format_stackdriver(_, __, ed):
