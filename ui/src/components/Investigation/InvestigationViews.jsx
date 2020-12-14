@@ -15,12 +15,15 @@ import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
+import CollectionView from 'components/Collection/CollectionView';
+import CollectionViewIds from 'components/Collection/collectionViewIds';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
+import { Schema } from 'components/common';
 import { queryCollectionEntities } from 'queries';
 import { selectEntitiesResult } from 'selectors';
 
 
-// import './InvestigationViews.scss'
+import './InvestigationViews.scss'
 
 class InvestigationViews extends React.Component {
   renderContent() {
@@ -49,9 +52,28 @@ class InvestigationViews extends React.Component {
   }
 
   render() {
-    const { activeMode, intl } = this.props;
+    const { activeMode, activeType, intl } = this.props;
+
+    let title, subheading;
+    if (activeMode === CollectionViewIds.SEARCH) {
+      title = null;
+    } else if (!!activeType) {
+      title = <Schema.Label schema={activeType} plural icon />;
+      subheading = <Schema.Description schema={activeType} />
+    } else if (!!activeMode) {
+      title = <CollectionView.Label id={activeMode} icon />;
+    }
+
     return (
       <>
+        {!!title && (
+          <div className="InvestigationViews__title-container">
+            <h5 className="InvestigationViews__title">
+              <span>{title}</span>
+            </h5>
+            {subheading && <p className="InvestigationWrapper__subheading">{subheading}</p>}
+          </div>
+        )}
         <div className="InvestigationViews__content">
           {this.renderContent()}
         </div>

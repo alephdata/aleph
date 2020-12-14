@@ -39,6 +39,7 @@ export class InvestigationWrapper extends Component {
 
   render() {
     const { children, collection } = this.props;
+
     return (
       <CollectionWrapper collection={collection}>
         <DualPane className="InvestigationWrapper">

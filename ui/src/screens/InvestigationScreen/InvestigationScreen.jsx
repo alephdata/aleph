@@ -14,7 +14,7 @@ import { selectCollection } from 'selectors';
 
 export class InvestigationScreen extends Component {
   render() {
-    const { collection, activeMode } = this.props;
+    const { collection, activeMode, activeType } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -32,6 +32,7 @@ export class InvestigationScreen extends Component {
         <InvestigationViews
           collection={collection}
           activeMode={activeMode}
+          activeType={activeType}
           isPreview={false}
         />
       </InvestigationWrapper>
@@ -44,10 +45,12 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
+  const activeType = hashQuery.type;
 
   return {
     collection: selectCollection(state, collectionId),
     activeMode,
+    activeType,
   };
 };
 
