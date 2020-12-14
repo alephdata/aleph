@@ -2,8 +2,6 @@
 
 $transition-duration: .3s;
 $sidebar-padding: $aleph-grid-size*2;
-$aleph-top-nav-height: 50px;
-$aleph-breadcrumbs-height: 44px;
 
 .InvestigationSidebar {
   background: $light-gray5;
@@ -12,7 +10,6 @@ $aleph-breadcrumbs-height: 44px;
   padding: 0;
   width: $aleph-investigation-sidebar-width;
   height: 100%;
-
 
   &.static {
     box-shadow: none;

@@ -10,13 +10,7 @@ $sidebar-padding: 15px;
   max-height: none;
   opacity: 1;
   border-radius: 5px;
-
-  .collapsed & {
-    padding: 0;
-    max-height: 0;
-    opacity: 0;
-    margin: 0;
-  }
+  margin: 20px;
 
   .static & {
     margin: 20px;

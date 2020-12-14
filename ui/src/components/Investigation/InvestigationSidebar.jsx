@@ -64,7 +64,7 @@ class InvestigationSidebar extends React.Component {
     const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS];
 
     return (
-      <div className={c('InvestigationSidebar')}>
+      <div className={c('InvestigationSidebar', { static: !activeMode })}>
         <div className="InvestigationSidebar__scroll-container">
           <InvestigationHeading collection={collection} activeMode={activeMode} minimal={minimalHeader} />
           <div className="InvestigationSidebar__content">

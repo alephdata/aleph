@@ -30,17 +30,18 @@ import CollectionWrapper from 'components/Collection/CollectionWrapper';
 //   },
 // });
 
+import './InvestigationWrapper.scss';
+
 export class InvestigationWrapper extends Component {
   constructor(props) {
     super(props);
-
   }
 
   render() {
     const { children, collection } = this.props;
     return (
       <CollectionWrapper collection={collection}>
-      <DualPane>
+        <DualPane className="InvestigationWrapper">
           <div className="InvestigationWrapper__sidebar-container">
             <InvestigationSidebar
               collection={collection}
