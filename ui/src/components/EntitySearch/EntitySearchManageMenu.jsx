@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { AnchorButton, ButtonGroup, Classes, ControlGroup, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, ButtonGroup, Classes, Tooltip } from '@blueprintjs/core';
 
 import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import { triggerQueryExport } from 'src/actions';
@@ -70,7 +70,6 @@ class EntitySearchManageMenu extends Component {
             disabled={dateFacetDisabled}
             active={dateFacetIsOpen}
             text={intl.formatMessage(messages.dates)}
-            outlined={true}
           />
         </Tooltip>
         <Tooltip content={exportTooltip} disabled={exportLink}>
@@ -80,7 +79,6 @@ class EntitySearchManageMenu extends Component {
               text: intl.formatMessage(messages.export),
               icon: "export",
               disabled: !exportLink,
-              outlined: true,
             }}
             Dialog={ExportDialog}
             dialogProps={{

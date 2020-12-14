@@ -27,21 +27,7 @@
     margin-top: 0.5em;
   }
 
-  &__control-bar {
-
-    &__inner-container {
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: space-between;
-    }
-
-    &__button {
-      .bp3-button {
-        height: $aleph-query-tag-height;
-        width: $aleph-query-tag-height;
-      }
-    }
-
+  &__controls {
     .QueryTags {
       margin-bottom: $aleph-grid-size/2;
 
