@@ -22,7 +22,7 @@ class InvestigationSidebar extends React.Component {
   }
 
   navigate(mode, type) {
-    const { history, isCollapsed, location } = this.props;
+    const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     parsedHash.mode = mode;
@@ -56,7 +56,7 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const {
-      collection, activeMode, activeType, isCollapsed, toggleCollapsed, minimalHeader,
+      collection, activeMode, activeType, minimalHeader,
       intl, schemaCounts
     } = this.props;
 
@@ -64,7 +64,7 @@ class InvestigationSidebar extends React.Component {
     const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS];
 
     return (
-      <div className={c('InvestigationSidebar', {static: true})}>
+      <div className={c('InvestigationSidebar')}>
         <div className="InvestigationSidebar__scroll-container">
           <InvestigationHeading collection={collection} activeMode={activeMode} minimal={minimalHeader} />
           <div className="InvestigationSidebar__content">

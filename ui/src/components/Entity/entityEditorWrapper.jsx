@@ -76,16 +76,16 @@ const entityEditorWrapper = (EditorComponent) => {
 
       async createEntity(entity) {
         const { collection, entitySetId, onStatusChange } = this.props;
-        onStatusChange(UpdateStatus.IN_PROGRESS);
+        onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
         try {
           if (entitySetId) {
             await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
           } else {
             await this.props.createEntity({ entity, collection_id: collection.id });
           }
-          onStatusChange(UpdateStatus.SUCCESS);
+          onStatusChange && onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(UpdateStatus.ERROR);
+          onStatusChange && onStatusChange(UpdateStatus.ERROR);
         }
         return null;
       }
@@ -100,21 +100,21 @@ const entityEditorWrapper = (EditorComponent) => {
 
       async updateEntity(entity) {
         const { collection, onStatusChange } = this.props;
-        onStatusChange(UpdateStatus.IN_PROGRESS);
+        onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
 
         try {
           entity.collection = collection;
           await this.props.updateEntity(entity);
-          onStatusChange(UpdateStatus.SUCCESS);
+          onStatusChange && onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(UpdateStatus.ERROR);
+          onStatusChange && onStatusChange(UpdateStatus.ERROR);
         }
       }
 
       async deleteEntity(entityId) {
         const { entitySetId, onStatusChange } = this.props;
 
-        onStatusChange(UpdateStatus.IN_PROGRESS);
+        onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
 
         try {
           if (entitySetId) {
@@ -126,9 +126,9 @@ const entityEditorWrapper = (EditorComponent) => {
           } else {
             await this.props.deleteEntity(entityId);
           }
-          onStatusChange(UpdateStatus.SUCCESS);
+          onStatusChange && onStatusChange(UpdateStatus.SUCCESS);
         } catch {
-          onStatusChange(UpdateStatus.ERROR);
+          onStatusChange && onStatusChange(UpdateStatus.ERROR);
         }
       }
 

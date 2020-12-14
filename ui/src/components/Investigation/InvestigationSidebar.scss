@@ -10,6 +10,7 @@ $aleph-breadcrumbs-height: 44px;
   box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
   transition: box-shadow $transition-duration ease-in-out;
   padding: 0;
+  width: $aleph-investigation-sidebar-width;
   height: 100%;
 
 
@@ -17,11 +18,6 @@ $aleph-breadcrumbs-height: 44px;
     box-shadow: none;
     background: none;
     border-right: 1px solid $aleph-border-color;
-  }
-
-  .collapsed & {
-    // box-shadow: none;
-    // background: $aleph-breadcrumbs-background;
   }
 
   .fixed & {
@@ -33,10 +29,6 @@ $aleph-breadcrumbs-height: 44px;
     overflow-y: scroll;
     width: 100%;
     // padding-bottom: $aleph-top-nav-height;
-
-    .collapsed & {
-      max-height: calc(100vh - #{$aleph-top-nav-height} - #{$aleph-breadcrumbs-height});
-    }
 
     .static & {
       overflow: visible;
@@ -51,10 +43,6 @@ $aleph-breadcrumbs-height: 44px;
 
   &__content {
     overflow: visible;
-
-    .collapsed & {
-      padding: 0;
-    }
   }
 
   // &__content {
@@ -78,10 +66,6 @@ $aleph-breadcrumbs-height: 44px;
     left: 0;
     z-index: 10;
     transition: width $transition-duration ease-in-out;
-
-    .collapsed & {
-      width: $aleph-investigation-sidebar-width-collapsed;
-    }
   }
 
   &__collapse-toggle.bp3-button {
@@ -109,11 +93,6 @@ $aleph-breadcrumbs-height: 44px;
       // padding-top: 5px;
     }
 
-    .collapsed & {
-      padding: $aleph-grid-size $aleph-grid-size/2 $aleph-grid-size $aleph-grid-size*2;
-      margin: 0;
-    }
-
     .static & {
       padding: 15px;
       border-radius: 10px;
@@ -131,22 +110,6 @@ $aleph-breadcrumbs-height: 44px;
       // margin-bottom: 15px;
       padding-bottom: 5px;
       // transition: all 1s ease-in-out;
-
-      .collapsed & {
-        color: $gray1;
-        text-transform: uppercase;
-        border: none;
-        font-weight: normal;
-        position: absolute;
-        writing-mode: vertical-rl;
-        font-size: 10px;
-        top: 50%;
-        left: 0;
-        transform: rotate(180deg) translateY(50%);
-        text-align: right;
-        padding: 0;
-        margin: 0;
-      }
     }
   }
 }
