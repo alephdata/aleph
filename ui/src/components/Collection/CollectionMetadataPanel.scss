@@ -24,6 +24,10 @@
         display: none;
       }
     }
+
+    .text-markdown p:last-child {
+      margin: 0 !important;
+    }
   }
 
   .CollectionStatus {
