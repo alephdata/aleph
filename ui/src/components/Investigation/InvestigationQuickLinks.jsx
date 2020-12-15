@@ -70,7 +70,7 @@ class InvestigationQuickLinks extends React.Component {
             dialogProps={{ collection }}
           >
             <>
-              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_documents.svg)' }} />
+              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_upload.svg)' }} />
               <p className="InvestigationQuickLinks__item__text">
                 <FormattedMessage id="investigation.shortcut.upload" defaultMessage="Upload documents" />
               </p>
@@ -92,7 +92,7 @@ class InvestigationQuickLinks extends React.Component {
             }}
           >
             <>
-              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_documents.svg)' }} />
+              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_entities.svg)' }} />
               <p className="InvestigationQuickLinks__item__text">
                 <FormattedMessage id="investigation.shortcut.entities" defaultMessage="Create new entities" />
               </p>
