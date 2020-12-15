@@ -7,7 +7,7 @@ import queryString from 'query-string';
 
 import { Count, ResultCount } from 'components/common';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
-import InvestigationOverviewMode from 'components/Investigation/InvestigationOverviewMode';
+import InvestigationOverview from 'components/Investigation/InvestigationOverview';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
@@ -73,6 +73,7 @@ class CollectionViews extends React.Component {
           panel={(
             <CollectionOverviewMode collection={collection}>
               {!isCasefile && <CollectionStatisticsGroup collection={collection} />}
+              {isCasefile && <InvestigationOverview collection={collection} />}
             </CollectionOverviewMode>
           )}
         />

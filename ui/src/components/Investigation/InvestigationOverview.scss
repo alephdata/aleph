@@ -1,0 +1,35 @@
+@import "app/variables.scss";
+
+.InvestigationOverview {
+  &__section {
+    margin: $aleph-content-padding/2 0 $aleph-content-padding*1.5;
+
+    &__title.bp3-heading {
+      margin-bottom: $aleph-content-padding/2;
+      padding-bottom: $aleph-grid-size*.7;
+      border-bottom: 1px solid $aleph-border-color;
+    }
+  }
+
+  &__guides {
+    $guides-button-margin: 7px;
+
+    margin: 0 (-$guides-button-margin/2);
+
+    .bp3-button {
+      margin: $guides-button-margin/2;
+      min-height: 48px !important;
+      background-color: rgba(19, 124, 189, 0.09) !important;
+      transition: background-color .05s ease-in-out;
+      color: $blue2 !important;
+
+      @media screen and (max-width: $aleph-screen-md-max-width) {
+        width: calc(50% - #{$guides-button-margin}) !important;
+      }
+
+      &:hover {
+        background-color: rgba(19, 124, 189, 0.04) !important;
+      }
+    }
+  }
+}
