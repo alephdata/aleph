@@ -16,19 +16,14 @@ class CollectionMetadataPanel extends PureComponent {
 
     return (
       <div className="CollectionMetadataPanel">
-        <div className="CollectionMetadataPanel__vertical-container">
-          {collection.summary && (
-            <div className="CollectionMetadataPanel__item">
-              <Summary text={collection.summary} />
-            </div>
-          )}
-          <CollectionStatus collection={collection} showCancel={collection.writeable} className="CollectionMetadataPanel__item" />
-        </div>
+        <CollectionStatus collection={collection} showCancel={collection.writeable} className="CollectionMetadataPanel__item" />
+        {collection.summary && (
+          <div className="CollectionMetadataPanel__item">
+            <Summary text={collection.summary} />
+          </div>
+        )}
         <div className="CollectionMetadataPanel__item">
           <CollectionInfo collection={collection} />
-          <div className="CollectionMetadataPanel__actions">
-            <CollectionManageMenu collection={collection} view="semi-collapsed" />
-          </div>
         </div>
         <div className="CollectionMetadataPanel__item mobile-hide">
           <CollectionReference collection={collection} />
