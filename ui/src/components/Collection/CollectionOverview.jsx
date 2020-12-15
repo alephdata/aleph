@@ -5,7 +5,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { ErrorSection, Skeleton, Summary } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
 
-import './CollectionStatisticsGroup.scss';
+import './CollectionOverview.scss';
 
 const statFields = [
   'schema', 'countries', 'names', 'emails', 'addresses', 'ibans', 'phones',
@@ -18,11 +18,11 @@ const messages = defineMessages({
   },
 });
 
-class CollectionStatisticsGroup extends React.Component {
+class CollectionOverview extends React.Component {
   renderStatisticsItem({ key, total, values }) {
     const { collection } = this.props;
     return (
-      <div className="CollectionStatisticsGroup__item" key={key}>
+      <div className="CollectionOverview__item" key={key}>
         <CollectionStatistics
           collection={collection}
           field={key}
@@ -54,7 +54,7 @@ class CollectionStatisticsGroup extends React.Component {
     }
 
     return (
-      <div className="CollectionStatisticsGroup">
+      <div className="CollectionOverview">
         {statsToRender.map((stat) => this.renderStatisticsItem(stat))}
       </div>
     );
@@ -65,4 +65,4 @@ class CollectionStatisticsGroup extends React.Component {
 export default compose(
   withRouter,
   injectIntl,
-)(CollectionStatisticsGroup);
+)(CollectionOverview);

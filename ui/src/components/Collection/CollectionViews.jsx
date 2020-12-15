@@ -13,7 +13,7 @@ import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
 import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
-import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
+import CollectionOverview from 'components/Collection/CollectionOverview';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { queryCollectionEntities, collectionXrefFacetsQuery } from 'queries';
@@ -72,7 +72,7 @@ class CollectionViews extends React.Component {
             </>}
           panel={(
             <CollectionOverviewMode collection={collection}>
-              {!isCasefile && <CollectionStatisticsGroup collection={collection} />}
+              {!isCasefile && <CollectionOverview collection={collection} />}
               {isCasefile && <InvestigationOverview collection={collection} />}
             </CollectionOverviewMode>
           )}
