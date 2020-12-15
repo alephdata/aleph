@@ -11,8 +11,8 @@ export const loginWithPassword = (email, password) => async (dispatch) => {
 
 export const logout = asyncActionCreator(
   () => async () => {
-    await endpoint.post('/sessions/logout');
-    return {};
+    const response = await endpoint.post('/sessions/logout');
+    return { redirect: response.data.redirect };
   },
   { name: 'LOGOUT' },
 );

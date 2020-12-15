@@ -21,13 +21,15 @@ class Authz(object):
     WRITE = "write"
     ACCESS = "authzca"
     TOKENS = "authztk"
+    EXPIRE = 42300
 
-    def __init__(self, role_id, roles, is_admin=False, token_id=None):
+    def __init__(self, role_id, roles, is_admin=False, token_id=None, expire=None):
         self.id = role_id
         self.logged_in = role_id is not None
         self.roles = set(roles)
         self.is_admin = is_admin
         self.token_id = token_id
+        self.expire = expire or self.EXPIRE
         self.session_write = not settings.MAINTENANCE and self.logged_in
         self._collections = {}
 
@@ -131,14 +133,14 @@ class Authz(object):
                 "roles": list(self.roles),
                 "is_admin": self.is_admin,
             }
-            cache.set_complex(key, state, expires=42300)
+            cache.set_complex(key, state, expires=self.expire)
         return self.token_id
 
     def __repr__(self):
         return "<Authz(%s)>" % self.id
 
     @classmethod
-    def from_role(cls, role):
+    def from_role(cls, role, expire=None):
         roles = set([Role.load_id(Role.SYSTEM_GUEST)])
         if role is None or not role.is_actor:
             return cls(None, roles)
@@ -146,7 +148,7 @@ class Authz(object):
         roles.add(role.id)
         roles.add(Role.load_id(Role.SYSTEM_USER))
         roles.update([g.id for g in role.roles])
-        return cls(role.id, roles, is_admin=role.is_admin)
+        return cls(role.id, roles, is_admin=role.is_admin, expire=expire)
 
     @classmethod
     def from_token(cls, token_id):

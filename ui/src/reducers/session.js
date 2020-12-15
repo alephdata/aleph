@@ -16,9 +16,10 @@ const handleLogin = (state, token) => {
   };
 };
 
-const handleLogout = state => ({
+const handleLogout = (state, { redirect }) => ({
   sessionId: state.sessionId,
   sessionStart: state.sessionStart,
+  logoutRedirect: redirect,
   loggedIn: false,
 });
 
