@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { Summary } from 'components/common';
 import CollectionInfo from 'components/Collection/CollectionInfo';
 import CollectionStatus from 'components/Collection/CollectionStatus';
-import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionReference from 'components/Collection/CollectionReference';
 
 import './CollectionMetadataPanel.scss';

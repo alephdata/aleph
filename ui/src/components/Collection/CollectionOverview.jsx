@@ -2,7 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import { ErrorSection, Skeleton, Summary } from 'components/common';
+import { ErrorSection, Skeleton } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
 
 import './CollectionOverview.scss';

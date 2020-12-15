@@ -2,16 +2,12 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import queryString from 'query-string';
-import { AnchorButton, ButtonGroup, Intent } from '@blueprintjs/core';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { AnchorButton, Intent } from '@blueprintjs/core';
 
-import { SearchBox, Skeleton } from 'components/common';
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import InvestigationQuickLinks from 'components/Investigation/InvestigationQuickLinks';
-import CollectionHeading from 'components/Collection/CollectionHeading';
-import CollectionMetadataPanel from 'components/Collection/CollectionMetadataPanel';
 import { selectNotificationsResult } from 'selectors';
 
 import './InvestigationOverview.scss';
@@ -19,11 +15,8 @@ import './InvestigationOverview.scss';
 const guidesURLPrefix = "https://docs.alephdata.org/guide/building-out-your-investigation/";
 
 class InvestigationOverview extends React.Component {
-
   render() {
-    const { collection, intl, notificationsQuery, notificationsResult } = this.props;
-
-    console.log(collection);
+    const { collection, notificationsQuery, notificationsResult } = this.props;
 
     return (
       <div className="InvestigationOverview">
@@ -85,11 +78,9 @@ const mapStateToProps = (state, ownProps) => {
     'facet': 'event',
     'filter:channels': `Collection:${collection.id}`
   }
-
   const notificationsQuery = Query.fromLocation('notifications', location, context, '')
     .limit(40);
   const notificationsResult = selectNotificationsResult(state, notificationsQuery);
-
 
   return {
     notificationsQuery,
