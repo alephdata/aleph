@@ -1,0 +1,53 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.CollectionMetadataPanel {
+  &__vertical-container {
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      margin-right: 20px;
+      width: 50%;
+      height: 100%;
+
+    }
+    & > *:first-child {
+      @media screen and (max-width: $aleph-screen-md-max-width) {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  &__item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: $light-gray5;
+    border-radius: 5px;
+    flex: 1 1 auto;
+
+    &:first-child {
+      margin-left: 0 !important;
+    }
+
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      margin-bottom: 0;
+    }
+
+    &.mobile-hide {
+      @media screen and (max-width: $aleph-screen-md-max-width) {
+        display: none;
+      }
+    }
+  }
+
+  .CollectionStatus {
+    font-size: 12px;
+
+    .bp3-heading {
+      font-size: 14px !important;
+      margin-bottom: 0 !important;
+    }
+  }
+
+  &__actions {
+    margin-top: 20px;
+  }
+}

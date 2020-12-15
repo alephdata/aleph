@@ -1,0 +1,99 @@
+@import "app/variables.scss";
+
+$metadata-width: $aleph-grid-size*30;
+
+.InvestigationOverview {
+  display: flex;
+  flex-flow: row;
+  @media screen and (max-width: $aleph-screen-md-max-width) {
+    flex-flow: column;
+    flex-direction: column-reverse;
+  }
+
+  &__main, &__secondary {
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      width: 100% !important;
+    }
+  }
+
+  &__main {
+    width: calc(100% - #{$metadata-width});
+
+  }
+
+  &__secondary {
+    // display: flex;
+    // flex: 1 1 $aleph-investigation-sidebar-width;
+    // padding: 10px;
+    width: $metadata-width;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid $aleph-border-color;
+
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      margin: 0;
+      padding-left: 0;
+      padding-bottom: 20px;
+      border-left: none;
+      border-bottom: 1px solid $aleph-border-color;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+
+  &__search {
+    margin-top: 20px;
+    // padding: 10px;
+    // background: rgba($blue1, .2);
+    // border-radius: 5px;
+  }
+
+  &__section {
+    // padding-bottom: 20px;
+    // border-top: 1px solid $aleph-border-color;
+    margin: 20px 0;
+    padding: 20px 0;
+    // background: $light-gray5;
+    // padding: 15px;
+    // border-radius: 5px;
+
+
+    &__title.bp3-heading {
+      color: $blue1;
+      // border-bottom: 1px solid $aleph-border-color;
+
+    }
+
+    &__content {
+      // border-radius: 5px;
+      // background: white;
+      // padding: 15px;
+      // border: 1px solid $aleph-border-color;
+    }
+
+  }
+
+  &__guides {
+    $guides-button-margin: 7px;
+
+    margin: 0 (-$guides-button-margin);
+
+    .bp3-button {
+      margin: $guides-button-margin/2;
+      min-height: 48px !important;
+      width: calc(33% - #{$guides-button-margin}) !important;
+      background-color: rgba(19, 124, 189, 0.09) !important;
+      transition: background-color .05s ease-in-out;
+      color: $blue2 !important;
+
+      @media screen and (max-width: $aleph-screen-lg-max-width) {
+        width: calc(50% - #{$guides-button-margin}) !important;
+      }
+
+      &:hover {
+        background-color: rgba(19, 124, 189, 0.04) !important;
+      }
+    }
+  }
+}

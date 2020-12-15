@@ -1,0 +1,124 @@
+@import "app/variables.scss";
+
+
+.InvestigationQuickLinks {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+
+  @media screen and (max-width: $aleph-screen-lg-max-width) {
+  }
+
+  &__item {
+    flex: 0 0 25%;
+    // justify-content: space-between;
+    align-items: stretch;
+    padding: 10px;
+    // height: 100%;
+    // width: 25% !important;
+
+    @media screen and (max-width: $aleph-screen-lg-max-width) {
+      flex-basis: 50%;
+    }
+
+
+    // &:first-child {
+    //   margin-left: 0 !important;
+    // }
+
+
+    &__content {
+      // margin: 20px;
+      // margin-right: 0;
+      // margin-bottom: 10px !important;
+      // margin-right: 10px !important;
+
+      border-radius: 5px;
+      box-shadow: $pt-elevation-shadow-2 !important;
+      transition: box-shadow .1s ease-in-out;
+      cursor: pointer !important;
+      height: 100%;
+      width: 100%;
+      text-align: center;
+      padding: 0;
+
+
+      &:hover {
+        background: white !important;
+        box-shadow: $pt-elevation-shadow-3 !important;
+      }
+    }
+
+
+    &__image {
+      min-height: 100px;
+      margin: 10px;
+      // padding: 10px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      position: relative;
+      border-radius: 5px;
+
+      &:after {
+        background: rgba($white, .6);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "";
+        // display: table;
+      }
+    }
+
+
+    &__text {
+      // position: absolute;
+      // top: 50%;
+      // transform: translateY(-50%);
+      text-align: center;
+      vertical-align: middle;
+      // width: 100%;
+      // height: 100%;
+      padding: 0 15px 15px;
+      margin: 0;
+      line-height: 1.4;
+      color: $blue1 !important;
+      font-weight: bold;
+    }
+  }
+  // .bp3-button {
+  //   min-height: 100px;
+  //   display: table !important;
+  //
+  //   margin: 10px;
+  //   margin-right: 0;
+  //   border: 1px solid rgba($blue1, .7) !important;
+  //   flex-basis: 33% !important;
+  //
+  //   &:first-child {
+  //     margin-left: 0 !important;
+  //   }
+  // }
+  // .bp3-icon, .bp3-button-text {
+  //   display: block !important;
+  //   text-align: center;
+  //   width: 100%;
+  // }
+  //
+  // .bp3-icon {
+  //   color: rgba($blue1, .7) !important;
+  //   svg {
+  //     margin: auto;
+  //     width: 30px;
+  //     height: 30px;
+  //   }
+  // }
+  //
+  // .bp3-button-text {
+  //   margin-top: 10px;
+  //   color: rgba($blue1, .8) !important;
+  //   font-weight: 500;
+  // }
+}
