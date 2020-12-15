@@ -1,8 +1,8 @@
 import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { injectIntl } from 'react-intl';
-import { Skeleton, Summary } from 'components/common';
+import { defineMessages, injectIntl } from 'react-intl';
+import { ErrorSection, Skeleton, Summary } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
 
 import './CollectionStatisticsGroup.scss';
@@ -10,6 +10,13 @@ import './CollectionStatisticsGroup.scss';
 const statFields = [
   'schema', 'countries', 'names', 'emails', 'addresses', 'ibans', 'phones',
 ];
+
+const messages = defineMessages({
+  empty: {
+    id: 'collection.overview.empty',
+    defaultMessage: 'This dataset is empty.',
+  },
+});
 
 class CollectionStatisticsGroup extends React.Component {
   renderStatisticsItem({ key, total, values }) {
@@ -27,7 +34,7 @@ class CollectionStatisticsGroup extends React.Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, intl } = this.props;
     const { statistics = {} } = collection;
 
     if (!collection.id || statistics.schema === undefined) {
@@ -36,6 +43,15 @@ class CollectionStatisticsGroup extends React.Component {
 
     const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
       .filter(stat => stat && stat.total);
+
+    if (!statsToRender.length) {
+      return (
+        <ErrorSection
+          icon="database"
+          title={intl.formatMessage(messages.empty)}
+        />
+      )
+    }
 
     return (
       <div className="CollectionStatisticsGroup">

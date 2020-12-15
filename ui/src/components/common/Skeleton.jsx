@@ -23,6 +23,8 @@ class LayoutSkeleton extends PureComponent {
 
     const columns = colCount ? [...Array(colCount).keys()] : [];
 
+    console.log('columns', columns)
+
     switch (type) {
       default:
         return (

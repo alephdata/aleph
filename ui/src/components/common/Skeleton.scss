@@ -2,7 +2,7 @@
 
 .LayoutSkeleton {
   &.multi-column {
-    column-count: 4;
+    column-count: 3;
     column-gap: 1.5em;
     table-layout : fixed;
     column-fill: balance;
@@ -10,14 +10,10 @@
     width: 100%;
 
     @media screen and (max-width: $aleph-screen-lg-max-width) {
-      column-count: 3;
-    }
-
-    @media screen and (max-width: $aleph-screen-md-max-width) {
       column-count: 2;
     }
 
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
+    @media screen and (max-width: $aleph-screen-md-max-width) {
       column-count: 1;
     }
 
