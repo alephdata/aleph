@@ -71,9 +71,9 @@ def handle_oauth(provider, oauth_token):
     email = token.get("email", token.get("upn"))
     role_id = "%s:%s" % (settings.OAUTH_HANDLER, token.get("sub", email))
     role = Role.by_foreign_id(role_id)
-    if role is None:
-        if settings.OAUTH_MIGRATE_SUB:
-            role = Role.by_email(email)
+    if settings.OAUTH_MIGRATE_SUB and role is None:
+        role = Role.by_email(email)
+        if role is not None:
             role.foreign_id = role_id
             role.update({"name": name})
     if role is None:
