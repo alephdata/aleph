@@ -1,16 +1,42 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Country, Role, Date, URL, Frequency,
+  Country, Role, Date, URL, Frequency, Skeleton,
 } from 'components/common';
 
 import './CollectionInfo.scss';
 
 class CollectionInfo extends PureComponent {
+  renderSkeletonItem() {
+    return (
+      <div className="CollectionInfo__item">
+        <div className="key text-muted">
+          <Skeleton.Text type="span" length={10} />
+        </div>
+        <div className="value">
+          <Skeleton.Text type="span" length={10} />
+        </div>
+      </div>
+    );
+  }
+
+  renderSkeleton() {
+    return (
+      <div className="CollectionInfo">
+        {this.renderSkeletonItem()}
+        {this.renderSkeletonItem()}
+        {this.renderSkeletonItem()}
+      </div>
+    );
+  }
+
   render() {
     const { collection } = this.props;
     if (!collection) {
       return null;
+    }
+    if (collection.isPending) {
+      return this.renderSkeleton();
     }
 
     return (

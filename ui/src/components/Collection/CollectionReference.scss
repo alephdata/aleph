@@ -3,10 +3,6 @@
 
 .CollectionReference {
   &__section {
-    &:first-child {
-      margin-bottom: $aleph-grid-size*2;
-    }
-
     .key {
       margin-bottom: 5px;
       color: $gray1 !important;
@@ -22,5 +18,9 @@
         @include rtlSupportInvertedProp(padding, right, 30px!important, 10px!important);
       }
     }
+  }
+
+  .bp3-divider {
+    margin: $aleph-grid-size*1.5 0 !important;
   }
 }
