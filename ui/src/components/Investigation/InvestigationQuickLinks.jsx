@@ -1,15 +1,13 @@
 import React from 'react';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { Button, ButtonGroup } from '@blueprintjs/core';
 import { EntityCreateDialog } from '@alephdata/react-ftm';
 
+import collectionViewIds from 'components/Collection/collectionViewIds';
 import { showSuccessToast, showErrorToast } from 'app/toast';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import { Schema } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
@@ -31,8 +29,17 @@ const messages = defineMessages({
 
 
 class InvestigationQuickLinks extends React.Component {
+  onDocUpload = () => {
+    const { history, location,  } = this.props;
+
+    history.push({
+      pathname: location.pathname,
+      hash: queryString.stringify({ mode: collectionViewIds.DOCUMENTS }),
+    });
+  }
+
   onEntityCreate = async (entityData) => {
-    const { collection, entityManager, history, intl, location,  } = this.props;
+    const { entityManager, history, intl, location,  } = this.props;
 
     if (!entityData) {
       showErrorToast(intl.formatMessage(messages.entity_create_error));
@@ -43,7 +50,7 @@ class InvestigationQuickLinks extends React.Component {
       showSuccessToast(intl.formatMessage(messages.entity_create_success, { name: entity.getCaption() }));
       history.push({
         pathname: location.pathname,
-        hash: queryString.stringify({ mode: 'entities', type: entityData.schema.name }),
+        hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: entityData.schema.name }),
       });
     }
   }
@@ -52,7 +59,7 @@ class InvestigationQuickLinks extends React.Component {
     const { history, location } = this.props;
     history.push({
       pathname: location.pathname,
-      hash: queryString.stringify({ mode: 'xref' }),
+      hash: queryString.stringify({ mode: collectionViewIds.XREF }),
     });
   }
 
@@ -67,7 +74,7 @@ class InvestigationQuickLinks extends React.Component {
               className: "InvestigationQuickLinks__item__content"
             }}
             Dialog={DocumentUploadDialog}
-            dialogProps={{ collection }}
+            dialogProps={{ collection, onUploadSuccess: this.onDocUpload }}
           >
             <>
               <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_upload.svg)' }} />
@@ -123,7 +130,7 @@ class InvestigationQuickLinks extends React.Component {
               className: "InvestigationQuickLinks__item__content"
             }}
             Dialog={CollectionXrefDialog}
-            dialogProps={{ collection, redirectOnSubmit: this.onXrefSubmit }}
+            dialogProps={{ collection, onSubmit: this.onXrefSubmit }}
           >
             <>
               <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_xref.svg)' }} />
