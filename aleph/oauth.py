@@ -44,9 +44,9 @@ def _get_groups(provider, oauth_token, id_token):
 
     # Amazon Cognito
     groups.extend(access_token.get("cognito:groups", []))
-    
+
     # Okta
-    groups.extend(id_token.get("groups", []));
+    groups.extend(id_token.get("groups", []))
 
     # ADFS
     groups.append(id_token.get("group"))
@@ -74,13 +74,12 @@ def handle_oauth(provider, oauth_token):
     if role is None:
         if settings.OAUTH_MIGRATE_SUB:
             role = Role.by_email(email)
+            role.foreign_id = role_id
+            role.update({"name": name})
     if role is None:
         role = Role.load_or_create(role_id, Role.USER, name, email=email)
     if not role.is_actor:
         return None
-    role.foreign_id = role_id
-    role.email = email
-    role.name = name
     role.clear_roles()
 
     for group in _get_groups(provider, oauth_token, token):

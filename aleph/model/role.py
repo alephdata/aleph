@@ -88,6 +88,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def update(self, data):
         self.name = data.get("name", self.name)
+        if self.name is None:
+            self.name = self.email or self.foreign_id
         self.is_muted = data.get("is_muted", self.is_muted)
         self.is_tester = data.get("is_tester", self.is_tester)
         if data.get("password"):
