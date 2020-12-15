@@ -22,8 +22,6 @@ const Summary = ({ className, text, truncate }) => {
     </ReactMarkdown>
   );
 
-  console.log('text', text);
-
   return (
     <div className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}>
       {truncate && <Truncate lines={truncate}>{content}</Truncate>}

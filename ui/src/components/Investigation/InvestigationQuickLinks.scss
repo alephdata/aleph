@@ -25,13 +25,11 @@
       text-align: center;
       padding: 0;
 
-
       &:hover {
         background: white !important;
         box-shadow: $pt-elevation-shadow-3 !important;
       }
     }
-
 
     &__image {
       min-height: 100px;

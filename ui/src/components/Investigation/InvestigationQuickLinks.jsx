@@ -9,6 +9,7 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import { showSuccessToast, showErrorToast } from 'app/toast';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { DialogToggleButton } from 'components/Toolbar';
+import { Skeleton } from 'components/common';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
 import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
@@ -63,8 +64,25 @@ class InvestigationQuickLinks extends React.Component {
     });
   }
 
+  renderSkeleton() {
+    return (
+      <div className="InvestigationQuickLinks">
+        {[...Array(4).keys()].map(key => (
+          <div className="InvestigationQuickLinks__item">
+            <Skeleton.Text type="div" length="250" className="InvestigationQuickLinks__item__content" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   render() {
     const { collection, intl, model } = this.props;
+
+    if (collection.isPending) {
+      return this.renderSkeleton();
+    }
+
     return (
       <div className="InvestigationQuickLinks">
         <div className="InvestigationQuickLinks__item">
