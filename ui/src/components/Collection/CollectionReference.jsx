@@ -1,42 +1,15 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Divider, InputGroup } from '@blueprintjs/core';
+import { Divider } from '@blueprintjs/core';
 
-import { ClipboardInput, Skeleton } from 'components/common';
+import { ClipboardInput } from 'components/common';
 
 import './CollectionReference.scss';
 
 class CollectionReference extends React.PureComponent {
-  renderSkeleton() {
-    return (
-      <div className="CollectionReference">
-        <div className="CollectionReference__section">
-          <div className="key text-muted">
-            <Skeleton.Text type="span" length={10} />
-          </div>
-          <div className="value">
-            <Skeleton.Text type="span" length={40} />
-          </div>
-        </div>
-        <Divider />
-        <div className="CollectionReference__section">
-          <div className="key text-muted">
-            <Skeleton.Text type="span" length={10} />
-          </div>
-          <div className="value">
-            <InputGroup readOnly disabled />
-            <Skeleton.Text type="span" length={100} className="bp3-text-small" />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   render() {
     const { collection } = this.props;
-    if (collection.isPending) {
-      return this.renderSkeleton();
-    }
+
     return (
       <div className="CollectionReference">
         <div className="CollectionReference__section">
