@@ -7,7 +7,6 @@ import { Summary } from 'components/common';
 import CollectionInfo from 'components/Collection/CollectionInfo';
 import CollectionStatus from 'components/Collection/CollectionStatus';
 import CollectionHeading from 'components/Collection/CollectionHeading';
-import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 
 import './InvestigationHeading.scss';
 
@@ -52,9 +51,6 @@ class InvestigationHeading extends React.Component {
               <div className="InvestigationHeading__divider" />
               <div className="InvestigationHeading__metadata__inner-container">
                 <CollectionInfo collection={collection} />
-                <div className="InvestigationHeading__actions">
-                  <CollectionManageMenu collection={collection} view="semi-collapsed" buttonProps={{ className: 'bp3-minimal' }}/>
-                </div>
               </div>
             </div>
           )}
