@@ -64,33 +64,31 @@ class InvestigationSidebar extends React.Component {
     const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS];
 
     return (
-      <div className={c('InvestigationSidebar', { static: !activeMode })}>
-        <div className="InvestigationSidebar__scroll-container">
-          <InvestigationHeading collection={collection} activeMode={activeMode} minimal={minimalHeader} />
-          <div className="InvestigationSidebar__content">
-            <div className="InvestigationSidebar__section">
-              <h6 className="bp3-heading InvestigationSidebar__section__title">
-                <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
-              </h6>
-              <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-                <SchemaCounts
-                  filterSchemata={schema => !schema.isDocument()}
-                  schemaCounts={schemaCounts}
-                  onSelect={schema => this.navigate('entities', schema)}
-                  showSchemaAdd={collection.writeable}
-                  activeSchema={activeType}
-                />
-                {entityTools.map(this.renderButton)}
-              </ButtonGroup>
-            </div>
-            <div className="InvestigationSidebar__section">
-              <h6 className="bp3-heading InvestigationSidebar__section__title">
-                <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
-              </h6>
-              <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
-                {docTools.map(this.renderButton)}
-              </ButtonGroup>
-            </div>
+      <div className="InvestigationSidebar">
+        <InvestigationHeading collection={collection} activeMode={activeMode} minimal={minimalHeader} />
+        <div className="InvestigationSidebar__content">
+          <div className="InvestigationSidebar__section">
+            <h6 className="bp3-heading InvestigationSidebar__section__title">
+              <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
+            </h6>
+            <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
+              <SchemaCounts
+                filterSchemata={schema => !schema.isDocument()}
+                schemaCounts={schemaCounts}
+                onSelect={schema => this.navigate('entities', schema)}
+                showSchemaAdd={collection.writeable}
+                activeSchema={activeType}
+              />
+              {entityTools.map(this.renderButton)}
+            </ButtonGroup>
+          </div>
+          <div className="InvestigationSidebar__section">
+            <h6 className="bp3-heading InvestigationSidebar__section__title">
+              <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
+            </h6>
+            <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
+              {docTools.map(this.renderButton)}
+            </ButtonGroup>
           </div>
         </div>
       </div>

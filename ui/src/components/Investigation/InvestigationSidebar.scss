@@ -1,112 +1,29 @@
 @import "app/variables.scss";
+@import "app/mixins.scss";
 
 $transition-duration: .3s;
 $sidebar-padding: $aleph-grid-size*2;
 
 .InvestigationSidebar {
-  background: $light-gray5;
-  box-shadow: 0 4px 8px rgba(16,22,26,.2), 0 5px 10px 6px rgba(16,22,26,.1);  // background: $aleph-breadcrumbs-background;
-  transition: box-shadow $transition-duration ease-in-out;
-  padding: 0;
   width: $aleph-investigation-sidebar-width;
   height: 100%;
-
-  &.static {
-    box-shadow: none;
-    background: none;
-    border-right: 1px solid $aleph-border-color;
-  }
-
-  .fixed & {
-    min-height: 100vh;
-  }
-
-  &__scroll-container {
-    // max-height: calc(100vh - #{$aleph-top-nav-height});
-    overflow-y: scroll;
-    width: 100%;
-    // padding-bottom: $aleph-top-nav-height;
-
-    .static & {
-      overflow: visible;
-      height: 100%;
-    }
-
-    .fixed & {
-      max-height: calc(100vh - #{$aleph-breadcrumbs-height});
-      // height: calc(100vh - #{$aleph-breadcrumbs-height});
-    }
-  }
-
-  &__content {
-    overflow: visible;
-  }
-
-  // &__content {
-  //   margin-bottom: 40px;
-  // }
+  @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, none);
+  @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, 0);
 
   .SchemaCounts {
     margin-bottom: $aleph-grid-size;
   }
 
-  &__footer {
-    background: $light-gray4;
-  }
-
-  &__footer {
-    padding: 5px 15px;
-    border-top: 1px solid $light-gray2;
-    position: fixed;
-    width: $aleph-investigation-sidebar-width;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
-    transition: width $transition-duration ease-in-out;
-  }
-
-  &__collapse-toggle.bp3-button {
-    background-color: $light-gray2 !important;
-
-    &:hover {
-      background-color: $light-gray1 !important;
-    }
-  }
-
   &__section {
-    // margin: $aleph-grid-size*2 0;
-    position: relative;
-    // background-color: white;
-    // margin: 0 $sidebar-padding;
-    padding: $sidebar-padding;
-    border-top: 1px solid $aleph-border-color;
-
-    // border-radius: $aleph-border-radius;
-    // box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.3);
-
-    &:first-child {
-      border: none;
-      // border-top: 1px solid $aleph-border-color;
-      // padding-top: 5px;
-    }
-
-    .static & {
-      padding: 15px;
-      border-radius: 10px;
-      background: $light-gray5;
-      margin: 20px;
-      border: none;
-    }
+    padding: 15px;
+    border-radius: 10px;
+    background: $light-gray5;
+    margin: $aleph-content-padding 0;
+    border: none;
 
     &__title.bp3-heading {
-      color: $blue1;
-      // text-transform: uppercase;
-      // font-weight: bold;
-      // font-size: 16px;
-      // border-bottom: 1px solid $blue1;
-      // margin-bottom: 15px;
+      color: $aleph-investigation-theme;
       padding-bottom: 5px;
-      // transition: all 1s ease-in-out;
     }
   }
 }

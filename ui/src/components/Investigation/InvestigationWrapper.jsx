@@ -16,8 +16,6 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
 import { Breadcrumbs, Collection, Count, Schema, DualPane, ResultText, ResultCount, Summary } from 'components/common';
 import { queryCollectionEntities } from 'queries';
-
-// import Screen from 'components/Screen/Screen';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 
 // const messages = defineMessages({
@@ -46,14 +44,12 @@ export class InvestigationWrapper extends Component {
     const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
 
     return (
-      <CollectionWrapper collection={collection}>
+      <CollectionWrapper collection={collection} isCasefile>
         <DualPane className="InvestigationWrapper">
           {showSidebar && (
-            <div className="InvestigationWrapper__sidebar-container">
-              <InvestigationSidebar
-                collection={collection}
-              />
-            </div>
+            <InvestigationSidebar
+              collection={collection}
+            />
           )}
           <DualPane.ContentPane className="InvestigationWrapper__body">
             <div className="InvestigationWrapper__body-content">

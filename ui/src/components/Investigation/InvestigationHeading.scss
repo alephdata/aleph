@@ -4,45 +4,20 @@ $transition-duration: .3s;
 $sidebar-padding: 15px;
 
 .InvestigationHeading {
-  background: $blue1;
+  background: rgba($aleph-investigation-theme, .7);
   transition: all $transition-duration ease-in-out;
   overflow: hidden;
   max-height: none;
-  opacity: 1;
   border-radius: 5px;
-  margin: 20px;
-  margin-bottom: 0;
-
-  .static & {
-    margin: 20px;
-  }
-
-  .fixed & {
-    margin: 15px;
-  }
+  margin-bottom: $aleph-content-padding;
 
   &__inner-container {
     padding: 15px;
-    padding-bottom: 0;
     transition: padding .3s ease-in-out;
-
-    .static & {
-      padding-bottom: 15px;
-    }
-
-    .fixed & {
-      padding-top: 0;
-      padding-bottom: 0;
-    }
 
     .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
       color: white !important;
     }
-
-    .bp3-input-group {
-      margin-top: 10px;
-    }
-
   }
 
   .text-markdown, .text-markdown p {
@@ -59,7 +34,6 @@ $sidebar-padding: 15px;
       width: 100%;
       margin-top: 20px;
       margin-bottom: 10px;
-      // margin: 20px auto;
     }
   }
 
@@ -72,10 +46,6 @@ $sidebar-padding: 15px;
       max-height: 10000px;
     }
 
-    .fixed & {
-      max-height: 0;
-    }
-
     .CollectionInfo__item .key {
       color: white !important;
     }
@@ -85,26 +55,6 @@ $sidebar-padding: 15px;
       padding: 10px;
       border-radius: 5px;
       background: rgba(#fff, .15);
-    }
-  }
-
-  &__actions {
-    margin-top: 15px;
-    // padding-top: 5px;
-    // border-top: 1px solid white;
-
-    .bp3-button.bp3-minimal {
-      // border-color: white;
-      color: white !important;
-      background: rgba(white, .15);
-
-      &:hover {
-        background: rgba(white, .3);
-      }
-
-      .bp3-icon {
-        color: white;
-      }
     }
   }
 
@@ -122,10 +72,6 @@ $sidebar-padding: 15px;
     .bp3-icon {
       color: white !important;
     }
-
-    .fixed & {
-      display: none !important;
-    }
   }
 
   .CollectionHeading {
@@ -134,9 +80,6 @@ $sidebar-padding: 15px;
     &__subheading {
       transition: max-height .3s ease-in-out;
       overflow: hidden;
-      .fixed & {
-        max-height: 0;
-      }
     }
 
     &__title {
@@ -144,9 +87,6 @@ $sidebar-padding: 15px;
 
       .bp3-icon {
         padding-right: 3px;
-      }
-      .fixed & {
-        font-size: 14px;
       }
     }
   }
@@ -166,5 +106,4 @@ $sidebar-padding: 15px;
   .CollectionLink, .CategoryLink {
     color: white !important;
   }
-
 }
