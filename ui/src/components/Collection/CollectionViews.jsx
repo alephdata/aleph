@@ -65,7 +65,9 @@ class CollectionViews extends React.Component {
           title={(
             <CollectionView.Label id={collectionViewIds.OVERVIEW} icon />
           )}
-          panel={<CollectionOverviewMode collection={collection} />}
+          panel={(
+            <CollectionOverviewMode isCasefile={false} collection={collection} />
+          )}
         />
         {collection.writeable && (
           <Tab

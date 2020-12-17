@@ -1,12 +1,15 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import ClipboardInput from 'components/common/ClipboardInput';
+import { Divider } from '@blueprintjs/core';
+
+import { ClipboardInput } from 'components/common';
 
 import './CollectionReference.scss';
 
 class CollectionReference extends React.PureComponent {
   render() {
     const { collection } = this.props;
+
     return (
       <div className="CollectionReference">
         <div className="CollectionReference__section">
@@ -17,7 +20,7 @@ class CollectionReference extends React.PureComponent {
             <code>{collection.foreign_id}</code>
           </div>
         </div>
-        <div className="CollectionOverviewMode__item__text-content__divider" />
+        <Divider />
         <div className="CollectionReference__section">
           <div className="key text-muted">
             <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />

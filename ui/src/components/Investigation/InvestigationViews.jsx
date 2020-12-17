@@ -47,7 +47,7 @@ class InvestigationViews extends React.Component {
       case 'xref':
         return <CollectionXrefMode collection={collection} />;
       default:
-        return <CollectionOverviewMode collection={collection} />;
+        return <CollectionOverviewMode collection={collection} isCasefile />;
     }
   }
 

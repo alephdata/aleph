@@ -1,6 +1,7 @@
 import AnimatedCount from './AnimatedCount';
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
+import ClipboardInput from './ClipboardInput';
 import Category from './Category';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
@@ -47,6 +48,7 @@ export {
   AnimatedCount,
   Breadcrumbs,
   SignInCallout,
+  ClipboardInput,
   Category,
   Frequency,
   Restricted,

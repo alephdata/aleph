@@ -41,15 +41,18 @@ const messages = defineMessages({
 
 class CollectionManageMenu extends PureComponent {
   renderSkeletonButton = () => (
-    <Skeleton.Text type="span" length={5} className="bp3-button" />
+    <Button disabled>
+      <Skeleton.Text type="span" length={10} />
+    </Button>
   )
 
   renderSkeleton = () => {
-    if (this.props.view) {
+    const { view } = this.props;
+    if (view === 'collapsed') {
       return this.renderSkeletonButton();
     } else {
       return (
-        <ButtonGroup>{[...Array(3).keys()].map(this.renderSkeletonButton)}</ButtonGroup>
+        <ButtonGroup fill>{[...Array(3).keys()].map(this.renderSkeletonButton)}</ButtonGroup>
       );
     };
   }
