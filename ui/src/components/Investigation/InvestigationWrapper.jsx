@@ -31,7 +31,7 @@ import CollectionWrapper from 'components/Collection/CollectionWrapper';
 
 import './InvestigationWrapper.scss';
 
-const sidebarHiddenViews = [collectionViewIds.SEARCH, collectionViewIds.XREF];
+const sidebarHiddenViews = [collectionViewIds.SEARCH];
 
 export class InvestigationWrapper extends Component {
   constructor(props) {

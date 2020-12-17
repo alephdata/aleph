@@ -61,7 +61,7 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      location, children, collection, collectionId, activeMode, query, intl, isCasefile,
+      activeMode, location, children, collection, collectionId, query, intl, isCasefile,
     } = this.props;
 
     const search = (
@@ -76,7 +76,7 @@ export class CollectionWrapper extends Component {
     const operation = <CollectionManageMenu collection={collection} view="collapsed" />;
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} type={isCasefile ? 'casefile' : 'dataset'}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory={!isCasefile} active />
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory={!isCasefile} active={!activeMode} />
       </Breadcrumbs>
     );
 
@@ -104,10 +104,11 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { collection, location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
-  const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
+  const activeMode = hashQuery.mode;
   const query = queryCollectionEntities(activeMode === 'search' && location, collectionId);
 
   return {
+    activeMode,
     collectionId,
     query,
     status: selectCollectionStatus(state, collectionId),

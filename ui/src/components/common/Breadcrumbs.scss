@@ -76,6 +76,14 @@
 
   .bp3-breadcrumb {
     font-size: $aleph-font-size;
+
+    &.CollectionLabel {
+      font-weight: 600;
+
+      .bp3-spinner-head {
+        stroke: white;
+      }
+    }
   }
 
   .bp3-breadcrumb-current {
