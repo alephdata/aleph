@@ -12,7 +12,7 @@ $sidebar-padding: 15px;
   margin-bottom: $aleph-content-padding;
 
   &__inner-container {
-    padding: 15px;
+    padding: $aleph-grid-size*2 $sidebar-padding 0;
     transition: padding .3s ease-in-out;
 
     .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
@@ -20,7 +20,15 @@ $sidebar-padding: 15px;
     }
   }
 
-  .text-markdown, .text-markdown p {
+  .CollectionHeading__title {
+    margin-bottom: 5px;
+  }
+
+  .text-markdown {
+    margin: $aleph-grid-size 0 !important;
+  }
+
+  .text-markdown p {
     margin-bottom: 5px !important;
   }
 
@@ -51,7 +59,7 @@ $sidebar-padding: 15px;
     }
 
     &__inner-container {
-      margin-top: 15px;
+      margin-top: $sidebar-padding;
       padding: 10px;
       border-radius: 5px;
       background: rgba(#fff, .15);
@@ -62,7 +70,7 @@ $sidebar-padding: 15px;
     width: 100%;
     transition: height .3s ease-in-out;
     overflow: hidden;
-    margin-top: $aleph-grid-size;
+    margin-top: $sidebar-padding;
     background: rgba($white, .1) !important;
 
     &:hover {
