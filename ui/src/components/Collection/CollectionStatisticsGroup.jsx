@@ -2,27 +2,20 @@ import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import { ErrorSection, Skeleton } from 'components/common';
+import { Skeleton } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
 
-import './CollectionOverview.scss';
+import './CollectionStatisticsGroup.scss';
 
 const statFields = [
   'schema', 'countries', 'names', 'emails', 'addresses', 'ibans', 'phones',
 ];
 
-const messages = defineMessages({
-  empty: {
-    id: 'collection.overview.empty',
-    defaultMessage: 'This dataset is empty.',
-  },
-});
-
-class CollectionOverview extends React.Component {
+class CollectionStatisticsGroup extends React.Component {
   renderStatisticsItem({ key, total, values }) {
     const { collection } = this.props;
     return (
-      <div className="CollectionOverview__item" key={key}>
+      <div className="CollectionStatisticsGroup__item" key={key}>
         <CollectionStatistics
           collection={collection}
           field={key}
@@ -34,7 +27,7 @@ class CollectionOverview extends React.Component {
   }
 
   render() {
-    const { collection, intl } = this.props;
+    const { collection, emptyComponent, intl } = this.props;
     const { statistics = {} } = collection;
 
     if (!collection.id || statistics.schema === undefined) {
@@ -45,16 +38,11 @@ class CollectionOverview extends React.Component {
       .filter(stat => stat && stat.total);
 
     if (!statsToRender.length) {
-      return (
-        <ErrorSection
-          icon="database"
-          title={intl.formatMessage(messages.empty)}
-        />
-      )
+      return emptyComponent;
     }
 
     return (
-      <div className="CollectionOverview">
+      <div className="CollectionStatisticsGroup">
         {statsToRender.map((stat) => this.renderStatisticsItem(stat))}
       </div>
     );
@@ -65,4 +53,4 @@ class CollectionOverview extends React.Component {
 export default compose(
   withRouter,
   injectIntl,
-)(CollectionOverview);
+)(CollectionStatisticsGroup);

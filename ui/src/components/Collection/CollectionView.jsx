@@ -70,6 +70,7 @@ const icons = {
   mappings: 'new-object' ,
   search: 'search' ,
   lists: 'list' ,
+  mentions: 'tag' ,
 };
 
 const CollectionViewIcon = ({ id, className }) => {

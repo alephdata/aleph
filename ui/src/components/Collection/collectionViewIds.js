@@ -5,6 +5,7 @@ const viewIds = {
   XREF: 'xref',
   DIAGRAMS: 'diagrams',
   MAPPINGS: 'mappings',
+  MENTIONS: 'mentions',
   SEARCH: 'search',
   LISTS: 'lists',
 };

@@ -5,12 +5,11 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 
-// import InvestigationOverviewMode from 'components/Investigation/InvestigationOverviewMode';
-// import InvestigationMentionsMode from 'components/Investigation/InvestigationMentionsMode';
-// import InvestigationDocumentsMode from 'components/Investigation/InvestigationDocumentsMode';
 
+// import InvestigationMentionsMode from 'components/Investigation/InvestigationMentionsMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
+import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
 import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
 import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
@@ -18,16 +17,30 @@ import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntit
 import CollectionView from 'components/Collection/CollectionView';
 import CollectionViewIds from 'components/Collection/collectionViewIds';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
-import { Schema } from 'components/common';
+import { ErrorSection, Schema } from 'components/common';
 import { queryCollectionEntities } from 'queries';
 import { selectEntitiesResult } from 'selectors';
 
 
 import './InvestigationViews.scss'
 
+const messages = defineMessages({
+  empty: {
+    id: 'investigation.mentions.empty',
+    defaultMessage: 'There are no mentions yet in this investigation.',
+  },
+});
+
 class InvestigationViews extends React.Component {
   renderContent() {
-    const { collection, activeMode, searchQuery, searchResult } = this.props;
+    const { collection, activeMode, intl, searchQuery, searchResult } = this.props;
+
+    const mentionsEmpty = (
+      <ErrorSection
+        icon="tag"
+        title={intl.formatMessage(messages.empty)}
+      />
+    )
 
     switch(activeMode) {
       case 'documents':
@@ -40,8 +53,8 @@ class InvestigationViews extends React.Component {
         return <CollectionEntitySetsIndexMode collection={collection} type="list" />;
       case 'mappings':
         return <CollectionMappingsMode collection={collection} />;
-      // case 'mentions':
-      //   return <InvestigationMentionsMode collection={collection} />;
+      case 'mentions':
+        return <CollectionStatisticsGroup collection={collection} emptyComponent={mentionsEmpty} />;
       case 'search':
         return <FacetedEntitySearch query={searchQuery} result={searchResult} />;
       case 'xref':

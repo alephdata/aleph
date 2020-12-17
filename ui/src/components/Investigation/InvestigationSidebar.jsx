@@ -61,7 +61,7 @@ class InvestigationSidebar extends React.Component {
     } = this.props;
 
     const entityTools = [collectionViewIds.DIAGRAMS, collectionViewIds.LISTS, collectionViewIds.XREF];
-    const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS];
+    const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS, collectionViewIds.MENTIONS];
 
     return (
       <div className="InvestigationSidebar">
