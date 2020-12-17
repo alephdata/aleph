@@ -7,7 +7,6 @@ $sidebar-padding: $aleph-grid-size*2;
 
 .InvestigationSidebar {
   width: $aleph-investigation-sidebar-width;
-  height: 100%;
   @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, none);
   @include rtlSupportInvertedProp(margin, right, $aleph-content-padding, 0);
   @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, 0);
