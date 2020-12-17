@@ -30,6 +30,10 @@
         background: white !important;
         box-shadow: $pt-elevation-shadow-3 !important;
       }
+
+      .bp3-button-text {
+        align-self: center;
+      }
     }
 
     &__image {
@@ -55,13 +59,19 @@
 
     &__text {
       text-align: center;
-      vertical-align: middle;
-      padding: 0 15px 15px;
+      padding: 5px 15px 15px;
       margin: 0;
       line-height: 1.4;
       color: $blue1 !important;
       font-weight: bold;
-      min-height: $aleph-grid-size*5;
+      // min-height: $aleph-grid-size*5;
+      display: table;
+
+      p {
+        vertical-align: middle;
+        margin: 0;
+        display: table-cell;
+      }
     }
   }
 }

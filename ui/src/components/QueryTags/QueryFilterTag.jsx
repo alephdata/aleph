@@ -41,7 +41,7 @@ class QueryFilterTag extends PureComponent {
         );
       case 'collection_id':
         return (
-          <Collection.Load id={value} renderWhenLoading="…">
+          <Collection.Load id={value}>
             {collection => (
               <Collection.Link collection={collection} />
             )}

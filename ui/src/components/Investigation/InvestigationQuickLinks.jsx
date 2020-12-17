@@ -96,9 +96,9 @@ class InvestigationQuickLinks extends React.Component {
           >
             <>
               <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_upload.svg)' }} />
-              <p className="InvestigationQuickLinks__item__text">
-                <FormattedMessage id="investigation.shortcut.upload" defaultMessage="Upload documents" />
-              </p>
+              <div className="InvestigationQuickLinks__item__text">
+                <p><FormattedMessage id="investigation.shortcut.upload" defaultMessage="Upload documents" /></p>
+              </div>
             </>
           </DialogToggleButton>
         </div>
@@ -118,9 +118,9 @@ class InvestigationQuickLinks extends React.Component {
           >
             <>
               <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_entities.svg)' }} />
-              <p className="InvestigationQuickLinks__item__text">
-                <FormattedMessage id="investigation.shortcut.entities" defaultMessage="Create new entities" />
-              </p>
+              <div className="InvestigationQuickLinks__item__text">
+                <p><FormattedMessage id="investigation.shortcut.entities" defaultMessage="Create new entities" /></p>
+              </div>
             </>
           </DialogToggleButton>
         </div>
@@ -135,9 +135,9 @@ class InvestigationQuickLinks extends React.Component {
           >
             <>
               <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_networks.svg)' }} />
-              <p className="InvestigationQuickLinks__item__text">
-                <FormattedMessage id="investigation.shortcut.diagram" defaultMessage="Sketch a network diagram" />
-              </p>
+              <div className="InvestigationQuickLinks__item__text">
+                <p><FormattedMessage id="investigation.shortcut.diagram" defaultMessage="Sketch a network diagram" /></p>
+              </div>
             </>
           </DialogToggleButton>
         </div>
@@ -152,9 +152,9 @@ class InvestigationQuickLinks extends React.Component {
           >
             <>
               <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_xref.svg)' }} />
-              <p className="InvestigationQuickLinks__item__text">
-                <FormattedMessage id="investigation.shortcut.xref" defaultMessage="Compare with other datasets" />
-              </p>
+              <div className="InvestigationQuickLinks__item__text">
+                <p><FormattedMessage id="investigation.shortcut.xref" defaultMessage="Compare with other datasets" /></p>
+              </div>
             </>
           </DialogToggleButton>
         </div>
