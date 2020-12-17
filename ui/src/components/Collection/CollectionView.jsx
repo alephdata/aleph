@@ -96,7 +96,6 @@ class CollectionViewLabel extends PureComponent {
 }
 
 const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
-  console.log('in count!', id, collection, model);
   let count;
   switch(id) {
     case 'documents':
@@ -106,9 +105,7 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
         count = 0;
         Object.entries(schemaCounts).forEach(([key, value]) => {
           const schema = model.getSchema(key);
-          console.log(schema, schema.isDocument(), key, value)
           if (id === 'entities' && !schema.isDocument() || id === 'documents' && schema.isDocument()) {
-            console.log(count, value);
             count += value;
           }
         });
@@ -128,22 +125,22 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
     case 'lists':
       count = collection?.counts?.entitysets?.list;
       break;
+    default:
+      return null;
   }
 
   if (count) {
     return <Count count={count} />;
   } else {
-    return null;
+    return <Count count={0} />;
   }
 }
 
 class CollectionViewDescription extends PureComponent {
   render() {
     const { id, intl } = this.props;
-    console.log(messages, id)
     if (!id) { return null; }
     const messageKey = messages[`${id}_description`];
-    console.log(messageKey);
     if (!messageKey) { return null; }
 
     return (
