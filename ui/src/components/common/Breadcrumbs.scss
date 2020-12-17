@@ -22,6 +22,10 @@
     .bp3-breadcrumb {
       color: white;
     }
+
+    .bp3-divider {
+      border-color: $light-gray4;
+    }
   }
 
   &__inner-container {
@@ -48,6 +52,10 @@
 
     .bp3-control-group, .bp3-input, .bp3-button-group {
       border-radius: $aleph-border-radius !important;
+    }
+
+    .bp3-input-group {
+      min-width: $aleph-grid-size*20.5;
     }
   }
 

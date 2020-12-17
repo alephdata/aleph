@@ -121,7 +121,7 @@ export class Navbar extends React.Component {
               )}
               {menuPages.map(page => (
                 <Link to={getPageLink(page)} key={page.name}>
-                  <Button icon={page.icon} className="Navbar_collections-button bp3-minimal">
+                  <Button icon={page.icon} className="Navbar__collections-button mobile-hide bp3-minimal">
                     {page.short}
                   </Button>
                 </Link>

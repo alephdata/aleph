@@ -1,5 +1,6 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
+import c from 'classnames';
 
 import { ErrorSection } from 'components/common';
 import CollectionMetadataPanel from 'components/Collection/CollectionMetadataPanel';
@@ -24,7 +25,7 @@ const CollectionOverviewMode = ({ children, collection, intl, isCasefile }) => {
   );
 
   return (
-    <div className="CollectionOverviewMode">
+    <div className={c('CollectionOverviewMode', { casefile: isCasefile })}>
       <div className="CollectionOverviewMode__main">
         {isCasefile && <InvestigationOverview collection={collection} />}
         {!isCasefile && <CollectionStatisticsGroup collection={collection} emptyComponent={emptyComponent} />}

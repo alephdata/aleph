@@ -42,7 +42,7 @@ const messages = defineMessages({
 class CollectionManageMenu extends PureComponent {
   renderSkeletonButton = () => (
     <Button disabled>
-      <Skeleton.Text type="span" length={10} />
+      <Skeleton.Text type="span" length={5} />
     </Button>
   )
 
@@ -130,10 +130,10 @@ class CollectionManageMenu extends PureComponent {
 
   render() {
     const { collection, buttonGroupProps = {}, buttonProps = {}, view = "default" } = this.props;
-    if (collection.isPending) {
-      return this.renderSkeleton();
-    }
-    if (!collection.writeable) {
+    // if (collection.isPending) {
+    //   return this.renderSkeleton();
+    // }
+    if (!collection.isPending && !collection.writeable) {
       return null;
     }
     const buttons = this.getButtons();
@@ -141,7 +141,7 @@ class CollectionManageMenu extends PureComponent {
     if (view === 'collapsed') {
       return (
         <Popover>
-          <Button icon="cog" rightIcon="caret-down" {...buttonProps} />
+          <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={collection.isPending}/>
           <Menu>
             {buttons.map(this.renderMenuItem)}
           </Menu>
@@ -149,7 +149,7 @@ class CollectionManageMenu extends PureComponent {
       );
     } else if (view === 'semi-collapsed') {
       return (
-        <ButtonGroup fill {...buttonGroupProps}>
+        <ButtonGroup fill {...buttonGroupProps} disabled={collection.isPending}>
           {buttons.filter(button => button.primary).map(this.renderButton)}
           <Popover>
             <Button icon="caret-down" {...buttonProps} />
@@ -159,7 +159,7 @@ class CollectionManageMenu extends PureComponent {
       );
     } else {
       return (
-        <ButtonGroup fill {...buttonGroupProps}>
+        <ButtonGroup fill {...buttonGroupProps} disabled={collection.isPending}>
           {buttons.map(this.renderButton)}
         </ButtonGroup>
       );

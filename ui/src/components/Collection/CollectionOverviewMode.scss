@@ -1,20 +1,33 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-$metadata-width: $aleph-grid-size*30;
+$metadata-width: $aleph-investigation-sidebar-width;
 $metadata-padding: $aleph-content-padding;
-$metadata-breakpoint: $aleph-screen-sm-max-width;
+$default-breakpoint: $aleph-screen-sm-max-width;
+$casefile-breakpoint: $aleph-screen-md-max-width;
+
+@mixin foldup {
+  @media screen and (max-width: $default-breakpoint) {
+    @content;
+  }
+  &.casefile, .casefile & {
+    @media screen and (max-width: $casefile-breakpoint) {
+      @content;
+    }
+  }
+}
 
 .CollectionOverviewMode {
   display: flex;
   flex-flow: row;
   width: 100%;
-  @media screen and (max-width: $metadata-breakpoint) {
+
+  @include foldup {
     flex-direction: column-reverse;
   }
 
   &__main, &__secondary {
-    @media screen and (max-width: $metadata-breakpoint) {
+    @include foldup {
       width: 100% !important;
     }
   }
@@ -29,11 +42,11 @@ $metadata-breakpoint: $aleph-screen-sm-max-width;
     @include rtlSupportInvertedProp(padding, left, $metadata-padding, 0);
     @include rtlSupportInvertedProp(border, left, 1px solid $aleph-border-color, none);
 
-    @media screen and (max-width: $metadata-breakpoint) {
+    @include foldup {
       padding: 0 0 $metadata-padding !important;
-      margin: 0 0 $metadata-padding !important;
+      margin: 0 !important;
       border: none !important;
-      border-bottom: 1px solid $aleph-border-color !important;
+      // border-bottom: 1px solid $aleph-border-color !important;
     }
   }
 }

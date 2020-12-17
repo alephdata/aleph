@@ -21,11 +21,11 @@ $sidebar-padding: 15px;
   }
 
   .CollectionHeading__title {
-    margin-bottom: 5px;
+    margin-bottom: $aleph-grid-size*2;
   }
 
   .text-markdown {
-    margin: $aleph-grid-size 0 !important;
+    margin: 0 0 $aleph-grid-size 0 !important;
   }
 
   .text-markdown p {
@@ -59,7 +59,7 @@ $sidebar-padding: 15px;
     }
 
     &__inner-container {
-      margin-top: $sidebar-padding;
+      margin: $sidebar-padding 0;
       padding: 10px;
       border-radius: 5px;
       background: rgba(#fff, .15);
@@ -70,7 +70,6 @@ $sidebar-padding: 15px;
     width: 100%;
     transition: height .3s ease-in-out;
     overflow: hidden;
-    margin-top: $sidebar-padding;
     background: rgba($white, .1) !important;
 
     &:hover {

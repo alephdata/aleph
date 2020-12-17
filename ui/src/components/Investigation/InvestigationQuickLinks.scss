@@ -4,14 +4,15 @@
 .InvestigationQuickLinks {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -10px;
+  margin: 0 -($aleph-grid-size);
+  align-content: stretch;
 
   &__item {
     flex: 0 0 25%;
-    align-items: stretch;
-    padding: 10px;
+    padding: $aleph-content-padding/2;
+    min-width: 125px;
 
-    @media screen and (max-width: $aleph-screen-md-max-width) {
+    @media screen and (max-width: 1275px) {
       flex-basis: 50%;
     }
 
