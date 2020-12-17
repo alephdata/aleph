@@ -31,6 +31,10 @@ const messages = defineMessages({
     id: 'collection.info.xref',
     defaultMessage: 'Cross-reference',
   },
+  xref_description: {
+    id: 'collection.info.xref_description',
+    defaultMessage: 'Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation.',
+  },
   search: {
     id: 'collection.info.search',
     defaultMessage: 'Search',
@@ -54,6 +58,10 @@ const messages = defineMessages({
   mentions: {
     id: 'collection.info.mentions',
     defaultMessage: 'Mentions',
+  },
+  mentions_description: {
+    id: 'collection.info.mentions_description',
+    defaultMessage: 'Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation.',
   },
   overview: {
     id: 'collection.info.overview',
@@ -144,7 +152,7 @@ class CollectionViewDescription extends PureComponent {
     if (!messageKey) { return null; }
 
     return (
-      <span>{intl.formatMessage(messageKey)}</span>
+      <span>{intl.formatMessage(messageKey, {br: <br />})}</span>
     );
   }
 }

@@ -62,7 +62,7 @@ class EntityTagsMode extends React.Component {
                 <span className="value">
                   <FormattedMessage
                     id="tags.title"
-                    defaultMessage="Extracted selectors"
+                    defaultMessage="Term"
                   />
                 </span>
               </th>
@@ -70,7 +70,7 @@ class EntityTagsMode extends React.Component {
                 <span className="value">
                   <FormattedMessage
                     id="tags.results"
-                    defaultMessage="Citations"
+                    defaultMessage="Mention count"
                   />
                 </span>
               </th>
