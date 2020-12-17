@@ -61,13 +61,13 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      location, children, collection, collectionId, activeMode, query, extraBreadcrumbs, intl,
+      location, children, collection, collectionId, activeMode, query, intl, isCasefile,
     } = this.props;
 
     const search = (
       <SearchBox
         onSearch={this.onSearch}
-        placeholder={intl.formatMessage(messages[collection.casefile ? 'placeholder_casefile' : 'placeholder'])}
+        placeholder={intl.formatMessage(messages[isCasefile ? 'placeholder_casefile' : 'placeholder'])}
         query={query}
         inputProps={{ disabled: collection.isPending }}
       />
@@ -75,9 +75,8 @@ export class CollectionWrapper extends Component {
 
     const operation = <CollectionManageMenu collection={collection} view="collapsed" />;
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} search={search}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
-        {extraBreadcrumbs}
+      <Breadcrumbs operation={operation} search={search} type={isCasefile ? 'casefile' : 'dataset'}>
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory={!isCasefile} active />
       </Breadcrumbs>
     );
 

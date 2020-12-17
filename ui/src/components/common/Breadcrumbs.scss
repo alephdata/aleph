@@ -10,6 +10,20 @@
     @include rtlSupportInvertedProp(padding, left, $aleph-mobile-content-padding, $aleph-mobile-content-padding);
   }
 
+  &.casefile {
+    background-color: $aleph-investigation-theme;
+  }
+
+  &.dataset {
+    background-color: $aleph-dataset-theme;
+  }
+
+  &.casefile, &.dataset {
+    .bp3-breadcrumb {
+      color: white;
+    }
+  }
+
   &__inner-container {
     display: flex;
     flex-flow: row wrap;
@@ -54,7 +68,6 @@
 
   .bp3-breadcrumb {
     font-size: $aleph-font-size;
-
   }
 
   .bp3-breadcrumb-current {

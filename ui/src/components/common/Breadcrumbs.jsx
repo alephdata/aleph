@@ -134,7 +134,7 @@ export default class Breadcrumbs extends Component {
   }
 
   render() {
-    const { collection, children } = this.props;
+    const { collection, children, type } = this.props;
 
     const collectionCrumbs = [];
     if (collection) {
@@ -144,7 +144,7 @@ export default class Breadcrumbs extends Component {
     }
 
     return (
-      <nav className="Breadcrumbs">
+      <nav className={c("Breadcrumbs", type)}>
         <div className="Breadcrumbs__inner-container">
           <div className="Breadcrumbs__main">
             <ul className="bp3-breadcrumbs">
