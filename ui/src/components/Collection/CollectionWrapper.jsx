@@ -12,7 +12,6 @@ import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox } from 'components/common';
 import { queryCollectionEntities } from 'queries';
-import { selectCollectionStatus } from 'selectors';
 
 const messages = defineMessages({
   placeholder: {
@@ -61,10 +60,10 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      activeMode, children, collection, collectionId, query, intl, isCasefile,
+      activeMode, children, collection, query, intl, isCasefile
     } = this.props;
 
-    const search = (
+    const search = !!collection && (
       <SearchBox
         onSearch={this.onSearch}
         placeholder={intl.formatMessage(messages[isCasefile ? 'placeholder_casefile' : 'placeholder'])}
@@ -81,37 +80,33 @@ export class CollectionWrapper extends Component {
     );
 
     return (
-      <CollectionContextLoader collectionId={collectionId}>
-        <Screen
-          title={collection.label}
-          description={collection.summary}
+      <>
+        {breadcrumbs}
+        <DocumentDropzone
+          canDrop={collection.writeable}
+          collection={collection}
+          onUploadSuccess={this.onUploadSuccess}
         >
-          {breadcrumbs}
-          <DocumentDropzone
-            canDrop={collection.writeable}
-            collection={collection}
-            onUploadSuccess={this.onUploadSuccess}
-          >
-            {children}
-          </DocumentDropzone>
-        </Screen>
-      </CollectionContextLoader>
+          {children}
+        </DocumentDropzone>
+      </>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.match.params;
-  const { location } = ownProps;
+  const { collection, location, forceCasefile } = ownProps;
+  if (!collection) {
+    return {};
+  }
   const hashQuery = queryString.parse(location.hash);
   const activeMode = hashQuery.mode;
-  const query = queryCollectionEntities(activeMode === 'search' && location, collectionId);
+  const query = queryCollectionEntities(activeMode === 'search' && location, collection.id);
 
   return {
+    isCasefile: forceCasefile || collection.casefile,
     activeMode,
-    collectionId,
     query,
-    status: selectCollectionStatus(state, collectionId),
   };
 };
 

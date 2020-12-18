@@ -31,7 +31,7 @@ export class InvestigationWrapper extends Component {
     const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
 
     return (
-      <CollectionWrapper collection={collection} isCasefile>
+      <CollectionWrapper collection={collection} forceCasefile>
         <DualPane className="InvestigationWrapper">
           {showSidebar && (
             <InvestigationSidebar

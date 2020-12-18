@@ -4,6 +4,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 
+import Screen from 'components/Screen/Screen';
+import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
@@ -15,7 +17,7 @@ import { selectCollection } from 'selectors';
 
 export class CollectionScreen extends Component {
   render() {
-    const { collection, activeMode } = this.props;
+    const { collectionId, collection, activeMode } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -24,21 +26,28 @@ export class CollectionScreen extends Component {
     if (!collection.isPending) {
       const isCasefile = collection.casefile;
       if (isCasefile) {
-        return <Redirect to={`/investigations/${collection.id}`} />;
+        return <Redirect to={`/investigations/${collectionId}`} />;
       }
     }
 
     return (
-      <CollectionWrapper collection={collection}>
-        <SinglePane>
-          <CollectionHeading collection={collection} />
-          <CollectionViews
-            collection={collection}
-            activeMode={activeMode}
-            isPreview={false}
-          />
-        </SinglePane>
-      </CollectionWrapper>
+      <CollectionContextLoader>
+        <Screen
+          title={collection.label}
+          description={collection.summary}
+        >
+          <CollectionWrapper collection={collection}>
+            <SinglePane>
+              <CollectionHeading collection={collection} />
+              <CollectionViews
+                collection={collection}
+                activeMode={activeMode}
+                isPreview={false}
+              />
+            </SinglePane>
+          </CollectionWrapper>
+        </Screen>
+      </CollectionContextLoader>
     );
   }
 }

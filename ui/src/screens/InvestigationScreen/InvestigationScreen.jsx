@@ -4,6 +4,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 
+import Screen from 'components/Screen/Screen';
+import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import InvestigationViews from 'components/Investigation/InvestigationViews';
 import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 import ErrorScreen from 'components/Screen/ErrorScreen';
@@ -25,14 +27,21 @@ export class InvestigationScreen extends Component {
     }
 
     return (
-      <InvestigationWrapper collection={collection}>
-        <InvestigationViews
-          collection={collection}
-          activeMode={activeMode}
-          activeType={activeType}
-          isPreview={false}
-        />
-      </InvestigationWrapper>
+      <CollectionContextLoader>
+        <Screen
+          title={collection.label}
+          description={collection.summary}
+        >
+          <InvestigationWrapper collection={collection}>
+            <InvestigationViews
+              collection={collection}
+              activeMode={activeMode}
+              activeType={activeType}
+              isPreview={false}
+            />
+          </InvestigationWrapper>
+        </Screen>
+      </CollectionContextLoader>
     );
   }
 }

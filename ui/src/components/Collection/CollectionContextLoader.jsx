@@ -45,10 +45,13 @@ class CollectionContextLoader extends PureComponent {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { collectionId, location } = ownProps;
+  const { match, location } = ownProps;
+  const { collectionId } = match.params;
+
   const xrefQuery = collectionXrefFacetsQuery(location, collectionId);
 
   return {
+    collectionId,
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
     xrefQuery,
