@@ -80,7 +80,7 @@ class EntityScreen extends Component {
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} >
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );

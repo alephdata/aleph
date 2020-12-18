@@ -5,9 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import Screen from 'components/Screen/Screen';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
-import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox } from 'components/common';
@@ -110,7 +108,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = queryCollectionEntities(qLocation, collection.id);
 
   const breadcrumbOptions = {
-    showCategory: !isCasefile,
+    showCategory: !isCasefile && onCollectionScreen,
     showLink: !onCollectionScreen || activeMode === collectionViewIds.SEARCH,
     showStatus: !onCollectionScreen || !!activeMode
   }

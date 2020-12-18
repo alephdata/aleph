@@ -13,7 +13,7 @@
     flex: 1 1 auto;
     margin: $aleph-content-padding/2;
 
-    @media screen and (min-width: $aleph-screen-lg-max-width) {
+    @media screen and (min-width: $aleph-screen-md-max-width) {
       max-width: $aleph-investigation-sidebar-width - $aleph-content-padding;
     }
 
