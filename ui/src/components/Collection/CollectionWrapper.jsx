@@ -62,7 +62,7 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      activeMode, children, collection, query, intl, isCasefile
+      breadcrumbOptions = {}, children, collection, query, intl, isCasefile
     } = this.props;
 
     const search = !!collection && (
@@ -77,7 +77,7 @@ export class CollectionWrapper extends Component {
     const operation = <CollectionManageMenu collection={collection} view="collapsed" />;
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} type={isCasefile ? 'casefile' : 'dataset'}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory={!isCasefile} active={!activeMode} />
+        <Breadcrumbs.Collection key="collection" collection={collection} {...breadcrumbOptions} />
       </Breadcrumbs>
     );
 
@@ -101,13 +101,23 @@ const mapStateToProps = (state, ownProps) => {
   if (!collection) {
     return {};
   }
+  const isCasefile = forceCasefile || collection.casefile;
   const hashQuery = queryString.parse(location.hash);
   const activeMode = hashQuery.mode;
-  const query = queryCollectionEntities(activeMode === 'search' && location, collection.id);
+  const onCollectionScreen = location.pathname === getCollectionLink(collection);
+  // only pull from query location when in collection search mode
+  const qLocation = onCollectionScreen && activeMode === collectionViewIds.SEARCH && location;
+  const query = queryCollectionEntities(qLocation, collection.id);
+
+  const breadcrumbOptions = {
+    showCategory: !isCasefile,
+    showLink: !onCollectionScreen || activeMode === collectionViewIds.SEARCH,
+    showStatus: !onCollectionScreen || !!activeMode
+  }
 
   return {
-    isCasefile: forceCasefile || collection.casefile,
-    activeMode,
+    isCasefile,
+    breadcrumbOptions,
     query,
   };
 };
