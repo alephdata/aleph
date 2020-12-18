@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import { logout } from 'actions/sessionActions';
-import { selectSession, selectMetadata } from 'selectors';
+import { selectSession } from 'selectors';
 
 class LogoutScreen extends Component {
   componentDidMount() {
@@ -11,17 +11,16 @@ class LogoutScreen extends Component {
   }
 
   render() {
-    const { session, metadata } = this.props;
-    if (session.loggedIn) {
-      return <LoadingScreen {...this.props} />
+    const { session } = this.props;
+    if (!session.loggedIn && session.logoutRedirect) {
+      window.location = session.logoutRedirect;
     }
-    window.location = metadata.auth.logout;
+    return <LoadingScreen {...this.props} />
   }
 }
 
 const mapStateToProps = (state) => ({
   session: selectSession(state),
-  metadata: selectMetadata(state),
 });
 
 export default connect(mapStateToProps, { logout })(LogoutScreen);

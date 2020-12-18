@@ -58,7 +58,7 @@ export class CollectionIndex extends Component {
 
     return (
       <ul className="index">
-        {result.results !== undefined && result.results.map(
+        {result.results.map(
           res => <CollectionIndexItem key={res.id} collection={res} />,
         )}
         {result.isPending && skeletonItems.map(
