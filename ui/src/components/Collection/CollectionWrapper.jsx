@@ -12,6 +12,8 @@ import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox } from 'components/common';
 import { queryCollectionEntities } from 'queries';
+import getCollectionLink from 'util/getCollectionLink';
+
 
 const messages = defineMessages({
   placeholder: {
@@ -33,12 +35,12 @@ export class CollectionWrapper extends Component {
   }
 
   onSearch(queryText) {
-    const { history, location, query } = this.props;
+    const { collection, history, query } = this.props;
 
     const newQuery = query.set('q', queryText);
 
     history.push({
-      pathname: location.pathname,
+      pathname: getCollectionLink(collection),
       hash: queryString.stringify({ mode: 'search' }),
       search: newQuery.toLocation()
     });
