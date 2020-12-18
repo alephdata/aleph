@@ -40,8 +40,8 @@ const messages = defineMessages({
 
 
 class CollectionManageMenu extends PureComponent {
-  renderSkeletonButton = () => (
-    <Skeleton.Text type="span" length={5} className="bp3-button" />
+  renderSkeletonButton = (i) => (
+    <Skeleton.Text key={i} type="span" length={5} className="bp3-button" />
   )
 
   renderSkeleton = () => {
