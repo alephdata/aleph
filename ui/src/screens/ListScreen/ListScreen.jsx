@@ -15,6 +15,7 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { Breadcrumbs, DualPane, SchemaCounts } from 'components/common';
 
+import './ListScreen.scss';
 
 export class ListScreen extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ export class ListScreen extends Component {
   fetchIfNeeded() {
     const { list, countsResult, countsQuery, entitySetId } = this.props;
 
-    if (list.shouldLoad || list.shallow) {
+    if (list.shouldLoad) {
       this.props.fetchEntitySet({ id: entitySetId });
     }
     if (countsResult.shouldLoad) {
@@ -87,35 +88,33 @@ export class ListScreen extends Component {
     );
 
     return (
-      <>
-        <Screen
-          title={list.label}
-          description={list.summary || ''}
-        >
-          <CollectionWrapper collection={list.collection}>
-            {breadcrumbs}
-            <DualPane>
-              <div>
-                <SchemaCounts
-                  schemaCounts={this.processCounts()}
-                  onSelect={this.navigate}
-                  showSchemaAdd={list.writeable}
-                  activeSchema={activeSchema}
-                />
-              </div>
-              <DualPane.ContentPane>
-                <EntityTable
-                  query={querySchemaEntities(activeSchema)}
-                  collection={list.collection}
-                  schema={activeSchema}
-                  writeable={list.writeable}
-                  isEntitySet
-                />
-              </DualPane.ContentPane>
-            </DualPane>
-          </CollectionWrapper>
-        </Screen>
-      </>
+      <Screen
+        title={list.label}
+        description={list.summary || ''}
+      >
+        <CollectionWrapper collection={list.collection}>
+          {breadcrumbs}
+          <DualPane className="ListScreen">
+            <div className="ListScreen__schema-counts">
+              <SchemaCounts
+                schemaCounts={this.processCounts()}
+                onSelect={this.navigate}
+                showSchemaAdd={list.writeable}
+                activeSchema={activeSchema.name}
+              />
+            </div>
+            <DualPane.ContentPane>
+              <EntityTable
+                query={querySchemaEntities(activeSchema)}
+                collection={list.collection}
+                schema={activeSchema}
+                writeable={list.writeable}
+                isEntitySet
+              />
+            </DualPane.ContentPane>
+          </DualPane>
+        </CollectionWrapper>
+      </Screen>
     );
   }
 }

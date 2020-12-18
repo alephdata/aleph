@@ -271,6 +271,7 @@ export class EntityTable extends Component {
           {!showEmptyComponent && (
             <>
               <TableEditor
+                key={schema.name}
                 entities={result.results}
                 schema={schema}
                 entityManager={entityManager}
