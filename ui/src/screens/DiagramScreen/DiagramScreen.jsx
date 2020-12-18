@@ -9,6 +9,7 @@ import { entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
+import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
@@ -92,7 +93,6 @@ export class DiagramScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} status={status}>
-        <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} />
       </Breadcrumbs>
     );
@@ -103,16 +103,18 @@ export class DiagramScreen extends Component {
           title={diagram.label}
           description={diagram.summary || ''}
         >
-          {breadcrumbs}
-          <DiagramEditor
-            collection={diagram.collection}
-            onStatusChange={this.onStatusChange}
-            diagram={diagram}
-            entities={entitiesResult?.results}
-            downloadTriggered={downloadTriggered}
-            filterText={filterText}
-            onDownloadComplete={this.onDownloadComplete}
-          />
+          <CollectionWrapper collection={diagram.collection}>
+            {breadcrumbs}
+            <DiagramEditor
+              collection={diagram.collection}
+              onStatusChange={this.onStatusChange}
+              diagram={diagram}
+              entities={entitiesResult?.results}
+              downloadTriggered={downloadTriggered}
+              filterText={filterText}
+              onDownloadComplete={this.onDownloadComplete}
+            />
+          </CollectionWrapper>
         </Screen>
       </>
     );
