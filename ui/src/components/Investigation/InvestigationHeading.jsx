@@ -1,5 +1,4 @@
 import React from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 import c from 'classnames';
 
@@ -9,17 +8,6 @@ import CollectionStatus from 'components/Collection/CollectionStatus';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 
 import './InvestigationHeading.scss';
-
-const messages = defineMessages({
-  metadataHide : {
-    id: 'collection.info.hide-metadata',
-    defaultMessage: 'Less',
-  },
-  metadataShow : {
-    id: 'collection.info.show-metadata',
-    defaultMessage: 'More',
-  },
-});
 
 class InvestigationHeading extends React.Component {
   constructor(props) {
@@ -33,9 +21,7 @@ class InvestigationHeading extends React.Component {
   }
 
   render() {
-    const {
-      collection, activeMode, intl, minimal
-    } = this.props;
+    const { collection, activeMode, minimal } = this.props;
     const { showMetadata } = this.state;
 
     return (
@@ -70,4 +56,4 @@ class InvestigationHeading extends React.Component {
   }
 }
 
-export default injectIntl(InvestigationHeading);
+export default InvestigationHeading;

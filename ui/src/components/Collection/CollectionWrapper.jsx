@@ -12,7 +12,7 @@ import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox } from 'components/common';
 import { queryCollectionEntities } from 'queries';
-import { selectCollection, selectCollectionStatus } from 'selectors';
+import { selectCollectionStatus } from 'selectors';
 
 const messages = defineMessages({
   placeholder: {
@@ -61,7 +61,7 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      activeMode, location, children, collection, collectionId, query, intl, isCasefile,
+      activeMode, children, collection, collectionId, query, intl, isCasefile,
     } = this.props;
 
     const search = (
@@ -102,7 +102,7 @@ export class CollectionWrapper extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
-  const { collection, location } = ownProps;
+  const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const activeMode = hashQuery.mode;
   const query = queryCollectionEntities(activeMode === 'search' && location, collectionId);

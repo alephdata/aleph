@@ -1,14 +1,13 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { Icon } from '@blueprintjs/core';
 
-import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Count, ResultCount } from 'components/common';
-import { queryCollectionEntities, collectionXrefFacetsQuery } from 'queries';
-import { selectModel, selectEntitiesResult, selectCollectionXrefResult } from 'selectors';
+import { collectionXrefFacetsQuery } from 'queries';
+import { selectModel, selectCollectionXrefResult } from 'selectors';
 
 const messages = defineMessages({
   diagrams: {
@@ -113,7 +112,7 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
         count = 0;
         Object.entries(schemaCounts).forEach(([key, value]) => {
           const schema = model.getSchema(key);
-          if (id === 'entities' && !schema.isDocument() || id === 'documents' && schema.isDocument()) {
+          if ((id === 'entities' && !schema.isDocument()) || (id === 'documents' && schema.isDocument())) {
             count += value;
           }
         });

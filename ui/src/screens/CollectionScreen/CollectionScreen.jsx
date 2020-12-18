@@ -9,8 +9,7 @@ import CollectionViews from 'components/Collection/CollectionViews';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { Breadcrumbs, SearchBox, SinglePane } from 'components/common';
-import { queryCollectionEntities } from 'queries';
+import { SinglePane } from 'components/common';
 import { selectCollection } from 'selectors';
 
 

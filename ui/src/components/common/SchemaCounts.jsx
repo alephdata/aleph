@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { Alignment, ButtonGroup, Card, Divider, Button, Tooltip } from '@blueprintjs/core';
+import { Alignment, ButtonGroup, Divider, Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -41,7 +41,7 @@ class SchemaCounts extends React.PureComponent {
   }
 
   render() {
-    const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, isPending, onSelect, writeable } = this.props;
+    const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, isPending, onSelect } = this.props;
 
     if (isPending && !activeSchema) {
       return <SectionLoading />

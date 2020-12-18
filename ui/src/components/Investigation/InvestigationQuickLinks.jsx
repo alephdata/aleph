@@ -68,7 +68,7 @@ class InvestigationQuickLinks extends React.Component {
     return (
       <div className="InvestigationQuickLinks">
         {[...Array(4).keys()].map(key => (
-          <div className="InvestigationQuickLinks__item">
+          <div className="InvestigationQuickLinks__item" key={key}>
             <Skeleton.Text type="div" length="250" className="InvestigationQuickLinks__item__content" />
           </div>
         ))}

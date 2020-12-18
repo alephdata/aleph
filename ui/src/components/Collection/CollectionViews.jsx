@@ -1,15 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab, Icon } from '@blueprintjs/core';
+import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import { Count, ResultCount } from 'components/common';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
-import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
@@ -46,9 +43,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, xref,
-      isCasefile, showDocumentsTab,
-      documentTabCount, entitiesTabCount, searchQuery, searchResult
+      collection, activeMode, searchQuery, searchResult
     } = this.props;
 
     return (
@@ -115,6 +110,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CollectionViews = connect(mapStateToProps, {})(CollectionViews);
-CollectionViews = injectIntl(CollectionViews);
 CollectionViews = withRouter(CollectionViews);
 export default CollectionViews;

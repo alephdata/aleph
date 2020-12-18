@@ -4,12 +4,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 
-import CollectionHeading from 'components/Collection/CollectionHeading';
 import InvestigationViews from 'components/Investigation/InvestigationViews';
 import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import { SinglePane } from 'components/common';
 import { selectCollection } from 'selectors';
 
 export class InvestigationScreen extends Component {

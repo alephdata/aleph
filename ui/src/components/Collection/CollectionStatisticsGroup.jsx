@@ -1,7 +1,6 @@
 import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
 import { Skeleton } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
 
@@ -27,7 +26,7 @@ class CollectionStatisticsGroup extends React.Component {
   }
 
   render() {
-    const { collection, emptyComponent, intl } = this.props;
+    const { collection, emptyComponent } = this.props;
     const { statistics = {} } = collection;
 
     if (!collection.id || statistics.schema === undefined) {
@@ -52,5 +51,4 @@ class CollectionStatisticsGroup extends React.Component {
 
 export default compose(
   withRouter,
-  injectIntl,
 )(CollectionStatisticsGroup);

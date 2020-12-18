@@ -2,11 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 
-
-// import InvestigationMentionsMode from 'components/Investigation/InvestigationMentionsMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
@@ -65,7 +62,7 @@ class InvestigationViews extends React.Component {
   }
 
   render() {
-    const { activeMode, activeType, intl } = this.props;
+    const { activeMode, activeType } = this.props;
 
     let title, subheading;
     if (activeMode === CollectionViewIds.SEARCH) {

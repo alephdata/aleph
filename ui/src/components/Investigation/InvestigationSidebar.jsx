@@ -2,14 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Alignment, Classes, ButtonGroup, Button, Divider, Tooltip } from '@blueprintjs/core';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Alignment, ButtonGroup, Button } from '@blueprintjs/core';
 import queryString from 'query-string';
-import c from 'classnames';
 
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Count, ResultCount, SearchBox, SchemaCounts, Summary } from 'components/common';
+import { SchemaCounts } from 'components/common';
 import InvestigationHeading from 'components/Investigation/InvestigationHeading';
 
 import './InvestigationSidebar.scss';
@@ -43,6 +42,7 @@ class InvestigationSidebar extends React.Component {
 
     return (
       <Button
+        key={id}
         icon={<CollectionView.Icon id={id} />}
         text={<CollectionView.Label id={id} />}
         rightIcon={<CollectionView.Count id={id} collection={collection} />}
@@ -55,10 +55,7 @@ class InvestigationSidebar extends React.Component {
   }
 
   render() {
-    const {
-      collection, activeMode, activeType, minimalHeader,
-      intl, schemaCounts
-    } = this.props;
+    const { collection, activeMode, activeType, minimalHeader, schemaCounts } = this.props;
 
     const entityTools = [collectionViewIds.DIAGRAMS, collectionViewIds.LISTS, collectionViewIds.XREF];
     const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS, collectionViewIds.MENTIONS];
