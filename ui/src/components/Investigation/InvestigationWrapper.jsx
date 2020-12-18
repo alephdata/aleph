@@ -9,16 +9,6 @@ import InvestigationSidebar from 'src/components/Investigation/InvestigationSide
 import { DualPane } from 'components/common';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 
-// const messages = defineMessages({
-//   placeholder: {
-//     id: 'collection.search.placeholder',
-//     defaultMessage: 'Search this dataset',
-//   },
-//   placeholder_casefile: {
-//     id: 'collection.search.placeholder',
-//     defaultMessage: 'Search this personal dataset',
-//   },
-// });
 
 import './InvestigationWrapper.scss';
 
@@ -26,9 +16,7 @@ const sidebarHiddenViews = [collectionViewIds.SEARCH];
 
 export class InvestigationWrapper extends Component {
   render() {
-    const { activeMode, children, collection } = this.props;
-
-    const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
+    const { children, collection, showSidebar } = this.props;
 
     return (
       <CollectionWrapper collection={collection} forceCasefile>
@@ -52,9 +40,10 @@ export class InvestigationWrapper extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+  const activeMode = hashQuery.mode;
 
   return {
-    activeMode: hashQuery.mode
+    showSidebar: sidebarHiddenViews.indexOf(activeMode) < 0
   };
 };
 
@@ -62,5 +51,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  // injectIntl,
 )(InvestigationWrapper);

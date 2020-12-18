@@ -37,8 +37,8 @@
     }
 
     &__image {
-      min-height: 100px;
-      margin: 10px;
+      min-height: $aleph-grid-size*10;
+      margin: $aleph-grid-size;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: 50% 50%;

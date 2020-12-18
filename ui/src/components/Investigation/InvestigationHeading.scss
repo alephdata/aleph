@@ -1,7 +1,7 @@
 @import "app/variables.scss";
 
 $transition-duration: .3s;
-$sidebar-padding: 15px;
+$inner-padding: 15px;
 
 .InvestigationHeading {
   background: rgba($aleph-investigation-theme, .7);
@@ -12,8 +12,8 @@ $sidebar-padding: 15px;
   margin-bottom: $aleph-content-padding;
 
   &__inner-container {
-    padding: $aleph-grid-size*2 $sidebar-padding 0;
-    transition: padding .3s ease-in-out;
+    padding: $aleph-grid-size*2 $inner-padding 0;
+    transition: padding $transition-duration ease-in-out;
 
     .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
       color: white;
@@ -36,12 +36,12 @@ $sidebar-padding: 15px;
     border-top: 1px solid rgba(white, .7);
     margin: auto;
     width: 0;
-    transition: width .3s ease-in-out, margin 1s ease-in-out;
+    transition: width $transition-duration ease-in-out, margin 1s ease-in-out;
 
     .metadata-shown & {
       width: 100%;
       margin-top: 20px;
-      margin-bottom: 10px;
+      margin-bottom: $aleph-grid-size;
     }
   }
 
@@ -59,8 +59,8 @@ $sidebar-padding: 15px;
     }
 
     &__inner-container {
-      margin: $sidebar-padding 0;
-      padding: 10px;
+      margin: $inner-padding 0;
+      padding: $aleph-grid-size;
       border-radius: 5px;
       background: rgba(#fff, .15);
     }
@@ -68,7 +68,7 @@ $sidebar-padding: 15px;
 
   &__metadata-toggle.bp3-button {
     width: 100%;
-    transition: height .3s ease-in-out;
+    transition: height $transition-duration ease-in-out;
     overflow: hidden;
     background: rgba($white, .1) !important;
 
@@ -85,12 +85,12 @@ $sidebar-padding: 15px;
     margin: 0;
 
     &__subheading {
-      transition: max-height .3s ease-in-out;
+      transition: max-height $transition-duration ease-in-out;
       overflow: hidden;
     }
 
     &__title {
-      transition: font-size .3s ease-in-out, font-weight .3s ease-in-out;
+      transition: font-size $transition-duration ease-in-out, font-weight $transition-duration ease-in-out;
 
       .bp3-icon {
         padding-right: 3px;
@@ -99,10 +99,10 @@ $sidebar-padding: 15px;
   }
 
   .CollectionStatus {
-    padding: 10px;
+    padding: $aleph-grid-size;
     border-radius: 5px;
-    font-size: 12px;
-    margin: 20px 0 10px;
+    font-size: $pt-font-size-small;
+    margin: $aleph-grid-size*2 0 $aleph-grid-size;
 
     .bp3-heading {
       font-size: 14px !important;

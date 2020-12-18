@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Button, ButtonGroup, Popover, Menu, MenuItem, Intent } from '@blueprintjs/core';
+import { Button, Popover, Menu, MenuItem, Intent } from '@blueprintjs/core';
 
 import { DialogToggleButton } from 'components/Toolbar'
 import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
@@ -8,7 +8,6 @@ import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAcc
 import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionReingestAlert from './CollectionReingestAlert';
 import CollectionReindexAlert from './CollectionReindexAlert';
-import { Skeleton } from 'components/common';
 
 
 const messages = defineMessages({
@@ -40,23 +39,6 @@ const messages = defineMessages({
 
 
 class CollectionManageMenu extends PureComponent {
-  renderSkeletonButton = () => (
-    <Button disabled>
-      <Skeleton.Text type="span" length={5} />
-    </Button>
-  )
-
-  renderSkeleton = () => {
-    const { view } = this.props;
-    if (view === 'collapsed') {
-      return this.renderSkeletonButton();
-    } else {
-      return (
-        <ButtonGroup fill>{[...Array(3).keys()].map(this.renderSkeletonButton)}</ButtonGroup>
-      );
-    };
-  }
-
   getButtons = () => {
     const { intl, collection } = this.props;
 
@@ -116,56 +98,22 @@ class CollectionManageMenu extends PureComponent {
     />
   );
 
-  renderButton = ({ buttonProps, Dialog }) => (
-    <DialogToggleButton
-      key={buttonProps.icon}
-      buttonProps={{
-        ...buttonProps,
-        ...(this.props.buttonProps)
-      }}
-      Dialog={Dialog}
-      dialogProps={{ collection: this.props.collection }}
-    />
-  );
-
   render() {
-    const { collection, buttonGroupProps = {}, buttonProps = {}, view = "default" } = this.props;
-    // if (collection.isPending) {
-    //   return this.renderSkeleton();
-    // }
+    const { collection, buttonProps = {} } = this.props;
+
     if (!collection.isPending && !collection.writeable) {
       return null;
     }
-    const buttons = this.getButtons();
 
-    if (view === 'collapsed') {
-      return (
-        <Popover>
-          <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={collection.isPending}/>
-          <Menu>
-            {buttons.map(this.renderMenuItem)}
-          </Menu>
-        </Popover>
-      );
-    } else if (view === 'semi-collapsed') {
-      return (
-        <ButtonGroup fill {...buttonGroupProps} disabled={collection.isPending}>
-          {buttons.filter(button => button.primary).map(this.renderButton)}
-          <Popover>
-            <Button icon="caret-down" {...buttonProps} />
-            {buttons.filter(button => !button.primary).map(this.renderMenuItem)}
-          </Popover>
-        </ButtonGroup>
-      );
-    } else {
-      return (
-        <ButtonGroup fill {...buttonGroupProps} disabled={collection.isPending}>
-          {buttons.map(this.renderButton)}
-        </ButtonGroup>
-      );
-    }
+    return (
+      <Popover>
+        <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={collection.isPending}/>
+        <Menu>
+          {this.getButtons().map(this.renderMenuItem)}
+        </Menu>
+      </Popover>
+    );
   }
 }
 
-CollectionManageMenu = injectIntl(CollectionManageMenu);
-export default CollectionManageMenu;
+export default injectIntl(CollectionManageMenu);
