@@ -25,9 +25,8 @@ class CollectionBreadcrumb extends PureComponent {
   }
 
   render() {
-    const { collection, showLink, showStatus, showCategory } = this.props;
-
-    if (!collection || !collection.id) {
+    const { collection, active, showCategory } = this.props;
+    if (collection?.id === undefined) {
       return this.renderSkeleton();
     }
 
@@ -44,7 +43,7 @@ class CollectionBreadcrumb extends PureComponent {
             className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
             icon
             truncate={30}
-            LabelComponent={showLink ? Collection.Link : Collection.Label}
+            LabelComponent={Collection.Link}
           />
           <Restricted collection={collection} />
         </li>

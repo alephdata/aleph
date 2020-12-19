@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Button, Popover, Menu, MenuItem, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, Popover, Menu, MenuItem, Intent } from '@blueprintjs/core';
 
-import { DialogToggleButton } from 'components/Toolbar'
+import { Skeleton } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
 import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
@@ -121,7 +122,7 @@ class CollectionManageMenu extends PureComponent {
 
     return (
       <Popover>
-        <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={collection.isPending}/>
+        <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={collection.isPending} />
         <Menu>
           {this.getButtons().map(this.renderMenuItem)}
         </Menu>

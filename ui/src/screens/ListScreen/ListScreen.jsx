@@ -73,7 +73,7 @@ export class ListScreen extends Component {
       return <ErrorScreen error={list.error} />;
     }
 
-    if (!list.id || countsResult.total === undefined) {
+    if (list.id === undefined) {
       return <LoadingScreen />;
     }
 
