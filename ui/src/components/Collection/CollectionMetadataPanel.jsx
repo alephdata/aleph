@@ -19,11 +19,7 @@ class CollectionMetadataPanel extends PureComponent {
 
   render() {
     const { collection } = this.props;
-    if (!collection) {
-      return null;
-    }
-
-    if (collection.isPending) {
+    if (!collection?.id) {
       return this.renderSkeleton();
     }
 

@@ -116,13 +116,13 @@ class CollectionManageMenu extends PureComponent {
   render() {
     const { collection, buttonProps = {} } = this.props;
 
-    if (!collection.isPending && !collection.writeable) {
+    if (!collection.id || !collection.writeable) {
       return null;
     }
 
     return (
       <Popover>
-        <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={collection.isPending} />
+        <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={!collection.id} />
         <Menu>
           {this.getButtons().map(this.renderMenuItem)}
         </Menu>

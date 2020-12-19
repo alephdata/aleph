@@ -321,7 +321,7 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   if (references?.results?.length) {
     return references.results[0].property.qname;
   }
-  return undefined;
+  return 'similar';
 }
 
 export function selectProfileView(state, profileId, mode) {

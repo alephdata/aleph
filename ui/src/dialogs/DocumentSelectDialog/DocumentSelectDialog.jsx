@@ -57,7 +57,6 @@ class DocumentSelectDialog extends Component {
 
     return (
       <Dialog
-        icon="import"
         className="DocumentSelectDialog"
         isOpen={isOpen}
         title={title}
@@ -87,7 +86,7 @@ class DocumentSelectDialog extends Component {
             onQueryChange={this.onQueryChange}
             onSelect={onSelect}
             noResultsText={intl.formatMessage(messages.no_results)}
-            buttonProps={{ placeholder: intl.formatMessage(messages.placeholder)}}
+            buttonProps={{ placeholder: intl.formatMessage(messages.placeholder) }}
           />
           <div className="bp3-form-helper-text">
             <FormattedMessage
@@ -96,7 +95,7 @@ class DocumentSelectDialog extends Component {
                 `Don't see the table you're looking for? {link}`
               }
               values={{
-                 link: (
+                link: (
                   <Link to={`${getCollectionLink(collection)}#mode=documents`}>
                     <FormattedMessage
                       id='entity.manager.bulk_import.link_text'
@@ -105,8 +104,8 @@ class DocumentSelectDialog extends Component {
                       }
                     />
                   </Link>
-                 )
-               }}
+                )
+              }}
             />
           </div>
         </div>

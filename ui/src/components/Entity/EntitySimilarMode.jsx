@@ -42,8 +42,7 @@ class EntitySimilarMode extends Component {
 
   renderSummary() {
     const { result } = this.props;
-    if (result.isPending || result.total === 0
-      || !result.facets || !result.facets.collection_id) {
+    if (result.total === undefined || result.total === 0) {
       return null;
     }
 

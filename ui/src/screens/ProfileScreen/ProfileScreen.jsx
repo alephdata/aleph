@@ -12,6 +12,7 @@ import EntityInfoMode from 'components/Entity/EntityInfoMode';
 import ProfileViews from 'components/Profile/ProfileViews';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
+import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 import { DialogToggleButton } from 'components/Toolbar';
 import { Breadcrumbs, DualPane } from 'components/common';
@@ -112,31 +113,32 @@ class ProfileScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={this.renderOperations()}>
-        <Breadcrumbs.Collection collection={profile.collection} />
         <Breadcrumbs.EntitySet key="profile" entitySet={profile} />
       </Breadcrumbs>
     );
 
     return (
       <Screen title={profile.label}>
-        {breadcrumbs}
-        <DualPane>
-          <DualPane.SidePane className="ItemOverview">
-            <div className="ItemOverview__heading profile">
-              <EntityHeading entity={profile.entity} isPreview={false} isProfile={true} />
-            </div>
-            <div className="ItemOverview__content">
-              <EntityInfoMode entity={profile.entity} isPreview={false} />
-            </div>
-          </DualPane.SidePane>
-          <DualPane.ContentPane>
-            <ProfileViews
-              profile={profile}
-              activeMode={activeMode}
-              viaEntityId={viaEntityId}
-            />
-          </DualPane.ContentPane>
-        </DualPane>
+        <CollectionWrapper collection={profile.collection}>
+          {breadcrumbs}
+          <DualPane>
+            <DualPane.SidePane className="ItemOverview">
+              <div className="ItemOverview__heading profile">
+                <EntityHeading entity={profile.entity} isPreview={false} isProfile={true} />
+              </div>
+              <div className="ItemOverview__content">
+                <EntityInfoMode entity={profile.entity} isPreview={false} />
+              </div>
+            </DualPane.SidePane>
+            <DualPane.ContentPane>
+              <ProfileViews
+                profile={profile}
+                activeMode={activeMode}
+                viaEntityId={viaEntityId}
+              />
+            </DualPane.ContentPane>
+          </DualPane>
+        </CollectionWrapper>
       </Screen>
     );
   }

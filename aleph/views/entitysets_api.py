@@ -66,6 +66,7 @@ def index():
     parser = QueryParser(request.args, request.authz)
     types = parser.filters.get("type")
     q = EntitySet.by_authz(request.authz, types=types, prefix=parser.prefix)
+    q = q.order_by(EntitySet.updated_at.desc())
     collection_ids = ensure_list(parser.filters.get("collection_id"))
     if len(collection_ids):
         q = q.filter(EntitySet.collection_id.in_(collection_ids))

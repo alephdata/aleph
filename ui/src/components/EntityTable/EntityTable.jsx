@@ -118,8 +118,7 @@ export class EntityTable extends Component {
   onEntityClick = (entity) => {
     if (entity) {
       const { history } = this.props;
-      const pathname = getEntityLink(entity);
-      history.push({ pathname });
+      history.push(getEntityLink(entity));
     }
   }
 
@@ -281,7 +280,7 @@ export class EntityTable extends Component {
                 selection={selection}
                 updateSelection={this.updateSelection}
                 writeable={writeable}
-                isPending={result.isPending}
+                isPending={result.total === undefined}
                 visitEntity={visitEntity}
               />
               <Waypoint

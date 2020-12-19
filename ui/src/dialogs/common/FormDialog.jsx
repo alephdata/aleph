@@ -6,7 +6,8 @@ import './FormDialog.scss';
 const FormDialog = ({ processing, children, onSubmit, ...rest }) => {
   const onSubmitForm = (event) => {
     event.preventDefault();
-    if (!processing && onSubmit) onSubmit();
+    event.stopPropagation();
+    if (!processing && !!onSubmit) onSubmit();
   };
 
   return (

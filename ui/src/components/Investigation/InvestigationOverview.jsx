@@ -20,7 +20,7 @@ class InvestigationOverview extends React.Component {
 
     return (
       <div className="InvestigationOverview">
-        {(notificationsResult.total > 0 || notificationsResult.isPending) && (
+        {(notificationsResult.total > 0 || notificationsResult.total === undefined) && (
           <div className="InvestigationOverview__section">
             <h6 className="InvestigationOverview__section__title bp3-heading bp3-text-muted">
               <FormattedMessage id="investigation.overview.notifications" defaultMessage="Recent activity" />

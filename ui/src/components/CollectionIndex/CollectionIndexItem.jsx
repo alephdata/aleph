@@ -27,12 +27,8 @@ class CollectionIndexItem extends PureComponent {
   render() {
     const { collection, isPending, preview = true } = this.props;
 
-    if (isPending) {
+    if (isPending || !collection.id) {
       return this.renderSkeleton();
-    }
-
-    if (!collection.id) {
-      return null;
     }
 
     return (
