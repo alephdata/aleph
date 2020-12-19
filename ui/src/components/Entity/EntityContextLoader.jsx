@@ -21,7 +21,7 @@ class EntityContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const { entityId, entity, tagsResult } = this.props;
+    const { entityId, entity, tagsResult, isPreview } = this.props;
     if (entity.shouldLoadDeep) {
       this.props.fetchEntity({ id: entityId });
     }
@@ -36,7 +36,8 @@ class EntityContextLoader extends PureComponent {
     }
 
     const { similarQuery, similarResult } = this.props;
-    if (entity?.schema?.matchable && similarResult.shouldLoad) {
+    const showSimilar = entity?.schema?.matchable && !isPreview;
+    if (showSimilar && similarResult.shouldLoad) {
       this.props.querySimilar({ query: similarQuery });
     }
 

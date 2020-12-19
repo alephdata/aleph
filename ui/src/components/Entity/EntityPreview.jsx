@@ -58,7 +58,7 @@ export class EntityPreview extends React.Component {
       return null;
     }
     return (
-      <EntityContextLoader entityId={entityId}>
+      <EntityContextLoader entityId={entityId} isPreview>
         <Drawer
           className="EntityPreview"
           isOpen={!hidden}
