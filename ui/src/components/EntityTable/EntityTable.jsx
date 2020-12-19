@@ -119,7 +119,7 @@ export class EntityTable extends Component {
     if (entity) {
       const { history } = this.props;
       const pathname = getEntityLink(entity);
-      history.push(pathname);
+      history.push({ pathname });
     }
   }
 
@@ -214,7 +214,6 @@ export class EntityTable extends Component {
                 Dialog={DocumentSelectDialog}
                 dialogProps={{
                   schema,
-                  title: intl.formatMessage(messages.bulk_import),
                   collection,
                   onSelect: this.onDocSelected
                 }}
@@ -272,6 +271,7 @@ export class EntityTable extends Component {
           {!showEmptyComponent && (
             <>
               <TableEditor
+                key={schema.name}
                 entities={result.results}
                 schema={schema}
                 entityManager={entityManager}

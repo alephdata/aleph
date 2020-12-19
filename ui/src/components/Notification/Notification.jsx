@@ -12,14 +12,20 @@ import './Notification.scss';
 
 class Notification extends PureComponent {
   getParam(name) {
-    const { event, params } = this.props.notification;
+    const { notification, showCollectionLinks = true } = this.props;
+    const { event, params } = notification;
+
     const object = params[name];
     const type = event.params[name] || 'role';
     if (type === 'collection') {
-      return <Collection.Link collection={object} preview icon />;
+      if (showCollectionLinks) {
+        return <Collection.Link collection={object} icon />;
+      } else {
+        return <Collection.Label collection={object} icon={false} />;
+      }
     }
     if (type === 'entity') {
-      return <Entity.Link entity={object} preview icon />;
+      return <Entity.Link entity={object} truncate={50} preview icon />;
     }
     if (type === 'entityset') {
       return <EntitySet.Link entitySet={object} icon />;

@@ -1,6 +1,7 @@
 import AnimatedCount from './AnimatedCount';
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
+import ClipboardInput from './ClipboardInput';
 import Category from './Category';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
@@ -26,6 +27,7 @@ import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
 import Score from './Score';
 import Tag from './Tag';
+import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
@@ -46,6 +48,7 @@ export {
   AnimatedCount,
   Breadcrumbs,
   SignInCallout,
+  ClipboardInput,
   Category,
   Frequency,
   Restricted,
@@ -73,6 +76,7 @@ export {
   Count,
   Score,
   Tag,
+  SchemaCounts,
   SearchBox,
   SearchListings,
   Skeleton,

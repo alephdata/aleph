@@ -1,0 +1,33 @@
+@import "app/variables.scss";
+
+.CollectionStatisticsGroup {
+  column-count: 3;
+  column-gap: 1.5em;
+  table-layout : fixed;
+  column-fill: balance;
+  height: 100%;
+  margin: 0 1px;
+
+  @media screen and (max-width: $aleph-screen-lg-max-width) {
+    column-count: 2;
+  }
+
+  @media screen and (max-width: $aleph-screen-md-max-width) {
+    column-count: 1;
+  }
+
+  &__item {
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+
+    padding-bottom: 1.5em;
+    padding-top: 1px;
+
+    & > * {
+      // Firefox fix to avoid break inside column
+      display: inline-block;
+      width: 100%;
+    }
+  }
+}

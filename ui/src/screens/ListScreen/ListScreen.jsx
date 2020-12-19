@@ -5,20 +5,22 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
-import { selectEntitySet, selectEntitiesResult } from 'selectors';
+import { selectEntitySet, selectEntitiesResult, selectModel } from 'selectors';
 import { entitySetSchemaCountsQuery, entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
-import EntityTableViews from 'components/EntityTable/EntityTableViews';
+import EntityTable from 'components/EntityTable/EntityTable';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
+import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, SinglePane } from 'components/common';
+import { Breadcrumbs, DualPane, SchemaCounts } from 'components/common';
 
+import './ListScreen.scss';
 
 export class ListScreen extends Component {
   constructor(props) {
     super(props);
-    this.onCollectionSearch = this.onCollectionSearch.bind(this);
+    this.navigate = this.navigate.bind(this);
   }
 
   componentDidMount() {
@@ -29,21 +31,10 @@ export class ListScreen extends Component {
     this.fetchIfNeeded();
   }
 
-  onCollectionSearch(queryText) {
-    const { history, list } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': list.collection.id,
-    };
-    history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
-    });
-  }
-
   fetchIfNeeded() {
     const { list, countsResult, countsQuery, entitySetId } = this.props;
-    if (list.shouldLoadDeep) {
+
+    if (list.shouldLoad) {
       this.props.fetchEntitySet({ id: entitySetId });
     }
     if (countsResult.shouldLoad) {
@@ -51,14 +42,38 @@ export class ListScreen extends Component {
     }
   }
 
+  navigate(schema) {
+    const { history, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    parsedHash.type = schema;
+    history.push({
+      pathname: location.pathname,
+      search: "",
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
+  processCounts = () => {
+    const { countsResult } = this.props;
+    if (!countsResult?.facets?.schema?.values) {
+      return {};
+    }
+
+    const counts = {};
+    countsResult.facets.schema.values.forEach(({ id, count }) => {
+      counts[id] = count;
+    });
+    return counts;
+  }
+
   render() {
-    const { countsResult, list, querySchemaEntities } = this.props;
+    const { activeSchema, countsResult, list, querySchemaEntities } = this.props;
 
     if (list.isError) {
       return <ErrorScreen error={list.error} />;
     }
 
-    if (countsResult.total === undefined) {
+    if (!list.id || countsResult.total === undefined) {
       return <LoadingScreen />;
     }
 
@@ -68,30 +83,38 @@ export class ListScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={list.collection} />
         <Breadcrumbs.EntitySet key="list" entitySet={list} />
       </Breadcrumbs>
     );
 
     return (
-      <>
-        <Screen
-          title={list.label}
-          description={list.summary || ''}
-        >
+      <Screen
+        title={list.label}
+        description={list.summary || ''}
+      >
+        <CollectionWrapper collection={list.collection}>
           {breadcrumbs}
-          <SinglePane>
-            <EntityTableViews
-              collection={list.collection}
-              schemaCounts={countsResult?.facets?.schema?.values || []}
-              querySchemaEntities={querySchemaEntities}
-              writeable={list.writeable}
-              isPending={countsResult.total === undefined && countsResult.isPending}
-              isEntitySet
-            />
-          </SinglePane>
-        </Screen>
-      </>
+          <DualPane className="ListScreen">
+            <div className="ListScreen__schema-counts">
+              <SchemaCounts
+                schemaCounts={this.processCounts()}
+                onSelect={this.navigate}
+                showSchemaAdd={list.writeable}
+                activeSchema={activeSchema.name}
+              />
+            </div>
+            <DualPane.ContentPane>
+              <EntityTable
+                query={querySchemaEntities(activeSchema)}
+                collection={list.collection}
+                schema={activeSchema}
+                writeable={list.writeable}
+                isEntitySet
+              />
+            </DualPane.ContentPane>
+          </DualPane>
+        </CollectionWrapper>
+      </Screen>
     );
   }
 }
@@ -100,17 +123,20 @@ const mapStateToProps = (state, ownProps) => {
   const { location, match } = ownProps;
   const { entitySetId } = match.params;
 
+  const model = selectModel(state);
   const list = selectEntitySet(state, entitySetId);
   const countsQuery = entitySetSchemaCountsQuery(entitySetId)
   const countsResult = selectEntitiesResult(state, countsQuery);
   const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name, 30);
+  const hashQuery = queryString.parse(location.hash);
 
   return {
     entitySetId,
     list,
     countsQuery,
     countsResult,
-    querySchemaEntities
+    querySchemaEntities,
+    activeSchema: model.getSchema(hashQuery.type || 'Person'),
   };
 };
 

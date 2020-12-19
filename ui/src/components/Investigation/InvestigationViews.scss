@@ -1,0 +1,31 @@
+@import "app/variables.scss";
+
+.InvestigationViews {
+  &__title-container {
+    margin: $aleph-grid-size 0 $aleph-content-padding;
+  }
+
+  &__title {
+    font-size: 20px;
+    margin: 0 0 $aleph-grid-size;
+    display: flex;
+    align-items: center;
+
+    .bp3-icon {
+      color: $gray1;
+      vertical-align: initial;
+    }
+  }
+
+  &__subheading {
+    color: $dark-gray5;
+    line-height: 1.5;
+    clear: both;
+    max-width: $aleph-content-width-limit;
+    margin-top: $aleph-grid-size*2;
+  }
+
+  .DualPane {
+    padding: 0;
+  }
+}

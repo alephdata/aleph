@@ -1,57 +1,51 @@
 @import "app/variables.scss";
+@import "app/mixins.scss";
+
+$metadata-width: $aleph-investigation-sidebar-width;
+$metadata-padding: $aleph-content-padding;
+$default-breakpoint: $aleph-screen-sm-max-width;
+$casefile-breakpoint: $aleph-screen-md-max-width;
+
+@mixin foldup {
+  @media screen and (max-width: $default-breakpoint) {
+    @content;
+  }
+  &.casefile, .casefile & {
+    @media screen and (max-width: $casefile-breakpoint) {
+      @content;
+    }
+  }
+}
 
 .CollectionOverviewMode {
-  column-count: 4;
-  column-gap: 1.5em;
-  table-layout : fixed;
-  column-fill: balance;
-  height: 100%;
+  display: flex;
+  flex-flow: row;
+  width: 100%;
 
-  @media screen and (max-width: $aleph-screen-lg-max-width) {
-    column-count: 3;
+  @include foldup {
+    flex-direction: column-reverse;
   }
 
-  @media screen and (max-width: $aleph-screen-md-max-width) {
-    column-count: 2;
-  }
-
-  @media screen and (max-width: $aleph-screen-sm-max-width) {
-    column-count: 1;
-  }
-
-  &__item {
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    break-inside: avoid;
-
-    padding-bottom: 1.5em;
-    padding-top: 1px;
-
-    &__text-content {
-      background-color: $aleph-breadcrumbs-background !important;
-      padding: $aleph-grid-size*2;
-      border-radius: $aleph-border-radius;
-
-      &__divider {
-        height: 1px;
-        width: 100%;
-        border-bottom: 1px solid $aleph-border-color;
-        margin: 15px 0;
-
-        &:last-child {
-          display: none;
-        }
-      }
-    }
-
-    & > * {
-      // Firefox fix to avoid break inside column
-      display: inline-block;
-      width: 100%;
+  &__main, &__secondary {
+    @include foldup {
+      width: 100% !important;
     }
   }
 
-  &__summary {
-    margin-bottom: $aleph-grid-size*2;
+  &__main {
+    width: calc(100% - #{$metadata-width} - #{$metadata-padding});
+  }
+
+  &__secondary {
+    width: $metadata-width;
+    @include rtlSupportInvertedProp(margin, left, $metadata-padding, 0);
+    @include rtlSupportInvertedProp(padding, left, $metadata-padding, 0);
+    @include rtlSupportInvertedProp(border, left, 1px solid $aleph-border-color, none);
+
+    @include foldup {
+      padding: 0 0 $metadata-padding !important;
+      margin: 0 !important;
+      border: none !important;
+    }
   }
 }

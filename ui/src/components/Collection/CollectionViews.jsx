@@ -1,21 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab, Icon } from '@blueprintjs/core';
+import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import { Count, ResultCount } from 'components/common';
-import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
-import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
-import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
+import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
-import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import { queryCollectionEntities, collectionXrefFacetsQuery } from 'queries';
-import { selectModel, selectEntitiesResult, selectCollectionXrefResult } from 'selectors';
+import CollectionView from 'components/Collection/CollectionView';
+import { queryCollectionEntities } from 'queries';
+import { selectEntitiesResult } from 'selectors';
 
 import './CollectionViews.scss';
 
@@ -47,9 +43,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, xref,
-      isCasefile, showDocumentsTab,
-      documentTabCount, entitiesTabCount, searchQuery, searchResult
+      collection, activeMode, searchQuery, searchResult
     } = this.props;
 
     return (
@@ -63,79 +57,23 @@ class CollectionViews extends React.Component {
         <Tab
           id={collectionViewIds.OVERVIEW}
           className="CollectionViews__tab"
-          title={
-            <>
-              <Icon icon="grouped-bar-chart" className="left-icon" />
-              <FormattedMessage id="entity.info.overview" defaultMessage="Overview" />
-            </>}
-          panel={<CollectionOverviewMode collection={collection} />}
+          title={(
+            <CollectionView.Label id={collectionViewIds.OVERVIEW} icon />
+          )}
+          panel={(
+            <CollectionOverviewMode isCasefile={false} collection={collection} />
+          )}
         />
-        {showDocumentsTab && (
+        {collection.writeable && (
           <Tab
             id={collectionViewIds.DOCUMENTS}
             className="CollectionViews__tab"
             title={
               <>
-                <Icon icon="document" className="left-icon" />
-                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                <Count count={documentTabCount} />
+                <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon />
+                <CollectionView.Count id={collectionViewIds.DOCUMENTS} collection={collection} />
               </>}
             panel={<CollectionDocumentsMode collection={collection} />}
-          />
-        )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.ENTITIES}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <Icon icon="list-columns" className="left-icon" />
-                <FormattedMessage id="entity.info.entities" defaultMessage="Entities" />
-                <Count count={entitiesTabCount} />
-              </>}
-            panel={<CollectionEntitiesMode collection={collection} />}
-          />
-        )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.DIAGRAMS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <Icon className="left-icon" icon="graph" />
-                <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
-                <Count count={collection?.counts?.entitysets?.diagram} />
-              </>
-            }
-            panel={<CollectionEntitySetsIndexMode collection={collection} type="diagram" />}
-          />
-        )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.LISTS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <Icon className="left-icon" icon="list" />
-                <FormattedMessage id="collection.info.lists" defaultMessage="Lists" />
-                <Count count={collection?.counts?.entitysets?.list} />
-              </>
-            }
-            panel={<CollectionEntitySetsIndexMode collection={collection} type="list" />}
-          />
-        )}
-        {isCasefile && (
-          <Tab
-            id={collectionViewIds.MAPPINGS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <Icon className="left-icon" icon="new-object" />
-                <FormattedMessage id="collection.info.mappings" defaultMessage="Entity mappings" />
-                <Count count={collection?.counts?.mappings} />
-              </>
-            }
-            panel={<CollectionMappingsMode collection={collection} />}
           />
         )}
         <Tab
@@ -143,9 +81,8 @@ class CollectionViews extends React.Component {
           className="CollectionViews__tab"
           title={
             <>
-              <Icon className="left-icon" icon="comparison" />
-              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
-              <ResultCount result={xref} />
+              <CollectionView.Label id={collectionViewIds.XREF} icon />
+              <CollectionView.Count id={collectionViewIds.XREF} collection={collection} />
             </>}
           panel={<CollectionXrefMode collection={collection} />}
         />
@@ -153,10 +90,7 @@ class CollectionViews extends React.Component {
           id={collectionViewIds.SEARCH}
           className="CollectionViews__tab"
           title={collectionViewIds.SEARCH === activeMode && (
-            <>
-              <Icon className="left-icon" icon="search" />
-              <FormattedMessage id="entity.info.search" defaultMessage='Search: "{qText}"' values={{ qText: searchQuery?.getString('q') }} />
-            </>
+            <CollectionView.Label id={collectionViewIds.SEARCH} icon />
           )}
           panel={<FacetedEntitySearch query={searchQuery} result={searchResult} />}
         />
@@ -167,39 +101,14 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const model = selectModel(state);
-  const xrefQuery = collectionXrefFacetsQuery(location, collection.id);
   const searchQuery = queryCollectionEntities(location, collection.id);
-  const schemata = collection?.statistics?.schema?.values;
-  let documentTabCount, entitiesTabCount;
-
-  if (schemata) {
-    documentTabCount = 0;
-    entitiesTabCount = 0;
-
-    for (const key in schemata) {
-      const schema = model.getSchema(key);
-      if (schema.isDocument()) {
-        documentTabCount += schemata[key];
-      }
-      if (!(schema.isDocument() || schema.hidden)) {
-        entitiesTabCount += schemata[key];
-      }
-    }
-  }
 
   return {
-    entitiesTabCount: entitiesTabCount,
-    documentTabCount: documentTabCount,
-    isCasefile: collection.casefile,
-    showDocumentsTab: (documentTabCount > 0 || collection.writeable),
-    xref: selectCollectionXrefResult(state, xrefQuery),
     searchQuery,
     searchResult: selectEntitiesResult(state, searchQuery)
   };
 };
 
 CollectionViews = connect(mapStateToProps, {})(CollectionViews);
-CollectionViews = injectIntl(CollectionViews);
 CollectionViews = withRouter(CollectionViews);
 export default CollectionViews;

@@ -44,7 +44,7 @@ class CollectionIndexItem extends PureComponent {
           <Collection.Link className="index-item__title__text" preview={preview} collection={collection} icon />
         </H4>
         {collection.summary && (
-          <Summary text={collection.summary} className="index-item__description" truncate={2} />
+          <Summary text={collection.summary} className="index-item__summary" truncate={2} />
         )}
         <p className="index-item__details">
           <span className="index-item__details__item">

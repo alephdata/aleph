@@ -15,6 +15,7 @@ import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
+import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import { Breadcrumbs, DualPane } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
@@ -79,8 +80,7 @@ class EntityScreen extends Component {
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} >
-        <Breadcrumbs.Collection collection={entity.collection} />
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );
@@ -88,24 +88,26 @@ class EntityScreen extends Component {
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.getCaption()}>
-          {breadcrumbs}
-          <DualPane>
-            <DualPane.SidePane className="ItemOverview">
-              <div className="ItemOverview__heading">
-                <EntityHeading entity={entity} isPreview={false} />
-              </div>
-              <div className="ItemOverview__content">
-                <EntityInfoMode entity={entity} isPreview={false} />
-              </div>
-            </DualPane.SidePane>
-            <DualPane.ContentPane>
-              <EntityViews
-                entity={entity}
-                activeMode={parsedHash.mode}
-                isPreview={false}
-              />
-            </DualPane.ContentPane>
-          </DualPane>
+          <CollectionWrapper collection={entity.collection}>
+            {breadcrumbs}
+            <DualPane>
+              <DualPane.SidePane className="ItemOverview">
+                <div className="ItemOverview__heading">
+                  <EntityHeading entity={entity} isPreview={false} />
+                </div>
+                <div className="ItemOverview__content">
+                  <EntityInfoMode entity={entity} isPreview={false} />
+                </div>
+              </DualPane.SidePane>
+              <DualPane.ContentPane>
+                <EntityViews
+                  entity={entity}
+                  activeMode={parsedHash.mode}
+                  isPreview={false}
+                />
+              </DualPane.ContentPane>
+            </DualPane>
+          </CollectionWrapper>
         </Screen>
       </EntityContextLoader>
     );

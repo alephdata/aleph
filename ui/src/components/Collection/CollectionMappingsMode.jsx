@@ -35,19 +35,7 @@ class CollectionMappingsMode extends React.Component {
 
     return (
       <div className="CollectionMappingsMode">
-        <h5 className="CollectionMappingsMode__title">
-          <FormattedMessage
-            id="collection.mappings.title"
-            defaultMessage="Entity mappings"
-          />
-        </h5>
         <div className="CollectionMappingsMode__description">
-          <p>
-            <FormattedMessage
-              id="collection.mappings.create_description"
-              defaultMessage="Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document."
-            />
-          </p>
           <p>
             <FormattedMessage
               id="collection.mappings.create_docs_link"

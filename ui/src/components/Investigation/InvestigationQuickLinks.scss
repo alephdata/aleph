@@ -1,0 +1,77 @@
+@import "app/variables.scss";
+
+
+.InvestigationQuickLinks {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -($aleph-grid-size);
+  align-content: stretch;
+
+  &__item {
+    flex: 0 0 25%;
+    padding: $aleph-content-padding/2;
+    min-width: 125px;
+
+    @media screen and (max-width: 1275px) {
+      flex-basis: 50%;
+    }
+
+    &__content {
+      border-radius: 5px;
+      box-shadow: $pt-elevation-shadow-2 !important;
+      transition: box-shadow .1s ease-in-out;
+      cursor: pointer !important;
+      height: 100%;
+      width: 100%;
+      text-align: center;
+      padding: 0;
+
+      &:hover {
+        background: white !important;
+        box-shadow: $pt-elevation-shadow-3 !important;
+      }
+
+      .bp3-button-text {
+        align-self: center;
+      }
+    }
+
+    &__image {
+      min-height: $aleph-grid-size*10;
+      margin: $aleph-grid-size;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      position: relative;
+      border-radius: 5px;
+
+      &:after {
+        background: rgba($white, .6);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "";
+      }
+    }
+
+
+    &__text {
+      text-align: center;
+      padding: 5px 15px 15px;
+      margin: 0;
+      line-height: 1.4;
+      color: $blue1 !important;
+      font-weight: bold;
+      // min-height: $aleph-grid-size*5;
+      display: table;
+
+      p {
+        vertical-align: middle;
+        margin: 0;
+        display: table-cell;
+      }
+    }
+  }
+}

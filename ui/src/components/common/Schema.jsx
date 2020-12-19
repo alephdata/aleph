@@ -14,6 +14,10 @@ function SchemaLink(props) {
   );
 }
 
+const SchemaDescription = ({ schema }) => {
+  return schema.description;
+}
+
 const mapStateToProps = (state, ownProps) => {
   const { schema } = ownProps;
   return { schema: selectModel(state).getSchema(schema) };
@@ -25,6 +29,8 @@ class Schema extends Component {
   static Icon = connect(mapStateToProps)(VLSchema.Icon);
 
   static Link = connect(mapStateToProps)(SchemaLink);
+
+  static Description = connect(mapStateToProps)(SchemaDescription);
 
   static Select = connect(state => ({ model: selectModel(state)}))(SchemaSelect);
 }

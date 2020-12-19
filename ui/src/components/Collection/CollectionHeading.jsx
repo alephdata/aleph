@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react';
+import c from 'classnames';
+
 import { Category, Collection, Skeleton } from 'components/common';
 
 import './CollectionHeading.scss';
@@ -12,22 +14,27 @@ class CollectionHeading extends PureComponent {
   )
 
   render() {
-    const { collection } = this.props;
+    const { collection, showCategory = true, link = false, categoryLink = false } = this.props;
     const isPending = collection.isPending && !collection.label;
 
     if (isPending) {
       return this.renderSkeleton();
     }
 
+    const CategoryComponent = categoryLink ? Category.Link : Category.Label;
+    const CollectionComponent = link ? Collection.Link : Collection.Label;
+
     return (
-      <div className="CollectionHeading">
-        <span className="bp3-text-muted">
-          <Collection.Label collection={collection} label={false} />
-          <Category.Label category={collection.category} />
-        </span>
-        <h1 itemProp="name" className="CollectionHeading__title">
-          {collection.label}
-        </h1>
+      <div className={c("CollectionHeading", { "padded": !collection.casefile })}>
+        {showCategory && (
+          <div className="bp3-text-muted CollectionHeading__subheading">
+            <Collection.Label collection={collection} label={false} />
+            <CategoryComponent category={collection.category} />
+          </div>
+        )}
+        <h2 itemProp="name" className="CollectionHeading__title">
+          <CollectionComponent collection={collection} icon={!showCategory} />
+        </h2>
       </div>
     );
   }

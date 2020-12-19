@@ -6,18 +6,14 @@ import { Redirect, withRouter } from 'react-router';
 
 import Screen from 'components/Screen/Screen';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
-import CollectionHeading from 'components/Collection/CollectionHeading';
-import CollectionViews from 'components/Collection/CollectionViews';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
+import InvestigationViews from 'components/Investigation/InvestigationViews';
+import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import { SinglePane } from 'components/common';
 import { selectCollection } from 'selectors';
 
-
-export class CollectionScreen extends Component {
+export class InvestigationScreen extends Component {
   render() {
-    const { collectionId, collection, activeMode } = this.props;
+    const { collection, activeMode, activeType } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -25,8 +21,8 @@ export class CollectionScreen extends Component {
 
     if (!collection.isPending) {
       const isCasefile = collection.casefile;
-      if (isCasefile) {
-        return <Redirect to={`/investigations/${collectionId}`} />;
+      if (!isCasefile) {
+        return <Redirect to={`/datasets/${collection.id}`} />;
       }
     }
 
@@ -36,16 +32,14 @@ export class CollectionScreen extends Component {
           title={collection.label}
           description={collection.summary}
         >
-          <CollectionWrapper collection={collection}>
-            <SinglePane>
-              <CollectionHeading collection={collection} />
-              <CollectionViews
-                collection={collection}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </SinglePane>
-          </CollectionWrapper>
+          <InvestigationWrapper collection={collection}>
+            <InvestigationViews
+              collection={collection}
+              activeMode={activeMode}
+              activeType={activeType}
+              isPreview={false}
+            />
+          </InvestigationWrapper>
         </Screen>
       </CollectionContextLoader>
     );
@@ -56,11 +50,13 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
-  const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
+  const activeMode = hashQuery.mode;
+  const activeType = hashQuery.type;
 
   return {
     collection: selectCollection(state, collectionId),
     activeMode,
+    activeType,
   };
 };
 
@@ -68,4 +64,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-)(CollectionScreen);
+)(InvestigationScreen);
