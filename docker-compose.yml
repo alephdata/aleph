@@ -75,7 +75,7 @@ services:
     volumes:
       - archive-data:/data
       - "./mappings:/aleph/mappings"
-      - "/:/host"
+      - "~:/host"
     env_file:
       - aleph.env
 

@@ -85,7 +85,7 @@ services:
       - "./site:/aleph/site"
       - "./contrib:/aleph/contrib"
       - "./mappings:/aleph/mappings"
-      - "/:/host"
+      - "~:/host"
     cap_add:
       - SYS_PTRACE
     environment:
