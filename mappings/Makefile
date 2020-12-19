@@ -1,5 +1,5 @@
 
-all: peps sanctions samples
+all: peps sanctions icij samples
 
 samples: \
 	eu_subsidystories \
@@ -73,3 +73,25 @@ ca_dfatd_sema_sanctions: ca_dfatd_sema_sanctions.occrp-data-export
 %.occrp-data-export:
 	curl -s https://storage.googleapis.com/occrp-data-exports/$*/$*.json | ftm validate | aleph load-entities $*
 	aleph publish $*
+
+icij: \
+	icij_bahamas_leaks \
+	icij_offshore_leaks \
+	icij_panama_papers \
+	icij_paradise_papers
+
+icij_bahamas_leaks:
+	curl -s https://public.data.occrp.org/datasets/icij/bahamas_leaks.ijson | ftm validate | aleph load-entities icij_bahamas_leaks
+	aleph publish icij_bahamas_leaks
+
+icij_offshore_leaks:
+	curl -s https://public.data.occrp.org/datasets/icij/offshore_leaks.ijson | ftm validate | aleph load-entities icij_offshore_leaks
+	aleph publish icij_offshore_leaks
+
+icij_panama_papers:
+	curl -s https://public.data.occrp.org/datasets/icij/panama_papers.ijson | ftm validate | aleph load-entities icij_panama_papers
+	aleph publish icij_panama_papers
+
+icij_paradise_papers:
+	curl -s https://public.data.occrp.org/datasets/icij/paradise_papers.ijson | ftm validate | aleph load-entities icij_paradise_papers
+	aleph publish icij_paradise_papers
