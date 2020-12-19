@@ -1,0 +1,14 @@
+@import "app/variables.scss";
+
+.MappingIndex {
+  &__items {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}

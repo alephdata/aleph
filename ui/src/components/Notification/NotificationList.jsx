@@ -3,8 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Waypoint } from 'react-waypoint';
-import { ErrorSection } from 'components/common';
+import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryNotifications } from 'actions';
 import { selectNotificationsResult } from 'selectors';
 import Notification from 'components/Notification/Notification';
@@ -23,23 +22,7 @@ const messages = defineMessages({
 class NotificationList extends Component {
   constructor(props) {
     super(props);
-    this.getMoreResults = this.getMoreResults.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryNotifications({ query, next: result.next });
-    }
   }
 
   updateQuery(newQuery) {
@@ -49,13 +32,6 @@ class NotificationList extends Component {
       pathname: location.pathname,
       search: newQuery.toLocation(),
     });
-  }
-
-  fetchIfNeeded() {
-    const { result, query } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryNotifications({ query });
-    }
   }
 
   render() {
@@ -82,10 +58,10 @@ class NotificationList extends Component {
             item => <Notification key={item} isPending />,
           )}
         </ul>
-        <Waypoint
-          onEnter={this.getMoreResults}
-          bottomOffset="-300px"
-          scrollableAncestor={window}
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={this.props.queryNotifications}
         />
       </div>
     );
@@ -97,10 +73,9 @@ const mapStateToProps = (state, ownProps) => {
   const result = selectNotificationsResult(state, query);
   return { query, result };
 };
-const mapDispatchToProps = { queryNotifications };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryNotifications }),
   injectIntl,
 )(NotificationList);

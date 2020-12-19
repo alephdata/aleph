@@ -1,0 +1,18 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+
+.SearchActionBar {
+  margin-bottom: $aleph-grid-size;
+  padding-right: 1px;
+  flex-wrap: wrap;
+
+  &__main {
+    margin-right: 5px !important;
+    white-space: nowrap;
+    line-height: $aleph-grid-size*3;
+    background: none;
+    font-weight: 500;
+    border-radius: 0;
+  }
+}

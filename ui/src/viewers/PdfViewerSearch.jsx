@@ -45,7 +45,7 @@ class PdfViewerSearch extends Component {
     if (!query.getString('q')) {
       return this.props.children;
     }
-    if (result.isPending) {
+    if (result.total === undefined) {
       return <SectionLoading />;
     }
     return (

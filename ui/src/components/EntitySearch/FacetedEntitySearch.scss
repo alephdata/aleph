@@ -1,0 +1,53 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.FacetedEntitySearch {
+  .total-count-span {
+    display: inline-flex;
+    @include rtlSupportInvertedProp(padding, left, 0.5em, null);
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+
+  .total-count {
+    display: flex;
+    padding: 0 $aleph-grid-size;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 3em !important;
+  }
+
+  .total-icon {
+    @include rtlSupportInvertedProp(margin, right, 0.5em, null);
+  }
+
+  .facets {
+    display: none;
+    cursor: pointer;
+    margin-top: 0.5em;
+  }
+
+  &__controls {
+    .QueryTags {
+      margin-bottom: $aleph-grid-size/2;
+
+      .bp3-tag {
+        @include rtlSupportInvertedProp(margin, right, 4px, 0);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $aleph-screen-sm-max-width) {
+  .hide {
+    display: none;
+  }
+
+  .show {
+    display: block;
+  }
+
+  .SidePane {
+    padding-bottom: 0 !important;
+  }
+}

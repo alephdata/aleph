@@ -67,7 +67,7 @@ class CollectionAccessDialog extends Component {
     };
     this.onAddRole = this.onAddRole.bind(this);
     this.onToggle = this.onToggle.bind(this);
-    this.onSave = this.onSave.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -101,7 +101,7 @@ class CollectionAccessDialog extends Component {
     }));
   }
 
-  async onSave() {
+  async onSubmit() {
     const { intl, collection } = this.props;
     const { permissions, blocking } = this.state;
     if (blocking) return;
@@ -109,12 +109,11 @@ class CollectionAccessDialog extends Component {
     try {
       await this.props.updateCollectionPermissions(collection.id, permissions);
       this.props.toggleDialog();
-      this.setState({ blocking: false });
       showSuccessToast(intl.formatMessage(messages.save_success));
     } catch (e) {
-      this.setState({ blocking: false });
       showWarningToast(e.message);
     }
+    this.setState({ blocking: false });
   }
 
   setPermissions(permissions, blocking) {
@@ -154,6 +153,7 @@ class CollectionAccessDialog extends Component {
         processing={blocking}
         icon="key"
         className="CollectionAccessDialog"
+        onSubmit={this.onSubmit}
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
         title={intl.formatMessage(messages.title)}
@@ -241,8 +241,8 @@ class CollectionAccessDialog extends Component {
               text={intl.formatMessage(messages.cancel_button)}
             />
             <Button
+              type="submit"
               intent={Intent.PRIMARY}
-              onClick={this.onSave}
               disabled={blocking}
               text={intl.formatMessage(messages.save_button)}
             />

@@ -57,7 +57,7 @@ class DiagramEditor extends React.Component {
   }
 
   updateLayout(layout, options) {
-    const { entityManager, diagram, onStatusChange } = this.props;
+    const { diagram, onStatusChange } = this.props;
     this.setState({ layout });
 
     if (options?.propagate) {

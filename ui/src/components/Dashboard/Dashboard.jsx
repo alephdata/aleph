@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { ResultCount, Skeleton, AppItem } from 'components/common';
+import { Count, Skeleton, AppItem } from 'components/common';
 import c from 'classnames';
 
-import Query from 'app/Query';
-import { fetchExports, queryCollections, queryEntitySets, queryRoles } from 'actions';
+import { queryRoles } from 'actions';
 import { queryGroups } from 'queries';
-import { selectAlerts, selectCollectionsResult, selectEntitySetsResult, selectExports, selectRolesResult } from 'selectors';
+import { selectRolesResult, selectCurrentRole } from 'selectors';
 
 import './Dashboard.scss';
 
@@ -28,7 +27,7 @@ const messages = defineMessages({
   },
   cases: {
     id: 'dashboard.cases',
-    defaultMessage: 'Personal datasets',
+    defaultMessage: 'Investigations',
   },
   diagrams: {
     id: 'dashboard.diagrams',
@@ -64,23 +63,9 @@ class Dashboard extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { exports, groupsQuery, groupsResult, casesCountQuery, casesCountResult, diagramsCountQuery,
-      diagramsCountResult, listsCountQuery, listsCountResult } = this.props;
-
+    const { groupsQuery, groupsResult } = this.props;
     if (groupsResult.shouldLoad) {
       this.props.queryRoles({ query: groupsQuery });
-    }
-    if (casesCountResult.shouldLoad) {
-      this.props.queryCollections({ query: casesCountQuery });
-    }
-    if (diagramsCountResult.shouldLoad) {
-      this.props.queryEntitySets({ query: diagramsCountQuery });
-    }
-    if (listsCountResult.shouldLoad) {
-      this.props.queryEntitySets({ query: listsCountQuery });
-    }
-    if (exports.shouldLoad) {
-      this.props.fetchExports();
     }
   }
 
@@ -89,7 +74,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, casesCountResult, diagramsCountResult, exports, listsCountResult, intl, location, groupsResult } = this.props;
+    const { role, intl, location, groupsResult } = this.props;
     const current = location.pathname;
 
     return (
@@ -111,14 +96,14 @@ class Dashboard extends React.Component {
               <MenuItem
                 icon="feed"
                 text={intl.formatMessage(messages.alerts)}
-                label={<ResultCount result={alerts} />}
+                label={<Count count={role?.counts?.alerts} />}
                 onClick={() => this.navigate('/alerts')}
                 active={current === '/alerts'}
               />
               <MenuItem
                 icon="export"
                 text={intl.formatMessage(messages.exports)}
-                label={<ResultCount result={exports} />}
+                label={<Count count={role?.counts?.exports} />}
                 onClick={() => this.navigate('/exports')}
                 active={current === '/exports'}
               />
@@ -131,28 +116,28 @@ class Dashboard extends React.Component {
               <MenuItem
                 icon="briefcase"
                 text={intl.formatMessage(messages.cases)}
-                label={<ResultCount result={casesCountResult} />}
-                onClick={() => this.navigate('/cases')}
-                active={current === '/cases'}
+                label={<Count count={role?.counts?.casefiles} />}
+                onClick={() => this.navigate('/investigations')}
+                active={current === '/investigations'}
               />
               <MenuItem
                 icon="graph"
                 text={intl.formatMessage(messages.diagrams)}
-                label={<ResultCount result={diagramsCountResult} />}
+                label={<Count count={role?.counts?.entitysets?.diagram} />}
                 onClick={() => this.navigate('/diagrams')}
                 active={current === '/diagrams'}
               />
               <MenuItem
                 icon="list"
                 text={intl.formatMessage(messages.lists)}
-                label={<ResultCount result={listsCountResult} />}
+                label={<Count count={role?.counts?.entitysets?.list} />}
                 onClick={() => this.navigate('/lists')}
                 active={current === '/lists'}
               />
               {(groupsResult.total === undefined || groupsResult.total > 0) && (
                 <>
                   <MenuDivider />
-                  <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
+                  <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.total === undefined })}>
                     <h6 className="bp3-heading">
                       <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                     </h6>
@@ -200,33 +185,15 @@ class Dashboard extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const groupsQuery = queryGroups(location);
-  const caseFilter = { 'filter:category': 'casefile' };
-  const casesCountQuery = new Query('collections', {}, caseFilter, 'collections')
-    .limit(0);
-
-  const diagramsCountQuery = new Query('entitysets', {}, {}, 'entitySets')
-    .setFilter('type', 'diagram')
-    .limit(0);
-
-  const listsCountQuery = new Query('entitysets', {}, {}, 'entitySets')
-    .setFilter('type', 'list')
-    .limit(0);
 
   return {
+    role: selectCurrentRole(state),
     groupsQuery,
     groupsResult: selectRolesResult(state, groupsQuery),
-    casesCountQuery,
-    casesCountResult: selectCollectionsResult(state, casesCountQuery),
-    diagramsCountQuery,
-    diagramsCountResult: selectEntitySetsResult(state, diagramsCountQuery),
-    listsCountQuery,
-    listsCountResult: selectEntitySetsResult(state, listsCountQuery),
-    exports: selectExports(state),
-    alerts: selectAlerts(state),
   };
 };
 
 Dashboard = injectIntl(Dashboard);
-Dashboard = connect(mapStateToProps, { fetchExports, queryRoles, queryCollections, queryEntitySets })(Dashboard);
+Dashboard = connect(mapStateToProps, { queryRoles })(Dashboard);
 Dashboard = withRouter(Dashboard);
 export default Dashboard;

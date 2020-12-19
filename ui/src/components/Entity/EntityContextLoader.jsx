@@ -3,12 +3,12 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  fetchEntity, fetchEntityTags, queryEntities, queryEntityExpand,
+  fetchEntity, fetchEntityTags, queryEntities, querySimilar, queryEntityExpand,
 } from 'actions';
 import {
-  selectEntity, selectEntityTags, selectEntitiesResult, selectEntityExpandResult
+  selectEntity, selectEntityTags, selectEntitiesResult, selectSimilarResult, selectEntityExpandResult
 } from 'selectors';
-import { queryEntitySimilar, queryFolderDocuments, queryEntityReferences } from 'queries';
+import { entitySimilarQuery, queryFolderDocuments, entityReferencesQuery } from 'queries';
 
 
 class EntityContextLoader extends PureComponent {
@@ -22,9 +22,7 @@ class EntityContextLoader extends PureComponent {
 
   fetchIfNeeded() {
     const { entityId, entity, tagsResult } = this.props;
-
-    const loadDeep = entity.shallow && !entity.isPending;
-    if (entity.shouldLoad || loadDeep) {
+    if (entity.shouldLoadDeep) {
       this.props.fetchEntity({ id: entityId });
     }
 
@@ -39,7 +37,7 @@ class EntityContextLoader extends PureComponent {
 
     const { similarQuery, similarResult } = this.props;
     if (entity?.schema?.matchable && similarResult.shouldLoad) {
-      this.props.queryEntities({ query: similarQuery });
+      this.props.querySimilar({ query: similarQuery });
     }
 
     const { childrenResult, childrenQuery } = this.props;
@@ -56,14 +54,14 @@ class EntityContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId, location } = ownProps;
-  const similarQuery = queryEntitySimilar(location, entityId);
+  const similarQuery = entitySimilarQuery(location, entityId);
   const childrenQuery = queryFolderDocuments(location, entityId, undefined);
-  const expandQuery = queryEntityReferences(entityId);
+  const expandQuery = entityReferencesQuery(entityId);
   return {
     entity: selectEntity(state, entityId),
     tagsResult: selectEntityTags(state, entityId),
     similarQuery,
-    similarResult: selectEntitiesResult(state, similarQuery),
+    similarResult: selectSimilarResult(state, similarQuery),
     expandQuery,
     expandResult: selectEntityExpandResult(state, expandQuery),
     childrenQuery,
@@ -73,6 +71,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   queryEntities,
+  querySimilar,
   queryEntityExpand,
   fetchEntity,
   fetchEntityTags,

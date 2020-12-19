@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlencode
 from flask_babel import gettext
 from flask import Blueprint, redirect, request, session
 from authlib.common.errors import AuthlibBaseError
@@ -16,6 +17,14 @@ from aleph.views.util import require, jsonify
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("sessions_api", __name__)
+
+
+def _oauth_session(token):
+    return cache.key("oauth-sess", token)
+
+
+def _token_session(token):
+    return cache.key("oauth-id-tok", token)
 
 
 @blueprint.route("/api/2/sessions/login", methods=["POST"])
@@ -58,10 +67,6 @@ def password_login():
     return jsonify({"status": "ok", "token": authz.to_token()})
 
 
-def _oauth_session(token):
-    return cache.key("oauth-sess", token)
-
-
 @blueprint.route("/api/2/sessions/oauth")
 def oauth_init():
     """Init OAuth auth flow.
@@ -95,25 +100,36 @@ def oauth_callback():
     try:
         oauth.provider.framework.set_session_data(request, "state", state.get("state"))
         uri = state.get("redirect_uri")
-        token = oauth.provider.authorize_access_token(redirect_uri=uri)
+        oauth_token = oauth.provider.authorize_access_token(redirect_uri=uri)
     except AuthlibBaseError as err:
         log.warning("Failed OAuth: %r", err)
         raise err
-    if token is None or isinstance(token, AuthlibBaseError):
-        log.warning("Failed OAuth: %r", token)
+    if oauth_token is None or isinstance(oauth_token, AuthlibBaseError):
+        log.warning("Failed OAuth: %r", oauth_token)
         raise err
 
-    role = handle_oauth(oauth.provider, token)
+    role = handle_oauth(oauth.provider, oauth_token)
     if role is None:
         raise err
+
+    # Determine session duration based on OAuth settings
+    expire = oauth_token.get("expires_in", Authz.EXPIRE)
+    expire = oauth_token.get("refresh_expires_in", expire)
 
     db.session.commit()
     update_role(role)
     log.debug("Logged in: %r", role)
-    request.authz = Authz.from_role(role)
+    request.authz = Authz.from_role(role, expire=expire)
+    token = request.authz.to_token()
+
+    # Store id_token to generate logout URL later
+    id_token = oauth_token.get("id_token")
+    if id_token is not None:
+        cache.set(_token_session(token), id_token, expires=expire)
+
     next_path = get_url_path(state.get("next_url"))
     next_url = ui_url("oauth", next=next_path)
-    next_url = "%s#token=%s" % (next_url, request.authz.to_token())
+    next_url = "%s#token=%s" % (next_url, token)
     session.clear()
     return redirect(next_url)
 
@@ -131,5 +147,15 @@ def logout():
       - Role
     """
     request.rate_limit = None
+    redirect_url = settings.APP_UI_URL
+    if settings.OAUTH:
+        metadata = oauth.provider.load_server_metadata()
+        logout_endpoint = metadata.get("end_session_endpoint")
+        if logout_endpoint is not None:
+            query = {
+                "post_logout_redirect_uri": redirect_url,
+                "id_token_hint": cache.get(_token_session(request.authz.token_id)),
+            }
+            redirect_url = logout_endpoint + "?" + urlencode(query)
     request.authz.destroy()
-    return ("", 202)
+    return jsonify({"redirect": redirect_url})

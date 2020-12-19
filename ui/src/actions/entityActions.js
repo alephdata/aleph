@@ -5,6 +5,8 @@ import { queryEndpoint } from './util';
 
 export const queryEntities = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITIES' });
 
+export const querySimilar = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_SIMILAR' });
+
 export const queryEntityExpand = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITY_EXPAND' });
 
 export const fetchEntity = asyncActionCreator(({ id }) => async () => {

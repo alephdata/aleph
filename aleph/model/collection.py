@@ -41,7 +41,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         "customs": lazy_gettext("Customs declarations"),
         "census": lazy_gettext("Population census"),
         "transport": lazy_gettext("Air and maritime registers"),
-        "casefile": lazy_gettext("Personal datasets"),
+        "casefile": lazy_gettext("Investigations"),
         "other": lazy_gettext("Other material"),
     }
     CASEFILE = "casefile"
@@ -207,10 +207,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return cls._apply_authz(q, authz)
 
     @classmethod
-    def all_casefiles(cls):
+    def all_casefiles(cls, authz=None):
         q = super(Collection, cls).all()
         q = q.filter(Collection.category == cls.CASEFILE)
-        return q
+        return cls._apply_authz(q, authz)
 
     @classmethod
     def all_by_ids(cls, ids, deleted=False, authz=None):

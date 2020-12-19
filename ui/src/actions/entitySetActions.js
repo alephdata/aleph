@@ -33,17 +33,20 @@ export const deleteEntitySet = asyncActionCreator((entitySetId) => async () => {
 }, { name: 'DELETE_ENTITYSET' });
 
 export const entitySetAddEntity = asyncActionCreator(({ entity, entitySetId, sync }) => async () => {
-  const config = {
-    params: { sync }
-  };
+  const config = { params: { sync } };
   const payload = entity.toJSON();
   const response = await endpoint.put(`entitysets/${entitySetId}/entities`, payload, config);
   return { id: response.data.id, data: response.data };
 }, { name: 'CREATE_ENTITY' });
 
-export const entitySetDeleteEntity = asyncActionCreator(({ entityId, entitySetId }) => async () => {
-  const config = { params: { sync: true } };
-  const payload = { "entity_id": entityId, "judgement": "no_judgement" };
-  await endpoint.post(`entitysets/${entitySetId}/items`, payload, config);
-  return { id: entityId };
-}, { name: 'DELETE_ENTITY' });
+
+export const queryEntitySetItems = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITYSET_ITEMS' });
+
+const updateEntitySetItem = ({ entityId, entitySetId, judgement }) => async () => {
+  const payload = { "entity_id": entityId, "judgement": judgement };
+  const response = await endpoint.post(`entitysets/${entitySetId}/items`, payload);
+  return { data: response.data };
+};
+
+export const updateEntitySetItemMutate = asyncActionCreator(updateEntitySetItem, { name: 'UPDATE_ESI_MUTATE' });
+export const updateEntitySetItemNoMutate = asyncActionCreator(updateEntitySetItem, { name: 'UPDATE_ESI_NO_MUTATE' });

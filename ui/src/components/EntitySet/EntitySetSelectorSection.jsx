@@ -55,17 +55,6 @@ class EntitySetSelectorSection extends Component {
     this.toggleExpand = this.toggleExpand.bind(this);
   }
 
-  componentDidUpdate() {
-    this.fetchIfNeeded()
-  }
-
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryEntitySets({ query });
-    }
-  }
-
   onChangeLabel(e) {
     e.preventDefault();
     this.setState({ label: e.target.value });

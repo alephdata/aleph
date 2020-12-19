@@ -27,6 +27,7 @@ export {
   fetchEntity,
   fetchEntityTags,
   queryEntities,
+  querySimilar,
   queryEntityExpand,
   updateEntity,
 } from './entityActions';
@@ -35,6 +36,7 @@ export {
   deleteEntityMapping,
   fetchEntityMapping,
   flushEntityMapping,
+  queryMappings,
   updateEntityMapping,
 } from './entityMappingActions';
 export {
@@ -42,22 +44,24 @@ export {
   createEntitySetNoMutate,
   deleteEntitySet,
   entitySetAddEntity,
-  entitySetDeleteEntity,
+  queryEntitySetItems,
+  updateEntitySetItemMutate,
+  updateEntitySetItemNoMutate,
   fetchEntitySet,
   queryEntitySets,
   queryEntitySetEntities,
   updateEntitySet,
 } from './entitySetActions';
 export {
+  queryProfileExpand,
   fetchProfile,
   fetchProfileTags,
   pairwiseJudgement,
 } from './profileActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
-export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';
 export { fetchExports, triggerQueryExport } from './exportActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');
-export const mutate = createAction('MUTATE');
+export const forceMutate = createAction('MUTATE');

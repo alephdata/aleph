@@ -4,6 +4,7 @@ import SignInCallout from './SignInCallout';
 import Category from './Category';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
+import HotKeysContainer from './HotKeysContainer';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Count from './Count';
@@ -23,6 +24,7 @@ import TextLoading from './TextLoading';
 import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
+import Score from './Score';
 import Tag from './Tag';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
@@ -31,11 +33,13 @@ import SortingBar from './SortingBar';
 import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
+import QueryInfiniteLoad from './QueryInfiniteLoad';
 import ResultCount from './ResultCount';
 import ResultText from './ResultText';
 import SelectWrapper from './SelectWrapper';
 import ExportLink from './ExportLink';
 import UpdateStatus from './UpdateStatus';
+import JudgementButtons from './JudgementButtons';
 
 
 export {
@@ -50,6 +54,7 @@ export {
   Collection,
   EntitySet,
   DualPane,
+  HotKeysContainer,
   Entity,
   AppItem,
   Facet,
@@ -66,17 +71,20 @@ export {
   Statistics,
   Summary,
   Count,
+  Score,
   Tag,
   SearchBox,
   SearchListings,
   Skeleton,
   SortingBar,
   QueryText,
+  QueryInfiniteLoad,
   ResultCount,
   ResultText,
   SelectWrapper,
   ExportLink,
   UpdateStatus,
+  JudgementButtons,
 };
 
 export * from './types';

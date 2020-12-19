@@ -71,25 +71,22 @@ class EntitySetEditDialog extends Component {
     });
   }
 
-  async onSubmit(event) {
+  async onSubmit() {
     const { entitySet, intl } = this.props;
-    const { label, processing, summary } = this.state;
-    event.preventDefault();
-    if (processing || !this.checkValid()) return;
+    const { label, summary } = this.state;
+    if (!this.checkValid()) return;
     this.setState({ processing: true });
 
     try {
       await this.props.updateEntitySet(entitySet.id, { label, summary });
-      this.setState({ processing: false });
       this.props.toggleDialog();
-
       showSuccessToast(
         intl.formatMessage(messages[`${entitySet.type}_success`]),
       );
     } catch (e) {
       showWarningToast(e.message);
-      this.setState({ processing: false });
     }
+    this.setState({ processing: false });
   }
 
   onChangeLabel({ target }) {
@@ -117,57 +114,56 @@ class EntitySetEditDialog extends Component {
         processing={processing}
         icon={<EntitySet.Icon entitySet={{ type }} />}
         isOpen={isOpen}
+        onSubmit={this.onSubmit}
         title={intl.formatMessage(messages[`${type}_title`])}
         onClose={toggleDialog}
       >
-        <form onSubmit={this.onSubmit}>
-          <div className="bp3-dialog-body">
-            <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="label">
-                <FormattedMessage id="entityset.choose.name" defaultMessage="Title" />
-                <div className="bp3-input-group bp3-fill">
-                  <input
-                    id="label"
-                    type="text"
-                    className="bp3-input"
-                    autoComplete="off"
-                    placeholder={intl.formatMessage(messages[`${type}_label_placeholder`])}
-                    onChange={this.onChangeLabel}
-                    value={label}
-                  />
-                </div>
-              </label>
-            </div>
-            <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="summary">
-                <FormattedMessage
-                  id="entityset.choose.summary"
-                  defaultMessage="Summary"
+        <div className="bp3-dialog-body">
+          <div className="bp3-form-group">
+            <label className="bp3-label" htmlFor="label">
+              <FormattedMessage id="entityset.choose.name" defaultMessage="Title" />
+              <div className="bp3-input-group bp3-fill">
+                <input
+                  id="label"
+                  type="text"
+                  className="bp3-input"
+                  autoComplete="off"
+                  placeholder={intl.formatMessage(messages[`${type}_label_placeholder`])}
+                  onChange={this.onChangeLabel}
+                  value={label}
                 />
-                <div className="bp3-input-group bp3-fill">
-                  <textarea
-                    id="summary"
-                    className="bp3-input"
-                    placeholder={intl.formatMessage(messages[`${type}_summary_placeholder`])}
-                    onChange={this.onChangeSummary}
-                    value={summary}
-                    rows={5}
-                  />
-                </div>
-              </label>
-            </div>
+              </div>
+            </label>
           </div>
-          <div className="bp3-dialog-footer">
-            <div className="bp3-dialog-footer-actions">
-              <Button
-                type="submit"
-                intent={Intent.PRIMARY}
-                disabled={disabled}
-                text={intl.formatMessage(messages.save)}
+          <div className="bp3-form-group">
+            <label className="bp3-label" htmlFor="summary">
+              <FormattedMessage
+                id="entityset.choose.summary"
+                defaultMessage="Summary"
               />
-            </div>
+              <div className="bp3-input-group bp3-fill">
+                <textarea
+                  id="summary"
+                  className="bp3-input"
+                  placeholder={intl.formatMessage(messages[`${type}_summary_placeholder`])}
+                  onChange={this.onChangeSummary}
+                  value={summary}
+                  rows={5}
+                />
+              </div>
+            </label>
           </div>
-        </form>
+        </div>
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
+            <Button
+              type="submit"
+              intent={Intent.PRIMARY}
+              disabled={disabled}
+              text={intl.formatMessage(messages.save)}
+            />
+          </div>
+        </div>
       </FormDialog>
     );
   }

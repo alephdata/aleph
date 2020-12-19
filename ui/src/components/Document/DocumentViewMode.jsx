@@ -1,7 +1,9 @@
 import React, { lazy } from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import Query from 'app/Query';
 import AudioViewer from 'viewers/AudioViewer';
 import DefaultViewer from 'viewers/DefaultViewer';
@@ -12,15 +14,53 @@ import ImageViewer from 'viewers/ImageViewer';
 import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
 import VideoViewer from 'viewers/VideoViewer';
-
+import EntityActionBar from 'components/Entity/EntityActionBar';
+import { selectEntityDirectionality } from 'selectors';
 
 import './DocumentViewMode.scss';
-import { selectEntityDirectionality } from 'selectors';
 
 const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer'));
 
+const messages = defineMessages({
+  placeholder: {
+    id: 'entity.viewer.search_placeholder',
+    defaultMessage: 'Search in {label}',
+  },
+});
 
 export class DocumentViewMode extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onSearch = this.onSearch.bind(this);
+  }
+
+  onSearch(queryText) {
+    const { history, location, query } = this.props;
+    const newQuery = query.setString('q', queryText);
+
+    history.push({
+      pathname: location.pathname,
+      search: newQuery.toLocation(),
+    });
+  }
+
+  renderActionBar() {
+    const { document, query, intl } = this.props;
+
+    if (document.schema.isA('Pages')) {
+      return (
+        <EntityActionBar
+          query={query}
+          onSearchSubmit={this.onSearch}
+          searchPlaceholder={intl.formatMessage(messages.placeholder, { label: document.getCaption() })}
+          searchDisabled={document.getProperty('processingError')?.length}
+        />
+      );
+    }
+    return null;
+  }
+
   renderContent() {
     const { document, queryText, activeMode, dir } = this.props;
     const processingError = document.getProperty('processingError');
@@ -103,6 +143,7 @@ export class DocumentViewMode extends React.Component {
   render() {
     return (
       <div className="DocumentViewMode">
+        {this.renderActionBar()}
         {this.renderContent()}
       </div>
     );
@@ -115,6 +156,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('entities', location, {}, '');
   return {
     dir: selectEntityDirectionality(state, document),
+    query,
     queryText: query.getString('q'),
   };
 };
@@ -122,4 +164,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
+  injectIntl,
 )(DocumentViewMode);

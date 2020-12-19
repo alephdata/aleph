@@ -1,14 +1,19 @@
 import logging
 from flask import Blueprint, request
+from followthemoney import model
+from followthemoney.compare import compare
 
+from aleph.settings import MAX_EXPAND_ENTITIES
+from aleph.model import Judgement
 from aleph.logic.profiles import get_profile, decide_pairwise
 from aleph.logic.expand import entity_tags, expand_proxies
+from aleph.queues import queue_task, OP_UPDATE_ENTITY
 from aleph.search import MatchQuery, QueryParser
-from aleph.views.serializers import EntitySerializer, ProfileSerializer
+from aleph.views.serializers import ProfileSerializer, SimilarSerializer
 from aleph.views.context import enable_cache, tag_request
-from aleph.views.util import obj_or_404, jsonify, parse_request
+from aleph.views.util import obj_or_404, jsonify, parse_request, get_session_id
 from aleph.views.util import get_index_entity, get_db_collection
-from aleph.settings import MAX_EXPAND_ENTITIES
+from aleph.views.util import require
 
 blueprint = Blueprint("profiles_api", __name__)
 log = logging.getLogger(__name__)
@@ -33,6 +38,7 @@ def view(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     return ProfileSerializer.jsonify(profile)
 
 
@@ -68,6 +74,7 @@ def tags(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     tag_request(collection_id=profile.get("collection_id"))
     results = entity_tags(profile["merged"], request.authz)
     return jsonify({"status": "ok", "total": len(results), "results": results})
@@ -111,10 +118,20 @@ def similar(profile_id):
     """
     enable_cache()
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     tag_request(collection_id=profile.get("collection_id"))
     exclude = [item["entity_id"] for item in profile["items"]]
     result = MatchQuery.handle(request, entity=profile["merged"], exclude=exclude)
-    return EntitySerializer.jsonify_result(result)
+    entities = list(result.results)
+    result.results = []
+    for obj in entities:
+        item = {
+            "score": compare(model, profile["merged"], obj),
+            "judgement": Judgement.NO_JUDGEMENT,
+            "entity": obj,
+        }
+        result.results.append(item)
+    return SimilarSerializer.jsonify_result(result)
 
 
 @blueprint.route("/api/2/profiles/<profile_id>/expand", methods=["GET"])
@@ -160,6 +177,7 @@ def expand(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
+    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     tag_request(collection_id=profile.get("collection_id"))
     parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
     properties = parser.filters.get("property")
@@ -222,5 +240,7 @@ def pairwise():
         judgement=data.get("judgement"),
         authz=request.authz,
     )
+    job_id = get_session_id()
+    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity.get("id"))
     profile_id = profile.id if profile is not None else None
     return jsonify({"status": "ok", "profile_id": profile_id}, status=200)

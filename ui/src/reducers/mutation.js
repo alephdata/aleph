@@ -3,7 +3,7 @@ import { createReducer } from 'redux-act';
 import timestamp from 'util/timestamp';
 
 import {
-  mutate,
+  forceMutate,
   createCollection,
   updateCollection,
   deleteCollection,
@@ -15,10 +15,12 @@ import {
   ingestDocument,
   createEntity,
   createEntitySetMutate,
+  updateEntitySetItemMutate,
   deleteEntity,
   deleteEntitySet,
-  deleteQueryLog,
   updateRole,
+  deleteAlert,
+  addAlert,
   loginWithToken,
   logout,
 } from 'actions';
@@ -30,7 +32,7 @@ function update() {
 }
 
 export default createReducer({
-  [mutate]: update,
+  [forceMutate]: update,
   [loginWithToken]: update,
   [logout]: update,
   // Clear out the redux cache when operations are performed that
@@ -45,9 +47,11 @@ export default createReducer({
   [updateCollectionPermissions.COMPLETE]: update,
   [createEntity.COMPLETE]: update,
   [createEntitySetMutate.COMPLETE]: update,
+  [updateEntitySetItemMutate.COMPLETE]: update,
   [deleteEntity.COMPLETE]: update,
   [deleteEntitySet.COMPLETE]: update,
   [ingestDocument.COMPLETE]: update,
-  [deleteQueryLog.COMPLETE]: update,
   [updateRole.COMPLETE]: update,
+  [addAlert.COMPLETE]: update,
+  [deleteAlert.COMPLETE]: update,
 }, initialState);

@@ -20,7 +20,7 @@ const messages = defineMessages({
   },
   collection_select_placeholder: {
     id: 'entityset.create.collection.existing',
-    defaultMessage: 'Select a dataset',
+    defaultMessage: 'Select an investigation',
   },
   list_title: {
     id: 'list.create.title',
@@ -68,7 +68,7 @@ const messages = defineMessages({
 class EntitySetCreateDialog extends Component {
   constructor(props) {
     super(props);
-    const { entitySet} = this.props;
+    const { entitySet } = this.props;
 
     this.state = {
       label: entitySet.label || '',
@@ -101,11 +101,10 @@ class EntitySetCreateDialog extends Component {
     });
   }
 
-  async onSubmit(event) {
+  async onSubmit() {
     const { history, entitySet, intl } = this.props;
-    const { label, entities, summary, collection, layout, processing } = this.state;
-    event.preventDefault();
-    if (processing || !this.checkValid()) return;
+    const { label, entities, summary, collection, layout } = this.state;
+    if (!this.checkValid()) return;
     const { type } = entitySet;
     this.setState({ processing: true });
 
@@ -124,8 +123,6 @@ class EntitySetCreateDialog extends Component {
       }
 
       const response = await this.props.createEntitySet(newEntitySet);
-      this.setState({ processing: false });
-
       history.push({
         pathname: getEntitySetLink(response.data),
       });
@@ -135,8 +132,8 @@ class EntitySetCreateDialog extends Component {
       );
     } catch (e) {
       showWarningToast(e.message);
-      this.setState({ processing: false });
     }
+    this.setState({ processing: false });
   }
 
   onChangeLabel({ target }) {
@@ -200,6 +197,7 @@ class EntitySetCreateDialog extends Component {
         icon={<EntitySet.Icon entitySet={{ type }} />}
         className="EntitySetCreateDialog"
         isOpen={isOpen}
+        onSubmit={this.onSubmit}
         title={intl.formatMessage(titleKey)}
         onClose={toggleDialog}
       >
@@ -256,7 +254,7 @@ class EntitySetCreateDialog extends Component {
                 <div className="bp3-label">
                   <FormattedMessage
                     id="entityset.create.collection"
-                    defaultMessage="Dataset"
+                    defaultMessage="Investigation"
                   />
                   <Collection.Select
                     collection={collection}
@@ -270,21 +268,21 @@ class EntitySetCreateDialog extends Component {
                     <FormattedMessage
                       id='entityset.create.collection.new'
                       defaultMessage={
-                        `Don't see the dataset you're looking for? {link}`
+                        `Don't see the investigation you're looking for? {link}`
                       }
                       values={{
-                         link: (
+                        link: (
                           /* eslint-disable */
                           <a onClick={() => this.toggleCollectionCreateDialog()}>
                             <FormattedMessage
                               id='entityset.create.collection.new_link'
                               defaultMessage={
-                                `Create a new personal dataset`
+                                `Create a new investigation`
                               }
                             />
                           </a>
-                         )
-                       }}
+                        )
+                      }}
                     />
                   </div>
                 </div>
@@ -303,15 +301,11 @@ class EntitySetCreateDialog extends Component {
               type="submit"
               intent={Intent.PRIMARY}
               disabled={disabled}
-              onClick={this.onSubmit}
-              text={(
-                intl.formatMessage(messages.save)
-              )}
+              text={intl.formatMessage(messages.save)}
             />
           </div>
         </div>
       </FormDialog>
-
     );
   }
 }

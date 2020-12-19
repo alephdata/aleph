@@ -1,10 +1,13 @@
 @import "app/variables.scss";
-@import "app/mixins.scss";
 
 .CollectionIndex {
   &__controls {
     .QueryTags {
-      margin-top: $aleph-grid-size;
+      margin-top: $aleph-grid-size*1.5;
+    }
+
+    .bp3-input-group {
+      margin-bottom: $aleph-grid-size;
     }
   }
 }

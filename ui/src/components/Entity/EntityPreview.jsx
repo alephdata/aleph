@@ -37,7 +37,7 @@ export class EntityPreview extends React.Component {
     if (entity.isError) {
       return <ErrorSection error={entity.error} />;
     }
-    if (entity.isPending) {
+    if (!entity.id || !entity?.schema?.name) {
       return <SectionLoading />;
     }
     return (

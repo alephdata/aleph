@@ -100,7 +100,6 @@ class DownloadButton extends React.PureComponent {
         </Tooltip>
         <Dialog
           isOpen={isOpen}
-          icon="download"
           className={Classes.ALERT}
         >
           <div className={Classes.ALERT_BODY}>

@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
 import {
-  resultLoadStart, resultLoadError, updateResults, updateExpandResults,
+  resultLoadStart, resultLoadError, updateResultsKeyed, updateResultsFull,
 } from 'reducers/util';
 
 import {
@@ -10,9 +10,13 @@ import {
   queryEntitySetEntities,
   queryRoles,
   queryEntities,
+  querySimilar,
   queryEntityExpand,
+  queryProfileExpand,
   queryNotifications,
   queryCollectionXref,
+  queryEntitySetItems,
+  queryMappings,
 } from 'actions';
 
 const initialState = {};
@@ -21,43 +25,65 @@ export default createReducer({
   [queryCollections.START]: (state, { query }) => resultLoadStart(state, query),
   [queryCollections.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryCollections.COMPLETE]: updateResults,
+  [queryCollections.COMPLETE]: updateResultsKeyed,
 
   [queryEntities.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntities.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryEntities.COMPLETE]: updateResults,
+  [queryEntities.COMPLETE]: updateResultsKeyed,
+
+  [querySimilar.START]: (state, { query }) => resultLoadStart(state, query),
+  [querySimilar.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
+  [querySimilar.COMPLETE]: updateResultsFull,
 
   [queryEntityExpand.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntityExpand.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryEntityExpand.COMPLETE]: updateExpandResults,
+  [queryEntityExpand.COMPLETE]: updateResultsFull,
+
+  [queryProfileExpand.START]: (state, { query }) => resultLoadStart(state, query),
+  [queryProfileExpand.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
+  [queryProfileExpand.COMPLETE]: updateResultsFull,
 
   [queryNotifications.START]: (state, { query }) => resultLoadStart(state, query),
   [queryNotifications.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryNotifications.COMPLETE]: updateResults,
+  [queryNotifications.COMPLETE]: updateResultsKeyed,
 
   [queryEntitySetEntities.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntitySetEntities.ERROR]:
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
-  [queryEntitySetEntities.COMPLETE]: updateResults,
+  [queryEntitySetEntities.COMPLETE]: updateResultsKeyed,
 
   [queryEntitySets.START]: (state, { query }) => resultLoadStart(state, query),
   [queryEntitySets.ERROR]: (state, {
     error, args: { query },
   }) => resultLoadError(state, query, error),
-  [queryEntitySets.COMPLETE]: updateResults,
+  [queryEntitySets.COMPLETE]: updateResultsKeyed,
 
-  [queryCollectionXref.COMPLETE]: updateResults,
+  [queryEntitySetItems.START]: (state, { query }) => resultLoadStart(state, query),
+  [queryEntitySetItems.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+  [queryEntitySetItems.COMPLETE]: updateResultsKeyed,
+
+  [queryCollectionXref.COMPLETE]: updateResultsFull,
   [queryCollectionXref.START]: (state, { query }) => resultLoadStart(state, query),
   [queryCollectionXref.ERROR]: (state, {
     error, args: { query },
   }) => resultLoadError(state, query, error),
 
-  [queryRoles.COMPLETE]: updateResults,
+  [queryRoles.COMPLETE]: updateResultsKeyed,
   [queryRoles.START]: (state, { query }) => resultLoadStart(state, query),
   [queryRoles.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+
+  [queryMappings.COMPLETE]: updateResultsKeyed,
+  [queryMappings.START]: (state, { query }) => resultLoadStart(state, query),
+  [queryMappings.ERROR]: (state, {
     error, args: { query },
   }) => resultLoadError(state, query, error),
 

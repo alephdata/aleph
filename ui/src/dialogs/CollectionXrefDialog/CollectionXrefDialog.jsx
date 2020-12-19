@@ -6,6 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import { triggerCollectionXref } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
+import { Collection } from 'components/common';
 
 
 const messages = defineMessages({
@@ -57,7 +58,7 @@ class CollectionXrefDialog extends Component {
   }
 
   render() {
-    const { intl } = this.props;
+    const { collection, intl } = this.props;
     return (
       <Dialog
         icon="comparison"
@@ -69,7 +70,8 @@ class CollectionXrefDialog extends Component {
         <div className="bp3-dialog-body">
           <FormattedMessage
             id="collection.xref.text"
-            defaultMessage="You will now cross-reference this dataset against all other sources. Start this process once and then wait for it to complete."
+            defaultMessage="You will now cross-reference {collectionLabel} against all other sources. Start this process once and then wait for it to complete."
+            values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
           />
         </div>
         <div className="bp3-dialog-footer">

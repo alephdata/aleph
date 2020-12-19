@@ -8,9 +8,11 @@ import { withRouter } from 'react-router';
 import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
-import { queryEntitySimilar, queryFolderDocuments } from 'queries';
 import {
-  selectEntitiesResult, selectEntityReferences, selectEntityTags,
+  entityReferenceQuery, entitySimilarQuery, queryFolderDocuments
+} from 'queries';
+import {
+  selectEntitiesResult, selectEntityReferences, selectEntityTags, selectEntityReference, selectSimilarResult
 } from 'selectors';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'components/Entity/EntityTagsMode';
@@ -43,18 +45,16 @@ class EntityViews extends React.Component {
 
   render() {
     const {
-      isPreview, activeMode, entity, references, tags, similar, children,
+      isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery
     } = this.props;
-    if (references.isPending) {
+    if (references.total === undefined) {
       return <SectionLoading />;
     }
-    const isMatchable = entity && entity.schema && entity.schema.matchable;
     const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
     const hasBrowseMode = entity.schema.isA('Folder');
     const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
-    const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
     const processingError = entity.getProperty('processingError');
 
     return (
@@ -78,7 +78,7 @@ class EntityViews extends React.Component {
             )}
             panel={
               <EntityInfoMode entity={entity} />
-               }
+            }
           />
         )}
         {hasViewMode && (
@@ -120,13 +120,13 @@ class EntityViews extends React.Component {
                 )}
                 <ResultCount result={children} />
               </TextLoading>
-              )}
+            )}
             panel={
               <DocumentViewMode document={entity} activeMode={activeMode} />
             }
           />
         )}
-        {refs.map(ref => (
+        {references.results.map(ref => (
           <Tab
             id={ref.property.qname}
             key={ref.property.qname}
@@ -138,7 +138,13 @@ class EntityViews extends React.Component {
               </>
             )}
             panel={
-              <EntityReferencesMode entity={entity} mode={activeMode} />
+              <EntityReferencesMode
+                entity={entity}
+                mode={activeMode}
+                query={referenceQuery}
+                reference={reference}
+                hideCollection={true}
+              />
             }
           />
         ))}
@@ -156,11 +162,12 @@ class EntityViews extends React.Component {
             panel={<EntityTagsMode entity={entity} />}
           />
         )}
-        { isMatchable && (
+        { entity?.schema?.matchable && !isPreview && (
           <Tab
             id="similar"
+            disabled={similar.total === 0}
             title={(
-              <TextLoading loading={similar.isPending}>
+              <TextLoading loading={similar.total === undefined}>
                 <Icon icon="similar" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
                 <ResultCount result={similar} />
@@ -169,7 +176,7 @@ class EntityViews extends React.Component {
             panel={<EntitySimilarMode entity={entity} />}
           />
         )}
-        { (entity.collection.writeable && entity.schema.isA('Table')) && (
+        { (entity?.collection?.writeable && entity.schema.isA('Table')) && (
           <Tab
             id="mapping"
             title={(
@@ -187,12 +194,15 @@ class EntityViews extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entity, location } = ownProps;
+  const { entity, location, activeMode } = ownProps;
   const childrenQuery = queryFolderDocuments(location, entity.id, undefined);
+  const reference = selectEntityReference(state, entity.id, activeMode);
   return {
+    reference,
     references: selectEntityReferences(state, entity.id),
+    referenceQuery: entityReferenceQuery(location, entity, reference),
     tags: selectEntityTags(state, entity.id),
-    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
+    similar: selectSimilarResult(state, entitySimilarQuery(location, entity.id)),
     children: selectEntitiesResult(state, childrenQuery),
   };
 };

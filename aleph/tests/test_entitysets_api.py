@@ -229,7 +229,8 @@ class EntitySetAPITest(TestCase):
 
         fst["judgement"] = "no_judgement"
         res = self.client.post(url, json=fst, headers=self.headers)
-        assert res.status_code == 204, res
+        assert res.status_code == 200, res
+        assert res.json["judgement"] == "no_judgement", res
 
         res = self.client.get(url, headers=self.headers)
         assert len(res.json["results"]) == 6, len(res.json["results"])

@@ -12,7 +12,7 @@ import EntityTableViews from 'components/EntityTable/EntityTableViews';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, SinglePane } from 'components/common';
+import { Breadcrumbs, SinglePane } from 'components/common';
 
 
 export class ListScreen extends Component {
@@ -41,23 +41,9 @@ export class ListScreen extends Component {
     });
   }
 
-  getSearchScopes() {
-    const { list } = this.props;
-    const scopes = [
-      {
-        listItem: <Collection.Label collection={list.collection} icon truncate={30} />,
-        label: list.collection.label,
-        onSearch: this.onCollectionSearch,
-      },
-    ];
-
-    return scopes;
-  }
-
   fetchIfNeeded() {
     const { list, countsResult, countsQuery, entitySetId } = this.props;
-
-    if (list.shouldLoad || list.shallow) {
+    if (list.shouldLoadDeep) {
       this.props.fetchEntitySet({ id: entitySetId });
     }
     if (countsResult.shouldLoad) {
@@ -72,7 +58,7 @@ export class ListScreen extends Component {
       return <ErrorScreen error={list.error} />;
     }
 
-    if (!list.id || countsResult.total === undefined) {
+    if (countsResult.total === undefined) {
       return <LoadingScreen />;
     }
 
@@ -92,7 +78,6 @@ export class ListScreen extends Component {
         <Screen
           title={list.label}
           description={list.summary || ''}
-          searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
           <SinglePane>

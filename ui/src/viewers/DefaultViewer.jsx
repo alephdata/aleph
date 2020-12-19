@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { ErrorSection } from 'components/common';
@@ -15,7 +15,7 @@ const messages = defineMessages({
 });
 
 
-export class DefaultViewer extends React.PureComponent {
+export class DefaultViewer extends PureComponent {
   render() {
     const { intl, document } = this.props;
     const backendMessage = document.getProperty('processingError').join(', ');

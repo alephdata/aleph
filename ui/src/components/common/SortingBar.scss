@@ -1,12 +1,11 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-$font-size: $pt-font-size-small;
+$font-size: 13px;
 
 .SortingBar {
   position: relative;
   white-space: nowrap;
-  margin-top: $aleph-grid-size;
   @include rtl(text-align, right, left)
 
   &__item {

@@ -7,13 +7,13 @@ short: FAQ
 
 Aleph is not a whistleblowing platform. Please check out OCCRP’s [becoming a whistleblower](https://www.occrp.org/en/become-a-whistleblower/) page if you have documents that you want to share with our reporters.
 
-### How up-to-date is the data? 
+### How up-to-date is the data?
 
 This varies from dataset to dataset. While some sources are static, we run more than 200 scrapers to update official datasets on a weekly or monthly basis. Datasets that are updated automatically will show the update frequency in the dataset description.
 
 ### Can I add my own data to OCCRP Aleph?
 
-As a journalist with ‘Friends of OCCRP’ access, you’re invited to use Aleph to upload documents, or to make a dataset with your persons of interest. Aleph helps you to systematize your own research, share it with colleagues and cross-reference lists of people with our archive. You can also use Aleph as an OCR tool for scanned documents. 
+As a journalist with ‘Friends of OCCRP’ access, you’re invited to use Aleph to upload documents, or to create an investigation with your persons of interest. Aleph helps you to systematize your own research, share it with colleagues and cross-reference lists of people with our archive. You can also use Aleph as an OCR tool for scanned documents. 
 
 The data you upload will be visible to some members of OCCRP’s data team, but no other editorial staff. In some cases, the data team may offer to introduce you to journalists who are developing related stories.
 
@@ -27,7 +27,7 @@ Please file a request with [OCCRP ID](https://id.occrp.org) to suggest a dataset
 
 ### Can I use the Aleph software for my own project?
 
-Yes! Much of the software we’re building at OCCRP is open source, and we invest a lot of time to make sure other organizations can benefit from this technology as well. 
+Yes! Much of the software we’re building at OCCRP is open source, and we invest a lot of time to make sure other organizations can benefit from this technology as well.
 
 Please visit the [Aleph software documentation](https://docs.alephdata.org/developers/installation) for information on how to install and operate the software.
 

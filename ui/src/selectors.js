@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { isEntityRtl } from '@alephdata/react-ftm';
 
 import { loadState } from 'reducers/util';
-import { queryEntityReferences } from 'queries';
+import { entityReferencesQuery, profileReferencesQuery } from 'queries';
 
 function selectTimestamp(state) {
   return state.mutation;
@@ -13,21 +13,34 @@ function selectObject(state, objects, id) {
     return loadState();
   }
   const obj = objects[id];
-  if (!obj.isError && !obj.isPending) {
+  const isLoadable = !obj.isError && !obj.isPending;
+  if (isLoadable) {
     const outdated = obj.loadedAt && obj.loadedAt < selectTimestamp(state);
     obj.shouldLoad = obj.shouldLoad || outdated;
   }
+  obj.shouldLoadDeep = obj.shouldLoad || (isLoadable && obj.shallow !== false);
   return obj;
 }
 
 function selectResult(state, query, expand) {
+  if (!query || !query.path) {
+    return {
+      ...loadState(),
+      results: [],
+      shouldLoad: false,
+      shouldLoadDeep: false,
+      isPending: true
+    };
+  }
   const result = {
     results: [],
     ...selectObject(state, state.results, query.toKey()),
   };
-  result.results = result.results
-    .map(id => expand(state, id))
-    .filter((r) => r.id !== undefined);
+  if (expand) {
+    result.results = result.results
+      .map(id => expand(state, id))
+      .filter((r) => r.id !== undefined);
+  }
   return result;
 }
 
@@ -128,21 +141,25 @@ export function selectCollection(state, collectionId) {
 
 export function selectEntity(state, entityId) {
   const entity = selectObject(state, state.entities, entityId);
-  const model = selectModel(state);
-  const hasModel = entity.schema !== undefined && model !== undefined;
-  const result = hasModel ? model.getEntity(entity) : {};
+  if (!entity.selectorCache) {
+    const model = selectModel(state);
+    if (!entity.schema || !model) {
+      return entity;
+    }
+    entity.selectorCache = model.getEntity(entity);
+  }
+  const result = entity.selectorCache;
+  result.safeHtml = entity.safeHtml;
+  result.collection = entity.collection;
+  result.highlight = entity.highlight;
+  result.latinized = entity.latinized;
   result.isPending = !!entity.isPending;
   result.isError = !!entity.isError;
   result.shouldLoad = !!entity.shouldLoad;
   result.shallow = !!entity.shallow;
   result.error = entity.error;
   result.links = entity.links;
-  result.safeHtml = entity.safeHtml;
-  result.collection = entity.collection;
-  result.highlight = entity.highlight;
-  result.latinized = entity.latinized;
-  result.profileId = entity.profile_id
-
+  result.profileId = entity.profile_id;
   return result;
 }
 
@@ -155,11 +172,22 @@ export function selectEntitySet(state, entitySetId) {
   return selectObject(state, state.entitySets, entitySetId);
 }
 
+export function selectEntitySetItem(state, itemId) {
+  const item = selectObject(state, state.entitySetItems, itemId);
+  item.entity = selectEntity(state, item.entityId || item.entity?.id);
+  return item;
+}
+
+export function selectMappingsResult(state, query) {
+  return selectResult(state, query, selectEntityMapping);
+}
+
 export function selectProfile(state, entitySetId) {
   const profile = selectObject(state, state.entitySets, entitySetId);
-  if (profile?.merged?.id && profile?.merged?.schema) {
+  if (profile?.merged?.schema && !profile?.entity?.id) {
     const model = selectModel(state);
-    profile.merged = model.getEntity(profile.merged);
+    profile.entity = model.getEntity(profile.merged);
+    profile.entity.latinized = profile.merged.latinized;
   }
   return profile;
 }
@@ -180,34 +208,56 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
-export function selectEntityExpandResult(state, query) {
-  return {
-    results: [],
-    ...selectObject(state, state.results, query.toKey()),
-  };
-}
-
-export function selectEntityReferences(state, entityId) {
-  const entity = selectEntity(state, entityId);
-  const query = queryEntityReferences(entity.id);
-  const references = selectEntityExpandResult(state, query);
+function buildReferences(references, schema) {
+  if (!schema) {
+    return { ...references, results: [] };
+  }
   references.results = references.results || [];
   references.results = references.results.map((ref) => {
-    const reverse = entity.schema.getProperty(ref.property);
+    if (!!ref.schema) {
+      return ref;
+    }
+    const reverse = schema.getProperty(ref.property);
     const property = reverse.getReverse();
     return {
       schema: property.schema, property, reverse, count: ref.count,
     };
   });
-  references.results = references.results.filter((ref) => ref.reverse.stub);
+  references.results = references.results.filter((ref) => (ref.reverse.stub && !ref.reverse.hidden));
+  references.total = references.results.length;
   return references;
+}
+
+export function selectEntityExpandResult(state, query) {
+  return selectObject(state, state.results, query.toKey());
+}
+
+export function selectEntityReferences(state, entityId) {
+  const entity = selectEntity(state, entityId);
+  const query = entityReferencesQuery(entityId);
+  const references = selectEntityExpandResult(state, query);
+  return buildReferences(references, entity?.schema);
 }
 
 export function selectEntityReference(state, entityId, qname) {
   const references = selectEntityReferences(state, entityId);
-  if (references?.results?.length) {
-    return references.results.find(ref => ref.property.qname === qname);
-  }
+  return references.results.find(ref => ref.property.qname === qname);
+}
+
+export function selectProfileExpandResult(state, query) {
+  return selectObject(state, state.results, query.toKey());
+}
+
+export function selectProfileReferences(state, profileId) {
+  const profile = selectProfile(state, profileId);
+  const query = profileReferencesQuery(profileId);
+  const references = selectProfileExpandResult(state, query);
+  return buildReferences(references, profile?.entity?.schema);
+}
+
+export function selectProfileReference(state, profileId, qname) {
+  const references = selectProfileReferences(state, profileId);
+  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectNotificationsResult(state, query) {
@@ -225,6 +275,10 @@ export function selectNotificationsResult(state, query) {
 
 export function selectEntitySetsResult(state, query) {
   return selectResult(state, query, selectEntitySet);
+}
+
+export function selectEntitySetItemsResult(state, query) {
+  return selectResult(state, query, selectEntitySetItem);
 }
 
 export function selectEntityTags(state, entityId) {
@@ -270,12 +324,19 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   return undefined;
 }
 
+export function selectProfileView(state, profileId, mode) {
+  return mode ? mode : 'items';
+}
+
 export function selectCollectionStatus(state, collectionId) {
   const status = selectObject(state, state.collectionStatus, collectionId);
-  if (status.isError || status.isPending) {
-    return status;
-  }
-  status.active = status.pending || status.running;
+  status.pending = status.pending || 0;
+  status.running = status.running || 0;
+  status.finished = status.finished || 0;
+  status.active = status.pending + status.running;
+  status.total = status.active + status.finished;
+  status.progress = status.finished / status.total;
+  status.percent = Math.round(status.progress * 100);
   return status;
 }
 
@@ -292,11 +353,18 @@ export function selectCollectionXref(state, xrefId) {
 }
 
 export function selectCollectionXrefResult(state, query) {
-  const model = selectModel(state);
-  const result = selectResult(state, query, (stateInner, id) => stateInner.collectionXref[id]);
+  const result = selectResult(state, query, undefined);
   result.results.forEach((xref) => {
-    xref.match = model.getEntity(xref.match);
-    xref.entity = model.getEntity(xref.entity);
+    xref.match = selectEntity(state, xref.matchId);
+    xref.entity = selectEntity(state, xref.entityId);
+  });
+  return result;
+}
+
+export function selectSimilarResult(state, query) {
+  const result = selectResult(state, query, undefined);
+  result.results.forEach((obj) => {
+    obj.entity = selectEntity(state, obj.entityId);
   });
   return result;
 }

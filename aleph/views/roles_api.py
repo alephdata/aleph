@@ -9,7 +9,7 @@ from aleph.core import db
 from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
-from aleph.logic.roles import challenge_role, update_role, create_user
+from aleph.logic.roles import challenge_role, update_role, create_user, get_deep_role
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
 from aleph.views.context import tag_request
@@ -182,7 +182,10 @@ def view(id):
     """
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_read_role(role.id))
-    return RoleSerializer.jsonify(role)
+    data = role.to_dict()
+    if request.authz.can_write_role(role.id):
+        data.update(get_deep_role(role))
+    return RoleSerializer.jsonify(data)
 
 
 @blueprint.route("/api/2/roles/<int:id>", methods=["POST", "PUT"])

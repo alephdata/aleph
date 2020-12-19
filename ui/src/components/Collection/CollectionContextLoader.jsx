@@ -2,9 +2,9 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { queryCollectionEntitySets, queryCollectionXrefFacets } from 'queries';
-import { fetchCollection, queryCollectionXref, queryEntitySets, mutate } from 'actions';
-import { selectCollection, selectCollectionStatus, selectCollectionXrefResult, selectEntitySetsResult } from 'selectors';
+import { collectionXrefFacetsQuery } from 'queries';
+import { fetchCollection, queryCollectionXref, forceMutate } from 'actions';
+import { selectCollection, selectCollectionStatus, selectCollectionXrefResult } from 'selectors';
 
 
 class CollectionContextLoader extends PureComponent {
@@ -13,22 +13,21 @@ class CollectionContextLoader extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    this.fetchIfNeeded();
     const { status } = this.props;
     const prevStatus = prevProps.status;
     const wasUpdating = prevStatus.pending > 0 || prevStatus.running > 0;
     const isUpdating = status.pending > 0 || status.running > 0;
 
     if (wasUpdating && !isUpdating) {
-      this.props.mutate();
+      this.props.forceMutate();
     }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
     const { collectionId, collection } = this.props;
 
-    const loadDeep = (collection.shallow && !collection.isPending);
-    if (collection.shouldLoad || loadDeep) {
+    if (collection.shouldLoadDeep) {
       const refresh = collection.shallow === false;
       this.props.fetchCollection({ id: collectionId, refresh });
     }
@@ -36,16 +35,6 @@ class CollectionContextLoader extends PureComponent {
     const { xrefResult, xrefQuery } = this.props;
     if (xrefResult.shouldLoad) {
       this.props.queryCollectionXref({ query: xrefQuery });
-    }
-
-    const { diagramsQuery, diagramsResult } = this.props;
-    if (diagramsResult.shouldLoad) {
-      this.props.queryEntitySets({ query: diagramsQuery });
-    }
-
-    const { listsQuery, listsResult } = this.props;
-    if (listsResult.shouldLoad) {
-      this.props.queryEntitySets({ query: listsQuery });
     }
   }
 
@@ -57,28 +46,20 @@ class CollectionContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
+  const xrefQuery = collectionXrefFacetsQuery(location, collectionId);
 
-  const entitySetsQuery = queryCollectionEntitySets(location, collectionId);
-  const diagramsQuery = entitySetsQuery.setFilter('type', 'diagram');
-  const listsQuery = entitySetsQuery.setFilter('type', 'list');
-  const xrefQuery = queryCollectionXrefFacets(location, collectionId);
   return {
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
     xrefQuery,
     xrefResult: selectCollectionXrefResult(state, xrefQuery),
-    diagramsQuery,
-    diagramsResult: selectEntitySetsResult(state, diagramsQuery),
-    listsQuery,
-    listsResult: selectEntitySetsResult(state, listsQuery),
   };
 };
 
 const mapDispatchToProps = {
-  mutate,
+  forceMutate,
   fetchCollection,
-  queryCollectionXref,
-  queryEntitySets,
+  queryCollectionXref
 };
 
 export default compose(

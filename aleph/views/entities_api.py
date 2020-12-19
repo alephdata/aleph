@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from flask_babel import gettext
 from werkzeug.exceptions import NotFound
 from followthemoney import model
+from followthemoney.compare import compare
 from pantomime.types import ZIP
 
 from aleph.core import db, url_for
@@ -21,6 +22,7 @@ from aleph.views.util import jsonify, parse_request, get_flag
 from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
+from aleph.views.serializers import SimilarSerializer
 from aleph.settings import MAX_EXPAND_ENTITIES
 from aleph.queues import queue_task, OP_EXPORT_SEARCH
 
@@ -325,11 +327,11 @@ def similar(entity_id):
           type: array
       responses:
         '200':
-          description: Returns a list of entities
+          description: Returns a list of scored and judged entities
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EntitiesResponse'
+                $ref: '#/components/schemas/SimilarResponse'
       tags:
       - Entity
     """
@@ -338,11 +340,18 @@ def similar(entity_id):
     tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
     result = MatchQuery.handle(request, entity=proxy)
-    pairs = [(entity_id, s.get("id")) for s in result.results]
+    entities = list(result.results)
+    pairs = [(entity_id, s.get("id")) for s in entities]
     judgements = pairwise_judgements(pairs, entity.get("collection_id"))
-    for similar in result.results:
-        similar["judgement"] = judgements.get((entity_id, similar.get("id")))
-    return EntitySerializer.jsonify_result(result)
+    result.results = []
+    for obj in entities:
+        item = {
+            "score": compare(model, proxy, obj),
+            "judgement": judgements.get((entity_id, obj.get("id"))),
+            "entity": obj,
+        }
+        result.results.append(item)
+    return SimilarSerializer.jsonify_result(result)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/tags", methods=["GET"])

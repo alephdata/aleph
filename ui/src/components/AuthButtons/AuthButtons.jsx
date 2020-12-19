@@ -18,10 +18,6 @@ const messages = defineMessages({
     id: 'nav.view_notifications',
     defaultMessage: 'Notifications',
   },
-  casefiles: {
-    id: 'nav.casefiles',
-    defaultMessage: 'Personal datasets',
-  },
   diagrams: {
     id: 'nav.diagrams',
     defaultMessage: 'Network diagrams',
@@ -66,7 +62,7 @@ export class AuthButtons extends Component {
 
   fetchIfNeeded() {
     const { role, roleId } = this.props;
-    if (role.shouldLoad) {
+    if (role.shouldLoadDeep) {
       this.props.fetchRole({ id: roleId });
     }
   }
@@ -101,12 +97,6 @@ export class AuthButtons extends Component {
                   </div>
                 </Link>
                 <MenuDivider />
-                <Link to="/cases" className="bp3-menu-item">
-                  <Icon icon="briefcase" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.casefiles)}
-                  </div>
-                </Link>
                 <Link to="/diagrams" className="bp3-menu-item">
                   <Icon icon="graph" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">

@@ -8,50 +8,47 @@ import c from 'classnames';
 
 import { fetchCollection, fetchCollectionStatus, queryCollections } from 'actions';
 import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'selectors';
-import getCollectionLink from 'util/getCollectionLink';
-import { Skeleton } from 'components/common';
+import { Skeleton, SelectWrapper } from 'components/common';
 import CollectionStatus from 'components/Collection/CollectionStatus';
-import SelectWrapper from 'components/common/SelectWrapper';
-
+import getCollectionLink from 'util/getCollectionLink';
 
 import './Collection.scss';
 
+
 class CollectionLabel extends PureComponent {
+  getIcon(collection) {
+    if (collection.casefile) {
+      return 'briefcase';
+    } else if (collection.secret) {
+      return 'lock';
+    }
+    return 'database';
+  }
+
   render() {
     const {
       collection, icon = true, label = true, updating = false, truncate, className,
     } = this.props;
 
-    if (!collection) {
+    if (!collection?.id) {
+      if (collection?.isPending) {
+        return <Skeleton.Text type="span" length={15} />;
+      }
       return null;
     }
-    if (!collection.id && collection.isPending) {
-      return <Skeleton.Text type="span" length={15} />;
-    }
 
-    let iconName = 'database';
-    const style = {};
-    if (collection.casefile) {
-      iconName = 'briefcase';
-    } else if (collection.secret) {
-      iconName = 'lock';
-    }
 
     let text = collection.label;
     if (truncate) {
       text = truncateText(collection.label, truncate);
     }
-    let renderedIcon;
-    if (updating) {
-      renderedIcon = <Spinner size="16" />;
-    } else if (icon) {
-      renderedIcon = <Icon icon={iconName} style={style} />;
-    }
-
+    const renderedIcon = updating ?
+      <Spinner size="16" /> :
+      <Icon icon={this.getIcon(collection)} />;
     return (
       <span className={c('CollectionLabel', className)} title={collection.label}>
-        { renderedIcon }
-        <span>{ label && text }</span>
+        {icon && renderedIcon}
+        <span>{label && text}</span>
       </span>
     );
   }
@@ -78,11 +75,11 @@ class CollectionUpdateStatus extends PureComponent {
   }
 
   render() {
-    const { collection, showPopover, status, LabelComponent } = this.props;
+    const { collection, status, LabelComponent } = this.props;
     const updating = !status.shouldLoad && status.active;
     const collectionLabel = <LabelComponent updating={updating} {...this.props} />;
 
-    if (showPopover && updating) {
+    if (updating) {
       return (
         <Popover
           lazy

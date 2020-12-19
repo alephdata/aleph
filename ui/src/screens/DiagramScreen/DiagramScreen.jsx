@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
-import { Divider } from '@blueprintjs/core';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
@@ -13,7 +11,7 @@ import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import DiagramEditor from 'components/Diagram/DiagramEditor';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { Breadcrumbs, Collection, UpdateStatus } from 'components/common';
+import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
 
 
 export class DiagramScreen extends Component {
@@ -26,8 +24,7 @@ export class DiagramScreen extends Component {
       downloadTriggered: false,
     };
 
-    this.onCollectionSearch = this.onCollectionSearch.bind(this);
-    this.onDiagramSearch = this.onDiagramSearch.bind(this);
+    this.onSearch = this.onSearch.bind(this);
     this.onDiagramDownload = this.onDiagramDownload.bind(this);
     this.onDownloadComplete = this.onDownloadComplete.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
@@ -41,19 +38,7 @@ export class DiagramScreen extends Component {
     this.fetchIfNeeded();
   }
 
-  onCollectionSearch(queryText) {
-    const { history, diagram } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': diagram.collection.id,
-    };
-    history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
-    });
-  }
-
-  onDiagramSearch(filterText) {
+  onSearch(filterText) {
     this.setState({ filterText });
   }
 
@@ -69,23 +54,9 @@ export class DiagramScreen extends Component {
     this.setState({ updateStatus });
   }
 
-  getSearchScopes() {
-    const { diagram } = this.props;
-    const scopes = [
-      {
-        listItem: <Collection.Label collection={diagram.collection} icon truncate={30} />,
-        label: diagram.collection.label,
-        onSearch: this.onCollectionSearch,
-      },
-    ];
-
-    return scopes;
-  }
-
   fetchIfNeeded() {
     const { diagram, entitiesQuery, entitiesResult, entitySetId } = this.props;
-
-    if (diagram.shouldLoad || diagram.shallow) {
+    if (diagram.shouldLoadDeep) {
       this.props.fetchEntitySet({ id: entitySetId });
     }
 
@@ -106,20 +77,21 @@ export class DiagramScreen extends Component {
       return <LoadingScreen />;
     }
 
+    const search = (
+      <SearchBox
+        onSearch={this.onSearch}
+        placeholderLabel={diagram.label}
+      />
+    );
+
+    const status = <UpdateStatus status={updateStatus} />;
+
     const operation = (
-      <>
-        {updateStatus && (
-          <>
-            <UpdateStatus status={updateStatus} />
-            <Divider />
-          </>
-        )}
-        <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} onSearch={this.onDiagramSearch} />
-      </>
+      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} />
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} search={search} status={status}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} />
       </Breadcrumbs>
@@ -130,7 +102,6 @@ export class DiagramScreen extends Component {
         <Screen
           title={diagram.label}
           description={diagram.summary || ''}
-          searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
           <DiagramEditor

@@ -50,27 +50,20 @@ class CollectionStatus extends Component {
 
   render() {
     const { className, collection, intl, showCancel, status } = this.props;
-    const pending = status.pending || 0;
-    const running = status.running || 0;
-    const finished = status.finished || 0;
-    const active = pending + running;
-    const total = active + finished;
-    if (!collection || !active) {
+    if (!collection || !status.active) {
       return null;
     }
-    const progress = finished / total;
-    const percent = Math.round(progress * 100);
     return (
       <div className={c('CollectionStatus', className)}>
         <h4 className="bp3-heading">
           <FormattedMessage
             id="collection.status.title"
             defaultMessage="Update in progress ({percent}%)"
-            values={{ percent: <Numeric num={percent} /> }}
+            values={{ percent: <Numeric num={status.percent} /> }}
           />
         </h4>
         <div className="progress-area">
-          <ProgressBar animate intent={Intent.PRIMARY} value={progress} />
+          <ProgressBar animate intent={Intent.PRIMARY} value={status.progress} />
           {showCancel && (
             <Tooltip content={intl.formatMessage(messages.cancel_button)}>
               <Button onClick={this.onCancel} icon="delete" minimal />

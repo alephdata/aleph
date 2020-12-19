@@ -16,7 +16,7 @@ import getCollectionLink from 'util/getCollectionLink';
 const messages = defineMessages({
   label_placeholder: {
     id: 'case.label_placeholder',
-    defaultMessage: 'Untitled dataset',
+    defaultMessage: 'Untitled investigation',
   },
   language_placeholder: {
     id: 'case.language_placeholder',
@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
   summary_placeholder: {
     id: 'case.summary',
-    defaultMessage: 'A brief description of the dataset',
+    defaultMessage: 'A brief description of the investigation',
   },
   save: {
     id: 'case.save',
@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'case.title',
-    defaultMessage: 'Create a personal dataset',
+    defaultMessage: 'Create an investigation',
   },
 });
 
@@ -56,7 +56,7 @@ class CreateCaseDialog extends Component {
       blocking: false,
     };
 
-    this.onAddCase = this.onAddCase.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.onChangeLabel = this.onChangeLabel.bind(this);
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onAddRole = this.onAddRole.bind(this);
@@ -83,11 +83,10 @@ class CreateCaseDialog extends Component {
   }
 
 
-  async onAddCase(event) {
+  async onSubmit() {
     const { history, createCollection, toggleDialog, updateCollectionPermissions, preventRedirect } = this.props;
-    const { collection, permissions, blocking } = this.state;
-    event.preventDefault();
-    if (blocking || !this.checkValid()) return;
+    const { collection, permissions } = this.state;
+    if (!this.checkValid()) return;
     this.setState({ blocking: true });
     try {
       const response = await createCollection(collection);
@@ -228,9 +227,8 @@ class CreateCaseDialog extends Component {
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
             <Button
-              type="submit"
+              onClick={this.onSubmit}
               intent={Intent.PRIMARY}
-              onClick={this.onAddCase}
               disabled={disabled}
               text={intl.formatMessage(messages.save)}
             />
@@ -241,8 +239,6 @@ class CreateCaseDialog extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({});
-
 CreateCaseDialog = injectIntl(CreateCaseDialog);
 CreateCaseDialog = withRouter(CreateCaseDialog);
-export default connect(mapStateToProps, { createCollection, updateCollectionPermissions })(CreateCaseDialog);
+export default connect(null, { createCollection, updateCollectionPermissions })(CreateCaseDialog);

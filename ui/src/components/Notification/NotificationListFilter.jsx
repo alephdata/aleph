@@ -24,7 +24,7 @@ class NotificationListFilter extends Component {
 
   renderOption = (option, { handleClick }) => (
     <MenuItem
-      key={option.field}
+      key={option.field || 'all'}
       onClick={handleClick}
       text={option.label}
       label={<Count count={option.count} />}

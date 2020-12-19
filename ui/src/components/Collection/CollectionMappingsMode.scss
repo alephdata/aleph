@@ -1,0 +1,20 @@
+@import "app/mixins.scss";
+@import "app/variables.scss";
+
+.CollectionMappingsMode {
+  max-width: $aleph-content-width-limit;
+
+  &__title, &__description, &__actions {
+    margin: $aleph-content-padding 0;
+  }
+
+  &__title {
+    font-size: 20px;
+    color: $dark-gray1;
+  }
+
+  &__description {
+    color: $dark-gray5;
+    line-height: 1.4;
+  }
+}

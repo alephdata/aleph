@@ -58,7 +58,7 @@ class XrefTable extends Component {
 
   render() {
     const { intl, result } = this.props;
-    const skeletonItems = [...Array(15).keys()];
+    const skeletonItems = [...Array(25).keys()];
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;

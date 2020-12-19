@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import { Waypoint } from 'react-waypoint';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import EntitySearchResults from './EntitySearchResults';
-import { ErrorSection } from 'components/common';
+import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 
 import './EntitySearch.scss';
 
@@ -34,29 +32,6 @@ export class EntitySearch extends Component {
   constructor(props) {
     super(props);
     this.updateQuery = this.updateQuery.bind(this);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && result.next && !result.isPending && !result.isError) {
-      this.props.queryEntities({ query, next: result.next });
-    }
-  }
-
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryEntities({ query });
-    }
   }
 
   updateQuery(newQuery) {
@@ -73,22 +48,6 @@ export class EntitySearch extends Component {
     return undefined;
   }
 
-  generateFoundText() {
-    const { result, foundTextGenerator } = this.props;
-
-    if (!foundTextGenerator || result.isPending || result.total === 0
-      || !result.facets || !result.facets.collection_id) {
-      return null;
-    }
-
-    const text = foundTextGenerator({
-      resultCount: result.total,
-      datasetCount: result.facets.collection_id.total,
-    });
-
-    return <Callout icon={null} intent="primary" className="EntitySearch__foundText">{text}</Callout>;
-  }
-
   render() {
     const {
       query, result, intl, className,
@@ -97,7 +56,6 @@ export class EntitySearch extends Component {
       emptyComponent, collection, writeable,
     } = this.props;
     const isEmpty = !query.hasQuery();
-    const foundText = this.generateFoundText();
 
     return (
       <div className={c('EntitySearch', className)}>
@@ -110,10 +68,9 @@ export class EntitySearch extends Component {
                 description={intl.formatMessage(messages.no_results_description)}
               />
             )}
-            { isEmpty && emptyComponent }
+            { isEmpty && emptyComponent}
           </section>
         )}
-        {foundText}
         <EntitySearchResults
           query={query}
           result={result}
@@ -126,10 +83,10 @@ export class EntitySearch extends Component {
           collection={collection}
           writeable={writeable}
         />
-        <Waypoint
-          onEnter={this.getMoreResults}
-          bottomOffset="-300px"
-          scrollableAncestor={window}
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={this.props.queryEntities}
         />
       </div>
     );

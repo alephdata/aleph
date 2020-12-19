@@ -1,190 +1,143 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
-import queryString from 'query-string';
-import { ButtonGroup } from '@blueprintjs/core';
-import { Entity as EntityObject } from '@alephdata/followthemoney';
-
-import Query from 'app/Query';
-import Screen from 'components/Screen/Screen';
-import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import queryString from 'query-string';
+import { defineMessages, injectIntl } from 'react-intl';
+import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
+
+import Screen from 'components/Screen/Screen';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityInfoMode from 'components/Entity/EntityInfoMode';
-import EntityViews from 'components/Entity/EntityViews';
-import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
+import ProfileViews from 'components/Profile/ProfileViews';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import { Breadcrumbs, Collection, DualPane, Entity, Property } from 'components/common';
+import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 import { DialogToggleButton } from 'components/Toolbar';
-import { DownloadButton } from 'components/Toolbar';
-import getEntityLink from 'util/getEntityLink';
-import { deleteEntity } from 'actions';
-import { queryEntityReference } from 'queries';
+import { Breadcrumbs, DualPane } from 'components/common';
+
 import {
-  selectProfile, selectEntityReference, selectEntityView,
+  fetchProfile,
+  fetchProfileTags,
+  queryEntities,
+  querySimilar,
+  queryProfileExpand,
+  queryEntitySetItems,
+} from 'actions';
+import {
+  selectProfile,
+  selectProfileView,
+  selectProfileTags,
+  selectSimilarResult,
+  selectProfileExpandResult,
+  selectEntitySetItemsResult,
 } from 'selectors';
+import { profileSimilarQuery, profileReferencesQuery, entitySetItemsQuery } from 'queries';
 
-import 'components/common/ItemOverview.scss';
-import ProfileContextLoader from 'components/Profile/ProfileContextLoader';
-
-// const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
-
+import './ProfileScreen.scss';
 
 const messages = defineMessages({
-  add_to: {
-    id: 'entity.viewer.add_to',
-    defaultMessage: 'Add to...',
+  delete: {
+    id: 'entityset.info.delete',
+    defaultMessage: 'Delete',
   },
 });
 
-class EntityScreen extends Component {
-  constructor(props) {
-    super(props);
 
-    // this.onCollectionSearch = this.onCollectionSearch.bind(this);
-    // this.onSearch = this.onSearch.bind(this);
+class ProfileScreen extends Component {
+  componentDidMount() {
+    this.fetchIfNeeded();
   }
 
-  // onCollectionSearch(queryText) {
-  //   const { history, entity } = this.props;
-  //   const query = {
-  //     q: queryText,
-  //     'filter:collection_id': entity.collection.id,
-  //   };
-  //   history.push({
-  //     pathname: '/search',
-  //     search: queryString.stringify(query),
-  //   });
-  // }
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
 
-  // onSearch(queryText, entityLink) {
-  //   const { history, location, query } = this.props;
-  //   const parsedHash = queryString.parse(location.hash);
-  //   const newQuery = query.setString('q', queryText);
-  //   parsedHash['preview:id'] = undefined;
-  //   parsedHash['preview:mode'] = undefined;
-  //   parsedHash.page = undefined;
-  //   history.push({
-  //     pathname: entityLink,
-  //     search: newQuery.toLocation(),
-  //     hash: queryString.stringify(parsedHash),
-  //   });
-  // }
+  fetchIfNeeded() {
+    const { profileId, profile, tagsResult } = this.props;
+    if (profile.shouldLoadDeep) {
+      this.props.fetchProfile({ id: profileId });
+    }
 
-  // getEntitySearchScope(entity) {
-  //   if (!entity || !entity.schema) {
-  //     return null;
-  //   }
-  //   const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
-  //   if (!hasSearch) {
-  //     return null;
-  //   }
-  //   const entityLink = getEntityLink(entity);
-  //   return {
-  //     listItem: <Entity.Label entity={entity} icon truncate={30} />,
-  //     label: entity.getCaption(),
-  //     onSearch: queryText => this.onSearch(queryText, entityLink),
-  //   };
-  // }
+    if (tagsResult.shouldLoad) {
+      this.props.fetchProfileTags({ id: profileId });
+    }
 
-  // getReferenceSearchScope(entity) {
-  //   const { reference } = this.props;
-  //   if (!reference || reference.count < 10) {
-  //     return null;
-  //   }
-  //   const item = (
-  //     <>
-  //       <Entity.Label entity={entity} icon truncate={30} />
-  //       { ': '}
-  //       <Property.Reverse prop={reference.property} />
-  //     </>
-  //   );
-  //   const entityLink = getEntityLink(entity);
-  //   return {
-  //     listItem: item,
-  //     label: reference.property.getReverse().label,
-  //     onSearch: queryText => this.onSearch(queryText, entityLink),
-  //   };
-  // }
+    const { expandQuery, expandResult } = this.props;
+    if (expandResult.shouldLoad) {
+      this.props.queryProfileExpand({ query: expandQuery });
+    }
 
-  // getSearchScopes() {
-  //   const { entity } = this.props;
-  //   const scopes = [];
+    const { similarQuery, similarResult } = this.props;
+    if (similarResult.shouldLoad) {
+      this.props.querySimilar({ query: similarQuery });
+    }
 
-  //   const referenceScope = this.getReferenceSearchScope(entity);
-  //   if (referenceScope) {
-  //     scopes.push(referenceScope);
-  //   }
+    const { itemsQuery, itemsResult } = this.props;
+    if (itemsResult.shouldLoad) {
+      this.props.queryEntitySetItems({ query: itemsQuery });
+    }
+  }
 
-  //   let currEntity = entity;
-  //   while (currEntity && EntityObject.isEntity(currEntity)) {
-  //     const entityScope = this.getEntitySearchScope(currEntity);
-  //     if (entityScope !== null) {
-  //       scopes.push(entityScope);
-  //     }
-  //     currEntity = currEntity.getFirst('parent');
-  //   }
+  renderOperations() {
+    const { intl, profile } = this.props;
+    return (
+      <ControlGroup className="EntitySetManageMenu">
+        {profile.writeable && (
+          <ButtonGroup>
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.delete),
+                icon: "trash"
+              }}
+              Dialog={EntitySetDeleteDialog}
+              dialogProps={{ entitySet: profile }}
+            />
+          </ButtonGroup>
+        )}
+      </ControlGroup>
 
-  //   scopes.push({
-  //     listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
-  //     label: entity.collection.label,
-  //     onSearch: this.onCollectionSearch,
-  //   });
-
-  //   return scopes.reverse();
-  // }
+    );
+  }
 
   render() {
-    const {
-      profile, profileId, activeMode, query, isDocument, intl,
-    } = this.props;
+    const { profile, viaEntityId, activeMode } = this.props;
 
     if (profile.isError) {
       return <ErrorScreen error={profile.error} />;
     }
-    if (profile.isPending || profile.shouldLoad) {
-      return (
-        <ProfileContextLoader profileId={profileId}>
-          <LoadingScreen />
-        </ProfileContextLoader>
-      );
+    if (!profile?.id || !profile?.entity) {
+      return <LoadingScreen />;
     }
 
-    const operation = (
-      <ButtonGroup>
-        <DownloadButton document={profile.merged} />
-      </ButtonGroup>
-    );
-
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={this.renderOperations()}>
         <Breadcrumbs.Collection collection={profile.collection} />
         <Breadcrumbs.EntitySet key="profile" entitySet={profile} />
       </Breadcrumbs>
     );
 
     return (
-      <ProfileContextLoader profileId={profileId}>
-        <Screen title={profile.label}>
-          {breadcrumbs}
-          <DualPane>
-            <DualPane.SidePane className="ItemOverview">
-              <div className="ItemOverview__heading">
-                <EntityHeading entity={profile.merged} isPreview={false} />
-              </div>
-              <div className="ItemOverview__content">
-                <EntityInfoMode entity={profile.merged} isPreview={false} />
-              </div>
-            </DualPane.SidePane>
-            <DualPane.ContentPane>
-
-            </DualPane.ContentPane>
-          </DualPane>
-        </Screen>
-      </ProfileContextLoader>
+      <Screen title={profile.label}>
+        {breadcrumbs}
+        <DualPane>
+          <DualPane.SidePane className="ItemOverview">
+            <div className="ItemOverview__heading profile">
+              <EntityHeading entity={profile.entity} isPreview={false} isProfile={true} />
+            </div>
+            <div className="ItemOverview__content">
+              <EntityInfoMode entity={profile.entity} isPreview={false} />
+            </div>
+          </DualPane.SidePane>
+          <DualPane.ContentPane>
+            <ProfileViews
+              profile={profile}
+              activeMode={activeMode}
+              viaEntityId={viaEntityId}
+            />
+          </DualPane.ContentPane>
+        </DualPane>
+      </Screen>
     );
   }
 }
@@ -192,26 +145,36 @@ class EntityScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { profileId } = ownProps.match.params;
   const { location } = ownProps;
-  const profile = selectProfile(state, profileId);
-  // const hashQuery = queryString.parse(location.hash);
-  // const isDocument = entity?.schema?.isDocument();
-  // const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
-  // const reference = selectEntityReference(state, entityId, activeMode);
-  // const referenceQuery = queryEntityReference(location, entity, reference);
-  // const documentQuery = Query.fromLocation('entities', location, {}, 'document');
-
+  const parsedHash = queryString.parse(location.hash);
+  const similarQuery = profileSimilarQuery(location, profileId);
+  const expandQuery = profileReferencesQuery(profileId);
+  const itemsQuery = entitySetItemsQuery(location, profileId);
   return {
-    profile,
+    profile: selectProfile(state, profileId),
     profileId,
-    // reference,
-    // activeMode,
-    // isDocument,
-    // query: referenceQuery || documentQuery,
+    viaEntityId: parsedHash.via,
+    activeMode: selectProfileView(state, profileId, parsedHash.mode),
+    tagsResult: selectProfileTags(state, profileId),
+    similarQuery,
+    similarResult: selectSimilarResult(state, similarQuery),
+    expandQuery,
+    expandResult: selectProfileExpandResult(state, expandQuery),
+    itemsQuery,
+    itemsResult: selectEntitySetItemsResult(state, itemsQuery),
   };
+};
+
+const mapDispatchToProps = {
+  queryEntities,
+  querySimilar,
+  queryProfileExpand,
+  queryEntitySetItems,
+  fetchProfile,
+  fetchProfileTags,
 };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
   injectIntl,
-)(EntityScreen);
+  connect(mapStateToProps, mapDispatchToProps),
+)(ProfileScreen);
