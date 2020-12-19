@@ -3,15 +3,14 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import Query from 'app/Query';
-import { queryCollections } from 'actions';
 import { selectCollectionsResult } from 'selectors';
 import { DualPane, SignInCallout } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
 import Screen from 'components/Screen/Screen';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
+import { queryDatasets } from 'queries';
 
-import './CollectionIndexScreen.scss';
+import './DatasetIndexScreen.scss';
 
 
 const messages = defineMessages({
@@ -37,13 +36,10 @@ const facetKeys = [
   'category', 'countries',
 ];
 
-export class CollectionIndexScreen extends Component {
+export class DatasetIndexScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      facets: facetKeys,
-    };
-
+    this.state = { facets: facetKeys };
     this.updateQuery = this.updateQuery.bind(this);
   }
 
@@ -60,7 +56,7 @@ export class CollectionIndexScreen extends Component {
 
     return (
       <Screen
-        className="CollectionIndexScreen"
+        className="DatasetIndexScreen"
         title={intl.formatMessage(messages.title)}
       >
         <DualPane>
@@ -90,18 +86,7 @@ export class CollectionIndexScreen extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const context = {
-    'exclude:category': 'casefile'
-  };
-  let query = Query.fromLocation('collections', location, context, 'collections')
-    .defaultFacet('countries')
-    .defaultFacet('category')
-    .limit(40);
-
-  if (!query.hasSort()) {
-    query = query.sortBy('created_at', 'desc');
-  }
-
+  const query = queryDatasets(location);
   return {
     query,
     result: selectCollectionsResult(state, query),
@@ -109,6 +94,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default compose(
-  connect(mapStateToProps, { queryCollections }),
+  connect(mapStateToProps, {}),
   injectIntl,
-)(CollectionIndexScreen);
+)(DatasetIndexScreen);

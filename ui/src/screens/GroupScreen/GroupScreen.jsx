@@ -77,15 +77,11 @@ const mapStateToProps = (state, ownProps) => {
   const { location, match } = ownProps;
   const { groupId } = match.params;
 
-  const context = {
-    'filter:team_id': groupId,
-  };
-  let query = Query.fromLocation('collections', location, context, 'collections')
+  const context = { 'filter:team_id': groupId };
+  const query = Query.fromLocation('collections', location, context, 'collections')
+    .defaultSortBy('created_at', 'desc')
     .limit(20);
 
-  if (!query.hasSort()) {
-    query = query.sortBy('created_at', 'desc');
-  }
   return {
     query,
     groupId,

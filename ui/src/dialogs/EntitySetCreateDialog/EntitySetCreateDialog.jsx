@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import Query from 'app/Query';
 import { Collection, EntitySet, FileImport } from 'components/common';
-import CreateCaseDialog from 'dialogs/CreateCaseDialog/CreateCaseDialog';
+import CreateInvestigationDialog from 'dialogs/CreateInvestigationDialog/CreateInvestigationDialog';
 import FormDialog from 'dialogs/common/FormDialog';
 import { createEntitySetMutate as createEntitySet } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
@@ -287,7 +287,7 @@ class EntitySetCreateDialog extends Component {
                   </div>
                 </div>
               </div>
-              <CreateCaseDialog
+              <CreateInvestigationDialog
                 isOpen={collectionCreateIsOpen}
                 toggleDialog={this.toggleCollectionCreateDialog}
                 preventRedirect

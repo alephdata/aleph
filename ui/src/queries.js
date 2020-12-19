@@ -57,6 +57,23 @@ export function entitySetItemsQuery(location, entitySetId, limit = 9999) {
   return Query.fromLocation(path, location, {}, 'items').limit(limit);
 }
 
+export function queryInvestigations(location) {
+  const context = { 'filter:category': 'casefile' };
+  return Query.fromLocation('collections', location, context, 'collections')
+    .defaultSortBy('created_at', 'desc')
+    .limit(30);
+}
+
+export function queryDatasets(location) {
+  const context = { 'exclude:category': 'casefile' };
+  return Query.fromLocation('collections', location, context, 'collections')
+    .defaultFacet('countries')
+    .defaultFacet('category')
+    .defaultSortBy('created_at', 'desc')
+    .limit(40);
+}
+
+
 export function queryCollectionEntitySets(location, collectionId) {
   const context = { 'filter:collection_id': collectionId };
   const path = collectionId ? `entitysets` : undefined;

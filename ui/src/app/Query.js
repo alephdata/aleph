@@ -172,6 +172,13 @@ class Query {
     return this.set('sort', `${name}:${direction}`);
   }
 
+  defaultSortBy(name, direction) {
+    if (!this.hasSort()) {
+      return this.sortBy(name, direction);
+    }
+    return this;
+  }
+
   limit(count) {
     return this.set('limit', `${count}`);
   }

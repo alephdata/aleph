@@ -100,17 +100,11 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'filter:type': type
   };
-  let query = Query.fromLocation('entitysets', location, context, 'entitySets');
-
-  if (!query.hasSort()) {
-    query = query.sortBy('created_at', 'asc');
-  }
-
-  const result = selectEntitySetsResult(state, query);
-
+  let query = Query.fromLocation('entitysets', location, context, 'entitySets')
+    .defaultSortBy('created_at', 'asc');
   return {
     query,
-    result,
+    result: selectEntitySetsResult(state, query),
     type,
   };
 };

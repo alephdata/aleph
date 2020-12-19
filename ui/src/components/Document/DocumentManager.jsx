@@ -204,11 +204,9 @@ export class DocumentManager extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { query } = ownProps;
   const { collection } = ownProps;
-  if (!query.hasSort()) {
-    query = query.sortBy('caption', 'asc');
-  }
+  let { query } = ownProps;
+  query = query.defaultSortBy('caption', 'asc');
   if (collection.writeable) {
     query = query.set('cache', 'false');
   }

@@ -42,7 +42,7 @@ const messages = defineMessages({
 
 /* eslint-disable */
 
-class CreateCaseDialog extends Component {
+class CreateInvestigationDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -133,7 +133,7 @@ class CreateCaseDialog extends Component {
       <FormDialog
         processing={blocking}
         icon="briefcase"
-        className="CreateCaseDialog"
+        className="CreateInvestigationDialog"
         isOpen={isOpen}
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
@@ -239,6 +239,6 @@ class CreateCaseDialog extends Component {
   }
 }
 
-CreateCaseDialog = injectIntl(CreateCaseDialog);
-CreateCaseDialog = withRouter(CreateCaseDialog);
-export default connect(null, { createCollection, updateCollectionPermissions })(CreateCaseDialog);
+CreateInvestigationDialog = injectIntl(CreateInvestigationDialog);
+CreateInvestigationDialog = withRouter(CreateInvestigationDialog);
+export default connect(null, { createCollection, updateCollectionPermissions })(CreateInvestigationDialog);

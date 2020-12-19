@@ -18,8 +18,8 @@ import AlertsScreen from 'screens/AlertsScreen/AlertsScreen';
 import SettingsScreen from 'screens/SettingsScreen/SettingsScreen';
 import SystemStatusScreen from 'screens/SystemStatusScreen/SystemStatusScreen';
 import GroupScreen from 'screens/GroupScreen/GroupScreen';
-import CasesIndexScreen from 'screens/CasesIndexScreen/CasesIndexScreen';
-import CollectionIndexScreen from 'screens/CollectionIndexScreen/CollectionIndexScreen';
+import InvestigationIndexScreen from 'screens/InvestigationIndexScreen/InvestigationIndexScreen';
+import DatasetIndexScreen from 'screens/DatasetIndexScreen/DatasetIndexScreen';
 import CollectionScreen from 'screens/CollectionScreen/CollectionScreen';
 import InvestigationScreen from 'screens/InvestigationScreen/InvestigationScreen';
 import EntitySetIndexScreen from 'screens/EntitySetIndexScreen/EntitySetIndexScreen';
@@ -72,9 +72,9 @@ class Router extends Component {
           <Redirect from="/text/:documentId" to="/entities/:documentId" />
           <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
           <Redirect from="/documents/:documentId" to="/entities/:documentId" />
-          <Route path="/datasets" exact component={CollectionIndexScreen} />
+          <Route path="/datasets" exact component={DatasetIndexScreen} />
           <Redirect from="/sources" to="/datasets" />
-          <Route path="/investigations" exact component={CasesIndexScreen} />
+          <Route path="/investigations" exact component={InvestigationIndexScreen} />
           <Redirect from="/cases" to="/investigations" />
           <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
           <Route path="/datasets/:collectionId" exact component={CollectionScreen} />

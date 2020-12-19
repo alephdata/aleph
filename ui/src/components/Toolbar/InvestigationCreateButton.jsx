@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Intent, Tooltip, Position } from '@blueprintjs/core';
 
-import CreateCaseDialog from 'dialogs/CreateCaseDialog/CreateCaseDialog';
+import CreateInvestigationDialog from 'dialogs/CreateInvestigationDialog/CreateInvestigationDialog';
 import { selectSession } from 'selectors';
 
 const messages = defineMessages({
@@ -13,7 +13,7 @@ const messages = defineMessages({
   },
 });
 
-class CaseCreateButton extends React.Component {
+class InvestigationCreateButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +45,7 @@ class CaseCreateButton extends React.Component {
             disabled={buttonDisabled}
           />
         </Tooltip>
-        <CreateCaseDialog
+        <CreateInvestigationDialog
           isOpen={this.state.isOpen}
           toggleDialog={this.toggle}
         />
@@ -56,6 +56,6 @@ class CaseCreateButton extends React.Component {
 
 const mapStateToProps = state => ({ session: selectSession(state) });
 
-CaseCreateButton = connect(mapStateToProps)(CaseCreateButton);
-CaseCreateButton = injectIntl(CaseCreateButton);
-export default CaseCreateButton;
+InvestigationCreateButton = connect(mapStateToProps)(InvestigationCreateButton);
+InvestigationCreateButton = injectIntl(InvestigationCreateButton);
+export default InvestigationCreateButton;
