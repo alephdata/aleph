@@ -48,10 +48,10 @@
     "defaultMessage": "You must sign in to upload your own data."
   },
   "case.description": {
-    "defaultMessage": "Les jeux de données personnels vous permettent de téléverser et partager des documents et des données qui appartiennent à une même histoire. Vous pouvez téléverser des PDFs, des archives de courriels ou des tableurs, et ces fichiers deviendront faciles à chercher et à parcourir."
+    "defaultMessage": "Investigations let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
   },
   "case.label_placeholder": {
-    "defaultMessage": "Untitled dataset"
+    "defaultMessage": "Untitled investigation"
   },
   "case.language_placeholder": {
     "defaultMessage": "Select languages"
@@ -66,10 +66,10 @@
     "defaultMessage": "Partager avec"
   },
   "case.summary": {
-    "defaultMessage": "Une brève description du jeu de données"
+    "defaultMessage": "A brief description of the investigation"
   },
   "case.title": {
-    "defaultMessage": "Créer un jeu de données personnel"
+    "defaultMessage": "Create an investigation"
   },
   "case.users": {
     "defaultMessage": "Chercher des utilisateurs"
@@ -78,19 +78,19 @@
     "defaultMessage": "Vue d'ensemble des cas"
   },
   "cases.create": {
-    "defaultMessage": "New personal dataset"
+    "defaultMessage": "New investigation"
   },
   "cases.empty": {
-    "defaultMessage": "You do not have any personal datasets yet."
+    "defaultMessage": "You do not have any investigations yet."
   },
   "cases.no_results": {
-    "defaultMessage": "No personal datasets were found matching this query."
+    "defaultMessage": "No investigations were found matching this query."
   },
   "cases.placeholder": {
-    "defaultMessage": "Chercher des jeux de données personnels..."
+    "defaultMessage": "Search investigations..."
   },
   "cases.title": {
-    "defaultMessage": "Jeux de données personnels"
+    "defaultMessage": "Investigations"
   },
   "clipboard.copy.after": {
     "defaultMessage": "Copié dans le presse-papier!"
@@ -102,7 +102,7 @@
     "defaultMessage": "Add new entity type"
   },
   "collection.analyze.alert.text": {
-    "defaultMessage": "You're about to re-index the entities in this dataset. This can be helpful if there are inconsistencies in how the data is presented."
+    "defaultMessage": "You're about to re-index the entities in {collectionLabel}. This can be helpful if there are inconsistencies in how the data is presented."
   },
   "collection.analyze.cancel": {
     "defaultMessage": "Annuler"
@@ -126,7 +126,7 @@
     "defaultMessage": "Supprimer"
   },
   "collection.delete.question": {
-    "defaultMessage": "Êtes-vous sûr de vouloir supprimer ce jeu de données et tous les éléments qu'il contient?"
+    "defaultMessage": "Are you sure you want to delete {collectionLabel} and all contained items?"
   },
   "collection.edit.access_title": {
     "defaultMessage": "Access control"
@@ -204,7 +204,7 @@
     "defaultMessage": "URL du publicateur"
   },
   "collection.edit.info.restricted": {
-    "defaultMessage": "This collection is restricted and viewers should be warned."
+    "defaultMessage": "This dataset is restricted and viewers should be warned."
   },
   "collection.edit.info.save": {
     "defaultMessage": "Sauvegarder les changements"
@@ -225,7 +225,7 @@
     "defaultMessage": "Your changes are saved."
   },
   "collection.edit.title": {
-    "defaultMessage": "Réglages du jeu de données"
+    "defaultMessage": "Settings"
   },
   "collection.edit.users": {
     "defaultMessage": "Users"
@@ -235,12 +235,6 @@
   },
   "collection.frequency": {
     "defaultMessage": "Updates"
-  },
-  "collection.index.breadcrumb": {
-    "defaultMessage": "Jeux de données"
-  },
-  "collection.index.create": {
-    "defaultMessage": "New dataset"
   },
   "collection.index.empty": {
     "defaultMessage": "No datasets were found."
@@ -275,17 +269,50 @@
   "collection.info.access": {
     "defaultMessage": "Partager"
   },
+  "collection.info.browse": {
+    "defaultMessage": "Documents"
+  },
   "collection.info.delete": {
     "defaultMessage": "Delete dataset"
+  },
+  "collection.info.delete_casefile": {
+    "defaultMessage": "Delete investigation"
   },
   "collection.info.diagrams": {
     "defaultMessage": "Network diagrams"
   },
+  "collection.info.diagrams_description": {
+    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
+  },
+  "collection.info.documents": {
+    "defaultMessage": "Documents"
+  },
   "collection.info.edit": {
     "defaultMessage": "Réglages"
   },
+  "collection.info.entities": {
+    "defaultMessage": "Entities"
+  },
   "collection.info.lists": {
     "defaultMessage": "Lists"
+  },
+  "collection.info.lists_description": {
+    "defaultMessage": "Lists let you organize and group related entities of interest."
+  },
+  "collection.info.mappings": {
+    "defaultMessage": "Entity mappings"
+  },
+  "collection.info.mappings_description": {
+    "defaultMessage": "Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document"
+  },
+  "collection.info.mentions": {
+    "defaultMessage": "Mentions"
+  },
+  "collection.info.mentions_description": {
+    "defaultMessage": "Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation."
+  },
+  "collection.info.overview": {
+    "defaultMessage": "Overview"
   },
   "collection.info.reindex": {
     "defaultMessage": "Re-index all content"
@@ -293,11 +320,29 @@
   "collection.info.reingest": {
     "defaultMessage": "Re-ingest documents"
   },
+  "collection.info.search": {
+    "defaultMessage": "Search"
+  },
+  "collection.info.xref": {
+    "defaultMessage": "Cross-reference"
+  },
+  "collection.info.xref_description": {
+    "defaultMessage": "Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation."
+  },
   "collection.info_url": {
     "defaultMessage": "URL d'information"
   },
   "collection.last_updated": {
     "defaultMessage": "Last updated {date}"
+  },
+  "collection.mappings.create": {
+    "defaultMessage": "Create a new entity mapping"
+  },
+  "collection.mappings.create_docs_link": {
+    "defaultMessage": "For more information, please refer to the {link}"
+  },
+  "collection.overview.empty": {
+    "defaultMessage": "This dataset is empty."
   },
   "collection.publisher": {
     "defaultMessage": "Publicateur"
@@ -330,7 +375,10 @@
     "defaultMessage": "Re-ingest started."
   },
   "collection.reingest.text": {
-    "defaultMessage": "You're about to re-process all documents in this dataset. This might take some time."
+    "defaultMessage": "You're about to re-process all documents in {collectionLabel}. This might take some time."
+  },
+  "collection.search.placeholder": {
+    "defaultMessage": "Search this investigation"
   },
   "collection.statistics.showmore": {
     "defaultMessage": "Montrer plus"
@@ -381,7 +429,7 @@
     "defaultMessage": "La création de références croisées a démarré."
   },
   "collection.xref.text": {
-    "defaultMessage": "You will now cross-reference this dataset against all other sources. Start this process once and then wait for it to complete."
+    "defaultMessage": "You will now cross-reference {collectionLabel} against all other sources. Start this process once and then wait for it to complete."
   },
   "collection.xref.title": {
     "defaultMessage": "Créer des références croisées"
@@ -393,7 +441,7 @@
     "defaultMessage": "Alertes"
   },
   "dashboard.cases": {
-    "defaultMessage": "Jeux de données personnels"
+    "defaultMessage": "Investigations"
   },
   "dashboard.diagrams": {
     "defaultMessage": "Network diagrams"
@@ -474,7 +522,7 @@
     "defaultMessage": "Diagrams"
   },
   "diagrams.description": {
-    "defaultMessage": "Network diagrams let you visualize complex relationships within a dataset."
+    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
   },
   "diagrams.no_diagrams": {
     "defaultMessage": "There are no network diagrams."
@@ -623,20 +671,17 @@
   "entity.document.manager.search_placeholder": {
     "defaultMessage": "Search documents"
   },
+  "entity.document.manager.search_placeholder_document": {
+    "defaultMessage": "Search in {label}"
+  },
   "entity.info.attachments": {
     "defaultMessage": "Pièces jointes"
   },
   "entity.info.documents": {
     "defaultMessage": "Documents"
   },
-  "entity.info.entities": {
-    "defaultMessage": "Entities"
-  },
   "entity.info.info": {
     "defaultMessage": "Info"
-  },
-  "entity.info.overview": {
-    "defaultMessage": "Vue d'ensemble"
   },
   "entity.info.similar": {
     "defaultMessage": "Similar"
@@ -650,9 +695,6 @@
   "entity.info.view": {
     "defaultMessage": "View"
   },
-  "entity.info.xref": {
-    "defaultMessage": "Créer des références croisées"
-  },
   "entity.manager.bulk_import.description.1": {
     "defaultMessage": "Select a table below from which to import new {schema} entities."
   },
@@ -663,16 +705,13 @@
     "defaultMessage": "Don't see the table you're looking for? {link}"
   },
   "entity.manager.bulk_import.link_text": {
-    "defaultMessage": "Import a new table"
+    "defaultMessage": "Upload a new table document"
   },
   "entity.manager.bulk_import.no_results": {
     "defaultMessage": "No matching documents found"
   },
   "entity.manager.bulk_import.placeholder": {
     "defaultMessage": "Select a table document"
-  },
-  "entity.manager.bulk_import.title": {
-    "defaultMessage": "Bulk import"
   },
   "entity.manager.delete": {
     "defaultMessage": "Delete"
@@ -701,6 +740,12 @@
   "entity.references.no_relationships": {
     "defaultMessage": "This entity does not have any relationships."
   },
+  "entity.references.no_results": {
+    "defaultMessage": "No relationships match this search."
+  },
+  "entity.references.search.placeholder": {
+    "defaultMessage": "Search in {schema}"
+  },
   "entity.remove.confirm": {
     "defaultMessage": "Remove"
   },
@@ -727,6 +772,9 @@
   },
   "entity.similar.empty": {
     "defaultMessage": "There are no similar entities."
+  },
+  "entity.similar.entity": {
+    "defaultMessage": "Similar entity"
   },
   "entity.similar.found_text": {
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
@@ -758,11 +806,11 @@
   "entity.viewer.bulk_import": {
     "defaultMessage": "Bulk import"
   },
+  "entity.viewer.search_placeholder": {
+    "defaultMessage": "Search in {label}"
+  },
   "entitySet.last_updated": {
     "defaultMessage": "Updated {date}"
-  },
-  "entity_set.menu.search_placeholder": {
-    "defaultMessage": "Search in {set_name}"
   },
   "entityset.choose.name": {
     "defaultMessage": "Title"
@@ -771,16 +819,16 @@
     "defaultMessage": "Summary"
   },
   "entityset.create.collection": {
-    "defaultMessage": "Jeu de données"
+    "defaultMessage": "Investigation"
   },
   "entityset.create.collection.existing": {
-    "defaultMessage": "Select a dataset"
+    "defaultMessage": "Select an investigation"
   },
   "entityset.create.collection.new": {
-    "defaultMessage": "Don't see the dataset you're looking for? {link}"
+    "defaultMessage": "Don't see the investigation you're looking for? {link}"
   },
   "entityset.create.collection.new_link": {
-    "defaultMessage": "Create a new personal dataset"
+    "defaultMessage": "Create a new investigation"
   },
   "entityset.create.submit": {
     "defaultMessage": "Créer"
@@ -909,7 +957,7 @@
     "defaultMessage": "Aleph {version}"
   },
   "group.page.description": {
-    "defaultMessage": "The list below shows all datasets that belong to this group."
+    "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
   },
   "home.counts.countries": {
     "defaultMessage": "Countries & territories"
@@ -943,6 +991,51 @@
   },
   "infoMode.collection.entries": {
     "defaultMessage": "{count} entries"
+  },
+  "infoMode.collection_casefile": {
+    "defaultMessage": "Investigation"
+  },
+  "investigation.mentions.empty": {
+    "defaultMessage": "There are no mentions yet in this investigation."
+  },
+  "investigation.overview.guides": {
+    "defaultMessage": "Cross-referencing your data"
+  },
+  "investigation.overview.notifications": {
+    "defaultMessage": "Recent activity"
+  },
+  "investigation.overview.shortcuts": {
+    "defaultMessage": "Quick links"
+  },
+  "investigation.overview.shortcuts_empty": {
+    "defaultMessage": "Getting started"
+  },
+  "investigation.shortcut.diagram": {
+    "defaultMessage": "Sketch a network diagram"
+  },
+  "investigation.shortcut.entities": {
+    "defaultMessage": "Create new entities"
+  },
+  "investigation.shortcut.entity_create_error": {
+    "defaultMessage": "Unable to create entity"
+  },
+  "investigation.shortcut.entity_create_success": {
+    "defaultMessage": "Successfully created {name}"
+  },
+  "investigation.shortcut.upload": {
+    "defaultMessage": "Upload documents"
+  },
+  "investigation.shortcut.xref": {
+    "defaultMessage": "Compare with other datasets"
+  },
+  "judgement.negative": {
+    "defaultMessage": "Different"
+  },
+  "judgement.positive": {
+    "defaultMessage": "Same"
+  },
+  "judgement.unsure": {
+    "defaultMessage": "Not enough information"
   },
   "list.create.button": {
     "defaultMessage": "New list"
@@ -1089,7 +1182,7 @@
     "defaultMessage": "Import a mapping"
   },
   "mapping.info": {
-    "defaultMessage": "Suivez les étapes ci-dessous pour associer des éléments de ce jeu de données à des entités structurées Follow the Money. Pour plus d'informations, veuillez consulter le {link}"
+    "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
   },
   "mapping.infoLink": {
     "defaultMessage": "Documentation sur l'association de données dans Aleph"
@@ -1158,7 +1251,7 @@
     "defaultMessage": "3. Vérifier"
   },
   "mapping.section4.description": {
-    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the dataset, please click below and select from the available options."
+    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the investigation, please click below and select from the available options."
   },
   "mapping.section4.title": {
     "defaultMessage": "4. Select a destination for generated entities (optional)"
@@ -1184,11 +1277,14 @@
   "mapping.warning.empty": {
     "defaultMessage": "You must create at least one entity"
   },
+  "mappings.no_mappings": {
+    "defaultMessage": "You have not generated any mappings yet"
+  },
   "nav.alerts": {
     "defaultMessage": "Alertes"
   },
-  "nav.casefiles": {
-    "defaultMessage": "Jeux de données personnels"
+  "nav.cases": {
+    "defaultMessage": "Investigations"
   },
   "nav.collections": {
     "defaultMessage": "Jeux de données"
@@ -1224,7 +1320,7 @@
     "defaultMessage": "You are receiving alerts about this search."
   },
   "notification.description": {
-    "defaultMessage": "View the latest updates to datasets, groups and tracking alerts you follow."
+    "defaultMessage": "View the latest updates to datasets, investigations, groups and tracking alerts you follow."
   },
   "notifications.greeting": {
     "defaultMessage": "What's new, {role}?"
@@ -1267,6 +1363,21 @@
   },
   "password_auth.signup": {
     "defaultMessage": "Sign up"
+  },
+  "profile.info.header": {
+    "defaultMessage": "Profile"
+  },
+  "profile.info.items": {
+    "defaultMessage": "Entity decisions"
+  },
+  "profile.info.similar": {
+    "defaultMessage": "Suggested"
+  },
+  "profile.items.entity": {
+    "defaultMessage": "Combined entities"
+  },
+  "profile.similar.no_results": {
+    "defaultMessage": "No suggested additions for this profile were found."
   },
   "profileinfo.api_desc": {
     "defaultMessage": "Use the API key to read and write data via remote applications."
@@ -1424,20 +1535,20 @@
   "search.no_results_title": {
     "defaultMessage": "Aucun résultat de recherche"
   },
-  "search.nolabel_placeholder": {
-    "defaultMessage": "Chercher des sociétés, personnes et documents"
-  },
   "search.placeholder": {
-    "defaultMessage": "Chercher dans {label}"
+    "defaultMessage": "Search companies, people and documents"
   },
   "search.placeholder_default": {
     "defaultMessage": "Search…"
   },
-  "search.screen.breadcrumb": {
-    "defaultMessage": "Chercher"
+  "search.placeholder_label": {
+    "defaultMessage": "Search in {label}"
+  },
+  "search.screen.dates": {
+    "defaultMessage": "Date distribution"
   },
   "search.screen.dates_disabled": {
-    "defaultMessage": "No dates available"
+    "defaultMessage": "No date distribution available"
   },
   "search.screen.dates_label": {
     "defaultMessage": "results"
@@ -1456,12 +1567,6 @@
   },
   "search.screen.filters": {
     "defaultMessage": "Filtres"
-  },
-  "search.screen.hide_dates": {
-    "defaultMessage": "Hide date filter"
-  },
-  "search.screen.show_dates": {
-    "defaultMessage": "Show date filter"
   },
   "search.title": {
     "defaultMessage": "Search: {title}"
@@ -1551,19 +1656,19 @@
     "defaultMessage": "Sort by:"
   },
   "sources.index.empty": {
-    "defaultMessage": "This group is not linked to any datasets."
+    "defaultMessage": "This group is not linked to any datasets or investigations."
   },
   "sources.index.placeholder": {
-    "defaultMessage": "Search datasets belonging to {group}..."
+    "defaultMessage": "Search datasets and investigations belonging to {group}..."
   },
   "status.no_collection": {
     "defaultMessage": "Other tasks"
   },
   "tags.results": {
-    "defaultMessage": "Citations"
+    "defaultMessage": "Mention count"
   },
   "tags.title": {
-    "defaultMessage": "Sélecteurs extraits"
+    "defaultMessage": "Term"
   },
   "text.loading": {
     "defaultMessage": "Chargement..."

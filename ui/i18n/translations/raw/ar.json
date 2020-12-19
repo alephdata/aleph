@@ -48,10 +48,10 @@
     "defaultMessage": "يجب عليك تسجيل الدخول لتحميل بياناتك"
   },
   "case.description": {
-    "defaultMessage": "تتيح لك مجموعات البيانات الشخصية تحميل ومشاركة مستندات وبيانات القصة. يمكنك تحميل ملفات PDF أو بريد إلكتروني أو جداول البيانات ما جعل عملية البحث والتصفح أسهل."
+    "defaultMessage": "Investigations let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
   },
   "case.label_placeholder": {
-    "defaultMessage": "بيانات غير معنونة\nبيانات بدون عنوان"
+    "defaultMessage": "Untitled investigation"
   },
   "case.language_placeholder": {
     "defaultMessage": "اختيار اللغة"
@@ -66,10 +66,10 @@
     "defaultMessage": "مشاركة مع"
   },
   "case.summary": {
-    "defaultMessage": "وصف موجز لقاعدة البيانات"
+    "defaultMessage": "A brief description of the investigation"
   },
   "case.title": {
-    "defaultMessage": "إنشاء مجموعة بيانات شخصية"
+    "defaultMessage": "Create an investigation"
   },
   "case.users": {
     "defaultMessage": "البحث عن المستخدمين"
@@ -78,19 +78,19 @@
     "defaultMessage": "نظرة عامة على الحالات"
   },
   "cases.create": {
-    "defaultMessage": "New personal dataset"
+    "defaultMessage": "New investigation"
   },
   "cases.empty": {
-    "defaultMessage": "You do not have any personal datasets yet."
+    "defaultMessage": "You do not have any investigations yet."
   },
   "cases.no_results": {
-    "defaultMessage": "No personal datasets were found matching this query."
+    "defaultMessage": "No investigations were found matching this query."
   },
   "cases.placeholder": {
-    "defaultMessage": "البحث في مجموعات البيانات الشخصية ..."
+    "defaultMessage": "Search investigations..."
   },
   "cases.title": {
-    "defaultMessage": "مجموعات بيانات شخصية"
+    "defaultMessage": "Investigations"
   },
   "clipboard.copy.after": {
     "defaultMessage": "تم النسخ إلى الحافظة!"
@@ -102,7 +102,7 @@
     "defaultMessage": "أضف نوع كيان جديد"
   },
   "collection.analyze.alert.text": {
-    "defaultMessage": "على وشك إعادة فهرسة الكيانات في مجموعة البيانات. يمكن أن يكون مفيدًا إذا كان هناك خلل في كيفية تقديم البيانات"
+    "defaultMessage": "You're about to re-index the entities in {collectionLabel}. This can be helpful if there are inconsistencies in how the data is presented."
   },
   "collection.analyze.cancel": {
     "defaultMessage": "الغاء"
@@ -126,7 +126,7 @@
     "defaultMessage": "حذف"
   },
   "collection.delete.question": {
-    "defaultMessage": "هل أنت متاكد من أنك تريد حذف مجموعة البيانات وجميع محتوياتها؟"
+    "defaultMessage": "Are you sure you want to delete {collectionLabel} and all contained items?"
   },
   "collection.edit.access_title": {
     "defaultMessage": "Access control"
@@ -204,7 +204,7 @@
     "defaultMessage": "رابط الناشر"
   },
   "collection.edit.info.restricted": {
-    "defaultMessage": "هذه المجموعة محظورة ويجب تنبيه المتصفحين"
+    "defaultMessage": "This dataset is restricted and viewers should be warned."
   },
   "collection.edit.info.save": {
     "defaultMessage": "حفظ التغييرات"
@@ -225,7 +225,7 @@
     "defaultMessage": "تم حفظ التغييرات"
   },
   "collection.edit.title": {
-    "defaultMessage": "الإعدادات الخاصة بمجموعة البيانات"
+    "defaultMessage": "Settings"
   },
   "collection.edit.users": {
     "defaultMessage": "المستخدمون"
@@ -235,12 +235,6 @@
   },
   "collection.frequency": {
     "defaultMessage": "تحديث"
-  },
-  "collection.index.breadcrumb": {
-    "defaultMessage": "مجموعات البيانات"
-  },
-  "collection.index.create": {
-    "defaultMessage": "New dataset"
   },
   "collection.index.empty": {
     "defaultMessage": "No datasets were found."
@@ -275,17 +269,50 @@
   "collection.info.access": {
     "defaultMessage": "مشاركة"
   },
+  "collection.info.browse": {
+    "defaultMessage": "Documents"
+  },
   "collection.info.delete": {
     "defaultMessage": "حذف قاعدة بيانات"
+  },
+  "collection.info.delete_casefile": {
+    "defaultMessage": "Delete investigation"
   },
   "collection.info.diagrams": {
     "defaultMessage": "مخططات الشبكة"
   },
+  "collection.info.diagrams_description": {
+    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
+  },
+  "collection.info.documents": {
+    "defaultMessage": "Documents"
+  },
   "collection.info.edit": {
     "defaultMessage": "الإعدادات"
   },
+  "collection.info.entities": {
+    "defaultMessage": "Entities"
+  },
   "collection.info.lists": {
     "defaultMessage": "Lists"
+  },
+  "collection.info.lists_description": {
+    "defaultMessage": "Lists let you organize and group related entities of interest."
+  },
+  "collection.info.mappings": {
+    "defaultMessage": "Entity mappings"
+  },
+  "collection.info.mappings_description": {
+    "defaultMessage": "Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document"
+  },
+  "collection.info.mentions": {
+    "defaultMessage": "Mentions"
+  },
+  "collection.info.mentions_description": {
+    "defaultMessage": "Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation."
+  },
+  "collection.info.overview": {
+    "defaultMessage": "Overview"
   },
   "collection.info.reindex": {
     "defaultMessage": "أعد فهرسة كل المحتوى"
@@ -293,11 +320,29 @@
   "collection.info.reingest": {
     "defaultMessage": "إعادة استيعاب المستندات"
   },
+  "collection.info.search": {
+    "defaultMessage": "Search"
+  },
+  "collection.info.xref": {
+    "defaultMessage": "Cross-reference"
+  },
+  "collection.info.xref_description": {
+    "defaultMessage": "Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation."
+  },
   "collection.info_url": {
     "defaultMessage": "رابط المعلومات"
   },
   "collection.last_updated": {
     "defaultMessage": "اخر تاريخ تحذيث"
+  },
+  "collection.mappings.create": {
+    "defaultMessage": "Create a new entity mapping"
+  },
+  "collection.mappings.create_docs_link": {
+    "defaultMessage": "For more information, please refer to the {link}"
+  },
+  "collection.overview.empty": {
+    "defaultMessage": "This dataset is empty."
   },
   "collection.publisher": {
     "defaultMessage": "الناشر"
@@ -330,7 +375,10 @@
     "defaultMessage": "بدء الإعادة"
   },
   "collection.reingest.text": {
-    "defaultMessage": "أنت على وشك إعادة معالجة جميع المستندات في مجموعة البيانات. الامر يستغرق بعض الوقت"
+    "defaultMessage": "You're about to re-process all documents in {collectionLabel}. This might take some time."
+  },
+  "collection.search.placeholder": {
+    "defaultMessage": "Search this investigation"
   },
   "collection.statistics.showmore": {
     "defaultMessage": "عرض المزيد"
@@ -381,7 +429,7 @@
     "defaultMessage": "بدأت  عملية المطابقة"
   },
   "collection.xref.text": {
-    "defaultMessage": "ستقوم الآن بمطابقة مجموعة البيانات هذه مع المصادر الأخرى. انتظر حتى إتمام العملية"
+    "defaultMessage": "You will now cross-reference {collectionLabel} against all other sources. Start this process once and then wait for it to complete."
   },
   "collection.xref.title": {
     "defaultMessage": "مطابقة"
@@ -393,7 +441,7 @@
     "defaultMessage": "تنبيهات"
   },
   "dashboard.cases": {
-    "defaultMessage": "مجموعات بيانات شخصية"
+    "defaultMessage": "Investigations"
   },
   "dashboard.diagrams": {
     "defaultMessage": "مخططات الشبكة"
@@ -474,7 +522,7 @@
     "defaultMessage": "Diagrams"
   },
   "diagrams.description": {
-    "defaultMessage": "Network diagrams let you visualize complex relationships within a dataset."
+    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
   },
   "diagrams.no_diagrams": {
     "defaultMessage": "لا توجد رسوم بيانية للشبكة."
@@ -623,20 +671,17 @@
   "entity.document.manager.search_placeholder": {
     "defaultMessage": "البحث عن الملفات"
   },
+  "entity.document.manager.search_placeholder_document": {
+    "defaultMessage": "Search in {label}"
+  },
   "entity.info.attachments": {
     "defaultMessage": "مرفقات"
   },
   "entity.info.documents": {
     "defaultMessage": "الوثائق/ المستندات"
   },
-  "entity.info.entities": {
-    "defaultMessage": "كيانات"
-  },
   "entity.info.info": {
     "defaultMessage": "معلومات"
-  },
-  "entity.info.overview": {
-    "defaultMessage": "نظرة عامة"
   },
   "entity.info.similar": {
     "defaultMessage": "مشابه"
@@ -650,9 +695,6 @@
   "entity.info.view": {
     "defaultMessage": "عرض"
   },
-  "entity.info.xref": {
-    "defaultMessage": "تطابق"
-  },
   "entity.manager.bulk_import.description.1": {
     "defaultMessage": "Select a table below from which to import new {schema} entities."
   },
@@ -663,16 +705,13 @@
     "defaultMessage": "Don't see the table you're looking for? {link}"
   },
   "entity.manager.bulk_import.link_text": {
-    "defaultMessage": "Import a new table"
+    "defaultMessage": "Upload a new table document"
   },
   "entity.manager.bulk_import.no_results": {
     "defaultMessage": "لم يتم العثور على مستندات مطابقة"
   },
   "entity.manager.bulk_import.placeholder": {
     "defaultMessage": "حدد جدول المستند"
-  },
-  "entity.manager.bulk_import.title": {
-    "defaultMessage": "إدخال بالجملة"
   },
   "entity.manager.delete": {
     "defaultMessage": "Delete"
@@ -701,6 +740,12 @@
   "entity.references.no_relationships": {
     "defaultMessage": "هذا الكيان غير مرتبط بالبحث"
   },
+  "entity.references.no_results": {
+    "defaultMessage": "No relationships match this search."
+  },
+  "entity.references.search.placeholder": {
+    "defaultMessage": "Search in {schema}"
+  },
   "entity.remove.confirm": {
     "defaultMessage": "Remove"
   },
@@ -727,6 +772,9 @@
   },
   "entity.similar.empty": {
     "defaultMessage": "لا توجد كيانات مشابهة"
+  },
+  "entity.similar.entity": {
+    "defaultMessage": "Similar entity"
   },
   "entity.similar.found_text": {
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
@@ -758,11 +806,11 @@
   "entity.viewer.bulk_import": {
     "defaultMessage": "إدخال بالجملة"
   },
+  "entity.viewer.search_placeholder": {
+    "defaultMessage": "Search in {label}"
+  },
   "entitySet.last_updated": {
     "defaultMessage": "Updated {date}"
-  },
-  "entity_set.menu.search_placeholder": {
-    "defaultMessage": "بحث في {set_name}"
   },
   "entityset.choose.name": {
     "defaultMessage": "عنوان"
@@ -771,16 +819,16 @@
     "defaultMessage": "ملخص"
   },
   "entityset.create.collection": {
-    "defaultMessage": "مجموعة البيانات"
+    "defaultMessage": "Investigation"
   },
   "entityset.create.collection.existing": {
-    "defaultMessage": "اختار مجموعة البيانات"
+    "defaultMessage": "Select an investigation"
   },
   "entityset.create.collection.new": {
-    "defaultMessage": "Don't see the dataset you're looking for? {link}"
+    "defaultMessage": "Don't see the investigation you're looking for? {link}"
   },
   "entityset.create.collection.new_link": {
-    "defaultMessage": "Create a new personal dataset"
+    "defaultMessage": "Create a new investigation"
   },
   "entityset.create.submit": {
     "defaultMessage": "إنشاء"
@@ -909,7 +957,7 @@
     "defaultMessage": "أَلِف {version}"
   },
   "group.page.description": {
-    "defaultMessage": "تعرض القائمة أدناه جميع مجموعات البيانات التي تنتمي إلى هذه المجموعة"
+    "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
   },
   "home.counts.countries": {
     "defaultMessage": "Countries & territories"
@@ -943,6 +991,51 @@
   },
   "infoMode.collection.entries": {
     "defaultMessage": "{count} الكيانات"
+  },
+  "infoMode.collection_casefile": {
+    "defaultMessage": "Investigation"
+  },
+  "investigation.mentions.empty": {
+    "defaultMessage": "There are no mentions yet in this investigation."
+  },
+  "investigation.overview.guides": {
+    "defaultMessage": "Cross-referencing your data"
+  },
+  "investigation.overview.notifications": {
+    "defaultMessage": "Recent activity"
+  },
+  "investigation.overview.shortcuts": {
+    "defaultMessage": "Quick links"
+  },
+  "investigation.overview.shortcuts_empty": {
+    "defaultMessage": "Getting started"
+  },
+  "investigation.shortcut.diagram": {
+    "defaultMessage": "Sketch a network diagram"
+  },
+  "investigation.shortcut.entities": {
+    "defaultMessage": "Create new entities"
+  },
+  "investigation.shortcut.entity_create_error": {
+    "defaultMessage": "Unable to create entity"
+  },
+  "investigation.shortcut.entity_create_success": {
+    "defaultMessage": "Successfully created {name}"
+  },
+  "investigation.shortcut.upload": {
+    "defaultMessage": "Upload documents"
+  },
+  "investigation.shortcut.xref": {
+    "defaultMessage": "Compare with other datasets"
+  },
+  "judgement.negative": {
+    "defaultMessage": "Different"
+  },
+  "judgement.positive": {
+    "defaultMessage": "Same"
+  },
+  "judgement.unsure": {
+    "defaultMessage": "Not enough information"
   },
   "list.create.button": {
     "defaultMessage": "New list"
@@ -1089,7 +1182,7 @@
     "defaultMessage": "استيراد البحث الشامل"
   },
   "mapping.info": {
-    "defaultMessage": "اتبع الخطوات أدناه لتعيين العناصر في مجموعة البيانات الخاصة بالكيانات المنتظمة لتتبع كيانات المال. لمزيد من المعلومات، يرجى الرجوع إلى {link}"
+    "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
   },
   "mapping.infoLink": {
     "defaultMessage": "آلف لتوثيق بيانات البحث الشامل"
@@ -1158,7 +1251,7 @@
     "defaultMessage": "3. تحقيق/ تدقيق"
   },
   "mapping.section4.description": {
-    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the dataset, please click below and select from the available options."
+    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the investigation, please click below and select from the available options."
   },
   "mapping.section4.title": {
     "defaultMessage": "4. Select a destination for generated entities (optional)"
@@ -1184,11 +1277,14 @@
   "mapping.warning.empty": {
     "defaultMessage": "You must create at least one entity"
   },
+  "mappings.no_mappings": {
+    "defaultMessage": "You have not generated any mappings yet"
+  },
   "nav.alerts": {
     "defaultMessage": "تنبيهات"
   },
-  "nav.casefiles": {
-    "defaultMessage": "مجموعات بيانات شخصية"
+  "nav.cases": {
+    "defaultMessage": "Investigations"
   },
   "nav.collections": {
     "defaultMessage": "مجموعات البيانات"
@@ -1224,7 +1320,7 @@
     "defaultMessage": "تتلقى تنبيهات حول هذا البحث"
   },
   "notification.description": {
-    "defaultMessage": "عرض آخر التحديثات لمجموعات البيانات وتتبع الإشارات التي تتابعها"
+    "defaultMessage": "View the latest updates to datasets, investigations, groups and tracking alerts you follow."
   },
   "notifications.greeting": {
     "defaultMessage": "ما الجديد {role}؟"
@@ -1267,6 +1363,21 @@
   },
   "password_auth.signup": {
     "defaultMessage": "تسجيل"
+  },
+  "profile.info.header": {
+    "defaultMessage": "Profile"
+  },
+  "profile.info.items": {
+    "defaultMessage": "Entity decisions"
+  },
+  "profile.info.similar": {
+    "defaultMessage": "Suggested"
+  },
+  "profile.items.entity": {
+    "defaultMessage": "Combined entities"
+  },
+  "profile.similar.no_results": {
+    "defaultMessage": "No suggested additions for this profile were found."
   },
   "profileinfo.api_desc": {
     "defaultMessage": "استخدم مفتاح API لقراءة البيانات وكتابتها عبر التطبيقات عن بعد."
@@ -1424,20 +1535,20 @@
   "search.no_results_title": {
     "defaultMessage": "لم يتم العثور على نتائج"
   },
-  "search.nolabel_placeholder": {
-    "defaultMessage": "ابحث عن شركات وأشخاص ومستندات"
-  },
   "search.placeholder": {
-    "defaultMessage": "بحث في {label}"
+    "defaultMessage": "Search companies, people and documents"
   },
   "search.placeholder_default": {
     "defaultMessage": "Search…"
   },
-  "search.screen.breadcrumb": {
-    "defaultMessage": "بحث"
+  "search.placeholder_label": {
+    "defaultMessage": "Search in {label}"
+  },
+  "search.screen.dates": {
+    "defaultMessage": "Date distribution"
   },
   "search.screen.dates_disabled": {
-    "defaultMessage": "No dates available"
+    "defaultMessage": "No date distribution available"
   },
   "search.screen.dates_label": {
     "defaultMessage": "نتائج"
@@ -1456,12 +1567,6 @@
   },
   "search.screen.filters": {
     "defaultMessage": "تصفية"
-  },
-  "search.screen.hide_dates": {
-    "defaultMessage": "اخفاء تصقية التاريخ"
-  },
-  "search.screen.show_dates": {
-    "defaultMessage": "اطهار تصفية التاريخ"
   },
   "search.title": {
     "defaultMessage": "Search: {title}"
@@ -1551,19 +1656,19 @@
     "defaultMessage": "Sort by:"
   },
   "sources.index.empty": {
-    "defaultMessage": "هذه المجموعة ليست مرتبطة بأي من مجموعات بيانات."
+    "defaultMessage": "This group is not linked to any datasets or investigations."
   },
   "sources.index.placeholder": {
-    "defaultMessage": "ابحث في مجموعات بيانات التابعة لـ {group} ..."
+    "defaultMessage": "Search datasets and investigations belonging to {group}..."
   },
   "status.no_collection": {
     "defaultMessage": "Other tasks"
   },
   "tags.results": {
-    "defaultMessage": "اقتباسات"
+    "defaultMessage": "Mention count"
   },
   "tags.title": {
-    "defaultMessage": "المحددات المستخرجة"
+    "defaultMessage": "Term"
   },
   "text.loading": {
     "defaultMessage": "تحميل..."

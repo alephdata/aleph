@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-04 11:12+0100\n"
+"POT-Creation-Date: 2020-12-19 16:31+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Nathan Jaccard <nathan@occrp.org>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/logic/entities.py:81
+#: aleph/logic/entities.py:90
 msgid "No schema on entity"
 msgstr "Sin esquema de la entidad"
 
@@ -36,7 +36,7 @@ msgstr "Sin esquema de la entidad"
 msgid "[HTML removed: could not be sanitized]"
 msgstr "[HTML eliminado: no se pudo depurar]"
 
-#: aleph/logic/roles.py:42
+#: aleph/logic/roles.py:59
 msgid "Registration"
 msgstr "Registro"
 
@@ -109,8 +109,8 @@ msgid "Air and maritime registers"
 msgstr "Registros marítimos y aéreos"
 
 #: aleph/model/collection.py:44
-msgid "Personal datasets"
-msgstr "Conjuntos de datos personales"
+msgid "Investigations"
+msgstr ""
 
 #: aleph/model/collection.py:45
 msgid "Other material"
@@ -348,23 +348,23 @@ msgstr "Nombre de esquema inválido: %s"
 msgid "Invalid date: %s"
 msgstr "Fecha inválida: %s"
 
-#: aleph/views/base_api.py:220
+#: aleph/views/base_api.py:213
 msgid "You are not authorized to do this."
 msgstr "Usted no está autorizado para hacer esto."
 
-#: aleph/views/base_api.py:229
+#: aleph/views/base_api.py:222
 msgid "This path does not exist."
 msgstr "Esta ruta no existe."
 
-#: aleph/views/base_api.py:236
+#: aleph/views/base_api.py:229
 msgid "Internal server error."
 msgstr "Error de servidor interno."
 
-#: aleph/views/base_api.py:249
+#: aleph/views/base_api.py:242
 msgid "Access token is invalid."
 msgstr "El token de acceso es inválido."
 
-#: aleph/views/entities_api.py:166
+#: aleph/views/entities_api.py:168
 #, python-format
 msgid "Search: %s"
 msgstr ""
@@ -385,15 +385,15 @@ msgstr "Código inválido"
 msgid "Email is already registered"
 msgstr "El correo electrónico ya está registrado"
 
-#: aleph/views/roles_api.py:229
+#: aleph/views/roles_api.py:232
 msgid "Incorrect password."
 msgstr "Contraseña incorrecta."
 
-#: aleph/views/sessions_api.py:52
+#: aleph/views/sessions_api.py:61
 msgid "Invalid user or password."
 msgstr "Contraseña o usuario incorrecto."
 
-#: aleph/views/sessions_api.py:90
+#: aleph/views/sessions_api.py:95
 msgid "Authentication has failed."
 msgstr "Error en la autenticación."
 

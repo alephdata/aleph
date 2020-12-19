@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-04 11:12+0100\n"
+"POT-Creation-Date: 2020-12-19 16:31+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Pinar Dag <pinar.dag@dagmedya.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Aleph"
 msgstr "Sesli Sözlük"
 
-#: aleph/logic/entities.py:81
+#: aleph/logic/entities.py:90
 msgid "No schema on entity"
 msgstr ""
 
@@ -34,7 +34,7 @@ msgstr ""
 msgid "[HTML removed: could not be sanitized]"
 msgstr ""
 
-#: aleph/logic/roles.py:42
+#: aleph/logic/roles.py:59
 msgid "Registration"
 msgstr "Kaydetme"
 
@@ -107,7 +107,7 @@ msgid "Air and maritime registers"
 msgstr ""
 
 #: aleph/model/collection.py:44
-msgid "Personal datasets"
+msgid "Investigations"
 msgstr ""
 
 #: aleph/model/collection.py:45
@@ -339,23 +339,23 @@ msgstr ""
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:220
+#: aleph/views/base_api.py:213
 msgid "You are not authorized to do this."
 msgstr "Bunu yapmaya yetkili değilsiniz."
 
-#: aleph/views/base_api.py:229
+#: aleph/views/base_api.py:222
 msgid "This path does not exist."
 msgstr "Bu yol mevcut değil."
 
-#: aleph/views/base_api.py:236
+#: aleph/views/base_api.py:229
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:249
+#: aleph/views/base_api.py:242
 msgid "Access token is invalid."
 msgstr ""
 
-#: aleph/views/entities_api.py:166
+#: aleph/views/entities_api.py:168
 #, python-format
 msgid "Search: %s"
 msgstr ""
@@ -376,15 +376,15 @@ msgstr "Geçersiz kod"
 msgid "Email is already registered"
 msgstr "E-posta zaten kayıtlı"
 
-#: aleph/views/roles_api.py:229
+#: aleph/views/roles_api.py:232
 msgid "Incorrect password."
 msgstr ""
 
-#: aleph/views/sessions_api.py:52
+#: aleph/views/sessions_api.py:61
 msgid "Invalid user or password."
 msgstr ""
 
-#: aleph/views/sessions_api.py:90
+#: aleph/views/sessions_api.py:95
 msgid "Authentication has failed."
 msgstr ""
 
