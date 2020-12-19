@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { collectionXrefFacetsQuery } from 'queries';
-import { fetchCollection, queryCollectionXref, mutate } from 'actions';
+import { fetchCollection, queryCollectionXref, forceMutate } from 'actions';
 import { selectCollection, selectCollectionStatus, selectCollectionXrefResult } from 'selectors';
 
 
@@ -13,15 +13,15 @@ class CollectionContextLoader extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    this.fetchIfNeeded();
     const { status } = this.props;
     const prevStatus = prevProps.status;
     const wasUpdating = prevStatus.pending > 0 || prevStatus.running > 0;
     const isUpdating = status.pending > 0 || status.running > 0;
 
     if (wasUpdating && !isUpdating) {
-      this.props.mutate();
+      this.props.forceMutate();
     }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
@@ -60,7 +60,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = {
-  mutate,
+  forceMutate,
   fetchCollection,
   queryCollectionXref
 };

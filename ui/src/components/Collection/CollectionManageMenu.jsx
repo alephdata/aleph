@@ -39,6 +39,20 @@ const messages = defineMessages({
 
 
 class CollectionManageMenu extends PureComponent {
+  renderSkeletonButton = (i) => (
+    <Skeleton.Text key={i} type="span" length={5} className="bp3-button" />
+  )
+
+  renderSkeleton = () => {
+    if (this.props.view) {
+      return this.renderSkeletonButton();
+    } else {
+      return (
+        <ButtonGroup>{[...Array(3).keys()].map(this.renderSkeletonButton)}</ButtonGroup>
+      );
+    };
+  }
+
   getButtons = () => {
     const { intl, collection } = this.props;
 

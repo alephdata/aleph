@@ -11,8 +11,6 @@ import Dashboard from 'components/Dashboard/Dashboard';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { triggerCollectionCancel, fetchSystemStatus } from 'actions';
 import { selectSystemStatus } from 'selectors';
-import { Link } from 'react-router-dom';
-import getCollectionLink from 'util/getCollectionLink';
 
 import './SystemStatusScreen.scss';
 
@@ -109,12 +107,8 @@ export class SystemStatusScreen extends React.Component {
     return (
       <tr key={collection?.id || 'null'}>
         <td className="entity">
-          {collection && (
-            <Link to={getCollectionLink(collection)}>
-              <Collection.Label collection={collection} />
-            </Link>
-          )}
-          {!collection && (
+          <Collection.Link collection={res.collection} />
+          {!res.collection && (
             <FormattedMessage id="status.no_collection" defaultMessage="Other tasks" />
           )}
         </td>
@@ -192,7 +186,7 @@ export class SystemStatusScreen extends React.Component {
                 </thead>
                 <tbody>
                   {results.map(this.renderRow)}
-                  {result.isPending && !results.length && skeletonItems.map(this.renderRowSkeleton)}
+                  {result.total === undefined && skeletonItems.map(this.renderRowSkeleton)}
                 </tbody>
               </table>
             )}

@@ -79,8 +79,8 @@ export class CollectionEditDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collection: props.collection,
       blocking: false,
+      changed: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -91,38 +91,39 @@ export class CollectionEditDialog extends Component {
     this.onFieldChange = this.onFieldChange.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps) {
-    return { collection: nextProps.collection };
+  static getDerivedStateFromProps(props, state) {
+    const collection = state.changed ? state.collection : { ...props.collection };
+    return { collection };
   }
 
   onFieldChange({ target }) {
-    const { collection } = this.props;
+    const { collection } = this.state;
     collection[target.id] = target.value;
-    this.setState({ collection });
+    this.setState({ collection, changed: true });
   }
 
   onToggleRestricted() {
-    const { collection } = this.props;
+    const { collection } = this.state;
     collection.restricted = !collection.restricted;
-    this.setState({ collection });
+    this.setState({ collection, changed: true });
   }
 
   onSelectCountries(countries) {
-    const { collection } = this.props;
+    const { collection } = this.state;
     collection.countries = countries;
-    this.setState({ collection });
+    this.setState({ collection, changed: true });
   }
 
   onSelectLanguages(languages) {
-    const { collection } = this.props;
+    const { collection } = this.state;
     collection.languages = languages;
-    this.setState({ collection });
+    this.setState({ collection, changed: true });
   }
 
   onSelectCreator(creator) {
-    const { collection } = this.props;
+    const { collection } = this.state;
     collection.creator = creator;
-    this.setState({ collection });
+    this.setState({ collection, changed: true });
   }
 
   async onSubmit() {
@@ -137,7 +138,7 @@ export class CollectionEditDialog extends Component {
     } catch (e) {
       showWarningToast(e.message);
     }
-    this.setState({ blocking: false });
+    this.setState({ blocking: false, changed: false });
   }
 
   render() {
@@ -149,7 +150,6 @@ export class CollectionEditDialog extends Component {
       <FormDialog
         processing={blocking}
         icon="cog"
-        onSubmit={this.onSubmit}
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
         title={intl.formatMessage(messages.title)}
@@ -356,7 +356,7 @@ export class CollectionEditDialog extends Component {
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
             <Button
-              type="submit"
+              onClick={this.onSubmit}
               intent={Intent.PRIMARY}
               disabled={blocking}
               text={intl.formatMessage(messages.save_button)}

@@ -19,7 +19,6 @@ import entitySetItems from './entitySetItems';
 import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
-import queryLogs from './queryLogs';
 import exports from './exports';
 
 
@@ -41,7 +40,6 @@ const rootReducer = combineReducers({
   entitySets,
   entitySetItems,
   entityMappings,
-  queryLogs,
   results,
   systemStatus,
   exports,

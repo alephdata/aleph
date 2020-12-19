@@ -59,10 +59,9 @@ export {
   pairwiseJudgement,
 } from './profileActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
-export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';
 export { fetchExports, triggerQueryExport } from './exportActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');
-export const mutate = createAction('MUTATE');
+export const forceMutate = createAction('MUTATE');

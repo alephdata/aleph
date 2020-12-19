@@ -135,7 +135,6 @@ class CreateCaseDialog extends Component {
         icon="briefcase"
         className="CreateCaseDialog"
         isOpen={isOpen}
-        onSubmit={this.onSubmit}
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
         enforceFocus={false}
@@ -228,7 +227,7 @@ class CreateCaseDialog extends Component {
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
             <Button
-              type="submit"
+              onClick={this.onSubmit}
               intent={Intent.PRIMARY}
               disabled={disabled}
               text={intl.formatMessage(messages.save)}
@@ -240,8 +239,6 @@ class CreateCaseDialog extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({});
-
 CreateCaseDialog = injectIntl(CreateCaseDialog);
 CreateCaseDialog = withRouter(CreateCaseDialog);
-export default connect(mapStateToProps, { createCollection, updateCollectionPermissions })(CreateCaseDialog);
+export default connect(null, { createCollection, updateCollectionPermissions })(CreateCaseDialog);

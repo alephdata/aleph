@@ -330,10 +330,13 @@ export function selectProfileView(state, profileId, mode) {
 
 export function selectCollectionStatus(state, collectionId) {
   const status = selectObject(state, state.collectionStatus, collectionId);
-  if (status.isError || status.isPending) {
-    return status;
-  }
-  status.active = status.pending || status.running;
+  status.pending = status.pending || 0;
+  status.running = status.running || 0;
+  status.finished = status.finished || 0;
+  status.active = status.pending + status.running;
+  status.total = status.active + status.finished;
+  status.progress = status.finished / status.total;
+  status.percent = Math.round(status.progress * 100);
   return status;
 }
 
