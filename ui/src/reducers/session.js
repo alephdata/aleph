@@ -22,7 +22,6 @@ const handleSession = (state) => {
 };
 
 const handleLogin = (state, token) => {
-  console.log('handle login', state, token);
   if (!token) {
     return handleSession(state);
   }

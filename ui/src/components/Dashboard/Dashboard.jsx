@@ -137,7 +137,7 @@ class Dashboard extends React.Component {
               {(groupsResult.total === undefined || groupsResult.total > 0) && (
                 <>
                   <MenuDivider />
-                  <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.isPending })}>
+                  <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.total === undefined })}>
                     <h6 className="bp3-heading">
                       <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                     </h6>
