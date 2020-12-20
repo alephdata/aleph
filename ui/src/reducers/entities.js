@@ -24,12 +24,10 @@ function nestedEntityObjects(state, result) {
     result.results.forEach(result => {
       if (result.entity?.id) {
         result.entityId = result.entity.id || result.entity_id;
-        result.entity.collection = result.entity.collection || result.collection;
         state[result.entityId] = loadComplete(result.entity);
       }
       if (result.match?.id) {
         result.matchId = result.match.id;
-        result.match.collection = result.match.collection || result.match_collection;
         state[result.matchId] = loadComplete(result.match);
       }
     });

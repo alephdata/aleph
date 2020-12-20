@@ -68,7 +68,7 @@ class XrefTableRow extends Component {
           <Score score={xref.score} />
         </td>
         <td className="collection">
-          <Collection.Link preview collection={xref.match_collection} icon />
+          <Collection.Link collection={xref.match?.collection} icon />
         </td>
       </tr >
     );

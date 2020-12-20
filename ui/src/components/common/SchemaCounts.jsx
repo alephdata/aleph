@@ -43,10 +43,6 @@ class SchemaCounts extends React.PureComponent {
   render() {
     const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, isPending, onSelect } = this.props;
 
-    if (isPending && !activeSchema) {
-      return <SectionLoading />
-    }
-
     return (
       <ButtonGroup vertical minimal className="SchemaCounts">
         {Object.keys(visibleCounts).map(schema => {
@@ -92,9 +88,8 @@ const mapStateToProps = (state, ownProps) => {
   const { activeSchema, filterSchemata, schemaCounts } = ownProps;
   const model = selectModel(state);
 
-  const allCounts = schemaCounts
-  if (activeSchema && !allCounts[activeSchema]) {
-    allCounts[activeSchema] = 0;
+  if (activeSchema && !schemaCounts[activeSchema]) {
+    schemaCounts[activeSchema] = 0;
   }
 
   const visibleCounts = _.pickBy(schemaCounts, (val, key) => {

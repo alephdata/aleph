@@ -63,12 +63,12 @@ export class CollectionWrapper extends Component {
       breadcrumbOptions = {}, children, collection, query, intl, isCasefile
     } = this.props;
 
-    const search = !!collection && (
+    const search = (
       <SearchBox
         onSearch={this.onSearch}
         placeholder={intl.formatMessage(messages[isCasefile ? 'placeholder_casefile' : 'placeholder'])}
         query={query}
-        inputProps={{ disabled: collection.isPending }}
+        inputProps={{ disabled: !collection?.id }}
       />
     );
 
@@ -96,16 +96,13 @@ export class CollectionWrapper extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location, forceCasefile } = ownProps;
-  if (!collection) {
-    return {};
-  }
-  const isCasefile = forceCasefile || collection.casefile;
+  const isCasefile = forceCasefile || collection?.casefile;
   const hashQuery = queryString.parse(location.hash);
   const activeMode = hashQuery.mode;
   const onCollectionScreen = location.pathname === getCollectionLink(collection);
   // only pull from query location when in collection search mode
   const qLocation = onCollectionScreen && activeMode === collectionViewIds.SEARCH && location;
-  const query = queryCollectionEntities(qLocation, collection.id);
+  const query = queryCollectionEntities(qLocation, collection?.id);
 
   const breadcrumbOptions = {
     showCategory: !isCasefile && onCollectionScreen,

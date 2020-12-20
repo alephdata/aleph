@@ -19,8 +19,8 @@ log = logging.getLogger(__name__)
 
 
 class Serializer(object):
-    def __init__(self, reference=False):
-        self.reference = reference
+    def __init__(self, nested=False):
+        self.nested = nested
 
     def _collect(self, obj):
         pass
@@ -39,15 +39,15 @@ class Serializer(object):
         return clean_object(obj)
 
     def queue(self, clazz, key, schema=None):
-        if not self.reference:
+        if not self.nested:
             resolver.queue(request, clazz, key, schema=schema)
 
     def resolve(self, clazz, key, serializer=None):
-        if self.reference:
+        if self.nested:
             return
         data = resolver.get(request, clazz, key)
         if data is not None and serializer is not None:
-            serializer = serializer(reference=True)
+            serializer = serializer(nested=True)
             data = serializer.serialize(data)
         return data
 
@@ -140,7 +140,6 @@ class CollectionSerializer(Serializer):
         authz = request.authz if obj.get("secret") else None
         obj["links"] = {
             "self": url_for("collections_api.view", collection_id=pk),
-            "xref": url_for("xref_api.index", collection_id=pk),
             "xref_export": url_for("xref_api.export", collection_id=pk, _authz=authz),
             "reconcile": url_for("reconcile_api.reconcile", collection_id=pk),
             "ui": collection_url(pk),
@@ -185,10 +184,6 @@ class EntitySerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get("id")
-        collection_id = obj.pop("collection_id", None)
-        obj["collection"] = self.resolve(
-            Collection, collection_id, CollectionSerializer
-        )
         proxy = model.get_proxy(obj)
         properties = obj.get("properties", {})
         for prop in proxy.iterprops():
@@ -224,6 +219,9 @@ class EntitySerializer(Serializer):
                 name = entity_filename(proxy, extension="csv")
                 links["csv"] = archive_url(csv_hash, file_name=name, mime_type=CSV)
 
+        collection = obj.get("collection") or {}
+        coll_id = obj.pop("collection_id", collection.get("id"))
+        obj["collection"] = self.resolve(Collection, coll_id, CollectionSerializer)
         obj["links"] = links
         obj["latinized"] = transliterate_values(proxy)
         obj["writeable"] = check_write_entity(obj, request.authz)
@@ -236,17 +234,14 @@ class XrefSerializer(Serializer):
         matchable = tuple([s.matchable for s in model])
         self.queue(Entity, obj.get("entity_id"), matchable)
         self.queue(Entity, obj.get("match_id"), matchable)
+        self.queue(Collection, obj.get("collection_id"))
         self.queue(Collection, obj.get("match_collection_id"))
 
     def _serialize(self, obj):
-        entity_id = obj.pop("entity_id", None)
-        obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
-        match_id = obj.pop("match_id", None)
-        obj["match"] = self.resolve(Entity, match_id, EntitySerializer)
-        match_collection_id = obj.pop("match_collection_id", None)
-        obj["match_collection"] = self.resolve(
-            Collection, match_collection_id, CollectionSerializer
-        )
+        entity = self.resolve(Entity, obj.pop("entity_id", None))
+        obj["entity"] = EntitySerializer().shallow(entity)
+        match = self.resolve(Entity, obj.pop("match_id", None))
+        obj["match"] = EntitySerializer().shallow(match)
         collection_id = obj.get("collection_id")
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
         if obj["entity"] and obj["match"]:
@@ -260,9 +255,6 @@ class SimilarSerializer(Serializer):
 
     def _serialize(self, obj):
         entity = obj.get("entity", {})
-        entity["collection"] = self.resolve(
-            Collection, entity.get("collection_id"), CollectionSerializer
-        )
         obj["entity"] = EntitySerializer().shallow(entity)
         collection_id = obj.get("collection_id")
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
@@ -301,13 +293,11 @@ class EntitySetItemSerializer(Serializer):
         self.queue(Entity, obj.get("entity_id"))
 
     def _serialize(self, obj):
-        collection_id = obj.pop("collection_id", None)
+        coll_id = obj.pop("collection_id", None)
         entity_id = obj.pop("entity_id", None)
         obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
-        obj["collection"] = self.resolve(
-            Collection, collection_id, CollectionSerializer
-        )
-        obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
+        obj["collection"] = self.resolve(Collection, coll_id, CollectionSerializer)
+        obj["writeable"] = request.authz.can(coll_id, request.authz.WRITE)
         return obj
 
 

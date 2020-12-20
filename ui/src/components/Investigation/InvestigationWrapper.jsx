@@ -22,9 +22,7 @@ export class InvestigationWrapper extends Component {
       <CollectionWrapper collection={collection} forceCasefile>
         <DualPane className="InvestigationWrapper">
           {showSidebar && (
-            <InvestigationSidebar
-              collection={collection}
-            />
+            <InvestigationSidebar collection={collection} />
           )}
           <DualPane.ContentPane className="InvestigationWrapper__body">
             <div className="InvestigationWrapper__body-content">
