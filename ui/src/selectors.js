@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { isEntityRtl } from '@alephdata/react-ftm';
+import { Model } from '@alephdata/followthemoney';
 
 import { loadState } from 'reducers/util';
 import { entityReferencesQuery, profileReferencesQuery } from 'queries';
@@ -64,7 +65,7 @@ export function selectMetadata(state) {
   const metadata = selectObject(state, state, 'metadata');
   if (!metadata.isPending) {
     const locale = selectLocale(state);
-    const localeMismatch = metadata.app && metadata.app.locale !== locale;
+    const localeMismatch = metadata?.app?.locale !== locale;
     metadata.shouldLoad = metadata.shouldLoad || localeMismatch;
     metadata.shouldLoad = metadata.shouldLoad || metadata.isError;
   }
@@ -80,7 +81,11 @@ export function selectPage(state, name) {
 }
 
 export function selectModel(state) {
-  return selectMetadata(state).model;
+  const metadata = selectMetadata(state);
+  if (metadata.model && !metadata.ftmModel) {
+    metadata.ftmModel = new Model(metadata.model)
+  }
+  return metadata.ftmModel;
 }
 
 export function selectSchema(state, schemaName) {

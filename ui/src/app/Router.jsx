@@ -3,7 +3,7 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
-import { fetchMetadata as fetchMetadataAction } from 'actions';
+import { fetchMetadata } from 'actions';
 import { selectSession, selectMetadata } from 'selectors';
 import NotFoundScreen from 'screens/NotFoundScreen/NotFoundScreen';
 
@@ -42,9 +42,9 @@ class Router extends Component {
   }
 
   fetchIfNeeded() {
-    const { metadata, fetchMetadata } = this.props;
+    const { metadata } = this.props;
     if (metadata.shouldLoad) {
-      fetchMetadata();
+      this.props.fetchMetadata();
     }
   }
 
@@ -108,4 +108,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { fetchMetadata: fetchMetadataAction })(Router);
+export default connect(mapStateToProps, { fetchMetadata })(Router);
