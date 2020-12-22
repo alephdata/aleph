@@ -14,11 +14,11 @@ import getCollectionLink from 'util/getCollectionLink';
 
 
 const messages = defineMessages({
-  placeholder: {
+  dataset: {
     id: 'collection.search.placeholder',
     defaultMessage: 'Search this dataset',
   },
-  placeholder_casefile: {
+  casefile: {
     id: 'collection.search.placeholder',
     defaultMessage: 'Search this investigation',
   },
@@ -60,13 +60,14 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      breadcrumbOptions = {}, children, collection, query, intl, isCasefile
+      showCategory, children, collection, query, intl, isCasefile
     } = this.props;
+    const message = intl.formatMessage(messages[isCasefile ? 'casefile' : 'dataset']);
 
     const search = (
       <SearchBox
         onSearch={this.onSearch}
-        placeholder={intl.formatMessage(messages[isCasefile ? 'placeholder_casefile' : 'placeholder'])}
+        placeholder={message}
         query={query}
         inputProps={{ disabled: !collection?.id }}
       />
@@ -75,7 +76,7 @@ export class CollectionWrapper extends Component {
     const operation = <CollectionManageMenu collection={collection} />;
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} type={isCasefile ? 'casefile' : 'dataset'}>
-        <Breadcrumbs.Collection key="collection" collection={collection} {...breadcrumbOptions} />
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory={showCategory} />
       </Breadcrumbs>
     );
 
@@ -103,16 +104,11 @@ const mapStateToProps = (state, ownProps) => {
   // only pull from query location when in collection search mode
   const qLocation = onCollectionScreen && activeMode === collectionViewIds.SEARCH && location;
   const query = collectionEntitiesQuery(qLocation, collection?.id);
-
-  const breadcrumbOptions = {
-    showCategory: !isCasefile && onCollectionScreen,
-    showLink: !onCollectionScreen || activeMode === collectionViewIds.SEARCH,
-    showStatus: !onCollectionScreen || !!activeMode
-  }
+  const showCategory = !isCasefile && onCollectionScreen;
 
   return {
     isCasefile,
-    breadcrumbOptions,
+    showCategory,
     query,
   };
 };
