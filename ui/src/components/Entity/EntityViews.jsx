@@ -9,7 +9,7 @@ import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
 import {
-  entityReferenceQuery, entitySimilarQuery, queryFolderDocuments
+  entityReferenceQuery, entitySimilarQuery, folderDocumentsQuery
 } from 'queries';
 import {
   selectEntitiesResult, selectEntityReferences, selectEntityTags, selectEntityReference, selectSimilarResult
@@ -195,7 +195,7 @@ class EntityViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, location, activeMode } = ownProps;
-  const childrenQuery = queryFolderDocuments(location, entity.id, undefined);
+  const childrenQuery = folderDocumentsQuery(location, entity.id, undefined);
   const reference = selectEntityReference(state, entity.id, activeMode);
   return {
     reference,

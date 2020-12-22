@@ -7,7 +7,7 @@ import { Count, Skeleton, AppItem } from 'components/common';
 import c from 'classnames';
 
 import { queryRoles } from 'actions';
-import { queryGroups } from 'queries';
+import { groupsQuery } from 'queries';
 import { selectRolesResult, selectCurrentRole } from 'selectors';
 
 import './Dashboard.scss';
@@ -184,12 +184,11 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const groupsQuery = queryGroups(location);
-
+  const query = groupsQuery(location);
   return {
     role: selectCurrentRole(state),
-    groupsQuery,
-    groupsResult: selectRolesResult(state, groupsQuery),
+    groupsQuery: query,
+    groupsResult: selectRolesResult(state, query),
   };
 };
 

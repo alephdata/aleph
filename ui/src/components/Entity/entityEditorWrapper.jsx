@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
-import { entityExpandQuery, queryEntitySuggest } from 'queries';
+import { entityExpandQuery, entitySuggestQuery } from 'queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
 import {
   createEntity,
@@ -61,7 +61,7 @@ const entityEditorWrapper = (EditorComponent) => {
 
       getEntitySuggestions(queryText, schema) {
         const { collection, location } = this.props;
-        const query = queryEntitySuggest(location, collection, schema, queryText);
+        const query = entitySuggestQuery(location, collection, schema, queryText);
 
         // throttle entities query request
         clearTimeout(this.entitySuggestTimeout);

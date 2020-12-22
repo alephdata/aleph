@@ -7,7 +7,7 @@ import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
 import InvestigationCreateButton from 'components/Toolbar/InvestigationCreateButton';
-import { queryInvestigations } from 'queries';
+import { investigationsQuery } from 'queries';
 
 
 const messages = defineMessages({
@@ -74,7 +74,7 @@ export class InvestigationIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  return { query: queryInvestigations(location) };
+  return { query: investigationsQuery(location) };
 };
 
 export default compose(

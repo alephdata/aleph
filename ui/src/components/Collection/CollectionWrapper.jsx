@@ -9,7 +9,7 @@ import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox } from 'components/common';
-import { queryCollectionEntities } from 'queries';
+import { collectionEntitiesQuery } from 'queries';
 import getCollectionLink from 'util/getCollectionLink';
 
 
@@ -102,7 +102,7 @@ const mapStateToProps = (state, ownProps) => {
   const onCollectionScreen = location.pathname === getCollectionLink(collection);
   // only pull from query location when in collection search mode
   const qLocation = onCollectionScreen && activeMode === collectionViewIds.SEARCH && location;
-  const query = queryCollectionEntities(qLocation, collection?.id);
+  const query = collectionEntitiesQuery(qLocation, collection?.id);
 
   const breadcrumbOptions = {
     showCategory: !isCasefile && onCollectionScreen,

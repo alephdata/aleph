@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import DocumentManager from 'components/Document/DocumentManager';
-import { queryFolderDocuments } from 'queries';
+import { folderDocumentsQuery } from 'queries';
 
 import './FolderViewer.scss';
 
@@ -35,7 +35,7 @@ const mapStateToProps = (state, ownProps) => {
   // note: this is not currently conducting a search for queryText
   // because the semantics of doing so are confusing.
   return {
-    query: queryFolderDocuments(location, document.id),
+    query: folderDocumentsQuery(location, document.id),
   };
 };
 

@@ -7,7 +7,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { Count, Schema, SectionLoading, Skeleton } from 'components/common';
+import { Count, Schema, Skeleton } from 'components/common';
 import { selectModel } from 'selectors';
 
 

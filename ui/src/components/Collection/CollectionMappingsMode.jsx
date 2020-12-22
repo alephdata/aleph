@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
-import { queryCollectionMappings } from 'queries';
+import { collectionMappingsQuery } from 'queries';
 import getEntityLink from 'util/getEntityLink';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import { DialogToggleButton } from 'components/Toolbar';
@@ -85,7 +85,7 @@ class CollectionMappingsMode extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   return {
-    query: queryCollectionMappings(location, collection.id),
+    query: collectionMappingsQuery(location, collection.id),
   };
 };
 

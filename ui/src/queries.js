@@ -1,11 +1,11 @@
 import Query from 'app/Query';
 
 
-export function queryGroups(location) {
+export function groupsQuery(location) {
   return Query.fromLocation('groups', location, {}, 'groups');
 }
 
-export function queryCollectionDocuments(location, collectionId) {
+export function collectionDocumentsQuery(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
     'filter:schemata': 'Document',
@@ -15,7 +15,7 @@ export function queryCollectionDocuments(location, collectionId) {
   return Query.fromLocation(path, location, context, 'document');
 }
 
-export function queryCollectionEntities(location, collectionId, schema) {
+export function collectionEntitiesQuery(location, collectionId, schema) {
   const context = {
     'filter:collection_id': collectionId,
   };
@@ -57,14 +57,14 @@ export function entitySetItemsQuery(location, entitySetId, limit = 9999) {
   return Query.fromLocation(path, location, {}, 'items').limit(limit);
 }
 
-export function queryInvestigations(location) {
+export function investigationsQuery(location) {
   const context = { 'filter:category': 'casefile' };
   return Query.fromLocation('collections', location, context, 'collections')
     .defaultSortBy('created_at', 'desc')
     .limit(30);
 }
 
-export function queryDatasets(location) {
+export function datasetsQuery(location) {
   const context = { 'exclude:category': 'casefile' };
   return Query.fromLocation('collections', location, context, 'collections')
     .defaultFacet('countries')
@@ -74,13 +74,13 @@ export function queryDatasets(location) {
 }
 
 
-export function queryCollectionEntitySets(location, collectionId) {
+export function collectionEntitySetsQuery(location, collectionId) {
   const context = { 'filter:collection_id': collectionId };
   const path = collectionId ? `entitysets` : undefined;
   return Query.fromLocation(path, location, context, 'entitySets');
 }
 
-export function queryCollectionMappings(location, collectionId) {
+export function collectionMappingsQuery(location, collectionId) {
   const path = collectionId ? `collections/${collectionId}/mappings` : undefined;
   return Query.fromLocation(path, location, {}, 'mappings');
 }
@@ -96,7 +96,7 @@ export function collectionXrefFacetsQuery(location, collectionId) {
   return query;
 }
 
-export function queryFolderDocuments(location, documentId, queryText) {
+export function folderDocumentsQuery(location, documentId, queryText) {
   // when a query is defined, we switch to recursive folder search - otherwise
   // a flat listing of the immediate children of this directory is shown.
   const path = documentId ? 'entities' : undefined;
@@ -123,7 +123,7 @@ export function profileSimilarQuery(location, profileId) {
     .defaultFacet('collection_id', true);
 }
 
-export function queryEntitySuggest(location, collection, schemaName, queryText) {
+export function entitySuggestQuery(location, collection, schemaName, queryText) {
   const context = {
     'filter:schemata': schemaName,
     'filter:collection_id': collection?.id,

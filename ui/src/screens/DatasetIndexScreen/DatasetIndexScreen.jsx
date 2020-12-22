@@ -8,7 +8,7 @@ import { DualPane, SignInCallout } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
 import Screen from 'components/Screen/Screen';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
-import { queryDatasets } from 'queries';
+import { datasetsQuery } from 'queries';
 
 import './DatasetIndexScreen.scss';
 
@@ -86,7 +86,7 @@ export class DatasetIndexScreen extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = queryDatasets(location);
+  const query = datasetsQuery(location);
   return {
     query,
     result: selectCollectionsResult(state, query),

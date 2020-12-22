@@ -7,7 +7,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { Entity, Schema } from 'components/common';
-import { queryEntitySuggest } from 'queries';
+import { entitySuggestQuery } from 'queries';
 import { queryEntities } from 'actions';
 import getCollectionLink from 'util/getCollectionLink';
 
@@ -45,7 +45,7 @@ class DocumentSelectDialog extends Component {
 
   onQueryChange(queryText) {
     const { collection, location } = this.props;
-    const query = queryEntitySuggest(location, collection, "Table", queryText);
+    const query = entitySuggestQuery(location, collection, "Table", queryText);
     this.props.queryEntities({ query });
 
     this.setState({ query });

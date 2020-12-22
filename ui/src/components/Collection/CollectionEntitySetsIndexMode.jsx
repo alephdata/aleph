@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { queryEntitySets } from 'actions';
-import { queryCollectionEntitySets } from 'queries';
+import { collectionEntitySetsQuery } from 'queries';
 import { selectEntitySetsResult } from 'selectors';
 import { ErrorSection } from 'components/common';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
@@ -39,7 +39,7 @@ export class CollectionEntitySetsIndexMode extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location, type } = ownProps;
-  const query = queryCollectionEntitySets(location, collection.id).setFilter('type', type);
+  const query = collectionEntitySetsQuery(location, collection.id).setFilter('type', type);
   return {
     query,
     result: selectEntitySetsResult(state, query),

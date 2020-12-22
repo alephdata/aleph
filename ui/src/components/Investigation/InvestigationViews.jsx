@@ -15,7 +15,7 @@ import CollectionView from 'components/Collection/CollectionView';
 import CollectionViewIds from 'components/Collection/collectionViewIds';
 import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import { ErrorSection, Schema } from 'components/common';
-import { queryCollectionEntities } from 'queries';
+import { collectionEntitiesQuery } from 'queries';
 import { selectEntitiesResult } from 'selectors';
 
 
@@ -39,7 +39,7 @@ class InvestigationViews extends React.Component {
       />
     )
 
-    switch(activeMode) {
+    switch (activeMode) {
       case 'documents':
         return <CollectionDocumentsMode collection={collection} />;
       case 'entities':
@@ -95,7 +95,7 @@ class InvestigationViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
-  const searchQuery = queryCollectionEntities(location, collection.id);
+  const searchQuery = collectionEntitiesQuery(location, collection.id);
 
   return {
     searchQuery,

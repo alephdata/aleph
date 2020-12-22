@@ -6,7 +6,7 @@ import queryString from 'query-string';
 
 import EntityTable from 'components/EntityTable/EntityTable';
 import { selectModel } from 'selectors';
-import { queryCollectionEntities } from 'queries';
+import { collectionEntitiesQuery } from 'queries';
 
 class CollectionEntitiesMode extends React.PureComponent {
   render() {
@@ -62,7 +62,7 @@ const mapStateToProps = (state, ownProps) => {
     activeSchema: activeType ? model.getSchema(activeType) : null,
     schemaViews,
     selectableSchemata,
-    querySchemaEntities: (schema) => queryCollectionEntities(location, collection.id, schema.name),
+    querySchemaEntities: (schema) => collectionEntitiesQuery(location, collection.id, schema.name),
   };
 };
 

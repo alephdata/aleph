@@ -67,7 +67,7 @@ export class ListScreen extends Component {
   }
 
   render() {
-    const { activeSchema, countsResult, list, querySchemaEntities } = this.props;
+    const { activeSchema, list, querySchemaEntities } = this.props;
 
     if (list.isError) {
       return <ErrorScreen error={list.error} />;
