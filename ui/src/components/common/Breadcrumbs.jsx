@@ -122,11 +122,13 @@ export default class Breadcrumbs extends Component {
 
   renderOperations() {
     const { operation, search, status } = this.props;
-    const items = [status, search, operation];
-
     return (
       <ControlGroup>
-        {items.map((item, i) => item && <React.Fragment key={i}>{item}<Divider /></React.Fragment>)}
+        {status}
+        {(status && search) && <Divider />}
+        {search}
+        {(search && operation) && <Divider />}
+        {operation}
       </ControlGroup>
     );
   }
