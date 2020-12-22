@@ -26,6 +26,7 @@ class QueryParser(object):
         if limit is None:
             limit = min(max_limit, max(0, self.getint("limit", 20)))
         self.limit = limit
+        self.next_limit = self.getint("next_limit", limit)
         self.text = sanitize_text(self.get("q"))
         self.prefix = sanitize_text(self.get("prefix"))
 

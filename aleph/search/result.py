@@ -21,14 +21,14 @@ class QueryResult(object):
 
     @property
     def pages(self):
-        if self.parser.limit == 0:
+        if self.parser.next_limit == 0:
             return 1
-        return int(math.ceil(self.total / float(self.parser.limit)))
+        return int(math.ceil(self.total / float(self.parser.next_limit)))
 
     def page_url(self, page):
         if page < 1 or page > self.pages:
             return None
-        offset = (page - 1) * self.parser.limit
+        offset = (page - 1) * self.parser.next_limit
         args = [("offset", str(offset))]
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
@@ -44,7 +44,7 @@ class QueryResult(object):
             "total": self.total,
             "total_type": self.total_type,
             "page": self.parser.page,
-            "limit": self.parser.limit,
+            "limit": self.parser.next_limit,
             "offset": self.parser.offset,
             "pages": self.pages,
             "next": self.page_url(self.parser.page + 1),

@@ -12,6 +12,10 @@ table {
     text-overflow: ellipsis;
     overflow: hidden;
 
+    span {
+      display: inline-block !important;
+    }
+
     &.expand {
       width: 2em;
       max-width: 2em;

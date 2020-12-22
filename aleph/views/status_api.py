@@ -36,7 +36,7 @@ def status():
     collections = (c for c in collections if c is not None)
     collections = Collection.all_by_ids(collections, deleted=True).all()
     collections = {c.id: c for c in collections}
-    serializer = CollectionSerializer(reference=True)
+    serializer = CollectionSerializer(nested=True)
     results = []
     for dataset, status in sorted(datasets.items()):
         collection_id = get_dataset_collection_id(dataset)
