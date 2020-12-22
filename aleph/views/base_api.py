@@ -239,6 +239,7 @@ def handle_invalid_data(err):
 @blueprint.app_errorhandler(DecodeError)
 @blueprint.app_errorhandler(ExpiredSignatureError)
 def handle_jwt_expired(err):
+    log.info("JWT Error: %s", err)
     data = {"status": "error", "errors": gettext("Access token is invalid.")}
     return jsonify(data, status=401)
 

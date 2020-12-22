@@ -5,6 +5,7 @@ from flask.wrappers import Response
 from flask import Blueprint, redirect, send_file, request
 
 from aleph.core import archive, settings
+from aleph.logic.util import archive_token
 from aleph.views.context import tag_request
 
 log = logging.getLogger(__name__)
@@ -35,11 +36,7 @@ def retrieve():
       - Archive
     """
     token = request.args.get("token")
-    token = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
-    content_hash = token.get("c")
-    file_name = token.get("f")
-    mime_type = token.get("m")
-    expire = datetime.utcfromtimestamp(token["exp"])
+    content_hash, file_name, mime_type, expire = archive_token(token)
     tag_request(content_hash=content_hash, file_name=file_name)
     url = archive.generate_url(
         content_hash,

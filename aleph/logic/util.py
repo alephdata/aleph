@@ -6,6 +6,9 @@ from datetime import datetime, timedelta
 
 from aleph.core import settings, url_for
 
+ALGORITHM = "HS256"
+DECODE = [ALGORITHM]
+
 
 def latin_alt(value):
     """Make a latin version of a string and return if it differs
@@ -43,5 +46,11 @@ def archive_url(content_hash, file_name=None, mime_type=None, expire=None):
     if expire is None:
         expire = datetime.utcnow() + timedelta(days=1)
     payload = {"c": content_hash, "f": file_name, "m": mime_type, "exp": expire}
-    token = jwt.encode(payload, settings.SECRET_KEY)
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
     return url_for("archive_api.retrieve", _query=[("token", token)])
+
+
+def archive_token(token):
+    token = jwt.decode(token, key=settings.SECRET_KEY, algorithms=DECODE, verify=True)
+    expire = datetime.utcfromtimestamp(token["exp"])
+    return token.get("c"), token.get("f"), token.get("m"), expire
