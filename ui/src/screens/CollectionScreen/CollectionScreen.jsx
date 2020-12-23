@@ -23,11 +23,8 @@ export class CollectionScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
-    if (!collection.isPending) {
-      const isCasefile = collection.casefile;
-      if (isCasefile) {
-        return <Redirect to={`/investigations/${collectionId}`} />;
-      }
+    if (collection.casefile === true) {
+      return <Redirect to={`/investigations/${collectionId}`} />;
     }
 
     return (
@@ -42,7 +39,6 @@ export class CollectionScreen extends Component {
               <CollectionViews
                 collection={collection}
                 activeMode={activeMode}
-                isPreview={false}
               />
             </SinglePane>
           </CollectionWrapper>

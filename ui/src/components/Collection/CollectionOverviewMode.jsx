@@ -2,10 +2,10 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
-import { ErrorSection } from 'components/common';
 import CollectionMetadataPanel from 'components/Collection/CollectionMetadataPanel';
 import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
 import InvestigationOverview from 'components/Investigation/InvestigationOverview';
+import { ErrorSection } from 'components/common';
 
 import './CollectionOverviewMode.scss';
 
@@ -16,7 +16,7 @@ const messages = defineMessages({
   },
 });
 
-const CollectionOverviewMode = ({ children, collection, intl, isCasefile }) => {
+const CollectionOverviewMode = ({ collection, intl, isCasefile }) => {
   const emptyComponent = (
     <ErrorSection
       icon="database"

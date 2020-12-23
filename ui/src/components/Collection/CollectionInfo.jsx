@@ -21,13 +21,13 @@ class CollectionInfo extends PureComponent {
               <FormattedMessage id="collection.publisher" defaultMessage="Publisher" />
             </div>
             <div className="value">
-              { !collection.publisher && (
+              {!collection.publisher && (
                 <URL value={collection.publisher_url} />
               )}
-              { !collection.publisher_url && (
+              {!collection.publisher_url && (
                 <span>{collection.publisher}</span>
               )}
-              { (collection.publisher && collection.publisher_url) && (
+              {(collection.publisher && collection.publisher_url) && (
                 <a href={collection.publisher_url} target="_blank" rel="noopener noreferrer">
                   {collection.publisher}
                 </a>

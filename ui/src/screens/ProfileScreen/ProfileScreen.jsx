@@ -124,10 +124,10 @@ class ProfileScreen extends Component {
           <DualPane>
             <DualPane.SidePane className="ItemOverview">
               <div className="ItemOverview__heading profile">
-                <EntityHeading entity={profile.entity} isPreview={false} isProfile={true} />
+                <EntityHeading entity={profile.entity} isProfile={true} />
               </div>
               <div className="ItemOverview__content">
-                <EntityInfoMode entity={profile.entity} isPreview={false} />
+                <EntityInfoMode entity={profile.entity} />
               </div>
             </DualPane.SidePane>
             <DualPane.ContentPane>

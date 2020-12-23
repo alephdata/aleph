@@ -104,7 +104,7 @@ class EntityReferencesMode extends React.Component {
       <tr key={`${entity.id}-expanded`}>
         <td />
         <td colSpan={colSpan}>
-          <EntityProperties entity={entity} />
+          <EntityProperties entity={entity} showCollection={false} />
         </td>
       </tr>,
     ];

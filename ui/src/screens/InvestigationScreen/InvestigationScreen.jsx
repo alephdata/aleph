@@ -19,11 +19,8 @@ export class InvestigationScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
-    if (!collection.isPending) {
-      const isCasefile = collection.casefile;
-      if (!isCasefile) {
-        return <Redirect to={`/datasets/${collection.id}`} />;
-      }
+    if (collection.casefile === false) {
+      return <Redirect to={`/datasets/${collection.id}`} />;
     }
 
     return (
@@ -37,7 +34,6 @@ export class InvestigationScreen extends Component {
               collection={collection}
               activeMode={activeMode}
               activeType={activeType}
-              isPreview={false}
             />
           </InvestigationWrapper>
         </Screen>

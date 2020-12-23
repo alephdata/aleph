@@ -1,14 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { Mention, Property } from 'components/common';
+import { Mention, Property, Collection } from 'components/common';
 
-class EntityProperties extends React.Component {
+class EntityProperties extends React.PureComponent {
   render() {
     /* OK, so the idea here is to ALWAYS show featured properties
     because they are so important, that them not being set is a
     piece of information in itself. */
-    const { entity, children } = this.props;
+    const { entity, showCollection = true } = this.props;
     const featured = entity.schema.getFeaturedProperties();
     const existing = entity.getProperties().filter(prop => !prop.hidden);
     const sorted = _.sortBy(existing, p => p.label).filter(p => featured.indexOf(p) === -1);
@@ -31,7 +31,29 @@ class EntityProperties extends React.Component {
             </span>
           </li>
         ))}
-        {children}
+        {(showCollection && entity?.collection?.id) && (
+          <li>
+            <span className="key">
+              <span>
+                {entity.collection.casefile && (
+                  <FormattedMessage
+                    id="infoMode.collection_casefile"
+                    defaultMessage="Investigation"
+                  />
+                )}
+                {!entity.collection.casefile && (
+                  <FormattedMessage
+                    id="infoMode.collection"
+                    defaultMessage="Dataset"
+                  />
+                )}
+              </span>
+            </span>
+            <span className="value">
+              <Collection.Link collection={entity.collection} icon />
+            </span>
+          </li>
+        )}
       </ul>
     );
   }
