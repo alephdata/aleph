@@ -13,7 +13,6 @@ import collectionStatus from './collectionStatus';
 import entityMappings from './entityMappings';
 import collectionPermissions from './collectionPermissions';
 import results from './results';
-import alerts from './alerts';
 import entitySets from './entitySets';
 import entitySetItems from './entitySetItems';
 import roles from './roles';
@@ -31,7 +30,6 @@ const rootReducer = combineReducers({
   entities,
   entityTags,
   values,
-  alerts,
   roles,
   notifications,
   collections,

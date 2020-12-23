@@ -5,6 +5,8 @@ AlertCreate:
     query:
       type: string
       example: putin
+      minLength: 3
+      maxLength: 100
       description: Query string for the alert
 
 Alert:

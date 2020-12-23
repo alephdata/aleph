@@ -1,4 +1,5 @@
 @import "app/variables.scss";
+@import "app/mixins.scss";
 
 .AlertsManager {
   .bp3-callout {
@@ -9,5 +10,27 @@
     margin-bottom: $aleph-grid-size*3;
     width: 100%;
     max-width: 700px;
+  }
+
+
+  td {
+    padding: $aleph-grid-size;
+    vertical-align: middle !important;
+  }
+
+  &__button.narrow {
+    padding: 13px 5px;
+  }
+
+  &__text {
+    @include rtl(text-align, left, right);
+    &.text-date {
+      color: $gray3;
+      @include rtl(text-align, right, left);
+    }
+
+    span {
+      padding: 0 3px;
+    }
   }
 }

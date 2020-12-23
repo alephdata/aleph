@@ -120,8 +120,8 @@ export function selectAdmin(state) {
   return role.is_admin || false;
 }
 
-export function selectAlerts(state) {
-  return selectObject(state, state, 'alerts');
+export function selectAlertResult(state, query) {
+  return selectResult(state, query);
 }
 
 export function selectStatistics(state) {

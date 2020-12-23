@@ -5,6 +5,10 @@ export function groupsQuery(location) {
   return Query.fromLocation('groups', location, {}, 'groups');
 }
 
+export function alertsQuery(location) {
+  return Query.fromLocation('alerts', location, {}, 'alerts').limit(9999);
+}
+
 export function collectionDocumentsQuery(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,

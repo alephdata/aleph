@@ -20,7 +20,7 @@ import {
   deleteEntitySet,
   updateRole,
   deleteAlert,
-  addAlert,
+  createAlert,
   loginWithToken,
   logout,
 } from 'actions';
@@ -52,6 +52,6 @@ export default createReducer({
   [deleteEntitySet.COMPLETE]: update,
   [ingestDocument.COMPLETE]: update,
   [updateRole.COMPLETE]: update,
-  [addAlert.COMPLETE]: update,
+  [createAlert.COMPLETE]: update,
   [deleteAlert.COMPLETE]: update,
 }, initialState);

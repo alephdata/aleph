@@ -18,7 +18,7 @@ const errorActionTypes = [
   actions.updateCollection.ERROR,
   actions.updateCollectionPermissions.ERROR,
   actions.deleteAlert.ERROR,
-  actions.addAlert.ERROR,
+  actions.createAlert.ERROR,
   actions.updateRole.ERROR,
 ];
 

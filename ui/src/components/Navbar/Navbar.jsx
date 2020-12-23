@@ -53,10 +53,11 @@ export class Navbar extends React.Component {
   }
 
   render() {
-    const { metadata, pages, session, query, isHomepage, intl } = this.props;
+    const { metadata, pages, session, query, result, isHomepage, intl } = this.props;
     const { mobileSearchOpen } = this.state;
 
     const queryText = query?.getString('q');
+    const alertQuery = result?.query_text || queryText;
     const menuPages = pages.filter((page) => page.menu);
 
     return (
@@ -76,7 +77,7 @@ export class Navbar extends React.Component {
                     onSearch={this.onSearchSubmit}
                     query={query}
                     inputProps={{
-                      rightElement: <SearchAlert alertQuery={queryText} />
+                      rightElement: <SearchAlert alertQuery={alertQuery} />
                     }}
                     placeholder={intl.formatMessage(messages.placeholder)}
                   />

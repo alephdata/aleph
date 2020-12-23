@@ -29,7 +29,6 @@ import Score from './Score';
 import Tag from './Tag';
 import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
-import SearchListings from './SearchListings';
 import Skeleton from './Skeleton';
 import SortingBar from './SortingBar';
 import Statistics from './Statistics';
@@ -78,7 +77,6 @@ export {
   Tag,
   SchemaCounts,
   SearchBox,
-  SearchListings,
   Skeleton,
   SortingBar,
   QueryText,

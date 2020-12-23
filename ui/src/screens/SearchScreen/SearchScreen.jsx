@@ -40,6 +40,7 @@ export class SearchScreen extends React.Component {
     return (
       <Screen
         query={query}
+        result={result}
         title={title}
       >
         <FacetedEntitySearch

@@ -51,6 +51,7 @@ const messages = defineMessages({
     defaultMessage: 'System status',
   },
 });
+
 export class AuthButtons extends Component {
   componentDidMount() {
     this.fetchIfNeeded();

@@ -41,7 +41,7 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      session, metadata, query, requireSession,
+      session, metadata, query, result, requireSession,
       isHomepage, title, description, className,
     } = this.props;
     const { advancedSearchOpen } = this.state;
@@ -54,13 +54,13 @@ export class Screen extends React.Component {
     return (
       <div className={c('Screen', className)}>
         <Helmet titleTemplate={titleTemplate} defaultTitle={defaultTitle}>
-          { !!title && (
+          {!!title && (
             <title>{title}</title>
           )}
-          { !!description && (
+          {!!description && (
             <meta name="description" content={description} />
           )}
-          { !!metadata.app.favicon && (
+          {!!metadata.app.favicon && (
             <link rel="shortcut icon" href={metadata.app.favicon} />
           )}
         </Helmet>
@@ -69,6 +69,7 @@ export class Screen extends React.Component {
           metadata={metadata}
           session={session}
           query={query}
+          result={result}
           isHomepage={isHomepage}
           onToggleAdvancedSearch={this.onToggleAdvancedSearch}
         />
