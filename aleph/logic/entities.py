@@ -20,22 +20,20 @@ from aleph.logic.aggregator import get_aggregator
 log = logging.getLogger(__name__)
 
 
-def upsert_entity(data, collection, authz=None, sync=False, job_id=None):
+def upsert_entity(data, collection, authz=None, sync=False, sign=False, job_id=None):
     """Create or update an entity in the database. This has a side hustle
     of migrating entities created via the _bulk API or a mapper to a
     database entity in the event that it gets edited by the user.
     """
-    from aleph.logic.profiles import profile_fragments
-
     entity = None
     entity_id = collection.ns.sign(data.get("id"))
     if entity_id is not None:
         entity = Entity.by_id(entity_id, collection=collection)
     if entity is None:
         role_id = authz.id if authz is not None else None
-        entity = Entity.create(data, collection, role_id=role_id)
+        entity = Entity.create(data, collection, sign=sign, role_id=role_id)
     else:
-        entity.update(data, collection)
+        entity.update(data, collection, sign=sign)
 
     proxy = entity.to_proxy()
     aggregator = get_aggregator(collection)
