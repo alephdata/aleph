@@ -141,7 +141,17 @@ export function selectEntitySets(state) {
 }
 
 export function selectCollection(state, collectionId) {
-  return selectObject(state, state.collections, collectionId);
+  const collection = selectObject(state, state.collections, collectionId);
+  const status = collection.status || {};
+  status.pending = status.pending || 0;
+  status.running = status.running || 0;
+  status.finished = status.finished || 0;
+  status.active = status.pending + status.running;
+  status.total = status.active + status.finished;
+  status.progress = status.finished / status.total;
+  status.percent = Math.round(status.progress * 100);
+  collection.status = status;
+  return collection;
 }
 
 export function selectEntity(state, entityId) {
@@ -331,18 +341,6 @@ export function selectEntityView(state, entityId, mode, isPreview) {
 
 export function selectProfileView(state, profileId, mode) {
   return mode ? mode : 'items';
-}
-
-export function selectCollectionStatus(state, collectionId) {
-  const status = selectObject(state, state.collectionStatus, collectionId);
-  status.pending = status.pending || 0;
-  status.running = status.running || 0;
-  status.finished = status.finished || 0;
-  status.active = status.pending + status.running;
-  status.total = status.active + status.finished;
-  status.progress = status.finished / status.total;
-  status.percent = Math.round(status.progress * 100);
-  return status;
 }
 
 export function selectCollectionPermissions(state, collectionId) {

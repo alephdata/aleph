@@ -41,28 +41,22 @@ class SchemaCounts extends React.PureComponent {
   }
 
   render() {
-    const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, isPending, onSelect } = this.props;
+    const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, onSelect } = this.props;
 
     return (
       <ButtonGroup vertical minimal className="SchemaCounts">
-        {Object.keys(visibleCounts).map(schema => {
-          const text = isPending
-            ? <Skeleton.Text type="span" length={15} />
-            : <Schema.Label schema={schema} plural />;
-
-          return (
-            <Button
-              key={schema}
-              text={text}
-              icon={<Schema.Icon schema={schema} />}
-              rightIcon={<Count count={visibleCounts[schema]} isPending={isPending} />}
-              onClick={() => onSelect(schema)}
-              active={activeSchema === schema}
-              alignText={Alignment.LEFT}
-              fill
-            />
-          )
-        })}
+        {Object.keys(visibleCounts).map(schema => (
+          <Button
+            key={schema}
+            text={<Schema.Label schema={schema} plural />}
+            icon={<Schema.Icon schema={schema} />}
+            rightIcon={<Count count={visibleCounts[schema]} />}
+            onClick={() => onSelect(schema)}
+            active={activeSchema === schema}
+            alignText={Alignment.LEFT}
+            fill
+          />
+        ))}
         {_.size(visibleCounts) > 0 && showSchemaAdd && <Divider />}
         {showSchemaAdd && (
           <Schema.Select

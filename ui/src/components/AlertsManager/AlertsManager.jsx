@@ -100,9 +100,9 @@ class AlertsDialog extends Component {
           <Icon className="bp3-intent-primary" icon="feed-subscribed" />
         </td>
         <td className="AlertsManager__text text-main">
-          <a onClick={(e) => this.onSearch(item, e)}>
+          <Button minimal onClick={(e) => this.onSearch(item, e)}>
             <QueryText query={item.query} />
-          </a>
+          </Button>
         </td>
         <td className="AlertsManager__text text-date">
           <Date value={item.updated_at} showTime />

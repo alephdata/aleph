@@ -4,24 +4,27 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { collectionXrefFacetsQuery } from 'queries';
 import { fetchCollection, queryCollectionXref, forceMutate } from 'actions';
-import { selectCollection, selectCollectionStatus, selectCollectionXrefResult } from 'selectors';
+import { selectCollection, selectCollectionXrefResult } from 'selectors';
+import timestamp from 'util/timestamp';
 
 
 class CollectionContextLoader extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = { timeout: null };
+    this.fetchRefresh = this.fetchRefresh.bind(this);
+  }
+
   componentDidMount() {
+    this.fetchRefresh();
+  }
+
+  componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
-    const { status } = this.props;
-    const prevStatus = prevProps.status;
-    const wasUpdating = prevStatus.pending > 0 || prevStatus.running > 0;
-    const isUpdating = status.pending > 0 || status.running > 0;
-
-    if (wasUpdating && !isUpdating) {
-      this.props.forceMutate();
-    }
-    this.fetchIfNeeded();
+  componentWillUnmount() {
+    clearTimeout(this.state.timeout);
   }
 
   fetchIfNeeded() {
@@ -36,6 +39,20 @@ class CollectionContextLoader extends PureComponent {
     if (xrefResult.shouldLoad) {
       this.props.queryCollectionXref({ query: xrefQuery });
     }
+  }
+
+  fetchRefresh() {
+    const { collection } = this.props;
+    const { status } = collection;
+    clearTimeout(this.state.timeout);
+    const staleDuration = status.active ? 3000 : 30000;
+    const age = timestamp() - collection.loadedAt;
+    const shouldRefresh = (age > staleDuration) && !collection.isPending;
+    if (shouldRefresh) {
+      this.props.forceMutate();
+    }
+    const timeout = setTimeout(this.fetchRefresh, 1000);
+    this.setState({ timeout });
   }
 
   render() {
@@ -53,7 +70,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     collectionId,
     collection: selectCollection(state, collectionId),
-    status: selectCollectionStatus(state, collectionId),
     xrefQuery,
     xrefResult: selectCollectionXrefResult(state, xrefQuery),
   };

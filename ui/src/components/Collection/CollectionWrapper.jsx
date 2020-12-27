@@ -27,16 +27,13 @@ const messages = defineMessages({
 export class CollectionWrapper extends Component {
   constructor(props) {
     super(props);
-
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
   onSearch(queryText) {
     const { collection, history, query } = this.props;
-
     const newQuery = query.set('q', queryText);
-
     history.push({
       pathname: getCollectionLink(collection),
       hash: queryString.stringify({ mode: 'search' }),
@@ -47,10 +44,8 @@ export class CollectionWrapper extends Component {
   onUploadSuccess() {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
-
     parsedHash.mode = collectionViewIds.DOCUMENTS;
     delete parsedHash.type;
-
     history.push({
       pathname: location.pathname,
       search: location.search,

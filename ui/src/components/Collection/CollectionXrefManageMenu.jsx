@@ -22,8 +22,8 @@ const messages = defineMessages({
     defaultMessage: 'Re-compute',
   },
   export: {
-    id:'xref.download',
-    defaultMessage:'Export results',
+    id: 'xref.download',
+    defaultMessage: 'Export results',
   }
 });
 
@@ -35,8 +35,8 @@ class CollectionXrefManageMenu extends Component {
     }
 
     /* eslint-disable camelcase */
-    const downloadLink = collection.links?.xref_export;
-    const showDownload = !result.isPending && downloadLink && result.total > 0;
+    const downloadLink = collection?.links?.xref_export;
+    const showDownload = !(result.total === undefined) && downloadLink && result.total > 0;
     const xrefButtonText = result.total > 0
       ? intl.formatMessage(messages.recompute)
       : intl.formatMessage(messages.compute);
@@ -49,7 +49,7 @@ class CollectionXrefManageMenu extends Component {
               text: xrefButtonText,
               icon: "play",
               disabled: !collection.writeable,
-              className: c({ [Classes.SKELETON]: result.isPending })
+              className: c({ [Classes.SKELETON]: result.total === undefined })
             }}
             Dialog={CollectionXrefDialog}
             dialogProps={{ collection }}

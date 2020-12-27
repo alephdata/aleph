@@ -35,11 +35,6 @@ export const fetchCollectionPermissions = asyncActionCreator(id => async () => {
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
-export const fetchCollectionStatus = asyncActionCreator(({ id }) => async () => {
-  const response = await endpoint.get(`collections/${id}/status`);
-  return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION_STATUS' });
-
 export const updateCollectionPermissions = asyncActionCreator((id, permissions) => async () => {
   const config = { params: { sync: true } };
   const response = await endpoint.post(`collections/${id}/permissions`, permissions, config);

@@ -6,8 +6,8 @@ import truncateText from 'truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import { fetchCollection, fetchCollectionStatus, queryCollections } from 'actions';
-import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'selectors';
+import { fetchCollection, queryCollections } from 'actions';
+import { selectCollection, selectCollectionsResult } from 'selectors';
 import { Skeleton, SelectWrapper } from 'components/common';
 import CollectionStatus from 'components/Collection/CollectionStatus';
 import getCollectionLink from 'util/getCollectionLink';
@@ -67,16 +67,9 @@ class CollectionLink extends PureComponent {
 }
 
 class CollectionUpdateStatus extends PureComponent {
-  componentDidMount() {
-    const { collection, status } = this.props;
-    if (status.shouldLoad) {
-      this.props.fetchCollectionStatus(collection);
-    }
-  }
-
   render() {
-    const { collection, status, LabelComponent } = this.props;
-    const updating = !status.shouldLoad && status.active;
+    const { collection, LabelComponent } = this.props;
+    const updating = !!collection?.status?.active;
     const collectionLabel = <LabelComponent updating={updating} {...this.props} />;
 
     if (updating) {
@@ -187,17 +180,12 @@ class CollectionSelect extends Component {
   }
 }
 
-const statusMapStateToProps = (state, ownProps) => ({
-  status: selectCollectionStatus(state, ownProps.collection.id),
-});
-
 const loadMapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
 
 const selectMapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
-
   return {
     query,
     result: selectCollectionsResult(state, query),
@@ -207,8 +195,7 @@ const selectMapStateToProps = (state, ownProps) => {
 class Collection {
   static Label = CollectionLabel;
 
-  static Status =
-    connect(statusMapStateToProps, { fetchCollectionStatus })(CollectionUpdateStatus);
+  static Status = CollectionUpdateStatus;
 
   static Link = withRouter(CollectionLink);
 

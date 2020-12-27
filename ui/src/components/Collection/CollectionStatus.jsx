@@ -5,9 +5,7 @@ import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { Numeric } from 'components/common';
-import { triggerCollectionCancel, fetchCollectionStatus } from 'actions';
-import { selectCollectionStatus } from 'selectors';
-import timestamp from 'util/timestamp';
+import { triggerCollectionCancel } from 'actions';
 
 import './CollectionStatus.scss';
 
@@ -22,35 +20,19 @@ class CollectionStatus extends Component {
   constructor(props) {
     super(props);
     this.onCancel = this.onCancel.bind(this);
-    this.fetchStatus = this.fetchStatus.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchStatus();
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
-  }
-
-  fetchStatus() {
-    const { collection, status } = this.props;
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(this.fetchStatus, 1000);
-    const staleDuration = status.active ? 2000 : 20000;
-    if (timestamp() - status.loadedAt > staleDuration) {
-      this.props.fetchCollectionStatus(collection);
-    }
   }
 
   onCancel() {
     const { collection } = this.props;
-    this.props.triggerCollectionCancel(collection.id);
+    if (collection?.id) {
+      this.props.triggerCollectionCancel(collection.id);
+    }
   }
 
   render() {
-    const { className, collection, intl, showCancel, status } = this.props;
-    if (!collection || !status.active) {
+    const { className, intl, showCancel, collection } = this.props;
+    const { status = {} } = collection;
+    if (!status.active) {
       return null;
     }
     return (
@@ -79,13 +61,8 @@ class CollectionStatus extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { collection } = ownProps;
-  return { status: selectCollectionStatus(state, collection.id) };
-};
+const mapDispatchToProps = { triggerCollectionCancel };
 
-const mapDispatchToProps = { triggerCollectionCancel, fetchCollectionStatus };
-
-CollectionStatus = connect(mapStateToProps, mapDispatchToProps)(CollectionStatus);
+CollectionStatus = connect(null, mapDispatchToProps)(CollectionStatus);
 CollectionStatus = injectIntl(CollectionStatus);
 export default CollectionStatus;

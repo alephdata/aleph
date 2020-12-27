@@ -31,7 +31,7 @@ const messages = defineMessages({
 
 class InvestigationQuickLinks extends React.Component {
   onDocUpload = () => {
-    const { history, location,  } = this.props;
+    const { history, location, } = this.props;
 
     history.push({
       pathname: location.pathname,
@@ -40,7 +40,7 @@ class InvestigationQuickLinks extends React.Component {
   }
 
   onEntityCreate = async (entityData) => {
-    const { entityManager, history, intl, location,  } = this.props;
+    const { entityManager, history, intl, location, } = this.props;
 
     if (!entityData) {
       showErrorToast(intl.formatMessage(messages.entity_create_error));
@@ -79,7 +79,7 @@ class InvestigationQuickLinks extends React.Component {
   render() {
     const { collection, intl, model } = this.props;
 
-    if (collection.isPending) {
+    if (collection.id === undefined) {
       return this.renderSkeleton();
     }
 
