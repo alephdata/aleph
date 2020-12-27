@@ -272,11 +272,10 @@ def bulk(collection_id):
 
     # Let UI tools change the entities created by this:
     mutable = get_flag("mutable", default=False)
-    role_id = request.authz.id
     entities = ensure_list(request.get_json(force=True))
     entity_ids = list()
     for entity_id in bulk_write(
-        collection, entities, safe=safe, mutable=mutable, role_id=role_id
+        collection, entities, safe=safe, mutable=mutable, role_id=request.authz.id
     ):
         entity_ids.append(entity_id)
         if entityset is not None:
