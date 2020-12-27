@@ -255,6 +255,12 @@ def entities_update(entityset_id):
         schema:
           type: string
         example: 3a0d91ece2dce88ad3259594c7b642485235a048
+      - in: query
+        name: sign
+        description: Sign entity IDs referenced in nested properties.
+        required: false
+        schema:
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -283,9 +289,13 @@ def entities_update(entityset_id):
     if entity is None or check_write_entity(entity, request.authz):
         if get_flag("validate", default=False):
             validate_entity(data)
-        sync = get_flag("sync", default=True)
         entity_id = upsert_entity(
-            data, collection, authz=request.authz, sync=sync, job_id=get_session_id()
+            data,
+            collection,
+            authz=request.authz,
+            sync=get_flag("sync", default=True),
+            sign=get_flag("sign", default=False),
+            job_id=get_session_id(),
         )
 
     save_entityset_item(

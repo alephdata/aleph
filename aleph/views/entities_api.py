@@ -229,6 +229,13 @@ def create():
         load bulk data, but only for interactive entity manipulation in the UI.
         Always use the `bulk` API or for loading source datasets, no
         exceptions.
+      parameters:
+      - in: query
+        name: sign
+        description: Sign entity IDs referenced in nested properties.
+        required: false
+        schema:
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -254,6 +261,7 @@ def create():
         collection,
         authz=request.authz,
         sync=True,
+        sign=get_flag("sign", default=False),
         job_id=get_session_id(),
     )
     db.session.commit()
@@ -409,6 +417,12 @@ def update(entity_id):
         schema:
           type: string
           format: entity_id
+      - in: query
+        name: sign
+        description: Sign entity IDs referenced in nested properties.
+        required: false
+        schema:
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -440,6 +454,7 @@ def update(entity_id):
         collection,
         authz=request.authz,
         sync=get_flag("sync", default=True),
+        sign=get_flag("sign", default=False),
         job_id=get_session_id(),
     )
     db.session.commit()

@@ -221,6 +221,10 @@ class EntitySerializer(Serializer):
 
         collection = obj.get("collection") or {}
         coll_id = obj.pop("collection_id", collection.get("id"))
+        # This is a last resort catcher for entities nested in other
+        # entities that get resolved without regard for authz.
+        if not request.authz.can(coll_id, request.authz.READ):
+            return None
         obj["collection"] = self.resolve(Collection, coll_id, CollectionSerializer)
         obj["links"] = links
         obj["latinized"] = transliterate_values(proxy)
@@ -294,6 +298,9 @@ class EntitySetItemSerializer(Serializer):
 
     def _serialize(self, obj):
         coll_id = obj.pop("collection_id", None)
+        # Should never come into effect:
+        if not request.authz.can(coll_id, request.authz.READ):
+            return None
         entity_id = obj.pop("entity_id", None)
         obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
         obj["collection"] = self.resolve(Collection, coll_id, CollectionSerializer)

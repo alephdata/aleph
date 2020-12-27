@@ -38,10 +38,10 @@ class Entity(db.Model, DatedModel):
     def model(self):
         return model.get(self.schema)
 
-    def update(self, data, collection):
+    def update(self, data, collection, sign=True):
         proxy = model.get_proxy(data, cleaned=False)
-        proxy = collection.ns.apply(proxy)
-        self.id = collection.ns.sign(self.id)
+        if sign:
+            proxy = collection.ns.apply(proxy)
         self.schema = proxy.schema.name
         self.updated_at = datetime.utcnow()
         previous = self.to_proxy()
@@ -67,7 +67,7 @@ class Entity(db.Model, DatedModel):
         return model.get_proxy(data, cleaned=False)
 
     @classmethod
-    def create(cls, data, collection, role_id=None):
+    def create(cls, data, collection, sign=True, role_id=None):
         entity = cls()
         entity_id = data.get("id") or make_textid()
         if not registry.entity.validate(entity_id):
@@ -75,7 +75,7 @@ class Entity(db.Model, DatedModel):
         entity.id = collection.ns.sign(entity_id)
         entity.collection_id = collection.id
         entity.role_id = role_id
-        entity.update(data, collection)
+        entity.update(data, collection, sign=sign)
         return entity
 
     @classmethod
