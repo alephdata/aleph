@@ -6,7 +6,7 @@ export function groupsQuery(location) {
 }
 
 export function alertsQuery(location) {
-  return Query.fromLocation('alerts', location, {}, 'alerts').limit(9999);
+  return Query.fromLocation('alerts', location, {}, 'alerts').limit(Query.MAX_LIMIT);
 }
 
 export function collectionDocumentsQuery(location, collectionId) {
@@ -31,9 +31,9 @@ export function collectionEntitiesQuery(location, collectionId, schema) {
 
   const path = collectionId ? 'entities' : undefined;
   if (location) {
-    return Query.fromLocation(path, location, context, 'entities').limit(200);
+    return Query.fromLocation(path, location, context, 'entities');
   } else {
-    return new Query(path, {}, context, 'entities').limit(200);
+    return new Query(path, {}, context, 'entities');
   }
 }
 
@@ -46,7 +46,7 @@ export function entitySetSchemaCountsQuery(entitySetId) {
     .limit(0);
 }
 
-export function entitySetEntitiesQuery(location, entitySetId, schema, limit = 9999) {
+export function entitySetEntitiesQuery(location, entitySetId, schema, limit = Query.MAX_LIMIT) {
   const context = {}
   if (schema) {
     context['filter:schema'] = schema;
@@ -56,7 +56,7 @@ export function entitySetEntitiesQuery(location, entitySetId, schema, limit = 99
     .limit(limit);
 }
 
-export function entitySetItemsQuery(location, entitySetId, limit = 9999) {
+export function entitySetItemsQuery(location, entitySetId, limit = Query.MAX_LIMIT) {
   const path = entitySetId ? `entitysets/${entitySetId}/items` : undefined;
   return Query.fromLocation(path, location, {}, 'items').limit(limit);
 }
@@ -64,8 +64,7 @@ export function entitySetItemsQuery(location, entitySetId, limit = 9999) {
 export function investigationsQuery(location) {
   const context = { 'filter:category': 'casefile' };
   return Query.fromLocation('collections', location, context, 'collections')
-    .defaultSortBy('created_at', 'desc')
-    .limit(30);
+    .defaultSortBy('created_at', 'desc');
 }
 
 export function datasetsQuery(location) {
@@ -73,8 +72,7 @@ export function datasetsQuery(location) {
   return Query.fromLocation('collections', location, context, 'collections')
     .defaultFacet('countries')
     .defaultFacet('category')
-    .defaultSortBy('created_at', 'desc')
-    .limit(40);
+    .defaultSortBy('created_at', 'desc');
 }
 
 
@@ -135,11 +133,10 @@ export function entitySuggestQuery(location, collection, schemaName, queryText) 
   };
   const path = schemaName && collection?.id ? 'entities' : undefined;
   return Query.fromLocation(path, location, context, 'entities')
-    .limit(30)
     .sortBy('caption', 'asc');
 }
 
-export function entityExpandQuery(entityId, properties, limit = 200) {
+export function entityExpandQuery(entityId, properties, limit = Query.LARGE) {
   const context = { 'filter:property': properties };
   const path = entityId ? `entities/${entityId}/expand` : undefined;
   return new Query(path, {}, context, 'expand').limit(limit);
@@ -158,7 +155,7 @@ export function entityReferenceQuery(location, entity, reference) {
   return Query.fromLocation(path, location, context, reference?.property?.name);
 }
 
-export function profileExpandQuery(profileId, properties, limit = 200) {
+export function profileExpandQuery(profileId, properties, limit = Query.LARGE) {
   const context = { 'filter:property': properties };
   const path = profileId ? `profiles/${profileId}/expand` : undefined;
   return new Query(path, {}, context, 'expand').limit(limit);

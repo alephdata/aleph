@@ -19,14 +19,14 @@ class QueryInfiniteLoad extends Component {
   getMoreResults() {
     const { query, result } = this.props;
     if (result && result.next && !result.isPending && !result.isError) {
-      this.props.fetch({ query, next: result.next });
+      this.props.fetch({ query, result, next: result.next });
     }
   }
 
   fetchIfNeeded() {
     const { query, result } = this.props;
     if (result.shouldLoad) {
-      this.props.fetch({ query });
+      this.props.fetch({ query, result });
     }
   }
 

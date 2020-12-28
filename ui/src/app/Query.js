@@ -15,7 +15,9 @@ class Query {
     this.setPlain('limit', Query.LIMIT);
   }
 
-  static LIMIT = 30;
+  static LIMIT = 10;
+  static LARGE = 200;
+  static MAX_LIMIT = 9999;
 
   static fromLocation(path, location, context, queryName) {
     const state = queryString.parse(location.search);
@@ -232,6 +234,8 @@ class Query {
     // Strip the parts of the query that are irrelevant to the result cache.
     return this
       .clear('offset')
+      .clear('limit')
+      .clear('next_limit')
       .toString();
   }
 

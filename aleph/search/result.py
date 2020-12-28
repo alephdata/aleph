@@ -25,13 +25,24 @@ class QueryResult(object):
             return 1
         return int(math.ceil(self.total / float(self.parser.next_limit)))
 
-    def page_url(self, page):
-        if page < 1 or page > self.pages:
-            return None
-        offset = (page - 1) * self.parser.next_limit
-        args = [("offset", str(offset))]
+    def make_url(self, offset):
+        args = [("offset", str(offset)), ("limit", str(self.parser.next_limit))]
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
+
+    @property
+    def next_url(self):
+        offset = self.parser.offset + self.parser.limit
+        if offset > self.total:
+            return None
+        return self.make_url(offset)
+
+    @property
+    def previous_url(self):
+        offset = self.parser.offset - self.parser.next_limit
+        if offset < 0:
+            return None
+        return self.make_url(offset)
 
     def to_dict(self, serializer=None):
         results = list(self.results)
@@ -47,8 +58,8 @@ class QueryResult(object):
             "limit": self.parser.next_limit,
             "offset": self.parser.offset,
             "pages": self.pages,
-            "next": self.page_url(self.parser.page + 1),
-            "previous": self.page_url(self.parser.page - 1),
+            "next": self.next_url,
+            "previous": self.previous_url,
         }
 
 

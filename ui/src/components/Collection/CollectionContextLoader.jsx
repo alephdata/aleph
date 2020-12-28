@@ -17,6 +17,7 @@ class CollectionContextLoader extends PureComponent {
 
   componentDidMount() {
     this.fetchRefresh();
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate() {
@@ -37,7 +38,7 @@ class CollectionContextLoader extends PureComponent {
 
     const { xrefResult, xrefQuery } = this.props;
     if (xrefResult.shouldLoad) {
-      this.props.queryCollectionXref({ query: xrefQuery });
+      this.props.queryCollectionXref({ query: xrefQuery, result: xrefResult });
     }
   }
 
@@ -49,7 +50,8 @@ class CollectionContextLoader extends PureComponent {
     const age = timestamp() - collection.loadedAt;
     const shouldRefresh = (age > staleDuration) && !collection.isPending;
     if (shouldRefresh) {
-      this.props.forceMutate();
+      // this.props.forceMutate();
+      this.props.fetchCollection(collection);
     }
     const timeout = setTimeout(this.fetchRefresh, 1000);
     this.setState({ timeout });
@@ -64,9 +66,7 @@ class CollectionContextLoader extends PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const { match, location } = ownProps;
   const { collectionId } = match.params;
-
   const xrefQuery = collectionXrefFacetsQuery(location, collectionId);
-
   return {
     collectionId,
     collection: selectCollection(state, collectionId),

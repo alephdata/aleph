@@ -77,10 +77,7 @@ class XrefTable extends Component {
         {this.renderHeader()}
         <tbody>
           {result.results.map(xref => (
-            <XrefTableRow
-              key={xref?.id}
-              xref={xref}
-            />
+            <XrefTableRow key={xref.id} xref={xref} />
           ))}
           {result.isPending && skeletonItems.map(item => (
             <XrefTableRow key={item} isPending />

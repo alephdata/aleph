@@ -40,7 +40,7 @@ class SearchAlert extends PureComponent {
   fetchIfNeeded() {
     const { loggedIn, query, result } = this.props;
     if (loggedIn && result.shouldLoad) {
-      this.props.queryAlerts({ query });
+      this.props.queryAlerts({ query, result });
     }
   }
 

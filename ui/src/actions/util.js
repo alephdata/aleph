@@ -1,12 +1,27 @@
 import { endpoint } from 'app/api';
 
-export const MAX_RESULTS = 9999;
+// function reloadQuery(query, result) {
+//   /* When the redux store is being mutated (see reducers/mutate),
+//   all results will be reloaded. This becomes problematic, if the
+//   user is looking at the lower end of an infinite scroll list: only
+//   the first page might be reloaded, and the view would be reset. To
+//   prevent this, we're adjusting the limit here to the max of the
+//   number of loaded items. */
+//   const limit = query.getInt('limit');
+//   console.log('reload results', query.path, limit, result?.results?.length);
+//   if (result?.results?.length > limit && !result.isPending) {
+//     return query
+//       .setString('offset', 0)
+//       .setString('next_limit', limit)
+//       .setString('limit', result.results.length);
+//   }
+//   return query;
+// }
 
-export async function queryEndpoint({ query, next }) {
+export async function queryEndpoint({ query, result, next }) {
   // run a standard Query object against the API endpoint
   // given by `path`. If the argument `next` is given, it
   // will be used instead of generating a URI.
-
   if (next) {
     const response = await endpoint.get(next);
     return { query, result: response.data };
