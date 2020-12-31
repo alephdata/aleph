@@ -45,5 +45,5 @@ coverage
 coveralls
 
 # Tracing and logging libraries
-structlog==20.1.0
+structlog==20.2.0
 colorama==0.4.4
