@@ -1,9 +1,7 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Button, ButtonGroup, Popover, Menu, MenuItem, Intent } from '@blueprintjs/core';
+import { Button, Popover, Menu, Intent } from '@blueprintjs/core';
 
-import { Skeleton } from 'components/common';
-import { DialogToggleButton } from 'components/Toolbar';
 import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
@@ -39,94 +37,88 @@ const messages = defineMessages({
 });
 
 
-class CollectionManageMenu extends PureComponent {
-  renderSkeletonButton = (i) => (
-    <Skeleton.Text key={i} type="span" length={5} className="bp3-button" />
-  )
-
-  renderSkeleton = () => {
-    if (this.props.view) {
-      return this.renderSkeletonButton();
-    } else {
-      return (
-        <ButtonGroup>{[...Array(3).keys()].map(this.renderSkeletonButton)}</ButtonGroup>
-      );
-    };
+class CollectionManageMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.toggleDialog = this.toggleDialog.bind(this);
   }
 
-  getButtons = () => {
-    const { intl, collection } = this.props;
-
-    return [
-      {
-        buttonProps: {
-          text: intl.formatMessage(messages.edit),
-          icon: "cog",
-        },
-        Dialog: CollectionEditDialog,
-        primary: true,
-      },
-      {
-        buttonProps: {
-          text: intl.formatMessage(messages.access),
-          icon: "key",
-        },
-        Dialog: CollectionAccessDialog,
-        primary: true,
-      },
-      {
-        buttonProps: {
-          text: intl.formatMessage(messages.reingest),
-          icon: "automatic-updates",
-        },
-        Dialog: CollectionReingestAlert,
-      },
-      {
-        buttonProps: {
-          text: intl.formatMessage(messages.reindex),
-          icon: "search-template",
-        },
-        Dialog: CollectionReindexAlert,
-      },
-      {
-        buttonProps: {
-          text: intl.formatMessage(messages[collection?.casefile ? 'delete_casefile' : 'delete_dataset']),
-          icon: "trash",
-          intent: Intent.DANGER,
-        },
-        Dialog: CollectionDeleteDialog,
-      },
-    ]
+  toggleDialog(name) {
+    const isOpen = this.state[name];
+    this.setState({ [name]: !!!isOpen });
   }
-
-  renderMenuItem = ({ buttonProps, Dialog }) => (
-    <DialogToggleButton
-      key={buttonProps.icon}
-      ButtonComponent={MenuItem}
-      buttonProps={{
-        shouldDismissPopover: false,
-        ...buttonProps,
-        ...(this.props.buttonProps)
-      }}
-      Dialog={Dialog}
-      dialogProps={{ collection: this.props.collection }}
-    />
-  );
 
   render() {
-    const { collection, buttonProps = {} } = this.props;
-
-    if (!collection.id || !collection.writeable) {
+    const { intl, collection } = this.props;
+    if (!collection.writeable) {
       return null;
     }
-
+    const deleteMessage = messages[collection?.casefile ? 'delete_casefile' : 'delete_dataset'];
     return (
-      <Popover>
-        <Button icon="cog" rightIcon="caret-down" {...buttonProps} disabled={!collection.id} />
-        <Menu>
-          {this.getButtons().map(this.renderMenuItem)}
-        </Menu>
-      </Popover>
+      <>
+        <Popover>
+          <Button icon="cog" rightIcon="caret-down" />
+          <Menu>
+            <Menu.Item
+              key={"edit"}
+              onClick={() => this.toggleDialog('isEditOpen')}
+              text={intl.formatMessage(messages.edit)}
+              icon="cog"
+            />
+            <Menu.Item
+              key={"access"}
+              onClick={() => this.toggleDialog('isAccessOpen')}
+              text={intl.formatMessage(messages.access)}
+              icon="key"
+            />
+            <Menu.Item
+              key={"reingest"}
+              onClick={() => this.toggleDialog('isReingestOpen')}
+              text={intl.formatMessage(messages.reingest)}
+              icon="automatic-updates"
+            />
+            <Menu.Item
+              key={"reindex"}
+              onClick={() => this.toggleDialog('isReindexOpen')}
+              text={intl.formatMessage(messages.reindex)}
+              icon="search-template"
+            />
+            <Menu.Item
+              key={"delete"}
+              onClick={() => this.toggleDialog('isDeleteOpen')}
+              text={intl.formatMessage(deleteMessage)}
+              intent={Intent.DANGER}
+              icon="trash"
+            />
+          </Menu>
+        </Popover>
+        <CollectionEditDialog
+          isOpen={!!this.state.isEditOpen}
+          toggleDialog={() => this.toggleDialog('isEditOpen')}
+          collection={collection}
+        />
+        <CollectionAccessDialog
+          isOpen={!!this.state.isAccessOpen}
+          toggleDialog={() => this.toggleDialog('isAccessOpen')}
+          collection={collection}
+        />
+        <CollectionReingestAlert
+          isOpen={!!this.state.isReingestOpen}
+          toggleDialog={() => this.toggleDialog('isReingestOpen')}
+          collection={collection}
+        />
+        <CollectionReindexAlert
+          isOpen={!!this.state.isReindexOpen}
+          toggleDialog={() => this.toggleDialog('isReindexOpen')}
+          collection={collection}
+        />
+        <CollectionDeleteDialog
+          isOpen={!!this.state.isDeleteOpen}
+          toggleDialog={() => this.toggleDialog('isDeleteOpen')}
+          collection={collection}
+        />
+      </>
     );
   }
 }

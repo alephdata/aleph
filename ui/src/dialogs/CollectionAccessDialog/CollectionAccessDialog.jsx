@@ -153,7 +153,6 @@ class CollectionAccessDialog extends Component {
         processing={blocking}
         icon="key"
         className="CollectionAccessDialog"
-        onSubmit={this.onSubmit}
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
         title={intl.formatMessage(messages.title)}
@@ -241,7 +240,8 @@ class CollectionAccessDialog extends Component {
               text={intl.formatMessage(messages.cancel_button)}
             />
             <Button
-              type="submit"
+              type="button"
+              onClick={this.onSubmit}
               intent={Intent.PRIMARY}
               disabled={blocking}
               text={intl.formatMessage(messages.save_button)}

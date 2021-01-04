@@ -73,8 +73,6 @@ const messages = defineMessages({
   },
 });
 
-// FIXME: Enable [jsx-a11y/label-has-associated-control] and [jsx-a11y/label-has-for] for this file
-/* eslint-disable jsx-a11y/label-has-for, jsx-a11y/label-has-associated-control */
 export class CollectionEditDialog extends Component {
   constructor(props) {
     super(props);
@@ -178,7 +176,6 @@ export class CollectionEditDialog extends Component {
               </label>
               <div className="bp3-select bp3-fill">
                 <select id="category" onChange={this.onFieldChange} value={collection.category}>
-                  {!collection.category && <option key="--" value="" selected>--</option>}
                   {Object.keys(categories).map(key => (
                     <option key={key} value={key}>
                       {categories[key]}
