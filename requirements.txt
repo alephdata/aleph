@@ -38,7 +38,7 @@ tabulate==0.8.7
 zipstream-new==1.1.8
 
 # Testing dependencies
-factory-boy==3.1.0
+factory-boy==3.2.0
 Faker==5.0.2
 nose
 coverage
