@@ -11,7 +11,7 @@ export function alertsQuery(location) {
 
 function collectionContextQuery(context, location, collectionId, name) {
   const path = collectionId ? 'entities' : undefined;
-  return Query.fromLocation(path, location, context, 'document');
+  return Query.fromLocation(path, location, context, name);
 }
 
 export function collectionDocumentsQuery(location, collectionId) {
