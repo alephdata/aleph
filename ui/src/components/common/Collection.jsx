@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from 'react';
 import { Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import truncateText from 'truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
@@ -57,8 +56,8 @@ class CollectionLabel extends PureComponent {
 class CollectionLink extends PureComponent {
   render() {
     const { collection, className } = this.props;
-    const link = getCollectionLink(collection);
     const content = <Collection.Label {...this.props} />;
+    const link = getCollectionLink(collection);
     if (!link) {
       return content;
     }
@@ -197,7 +196,7 @@ class Collection {
 
   static Status = CollectionUpdateStatus;
 
-  static Link = withRouter(CollectionLink);
+  static Link = CollectionLink;
 
   static Load = connect(loadMapStateToProps, { fetchCollection })(CollectionLoad);
 

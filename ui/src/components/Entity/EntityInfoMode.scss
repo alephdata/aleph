@@ -1,21 +1,15 @@
 @import "app/variables.scss";
 
 .EntityInfoMode {
-  .collection-info.bp3-card {
-    border: 1px solid $aleph-border-color;
-    box-shadow: none;
+
+  hr {
+    border: 0;
+    border-top: 1px solid $aleph-border-color;
+    margin-top: $aleph-grid-size;
+    margin-bottom: $aleph-grid-size * 2;
   }
 
-  .collection-info__item {
-    display: block;
-    padding: 5px 0;
-  }
-
-  .bp3-spinner-head {
-    stroke: $blue1 !important;
-  }
-
-  .CollectionLabel {
+  .value.big {
     vertical-align: middle;
   }
 }

@@ -16,7 +16,7 @@ import { selectCollection } from 'selectors';
 
 import './InvestigationScreen.scss';
 
-const sidebarHiddenViews = [collectionViewIds.SEARCH];
+const sidebarHiddenViews = [collectionViewIds.SEARCH, collectionViewIds.XREF];
 
 export class InvestigationScreen extends Component {
   render() {

@@ -171,6 +171,7 @@ class PermissionSerializer(Serializer):
 class EntitySerializer(Serializer):
     def _collect(self, obj):
         self.queue(Collection, obj.get("collection_id"))
+        self.queue(Role, obj.get("role_id"))
         schema = model.get(obj.get("schema"))
         if schema is None:
             return
@@ -226,6 +227,8 @@ class EntitySerializer(Serializer):
         if not request.authz.can(coll_id, request.authz.READ):
             return None
         obj["collection"] = self.resolve(Collection, coll_id, CollectionSerializer)
+        role_id = obj.pop("role_id", None)
+        obj["role"] = self.resolve(Role, role_id, RoleSerializer)
         obj["links"] = links
         obj["latinized"] = transliterate_values(proxy)
         obj["writeable"] = check_write_entity(obj, request.authz)
@@ -280,6 +283,7 @@ class ExportSerializer(Serializer):
 class EntitySetSerializer(Serializer):
     def _collect(self, obj):
         self.queue(Collection, obj.get("collection_id"))
+        self.queue(Role, obj.get("role_id"))
 
     def _serialize(self, obj):
         collection_id = obj.pop("collection_id", None)
@@ -288,6 +292,8 @@ class EntitySetSerializer(Serializer):
         obj["collection"] = self.resolve(
             Collection, collection_id, CollectionSerializer
         )
+        role_id = obj.get("role_id", None)
+        obj["role"] = self.resolve(Role, role_id, RoleSerializer)
         return obj
 
 
