@@ -5,15 +5,22 @@ import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 
 import Screen from 'components/Screen/Screen';
+import { DualPane } from 'components/common';
+import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
+import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import InvestigationViews from 'components/Investigation/InvestigationViews';
-import InvestigationWrapper from 'components/Investigation/InvestigationWrapper';
+import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { selectCollection } from 'selectors';
 
+import './InvestigationScreen.scss';
+
+const sidebarHiddenViews = [collectionViewIds.SEARCH];
+
 export class InvestigationScreen extends Component {
   render() {
-    const { collection, activeMode, activeType } = this.props;
+    const { collection, collectionId, activeMode, activeType } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -23,19 +30,29 @@ export class InvestigationScreen extends Component {
       return <Redirect to={`/datasets/${collection.id}`} />;
     }
 
+    const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
     return (
-      <CollectionContextLoader>
+      <CollectionContextLoader collectionId={collectionId}>
         <Screen
           title={collection.label}
           description={collection.summary}
         >
-          <InvestigationWrapper collection={collection}>
-            <InvestigationViews
-              collection={collection}
-              activeMode={activeMode}
-              activeType={activeType}
-            />
-          </InvestigationWrapper>
+          <CollectionWrapper collection={collection} forceCasefile>
+            <DualPane className="InvestigationScreen">
+              {showSidebar && (
+                <InvestigationSidebar collection={collection} />
+              )}
+              <DualPane.ContentPane className="InvestigationScreen__body">
+                <div className="InvestigationScreen__body-content">
+                  <InvestigationViews
+                    collection={collection}
+                    activeMode={activeMode}
+                    activeType={activeType}
+                  />
+                </div>
+              </DualPane.ContentPane>
+            </DualPane>
+          </CollectionWrapper>
         </Screen>
       </CollectionContextLoader>
     );
@@ -50,6 +67,7 @@ const mapStateToProps = (state, ownProps) => {
   const activeType = hashQuery.type;
 
   return {
+    collectionId,
     collection: selectCollection(state, collectionId),
     activeMode,
     activeType,

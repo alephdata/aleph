@@ -28,7 +28,7 @@ export class CollectionScreen extends Component {
     }
 
     return (
-      <CollectionContextLoader>
+      <CollectionContextLoader collectionId={collectionId}>
         <Screen
           title={collection.label}
           description={collection.summary}
@@ -55,6 +55,7 @@ const mapStateToProps = (state, ownProps) => {
   const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;
 
   return {
+    collectionId,
     collection: selectCollection(state, collectionId),
     activeMode,
   };
