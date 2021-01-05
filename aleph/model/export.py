@@ -17,7 +17,6 @@ class Export(db.Model, IdModel, DatedModel):
     storage bucket and the user is given a link to download the data. The link
     expires after a fixed duration and the exported data is deleted."""
 
-    MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024  # 2 GB
     DEFAULT_EXPIRATION = timedelta(days=30)  # After 30 days
 
     label = db.Column(db.Unicode)
@@ -103,7 +102,6 @@ class Export(db.Model, IdModel, DatedModel):
     def get_expired(cls, deleted=False):
         now = datetime.utcnow()
         q = cls.all()
-        q = q.filter(cls.expires_at.isnot(None))
         q = q.filter(cls.expires_at <= now)
         if not deleted:
             q = q.filter(cls.deleted == deleted)

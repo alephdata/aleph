@@ -94,6 +94,10 @@ SINGLE_USER = env.to_bool("ALEPH_SINGLE_USER")
 # Disable password-based authentication for SSO settings:
 PASSWORD_LOGIN = env.to_bool("ALEPH_PASSWORD_LOGIN", not OAUTH)
 
+# Roles that haven't logged in since X months will stop receiving notifications.
+ROLE_INACTIVE = env.to_int("ALEPH_ROLE_INACTIVE", 6 * 30)
+ROLE_INACTIVE = timedelta(days=ROLE_INACTIVE)
+
 
 ###############################################################################
 # Content processing options
@@ -121,6 +125,13 @@ MAX_EXPAND_ENTITIES = env.to_int("ALEPH_MAX_EXPAND_ENTITIES", 200)
 API_RATE_LIMIT = env.to_int("ALEPH_API_RATE_LIMIT", 30)
 API_RATE_WINDOW = 15  # minutes
 
+# Export file size limit
+EXPORT_MAX_SIZE = 1 * 1024 * 1024 * 1024  # GB
+EXPORT_MAX_SIZE = env.to_int("EXPORT_MAX_SIZE", EXPORT_MAX_SIZE)
+# Export result size limit (number of search entities)
+EXPORT_MAX_RESULTS = 100_000
+EXPORT_MAX_RESULTS = env.to_int("EXPORT_MAX_RESULTS", EXPORT_MAX_RESULTS)
+
 # Mini-CMS
 # Pages directory
 PAGES_PATH = os.path.join(APP_DIR, "pages")
@@ -137,10 +148,6 @@ MAIL_USE_SSL = env.to_bool("ALEPH_MAIL_SSL", False)
 MAIL_USE_TLS = env.to_bool("ALEPH_MAIL_TLS", True)
 MAIL_PORT = env.to_int("ALEPH_MAIL_PORT", 465)
 MAIL_DEBUG = env.to_bool("ALEPH_MAIL_DEBUG", DEBUG)
-
-# Roles that haven't logged in since X months will stop receiving notifications.
-ROLE_INACTIVE = env.to_int("ALEPH_ROLE_INACTIVE", 6 * 30)
-ROLE_INACTIVE = timedelta(days=ROLE_INACTIVE)
 
 ###############################################################################
 # Database and search index

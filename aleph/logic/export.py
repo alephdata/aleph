@@ -21,8 +21,13 @@ from aleph.logic.mail import email_role
 
 
 log = logging.getLogger(__name__)
-EXCEL_FILE = "Export.xlsx"
 EXTRA_HEADERS = ["url", "collection"]
+WARNING = """
+This data export was aborted before it was complete, because the %s
+exported entities exceeds the limits set by the system operators.
+
+Contact the operator to discuss bulk exports.
+"""
 
 
 def get_export(export_id):
@@ -56,11 +61,12 @@ def export_entities(export_id):
     collections = {}
     try:
         filters = [export.meta.get("query", {"match_none": {}})]
-        file_path = export_dir.joinpath("query-export.zip")
+        file_path = export_dir.joinpath("export.zip")
         with ZipFile(file_path, mode="w") as zf:
-            excel_path = export_dir.joinpath(EXCEL_FILE)
+            excel_name = safe_filename(export.label, extension="xlsx")
+            excel_path = export_dir.joinpath(excel_name)
             exporter = ExcelExporter(excel_path, extra=EXTRA_HEADERS)
-            for entity in iter_proxies(filters=filters):
+            for idx, entity in enumerate(iter_proxies(filters=filters)):
                 collection_id = entity.context.get("collection_id")
                 if collection_id not in collections:
                     collections[collection_id] = get_collection(collection_id)
@@ -70,13 +76,20 @@ def export_entities(export_id):
                 extra = [entity_url(entity.id), collection.get("label")]
                 exporter.write(entity, extra=extra)
                 write_document(export_dir, zf, collection, entity)
-                if file_path.stat().st_size >= Export.MAX_FILE_SIZE:
-                    log.warn("Export too large: %r", export)
+                if file_path.stat().st_size >= settings.EXPORT_MAX_SIZE:
+                    concern = "total size of the"
+                    zf.writestr("EXPORT_TOO_LARGE.txt", WARNING % concern)
+                    break
+                if idx >= settings.EXPORT_MAX_RESULTS:
+                    concern = "number of"
+                    zf.writestr("EXPORT_TOO_LARGE.txt", WARNING % concern)
                     break
 
             exporter.finalize()
-            zf.write(excel_path, arcname=EXCEL_FILE)
-        complete_export(export_id, file_path)
+            zf.write(excel_path, arcname=excel_name)
+        file_name = "Export: %s" % export.label
+        file_name = safe_filename(file_name, extension="zip")
+        complete_export(export_id, file_path, file_name)
     except Exception:
         log.exception("Failed to process export [%s]", export_id)
         export = Export.by_id(export_id)
@@ -106,10 +119,10 @@ def create_export(
     return export
 
 
-def complete_export(export_id, file_path):
+def complete_export(export_id, file_path, file_name):
     export = Export.by_id(export_id)
     file_path = ensure_path(file_path)
-    export.file_name = safe_filename(file_path)
+    export.file_name = file_name
     export.file_size = file_path.stat().st_size
     export.content_hash = checksum(file_path)
     try:

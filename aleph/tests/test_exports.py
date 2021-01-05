@@ -17,18 +17,18 @@ class ExportsTestCase(TestCase):
         csv_path = self.get_fixture_path("experts.csv")
         temp_path = self._create_temporary_copy(csv_path, "experts.csv")
         self.export1 = create_export("TEST", self.role_email.id, "test1")
-        complete_export(self.export1.id, temp_path)
+        complete_export(self.export1.id, temp_path, "experts.csv")
 
         temp_path = self._create_temporary_copy(csv_path, "experts.csv")
         self.export2 = create_export("TEST", self.role_email.id, "test2")
         self.export2.expires_at = datetime.utcnow() + timedelta(days=-1)
-        complete_export(self.export2.id, temp_path)
+        complete_export(self.export2.id, temp_path, "experts.csv")
 
         source_path = self.get_fixture_path("../util.py")
         temp_path = self._create_temporary_copy(source_path, "init.py")
         self.export3 = create_export("TEST", self.role_email.id, "test3")
         self.export3.expires_at = datetime.utcnow() + timedelta(days=-1)
-        complete_export(self.export3.id, temp_path)
+        complete_export(self.export3.id, temp_path, "init.py")
 
     def test_create(self):
         assert self.export1.content_hash is not None
