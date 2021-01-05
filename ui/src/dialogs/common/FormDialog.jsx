@@ -3,7 +3,7 @@ import { Dialog, Spinner } from '@blueprintjs/core';
 
 import './FormDialog.scss';
 
-const FormDialog = ({ processing, children, onSubmit, icon, ...rest }) => {
+const FormDialog = ({ processing, children, onSubmit, ...rest }) => {
   const onSubmitForm = (event) => {
     event.preventDefault();
     event.stopPropagation();
