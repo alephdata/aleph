@@ -137,9 +137,9 @@ class SearchQueryParser(QueryParser):
         self.highlight = self.highlight and settings.RESULT_HIGHLIGHT
         self.highlight = self.highlight and self.text
         # Length of each snippet in characters
-        self.highlight_length = self.getint("highlight_length", 100)
+        self.highlight_length = self.getint("highlight_length", 120)
         # Number of snippets per document, 0 = return full document text.
-        self.highlight_count = self.getint("highlight_count", 1)
+        self.highlight_count = self.getint("highlight_count", 3)
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""

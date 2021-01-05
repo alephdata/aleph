@@ -97,8 +97,6 @@ const mapStateToProps = (state, ownProps) => {
   const queryText = queryOverride || baseQuery.getString('q');
   const query = baseQuery.setString('q', queryText)
     .set('highlight', true)
-    .set('highlight_count', 10)
-    .set('highlight_length', 120)
     .sortBy('properties.index', 'asc')
     .clear('limit')
     .clear('offset');
