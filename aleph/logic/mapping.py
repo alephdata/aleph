@@ -90,6 +90,7 @@ def load_mapping(collection, mapping_id, sync=False):
         mapping.set_status(status=Status.SUCCESS)
         db.session.commit()
     except Exception as exc:
+        log.exception("Failed to load mapping.")
         mapping.set_status(status=Status.FAILED, error=str(exc))
         db.session.commit()
         aggregator.delete(origin=origin)

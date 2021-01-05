@@ -55,7 +55,8 @@ def update_entity(collection, entity_id=None):
     log.info("[%s] Update entity: %s", collection, entity_id)
     entity = index.get_entity(entity_id)
     proxy = model.get_proxy(entity)
-    xref_entity(collection, proxy)
+    if collection.casefile:
+        xref_entity(collection, proxy)
 
     aggregator = get_aggregator(collection, origin=MODEL_ORIGIN)
     profile_fragments(collection, aggregator, entity_id=entity_id)
