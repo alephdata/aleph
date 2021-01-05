@@ -9,7 +9,7 @@ import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox } from 'components/common';
-import { collectionEntitiesQuery } from 'queries';
+import { collectionSearchQuery } from 'queries';
 import getCollectionLink from 'util/getCollectionLink';
 
 
@@ -93,12 +93,8 @@ export class CollectionWrapper extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location, forceCasefile } = ownProps;
   const isCasefile = forceCasefile || collection?.casefile;
-  const hashQuery = queryString.parse(location.hash);
-  const activeMode = hashQuery.mode;
+  const query = collectionSearchQuery(location, collection?.id);
   const onCollectionScreen = location.pathname === getCollectionLink(collection);
-  // only pull from query location when in collection search mode
-  const qLocation = onCollectionScreen && activeMode === collectionViewIds.SEARCH && location;
-  const query = collectionEntitiesQuery(qLocation, collection?.id);
   const showCategory = !isCasefile && onCollectionScreen;
 
   return {

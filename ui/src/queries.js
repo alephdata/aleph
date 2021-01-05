@@ -9,32 +9,34 @@ export function alertsQuery(location) {
   return Query.fromLocation('alerts', location, {}, 'alerts').limit(Query.MAX_LIMIT);
 }
 
+function collectionContextQuery(context, location, collectionId, name) {
+  const path = collectionId ? 'entities' : undefined;
+  return Query.fromLocation(path, location, context, 'document');
+}
+
 export function collectionDocumentsQuery(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
     'filter:schemata': 'Document',
     'empty:properties.parent': true,
   };
-  const path = collectionId ? 'entities' : undefined;
-  return Query.fromLocation(path, location, context, 'document');
+  return collectionContextQuery(context, location, collectionId, 'documents');
 }
 
 export function collectionEntitiesQuery(location, collectionId, schema) {
   const context = {
     'filter:collection_id': collectionId,
+    'filter:schema': schema,
   };
-  if (schema) {
-    context['filter:schema'] = schema;
-  } else {
-    context['filter:schemata'] = 'Thing';
-  }
+  return collectionContextQuery(context, location, collectionId, 'entities');
+}
 
-  const path = collectionId ? 'entities' : undefined;
-  if (location) {
-    return Query.fromLocation(path, location, context, 'entities');
-  } else {
-    return new Query(path, {}, context, 'entities');
-  }
+export function collectionSearchQuery(location, collectionId) {
+  const context = {
+    'filter:collection_id': collectionId,
+    'filter:schemata': 'Thing',
+  };
+  return collectionContextQuery(context, location, collectionId, 'cs');
 }
 
 export function entitySetSchemaCountsQuery(entitySetId) {
