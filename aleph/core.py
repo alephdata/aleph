@@ -17,6 +17,7 @@ from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 from servicelayer.util import service_retries, backoff
 from servicelayer.logs import configure_logging, LOG_FORMAT_JSON
+from servicelayer import settings as sls
 
 from aleph import settings
 from aleph.cache import Cache
@@ -122,7 +123,7 @@ def get_es():
             if not hasattr(settings, "_es_instance"):
                 # When logging structured logs, use a custom transport to log
                 # all es queries and their response time
-                if settings.LOG_FORMAT == LOG_FORMAT_JSON:
+                if sls.LOG_FORMAT == LOG_FORMAT_JSON:
                     es = Elasticsearch(
                         url, transport_class=LoggingTransport, timeout=timeout
                     )
