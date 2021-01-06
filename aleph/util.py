@@ -63,7 +63,7 @@ class LoggingTransport(Transport):
             "es_url": url,
             "es_req_params": params,
             "es_req_body": body,
-            "took": result.get("took"),
+            "took": hasattr(result, "get") and result.get("took"),
         }
         log.info("Performed ES request", **payload)
         return result
