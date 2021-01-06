@@ -16,11 +16,11 @@ from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 from servicelayer.util import service_retries, backoff
+from servicelayer.logs import configure_logging, LOG_FORMAT_JSON
 
 from aleph import settings
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
-from aleph.logs import configure_logging, LOG_FORMAT_JSON
 from aleph.util import LoggingTransport
 
 NONE = "'none'"
@@ -34,7 +34,10 @@ talisman = Talisman()
 
 
 def create_app(config={}):
-    configure_logging()
+    if settings.DEBUG:
+        configure_logging(level=logging.DEBUG)
+    else:
+        configure_logging(level=logging.INFO)
     app = Flask("aleph")
     app.config.from_object(settings)
     app.config.update(config)
