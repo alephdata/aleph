@@ -6,6 +6,7 @@ from structlog.contextvars import clear_contextvars, bind_contextvars
 from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
 from servicelayer.extensions import get_entry_point
+from servicelayer.logs import apply_task_context
 
 from aleph import __version__
 from aleph.core import kv, db, create_app, settings
@@ -94,7 +95,7 @@ class AlephWorker(Worker):
 
     def handle(self, task):
         with app.app_context():
-            self.setup_logging_context(task)
+            apply_task_context(task)
             self.dispatch_task(task)
 
     def cleanup_job(self, job):
@@ -112,18 +113,6 @@ class AlephWorker(Worker):
     def after_task(self, task):
         with app.app_context():
             self.cleanup_job(task.job)
-
-    def setup_logging_context(self, task):
-        # Setup context for structured logging
-        clear_contextvars()
-        bind_contextvars(
-            version=__version__,
-            job_id=task.job.id,
-            stage=task.stage.stage,
-            dataset=task.job.dataset.name,
-            start_time=datetime.utcnow().isoformat(),
-            trace_id=str(uuid.uuid4()),
-        )
 
 
 def get_worker():
