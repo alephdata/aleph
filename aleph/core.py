@@ -34,10 +34,7 @@ talisman = Talisman()
 
 
 def create_app(config={}):
-    if settings.DEBUG:
-        configure_logging(level=logging.DEBUG)
-    else:
-        configure_logging(level=logging.INFO)
+    configure_logging(level=logging.DEBUG)
     app = Flask("aleph")
     app.config.from_object(settings)
     app.config.update(config)
