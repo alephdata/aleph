@@ -1,4 +1,4 @@
-import time
+from datetime import datetime
 import uuid
 
 import structlog
@@ -121,7 +121,7 @@ class AlephWorker(Worker):
             job_id=task.job.id,
             stage=task.stage.stage,
             dataset=task.job.dataset.name,
-            start_time=time.time(),
+            start_time=datetime.utcnow().isoformat(),
             trace_id=str(uuid.uuid4()),
         )
 
