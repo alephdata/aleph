@@ -10,6 +10,7 @@ import { fetchRole } from 'actions';
 import { selectCurrentRole, selectCurrentRoleId, selectMetadata } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { DialogToggleButton } from 'components/Toolbar'
+
 import './AuthButtons.scss';
 
 

@@ -40,7 +40,11 @@ export class InvestigationScreen extends Component {
           <CollectionWrapper collection={collection} forceCasefile>
             <DualPane className="InvestigationScreen">
               {showSidebar && (
-                <InvestigationSidebar collection={collection} />
+                <InvestigationSidebar
+                  collection={collection}
+                  activeMode={activeMode}
+                  activeType={activeType}
+                />
               )}
               <DualPane.ContentPane className="InvestigationScreen__body">
                 <div className="InvestigationScreen__body-content">

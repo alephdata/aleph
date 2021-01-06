@@ -16,21 +16,14 @@ import './InvestigationSidebar.scss';
 class InvestigationSidebar extends React.Component {
   constructor(props) {
     super(props);
-
     this.navigate = this.navigate.bind(this);
   }
 
   navigate(mode, type) {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
-
     parsedHash.mode = mode;
-    if (type) {
-      parsedHash.type = type
-    } else {
-      delete parsedHash.type;
-    }
-
+    parsedHash.type = type || undefined;
     history.push({
       pathname: location.pathname,
       hash: queryString.stringify(parsedHash),
@@ -94,13 +87,10 @@ class InvestigationSidebar extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
+  const { collection } = ownProps;
 
   return {
-    schemaCounts: collection?.statistics?.schema?.values || {},
-    activeMode: hashQuery.mode,
-    activeType: hashQuery.type,
+    schemaCounts: collection?.statistics?.schema?.values || {}
   };
 };
 
