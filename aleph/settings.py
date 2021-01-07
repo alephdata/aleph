@@ -4,7 +4,6 @@
 # setup. Wherever possible use environment variables to override the
 # defaults.
 import os
-import uuid
 from servicelayer import env
 from urllib.parse import urlparse
 from flask_babel import lazy_gettext
@@ -55,17 +54,11 @@ CONTENT_POLICY = env.get("ALEPH_CONTENT_POLICY", CONTENT_POLICY)
 # Cross-origin resource sharing
 CORS_ORIGINS = env.to_list("ALEPH_CORS_ORIGINS", ["*"], separator="|")
 
-# Google Cloud platform config
-GOOGLE_REQUEST_LOGGING = env.to_bool("ALEPH_GOOGLE_REQUEST_LOGGING", False)
-
 ##############################################################################
 # Security and authentication.
 
 # Required: set a secret key
 SECRET_KEY = env.get("ALEPH_SECRET_KEY")
-
-# A process identifier
-PROCESS_ID = uuid.uuid4().hex
 
 # Designate users with the given email as admins automatically:
 # Assumes a comma-separated list.
