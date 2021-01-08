@@ -94,8 +94,6 @@ def load_mapping(collection, mapping_id, sync=False):
         mapping.set_status(status=Status.FAILED, error=str(exc))
         db.session.commit()
         aggregator.delete(origin=origin)
-    finally:
-        aggregator.close()
 
 
 def flush_mapping(collection, mapping_id, sync=True):
@@ -104,6 +102,5 @@ def flush_mapping(collection, mapping_id, sync=True):
     origin = mapping_origin(mapping_id)
     aggregator = get_aggregator(collection)
     aggregator.delete(origin=origin)
-    aggregator.close()
     delete_entities(collection.id, origin=origin, sync=sync)
     update_collection(collection, sync=sync)

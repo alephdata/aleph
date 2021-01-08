@@ -129,7 +129,6 @@ def index_aggregator(
         log.debug("[%s] Indexed %s entities", collection, idx)
 
     entities_index.index_bulk(collection, _generate(), sync=sync)
-    aggregator.close()
 
 
 def reingest_collection(collection, job_id=None, index=False, flush=True):
@@ -169,10 +168,7 @@ def reindex_collection(collection, skip_errors=True, sync=False, flush=False):
 def delete_collection(collection, keep_metadata=False, sync=False):
     cancel_queue(collection)
     aggregator = get_aggregator(collection)
-    try:
-        aggregator.drop()
-    finally:
-        aggregator.close()
+    aggregator.drop()
     flush_notifications(collection, sync=sync)
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)

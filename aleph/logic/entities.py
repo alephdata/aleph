@@ -39,7 +39,6 @@ def upsert_entity(data, collection, authz=None, sync=False, sign=False, job_id=N
     aggregator = get_aggregator(collection)
     aggregator.delete(entity_id=entity.id)
     aggregator.put(proxy, origin=MODEL_ORIGIN)
-    aggregator.close()
 
     index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(collection, entity.id)
@@ -78,7 +77,6 @@ def update_entity(collection, entity_id=None):
             aggregator.put(name_proxy, fragment="names")
 
     index_aggregator(collection, aggregator, entity_ids=[entity_id])
-    aggregator.close()
     refresh_entity(collection, proxy.id)
 
 
@@ -150,6 +148,5 @@ def prune_entity(collection, entity_id=None, job_id=None):
     xref_index.delete_xref(collection, entity_id=entity_id)
     aggregator = get_aggregator(collection)
     aggregator.delete(entity_id=entity_id)
-    aggregator.close()
     refresh_entity(collection, entity_id)
     db.session.commit()

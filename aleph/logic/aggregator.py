@@ -1,5 +1,5 @@
 import logging
-from ftmstore import Dataset
+from ftmstore import get_dataset
 
 log = logging.getLogger(__name__)
 
@@ -10,4 +10,5 @@ def get_aggregator_name(collection):
 
 def get_aggregator(collection, origin="aleph"):
     """Connect to a followthemoney dataset."""
-    return Dataset(get_aggregator_name(collection), origin=origin)
+    dataset = get_aggregator_name(collection)
+    return get_dataset(dataset, origin=origin)

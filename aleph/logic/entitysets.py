@@ -56,7 +56,6 @@ def save_entityset_item(entityset, collection, entity_id, **data):
         profile_fragments(collection, aggregator, entity_id=entity_id)
         index_aggregator(collection, aggregator, entity_ids=[entity_id])
         refresh_entity(collection, entity_id)
-        aggregator.close()
     refresh_entityset(entityset.id)
     return item
 

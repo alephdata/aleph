@@ -80,7 +80,7 @@ class TestCase(unittest.TestCase):
         # have actually been evaluated.
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
-        ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
+        # ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
         settings.APP_NAME = APP_NAME
         settings.TESTING = True
         settings.DEBUG = True
@@ -205,14 +205,12 @@ class TestCase(unittest.TestCase):
 
         aggregator = get_aggregator(self.public_coll)
         aggregator.delete()
-        aggregator.close()
         reindex_collection(self.public_coll, sync=True)
 
         aggregator = get_aggregator(self.private_coll)
         aggregator.delete()
         for sample in read_entities(self.get_fixture_path("samples.ijson")):
             aggregator.put(sample, fragment="sample")
-        aggregator.close()
         reindex_collection(self.private_coll, sync=True)
 
     def setUp(self):

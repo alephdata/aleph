@@ -15,7 +15,6 @@ def ingest_flush(collection, entity_id=None):
     aggregator = get_aggregator(collection)
     for stage in settings.INGEST_PIPELINE:
         aggregator.delete(entity_id=entity_id, origin=stage)
-    aggregator.close()
 
 
 def crawl_directory(collection, path, parent=None, job_id=None):

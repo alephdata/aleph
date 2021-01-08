@@ -111,7 +111,6 @@ def _query_mentions(collection):
             writer.put(proxy, fragment="mention")
             # pprint(proxy.to_dict())
     writer.flush()
-    aggregator.close()
 
 
 def _query_entities(collection):

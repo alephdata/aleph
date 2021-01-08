@@ -20,7 +20,6 @@ class MappingAPITest(TestCase):
         self.col = self.create_collection(foreign_id="map1")
         aggregator = get_aggregator(self.col)
         aggregator.delete()
-        aggregator.close()
         _, self.headers = self.login(is_admin=True)
         self.rolex = self.create_user(foreign_id="user_3")
         _, self.headers_x = self.login(foreign_id="user_3")
