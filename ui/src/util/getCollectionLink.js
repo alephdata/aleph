@@ -1,10 +1,15 @@
-export default function getCollectionLink(collection) {
+import queryString from 'query-string';
+
+export default function getCollectionLink(collection, hash) {
   if (collection && collection.id) {
+    const hashSuffix = hash && queryString.stringify(hash);
+    let base;
     if (collection.casefile) {
-      return `/investigations/${collection.id}`;
+      base = `/investigations/${collection.id}`;
     } else {
-      return `/datasets/${collection.id}`;
+      base = `/datasets/${collection.id}`;
     }
+    return hashSuffix ? `${base}#${hashSuffix}` : base;
   }
   return null;
 }
