@@ -49,14 +49,8 @@ build-ui:
 
 build-full: build build-ui
 
-docker-pull:
-	$(COMPOSE) pull --include-deps --ignore-pull-failures
-
-docker-push:
-	docker push alephdata/aleph-elasticsearch:$(ALEPH_TAG)
-	docker push alephdata/aleph:$(ALEPH_TAG)
-	docker push alephdata/aleph-ui:$(ALEPH_TAG)
-	docker push alephdata/aleph-ui-production:$(ALEPH_TAG)
+ingest-restart:
+	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
 
 dev: 
 	pip install -q bump2version babel jinja2
@@ -75,3 +69,4 @@ translate: dev
 	pybabel compile -d aleph/translations -D aleph -f
 
 .PHONY: build services
+
