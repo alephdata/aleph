@@ -16,12 +16,14 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import { Breadcrumbs, DualPane } from 'components/common';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+import { Breadcrumbs, DualPane, Schema } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
+import getCollectionLink from 'util/getCollectionLink';
 
 import 'components/common/ItemOverview.scss';
 
@@ -81,6 +83,9 @@ class EntityScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
+        <Breadcrumbs.Text>
+          <Schema.Link schema={entity.schema} url={getCollectionLink(entity.collection, { mode: collectionViewIds.ENTITIES, type: entity.schema })} plural icon />
+        </Breadcrumbs.Text>
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );

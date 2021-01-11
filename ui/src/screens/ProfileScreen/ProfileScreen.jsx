@@ -15,8 +15,9 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 import { DialogToggleButton } from 'components/Toolbar';
-import { Breadcrumbs, DualPane } from 'components/common';
-
+import { Breadcrumbs, DualPane, Schema } from 'components/common';
+import getCollectionLink from 'util/getCollectionLink';
+import collectionViewIds from 'components/Collection/collectionViewIds';
 import {
   fetchProfile,
   fetchProfileTags,
@@ -111,8 +112,12 @@ class ProfileScreen extends Component {
       return <LoadingScreen />;
     }
 
+    const baseEntity = profile.entity;
     const breadcrumbs = (
       <Breadcrumbs operation={this.renderOperations()}>
+        <Breadcrumbs.Text>
+          <Schema.Link schema={baseEntity.schema} url={getCollectionLink(profile.collection, { mode: collectionViewIds.ENTITIES, type: baseEntity.schema })} plural icon />
+        </Breadcrumbs.Text>
         <Breadcrumbs.EntitySet key="profile" entitySet={profile} />
       </Breadcrumbs>
     );
@@ -124,10 +129,10 @@ class ProfileScreen extends Component {
           <DualPane>
             <DualPane.SidePane className="ItemOverview">
               <div className="ItemOverview__heading profile">
-                <EntityHeading entity={profile.entity} isProfile={true} />
+                <EntityHeading entity={baseEntity} isProfile={true} />
               </div>
               <div className="ItemOverview__content">
-                <EntityInfoMode entity={profile.entity} />
+                <EntityInfoMode entity={baseEntity} />
               </div>
             </DualPane.SidePane>
             <DualPane.ContentPane>

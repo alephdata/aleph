@@ -74,7 +74,7 @@ class EntityBreadcrumb extends PureComponent {
           </li>
         )}
         <li key={entity.id}>
-          <Entity.Label entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
+          <Entity.Label entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" truncate={30} />
         </li>
       </>
     );
