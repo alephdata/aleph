@@ -2,7 +2,7 @@ import logging
 from pprint import pprint, pformat  # noqa
 from flask import request
 from pantomime.types import PDF, CSV
-from banal import ensure_list, first
+from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.helpers import entity_filename
@@ -186,16 +186,15 @@ class EntitySerializer(Serializer):
     def _serialize(self, obj):
         pk = obj.get("id")
         proxy = model.get_proxy(obj)
-        properties = obj.get("properties", {})
-        for prop in proxy.iterprops():
-            if prop.type != registry.entity:
-                continue
-            values = ensure_list(properties.get(prop.name))
-            properties[prop.name] = []
-            for value in values:
+        properties = {}
+        for prop, value in proxy.itervalues():
+            properties.setdefault(prop.name, [])
+            if prop.type == registry.entity:
                 entity = self.resolve(Entity, value, EntitySerializer)
-                properties[prop.name].append(entity or value)
-
+                value = entity or value
+            if value is not None:
+                properties[prop.name].append(value)
+        obj["properties"] = properties
         links = {
             "self": url_for("entities_api.view", entity_id=pk),
             "expand": url_for("entities_api.expand", entity_id=pk),
@@ -203,19 +202,20 @@ class EntitySerializer(Serializer):
             "ui": entity_url(pk),
         }
         if proxy.schema.is_a(Document.SCHEMA):
-            content_hash = first(properties.get("contentHash"))
+            content_hash = proxy.first("contentHash", quiet=True)
             if content_hash:
                 name = entity_filename(proxy)
-                mime = first(properties.get("mimeType"))
+                mime = proxy.first("mimeType", quiet=True)
                 links["file"] = archive_url(
                     content_hash, file_name=name, mime_type=mime
                 )
 
-            pdf_hash = first(properties.get("pdfHash"))
+            pdf_hash = proxy.first("pdfHash", quiet=True)
             if pdf_hash:
                 name = entity_filename(proxy, extension="pdf")
                 links["pdf"] = archive_url(pdf_hash, file_name=name, mime_type=PDF)
-            csv_hash = first(properties.get("csvHash"))
+
+            csv_hash = proxy.first("csvHash", quiet=True)
             if csv_hash:
                 name = entity_filename(proxy, extension="csv")
                 links["csv"] = archive_url(csv_hash, file_name=name, mime_type=CSV)
