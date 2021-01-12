@@ -51,7 +51,7 @@ class CollectionManageMenu extends React.Component {
 
   render() {
     const { intl, collection } = this.props;
-    if (!collection.writeable) {
+    if (!collection?.writeable) {
       return null;
     }
     const deleteMessage = messages[collection?.casefile ? 'delete_casefile' : 'delete_dataset'];
