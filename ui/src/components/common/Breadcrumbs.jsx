@@ -83,10 +83,10 @@ class EntityBreadcrumb extends PureComponent {
 
 class EntitySetBreadcrumb extends PureComponent {
   render() {
-    const { entitySet } = this.props;
+    const { entitySet, icon } = this.props;
     return (
       <li key={entitySet.id}>
-        <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
+        <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon={icon} truncate={30} />
       </li>
     );
   }

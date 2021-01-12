@@ -126,7 +126,7 @@ class ProfileScreen extends Component {
             icon
           />
         </Breadcrumbs.Text>
-        <Breadcrumbs.EntitySet key="profile" entitySet={profile} />
+        <Breadcrumbs.EntitySet key="profile" entitySet={profile} icon />
       </Breadcrumbs>
     );
 

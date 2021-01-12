@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
+import queryString from 'query-string';
 import { Icon } from '@blueprintjs/core';
 
 import { Count, ResultCount } from 'components/common';
 import { collectionXrefFacetsQuery } from 'queries';
 import { selectModel, selectCollectionXrefResult } from 'selectors';
+import getCollectionLink from 'util/getCollectionLink';
 
 const messages = defineMessages({
   diagrams: {
@@ -102,6 +105,15 @@ class CollectionViewLabel extends PureComponent {
   }
 }
 
+const CollectionViewLink = ({id, collection, children, ...rest}) => {
+  const content = children || <CollectionViewLabel id={id} {...rest} />
+  return (
+    <Link to={{ pathname: getCollectionLink(collection), hash: queryString.stringify({ mode: id })}}>
+      {content}
+    </Link>
+  );
+}
+
 const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
   let count;
   switch(id) {
@@ -169,6 +181,7 @@ const mapStateToProps = (state, ownProps) => {
 export default class CollectionView {
   static Icon = CollectionViewIcon;
   static Label = injectIntl(CollectionViewLabel);
+  static Link = injectIntl(CollectionViewLink);
   static Count = compose(withRouter, connect(mapStateToProps))(CollectionViewCount);
   static Description = injectIntl(CollectionViewDescription);
 }
