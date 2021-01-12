@@ -48,14 +48,14 @@ class InvestigationSidebar extends React.Component {
   }
 
   render() {
-    const { collection, activeMode, activeType, minimalHeader, schemaCounts } = this.props;
+    const { collection, activeMode, activeType, schemaCounts } = this.props;
 
     const entityTools = [collectionViewIds.DIAGRAMS, collectionViewIds.LISTS, collectionViewIds.XREF];
     const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS, collectionViewIds.MENTIONS];
 
     return (
       <div className="InvestigationSidebar">
-        <InvestigationHeading collection={collection} activeMode={activeMode} minimal={minimalHeader} />
+        <InvestigationHeading collection={collection} activeMode={activeMode} />
         <div className="InvestigationSidebar__content">
           <div className="InvestigationSidebar__section">
             <h6 className="bp3-heading InvestigationSidebar__section__title">

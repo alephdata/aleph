@@ -31,23 +31,16 @@ class CollectionBreadcrumb extends PureComponent {
     }
 
     return (
-      <>
-        {showCategory && (
-          <li key={collection.category}>
-            <Category.Link category={collection.category} className="bp3-breadcrumb" icon="database" />
-          </li>
-        )}
-        <li key={collection.id}>
-          <Collection.Status
-            collection={collection}
-            className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
-            icon={!showCategory}
-            truncate={30}
-            LabelComponent={Collection.Link}
-          />
-          <Restricted collection={collection} />
-        </li>
-      </>
+      <li key={collection.id}>
+        <Collection.Status
+          collection={collection}
+          className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
+          icon
+          truncate={30}
+          LabelComponent={Collection.Link}
+        />
+        <Restricted collection={collection} />
+      </li>
     );
   }
 }

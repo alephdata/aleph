@@ -71,7 +71,7 @@ export class CollectionWrapper extends Component {
     const operation = <CollectionManageMenu collection={collection} />;
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} type={isCasefile ? 'casefile' : 'dataset'}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory={showCategory} />
+        <Breadcrumbs.Collection key="collection" collection={collection} />
       </Breadcrumbs>
     );
 
