@@ -11,7 +11,7 @@ import './EntityToolbar.scss';
 
 class EntityToolbar extends React.Component {
   render() {
-    const { entity } = this.props;
+    const { entity, profile } = this.props;
     if (!entity || !entity.schema) {
       return null;
     }
@@ -23,7 +23,7 @@ class EntityToolbar extends React.Component {
       <div className="EntityToolbar">
         <ButtonGroup minimal className="EntityToolbar__buttons bp3-intent-primary">
           {isThing && (
-            <Link to={getEntityLink(entity)} className="bp3-button">
+            <Link to={getEntityLink(entity, profile)} className="bp3-button">
               <Icon icon="fullscreen" className="left-icon" />
               <FormattedMessage id="sidebar.open" defaultMessage="Expand" />
             </Link>
