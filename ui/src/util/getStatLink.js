@@ -7,14 +7,19 @@ export default function getStatLink(collection, field, value,) {
     const params = {
       [`csfilter:${field}`]: value,
     };
-    const query = queryString.stringify(params);
-    return `${getCollectionLink(collection, { mode: collectionViewIds.SEARCH })}?${query}`;
+    return ({
+      pathname: getCollectionLink(collection),
+      search: queryString.stringify(params),
+      hash: queryString.stringify({ mode: collectionViewIds.SEARCH })
+    });
   }
 
   const params = {
     [`filter:${field}`]: value,
   };
-  const query = queryString.stringify(params);
 
-  return `/search?${query}`;
+  return ({
+    pathname: 'search',
+    search: queryString.stringify(params)
+  });
 }

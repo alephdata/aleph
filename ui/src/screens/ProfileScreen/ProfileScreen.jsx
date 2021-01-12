@@ -116,7 +116,15 @@ class ProfileScreen extends Component {
     const breadcrumbs = (
       <Breadcrumbs operation={this.renderOperations()}>
         <Breadcrumbs.Text>
-          <Schema.Link schema={baseEntity.schema} url={getCollectionLink(profile.collection, { mode: collectionViewIds.ENTITIES, type: baseEntity.schema })} plural icon />
+          <Schema.Link
+            schema={baseEntity.schema}
+            url={{
+              pathname: getCollectionLink(profile.collection),
+              hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: baseEntity.schema })
+            }}
+            plural
+            icon
+          />
         </Breadcrumbs.Text>
         <Breadcrumbs.EntitySet key="profile" entitySet={profile} />
       </Breadcrumbs>

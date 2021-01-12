@@ -11,6 +11,7 @@ import { entitySuggestQuery } from 'queries';
 import { queryEntities } from 'actions';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import getCollectionLink from 'util/getCollectionLink';
+import queryString from 'query-string';
 
 
 import './DocumentSelectDialog.scss';
@@ -97,7 +98,7 @@ class DocumentSelectDialog extends Component {
               }
               values={{
                 link: (
-                  <Link to={getCollectionLink(collection, { mode: collectionViewIds.DOCUMENTS })}>
+                  <Link to={{ pathname: getCollectionLink(collection), hash: queryString.stringify({ mode: collectionViewIds.DOCUMENTS })}}>
                     <FormattedMessage
                       id='entity.manager.bulk_import.link_text'
                       defaultMessage={

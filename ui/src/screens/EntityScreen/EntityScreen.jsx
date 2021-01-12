@@ -84,7 +84,15 @@ class EntityScreen extends Component {
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
         <Breadcrumbs.Text>
-          <Schema.Link schema={entity.schema} url={getCollectionLink(entity.collection, { mode: collectionViewIds.ENTITIES, type: entity.schema })} plural icon />
+          <Schema.Link
+            schema={entity.schema}
+            url={{
+              pathname: getCollectionLink(entity.collection),
+              hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: entity.schema })
+            }}
+            plural
+            icon
+          />
         </Breadcrumbs.Text>
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
