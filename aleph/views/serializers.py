@@ -233,6 +233,9 @@ class EntitySerializer(Serializer):
         obj["latinized"] = transliterate_values(proxy)
         obj["writeable"] = check_write_entity(obj, request.authz)
         obj["shallow"] = obj.get("shallow", True)
+        # Phasing out multi-values here (2021-01):
+        obj["created_at"] = min(ensure_list(obj.get("created_at")), default=None)
+        obj["updated_at"] = max(ensure_list(obj.get("updated_at")), default=None)
         return obj
 
 

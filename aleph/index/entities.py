@@ -205,17 +205,16 @@ def format_proxy(proxy, collection):
 
     # Context data - from aleph system, not followthemoney.
     data["collection_id"] = collection.id
-    # FIXME: Can there ever really be multiple role_ids?
     data["role_id"] = first(data.get("role_id"))
     data["profile_id"] = first(data.get("profile_id"))
     data["mutable"] = max(ensure_list(data.get("mutable")), default=False)
     data["origin"] = ensure_list(data.get("origin"))
     # Logical simplifications of dates:
     created_at = ensure_list(data.get("created_at"))
-    if len(created_at):
+    if len(created_at) > 0:
         data["created_at"] = min(created_at)
     updated_at = ensure_list(data.get("updated_at")) or created_at
-    if len(updated_at):
+    if len(updated_at) > 0:
         data["updated_at"] = max(updated_at)
 
     # log.info("%s", pformat(data))
