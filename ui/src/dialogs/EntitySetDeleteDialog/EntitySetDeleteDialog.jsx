@@ -37,9 +37,9 @@ class EntitySetDeleteDialog extends Component {
       showSuccessToast(intl.formatMessage(messages.success, { title: entitySet.label }))
     ));
 
-    history.push({
-      pathname: getCollectionLink(entitySet.collection),
-    });
+    history.push(
+      getCollectionLink({ collection: entitySet.collection })
+    );
   }
 
   render() {

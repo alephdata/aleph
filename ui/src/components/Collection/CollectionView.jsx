@@ -105,10 +105,10 @@ class CollectionViewLabel extends PureComponent {
   }
 }
 
-const CollectionViewLink = ({id, collection, children, ...rest}) => {
+const CollectionViewLink = ({id, collection, hash, search, children, ...rest}) => {
   const content = children || <CollectionViewLabel id={id} {...rest} />
   return (
-    <Link to={{ pathname: getCollectionLink(collection), hash: queryString.stringify({ mode: id })}}>
+    <Link to={getCollectionLink({ collection, mode: id, hash, search })}>
       {content}
     </Link>
   );

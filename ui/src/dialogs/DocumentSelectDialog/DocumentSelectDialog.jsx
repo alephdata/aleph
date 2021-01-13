@@ -11,7 +11,6 @@ import { entitySuggestQuery } from 'queries';
 import { queryEntities } from 'actions';
 import CollectionView from 'components/Collection/CollectionView';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import getCollectionLink from 'util/getCollectionLink';
 import queryString from 'query-string';
 
 

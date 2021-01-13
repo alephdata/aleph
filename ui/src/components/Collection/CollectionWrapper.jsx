@@ -34,11 +34,9 @@ export class CollectionWrapper extends Component {
   onSearch(queryText) {
     const { collection, history, query } = this.props;
     const newQuery = query.set('q', queryText);
-    history.push({
-      pathname: getCollectionLink(collection),
-      hash: queryString.stringify({ mode: 'search' }),
-      search: newQuery.toLocation()
-    });
+    history.push(
+      getCollectionLink({ collection, mode: collectionViewIds.SEARCH, search: newQuery.toLocation() })
+    );
   }
 
   onUploadSuccess() {
