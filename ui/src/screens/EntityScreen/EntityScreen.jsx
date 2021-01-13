@@ -16,8 +16,6 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import CollectionView from 'components/Collection/CollectionView';
-import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, DualPane, Schema } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
@@ -82,24 +80,14 @@ class EntityScreen extends Component {
       </ButtonGroup>
     );
 
-    const schemaLink = entity.schema.isDocument()
-      ? <CollectionView.Link collection={entity.collection} id={collectionViewIds.DOCUMENTS} icon />
-      : (
-        <Schema.Link
-          schema={entity.schema}
-          url={{
-            pathname: getCollectionLink(entity.collection),
-            hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: entity.schema })
-          }}
-          plural
-          icon
-        />
-      );
-
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
         <Breadcrumbs.Text>
-          {schemaLink}
+          <Schema.Link
+            schema={entity.schema}
+            collection={entity.collection}
+            plural
+          />
         </Breadcrumbs.Text>
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>

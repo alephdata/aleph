@@ -1,16 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { selectModel } from 'selectors';
-import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
 
-function SchemaLink(props) {
-  const { schema, plural, url, children } = props;
+import { selectModel } from 'selectors';
+import { collectionSearchQuery } from 'queries';
+import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
+import CollectionView from 'components/Collection/CollectionView';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+
+
+function SchemaLink({ collection, location, schema, ...rest }) {
+  const viewProps = { collection };
+  if (collection.casefile && !schema.isDocument()) {
+    viewProps.id = collectionViewIds.ENTITIES;
+    viewProps.hash = { type: schema };
+  } else {
+    viewProps.id = collectionViewIds.SEARCH;
+
+    const query = collectionSearchQuery(location, collection.id)
+      .setFilter('schema', schema);
+
+    viewProps.search = query.toLocation();
+  }
+
   return (
-    <Link to={url}>
-      <VLSchema.Label schema={schema} icon={true} plural={plural} />
-      {children}
-    </Link>
+    <CollectionView.Link {...viewProps}>
+      <VLSchema.Label schema={schema} icon={true} {...rest} />
+    </CollectionView.Link>
   );
 }
 
@@ -28,7 +46,7 @@ class Schema extends Component {
 
   static Icon = connect(mapStateToProps)(VLSchema.Icon);
 
-  static Link = connect(mapStateToProps)(SchemaLink);
+  static Link = compose(withRouter, connect(mapStateToProps))(SchemaLink);
 
   static Description = connect(mapStateToProps)(SchemaDescription);
 

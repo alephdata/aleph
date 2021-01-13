@@ -118,12 +118,8 @@ class ProfileScreen extends Component {
         <Breadcrumbs.Text>
           <Schema.Link
             schema={baseEntity.schema}
-            url={{
-              pathname: getCollectionLink(profile.collection),
-              hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: baseEntity.schema })
-            }}
+            collection={profile.collection}
             plural
-            icon
           />
         </Breadcrumbs.Text>
         <Breadcrumbs.EntitySet key="profile" entitySet={profile} icon />
