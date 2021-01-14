@@ -2,6 +2,7 @@
 import json
 import click
 import logging
+import random
 from pathlib import Path
 from pprint import pprint  # noqa
 from itertools import count
@@ -233,6 +234,66 @@ def dump_entities(foreign_id, outfile):
     collection = get_collection(foreign_id)
     for entity in iter_proxies(collection_id=collection.id):
         write_object(outfile, entity)
+
+
+@cli.command("sample-entities")
+@click.option(
+    "--secret",
+    type=bool,
+    default=None,
+    help="Whether to sample from secret collections (None means sample from both)",
+)
+@click.option(
+    "--property",
+    "-p",
+    "properties",
+    multiple=True,
+    type=str,
+    default=[],
+    help="Entities must have at least one of the listed properties",
+)
+@click.option(
+    "--schemata",
+    "-s",
+    "schematas",
+    multiple=True,
+    type=str,
+    default=[],
+    help="Filter schematas",
+)
+@click.option("--seed", type=int, default=None, help="Set the random seed")
+@click.option(
+    "--sample-pct",
+    type=float,
+    default=None,
+    help="Random sampling percent (value from 0-1)",
+)
+@click.option("--limit", type=int, default=None, help="Number of entities to return")
+@click.argument("outfile", type=click.File("w+"), default="-")
+def sample_entities(secret, properties, schematas, seed, sample_pct, limit, outfile):
+    """Sample random entities"""
+    random.seed(seed)
+    authz = Authz.from_role(Role.load_cli_user())
+    collections = list(Collection.all_by_secret(secret, authz))
+    random.shuffle(collections)
+    iter_proxies_kwargs = {
+        "authz": authz,
+        "schemata": schematas or None,
+        "sort": "random",
+        "random_seed": seed,
+    }
+    n_entities = 0
+    for collection in collections:
+        for entity in iter_proxies(collection_id=collection.id, **iter_proxies_kwargs):
+            if properties and not any(
+                entity.properties.get(prop) for prop in properties
+            ):
+                continue
+            if not sample_pct or random.random() < sample_pct:
+                write_object(outfile, entity)
+                n_entities += 1
+                if limit and n_entities >= limit:
+                    return
 
 
 @cli.command()
