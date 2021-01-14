@@ -1,5 +1,6 @@
 import logging
 import fingerprints
+import warnings
 from pprint import pprint, pformat  # noqa
 from banal import ensure_list, first
 from followthemoney import model
@@ -64,6 +65,7 @@ def iter_entities(
     excludes=None,
     filters=None,
     sort=None,
+    randomize=False,
     random_seed=None,
 ):
     """Scan all entities matching the given criteria."""
@@ -72,7 +74,12 @@ def iter_entities(
     }
     q = _entities_query(filters, authz, collection_id, schemata)
     preserve_order = False
-    if sort == "random":
+    if randomize:
+        if sort is not None:
+            warnings.warn(
+                "iter_entities: randomize and sort are mutually exclusive. ignoring sort order.",
+                RuntimeWarning,
+            )
         seed_q = {"field": "_seq_no"}
         if random_seed:
             seed_q["seed"] = random_seed
