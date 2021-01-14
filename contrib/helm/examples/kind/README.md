@@ -84,7 +84,7 @@ helm install aleph ../../charts/aleph -f ./values/staging.yaml -n staging --time
 Or using a packaged helm chart release:
 
 ```
-helm install aleph -f ./values/staging.yaml -n staging --timeout 10m0s https://github.com/alephdata/aleph-helm-charts/releases/download/3.9.8/aleph-3.9.8.tgz
+helm install aleph -f ./values/staging.yaml -n staging --timeout 10m0s https://github.com/alephdata/aleph-helm-charts/releases/download/3.9.9/aleph-3.9.9.tgz
 ```
 
 Configuration values for Aleph can be changed in `values/$(ENV).yaml`
