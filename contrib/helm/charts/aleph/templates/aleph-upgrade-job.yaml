@@ -1,0 +1,101 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: aleph-upgrade
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade
+    # "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 60
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      name: aleph-upgrade
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      nodeSelector: {{- toYaml .Values.upgrade.nodeSelector | nindent 8 }}
+      restartPolicy: Never
+      securityContext: {{- toYaml .Values.upgrade.podSecurityContext | nindent 8 }}
+      containers:
+        - name: aleph-upgrade
+          image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+          command: ["aleph", "upgrade"]
+          volumeMounts:
+            {{ if .Values.global.google }}
+            - mountPath: /var/secrets/google
+              name: service-account-aleph
+              readOnly: true
+            {{ end }}
+          securityContext:
+            {{- toYaml .Values.upgrade.containerSecurityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.upgrade.containerResources | nindent 12 }}
+          env:
+            {{- range $key, $value := .Values.global.commonEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.global.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.upgrade.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: ALEPH_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_DATABASE_URI
+            - name: ALEPH_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_OAUTH_SECRET
+            - name: ALEPH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_SECRET_KEY
+            - name: FTM_STORE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: FTM_STORE_URI
+            {{ if .Values.global.google }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/service-account.json
+            {{ end }}
+            {{ if .Values.global.amazon }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: AWS_SECRET_ACCESS_KEY
+            {{ end }}
+      volumes:
+        {{ if .Values.global.google }}
+        - name: service-account-aleph
+          secret:
+            secretName: service-account-aleph
+        {{ end }}

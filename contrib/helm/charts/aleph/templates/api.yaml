@@ -1,0 +1,157 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.namingPrefix }}-api
+  labels:
+    app: {{ .Values.global.namingPrefix }}-api
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-api
+  strategy: {{- toYaml .Values.api.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.namingPrefix }}-api
+      annotations: {{- toYaml .Values.api.podAnnotations | nindent 8 }}
+    spec:
+      nodeSelector: {{- toYaml .Values.api.nodeSelector | nindent 8 }}
+      restartPolicy: Always
+      securityContext: {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          command:
+            - gunicorn
+            - "--timeout"
+            - "3600"
+            - "--keep-alive"
+            - "60"
+            - "--threads"
+            - "10"
+            - "--bind"
+            - 0.0.0.0:8000
+            - --log-level
+            - warning
+            - --log-file
+            - "-"
+            - --access-logfile
+            - "-"
+            - aleph.wsgi:app
+          volumeMounts:
+            {{ if .Values.global.google }}
+            - mountPath: /var/secrets/google
+              name: service-account-aleph
+              readOnly: true
+            {{ end }}
+            - mountPath: /tmp
+              name: tmp-volume
+            - mountPath: /home/app
+              name: home-volume
+          securityContext:
+            {{- toYaml .Values.api.containerSecurityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.api.containerResources | nindent 12 }}
+          env:
+            {{- range $key, $value := .Values.global.commonEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.global.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.api.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: ALEPH_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_DATABASE_URI
+            - name: ALEPH_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_OAUTH_SECRET
+            - name: ALEPH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_SECRET_KEY
+            - name: FTM_STORE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: FTM_STORE_URI
+            {{ if .Values.global.google }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/service-account.json
+            {{ end }}
+            {{ if .Values.global.amazon }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: AWS_SECRET_ACCESS_KEY
+            {{ end }}
+          readinessProbe:
+            httpGet:
+              path: /healthz?ready
+              port: 8000
+            initialDelaySeconds: 5
+            # timeoutSeconds: 5
+            # periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz?live
+              port: 8000
+            initialDelaySeconds: 5
+            # timeoutSeconds: 5
+            # periodSeconds: 20
+            # failureThreshold: 10
+      volumes:
+        {{ if .Values.global.google }}
+        - name: service-account-aleph
+          secret:
+            secretName: service-account-aleph
+        {{ end }}
+        - name: tmp-volume
+          emptyDir: {}
+        - name: home-volume
+          emptyDir: {}
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.global.namingPrefix }}-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.global.namingPrefix }}-api
+  minReplicas: {{.Values.api.hpa.minReplicas}}
+  maxReplicas: {{.Values.api.hpa.maxReplicas}}
+  metrics: {{- toYaml .Values.api.hpa.scalingMetrics | nindent 4}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.namingPrefix }}-api
+  labels:
+    app: {{ .Values.global.namingPrefix }}-api
+spec:
+  selector:
+    app: {{ .Values.global.namingPrefix }}-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: "TCP"
+      name: api

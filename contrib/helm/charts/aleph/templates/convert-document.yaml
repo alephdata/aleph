@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.namingPrefix }}-convert-document
+  labels:
+    app: {{ .Values.global.namingPrefix }}-convert-document
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-convert-document
+  strategy: {{- toYaml .Values.convertdocument.strategy | nindent 6}}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.namingPrefix }}-convert-document
+      annotations: {{- toYaml .Values.convertdocument.podAnnotations | nindent 8}}
+    spec:
+      nodeSelector: {{- toYaml .Values.convertdocument.nodeSelector | nindent 8}}
+      restartPolicy: Always
+      securityContext: {{- toYaml .Values.convertdocument.podSecurityContext | nindent 8}}
+      containers:
+        - name: {{.Chart.Name}}
+          image: "{{ .Values.convertdocument.image.repository }}:{{ .Values.convertdocument.image.tag }}"
+          imagePullPolicy: {{.Values.convertdocument.image.pullPolicy}}
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
+            - mountPath: /home/app
+              name: home-volume
+          securityContext:
+            {{- toYaml .Values.convertdocument.containerSecurityContext | nindent 12}}
+          resources: {{- toYaml .Values.convertdocument.containerResources | nindent 12}}
+          env:
+            {{- range $key, $value := .Values.convertdocument.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 3000
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 3000
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 1
+      volumes:
+        - name: home-volume
+          emptyDir: {}
+        - name: tmp-volume
+          emptyDir: {}
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.global.namingPrefix }}-convert-document
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.global.namingPrefix }}-convert-document
+  minReplicas: {{.Values.convertdocument.hpa.minReplicas}}
+  maxReplicas: {{.Values.convertdocument.hpa.maxReplicas}}
+  metrics: {{- toYaml .Values.convertdocument.hpa.scalingMetrics | nindent 4}}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.global.namingPrefix }}-convert-document-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-convert-document
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ .Values.global.namingPrefix }}-ingest-file
+      ports:
+        - protocol: TCP
+          port: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.namingPrefix }}-convert-document
+  labels:
+    app: {{ .Values.global.namingPrefix }}-convert-document
+spec:
+  selector:
+    app: {{ .Values.global.namingPrefix }}-convert-document
+  type: {{.Values.convertdocument.service.type}}
+  ports:
+    - port: {{.Values.convertdocument.service.port}}
+      protocol: "TCP"
+      name: api

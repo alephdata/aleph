@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: aleph-ingress-staging
+  namespace: staging
+spec:
+  rules:
+    - host: aleph.staging
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: aleph-ui
+              servicePort: 80
+          - path: /api
+            backend:
+              serviceName: aleph-api
+              servicePort: 8000
