@@ -12,6 +12,14 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::$(cat contrib/helm/charts/aleph/Chart.yaml | grep version | awk '{print $2}')
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+      - name: Copy existing charts for index regeneration
+        run: gsutil cp -r gs://aleph-helm-charts charts
 
       # Build for every commit
       - name: Package chart
@@ -20,18 +28,8 @@ jobs:
           exec: |
             helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}+${{ github.sha }} --destination charts/
             helm repo index charts/
-      - name: Upload index to GCS
-        uses: google-github-actions/upload-cloud-storage@main
-        with:
-          credentials: ${{ secrets.gcp_credentials }}
-          path: charts/index.yaml
-          destination: aleph-helm-charts
       - name: Upload chart to GCS
-        uses: google-github-actions/upload-cloud-storage@main
-        with:
-          credentials: ${{ secrets.gcp_credentials }}
-          path: charts/aleph-${{ steps.get_version.outputs.VERSION }}+${{ github.sha }}.tgz
-          destination: aleph-helm-charts
+        run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}+${{ github.sha }}.tgz gs://aleph-helm-charts
 
       # Build for tags
       - name: Package chart
@@ -41,17 +39,8 @@ jobs:
           exec: |
             helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }} --destination charts/
             helm repo index charts/
-      - name: Upload index to GCS
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        uses: google-github-actions/upload-cloud-storage@main
-        with:
-          credentials: ${{ secrets.gcp_credentials }}
-          path: charts/index.yaml
-          destination: aleph-helm-charts
       - name: Upload chart to GCS
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        uses: google-github-actions/upload-cloud-storage@main
-        with:
-          credentials: ${{ secrets.gcp_credentials }}
-          path: charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz
-          destination: aleph-helm-charts
+        run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://aleph-helm-charts
+
+      - name: Upload index to GCS
+        run: gsutil cp charts/index.yaml gs://aleph-helm-charts
