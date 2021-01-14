@@ -285,7 +285,7 @@ export class EntityTable extends Component {
               />
               <Waypoint
                 onEnter={this.getMoreResults}
-                bottomOffset="-600px"
+                bottomOffset="0"
                 scrollableAncestor={window}
               />
             </>
