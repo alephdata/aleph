@@ -27,6 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
           release_name: Aleph ${{ github.sha }}
           draft: false
           prerelease: true
