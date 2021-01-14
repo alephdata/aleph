@@ -40,6 +40,7 @@ jobs:
             helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }} --destination charts/
             helm repo index charts/
       - name: Upload chart to GCS
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://aleph-helm-charts
 
       - name: Upload index to GCS
