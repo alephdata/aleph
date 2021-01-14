@@ -29,6 +29,7 @@ jobs:
         with:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
           release_name: Aleph ${{ github.sha }}
+          commitish: ${{ github.sha }}
           draft: false
           prerelease: true
       - name: Upload Release Asset
