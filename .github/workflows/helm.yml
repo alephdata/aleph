@@ -21,27 +21,13 @@ jobs:
       - name: Copy existing charts for index regeneration
         run: mkdir charts && gsutil cp -r gs://aleph-helm-charts charts
 
-      # Build for every commit
       - name: Package chart
-        uses: WyriHaximus/github-action-helm3@v2
-        with:
-          exec: |
-            helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}+${{ github.sha }} --destination charts/
-            helm repo index charts/
-      - name: Upload chart to GCS
-        run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}+${{ github.sha }}.tgz gs://aleph-helm-charts
-
-      # Build for tags
-      - name: Package chart
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: WyriHaximus/github-action-helm3@v2
         with:
           exec: |
             helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }} --destination charts/
             helm repo index charts/
       - name: Upload chart to GCS
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://aleph-helm-charts
-
       - name: Upload index to GCS
         run: gsutil cp charts/index.yaml gs://aleph-helm-charts
