@@ -279,7 +279,7 @@ def sample_entities(secret, properties, schematas, seed, sample_pct, limit, outf
     iter_proxies_kwargs = {
         "authz": authz,
         "schemata": schematas or None,
-        "sort": "random",
+        "randomize": True,
         "random_seed": seed,
     }
     n_entities = 0
