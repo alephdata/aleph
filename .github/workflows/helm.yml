@@ -27,8 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Aleph ${GITHUB_SHA}
+          release_name: Aleph ${{ github.sha }}
           draft: false
           prerelease: true
       - name: Upload Release Asset
