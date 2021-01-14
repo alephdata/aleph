@@ -12,56 +12,46 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::$(cat contrib/helm/charts/aleph/Chart.yaml | grep version | awk '{print $2}')
-      - name: Get the tag
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        id: get_tag
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+
+      # Build for every commit
       - name: Package chart
         uses: WyriHaximus/github-action-helm3@v2
         with:
-          exec: helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}
+          exec: |
+            helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}+${{ github.sha }} --destination charts/
+            helm repo index charts/
+      - name: Upload index to GCS
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          credentials: ${{ secrets.gcp_credentials }}
+          path: charts/index.yaml
+          destination: aleph-helm-charts/index.yaml
+      - name: Upload chart to GCS
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          credentials: ${{ secrets.gcp_credentials }}
+          path: charts/aleph-${{ steps.get_version.outputs.VERSION }}+${{ github.sha }}.tgz
+          destination: aleph-helm-charts/aleph-${{ steps.get_version.outputs.VERSION }}+${{ github.sha }}.tgz
 
-      - name: Create Release for commit hash
-        id: create_release_commit
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.get_version.outputs.VERSION }}
-          release_name: Aleph ${{ github.sha }}
-          commitish: ${{ github.sha }}
-          draft: false
-          prerelease: true
-      - name: Upload Release Asset
-        id: upload_release_asset_commit
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release_commit.outputs.upload_url }}
-          asset_path: ./aleph-${{ steps.get_version.outputs.VERSION }}.tgz
-          asset_name: aleph-${{ steps.get_version.outputs.VERSION }}.tgz
-          asset_content_type: application/gzip
-
-      - name: Create Release for release tags
+      # Build for tags
+      - name: Package chart
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        id: create_release_tag
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: WyriHaximus/github-action-helm3@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Aleph ${{ steps.get_version.outputs.VERSION }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
+          exec: |
+            helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }} --destination charts/
+            helm repo index charts/
+      - name: Upload index to GCS
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: google-github-actions/upload-cloud-storage@main
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./aleph-${{ steps.get_version.outputs.VERSION }}.tgz
-          asset_name: aleph-${{ steps.get_version.outputs.VERSION }}.tgz
-          asset_content_type: application/gzip
+          credentials: ${{ secrets.gcp_credentials }}
+          path: charts/index.yaml
+          destination: aleph-helm-charts/index.yaml
+      - name: Upload chart to GCS
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          credentials: ${{ secrets.gcp_credentials }}
+          path: charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz
+          destination: aleph-helm-charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz
