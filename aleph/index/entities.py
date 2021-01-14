@@ -64,16 +64,24 @@ def iter_entities(
     excludes=None,
     filters=None,
     sort=None,
+    random_seed=None,
 ):
     """Scan all entities matching the given criteria."""
     query = {
-        "query": _entities_query(filters, authz, collection_id, schemata),
         "_source": _source_spec(includes, excludes),
     }
+    q = _entities_query(filters, authz, collection_id, schemata)
     preserve_order = False
-    if sort is not None:
-        query["sort"] = ensure_list(sort)
-        preserve_order = True
+    if sort == "random":
+        seed_q = {"field": "_seq_no"}
+        if random_seed:
+            seed_q["seed"] = random_seed
+        query["query"] = {"function_score": {"query": q, "random_score": seed_q}}
+    else:
+        query["query"] = q
+        if sort is not None:
+            query["sort"] = ensure_list(sort)
+            preserve_order = True
     index = entities_read_index(schema=schemata)
     for res in scan(
         es,

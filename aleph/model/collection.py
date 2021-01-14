@@ -218,6 +218,13 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return cls._apply_authz(q, authz)
 
     @classmethod
+    def all_by_secret(cls, secret, authz=None):
+        q = super(Collection, cls).all()
+        if secret is not None:
+            q = q.filter(Collection.restricted == secret)
+        return cls._apply_authz(q, authz)
+
+    @classmethod
     def create(cls, data, authz, created_at=None):
         foreign_id = data.get("foreign_id") or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
