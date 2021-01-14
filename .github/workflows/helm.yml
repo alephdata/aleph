@@ -1,9 +1,6 @@
 name: Package and Upload Helm Chart Release
 
-on:
-  push:
-    tags:
-      - "*"
+on: [push]
 
 jobs:
   build:
@@ -14,13 +11,38 @@ jobs:
         uses: actions/checkout@v2
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=VERSION::$(cat contrib/helm/charts/aleph/Chart.yaml | grep version | awk '{print $2}')
+      - name: Get the tag
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        id: get_tag
+        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
       - name: Package chart
         uses: WyriHaximus/github-action-helm3@v2
         with:
-          exec: helm package charts/aleph --version ${GITHUB_REF/refs\/tags\//}
-      - name: Create Release
-        id: create_release
+          exec: helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}
+      - name: Create Release for commit hash
+        id: create_release_commit
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Aleph ${GITHUB_SHA}
+          draft: false
+          prerelease: true
+      - name: Upload Release Asset
+        id: upload_release_asset_commit
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_commit.outputs.upload_url }}
+          asset_path: ./aleph-${{ steps.get_version.outputs.VERSION }}.tgz
+          asset_name: aleph-${{ steps.get_version.outputs.VERSION }}.tgz
+          asset_content_type: application/gzip
+      - name: Create Release for release tags
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        id: create_release_tag
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,6 +52,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Upload Release Asset
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
