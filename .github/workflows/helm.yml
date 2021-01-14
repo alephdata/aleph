@@ -19,7 +19,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           export_default_credentials: true
       - name: Copy existing charts for index regeneration
-        run: gsutil cp -r gs://aleph-helm-charts charts
+        run: mkdir charts && gsutil cp -r gs://aleph-helm-charts charts
 
       # Build for every commit
       - name: Package chart
