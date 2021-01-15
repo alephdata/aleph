@@ -5,7 +5,7 @@ import getCollectionLink from 'util/getCollectionLink';
 export default function getStatLink(collection, field, value,) {
   if (collection) {
     const params = {
-      [`entitiesfilter:${field}`]: value,
+      [`csfilter:${field}`]: value,
     };
     const query = queryString.stringify(params);
     return `${getCollectionLink(collection)}?${query}#mode=search`;
