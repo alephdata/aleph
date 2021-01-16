@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Waypoint } from 'react-waypoint';
 import { Button, Intent } from '@blueprintjs/core';
-import { ErrorSection } from 'components/common';
+import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryEntitySets } from 'actions';
 import EntitySetIndexItem from 'components/EntitySet/EntitySetIndexItem';
 
@@ -22,11 +21,6 @@ const messages = defineMessages({
 });
 
 class EntitySetIndex extends Component {
-  constructor(props) {
-    super(props);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -42,15 +36,8 @@ class EntitySetIndex extends Component {
     }
   }
 
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isPending && result.next && !result.isError) {
-      this.props.queryEntitySets({ query, next: result.next });
-    }
-  }
-
   render() {
-    const { intl, loadMoreOnScroll, onSelect, result, showCollection, type } = this.props;
+    const { intl, loadMoreOnScroll, onSelect, query, result, showCollection, type } = this.props;
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
@@ -87,10 +74,10 @@ class EntitySetIndex extends Component {
           ))}
         </ul>
         {loadMoreOnScroll && (
-          <Waypoint
-            onEnter={this.getMoreResults}
-            bottomOffset="0"
-            scrollableAncestor={window}
+          <QueryInfiniteLoad
+            query={query}
+            result={result}
+            fetch={this.props.queryEntitySets}
           />
         )}
         {showLoadMoreButton && (
