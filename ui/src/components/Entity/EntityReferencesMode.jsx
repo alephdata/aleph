@@ -149,37 +149,41 @@ class EntityReferencesMode extends React.Component {
           searchPlaceholder={placeholder}
         >
         </EntityActionBar>
-        <table className="data-table references-data-table">
-          <thead>
-            <tr>
-              {!isThing && (
-                <th key="expand" />
-              )}
-              {columns.map(prop => (
-                <th key={prop.name} className={prop.type}>
-                  <Property.Name prop={prop} />
-                </th>
-              ))}
-              {!hideCollection && (
-                <th>
-                  <FormattedMessage
-                    id="xref.match_collection"
-                    defaultMessage="Dataset"
-                  />
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {results.map(entity => this.renderRow(columns, entity))}
-            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(columns, idx))}
-          </tbody>
-        </table>
-        <QueryInfiniteLoad
-          query={query}
-          result={result}
-          fetch={this.props.queryEntities}
-        />
+        {result.total !== 0 && (
+          <>
+            <table className="data-table references-data-table">
+              <thead>
+                <tr>
+                  {!isThing && (
+                    <th key="expand" />
+                  )}
+                  {columns.map(prop => (
+                    <th key={prop.name} className={prop.type}>
+                      <Property.Name prop={prop} />
+                    </th>
+                  ))}
+                  {!hideCollection && (
+                    <th>
+                      <FormattedMessage
+                        id="xref.match_collection"
+                        defaultMessage="Dataset"
+                      />
+                    </th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {results.map(entity => this.renderRow(columns, entity))}
+                {result.isPending && skeletonItems.map(idx => this.renderSkeleton(columns, idx))}
+              </tbody>
+            </table>
+            <QueryInfiniteLoad
+              query={query}
+              result={result}
+              fetch={this.props.queryEntities}
+            />
+          </>
+        )}
         {result.total === 0 && (
           <ErrorSection
             icon={<Schema.Icon schema={reference.schema} className="left-icon" size={60} />}
