@@ -200,7 +200,7 @@ def export_matches(export_id):
         authz = Authz.from_role(role)
         collection = Collection.by_id(export.collection_id)
         file_name = "%s - Crossreference.xlsx" % collection.label
-        file_path = export_dir.joinpath(file_name)
+        file_path = export_dir.joinpath(f"{export_id}.xslx")
         excel = ExcelWriter()
         headers = [
             "Score",
@@ -230,7 +230,7 @@ def export_matches(export_id):
             for data in buffer:
                 fp.write(data)
 
-        complete_export(export_id, file_path)
+        complete_export(export_id, file_path, file_name)
     except Exception:
         log.exception("Failed to process export [%s]", export_id)
         export = Export.by_id(export_id)
