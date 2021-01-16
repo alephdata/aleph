@@ -14,5 +14,11 @@
   &__popover {
     border-radius: 0 !important;
     background-color: #3a454d !important;
+
+    .bp3-menu-item.mobile-show {
+      @media screen and (min-width: $aleph-navbar-mobile-max-width) {
+        display: none;
+      }
+    }
   }
 }
