@@ -10,6 +10,7 @@ import { fetchRole } from 'actions';
 import { selectCurrentRole, selectCurrentRoleId, selectMetadata } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { DialogToggleButton } from 'components/Toolbar'
+import { Skeleton } from 'components/common'
 
 import './AuthButtons.scss';
 
@@ -73,8 +74,18 @@ export class AuthButtons extends Component {
     }
   }
 
+  renderSkeleton() {
+    return (
+      <Skeleton.Text type="span" length="10" className="AuthButtons" />
+    )
+  }
+
   render() {
     const { role, metadata, intl } = this.props;
+
+    if (role.isPending) {
+      return this.renderSkeleton();
+    }
 
     if (!!role.id) {
       return (
