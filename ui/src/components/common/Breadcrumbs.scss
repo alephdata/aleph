@@ -39,6 +39,10 @@
     margin: 2px 0;
   }
 
+  &__main {
+    @include rtlSupportInvertedProp(margin, right, $aleph-content-padding, 0);
+  }
+
   &__right {
     display: flex;
 

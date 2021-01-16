@@ -36,7 +36,7 @@ class CollectionBreadcrumb extends PureComponent {
           collection={collection}
           className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
           icon
-          truncate={30}
+          truncate={75}
           LabelComponent={Collection.Link}
         />
         <Restricted collection={collection} />
