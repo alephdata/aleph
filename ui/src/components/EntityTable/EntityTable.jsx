@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Divider } from '@blueprintjs/core';
-import { Waypoint } from 'react-waypoint';
 import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -10,7 +9,7 @@ import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import { Count, ErrorSection } from 'components/common';
+import { Count, ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
@@ -62,7 +61,6 @@ export class EntityTable extends Component {
       selection: [],
     };
     this.updateQuery = this.updateQuery.bind(this);
-    this.getMoreResults = this.getMoreResults.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
     this.onSortColumn = this.onSortColumn.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
@@ -78,13 +76,6 @@ export class EntityTable extends Component {
 
   componentDidUpdate() {
     this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result.next && !result.isPending && !result.isError) {
-      this.props.queryEntities({ query, next: result.next });
-    }
   }
 
   fetchIfNeeded() {
@@ -283,10 +274,10 @@ export class EntityTable extends Component {
                 isPending={result.total === undefined}
                 visitEntity={visitEntity}
               />
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="0"
-                scrollableAncestor={window}
+              <QueryInfiniteLoad
+                query={query}
+                result={result}
+                fetch={this.props.queryEntities}
               />
             </>
           )}
