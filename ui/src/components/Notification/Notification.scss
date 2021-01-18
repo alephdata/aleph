@@ -46,4 +46,8 @@ $notification-items-padding: 1px;
   .EntityLabel {
     vertical-align: inherit;
   }
+
+  span.bp3-skeleton {
+    white-space: nowrap;
+  }
 }
