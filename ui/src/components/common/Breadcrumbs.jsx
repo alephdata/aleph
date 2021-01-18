@@ -2,30 +2,22 @@ import React, { PureComponent, Component } from 'react';
 import { ControlGroup, Divider, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Category, Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
+import { Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
 
 import './Breadcrumbs.scss';
 
 
 class CollectionBreadcrumb extends PureComponent {
   renderSkeleton() {
-    const { showCategory } = this.props;
     return (
-      <>
-        {showCategory && (
-          <li>
-            <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
-          </li>
-        )}
-        <li>
-          <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
-        </li>
-      </>
+      <li>
+        <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
+      </li>
     );
   }
 
   render() {
-    const { collection, active, showCategory } = this.props;
+    const { collection, active } = this.props;
     if (collection?.id === undefined) {
       return this.renderSkeleton();
     }

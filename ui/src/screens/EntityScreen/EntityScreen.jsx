@@ -22,7 +22,6 @@ import { DownloadButton } from 'components/Toolbar';
 import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
-import getCollectionLink from 'util/getCollectionLink';
 
 import 'components/common/ItemOverview.scss';
 

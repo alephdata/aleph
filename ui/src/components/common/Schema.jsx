@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 
 import { selectModel } from 'selectors';
 import { collectionSearchQuery } from 'queries';
