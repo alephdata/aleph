@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 
 import Screen from 'components/Screen/Screen';
-import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
@@ -28,22 +27,20 @@ export class CollectionScreen extends Component {
     }
 
     return (
-      <CollectionContextLoader collectionId={collectionId}>
-        <Screen
-          title={collection.label}
-          description={collection.summary}
-        >
-          <CollectionWrapper collection={collection}>
-            <SinglePane>
-              <CollectionHeading collection={collection} />
-              <CollectionViews
-                collection={collection}
-                activeMode={activeMode}
-              />
-            </SinglePane>
-          </CollectionWrapper>
-        </Screen>
-      </CollectionContextLoader>
+      <Screen
+        title={collection.label}
+        description={collection.summary}
+      >
+        <CollectionWrapper collectionId={collectionId} collection={collection}>
+          <SinglePane>
+            <CollectionHeading collection={collection} />
+            <CollectionViews
+              collection={collection}
+              activeMode={activeMode}
+            />
+          </SinglePane>
+        </CollectionWrapper>
+      </Screen>
     );
   }
 }

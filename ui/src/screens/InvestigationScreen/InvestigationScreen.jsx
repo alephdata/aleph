@@ -7,7 +7,6 @@ import { Redirect, withRouter } from 'react-router';
 import Screen from 'components/Screen/Screen';
 import { DualPane } from 'components/common';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import InvestigationViews from 'components/Investigation/InvestigationViews';
 import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
@@ -32,33 +31,31 @@ export class InvestigationScreen extends Component {
 
     const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
     return (
-      <CollectionContextLoader collectionId={collectionId}>
-        <Screen
-          title={collection.label}
-          description={collection.summary}
-        >
-          <CollectionWrapper collection={collection} forceCasefile>
-            <DualPane className="InvestigationScreen">
-              {showSidebar && (
-                <InvestigationSidebar
+      <Screen
+        title={collection.label}
+        description={collection.summary}
+      >
+        <CollectionWrapper collectionId={collectionId} collection={collection} forceCasefile>
+          <DualPane className="InvestigationScreen">
+            {showSidebar && (
+              <InvestigationSidebar
+                collection={collection}
+                activeMode={activeMode}
+                activeType={activeType}
+              />
+            )}
+            <DualPane.ContentPane className="InvestigationScreen__body">
+              <div className="InvestigationScreen__body-content">
+                <InvestigationViews
                   collection={collection}
                   activeMode={activeMode}
                   activeType={activeType}
                 />
-              )}
-              <DualPane.ContentPane className="InvestigationScreen__body">
-                <div className="InvestigationScreen__body-content">
-                  <InvestigationViews
-                    collection={collection}
-                    activeMode={activeMode}
-                    activeType={activeType}
-                  />
-                </div>
-              </DualPane.ContentPane>
-            </DualPane>
-          </CollectionWrapper>
-        </Screen>
-      </CollectionContextLoader>
+              </div>
+            </DualPane.ContentPane>
+          </DualPane>
+        </CollectionWrapper>
+      </Screen>
     );
   }
 }
