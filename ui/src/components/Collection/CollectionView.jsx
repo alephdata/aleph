@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import queryString from 'query-string';
 import { Icon } from '@blueprintjs/core';
 
 import { Count, ResultCount } from 'components/common';
@@ -75,12 +74,12 @@ const icons = {
   overview: 'grouped-bar-chart',
   documents: 'document',
   entities: 'list-columns',
-  xref: 'comparison' ,
-  diagrams: 'graph' ,
-  mappings: 'new-object' ,
-  search: 'search' ,
-  lists: 'list' ,
-  mentions: 'tag' ,
+  xref: 'comparison',
+  diagrams: 'graph',
+  mappings: 'new-object',
+  search: 'search',
+  lists: 'list',
+  mentions: 'tag',
 };
 
 const CollectionViewIcon = ({ id, className }) => {
@@ -105,7 +104,7 @@ class CollectionViewLabel extends PureComponent {
   }
 }
 
-const CollectionViewLink = ({id, collection, hash, search, children, ...rest}) => {
+const CollectionViewLink = ({ id, collection, hash, search, children, ...rest }) => {
   const content = children || <CollectionViewLabel id={id} {...rest} />
   return (
     <Link to={getCollectionLink({ collection, mode: id, hash, search })}>
@@ -116,7 +115,7 @@ const CollectionViewLink = ({id, collection, hash, search, children, ...rest}) =
 
 const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
   let count;
-  switch(id) {
+  switch (id) {
     case 'documents':
     case 'entities':
       const schemaCounts = collection?.statistics?.schema?.values;
@@ -163,7 +162,7 @@ class CollectionViewDescription extends PureComponent {
     if (!messageKey) { return null; }
 
     return (
-      <span>{intl.formatMessage(messageKey, {br: <br />})}</span>
+      <span>{intl.formatMessage(messageKey, { br: <br /> })}</span>
     );
   }
 }

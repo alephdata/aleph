@@ -53,7 +53,7 @@ class ProfileItemsMode extends Component {
           <Score score={item.score} />
         </td>
         <td className="collection">
-          <Collection.Link collection={item.collection} icon />
+          <Collection.Link collection={item.entity.collection} icon />
         </td>
       </tr>
     );

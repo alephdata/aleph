@@ -8,7 +8,7 @@ class ResultText extends PureComponent {
     if (result?.isError) {
       return <FormattedMessage id="result.error" defaultMessage="Error" />;
     }
-    if (!result || result.total == undefined) {
+    if (!result || result.total === undefined) {
       return <FormattedMessage id="result.searching" defaultMessage="Searching..." />;
     }
     if (result.total_type === 'gte') {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Classes, Dialog } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -11,7 +10,6 @@ import { entitySuggestQuery } from 'queries';
 import { queryEntities } from 'actions';
 import CollectionView from 'components/Collection/CollectionView';
 import collectionViewIds from 'components/Collection/collectionViewIds';
-import queryString from 'query-string';
 
 
 import './DocumentSelectDialog.scss';

@@ -17,8 +17,6 @@ import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDelete
 import { DialogToggleButton } from 'components/Toolbar';
 import { Breadcrumbs, DualPane, Schema } from 'components/common';
 import getEntityLink from 'util/getEntityLink';
-import getCollectionLink from 'util/getCollectionLink';
-import collectionViewIds from 'components/Collection/collectionViewIds';
 import {
   fetchProfile,
   fetchProfileTags,

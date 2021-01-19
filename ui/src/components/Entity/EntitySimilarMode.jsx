@@ -111,7 +111,7 @@ class EntitySimilarMode extends Component {
           <Score score={similar.score} />
         </td>
         <td className="collection">
-          <Collection.Link collection={similar.entity?.collection} icon />
+          <Collection.Link collection={similar.entity.collection} icon />
         </td>
       </tr>
     );

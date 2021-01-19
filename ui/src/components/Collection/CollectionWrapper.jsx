@@ -55,7 +55,7 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      showCategory, children, collection, collectionId, query, intl, isCasefile
+      children, collection, collectionId, query, intl, isCasefile
     } = this.props;
     const message = intl.formatMessage(messages[isCasefile ? 'casefile' : 'dataset']);
 
@@ -96,14 +96,11 @@ const mapStateToProps = (state, ownProps) => {
   const isCasefile = forceCasefile || collection?.casefile;
   const collectionStatus = selectCollection(state, collectionId)?.status;
   const query = collectionSearchQuery(location, collectionId);
-  const onCollectionScreen = location.pathname === getCollectionLink(collection);
-  const showCategory = !isCasefile && onCollectionScreen;
 
   return {
     collectionId,
-    collection: {...collection, status: collectionStatus},
+    collection: { ...collection, status: collectionStatus },
     isCasefile,
-    showCategory,
     query,
   };
 };

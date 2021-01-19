@@ -54,7 +54,7 @@ class CollectionStatistics extends PureComponent {
   }
 
   render() {
-    const { collection, field, total, values } = this.props;
+    const { field, total, values } = this.props;
     const filteredValues = _.pickBy(values, this.filterValues);
     const filteredTotal = field === 'schema' ? Object.keys(filteredValues).length : total;
 

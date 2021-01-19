@@ -5,7 +5,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
 
 import { Count, Schema } from 'components/common';
 import { selectModel } from 'selectors';
