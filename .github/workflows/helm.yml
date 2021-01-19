@@ -23,15 +23,16 @@ jobs:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           export_default_credentials: true
       - name: Copy existing charts for index regeneration
-        run: mkdir charts && gsutil cp -r gs://aleph-helm-charts charts
+        run: gsutil -m cp -r gs://aleph-helm-charts . && mv aleph-helm-charts charts
 
       - name: Package chart
         uses: WyriHaximus/github-action-helm3@v2
         with:
-          exec: helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}-dev --destination charts/
+          exec: |
+            rm -f charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz
+            helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}-dev --destination charts/
       - name: Upload chart to GCS
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz gs://aleph-helm-charts
-
       - name: Package chart
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: WyriHaximus/github-action-helm3@v2
@@ -41,9 +42,9 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://aleph-helm-charts
 
-      - name: Upload index to GCS
+      - name: Generate index
         uses: WyriHaximus/github-action-helm3@v2
         with:
-          exec: |
-            helm repo index charts/
-            gsutil cp charts/index.yaml gs://aleph-helm-charts
+          exec: helm repo index charts/
+      - name: Upload index to GCS
+        run: gsutil cp charts/index.yaml gs://aleph-helm-charts/index.yaml
