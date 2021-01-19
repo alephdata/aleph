@@ -39,7 +39,7 @@ zipstream-new==1.1.8
 
 # Testing dependencies
 factory-boy==3.2.0
-Faker==5.6.1
+Faker==5.6.2
 nose
 coverage
 coveralls
