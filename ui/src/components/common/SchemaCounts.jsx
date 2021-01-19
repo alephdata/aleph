@@ -22,24 +22,6 @@ const messages = defineMessages({
 
 
 class SchemaCounts extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.handleTabChange = this.handleTabChange.bind(this);
-  }
-
-  handleTabChange(type) {
-    const { history, location } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    parsedHash.type = type;
-    parsedHash.mode = 'entities';
-
-    history.push({
-      pathname: location.pathname,
-      search: "",
-      hash: queryString.stringify(parsedHash),
-    });
-  }
-
   render() {
     const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, onSelect } = this.props;
 
@@ -60,7 +42,7 @@ class SchemaCounts extends React.PureComponent {
         {_.size(visibleCounts) > 0 && showSchemaAdd && <Divider />}
         {showSchemaAdd && (
           <Schema.Select
-            onSelect={this.handleTabChange}
+            onSelect={schema => onSelect(schema)}
             fill
             optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
           >

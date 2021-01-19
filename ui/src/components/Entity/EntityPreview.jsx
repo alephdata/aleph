@@ -53,7 +53,7 @@ export class EntityPreview extends React.Component {
   }
 
   render() {
-    const { entityId, entity, hidden, locale } = this.props;
+    const { entityId, entity, hidden, locale, profile } = this.props;
     if (!entityId) {
       return null;
     }
@@ -62,7 +62,7 @@ export class EntityPreview extends React.Component {
         <Drawer
           className="EntityPreview"
           isOpen={!hidden}
-          title={<EntityToolbar entity={entity} />}
+          title={<EntityToolbar entity={entity} profile={profile} />}
           onClose={this.onClose}
           hasBackdrop={false}
           autoFocus={false}
@@ -83,9 +83,12 @@ export class EntityPreview extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const parsedHash = queryString.parse(ownProps.location.hash);
   const entityId = parsedHash['preview:id'];
+  const profile = parsedHash['preview:profile'] !== 'false';
   const activeMode = parsedHash['preview:mode'];
+
   return {
     entityId,
+    profile,
     parsedHash,
     entity: selectEntity(state, entityId),
     activeMode: selectEntityView(state, entityId, activeMode, true),

@@ -6,10 +6,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
+import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { Breadcrumbs, SearchBox } from 'components/common';
 import { collectionSearchQuery } from 'queries';
+import { selectCollection } from 'selectors';
 import getCollectionLink from 'util/getCollectionLink';
 
 
@@ -53,7 +55,7 @@ export class CollectionWrapper extends Component {
 
   render() {
     const {
-      showCategory, children, collection, query, intl, isCasefile
+      showCategory, children, collection, collectionId, query, intl, isCasefile
     } = this.props;
     const message = intl.formatMessage(messages[isCasefile ? 'casefile' : 'dataset']);
 
@@ -74,7 +76,7 @@ export class CollectionWrapper extends Component {
     );
 
     return (
-      <>
+      <CollectionContextLoader collectionId={collectionId}>
         {breadcrumbs}
         <DocumentDropzone
           canDrop={collection.writeable}
@@ -83,19 +85,23 @@ export class CollectionWrapper extends Component {
         >
           {children}
         </DocumentDropzone>
-      </>
+      </CollectionContextLoader>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location, forceCasefile } = ownProps;
+  const { collection, collectionId: id, location, forceCasefile } = ownProps;
+  const collectionId = id || collection?.id;
   const isCasefile = forceCasefile || collection?.casefile;
-  const query = collectionSearchQuery(location, collection?.id);
+  const collectionStatus = selectCollection(state, collectionId)?.status;
+  const query = collectionSearchQuery(location, collectionId);
   const onCollectionScreen = location.pathname === getCollectionLink(collection);
   const showCategory = !isCasefile && onCollectionScreen;
 
   return {
+    collectionId,
+    collection: {...collection, status: collectionStatus},
     isCasefile,
     showCategory,
     query,

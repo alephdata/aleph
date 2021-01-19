@@ -89,6 +89,15 @@ table {
   td.entity {
     font-weight: bold;
     max-width: unset;
+    white-space: normal !important;
+    word-break: break-word;
+
+    .EntityLabel {
+      display: flex !important;
+    }
+    .Transliterate {
+      display: inline !important;
+    }
   }
 
   tr.prefix {

@@ -20,17 +20,17 @@ class EntityLink extends PureComponent {
   }
 
   onClick(event) {
-    const { entity, history, preview } = this.props;
+    const { entity, history, preview, profile = true} = this.props;
     if (preview) {
       event.preventDefault();
-      togglePreview(history, entity);
+      togglePreview(history, entity, profile);
     }
   }
 
   render() {
-    const { entity, className, children, preview } = this.props;
+    const { entity, className, children, preview, profile = true } = this.props;
     const content = children || <VLEntity.Label {...this.props} />;
-    const link = getEntityLink(entity);
+    const link = getEntityLink(entity, profile);
     if (!link) {
       return content;
     }
@@ -39,7 +39,8 @@ class EntityLink extends PureComponent {
       <Link
         to={link}
         onClick={preview ? this.onClick : undefined}
-        className={c('EntityLink', className)}>
+        className={c('EntityLink', className)}
+      >
         {content}
       </Link>
     );

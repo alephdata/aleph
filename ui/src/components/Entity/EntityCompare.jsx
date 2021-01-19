@@ -49,7 +49,7 @@ class EntityCompare extends PureComponent {
     const properties = this.getCommonProperties(entity, other, showEmpty);
     return (
       <>
-        <Entity.Link entity={entity} preview icon />
+        <Entity.Link entity={entity} profile={false} preview icon />
         <div className="EntityCompare__properties">
           {properties.map((prop) => (
             <div className="EntityCompare__property" key={prop.qname}>

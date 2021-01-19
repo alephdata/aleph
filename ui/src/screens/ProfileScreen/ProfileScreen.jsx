@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
@@ -16,6 +16,7 @@ import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 import { DialogToggleButton } from 'components/Toolbar';
 import { Breadcrumbs, DualPane, Schema } from 'components/common';
+import getEntityLink from 'util/getEntityLink';
 import getCollectionLink from 'util/getCollectionLink';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import {
@@ -106,6 +107,9 @@ class ProfileScreen extends Component {
     const { profile, viaEntityId, activeMode } = this.props;
 
     if (profile.isError) {
+      if (viaEntityId) {
+        return <Redirect to={getEntityLink(viaEntityId, false)} />;
+      }
       return <ErrorScreen error={profile.error} />;
     }
     if (!profile?.id || !profile?.entity) {

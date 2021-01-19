@@ -60,7 +60,7 @@ class ProfileItemsMode extends Component {
           <EntityCompare entity={item.entity} other={this.props.profile.entity} />
         </td>
         <td className="collection">
-          <Collection.Link collection={item.entity.collection} icon />
+          <Collection.Link collection={item.collection} icon />
         </td>
       </tr>
     );

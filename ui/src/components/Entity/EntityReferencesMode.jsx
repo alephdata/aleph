@@ -12,13 +12,11 @@ import {
   selectEntitiesResult, selectSchema,
 } from 'selectors';
 import {
-  Entity, ErrorSection, Property, QueryInfiniteLoad
+  Collection, Entity, ErrorSection, Property, QueryInfiniteLoad, Schema, Skeleton,
 } from 'components/common';
 import EntityProperties from 'components/Entity/EntityProperties';
 import ensureArray from 'util/ensureArray';
 import { queryEntities } from 'actions/index';
-import Collection from 'components/common/Collection';
-import Skeleton from 'components/common/Skeleton';
 import EntityActionBar from './EntityActionBar';
 
 const messages = defineMessages({
@@ -28,7 +26,7 @@ const messages = defineMessages({
   },
   no_results: {
     id: 'entity.references.no_results',
-    defaultMessage: 'No relationships match this search.',
+    defaultMessage: 'No {schema} match this search.',
   },
   search_placeholder: {
     id: 'entity.references.search.placeholder',
@@ -140,7 +138,8 @@ class EntityReferencesMode extends React.Component {
     const { property } = reference;
     const results = _.uniqBy(ensureArray(result.results), 'id');
     const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
-    const placeholder = intl.formatMessage(messages.search_placeholder, { schema: reference.schema.plural });
+    const schemaLabel = reference.schema.plural.toLowerCase();
+    const placeholder = intl.formatMessage(messages.search_placeholder, { schema: schemaLabel });
     const skeletonItems = [...Array(15).keys()];
     return (
       <section className="EntityReferencesTable">
@@ -150,39 +149,46 @@ class EntityReferencesMode extends React.Component {
           searchPlaceholder={placeholder}
         >
         </EntityActionBar>
-        <table className="data-table references-data-table">
-          <thead>
-            <tr>
-              {!isThing && (
-                <th key="expand" />
-              )}
-              {columns.map(prop => (
-                <th key={prop.name} className={prop.type}>
-                  <Property.Name prop={prop} />
-                </th>
-              ))}
-              {!hideCollection && (
-                <th>
-                  <FormattedMessage
-                    id="xref.match_collection"
-                    defaultMessage="Dataset"
-                  />
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {results.map(entity => this.renderRow(columns, entity))}
-            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(columns, idx))}
-          </tbody>
-        </table>
-        <QueryInfiniteLoad
-          query={query}
-          result={result}
-          fetch={this.props.queryEntities}
-        />
+        {result.total !== 0 && (
+          <>
+            <table className="data-table references-data-table">
+              <thead>
+                <tr>
+                  {!isThing && (
+                    <th key="expand" />
+                  )}
+                  {columns.map(prop => (
+                    <th key={prop.name} className={prop.type}>
+                      <Property.Name prop={prop} />
+                    </th>
+                  ))}
+                  {!hideCollection && (
+                    <th>
+                      <FormattedMessage
+                        id="xref.match_collection"
+                        defaultMessage="Dataset"
+                      />
+                    </th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {results.map(entity => this.renderRow(columns, entity))}
+                {result.isPending && skeletonItems.map(idx => this.renderSkeleton(columns, idx))}
+              </tbody>
+            </table>
+            <QueryInfiniteLoad
+              query={query}
+              result={result}
+              fetch={this.props.queryEntities}
+            />
+          </>
+        )}
         {result.total === 0 && (
-          <ErrorSection icon="graph" title={intl.formatMessage(messages.no_results)} />
+          <ErrorSection
+            icon={<Schema.Icon schema={reference.schema} className="left-icon" size={60} />}
+            title={intl.formatMessage(messages.no_results, { schema: schemaLabel })}
+          />
         )}
       </section>
     );

@@ -174,6 +174,7 @@ export function selectEntity(state, entityId) {
   result.isPending = !!entity.isPending;
   result.isError = !!entity.isError;
   result.shouldLoad = !!entity.shouldLoad;
+  result.shouldLoadDeep = !!entity.shouldLoadDeep;
   result.shallow = !!entity.shallow;
   result.error = entity.error;
   result.links = entity.links;
