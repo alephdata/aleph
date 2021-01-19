@@ -10,6 +10,7 @@ import { fetchRole } from 'actions';
 import { selectCurrentRole, selectCurrentRoleId, selectMetadata } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { DialogToggleButton } from 'components/Toolbar'
+import { Skeleton } from 'components/common'
 
 import './AuthButtons.scss';
 
@@ -47,6 +48,10 @@ const messages = defineMessages({
     id: 'nav.alerts',
     defaultMessage: 'Alerts',
   },
+  cases: {
+    id: 'nav.menu.cases',
+    defaultMessage: 'Investigations',
+  },
   status: {
     id: 'nav.status',
     defaultMessage: 'System status',
@@ -69,8 +74,18 @@ export class AuthButtons extends Component {
     }
   }
 
+  renderSkeleton() {
+    return (
+      <Skeleton.Text type="span" length="10" className="AuthButtons" />
+    )
+  }
+
   render() {
     const { role, metadata, intl } = this.props;
+
+    if (role.isPending) {
+      return this.renderSkeleton();
+    }
 
     if (!!role.id) {
       return (
@@ -99,6 +114,12 @@ export class AuthButtons extends Component {
                   </div>
                 </Link>
                 <MenuDivider />
+                <Link to="/investigations" className="bp3-menu-item mobile-show">
+                  <Icon icon="briefcase" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.cases)}
+                  </div>
+                </Link>
                 <Link to="/diagrams" className="bp3-menu-item">
                   <Icon icon="graph" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">

@@ -13,6 +13,7 @@ $aleph-content-width-limit: 750px;
 $aleph-screen-sm-max-width: 620px;
 $aleph-screen-md-max-width: 980px;
 $aleph-screen-lg-max-width: 1200px;
+$aleph-navbar-mobile-max-width: $aleph-screen-sm-max-width + $aleph-grid-size*12;
 
 $aleph-breadcrumbs-background: $light-gray4;
 $aleph-page-background: white;
