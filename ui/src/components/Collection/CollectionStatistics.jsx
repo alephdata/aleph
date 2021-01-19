@@ -2,20 +2,23 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { Country, Facet, Numeric, Schema, Statistics } from 'components/common';
 import { selectModel } from 'selectors';
-import getStatLink from 'util/getStatLink';
+import { collectionSearchQuery } from 'queries';
+import getCollectionLink from 'util/getCollectionLink';
+import collectionViewIds from 'components/Collection/collectionViewIds';
 
 import './CollectionStatistics.scss';
-
 
 class CollectionStatistics extends PureComponent {
   constructor(props) {
     super(props);
     this.filterValues = this.filterValues.bind(this);
     this.getLabel = this.getLabel.bind(this);
+    this.getLink = this.getLink.bind(this);
   }
 
   filterValues(count, value) {
@@ -37,6 +40,17 @@ class CollectionStatistics extends PureComponent {
     } else {
       return name;
     }
+  }
+
+  getLink(value) {
+    const { collection, field, baseQuery } = this.props;
+    const newQuery = baseQuery.setFilter(field, value);
+
+    return getCollectionLink({
+      collection,
+      mode: collectionViewIds.SEARCH,
+      search: newQuery.toLocation()
+    });
   }
 
   render() {
@@ -63,7 +77,7 @@ class CollectionStatistics extends PureComponent {
           )}
           statistic={filteredValues}
           isPending={!values}
-          itemLink={name => getStatLink(collection, field, name)}
+          itemLink={this.getLink}
           itemLabel={this.getLabel}
           ItemContentContainer={this.renderItem}
           styleType="dark"
@@ -74,10 +88,13 @@ class CollectionStatistics extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { model: selectModel(state) };
+  const { collection, location } = ownProps;
+  const baseQuery = collectionSearchQuery(location, collection.id);
+  return { model: selectModel(state), baseQuery };
 };
 
 export default compose(
   injectIntl,
+  withRouter,
   connect(mapStateToProps),
 )(CollectionStatistics);

@@ -44,7 +44,7 @@ class CollectionIndexItem extends PureComponent {
         )}
         <p className="index-item__details">
           <span className="index-item__details__item">
-            <Category.Label category={collection.category} icon />
+            <Category.Label category={collection.category} icon="list" />
           </span>
           <span className="index-item__details__item">
             <Icon icon="time" />

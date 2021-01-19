@@ -1,17 +1,36 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { selectModel } from 'selectors';
-import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
+import { compose } from 'redux';
+import { withRouter } from 'react-router';
 
-function SchemaLink(props) {
-  const { schema, plural, url, children } = props;
-  return (
-    <Link to={url}>
-      <VLSchema.Label schema={schema} icon={true} plural={plural} />
-      {children}
-    </Link>
-  );
+import { selectModel } from 'selectors';
+import { collectionSearchQuery } from 'queries';
+import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
+import CollectionView from 'components/Collection/CollectionView';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+
+
+function SchemaLink({ collection, location, schema, ...rest }) {
+  if (schema.isDocument()) {
+    return <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS} icon />
+  } else {
+    const viewProps = { collection };
+    if (collection.casefile) {
+      viewProps.id = collectionViewIds.ENTITIES;
+      viewProps.hash = { type: schema };
+    } else {
+      viewProps.id = collectionViewIds.SEARCH;
+      const query = collectionSearchQuery(location, collection.id)
+        .setFilter('schema', schema);
+      viewProps.search = query.toLocation();
+    }
+
+    return (
+      <CollectionView.Link {...viewProps}>
+        <VLSchema.Label schema={schema} icon={true} {...rest} />
+      </CollectionView.Link>
+    );
+  }
 }
 
 const SchemaDescription = ({ schema }) => {
@@ -28,7 +47,7 @@ class Schema extends Component {
 
   static Icon = connect(mapStateToProps)(VLSchema.Icon);
 
-  static Link = connect(mapStateToProps)(SchemaLink);
+  static Link = compose(withRouter, connect(mapStateToProps))(SchemaLink);
 
   static Description = connect(mapStateToProps)(SchemaDescription);
 

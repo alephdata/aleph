@@ -14,25 +14,21 @@ class CollectionHeading extends PureComponent {
   )
 
   render() {
-    const { collection, showCategory = true, link = false, categoryLink = false } = this.props;
+    const { collection, link = false } = this.props;
 
     if (collection?.label === undefined) {
       return this.renderSkeleton();
     }
 
-    const CategoryComponent = categoryLink ? Category.Link : Category.Label;
     const CollectionComponent = link ? Collection.Link : Collection.Label;
 
     return (
       <div className={c("CollectionHeading", { "padded": !collection.casefile })}>
-        {showCategory && (
-          <div className="bp3-text-muted CollectionHeading__subheading">
-            <Collection.Label collection={collection} label={false} />
-            <CategoryComponent category={collection.category} />
-          </div>
-        )}
+        <div className="bp3-text-muted CollectionHeading__subheading">
+          <Category.Link category={collection.category} icon={collection.casefile ? 'briefcase' : 'database'} />
+        </div>
         <h2 itemProp="name" className="CollectionHeading__title">
-          <CollectionComponent collection={collection} icon={!showCategory} />
+          <CollectionComponent collection={collection} icon={false} />
         </h2>
       </div>
     );

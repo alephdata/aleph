@@ -10,7 +10,6 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { AnimatedCount, SearchBox, Category, Country, Schema, Statistics } from 'components/common';
 import { fetchStatistics } from 'actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'selectors';
-import getStatLink from 'util/getStatLink';
 import Screen from 'components/Screen/Screen';
 import wordList from 'util/wordList';
 
@@ -138,7 +137,10 @@ export class HomeScreen extends Component {
                     )}
                     statistic={statistics.schemata}
                     isPending={statistics.isPending}
-                    itemLink={name => getStatLink(null, 'schema', name)}
+                    itemLink={value => ({
+                      pathname: 'search',
+                      search: queryString.stringify({'filter:schema': value})
+                    })}
                     itemLabel={name => <Schema.Label schema={name} plural icon />}
                   />
                 </div>
@@ -153,7 +155,10 @@ export class HomeScreen extends Component {
                     )}
                     statistic={statistics.categories}
                     isPending={statistics.isPending}
-                    itemLink={name => `/datasets?collectionsfilter:category=${name}`}
+                    itemLink={value => ({
+                      pathname: 'datasets',
+                      search: queryString.stringify({'collectionsfilter:category': value})
+                    })}
                     itemLabel={name => <Category.Label category={name} />}
                   />
                 </div>
@@ -168,7 +173,10 @@ export class HomeScreen extends Component {
                     )}
                     statistic={statistics.countries}
                     isPending={statistics.isPending}
-                    itemLink={name => `/datasets?collectionsfilter:countries=${name}`}
+                    itemLink={value => ({
+                      pathname: 'datasets',
+                      search: queryString.stringify({'collectionsfilter:countries': value})
+                    })}
                     itemLabel={name => <Country.Name code={name} />}
                   />
                 </div>

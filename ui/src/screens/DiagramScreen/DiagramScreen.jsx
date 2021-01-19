@@ -12,6 +12,8 @@ import DiagramEditor from 'components/Diagram/DiagramEditor';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
 
 
@@ -93,7 +95,10 @@ export class DiagramScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} status={status}>
-        <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} />
+        <Breadcrumbs.Text>
+          <CollectionView.Link id={collectionViewIds.DIAGRAMS} collection={diagram.collection} icon />
+        </Breadcrumbs.Text>
+        <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} icon={false}/>
       </Breadcrumbs>
     );
 

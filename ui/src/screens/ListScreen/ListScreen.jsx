@@ -13,6 +13,8 @@ import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, DualPane, SchemaCounts } from 'components/common';
 
 import './ListScreen.scss';
@@ -83,7 +85,10 @@ export class ListScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.EntitySet key="list" entitySet={list} />
+        <Breadcrumbs.Text>
+          <CollectionView.Link id={collectionViewIds.LISTS} collection={list.collection} icon />
+        </Breadcrumbs.Text>
+        <Breadcrumbs.EntitySet key="list" entitySet={list} icon={false}/>
       </Breadcrumbs>
     );
 
