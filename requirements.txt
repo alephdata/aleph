@@ -28,7 +28,7 @@ apispec==4.0.0
 apispec-webframeworks==0.5.2
 blinker==1.4
 Babel==2.9.0
-PyYAML==5.3.1
+PyYAML==5.4
 python-frontmatter==0.5.0
 pyjwt==2.0.1
 cryptography==3.3.1
