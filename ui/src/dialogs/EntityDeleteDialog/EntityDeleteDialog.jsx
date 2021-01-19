@@ -93,9 +93,8 @@ export class EntityDeleteDialog extends Component {
         if (redirectOnSuccess) {
           const parent = entities[0]?.getFirst('parent');
           const collection = entities[0]?.collection;
-          const pathname = parent ? getEntityLink(parent) : getCollectionLink(collection);
 
-          history.push({ pathname });
+          history.push(parent ? { pathname: getEntityLink(parent) } : getCollectionLink({ collection }));
         }
         this.setState({ blocking: false });
         toggleDialog(true);

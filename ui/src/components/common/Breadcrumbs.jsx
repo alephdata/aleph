@@ -2,52 +2,37 @@ import React, { PureComponent, Component } from 'react';
 import { ControlGroup, Divider, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Category, Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
+import { Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
 
 import './Breadcrumbs.scss';
 
 
 class CollectionBreadcrumb extends PureComponent {
   renderSkeleton() {
-    const { showCategory } = this.props;
     return (
-      <>
-        {showCategory && (
-          <li>
-            <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
-          </li>
-        )}
-        <li>
-          <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
-        </li>
-      </>
+      <li>
+        <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
+      </li>
     );
   }
 
   render() {
-    const { collection, active, showCategory } = this.props;
+    const { collection, active } = this.props;
     if (collection?.id === undefined) {
       return this.renderSkeleton();
     }
 
     return (
-      <>
-        {showCategory && (
-          <li key={collection.category}>
-            <Category.Link category={collection.category} className="bp3-breadcrumb" icon />
-          </li>
-        )}
-        <li key={collection.id}>
-          <Collection.Status
-            collection={collection}
-            className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
-            icon
-            truncate={30}
-            LabelComponent={Collection.Link}
-          />
-          <Restricted collection={collection} />
-        </li>
-      </>
+      <li key={collection.id}>
+        <Collection.Status
+          collection={collection}
+          className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
+          icon
+          truncate={75}
+          LabelComponent={Collection.Link}
+        />
+        <Restricted collection={collection} />
+      </li>
     );
   }
 }
@@ -74,7 +59,7 @@ class EntityBreadcrumb extends PureComponent {
           </li>
         )}
         <li key={entity.id}>
-          <Entity.Label entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
+          <Entity.Label entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" truncate={30} />
         </li>
       </>
     );
@@ -83,10 +68,10 @@ class EntityBreadcrumb extends PureComponent {
 
 class EntitySetBreadcrumb extends PureComponent {
   render() {
-    const { entitySet } = this.props;
+    const { entitySet, icon } = this.props;
     return (
       <li key={entitySet.id}>
-        <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
+        <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon={icon} truncate={30} />
       </li>
     );
   }

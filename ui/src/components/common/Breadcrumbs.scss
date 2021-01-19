@@ -39,6 +39,10 @@
     margin: 2px 0;
   }
 
+  &__main {
+    @include rtlSupportInvertedProp(margin, right, $aleph-content-padding, 0);
+  }
+
   &__right {
     display: flex;
 
@@ -83,6 +87,11 @@
       .bp3-spinner-head {
         stroke: white;
       }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
     }
   }
 

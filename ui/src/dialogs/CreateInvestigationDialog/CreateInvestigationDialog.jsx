@@ -96,9 +96,7 @@ class CreateInvestigationDialog extends Component {
       if (preventRedirect) {
         toggleDialog(response.data);
       } else {
-        history.push({
-          pathname: getCollectionLink(response.data)
-        });
+        history.push(getCollectionLink({ collection: response.data }));
       }
     } catch (e) {
       this.setState({ blocking: false });

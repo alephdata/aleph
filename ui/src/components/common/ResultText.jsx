@@ -5,11 +5,11 @@ import { FormattedNumber, FormattedMessage } from 'react-intl';
 class ResultText extends PureComponent {
   renderText() {
     const { result } = this.props;
-    if (!result || result.isPending) {
-      return <FormattedMessage id="result.searching" defaultMessage="Searching..." />;
-    }
-    if (result.isError) {
+    if (result?.isError) {
       return <FormattedMessage id="result.error" defaultMessage="Error" />;
+    }
+    if (!result || result.total == undefined) {
+      return <FormattedMessage id="result.searching" defaultMessage="Searching..." />;
     }
     if (result.total_type === 'gte') {
       return (

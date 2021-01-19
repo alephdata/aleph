@@ -57,7 +57,7 @@ class CollectionLink extends PureComponent {
   render() {
     const { collection, className } = this.props;
     const content = <Collection.Label {...this.props} />;
-    const link = getCollectionLink(collection);
+    const link = getCollectionLink({ collection });
     if (!link) {
       return content;
     }

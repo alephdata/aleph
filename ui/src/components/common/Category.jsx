@@ -16,7 +16,7 @@ class CategoryLabel extends PureComponent {
     const label = categories[category];
     return (
       <span className="CategoryLabel" title={label}>
-        { icon && (<Icon icon="list" className="left-icon" />)}
+        { !!icon && (<Icon icon={icon} className="left-icon" />)}
         <span>{ label }</span>
       </span>
     );

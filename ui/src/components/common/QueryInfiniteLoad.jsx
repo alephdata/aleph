@@ -18,9 +18,7 @@ class QueryInfiniteLoad extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && result.next && !result.isPending && !result.isError) {
-      this.props.fetch({ query, result, next: result.next });
-    }
+    this.props.fetch({ query, result, next: result.next });
   }
 
   fetchIfNeeded() {
@@ -31,13 +29,20 @@ class QueryInfiniteLoad extends Component {
   }
 
   render() {
-    return (
-      <Waypoint
-        onEnter={this.getMoreResults}
-        bottomOffset="-300px"
-        scrollableAncestor={window}
-      />
-    );
+    const { result } = this.props;
+    const canLoadMore = result && result.next && !result.isPending && !result.isError;
+
+    if (canLoadMore) {
+      return (
+        <Waypoint
+          onEnter={this.getMoreResults}
+          bottomOffset="-100px"
+          scrollableAncestor={window}
+        />
+      );
+    }
+
+    return null;
   }
 }
 

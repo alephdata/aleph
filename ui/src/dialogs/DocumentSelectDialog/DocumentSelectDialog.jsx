@@ -9,7 +9,9 @@ import { connect } from 'react-redux';
 import { Entity, Schema } from 'components/common';
 import { entitySuggestQuery } from 'queries';
 import { queryEntities } from 'actions';
-import getCollectionLink from 'util/getCollectionLink';
+import CollectionView from 'components/Collection/CollectionView';
+import collectionViewIds from 'components/Collection/collectionViewIds';
+import queryString from 'query-string';
 
 
 import './DocumentSelectDialog.scss';
@@ -96,14 +98,14 @@ class DocumentSelectDialog extends Component {
               }
               values={{
                 link: (
-                  <Link to={`${getCollectionLink(collection)}#mode=documents`}>
+                  <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS}>
                     <FormattedMessage
                       id='entity.manager.bulk_import.link_text'
                       defaultMessage={
                         `Upload a new table document`
                       }
                     />
-                  </Link>
+                  </CollectionView.Link>
                 )
               }}
             />

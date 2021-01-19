@@ -1,10 +1,14 @@
-export default function getCollectionLink(collection) {
-  if (collection && collection.id) {
-    if (collection.casefile) {
-      return `/investigations/${collection.id}`;
-    } else {
-      return `/datasets/${collection.id}`;
-    }
+import queryString from 'query-string';
+
+export default function getCollectionLink({ collection, mode, hash, search }) {
+  if (!collection?.id) {
+    return null;
   }
-  return null;
+  const collectionId = collection.id;
+
+  return ({
+    pathname: collection.casefile ? `/investigations/${collectionId}` : `/datasets/${collectionId}`,
+    hash: queryString.stringify({ mode, ...hash }),
+    search
+  });
 }
