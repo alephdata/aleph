@@ -81,10 +81,12 @@ Install Aleph and related services using the helm charts in this repo:
 helm install aleph ../../charts/aleph -f ./values/staging.yaml -n staging --timeout 10m0s
 ```
 
-Or using a packaged helm chart release:
+Or using the helm repository:
 
 ```
-helm install aleph -f ./values/staging.yaml -n staging --timeout 10m0s https://github.com/alephdata/aleph-helm-charts/releases/download/3.9.9/aleph-3.9.9.tgz
+helm repo add aleph https://aleph-helm-charts.storage.googleapis.com
+helm repo update
+helm install aleph -f ./values/staging.yaml -n staging --timeout 10m0s aleph/aleph
 ```
 
 Configuration values for Aleph can be changed in `values/$(ENV).yaml`

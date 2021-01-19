@@ -4,11 +4,11 @@ This repository contains helm charts to install Aleph and its microservices in a
 
 ## Configurations
 
-The umbrella chart is in `charts/aleph` directory. It's configuration options are listed in its [README](charts/aleph/README.md)
+The chart is in `charts/aleph` directory. It's configuration options are listed in its [README](charts/aleph/README.md)
 
 ## Releases
 
-Packaged helm charts are released as tar archives. They are listed [here](https://github.com/alephdata/aleph/releases)
+The charts are released into the helm repo located at [https://aleph-helm-charts.storage.googleapis.com/](https://aleph-helm-charts.storage.googleapis.com/)
 
 ## Pre and Post-Installation Steps
 

@@ -1,8 +1,6 @@
 # Aleph
 
-![Version: 3.9.1](https://img.shields.io/badge/Version-3.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.9.1](https://img.shields.io/badge/AppVersion-3.9.1-informational?style=flat-square)
-
-A Helm chart for Aleph
+Helm chart for Aleph
 
 ## Values
 
@@ -13,7 +11,8 @@ A Helm chart for Aleph
 | global.amazon | bool | `true` | Are we using AWS services like s3? |
 | global.google | bool | `false` | Are we using GCE services like storage, vision api? |
 | global.image.repository | string | `"alephdata/aleph"` | Aleph docker image repo |
-| global.image.tag | string | `"c682e68e9dcd38a716f919c1802197832abbdaeb"` | Aleph docker image tag |
+| global.image.tag | string | `"3.9.9"` | Aleph docker image tag |
+| global.image.tag | string | `"Always"` |  |
 | global.namingPrefix | string | `"aleph"` | Prefix for the names of k8s resources |
 
 ### Environment variables

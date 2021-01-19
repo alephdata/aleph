@@ -1,8 +1,5 @@
 global:
   google: false
-  image:
-    repository: alephdata/aleph
-    tag: "3.9.9"
   commonEnv:
     REDIS_URL: redis://aleph-redis-master.dev.svc.cluster.local:6379/0
     ARCHIVE_TYPE: s3
