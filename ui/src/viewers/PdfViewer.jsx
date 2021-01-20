@@ -12,6 +12,8 @@ import { selectEntitiesResult } from 'selectors';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
 import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
+// eslint-disable-next-line
+import PdfjsWorker from 'file-loader!pdfjs-dist/build/pdf.worker.min.js';
 
 import './PdfViewer.scss';
 
@@ -123,8 +125,12 @@ export class PdfViewer extends Component {
   }
 
   fetchComponents() {
-    import(/* webpackChunkName:'pdf-lib' */'react-pdf/dist/esm/entry.webpack')
-      .then((components) => this.setState({ components }));
+    import(/* webpackChunkName:'pdf-lib' */'react-pdf')
+      .then(({ Document, Page, pdfjs }) => {
+        // see https://github.com/wojtekmaj/react-pdf#create-react-app
+        pdfjs.GlobalWorkerOptions.workerSrc = PdfjsWorker;
+        this.setState({ components: { Document, Page }});
+      });
   }
 
   renderPdf() {
