@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -15,6 +15,7 @@ import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
 import VideoViewer from 'viewers/VideoViewer';
 import EntityActionBar from 'components/Entity/EntityActionBar';
+import { SectionLoading } from 'components/common';
 import { selectEntityDirectionality } from 'selectors';
 
 import './DocumentViewMode.scss';
@@ -123,12 +124,14 @@ export class DocumentViewMode extends React.Component {
     }
     if (document.schema.isA('Pages')) {
       return (
-        <PdfViewer
-          document={document}
-          queryText={queryText}
-          activeMode={activeMode}
-          dir={dir}
-        />
+        <Suspense fallback={<SectionLoading />}>
+          <PdfViewer
+            document={document}
+            queryText={queryText}
+            activeMode={activeMode}
+            dir={dir}
+          />
+        </Suspense>
       );
     }
     if (document.schema.isA('Folder')) {
