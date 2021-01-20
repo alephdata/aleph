@@ -266,7 +266,7 @@ class SimilarSerializer(Serializer):
     def _serialize(self, obj):
         entity = obj.get("entity", {})
         obj["entity"] = EntitySerializer().shallow(entity)
-        collection_id = obj.get("collection_id")
+        collection_id = entity.get("collection_id")
         obj["writeable"] = request.authz.can(collection_id, request.authz.WRITE)
         return obj
 
