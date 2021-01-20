@@ -130,7 +130,6 @@ services:
       - "127.0.0.1:8080:8080"
     volumes:
       - "./ui/src:/alephui/src"
-      - "./ui/public:/alephui/public"
       - "./ui/package.json:/alephui/package.json"
     environment:
       PORT: "8080"
