@@ -123,8 +123,12 @@ export class PdfViewer extends Component {
   }
 
   fetchComponents() {
-    import(/* webpackChunkName:'pdf-lib' */'react-pdf/dist/esm/entry.webpack')
-      .then((components) => this.setState({ components }));
+    import(/* webpackChunkName:'pdf-lib' */'react-pdf')
+      .then(({ Document, Page, pdfjs }) => {
+        // see https://github.com/wojtekmaj/react-pdf#create-react-app
+        pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+        this.setState({ components: { Document, Page }});
+      });
   }
 
   renderPdf() {
