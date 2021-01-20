@@ -116,7 +116,7 @@ def similar(profile_id):
       tags:
       - Profile
     """
-    enable_cache()
+    # enable_cache()
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
     require(request.authz.can(profile.get("collection_id"), request.authz.READ))
     tag_request(collection_id=profile.get("collection_id"))

@@ -343,7 +343,7 @@ def similar(entity_id):
       tags:
       - Entity
     """
-    enable_cache()
+    # enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
