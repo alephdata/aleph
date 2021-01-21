@@ -12,9 +12,9 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 
 function SchemaLink({ collection, location, schema, ...rest }) {
   if (schema.isDocument()) {
-    return <CollectionView.Link collectionId={collection.id} id={collectionViewIds.DOCUMENTS} icon />
+    return <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS} icon />
   } else {
-    const viewProps = { collectionId: collection.id };
+    const viewProps = { collection };
     if (collection.casefile) {
       viewProps.id = collectionViewIds.ENTITIES;
       viewProps.hash = { type: schema };

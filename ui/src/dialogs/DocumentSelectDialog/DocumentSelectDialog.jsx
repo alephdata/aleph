@@ -96,7 +96,7 @@ class DocumentSelectDialog extends Component {
               }
               values={{
                 link: (
-                  <CollectionView.Link collectionId={collection.id} id={collectionViewIds.DOCUMENTS}>
+                  <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS}>
                     <FormattedMessage
                       id='entity.manager.bulk_import.link_text'
                       defaultMessage={
