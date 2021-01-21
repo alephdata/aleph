@@ -30,18 +30,16 @@ class CollectionStatisticsGroup extends React.Component {
 
   render() {
     const { emptyComponent, isPending, statsToRender } = this.props;
+    const skeletonItems = [...Array(3).keys()];
 
-    if (isPending) {
-      return <Skeleton.Layout type="multi-column" colCount={3} />;
-    }
-
-    if (!statsToRender.length) {
+    if (!isPending && !statsToRender.length) {
       return emptyComponent;
     }
 
     return (
       <div className="CollectionStatisticsGroup">
-        {statsToRender.map((stat) => this.renderStatisticsItem(stat))}
+        {isPending && skeletonItems.map((key) => this.renderStatisticsItem({ key }))}
+        {!isPending && statsToRender.map((stat) => this.renderStatisticsItem(stat))}
       </div>
     );
   }

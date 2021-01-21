@@ -4,6 +4,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { Classes } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { Country, Facet, Numeric, Schema, Statistics } from 'components/common';
 import { selectCollection, selectModel } from 'selectors';
@@ -59,7 +61,7 @@ class CollectionStatistics extends PureComponent {
     const filteredTotal = field === 'schema' ? Object.keys(filteredValues).length : total;
 
     return (
-      <div className="CollectionStatistics bp3-card bp3-elevation-1">
+      <div className={c("CollectionStatistics bp3-card bp3-elevation-1", { [Classes.SKELETON]: !values })}>
         <div className="CollectionStatistics__heading">
           <h5 className="CollectionStatistics__heading__total">
             <Numeric num={filteredTotal} abbr={3} />
