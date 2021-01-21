@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ingest-file
+  labels:
+    app: {{ .Values.global.namingPrefix }}-ingest-file
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-ingest-file
+  strategy: {{- toYaml .Values.ingestfile.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.namingPrefix }}-ingest-file
+      annotations: {{- toYaml .Values.ingestfile.podAnnotations | nindent 8 }}
+    spec:
+      nodeSelector: {{- toYaml .Values.ingestfile.nodeSelector | nindent 8 }}
+      restartPolicy: Always
+      securityContext: {{- toYaml .Values.ingestfile.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds:
+        {{ .Values.ingestfile.terminationGracePeriodSeconds }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.ingestfile.image.repository }}:{{ .Values.ingestfile.image.tag }}"
+          imagePullPolicy: {{ .Values.ingestfile.image.pullPolicy }}
+          command:
+            - ingestors
+            - process
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+            {{ if .Values.global.google }}
+            - mountPath: /var/secrets/google
+              name: service-account-aleph
+            {{ end }}
+            - mountPath: /tmp
+              name: tmp-volume
+            - mountPath: /home/app
+              name: home-volume
+          securityContext:
+            {{- toYaml .Values.ingestfile.containerSecurityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.ingestfile.containerResources | nindent 12 }}
+          env:
+            {{- range $key, $value := .Values.global.commonEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}  
+            {{- range $key, $value := .Values.ingestfile.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }} 
+            - name: FTM_STORE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: FTM_STORE_URI
+            {{ if .Values.global.google }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/service-account.json
+            {{ end }}
+            {{ if .Values.global.amazon }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: AWS_SECRET_ACCESS_KEY
+            {{ end }}
+      volumes:
+        {{ if .Values.global.google }}
+        - name: service-account-aleph
+          secret:
+            secretName: service-account-aleph
+        {{ end }}
+        - name: tmp-volume
+          emptyDir: {}
+        - name: home-volume
+          emptyDir:
+            medium: Memory
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ingest-file
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.global.namingPrefix }}-ingest-file
+  minReplicas: {{.Values.ingestfile.hpa.minReplicas}}
+  maxReplicas: {{.Values.ingestfile.hpa.maxReplicas}}
+  metrics: {{- toYaml .Values.ingestfile.hpa.scalingMetrics | nindent 4}}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ingest-file-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-ingest-file
+  policyTypes:
+    - Ingress

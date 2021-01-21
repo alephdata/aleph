@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ui-config
+data:
+  {{- toYaml .Values.ui.nginxConfig | nindent 2 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ui
+  labels:
+    app: {{ .Values.global.namingPrefix }}-ui
+spec:
+  replicas: {{ .Values.ui.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-ui
+  strategy: {{- toYaml .Values.ui.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.namingPrefix }}-ui
+      annotations: {{- toYaml .Values.ui.podAnnotations | nindent 8 }}
+    spec:
+      nodeSelector: {{- toYaml .Values.ui.nodeSelector | nindent 8 }}
+      restartPolicy: Always
+      securityContext: {{- toYaml .Values.ui.podSecurityContext | nindent 8 }}
+      containers:
+        - name: nginx
+          image: "{{ .Values.ui.image.repository }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
+          volumeMounts:
+            - name: {{ .Values.global.namingPrefix }}-ui-config
+              mountPath: /etc/nginx
+              readOnly: true
+          securityContext:
+            {{- toYaml .Values.ui.containerSecurityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.ui.containerResources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
+      volumes:
+        - name: {{ .Values.global.namingPrefix }}-ui-config
+          configMap:
+            name: {{ .Values.global.namingPrefix }}-ui-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ui
+  labels:
+    app: {{ .Values.global.namingPrefix }}-ui
+spec:
+  type: NodePort
+  selector:
+    app: {{ .Values.global.namingPrefix }}-ui
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http

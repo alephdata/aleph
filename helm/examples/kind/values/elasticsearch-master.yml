@@ -1,0 +1,56 @@
+---
+clusterName: "search-index"
+nodeGroup: "master"
+masterService: "search-index-master"
+
+roles:
+  master: "true"
+  ingest: "false"
+  data: "false"
+
+replicas: 2
+minimumMasterNodes: 1
+esMajorVersion: 7
+
+image: "alephdata/aleph-elasticsearch"
+imageTag: "latest"
+imagePullPolicy: "IfNotPresent"
+
+esJavaOpts: "-Xmx1g -Xms1g"
+esConfig:
+  elasticsearch.yml: |
+    xpack:
+      graph:
+        enabled: "false"
+      ml:
+        enabled: "false"
+      security:
+        enabled: "false"
+# secretMounts:
+#   - name: search-index-secret
+#     secretName: search-index-secret
+#     path: /secrets
+
+resources:
+  requests:
+    cpu: "300m"
+    memory: "1500Mi"
+  limits:
+    cpu: "600m"
+    memory: "2000Mi"
+
+volumeClaimTemplate:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: 1Gi
+
+protocol: http
+httpPort: 9200
+transportPort: 9300
+
+# antiAffinity: "disable"
+# podManagementPolicy: "Parallel"
+# nodeSelector:
+#   lifespan: permanent

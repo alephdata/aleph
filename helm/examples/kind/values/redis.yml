@@ -1,0 +1,3 @@
+cluster:
+  enabled: false
+usePassword: false

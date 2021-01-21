@@ -1,0 +1,16 @@
+global:
+  google: false
+  commonEnv:
+    REDIS_URL: redis://aleph-redis-master.dev.svc.cluster.local:6379/0
+    ARCHIVE_TYPE: s3
+    ARCHIVE_BUCKET: aleph-archive
+    ARCHIVE_ENDPOINT_URL: http://aleph-minio.dev.svc.cluster.local:9000
+  env:
+    ALEPH_APP_TITLE: "Aleph Dev"
+    ALEPH_APP_DESCRIPTION: "Dev archive of research material for investigative reporting."
+    ALEPH_UI_URL: http://aleph.devel
+    ALEPH_ELASTICSEARCH_URI: http://aleph-index-master.dev.svc.cluster.local:9200
+
+ingestfile:
+  env:
+    INGESTORS_CONVERT_DOCUMENT_URL: http://aleph-convert-document.dev.svc.cluster.local:3000/convert

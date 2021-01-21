@@ -1,0 +1,307 @@
+global:
+  google: false # Are we using any google services? Storage, Vision API?
+  amazon: true # Are we using amazon s3 for storage?
+
+  namingPrefix: aleph # prefix for service names. eg: with prefix=aleph the api will be named aleph-api
+
+  image:
+    repository: alephdata/aleph
+    tag: "3.9.9"
+    pullPolicy: Always
+
+  commonEnv:
+    # LOG_FORMAT: JSON
+    REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
+
+  env:
+    ALEPH_DEBUG: "false"
+    ALEPH_CACHE: "true"
+    ALEPH_FORCE_HTTPS: "false"
+    ALEPH_URL_SCHEME: "https"
+    ALEPH_APP_TITLE: "Aleph"
+    ALEPH_APP_DESCRIPTION: "The global archive of research material for investigative reporting."
+    ALEPH_PAGES_PATH: "/aleph/site/aleph.occrp.org/pages"
+    ALEPH_APP_NAME: aleph
+    # ALEPH_CONTENT_POLICY: "default-src 'self' 'unsafe-inline' 'unsafe-eval' *.occrp.org *.googleapis.com; connect-src 'self' *.occrp.org *.googleapis.com; img-src data: blob: *.occrp.org *.googleapis.com;"
+    # ALEPH_GOOGLE_REQUEST_LOGGING: "true"
+    ALEPH_PASSWORD_LOGIN: "true"
+    # ALEPH_ADMINS: pudo@occrp.org
+    # ALEPH_MAIL_FROM: notifications@aleph.occrp.org
+    # ALEPH_MAIL_HOST: core-mail.default.svc.cluster.local
+    # ALEPH_MAIL_USERNAME: ""
+    # ALEPH_MAIL_PASSWORD: ""
+    # ALEPH_MAIL_PORT: "25"
+    # ALEPH_MAIL_TLS: "false"
+    # ALEPH_MAIL_SSL: "false"
+    ALEPH_UI_URL: http://localhost
+    # ALEPH_FAVICON: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
+    # ALEPH_LOGO: https://cdn.occrp.org/common/logo/WhiteTransparent_globe.png
+    ALEPH_ELASTICSEARCH_URI: http://aleph-index-master.default.svc.cluster.local:9200
+    ALEPH_INDEX_PREFIX: "aleph"
+    ALEPH_INDEX_WRITE: "v2"
+    ALEPH_INDEX_READ: "v1:v2"
+    ALEPH_INDEX_REPLICAS: "2"
+    ALEPH_API_RATE_LIMIT: "600"
+    ALEPH_OAUTH: "false"
+    # ALEPH_OAUTH_KEY: data-occrp-org
+    # ALEPH_OAUTH_METADATA_URL: https://secure.occrp.org/auth/realms/general/.well-known/openid-configuration
+    ELASTICSEARCH_TIMEOUT: "600"
+
+# Aleph API - templates/api.yaml
+api:
+  strategy:
+    rollingUpdate:
+      maxSurge: 4
+      maxUnavailable: 10%
+    type: RollingUpdate
+
+  podAnnotations: {}
+
+  nodeSelector: {}
+
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  image:
+    pullPolicy: Always
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+
+  containerResources:
+    requests:
+      memory: 2000Mi
+      cpu: 200m
+    limits:
+      memory: 3000Mi
+
+  hpa:
+    minReplicas: 1
+    maxReplicas: 14
+    scalingMetrics:
+      - type: Resource
+        resource:
+          name: cpu
+          targetAverageUtilization: 60
+
+# Aleph Upgrade Job - templates/aleph-upgrade-job.yaml
+upgrade:
+  containerResources:
+    requests:
+      memory: 600Mi
+
+# convert-document Service - templates/covert-document.yaml
+convertdocument:
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 70%
+    type: RollingUpdate
+
+  podAnnotations:
+    "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
+
+  nodeSelector: {}
+
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  image:
+    repository: ghcr.io/alephdata/convert-document
+    pullPolicy: Always
+    tag: 3.11.2
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+
+  containerResources:
+    requests:
+      memory: 120Mi
+      cpu: 300m
+    limits:
+      memory: 500Mi
+      # cpu: 2000m
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  hpa:
+    minReplicas: 2
+    maxReplicas: 30
+    scalingMetrics:
+      - type: Resource
+        resource:
+          name: cpu
+          targetAverageUtilization: 50
+
+# ingest-file Service - templates/covert-document.yaml
+ingestfile:
+  strategy:
+    rollingUpdate:
+      maxSurge: 20
+      maxUnavailable: 100%
+    type: RollingUpdate
+
+  podAnnotations:
+    "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
+
+  nodeSelector: {}
+
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  terminationGracePeriodSeconds: 300
+
+  image:
+    repository: ghcr.io/alephdata/ingest-file
+    tag: 3.11.2
+    pullPolicy: Always
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+
+  containerResources:
+    requests:
+      cpu: 300m
+      memory: 2000Mi
+    limits:
+      # cpu: 1000m
+      memory: 3000Mi
+
+  env:
+    WORKER_THREADS: 0
+    OCR_VISION_API: false
+    INGESTORS_CONVERT_DOCUMENT_URL: http://aleph-convert-document.default.svc.cluster.local:3000/convert
+
+  hpa:
+    minReplicas: 5
+    maxReplicas: 60
+    scalingMetrics:
+      - type: Resource
+        resource:
+          name: cpu
+          targetAverageUtilization: 100
+
+# Aleph UI - templates/ui.yaml
+ui:
+  replicas: 2
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 50%
+    type: RollingUpdate
+
+  podAnnotations:
+    "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
+
+  nodeSelector: {}
+
+  podSecurityContext: {}
+
+  image:
+    repository: alephdata/aleph-ui-production
+    pullPolicy: Always
+
+  containerSecurityContext: {}
+
+  containerResources:
+    requests:
+      cpu: 50m
+      memory: 21Mi
+
+  # Nginx config - templates/config-map.yaml
+  nginxConfig:
+    mime.types: |
+      types {
+          text/html                                        html htm shtml;
+          text/css                                         css;
+          text/xml                                         xml;
+          image/gif                                        gif;
+          image/jpeg                                       jpeg jpg;
+          application/javascript                           js;
+          image/png                                        png;
+          image/svg+xml                                    svg svgz;
+          image/tiff                                       tif tiff;
+          image/x-icon                                     ico;
+          image/x-jng                                      jng;
+          application/font-woff                            woff;
+          application/json                                 json;
+          application/zip                                  zip;
+      }
+    nginx.conf: |
+      worker_processes 4;
+
+      events {
+        worker_connections 1024;
+      }
+
+      http {
+        include mime.types;
+        index index.html;
+        sendfile on;
+
+        server {
+          listen 80 default_server;
+
+          access_log off;
+          add_header X-Clacks-Overhead          "GNU DCG; JK; MK";
+          add_header Feature-Policy             "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'";
+
+          location ~ ^/static.* {
+            root /assets;
+            expires 14d;
+          }
+
+          location / {
+            root /assets;
+            try_files $uri $uri/ /index.html;
+            expires 1s;
+          }
+        }
+      }
+
+# Aleph Worker - templates/worker.yaml
+worker:
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 100%
+    type: RollingUpdate
+
+  podAnnotations: {}
+
+  nodeSelector: {}
+
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  image: {}
+
+  # Scaling:
+  replicas: 2
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+
+  containerResources:
+    requests:
+      cpu: 301m
+      memory: 300Mi
+    limits:
+      # cpu: 1000m
+      memory: 800Mi
+
+  env:
+    WORKER_THREADS: 5
