@@ -6,7 +6,7 @@ import {
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { ingestDocument as ingestDocumentAction } from 'actions';
+import { ingestDocument as ingestDocumentAction, forceMutate } from 'actions';
 import convertPathsToTree from 'util/convertPathsToTree';
 import DocumentUploadForm from './DocumentUploadForm';
 import DocumentUploadStatus, { UPLOAD_STATUS } from './DocumentUploadStatus';
@@ -114,6 +114,7 @@ export class DocumentUploadDialog extends Component {
         }
       }
     });
+    this.props.forceMutate();
   }
 
   async traverseFileTree(tree, parent) {
@@ -278,7 +279,7 @@ export class DocumentUploadDialog extends Component {
   }
 }
 
-const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
+const mapDispatchToProps = { ingestDocument: ingestDocumentAction, forceMutate };
 
 export default compose(
   connect(null, mapDispatchToProps),
