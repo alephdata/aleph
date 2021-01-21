@@ -8,7 +8,7 @@ import { Icon } from '@blueprintjs/core';
 
 import { Count, ResultCount } from 'components/common';
 import { collectionXrefFacetsQuery } from 'queries';
-import { selectModel, selectCollectionXrefResult } from 'selectors';
+import { selectCollection, selectModel, selectCollectionXrefResult } from 'selectors';
 import getCollectionLink from 'util/getCollectionLink';
 
 const messages = defineMessages({
@@ -168,12 +168,13 @@ class CollectionViewDescription extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const xrefQuery = collectionXrefFacetsQuery(location, collection.id);
+  const { collectionId, location } = ownProps;
+  const xrefQuery = collectionXrefFacetsQuery(location, collectionId);
 
   return ({
     model: selectModel(state),
     xrefResult: selectCollectionXrefResult(state, xrefQuery),
+    collection: selectCollection(state, collectionId)
   });
 };
 

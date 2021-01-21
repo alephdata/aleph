@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { queryEntitySets } from 'actions';
 import { collectionEntitySetsQuery } from 'queries';
-import { selectEntitySetsResult } from 'selectors';
+import { selectCollection, selectEntitySetsResult } from 'selectors';
 import { ErrorSection } from 'components/common';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
 import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
@@ -38,9 +38,10 @@ export class CollectionEntitySetsIndexMode extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location, type } = ownProps;
-  const query = collectionEntitySetsQuery(location, collection.id).setFilter('type', type);
+  const { collectionId, location, type } = ownProps;
+  const query = collectionEntitySetsQuery(location, collectionId).setFilter('type', type);
   return {
+    collection: selectCollection(state, collectionId),
     query,
     result: selectEntitySetsResult(state, query),
   };

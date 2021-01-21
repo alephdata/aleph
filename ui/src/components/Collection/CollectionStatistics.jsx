@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { Country, Facet, Numeric, Schema, Statistics } from 'components/common';
-import { selectModel } from 'selectors';
+import { selectCollection, selectModel } from 'selectors';
 import { collectionSearchQuery } from 'queries';
 import getCollectionLink from 'util/getCollectionLink';
 import collectionViewIds from 'components/Collection/collectionViewIds';
@@ -88,9 +88,13 @@ class CollectionStatistics extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const baseQuery = collectionSearchQuery(location, collection.id);
-  return { model: selectModel(state), baseQuery };
+  const { collectionId, location } = ownProps;
+  const baseQuery = collectionSearchQuery(location, collectionId);
+  return {
+    model: selectModel(state),
+    collection: selectCollection(state, collectionId),
+    baseQuery,
+  };
 };
 
 export default compose(

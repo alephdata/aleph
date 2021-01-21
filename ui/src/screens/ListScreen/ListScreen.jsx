@@ -86,7 +86,7 @@ export class ListScreen extends Component {
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
         <Breadcrumbs.Text>
-          <CollectionView.Link id={collectionViewIds.LISTS} collection={list.collection} icon />
+          <CollectionView.Link id={collectionViewIds.LISTS} collectionId={list.collection?.id} icon />
         </Breadcrumbs.Text>
         <Breadcrumbs.EntitySet key="list" entitySet={list} icon={false}/>
       </Breadcrumbs>

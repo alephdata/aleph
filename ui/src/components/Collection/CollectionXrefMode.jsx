@@ -9,7 +9,7 @@ import { QueryInfiniteLoad } from 'components/common';
 import CollectionXrefManageMenu from 'components/Collection/CollectionXrefManageMenu';
 import XrefTable from 'components/XrefTable/XrefTable';
 import { collectionXrefFacetsQuery } from 'queries';
-import { selectCollectionXrefResult } from 'selectors';
+import { selectCollection, selectCollectionXrefResult } from 'selectors';
 import { queryCollectionXref, queryRoles } from 'actions';
 
 import './CollectionXrefMode.scss';
@@ -61,9 +61,10 @@ export class CollectionXrefMode extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const query = collectionXrefFacetsQuery(location, collection.id);
+  const { collectionId, location } = ownProps;
+  const query = collectionXrefFacetsQuery(location, collectionId);
   return {
+    collection: selectCollection(state, collectionId),
     query,
     result: selectCollectionXrefResult(state, query),
   };

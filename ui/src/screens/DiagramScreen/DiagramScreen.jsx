@@ -96,7 +96,7 @@ export class DiagramScreen extends Component {
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} status={status}>
         <Breadcrumbs.Text>
-          <CollectionView.Link id={collectionViewIds.DIAGRAMS} collection={diagram.collection} icon />
+          <CollectionView.Link id={collectionViewIds.DIAGRAMS} collectionId={diagram.collection?.id} icon />
         </Breadcrumbs.Text>
         <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} icon={false}/>
       </Breadcrumbs>

@@ -38,7 +38,7 @@ class InvestigationSidebar extends React.Component {
         key={id}
         icon={<CollectionView.Icon id={id} />}
         text={<CollectionView.Label id={id} />}
-        rightIcon={<CollectionView.Count id={id} collection={collection} />}
+        rightIcon={<CollectionView.Count id={id} collectionId={collection.id} />}
         onClick={() => this.navigate(id)}
         active={activeMode === id}
         alignText={Alignment.LEFT}

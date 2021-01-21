@@ -1,8 +1,11 @@
 import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+
 import { Skeleton } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
+import { selectCollection } from 'selectors';
 
 import './CollectionStatisticsGroup.scss';
 
@@ -12,11 +15,11 @@ const statFields = [
 
 class CollectionStatisticsGroup extends React.Component {
   renderStatisticsItem({ key, total, values }) {
-    const { collection } = this.props;
+    const { collectionId } = this.props;
     return (
       <div className="CollectionStatisticsGroup__item" key={key}>
         <CollectionStatistics
-          collection={collection}
+          collectionId={collectionId}
           field={key}
           values={values}
           total={total}
@@ -26,15 +29,11 @@ class CollectionStatisticsGroup extends React.Component {
   }
 
   render() {
-    const { collection, emptyComponent } = this.props;
-    const { statistics = {} } = collection;
+    const { emptyComponent, isPending, statsToRender } = this.props;
 
-    if (!collection.id || statistics.schema === undefined) {
+    if (isPending) {
       return <Skeleton.Layout type="multi-column" colCount={3} />;
     }
-
-    const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
-      .filter(stat => stat && stat.total);
 
     if (!statsToRender.length) {
       return emptyComponent;
@@ -48,7 +47,20 @@ class CollectionStatisticsGroup extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const { collectionId } = ownProps;
+  const collection = selectCollection(state, collectionId);
+  if (!collection.id && collection.isPending) { return { isPending: true } }
+
+  const { statistics = {} } = collection;
+
+  const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
+    .filter(stat => stat && stat.total);
+
+  return { statsToRender };
+};
 
 export default compose(
   withRouter,
+  connect(mapStateToProps),
 )(CollectionStatisticsGroup);
