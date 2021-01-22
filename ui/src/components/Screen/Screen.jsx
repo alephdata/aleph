@@ -35,7 +35,6 @@ export class Screen extends React.Component {
     } = this.props;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
     const forceAuth = requireSession && !session.loggedIn;
-    const mainClass = isHomepage ? 'main-homepage' : 'main';
     const titleTemplate = hasMetadata ? `%s - ${metadata.app.title}` : '%s';
     const defaultTitle = hasMetadata ? metadata.app.title : 'Aleph';
 
@@ -59,7 +58,7 @@ export class Screen extends React.Component {
         )}
         {!forceAuth && (
           <>
-            <main className={mainClass}>
+            <main>
               {this.props.children}
             </main>
             <EntityPreview />

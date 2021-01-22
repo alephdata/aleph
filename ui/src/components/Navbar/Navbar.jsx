@@ -72,8 +72,8 @@ export class Navbar extends React.Component {
 
     return (
       <>
-        <div ref={this.navbarRef}>
-          <Bp3Navbar id="Navbar" className="Navbar bp3-dark" >
+        <div className="Navbar" ref={this.navbarRef}>
+          <Bp3Navbar id="Navbar" className="bp3-dark" >
             <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
               <Link to="/" className="Navbar__home-link">
                 {!!metadata.app.logo && <img src={metadata.app.logo} alt={metadata.app.title} />}
