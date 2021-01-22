@@ -8,8 +8,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
+import Query from 'app/Query';
 import AuthButtons from 'components/AuthButtons/AuthButtons';
-import { selectSession, selectPages } from 'selectors';
+import { selectMetadata, selectSession, selectPages } from 'selectors';
 import SearchAlert from 'components/SearchAlert/SearchAlert';
 import { SearchBox } from 'components/common';
 import getPageLink from 'util/getPageLink';
@@ -139,10 +140,17 @@ export class Navbar extends React.Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const { query } = ownProps;
+  const { location } = ownProps;
+  // We normally only want Things, not Intervals (relations between things).
+  const context = {
+    highlight: true,
+    'filter:schemata': 'Thing',
+  };
 
   return ({
-    query,
+    query: Query.fromLocation('entities', location, context, ''),
+    isHomepage: location.pathname === '/',
+    metadata: selectMetadata(state),
     session: selectSession(state),
     pages: selectPages(state),
   });

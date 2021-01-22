@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import EntityPreview from 'components/Entity/EntityPreview';
-import Navbar from 'components/Navbar/Navbar';
 import AdvancedSearch from 'components/AdvancedSearch/AdvancedSearch';
 import { selectSession, selectMetadata } from 'selectors';
 
@@ -41,7 +40,7 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      session, metadata, query, result, requireSession,
+      session, metadata, requireSession,
       isHomepage, title, description, className,
     } = this.props;
     const { advancedSearchOpen } = this.state;
@@ -64,15 +63,6 @@ export class Screen extends React.Component {
             <link rel="shortcut icon" href={metadata.app.favicon} />
           )}
         </Helmet>
-        <Navbar
-          navbarRef={this.navbarRef}
-          metadata={metadata}
-          session={session}
-          query={query}
-          result={result}
-          isHomepage={isHomepage}
-          onToggleAdvancedSearch={this.onToggleAdvancedSearch}
-        />
         { (hasMetadata && !!metadata.app.banner) && (
           <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
             {metadata.app.banner}
