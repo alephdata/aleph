@@ -150,6 +150,9 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
   if (count) {
     return <Count count={count} />;
   } else {
+    if (collection.isPending) {
+      return <Count isPending={true} />
+    }
     return <Count count={0} />;
   }
 }
