@@ -8,7 +8,7 @@ import { showSuccessToast } from 'app/toast';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import ClipboardInput from 'components/common/ClipboardInput';
-import { updateRole, fetchRole } from 'actions';
+import { updateRole } from 'actions';
 import { selectMetadata, selectLocale, selectCurrentRole } from 'selectors';
 import SelectWrapper from 'components/common/SelectWrapper';
 
@@ -358,6 +358,6 @@ const mapStateToProps = state => ({
 });
 
 SettingsScreen = withRouter(SettingsScreen);
-SettingsScreen = connect(mapStateToProps, { fetchRole, updateRole })(SettingsScreen);
+SettingsScreen = connect(mapStateToProps, { updateRole })(SettingsScreen);
 SettingsScreen = injectIntl(SettingsScreen);
 export default SettingsScreen;
