@@ -4,7 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { ingestDocument } from 'actions';
+import { forceMutate, ingestDocument } from 'actions';
 import { showErrorToast } from 'app/toast';
 import FormDialog from 'dialogs/common/FormDialog';
 
@@ -60,7 +60,10 @@ export class DocumentFolderDialog extends Component {
         metadata.parent_id = parent.id;
       }
       const ingest = this.props.ingestDocument;
-      const result = await ingest(collection.id, metadata, null, this.onUploadProgress);
+      const result = await ingest(collection.id, metadata, null, null);
+
+      this.props.forceMutate();
+
       history.push({
         pathname: `/documents/${result.id}`,
       });
@@ -113,7 +116,7 @@ export class DocumentFolderDialog extends Component {
     );
   }
 }
-const mapDispatchToProps = { ingestDocument };
+const mapDispatchToProps = { forceMutate, ingestDocument };
 export default compose(
   withRouter,
   connect(null, mapDispatchToProps),

@@ -11,6 +11,7 @@ import getEntityLink from 'util/getEntityLink';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import { DialogToggleButton } from 'components/Toolbar';
 import MappingIndex from 'components/MappingIndex/MappingIndex';
+import { selectCollection } from 'selectors';
 
 import './CollectionMappingsMode.scss';
 
@@ -83,9 +84,10 @@ class CollectionMappingsMode extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
+  const { collectionId, location } = ownProps;
   return {
-    query: collectionMappingsQuery(location, collection.id),
+    collection: selectCollection(state, collectionId),
+    query: collectionMappingsQuery(location, collectionId),
   };
 };
 

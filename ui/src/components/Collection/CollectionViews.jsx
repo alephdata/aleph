@@ -11,7 +11,7 @@ import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { collectionSearchQuery } from 'queries';
-import { selectEntitiesResult } from 'selectors';
+import { selectCollection, selectEntitiesResult } from 'selectors';
 
 import './CollectionViews.scss';
 
@@ -43,7 +43,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, searchQuery, searchResult
+      collection, collectionId, activeMode, searchQuery, searchResult
     } = this.props;
 
     return (
@@ -61,7 +61,7 @@ class CollectionViews extends React.Component {
             <CollectionView.Label id={collectionViewIds.OVERVIEW} icon />
           )}
           panel={(
-            <CollectionOverviewMode isCasefile={false} collection={collection} />
+            <CollectionOverviewMode isCasefile={false} collectionId={collectionId} />
           )}
         />
         {collection.writeable && (
@@ -71,9 +71,9 @@ class CollectionViews extends React.Component {
             title={
               <>
                 <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon />
-                <CollectionView.Count id={collectionViewIds.DOCUMENTS} collection={collection} />
+                <CollectionView.Count id={collectionViewIds.DOCUMENTS} collectionId={collectionId} />
               </>}
-            panel={<CollectionDocumentsMode collection={collection} />}
+            panel={<CollectionDocumentsMode collectionId={collectionId} />}
           />
         )}
         <Tab
@@ -82,9 +82,9 @@ class CollectionViews extends React.Component {
           title={
             <>
               <CollectionView.Label id={collectionViewIds.XREF} icon />
-              <CollectionView.Count id={collectionViewIds.XREF} collection={collection} />
+              <CollectionView.Count id={collectionViewIds.XREF} collectionId={collectionId} />
             </>}
-          panel={<CollectionXrefMode collection={collection} />}
+          panel={<CollectionXrefMode collectionId={collectionId} />}
         />
         <Tab
           id={collectionViewIds.SEARCH}
@@ -100,10 +100,11 @@ class CollectionViews extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const searchQuery = collectionSearchQuery(location, collection.id);
+  const { collectionId, location } = ownProps;
+  const searchQuery = collectionSearchQuery(location, collectionId);
 
   return {
+    collection: selectCollection(state, collectionId),
     searchQuery,
     searchResult: selectEntitiesResult(state, searchQuery)
   };

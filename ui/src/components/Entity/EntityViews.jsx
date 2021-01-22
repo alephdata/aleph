@@ -148,6 +148,12 @@ class EntityViews extends React.Component {
             }
           />
         ))}
+        {!references.total && references.isPending && (
+          <Tab
+            id='loading'
+            title={<TextLoading loading={true} />}
+          />
+        )}
         { entity.schema.isDocument() && (!processingError || !processingError.length) && (
           <Tab
             id="tags"

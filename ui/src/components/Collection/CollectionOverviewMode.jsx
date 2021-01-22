@@ -1,4 +1,6 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
@@ -6,6 +8,7 @@ import CollectionMetadataPanel from 'components/Collection/CollectionMetadataPan
 import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
 import InvestigationOverview from 'components/Investigation/InvestigationOverview';
 import { ErrorSection } from 'components/common';
+import { selectCollection } from 'selectors';
 
 import './CollectionOverviewMode.scss';
 
@@ -16,7 +19,7 @@ const messages = defineMessages({
   },
 });
 
-const CollectionOverviewMode = ({ collection, intl, isCasefile }) => {
+const CollectionOverviewMode = ({ collection, collectionId, intl, isCasefile }) => {
   const emptyComponent = (
     <ErrorSection
       icon="database"
@@ -27,8 +30,8 @@ const CollectionOverviewMode = ({ collection, intl, isCasefile }) => {
   return (
     <div className={c('CollectionOverviewMode', { casefile: isCasefile })}>
       <div className="CollectionOverviewMode__main">
-        {isCasefile && <InvestigationOverview collection={collection} />}
-        {!isCasefile && <CollectionStatisticsGroup collection={collection} emptyComponent={emptyComponent} />}
+        {isCasefile && <InvestigationOverview collectionId={collectionId} />}
+        {!isCasefile && <CollectionStatisticsGroup collectionId={collectionId} emptyComponent={emptyComponent} />}
       </div>
       <div className="CollectionOverviewMode__secondary">
         <CollectionMetadataPanel collection={collection} />
@@ -37,4 +40,15 @@ const CollectionOverviewMode = ({ collection, intl, isCasefile }) => {
   );
 }
 
-export default injectIntl(CollectionOverviewMode);
+const mapStateToProps = (state, ownProps) => {
+  const { collectionId } = ownProps;
+
+  return {
+    collection: selectCollection(state, collectionId),
+  };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  injectIntl,
+)(CollectionOverviewMode);

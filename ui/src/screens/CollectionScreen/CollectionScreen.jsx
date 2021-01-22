@@ -35,7 +35,7 @@ export class CollectionScreen extends Component {
           <SinglePane>
             <CollectionHeading collection={collection} />
             <CollectionViews
-              collection={collection}
+              collectionId={collectionId}
               activeMode={activeMode}
             />
           </SinglePane>

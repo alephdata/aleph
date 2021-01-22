@@ -30,7 +30,7 @@ const messages = defineMessages({
 
 class InvestigationViews extends React.Component {
   renderContent() {
-    const { collection, activeMode, intl, searchQuery, searchResult } = this.props;
+    const { collectionId, activeMode, intl, searchQuery, searchResult } = this.props;
 
     const mentionsEmpty = (
       <ErrorSection
@@ -41,23 +41,23 @@ class InvestigationViews extends React.Component {
 
     switch (activeMode) {
       case 'documents':
-        return <CollectionDocumentsMode collection={collection} />;
+        return <CollectionDocumentsMode collectionId={collectionId} />;
       case 'entities':
-        return <CollectionEntitiesMode collection={collection} />;
+        return <CollectionEntitiesMode collectionId={collectionId} />;
       case 'diagrams':
-        return <CollectionEntitySetsIndexMode collection={collection} type="diagram" />;
+        return <CollectionEntitySetsIndexMode collectionId={collectionId} type="diagram" />;
       case 'lists':
-        return <CollectionEntitySetsIndexMode collection={collection} type="list" />;
+        return <CollectionEntitySetsIndexMode collectionId={collectionId} type="list" />;
       case 'mappings':
-        return <CollectionMappingsMode collection={collection} />;
+        return <CollectionMappingsMode collectionId={collectionId} />;
       case 'mentions':
-        return <CollectionStatisticsGroup collection={collection} emptyComponent={mentionsEmpty} />;
+        return <CollectionStatisticsGroup collectionId={collectionId} emptyComponent={mentionsEmpty} />;
       case 'search':
         return <FacetedEntitySearch query={searchQuery} result={searchResult} />;
       case 'xref':
-        return <CollectionXrefMode collection={collection} />;
+        return <CollectionXrefMode collectionId={collectionId} />;
       default:
-        return <CollectionOverviewMode collection={collection} isCasefile />;
+        return <CollectionOverviewMode collectionId={collectionId} isCasefile />;
     }
   }
 
@@ -94,8 +94,8 @@ class InvestigationViews extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const searchQuery = collectionSearchQuery(location, collection.id);
+  const { collectionId, location } = ownProps;
+  const searchQuery = collectionSearchQuery(location, collectionId);
 
   return {
     searchQuery,

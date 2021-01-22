@@ -4,9 +4,11 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { Classes } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { Country, Facet, Numeric, Schema, Statistics } from 'components/common';
-import { selectModel } from 'selectors';
+import { selectCollection, selectModel } from 'selectors';
 import { collectionSearchQuery } from 'queries';
 import getCollectionLink from 'util/getCollectionLink';
 import collectionViewIds from 'components/Collection/collectionViewIds';
@@ -59,7 +61,7 @@ class CollectionStatistics extends PureComponent {
     const filteredTotal = field === 'schema' ? Object.keys(filteredValues).length : total;
 
     return (
-      <div className="CollectionStatistics bp3-card bp3-elevation-1">
+      <div className={c("CollectionStatistics bp3-card bp3-elevation-1", { [Classes.SKELETON]: !values })}>
         <div className="CollectionStatistics__heading">
           <h5 className="CollectionStatistics__heading__total">
             <Numeric num={filteredTotal} abbr={3} />
@@ -88,9 +90,13 @@ class CollectionStatistics extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
-  const baseQuery = collectionSearchQuery(location, collection.id);
-  return { model: selectModel(state), baseQuery };
+  const { collectionId, location } = ownProps;
+  const baseQuery = collectionSearchQuery(location, collectionId);
+  return {
+    model: selectModel(state),
+    collection: selectCollection(state, collectionId),
+    baseQuery,
+  };
 };
 
 export default compose(

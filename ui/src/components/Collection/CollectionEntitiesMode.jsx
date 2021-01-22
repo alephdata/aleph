@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import EntityTable from 'components/EntityTable/EntityTable';
-import { selectModel } from 'selectors';
+import { selectCollection, selectModel } from 'selectors';
 import { collectionEntitiesQuery } from 'queries';
 
 class CollectionEntitiesMode extends React.PureComponent {
@@ -25,9 +25,10 @@ class CollectionEntitiesMode extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, collection } = ownProps;
+  const { location, collectionId } = ownProps;
 
   const model = selectModel(state);
+  const collection = selectCollection(state, collectionId);
   const hashQuery = queryString.parse(location.hash);
   const hashType = hashQuery.type;
 
@@ -60,9 +61,10 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     activeSchema: activeType ? model.getSchema(activeType) : null,
+    collection,
     schemaViews,
     selectableSchemata,
-    querySchemaEntities: (schema) => collectionEntitiesQuery(location, collection.id, schema.name),
+    querySchemaEntities: (schema) => collectionEntitiesQuery(location, collectionId, schema.name),
   };
 };
 

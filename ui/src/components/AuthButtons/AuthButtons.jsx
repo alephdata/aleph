@@ -83,7 +83,7 @@ export class AuthButtons extends Component {
   render() {
     const { role, metadata, intl } = this.props;
 
-    if (role.isPending) {
+    if (!role.id && role.isPending) {
       return this.renderSkeleton();
     }
 

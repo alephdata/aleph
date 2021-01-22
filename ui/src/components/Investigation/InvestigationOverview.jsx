@@ -8,7 +8,7 @@ import { AnchorButton, Intent } from '@blueprintjs/core';
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import InvestigationQuickLinks from 'components/Investigation/InvestigationQuickLinks';
-import { selectNotificationsResult } from 'selectors';
+import { selectCollection, selectNotificationsResult } from 'selectors';
 
 import './InvestigationOverview.scss';
 
@@ -72,17 +72,18 @@ class InvestigationOverview extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection, location } = ownProps;
+  const { collectionId, location } = ownProps;
 
   const context = {
     'facet': 'event',
-    'filter:channels': `Collection:${collection.id}`
+    'filter:channels': `Collection:${collectionId}`
   }
   const notificationsQuery = Query.fromLocation('notifications', location, context, '')
     .limit(40);
   const notificationsResult = selectNotificationsResult(state, notificationsQuery);
 
   return {
+    collection: selectCollection(state, collectionId),
     notificationsQuery,
     notificationsResult,
   };

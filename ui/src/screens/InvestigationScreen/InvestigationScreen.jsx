@@ -26,7 +26,7 @@ export class InvestigationScreen extends Component {
     }
 
     if (collection.casefile === false) {
-      return <Redirect to={`/datasets/${collection.id}`} />;
+      return <Redirect to={`/datasets/${collectionId}`} />;
     }
 
     const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
@@ -47,7 +47,7 @@ export class InvestigationScreen extends Component {
             <DualPane.ContentPane className="InvestigationScreen__body">
               <div className="InvestigationScreen__body-content">
                 <InvestigationViews
-                  collection={collection}
+                  collectionId={collectionId}
                   activeMode={activeMode}
                   activeType={activeType}
                 />

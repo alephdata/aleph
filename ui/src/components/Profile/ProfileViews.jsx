@@ -99,6 +99,12 @@ class ProfileViews extends React.Component {
             }
           />
         ))}
+        {!references.total && references.isPending && (
+          <Tab
+            id="loading"
+            title={<TextLoading loading={true} />}
+          />
+        )}
       </Tabs>
     );
   }
