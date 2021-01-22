@@ -147,14 +147,10 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
       return null;
   }
 
-  if (count) {
+  if (Number.isInteger(count)) {
     return <Count count={count} />;
-  } else {
-    if (collection.isPending) {
-      return <Count isPending={true} />
-    }
-    return <Count count={0} />;
   }
+  return <Count isPending={collection.isPending} count={0} />;
 }
 
 class CollectionViewDescription extends PureComponent {
