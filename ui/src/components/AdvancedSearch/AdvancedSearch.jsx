@@ -217,12 +217,12 @@ class AdvancedSearch extends React.Component {
   }
 
   render() {
-    const { navbarRef } = this.props;
+    const { isOpen, navbarRef } = this.props;
 
     return (
       <div className="AdvancedSearch" ref={this.ref}>
         <Drawer
-          isOpen={this.props.isOpen}
+          isOpen={isOpen}
           position={Position.TOP}
           canOutsideClickClose
           icon="settings"
