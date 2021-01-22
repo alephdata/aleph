@@ -13,7 +13,7 @@ table {
     overflow: hidden;
 
     span {
-      display: inline-block !important;
+      display: inline-flex !important;
     }
 
     &.expand {
@@ -92,7 +92,7 @@ table {
     white-space: normal !important;
     word-break: break-word;
 
-    .EntityLabel {
+    .EntityLabel, .EntityLink {
       display: flex !important;
     }
     .Transliterate {
