@@ -28,9 +28,17 @@ const messages = defineMessages({
     id: 'entity.references.no_results',
     defaultMessage: 'No {schema} match this search.',
   },
+  no_results_default: {
+    id: 'entity.references.no_results_default',
+    defaultMessage: 'No entities match this search.',
+  },
   search_placeholder: {
     id: 'entity.references.search.placeholder',
     defaultMessage: 'Search in {schema}',
+  },
+  search_placeholder_default: {
+    id: 'entity.references.search.placeholder_default',
+    defaultMessage: 'Search entities',
   },
 });
 
@@ -147,7 +155,9 @@ class EntityReferencesMode extends React.Component {
     const results = _.uniqBy(ensureArray(result.results), 'id');
     const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
     const schemaLabel = reference.schema.plural.toLowerCase();
-    const placeholder = intl.formatMessage(messages.search_placeholder, { schema: schemaLabel });
+    const placeholder = schema.name === 'Thing'
+      ? intl.formatMessage(messages.search_placeholder_default)
+      : intl.formatMessage(messages.search_placeholder, { schemaLabel })
     const skeletonItems = [...Array(15).keys()];
 
     return (
@@ -196,7 +206,10 @@ class EntityReferencesMode extends React.Component {
         {result.total === 0 && (
           <ErrorSection
             icon={<Schema.Icon schema={reference.schema} className="left-icon" size={60} />}
-            title={intl.formatMessage(messages.no_results, { schema: schemaLabel })}
+            title={schema.name === 'Thing'
+              ? intl.formatMessage(messages.no_results_default)
+              : intl.formatMessage(messages.no_results, { schemaLabel })
+            }
           />
         )}
       </section>
