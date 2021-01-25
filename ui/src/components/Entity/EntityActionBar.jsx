@@ -30,7 +30,7 @@ class EntityActionBar extends Component {
 
     return (
       <>
-        <ControlGroup className={c("EntityActionBar", {"show-status":!!updateStatus})}>
+        <ControlGroup fill className={c("EntityActionBar", {"show-status":!!updateStatus})}>
           <OverflowList
             items={showActions ? children : [resultText]}
             collapseFrom={Boundary.END}
