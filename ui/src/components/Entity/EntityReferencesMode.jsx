@@ -157,7 +157,7 @@ class EntityReferencesMode extends React.Component {
     const schemaLabel = reference.schema.plural.toLowerCase();
     const placeholder = schema.name === 'Thing'
       ? intl.formatMessage(messages.search_placeholder_default)
-      : intl.formatMessage(messages.search_placeholder, { schemaLabel })
+      : intl.formatMessage(messages.search_placeholder, { schema: schemaLabel })
     const skeletonItems = [...Array(15).keys()];
 
     return (
@@ -208,7 +208,7 @@ class EntityReferencesMode extends React.Component {
             icon={<Schema.Icon schema={reference.schema} className="left-icon" size={60} />}
             title={schema.name === 'Thing'
               ? intl.formatMessage(messages.no_results_default)
-              : intl.formatMessage(messages.no_results, { schemaLabel })
+              : intl.formatMessage(messages.no_results, { schema: schemaLabel })
             }
           />
         )}
