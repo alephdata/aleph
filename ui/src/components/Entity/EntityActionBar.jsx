@@ -26,7 +26,7 @@ class EntityActionBar extends Component {
   render() {
     const { children, query, result, onSearchSubmit, searchDisabled, searchPlaceholder, updateStatus, writeable } = this.props;
     const showActions = writeable && children;
-    const resultText = query.hasQuery() && <ResultText result={result} />;
+    const resultText = query.hasQuery() && (result.isPending || result.total > 0) && <ResultText result={result} />;
 
     return (
       <>
@@ -54,7 +54,9 @@ class EntityActionBar extends Component {
             />
           </div>
         </ControlGroup>
-        {showActions && resultText}
+        <div className="EntityActionBar__secondary">
+          {showActions && resultText}
+        </div>
       </>
     );
   }
