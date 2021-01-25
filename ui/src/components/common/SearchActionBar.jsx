@@ -9,7 +9,7 @@ import './SearchActionBar.scss';
 const SearchActionBar = ({ children, intl, result }) => {
   return (
     <ControlGroup className="SearchActionBar" fill>
-      <div className="SearchActionBar__main text-muted">
+      <div className="SearchActionBar__main">
         <ResultText result={result} />
       </div>
       {children}

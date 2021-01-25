@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
+import './ResultText.scss'
 
 class ResultText extends PureComponent {
   renderText() {
@@ -41,7 +42,7 @@ class ResultText extends PureComponent {
 
   render() {
     return (
-      <span className="ResultText">
+      <span className="ResultText text-muted">
         {this.renderText()}
       </span>
     )
