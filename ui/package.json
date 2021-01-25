@@ -3,7 +3,7 @@
   "version": "3.9.9",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "2.2.2",
+    "@alephdata/followthemoney": "2.3.0",
     "@alephdata/react-ftm": "2.2.8",
     "@blueprintjs/core": "3.36.0",
     "@blueprintjs/datetime": "3.20.0",
