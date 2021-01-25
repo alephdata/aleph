@@ -127,7 +127,7 @@ class EntityReferencesMode extends React.Component {
   renderSkeleton(columns, idx) {
     const { isThing, hideCollection } = this.props;
     return (
-      <tr key={idx} className='nowrap'>
+      <tr key={idx} className='nowrap skeleton'>
         {!isThing && (
           <td className="expand">
             <Button disabled small minimal icon='chevron-down' />

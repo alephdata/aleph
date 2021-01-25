@@ -29,8 +29,8 @@ class EntityActionBar extends Component {
     const resultText = query.hasQuery() && (result.isPending || result.total > 0) && <ResultText result={result} />;
 
     return (
-      <>
-        <ControlGroup fill className={c("EntityActionBar", {"show-status":!!updateStatus})}>
+      <div className="EntityActionBar">
+        <ControlGroup fill className={c({"show-status":!!updateStatus})}>
           <OverflowList
             items={showActions ? children : [resultText]}
             collapseFrom={Boundary.END}
@@ -54,10 +54,12 @@ class EntityActionBar extends Component {
             />
           </div>
         </ControlGroup>
-        <div className="EntityActionBar__secondary">
-          {showActions && resultText}
-        </div>
-      </>
+        {showActions && (
+          <div className="EntityActionBar__secondary">
+            {resultText}
+          </div>
+        )}
+      </div>
     );
   }
 }

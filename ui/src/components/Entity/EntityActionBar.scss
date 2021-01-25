@@ -11,8 +11,9 @@ $status-width: 120px;
     display: none;
   }
 
-  &.bp3-control-group {
+  .bp3-control-group {
     justify-content: space-between;
+    padding-bottom: $aleph-content-padding/2;
 
     .bp3-input-group {
       .bp3-input:not(:first-child) {
@@ -22,7 +23,6 @@ $status-width: 120px;
     .bp3-input-group, .bp3-button-group {
       border-radius: 3px;
     }
-    margin-bottom: $aleph-grid-size;
   }
 
   .bp3-divider {
@@ -57,10 +57,6 @@ $status-width: 120px;
 
   &__right {
     display: flex;
-  }
-
-  &__secondary {
-    padding-bottom: $aleph-content-padding/2;
   }
 
   .prevent-flex-grow.bp3-popover-wrapper {
