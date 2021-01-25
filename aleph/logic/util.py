@@ -1,6 +1,6 @@
 import jwt
+from normality import ascii_text
 from werkzeug.urls import url_join
-from normality import latinize_text
 from urlnormalizer import query_string
 from datetime import datetime, timedelta
 
@@ -13,7 +13,7 @@ DECODE = [ALGORITHM]
 def latin_alt(value):
     """Make a latin version of a string and return if it differs
     from the input."""
-    trans_value = latinize_text(value)
+    trans_value = ascii_text(value)
     if trans_value.lower() != value.lower():
         return trans_value
 

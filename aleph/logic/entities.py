@@ -107,7 +107,7 @@ def check_write_entity(entity, authz):
 def transliterate_values(entity):
     """Generate transliterated strings for the names and addresses
     linked to the given entity proxy."""
-    transliterated = {}
+    transliterated = {entity.caption: latin_alt(entity.caption)}
     for type_ in (registry.name, registry.address):
         for value in entity.get_type_values(type_):
             transliterated[value] = latin_alt(value)

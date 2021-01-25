@@ -38,11 +38,7 @@ export class SearchScreen extends React.Component {
     const title = intl.formatMessage(messages.title, { title: titleStatus });
 
     return (
-      <Screen
-        query={query}
-        result={result}
-        title={title}
-      >
+      <Screen title={title} >
         <FacetedEntitySearch
           query={query}
           result={result}
