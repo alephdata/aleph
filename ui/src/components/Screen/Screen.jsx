@@ -30,8 +30,7 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      session, metadata, requireSession,
-      isHomepage, title, description, className,
+      session, metadata, requireSession, title, description, className,
     } = this.props;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
     const forceAuth = requireSession && !session.loggedIn;

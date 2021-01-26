@@ -72,7 +72,6 @@ export class HomeScreen extends Component {
 
     return (
       <Screen
-        isHomepage
         title={intl.formatMessage(messages.title)}
         description={description}
       >
@@ -139,7 +138,7 @@ export class HomeScreen extends Component {
                     isPending={statistics.isPending}
                     itemLink={value => ({
                       pathname: 'search',
-                      search: queryString.stringify({'filter:schema': value})
+                      search: queryString.stringify({ 'filter:schema': value })
                     })}
                     itemLabel={name => <Schema.Label schema={name} plural icon />}
                   />
@@ -157,7 +156,7 @@ export class HomeScreen extends Component {
                     isPending={statistics.isPending}
                     itemLink={value => ({
                       pathname: 'datasets',
-                      search: queryString.stringify({'collectionsfilter:category': value})
+                      search: queryString.stringify({ 'collectionsfilter:category': value })
                     })}
                     itemLabel={name => <Category.Label category={name} />}
                   />
@@ -175,7 +174,7 @@ export class HomeScreen extends Component {
                     isPending={statistics.isPending}
                     itemLink={value => ({
                       pathname: 'datasets',
-                      search: queryString.stringify({'collectionsfilter:countries': value})
+                      search: queryString.stringify({ 'collectionsfilter:countries': value })
                     })}
                     itemLabel={name => <Country.Name code={name} />}
                   />
