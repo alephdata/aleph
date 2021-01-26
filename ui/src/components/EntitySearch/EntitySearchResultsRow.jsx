@@ -14,7 +14,7 @@ class EntitySearchResultsRow extends Component {
     const { hideCollection, documentMode, updateSelection, writeable } = this.props;
 
     return (
-      <tr className={c('EntitySearchResultsRow', 'nowrap')} key="skeleton">
+      <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')} key="skeleton">
         {writeable && updateSelection && (
           <td className="select">
             <Skeleton.Text type="span" length={2} />

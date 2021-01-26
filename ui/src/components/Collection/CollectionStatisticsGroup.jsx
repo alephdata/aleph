@@ -3,7 +3,6 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { Skeleton } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
 import { selectCollection } from 'selectors';
 

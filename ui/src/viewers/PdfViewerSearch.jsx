@@ -93,17 +93,9 @@ class PdfViewerSearch extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { baseQuery, queryText: queryOverride } = ownProps;
-  const queryText = queryOverride || baseQuery.getString('q');
-  const query = baseQuery.setString('q', queryText)
-    .set('highlight', true)
-    .sortBy('properties.index', 'asc')
-    .clear('limit')
-    .clear('offset');
+  const { query } = ownProps;
 
   return {
-    query,
-    queryText,
     result: selectEntitiesResult(state, query),
   };
 };
