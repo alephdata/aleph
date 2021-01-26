@@ -13,35 +13,35 @@ const timestampToYear = timestamp => {
   return new Date(timestamp).getFullYear();
 }
 
-const filterDateIntervals = ({ query, intervals }) => {
+const filterDateIntervals = ({ query, intervals, useDefaultBounds }) => {
   const defaultEndInterval = new Date().getFullYear();
   const hasGtFilter = query.hasFilter('gte:dates');
   const hasLtFilter = query.hasFilter('lte:dates');
 
   const gt = hasGtFilter
     ? cleanDateQParam(query.getFilter('gte:dates')[0])
-    : DEFAULT_START_INTERVAL;
+    : (useDefaultBounds && DEFAULT_START_INTERVAL);
 
   const lt = hasLtFilter
     ? cleanDateQParam(query.getFilter('lte:dates')[0])
-    : defaultEndInterval;
+    : (useDefaultBounds && defaultEndInterval);
 
   let gtOutOfRange, ltOutOfRange = false;
 
   const filteredIntervals = intervals.filter(({ id }) => {
     const year = timestampToYear(id);
-    if (year < gt) {
+    if (gt && year < gt) {
       gtOutOfRange = true;
       return false;
     }
-    if (year > lt) {
+    if (lt && year > lt) {
       ltOutOfRange = true;
       return false;
     }
     return true;
   })
 
-  const hasOutOfRange = (!hasGtFilter && gtOutOfRange) || (!hasLtFilter && ltOutOfRange)
+  const hasOutOfRange = useDefaultBounds && ((!hasGtFilter && gtOutOfRange) || (!hasLtFilter && ltOutOfRange));
   return { filteredIntervals, hasOutOfRange };
 }
 

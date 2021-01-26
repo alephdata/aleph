@@ -124,14 +124,14 @@ const mapStateToProps = (state, ownProps) => {
   const { location, intervals, query } = ownProps;
   const hashQuery = queryString.parse(location.hash);
 
-  if (intervals && !hashQuery.show_all_dates) {
-    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ query, intervals })
+  if (intervals) {
+    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ query, intervals, useDefaultBounds: !hashQuery.show_all_dates })
     return {
       filteredIntervals,
       displayShowHiddenToggle: hasOutOfRange
     };
   }
-  return { filteredIntervals: intervals };
+  return {};
 };
 
 export default compose(
