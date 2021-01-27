@@ -1,7 +1,6 @@
 @import "app/variables.scss";
 
 .EntityInfoMode {
-
   hr {
     border: 0;
     border-top: 1px solid $aleph-border-color;
@@ -11,5 +10,21 @@
 
   .value.big {
     vertical-align: middle;
+  }
+}
+
+// Profile callout
+.ProfileCallout {
+  &.bp3-callout {
+    background-color: $aleph-profile-dark !important;
+    color: white;
+
+    a {
+      color: $aleph-profile-light;
+    }
+
+    .bp3-icon {
+      color: white !important;
+    }
   }
 }
