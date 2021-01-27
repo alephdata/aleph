@@ -356,6 +356,7 @@ def similar(entity_id):
         item = {
             "score": compare(model, proxy, obj),
             "judgement": judgements.get((entity_id, obj.get("id"))),
+            "collection_id": entity.get("collection_id"),
             "entity": obj,
         }
         result.results.append(item)

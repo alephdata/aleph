@@ -128,6 +128,7 @@ def similar(profile_id):
         item = {
             "score": compare(model, profile["merged"], obj),
             "judgement": Judgement.NO_JUDGEMENT,
+            "collection_id": profile.get("collection_id"),
             "entity": obj,
         }
         result.results.append(item)
