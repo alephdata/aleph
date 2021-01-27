@@ -7,7 +7,7 @@ import { Callout } from '@blueprintjs/core';
 import { querySimilar } from 'actions';
 import { selectSimilarResult } from 'selectors';
 import {
-  ErrorSection, QueryInfiniteLoad, JudgementButtons, Score, Collection,
+  ErrorSection, QueryInfiniteLoad, JudgementButtons, Score, Collection, Skeleton,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySimilarQuery } from 'queries';
@@ -98,6 +98,25 @@ class EntitySimilarMode extends Component {
     );
   }
 
+  renderSkeleton(idx) {
+    return (
+      <tr key={idx}>
+        <td className="numeric narrow">
+          <JudgementButtons isPending />
+        </td>
+        <td className="entity bordered">
+          <EntityCompare isPending />
+        </td>
+        <td className="numeric narrow">
+          <Skeleton.Text type="span" length={3} />
+        </td>
+        <td className="collection">
+          <Skeleton.Text type="span" length={10} />
+        </td>
+      </tr>
+    );
+  }
+
   renderRow(similar) {
     return (
       <tr key={similar.entity.id}>
@@ -119,6 +138,7 @@ class EntitySimilarMode extends Component {
 
   render() {
     const { intl, query, result } = this.props;
+    const skeletonItems = [...Array(10).keys()];
 
     if (result.total === 0) {
       return <ErrorSection
@@ -134,6 +154,7 @@ class EntitySimilarMode extends Component {
           {this.renderHeader()}
           <tbody>
             {result.results?.map(res => this.renderRow(res))}
+            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
           </tbody>
         </table>
         <QueryInfiniteLoad
