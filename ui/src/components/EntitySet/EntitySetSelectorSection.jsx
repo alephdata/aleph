@@ -135,7 +135,7 @@ class EntitySetSelectorSection extends Component {
               result={result}
               onSelect={onSelect}
               type={type}
-              loadMoreOnScroll={false}
+              loadOnScroll={false}
             />
           </div>
         </Collapse>

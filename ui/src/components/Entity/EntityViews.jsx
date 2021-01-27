@@ -47,7 +47,7 @@ class EntityViews extends React.Component {
     const {
       isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery
     } = this.props;
-    if (references.total === undefined) {
+    if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
     }
     const hasTextMode = entity.schema.isAny(['Pages', 'Image']);

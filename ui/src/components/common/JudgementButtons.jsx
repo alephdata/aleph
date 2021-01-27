@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { Button, ButtonGroup, Classes, Intent, Tooltip, Position } from '@blueprintjs/core';
+import c from 'classnames';
 
 import './JudgementButtons.scss';
 
@@ -34,11 +35,11 @@ class JudgementButtons extends Component {
     }
 
     render() {
-        const { obj, intl } = this.props;
+        const { obj = {}, intl, isPending } = this.props;
         const { blocking } = this.state;
         const disabled = this.props.disabled || blocking || !obj.writeable;
         return (
-            <ButtonGroup className="JudgementButtons" vertical>
+            <ButtonGroup className={c("JudgementButtons", {[Classes.SKELETON]: isPending})} vertical>
                 <Tooltip content={intl.formatMessage(messages.positive)} position={Position.RIGHT} disabled={disabled}>
                     <Button icon="tick"
                         disabled={disabled}

@@ -26,7 +26,7 @@ class InvestigationOverview extends React.Component {
               <FormattedMessage id="investigation.overview.notifications" defaultMessage="Recent activity" />
             </h6>
             <div className="InvestigationOverview__section__content">
-              <NotificationList query={notificationsQuery} showCollectionLinks={false} />
+              <NotificationList query={notificationsQuery} showCollectionLinks={false} loadOnScroll={false} />
             </div>
           </div>
         )}

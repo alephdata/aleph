@@ -6,6 +6,7 @@ $status-width: 120px;
 
 .EntityActionBar {
   margin-bottom: $aleph-content-padding/2;
+  width: 100%;
 
   .preview & {
     display: none;

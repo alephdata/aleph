@@ -26,7 +26,7 @@ class EntityActionBar extends Component {
   render() {
     const { children, query, result, onSearchSubmit, searchDisabled, searchPlaceholder, updateStatus, writeable } = this.props;
     const showActions = writeable && children;
-    const resultText = query.hasQuery() && (result.isPending || result.total > 0) && <ResultText result={result} />;
+    const resultText = query.hasQuery() && <ResultText result={result} />;
 
     return (
       <div className="EntityActionBar">
@@ -37,6 +37,7 @@ class EntityActionBar extends Component {
             visibleItemRenderer={(item, i) => <React.Fragment key={i}>{item}</React.Fragment>}
             overflowRenderer={this.overflowListRenderer}
             className="bp3-button-group"
+            minVisibleItems={showActions ? 0 : 1}
             observeParents
           />
           <div className="EntityActionBar__right">

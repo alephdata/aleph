@@ -47,9 +47,11 @@ class CollectionStatisticsGroup extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps;
   const collection = selectCollection(state, collectionId);
-  if (!collection.id && collection.isPending) { return { isPending: true } }
+  const { statistics } = collection;
 
-  const { statistics = {} } = collection;
+  if (!statistics) {
+    return { isPending: true, statsToRender: [] };
+  }
 
   const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
     .filter(stat => stat && stat.total);

@@ -92,10 +92,6 @@ table {
     white-space: normal !important;
     word-break: break-word;
 
-    span {
-      display: inline-flex !important;
-    }
-
     .bp3-skeleton {
       white-space: nowrap;
     }
@@ -105,6 +101,12 @@ table {
     }
     .Transliterate {
       display: inline !important;
+    }
+  }
+
+  td.collection {
+    .CollectionLabel {
+      display: flex !important;
     }
   }
 
