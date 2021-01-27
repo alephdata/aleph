@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Button, Intent } from '@blueprintjs/core';
 import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryEntitySets } from 'actions';
 import EntitySetIndexItem from 'components/EntitySet/EntitySetIndexItem';
-
-import './EntitySetIndex.scss';
 
 const messages = defineMessages({
   no_diagram: {
@@ -37,12 +34,11 @@ class EntitySetIndex extends Component {
   }
 
   render() {
-    const { intl, loadMoreOnScroll, onSelect, query, result, showCollection, type } = this.props;
+    const { intl, loadOnScroll, onSelect, query, result, showCollection, type } = this.props;
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
     const icon = type === 'diagram' ? 'graph' : 'list';
-    const showLoadMoreButton = !loadMoreOnScroll && result.results && result.results.length < result.total;
 
     if (result.isError || result.total === 0) {
       return (
@@ -73,27 +69,12 @@ class EntitySetIndex extends Component {
             />
           ))}
         </ul>
-        {loadMoreOnScroll && (
-          <QueryInfiniteLoad
-            query={query}
-            result={result}
-            fetch={this.props.queryEntitySets}
-          />
-        )}
-        {showLoadMoreButton && (
-          <Button
-            minimal
-            intent={Intent.PRIMARY}
-            onClick={this.getMoreResults}
-            className="EntitySetIndex__showMore"
-          >
-            <FormattedMessage
-              id="entitysets.load_more"
-              defaultMessage="Load more..."
-            />
-          </Button>
-        )}
-
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={this.props.queryEntitySets}
+          loadOnScroll={loadOnScroll}
+        />
       </div>
     );
   }
