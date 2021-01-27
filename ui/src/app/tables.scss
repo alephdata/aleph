@@ -104,6 +104,12 @@ table {
     }
   }
 
+  td.collection {
+    .CollectionLabel {
+      display: flex !important;
+    }
+  }
+
   tr.prefix {
     td {
       border-bottom: 0px !important;
