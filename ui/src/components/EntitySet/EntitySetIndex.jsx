@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { ErrorSection, QueryInfiniteLoad } from 'components/common';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import './QueryInfiniteLoad.scss';
 
