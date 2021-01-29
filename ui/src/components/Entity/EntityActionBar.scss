@@ -58,6 +58,7 @@ $status-width: 120px;
 
   &__right {
     display: flex;
+    margin: 0 !important;
   }
 
   .prevent-flex-grow.bp3-popover-wrapper {
@@ -70,5 +71,10 @@ $status-width: 120px;
 
   .Count {
     @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+  }
+
+  .bp3-button {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
