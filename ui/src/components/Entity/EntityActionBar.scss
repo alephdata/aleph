@@ -72,4 +72,9 @@ $status-width: 120px;
   .Count {
     @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
   }
+
+  .bp3-button {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }
