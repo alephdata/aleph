@@ -6,7 +6,6 @@ import { Spinner } from '@blueprintjs/core';
 
 import { selectLocale } from 'selectors';
 import translations from 'content/translations.json';
-import { selectLocale } from 'selectors';
 
 
 class Translator extends React.Component {
@@ -50,8 +49,8 @@ class Translator extends React.Component {
       return <div className="spinner"><Spinner className="bp3-large" /></div>
     }
 
-    //  override arabic locale to marocan version 
-    // We want all dates and numbers in latin instead of default ar eastern digits 
+    //  override arabic locale to marocan version
+    // We want all dates and numbers in latin instead of default ar eastern digits
     const modifiedLocale = locale === "ar" ? "ar-ma" : locale;
 
     return (
