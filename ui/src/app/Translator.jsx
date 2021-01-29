@@ -2,21 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import { shouldPolyfill } from '@formatjs/intl-relativetimeformat/should-polyfill'
-import { Spinner } from '@blueprintjs/core';
 
 import { selectLocale } from 'selectors';
+import { SectionLoading } from 'components/common';
 import translations from 'content/translations.json';
 
 
 class Translator extends React.Component {
   constructor(props) {
     super(props);
-    this.requiresPollyfill = shouldPolyfill();
-    this.state = { isPending: this.requiresPollyfill };
+    this.requiresPolyfill = shouldPolyfill();
+    this.state = { isPending: this.requiresPolyfill };
   }
 
   componentDidMount() {
-    if (this.requiresPollyfill) {
+    if (this.requiresPolyfill) {
       this.fetchPolyfill();
     }
   }
@@ -46,7 +46,7 @@ class Translator extends React.Component {
     const { isPending } = this.state;
 
     if (isPending) {
-      return <div className="spinner"><Spinner className="bp3-large" /></div>
+      return <SectionLoading className="bp3-large" />
     }
 
     //  override arabic locale to marocan version

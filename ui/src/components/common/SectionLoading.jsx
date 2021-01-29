@@ -3,10 +3,10 @@ import { Spinner } from '@blueprintjs/core';
 
 import './SectionLoading.scss';
 
-const SectionLoading = () => (
+const SectionLoading = (props = {}) => (
   <div className="SectionLoading">
     <div className="spinner">
-      <Spinner />
+      <Spinner {...props}/>
     </div>
   </div>
 );
