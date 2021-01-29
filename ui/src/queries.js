@@ -9,6 +9,15 @@ export function alertsQuery(location) {
   return Query.fromLocation('alerts', location, {}, 'alerts').limit(Query.MAX_LIMIT);
 }
 
+export function entitiesQuery(location) {
+  // We normally only want Things, not Intervals (relations between things).
+  const context = {
+    highlight: true,
+    'filter:schemata': 'Thing',
+  };
+  return Query.fromLocation('entities', location, context, '');
+}
+
 function collectionContextQuery(context, location, collectionId, name) {
   const path = collectionId ? 'entities' : undefined;
   return Query.fromLocation(path, location, context, name);
