@@ -111,7 +111,8 @@ def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
         if prop.specificity(value) > 0.1:
             values.add((prop.type, value))
 
-    log.debug("Tags[%s]: %s values", prop_types, len(values))
+    type_names = [t.name for t in prop_types]
+    log.debug("Tags[%s]: %s values", type_names, len(values))
     for (type_, value) in values:
         key = type_.node_id(value)
         lookup[key] = (type_, value)
