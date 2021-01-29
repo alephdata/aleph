@@ -58,6 +58,7 @@ $status-width: 120px;
 
   &__right {
     display: flex;
+    margin: 0 !important;
   }
 
   .prevent-flex-grow.bp3-popover-wrapper {
