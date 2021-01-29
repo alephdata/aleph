@@ -305,7 +305,8 @@ class EntitySetItemSerializer(Serializer):
         entity_id = obj.pop("entity_id", None)
         obj["entity"] = self.resolve(Entity, entity_id, EntitySerializer)
         obj["collection"] = self.resolve(Collection, coll_id, CollectionSerializer)
-        obj["writeable"] = request.authz.can(coll_id, request.authz.WRITE)
+        esi_coll_id = obj.get("entityset_collection_id")
+        obj["writeable"] = request.authz.can(esi_coll_id, request.authz.WRITE)
         return obj
 
 
