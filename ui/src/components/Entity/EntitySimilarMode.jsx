@@ -142,7 +142,7 @@ class EntitySimilarMode extends Component {
 
     if (result.total === 0) {
       return <ErrorSection
-        icon="snowflake"
+        icon="similar"
         title={intl.formatMessage(messages.empty)}
       />
     }

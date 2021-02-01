@@ -64,7 +64,7 @@ class ProfileItemsMode extends Component {
     const { query, result } = this.props;
     if (result.total === 0) {
       return (
-        <Callout icon="snowflake" intent="primary">
+        <Callout icon="similar" intent="primary">
           <FormattedMessage
             id="profile.similar.no_results"
             defaultMessage="No suggested additions for this profile were found."
