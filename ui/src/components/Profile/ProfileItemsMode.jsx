@@ -16,7 +16,6 @@ import { showWarningToast } from 'app/toast';
 import { Entity } from '@alephdata/react-ftm';
 import getEntityLink from 'util/getEntityLink';
 
-import './ProfileItemsMode.scss';
 import Skeleton from 'components/common/Skeleton';
 
 
