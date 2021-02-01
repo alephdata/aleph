@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { selectEntitySetItemsResult } from 'selectors';
 import {
@@ -111,7 +112,7 @@ class ProfileItemsMode extends Component {
             />
           )}
         </Callout>
-        <table className="data-table">
+        <table className={c("data-table", { 'pending': result.isPending })}>
           <thead>
             <tr>
               <th className="numeric narrow" />
@@ -135,7 +136,7 @@ class ProfileItemsMode extends Component {
           </thead>
           <tbody>
             {result.results?.map(res => this.renderRow(res))}
-            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
+            {!result.total && result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
           </tbody>
         </table>
       </div >

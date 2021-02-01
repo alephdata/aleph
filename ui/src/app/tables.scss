@@ -140,6 +140,10 @@ table.data-table {
   @extend .bp3-html-table;
   width: 100%;
 
+  &.pending > tbody {
+    opacity: .5;
+  }
+
   td {
     border-bottom: 1px solid $aleph-table-border-color;
   }
