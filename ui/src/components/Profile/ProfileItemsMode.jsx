@@ -34,7 +34,8 @@ class ProfileItemsMode extends Component {
         entitySetId: profile.id,
         entityId: obj.entity.id,
       });
-      if (profile.id !== item.entityset_id) {
+
+      if (item.entityset_id && profile.id !== item.entityset_id) {
         history.replace({
           pathname: `/profiles/${item.entityset_id}`,
           search: location.search,
@@ -47,10 +48,6 @@ class ProfileItemsMode extends Component {
   }
 
   renderRow(item) {
-    const { viaEntityId } = this.props;
-    if (item.entity.id === viaEntityId) {
-      return null;
-    }
     return (
       <tr key={item.id || item.entity.id}>
         <td className="numeric narrow">

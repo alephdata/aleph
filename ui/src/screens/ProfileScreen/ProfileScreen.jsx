@@ -56,6 +56,8 @@ class ProfileScreen extends Component {
 
   fetchIfNeeded() {
     const { profileId, profile, tagsResult } = this.props;
+    if (!profileId) { return; }
+
     if (profile.shouldLoadDeep) {
       this.props.fetchProfile({ id: profileId });
     }
@@ -102,9 +104,9 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    const { profile, viaEntityId, activeMode } = this.props;
+    const { profile, itemsResult, viaEntityId, activeMode } = this.props;
 
-    if (profile.isError) {
+    if (profile.isError || (!itemsResult.isPending && !itemsResult.total)) {
       if (viaEntityId) {
         return <Redirect to={getEntityLink(viaEntityId, false)} />;
       }
