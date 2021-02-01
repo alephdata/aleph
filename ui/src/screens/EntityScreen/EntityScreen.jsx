@@ -33,6 +33,28 @@ const messages = defineMessages({
 });
 
 class EntityScreen extends Component {
+  componentDidMount() {
+    this.cleanHash();
+  }
+
+  componentDidUpdate() {
+    this.cleanHash();
+  }
+
+  cleanHash() {
+    const { entity, entityId, history, location, intl, parsedHash } = this.props;
+
+    // if an entity does not have an associated profile ensure profile=false is removed from hash
+    if (!!entity.id && !entity.profileId && !!parsedHash.profile) {
+      delete parsedHash.profile;
+
+      history.replace({
+        pathname: location.pathname,
+        search: location.search,
+        hash: queryString.stringify(parsedHash),
+      });
+    }
+  }
 
   render() {
     const { entity, entityId, intl, parsedHash } = this.props;
