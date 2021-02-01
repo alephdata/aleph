@@ -11,11 +11,11 @@ import './EntityInfoMode.scss';
 
 
 function EntityInfoMode(props) {
-  const { entity } = props;
+  const { entity, showProfileLinks = true } = props;
   const profileLink = getProfileLink(entity.profileId, { via: entity.id });
   return (
     <>
-      {entity.profileId && (
+      {showProfileLinks && entity.profileId && (
         <Callout icon="layers" intent="primary" className="ProfileCallout">
           <FormattedMessage
             id="profile.items.intro"

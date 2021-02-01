@@ -45,7 +45,7 @@ class EntityViews extends React.Component {
 
   render() {
     const {
-      isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery
+      isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery, showProfileLinks
     } = this.props;
     if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
@@ -77,7 +77,7 @@ class EntityViews extends React.Component {
               </>
             )}
             panel={
-              <EntityInfoMode entity={entity} />
+              <EntityInfoMode entity={entity} showProfileLinks={showProfileLinks} />
             }
           />
         )}

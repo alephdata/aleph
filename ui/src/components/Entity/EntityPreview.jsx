@@ -33,7 +33,7 @@ export class EntityPreview extends React.Component {
   }
 
   renderContext() {
-    const { entity, activeMode } = this.props;
+    const { entity, activeMode, profile } = this.props;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />;
     }
@@ -46,7 +46,7 @@ export class EntityPreview extends React.Component {
           <EntityHeading entity={entity} isPreview />
         </div>
         <div className="ItemOverview__content">
-          <EntityViews entity={entity} activeMode={activeMode} isPreview />
+          <EntityViews entity={entity} activeMode={activeMode} showProfileLinks={profile} isPreview />
         </div>
       </div>
     );
