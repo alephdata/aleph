@@ -22,15 +22,15 @@
 
     .preview & {
       background-color: $aleph-breadcrumbs-background;
-      padding: $aleph-grid-size*4 $aleph-grid-size*2;
+      padding: $aleph-grid-size*3 $aleph-grid-size*2;
       border: none;
     }
 
     .profile & {
       background-color: $aleph-profile-dark;
       color: white;
-      padding: $aleph-grid-size*4 $aleph-grid-size*2;
-      border-radius: $aleph-border-radius;
+      padding: $aleph-grid-size*4 $aleph-grid-size*2 $aleph-grid-size*2;
+      border-radius: $aleph-grid-size $aleph-grid-size 0 0;
 
       .bp3-text-muted {
         color: white;
@@ -63,10 +63,11 @@
   }
 
   &__callout {
-    margin: -1*$aleph-grid-size 0 2*$aleph-grid-size;
+    padding: 0 0 2*$aleph-grid-size;
 
-    .preview &, .profile & {
+    .preview & {
       margin-top: 2*$aleph-grid-size;
+      border-bottom: 1px solid $aleph-border-color;
     }
   }
 
@@ -74,7 +75,7 @@
     border-top: 1px solid $aleph-border-color;
 
     .preview & {
-      padding: 0;
+      border: none;
     }
 
     .horizontal & {
@@ -89,8 +90,12 @@
     }
 
     &__section {
-      padding-top: $aleph-grid-size * 2;
+      padding: $aleph-grid-size 0;
       border-bottom: 1px solid $aleph-border-color;
+      .preview &:first-child {
+        padding-top: 0;
+        margin-top: $aleph-grid-size/2;
+      }
 
       &:last-child {
         border: none;
