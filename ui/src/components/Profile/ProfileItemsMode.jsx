@@ -85,33 +85,6 @@ class ProfileItemsMode extends Component {
     const skeletonItems = [...Array(15).keys()];
     return (
       <div className="ProfileItemsMode">
-        <Callout intent="primary" className="ProfileItemsMode__callout">
-          <strong>
-            <FormattedMessage
-              id="profile.items.intro"
-              defaultMessage={"You're viewing {entity} as a profile. "}
-              values={{
-                entity: <Entity.Label entity={profile.entity} />,
-              }}
-            />
-          </strong>
-          <FormattedMessage
-            id="profile.items.intro"
-            defaultMessage={"The profile aggregates attributes and relationships from {count} entities across different datasets. You can select what source entities to include in the list below. "}
-            values={{
-              count: profile.entities ? profile.entities.length : 0,
-            }}
-          />
-          {viaEntityId && (
-            <FormattedMessage
-              id="profile.items.intro"
-              defaultMessage={"View the <link>original entity</link>."}
-              values={{
-                link: chunks => <Link to={getEntityLink(viaEntityId, false)}>{chunks}</Link >,
-              }}
-            />
-          )}
-        </Callout>
         <table className={c("data-table", { 'pending': result.isPending })}>
           <thead>
             <tr>

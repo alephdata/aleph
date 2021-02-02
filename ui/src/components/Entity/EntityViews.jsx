@@ -14,10 +14,10 @@ import {
 import {
   selectEntitiesResult, selectEntityReferences, selectEntityTags, selectEntityReference, selectSimilarResult
 } from 'selectors';
+import EntityProperties from 'components/Entity/EntityProperties';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
-import EntityInfoMode from 'components/Entity/EntityInfoMode';
 import EntityMappingMode from 'components/Entity/EntityMappingMode';
 import DocumentViewMode from 'components/Document/DocumentViewMode';
 
@@ -45,7 +45,7 @@ class EntityViews extends React.Component {
 
   render() {
     const {
-      isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery, showProfileLinks
+      isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery
     } = this.props;
     if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
@@ -77,7 +77,7 @@ class EntityViews extends React.Component {
               </>
             )}
             panel={
-              <EntityInfoMode entity={entity} showProfileLinks={showProfileLinks} />
+              <EntityProperties entity={entity} />
             }
           />
         )}

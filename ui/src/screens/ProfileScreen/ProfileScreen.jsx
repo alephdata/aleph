@@ -8,12 +8,13 @@ import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
 
 import Screen from 'components/Screen/Screen';
 import EntityHeading from 'components/Entity/EntityHeading';
-import EntityInfoMode from 'components/Entity/EntityInfoMode';
+import EntityProperties from 'components/Entity/EntityProperties';
 import ProfileViews from 'components/Profile/ProfileViews';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
+import ProfileCallout from 'components/Profile/ProfileCallout';
 import { DialogToggleButton } from 'components/Toolbar';
 import { Breadcrumbs, DualPane, Schema } from 'components/common';
 import getEntityLink from 'util/getEntityLink';
@@ -34,8 +35,6 @@ import {
   selectEntitySetItemsResult,
 } from 'selectors';
 import { profileSimilarQuery, profileReferencesQuery, entitySetItemsQuery } from 'queries';
-
-import './ProfileScreen.scss';
 
 const messages = defineMessages({
   delete: {
@@ -135,12 +134,15 @@ class ProfileScreen extends Component {
         <CollectionWrapper collection={profile.collection}>
           {breadcrumbs}
           <DualPane>
-            <DualPane.SidePane className="ItemOverview">
-              <div className="ItemOverview__heading profile">
+            <DualPane.SidePane className="ItemOverview profile">
+              <div className="ItemOverview__heading">
                 <EntityHeading entity={baseEntity} isProfile={true} />
               </div>
+              <div className="ItemOverview__callout">
+                <ProfileCallout profile={profile} viaEntityId={viaEntityId} />
+              </div>
               <div className="ItemOverview__content">
-                <EntityInfoMode entity={baseEntity} />
+                <EntityProperties entity={baseEntity} />
               </div>
             </DualPane.SidePane>
             <DualPane.ContentPane>

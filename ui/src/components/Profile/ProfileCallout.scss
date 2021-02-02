@@ -1,0 +1,19 @@
+@import "app/variables.scss";
+
+.ProfileCallout {
+  &.bp3-callout {
+    color: $aleph-profile-dark !important;
+    background-color: white !important;
+    border: 1px solid $aleph-profile-dark;
+    font-weight: bolder;
+
+    a {
+      font-weight: bold;
+      color: $aleph-profile-dark;
+    }
+
+    .bp3-icon {
+      color: $aleph-profile-dark !important;
+    }
+  }
+}

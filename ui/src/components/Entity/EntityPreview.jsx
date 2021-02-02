@@ -9,6 +9,7 @@ import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityToolbar from 'components/Entity/EntityToolbar';
 import EntityViews from 'components/Entity/EntityViews';
+import ProfileCallout from 'components/Profile/ProfileCallout';
 import { SectionLoading, ErrorSection } from 'components/common';
 import { selectEntity, selectEntityView, selectLocale } from 'selectors';
 import queryString from 'query-string';
@@ -45,8 +46,13 @@ export class EntityPreview extends React.Component {
         <div className="ItemOverview__heading">
           <EntityHeading entity={entity} isPreview />
         </div>
+        {entity.profileId && profile && (
+          <div className="ItemOverview__callout">
+            <ProfileCallout entity={entity} />
+          </div>
+        )}
         <div className="ItemOverview__content">
-          <EntityViews entity={entity} activeMode={activeMode} showProfileLinks={profile} isPreview />
+          <EntityViews entity={entity} activeMode={activeMode} isPreview />
         </div>
       </div>
     );
