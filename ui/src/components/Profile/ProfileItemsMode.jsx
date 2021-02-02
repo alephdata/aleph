@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Callout } from '@blueprintjs/core';
+import { Callout, Intent } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { selectEntitySetItemsResult } from 'selectors';
@@ -85,6 +85,12 @@ class ProfileItemsMode extends Component {
     const skeletonItems = [...Array(15).keys()];
     return (
       <div className="ProfileItemsMode">
+        <Callout intent={Intent.PRIMARY} icon={null} style={{ 'marginBottom': '10px'}}>
+          <FormattedMessage
+            id="profile.items.explanation"
+            defaultMessage="Make decisions below to determine which source entities should be added or excluded from this profile."
+          />
+        </Callout>
         <table className={c("data-table", { 'pending': result.isPending })}>
           <thead>
             <tr>
