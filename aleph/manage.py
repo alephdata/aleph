@@ -25,6 +25,7 @@ from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
+from aleph.logic.archive import cleanup_archive
 from aleph.logic.xref import xref_collection
 from aleph.logic.export import retry_exports
 from aleph.logic.roles import create_user, update_roles, delete_role
@@ -408,6 +409,12 @@ def resetindex():
 def resetcache():
     """Clear the redis cache."""
     cache.flush()
+
+
+@cli.command("cleanup-archive")
+@click.option("-p", "--prefix", help="Scan a subset with a prefix")
+def cleanuparchive(prefix):
+    cleanup_archive(prefix=prefix)
 
 
 @cli.command()

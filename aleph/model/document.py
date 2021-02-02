@@ -166,6 +166,11 @@ class Document(db.Model, DatedModel):
         return q.first()
 
     @classmethod
+    def by_content_hash(cls, content_hash):
+        q = cls.all()
+        return q.filter(cls.content_hash == content_hash)
+
+    @classmethod
     def by_collection(cls, collection_id=None):
         q = cls.all()
         q = q.filter(cls.collection_id == collection_id)

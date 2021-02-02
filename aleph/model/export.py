@@ -132,5 +132,13 @@ class Export(db.Model, IdModel, DatedModel):
         q = q.order_by(cls.created_at.desc())
         return q
 
+    @classmethod
+    def by_content_hash(cls, content_hash, deleted=False):
+        q = cls.all()
+        q = q.filter(cls.content_hash == content_hash)
+        if not deleted:
+            q = q.filter(cls.deleted == False)  # noqa
+        return q
+
     def __repr__(self):
         return "<Export(%r, %r, %r)>" % (self.id, self.creator_id, self.label)

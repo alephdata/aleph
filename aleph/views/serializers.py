@@ -183,7 +183,9 @@ class EntitySerializer(Serializer):
             properties.setdefault(prop.name, [])
             if prop.type == registry.entity and not self.nested:
                 entity = self.resolve(Entity, value, EntitySerializer)
-                value = entity or value
+                if entity is not None:
+                    entity["shallow"] = True
+                    value = entity
             if value is not None:
                 properties[prop.name].append(value)
         obj["properties"] = properties
