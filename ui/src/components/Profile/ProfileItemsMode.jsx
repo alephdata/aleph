@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout, Intent } from '@blueprintjs/core';
@@ -14,8 +13,6 @@ import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySetItemsQuery } from 'queries';
 import { updateEntitySetItemMutate } from 'actions';
 import { showWarningToast } from 'app/toast';
-import { Entity } from '@alephdata/react-ftm';
-import getEntityLink from 'util/getEntityLink';
 
 import Skeleton from 'components/common/Skeleton';
 
@@ -81,7 +78,7 @@ class ProfileItemsMode extends Component {
   }
 
   render() {
-    const { profile, result, viaEntityId } = this.props;
+    const { result } = this.props;
     const skeletonItems = [...Array(15).keys()];
     return (
       <div className="ProfileItemsMode">

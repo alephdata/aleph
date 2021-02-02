@@ -142,7 +142,7 @@ class ProfileScreen extends Component {
                 <ProfileCallout profile={profile} viaEntityId={viaEntityId} />
               </div>
               <div className="ItemOverview__content">
-                <EntityProperties entity={baseEntity} />
+                <EntityProperties entity={baseEntity} showMetadata={false} />
               </div>
             </DualPane.SidePane>
             <DualPane.ContentPane>

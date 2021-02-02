@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import c from 'classnames';
 import { Link } from 'react-router-dom';
 import { Callout, Icon } from '@blueprintjs/core';
 

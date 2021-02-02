@@ -1,22 +1,7 @@
 @import "app/variables.scss";
-@import "app/mixins.scss";
-
-@mixin large {
-  @media screen and (min-width: $aleph-screen-md-max-width) {
-    @content;
-  }
-}
 
 .ItemOverview {
-  &.horizontal {
-    margin-bottom: $aleph-content-padding;
-
-    @include large {
-      display: flex;
-      padding: $aleph-content-padding;
-    }
-  }
-
+  height: auto !important;
   &__heading {
     padding: ($aleph-grid-size * 4) 0;
 
@@ -37,21 +22,6 @@
       }
     }
 
-    .horizontal & {
-      @include large {
-        flex: 1 1 35%;
-        padding: $aleph-grid-size*4;
-        @include rtlSupportInvertedProp(padding, left, 0, null);
-        border-bottom: none;
-        max-width: 800px;
-        @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
-      }
-
-      @media screen and (max-width: $aleph-screen-lg-max-width) {
-        flex-basis: 50%;
-      }
-    }
-
     &__title, &__subtitle, &__description {
       margin: 10px 0;
       overflow-wrap: break-word;
@@ -67,31 +37,24 @@
 
     .preview & {
       margin-top: 2*$aleph-grid-size;
-      border-bottom: 1px solid $aleph-border-color;
+      padding-bottom: $aleph-grid-size;
+    }
+    .profile & {
+      padding-bottom: $aleph-grid-size;
     }
   }
 
   &__content {
     border-top: 1px solid $aleph-border-color;
 
-    .preview & {
+    .preview &, .profile & {
       border: none;
-    }
-
-    .horizontal & {
-      @include large {
-        flex: 1 1 65%;
-        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*4, null);
-      }
-
-      @media screen and (max-width: $aleph-screen-lg-max-width) {
-        flex-basis: 50%;
-      }
     }
 
     &__section {
       padding: $aleph-grid-size 0;
       border-bottom: 1px solid $aleph-border-color;
+
       .preview &:first-child {
         padding-top: 0;
         margin-top: $aleph-grid-size/2;

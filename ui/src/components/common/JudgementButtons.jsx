@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { AnchorButton, Button, ButtonGroup, Classes, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { AnchorButton, ButtonGroup, Classes, Intent, Tooltip, Position } from '@blueprintjs/core';
 import c from 'classnames';
 
 import './JudgementButtons.scss';

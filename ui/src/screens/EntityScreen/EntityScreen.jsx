@@ -43,9 +43,9 @@ class EntityScreen extends Component {
   }
 
   cleanHash() {
-    const { entity, entityId, history, location, intl, parsedHash } = this.props;
+    const { entity, history, location, parsedHash } = this.props;
 
-    // if an entity does not have an associated profile ensure profile=false is removed from hash
+    // if an entity does not have an associated profile, ensure profile=false is removed from hash
     if (!!entity.id && !entity.profileId && !!parsedHash.profile) {
       delete parsedHash.profile;
 
