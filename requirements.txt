@@ -43,7 +43,3 @@ Faker >=5.6.0, < 6.0.0
 nose
 coverage
 coveralls
-
-# Tracing and logging libraries
-structlog==20.2.0
-colorama==0.4.4
