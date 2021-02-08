@@ -42,10 +42,14 @@ def index():
         in: query
         name: 'filter:type'
         required: false
+        schema:
+          type: string
       - description: Quert string for searches
         in: query
         name: 'prefix'
         required: false
+        schema:
+          type: string
       responses:
         '200':
           content:
