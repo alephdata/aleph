@@ -1,0 +1,39 @@
+@import "app/variables.scss";
+
+.ProfileCallout {
+  &.bp3-callout {
+    color: $aleph-profile-dark !important;
+    background-color: white !important;
+    border: 1px solid $aleph-profile-dark;
+    font-weight: bolder;
+    border-radius: $aleph-grid-size;
+
+    a {
+      font-weight: bold;
+      color: $aleph-profile-dark;
+
+      .bp3-icon {
+        margin: 0 3px;
+      }
+    }
+
+    .bp3-icon {
+      color: $aleph-profile-dark !important;
+    }
+
+    .profile & {
+      $profile-vertical-padding: $aleph-grid-size*1.5;
+      border-radius: 0 0 $aleph-grid-size $aleph-grid-size;
+      padding-top: $profile-vertical-padding;
+      padding-bottom: $profile-vertical-padding;
+
+      .bp3-icon {
+        top: $aleph-grid-size*2 !important;
+      }
+    }
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}

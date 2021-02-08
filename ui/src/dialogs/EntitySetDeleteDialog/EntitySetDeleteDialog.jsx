@@ -44,7 +44,8 @@ class EntitySetDeleteDialog extends Component {
 
   render() {
     const { intl, entitySet } = this.props;
-    const { type } = entitySet;
+    const { label, type } = entitySet;
+
     return (
       <Alert
         isOpen={this.props.isOpen}
@@ -55,11 +56,23 @@ class EntitySetDeleteDialog extends Component {
         onCancel={this.props.toggleDialog}
         onConfirm={this.onDelete}
       >
-        <FormattedMessage
-          id="entityset.delete.question"
-          defaultMessage="Are you sure you want to delete this {type}?"
-          values={{ type }}
-        />
+        <p>
+          <strong>
+            <FormattedMessage
+              id="entityset.delete.question"
+              defaultMessage="Are you sure you want to delete {label}?"
+              values={{ label }}
+            />
+          </strong>
+        </p>
+        {type === 'profile' && (
+          <p>
+            <FormattedMessage
+              id="profile.delete.warning"
+              defaultMessage="(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+            />
+          </p>
+        )}
       </Alert>
     );
   }

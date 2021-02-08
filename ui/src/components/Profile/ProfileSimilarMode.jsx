@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { selectSimilarResult } from 'selectors';
 import {
@@ -28,7 +29,7 @@ class ProfileItemsMode extends Component {
         entitySetId: profile.id,
         entityId: obj.entity.id,
       });
-      if (profile.id !== item.data.entityset_id) {
+      if (item.data.entityset_id && profile.id !== item.data.entityset_id) {
         history.replace({
           pathname: `/profiles/${item.data.entityset_id}`,
           search: location.search,
@@ -63,7 +64,7 @@ class ProfileItemsMode extends Component {
     const { query, result } = this.props;
     if (result.total === 0) {
       return (
-        <Callout icon="snowflake" intent="primary">
+        <Callout icon="similar" intent="primary">
           <FormattedMessage
             id="profile.similar.no_results"
             defaultMessage="No suggested additions for this profile were found."
@@ -73,7 +74,7 @@ class ProfileItemsMode extends Component {
     }
     return (
       <div className="ProfileSimilarMode">
-        <table className="data-table">
+        <table className={c("data-table", { 'pending': result.isPending })}>
           <thead>
             <tr>
               <th className="numeric narrow" />

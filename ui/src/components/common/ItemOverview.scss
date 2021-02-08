@@ -1,44 +1,24 @@
 @import "app/variables.scss";
-@import "app/mixins.scss";
-
-@mixin large {
-  @media screen and (min-width: $aleph-screen-md-max-width) {
-    @content;
-  }
-}
 
 .ItemOverview {
-  &.horizontal {
-    margin-bottom: $aleph-content-padding;
-
-    @include large {
-      display: flex;
-      padding: $aleph-content-padding;
-    }
-  }
-
+  height: auto !important;
   &__heading {
-    border-bottom: 1px solid $aleph-border-color;
     padding: ($aleph-grid-size * 4) 0;
 
     .preview & {
       background-color: $aleph-breadcrumbs-background;
-      padding: $aleph-grid-size*4 $aleph-grid-size*2;
+      padding: $aleph-grid-size*3 $aleph-grid-size*2;
       border: none;
     }
 
-    .horizontal & {
-      @include large {
-        flex: 1 1 35%;
-        padding: $aleph-grid-size*4;
-        @include rtlSupportInvertedProp(padding, left, 0, null);
-        border-bottom: none;
-        max-width: 800px;
-        @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
-      }
+    .profile & {
+      background-color: $aleph-profile-dark;
+      color: white;
+      padding: $aleph-grid-size*4 $aleph-grid-size*2 $aleph-grid-size*2;
+      border-radius: $aleph-grid-size $aleph-grid-size 0 0;
 
-      @media screen and (max-width: $aleph-screen-lg-max-width) {
-        flex-basis: 50%;
+      .bp3-text-muted {
+        color: white;
       }
     }
 
@@ -52,21 +32,36 @@
     }
   }
 
-  &__content {
-    padding: ($aleph-grid-size * 4) 0;
+  &__callout {
+    padding: 0 0 2*$aleph-grid-size;
 
     .preview & {
-      padding: 0;
+      margin-top: 2*$aleph-grid-size;
+      padding-bottom: $aleph-grid-size;
+    }
+    .profile & {
+      padding-bottom: $aleph-grid-size;
+    }
+  }
+
+  &__content {
+    border-top: 1px solid $aleph-border-color;
+
+    .preview &, .profile & {
+      border: none;
     }
 
-    .horizontal & {
-      @include large {
-        flex: 1 1 65%;
-        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*4, null);
+    &__section {
+      padding: $aleph-grid-size 0;
+      border-bottom: 1px solid $aleph-border-color;
+
+      .preview &:first-child {
+        padding-top: 0;
+        margin-top: $aleph-grid-size/2;
       }
 
-      @media screen and (max-width: $aleph-screen-lg-max-width) {
-        flex-basis: 50%;
+      &:last-child {
+        border: none;
       }
     }
   }

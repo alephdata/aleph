@@ -1,0 +1,13 @@
+@import "app/variables.scss";
+
+.EntityProperties {
+  &.info-sheet {
+    margin: $aleph-grid-size 0;
+  }
+  li:last-child {
+    padding-bottom: 0;
+  }
+  .value.big {
+    vertical-align: middle;
+  }
+}
