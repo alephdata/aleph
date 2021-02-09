@@ -96,13 +96,15 @@ class RoleSerializer(Serializer):
         obj["links"] = {"self": url_for("roles_api.view", id=obj.get("id"))}
         obj["writeable"] = request.authz.can_write_role(obj.get("id"))
         obj["shallow"] = obj.get("shallow", True)
-        if not obj["writeable"]:
+        if self.nested or not obj["writeable"]:
             obj.pop("has_password", None)
+            obj.pop("is_admin", None)
             obj.pop("is_muted", None)
             obj.pop("is_tester", None)
             obj.pop("is_blocked", None)
             obj.pop("api_key", None)
             obj.pop("email", None)
+            obj.pop("locale", None)
             obj.pop("created_at", None)
             obj.pop("updated_at", None)
         if obj["type"] != Role.USER:

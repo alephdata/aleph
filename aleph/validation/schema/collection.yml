@@ -140,7 +140,7 @@ CollectionStatus:
                 stage:
                   type: string
 
-CollectionFull:
+CollectionDeep:
   type: object
   allOf:
     - $ref: "#/components/schemas/Collection"

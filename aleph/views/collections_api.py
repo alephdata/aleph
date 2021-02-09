@@ -34,14 +34,7 @@ def index():
           content:
             application/json:
               schema:
-                type: object
-                allOf:
-                - $ref: '#/components/schemas/QueryResponse'
-                properties:
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Collection'
+                $ref: '#/components/schemas/CollectionsResponse'
       tags:
       - Collection
     """
@@ -99,7 +92,7 @@ def view(collection_id):
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CollectionFull'
+                $ref: '#/components/schemas/CollectionDeep'
       tags:
       - Collection
     """
