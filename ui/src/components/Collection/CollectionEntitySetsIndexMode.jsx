@@ -30,7 +30,6 @@ export class CollectionEntitySetsIndexMode extends Component {
           result={result}
           showCollection={false}
           type={type}
-          loadMoreOnScroll
         />
       </div>
     );

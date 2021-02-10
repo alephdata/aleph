@@ -42,10 +42,14 @@ def index():
         in: query
         name: 'filter:type'
         required: false
+        schema:
+          type: string
       - description: Quert string for searches
         in: query
         name: 'prefix'
         required: false
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -337,6 +341,8 @@ def item_index(entityset_id):
     """
     entityset = get_entityset(entityset_id, request.authz.READ)
     result = DatabaseQueryResult(request, entityset.items(request.authz))
+    # The entityset is needed to check if the item is writeable in the serializer:
+    result.results = [i.to_dict(entityset=entityset) for i in result.results]
     return EntitySetItemSerializer.jsonify_result(result)
 
 
@@ -386,10 +392,14 @@ def item_update(entityset_id):
     db.session.commit()
     job_id = get_session_id()
     queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity_id)
-    if item is None:
+    if item is not None:
+        # The entityset is needed to check if the item is writeable in the serializer:
+        item = item.to_dict(entityset=entityset)
+    else:
         item = {
             "id": "$".join((entityset_id, entity_id)),
             "entityset_id": entityset_id,
+            "entityset_collection_id": entityset.collection_id,
             "entity_id": entity_id,
             "collection_id": entity["collection_id"],
             "judgement": Judgement.NO_JUDGEMENT,

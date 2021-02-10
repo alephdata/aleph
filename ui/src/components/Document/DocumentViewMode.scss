@@ -15,7 +15,4 @@
       @include rtlSupportInvertedProp(margin, right, auto, 0);
     }
   }
-  .EntityActionBar {
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size / 2, 0);
-  }
 }

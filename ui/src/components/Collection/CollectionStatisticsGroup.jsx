@@ -3,7 +3,6 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { Skeleton } from 'components/common';
 import CollectionStatistics from './CollectionStatistics';
 import { selectCollection } from 'selectors';
 
@@ -48,9 +47,11 @@ class CollectionStatisticsGroup extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps;
   const collection = selectCollection(state, collectionId);
-  if (!collection.id && collection.isPending) { return { isPending: true } }
+  const { statistics } = collection;
 
-  const { statistics = {} } = collection;
+  if (!statistics) {
+    return { isPending: true, statsToRender: [] };
+  }
 
   const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
     .filter(stat => stat && stat.total);

@@ -129,6 +129,9 @@ table {
     &:not(:first-child) {
       @include rtlSupportInvertedProp(padding, left, 30px, 10px);
     }
+
+    // to handle Safari input placeholder line-height weirdness
+    line-height: normal !important;
   }
   > .bp3-button {
       &:last-child {

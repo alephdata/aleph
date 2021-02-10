@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { AnchorButton, ButtonGroup, Classes, Intent, Tooltip, Position } from '@blueprintjs/core';
+import c from 'classnames';
 
 import './JudgementButtons.scss';
 
 const messages = defineMessages({
+    disabled: {
+        id: 'judgement.disabled',
+        defaultMessage: 'You must have edit access in order to make judgements.',
+    },
     positive: {
         id: 'judgement.positive',
         defaultMessage: 'Same',
@@ -34,32 +39,37 @@ class JudgementButtons extends Component {
     }
 
     render() {
-        const { obj, intl } = this.props;
+        const { obj = {}, intl, isPending } = this.props;
         const { blocking } = this.state;
         const disabled = this.props.disabled || blocking || !obj.writeable;
         return (
-            <ButtonGroup className="JudgementButtons" vertical>
+          <Tooltip
+            disabled={!disabled}
+            content={intl.formatMessage(messages.disabled)}
+          >
+            <ButtonGroup className={c("JudgementButtons", {[Classes.SKELETON]: isPending})} vertical>
                 <Tooltip content={intl.formatMessage(messages.positive)} position={Position.RIGHT} disabled={disabled}>
-                    <Button icon="tick"
+                    <AnchorButton icon="tick"
                         disabled={disabled}
                         intent={obj.judgement === 'positive' ? Intent.SUCCESS : Intent.NONE}
                         active={obj.judgement === 'positive'}
                         onClick={(e) => this.onChange('positive')} />
                 </Tooltip>
                 <Tooltip content={intl.formatMessage(messages.unsure)} position={Position.RIGHT} disabled={disabled}>
-                    <Button icon="help"
+                    <AnchorButton icon="help"
                         disabled={disabled}
                         active={obj.judgement === 'unsure'}
                         onClick={(e) => this.onChange('unsure')} />
                 </Tooltip>
                 <Tooltip content={intl.formatMessage(messages.negative)} position={Position.RIGHT} disabled={disabled}>
-                    <Button icon="cross"
+                    <AnchorButton icon="cross"
                         disabled={disabled}
                         intent={obj.judgement === 'negative' ? Intent.DANGER : Intent.NONE}
                         active={obj.judgement === 'negative'}
                         onClick={(e) => this.onChange('negative')} />
                 </Tooltip>
             </ButtonGroup>
+          </Tooltip>
         );
     }
 }

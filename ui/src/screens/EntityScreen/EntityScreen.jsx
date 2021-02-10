@@ -9,13 +9,14 @@ import { ButtonGroup } from '@blueprintjs/core';
 import Screen from 'components/Screen/Screen';
 import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import EntityHeading from 'components/Entity/EntityHeading';
-import EntityInfoMode from 'components/Entity/EntityInfoMode';
+import EntityProperties from 'components/Entity/EntityProperties';
 import EntityViews from 'components/Entity/EntityViews';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
+import ProfileCallout from 'components/Profile/ProfileCallout';
 import { Breadcrumbs, DualPane, Schema } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
@@ -33,6 +34,28 @@ const messages = defineMessages({
 });
 
 class EntityScreen extends Component {
+  componentDidMount() {
+    this.cleanHash();
+  }
+
+  componentDidUpdate() {
+    this.cleanHash();
+  }
+
+  cleanHash() {
+    const { entity, history, location, parsedHash } = this.props;
+
+    // if an entity does not have an associated profile, ensure profile=false is removed from hash
+    if (!!entity.id && !entity.profileId && !!parsedHash.profile) {
+      delete parsedHash.profile;
+
+      history.replace({
+        pathname: location.pathname,
+        search: location.search,
+        hash: queryString.stringify(parsedHash),
+      });
+    }
+  }
 
   render() {
     const { entity, entityId, intl, parsedHash } = this.props;
@@ -103,8 +126,13 @@ class EntityScreen extends Component {
                 <div className="ItemOverview__heading">
                   <EntityHeading entity={entity} isPreview={false} />
                 </div>
+                {entity.profileId && (
+                  <div className="ItemOverview__callout">
+                    <ProfileCallout entity={entity} />
+                  </div>
+                )}
                 <div className="ItemOverview__content">
-                  <EntityInfoMode entity={entity} isPreview={false} />
+                  <EntityProperties entity={entity} isPreview={false} />
                 </div>
               </DualPane.SidePane>
               <DualPane.ContentPane>

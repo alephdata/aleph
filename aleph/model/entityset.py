@@ -341,16 +341,18 @@ class EntitySetItem(db.Model, SoftDeleteModel):
         pq = pq.filter(cls.entity_id == entity_id)
         pq.delete(synchronize_session=False)
 
-    def to_dict(self):
+    def to_dict(self, entityset=None):
         data = {
             "id": "$".join((self.entityset_id, self.entity_id)),
-            "entityset_id": self.entityset_id,
             "entity_id": self.entity_id,
             "collection_id": self.collection_id,
             "added_by_id": self.added_by_id,
             "judgement": self.judgement,
             "compared_to_entity_id": self.compared_to_entity_id,
         }
+        entityset = entityset or self.entityset
+        data["entityset_collection_id"] = entityset.collection_id
+        data["entityset_id"] = entityset.id
         data.update(self.to_dict_dates())
         return data
 

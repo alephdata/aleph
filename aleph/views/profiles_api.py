@@ -10,7 +10,7 @@ from aleph.logic.expand import entity_tags, expand_proxies
 from aleph.queues import queue_task, OP_UPDATE_ENTITY
 from aleph.search import MatchQuery, QueryParser
 from aleph.views.serializers import ProfileSerializer, SimilarSerializer
-from aleph.views.context import enable_cache, tag_request
+from aleph.views.context import tag_request
 from aleph.views.util import obj_or_404, jsonify, parse_request, get_session_id
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import require
@@ -27,6 +27,12 @@ def view(profile_id):
       summary: Retrieve a profile
       description: >-
         Get a profile with constituent items and the merged pseudo entity.
+      parameters:
+      - in: path
+        name: profile_id
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: OK
@@ -128,6 +134,7 @@ def similar(profile_id):
         item = {
             "score": compare(model, profile["merged"], obj),
             "judgement": Judgement.NO_JUDGEMENT,
+            "collection_id": profile.get("collection_id"),
             "entity": obj,
         }
         result.results.append(item)

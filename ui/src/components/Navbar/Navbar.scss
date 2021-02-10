@@ -4,7 +4,7 @@
 $navbar-horizontal-padding: $aleph-grid-size*.8;
 
 .Navbar {
-  &.bp3-navbar {
+  .bp3-navbar {
     display: flex;
     padding: 0 $aleph-content-padding;
     justify-content: space-between;

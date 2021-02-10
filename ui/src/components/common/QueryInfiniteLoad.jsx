@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
+import { Button } from '@blueprintjs/core';
 
+import './QueryInfiniteLoad.scss';
 
 class QueryInfiniteLoad extends Component {
   constructor(props) {
@@ -29,21 +32,37 @@ class QueryInfiniteLoad extends Component {
   }
 
   render() {
-    const { result } = this.props;
-    const canLoadMore = result && result.next && !result.isPending && !result.isError;
+    const { loadOnScroll = true, result } = this.props;
+    const canLoadMore = result && result.next && !result.isPending && !result.isError && result.results.length < result.total;
 
     if (canLoadMore) {
-      return (
-        <Waypoint
-          onEnter={this.getMoreResults}
-          bottomOffset="-100px"
-          scrollableAncestor={window}
-        />
-      );
+      if (loadOnScroll) {
+        return (
+          <Waypoint
+            onEnter={this.getMoreResults}
+            bottomOffset="-100px"
+            scrollableAncestor={window}
+          />
+        );
+      } else {
+        return (
+          <div className="QueryInfiniteLoad">
+            <Button
+              onClick={this.getMoreResults}
+              className="QueryInfiniteLoad__button"
+            >
+              <FormattedMessage
+                id="screen.load_more"
+                defaultMessage="Load more"
+              />
+            </Button>
+          </div>
+        );
+      }
     }
 
     return null;
   }
 }
 
-export default QueryInfiniteLoad;
+export default injectIntl(QueryInfiniteLoad);

@@ -58,7 +58,6 @@ def index(collection_id):
         name: table
         schema:
           type: string
-      requestBody:
       responses:
         '200':
           content:

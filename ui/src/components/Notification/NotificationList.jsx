@@ -35,7 +35,7 @@ class NotificationList extends Component {
   }
 
   render() {
-    const { query, result, intl, showCollectionLinks } = this.props;
+    const { query, result, intl, showCollectionLinks, loadOnScroll = true } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
     if (result.isError || result.total === 0) {
@@ -62,6 +62,7 @@ class NotificationList extends Component {
           query={query}
           result={result}
           fetch={this.props.queryNotifications}
+          loadOnScroll={loadOnScroll}
         />
       </div>
     );

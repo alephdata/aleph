@@ -86,7 +86,6 @@ export class EntitySetIndexScreen extends Component {
             type={type}
             query={query}
             showCollection
-            loadMoreOnScroll
           />
         </Dashboard>
       </Screen>

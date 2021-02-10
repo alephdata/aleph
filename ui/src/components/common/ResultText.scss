@@ -1,0 +1,7 @@
+@import "app/variables.scss";
+
+.ResultText {
+  white-space: nowrap;
+  line-height: $aleph-grid-size*3;
+  font-weight: 500;
+}

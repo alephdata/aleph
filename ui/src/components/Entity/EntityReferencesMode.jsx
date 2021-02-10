@@ -28,9 +28,17 @@ const messages = defineMessages({
     id: 'entity.references.no_results',
     defaultMessage: 'No {schema} match this search.',
   },
+  no_results_default: {
+    id: 'entity.references.no_results_default',
+    defaultMessage: 'No entities match this search.',
+  },
   search_placeholder: {
     id: 'entity.references.search.placeholder',
     defaultMessage: 'Search in {schema}',
+  },
+  search_placeholder_default: {
+    id: 'entity.references.search.placeholder_default',
+    defaultMessage: 'Search entities',
   },
 });
 
@@ -63,13 +71,20 @@ class EntityReferencesMode extends React.Component {
 
   renderCell(prop, entity) {
     const { schema, isThing } = this.props;
-    let content = <Property.Values prop={prop} values={entity.getProperty(prop.name)} translitLookup={entity.latinized} />;
+    const propVal = <Property.Values prop={prop} values={entity.getProperty(prop.name)} translitLookup={entity.latinized} />;
     if (isThing && schema.caption.indexOf(prop.name) !== -1) {
-      content = <Entity.Link entity={entity}>{content}</Entity.Link>;
+      return (
+        <td key={prop.name} className="entity">
+          <Entity.Link entity={entity}>
+            <Schema.Icon schema={entity.schema} className="left-icon"/>
+            {propVal}
+          </Entity.Link>
+        </td>
+      );
     }
     return (
       <td key={prop.name} className={prop.type.name}>
-        {content}
+        {propVal}
       </td>
     );
   }
@@ -78,6 +93,7 @@ class EntityReferencesMode extends React.Component {
     const { isThing, expandedId, hideCollection } = this.props;
     const isExpanded = entity.id === expandedId;
     const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
+
     const mainRow = (
       <tr key={entity.id} className={c('nowrap', { prefix: isExpanded })}>
         { !isThing && (
@@ -111,7 +127,7 @@ class EntityReferencesMode extends React.Component {
   renderSkeleton(columns, idx) {
     const { isThing, hideCollection } = this.props;
     return (
-      <tr key={idx} className='nowrap'>
+      <tr key={idx} className='nowrap skeleton'>
         {!isThing && (
           <td className="expand">
             <Button disabled small minimal icon='chevron-down' />
@@ -139,8 +155,11 @@ class EntityReferencesMode extends React.Component {
     const results = _.uniqBy(ensureArray(result.results), 'id');
     const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
     const schemaLabel = reference.schema.plural.toLowerCase();
-    const placeholder = intl.formatMessage(messages.search_placeholder, { schema: schemaLabel });
+    const placeholder = schema.name === 'Thing'
+      ? intl.formatMessage(messages.search_placeholder_default)
+      : intl.formatMessage(messages.search_placeholder, { schema: schemaLabel })
     const skeletonItems = [...Array(15).keys()];
+
     return (
       <section className="EntityReferencesTable">
         <EntityActionBar
@@ -187,7 +206,10 @@ class EntityReferencesMode extends React.Component {
         {result.total === 0 && (
           <ErrorSection
             icon={<Schema.Icon schema={reference.schema} className="left-icon" size={60} />}
-            title={intl.formatMessage(messages.no_results, { schema: schemaLabel })}
+            title={schema.name === 'Thing'
+              ? intl.formatMessage(messages.no_results_default)
+              : intl.formatMessage(messages.no_results, { schema: schemaLabel })
+            }
           />
         )}
       </section>

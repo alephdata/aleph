@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 import { compose } from 'redux';
@@ -10,10 +11,18 @@ import { SectionLoading, Skeleton } from 'components/common';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
+import EntityActionBar from 'components/Entity/EntityActionBar';
 import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
+
+const messages = defineMessages({
+  placeholder: {
+    id: 'entity.viewer.search_placeholder',
+    defaultMessage: 'Search in {label}',
+  },
+});
 
 
 export class PdfViewer extends Component {
@@ -29,6 +38,7 @@ export class PdfViewer extends Component {
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onPageLoad = this.onPageLoad.bind(this);
     this.onResize = this.onResize.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
@@ -83,6 +93,16 @@ export class PdfViewer extends Component {
   onPageLoad(page) {
     this.pageData = page;
     this.setRotation();
+  }
+
+  onSearch(queryText) {
+    const { history, location, baseQuery } = this.props;
+    const newQuery = baseQuery.setString('q', queryText);
+
+    history.push({
+      pathname: location.pathname,
+      search: newQuery.toLocation(),
+    });
   }
 
   setRotation() {
@@ -179,7 +199,7 @@ export class PdfViewer extends Component {
 
   render() {
     const {
-      document, dir, activeMode, baseQuery, page, queryText, numPages,
+      document, dir, activeMode, baseQuery, searchQuery, intl, page, queryText, numPages,
     } = this.props;
 
     if (document.isPending || numPages === undefined || numPages === null) {
@@ -187,6 +207,12 @@ export class PdfViewer extends Component {
     }
     return (
       <div className="PdfViewer">
+        <EntityActionBar
+          query={searchQuery}
+          onSearchSubmit={this.onSearch}
+          searchPlaceholder={intl.formatMessage(messages.placeholder, { label: document.getCaption() })}
+          searchDisabled={document.getProperty('processingError')?.length}
+        />
         <div className="outer">
           <div id="PdfViewer" className="inner">
             <div className="document">
@@ -194,8 +220,7 @@ export class PdfViewer extends Component {
                 document={document}
                 dir={dir}
                 activeMode={activeMode}
-                queryText={queryText}
-                baseQuery={baseQuery}
+                query={searchQuery}
               >
                 {activeMode === 'text' && (
                   <PdfViewerPage
@@ -225,10 +250,18 @@ const mapStateToProps = (state, ownProps) => {
   const baseQuery = Query.fromLocation('entities', location, {}, 'document')
     .setFilter('properties.document', document.id)
     .setFilter('schema', 'Page');
+
   const countQuery = baseQuery
     .setString('q', undefined)
     .offset(0)
     .limit(0);
+
+  const searchQuery = baseQuery
+    .set('highlight', true)
+    .sortBy('properties.index', 'asc')
+    .clear('limit')
+    .clear('offset');
+
   const countResult = selectEntitiesResult(state, countQuery);
   const pdfUrl = document.links?.pdf || document.links?.file;
   return {
@@ -238,6 +271,8 @@ const mapStateToProps = (state, ownProps) => {
     numPages: countResult.total,
     baseQuery,
     countQuery,
+    searchQuery,
+    queryText: baseQuery.getString('q'),
     countResult,
   };
 };
@@ -245,4 +280,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities }),
+  injectIntl,
 )(PdfViewer);

@@ -15,7 +15,7 @@ class Query {
     this.setPlain('limit', Query.LIMIT);
   }
 
-  static LIMIT = 10;
+  static LIMIT = 30;
   static LARGE = 200;
   static MAX_LIMIT = 9999;
 

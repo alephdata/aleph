@@ -3,8 +3,6 @@
 
 .DocumentManager {
   &__content {
-    margin-top: $aleph-grid-size*2;
-
     &__empty {
       border: 1px dashed rgba(92, 112, 128, 0.6);
       cursor: pointer;

@@ -6,20 +6,11 @@
   flex-flow: column nowrap;
   background: $aleph-page-background;
 
-  .main-homepage {
+  main {
     flex-grow: 1;
     display: flex;
     flex-flow: column nowrap;
-    // background-color: $aleph-content-background;
     align-items: stretch;
-  }
-
-  .main {
-    @extend .main-homepage;
-    // padding-bottom: ($aleph-grid-size * 2 - 1);
-  }
-
-  .screen-children {
-    width: 100%;
+    height: 100%;
   }
 }

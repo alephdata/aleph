@@ -27,7 +27,7 @@
   .pane-layout-side {
     flex: none;
     width: $aleph-sidebar-width;
-    min-height: 100%;
+    height: 100%;
     overflow: visible;
 
     @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {

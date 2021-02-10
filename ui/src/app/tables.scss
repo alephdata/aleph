@@ -12,10 +12,6 @@ table {
     text-overflow: ellipsis;
     overflow: hidden;
 
-    span {
-      display: inline-block !important;
-    }
-
     &.expand {
       width: 2em;
       max-width: 2em;
@@ -26,6 +22,10 @@ table {
         @include rtlSupportInvertedProp(margin, left, 0, null);
       }
     }
+  }
+
+  tr.skeleton > td {
+    text-overflow: clip;
   }
 
   // Make these columns take the minimal width that fits the content
@@ -92,11 +92,21 @@ table {
     white-space: normal !important;
     word-break: break-word;
 
-    .EntityLabel {
+    .bp3-skeleton {
+      white-space: nowrap;
+    }
+
+    .EntityLabel, .EntityLink {
       display: flex !important;
     }
     .Transliterate {
       display: inline !important;
+    }
+  }
+
+  td.collection {
+    .CollectionLabel {
+      display: flex !important;
     }
   }
 
@@ -129,6 +139,10 @@ table {
 table.data-table {
   @extend .bp3-html-table;
   width: 100%;
+
+  &.pending > tbody {
+    opacity: .5;
+  }
 
   td {
     border-bottom: 1px solid $aleph-table-border-color;

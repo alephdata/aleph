@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Callout } from '@blueprintjs/core';
+import { Callout, Intent } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { selectEntitySetItemsResult } from 'selectors';
 import {
@@ -13,10 +13,7 @@ import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySetItemsQuery } from 'queries';
 import { updateEntitySetItemMutate } from 'actions';
 import { showWarningToast } from 'app/toast';
-import { Entity } from '@alephdata/react-ftm';
-import getEntityLink from 'util/getEntityLink';
 
-import './ProfileItemsMode.scss';
 import Skeleton from 'components/common/Skeleton';
 
 
@@ -34,7 +31,8 @@ class ProfileItemsMode extends Component {
         entitySetId: profile.id,
         entityId: obj.entity.id,
       });
-      if (profile.id !== item.entityset_id) {
+
+      if (item.entityset_id && profile.id !== item.entityset_id) {
         history.replace({
           pathname: `/profiles/${item.entityset_id}`,
           search: location.search,
@@ -47,10 +45,6 @@ class ProfileItemsMode extends Component {
   }
 
   renderRow(item) {
-    const { viaEntityId } = this.props;
-    if (item.entity.id === viaEntityId) {
-      return null;
-    }
     return (
       <tr key={item.id || item.entity.id}>
         <td className="numeric narrow">
@@ -84,38 +78,17 @@ class ProfileItemsMode extends Component {
   }
 
   render() {
-    const { profile, result, viaEntityId } = this.props;
+    const { result } = this.props;
     const skeletonItems = [...Array(15).keys()];
     return (
       <div className="ProfileItemsMode">
-        <Callout intent="primary" className="ProfileItemsMode__callout">
-          <strong>
-            <FormattedMessage
-              id="profile.items.intro"
-              defaultMessage={"You're viewing {entity} as a profile. "}
-              values={{
-                entity: <Entity.Label entity={profile.entity} />,
-              }}
-            />
-          </strong>
+        <Callout intent={Intent.PRIMARY} icon={null} style={{ 'marginBottom': '10px'}}>
           <FormattedMessage
-            id="profile.items.intro"
-            defaultMessage={"The profile aggregates attributes and relationships from {count} entities across different datasets. You can select what source entities to include in the list below. "}
-            values={{
-              count: profile.entities ? profile.entities.length : 0,
-            }}
+            id="profile.items.explanation"
+            defaultMessage="Make decisions below to determine which source entities should be added or excluded from this profile."
           />
-          {viaEntityId && (
-            <FormattedMessage
-              id="profile.items.intro"
-              defaultMessage={"View the <link>original entity</link>."}
-              values={{
-                link: chunks => <Link to={getEntityLink(viaEntityId, false)}>{chunks}</Link >,
-              }}
-            />
-          )}
         </Callout>
-        <table className="data-table">
+        <table className={c("data-table", { 'pending': result.isPending })}>
           <thead>
             <tr>
               <th className="numeric narrow" />
@@ -139,7 +112,7 @@ class ProfileItemsMode extends Component {
           </thead>
           <tbody>
             {result.results?.map(res => this.renderRow(res))}
-            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
+            {!result.total && result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
           </tbody>
         </table>
       </div >

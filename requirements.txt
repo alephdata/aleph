@@ -1,10 +1,10 @@
 # Dependencies maintained by OCCRP
-banal==1.0.1
+banal==1.0.4
 urlnormalizer==1.2.5
-followthemoney==2.2.2
+followthemoney==2.3.1
 followthemoney-store[postgresql]==3.0.1
 fingerprints==1.0.1
-servicelayer[google,amazon]==1.16.1
+servicelayer[google,amazon]==1.17.0
 normality==2.1.1
 pantomime==0.4.1
 
@@ -16,34 +16,30 @@ Flask-Migrate==2.6.0
 Flask-Cors==3.0.10
 Flask-Babel==2.0.0
 flask-talisman==0.7.0
-SQLAlchemy==1.3.22
-alembic==1.5.2
+SQLAlchemy==1.3.23
+alembic==1.5.4
 authlib==0.15.3
 
 elasticsearch==7.10.1
 marshmallow==2.19.2
 gunicorn[eventlet]==20.0.4
 jsonschema==3.2.0
-apispec==4.0.0
+apispec==4.2.0
 apispec-webframeworks==0.5.2
 blinker==1.4
 Babel==2.9.0
 PyYAML==5.4.1
 python-frontmatter==0.5.0
 pyjwt >= 2.0.1, < 2.1.0
-cryptography==3.3.1
+cryptography >= 3.4.4, < 4.0.0
 requests[security] >= 2.25.1, < 3.0.0
-urllib3==1.26.2
+urllib3==1.26.3
 tabulate==0.8.7
 zipstream-new==1.1.8
 
 # Testing dependencies
 factory-boy >=3.2.0, < 4.0.0
-Faker >=5.6.0, < 6.0.0
+Faker >= 5.6.0, < 7.0.0
 nose
 coverage
 coveralls
-
-# Tracing and logging libraries
-structlog==20.2.0
-colorama==0.4.4

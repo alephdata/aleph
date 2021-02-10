@@ -5,15 +5,16 @@ $search-bar-width: 200px;
 $status-width: 120px;
 
 .EntityActionBar {
-  margin-bottom: $aleph-grid-size;
+  margin-bottom: $aleph-content-padding/2;
+  width: 100%;
 
   .preview & {
     display: none;
   }
 
-  &.bp3-control-group {
+  .bp3-control-group {
     justify-content: space-between;
-    @include rtlSupportInvertedProp(margin, right, 1px, null);
+    padding-bottom: $aleph-content-padding/2;
 
     .bp3-input-group {
       .bp3-input:not(:first-child) {
@@ -57,6 +58,7 @@ $status-width: 120px;
 
   &__right {
     display: flex;
+    margin: 0 !important;
   }
 
   .prevent-flex-grow.bp3-popover-wrapper {
@@ -69,5 +71,10 @@ $status-width: 120px;
 
   .Count {
     @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+  }
+
+  .bp3-button {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }

@@ -36,22 +36,22 @@ samples:
 </section>
 <section className="HomeScreen__section">
   <div className="HomeScreen__section__content">
+    <h1 className="HomeScreen__title">About the project</h1>
     <div className="HomeScreen__halves">
       <div>
         <a className="HomeScreen__imageLink" href="https://aleph.occrp.org/">
-          <img src="/static/logo.svg" style="max-width: 60%;"/>
+          <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/nqUByNDPqnE?controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </a>
       </div>
       <div>
-        <h1 className="HomeScreen__title">About the project</h1>
         <div className="HomeScreen__paragraph">
-          <p><b>OCCRP reporters follow the money to hold those in power to account.</b> The Aleph data platform brings together a vast archive of current and historic databases, documents, leaks and investigations.</p>
+          <p>The Aleph data platform brings together a vast archive of current and historic databases, documents, leaks and investigations.</p>
         </div>
         <div className="HomeScreen__paragraph">
-          <p>This web of evidence helps us to see connections, find stolen funds, spot political influence and to unveil corruption across the world.</p>
+          <p>This web of evidence helps journalists at OCCRP, other publications, and across the world, to see connections, find stolen funds, spot political influence, and unveil corruption.</p>
         </div>
         <div className="HomeScreen__paragraph">
-          <p>As part of Aleph, we periodically fetch public records from over 230 online sources, and provide search access to an archive of leaked evidence.</p>
+          <p>As part of Aleph, we periodically fetch public records from over 230 online sources, and provide a public search access. Accredited journalists can also access an archive of leaked evidence.</p>
         </div>
         <a className="bp3-button bp3-intent-primary bp3-align-left" href="pages/about"><b>Learn more</b></a>
       </div>
@@ -78,7 +78,7 @@ samples:
     <div className="HomeScreen__feature-block">
       <div className="HomeScreen__feature-block__content">
         <img src="/static/home_xref.svg" />
-        <p><b>Compare the persons in your investigations</b> with other datasets in bulk to find leads for further reporting.</p>
+        <p><b>Compare the people in your investigations</b> with other datasets in bulk to find leads for further reporting.</p>
       </div>
     </div>
   </div>

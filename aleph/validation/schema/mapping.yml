@@ -9,7 +9,6 @@ MappingCreate:
       nullable: true
     entityset:
       $ref: "#/components/schemas/DatedModel"
-      nullable: true
     mapping_query:
       type: object
 
@@ -26,14 +25,13 @@ Mapping:
       type: string
     entityset:
       $ref: "#/components/schemas/EntitySet"
-      nullable: true
     last_run_err_msg:
       type: string
       readOnly: true
       nullable: true
     last_run_status:
       type: string
-      readonly: true
+      readOnly: true
       nullable: true
     query:
       type: object

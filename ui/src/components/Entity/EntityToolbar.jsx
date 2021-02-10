@@ -11,7 +11,7 @@ import './EntityToolbar.scss';
 
 class EntityToolbar extends React.Component {
   render() {
-    const { entity, profile } = this.props;
+    const { entity, profile = true } = this.props;
     if (!entity || !entity.schema) {
       return null;
     }

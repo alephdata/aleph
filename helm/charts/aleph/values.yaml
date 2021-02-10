@@ -38,8 +38,8 @@ global:
     # ALEPH_LOGO: https://cdn.occrp.org/common/logo/WhiteTransparent_globe.png
     ALEPH_ELASTICSEARCH_URI: http://aleph-index-master.default.svc.cluster.local:9200
     ALEPH_INDEX_PREFIX: "aleph"
-    ALEPH_INDEX_WRITE: "v2"
-    ALEPH_INDEX_READ: "v1:v2"
+    ALEPH_INDEX_WRITE: "v1"
+    ALEPH_INDEX_READ: "v1"
     ALEPH_INDEX_REPLICAS: "2"
     ALEPH_API_RATE_LIMIT: "600"
     ALEPH_OAUTH: "false"
@@ -114,7 +114,7 @@ convertdocument:
   image:
     repository: ghcr.io/alephdata/convert-document
     pullPolicy: Always
-    tag: 3.11.2
+    tag: 3.12.1
 
   containerSecurityContext:
     readOnlyRootFilesystem: true
@@ -162,7 +162,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: 3.11.2
+    tag: 3.12.1
     pullPolicy: Always
 
   containerSecurityContext:
