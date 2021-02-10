@@ -114,7 +114,7 @@ convertdocument:
   image:
     repository: ghcr.io/alephdata/convert-document
     pullPolicy: Always
-    tag: 3.12.0
+    tag: 3.12.1
 
   containerSecurityContext:
     readOnlyRootFilesystem: true
@@ -162,7 +162,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: 3.11.2
+    tag: 3.12.1
     pullPolicy: Always
 
   containerSecurityContext:
