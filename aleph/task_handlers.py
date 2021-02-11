@@ -34,7 +34,7 @@ def op_flush_mapping_handler(collection, task):
 
 
 def op_update_entity_handler(collection, task):
-    update_entity(collection, **task.payload)
+    update_entity(collection, job_id=task.stage.job.id, **task.payload)
 
 
 def op_prune_entity_handler(collection, task):

@@ -1,8 +1,4 @@
-from datetime import datetime
-import uuid
-
 import structlog
-from structlog.contextvars import clear_contextvars, bind_contextvars
 from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker
 from servicelayer.extensions import get_entry_point
@@ -85,17 +81,14 @@ class AlephWorker(Worker):
             collection = Collection.by_id(collection, deleted=True)
         handler = get_entry_point("aleph.task_handlers", task.stage.stage)
         if handler is None:
-            log.warning(
-                f"Task handler not found for task [task.job.dataset]: task.stage.stage",
-            )
-            return
+            raise RuntimeError(f"Invalid task handler: {task.stage}")
         log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (started)")
         handler(collection, task)
         log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (done)")
 
     def handle(self, task):
         with app.app_context():
-            apply_task_context(task)
+            apply_task_context(task, v=__version__)
             self.dispatch_task(task)
 
     def cleanup_job(self, job):
