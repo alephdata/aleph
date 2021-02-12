@@ -79,7 +79,7 @@ class MappingIndexItem extends PureComponent {
         </div>
         <div className="MappingIndexItem__section">
           <div className="MappingIndexItem__schemata">
-            {Object.keys(query).map(schema => <Schema.Label schema={schema} icon plural />)}
+            {Object.values(query).map(({ schema }) => <Schema.Label schema={schema} icon plural />)}
           </div>
         </div>
         <div className="MappingIndexItem__section">
