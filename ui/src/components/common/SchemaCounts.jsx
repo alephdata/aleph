@@ -23,6 +23,11 @@ const messages = defineMessages({
 class SchemaCounts extends React.PureComponent {
   render() {
     const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, onSelect } = this.props;
+    const hasVisibleSchemata = _.size(visibleCounts) > 0;
+
+    if (!hasVisibleSchemata && !showSchemaAdd) {
+      return null;
+    }
 
     return (
       <ButtonGroup vertical minimal className="SchemaCounts">
@@ -38,7 +43,7 @@ class SchemaCounts extends React.PureComponent {
             fill
           />
         ))}
-        {_.size(visibleCounts) > 0 && showSchemaAdd && <Divider />}
+        {hasVisibleSchemata && showSchemaAdd && <Divider />}
         {showSchemaAdd && (
           <Schema.Select
             onSelect={schema => onSelect(schema)}
