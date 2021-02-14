@@ -33,7 +33,7 @@ class EntityHeading extends React.PureComponent {
           )}
         </h1>
         {entity.lastViewed && (
-          <span>< FormattedMessage 
+          <span><FormattedMessage 
               id="entity.info.last_view" 
               defaultMessage="Last viewed" 
             /> {date}
