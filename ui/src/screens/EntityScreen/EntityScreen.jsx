@@ -22,6 +22,7 @@ import { DownloadButton } from 'components/Toolbar';
 import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
+import { setRecentlyViewedItem } from 'app/storage';
 
 import 'components/common/ItemOverview.scss';
 
@@ -53,6 +54,8 @@ class EntityScreen extends Component {
       );
     }
 
+    setRecentlyViewedItem(entityId);
+    
     const operation = (
       <ButtonGroup>
         <DownloadButton document={entity} />

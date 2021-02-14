@@ -4,6 +4,7 @@ import { Model } from '@alephdata/followthemoney';
 
 import { loadState } from 'reducers/util';
 import { entityReferencesQuery, profileReferencesQuery } from 'queries';
+import { getRecentlyViewedItem } from 'app/storage';
 
 function selectTimestamp(state) {
   return state.mutation;
@@ -51,13 +52,18 @@ export function selectLocale(state) {
   // request to metadata will be sent with unmodified Accept-Language headers
   // allowing the backend to perform language negotiation.
   const role = selectCurrentRole(state);
+  window.__localId__ = 'en';
+  
   if (role.locale) {
+    window.__localId__ = role.locale;
     return role.locale;
   }
   const { metadata } = state;
   if (metadata && metadata.app) {
+    window.__localId__ = metadata.app.locale;
     return metadata.app.locale;
   }
+
   return 'en';
 }
 
@@ -155,7 +161,9 @@ export function selectCollection(state, collectionId) {
 }
 
 export function selectEntity(state, entityId) {
-  const entity = selectObject(state, state.entities, entityId);
+  const entity = selectObject(state, state.entities, entityId)
+  const lastViewed = getRecentlyViewedItem(entityId);
+
   if (!entity.selectorCache) {
     const model = selectModel(state);
     if (!entity.schema || !model) {
@@ -163,6 +171,7 @@ export function selectEntity(state, entityId) {
     }
     entity.selectorCache = model.getEntity(entity);
   }
+
   const result = entity.selectorCache;
   result.safeHtml = entity.safeHtml;
   result.collection = entity.collection;
@@ -179,6 +188,11 @@ export function selectEntity(state, entityId) {
   result.error = entity.error;
   result.links = entity.links;
   result.profileId = entity.profile_id;
+
+  if (lastViewed) {
+    result.lastViewed = lastViewed.date;
+  }
+
   return result;
 }
 

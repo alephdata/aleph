@@ -78,6 +78,7 @@
     ]
   },
   "devDependencies": {
+    "date-fns": "^2.17.0",
     "file-selector": "^0.2.2"
   }
 }

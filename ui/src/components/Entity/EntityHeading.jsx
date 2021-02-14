@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import getFormattedDate from 'util/getFormattedDate';
 
 import { Entity, Schema } from 'components/common';
 
@@ -9,6 +10,8 @@ import 'components/common/ItemOverview.scss';
 class EntityHeading extends React.PureComponent {
   render() {
     const { entity, isProfile = false } = this.props;
+    const date = entity.lastViewed && getFormattedDate(new Date(parseInt(entity.lastViewed, 10)), window.__localId__);
+
     return (
       <>
         <span className="bp3-text-muted ItemOverview__heading__subtitle">
@@ -29,6 +32,13 @@ class EntityHeading extends React.PureComponent {
             <Entity.Label entity={entity} addClass />
           )}
         </h1>
+        {entity.lastViewed && (
+          <span>< FormattedMessage 
+              id="entity.info.last_view" 
+              defaultMessage="Last viewed" 
+            /> {date}
+          </span>
+        )}
       </>
     );
   }
