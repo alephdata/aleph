@@ -7,8 +7,7 @@
     margin: 0;
   }
 
-  a {
-    color: inherit !important;
-    text-decoration: none !important;
+  li {
+    margin: 4*$aleph-grid-size 0;
   }
 }

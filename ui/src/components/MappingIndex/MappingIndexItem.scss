@@ -2,62 +2,44 @@
 @import "app/mixins.scss";
 
 .MappingIndexItem {
-  display: flex;
-  // flex-wrap: wrap;
   width: 100%;
-  justify-content: space-between;
   margin: $aleph-grid-size 0;
-  box-shadow: $pt-elevation-shadow-1;
-  transition: box-shadow .1s ease-in-out;
-  opacity: .6;
 
-  &.bp3-intent-primary {
-    opacity: 1;
-    background: $light-gray5 !important;
-  }
-  &.bp3-intent-warning {
-    opacity: 1;
-  }
-
-  &:hover {
-    box-shadow: $pt-elevation-shadow-2;
-  }
-
-  @media screen and (max-width: $aleph-screen-sm-max-width) {
-    flex-wrap: wrap;
-  }
-
-  &__section {
-    width: 33%;
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*2, none);
-
-    &:last-child {
-      @include rtl(text-align, right, left);
-      @media screen and (max-width: $aleph-screen-sm-max-width) {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        margin-top: $aleph-grid-size;
-        padding-top: $aleph-grid-size/2;
-        border-top: 1px solid $aleph-border-color;
-      }
-    }
-
-    span {
-      text-decoration: none !important;
-    }
+  &__title.bp3-heading {
+    margin-bottom: $aleph-grid-size*1.5;
+    display: inline-block;
   }
 
   &__schemata {
+    margin-bottom: $aleph-grid-size;
     .SchemaLabel {
-      display: block;
+      display: inline-flex;
       white-space: nowrap;
-      margin-bottom: 5px;
+      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*2, 0);
       font-weight: bolder;
     }
   }
 
+  &__statusItems {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-top: $aleph-grid-size;
+    border-top: 1px solid $aleph-border-color;
+  }
+
   &__statusItem {
-    margin-bottom: 5px;
+    &__value {
+      white-space: nowrap;
+    }
+
+    .bp3-intent-primary {
+      font-weight: bold;
+      color: $green1;
+    }
+    .bp3-intent-danger {
+      font-weight: bold;
+      color: $red1;
+    }
   }
 }
