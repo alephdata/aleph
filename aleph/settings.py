@@ -130,6 +130,11 @@ EXPORT_MAX_RESULTS = env.to_int("EXPORT_MAX_RESULTS", EXPORT_MAX_RESULTS)
 PAGES_PATH = os.path.join(APP_DIR, "pages")
 PAGES_PATH = env.get("ALEPH_PAGES_PATH", PAGES_PATH)
 
+# Publishing network diagram embeds
+REACT_FTM_URL = (
+    "https://cdn.jsdelivr.net/npm/@alephdata/react-ftm@2.3.1/dist/react-ftm-embed.js"
+)
+
 ##############################################################################
 # E-mail settings
 

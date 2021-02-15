@@ -77,6 +77,12 @@ class EntitySet(db.Model, SoftDeleteModel):
         return entityset
 
     @classmethod
+    def by_id(cls, entityset_id, types=None, deleted=False):
+        q = cls.by_type(types, deleted=deleted)
+        q = q.filter(cls.id == entityset_id)
+        return q.first()
+
+    @classmethod
     def by_authz(cls, authz, types=None, prefix=None):
         ids = authz.collections(authz.READ)
         q = cls.by_type(types)
@@ -86,9 +92,9 @@ class EntitySet(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def by_type(cls, types):
+    def by_type(cls, types, deleted=False):
         """Retuns EntitySets of a particular type"""
-        q = EntitySet.all()
+        q = EntitySet.all(deleted=deleted)
         types = ensure_list(types)
         if len(types) and types != cls.TYPES:
             q = q.filter(EntitySet.type.in_(types))
