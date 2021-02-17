@@ -3,7 +3,7 @@ import random
 from flask import Blueprint, request
 from pantomime.types import XLSX
 
-from aleph.search import XrefQuery, XrefPartyQuery
+from aleph.search import XrefQuery, XrefEvaluationQuery
 from aleph.logic.profiles import pairwise_judgements
 from aleph.logic.export import create_export
 from aleph.views.serializers import XrefSerializer
@@ -36,7 +36,7 @@ def index(collection_id):
         schema:
           type: integer
       - in: query
-        name: party
+        name: evaluation_mode
         required: false
         schema:
           type: bool
@@ -61,13 +61,15 @@ def index(collection_id):
     """
     get_index_collection(collection_id, request.authz.READ)
     result = XrefQuery.handle(request, collection_id=collection_id)
-    if get_flag("party", default=False):
-        # In party mode we merge in some random xref pairs and shuffle the
+    if get_flag("evaluation_mode", default=False):
+        # In evaluation mode we merge in some random xref pairs and shuffle the
         # collection. This gives us a good mix of positive and negative matches
-        results_party = XrefPartyQuery.handle(request, collection_id=collection_id)
-        results_merged = result.results + results_party.results
+        results_evaluation = XrefEvaluationQuery.handle(
+            request, collection_id=collection_id
+        )
+        results_merged = result.results + results_evaluation.results
         random.shuffle(results_merged)
-        result.result = results_merged
+        result.results = results_merged
     pairs = []
     for xref in result.results:
         pairs.append((xref.get("entity_id"), xref.get("match_id")))

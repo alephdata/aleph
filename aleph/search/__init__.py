@@ -103,7 +103,7 @@ class XrefQuery(Query):
         return xref_index()
 
 
-class XrefPartyQuery(XrefQuery):
+class XrefEvaluationQuery(XrefQuery):
     def get_sort(self):
         return [{"_id": "desc"}]
 
