@@ -17,11 +17,11 @@ import getCollectionLink from 'util/getCollectionLink';
 
 const messages = defineMessages({
   dataset: {
-    id: 'collection.search.placeholder',
+    id: 'dataset.search.placeholder',
     defaultMessage: 'Search this dataset',
   },
   casefile: {
-    id: 'collection.search.placeholder',
+    id: 'investigation.search.placeholder',
     defaultMessage: 'Search this investigation',
   },
 });
