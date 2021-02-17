@@ -61,6 +61,7 @@ class DocumentSelectDialog extends Component {
         isOpen={isOpen}
         title={title}
         onClose={toggleDialog}
+        enforceFocus={false}
       >
         <div className={Classes.DIALOG_BODY}>
           <p>
