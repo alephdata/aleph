@@ -82,7 +82,7 @@ class MappingIndexItem extends PureComponent {
       <div className="MappingIndexItem">
         <h5 className="MappingIndexItem__title bp3-heading">{this.getTitle()}</h5>
         <div className="MappingIndexItem__schemata">
-          {Object.values(query).map(({ schema }) => <Schema.Label schema={schema} icon plural />)}
+          {Object.entries(query).map(([key, { schema }]) => <Schema.Label key={key} schema={schema} icon plural />)}
         </div>
         <div className="MappingIndexItem__statusItems">
           <p className="MappingIndexItem__statusItem bp3-text-muted">

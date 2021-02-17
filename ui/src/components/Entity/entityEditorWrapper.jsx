@@ -61,7 +61,7 @@ const entityEditorWrapper = (EditorComponent) => {
 
       getEntitySuggestions(queryText, schema) {
         const { collection, location } = this.props;
-        const query = entitySuggestQuery(location, collection, schema, queryText);
+        const query = entitySuggestQuery(location, collection, schema, { prefix: queryText });
 
         // throttle entities query request
         clearTimeout(this.entitySuggestTimeout);
