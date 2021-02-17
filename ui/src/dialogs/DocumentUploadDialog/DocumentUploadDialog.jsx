@@ -11,6 +11,7 @@ import convertPathsToTree from 'util/convertPathsToTree';
 import DocumentUploadForm from './DocumentUploadForm';
 import DocumentUploadStatus, { UPLOAD_STATUS } from './DocumentUploadStatus';
 import DocumentUploadView from './DocumentUploadView';
+import { Entity } from 'components/common';
 
 import './DocumentUploadDialog.scss';
 
@@ -18,7 +19,11 @@ import './DocumentUploadDialog.scss';
 const messages = defineMessages({
   title: {
     id: 'document.upload.title',
-    defaultMessage: 'Upload Documents',
+    defaultMessage: 'Upload documents',
+  },
+  title_in_folder: {
+    id: 'document.upload.title_in_folder',
+    defaultMessage: 'Upload documents to {folder}',
   }
 });
 
@@ -256,7 +261,7 @@ export class DocumentUploadDialog extends Component {
   }
 
   render() {
-    const { intl, isOpen } = this.props;
+    const { intl, isOpen, parent } = this.props;
     const { uploadMeta } = this.state;
     const closeable = uploadMeta?.status !== UPLOAD_STATUS.PENDING;
 
@@ -268,7 +273,7 @@ export class DocumentUploadDialog extends Component {
         canEscapeKeyClose={closeable}
         canOutsideClickClose={closeable}
         isCloseButtonShown={closeable}
-        title={intl.formatMessage(messages.title)}
+        title={parent ? intl.formatMessage(messages.title_in_folder, { folder: <Entity.Label entity={parent} /> }) : intl.formatMessage(messages.title)}
         onClose={this.onClose}
       >
         <div className={Classes.DIALOG_BODY}>
