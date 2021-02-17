@@ -42,20 +42,23 @@ export class CollectionWrapper extends Component {
   }
 
   onUploadSuccess() {
-    const { history, location } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    parsedHash.mode = collectionViewIds.DOCUMENTS;
-    delete parsedHash.type;
-    history.push({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
-    });
+    const { collection, dropzoneFolderParent, history, location } = this.props;
+    if (dropzoneFolderParent) {
+      return;
+    }
+
+    history.push(
+      getCollectionLink({
+        collection,
+        mode: collectionViewIds.DOCUMENTS,
+        search: location.search
+      })
+    );
   }
 
   render() {
     const {
-      children, collection, collectionId, query, intl, isCasefile
+      children, collection, collectionId, dropzoneFolderParent, query, intl, isCasefile
     } = this.props;
     const message = intl.formatMessage(messages[isCasefile ? 'casefile' : 'dataset']);
 
@@ -82,6 +85,7 @@ export class CollectionWrapper extends Component {
           canDrop={collection.writeable}
           collection={collection}
           onUploadSuccess={this.onUploadSuccess}
+          parent={dropzoneFolderParent}
         >
           {children}
         </DocumentDropzone>
