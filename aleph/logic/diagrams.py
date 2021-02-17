@@ -6,6 +6,7 @@ from aleph.model import EntitySet
 from aleph.index.entities import entities_by_ids
 
 log = logging.getLogger(__name__)
+FIELDS = ["id", "schema", "properties"]
 
 
 def publish_diagram(entityset_id):
@@ -16,12 +17,23 @@ def publish_diagram(entityset_id):
 
 
 def render_diagram(entityset):
+    """Generate an HTML snippet from a diagram object."""
     entity_ids = entityset.entities
-    entities = list(entities_by_ids(entity_ids, cached=True))
+    entities = []
+    for entity in entities_by_ids(entity_ids, cached=True):
+        for field in list(entity.keys()):
+            if field not in FIELDS:
+                entity.pop(field)
+        entities.append(entity)
+
     # TODO: add viewport
     return render_template(
         "diagram.html",
-        data={"entities": entities, "layout": entityset.layout},
+        data={
+            "entities": entities,
+            "layout": entityset.layout,
+            "viewport": {"center": {"x": 0, "y": 0}},
+        },
         entityset=entityset,
         settings=settings,
     )
