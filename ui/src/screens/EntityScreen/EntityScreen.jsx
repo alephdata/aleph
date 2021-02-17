@@ -119,7 +119,7 @@ class EntityScreen extends Component {
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.getCaption()}>
-          <CollectionWrapper collection={entity.collection}>
+          <CollectionWrapper collection={entity.collection} dropzoneFolderParent={entity.schema.isA('Folder') && entity}>
             {breadcrumbs}
             <DualPane>
               <DualPane.SidePane className="ItemOverview">
