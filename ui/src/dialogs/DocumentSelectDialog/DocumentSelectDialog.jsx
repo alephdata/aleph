@@ -45,7 +45,7 @@ class DocumentSelectDialog extends Component {
 
   onQueryChange(queryText) {
     const { collection, location } = this.props;
-    const query = entitySuggestQuery(location, collection, "Table", queryText);
+    const query = entitySuggestQuery(location, collection, "Table", { q: queryText });
     this.props.queryEntities({ query });
 
     this.setState({ query });

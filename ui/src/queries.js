@@ -140,7 +140,7 @@ export function entitySuggestQuery(location, collection, schemaName, queryText) 
   const context = {
     'filter:schemata': schemaName,
     'filter:collection_id': collection?.id,
-    prefix: queryText,
+    ...queryText
   };
   const path = schemaName && collection?.id ? 'entities' : undefined;
   return Query.fromLocation(path, location, context, 'entities')
