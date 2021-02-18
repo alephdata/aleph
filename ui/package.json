@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alephdata/followthemoney": "2.3.1",
-    "@alephdata/react-ftm": "2.2.8",
+    "@alephdata/react-ftm": "2.3.1",
     "@blueprintjs/core": "3.36.0",
     "@blueprintjs/datetime": "3.20.4",
     "@blueprintjs/icons": "3.24.0",
