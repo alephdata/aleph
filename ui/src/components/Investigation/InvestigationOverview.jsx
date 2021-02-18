@@ -45,13 +45,13 @@ class InvestigationOverview extends React.Component {
           </h6>
           <div className="InvestigationOverview__section__content">
             <div className="InvestigationOverview__guides">
-              <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="people" target="_blank" href={`${guidesURLPrefix}creating-a-personal-dataset#managing-access-to-your-personal-dataset`}>
+              <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="people" target="_blank" href={`${guidesURLPrefix}creating-an-investigation#managing-access-to-your-investigation`}>
                 <FormattedMessage id="investigation.overview.guides.access" defaultMessage="Managing access" />
               </AnchorButton>
-              <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="upload" target="_blank" href={`${guidesURLPrefix}cross-referencing`}>
+              <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="upload" target="_blank" href={`${guidesURLPrefix}uploading-documents`}>
                 <FormattedMessage id="investigation.overview.guides.documents" defaultMessage="Uploading documents" />
               </AnchorButton>
-              <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="graph" target="_blank" href={`${guidesURLPrefix}uploading-documents`}>
+              <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="graph" target="_blank" href={`${guidesURLPrefix}network-diagrams`}>
                 <FormattedMessage id="investigation.overview.guides.diagrams" defaultMessage="Drawing network diagrams" />
               </AnchorButton>
               <AnchorButton minimal intent={Intent.PRIMARY} alignText="left" icon="new-object" target="_blank" href={`${guidesURLPrefix}using-the-table-editor`}>

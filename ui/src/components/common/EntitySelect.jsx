@@ -13,7 +13,7 @@ class EntitySelect extends Component {
         allowMultiple={false}
         values={[]}
         entitySuggestions={result.results}
-        isFetching={result.shouldLoad || result.isLoading}
+        isFetching={result.isPending}
         onSubmit={entities => onSelect(entities[0])}
         onQueryChange={onQueryChange}
         noResultsText={noResultsText}

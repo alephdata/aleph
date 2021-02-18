@@ -44,7 +44,7 @@ class CollectionMappingsMode extends React.Component {
               values={{
                 link: (
                   <a
-                    href="https://docs.alephdata.org/developers/mappings"
+                    href="https://docs.alephdata.org/guide/building-out-your-investigation/generating-multiple-entities-from-a-list"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
