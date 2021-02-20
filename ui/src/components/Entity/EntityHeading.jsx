@@ -10,7 +10,9 @@ import 'components/common/ItemOverview.scss';
 class EntityHeading extends React.PureComponent {
   render() {
     const { entity, isProfile = false } = this.props;
-    const { value, unit } = selectUnit(new Date(parseInt(entity.lastViewed, 10)), Date.now());
+    const lastViewedDate = entity.lastViewed ? new Date(parseInt(entity.lastViewed, 10)) : Date.now();
+    const { value, unit } = selectUnit(lastViewedDate, Date.now());
+    
     return (
       <>
         <span className="bp3-text-muted ItemOverview__heading__subtitle">

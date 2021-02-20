@@ -35,6 +35,12 @@ const messages = defineMessages({
 
 class EntityScreen extends Component {
 
+  componentDidMount() {
+    const { entityId } = this.props;
+
+    setRecentlyViewedItem(entityId);
+  }
+  
   render() {
     const { entity, entityId, intl, parsedHash } = this.props;
     if (entity.profileId && parsedHash.profile === undefined) {
@@ -53,8 +59,6 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-
-    setRecentlyViewedItem(entityId);
     
     const operation = (
       <ButtonGroup>

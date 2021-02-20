@@ -52,15 +52,12 @@ export function selectLocale(state) {
   // request to metadata will be sent with unmodified Accept-Language headers
   // allowing the backend to perform language negotiation.
   const role = selectCurrentRole(state);
-  window.__localId__ = 'en';
   
   if (role.locale) {
-    window.__localId__ = role.locale;
     return role.locale;
   }
   const { metadata } = state;
   if (metadata && metadata.app) {
-    window.__localId__ = metadata.app.locale;
     return metadata.app.locale;
   }
 
@@ -188,11 +185,8 @@ export function selectEntity(state, entityId) {
   result.error = entity.error;
   result.links = entity.links;
   result.profileId = entity.profile_id;
-
-  if (lastViewed) {
-    result.lastViewed = lastViewed.date;
-  }
-
+  result.lastViewed = lastViewed;
+  
   return result;
 }
 

@@ -23,44 +23,40 @@ export const saveState = (state) => {
 const parseRecentlyViewed = () => {
   const recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed'));
 
-  if(recentlyViewed && recentlyViewed.recentlyViewed) {
-    return recentlyViewed.recentlyViewed;
-  }
-
-  return [];
+  return recentlyViewed || {};
 }
 
 export const setRecentlyViewedItem = (id) => {
   const recentlyViewed = parseRecentlyViewed();
-  const thing = recentlyViewed.filter(item => item.id !== id);
-  
-  thing.push({
-    id,
-    date: Date.now(),
-  });
-
-  localStorage.setItem('recentlyViewed', JSON.stringify({
-    recentlyViewed: thing,
-  }));
+  recentlyViewed[id] = Date.now();
+  localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
 }
 
 export const getRecentlyViewedItem = (id) => {
   const recentlyViewed = parseRecentlyViewed();
-  const item = recentlyViewed.filter(item => item.id === id)
+  const item = recentlyViewed[id];
 
-  if (item && item.length) {
-    return item[0];
-  }
-  
-  return;
+  return item;
 }
 
 export const expireRecentlyViewed = () => {
   const recentlyViewed = parseRecentlyViewed();
-  const expiry = 5259600000; //two months
+  const expiry = 5259600000; // Two months
   const expiryDate = Date.now() - expiry;
 
-  localStorage.setItem('recentlyViewed', JSON.stringify({ 
-    recentlyViewed: recentlyViewed.filter(item => new Date(parseInt(item.date, 10)) > expiryDate) 
-  }));
+  // Not wanting to prematurely optamise here but If 
+  // walking the entire list becomes an issue in the future
+  // look to first sorting the list of recentlyViewed items 
+  // by date using recentlyViewed.entries() and then .sort()
+  // you can then remove everying that is expired and stop before
+  // iterating the entire list of entries.
+  for(const item in recentlyViewed) {
+    const itemDate = new Date(parseInt(recentlyViewed[item], 10));
+
+    if(itemDate < expiryDate) {
+      delete recentlyViewed[item];
+    }
+  }
+  
+  localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
 }

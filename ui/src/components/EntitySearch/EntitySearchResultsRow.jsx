@@ -75,11 +75,11 @@ class EntitySearchResultsRow extends Component {
     const isPrefix = !!highlights.length;
     const resultClass = c('EntitySearchResultsRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
     const highlightsClass = c('EntitySearchResultsRow', { active: isActive });
-    const viewed = entity.lastViewed ? 'viewed' : '';
+    const rowClass = c(resultClass, { viewed: !!entity.lastViewed });
 
     return (
       <>
-        <tr key={entity.id} className={`${resultClass} ${viewed}`}>
+        <tr key={entity.id} className={rowClass}>
           {writeable && updateSelection && (
             <td key="select" className="select">
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
