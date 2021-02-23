@@ -32,6 +32,7 @@ export class CollectionXrefMode extends React.Component {
   constructor(props) {
     super(props);
     this.updateQuery = this.updateQuery.bind(this);
+    this.toggleEvalMode = this.toggleEvalMode.bind(this);
   }
 
   updateQuery(newQuery) {
@@ -43,8 +44,14 @@ export class CollectionXrefMode extends React.Component {
     });
   }
 
+  toggleEvalMode() {
+    const { isEvalMode, query } = this.props;
+    const newQuery = query.set('evaluation_mode', !isEvalMode);
+    this.updateQuery(newQuery)
+  }
+
   render() {
-    const { collection, hasPartySort, intl, isTester, query, result } = this.props;
+    const { collection, isEvalMode, intl, isTester, query, result } = this.props;
     return (
       <section className="CollectionXrefMode">
         <div className="pane-layout">
@@ -57,31 +64,33 @@ export class CollectionXrefMode extends React.Component {
             />
           </div>
           <div className="pane-layout-main">
-            <CollectionXrefManageMenu
-              collection={collection}
-              result={result}
-              query={query}
-            />
-            <SearchActionBar result={result}>
-              {isTester && (
-                <div className="SortingBar">
-                  <span className="SortingBar__label">
-                    <FormattedMessage
-                      id="xref.sort.label"
-                      defaultMessage="Sort by:"
-                    />
-                  </span>
-                  <div className="SortingBar__control">
-                    <Button
-                      text={intl.formatMessage(messages[hasPartySort ? 'sort_random' : 'sort_default'])}
-                      onClick={() => {}}
-                      minimal
-                      intent={Intent.PRIMARY}
-                    />
+            <div className="CollectionXrefMode__actions">
+              <CollectionXrefManageMenu
+                collection={collection}
+                result={result}
+                query={query}
+              />
+              <SearchActionBar result={result}>
+                {isTester && (
+                  <div className="SortingBar">
+                    <span className="SortingBar__label">
+                      <FormattedMessage
+                        id="xref.sort.label"
+                        defaultMessage="Sort by:"
+                      />
+                    </span>
+                    <div className="SortingBar__control">
+                      <Button
+                        text={intl.formatMessage(messages[isEvalMode ? 'sort_random' : 'sort_default'])}
+                        onClick={this.toggleEvalMode}
+                        minimal
+                        intent={Intent.PRIMARY}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
-            </SearchActionBar>
+                )}
+              </SearchActionBar>
+            </div>
             <XrefTable result={result} />
             <QueryInfiniteLoad
               query={query}
@@ -102,7 +111,7 @@ const mapStateToProps = (state, ownProps) => {
     collection: selectCollection(state, collectionId),
     query,
     isTester: selectTester(state),
-    hasPartySort: true,
+    isEvalMode: query.getBool('evaluation_mode'),
     result: selectCollectionXrefResult(state, query),
   };
 };
