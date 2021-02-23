@@ -7,8 +7,11 @@
     }
 
     .CollectionXrefManageMenu {
-      margin-bottom: $aleph-content-padding;
-      @include rtl(float, right, left);
+      margin-bottom: $aleph-grid-size*1.5;
+    }
+
+    &__actions {
+      margin-bottom: $aleph-grid-size/2;
     }
 
     .pane-layout-side {
