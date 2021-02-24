@@ -1,5 +1,5 @@
 # Dependencies maintained by OCCRP
-banal==1.0.4
+banal==1.0.5
 urlnormalizer==1.2.5
 followthemoney==2.3.1
 followthemoney-store[postgresql]==3.0.1
