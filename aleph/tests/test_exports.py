@@ -44,7 +44,7 @@ class ExportsTestCase(TestCase):
         assert notification_count == 3, notification_count
 
     def test_delete_expired(self):
-        q = Export.by_role_id(self.role_email.id)
+        q = Export.by_role_id(self.role_email.id, deleted=True)
         assert q.count() == 3, q.count()
 
         delete_expired_exports()
