@@ -50,12 +50,6 @@ class DiagramEditor extends React.Component {
     }));
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.downloadTriggered && !prevProps.downloadTriggered) {
-      this.downloadDiagram();
-    }
-  }
-
   updateLayout(layout, options) {
     const { diagram, onStatusChange } = this.props;
     this.setState({ layout });
@@ -87,20 +81,6 @@ class DiagramEditor extends React.Component {
     const { diagram } = this.props;
     fileDownload(data, `${diagram.label}.svg`);
   }
-
-  downloadDiagram() {
-    const { entityManager, diagram, onDownloadComplete } = this.props;
-    const { layout, viewport } = this.state;
-
-    const graphData = JSON.stringify({
-      entities: entityManager.toJSON(),
-      layout: layout.toJSON(),
-      viewport: viewport.toJSON(),
-    });
-    fileDownload(graphData, `${diagram.label}.ftm`);
-    onDownloadComplete();
-  }
-
   render() {
     const { diagram, entityManager, filterText, locale } = this.props;
     const { layout, viewport } = this.state;

@@ -16,6 +16,8 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
 
+const fileDownload = require('js-file-download');
+
 
 export class DiagramScreen extends Component {
   constructor(props) {
@@ -24,12 +26,9 @@ export class DiagramScreen extends Component {
     this.state = {
       filterText: '',
       updateStatus: null,
-      downloadTriggered: false,
     };
 
     this.onSearch = this.onSearch.bind(this);
-    this.onDiagramDownload = this.onDiagramDownload.bind(this);
-    this.onDownloadComplete = this.onDownloadComplete.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
   }
 
@@ -45,14 +44,6 @@ export class DiagramScreen extends Component {
     this.setState({ filterText });
   }
 
-  onDiagramDownload() {
-    this.setState({ downloadTriggered: true });
-  }
-
-  onDownloadComplete() {
-    this.setState({ downloadTriggered: false });
-  }
-
   onStatusChange(updateStatus) {
     this.setState({ updateStatus });
   }
@@ -66,6 +57,15 @@ export class DiagramScreen extends Component {
     if (entitiesResult.shouldLoad) {
       this.props.queryEntitySetEntities({ query: entitiesQuery });
     }
+  }
+
+  downloadDiagram = () => {
+    const { entitiesResult, diagram } = this.props;
+    const graphData = JSON.stringify({
+      entities: entitiesResult.results?.map(e => e.toJSON()),
+      layout: diagram.layout
+    });
+    fileDownload(graphData, `${diagram.label}.ftm`);
   }
 
   render() {
@@ -90,7 +90,10 @@ export class DiagramScreen extends Component {
     const status = <UpdateStatus status={updateStatus} />;
 
     const operation = (
-      <EntitySetManageMenu entitySet={diagram} triggerDownload={this.onDiagramDownload} />
+      <EntitySetManageMenu
+        entitySet={diagram}
+        triggerDownload={this.downloadDiagram}
+      />
     );
 
     const breadcrumbs = (
@@ -115,9 +118,7 @@ export class DiagramScreen extends Component {
               onStatusChange={this.onStatusChange}
               diagram={diagram}
               entities={entitiesResult?.results}
-              downloadTriggered={downloadTriggered}
               filterText={filterText}
-              onDownloadComplete={this.onDownloadComplete}
             />
           </CollectionWrapper>
         </Screen>
