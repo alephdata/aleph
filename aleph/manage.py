@@ -191,6 +191,14 @@ def xref(foreign_id):
     xref_collection(collection)
 
 
+@cli.command()
+@click.argument("entityset_id")
+def embed_diagram(entityset_id):
+    from aleph.logic.diagrams import publish_diagram
+
+    publish_diagram(entityset_id)
+
+
 @cli.command("load-entities")
 @click.argument("foreign_id")
 @click.option("-i", "--infile", type=click.File("r"), default="-")  # noqa
