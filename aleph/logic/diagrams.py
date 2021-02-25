@@ -1,19 +1,26 @@
 import logging
+from uuid import uuid4
 from flask import render_template
+from tempfile import NamedTemporaryFile
+from pantomime.types import HTML
 
 from aleph import settings
-from aleph.model import EntitySet
+from aleph.core import archive
 from aleph.index.entities import entities_by_ids
 
 log = logging.getLogger(__name__)
 FIELDS = ["id", "schema", "properties"]
 
 
-def publish_diagram(entityset_id):
-    entityset = EntitySet.by_id(entityset_id, types=[EntitySet.DIAGRAM])
+def publish_diagram(entityset):
     embed = render_diagram(entityset)
-    with open(f"embed_{entityset_id}.html", "w") as fh:
+    with NamedTemporaryFile("w") as fh:
         fh.write(embed)
+        fh.flush()
+        publish_id = uuid4().hex
+        embed_path = f"embeds/{entityset.id}/{publish_id}.html"
+        url = archive.publish_file(fh.name, embed_path, mime_type=HTML)
+    return {"embed": embed, "url": url}
 
 
 def render_diagram(entityset):

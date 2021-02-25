@@ -1,13 +1,15 @@
 import logging
 from banal import ensure_list
+from flask_babel import gettext
 from flask import Blueprint, request, redirect
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, BadRequest
 
 from aleph.core import db, url_for
 from aleph.model import EntitySet, Judgement
 from aleph.model.common import make_textid
 from aleph.logic.entitysets import create_entityset, refresh_entityset
 from aleph.logic.entitysets import save_entityset_item
+from aleph.logic.diagrams import publish_diagram
 from aleph.logic.entities import upsert_entity, validate_entity, check_write_entity
 from aleph.queues import queue_task, OP_UPDATE_ENTITY
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
@@ -16,8 +18,9 @@ from aleph.views.context import tag_request
 from aleph.views.entities_api import view as entity_view
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
+from aleph.views.util import jsonify, get_flag, get_session_id
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
-from aleph.views.util import parse_request, get_db_collection, get_flag, get_session_id
+from aleph.views.util import parse_request, get_db_collection
 
 
 blueprint = Blueprint("entitysets_api", __name__)
@@ -31,7 +34,7 @@ def index():
     get:
       summary: List entitysets
       parameters:
-      - description: The collection id.
+      - description: The collection ID.
         in: query
         name: 'filter:collection_id'
         required: true
@@ -108,7 +111,7 @@ def create():
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["GET"])
 def view(entityset_id):
-    """Return the entityset with id `entityset_id`.
+    """Return the entityset with ID `entityset_id`.
     ---
     get:
       summary: Fetch an entityset
@@ -140,12 +143,12 @@ def view(entityset_id):
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["POST", "PUT"])
 def update(entityset_id):
-    """Update the entityset with id `entityset_id`.
+    """Update the entityset with ID `entityset_id`.
     ---
     post:
       summary: Update an entityset
       parameters:
-      - description: The entityset id.
+      - description: The entityset ID.
         in: path
         name: entityset_id
         required: true
@@ -173,6 +176,45 @@ def update(entityset_id):
     db.session.commit()
     refresh_entityset(entityset_id)
     return view(entityset_id)
+
+
+@blueprint.route("/api/2/entitysets/<entityset_id>/embed", methods=["POST"])
+def embed(entityset_id):
+    """Return an embedded network diagram for the entityset with ID `entityset_id`.
+    ---
+    post:
+      summary: Create an embedded network diagram
+      parameters:
+      - description: The entityset id.
+        in: path
+        name: entityset_id
+        required: true
+        schema:
+          type: string
+        example: 3a0d91ece2dce88ad3259594c7b642485235a048
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  embed:
+                    type: string
+                    description: HTML fragment to be embedded.
+                  url:
+                    type: string
+                    format: url
+                    description: Published version of the embedded file.
+          description: OK
+      tags:
+      - EntitySet
+    """
+    entityset = get_entityset(entityset_id, request.authz.WRITE)
+    if entityset.type != EntitySet.DIAGRAM:
+        raise BadRequest(gettext("Only diagrams can be embedded!"))
+    data = publish_diagram(entityset)
+    return jsonify(data)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["DELETE"])
