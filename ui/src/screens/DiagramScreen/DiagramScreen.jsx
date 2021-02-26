@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
@@ -15,9 +16,16 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
+import { showErrorToast } from 'app/toast';
 
 const fileDownload = require('js-file-download');
 
+const messages = defineMessages({
+  export_error: {
+    id: 'diagram.export.error',
+    defaultMessage: 'Error exporting diagram',
+  },
+})
 
 export class DiagramScreen extends Component {
   constructor(props) {
@@ -30,6 +38,7 @@ export class DiagramScreen extends Component {
 
     this.onSearch = this.onSearch.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
+    this.editorRef = React.createRef();
   }
 
   componentDidMount() {
@@ -59,7 +68,7 @@ export class DiagramScreen extends Component {
     }
   }
 
-  downloadDiagram = () => {
+  exportFtm = () => {
     const { entitiesResult, diagram } = this.props;
     const graphData = JSON.stringify({
       entities: entitiesResult.results?.map(e => e.toJSON()),
@@ -68,9 +77,20 @@ export class DiagramScreen extends Component {
     fileDownload(graphData, `${diagram.label}.ftm`);
   }
 
+  exportSvg = () => {
+    const { intl } = this.props;
+    if (!!this.editorRef?.exportSvg) {
+      this.editorRef.exportSvg();
+    } else {
+      showErrorToast(
+        intl.formatMessage(messages.export_error)
+      );
+    }
+  }
+
   render() {
     const { diagram, entitiesResult } = this.props;
-    const { downloadTriggered, filterText, updateStatus } = this.state;
+    const { filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
       return <ErrorScreen error={diagram.error} />;
@@ -92,7 +112,8 @@ export class DiagramScreen extends Component {
     const operation = (
       <EntitySetManageMenu
         entitySet={diagram}
-        triggerDownload={this.downloadDiagram}
+        exportFtm={this.exportFtm}
+        exportSvg={this.exportSvg}
       />
     );
 
@@ -114,6 +135,7 @@ export class DiagramScreen extends Component {
           <CollectionWrapper collection={diagram.collection}>
             {breadcrumbs}
             <DiagramEditor
+              setRef={ref => this.editorRef = ref}
               collection={diagram.collection}
               onStatusChange={this.onStatusChange}
               diagram={diagram}
@@ -144,4 +166,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
+  injectIntl,
 )(DiagramScreen);

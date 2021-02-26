@@ -134,8 +134,10 @@ const entityEditorWrapper = (EditorComponent) => {
 
       render() {
         // return editor component with entityManager
+        const { setRef } = this.props;
         return (
           <EditorComponent
+            ref={setRef}
             entityManager={this.entityManager}
             {...this.props}
           />
@@ -145,7 +147,7 @@ const entityEditorWrapper = (EditorComponent) => {
   );
   return compose(
     withRouter,
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true }),
   )(WrappedComponent);
 }
 

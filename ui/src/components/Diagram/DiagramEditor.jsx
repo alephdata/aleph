@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
+import { exportSvg, NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
 import { UpdateStatus } from 'components/common';
@@ -38,6 +38,7 @@ class DiagramEditor extends React.Component {
     this.updateLayout = this.updateLayout.bind(this);
     this.updateViewport = this.updateViewport.bind(this);
     this.exportSvg = this.exportSvg.bind(this);
+    this.svgRef = React.createRef();
   }
 
   componentDidMount() {
@@ -77,10 +78,14 @@ class DiagramEditor extends React.Component {
     this.setState({ viewport });
   }
 
-  exportSvg(data) {
+  exportSvg() {
     const { diagram } = this.props;
+    const { layout, viewport } = this.state;
+    const data = exportSvg(layout, viewport, this.svgRef.current);
+
     fileDownload(data, `${diagram.label}.svg`);
   }
+
   render() {
     const { diagram, entityManager, filterText, locale } = this.props;
     const { layout, viewport } = this.state;
@@ -94,10 +99,10 @@ class DiagramEditor extends React.Component {
           viewport={viewport}
           updateLayout={this.updateLayout}
           updateViewport={this.updateViewport}
-          exportSvg={this.exportSvg}
           externalFilterText={filterText}
           writeable={diagram.writeable}
           locale={locale}
+          svgRef={this.svgRef}
         />
       </div>
     );
@@ -111,6 +116,6 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  entityEditorWrapper
+  connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true }),
+  entityEditorWrapper,
 )(DiagramEditor);
