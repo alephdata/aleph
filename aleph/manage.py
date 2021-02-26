@@ -16,8 +16,8 @@ from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
-from aleph.queues import get_status, get_stage, cancel_queue
-from aleph.queues import get_active_dataset_status, OP_XREF
+from aleph.queues import get_status, cancel_queue
+from aleph.queues import get_active_dataset_status
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
 from aleph.logic.collections import create_collection, update_collection
@@ -189,14 +189,6 @@ def xref(foreign_id):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
     xref_collection(collection)
-
-
-@cli.command()
-@click.argument("entityset_id")
-def embed_diagram(entityset_id):
-    from aleph.logic.diagrams import publish_diagram
-
-    publish_diagram(entityset_id)
 
 
 @cli.command("load-entities")
