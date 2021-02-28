@@ -70,11 +70,10 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all",
-      "firefox 68"
+      "not op_mini all"
     ],
     "development": [
-      "chrome 79",
+      "last 5 chrome version",
       "last 5 firefox version",
       "last 5 safari version"
     ]

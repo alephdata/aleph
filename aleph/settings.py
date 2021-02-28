@@ -80,6 +80,7 @@ OAUTH_SCOPE = env.get("ALEPH_OAUTH_SCOPE", "openid email profile")
 OAUTH_METADATA_URL = env.get("ALEPH_OAUTH_METADATA_URL")
 OAUTH_TOKEN_METHOD = env.get("ALEPH_OAUTH_TOKEN_METHOD", "POST")
 OAUTH_ADMIN_GROUP = env.get("ALEPH_OAUTH_ADMIN_GROUP", "superuser")
+OAUTH_EXPIRE = env.to_int("ALEPH_OAUTH_EXPIRE", 60_000)
 
 # No authentication. Everyone is admin.
 SINGLE_USER = env.to_bool("ALEPH_SINGLE_USER")
@@ -129,6 +130,11 @@ EXPORT_MAX_RESULTS = env.to_int("EXPORT_MAX_RESULTS", EXPORT_MAX_RESULTS)
 # Pages directory
 PAGES_PATH = os.path.join(APP_DIR, "pages")
 PAGES_PATH = env.get("ALEPH_PAGES_PATH", PAGES_PATH)
+
+# Publishing network diagram embeds
+REACT_FTM_URL = (
+    "https://cdn.jsdelivr.net/npm/@alephdata/react-ftm@2.3.1/dist/react-ftm-embed.js"
+)
 
 ##############################################################################
 # E-mail settings

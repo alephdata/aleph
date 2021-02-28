@@ -48,32 +48,24 @@ OPERATIONS = (
 class AlephWorker(Worker):
     def boot(self):
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
-        self.hourly = get_rate_limit("hourly", unit=3600, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
-
-    def run_often(self):
-        log.info("Self-check...")
-        self.cleanup_jobs()
-        compute_collections()
-
-        if self.hourly.check():
-            self.hourly.update()
-            log.info("Running hourly tasks...")
-            check_alerts()
-
-        if self.daily.check():
-            self.daily.update()
-            log.info("Running daily tasks...")
-            generate_digest()
-            update_roles()
-            delete_expired_exports()
 
     def periodic(self):
         with app.app_context():
             db.session.remove()
             if self.often.check():
                 self.often.update()
-                self.run_often()
+                log.info("Self-check...")
+                self.cleanup_jobs()
+                compute_collections()
+
+            if self.daily.check():
+                self.daily.update()
+                log.info("Running daily tasks...")
+                check_alerts()
+                generate_digest()
+                update_roles()
+                delete_expired_exports()
 
     def dispatch_task(self, task):
         collection = get_dataset_collection_id(task.job.dataset.name)
