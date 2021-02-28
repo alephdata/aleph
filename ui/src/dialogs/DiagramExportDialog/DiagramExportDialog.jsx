@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { Button, Card, Dialog, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { withRouter } from 'react-router';
+import { Button, Card, Dialog, Intent } from '@blueprintjs/core';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import { updateEntitySet } from 'actions';
-import { showSuccessToast, showWarningToast } from 'app/toast';
-import { EntitySet } from 'components/common';
+import { fetchDiagramEmbed } from 'actions';
+import { showSuccessToast, showErrorToast } from 'app/toast';
+import { ClipboardInput, EntitySet } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
+
 
 import './DiagramExportDialog.scss';
 
@@ -16,19 +18,45 @@ const messages = defineMessages({
     id: 'diagram.export.title',
     defaultMessage: 'Export options',
   },
+  embed_error: {
+    id: 'diagram.export.error',
+    defaultMessage: 'Error generating diagram embed',
+  }
 });
 
 class DiagramExportDialog extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      embedUrl: null
+    }
   }
 
-  exportIframe = () => {
-    console.log('exporting iframe');
+  fetchEmbedUrl = async () => {
+    const { entitySet, intl } = this.props;
+
+    try {
+      const embedData = await this.props.fetchDiagramEmbed(entitySet.id);
+      if (embedData?.url) {
+        this.setState({ embedUrl: embedData.url });
+      } else {
+        throw intl.formatMessage(messages.embed_error);
+      }
+    } catch (e) {
+      showErrorToast(e);
+    }
+  }
+
+  generateIframeString = () => {
+    const { entitySet } = this.props;
+    const { embedUrl } = this.state;
+    return `<iframe width="100%" height="100%" src=${embedUrl} title=${entitySet.label} style="border:none;"></iframe>`;
   }
 
   render() {
     const { entitySet, exportFtm, exportSvg, intl, isOpen, toggleDialog } = this.props;
+    const { embedUrl } = this.state;
 
     return (
       <Dialog
@@ -40,39 +68,47 @@ class DiagramExportDialog extends Component {
       >
         <div className="bp3-dialog-body">
           <Card className="DiagramExportDialog__section">
-            <Button icon="image" onClick={() => { exportSvg(); toggleDialog(); }} intent={Intent.PRIMARY} outlined>
-              <FormattedMessage id="diagram.export.svg" defaultMessage="Export SVG" />
+            <Button icon="image" onClick={() => { exportSvg(); toggleDialog(); }} >
+              <FormattedMessage id="diagram.export.svg" defaultMessage="Export as SVG" />
             </Button>
             <p className="bp3-text-muted">
               <FormattedMessage
                 id="diagram.export.svg.description"
-                defaultMessage="A still image containing all of the contents of your diagram."
+                defaultMessage="Download a still image containing all of the contents of your diagram."
               />
             </p>
           </Card>
+
           <Card className="DiagramExportDialog__section">
-            <Button icon="code" onClick={this.exportIframe} intent={Intent.PRIMARY} outlined>
-              <FormattedMessage id="diagram.export.iframe" defaultMessage="Embed iframe" />
-            </Button>
+            {!!embedUrl && (
+              <div className="DiagramExportDialog__embed-code">
+                <ClipboardInput icon="code" value={this.generateIframeString()} />
+              </div>
+            )}
+            {!embedUrl && (
+              <Button icon="code" onClick={this.fetchEmbedUrl} >
+                <FormattedMessage id="diagram.export.iframe" defaultMessage="Embed iframe" />
+              </Button>
+            )}
             <p className="bp3-text-muted">
               <FormattedMessage
                 id="diagram.export.svg.description"
-                defaultMessage="An interactive version of your diagram, allowing viewers to click and explore its contents."
+                defaultMessage="Generate an interactive version of your diagram, allowing viewers to click and explore its contents."
               />
             </p>
           </Card>
           <Card className="DiagramExportDialog__section">
-            <Button icon="offline" onClick={() => { exportFtm(); toggleDialog(); }} intent={Intent.PRIMARY} outlined>
-              <FormattedMessage id="diagram.export.ftm" defaultMessage="Export .ftm" />
+            <Button icon="offline" onClick={() => { exportFtm(); toggleDialog(); }} >
+              <FormattedMessage id="diagram.export.ftm" defaultMessage="Export as .ftm" />
             </Button>
             <p className="bp3-text-muted">
               <FormattedMessage
                 id="diagram.export.ftm.description"
-                defaultMessage="A .ftm file, allowing you to continue editing your diagram offline in {link}, or to share your diagram with a colleague outside of Aleph."
+                defaultMessage="Download your diagram as a file which can be edited offline in {link} or shared with colleagues outside of Aleph."
                 values={{
                   link: (
                     <a
-                      href="https://https://docs.alephdata.org/guide/aleph-data-desktop"
+                      href="https://docs.alephdata.org/guide/aleph-data-desktop"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -92,7 +128,8 @@ class DiagramExportDialog extends Component {
   }
 }
 
-
 export default compose(
+  withRouter,
+  connect(null, { fetchDiagramEmbed }),
   injectIntl,
 )(DiagramExportDialog);
