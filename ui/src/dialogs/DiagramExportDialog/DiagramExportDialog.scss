@@ -1,0 +1,19 @@
+@import "app/variables.scss";
+
+.DiagramExportDialog {
+  &.bp3-dialog {
+    padding-bottom: 0;
+  }
+
+  &__section {
+    margin-bottom: $aleph-grid-size;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    p {
+      margin: $aleph-grid-size 0 0;
+    }
+  }
+}
