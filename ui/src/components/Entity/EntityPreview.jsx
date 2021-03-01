@@ -24,18 +24,24 @@ export class EntityPreview extends React.Component {
   constructor(props) {
     super(props);
     this.onClose = this.onClose.bind(this);
-    this.onOpen = this.onOpen.bind(this);
+    this.onUnmount = this.onUnmount.bind(this);
   }
 
-  onOpen(event) {
+  componentDidMount() {
+    window.addEventListener("beforeunload", this.onUnmount);
+  }
+
+  componentWillUnmount() {
+    this.onUnmount();
+    window.removeEventListener("beforeunload", this.onUnmount);
+  }
+
+  onUnmount() {
     setRecentlyViewedItem(this.props.entityId);
   }
 
   onClose(event) {
-    // don't close preview if other entity label is clicked
-    if (event.target.classList.contains('EntityLabel')) {
-      return;
-    }
+    this.onUnmount();
     togglePreview(this.props.history, null);
   }
 

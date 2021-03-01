@@ -35,12 +35,28 @@ const messages = defineMessages({
 });
 
 class EntityScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.onUnmount = this.onUnmount.bind(this);
+  }
+
   componentDidMount() {
     this.cleanHash();
+    window.addEventListener("beforeunload", this.onUnmount);
   }
 
   componentDidUpdate() {
     this.cleanHash();
+  }
+
+  componentWillUnmount() {
+    this.onUnmount();
+    window.removeEventListener("beforeunload", this.onUnmount);
+  }
+
+  onUnmount() {
+    const { entityId } = this.props;
+    setRecentlyViewedItem(entityId);
   }
 
   cleanHash() {
@@ -58,12 +74,6 @@ class EntityScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    const { entityId } = this.props;
-
-    setRecentlyViewedItem(entityId);
-  }
-  
   render() {
     const { entity, entityId, intl, parsedHash } = this.props;
     if (entity.profileId && parsedHash.profile === undefined) {
