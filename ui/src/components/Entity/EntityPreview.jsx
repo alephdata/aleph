@@ -14,6 +14,7 @@ import { SectionLoading, ErrorSection } from 'components/common';
 import { selectEntity, selectEntityView, selectLocale } from 'selectors';
 import queryString from 'query-string';
 import togglePreview from 'util/togglePreview';
+import { setRecentlyViewedItem} from 'app/storage';
 
 import 'components/common/ItemOverview.scss';
 import './EntityPreview.scss';
@@ -23,6 +24,11 @@ export class EntityPreview extends React.Component {
   constructor(props) {
     super(props);
     this.onClose = this.onClose.bind(this);
+    this.onOpen = this.onOpen.bind(this);
+  }
+
+  onOpen(event) {
+    setRecentlyViewedItem(this.props.entityId);
   }
 
   onClose(event) {
@@ -69,6 +75,7 @@ export class EntityPreview extends React.Component {
           className="EntityPreview"
           isOpen={!hidden}
           title={<EntityToolbar entity={entity} profile={profile} />}
+          onOpened={this.onOpen}
           onClose={this.onClose}
           hasBackdrop={false}
           autoFocus={false}
