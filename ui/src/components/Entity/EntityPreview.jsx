@@ -14,6 +14,7 @@ import { SectionLoading, ErrorSection } from 'components/common';
 import { selectEntity, selectEntityView, selectLocale } from 'selectors';
 import queryString from 'query-string';
 import togglePreview from 'util/togglePreview';
+import { setRecentlyViewedItem} from 'app/storage';
 
 import 'components/common/ItemOverview.scss';
 import './EntityPreview.scss';
@@ -23,13 +24,24 @@ export class EntityPreview extends React.Component {
   constructor(props) {
     super(props);
     this.onClose = this.onClose.bind(this);
+    this.onUnmount = this.onUnmount.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener("beforeunload", this.onUnmount);
+  }
+
+  componentWillUnmount() {
+    this.onUnmount();
+    window.removeEventListener("beforeunload", this.onUnmount);
+  }
+
+  onUnmount() {
+    setRecentlyViewedItem(this.props.entityId);
   }
 
   onClose(event) {
-    // don't close preview if other entity label is clicked
-    if (event.target.classList.contains('EntityLabel')) {
-      return;
-    }
+    this.onUnmount();
     togglePreview(this.props.history, null);
   }
 
@@ -69,6 +81,7 @@ export class EntityPreview extends React.Component {
           className="EntityPreview"
           isOpen={!hidden}
           title={<EntityToolbar entity={entity} profile={profile} />}
+          onOpened={this.onOpen}
           onClose={this.onClose}
           hasBackdrop={false}
           autoFocus={false}
