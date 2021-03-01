@@ -2,6 +2,7 @@
 
 .ItemOverview {
   height: auto !important;
+
   &__heading {
     padding: ($aleph-grid-size * 4) 0;
 
@@ -29,6 +30,10 @@
 
     &__title {
       line-height: 1.5;
+    }
+
+    &__last-viewed {
+      font-size: $pt-font-size-small;
     }
   }
 

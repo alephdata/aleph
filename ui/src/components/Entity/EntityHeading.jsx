@@ -12,7 +12,7 @@ class EntityHeading extends React.PureComponent {
     const { entity, isProfile = false } = this.props;
     const lastViewedDate = entity.lastViewed ? new Date(parseInt(entity.lastViewed, 10)) : Date.now();
     const { value, unit } = selectUnit(lastViewedDate, Date.now());
-    
+
     return (
       <>
         <span className="bp3-text-muted ItemOverview__heading__subtitle">
@@ -34,16 +34,21 @@ class EntityHeading extends React.PureComponent {
           )}
         </h1>
         {entity.lastViewed && (
-          <span><FormattedMessage 
-              id="entity.info.last_view" 
-              defaultMessage="Last viewed" 
-              /> <FormattedRelativeTime
-              value={value}
-              unit={unit}
-              // eslint-disable-next-line
-              style="long"
-              numeric="auto"
-            />
+          <span className="ItemOverview__heading__last-viewed bp3-text-muted">
+              <FormattedMessage
+                id="entity.info.last_view"
+                defaultMessage="Last viewed {time}"
+                values={{
+                  time: (
+                    <FormattedRelativeTime
+                      value={value}
+                      unit={unit}
+                      style="long"
+                      numeric="auto"
+                    />
+                  )
+                }}
+              />
           </span>
         )}
       </>
