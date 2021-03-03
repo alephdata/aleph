@@ -12,7 +12,7 @@ from aleph.index import entities as index
 from aleph.queues import pipeline_entity, queue_task
 from aleph.queues import OP_UPDATE_ENTITY, OP_PRUNE_ENTITY
 from aleph.logic.notifications import flush_notifications
-from aleph.logic.collections import index_aggregator, refresh_collection
+from aleph.logic.collections import refresh_collection
 from aleph.logic.collections import MODEL_ORIGIN
 from aleph.logic.util import latin_alt
 from aleph.index import xref as xref_index
@@ -35,6 +35,7 @@ def upsert_entity(data, collection, authz=None, sync=False, sign=False, job_id=N
         entity = Entity.create(data, collection, sign=sign, role_id=role_id)
     else:
         entity.update(data, collection, sign=sign)
+    collection.touch()
 
     proxy = entity.to_proxy()
     aggregator = get_aggregator(collection)
@@ -166,4 +167,5 @@ def prune_entity(collection, entity_id=None, job_id=None):
     aggregator = get_aggregator(collection)
     aggregator.delete(entity_id=entity_id)
     refresh_entity(collection, entity_id)
+    collection.touch()
     db.session.commit()

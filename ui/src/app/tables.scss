@@ -141,7 +141,11 @@ table.data-table {
   width: 100%;
 
   &.pending > tbody {
-    opacity: .5;
+    opacity: 0.5;
+  }
+
+  tr.viewed td {
+    opacity: 0.5;
   }
 
   td {

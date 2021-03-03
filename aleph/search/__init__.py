@@ -103,6 +103,11 @@ class XrefQuery(Query):
         return xref_index()
 
 
+class XrefEvaluationQuery(XrefQuery):
+    def get_sort(self):
+        return [{"_id": "desc"}]
+
+
 class NotificationsQuery(Query):
     AUTHZ_FIELD = None
     TEXT_FIELDS = ["text"]

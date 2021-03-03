@@ -6,10 +6,6 @@
   -- `The Aleph <http://www.phinnweb.org/links/literature/borges/aleph.html>`_,
   Jorge Luis Borges
 
-.. figure:: https://api.travis-ci.org/alephdata/aleph.png
-   :target: https://travis-ci.org/alephdata/aleph/
-   :alt: Build Status
-
 **Aleph** is a tool for indexing large amounts of both documents (PDF, Word,
 HTML) and structured (CSV, XLS, SQL) data for easy browsing and search. It is
 built with investigative reporting as a primary use case. Aleph allows
