@@ -62,7 +62,7 @@ class DiagramExportDialog extends Component {
       <Dialog
         icon="export"
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title, {title: entitySet.label})}
+        title={intl.formatMessage(messages.title, { title: entitySet.label })}
         onClose={toggleDialog}
         className="DiagramExportDialog"
       >
@@ -74,7 +74,7 @@ class DiagramExportDialog extends Component {
             <p className="bp3-text-muted">
               <FormattedMessage
                 id="diagram.export.svg.description"
-                defaultMessage="Download a still image containing all of the contents of the diagram."
+                defaultMessage="Download a vector graphic with the contents of the diagram."
               />
             </p>
           </Card>
@@ -93,7 +93,7 @@ class DiagramExportDialog extends Component {
             <p className="bp3-text-muted">
               <FormattedMessage
                 id="diagram.export.svg.description"
-                defaultMessage="Generate an interactive version of the diagram, allowing viewers to click and explore its contents."
+                defaultMessage="Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
               />
             </p>
           </Card>
@@ -104,7 +104,7 @@ class DiagramExportDialog extends Component {
             <p className="bp3-text-muted">
               <FormattedMessage
                 id="diagram.export.ftm.description"
-                defaultMessage="Download the diagram as a file which can be edited offline in {link} or shared with colleagues outside of Aleph."
+                defaultMessage="Download the diagram as a data file that can be used in {link} or another Aleph site."
                 values={{
                   link: (
                     <a
