@@ -9,7 +9,7 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
-from aleph.core import settings, url_for, cache
+from aleph.core import settings, url_for, cache, archive
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic.pages import load_pages
@@ -51,6 +51,7 @@ def _metadata_locale(locale):
             "version": __version__,
             "banner": settings.APP_BANNER,
             "ui_uri": settings.APP_UI_URL,
+            "publish": archive.can_publish,
             "logo": app_logo,
             "favicon": settings.APP_FAVICON,
             "locale": locale,

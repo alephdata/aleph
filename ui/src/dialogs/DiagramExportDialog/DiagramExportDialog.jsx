@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { Button, Card, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Card, Dialog } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import { fetchDiagramEmbed } from 'actions';
-import { showSuccessToast, showErrorToast } from 'app/toast';
-import { ClipboardInput, EntitySet } from 'components/common';
-import FormDialog from 'dialogs/common/FormDialog';
+import { showErrorToast } from 'app/toast';
+import { ClipboardInput } from 'components/common';
 
 
 import './DiagramExportDialog.scss';
+import { selectMetadata } from 'selectors';
 
 const messages = defineMessages({
   title: {
@@ -55,7 +55,7 @@ class DiagramExportDialog extends Component {
   }
 
   render() {
-    const { entitySet, exportFtm, exportSvg, intl, isOpen, toggleDialog } = this.props;
+    const { entitySet, exportFtm, exportSvg, intl, isOpen, canEmbed, toggleDialog } = this.props;
     const { embedUrl } = this.state;
 
     return (
@@ -79,24 +79,27 @@ class DiagramExportDialog extends Component {
             </p>
           </Card>
 
-          <Card className="DiagramExportDialog__section">
-            {!!embedUrl && (
-              <div className="DiagramExportDialog__embed-code">
-                <ClipboardInput icon="code" value={this.generateIframeString()} />
-              </div>
-            )}
-            {!embedUrl && (
-              <Button icon="code" onClick={this.fetchEmbedUrl} >
-                <FormattedMessage id="diagram.export.iframe" defaultMessage="Embed iframe" />
-              </Button>
-            )}
-            <p className="bp3-text-muted">
-              <FormattedMessage
-                id="diagram.export.svg.description"
-                defaultMessage="Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
-              />
-            </p>
-          </Card>
+          {canEmbed && (
+            <Card className="DiagramExportDialog__section">
+              {!!embedUrl && (
+                <div className="DiagramExportDialog__embed-code">
+                  <ClipboardInput icon="code" value={this.generateIframeString()} />
+                </div>
+              )}
+              {!embedUrl && (
+                <Button icon="code" onClick={this.fetchEmbedUrl} >
+                  <FormattedMessage id="diagram.export.iframe" defaultMessage="Embed iframe" />
+                </Button>
+              )}
+              <p className="bp3-text-muted">
+                <FormattedMessage
+                  id="diagram.export.svg.description"
+                  defaultMessage="Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
+                />
+              </p>
+            </Card>
+          )}
+
           <Card className="DiagramExportDialog__section">
             <Button icon="offline" onClick={() => { exportFtm(); toggleDialog(); }} >
               <FormattedMessage id="diagram.export.ftm" defaultMessage="Export as .ftm" />
@@ -128,8 +131,15 @@ class DiagramExportDialog extends Component {
   }
 }
 
+
+const mapStateToProps = (state, ownProps) => {
+  const metadata = selectMetadata(state);
+  return { canEmbed: metadata.app.publish };
+};
+
+
 export default compose(
   withRouter,
-  connect(null, { fetchDiagramEmbed }),
+  connect(mapStateToProps, { fetchDiagramEmbed }),
   injectIntl,
 )(DiagramExportDialog);
