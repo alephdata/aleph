@@ -29,7 +29,7 @@
     "numeral": "^2.0.6",
     "papaparse": "^5.1.0",
     "query-string": "^6.8.3",
-    "react": "^16.13.1",
+    "react": "^17.0.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
     "react-helmet": "^6.0.0-beta",
