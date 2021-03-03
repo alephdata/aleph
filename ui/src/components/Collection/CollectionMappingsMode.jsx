@@ -49,7 +49,7 @@ class CollectionMappingsMode extends React.Component {
                     rel="noopener noreferrer"
                   >
                     <FormattedMessage
-                      id="mapping.infoLink"
+                      id="mapping.docs.link"
                       defaultMessage="Aleph entity mapping documentation"
                     />
                   </a>

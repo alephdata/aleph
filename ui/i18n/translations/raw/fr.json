@@ -5,6 +5,9 @@
   "alerts.add_placeholder": {
     "defaultMessage": "Créer une nouvelle alerte de suivi..."
   },
+  "alerts.delete": {
+    "defaultMessage": "Remove alert"
+  },
   "alerts.heading": {
     "defaultMessage": "Gérer vos alertes"
   },
@@ -74,9 +77,6 @@
   "case.users": {
     "defaultMessage": "Chercher des utilisateurs"
   },
-  "cases.browser.breadcrumb": {
-    "defaultMessage": "Vue d'ensemble des cas"
-  },
   "cases.create": {
     "defaultMessage": "New investigation"
   },
@@ -93,7 +93,7 @@
     "defaultMessage": "Investigations"
   },
   "clipboard.copy.after": {
-    "defaultMessage": "Copié dans le presse-papier!"
+    "defaultMessage": "Successfully copied to clipboard"
   },
   "clipboard.copy.before": {
     "defaultMessage": "Copier dans le presse-papier"
@@ -377,9 +377,6 @@
   "collection.reingest.text": {
     "defaultMessage": "You're about to re-process all documents in {collectionLabel}. This might take some time."
   },
-  "collection.search.placeholder": {
-    "defaultMessage": "Search this investigation"
-  },
   "collection.statistics.showmore": {
     "defaultMessage": "Montrer plus"
   },
@@ -473,6 +470,9 @@
   "dashboard.workspace": {
     "defaultMessage": "Workspace"
   },
+  "dataset.search.placeholder": {
+    "defaultMessage": "Search this dataset"
+  },
   "diagram.create.button": {
     "defaultMessage": "New diagram"
   },
@@ -490,6 +490,36 @@
   },
   "diagram.create.title": {
     "defaultMessage": "Create a diagram"
+  },
+  "diagram.embed.error": {
+    "defaultMessage": "Error generating diagram embed"
+  },
+  "diagram.export.embed.description": {
+    "defaultMessage": "Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
+  },
+  "diagram.export.error": {
+    "defaultMessage": "Error exporting diagram"
+  },
+  "diagram.export.ftm": {
+    "defaultMessage": "Export as .ftm"
+  },
+  "diagram.export.ftm.description": {
+    "defaultMessage": "Download the diagram as a data file that can be used in {link} or another Aleph site."
+  },
+  "diagram.export.ftm.link": {
+    "defaultMessage": "Aleph Data Desktop"
+  },
+  "diagram.export.iframe": {
+    "defaultMessage": "Embed iframe"
+  },
+  "diagram.export.svg": {
+    "defaultMessage": "Export as SVG"
+  },
+  "diagram.export.svg.description": {
+    "defaultMessage": "Download a vector graphic with the contents of the diagram."
+  },
+  "diagram.export.title": {
+    "defaultMessage": "Export options"
   },
   "diagram.import.button": {
     "defaultMessage": "Import diagram"
@@ -612,7 +642,10 @@
     "defaultMessage": "{numberOfFiles, number} files, {totalSize}"
   },
   "document.upload.title": {
-    "defaultMessage": "Upload Documents"
+    "defaultMessage": "Upload documents"
+  },
+  "document.upload.title_in_folder": {
+    "defaultMessage": "Upload documents to {folder}"
   },
   "document.viewer.ignored_file": {
     "defaultMessage": "The system does not work with these types of files. Please download it so you’ll be able to see it."
@@ -683,6 +716,9 @@
   "entity.info.info": {
     "defaultMessage": "Info"
   },
+  "entity.info.last_view": {
+    "defaultMessage": "Last viewed {time}"
+  },
   "entity.info.similar": {
     "defaultMessage": "Similar"
   },
@@ -741,10 +777,16 @@
     "defaultMessage": "This entity does not have any relationships."
   },
   "entity.references.no_results": {
-    "defaultMessage": "No relationships match this search."
+    "defaultMessage": "No {schema} match this search."
+  },
+  "entity.references.no_results_default": {
+    "defaultMessage": "No entities match this search."
   },
   "entity.references.search.placeholder": {
     "defaultMessage": "Search in {schema}"
+  },
+  "entity.references.search.placeholder_default": {
+    "defaultMessage": "Search entities"
   },
   "entity.remove.confirm": {
     "defaultMessage": "Remove"
@@ -840,7 +882,7 @@
     "defaultMessage": "Supprimer"
   },
   "entityset.delete.question": {
-    "defaultMessage": "Are you sure you want to delete this {type}?"
+    "defaultMessage": "Are you sure you want to delete {label}?"
   },
   "entityset.delete.success": {
     "defaultMessage": "Successfully deleted {title}"
@@ -874,9 +916,6 @@
   },
   "entityset.update.submit": {
     "defaultMessage": "Save changes"
-  },
-  "entitysets.load_more": {
-    "defaultMessage": "Load more..."
   },
   "error.screen.not_found": {
     "defaultMessage": "The requested page could not be found."
@@ -986,19 +1025,43 @@
   "home.title": {
     "defaultMessage": "Trouver des enregistrements publics et des fuites"
   },
-  "infoMode.collection": {
-    "defaultMessage": "Jeu de données"
-  },
-  "infoMode.collection.entries": {
-    "defaultMessage": "{count} entries"
-  },
   "infoMode.collection_casefile": {
     "defaultMessage": "Investigation"
+  },
+  "infoMode.collection_dataset": {
+    "defaultMessage": "Dataset"
+  },
+  "infoMode.createdAt": {
+    "defaultMessage": "Created at"
+  },
+  "infoMode.creator": {
+    "defaultMessage": "Created by"
+  },
+  "infoMode.updatedAt": {
+    "defaultMessage": "Last updated"
   },
   "investigation.mentions.empty": {
     "defaultMessage": "There are no mentions yet in this investigation."
   },
   "investigation.overview.guides": {
+    "defaultMessage": "Read more"
+  },
+  "investigation.overview.guides.access": {
+    "defaultMessage": "Managing access"
+  },
+  "investigation.overview.guides.diagrams": {
+    "defaultMessage": "Drawing network diagrams"
+  },
+  "investigation.overview.guides.documents": {
+    "defaultMessage": "Uploading documents"
+  },
+  "investigation.overview.guides.entities": {
+    "defaultMessage": "Creating & editing entities"
+  },
+  "investigation.overview.guides.mappings": {
+    "defaultMessage": "Generating entities from a spreadsheet"
+  },
+  "investigation.overview.guides.xref": {
     "defaultMessage": "Cross-referencing your data"
   },
   "investigation.overview.notifications": {
@@ -1009,6 +1072,9 @@
   },
   "investigation.overview.shortcuts_empty": {
     "defaultMessage": "Getting started"
+  },
+  "investigation.search.placeholder": {
+    "defaultMessage": "Search this investigation"
   },
   "investigation.shortcut.diagram": {
     "defaultMessage": "Sketch a network diagram"
@@ -1027,6 +1093,9 @@
   },
   "investigation.shortcut.xref": {
     "defaultMessage": "Compare with other datasets"
+  },
+  "judgement.disabled": {
+    "defaultMessage": "You must have edit access in order to make judgements."
   },
   "judgement.negative": {
     "defaultMessage": "Different"
@@ -1133,6 +1202,9 @@
   "mapping.delete.question": {
     "defaultMessage": "Êtes-vous sûr de vouloir supprimer cette association et toutes les entités générées?"
   },
+  "mapping.docs.link": {
+    "defaultMessage": "Aleph entity mapping documentation"
+  },
   "mapping.entityAssign.helpText": {
     "defaultMessage": "You must create an object of type \"{range}\" to be the {property}"
   },
@@ -1184,8 +1256,8 @@
   "mapping.info": {
     "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
   },
-  "mapping.infoLink": {
-    "defaultMessage": "Documentation sur l'association de données dans Aleph"
+  "mapping.info.link": {
+    "defaultMessage": "Aleph data mapping documentation"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
@@ -1298,6 +1370,9 @@
   "nav.lists": {
     "defaultMessage": "Lists"
   },
+  "nav.menu.cases": {
+    "defaultMessage": "Investigations"
+  },
   "nav.settings": {
     "defaultMessage": "Réglages"
   },
@@ -1364,6 +1439,9 @@
   "password_auth.signup": {
     "defaultMessage": "Sign up"
   },
+  "profile.delete.warning": {
+    "defaultMessage": "(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+  },
   "profile.info.header": {
     "defaultMessage": "Profile"
   },
@@ -1376,6 +1454,9 @@
   "profile.items.entity": {
     "defaultMessage": "Combined entities"
   },
+  "profile.items.explanation": {
+    "defaultMessage": "Make decisions below to determine which source entities should be added or excluded from this profile."
+  },
   "profile.similar.no_results": {
     "defaultMessage": "No suggested additions for this profile were found."
   },
@@ -1384,18 +1465,6 @@
   },
   "queryFilters.clearAll": {
     "defaultMessage": "Tout effacer"
-  },
-  "queryLogs.add_placeholder": {
-    "defaultMessage": "Garder une trace des recherches..."
-  },
-  "queryLogs.no_alerts": {
-    "defaultMessage": "You are not tracking any searches"
-  },
-  "queryLogs.query.delete.tooltip": {
-    "defaultMessage": "Enlever de {listType}"
-  },
-  "queryLogs.query.search": {
-    "defaultMessage": "Recherche de {query}"
   },
   "refresh.callout_message": {
     "defaultMessage": "Les documents sont en cours de traitement. Veuillez patienter..."
@@ -1435,6 +1504,9 @@
   },
   "schemaSelect.button.thing": {
     "defaultMessage": "Ajouter un nouvel objet"
+  },
+  "screen.load_more": {
+    "defaultMessage": "Load more"
   },
   "search.advanced.all.helptext": {
     "defaultMessage": "Results containing all of the given terms will be prioritized, followed by those with one or more of the terms."
@@ -1546,6 +1618,12 @@
   },
   "search.screen.dates": {
     "defaultMessage": "Date distribution"
+  },
+  "search.screen.dates.show-hidden": {
+    "defaultMessage": "* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
+  },
+  "search.screen.dates.show-hidden.click": {
+    "defaultMessage": "Click here"
   },
   "search.screen.dates_disabled": {
     "defaultMessage": "No date distribution available"
@@ -1679,21 +1757,6 @@
   "xref.compute": {
     "defaultMessage": "Calculer"
   },
-  "xref.context.explain1": {
-    "defaultMessage": "Reviewing cross-reference matches helps you to flag and share leads. Your judgements are sensitive information, so please select what group of users can view your decisions."
-  },
-  "xref.context.private": {
-    "defaultMessage": "Keep private (no sharing)"
-  },
-  "xref.context.select": {
-    "defaultMessage": "Share with:"
-  },
-  "xref.context.submit": {
-    "defaultMessage": "Start review"
-  },
-  "xref.context.title": {
-    "defaultMessage": "Cross-reference match review"
-  },
   "xref.download": {
     "defaultMessage": "Export results"
   },
@@ -1711,5 +1774,14 @@
   },
   "xref.score": {
     "defaultMessage": "Évaluer"
+  },
+  "xref.sort.default": {
+    "defaultMessage": "Default"
+  },
+  "xref.sort.label": {
+    "defaultMessage": "Sort by:"
+  },
+  "xref.sort.random": {
+    "defaultMessage": "Random"
   }
 }

@@ -19,7 +19,7 @@ const messages = defineMessages({
     defaultMessage: 'Export options',
   },
   embed_error: {
-    id: 'diagram.export.error',
+    id: 'diagram.embed.error',
     defaultMessage: 'Error generating diagram embed',
   }
 });
@@ -93,7 +93,7 @@ class DiagramExportDialog extends Component {
               )}
               <p className="bp3-text-muted">
                 <FormattedMessage
-                  id="diagram.export.svg.description"
+                  id="diagram.export.embed.description"
                   defaultMessage="Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
                 />
               </p>

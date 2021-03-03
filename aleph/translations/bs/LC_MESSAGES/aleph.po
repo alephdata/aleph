@@ -1,7 +1,7 @@
 # Translations template for PROJECT.
-# Copyright (C) 2020 ORGANIZATION
+# Copyright (C) 2021 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 # 
 # Translators:
 # pudo <friedrich@pudo.org>, 2018
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-19 16:31+0100\n"
+"POT-Creation-Date: 2021-03-03 17:36+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Tajna Biscevic <tajna@occrp.org>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
@@ -25,11 +25,11 @@ msgstr ""
 "Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: aleph/settings.py:32
+#: aleph/settings.py:31
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/logic/entities.py:90
+#: aleph/logic/entities.py:102
 msgid "No schema on entity"
 msgstr ""
 
@@ -153,7 +153,7 @@ msgstr ""
 msgid "failed"
 msgstr ""
 
-#: aleph/model/entity.py:74
+#: aleph/model/entity.py:75
 msgid "Invalid entity ID"
 msgstr ""
 
@@ -229,7 +229,7 @@ msgstr ""
 msgid "{{export}} is ready for download"
 msgstr ""
 
-#: aleph/search/__init__.py:51
+#: aleph/search/__init__.py:52
 msgid "No schema is specified for the query."
 msgstr "Nije navedena shema za upit."
 
@@ -343,25 +343,29 @@ msgstr ""
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:213
+#: aleph/views/base_api.py:214
 msgid "You are not authorized to do this."
 msgstr "Niste ovlašteni da ovo uradite."
 
-#: aleph/views/base_api.py:222
+#: aleph/views/base_api.py:223
 msgid "This path does not exist."
 msgstr "Ova putanja ne postoji."
 
-#: aleph/views/base_api.py:229
+#: aleph/views/base_api.py:230
 msgid "Internal server error."
 msgstr "Interna greška servera."
 
-#: aleph/views/base_api.py:242
+#: aleph/views/base_api.py:244
 msgid "Access token is invalid."
 msgstr ""
 
 #: aleph/views/entities_api.py:168
 #, python-format
 msgid "Search: %s"
+msgstr ""
+
+#: aleph/views/entitysets_api.py:215
+msgid "Only diagrams can be embedded!"
 msgstr ""
 
 #: aleph/views/roles_api.py:61

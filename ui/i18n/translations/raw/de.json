@@ -5,6 +5,9 @@
   "alerts.add_placeholder": {
     "defaultMessage": "Legen sie ein neues Themen-Abo an..."
   },
+  "alerts.delete": {
+    "defaultMessage": "Remove alert"
+  },
   "alerts.heading": {
     "defaultMessage": "Verwalten sie sie ihre Themen-Abos"
   },
@@ -74,9 +77,6 @@
   "case.users": {
     "defaultMessage": "Nutzersuche"
   },
-  "cases.browser.breadcrumb": {
-    "defaultMessage": "Fallübersicht"
-  },
   "cases.create": {
     "defaultMessage": "New investigation"
   },
@@ -90,10 +90,10 @@
     "defaultMessage": "Search investigations..."
   },
   "cases.title": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Recherchen"
   },
   "clipboard.copy.after": {
-    "defaultMessage": "In die Zwischenablage kopiert!"
+    "defaultMessage": "Successfully copied to clipboard"
   },
   "clipboard.copy.before": {
     "defaultMessage": "In die Zwischenablage kopieren"
@@ -225,7 +225,7 @@
     "defaultMessage": "Ich gebe ihnen mein Ehrenwort!"
   },
   "collection.edit.title": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Einstellungen"
   },
   "collection.edit.users": {
     "defaultMessage": "Benutzer"
@@ -270,13 +270,13 @@
     "defaultMessage": "Teilen"
   },
   "collection.info.browse": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Dokumente"
   },
   "collection.info.delete": {
     "defaultMessage": "Datensatz löschen"
   },
   "collection.info.delete_casefile": {
-    "defaultMessage": "Delete investigation"
+    "defaultMessage": "Recherche löschen"
   },
   "collection.info.diagrams": {
     "defaultMessage": "Netzwerkdiagramme"
@@ -285,13 +285,13 @@
     "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
   },
   "collection.info.documents": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Dokumente"
   },
   "collection.info.edit": {
     "defaultMessage": "Einstellungen"
   },
   "collection.info.entities": {
-    "defaultMessage": "Entities"
+    "defaultMessage": "Objekte"
   },
   "collection.info.lists": {
     "defaultMessage": "Listen"
@@ -376,9 +376,6 @@
   },
   "collection.reingest.text": {
     "defaultMessage": "You're about to re-process all documents in {collectionLabel}. This might take some time."
-  },
-  "collection.search.placeholder": {
-    "defaultMessage": "Search this investigation"
   },
   "collection.statistics.showmore": {
     "defaultMessage": "Mehr zeigen"
@@ -473,6 +470,9 @@
   "dashboard.workspace": {
     "defaultMessage": "Arbeitsplatz"
   },
+  "dataset.search.placeholder": {
+    "defaultMessage": "Search this dataset"
+  },
   "diagram.create.button": {
     "defaultMessage": "Neues Netzwerk"
   },
@@ -490,6 +490,36 @@
   },
   "diagram.create.title": {
     "defaultMessage": "Neues Diagramm anlegen"
+  },
+  "diagram.embed.error": {
+    "defaultMessage": "Error generating diagram embed"
+  },
+  "diagram.export.embed.description": {
+    "defaultMessage": "Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
+  },
+  "diagram.export.error": {
+    "defaultMessage": "Error exporting diagram"
+  },
+  "diagram.export.ftm": {
+    "defaultMessage": "Export as .ftm"
+  },
+  "diagram.export.ftm.description": {
+    "defaultMessage": "Download the diagram as a data file that can be used in {link} or another Aleph site."
+  },
+  "diagram.export.ftm.link": {
+    "defaultMessage": "Aleph Data Desktop"
+  },
+  "diagram.export.iframe": {
+    "defaultMessage": "Embed iframe"
+  },
+  "diagram.export.svg": {
+    "defaultMessage": "Export as SVG"
+  },
+  "diagram.export.svg.description": {
+    "defaultMessage": "Download a vector graphic with the contents of the diagram."
+  },
+  "diagram.export.title": {
+    "defaultMessage": "Export options"
   },
   "diagram.import.button": {
     "defaultMessage": "Diagramm importieren"
@@ -612,7 +642,10 @@
     "defaultMessage": "{numberOfFiles, number} files, {totalSize}"
   },
   "document.upload.title": {
-    "defaultMessage": "Dokumente hochladen"
+    "defaultMessage": "Upload documents"
+  },
+  "document.upload.title_in_folder": {
+    "defaultMessage": "Upload documents to {folder}"
   },
   "document.viewer.ignored_file": {
     "defaultMessage": "Das System kann mit diesem Dateityp nicht umgehen. Bitte laden sie die Datei herunter um den Inhalt zu sehen."
@@ -683,6 +716,9 @@
   "entity.info.info": {
     "defaultMessage": "Info"
   },
+  "entity.info.last_view": {
+    "defaultMessage": "Last viewed {time}"
+  },
   "entity.info.similar": {
     "defaultMessage": "Ähnlich"
   },
@@ -741,10 +777,16 @@
     "defaultMessage": "Diese Objekt hat keine Verbindungen."
   },
   "entity.references.no_results": {
-    "defaultMessage": "No relationships match this search."
+    "defaultMessage": "No {schema} match this search."
+  },
+  "entity.references.no_results_default": {
+    "defaultMessage": "No entities match this search."
   },
   "entity.references.search.placeholder": {
     "defaultMessage": "Search in {schema}"
+  },
+  "entity.references.search.placeholder_default": {
+    "defaultMessage": "Search entities"
   },
   "entity.remove.confirm": {
     "defaultMessage": "Entfernen"
@@ -840,7 +882,7 @@
     "defaultMessage": "Löschen"
   },
   "entityset.delete.question": {
-    "defaultMessage": "Sind sie sicher, dass die dieses {type} löschen wollen?"
+    "defaultMessage": "Are you sure you want to delete {label}?"
   },
   "entityset.delete.success": {
     "defaultMessage": "Successfully deleted {title}"
@@ -874,9 +916,6 @@
   },
   "entityset.update.submit": {
     "defaultMessage": "Speichern"
-  },
-  "entitysets.load_more": {
-    "defaultMessage": "Load more..."
   },
   "error.screen.not_found": {
     "defaultMessage": "Die angeforderte Seite konnte nicht gefunden werden."
@@ -986,19 +1025,43 @@
   "home.title": {
     "defaultMessage": "Finde öffentliche Dokumente und Leaks"
   },
-  "infoMode.collection": {
-    "defaultMessage": "Datensatz"
-  },
-  "infoMode.collection.entries": {
-    "defaultMessage": "{count} Einträge"
-  },
   "infoMode.collection_casefile": {
     "defaultMessage": "Investigation"
+  },
+  "infoMode.collection_dataset": {
+    "defaultMessage": "Dataset"
+  },
+  "infoMode.createdAt": {
+    "defaultMessage": "Created at"
+  },
+  "infoMode.creator": {
+    "defaultMessage": "Created by"
+  },
+  "infoMode.updatedAt": {
+    "defaultMessage": "Last updated"
   },
   "investigation.mentions.empty": {
     "defaultMessage": "There are no mentions yet in this investigation."
   },
   "investigation.overview.guides": {
+    "defaultMessage": "Read more"
+  },
+  "investigation.overview.guides.access": {
+    "defaultMessage": "Managing access"
+  },
+  "investigation.overview.guides.diagrams": {
+    "defaultMessage": "Drawing network diagrams"
+  },
+  "investigation.overview.guides.documents": {
+    "defaultMessage": "Uploading documents"
+  },
+  "investigation.overview.guides.entities": {
+    "defaultMessage": "Creating & editing entities"
+  },
+  "investigation.overview.guides.mappings": {
+    "defaultMessage": "Generating entities from a spreadsheet"
+  },
+  "investigation.overview.guides.xref": {
     "defaultMessage": "Cross-referencing your data"
   },
   "investigation.overview.notifications": {
@@ -1010,11 +1073,14 @@
   "investigation.overview.shortcuts_empty": {
     "defaultMessage": "Getting started"
   },
+  "investigation.search.placeholder": {
+    "defaultMessage": "Search this investigation"
+  },
   "investigation.shortcut.diagram": {
     "defaultMessage": "Sketch a network diagram"
   },
   "investigation.shortcut.entities": {
-    "defaultMessage": "Create new entities"
+    "defaultMessage": "Neue Objekte anlegen"
   },
   "investigation.shortcut.entity_create_error": {
     "defaultMessage": "Unable to create entity"
@@ -1028,20 +1094,23 @@
   "investigation.shortcut.xref": {
     "defaultMessage": "Compare with other datasets"
   },
+  "judgement.disabled": {
+    "defaultMessage": "You must have edit access in order to make judgements."
+  },
   "judgement.negative": {
-    "defaultMessage": "Different"
+    "defaultMessage": "Ungleich"
   },
   "judgement.positive": {
-    "defaultMessage": "Same"
+    "defaultMessage": "Gleich"
   },
   "judgement.unsure": {
-    "defaultMessage": "Not enough information"
+    "defaultMessage": "Nicht genug Informationen"
   },
   "list.create.button": {
     "defaultMessage": "Neue Liste"
   },
   "list.create.label_placeholder": {
-    "defaultMessage": "Untitled list"
+    "defaultMessage": "Unbenannte Liste"
   },
   "list.create.login": {
     "defaultMessage": "You must log in to create a list"
@@ -1071,7 +1140,7 @@
     "defaultMessage": "A brief description of the list"
   },
   "list.update.title": {
-    "defaultMessage": "List settings"
+    "defaultMessage": "Listeneinstellungen"
   },
   "lists": {
     "defaultMessage": "Listen"
@@ -1133,6 +1202,9 @@
   "mapping.delete.question": {
     "defaultMessage": "Sind sie sicher, dass sie dieses Mapping und alle daraus resultierenden Objekte löschen wollen?"
   },
+  "mapping.docs.link": {
+    "defaultMessage": "Aleph entity mapping documentation"
+  },
   "mapping.entityAssign.helpText": {
     "defaultMessage": "Sie benötigen eine \"{range}\" als Zuweisung für die Eigenschaft {property}"
   },
@@ -1184,8 +1256,8 @@
   "mapping.info": {
     "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
   },
-  "mapping.infoLink": {
-    "defaultMessage": "Aleph Mapping-Dokumentation"
+  "mapping.info.link": {
+    "defaultMessage": "Aleph data mapping documentation"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
@@ -1284,7 +1356,7 @@
     "defaultMessage": "Themen-Abos"
   },
   "nav.cases": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Recherchen"
   },
   "nav.collections": {
     "defaultMessage": "Datensätze"
@@ -1293,10 +1365,13 @@
     "defaultMessage": "Netzwerkdiagramme"
   },
   "nav.exports": {
-    "defaultMessage": "Exports"
+    "defaultMessage": "Exporte"
   },
   "nav.lists": {
     "defaultMessage": "Listen"
+  },
+  "nav.menu.cases": {
+    "defaultMessage": "Investigations"
   },
   "nav.settings": {
     "defaultMessage": "Einstellungen"
@@ -1364,6 +1439,9 @@
   "password_auth.signup": {
     "defaultMessage": "Registrieren"
   },
+  "profile.delete.warning": {
+    "defaultMessage": "(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+  },
   "profile.info.header": {
     "defaultMessage": "Profile"
   },
@@ -1376,6 +1454,9 @@
   "profile.items.entity": {
     "defaultMessage": "Combined entities"
   },
+  "profile.items.explanation": {
+    "defaultMessage": "Make decisions below to determine which source entities should be added or excluded from this profile."
+  },
   "profile.similar.no_results": {
     "defaultMessage": "No suggested additions for this profile were found."
   },
@@ -1384,18 +1465,6 @@
   },
   "queryFilters.clearAll": {
     "defaultMessage": "Alle entfernen"
-  },
-  "queryLogs.add_placeholder": {
-    "defaultMessage": "Verwalten sie ihre Suchen..."
-  },
-  "queryLogs.no_alerts": {
-    "defaultMessage": "Sie haben keine Themen-Abos"
-  },
-  "queryLogs.query.delete.tooltip": {
-    "defaultMessage": "Entfernen aus {listType}"
-  },
-  "queryLogs.query.search": {
-    "defaultMessage": "Suche nach {query}"
   },
   "refresh.callout_message": {
     "defaultMessage": "Die Dokumente werden verarbeitet. Bitte warten sie..."
@@ -1435,6 +1504,9 @@
   },
   "schemaSelect.button.thing": {
     "defaultMessage": "Neues Objekt hinzufügen"
+  },
+  "screen.load_more": {
+    "defaultMessage": "Load more"
   },
   "search.advanced.all.helptext": {
     "defaultMessage": "Results containing all of the given terms will be prioritized, followed by those with one or more of the terms."
@@ -1546,6 +1618,12 @@
   },
   "search.screen.dates": {
     "defaultMessage": "Date distribution"
+  },
+  "search.screen.dates.show-hidden": {
+    "defaultMessage": "* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
+  },
+  "search.screen.dates.show-hidden.click": {
+    "defaultMessage": "Click here"
   },
   "search.screen.dates_disabled": {
     "defaultMessage": "No date distribution available"
@@ -1679,21 +1757,6 @@
   "xref.compute": {
     "defaultMessage": "Errechnen"
   },
-  "xref.context.explain1": {
-    "defaultMessage": "Rasterfahndungsergebnisse zu prüfen hift ihnen Hinweise zu identifizieren und zu teilen. Ihre Urteile sind dabei vetrauliche Informationen, die sie mit einer anderen Nutzergruppe teilen können."
-  },
-  "xref.context.private": {
-    "defaultMessage": "Privat halten (kein Teilen)"
-  },
-  "xref.context.select": {
-    "defaultMessage": "Teilen mit:"
-  },
-  "xref.context.submit": {
-    "defaultMessage": "Prüfung starten"
-  },
-  "xref.context.title": {
-    "defaultMessage": "Querverweis-Prüfung"
-  },
   "xref.download": {
     "defaultMessage": "Export results"
   },
@@ -1711,5 +1774,14 @@
   },
   "xref.score": {
     "defaultMessage": "Qualität"
+  },
+  "xref.sort.default": {
+    "defaultMessage": "Default"
+  },
+  "xref.sort.label": {
+    "defaultMessage": "Sort by:"
+  },
+  "xref.sort.random": {
+    "defaultMessage": "Random"
   }
 }
