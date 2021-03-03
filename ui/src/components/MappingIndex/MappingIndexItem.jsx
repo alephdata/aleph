@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Callout, Intent } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import c from 'classnames';
 
@@ -44,7 +43,7 @@ class MappingIndexItem extends PureComponent {
 
   getIntent() {
     const status = this.props.mapping?.last_run_status;
-    switch(status) {
+    switch (status) {
       case 'successful':
         return 'bp3-intent-primary';
       case 'error':
@@ -71,7 +70,7 @@ class MappingIndexItem extends PureComponent {
   }
 
   render() {
-    const { isPending, link, mapping, tableEntity } = this.props;
+    const { isPending, mapping } = this.props;
     if (isPending) {
       return this.renderSkeleton();
     }

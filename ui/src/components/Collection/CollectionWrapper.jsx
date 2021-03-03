@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

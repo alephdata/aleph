@@ -35,20 +35,20 @@ class EntityHeading extends React.PureComponent {
         </h1>
         {entity.lastViewed && (
           <span className="ItemOverview__heading__last-viewed bp3-text-muted">
-              <FormattedMessage
-                id="entity.info.last_view"
-                defaultMessage="Last viewed {time}"
-                values={{
-                  time: (
-                    <FormattedRelativeTime
-                      value={value}
-                      unit={unit}
-                      style="long"
-                      numeric="auto"
-                    />
-                  )
-                }}
-              />
+            <FormattedMessage
+              id="entity.info.last_view"
+              defaultMessage="Last viewed {time}"
+              values={{
+                time: (
+                  <FormattedRelativeTime
+                    value={value}
+                    unit={unit}
+                    style="long"
+                    numeric="auto"
+                  />
+                )
+              }}
+            />
           </span>
         )}
       </>

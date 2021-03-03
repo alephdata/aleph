@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import { deleteEntity } from 'src/actions';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 
 const messages = defineMessages({
@@ -87,6 +85,5 @@ export class ExportDialog extends Component {
 
 export default compose(
   withRouter,
-  connect(null, { deleteEntity }),
   injectIntl,
 )(ExportDialog);
