@@ -23,60 +23,45 @@ const entityEditorWrapper = (EditorComponent) => {
       constructor(props) {
         super(props);
 
-        const { entities } = props;
+        this.namespace = new Namespace(props.collection.foreign_id);
 
-        const config = {
-          model: props.model,
-          namespace: new Namespace(props.collection.foreign_id),
+        this.context = new AlephEntityContext({
+          selectModel,
+          selectLocale,
           createEntity: this.createEntity.bind(this),
-          deleteEntity: this.deleteEntity.bind(this),
-          expandEntity: this.expandEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
-          getEntitySuggestions: this.getEntitySuggestions.bind(this),
-        };
-        this.entityManager = new EntityManager(config);
-
-        if (entities) {
-          const processedEntities = entities.map(e => e.clone());
-          this.entityManager.addEntities(processedEntities);
-        }
-        this.pendingPromises = [];
-      }
-
-      componentDidUpdate() {
-        const { selectQueryResults } = this.props;
-
-        // if there is an unresolved query promise, check if results have returned and resolve
-        if (this.pendingPromises.length) {
-          this.pendingPromises = this.pendingPromises.filter(({ query, promiseResolve }) => {
-            const results = selectQueryResults(query);
-            if (results) {
-              promiseResolve(results);
-              return false;
-            }
-            return true;
-          });
-        }
-      }
-
-      getEntitySuggestions(queryText, schema) {
-        const { collection, location } = this.props;
-        const query = entitySuggestQuery(location, collection, schema, { prefix: queryText });
-
-        // throttle entities query request
-        clearTimeout(this.entitySuggestTimeout);
-        this.entitySuggestTimeout = setTimeout(() => {
-          this.props.queryEntities({ query });
-        }, 150);
-
-        return new Promise((resolve) => {
-          this.pendingPromises.push({ query, promiseResolve: resolve });
+          deleteEntity: this.deleteEntity.bind(this),
+          selectEntity,
+          selectEntities: this.selectEntities.bind(this),
+          queryEntities: this.queryEntities.bind(this),
+          queryEntitySuggest: this.queryEntitySuggest.bind(this),
+          selectEntitiesResult:
+          // queryEntityExpand: this.queryEntityExpand.bind(this),
+          // selectEntityExpandResult:
         });
       }
 
-      async createEntity(entity) {
+      async createEntity(model, entityData) {
         const { collection, entitySetId, onStatusChange } = this.props;
         onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
+
+        let entity;
+        if (entityData.id) {
+          entity = model.getEntity(entityData);
+        } else {
+          const { properties, schema } = entityData;
+          entity = model.createEntity(schema);
+          if (properties) {
+            Object.entries(properties).forEach(([prop, value]: [string, any]) => {
+              if (Array.isArray(value)) {
+                value.forEach(v => entity.setProperty(prop, v));
+              } else {
+                entity.setProperty(prop, value);
+              }
+            });
+          }
+        }
+
         try {
           if (entitySetId) {
             await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
@@ -87,15 +72,7 @@ const entityEditorWrapper = (EditorComponent) => {
         } catch {
           onStatusChange && onStatusChange(UpdateStatus.ERROR);
         }
-        return null;
-      }
-
-      async expandEntity(entityId, properties, limit) {
-        const query = entityExpandQuery(entityId, properties, limit);
-        this.props.queryEntityExpand({ query });
-        return new Promise((resolve) => {
-          this.pendingPromises.push({ query, promiseResolve: resolve });
-        });
+        return entity;
       }
 
       async updateEntity(entity) {
@@ -132,11 +109,59 @@ const entityEditorWrapper = (EditorComponent) => {
         }
       }
 
+      selectEntities(state, ids) {
+        const { query } = this.props;
+        return selectEntitiesResult(state, this.generateQuery('all'));
+      }
+
+      queryEntities(queryText, schemata) {
+        const { query } = this.props;
+        const newQuery = query
+          .setFilter('schemata', schemata);
+          .set('prefix', queryText);
+
+        this.props.queryEntities(newQuery);
+      }
+
+      queryEntitySuggest(queryText, schemata) {
+        const { collection, location } = this.props;
+        const query = entitySuggestQuery(location, collection, schemata, { prefix: queryText });
+
+        // // throttle entities query request
+        clearTimeout(this.entitySuggestTimeout);
+        this.entitySuggestTimeout = setTimeout(() => {
+          this.props.queryEntities({ query });
+        }, 150);
+      }
+
+      // selectEntitiesResult(state, queryText, schemata) {
+      //
+      // }
+
+
+      //
+      queryEntityExpand(entityId, properties, limit) {
+        const query = entityExpandQuery(entityId, properties, limit);
+        this.props.queryEntityExpand({ query });
+      }
+
+      selectEntityExpandResult(state, entityId, properties, limit) {
+
+      }
+
+      generateQuery(queryName, ) {
+        const { query } = this.props;
+        switch(queryName) {
+          case 'all':
+            return query;
+        }
+      }
+
       render() {
         // return editor component with entityManager
         return (
           <EditorComponent
-            entityManager={this.entityManager}
+            entityContext={this.entityContext}
             {...this.props}
           />
         );
