@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
+import { exportSvg, NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
 import { UpdateStatus } from 'components/common';
@@ -38,6 +38,7 @@ class DiagramEditor extends React.Component {
     this.updateLayout = this.updateLayout.bind(this);
     this.updateViewport = this.updateViewport.bind(this);
     this.exportSvg = this.exportSvg.bind(this);
+    this.svgRef = React.createRef();
   }
 
   componentDidMount() {
@@ -48,12 +49,6 @@ class DiagramEditor extends React.Component {
     this.setState(({ viewport }) => ({
       viewport: viewport.fitToRect(initialBounds),
     }));
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.downloadTriggered && !prevProps.downloadTriggered) {
-      this.downloadDiagram();
-    }
   }
 
   updateLayout(layout, options) {
@@ -83,22 +78,12 @@ class DiagramEditor extends React.Component {
     this.setState({ viewport });
   }
 
-  exportSvg(data) {
+  exportSvg() {
     const { diagram } = this.props;
-    fileDownload(data, `${diagram.label}.svg`);
-  }
-
-  downloadDiagram() {
-    const { entityManager, diagram, onDownloadComplete } = this.props;
     const { layout, viewport } = this.state;
+    const data = exportSvg(layout, viewport, this.svgRef.current);
 
-    const graphData = JSON.stringify({
-      entities: entityManager.toJSON(),
-      layout: layout.toJSON(),
-      viewport: viewport.toJSON(),
-    });
-    fileDownload(graphData, `${diagram.label}.ftm`);
-    onDownloadComplete();
+    fileDownload(data, `${diagram.label}.svg`);
   }
 
   render() {
@@ -114,10 +99,10 @@ class DiagramEditor extends React.Component {
           viewport={viewport}
           updateLayout={this.updateLayout}
           updateViewport={this.updateViewport}
-          exportSvg={this.exportSvg}
           externalFilterText={filterText}
           writeable={diagram.writeable}
           locale={locale}
+          svgRef={this.svgRef}
         />
       </div>
     );
@@ -131,6 +116,6 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  entityEditorWrapper
+  connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true }),
+  entityEditorWrapper,
 )(DiagramEditor);

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Menu, MenuItem, Popover } from '@blueprintjs/core';
+import { Button, ButtonGroup, Tooltip } from '@blueprintjs/core';
 
 import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetEditDialog from 'dialogs/EntitySetEditDialog/EntitySetEditDialog';
+import DiagramExportDialog from 'dialogs/DiagramExportDialog/DiagramExportDialog';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 
 import './EntitySetManageMenu.scss';
@@ -13,6 +14,10 @@ const messages = defineMessages({
     id: 'entityset.info.edit',
     defaultMessage: 'Settings',
   },
+  export: {
+    id: 'entityset.info.export',
+    defaultMessage: 'Export',
+  },
   delete: {
     id: 'entityset.info.delete',
     defaultMessage: 'Delete',
@@ -20,68 +25,78 @@ const messages = defineMessages({
 });
 
 class EntitySetManageMenu extends Component {
-  renderMenu() {
-    const { entitySet, intl, triggerDownload } = this.props;
-
-    return (
-      <Menu>
-        <MenuItem icon="export" onClick={triggerDownload} text={
-          <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
-        } />
-        <DialogToggleButton
-          ButtonComponent={MenuItem}
-          buttonProps={{
-            text: intl.formatMessage(messages.delete),
-            icon: "trash",
-            shouldDismissPopover: false
-          }}
-          Dialog={EntitySetDeleteDialog}
-          dialogProps={{ entitySet }}
-        />
-      </Menu>
+  renderSettings = (showText = true) => {
+    const { entitySet, intl } = this.props;
+    const text = intl.formatMessage(messages.edit);
+    const button = (
+      <DialogToggleButton
+        buttonProps={{
+          icon: "cog",
+          text: showText && text
+        }}
+        Dialog={EntitySetEditDialog}
+        dialogProps={{ entitySet, canChangeCollection: false }}
+      />
     );
+    return showText ? button : <Tooltip content={text}>{button}</Tooltip>;
+  }
+
+  renderExport = (showText = true) => {
+    const { entitySet, exportFtm, exportSvg, intl } = this.props;
+    const text = intl.formatMessage(messages.export);
+    const button = (
+      <DialogToggleButton
+        buttonProps={{
+          icon: "export",
+          text: showText && text
+        }}
+        Dialog={DiagramExportDialog}
+        dialogProps={{ entitySet, exportFtm, exportSvg }}
+      />
+    );
+    return showText ? button : <Tooltip content={text}>{button}</Tooltip>;
+  }
+
+  renderDelete = (showText = true) => {
+    const { entitySet, intl } = this.props;
+    const text = intl.formatMessage(messages.delete);
+    const button = (
+      <DialogToggleButton
+        buttonProps={{
+          icon: "trash",
+          text: showText && text
+        }}
+        Dialog={EntitySetDeleteDialog}
+        dialogProps={{ entitySet }}
+      />
+    )
+    return showText ? button : <Tooltip content={text}>{button}</Tooltip>;
   }
 
   render() {
-    const { entitySet, intl, triggerDownload } = this.props;
-    const showMenu = entitySet.type === 'diagram';
+    const { entitySet, intl } = this.props;
+    const isDiagram = entitySet.type === 'diagram';
 
-    return (
-      <ButtonGroup className="EntitySetManageMenu">
-        {entitySet.writeable && (
-          <>
-            <DialogToggleButton
-              buttonProps={{
-                text: intl.formatMessage(messages.edit),
-                icon: "cog"
-              }}
-              Dialog={EntitySetEditDialog}
-              dialogProps={{ entitySet, canChangeCollection: false }}
-            />
-            {!showMenu && (
-              <DialogToggleButton
-                buttonProps={{
-                  text: intl.formatMessage(messages.delete),
-                  icon: "trash"
-                }}
-                Dialog={EntitySetDeleteDialog}
-                dialogProps={{ entitySet }}
-              />
-            )}
-            {showMenu && (
-              <Popover minimal content={this.renderMenu()}>
-                <Button rightIcon="caret-down" />
-              </Popover>
-            )}
-          </>
-        )}
-        {!entitySet.writeable && triggerDownload && (
-          <Button icon="export" onClick={triggerDownload}>
-            <FormattedMessage id="entityset.info.export" defaultMessage="Export" />
-          </Button>
-        )}
-      </ButtonGroup>
-    );
+    if (!entitySet.writeable && isDiagram) {
+      return this.renderExport();
+    }
+
+    if (isDiagram) {
+      return (
+        <ButtonGroup minimal>
+          {this.renderSettings(false)}
+          {this.renderExport(false)}
+          {this.renderDelete(false)}
+        </ButtonGroup>
+      );
+    } else {
+      return (
+        <ButtonGroup className="EntitySetManageMenu">
+          {this.renderSettings()}
+          {this.renderDelete()}
+        </ButtonGroup>
+      );
+    }
   }
 }
 
