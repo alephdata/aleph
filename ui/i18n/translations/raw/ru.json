@@ -5,6 +5,9 @@
   "alerts.add_placeholder": {
     "defaultMessage": "Создать новое оповещение"
   },
+  "alerts.delete": {
+    "defaultMessage": "Remove alert"
+  },
   "alerts.heading": {
     "defaultMessage": "Оповещения о новых результатах поиска"
   },
@@ -48,10 +51,10 @@
     "defaultMessage": "Для загрузки данных необходимо авторизоваться."
   },
   "case.description": {
-    "defaultMessage": "Investigations let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+    "defaultMessage": "С помощью Расследований вы можете загружать и коллективно использовать документы и данные, относящиеся к определённой истории. Загруженные PDF-файлы, почтовые архивы и таблицы будут представлены в удобном для поиска и изучения виде."
   },
   "case.label_placeholder": {
-    "defaultMessage": "Untitled investigation"
+    "defaultMessage": "Безымянное расследование"
   },
   "case.language_placeholder": {
     "defaultMessage": "Выбрать языки"
@@ -66,34 +69,31 @@
     "defaultMessage": "Предоставить доступ"
   },
   "case.summary": {
-    "defaultMessage": "A brief description of the investigation"
+    "defaultMessage": "Краткое описание расследования"
   },
   "case.title": {
-    "defaultMessage": "Create an investigation"
+    "defaultMessage": "Создать расследование"
   },
   "case.users": {
     "defaultMessage": "Искать пользователей"
   },
-  "cases.browser.breadcrumb": {
-    "defaultMessage": "Обзор кейсов"
-  },
   "cases.create": {
-    "defaultMessage": "New investigation"
+    "defaultMessage": "Новое расследование"
   },
   "cases.empty": {
-    "defaultMessage": "You do not have any investigations yet."
+    "defaultMessage": "У вас пока нет расследований."
   },
   "cases.no_results": {
-    "defaultMessage": "No investigations were found matching this query."
+    "defaultMessage": "Расследований, удовлетворяющих запросу, не найдено."
   },
   "cases.placeholder": {
-    "defaultMessage": "Search investigations..."
+    "defaultMessage": "Поиск расследований..."
   },
   "cases.title": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Расследования"
   },
   "clipboard.copy.after": {
-    "defaultMessage": "Скопировано в буфер"
+    "defaultMessage": "Successfully copied to clipboard"
   },
   "clipboard.copy.before": {
     "defaultMessage": "Скопировать в буфер"
@@ -102,7 +102,7 @@
     "defaultMessage": "Добавить новый тип сущности"
   },
   "collection.analyze.alert.text": {
-    "defaultMessage": "You're about to re-index the entities in {collectionLabel}. This can be helpful if there are inconsistencies in how the data is presented."
+    "defaultMessage": "Все сущности в {collectionLabel} будут переиндексированы. Иногда это позволяет исправить ошибки в представлении данных."
   },
   "collection.analyze.cancel": {
     "defaultMessage": "Отменить"
@@ -126,7 +126,7 @@
     "defaultMessage": "Удалить"
   },
   "collection.delete.question": {
-    "defaultMessage": "Are you sure you want to delete {collectionLabel} and all contained items?"
+    "defaultMessage": "Вы хотите удалить {collectionLabel} и всё содержимое?"
   },
   "collection.edit.access_title": {
     "defaultMessage": "Управление доступом"
@@ -204,7 +204,7 @@
     "defaultMessage": "Ссылка на издателя"
   },
   "collection.edit.info.restricted": {
-    "defaultMessage": "This dataset is restricted and viewers should be warned."
+    "defaultMessage": "Доступ к этому набору данных ограничен — об этом необходимо предупреждать новых пользователей."
   },
   "collection.edit.info.save": {
     "defaultMessage": "Сохранить изменения"
@@ -225,7 +225,7 @@
     "defaultMessage": "Изменения сохранены"
   },
   "collection.edit.title": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Настройки"
   },
   "collection.edit.users": {
     "defaultMessage": "Пользователи"
@@ -270,49 +270,49 @@
     "defaultMessage": "Доступ"
   },
   "collection.info.browse": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Документы"
   },
   "collection.info.delete": {
     "defaultMessage": "Удалить набор данных"
   },
   "collection.info.delete_casefile": {
-    "defaultMessage": "Delete investigation"
+    "defaultMessage": "Удалить расследование"
   },
   "collection.info.diagrams": {
     "defaultMessage": "Диаграммы"
   },
   "collection.info.diagrams_description": {
-    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
+    "defaultMessage": "С помощью диаграмм вы можете визуализировать сложные связи внутри набора данных."
   },
   "collection.info.documents": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Документы"
   },
   "collection.info.edit": {
     "defaultMessage": "Настройки"
   },
   "collection.info.entities": {
-    "defaultMessage": "Entities"
+    "defaultMessage": "Сущности"
   },
   "collection.info.lists": {
     "defaultMessage": "Списки"
   },
   "collection.info.lists_description": {
-    "defaultMessage": "Lists let you organize and group related entities of interest."
+    "defaultMessage": "С помощью списков вы можете организовывать и группировать связанные сущности."
   },
   "collection.info.mappings": {
-    "defaultMessage": "Entity mappings"
+    "defaultMessage": "Маппинги сущностей"
   },
   "collection.info.mappings_description": {
-    "defaultMessage": "Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document"
+    "defaultMessage": "С помощью маппинга сущностей вы можете из рядов в таблице или в CSV-документе массово сгенерировать сущности модели Follow the Money (Люди, Компании и взаимоотношения между ними)"
   },
   "collection.info.mentions": {
-    "defaultMessage": "Mentions"
+    "defaultMessage": "Упоминания"
   },
   "collection.info.mentions_description": {
-    "defaultMessage": "Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation."
+    "defaultMessage": "Алеф автоматически извлекает из загружаемых в расследование документов и сущностей слова и фразы, похожие на имена, адреса, телефонные номера и эл. адреса. {br}{br} Нажмите на упоминании ниже, чтобы посмотреть, где оно встречается в вашем расследовании."
   },
   "collection.info.overview": {
-    "defaultMessage": "Overview"
+    "defaultMessage": "Информация"
   },
   "collection.info.reindex": {
     "defaultMessage": "Переиндексировать всё содержимое"
@@ -321,13 +321,13 @@
     "defaultMessage": "Перезагрузить документы"
   },
   "collection.info.search": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Поиск"
   },
   "collection.info.xref": {
-    "defaultMessage": "Cross-reference"
+    "defaultMessage": "Перекрёстное сравнение"
   },
   "collection.info.xref_description": {
-    "defaultMessage": "Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation."
+    "defaultMessage": "Перекрёстное сравнение позволяет искать по всему Алефу сущности, похожие на содержащиеся в вашем расследовании."
   },
   "collection.info_url": {
     "defaultMessage": "Ссылка на описание"
@@ -336,13 +336,13 @@
     "defaultMessage": "Обновлено {date}"
   },
   "collection.mappings.create": {
-    "defaultMessage": "Create a new entity mapping"
+    "defaultMessage": "Создать новый маппинг сущностей"
   },
   "collection.mappings.create_docs_link": {
-    "defaultMessage": "For more information, please refer to the {link}"
+    "defaultMessage": "Подробнее см. {link}"
   },
   "collection.overview.empty": {
-    "defaultMessage": "This dataset is empty."
+    "defaultMessage": "Пустой набор данных."
   },
   "collection.publisher": {
     "defaultMessage": "Издатель"
@@ -375,10 +375,7 @@
     "defaultMessage": "Перезагрузка документов запущена."
   },
   "collection.reingest.text": {
-    "defaultMessage": "You're about to re-process all documents in {collectionLabel}. This might take some time."
-  },
-  "collection.search.placeholder": {
-    "defaultMessage": "Search this investigation"
+    "defaultMessage": "Все документы в {collectionLabel} будут проанализированы повторно. Это займёт некоторое время."
   },
   "collection.statistics.showmore": {
     "defaultMessage": "Ещё"
@@ -429,7 +426,7 @@
     "defaultMessage": "Перекрёстное сравнение запущено."
   },
   "collection.xref.text": {
-    "defaultMessage": "You will now cross-reference {collectionLabel} against all other sources. Start this process once and then wait for it to complete."
+    "defaultMessage": "Сейчас будет произведено перекрёстное сравнение {collectionLabel} со всеми остальными источниками. Запустите и дождитесь завершения."
   },
   "collection.xref.title": {
     "defaultMessage": "Перекрёстное сравнение"
@@ -441,7 +438,7 @@
     "defaultMessage": "Оповещения"
   },
   "dashboard.cases": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Расследования"
   },
   "dashboard.diagrams": {
     "defaultMessage": "Диаграммы"
@@ -473,6 +470,9 @@
   "dashboard.workspace": {
     "defaultMessage": "Рабочая среда"
   },
+  "dataset.search.placeholder": {
+    "defaultMessage": "Search this dataset"
+  },
   "diagram.create.button": {
     "defaultMessage": "Новая диаграмма"
   },
@@ -490,6 +490,36 @@
   },
   "diagram.create.title": {
     "defaultMessage": "Создать диаграмму"
+  },
+  "diagram.embed.error": {
+    "defaultMessage": "Error generating diagram embed"
+  },
+  "diagram.export.embed.description": {
+    "defaultMessage": "Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
+  },
+  "diagram.export.error": {
+    "defaultMessage": "Error exporting diagram"
+  },
+  "diagram.export.ftm": {
+    "defaultMessage": "Export as .ftm"
+  },
+  "diagram.export.ftm.description": {
+    "defaultMessage": "Download the diagram as a data file that can be used in {link} or another Aleph site."
+  },
+  "diagram.export.ftm.link": {
+    "defaultMessage": "Aleph Data Desktop"
+  },
+  "diagram.export.iframe": {
+    "defaultMessage": "Embed iframe"
+  },
+  "diagram.export.svg": {
+    "defaultMessage": "Export as SVG"
+  },
+  "diagram.export.svg.description": {
+    "defaultMessage": "Download a vector graphic with the contents of the diagram."
+  },
+  "diagram.export.title": {
+    "defaultMessage": "Export options"
   },
   "diagram.import.button": {
     "defaultMessage": "Импортировать диаграмму"
@@ -522,7 +552,7 @@
     "defaultMessage": "Диаграммы"
   },
   "diagrams.description": {
-    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
+    "defaultMessage": "С помощью диаграмм вы можете визуализировать сложные связи внутри расследования."
   },
   "diagrams.no_diagrams": {
     "defaultMessage": "Диаграммы отсутствуют."
@@ -612,7 +642,10 @@
     "defaultMessage": "{numberOfFiles, number} файлов, {totalSize}"
   },
   "document.upload.title": {
-    "defaultMessage": "Загрузить документы"
+    "defaultMessage": "Upload documents"
+  },
+  "document.upload.title_in_folder": {
+    "defaultMessage": "Upload documents to {folder}"
   },
   "document.viewer.ignored_file": {
     "defaultMessage": "Работа с данным типом файлов не поддерживается. Для просмотра попробуйте скачать файл."
@@ -672,7 +705,7 @@
     "defaultMessage": "Поиск по документам"
   },
   "entity.document.manager.search_placeholder_document": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "Поиск в {label}"
   },
   "entity.info.attachments": {
     "defaultMessage": "Вложения"
@@ -682,6 +715,9 @@
   },
   "entity.info.info": {
     "defaultMessage": "Информация"
+  },
+  "entity.info.last_view": {
+    "defaultMessage": "Last viewed {time}"
   },
   "entity.info.similar": {
     "defaultMessage": "Совпадения"
@@ -705,7 +741,7 @@
     "defaultMessage": "Не видите искомую таблицу? {link}"
   },
   "entity.manager.bulk_import.link_text": {
-    "defaultMessage": "Upload a new table document"
+    "defaultMessage": "Загрузить документ, содержащий таблицу"
   },
   "entity.manager.bulk_import.no_results": {
     "defaultMessage": "Совпадений с другими документами нет"
@@ -741,10 +777,16 @@
     "defaultMessage": "У этой сущности отсутствуют связи"
   },
   "entity.references.no_results": {
-    "defaultMessage": "No relationships match this search."
+    "defaultMessage": "No {schema} match this search."
+  },
+  "entity.references.no_results_default": {
+    "defaultMessage": "No entities match this search."
   },
   "entity.references.search.placeholder": {
-    "defaultMessage": "Search in {schema}"
+    "defaultMessage": "Искать в {schema}"
+  },
+  "entity.references.search.placeholder_default": {
+    "defaultMessage": "Search entities"
   },
   "entity.remove.confirm": {
     "defaultMessage": "Удалить"
@@ -774,7 +816,7 @@
     "defaultMessage": "Нет похожих записей"
   },
   "entity.similar.entity": {
-    "defaultMessage": "Similar entity"
+    "defaultMessage": "Похожая сущность"
   },
   "entity.similar.found_text": {
     "defaultMessage": "Найдено {resultCount} {resultCount, plural, one {похожая запись} other {похожие записи}} из {datasetCount} {datasetCount, plural, one {набор данных} other {наборы данных}}"
@@ -807,7 +849,7 @@
     "defaultMessage": "Массовый импорт"
   },
   "entity.viewer.search_placeholder": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "Поиск в {label}"
   },
   "entitySet.last_updated": {
     "defaultMessage": "Обновлено {date}"
@@ -819,16 +861,16 @@
     "defaultMessage": "Краткое описание"
   },
   "entityset.create.collection": {
-    "defaultMessage": "Investigation"
+    "defaultMessage": "Расследование"
   },
   "entityset.create.collection.existing": {
-    "defaultMessage": "Select an investigation"
+    "defaultMessage": "Выбрать расследование"
   },
   "entityset.create.collection.new": {
-    "defaultMessage": "Don't see the investigation you're looking for? {link}"
+    "defaultMessage": "Не видите искомое расследование? {link}"
   },
   "entityset.create.collection.new_link": {
-    "defaultMessage": "Create a new investigation"
+    "defaultMessage": "Создать новое расследование"
   },
   "entityset.create.submit": {
     "defaultMessage": "Создать"
@@ -840,7 +882,7 @@
     "defaultMessage": "Удалить"
   },
   "entityset.delete.question": {
-    "defaultMessage": "Вы уверены, что хотите удалить {type}?"
+    "defaultMessage": "Are you sure you want to delete {label}?"
   },
   "entityset.delete.success": {
     "defaultMessage": "Успешно удалён {title}"
@@ -874,9 +916,6 @@
   },
   "entityset.update.submit": {
     "defaultMessage": "Сохранить изменения"
-  },
-  "entitysets.load_more": {
-    "defaultMessage": "Загрузить ещё..."
   },
   "error.screen.not_found": {
     "defaultMessage": "Запрашиваемая страница не найдена"
@@ -957,7 +996,7 @@
     "defaultMessage": "Алеф {version}"
   },
   "group.page.description": {
-    "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
+    "defaultMessage": "Список всех наборов данных и расследований, принадлежащих этой группе."
   },
   "home.counts.countries": {
     "defaultMessage": "Страны и территории"
@@ -986,56 +1025,86 @@
   "home.title": {
     "defaultMessage": "Искать публичные записи и секретные документы"
   },
-  "infoMode.collection": {
-    "defaultMessage": "Набор данных"
-  },
-  "infoMode.collection.entries": {
-    "defaultMessage": "{count} записей"
-  },
   "infoMode.collection_casefile": {
-    "defaultMessage": "Investigation"
+    "defaultMessage": "Расследование"
+  },
+  "infoMode.collection_dataset": {
+    "defaultMessage": "Dataset"
+  },
+  "infoMode.createdAt": {
+    "defaultMessage": "Created at"
+  },
+  "infoMode.creator": {
+    "defaultMessage": "Created by"
+  },
+  "infoMode.updatedAt": {
+    "defaultMessage": "Last updated"
   },
   "investigation.mentions.empty": {
-    "defaultMessage": "There are no mentions yet in this investigation."
+    "defaultMessage": "Упоминания отсутствуют в этом расследовании."
   },
   "investigation.overview.guides": {
+    "defaultMessage": "Read more"
+  },
+  "investigation.overview.guides.access": {
+    "defaultMessage": "Managing access"
+  },
+  "investigation.overview.guides.diagrams": {
+    "defaultMessage": "Drawing network diagrams"
+  },
+  "investigation.overview.guides.documents": {
+    "defaultMessage": "Uploading documents"
+  },
+  "investigation.overview.guides.entities": {
+    "defaultMessage": "Creating & editing entities"
+  },
+  "investigation.overview.guides.mappings": {
+    "defaultMessage": "Generating entities from a spreadsheet"
+  },
+  "investigation.overview.guides.xref": {
     "defaultMessage": "Cross-referencing your data"
   },
   "investigation.overview.notifications": {
-    "defaultMessage": "Recent activity"
+    "defaultMessage": "Недавние события"
   },
   "investigation.overview.shortcuts": {
-    "defaultMessage": "Quick links"
+    "defaultMessage": "Быстрые ссылки"
   },
   "investigation.overview.shortcuts_empty": {
-    "defaultMessage": "Getting started"
+    "defaultMessage": "Приступить к работе"
+  },
+  "investigation.search.placeholder": {
+    "defaultMessage": "Search this investigation"
   },
   "investigation.shortcut.diagram": {
-    "defaultMessage": "Sketch a network diagram"
+    "defaultMessage": "Создать диаграмму"
   },
   "investigation.shortcut.entities": {
-    "defaultMessage": "Create new entities"
+    "defaultMessage": "Создать новые сущности"
   },
   "investigation.shortcut.entity_create_error": {
-    "defaultMessage": "Unable to create entity"
+    "defaultMessage": "Не удалось создать сущность"
   },
   "investigation.shortcut.entity_create_success": {
-    "defaultMessage": "Successfully created {name}"
+    "defaultMessage": "Успешно создано: {name}"
   },
   "investigation.shortcut.upload": {
-    "defaultMessage": "Upload documents"
+    "defaultMessage": "Загрузить документы"
   },
   "investigation.shortcut.xref": {
-    "defaultMessage": "Compare with other datasets"
+    "defaultMessage": "Сопоставить с другими наборами данных"
+  },
+  "judgement.disabled": {
+    "defaultMessage": "You must have edit access in order to make judgements."
   },
   "judgement.negative": {
-    "defaultMessage": "Different"
+    "defaultMessage": "Различаются"
   },
   "judgement.positive": {
-    "defaultMessage": "Same"
+    "defaultMessage": "Одинаковые"
   },
   "judgement.unsure": {
-    "defaultMessage": "Not enough information"
+    "defaultMessage": "Недостаточно информации"
   },
   "list.create.button": {
     "defaultMessage": "Новый список"
@@ -1133,6 +1202,9 @@
   "mapping.delete.question": {
     "defaultMessage": "Вы уверены, что хотите удалить этот маппинг и все созданные сущности?"
   },
+  "mapping.docs.link": {
+    "defaultMessage": "Aleph entity mapping documentation"
+  },
   "mapping.entityAssign.helpText": {
     "defaultMessage": "Необходимо создать объект типа \"{range}\" для {property}"
   },
@@ -1182,10 +1254,10 @@
     "defaultMessage": "Импорт маппинга"
   },
   "mapping.info": {
-    "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
+    "defaultMessage": "Выполните нижеследующие действия для маппинга данных в этом расследовании с сущностями модели Follow the Money. Подробнее см. {link}"
   },
-  "mapping.infoLink": {
-    "defaultMessage": "Маппинг данных в Алефе"
+  "mapping.info.link": {
+    "defaultMessage": "Aleph data mapping documentation"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "Используйте колонки с идентификационными номерами, телефонными номерами, эл. адресами\n                и прочей уникальной информацией. Если колонки с уникальными значениями отсутствуют,\n                выберите одновременно несколько колонок, чтобы Алеф сгенерировал уникальные сущности из ваших данных."
@@ -1251,7 +1323,7 @@
     "defaultMessage": "3. Проверьте результат"
   },
   "mapping.section4.description": {
-    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the investigation, please click below and select from the available options."
+    "defaultMessage": "Сгенерированные сущности будут по умолчанию добавлены в {collection}. Если вы также хотите добавить их к списку или к диаграмме в расследовании, выберите ниже возможные варианты."
   },
   "mapping.section4.title": {
     "defaultMessage": "4. Выберите, куда добавить сгенерированные сущности (необязательно)"
@@ -1278,13 +1350,13 @@
     "defaultMessage": "Необходимо создать хотя бы одну сущность"
   },
   "mappings.no_mappings": {
-    "defaultMessage": "You have not generated any mappings yet"
+    "defaultMessage": "У вас пока нет сгенерированных маппингов"
   },
   "nav.alerts": {
     "defaultMessage": "Оповещения"
   },
   "nav.cases": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Расследования"
   },
   "nav.collections": {
     "defaultMessage": "Наборы данных"
@@ -1297,6 +1369,9 @@
   },
   "nav.lists": {
     "defaultMessage": "Списки"
+  },
+  "nav.menu.cases": {
+    "defaultMessage": "Investigations"
   },
   "nav.settings": {
     "defaultMessage": "Настройки"
@@ -1320,7 +1395,7 @@
     "defaultMessage": "Вы подписаны на оповещения для этого поискового запроса."
   },
   "notification.description": {
-    "defaultMessage": "View the latest updates to datasets, investigations, groups and tracking alerts you follow."
+    "defaultMessage": "Показать последние обновления для наборов данных, расследований, групп и оповещений, на которые вы подписаны"
   },
   "notifications.greeting": {
     "defaultMessage": "Что нового, {role}?"
@@ -1364,38 +1439,32 @@
   "password_auth.signup": {
     "defaultMessage": "Зарегистрироваться"
   },
+  "profile.delete.warning": {
+    "defaultMessage": "(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+  },
   "profile.info.header": {
-    "defaultMessage": "Profile"
+    "defaultMessage": "Профиль"
   },
   "profile.info.items": {
-    "defaultMessage": "Entity decisions"
+    "defaultMessage": "Распознавание сущностей"
   },
   "profile.info.similar": {
-    "defaultMessage": "Suggested"
+    "defaultMessage": "Предлагаемое"
   },
   "profile.items.entity": {
-    "defaultMessage": "Combined entities"
+    "defaultMessage": "Объединённые сущности"
+  },
+  "profile.items.explanation": {
+    "defaultMessage": "Make decisions below to determine which source entities should be added or excluded from this profile."
   },
   "profile.similar.no_results": {
-    "defaultMessage": "No suggested additions for this profile were found."
+    "defaultMessage": "Дополнительные сведения для профиля не найдены."
   },
   "profileinfo.api_desc": {
     "defaultMessage": "API-ключ для редактирования данных через сторонние приложения"
   },
   "queryFilters.clearAll": {
     "defaultMessage": "Очистить все"
-  },
-  "queryLogs.add_placeholder": {
-    "defaultMessage": "Оповещать о новых результатах поиска..."
-  },
-  "queryLogs.no_alerts": {
-    "defaultMessage": "Вы не подписаны на оповещения"
-  },
-  "queryLogs.query.delete.tooltip": {
-    "defaultMessage": "Удалить из {listType}"
-  },
-  "queryLogs.query.search": {
-    "defaultMessage": "Искть {query}"
   },
   "refresh.callout_message": {
     "defaultMessage": "Обрабатываем документы. Пожалуйста, подождите..."
@@ -1435,6 +1504,9 @@
   },
   "schemaSelect.button.thing": {
     "defaultMessage": "Добавить новый объект"
+  },
+  "screen.load_more": {
+    "defaultMessage": "Load more"
   },
   "search.advanced.all.helptext": {
     "defaultMessage": "Результаты будут отсортированы по количеству вхождений искомых слов."
@@ -1536,19 +1608,25 @@
     "defaultMessage": "Ничего не найдено"
   },
   "search.placeholder": {
-    "defaultMessage": "Search companies, people and documents"
+    "defaultMessage": "Искать людей, компании или документы"
   },
   "search.placeholder_default": {
     "defaultMessage": "Поиск..."
   },
   "search.placeholder_label": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "Поиск в {label}"
   },
   "search.screen.dates": {
-    "defaultMessage": "Date distribution"
+    "defaultMessage": "Распределение дат"
+  },
+  "search.screen.dates.show-hidden": {
+    "defaultMessage": "* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
+  },
+  "search.screen.dates.show-hidden.click": {
+    "defaultMessage": "Click here"
   },
   "search.screen.dates_disabled": {
-    "defaultMessage": "No date distribution available"
+    "defaultMessage": "Распределение дат недоступно"
   },
   "search.screen.dates_label": {
     "defaultMessage": "результаты"
@@ -1656,19 +1734,19 @@
     "defaultMessage": "Отсортировать:"
   },
   "sources.index.empty": {
-    "defaultMessage": "This group is not linked to any datasets or investigations."
+    "defaultMessage": "Эта группа не привязана к какому-либо набору данных или расследованию."
   },
   "sources.index.placeholder": {
-    "defaultMessage": "Search datasets and investigations belonging to {group}..."
+    "defaultMessage": "Поиск по наборам данных и расследованиям, относящимся к {group}..."
   },
   "status.no_collection": {
     "defaultMessage": "Прочие задачи"
   },
   "tags.results": {
-    "defaultMessage": "Mention count"
+    "defaultMessage": "Количество упоминаний"
   },
   "tags.title": {
-    "defaultMessage": "Term"
+    "defaultMessage": "Искомое слово"
   },
   "text.loading": {
     "defaultMessage": "Загрузка..."
@@ -1678,21 +1756,6 @@
   },
   "xref.compute": {
     "defaultMessage": "Обработать"
-  },
-  "xref.context.explain1": {
-    "defaultMessage": "Проверяйте результаты и находите новые совпадения и связи. Ваши решения могут быть ценной информацией, поэтому будьте осторожны в выборе групп пользователей, которым предоставляете доступ."
-  },
-  "xref.context.private": {
-    "defaultMessage": "Никому не показывать"
-  },
-  "xref.context.select": {
-    "defaultMessage": "Предоставить доступ:"
-  },
-  "xref.context.submit": {
-    "defaultMessage": "Начать проверку"
-  },
-  "xref.context.title": {
-    "defaultMessage": "Проверка совпадений"
   },
   "xref.download": {
     "defaultMessage": "Экспортировать результаты"
@@ -1711,5 +1774,14 @@
   },
   "xref.score": {
     "defaultMessage": "Оценка"
+  },
+  "xref.sort.default": {
+    "defaultMessage": "Default"
+  },
+  "xref.sort.label": {
+    "defaultMessage": "Sort by:"
+  },
+  "xref.sort.random": {
+    "defaultMessage": "Random"
   }
 }

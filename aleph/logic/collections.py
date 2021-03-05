@@ -166,13 +166,13 @@ def reindex_collection(collection, skip_errors=True, sync=False, flush=False):
 
 
 def delete_collection(collection, keep_metadata=False, sync=False):
+    deleted_at = collection.deleted_at or datetime.utcnow()
     cancel_queue(collection)
     aggregator = get_aggregator(collection)
     aggregator.drop()
     flush_notifications(collection, sync=sync)
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)
-    deleted_at = collection.deleted_at or datetime.utcnow()
     Mapping.delete_by_collection(collection.id)
     EntitySet.delete_by_collection(collection.id, deleted_at)
     Entity.delete_by_collection(collection.id)
@@ -183,8 +183,8 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     db.session.commit()
     if not keep_metadata:
         index.delete_collection(collection.id, sync=True)
-        Authz.flush()
     refresh_collection(collection.id)
+    Authz.flush()
 
 
 def upgrade_collections():

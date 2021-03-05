@@ -11,18 +11,19 @@ from tabulate import tabulate
 from flask.cli import FlaskGroup
 from followthemoney.cli.util import write_object
 
-from aleph.core import create_app, cache
+from aleph.core import create_app, cache, db
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
-from aleph.queues import get_status, get_stage, cancel_queue
-from aleph.queues import get_active_dataset_status, OP_XREF
+from aleph.queues import get_status, cancel_queue
+from aleph.queues import get_active_dataset_status
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
+from aleph.logic.collections import compute_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.archive import cleanup_archive
@@ -107,6 +108,17 @@ def delete(foreign_id, sync=False):
     """Delete a given collection."""
     collection = get_collection(foreign_id)
     delete_collection(collection, sync=sync)
+
+
+@cli.command()
+@click.argument("foreign_id")
+@click.option("--sync/--async", default=True)
+def touch(foreign_id, sync=True):
+    """Mark a collection as changed."""
+    collection = get_collection(foreign_id)
+    collection.touch()
+    db.session.commit()
+    compute_collection(collection, force=True, sync=True)
 
 
 @cli.command()

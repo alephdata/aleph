@@ -17,6 +17,7 @@ log = logging.getLogger(__name__)
 class Entity(db.Model, DatedModel):
     THING = "Thing"
     LEGAL_ENTITY = "LegalEntity"
+    ANALYZABLE = "Analyzable"
 
     id = db.Column(
         db.String(ENTITY_ID_LEN),

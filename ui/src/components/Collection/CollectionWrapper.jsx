@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -17,11 +16,11 @@ import getCollectionLink from 'util/getCollectionLink';
 
 const messages = defineMessages({
   dataset: {
-    id: 'collection.search.placeholder',
+    id: 'dataset.search.placeholder',
     defaultMessage: 'Search this dataset',
   },
   casefile: {
-    id: 'collection.search.placeholder',
+    id: 'investigation.search.placeholder',
     defaultMessage: 'Search this investigation',
   },
 });
@@ -42,20 +41,23 @@ export class CollectionWrapper extends Component {
   }
 
   onUploadSuccess() {
-    const { history, location } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    parsedHash.mode = collectionViewIds.DOCUMENTS;
-    delete parsedHash.type;
-    history.push({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
-    });
+    const { collection, dropzoneFolderParent, history, location } = this.props;
+    if (dropzoneFolderParent) {
+      return;
+    }
+
+    history.push(
+      getCollectionLink({
+        collection,
+        mode: collectionViewIds.DOCUMENTS,
+        search: location.search
+      })
+    );
   }
 
   render() {
     const {
-      children, collection, collectionId, query, intl, isCasefile
+      children, collection, collectionId, dropzoneFolderParent, query, intl, isCasefile
     } = this.props;
     const message = intl.formatMessage(messages[isCasefile ? 'casefile' : 'dataset']);
 
@@ -82,6 +84,7 @@ export class CollectionWrapper extends Component {
           canDrop={collection.writeable}
           collection={collection}
           onUploadSuccess={this.onUploadSuccess}
+          parent={dropzoneFolderParent}
         >
           {children}
         </DocumentDropzone>

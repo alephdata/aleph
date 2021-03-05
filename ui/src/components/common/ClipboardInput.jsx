@@ -1,22 +1,26 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Button, InputGroup, Tooltip } from '@blueprintjs/core';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
+import { showSuccessToast } from 'app/toast';
+
+const messages = defineMessages({
+  success: {
+    id: 'clipboard.copy.after',
+    defaultMessage: 'Successfully copied to clipboard',
+  },
+});
 
 export default function ClipboardInput(props) {
+  const intl = useIntl();
   const inputRef = useRef(null);
-  const titles = [
+  const tooltip = (
     <FormattedMessage
       id="clipboard.copy.before"
       defaultMessage="Copy to clipboard"
+    />
+  );
 
-    />, <FormattedMessage
-      id="clipboard.copy.after"
-      defaultMessage="Copied to clipboard!"
-
-    />,
-  ];
-  const [title, setTitle] = useState(0);
   return (
     <InputGroup
       inputRef={inputRef}
@@ -25,12 +29,12 @@ export default function ClipboardInput(props) {
       readOnly
       value={props.value}
       rightElement={(
-        <Tooltip content={titles[title]}>
+        <Tooltip content={tooltip}>
           <Button
             onClick={() => {
                 inputRef.current.select();
                 document.execCommand('copy');
-                setTitle(1);
+                showSuccessToast(intl.formatMessage(messages.success));
             }}
             icon="clipboard"
             minimal

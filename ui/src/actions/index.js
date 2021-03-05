@@ -43,6 +43,7 @@ export {
   createEntitySetNoMutate,
   deleteEntitySet,
   entitySetAddEntity,
+  fetchDiagramEmbed,
   queryEntitySetItems,
   updateEntitySetItemMutate,
   updateEntitySetItemNoMutate,

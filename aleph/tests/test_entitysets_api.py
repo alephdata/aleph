@@ -11,7 +11,6 @@ from followthemoney.exc import InvalidData
 
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
-from aleph.logic.entities import upsert_entity
 from aleph.logic.collections import delete_collection
 
 log = logging.getLogger(__name__)
@@ -173,6 +172,15 @@ class EntitySetAPITest(TestCase):
         assert res2.status_code == 200, res2
         assert res2.json["id"] == res.json["id"], res2.json
         assert "np" in res2.json["properties"]["nationality"], res2.json
+
+        embed_url = "/api/2/entitysets/%s/embed" % entityset_id
+        res = self.client.post(embed_url)
+        assert res.status_code == 403, res
+        res = self.client.post(embed_url, headers=self.headers)
+        assert res.status_code == 200, res
+        data = dict(res.json)
+        assert len(res.json["embed"]) > 1000, res.json
+        assert res.json["url"] is None
 
     def test_entity_entitysets(self):
         url = "/api/2/entitysets"

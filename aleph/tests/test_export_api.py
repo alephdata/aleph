@@ -33,6 +33,6 @@ class ExportApiTestCase(TestCase):
         res = self.client.get("/api/2/exports", headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, "QueryResponse")
-        assert res.json["total"] == 2, res.json
+        assert res.json["total"] == 1, res.json
         results = res.json["results"]
         validate(results[0], "Export")

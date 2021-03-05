@@ -66,7 +66,7 @@ export class DateFilter extends Component {
             button: (
               <Button minimal small intent={Intent.PRIMARY} onClick={this.toggleShowHidden}>
                 <FormattedMessage
-                  id="search.screen.dates.show-hidden"
+                  id="search.screen.dates.show-hidden.click"
                   defaultMessage="Click here"
                 />
               </Button>
@@ -87,7 +87,7 @@ export class DateFilter extends Component {
       content = (
         <>
           <Histogram
-            data={filteredIntervals.map(({label, count, ...rest}) => ({ label: timestampToYear(label), [dataPropName]: count, ...rest }))}
+            data={filteredIntervals.map(({ label, count, ...rest }) => ({ label: timestampToYear(label), [dataPropName]: count, ...rest }))}
             dataPropName={dataPropName}
             onSelect={this.onSelect}
             containerProps={{
@@ -99,8 +99,8 @@ export class DateFilter extends Component {
       )
     } else {
       content = (
-        <div style={{ minHeight: `${DATE_FACET_HEIGHT}px`}}>
-          <Spinner  />
+        <div style={{ minHeight: `${DATE_FACET_HEIGHT}px` }}>
+          <Spinner />
         </div>
       );
     }

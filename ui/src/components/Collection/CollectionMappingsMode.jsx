@@ -44,12 +44,12 @@ class CollectionMappingsMode extends React.Component {
               values={{
                 link: (
                   <a
-                    href="https://docs.alephdata.org/developers/mappings"
+                    href="https://docs.alephdata.org/guide/building-out-your-investigation/generating-multiple-entities-from-a-list"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <FormattedMessage
-                      id="mapping.infoLink"
+                      id="mapping.docs.link"
                       defaultMessage="Aleph entity mapping documentation"
                     />
                   </a>

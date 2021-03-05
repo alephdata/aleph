@@ -9,6 +9,7 @@ import { selectLocale } from 'selectors';
 import Router from './Router';
 import Translator from './Translator';
 import initializeIconRenderer from './initializeIconRenderer';
+import { expireRecentlyViewed } from './storage';
 
 // TODO Initialise store here instead of in store.js (which should just export
 // createStore).
@@ -81,7 +82,8 @@ endpoint.interceptors.response.use(
 function App() {
   // extends blueprint icon renderer to render icons from the ftm iconRegistry
   initializeIconRenderer();
-
+  expireRecentlyViewed();
+  
   return (
     <Provider store={store}>
       <Translator>

@@ -112,24 +112,20 @@ def oauth_callback():
     if role is None:
         raise err
 
-    # Determine session duration based on OAuth settings
-    expire = oauth_token.get("expires_in", Authz.EXPIRE)
-    expire = oauth_token.get("refresh_expires_in", expire)
-
     db.session.commit()
     update_role(role)
     log.debug("Logged in: %r", role)
-    request.authz = Authz.from_role(role, expire=expire)
+    request.authz = Authz.from_role(role)
     token = request.authz.to_token()
 
     # Store id_token to generate logout URL later
     id_token = oauth_token.get("id_token")
     if id_token is not None:
-        cache.set(_token_session(token), id_token, expires=expire)
+        cache.set(_token_session(token), id_token, expires=settings.OAUTH_EXPIRE)
 
     next_path = get_url_path(state.get("next_url"))
     next_url = ui_url("oauth", next=next_path)
-    next_url = "%s#token=%s" % (next_url, token)
+    next_url = f"{next_url}#token={token}"
     session.clear()
     return redirect(next_url)
 

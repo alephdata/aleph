@@ -114,7 +114,7 @@ export class EntityMappingMode extends Component {
                     rel="noopener noreferrer"
                   >
                     <FormattedMessage
-                      id="mapping.infoLink"
+                      id="mapping.info.link"
                       defaultMessage="Aleph data mapping documentation"
                     />
                   </a>
@@ -162,7 +162,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     existingMapping: selectEntityMapping(state, document.id),
-    prefilledSchemaData: urlSchema ? {[urlSchema]: {schema: urlSchema}} : null,
+    prefilledSchemaData: urlSchema ? { [urlSchema]: { schema: urlSchema } } : null,
   };
 };
 

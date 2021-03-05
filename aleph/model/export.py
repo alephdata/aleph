@@ -100,9 +100,8 @@ class Export(db.Model, IdModel, DatedModel):
 
     @classmethod
     def get_expired(cls, deleted=False):
-        now = datetime.utcnow()
         q = cls.all()
-        q = q.filter(cls.expires_at <= now)
+        q = q.filter(cls.expires_at <= datetime.utcnow())
         if not deleted:
             q = q.filter(cls.deleted == deleted)
         return q
@@ -129,6 +128,7 @@ class Export(db.Model, IdModel, DatedModel):
         q = q.filter(cls.creator_id == role_id)
         if not deleted:
             q = q.filter(cls.deleted == False)  # noqa
+            q = q.filter(cls.expires_at > datetime.utcnow())
         q = q.order_by(cls.created_at.desc())
         return q
 

@@ -26,7 +26,7 @@ def create_entityset(collection, data, authz):
     entity_ids = []
     for entity in data.pop("entities", []):
         old_id = entity.get("id")
-        new_id = upsert_entity(entity, collection, sync=True)
+        new_id = upsert_entity(entity, collection, sign=True, sync=True)
         old_to_new_id_map[old_id] = new_id
         entity_ids.append(new_id)
     layout = data.get("layout", {})
@@ -56,6 +56,7 @@ def save_entityset_item(entityset, collection, entity_id, **data):
         profile_fragments(collection, aggregator, entity_id=entity_id)
         index_aggregator(collection, aggregator, entity_ids=[entity_id])
         refresh_entity(collection, entity_id)
+    collection.touch()
     refresh_entityset(entityset.id)
     return item
 

@@ -23,6 +23,7 @@ import { DownloadButton } from 'components/Toolbar';
 import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
+import { setRecentlyViewedItem } from 'app/storage';
 
 import 'components/common/ItemOverview.scss';
 
@@ -34,12 +35,28 @@ const messages = defineMessages({
 });
 
 class EntityScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.onUnmount = this.onUnmount.bind(this);
+  }
+
   componentDidMount() {
     this.cleanHash();
+    window.addEventListener("beforeunload", this.onUnmount);
   }
 
   componentDidUpdate() {
     this.cleanHash();
+  }
+
+  componentWillUnmount() {
+    this.onUnmount();
+    window.removeEventListener("beforeunload", this.onUnmount);
+  }
+
+  onUnmount() {
+    const { entityId } = this.props;
+    setRecentlyViewedItem(entityId);
   }
 
   cleanHash() {
@@ -75,7 +92,7 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-
+    
     const operation = (
       <ButtonGroup>
         <DownloadButton document={entity} />
@@ -119,7 +136,7 @@ class EntityScreen extends Component {
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.getCaption()}>
-          <CollectionWrapper collection={entity.collection}>
+          <CollectionWrapper collection={entity.collection} dropzoneFolderParent={entity.schema.isA('Folder') && entity}>
             {breadcrumbs}
             <DualPane>
               <DualPane.SidePane className="ItemOverview">
