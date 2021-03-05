@@ -26,6 +26,8 @@ def upsert_entity(data, collection, authz=None, sync=False, sign=False, job_id=N
     entities created via the _bulk API or a mapper to a database entity in the event
     that it gets edited by the user.
     """
+    from aleph.logic.profiles import profile_fragments
+
     entity = None
     entity_id = collection.ns.sign(data.get("id"))
     if entity_id is not None:
@@ -39,12 +41,13 @@ def upsert_entity(data, collection, authz=None, sync=False, sign=False, job_id=N
 
     proxy = entity.to_proxy()
     aggregator = get_aggregator(collection)
-    aggregator.delete(entity_id=entity.id)
+    aggregator.delete(entity_id=proxy.id)
     aggregator.put(proxy, origin=MODEL_ORIGIN)
+    profile_fragments(collection, aggregator, entity_id=proxy.id)
 
     index.index_proxy(collection, proxy, sync=sync)
-    refresh_entity(collection, entity.id)
-    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity.id)
+    refresh_entity(collection, proxy.id)
+    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=proxy.id)
     return entity.id
 
 
