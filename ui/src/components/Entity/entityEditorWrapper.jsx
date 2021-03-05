@@ -3,9 +3,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
-import { EntityManager } from '@alephdata/react-ftm';
+import { AlephEntityContext } from '@alephdata/react-ftm';
 import { entityExpandQuery, entitySuggestQuery } from 'queries';
-import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
+import { selectEntity, selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
 import {
   createEntity,
   deleteEntity,
@@ -25,19 +25,19 @@ const entityEditorWrapper = (EditorComponent) => {
 
         this.namespace = new Namespace(props.collection.foreign_id);
 
-        this.context = new AlephEntityContext({
+        this.entityContext = new AlephEntityContext({
           selectModel,
           selectLocale,
           createEntity: this.createEntity.bind(this),
           updateEntity: this.updateEntity.bind(this),
           deleteEntity: this.deleteEntity.bind(this),
           selectEntity,
-          selectEntities: this.selectEntities.bind(this),
           queryEntities: this.queryEntities.bind(this),
+          selectEntitiesResult: this.selectEntitiesResult.bind(this),
           queryEntitySuggest: this.queryEntitySuggest.bind(this),
-          selectEntitiesResult:
-          // queryEntityExpand: this.queryEntityExpand.bind(this),
-          // selectEntityExpandResult:
+          selectEntitySuggestResult: this.selectEntitySuggestResult.bind(this),
+          queryEntityExpand: this.queryEntityExpand.bind(this),
+          selectEntityExpandResult: this.selectEntityExpandResult.bind(this)
         });
       }
 
@@ -109,18 +109,19 @@ const entityEditorWrapper = (EditorComponent) => {
         }
       }
 
-      selectEntities(state, ids) {
-        const { query } = this.props;
-        return selectEntitiesResult(state, this.generateQuery('all'));
+      queryEntities(queryText, schemata) {
+        this.props.queryEntities(this.generateEntitiesQuery(queryText, schemata));
       }
 
-      queryEntities(queryText, schemata) {
-        const { query } = this.props;
-        const newQuery = query
-          .setFilter('schemata', schemata);
-          .set('prefix', queryText);
+      selectEntitiesResult(state, queryText, schemata) {
+        return selectEntitiesResult(state, this.generateEntitiesQuery(queryText, schemata));
+      }
 
-        this.props.queryEntities(newQuery);
+      generateEntitiesQuery(queryText, schemata) {
+        const { query } = this.props;
+        return query
+          .setFilter('schemata', schemata)
+          .set('prefix', queryText);
       }
 
       queryEntitySuggest(queryText, schemata) {
@@ -134,27 +135,20 @@ const entityEditorWrapper = (EditorComponent) => {
         }, 150);
       }
 
-      // selectEntitiesResult(state, queryText, schemata) {
-      //
-      // }
+      selectEntitySuggestResult(state, queryText, schemata) {
+        const { collection, location } = this.props;
+        const query = entitySuggestQuery(location, collection, schemata, { prefix: queryText });
+        return selectEntitiesResult(state, query);
+      }
 
-
-      //
       queryEntityExpand(entityId, properties, limit) {
         const query = entityExpandQuery(entityId, properties, limit);
         this.props.queryEntityExpand({ query });
       }
 
       selectEntityExpandResult(state, entityId, properties, limit) {
-
-      }
-
-      generateQuery(queryName, ) {
-        const { query } = this.props;
-        switch(queryName) {
-          case 'all':
-            return query;
-        }
+        const query = entityExpandQuery(entityId, properties, limit);
+        selectEntityExpandResult(state, query)
       }
 
       render() {
@@ -178,25 +172,7 @@ const mapStateToProps = (state, ownProps) => {
   const { match } = ownProps;
   const { entitySetId } = match.params;
 
-  return ({
-    model: selectModel(state),
-    locale: selectLocale(state),
-    entitySetId,
-    selectQueryResults: (query) => {
-      let result;
-
-      if (query.queryName === 'expand') {
-        result = selectEntityExpandResult(state, query);
-      } else {
-        result = selectEntitiesResult(state, query);
-      }
-
-      if (!result.isPending && result.results) {
-        return result.results;
-      }
-      return null;
-    },
-  });
+  return ({ entitySetId });
 }
 
 const mapDispatchToProps = {
