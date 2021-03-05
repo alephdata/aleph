@@ -1,6 +1,6 @@
 {
   "name": "aleph-ui",
-  "version": "3.9.11",
+  "version": "3.9.12",
   "private": true,
   "dependencies": {
     "@alephdata/followthemoney": "2.4.1",
