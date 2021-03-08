@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
+import queryString from 'query-string';
+import { withRouter } from 'react-router';
 
-import { ErrorSection } from 'components/common';
+import { ErrorSection, EntityDecisionHotkeys } from 'components/common';
+import { showWarningToast } from 'app/toast';
+import { pairwiseJudgement } from 'actions';
 import XrefTableRow from './XrefTableRow';
 
 import './XrefTable.scss';
@@ -16,6 +21,19 @@ const messages = defineMessages({
 
 
 class XrefTable extends Component {
+  constructor(props) {
+    super(props);
+    this.onDecide = this.onDecide.bind(this);
+  }
+
+  async onDecide(xref) {
+    try {
+      await this.props.pairwiseJudgement(xref);
+    } catch (e) {
+      showWarningToast(e.message);
+    }
+  }
+
   renderHeader = () => (
     <thead>
       <tr>
@@ -73,21 +91,29 @@ class XrefTable extends Component {
     }
 
     return (
-      <table className="XrefTable data-table">
-        {this.renderHeader()}
-        <tbody>
-          {result.results.map(xref => (
-            <XrefTableRow key={xref.id} xref={xref} />
-          ))}
-          {result.isPending && skeletonItems.map(item => (
-            <XrefTableRow key={item} isPending />
-          ))}
-        </tbody>
-      </table>
+      <EntityDecisionHotkeys result={result} onDecide={this.onDecide}>
+        <table className="XrefTable data-table">
+          {this.renderHeader()}
+          <tbody>
+            {result.results.map((xref, i) => (
+              <XrefTableRow
+                key={xref.id}
+                xref={xref}
+                onDecide={this.onDecide}
+              />
+            ))}
+            {result.isPending && skeletonItems.map(item => (
+              <XrefTableRow key={item} isPending />
+            ))}
+          </tbody>
+        </table>
+      </EntityDecisionHotkeys>
     );
   }
 }
 
 export default compose(
+  withRouter,
+  connect(null, { pairwiseJudgement }),
   injectIntl,
 )(XrefTable);

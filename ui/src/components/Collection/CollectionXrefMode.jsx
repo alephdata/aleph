@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, Intent } from '@blueprintjs/core';
+import queryString from 'query-string';
 
 import SearchActionBar from 'components/common/SearchActionBar';
 import SearchFacets from 'components/Facet/SearchFacets';
@@ -37,10 +38,13 @@ export class CollectionXrefMode extends React.Component {
 
   updateQuery(newQuery) {
     const { history, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    parsedHash.selectedIndex = undefined;
+
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
-      hash: location.hash,
+      hash: queryString.stringify(parsedHash),
     });
   }
 
