@@ -21,7 +21,7 @@ class EntityDecisionHotkeys extends Component {
     const { result, selectedId } = this.props;
 
     return result.results?.findIndex(
-      item => item.id === selectedId,
+      item => (item.id || item.entityId) === selectedId,
     );
   }
 
@@ -32,6 +32,7 @@ class EntityDecisionHotkeys extends Component {
     if (selectedXrefResult) {
       selectedXrefResult.judgement = selectedXrefResult.judgement === judgement ? 'no_judgement' : judgement
       onDecide(selectedXrefResult);
+      console.log('selecting next');
       this.selectNext();
     }
   }
@@ -41,7 +42,9 @@ class EntityDecisionHotkeys extends Component {
     if (!nextSelected) { return; }
 
     const parsedHash = queryString.parse(location.hash);
-    parsedHash.selectedId = nextSelected.id;
+    parsedHash.selectedId = nextSelected.id || nextSelected.entityId;
+
+    console.log('updating query', nextSelected)
 
     history.replace({
       pathname: location.pathname,
@@ -54,6 +57,7 @@ class EntityDecisionHotkeys extends Component {
     const { history, location, result } = this.props;
     const selectedIndex = this.getCurrentSelectedIndex();
     const hasNext = result.results && result.results.length > (selectedIndex + 1)
+    console.log('hasNext', selectedIndex, hasNext)
     if (hasNext) {
       this.updateQuery(result.results[selectedIndex + 1]);
     }

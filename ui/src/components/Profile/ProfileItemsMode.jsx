@@ -7,7 +7,7 @@ import c from 'classnames';
 
 import { selectEntitySetItemsResult } from 'selectors';
 import {
-  JudgementButtons, Collection,
+  JudgementButtons, Collection, EntityDecisionHotkeys, EntityDecisionRow,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySetItemsQuery } from 'queries';
@@ -46,7 +46,7 @@ class ProfileItemsMode extends Component {
 
   renderRow(item) {
     return (
-      <tr key={item.id || item.entity.id}>
+      <EntityDecisionRow objId={item.id || item.entity.id}>
         <td className="numeric narrow">
           <JudgementButtons obj={item} onChange={this.onDecide} />
         </td>
@@ -56,7 +56,7 @@ class ProfileItemsMode extends Component {
         <td className="collection">
           <Collection.Link collection={item.collection} icon />
         </td>
-      </tr>
+      </EntityDecisionRow>
     );
   }
 
@@ -88,33 +88,35 @@ class ProfileItemsMode extends Component {
             defaultMessage="Make decisions below to determine which source entities should be added or excluded from this profile."
           />
         </Callout>
-        <table className={c("data-table", { 'pending': result.isPending })}>
-          <thead>
-            <tr>
-              <th className="numeric narrow" />
-              <th>
-                <span className="value">
-                  <FormattedMessage
-                    id="profile.items.entity"
-                    defaultMessage="Combined entities"
-                  />
-                </span>
-              </th>
-              <th className="collection">
-                <span className="value">
-                  <FormattedMessage
-                    id="xref.match_collection"
-                    defaultMessage="Dataset"
-                  />
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.results?.map(res => this.renderRow(res))}
-            {!result.total && result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
-          </tbody>
-        </table>
+        <EntityDecisionHotkeys result={result} onDecide={this.onDecide}>
+          <table className={c("data-table", { 'pending': result.isPending })}>
+            <thead>
+              <tr>
+                <th className="numeric narrow" />
+                <th>
+                  <span className="value">
+                    <FormattedMessage
+                      id="profile.items.entity"
+                      defaultMessage="Combined entities"
+                    />
+                  </span>
+                </th>
+                <th className="collection">
+                  <span className="value">
+                    <FormattedMessage
+                      id="xref.match_collection"
+                      defaultMessage="Dataset"
+                    />
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.results?.map(res => this.renderRow(res))}
+              {!result.total && result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
+            </tbody>
+          </table>
+        </EntityDecisionHotkeys>
       </div >
     );
   }

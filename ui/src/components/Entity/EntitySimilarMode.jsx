@@ -7,7 +7,7 @@ import { Callout } from '@blueprintjs/core';
 import { querySimilar } from 'actions';
 import { selectSimilarResult } from 'selectors';
 import {
-  ErrorSection, QueryInfiniteLoad, JudgementButtons, Score, Collection, Skeleton,
+  ErrorSection, QueryInfiniteLoad, JudgementButtons, Score, Collection, Skeleton, EntityDecisionHotkeys, EntityDecisionRow,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySimilarQuery } from 'queries';
@@ -119,7 +119,7 @@ class EntitySimilarMode extends Component {
 
   renderRow(similar) {
     return (
-      <tr key={similar.entity.id}>
+      <EntityDecisionRow key={similar.entity.id} objId={similar.entity.id}>
         <td className="numeric narrow">
           <JudgementButtons obj={similar} onChange={this.onDecide} />
         </td>
@@ -132,7 +132,7 @@ class EntitySimilarMode extends Component {
         <td className="collection">
           <Collection.Link collection={similar.entity.collection} icon />
         </td>
-      </tr>
+      </EntityDecisionRow>
     );
   }
 
@@ -150,13 +150,15 @@ class EntitySimilarMode extends Component {
     return (
       <div className="EntitySimilarMode">
         {this.renderSummary()}
-        <table className="data-table">
-          {this.renderHeader()}
-          <tbody>
-            {result.results?.map(res => this.renderRow(res))}
-            {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
-          </tbody>
-        </table>
+        <EntityDecisionHotkeys result={result} onDecide={this.onDecide}>
+          <table className="data-table">
+            {this.renderHeader()}
+            <tbody>
+              {result.results?.map(res => this.renderRow(res))}
+              {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
+            </tbody>
+          </table>
+        </EntityDecisionHotkeys>
         <QueryInfiniteLoad
           query={query}
           result={result}

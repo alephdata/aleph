@@ -11,7 +11,6 @@ import './EntityDecisionRow.scss';
 class EntityDecisionRow extends Component {
   constructor(props) {
     super(props);
-    this.onSelect = this.onSelect.bind(this);
     this.ref = React.createRef();
   }
 
@@ -31,24 +30,11 @@ class EntityDecisionRow extends Component {
     }
   }
 
-  onSelect() {
-    const { history, location, objId } = this.props;
-
-    const parsedHash = queryString.parse(location.hash);
-    parsedHash.selectedId = objId;
-
-    history.replace({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
-    });
-  }
-
   render() {
-    const { className, children, selected } = this.props;
+    const { className, children, objId, selected } = this.props;
 
     return (
-      <tr className={c("EntityDecisionRow", className, { selected })} ref={this.ref} onClick={this.onSelect} >
+      <tr key={objId} className={c("EntityDecisionRow", className, { selected })} ref={this.ref}>
         {children}
       </tr>
     );
