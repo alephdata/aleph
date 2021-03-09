@@ -29,7 +29,7 @@ class XrefTableRow extends Component {
   }
 
   render() {
-    const { isPending, onDecide, xref } = this.props;
+    const { isPending, onDecide, selected, xref } = this.props;
 
     if (isPending) {
       return this.renderSkeleton();
@@ -39,7 +39,7 @@ class XrefTableRow extends Component {
       return null;
     }
     return (
-      <EntityDecisionRow className="XrefTableRow" objId={xref.id}>
+      <EntityDecisionRow className="XrefTableRow" selected={selected}>
         <td className="numeric narrow">
           <JudgementButtons obj={xref} onChange={onDecide} />
         </td>

@@ -3,6 +3,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
+import queryString from 'query-string';
 
 import { querySimilar } from 'actions';
 import { selectSimilarResult } from 'selectors';
@@ -117,9 +118,10 @@ class EntitySimilarMode extends Component {
     );
   }
 
-  renderRow(similar) {
+  renderRow(similar, index) {
+    const { selectedIndex } = this.props;
     return (
-      <EntityDecisionRow key={similar.entity.id} objId={similar.entity.id}>
+      <EntityDecisionRow key={similar.entity.id} selected={index === selectedIndex}>
         <td className="numeric narrow">
           <JudgementButtons obj={similar} onChange={this.onDecide} />
         </td>
@@ -154,7 +156,7 @@ class EntitySimilarMode extends Component {
           <table className="data-table">
             {this.renderHeader()}
             <tbody>
-              {result.results?.map(res => this.renderRow(res))}
+              {result.results?.map((res, i) => this.renderRow(res, i))}
               {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
             </tbody>
           </table>
@@ -173,7 +175,10 @@ const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
   const query = entitySimilarQuery(location, entity.id);
   const result = selectSimilarResult(state, query);
-  return { query, result };
+
+  const parsedHash = queryString.parse(location.hash);
+
+  return { query, result, selectedIndex: +parsedHash.selectedIndex };
 };
 
 EntitySimilarMode = connect(mapStateToProps, { querySimilar, pairwiseJudgement })(EntitySimilarMode);

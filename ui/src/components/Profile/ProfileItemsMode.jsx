@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout, Intent } from '@blueprintjs/core';
 import c from 'classnames';
+import queryString from 'query-string';
 
 import { selectEntitySetItemsResult } from 'selectors';
 import {
@@ -44,9 +45,11 @@ class ProfileItemsMode extends Component {
     }
   }
 
-  renderRow(item) {
+  renderRow(item, index) {
+    const { selectedIndex } = this.props;
+
     return (
-      <EntityDecisionRow objId={item.id || item.entity.id}>
+      <EntityDecisionRow key={item.id || item.entity.id} selected={index === selectedIndex}>
         <td className="numeric narrow">
           <JudgementButtons obj={item} onChange={this.onDecide} />
         </td>
@@ -112,7 +115,7 @@ class ProfileItemsMode extends Component {
               </tr>
             </thead>
             <tbody>
-              {result.results?.map(res => this.renderRow(res))}
+              {result.results?.map((res, i) => this.renderRow(res, i))}
               {!result.total && result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
             </tbody>
           </table>
@@ -125,9 +128,12 @@ class ProfileItemsMode extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { profile, location } = ownProps;
   const query = entitySetItemsQuery(location, profile.id);
+  const parsedHash = queryString.parse(location.hash);
+
   return {
     query,
-    result: selectEntitySetItemsResult(state, query)
+    result: selectEntitySetItemsResult(state, query),
+    selectedIndex: +parsedHash.selectedIndex
   };
 };
 

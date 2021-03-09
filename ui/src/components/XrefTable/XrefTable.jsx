@@ -75,7 +75,7 @@ class XrefTable extends Component {
   )
 
   render() {
-    const { intl, result } = this.props;
+    const { intl, result, selectedIndex } = this.props;
     const skeletonItems = [...Array(25).keys()];
 
     if (result.isError) {
@@ -100,6 +100,7 @@ class XrefTable extends Component {
                 key={xref.id}
                 xref={xref}
                 onDecide={this.onDecide}
+                selected={i === selectedIndex}
               />
             ))}
             {result.isPending && skeletonItems.map(item => (
@@ -112,8 +113,18 @@ class XrefTable extends Component {
   }
 }
 
+
+const mapStateToProps = (state, ownProps) => {
+  const { profile, location } = ownProps;
+  const parsedHash = queryString.parse(location.hash);
+
+  return {
+    selectedIndex: +parsedHash.selectedIndex
+  };
+};
+
 export default compose(
   withRouter,
-  connect(null, { pairwiseJudgement }),
+  connect(mapStateToProps, { pairwiseJudgement }),
   injectIntl,
 )(XrefTable);

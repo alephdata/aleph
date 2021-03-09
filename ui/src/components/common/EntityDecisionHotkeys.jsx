@@ -17,34 +17,31 @@ class EntityDecisionHotkeys extends Component {
     this.selectPrevious = this.selectPrevious.bind(this);
   }
 
-  getCurrentSelectedIndex() {
-    const { result, selectedId } = this.props;
+  componentDidUpdate(prevProps) {
+    const { result, selectedIndex } = this.props;
+    const newLength = result.results?.length;
 
-    return result.results?.findIndex(
-      item => (item.id || item.entityId) === selectedId,
-    );
+    if (prevProps.result.results?.length !== newLength && selectedIndex >= newLength) {
+      this.updateQuery(newLength - 1);
+    }
   }
 
   onDecideSelected(judgement) {
     const { history, location, onDecide, result, selectedIndex } = this.props;
 
-    const selectedXrefResult = result.results?.[this.getCurrentSelectedIndex()];
+    const selectedXrefResult = result.results?.[selectedIndex === -1 ? 0 : selectedIndex];
     if (selectedXrefResult) {
       selectedXrefResult.judgement = selectedXrefResult.judgement === judgement ? 'no_judgement' : judgement
       onDecide(selectedXrefResult);
-      console.log('selecting next');
       this.selectNext();
     }
   }
 
   updateQuery(nextSelected) {
     const { history, location } = this.props;
-    if (!nextSelected) { return; }
 
     const parsedHash = queryString.parse(location.hash);
-    parsedHash.selectedId = nextSelected.id || nextSelected.entityId;
-
-    console.log('updating query', nextSelected)
+    parsedHash.selectedIndex = nextSelected;
 
     history.replace({
       pathname: location.pathname,
@@ -54,26 +51,26 @@ class EntityDecisionHotkeys extends Component {
   }
 
   selectNext() {
-    const { history, location, result } = this.props;
-    const selectedIndex = this.getCurrentSelectedIndex();
+    const { history, location, result, selectedIndex } = this.props;
     const hasNext = result.results && result.results.length > (selectedIndex + 1)
-    console.log('hasNext', selectedIndex, hasNext)
+
     if (hasNext) {
-      this.updateQuery(result.results[selectedIndex + 1]);
+      this.updateQuery(selectedIndex + 1);
     }
   }
 
   selectPrevious() {
-    const { history, location, result } = this.props;
-    const selectedIndex = this.getCurrentSelectedIndex();
+    const { history, location, result, selectedIndex } = this.props;
     const hasPrevious = result.results?.length && selectedIndex > 0;
     if (hasPrevious) {
-      this.updateQuery(result.results[selectedIndex - 1]);
+      this.updateQuery(selectedIndex - 1);
     }
   }
 
   render() {
     const { children, } = this.props;
+
+    console.log(this.props.selectedIndex)
 
     return (
       <HotKeysContainer
@@ -105,7 +102,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const parsedHash = queryString.parse(location.hash);
 
-  return { selectedId: parsedHash.selectedId };
+  return { selectedIndex: parsedHash.selectedIndex ? +parsedHash.selectedIndex : -1 };
 }
 
 export default compose(
