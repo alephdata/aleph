@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 
-import { ErrorSection, HotKeysContainer } from 'components/common';
+import { HotKeysContainer } from 'components/common';
 
 
 class EntityDecisionHotkeys extends Component {

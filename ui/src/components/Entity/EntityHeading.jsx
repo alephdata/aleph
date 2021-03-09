@@ -43,6 +43,7 @@ class EntityHeading extends React.PureComponent {
                   <FormattedRelativeTime
                     value={value}
                     unit={unit}
+                    // eslint-disable-next-line
                     style="long"
                     numeric="auto"
                   />
