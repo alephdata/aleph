@@ -1,21 +1,22 @@
 @import "app/variables.scss";
 
-
 .QuickLinks {
+  // grid fallback
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -($aleph-grid-size);
-  align-content: stretch;
+
+  padding: 0 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: $aleph-grid-size*1.5 $aleph-grid-size*1.5;
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 
   &__item {
     flex: 0 0 25%;
-    padding: $aleph-content-padding/2;
-    min-width: 125px;
-    text-decoration: none !important;
 
-    @media screen and (max-width: 1275px) {
-      flex-basis: 50%;
-    }
+    text-decoration: none !important;
 
     &__content {
       border-radius: 5px;
@@ -53,7 +54,6 @@
         content: "";
       }
     }
-
 
     &__text {
       text-align: center;
