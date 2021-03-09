@@ -27,7 +27,7 @@ class EntityDecisionRow extends Component {
   }
 
   render() {
-    const { className, children, objId, selected } = this.props;
+    const { className, children, selected } = this.props;
 
     return (
       <tr className={c("EntityDecisionRow", className, { selected })} ref={this.ref}>

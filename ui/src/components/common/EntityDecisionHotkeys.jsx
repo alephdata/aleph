@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 
 import { ErrorSection, HotKeysContainer } from 'components/common';
-import { showWarningToast } from 'app/toast';
 
 
 class EntityDecisionHotkeys extends Component {
@@ -27,7 +25,7 @@ class EntityDecisionHotkeys extends Component {
   }
 
   onDecideSelected(judgement) {
-    const { history, location, onDecide, result, selectedIndex } = this.props;
+    const {onDecide, result, selectedIndex } = this.props;
 
     const selectedXrefResult = result.results?.[selectedIndex === -1 ? 0 : selectedIndex];
     if (selectedXrefResult) {
@@ -51,7 +49,7 @@ class EntityDecisionHotkeys extends Component {
   }
 
   selectNext() {
-    const { history, location, result, selectedIndex } = this.props;
+    const { result, selectedIndex } = this.props;
     const hasNext = result.results && result.results.length > (selectedIndex + 1)
 
     if (hasNext) {
@@ -60,7 +58,7 @@ class EntityDecisionHotkeys extends Component {
   }
 
   selectPrevious() {
-    const { history, location, result, selectedIndex } = this.props;
+    const { result, selectedIndex } = this.props;
     const hasPrevious = result.results?.length && selectedIndex > 0;
     if (hasPrevious) {
       this.updateQuery(selectedIndex - 1);
@@ -108,5 +106,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
 )(EntityDecisionHotkeys);

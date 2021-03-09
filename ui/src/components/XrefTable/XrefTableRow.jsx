@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import c from 'classnames';
 
 import {
   Collection, EntityDecisionRow, Skeleton, JudgementButtons, Score,

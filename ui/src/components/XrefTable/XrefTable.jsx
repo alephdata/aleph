@@ -115,7 +115,7 @@ class XrefTable extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { profile, location } = ownProps;
+  const { location } = ownProps;
   const parsedHash = queryString.parse(location.hash);
 
   return {
