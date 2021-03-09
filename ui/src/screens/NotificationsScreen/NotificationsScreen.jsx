@@ -33,6 +33,7 @@ export class NotificationsScreen extends React.Component {
     const screenProps = {
       title: intl.formatMessage(messages.title),
       requireSession: true,
+      className: 'NotificationsScreen'
     };
 
     if (!role.id) {
