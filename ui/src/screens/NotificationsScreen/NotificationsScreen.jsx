@@ -10,6 +10,7 @@ import Screen from 'components/Screen/Screen';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { selectNotificationsResult, selectCurrentRole } from 'selectors';
+import LandingQuickLinks from 'components/common/LandingQuickLinks';
 
 import './NotificationsScreen.scss';
 
@@ -52,6 +53,7 @@ export class NotificationsScreen extends React.Component {
               />
             </p>
           </div>
+          <LandingQuickLinks />
           <NotificationList query={query} />
         </Dashboard>
       </Screen>
