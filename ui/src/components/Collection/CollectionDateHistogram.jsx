@@ -3,6 +3,8 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Histogram } from '@alephdata/react-ftm';
+import { Classes } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { collectionSearchQuery } from 'queries'
 import CollectionStatistics from './CollectionStatistics';
@@ -47,15 +49,25 @@ class CollectionDateHistogram extends React.Component {
   }
 
   render() {
-    const { datesQuery, datesResult, statsToRender } = this.props;
+    const { className, datesQuery, datesResult, statsToRender } = this.props;
+
+    const intervals = datesResult.facets?.dates?.intervals;
+
+    if (!datesResult.isPending && (!intervals || intervals.length <= 1)) {
+      return null;
+    }
 
     return (
-      <DateFacet
-        isOpen={true}
-        intervals={datesResult?.facets?.dates?.intervals}
-        query={datesQuery}
-        updateQuery={this.onDateIntervalSelect}
-      />
+      <div className={className}>
+        <div className={c({[Classes.SKELETON]: datesResult.isPending})}>
+          <DateFacet
+            isOpen={true}
+            intervals={intervals}
+            query={datesQuery}
+            updateQuery={this.onDateIntervalSelect}
+          />
+        </div>
+      </div>
     );
   }
 }

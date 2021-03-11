@@ -38,7 +38,7 @@ class CollectionStatisticsGroup extends React.Component {
 
     return (
       <div className="CollectionStatisticsGroup">
-        <CollectionDateHistogram collectionId={collectionId} />
+        <CollectionDateHistogram collectionId={collectionId} className="CollectionStatisticsGroup__item" />
         {isPending && skeletonItems.map((key) => this.renderStatisticsItem({ key }))}
         {!isPending && statsToRender.map((stat) => this.renderStatisticsItem(stat))}
       </div>
