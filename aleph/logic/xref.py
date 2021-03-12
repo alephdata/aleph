@@ -13,6 +13,7 @@ from servicelayer.archive.util import ensure_path
 
 from aleph.core import es, db
 from aleph.model import Collection, Entity, Role, Export, Status
+from aleph.model import EntitySet
 from aleph.authz import Authz
 from aleph.logic import resolver
 from aleph.logic.collections import reindex_collection
@@ -43,13 +44,14 @@ def _merge_schemata(proxy, schemata):
             proxy.schema = model.get(Entity.LEGAL_ENTITY)
 
 
-def _query_item(entity):
+def _query_item(entity, entitysets=True):
     """Cross-reference an entity or document, given as an indexed document."""
     query = match_query(entity)
     if query == none_query():
         return
 
     log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
+    entityset_ids = EntitySet.entity_entitysets(entity.id) if entitysets else []
     query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
     index = entities_read_index(schema=list(entity.schema.matchable_schemata))
     result = es.search(index=index, body=query)
@@ -61,7 +63,7 @@ def _query_item(entity):
         score = compare(model, entity, match)
         if score >= SCORE_CUTOFF:
             log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
-            yield score, entity, result.get("collection_id"), match
+            yield score, entity, result.get("collection_id"), match, entityset_ids
 
 
 def _iter_mentions(collection):
@@ -93,10 +95,10 @@ def _query_mentions(collection):
     for proxy in _iter_mentions(collection):
         schemata = set()
         countries = set()
-        for score, _, collection_id, match in _query_item(proxy):
+        for score, _, collection_id, match, _ in _query_item(proxy, entitysets=False):
             schemata.add(match.schema)
             countries.update(match.get_type_values(registry.country))
-            yield score, proxy, collection_id, match
+            yield score, proxy, collection_id, match, []
         if len(schemata):
             # Assign only those countries that are backed by one of
             # the matches:

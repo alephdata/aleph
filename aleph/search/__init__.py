@@ -86,6 +86,10 @@ class MatchQuery(EntitiesQuery):
 class XrefQuery(Query):
     TEXT_FIELDS = ["text"]
     SORT_DEFAULT = [{"score": "desc"}]
+    SORT_FIELDS = {
+        "random": "random",
+        "score": "_score",
+    }
     AUTHZ_FIELD = "match_collection_id"
     SOURCE = XREF_SOURCE
 
