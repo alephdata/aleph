@@ -121,7 +121,7 @@ def oauth_callback():
     # Store id_token to generate logout URL later
     id_token = oauth_token.get("id_token")
     if id_token is not None:
-        cache.set(_token_session(token), id_token, expires=settings.OAUTH_EXPIRE)
+        cache.set(_token_session(token), id_token, expires=settings.SESSION_EXPIRE)
 
     next_path = get_url_path(state.get("next_url"))
     next_url = ui_url("oauth", next=next_path)
