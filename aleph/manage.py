@@ -13,7 +13,7 @@ from followthemoney.cli.util import write_object
 
 from aleph.core import create_app, cache, db
 from aleph.authz import Authz
-from aleph.model import Collection, Role
+from aleph.model import Collection, Role, EntitySet
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
 from aleph.queues import get_status, cancel_queue
@@ -31,8 +31,19 @@ from aleph.logic.xref import xref_collection
 from aleph.logic.export import retry_exports
 from aleph.logic.roles import create_user, update_roles, delete_role
 from aleph.logic.permissions import update_permission
+from aleph.util import JSONEncoder
+from aleph.index.collections import get_collection as _get_index_collection
+from aleph.index.entities import get_entity as _get_index_entity
 
 log = logging.getLogger("aleph")
+
+
+def get_expanded_entity(entity_id):
+    if not entity_id:
+        return None
+    entity = _get_index_entity(entity_id)
+    entity["collection"] = _get_index_collection(entity["collection_id"])
+    return entity
 
 
 def get_collection(foreign_id):
@@ -247,6 +258,25 @@ def dump_entities(foreign_id, outfile):
     collection = get_collection(foreign_id)
     for entity in iter_proxies(collection_id=collection.id):
         write_object(outfile, entity)
+
+
+@cli.command("dump-profiles")
+@click.argument("foreign_id")
+@click.option("-o", "--outfile", type=click.File("w"), default="-")  # noqa
+def dump_profiles(foreign_id, outfile):
+    """Export XREF judgements for the given collection."""
+    collection = get_collection(foreign_id)
+    entitysets = EntitySet.by_collection_id(collection.id, types="profile")
+    encoder = JSONEncoder(sort_keys=True)
+    for entityset in entitysets:
+        judgements = entityset.items()
+        for judgement in judgements:
+            data = judgement.to_dict()
+            data["entity"] = get_expanded_entity(data.get("entity_id"))
+            data["compared_to_entity"] = get_expanded_entity(
+                data.get("compared_to_entity_id")
+            )
+            outfile.write(encoder.encode(data) + "\n")
 
 
 @cli.command("sample-entities")
