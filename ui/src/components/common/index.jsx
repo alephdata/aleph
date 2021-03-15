@@ -3,6 +3,8 @@ import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import ClipboardInput from './ClipboardInput';
 import Category from './Category';
+import EntityDecisionHotkeys from './EntityDecisionHotkeys';
+import EntityDecisionRow from './EntityDecisionRow';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
 import HotKeysContainer from './HotKeysContainer';
@@ -68,6 +70,8 @@ export {
   SectionLoading,
   TextLoading,
   ErrorSection,
+  EntityDecisionHotkeys,
+  EntityDecisionRow,
   SinglePane,
   SortableTH,
   Statistics,

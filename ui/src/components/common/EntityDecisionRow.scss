@@ -1,0 +1,7 @@
+@import "app/variables.scss";
+
+.EntityDecisionRow {
+  &.selected {
+    background: $light-gray4;
+  }
+}
