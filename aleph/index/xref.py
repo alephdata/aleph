@@ -1,5 +1,6 @@
 import logging
 from pprint import pprint  # noqa
+from random import randint
 from banal import hash_data
 from datetime import datetime
 from followthemoney.types import registry
@@ -12,7 +13,7 @@ from aleph.index.util import authz_query
 from aleph.index.util import KEYWORD, SHARDS_HEAVY
 
 log = logging.getLogger(__name__)
-XREF_SOURCE = {"excludes": ["text", "countries"]}
+XREF_SOURCE = {"excludes": ["text", "countries", "entityset_ids"]}
 MAX_NAMES = 30
 
 
@@ -26,8 +27,10 @@ def configure_xref():
         "dynamic": False,
         "properties": {
             "score": {"type": "float"},
+            "random": {"type": "integer"},
             "entity_id": KEYWORD,
             "collection_id": KEYWORD,
+            "entityset_ids": KEYWORD,
             "match_id": KEYWORD,
             "match_collection_id": KEYWORD,
             registry.country.group: KEYWORD,
@@ -42,7 +45,7 @@ def configure_xref():
 
 def _index_form(collection, matches):
     now = datetime.utcnow().isoformat()
-    for (score, entity, match_collection_id, match) in matches:
+    for (score, entity, match_collection_id, match, entityset_ids) in matches:
         xref_id = hash_data((entity.id, collection.id, match.id))
         text = set([entity.caption, match.caption])
         text.update(entity.get_type_values(registry.name)[:MAX_NAMES])
@@ -54,9 +57,11 @@ def _index_form(collection, matches):
             "_index": xref_index(),
             "_source": {
                 "score": score,
+                "random": randint(1, 2 ** 31),
                 "entity_id": entity.id,
                 "schema": match.schema.name,
                 "collection_id": collection.id,
+                "entityset_ids": list(entityset_ids),
                 "match_id": match.id,
                 "match_collection_id": match_collection_id,
                 "countries": list(countries),
