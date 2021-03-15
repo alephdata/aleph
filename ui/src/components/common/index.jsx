@@ -20,6 +20,7 @@ import Facet from './Facet';
 import FileImport from './FileImport';
 import Mention from './Mention';
 import Property from './Property';
+import QuickLinks from './QuickLinks';
 import Role from './Role';
 import Schema from './Schema';
 import SectionLoading from './SectionLoading';
@@ -85,6 +86,7 @@ export {
   SortingBar,
   QueryText,
   QueryInfiniteLoad,
+  QuickLinks,
   ResultCount,
   ResultText,
   SelectWrapper,
