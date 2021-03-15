@@ -2,12 +2,10 @@ import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Histogram } from '@alephdata/react-ftm';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { collectionSearchQuery } from 'queries'
-import CollectionStatistics from './CollectionStatistics';
+import { collectionSearchQuery } from 'queries';
 import { selectCollection, selectEntitiesResult } from 'selectors';
 import { queryEntities } from 'actions';
 import DateFacet from 'components/Facet/DateFacet';
@@ -37,7 +35,7 @@ class CollectionDateHistogram extends React.Component {
   }
 
   onDateIntervalSelect(newQuery) {
-    const { collection, history, location } = this.props;
+    const { collection, history } = this.props;
 
     history.push(
       getCollectionLink({
@@ -49,8 +47,7 @@ class CollectionDateHistogram extends React.Component {
   }
 
   render() {
-    const { className, datesQuery, datesResult, statsToRender } = this.props;
-
+    const { className, datesQuery, datesResult } = this.props;
     const intervals = datesResult.facets?.dates?.intervals;
 
     if (!datesResult.isPending && (!intervals || intervals.length <= 1)) {
@@ -59,7 +56,7 @@ class CollectionDateHistogram extends React.Component {
 
     return (
       <div className={className}>
-        <div className={c({[Classes.SKELETON]: datesResult.isPending})}>
+        <div className={c({ [Classes.SKELETON]: datesResult.isPending })}>
           <DateFacet
             isOpen={true}
             intervals={intervals}
