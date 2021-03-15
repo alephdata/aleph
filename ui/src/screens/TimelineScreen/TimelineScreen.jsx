@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
+import { Button, ButtonGroup } from '@blueprintjs/core';
 
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult, selectModel } from 'selectors';
@@ -13,16 +14,21 @@ import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
+import Timeline from 'components/Timeline/Timeline';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, DualPane, SchemaCounts } from 'components/common';
+import { Breadcrumbs, DualPane, UpdateStatus} from 'components/common';
 
 import './TimelineScreen.scss';
 
 export class TimelineScreen extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      updateStatus: null
+    }
+  }
 
   componentDidMount() {
     this.fetchIfNeeded();
@@ -38,24 +44,14 @@ export class TimelineScreen extends Component {
     if (timeline.shouldLoad) {
       this.props.fetchEntitySet({ id: entitySetId });
     }
-    // if (countsResult.shouldLoad) {
-    //   this.props.queryEntitySetEntities({ query: countsQuery });
-    // }
   }
 
-  // navigate(schema) {
-  //   const { history, location } = this.props;
-  //   const parsedHash = queryString.parse(location.hash);
-  //   parsedHash.type = schema;
-  //   history.push({
-  //     pathname: location.pathname,
-  //     search: "",
-  //     hash: queryString.stringify(parsedHash),
-  //   });
-  // }
+  onStatusChange(updateStatus) {
+    this.setState({ updateStatus });
+  }
 
   render() {
-    const { activeSchema, timeline, querySchemaEntities } = this.props;
+    const { activeSchema, entitiesQuery, timeline, updateStatus, querySchemaEntities } = this.props;
 
     if (timeline.isError) {
       return <ErrorScreen error={timeline.error} />;
@@ -69,8 +65,10 @@ export class TimelineScreen extends Component {
       <EntitySetManageMenu entitySet={timeline} />
     );
 
+    const status = <UpdateStatus status={updateStatus} />;
+
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} status={status}>
         <Breadcrumbs.Text>
           <CollectionView.Link id={collectionViewIds.TIMELINES} collection={timeline.collection} icon />
         </Breadcrumbs.Text>
@@ -87,7 +85,11 @@ export class TimelineScreen extends Component {
           {breadcrumbs}
           <DualPane className="TimelineScreen">
             <DualPane.ContentPane>
-
+              <Timeline
+                query={entitiesQuery}
+                collection={timeline.collection}
+                onStatusChange={this.onStatusChange}
+              />
             </DualPane.ContentPane>
           </DualPane>
         </CollectionWrapper>
@@ -100,25 +102,17 @@ const mapStateToProps = (state, ownProps) => {
   const { location, match } = ownProps;
   const { entitySetId } = match.params;
 
-  const model = selectModel(state);
   const timeline = selectEntitySet(state, entitySetId);
-  // const countsQuery = entitySetSchemaCountsQuery(entitySetId)
-  // const countsResult = selectEntitiesResult(state, countsQuery);
-  // const querySchemaEntities = (schema) => entitySetEntitiesQuery(location, entitySetId, schema.name, 30);
-  const hashQuery = queryString.parse(location.hash);
 
   return {
     entitySetId,
     timeline,
-    // countsQuery,
-    // countsResult,
-    // querySchemaEntities,
-    activeSchema: model.getSchema(hashQuery.type || 'Person'),
+    entitiesQuery: entitySetEntitiesQuery(location, entitySetId, null, 1000),
   };
 };
 
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
+  connect(mapStateToProps, { fetchEntitySet }),
 )(TimelineScreen);
