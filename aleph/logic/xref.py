@@ -31,7 +31,6 @@ from aleph.logic.export import complete_export
 
 
 log = logging.getLogger(__name__)
-SCORE_CUTOFF = 0.35
 ORIGIN = "xref"
 
 
@@ -61,9 +60,8 @@ def _query_item(entity, entitysets=True):
             continue
         match = model.get_proxy(result)
         score = compare(model, entity, match)
-        if score >= SCORE_CUTOFF:
-            log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
-            yield score, entity, result.get("collection_id"), match, entityset_ids
+        log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
+        yield score, entity, result.get("collection_id"), match, entityset_ids
 
 
 def _iter_mentions(collection):
