@@ -24,6 +24,10 @@ const messages = defineMessages({
     id: 'nav.diagrams',
     defaultMessage: 'Network diagrams',
   },
+  timelines: {
+    id: 'nav.timelines',
+    defaultMessage: 'Timelines',
+  },
   lists: {
     id: 'nav.lists',
     defaultMessage: 'Lists',
@@ -124,6 +128,12 @@ export class AuthButtons extends Component {
                   <Icon icon="graph" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.diagrams)}
+                  </div>
+                </Link>
+                <Link to="/timelines" className="bp3-menu-item">
+                  <Icon icon="gantt-chart" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.timelines)}
                   </div>
                 </Link>
                 <Link to="/lists" className="bp3-menu-item">

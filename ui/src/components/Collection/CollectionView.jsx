@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 
-import { Count, ResultCount } from 'components/common';
+import { Count, EntitySet, ResultCount } from 'components/common';
 import { collectionXrefFacetsQuery } from 'queries';
 import { selectCollection, selectModel, selectCollectionXrefResult } from 'selectors';
 import getCollectionLink from 'util/getCollectionLink';
@@ -27,6 +27,14 @@ const messages = defineMessages({
   lists_description: {
     id: 'collection.info.lists_description',
     defaultMessage: 'Lists let you organize and group related entities of interest.',
+  },
+  timelines: {
+    id: 'collection.info.timelines',
+    defaultMessage: 'Timelines',
+  },
+  timelines_description: {
+    id: 'collection.info.timelines_description',
+    defaultMessage: 'Timelines are a way to view and organize events chronologically.',
   },
   xref: {
     id: 'collection.info.xref',
@@ -79,6 +87,7 @@ const icons = {
   mappings: 'new-object',
   search: 'search',
   lists: 'list',
+  timelines: 'gantt-chart',
   mentions: 'tag',
 };
 
@@ -142,6 +151,9 @@ const CollectionViewCount = ({ id, collection, model, xrefResult }) => {
       break;
     case 'lists':
       count = collection?.counts?.entitysets?.list;
+      break;
+    case 'timelines':
+      count = collection?.counts?.entitysets?.timeline;
       break;
     default:
       return null;

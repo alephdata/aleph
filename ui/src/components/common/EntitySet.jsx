@@ -9,18 +9,18 @@ import getEntitySetLink from 'util/getEntitySetLink';
 
 const ICONS = {
   diagram: 'graph',
-  timeline: 'timeline-events',
+  timeline: 'gantt-chart',
   profile: 'layers',
   list: 'list'
 }
 
 const getIcon = ({ type }) => ICONS[type] || ICONS.list;
 
-const EntitySetIcon = ({ entitySet, className }) => {
+const EntitySetIcon = ({ entitySet, className, iconSize }) => {
   if (!entitySet) return null;
 
   return (
-    <Icon icon={getIcon(entitySet)} className={className} />
+    <Icon icon={getIcon(entitySet)} className={className} iconSize={iconSize} />
   );
 }
 

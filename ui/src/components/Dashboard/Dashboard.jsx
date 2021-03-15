@@ -37,6 +37,10 @@ const messages = defineMessages({
     id: 'dashboard.lists',
     defaultMessage: 'Lists',
   },
+  timelines: {
+    id: 'dashboard.timelines',
+    defaultMessage: 'Timelines',
+  },
   settings: {
     id: 'dashboard.settings',
     defaultMessage: 'Settings',
@@ -126,6 +130,13 @@ class Dashboard extends React.Component {
                 label={<Count count={role?.counts?.entitysets?.diagram} />}
                 onClick={() => this.navigate('/diagrams')}
                 active={current === '/diagrams'}
+              />
+              <MenuItem
+                icon="gantt-chart"
+                text={intl.formatMessage(messages.timelines)}
+                label={<Count count={role?.counts?.entitysets?.timeline} />}
+                onClick={() => this.navigate('/timelines')}
+                active={current === '/timelines'}
               />
               <MenuItem
                 icon="list"

@@ -48,6 +48,8 @@ class InvestigationViews extends React.Component {
         return <CollectionEntitySetsIndexMode collectionId={collectionId} type="diagram" />;
       case 'lists':
         return <CollectionEntitySetsIndexMode collectionId={collectionId} type="list" />;
+      case 'timelines':
+        return <CollectionEntitySetsIndexMode collectionId={collectionId} type="timeline" />;
       case 'mappings':
         return <CollectionMappingsMode collectionId={collectionId} />;
       case 'mentions':

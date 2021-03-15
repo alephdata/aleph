@@ -62,6 +62,22 @@ const messages = defineMessages({
     id: 'diagram.import.placeholder',
     defaultMessage: 'Drop a .ftm or .vis file here or click to import an existing diagram',
   },
+  timeline_title: {
+    id: 'timeline.create.title',
+    defaultMessage: 'Create a timeline',
+  },
+  timeline_label_placeholder: {
+    id: 'timeline.create.label_placeholder',
+    defaultMessage: 'Untitled timeline',
+  },
+  timeline_summary_placeholder: {
+    id: 'timeline.create.summary_placeholder',
+    defaultMessage: 'A brief description of the timeline',
+  },
+  timeline_success: {
+    id: 'timeline.create.success',
+    defaultMessage: 'Your timeline has been created successfully.',
+  },
 });
 
 

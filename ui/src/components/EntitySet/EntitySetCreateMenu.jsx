@@ -16,6 +16,10 @@ const messages = defineMessages({
     id: 'diagram.create.button',
     defaultMessage: 'New diagram',
   },
+  timeline_create: {
+    id: 'timeline.create.button',
+    defaultMessage: 'New timeline',
+  },
   list_login: {
     id: 'list.create.login',
     defaultMessage: 'You must log in to create a list',
@@ -24,7 +28,17 @@ const messages = defineMessages({
     id: 'diagram.create.login',
     defaultMessage: 'You must log in to create a diagram',
   },
+  timeline_login: {
+    id: 'timeline.create.login',
+    defaultMessage: 'You must log in to create a timeline',
+  },
 });
+
+const BUTTON_ICON = {
+  diagram: 'send-to-graph',
+  list: 'add-to-artifact',
+  timeline: 'add',
+}
 
 class EntitySetCreateMenu extends Component {
   constructor(props) {
@@ -45,11 +59,10 @@ class EntitySetCreateMenu extends Component {
     const { isOpen, importEnabled } = this.state;
     const canAdd = session?.loggedIn;
     const canImportDiagram = type === 'diagram';
-    const icon = type === 'diagram' ? 'send-to-graph' : 'add-to-artifact';
 
     const buttonContent = (
       <ButtonGroup>
-        <Button onClick={() => this.toggleDialog(false)} icon={icon} intent={Intent.PRIMARY} disabled={!canAdd}>
+        <Button onClick={() => this.toggleDialog(false)} icon={BUTTON_ICON[type]} intent={Intent.PRIMARY} disabled={!canAdd}>
           {intl.formatMessage(messages[`${type}_create`])}
         </Button>
         {canImportDiagram && (
