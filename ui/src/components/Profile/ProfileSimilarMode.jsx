@@ -4,10 +4,11 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
+import queryString from 'query-string';
 
 import { selectSimilarResult } from 'selectors';
 import {
-  QueryInfiniteLoad, JudgementButtons, Score, Collection,
+  QueryInfiniteLoad, JudgementButtons, Score, Collection, EntityDecisionHotkeys, EntityDecisionRow,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { profileSimilarQuery } from 'queries';
@@ -41,9 +42,10 @@ class ProfileItemsMode extends Component {
     }
   }
 
-  renderRow(item) {
+  renderRow(item, index) {
+    const { selectedIndex } = this.props;
     return (
-      <tr key={item.id || item.entity.id}>
+      <EntityDecisionRow key={item.id || item.entity.id} selected={index === selectedIndex}>
         <td className="numeric narrow">
           <JudgementButtons obj={item} onChange={this.onDecide} />
         </td>
@@ -56,7 +58,7 @@ class ProfileItemsMode extends Component {
         <td className="collection">
           <Collection.Link collection={item.entity.collection} icon />
         </td>
-      </tr>
+      </EntityDecisionRow>
     );
   }
 
@@ -74,40 +76,42 @@ class ProfileItemsMode extends Component {
     }
     return (
       <div className="ProfileSimilarMode">
-        <table className={c("data-table", { 'pending': result.isPending })}>
-          <thead>
-            <tr>
-              <th className="numeric narrow" />
-              <th>
-                <span className="value">
-                  <FormattedMessage
-                    id="entity.similar.entity"
-                    defaultMessage="Similar entity"
-                  />
-                </span>
-              </th>
-              <th className="numeric narrow">
-                <span className="value">
-                  <FormattedMessage
-                    id="xref.score"
-                    defaultMessage="Score"
-                  />
-                </span>
-              </th>
-              <th className="collection">
-                <span className="value">
-                  <FormattedMessage
-                    id="xref.match_collection"
-                    defaultMessage="Dataset"
-                  />
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.results?.map(res => this.renderRow(res))}
-          </tbody>
-        </table>
+        <EntityDecisionHotkeys result={result} onDecide={this.onDecide}>
+          <table className={c("data-table", { 'pending': result.isPending })}>
+            <thead>
+              <tr>
+                <th className="numeric narrow" />
+                <th>
+                  <span className="value">
+                    <FormattedMessage
+                      id="entity.similar.entity"
+                      defaultMessage="Similar entity"
+                    />
+                  </span>
+                </th>
+                <th className="numeric narrow">
+                  <span className="value">
+                    <FormattedMessage
+                      id="xref.score"
+                      defaultMessage="Score"
+                    />
+                  </span>
+                </th>
+                <th className="collection">
+                  <span className="value">
+                    <FormattedMessage
+                      id="xref.match_collection"
+                      defaultMessage="Dataset"
+                    />
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.results?.map((res, i) => this.renderRow(res, i))}
+            </tbody>
+          </table>
+        </EntityDecisionHotkeys>
         <QueryInfiniteLoad
           query={query}
           result={result}
@@ -121,9 +125,12 @@ class ProfileItemsMode extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { profile, location } = ownProps;
   const query = profileSimilarQuery(location, profile.id);
+  const parsedHash = queryString.parse(location.hash);
+
   return {
     query,
     result: selectSimilarResult(state, query),
+    selectedIndex: +parsedHash.selectedIndex
   };
 };
 

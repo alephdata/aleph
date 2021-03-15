@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 import {
-  Collection, Skeleton, JudgementButtons, Score,
+  Collection, EntityDecisionRow, Skeleton, JudgementButtons, Score,
 } from 'components/common';
-import EntityCompare from 'components/Entity/EntityCompare';
-import { showWarningToast } from 'app/toast';
-import { pairwiseJudgement } from 'actions';
 
+import EntityCompare from 'components/Entity/EntityCompare';
 
 class XrefTableRow extends Component {
-  constructor(props) {
-    super(props);
-    this.onDecide = this.onDecide.bind(this);
-  }
-
-  async onDecide(xref) {
-    try {
-      await this.props.pairwiseJudgement(xref);
-    } catch (e) {
-      showWarningToast(e.message);
-    }
-  }
-
   renderSkeleton() {
     return (
       <tr>
@@ -44,7 +28,7 @@ class XrefTableRow extends Component {
   }
 
   render() {
-    const { isPending, xref } = this.props;
+    const { isPending, onDecide, selected, xref } = this.props;
 
     if (isPending) {
       return this.renderSkeleton();
@@ -54,9 +38,9 @@ class XrefTableRow extends Component {
       return null;
     }
     return (
-      <tr className="XrefTableRow">
+      <EntityDecisionRow className="XrefTableRow" selected={selected}>
         <td className="numeric narrow">
-          <JudgementButtons obj={xref} onChange={this.onDecide} />
+          <JudgementButtons obj={xref} onChange={onDecide} />
         </td>
         <td className="entity bordered">
           <EntityCompare entity={xref.entity} other={xref.match} showEmpty={true} />
@@ -70,10 +54,9 @@ class XrefTableRow extends Component {
         <td className="collection">
           <Collection.Link collection={xref.match?.collection} icon />
         </td>
-      </tr >
+      </EntityDecisionRow>
     );
   }
 }
 
-XrefTableRow = connect(null, { pairwiseJudgement })(XrefTableRow);
 export default XrefTableRow;

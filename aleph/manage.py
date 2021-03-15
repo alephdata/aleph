@@ -13,7 +13,7 @@ from followthemoney.cli.util import write_object
 
 from aleph.core import create_app, cache, db
 from aleph.authz import Authz
-from aleph.model import Collection, Role
+from aleph.model import Collection, Role, EntitySet
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
 from aleph.queues import get_status, cancel_queue
@@ -31,8 +31,20 @@ from aleph.logic.xref import xref_collection
 from aleph.logic.export import retry_exports
 from aleph.logic.roles import create_user, update_roles, delete_role
 from aleph.logic.permissions import update_permission
+from aleph.util import JSONEncoder
+from aleph.index.collections import get_collection as _get_index_collection
+from aleph.index.entities import get_entity as _get_index_entity
 
 log = logging.getLogger("aleph")
+
+
+def get_expanded_entity(entity_id):
+    if not entity_id:
+        return None
+    entity = _get_index_entity(entity_id)
+    entity.pop("_index", None)
+    entity["collection"] = _get_index_collection(entity["collection_id"])
+    return entity
 
 
 def get_collection(foreign_id):
@@ -73,7 +85,7 @@ def collections():
     is_flag=True,
     default=False,
     help="Run without threads and quit when no tasks are left.",
-)  # noqa
+)
 def worker(sync=False):
     """Run the queue-based worker service."""
     worker = get_worker()
@@ -85,9 +97,7 @@ def worker(sync=False):
 
 @cli.command()
 @click.argument("path", type=click.Path(exists=True))
-@click.option(
-    "-l", "--language", multiple=True, help="ISO language codes for OCR"
-)  # noqa
+@click.option("-l", "--language", multiple=True, help="ISO language codes for OCR")
 @click.option("-f", "--foreign_id", help="Foreign ID of the collection")
 def crawldir(path, language=None, foreign_id=None):
     """Crawl the given directory."""
@@ -205,7 +215,7 @@ def xref(foreign_id):
 
 @cli.command("load-entities")
 @click.argument("foreign_id")
-@click.option("-i", "--infile", type=click.File("r"), default="-")  # noqa
+@click.option("-i", "--infile", type=click.File("r"), default="-")
 @click.option(
     "--safe/--unsafe",
     default=True,
@@ -241,12 +251,32 @@ def load_entities(foreign_id, infile, safe=False, mutable=False):
 
 @cli.command("dump-entities")
 @click.argument("foreign_id")
-@click.option("-o", "--outfile", type=click.File("w"), default="-")  # noqa
+@click.option("-o", "--outfile", type=click.File("w"), default="-")
 def dump_entities(foreign_id, outfile):
     """Export FtM entities for the given collection."""
     collection = get_collection(foreign_id)
     for entity in iter_proxies(collection_id=collection.id):
         write_object(outfile, entity)
+
+
+@cli.command("dump-profiles")
+@click.option("-o", "--outfile", type=click.File("w"), default="-")
+@click.option("-f", "--foreign_id", help="Foreign ID of the collection")
+def dump_profiles(outfile, foreign_id=None):
+    """Export profile entityset items for the given collection."""
+    entitysets = EntitySet.by_type(EntitySet.PROFILE)
+    if foreign_id is not None:
+        collection = get_collection(foreign_id)
+        entitysets = entitysets.filter(EntitySet.collection_id == collection.id)
+    encoder = JSONEncoder(sort_keys=True)
+    for entityset in entitysets:
+        for item in entityset.items():
+            data = item.to_dict(entityset=entityset)
+            data["entity"] = get_expanded_entity(data.get("entity_id"))
+            data["compared_to_entity"] = get_expanded_entity(
+                data.get("compared_to_entity_id")
+            )
+            outfile.write(encoder.encode(data) + "\n")
 
 
 @cli.command("sample-entities")
@@ -374,8 +404,8 @@ def retry_exports_():
 @click.option("-n", "--name", help="Set a label")
 @click.option(
     "-a", "--admin", is_flag=True, default=False, help="Make the user an admin."
-)  # noqa
-def createuser(email, password=None, name=None, admin=False):  # noqa
+)
+def createuser(email, password=None, name=None, admin=False):
     """Create a user and show their API key."""
     role = create_user(email, name, password, is_admin=admin)
     print("User created. ID: %s, API Key: %s" % (role.id, role.api_key))
@@ -383,7 +413,7 @@ def createuser(email, password=None, name=None, admin=False):  # noqa
 
 @cli.command()
 @click.argument("foreign_id")
-def deleterole(foreign_id):  # noqa
+def deleterole(foreign_id):
     """Hard-delete a role (user, or group) from the database."""
     role = Role.by_foreign_id(foreign_id, deleted=True)
     if role is None:

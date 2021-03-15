@@ -3,6 +3,8 @@ import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import ClipboardInput from './ClipboardInput';
 import Category from './Category';
+import EntityDecisionHotkeys from './EntityDecisionHotkeys';
+import EntityDecisionRow from './EntityDecisionRow';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
 import HotKeysContainer from './HotKeysContainer';
@@ -18,6 +20,7 @@ import Facet from './Facet';
 import FileImport from './FileImport';
 import Mention from './Mention';
 import Property from './Property';
+import QuickLinks from './QuickLinks';
 import Role from './Role';
 import Schema from './Schema';
 import SectionLoading from './SectionLoading';
@@ -68,6 +71,8 @@ export {
   SectionLoading,
   TextLoading,
   ErrorSection,
+  EntityDecisionHotkeys,
+  EntityDecisionRow,
   SinglePane,
   SortableTH,
   Statistics,
@@ -81,6 +86,7 @@ export {
   SortingBar,
   QueryText,
   QueryInfiniteLoad,
+  QuickLinks,
   ResultCount,
   ResultText,
   SelectWrapper,

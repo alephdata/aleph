@@ -1,25 +1,7 @@
-@import "app/mixins.scss";
+@import "app/variables.scss";
 
 .NotificationsScreen {
-  flex-grow: 1;
-  display: flex;
-  flex-flow: row nowrap;
-  align-content: stretch;
-  align-items: stretch;
-
-  .dummy-pane {
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  .mark-read {
-    @include rtlSupportInvertedProp(margin, right, 0, null);
-    @include rtl(float, right, left);
-  }
-
-  ul.notifications-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+  .QuickLinks {
+    margin-bottom: $aleph-grid-size*2;
   }
 }
