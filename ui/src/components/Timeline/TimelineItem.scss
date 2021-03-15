@@ -1,6 +1,46 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-.Timelineitem {
+$timeline-item-padding: $aleph-grid-size;
 
+.TimelineItem {
+  display: flex;
+
+  &.bp3-card {
+    padding: 0;
+  }
+
+  &__main {
+    flex: 1 1 70%;
+
+    &__title {
+      background: $light-gray4;
+      padding: $timeline-item-padding;
+      font-weight: bold;
+    }
+
+    &__content {
+      padding: $timeline-item-padding;
+    }
+  }
+
+  &__secondary {
+    flex: 1 1 30%;
+    padding: $timeline-item-padding;
+    @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, none);
+  }
+
+  &__date {
+    font-weight: bold;
+    font-size: $pt-font-size;
+    margin: 0 0 $timeline-item-padding*2;
+  }
+
+  &__property {
+    margin: $timeline-item-padding 0;
+
+    &__label, &__value {
+      margin: 0;
+    }
+  }
 }
