@@ -8,22 +8,21 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
+import { DualPane, ErrorSection, HotKeysContainer, QueryInfiniteLoad } from 'components/common';
+import SearchFacets from 'components/Facet/SearchFacets';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import { Count, ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
-import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
 import TimelineActionBar from 'components/Timeline/TimelineActionBar';
-import EntityActionBar from 'components/Entity/EntityActionBar';
-import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import TimelineItem from 'components/Timeline/TimelineItem';
+import DateFacet from 'components/Facet/DateFacet';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
-import { showErrorToast, showSuccessToast } from 'app/toast';
-import getEntityLink from 'util/getEntityLink';
 
 import './Timeline.scss';
 
+const defaultFacets = [
+  'schema', 'countries', 'names', 'addresses',
+];
 
 const messages = defineMessages({
   // search_placeholder: {
@@ -131,29 +130,46 @@ class Timeline extends Component {
     // const selectedEntities = selection.map(this.getEntity).filter(e => e !== undefined);
 
     return (
-      <div className="Timeline">
-        <TimelineActionBar createNewItem={this.createNewItem} />
-        <div className="Timeline__content">
-          {isEmpty && (
-            <ErrorSection
-              icon="gantt-chart"
-              title={intl.formatMessage(messages.empty)}
-            />
-          )}
-          {!isEmpty && (
-            <>
-              {items.map((item) => (
-                <TimelineItem key={item.id || 'new'} item={item} />
-              ))}
-              <QueryInfiniteLoad
-                query={query}
-                result={result}
-                fetch={this.props.queryEntities}
+      <DualPane className="Timeline">
+        <DualPane.SidePane>
+          <SearchFacets
+            query={query}
+            result={result}
+            updateQuery={this.updateQuery}
+            facets={defaultFacets}
+            isCollapsible
+          />
+        </DualPane.SidePane>
+        <DualPane.ContentPane>
+          <DateFacet
+            isOpen={true}
+            intervals={result.facets?.dates?.intervals}
+            query={query}
+            updateQuery={this.updateQuery}
+          />
+          <TimelineActionBar createNewItem={this.createNewItem} />
+          <div className="Timeline__content">
+            {isEmpty && (
+              <ErrorSection
+                icon="gantt-chart"
+                title={intl.formatMessage(messages.empty)}
               />
-            </>
-          )}
-        </div>
-      </div>
+            )}
+            {!isEmpty && (
+              <>
+                {items.map((item) => (
+                  <TimelineItem key={item.id || 'new'} item={item} />
+                ))}
+                <QueryInfiniteLoad
+                  query={query}
+                  result={result}
+                  fetch={this.props.queryEntities}
+                />
+              </>
+            )}
+          </div>
+        </DualPane.ContentPane>
+      </DualPane>
     );
   }
 }

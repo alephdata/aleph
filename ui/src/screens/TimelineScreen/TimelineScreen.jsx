@@ -83,15 +83,11 @@ export class TimelineScreen extends Component {
       >
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
-          <DualPane className="TimelineScreen">
-            <DualPane.ContentPane>
-              <Timeline
-                query={entitiesQuery}
-                collection={timeline.collection}
-                onStatusChange={this.onStatusChange}
-              />
-            </DualPane.ContentPane>
-          </DualPane>
+          <Timeline
+            query={entitiesQuery}
+            collection={timeline.collection}
+            onStatusChange={this.onStatusChange}
+          />
         </CollectionWrapper>
       </Screen>
     );
@@ -107,7 +103,9 @@ const mapStateToProps = (state, ownProps) => {
   return {
     entitySetId,
     timeline,
-    entitiesQuery: entitySetEntitiesQuery(location, entitySetId, null, 1000),
+    entitiesQuery: entitySetEntitiesQuery(location, entitySetId, null, 1000)
+      .add('facet', 'dates')
+      .add('facet_interval:dates', 'year'),
   };
 };
 
