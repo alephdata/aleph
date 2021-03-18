@@ -10,7 +10,7 @@ pantomime==0.4.1
 
 # Flask ecosystem
 Flask==1.1.2
-Flask-SQLAlchemy==2.4.4
+Flask-SQLAlchemy==2.5.1
 Flask-Mail==0.9.1
 Flask-Migrate==2.7.0
 Flask-Cors==3.0.10
