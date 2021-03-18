@@ -30,7 +30,7 @@ def _make_queries(type_, value):
             yield {
                 "match": {
                     "fingerprints.text": {
-                        "query": value,
+                        "query": fp,
                         "operator": "and",
                         "minimum_should_match": "60%",
                     }
