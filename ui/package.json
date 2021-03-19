@@ -17,7 +17,7 @@
     "@formatjs/intl-utils": "^3.8.4",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.1",
-    "@types/react": "^16.13.1",
+    "@types/react": "^17.0.3",
     "@types/react-dom": "^16.13.1",
     "axios": "^0.21.0",
     "classnames": "^2.2.6",
