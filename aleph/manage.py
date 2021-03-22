@@ -41,6 +41,8 @@ def get_expanded_entity(entity_id):
     if not entity_id:
         return None
     entity = _get_index_entity(entity_id)
+    if entity is None:
+        return None
     entity.pop("_index", None)
     entity["collection"] = _get_index_collection(entity["collection_id"])
     return entity
