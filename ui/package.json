@@ -9,7 +9,7 @@
     "@blueprintjs/datetime": "3.20.5",
     "@blueprintjs/icons": "3.24.0",
     "@blueprintjs/select": "3.15.6",
-    "@blueprintjs/table": "3.8.23",
+    "@blueprintjs/table": "3.8.26",
     "@formatjs/cli": "^3.0.1",
     "@formatjs/intl-locale": "^2.4.14",
     "@formatjs/intl-pluralrules": "^4.0.6",
