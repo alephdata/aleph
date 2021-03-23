@@ -77,6 +77,7 @@ const entityEditorWrapper = (EditorComponent) => {
       async createEntity(entity) {
         const { collection, entitySetId, onStatusChange } = this.props;
         onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
+        console.log('in create', entity, entitySetId)
         try {
           if (entitySetId) {
             await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
@@ -101,6 +102,8 @@ const entityEditorWrapper = (EditorComponent) => {
       async updateEntity(entity) {
         const { collection, onStatusChange } = this.props;
         onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
+
+        console.log('in update entity', entity);
 
         try {
           entity.collection = collection;

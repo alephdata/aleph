@@ -70,49 +70,18 @@ class Timeline extends Component {
     });
   }
 
-  createNewItem() {
-    this.setState({ showNewItem: true });
+  async createNewItem({ schema, properties }) {
+    const { entityManager } = this.props;
+
+    const simplifiedProps = {};
+    properties.forEach((value, prop) => {
+      simplifiedProps[prop.name] = value
+    })
+    console.log(simplifiedProps);
+
+    await entityManager.createEntity({ schema, properties: simplifiedProps });
+    this.setState({ showNewItem: false });
   }
-
-  // updateSelection(entityIds, newVal) {
-  //   this.setState(({ selection }) => {
-  //     let newSelection;
-  //     if (newVal) {
-  //       newSelection = [...new Set([...selection, ...entityIds])];
-  //     } else {
-  //       newSelection = selection.filter(id => entityIds.indexOf(id) < 0);
-  //     }
-  //     return ({ selection: newSelection });
-  //   });
-  // }
-
-  // onEntityClick = (entity) => {
-  //   if (entity) {
-  //     const { history } = this.props;
-  //     history.push(getEntityLink(entity));
-  //   }
-  // }
-  //
-  // onSortColumn(newField) {
-  //   const { query, sort } = this.props;
-  //   const { field: currentField, direction } = sort;
-  //
-  //   if (currentField !== newField) {
-  //     return this.updateQuery(query.sortBy(`properties.${newField}`, 'asc'));
-  //   }
-  //
-  //   // Toggle through sorting states: ascending, descending, or unsorted.
-  //   this.updateQuery(query.sortBy(
-  //     `properties.${currentField}`,
-  //     direction === 'asc' ? 'desc' : undefined
-  //   ));
-  // }
-  //
-  // onSearchSubmit(queryText) {
-  //   const { query } = this.props;
-  //   const newQuery = query.set('q', queryText);
-  //   this.updateQuery(newQuery);
-  // }
 
   clearSelection() {
     this.setState({ selection: [] });
@@ -144,7 +113,7 @@ class Timeline extends Component {
             query={query}
             updateQuery={this.updateQuery}
           />
-          <TimelineActionBar createNewItem={this.createNewItem} />
+          <TimelineActionBar createNewItem={() => this.setState({ showNewItem: true })} />
           <div className="Timeline__content">
             {isEmpty && !showNewItem && (
               <ErrorSection
@@ -152,11 +121,11 @@ class Timeline extends Component {
                 title={intl.formatMessage(messages.empty)}
               />
             )}
-            {showNewItem && <TimelineItem />}
+            {showNewItem && <TimelineItem onUpdate={this.createNewItem} />}
             {!isEmpty && (
               <>
                 {items.map((item) => (
-                  <TimelineItem key={item.id} entity={item} />
+                  <TimelineItem key={item.id} entity={item} onUpdate={entityData => entityManager.updateEntity(entityData)} />
                 ))}
                 <QueryInfiniteLoad
                   query={query}

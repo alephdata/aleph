@@ -28,6 +28,7 @@ export class TimelineScreen extends Component {
     this.state = {
       updateStatus: null
     }
+    this.onStatusChange = this.onStatusChange.bind(this);
   }
 
   componentDidMount() {
@@ -51,7 +52,7 @@ export class TimelineScreen extends Component {
   }
 
   render() {
-    const { activeSchema, entitiesQuery, timeline, updateStatus, querySchemaEntities } = this.props;
+    const { activeSchema, entitiesQuery, entitiesResult, timeline, updateStatus, querySchemaEntities } = this.props;
 
     if (timeline.isError) {
       return <ErrorScreen error={timeline.error} />;
@@ -85,6 +86,7 @@ export class TimelineScreen extends Component {
           {breadcrumbs}
           <Timeline
             query={entitiesQuery}
+            entities={entitiesResult?.results}
             collection={timeline.collection}
             onStatusChange={this.onStatusChange}
           />
@@ -99,13 +101,15 @@ const mapStateToProps = (state, ownProps) => {
   const { entitySetId } = match.params;
 
   const timeline = selectEntitySet(state, entitySetId);
+  const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000)
+    .add('facet', 'dates')
+    .add('facet_interval:dates', 'year')
 
   return {
     entitySetId,
     timeline,
-    entitiesQuery: entitySetEntitiesQuery(location, entitySetId, null, 1000)
-      .add('facet', 'dates')
-      .add('facet_interval:dates', 'year'),
+    entitiesQuery,
+    entitiesResult: selectEntitiesResult(state, entitiesQuery)
   };
 };
 

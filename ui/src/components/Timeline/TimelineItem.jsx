@@ -29,7 +29,7 @@ class TimelineItem extends Component {
   constructor(props) {
     super(props);
     const { entity, model } = props;
-    
+
     this.state = {
       entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` })
     }
@@ -48,6 +48,10 @@ class TimelineItem extends Component {
 
   onPropertyEdit(entity) {
     this.setState({ entity });
+
+    console.log('in prop edit', entity);
+    //
+    this.props.onUpdate(entity);
   }
 
   render() {
@@ -55,6 +59,8 @@ class TimelineItem extends Component {
     const { entity } = this.state;
 
     const captionProp = entity.schema.caption?.[0];
+
+    console.log(captionProp);
 
     return (
       <Card className="TimelineItem">
