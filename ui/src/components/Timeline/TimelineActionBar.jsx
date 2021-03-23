@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
-import { Count, ErrorSection, QueryInfiniteLoad } from 'components/common';
+import { Count, ErrorSection, QueryInfiniteLoad, Schema } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
@@ -60,8 +60,6 @@ class TimelineActionBar extends Component {
     this.updateQuery = this.updateQuery.bind(this);
   }
 
-
-
   updateQuery(newQuery) {
     const { history, location } = this.props;
     history.push({
@@ -76,10 +74,7 @@ class TimelineActionBar extends Component {
 
     return (
       <ButtonGroup>
-        <Button
-          icon="add"
-          onClick={createNewItem}
-        >
+        <Button icon="add" onClick={createNewItem}>
           <FormattedMessage id="timeline.add_new" defaultMessage="Add a new event" />
         </Button>
       </ButtonGroup>

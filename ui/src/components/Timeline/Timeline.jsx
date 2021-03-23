@@ -40,7 +40,7 @@ class Timeline extends Component {
     super(props);
     this.state = {
       selection: [],
-      newItem: null
+      showNewItem: false
     };
     this.updateQuery = this.updateQuery.bind(this);
     this.createNewItem = this.createNewItem.bind(this);
@@ -71,7 +71,7 @@ class Timeline extends Component {
   }
 
   createNewItem() {
-    this.setState({ newItem: {} });
+    this.setState({ showNewItem: true });
   }
 
   // updateSelection(entityIds, newVal) {
@@ -120,12 +120,9 @@ class Timeline extends Component {
 
   render() {
     const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, updateStatus, writeable } = this.props;
-    const { newItem } = this.state;
+    const { showNewItem } = this.state;
 
-    const newItems = newItem ? [newItem] : [];
-    const existingItems = result.results ? result.results : [];
-    const items = [...newItems, ...existingItems]
-
+    const items = result.results;
     const isEmpty = items.length == 0;
     // const selectedEntities = selection.map(this.getEntity).filter(e => e !== undefined);
 
@@ -149,16 +146,17 @@ class Timeline extends Component {
           />
           <TimelineActionBar createNewItem={this.createNewItem} />
           <div className="Timeline__content">
-            {isEmpty && (
+            {isEmpty && !showNewItem && (
               <ErrorSection
                 icon="gantt-chart"
                 title={intl.formatMessage(messages.empty)}
               />
             )}
+            {showNewItem && <TimelineItem />}
             {!isEmpty && (
               <>
                 {items.map((item) => (
-                  <TimelineItem key={item.id || 'new'} item={item} />
+                  <TimelineItem key={item.id} entity={item} />
                 ))}
                 <QueryInfiniteLoad
                   query={query}
@@ -177,6 +175,7 @@ class Timeline extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
   const sort = query.getSort();
+
 
   return {
     sort: !_.isEmpty(sort) ? {
