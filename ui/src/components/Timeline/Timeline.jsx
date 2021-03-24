@@ -8,13 +8,15 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
-import { DualPane, ErrorSection, HotKeysContainer, QueryInfiniteLoad } from 'components/common';
+import { DualPane, ErrorSection, HotKeysContainer, QueryInfiniteLoad, SortingBar } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
+import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { DialogToggleButton } from 'components/Toolbar';
 import TimelineActionBar from 'components/Timeline/TimelineActionBar';
 import TimelineItem from 'components/Timeline/TimelineItem';
 import DateFacet from 'components/Facet/DateFacet';
+import QueryTags from 'components/QueryTags/QueryTags';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
@@ -77,7 +79,6 @@ class Timeline extends Component {
     properties.forEach((value, prop) => {
       simplifiedProps[prop.name] = value
     })
-    console.log(simplifiedProps);
 
     await entityManager.createEntity({ schema, properties: simplifiedProps });
     this.setState({ showNewItem: false });
@@ -107,6 +108,13 @@ class Timeline extends Component {
           />
         </DualPane.SidePane>
         <DualPane.ContentPane>
+          <QueryTags query={query} updateQuery={this.updateQuery} />
+          <SearchActionBar result={result}>
+            <SortingBar
+              query={query}
+              updateQuery={this.updateQuery}
+            />
+          </SearchActionBar>
           <DateFacet
             isOpen={true}
             intervals={result.facets?.dates?.intervals}
@@ -121,11 +129,21 @@ class Timeline extends Component {
                 title={intl.formatMessage(messages.empty)}
               />
             )}
-            {showNewItem && <TimelineItem onUpdate={this.createNewItem} />}
+            {showNewItem && (
+              <TimelineItem
+                onUpdate={this.createNewItem}
+                fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+              />
+            )}
             {!isEmpty && (
               <>
                 {items.map((item) => (
-                  <TimelineItem key={item.id} entity={item} onUpdate={entityData => entityManager.updateEntity(entityData)} />
+                  <TimelineItem
+                    key={item.id}
+                    entity={item}
+                    onUpdate={entityData => entityManager.updateEntity(entityData)}
+                    fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+                  />
                 ))}
                 <QueryInfiniteLoad
                   query={query}

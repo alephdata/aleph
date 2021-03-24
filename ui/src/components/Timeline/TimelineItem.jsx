@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, EditableText } from '@blueprintjs/core';
-import { PropertyEditor } from '@alephdata/react-ftm';
+import { PropertyEditor, PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 
 
@@ -31,11 +31,15 @@ class TimelineItem extends Component {
     const { entity, model } = props;
 
     this.state = {
-      entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` })
+      entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` }),
+      addedProps: []
     }
 
     this.onSchemaChange = this.onSchemaChange.bind(this);
     this.onPropertyEdit = this.onPropertyEdit.bind(this);
+    this.getVisibleProperties = this.getVisibleProperties.bind(this);
+    this.renderProperty = this.renderProperty.bind(this);
+    this.onNewPropertyAdded = this.onNewPropertyAdded.bind(this);
   }
 
   onSchemaChange(schema) {
@@ -48,10 +52,32 @@ class TimelineItem extends Component {
 
   onPropertyEdit(entity) {
     this.setState({ entity });
-
-    console.log('in prop edit', entity);
-    //
     this.props.onUpdate(entity);
+  }
+
+  onNewPropertyAdded(prop) {
+    this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop.name] }));
+  }
+
+  getVisibleProperties() {
+    const { addedProps, entity } = this.state;
+
+    return Array.from(new Set([...entity.schema.featured, ...entity.getProperties().map(prop => prop.name), ...addedProps]));
+  }
+
+  renderProperty(propName) {
+    const { fetchEntitySuggestions } = this.props;
+    const { entity } = this.state;
+
+    return (
+      <Property.Editable
+        key={propName}
+        entity={entity}
+        property={propName}
+        onEdit={this.onPropertyEdit}
+        fetchEntitySuggestions={fetchEntitySuggestions}
+      />
+    )
   }
 
   render() {
@@ -59,8 +85,13 @@ class TimelineItem extends Component {
     const { entity } = this.state;
 
     const captionProp = entity.schema.caption?.[0];
+    const reservedProps = [captionProp, 'date', 'endDate', 'description'];
+    const visibleProps = this.getVisibleProperties()
+      .filter(prop => reservedProps.indexOf(prop) < 0);
 
-    console.log(captionProp);
+    const availableProps = entity.schema.getEditableProperties()
+      .sort((a, b) => a.label.localeCompare(b.label))
+      .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
     return (
       <Card className="TimelineItem">
@@ -72,17 +103,9 @@ class TimelineItem extends Component {
             <Schema.Label schema={entity.schema} icon />
           </Schema.Select>
           <h5 className="TimelineItem__date">
-            <Property.Editable
-              entity={entity}
-              property='date'
-              onEdit={this.onPropertyEdit}
-            />
+            {this.renderProperty('date')}
             -
-            <Property.Editable
-              entity={entity}
-              property='endDate'
-              onEdit={this.onPropertyEdit}
-            />
+            {this.renderProperty('endDate')}
           </h5>
           <div className="TimelineItem__date">
           </div>
@@ -90,18 +113,15 @@ class TimelineItem extends Component {
         <div className="TimelineItem__main">
           {captionProp && (
             <div className="TimelineItem__main__title">
-              <Property.Editable
-                entity={entity}
-                property={captionProp}
-                onEdit={this.onPropertyEdit}
-              />
+              {this.renderProperty(captionProp)}
             </div>
           )}
           <div className="TimelineItem__main__content">
-            <Property.Editable
-              entity={entity}
-              property="description"
-              onEdit={this.onPropertyEdit}
+            {this.renderProperty('description')}
+            {visibleProps.map(this.renderProperty)}
+            <PropertySelect
+              properties={availableProps}
+              onSelected={this.onNewPropertyAdded}
             />
           </div>
         </div>

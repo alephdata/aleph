@@ -23,7 +23,7 @@ class EditableProperty extends React.Component {
   }
 
   render() {
-    const { locale, model, onEdit, property, entity } = this.props;
+    const { locale, model, onEdit, property, entity, fetchEntitySuggestions } = this.props;
     const { editing } = this.state;
 
     const ftmProp = entity.schema.getProperty(property);
@@ -35,6 +35,7 @@ class EditableProperty extends React.Component {
           entity={entity}
           property={ftmProp}
           onSubmit={(entityData) => { this.toggleEditing(); onEdit(entityData); }}
+          fetchEntitySuggestions={fetchEntitySuggestions}
         />
       );
     } else {
