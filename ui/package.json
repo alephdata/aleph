@@ -28,7 +28,7 @@
     "node-sass": "^4.13.1",
     "numeral": "^2.0.6",
     "papaparse": "^5.1.0",
-    "query-string": "^6.8.3",
+    "query-string": "^7.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
