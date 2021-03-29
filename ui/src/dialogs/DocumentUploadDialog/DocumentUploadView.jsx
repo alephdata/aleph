@@ -91,15 +91,13 @@ export class DocumentUploadView extends PureComponent {
           numberOfFiles: filesToUpload.length,
           totalSize: <FileSize value={totalFileSize} />
         })}</p>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
-            <Button
-              type="submit"
-              intent={Intent.PRIMARY}
-              text={intl.formatMessage(messages.save)}
-              onClick={this.submit}
-            />
-          </div>
+        <div className="bp3-dialog-footer-actions">
+          <Button
+            type="submit"
+            intent={Intent.PRIMARY}
+            text={intl.formatMessage(messages.save)}
+            onClick={this.submit}
+          />
         </div>
       </div>
     );
