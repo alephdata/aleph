@@ -1,14 +1,10 @@
 @import "app/variables.scss";
 
 .EntityLink {
-  &:visited {
-    color: $aleph-visited-link-color;
+  .active & {
+    opacity: 1 !important;
   }
-
-  // &.profile {
-  //   color: $aleph-profile-dark;
-  //   &:visited {
-  //     color: $aleph-profile-dark-visited;
-  //   }
-  // }  
+  &.visited, &:visited {
+    opacity: .65;
+  }
 }
