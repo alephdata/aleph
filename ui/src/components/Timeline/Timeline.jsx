@@ -17,7 +17,7 @@ import TimelineActionBar from 'components/Timeline/TimelineActionBar';
 import TimelineItem from 'components/Timeline/TimelineItem';
 import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
-import { queryEntities } from 'actions';
+import { deleteEntity, queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
 import './Timeline.scss';
@@ -75,6 +75,8 @@ class Timeline extends Component {
   async createNewItem({ schema, properties }) {
     const { entityManager } = this.props;
 
+    console.log('in create new', properties);
+
     const simplifiedProps = {};
     properties.forEach((value, prop) => {
       simplifiedProps[prop.name] = value
@@ -89,7 +91,7 @@ class Timeline extends Component {
   }
 
   render() {
-    const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, updateStatus, writeable } = this.props;
+    const { collection, deleteEntity, entityManager, query, intl, result, schema, isEntitySet, sort, updateStatus, writeable } = this.props;
     const { showNewItem } = this.state;
 
     const items = result.results;
@@ -131,7 +133,9 @@ class Timeline extends Component {
             )}
             {showNewItem && (
               <TimelineItem
+                isDraft
                 onUpdate={this.createNewItem}
+                onDelete={() => this.setState({ showNewItem: false })}
                 fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
               />
             )}
@@ -142,6 +146,8 @@ class Timeline extends Component {
                     key={item.id}
                     entity={item}
                     onUpdate={entityData => entityManager.updateEntity(entityData)}
+                    onRemove={entityId => entityManager.deleteEntities([entityId])}
+                    onDelete={entityId => deleteEntity(entityId)}
                     fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
                   />
                 ))}
@@ -176,6 +182,6 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   entityEditorWrapper,
-  connect(mapStateToProps, { queryEntities }),
+  connect(mapStateToProps, { deleteEntity, queryEntities }),
   injectIntl,
 )(Timeline);

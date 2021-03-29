@@ -15,36 +15,50 @@ class EditableProperty extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { editing: false };
+    this.state = { editing: props.defaultEditing };
   }
 
   toggleEditing = () => {
     this.setState(({ editing }) => ({ editing: !editing }));
   }
 
+  renderLabel(options) {
+    const { prop, entity } = this.props;
+
+    return (
+      <span className="PropertyName text-muted">
+        <VLProperty.Name prop={entity.schema.getProperty(prop)} />
+        {options?.withSeparator && <span>:</span>}
+      </span>
+    );
+  }
+
   render() {
-    const { locale, model, onEdit, property, entity, fetchEntitySuggestions } = this.props;
+    const { className, locale, model, onEdit, prop, entity, fetchEntitySuggestions, showLabel } = this.props;
     const { editing } = this.state;
 
-    const ftmProp = entity.schema.getProperty(property);
+    const property = entity.schema.getProperty(prop);
 
     if (editing) {
       return (
-        <PropertyEditor
-          locale={locale}
-          entity={entity}
-          property={ftmProp}
-          onSubmit={(entityData) => { this.toggleEditing(); onEdit(entityData); }}
-          fetchEntitySuggestions={fetchEntitySuggestions}
-        />
+        <div className={className}>
+          {showLabel && this.renderLabel({ withSeparator: true })}
+          <PropertyEditor
+            locale={locale}
+            entity={entity}
+            property={property}
+            onSubmit={(entityData) => { this.toggleEditing(); onEdit(entityData); }}
+            fetchEntitySuggestions={fetchEntitySuggestions}
+          />
+        </div>
       );
     } else {
       const values = entity.getProperty(property);
       const isEmpty = values.length === 0;
       return (
-        <div onClick={this.toggleEditing}>
-          {isEmpty && <span className="bp3-text-muted">{ftmProp.label}</span>}
-          {!isEmpty && <Property.Values prop={ftmProp} values={values} />}
+        <div className={className} onClick={this.toggleEditing}>
+          {(isEmpty || showLabel) && this.renderLabel({ withSeparator: !isEmpty })}
+          {!isEmpty && <Property.Values prop={property} values={values} />}
         </div>
       );
     }

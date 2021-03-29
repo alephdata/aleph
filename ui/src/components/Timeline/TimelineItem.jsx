@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import c from 'classnames';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, EditableText } from '@blueprintjs/core';
+import { Button, Card, Divider, EditableText, Intent, Menu, Popover, Tooltip } from '@blueprintjs/core';
 import { PropertyEditor, PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 
@@ -19,10 +20,14 @@ const messages = defineMessages({
   //   id: 'entity.manager.search_placeholder',
   //   defaultMessage: 'Search {schema}',
   // },
-  // empty: {
-  //   id: 'timeline.empty',
-  //   defaultMessage: 'This timeline is empty',
-  // }
+  remove: {
+    id: 'timeline.item.remove',
+    defaultMessage: 'Remove from timeline',
+  },
+  delete: {
+    id: 'timeline.item.delete',
+    defaultMessage: 'Delete',
+  }
 });
 
 class TimelineItem extends Component {
@@ -52,6 +57,7 @@ class TimelineItem extends Component {
 
   onPropertyEdit(entity) {
     this.setState({ entity });
+    console.log('in on edit', entity)
     this.props.onUpdate(entity);
   }
 
@@ -65,7 +71,7 @@ class TimelineItem extends Component {
     return Array.from(new Set([...entity.schema.featured, ...entity.getProperties().map(prop => prop.name), ...addedProps]));
   }
 
-  renderProperty(propName) {
+  renderProperty(propName, options) {
     const { fetchEntitySuggestions } = this.props;
     const { entity } = this.state;
 
@@ -73,18 +79,97 @@ class TimelineItem extends Component {
       <Property.Editable
         key={propName}
         entity={entity}
-        property={propName}
+        prop={propName}
         onEdit={this.onPropertyEdit}
         fetchEntitySuggestions={fetchEntitySuggestions}
+        {...options}
       />
     )
   }
 
-  render() {
+  renderDraft() {
+    const { entity, onDelete } = this.state;
+
+    const captionProp = entity.schema.caption?.[0];
+
+    return (
+      <>
+        <Button className="TimelineItem__menu-toggle" minimal icon="cross" onClick={() => onDelete()} />
+        <div className="TimelineItem__title bp3-heading">
+          <Schema.Select
+            optionsFilter={schema => schema.isA('Interval') }
+            onSelect={this.onSchemaChange}
+          >
+            <Button
+              minimal
+              small
+              icon={<Schema.Icon schema={entity.schema} />}
+              rightIcon="caret-down"
+            >
+              <Schema.Label schema={entity.schema} />
+            </Button>
+          </Schema.Select>
+          {captionProp && (
+            <>
+              <Divider />
+              {this.renderProperty(captionProp, { defaultEditing: true, showLabel: true, className: "TimelineItem__property" })}
+            </>
+          )}
+        </div>
+      </>
+    )
+  }
+
+  renderActionMenu() {
+    const { intl, onDelete, onRemove } = this.props;
+    const { entity } = this.state;
+
+    return (
+      <Popover>
+        <Button className="TimelineItem__menu-toggle" minimal icon="more" />
+        <Menu>
+          <Menu.Item
+            onClick={() => onRemove(entity.id)}
+            text={intl.formatMessage(messages.remove)}
+            icon="remove"
+          />
+          <Menu.Item
+            onClick={() => onDelete(entity.id)}
+            text={intl.formatMessage(messages.delete)}
+            icon="trash"
+            intent={Intent.DANGER}
+          />
+        </Menu>
+      </Popover>
+    );
+  }
+
+  renderTitle() {
+    const { entity } = this.state;
+
+    const captionProp = entity.schema.caption?.[0];
+
+    if (captionProp) {
+      return (
+        <>
+          <Tooltip minimal content={<Schema.Label schema={entity.schema} icon />} >
+            <Schema.Icon schema={entity.schema} className="left-icon" />
+          </Tooltip>
+          {this.renderProperty(captionProp)}
+        </>
+      );
+    } else {
+      return <span style={{ textTransform: 'italic'}}><Schema.Label schema={entity.schema} icon /></span>
+    }
+  }
+
+
+  renderFull() {
     const { intl, model } = this.props;
     const { entity } = this.state;
 
     const captionProp = entity.schema.caption?.[0];
+    // const otherRequiredProps = entity.schema.required.filter(prop => prop !== captionProp);
     const reservedProps = [captionProp, 'date', 'endDate', 'description'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
@@ -93,74 +178,49 @@ class TimelineItem extends Component {
       .sort((a, b) => a.label.localeCompare(b.label))
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
+    const showEndDate = entity.hasProperty('date');
+
     return (
-      <Card className="TimelineItem">
-        <div className="TimelineItem__secondary">
-          <Schema.Select
-            optionsFilter={schema => schema.isA('Interval') }
-            onSelect={this.onSchemaChange}
-          >
-            <Schema.Label schema={entity.schema} icon />
-          </Schema.Select>
-          <h5 className="TimelineItem__date">
-            {this.renderProperty('date')}
-            -
-            {this.renderProperty('endDate')}
-          </h5>
-          <div className="TimelineItem__date">
+      <>
+        {this.renderActionMenu()}
+        <div className="TimelineItem__main">
+          <div className="TimelineItem__title bp3-heading">
+            {this.renderTitle(captionProp)}
+          </div>
+          <div className="TimelineItem__main__content">
+            <div className="TimelineItem__date">
+              {this.renderProperty('date')}
+              {showEndDate && (
+                <>
+                  <span className="TimelineItem__date__divider text-muted">-</span>
+                  {this.renderProperty('endDate')}
+                </>
+              )}
+            </div>
           </div>
         </div>
-        <div className="TimelineItem__main">
-          {captionProp && (
-            <div className="TimelineItem__main__title">
-              {this.renderProperty(captionProp)}
-            </div>
-          )}
-          <div className="TimelineItem__main__content">
-            {this.renderProperty('description')}
-            {visibleProps.map(this.renderProperty)}
+        <div className="TimelineItem__secondary">
+          <div className="TimelineItem__secondary__content">
+            {visibleProps.map(prop => this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" }))}
             <PropertySelect
               properties={availableProps}
               onSelected={this.onNewPropertyAdded}
+              buttonProps={{ minimal: true, small: true }}
             />
           </div>
         </div>
-      </Card>
+      </>
     )
 
-  //   return (
-  //     <Card className="TimelineItem">
-  //       <div className="TimelineItem__secondary">
-  //         <Schema.Label schema={item.schema} icon />
-  //         <h5 className="TimelineItem__date">
-  //           <Property.Values prop={item.schema.getProperty('date')} values={properties['date']} />
-  //         </h5>
-  //         <div className="TimelineItem__property">
-  //           <h5 className="TimelineItem__property__label">Organized by</h5>
-  //           <div className="TimelineItem__property__values">
-  //             <Entity.Link entity={testPerson} icon />
-  //           </div>
-  //         </div>
-  //         <div className="TimelineItem__property">
-  //           <h5 className="TimelineItem__property__label">Involved</h5>
-  //           <div className="TimelineItem__property__values">
-  //             <Entity.Link className="TimelineItem__property__value" entity={testCompany} icon />
-  //             <Entity.Link className="TimelineItem__property__value" entity={testPerson} icon />
-  //           </div>
-  //         </div>
-  //       </div>
-  //       <div className="TimelineItem__main">
-  //         <div className="TimelineItem__main__title">
-  //           <Entity.Link entity={testEntity} icon />
-  //         </div>
-  //         <div className="TimelineItem__main__content">
-  //           <p className="TimelineItem__summary">
-  //             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  //           </p>
-  //         </div>
-  //       </div>
-  //     </Card>
-  //   );
+  }
+
+  render() {
+    const { isDraft } = this.props;
+    const content = isDraft ? this.renderDraft() : this.renderFull();
+
+    return (
+      <Card className="TimelineItem" elevation={1}>{content}</Card>
+    );
   }
 }
 

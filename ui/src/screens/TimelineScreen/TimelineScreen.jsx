@@ -89,6 +89,7 @@ export class TimelineScreen extends Component {
             entities={entitiesResult?.results}
             collection={timeline.collection}
             onStatusChange={this.onStatusChange}
+            mutateOnUpdate
           />
         </CollectionWrapper>
       </Screen>
