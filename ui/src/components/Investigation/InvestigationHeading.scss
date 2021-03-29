@@ -40,7 +40,7 @@ $inner-padding: 15px;
 
     .metadata-shown & {
       width: 100%;
-      margin-top: 20px;
+      margin-top: 0;
       margin-bottom: $aleph-grid-size;
     }
   }
@@ -112,5 +112,9 @@ $inner-padding: 15px;
 
   .CollectionLink, .CategoryLink {
     color: white !important;
+  }
+
+  .CollectionInfo__item .value {
+    font-weight: 500;
   }
 }
