@@ -1,10 +1,7 @@
 @import "app/variables.scss";
 
 .EntityLink {
-  .active & {
-    opacity: 1 !important;
-  }
   &.visited, &:visited {
-    opacity: .65;
+    color: $aleph-visited-link-color;
   }
 }
