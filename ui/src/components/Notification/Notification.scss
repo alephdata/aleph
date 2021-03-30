@@ -14,9 +14,6 @@ $notification-items-padding: 1px;
   .notification-action {
     .param {
       font-weight: bold;
-      .bp3-icon, .bp3-icon svg {
-        @include rtlSupportInvertedProp(margin, right, $notification-items-padding*1.5, null);
-      }
       .Role {
         span {
           @include rtlSupportInvertedProp(padding, right, $notification-items-padding, null);
