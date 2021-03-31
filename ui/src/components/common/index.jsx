@@ -33,7 +33,6 @@ import Tag from './Tag';
 import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
 import Skeleton from './Skeleton';
-import SortingBar from './SortingBar';
 import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
@@ -83,7 +82,6 @@ export {
   SchemaCounts,
   SearchBox,
   Skeleton,
-  SortingBar,
   QueryText,
   QueryInfiniteLoad,
   QuickLinks,

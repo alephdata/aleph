@@ -2,16 +2,30 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { Button, Intent } from '@blueprintjs/core';
 
 import { queryCollections } from 'actions';
-import { selectCollectionsResult } from 'selectors';
-import { ErrorSection, SearchBox, SortingBar, QueryInfiniteLoad } from 'components/common';
+import { selectCollectionsResult, selectCurrentRole } from 'selectors';
+import { ErrorSection, SearchBox, QueryInfiniteLoad } from 'components/common';
 import QueryTags from 'components/QueryTags/QueryTags';
 import SearchActionBar from 'components/common/SearchActionBar';
 import CollectionIndexItem from './CollectionIndexItem';
+import SortingBar from 'components/SortingBar/SortingBar';
+
 
 import './CollectionIndex.scss';
 
+const messages = defineMessages({
+  show_mine: {
+    id: 'collection.index.filter.mine',
+    defaultMessage: 'Created by me',
+  },
+  show_all: {
+    id: 'collection.index.filter.all',
+    defaultMessage: 'All',
+  },
+});
 
 export class CollectionIndex extends Component {
   constructor(props) {
@@ -19,6 +33,7 @@ export class CollectionIndex extends Component {
 
     this.onSearch = this.onSearch.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
+    this.toggleCreatedBy = this.toggleCreatedBy.bind(this);
   }
 
   onSearch(queryText) {
@@ -34,6 +49,12 @@ export class CollectionIndex extends Component {
       pathname: location.pathname,
       search: newQuery.toLocation(),
     });
+  }
+
+  toggleCreatedBy() {
+    const { createdByFilterVal, query, role } = this.props;
+    const newQuery = createdByFilterVal.length ? query.clearFilter('creator_id') : query.setFilter('creator_id', role.id);
+    this.updateQuery(newQuery);
   }
 
   renderErrors() {
@@ -69,7 +90,7 @@ export class CollectionIndex extends Component {
   }
 
   render() {
-    const { placeholder, query, result, showQueryTags } = this.props;
+    const { createdByFilterVal, intl, placeholder, query, result, showQueryTags } = this.props;
 
     return (
       <div className="CollectionIndex">
@@ -87,7 +108,15 @@ export class CollectionIndex extends Component {
             <SortingBar
               query={query}
               updateQuery={this.updateQuery}
-              showCreatedByFilter
+              sortingFields={['created_at', 'count', 'label', 'updated_at']}
+              filterButton={
+                <Button
+                  text={intl.formatMessage(createdByFilterVal.length ? messages.show_mine : messages.show_all)}
+                  onClick={this.toggleCreatedBy}
+                  minimal
+                  intent={Intent.PRIMARY}
+                />
+              }
             />
           </SearchActionBar>
         </div>
@@ -104,13 +133,17 @@ export class CollectionIndex extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
+  const createdByFilterVal = query.getFilter('creator_id');
 
   return {
     result: selectCollectionsResult(state, query),
+    role: selectCurrentRole(state),
+    createdByFilterVal
   };
 };
 
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryCollections }),
+  injectIntl
 )(CollectionIndex);

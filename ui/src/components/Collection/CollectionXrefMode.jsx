@@ -11,12 +11,12 @@ import SearchFacets from 'components/Facet/SearchFacets';
 import { QueryInfiniteLoad } from 'components/common';
 import CollectionXrefManageMenu from 'components/Collection/CollectionXrefManageMenu';
 import XrefTable from 'components/XrefTable/XrefTable';
+import SortingBar from 'components/SortingBar/SortingBar';
 import { collectionXrefFacetsQuery } from 'queries';
 import { selectCollection, selectCollectionXrefResult, selectTester } from 'selectors';
 import { queryCollectionXref, queryRoles } from 'actions';
 
 import './CollectionXrefMode.scss';
-import 'src/components/common/SortingBar.scss';
 
 const messages = defineMessages({
   sort_random: {
@@ -26,6 +26,10 @@ const messages = defineMessages({
   sort_default: {
     id: 'xref.sort.default',
     defaultMessage: 'Default',
+  },
+  sort_label: {
+    id: "xref.sort.label",
+    defaultMessage: "Sort by:"
   }
 });
 
@@ -79,22 +83,17 @@ export class CollectionXrefMode extends React.Component {
               />
               <SearchActionBar result={result}>
                 {isTester && (
-                  <div className="SortingBar">
-                    <span className="SortingBar__label">
-                      <FormattedMessage
-                        id="xref.sort.label"
-                        defaultMessage="Sort by:"
-                      />
-                    </span>
-                    <div className="SortingBar__control">
+                  <SortingBar
+                    filterButtonLabel={intl.formatMessage(messages.sort_label)}
+                    filterButton={
                       <Button
                         text={intl.formatMessage(messages[isRandomSort ? 'sort_random' : 'sort_default'])}
                         onClick={this.toggleSort}
                         minimal
                         intent={Intent.PRIMARY}
                       />
-                    </div>
-                  </div>
+                    }
+                  />
                 )}
               </SearchActionBar>
             </div>

@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
-import { DualPane, ErrorSection, HotKeysContainer, QueryInfiniteLoad, SortingBar } from 'components/common';
+import { DualPane, ErrorSection, HotKeysContainer, QueryInfiniteLoad } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
 import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
@@ -17,6 +17,7 @@ import TimelineActionBar from 'components/Timeline/TimelineActionBar';
 import TimelineItem from 'components/Timeline/TimelineItem';
 import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
+import SortingBar from 'components/SortingBar/SortingBar';
 import { deleteEntity, queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
@@ -65,6 +66,7 @@ class Timeline extends Component {
 
   updateQuery(newQuery) {
     const { history, location } = this.props;
+    console.log('updating query', newQuery);
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -115,6 +117,7 @@ class Timeline extends Component {
             <SortingBar
               query={query}
               updateQuery={this.updateQuery}
+              sortingFields={['properties.date', 'caption', 'created_at']}
             />
           </SearchActionBar>
           <DateFacet
