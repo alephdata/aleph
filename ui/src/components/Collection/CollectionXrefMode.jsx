@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, Intent } from '@blueprintjs/core';
+import queryString from 'query-string';
 
 import SearchActionBar from 'components/common/SearchActionBar';
 import SearchFacets from 'components/Facet/SearchFacets';
@@ -32,26 +33,32 @@ export class CollectionXrefMode extends React.Component {
   constructor(props) {
     super(props);
     this.updateQuery = this.updateQuery.bind(this);
-    this.toggleEvalMode = this.toggleEvalMode.bind(this);
+    this.toggleSort = this.toggleSort.bind(this);
   }
 
   updateQuery(newQuery) {
     const { history, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    parsedHash.selectedId = undefined;
+
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
-      hash: location.hash,
+      hash: queryString.stringify(parsedHash),
     });
   }
 
-  toggleEvalMode() {
-    const { isEvalMode, query } = this.props;
-    const newQuery = query.set('evaluation_mode', !isEvalMode);
-    this.updateQuery(newQuery)
+  toggleSort() {
+    const { isRandomSort, query } = this.props;
+    if (isRandomSort) {
+      this.updateQuery(query.clear('sort'));
+    } else {
+      this.updateQuery(query.sortBy('random', 'desc'));
+    }
   }
 
   render() {
-    const { collection, isEvalMode, intl, isTester, query, result } = this.props;
+    const { collection, isRandomSort, intl, isTester, query, result } = this.props;
     return (
       <section className="CollectionXrefMode">
         <div className="pane-layout">
@@ -81,8 +88,8 @@ export class CollectionXrefMode extends React.Component {
                     </span>
                     <div className="SortingBar__control">
                       <Button
-                        text={intl.formatMessage(messages[isEvalMode ? 'sort_random' : 'sort_default'])}
-                        onClick={this.toggleEvalMode}
+                        text={intl.formatMessage(messages[isRandomSort ? 'sort_random' : 'sort_default'])}
+                        onClick={this.toggleSort}
                         minimal
                         intent={Intent.PRIMARY}
                       />
@@ -111,7 +118,7 @@ const mapStateToProps = (state, ownProps) => {
     collection: selectCollection(state, collectionId),
     query,
     isTester: selectTester(state),
-    isEvalMode: query.getBool('evaluation_mode'),
+    isRandomSort: query.getSort()?.field === 'random',
     result: selectCollectionXrefResult(state, query),
   };
 };

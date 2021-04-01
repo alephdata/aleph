@@ -28,7 +28,7 @@ class Authz(object):
         self.roles = set(roles)
         self.is_admin = is_admin
         self.token_id = token_id
-        self.expire = expire or settings.OAUTH_EXPIRE
+        self.expire = expire or settings.SESSION_EXPIRE
         self.session_write = not settings.MAINTENANCE and self.logged_in
         self._collections = {}
 

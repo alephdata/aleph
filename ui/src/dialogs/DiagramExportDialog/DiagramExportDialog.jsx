@@ -51,7 +51,7 @@ class DiagramExportDialog extends Component {
   generateIframeString = () => {
     const { entitySet } = this.props;
     const { embedUrl } = this.state;
-    return `<iframe width="100%" height="100%" src=${embedUrl} title=${entitySet.label} style="border:none;"></iframe>`;
+    return `<iframe width="100%" height="100%" src="${embedUrl}" title="${entitySet.label}" style="border:none;"></iframe>`;
   }
 
   render() {

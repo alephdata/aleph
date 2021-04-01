@@ -56,8 +56,6 @@ class MappingIndexItem extends PureComponent {
   getTitle() {
     const { link, tableEntity } = this.props;
 
-    console.log(tableEntity, link);
-
     if (tableEntity && !tableEntity.isPending) {
       const title = <Entity.Label entity={tableEntity} icon />;
       if (link) {

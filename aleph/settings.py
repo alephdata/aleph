@@ -80,10 +80,13 @@ OAUTH_SCOPE = env.get("ALEPH_OAUTH_SCOPE", "openid email profile")
 OAUTH_METADATA_URL = env.get("ALEPH_OAUTH_METADATA_URL")
 OAUTH_TOKEN_METHOD = env.get("ALEPH_OAUTH_TOKEN_METHOD", "POST")
 OAUTH_ADMIN_GROUP = env.get("ALEPH_OAUTH_ADMIN_GROUP", "superuser")
-OAUTH_EXPIRE = env.to_int("ALEPH_OAUTH_EXPIRE", 60_000)
 
 # No authentication. Everyone is admin.
 SINGLE_USER = env.to_bool("ALEPH_SINGLE_USER")
+
+# Default session duration.
+SESSION_EXPIRE = 800_000 if SINGLE_USER else 60_000
+SESSION_EXPIRE = env.to_int("ALEPH_SESSION_EXPIRE", SESSION_EXPIRE)
 
 # Disable password-based authentication for SSO settings:
 PASSWORD_LOGIN = env.to_bool("ALEPH_PASSWORD_LOGIN", not OAUTH)

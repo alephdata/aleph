@@ -128,6 +128,19 @@ class EntitySet(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
+    def entity_entitysets(cls, entity_id, collection_id=None):
+        """Retuns EntitySets linked positive to entity_id."""
+        q = db.session.query(cls.id)
+        q = q.join(EntitySetItem)
+        q = q.filter(cls.deleted_at == None)  # NOQA
+        q = q.filter(EntitySetItem.deleted_at == None)  # NOQA
+        q = q.filter(EntitySetItem.entity_id == entity_id)
+        q = q.filter(EntitySetItem.judgement == Judgement.POSITIVE)
+        if collection_id:
+            q = q.filter(EntitySetItem.collection_id == collection_id)
+        return set([id_ for id_, in q.all()])
+
+    @classmethod
     def all_profiles(cls, collection_id, entity_id=None):
         q = EntitySet.all_ids()
         q = q.filter(EntitySet.type == EntitySet.PROFILE)

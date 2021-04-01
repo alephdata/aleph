@@ -1,5 +1,6 @@
 import React from 'react';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
@@ -7,15 +8,13 @@ import { EntityCreateDialog } from '@alephdata/react-ftm';
 
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { showSuccessToast, showErrorToast } from 'app/toast';
-import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { DialogToggleButton } from 'components/Toolbar';
-import { Skeleton } from 'components/common';
+import { QuickLinks } from 'components/common';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
 import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
+import { selectModel } from 'selectors';
 
-
-import './InvestigationQuickLinks.scss'
 
 const messages = defineMessages({
   entity_create_error: {
@@ -64,49 +63,33 @@ class InvestigationQuickLinks extends React.Component {
     });
   }
 
-  renderSkeleton() {
-    return (
-      <div className="InvestigationQuickLinks">
-        {[...Array(4).keys()].map(key => (
-          <div className="InvestigationQuickLinks__item" key={key}>
-            <Skeleton.Text type="div" length="250" className="InvestigationQuickLinks__item__content" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   render() {
     const { collection, intl, model } = this.props;
 
-    if (collection.id === undefined) {
-      return this.renderSkeleton();
-    }
-
     return (
-      <div className="InvestigationQuickLinks">
-        <div className="InvestigationQuickLinks__item">
+      <QuickLinks isPending={collection.id === undefined}>
+        <div className="QuickLinks__item">
           <DialogToggleButton
             buttonProps={{
               minimal: true,
-              className: "InvestigationQuickLinks__item__content"
+              className: "QuickLinks__item__content"
             }}
             Dialog={DocumentUploadDialog}
             dialogProps={{ collection, onUploadSuccess: this.onDocUpload }}
           >
             <>
-              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_upload.svg)' }} />
-              <div className="InvestigationQuickLinks__item__text">
+              <div className="QuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_upload.svg)' }} />
+              <div className="QuickLinks__item__text">
                 <p><FormattedMessage id="investigation.shortcut.upload" defaultMessage="Upload documents" /></p>
               </div>
             </>
           </DialogToggleButton>
         </div>
-        <div className="InvestigationQuickLinks__item">
+        <div className="QuickLinks__item">
           <DialogToggleButton
             buttonProps={{
               minimal: true,
-              className: "InvestigationQuickLinks__item__content"
+              className: "QuickLinks__item__content"
             }}
             Dialog={EntityCreateDialog}
             dialogProps={{
@@ -117,54 +100,60 @@ class InvestigationQuickLinks extends React.Component {
             }}
           >
             <>
-              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_entities.svg)' }} />
-              <div className="InvestigationQuickLinks__item__text">
+              <div className="QuickLinks__item__image" style={{ backgroundImage: 'url(/static/investigation_entities.svg)' }} />
+              <div className="QuickLinks__item__text">
                 <p><FormattedMessage id="investigation.shortcut.entities" defaultMessage="Create new entities" /></p>
               </div>
             </>
           </DialogToggleButton>
         </div>
-        <div className="InvestigationQuickLinks__item">
+        <div className="QuickLinks__item">
           <DialogToggleButton
             buttonProps={{
               minimal: true,
-              className: "InvestigationQuickLinks__item__content"
+              className: "QuickLinks__item__content"
             }}
             Dialog={EntitySetCreateDialog}
             dialogProps={{ entitySet: { collection, type: 'diagram' }, canChangeCollection: false }}
           >
             <>
-              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_networks.svg)' }} />
-              <div className="InvestigationQuickLinks__item__text">
+              <div className="QuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_networks.svg)' }} />
+              <div className="QuickLinks__item__text">
                 <p><FormattedMessage id="investigation.shortcut.diagram" defaultMessage="Sketch a network diagram" /></p>
               </div>
             </>
           </DialogToggleButton>
         </div>
-        <div className="InvestigationQuickLinks__item">
+        <div className="QuickLinks__item">
           <DialogToggleButton
             buttonProps={{
               minimal: true,
-              className: "InvestigationQuickLinks__item__content"
+              className: "QuickLinks__item__content"
             }}
             Dialog={CollectionXrefDialog}
             dialogProps={{ collection, onSubmit: this.onXrefSubmit }}
           >
             <>
-              <div className="InvestigationQuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_xref.svg)' }} />
-              <div className="InvestigationQuickLinks__item__text">
+              <div className="QuickLinks__item__image" style={{ backgroundImage: 'url(/static/home_xref.svg)' }} />
+              <div className="QuickLinks__item__text">
                 <p><FormattedMessage id="investigation.shortcut.xref" defaultMessage="Compare with other datasets" /></p>
               </div>
             </>
           </DialogToggleButton>
         </div>
-      </div>
+      </QuickLinks>
     )
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    model: selectModel(state),
+  };
+};
+
 export default compose(
   withRouter,
-  entityEditorWrapper,
+  connect(mapStateToProps),
   injectIntl,
 )(InvestigationQuickLinks);

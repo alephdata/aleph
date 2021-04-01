@@ -86,7 +86,12 @@ class MatchQuery(EntitiesQuery):
 class XrefQuery(Query):
     TEXT_FIELDS = ["text"]
     SORT_DEFAULT = [{"score": "desc"}]
+    SORT_FIELDS = {
+        "random": "random",
+        "score": "_score",
+    }
     AUTHZ_FIELD = "match_collection_id"
+    SCORE_CUTOFF = 0.5
     SOURCE = XREF_SOURCE
 
     def __init__(self, parser, collection_id=None):
@@ -97,15 +102,13 @@ class XrefQuery(Query):
     def get_filters(self, **kwargs):
         filters = super(XrefQuery, self).get_filters(**kwargs)
         filters.append({"term": {"collection_id": self.collection_id}})
+        sorts = [f for (f, _) in self.parser.sorts]
+        if "random" not in sorts:
+            filters.append({"range": {"random": {"gt": self.SCORE_CUTOFF}}})
         return filters
 
     def get_index(self):
         return xref_index()
-
-
-class XrefEvaluationQuery(XrefQuery):
-    def get_sort(self):
-        return [{"_id": "desc"}]
 
 
 class NotificationsQuery(Query):

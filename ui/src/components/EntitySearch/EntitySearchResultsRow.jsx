@@ -73,7 +73,7 @@ class EntitySearchResultsRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    const resultClass = c('EntitySearchResultsRow', 'nowrap', { active: isActive }, { prefix: isPrefix }, { viewed: !!entity.lastViewed });
+    const resultClass = c('EntitySearchResultsRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
     const highlightsClass = c('EntitySearchResultsRow', { active: isActive });
 
     return (

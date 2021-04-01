@@ -26,6 +26,10 @@
     background: $aleph-text-highlight-color;
     font-style: normal;
   }
+
+  .highlights {
+    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
+  }
 }
 
 //medium and small screen

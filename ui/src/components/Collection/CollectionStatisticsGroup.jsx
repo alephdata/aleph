@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import CollectionStatistics from './CollectionStatistics';
+import CollectionDateHistogram from './CollectionDateHistogram';
 import { selectCollection } from 'selectors';
 
 import './CollectionStatisticsGroup.scss';
@@ -28,7 +29,7 @@ class CollectionStatisticsGroup extends React.Component {
   }
 
   render() {
-    const { emptyComponent, isPending, statsToRender } = this.props;
+    const { collectionId, emptyComponent, isPending, statsToRender } = this.props;
     const skeletonItems = [...Array(3).keys()];
 
     if (!isPending && !statsToRender.length) {
@@ -37,6 +38,7 @@ class CollectionStatisticsGroup extends React.Component {
 
     return (
       <div className="CollectionStatisticsGroup">
+        <CollectionDateHistogram collectionId={collectionId} className="CollectionStatisticsGroup__item" />
         {isPending && skeletonItems.map((key) => this.renderStatisticsItem({ key }))}
         {!isPending && statsToRender.map((stat) => this.renderStatisticsItem(stat))}
       </div>

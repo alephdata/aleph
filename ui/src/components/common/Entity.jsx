@@ -39,7 +39,7 @@ class EntityLink extends PureComponent {
       <Link
         to={link}
         onClick={preview ? this.onClick : undefined}
-        className={c('EntityLink', className)}
+        className={c('EntityLink', className, {visited: !!entity.lastViewed})}
       >
         {content}
       </Link>
