@@ -176,6 +176,12 @@ class EntitySetSelector extends Component {
             onSelect={this.onSelect}
             onCreate={this.onCreate}
           />
+          <EntitySetSelectorSection
+            type="timeline"
+            collection={collection}
+            onSelect={this.onSelect}
+            onCreate={this.onCreate}
+          />
         </div>
       </Drawer>
     );
