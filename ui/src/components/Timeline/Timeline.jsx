@@ -9,11 +9,10 @@ import SearchFacets from 'components/Facet/SearchFacets';
 import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import TimelineActionBar from 'components/Timeline/TimelineActionBar';
-import TimelineItem from 'components/Timeline/TimelineItem';
+import TimelineItemList from 'components/Timeline/TimelineItemList';
 import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
 import SortingBar from 'components/SortingBar/SortingBar';
-import { deleteEntity, queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
 import './Timeline.scss';
@@ -27,10 +26,6 @@ const messages = defineMessages({
   //   id: 'entity.manager.search_placeholder',
   //   defaultMessage: 'Search {schema}',
   // },
-  empty: {
-    id: 'timeline.empty',
-    defaultMessage: 'This timeline is empty',
-  },
   histogram_empty: {
     id: 'timeline.empty_histogram',
     defaultMessage: 'No dates found for selected range',
@@ -41,26 +36,9 @@ class Timeline extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selection: [],
-      showNewItem: false
+      showDraftItem: false
     };
     this.updateQuery = this.updateQuery.bind(this);
-    this.createNewItem = this.createNewItem.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryEntities({ query });
-    }
   }
 
   updateQuery(newQuery) {
@@ -72,28 +50,9 @@ class Timeline extends Component {
     });
   }
 
-  async createNewItem({ schema, properties }) {
-    const { entityManager } = this.props;
-
-    const simplifiedProps = {};
-    properties.forEach((value, prop) => {
-      simplifiedProps[prop.name] = value
-    })
-
-    await entityManager.createEntity({ schema, properties: simplifiedProps });
-    this.setState({ showNewItem: false });
-  }
-
-  clearSelection() {
-    this.setState({ selection: [] });
-  }
-
   render() {
-    const { deleteEntity, entityManager, query, intl, result } = this.props;
-    const { showNewItem } = this.state;
-
-    const items = result.results;
-    const isEmpty = items.length === 0;
+    const { entityManager, query, intl, result } = this.props;
+    const { showDraftItem } = this.state;
 
     return (
       <DualPane className="Timeline">
@@ -121,42 +80,14 @@ class Timeline extends Component {
               sortingFields={['properties.date', 'caption', 'created_at']}
             />
           </SearchActionBar>
-          <TimelineActionBar createNewItem={() => this.setState({ showNewItem: true })} />
-          <div className="Timeline__content">
-            {isEmpty && !showNewItem && (
-              <ErrorSection
-                icon="gantt-chart"
-                title={intl.formatMessage(messages.empty)}
-              />
-            )}
-            {showNewItem && (
-              <TimelineItem
-                isDraft
-                onUpdate={this.createNewItem}
-                onDelete={() => this.setState({ showNewItem: false })}
-                fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
-              />
-            )}
-            {!isEmpty && (
-              <>
-                {items.map((item) => (
-                  <TimelineItem
-                    key={item.id}
-                    entity={item}
-                    onUpdate={entityData => entityManager.updateEntity(entityData)}
-                    onRemove={entityId => entityManager.deleteEntities([entityId])}
-                    onDelete={entityId => deleteEntity(entityId)}
-                    fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
-                  />
-                ))}
-                <QueryInfiniteLoad
-                  query={query}
-                  result={result}
-                  fetch={this.props.queryEntities}
-                />
-              </>
-            )}
-          </div>
+          <TimelineActionBar createNewItem={() => this.setState({ showDraftItem: true })} />
+          <TimelineItemList
+            query={query}
+            result={result}
+            showDraftItem={showDraftItem}
+            onHideDraft={() => this.setState({ showDraftItem: false })}
+            entityManager={entityManager}
+          />
         </DualPane.ContentPane>
       </DualPane>
     );
@@ -174,6 +105,6 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   entityEditorWrapper,
-  connect(mapStateToProps, { deleteEntity, queryEntities }),
+  connect(mapStateToProps),
   injectIntl,
 )(Timeline);
