@@ -59,15 +59,12 @@ class SortingBar extends Component {
   onSort({ field, direction }) {
     const { query, sortDirection, sortField, updateQuery } = this.props;
 
-    console.log(field || sortField, direction || sortDirection);
     const newQuery = query.sortBy(field || sortField, direction || sortDirection);
     updateQuery(newQuery);
   }
 
   renderSortingButtons() {
     const { intl, sortingFields, sortDirection, sortField } = this.props;
-
-    console.log('fields', sortingFields)
 
     const sortingItems = sortingFields.map(field => ({ field, label: intl.formatMessage(messages[field]) }));
 

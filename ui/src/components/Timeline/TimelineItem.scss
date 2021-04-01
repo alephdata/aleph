@@ -12,7 +12,7 @@ $timeline-item-padding: $aleph-grid-size;
     padding: 0;
   }
 
-  &__menu-toggle {
+  &__actions {
     position: absolute;
     top: 0;
     @include rtl(right, 0, null);
@@ -23,7 +23,7 @@ $timeline-item-padding: $aleph-grid-size;
     flex: 1 1 70%;
 
     &__content {
-      padding: $timeline-item-padding;
+      padding: $timeline-item-padding/2 $timeline-item-padding;
     }
   }
 

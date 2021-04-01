@@ -19,7 +19,7 @@ import { selectEntitiesResult } from 'selectors';
 import './Timeline.scss';
 
 const defaultFacets = [
-  'schema', 'countries', 'names', 'addresses',
+  'names', 'addresses', 'schema',
 ];
 
 const messages = defineMessages({
@@ -61,7 +61,6 @@ class Timeline extends Component {
 
   updateQuery(newQuery) {
     const { history, location } = this.props;
-    console.log('updating query', newQuery);
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -71,8 +70,6 @@ class Timeline extends Component {
 
   async createNewItem({ schema, properties }) {
     const { entityManager } = this.props;
-
-    console.log('in create new', properties);
 
     const simplifiedProps = {};
     properties.forEach((value, prop) => {
@@ -97,6 +94,12 @@ class Timeline extends Component {
     return (
       <DualPane className="Timeline">
         <DualPane.SidePane>
+          <DateFacet
+            isOpen={true}
+            intervals={result.facets?.dates?.intervals}
+            query={query}
+            updateQuery={this.updateQuery}
+          />
           <SearchFacets
             query={query}
             result={result}
@@ -114,12 +117,6 @@ class Timeline extends Component {
               sortingFields={['properties.date', 'caption', 'created_at']}
             />
           </SearchActionBar>
-          <DateFacet
-            isOpen={true}
-            intervals={result.facets?.dates?.intervals}
-            query={query}
-            updateQuery={this.updateQuery}
-          />
           <TimelineActionBar createNewItem={() => this.setState({ showNewItem: true })} />
           <div className="Timeline__content">
             {isEmpty && !showNewItem && (

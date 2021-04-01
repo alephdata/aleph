@@ -32,10 +32,7 @@ class TimelineActionBar extends Component {
     return (
       <ButtonGroup>
         <Button icon="add" onClick={createNewItem}>
-          <FormattedMessage id="timeline.add_new" defaultMessage="Create a new item" />
-        </Button>
-        <Button icon="add" onClick={createNewItem}>
-          <FormattedMessage id="timeline.add_existing" defaultMessage="Add an exiting item" />
+          <FormattedMessage id="timeline.add_new" defaultMessage="Create new item" />
         </Button>
       </ButtonGroup>
     );
