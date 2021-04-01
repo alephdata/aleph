@@ -21,7 +21,7 @@ upgrade: build
 	$(APPDOCKER) aleph upgrade
 
 api: services
-	$(COMPOSE) up --force-recreate api
+	$(COMPOSE) up --abort-on-container-exit api
 
 web: services
 	$(COMPOSE) up --abort-on-container-exit api ui
