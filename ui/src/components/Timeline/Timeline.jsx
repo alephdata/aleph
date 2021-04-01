@@ -30,6 +30,10 @@ const messages = defineMessages({
   empty: {
     id: 'timeline.empty',
     defaultMessage: 'This timeline is empty',
+  },
+  histogram_empty: {
+    id: 'timeline.empty_histogram',
+    defaultMessage: 'No dates found for selected range',
   }
 });
 
@@ -99,13 +103,13 @@ class Timeline extends Component {
             intervals={result.facets?.dates?.intervals}
             query={query}
             updateQuery={this.updateQuery}
+            emptyText={intl.formatMessage(messages.histogram_empty)}
           />
           <SearchFacets
             query={query}
             result={result}
             updateQuery={this.updateQuery}
             facets={defaultFacets}
-            isCollapsible
           />
         </DualPane.SidePane>
         <DualPane.ContentPane>

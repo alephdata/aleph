@@ -8,24 +8,20 @@ import { Entity as FTMEntity } from '@alephdata/followthemoney';
 
 
 import { selectModel } from 'selectors';
-import { Entity, Property, Schema } from 'components/common';
+import { Collection, Entity, Property, Schema } from 'components/common';
 
 
 import './TimelineItem.scss';
 
 
 const messages = defineMessages({
-  // search_placeholder: {
-  //   id: 'entity.manager.search_placeholder',
-  //   defaultMessage: 'Search {schema}',
-  // },
   remove: {
     id: 'timeline.item.remove',
     defaultMessage: 'Remove from timeline',
   },
   delete: {
     id: 'timeline.item.delete',
-    defaultMessage: 'Delete',
+    defaultMessage: 'Delete from {collection}',
   }
 });
 
@@ -106,7 +102,7 @@ class TimelineItem extends Component {
           />
           <Menu.Item
             onClick={() => onDelete(entity.id)}
-            text={intl.formatMessage(messages.delete)}
+            text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
             icon="trash"
             intent={Intent.DANGER}
           />

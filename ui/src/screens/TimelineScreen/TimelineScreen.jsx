@@ -102,7 +102,11 @@ const mapStateToProps = (state, ownProps) => {
   const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000)
     .add('facet', 'dates')
     .add('facet_interval:dates', 'year')
-    .defaultSortBy('properties.date', 'asc')
+    .defaultFacet('schema')
+    .defaultFacet('names')
+    .defaultFacet('addresses')
+    .defaultSortBy('properties.date', 'asc');
+
 
   return {
     entitySetId,

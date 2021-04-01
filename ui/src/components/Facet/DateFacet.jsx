@@ -6,7 +6,10 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
+
 import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToYear } from 'components/Facet/util';
+import { ErrorSection } from 'components/common';
+
 
 import './DateFacet.scss';
 
@@ -78,25 +81,36 @@ export class DateFilter extends Component {
   }
 
   render() {
-    const { filteredIntervals, intervals, intl, isOpen, displayShowHiddenToggle } = this.props;
-    if (!isOpen || (filteredIntervals && filteredIntervals.length <= 1)) return null;
+    const { emptyText, filteredIntervals, intervals, intl, isOpen, displayShowHiddenToggle } = this.props;
+    if (!isOpen || (!filteredIntervals?.length && !emptyText)) {
+      return null;
+    }
+
     let content;
 
-    if (intervals) {
-      const dataPropName = intl.formatMessage(messages.results);
-      content = (
-        <>
-          <Histogram
-            data={filteredIntervals.map(({ label, count, ...rest }) => ({ label: timestampToYear(label), [dataPropName]: count, ...rest }))}
-            dataPropName={dataPropName}
-            onSelect={this.onSelect}
-            containerProps={{
-              height: DATE_FACET_HEIGHT,
-            }}
+    if (filteredIntervals) {
+      if (!filteredIntervals.length) {
+        content = (
+          <ErrorSection
+            description={emptyText}
           />
-          {displayShowHiddenToggle && this.renderShowHiddenToggle()}
-        </>
-      )
+        )
+      } else {
+        const dataPropName = intl.formatMessage(messages.results);
+        content = (
+          <>
+            <Histogram
+              data={filteredIntervals.map(({ label, count, ...rest }) => ({ label: timestampToYear(label), [dataPropName]: count, ...rest }))}
+              dataPropName={dataPropName}
+              onSelect={this.onSelect}
+              containerProps={{
+                height: DATE_FACET_HEIGHT,
+              }}
+            />
+            {displayShowHiddenToggle && this.renderShowHiddenToggle()}
+          </>
+        )
+      }
     } else {
       content = (
         <div style={{ minHeight: `${DATE_FACET_HEIGHT}px` }}>
