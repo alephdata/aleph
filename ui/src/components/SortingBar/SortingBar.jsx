@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
+import { Button, Intent, MenuItem } from '@blueprintjs/core';
 
 import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
 
@@ -29,7 +29,7 @@ const messages = defineMessages({
     id: 'sorting.bar.caption',
     defaultMessage: 'Title',
   },
-  ['properties.date']: {
+  'properties.date': {
     id: 'sorting.bar.date',
     defaultMessage: 'Date',
   },
@@ -65,7 +65,7 @@ class SortingBar extends Component {
   }
 
   renderSortingButtons() {
-    const { intl, filterButton, sortingFields, sortDirection, sortField } = this.props;
+    const { intl, sortingFields, sortDirection, sortField } = this.props;
 
     console.log('fields', sortingFields)
 
@@ -112,7 +112,7 @@ class SortingBar extends Component {
   }
 
   render() {
-    const { intl, filterButton, filterButtonLabel, sortingFields, sortDirection, sortField, showCreatedByFilter } = this.props;
+    const { intl, filterButton, filterButtonLabel, sortingFields } = this.props;
 
     return (
       <div className="SortingBar">

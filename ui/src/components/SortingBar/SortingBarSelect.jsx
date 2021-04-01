@@ -1,7 +1,4 @@
 import React, { PureComponent } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
 
 import { Count, SelectWrapper } from 'components/common';

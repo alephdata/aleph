@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import c from 'classnames';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, Divider, EditableText, Intent, Menu, Popover, Tooltip } from '@blueprintjs/core';
-import { PropertyEditor, PropertySelect } from '@alephdata/react-ftm';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Button, Card, Divider, Intent, Menu, Popover, Tooltip } from '@blueprintjs/core';
+import { PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 
 
 import { selectModel } from 'selectors';
-import { Entity, Property, Schema } from 'components/common';
+import { Property, Schema } from 'components/common';
 
 
 import './TimelineItem.scss';
@@ -57,7 +56,6 @@ class TimelineItem extends Component {
 
   onPropertyEdit(entity) {
     this.setState({ entity });
-    console.log('in on edit', entity)
     this.props.onUpdate(entity);
   }
 
@@ -165,7 +163,6 @@ class TimelineItem extends Component {
 
 
   renderFull() {
-    const { intl, model } = this.props;
     const { entity } = this.state;
 
     const captionProp = entity.schema.caption?.[0];

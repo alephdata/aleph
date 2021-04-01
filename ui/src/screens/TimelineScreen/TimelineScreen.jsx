@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
-import { Button, ButtonGroup } from '@blueprintjs/core';
 
-import { fetchEntitySet, queryEntitySetEntities } from 'actions';
-import { selectEntitySet, selectEntitiesResult, selectModel } from 'selectors';
-import { entitySetSchemaCountsQuery, entitySetEntitiesQuery } from 'queries';
+import { fetchEntitySet } from 'actions';
+import { selectEntitySet, selectEntitiesResult } from 'selectors';
+import { entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
-import EntityTable from 'components/EntityTable/EntityTable';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import LoadingScreen from 'components/Screen/LoadingScreen';
@@ -17,7 +14,7 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import Timeline from 'components/Timeline/Timeline';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, DualPane, UpdateStatus} from 'components/common';
+import { Breadcrumbs, UpdateStatus} from 'components/common';
 
 import './TimelineScreen.scss';
 
@@ -40,7 +37,7 @@ export class TimelineScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { timeline, countsResult, countsQuery, entitySetId } = this.props;
+    const { timeline, entitySetId } = this.props;
 
     if (timeline.shouldLoad) {
       this.props.fetchEntitySet({ id: entitySetId });
@@ -52,7 +49,7 @@ export class TimelineScreen extends Component {
   }
 
   render() {
-    const { activeSchema, entitiesQuery, entitiesResult, timeline, updateStatus, querySchemaEntities } = this.props;
+    const { entitiesQuery, entitiesResult, timeline, updateStatus } = this.props;
 
     if (timeline.isError) {
       return <ErrorScreen error={timeline.error} />;

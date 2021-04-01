@@ -2,5 +2,12 @@
 @import "app/mixins.scss";
 
 .Timeline {
+  .DateFacet {
+    margin-top: $aleph-grid-size;
+    margin-bottom: $aleph-grid-size*2;
+  }
 
+  .ContentPane {
+    overflow: visible;
+  }
 }

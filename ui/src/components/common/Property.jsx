@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import { Property as VLProperty, PropertyEditor } from '@alephdata/react-ftm';
 
 import { Entity } from 'components/common';
@@ -34,7 +33,7 @@ class EditableProperty extends React.Component {
   }
 
   render() {
-    const { className, locale, model, onEdit, prop, entity, fetchEntitySuggestions, showLabel } = this.props;
+    const { className, locale, onEdit, prop, entity, fetchEntitySuggestions, showLabel } = this.props;
     const { editing } = this.state;
 
     const property = entity.schema.getProperty(prop);

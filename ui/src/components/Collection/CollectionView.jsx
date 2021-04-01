@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 
-import { Count, EntitySet, ResultCount } from 'components/common';
+import { Count, ResultCount } from 'components/common';
 import { collectionXrefFacetsQuery } from 'queries';
 import { selectCollection, selectModel, selectCollectionXrefResult } from 'selectors';
 import getCollectionLink from 'util/getCollectionLink';

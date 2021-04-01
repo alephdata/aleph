@@ -1,11 +1,9 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
 
-import { Count, SelectWrapper } from 'components/common';
 import SortingBar from 'components/SortingBar/SortingBar';
 import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
 

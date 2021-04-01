@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Divider } from '@blueprintjs/core';
-import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
-import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
-import { DualPane, ErrorSection, HotKeysContainer, QueryInfiniteLoad } from 'components/common';
+import { DualPane, ErrorSection, QueryInfiniteLoad } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
 import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import { DialogToggleButton } from 'components/Toolbar';
 import TimelineActionBar from 'components/Timeline/TimelineActionBar';
 import TimelineItem from 'components/Timeline/TimelineItem';
 import DateFacet from 'components/Facet/DateFacet';
@@ -93,12 +88,11 @@ class Timeline extends Component {
   }
 
   render() {
-    const { collection, deleteEntity, entityManager, query, intl, result, schema, isEntitySet, sort, updateStatus, writeable } = this.props;
+    const { deleteEntity, entityManager, query, intl, result } = this.props;
     const { showNewItem } = this.state;
 
     const items = result.results;
-    const isEmpty = items.length == 0;
-    // const selectedEntities = selection.map(this.getEntity).filter(e => e !== undefined);
+    const isEmpty = items.length === 0;
 
     return (
       <DualPane className="Timeline">
@@ -170,14 +164,8 @@ class Timeline extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
-  const sort = query.getSort();
-
 
   return {
-    sort: !_.isEmpty(sort) ? {
-      field: sort.field.replace('properties.', ''),
-      direction: sort.direction
-    } : {},
     result: selectEntitiesResult(state, query)
   };
 };
