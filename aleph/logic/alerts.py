@@ -20,7 +20,7 @@ def get_alert(alert_id):
 
 def check_alerts():
     """Go through all alerts."""
-    for alert_id in list(Alert.all_ids()):
+    for (alert_id,) in list(Alert.all_ids()):
         check_alert(alert_id)
 
 
