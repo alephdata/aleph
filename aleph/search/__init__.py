@@ -104,7 +104,7 @@ class XrefQuery(Query):
         filters.append({"term": {"collection_id": self.collection_id}})
         sorts = [f for (f, _) in self.parser.sorts]
         if "random" not in sorts:
-            filters.append({"range": {"random": {"gt": self.SCORE_CUTOFF}}})
+            filters.append({"range": {"score": {"gt": self.SCORE_CUTOFF}}})
         return filters
 
     def get_index(self):
