@@ -52,7 +52,7 @@ def _query_item(entity, entitysets=True):
     log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
     entityset_ids = EntitySet.entity_entitysets(entity.id) if entitysets else []
     query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
-    index = entities_read_index(schema=list(entity.schema.matchable_schemata))
+    index = entities_read_index(schema=entity.schema.matchable_schemata, expand=False)
     result = es.search(index=index, body=query)
     for result in result.get("hits").get("hits"):
         result = unpack_result(result)
