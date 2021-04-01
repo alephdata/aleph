@@ -35,10 +35,16 @@ class MentionLink extends Component {
         hoverOpenDelay={100}
       >
         <Link to={href} className="Mention">
-          <Bp3Tag minimal interactive multiline>
-            <Tag.Icon field={prop.type.group} />
-            <span><Property.Value {...this.props} translitLookup={null} /></span>
-            <Count count={count} className="no-fill" />
+          <Bp3Tag
+            minimal
+            interactive
+            multiline
+            icon={<Tag.Icon field={prop.type.group} />}
+            rightIcon={<Count count={count} class="bp3-tag-remove" />}
+          >
+            <span className="Mention__text">
+              <Property.Value {...this.props} translitLookup={null} />
+            </span>
           </Bp3Tag>
         </Link>
       </Tooltip>

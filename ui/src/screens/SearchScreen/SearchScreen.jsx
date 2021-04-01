@@ -26,6 +26,10 @@ const messages = defineMessages({
     id: 'search.title',
     defaultMessage: 'Search: {title}',
   },
+  title_emptyq: {
+    id: 'search.title_emptyq',
+    defaultMessage: 'Search',
+  },
   loading: {
     id: 'search.loading',
     defaultMessage: 'Loading...',
@@ -35,8 +39,11 @@ const messages = defineMessages({
 export class SearchScreen extends React.Component {
   render() {
     const { query, result, intl } = this.props;
-    const titleStatus = result.query_text ? result.query_text : intl.formatMessage(messages.loading);
-    const title = intl.formatMessage(messages.title, { title: titleStatus });
+
+    const titleStatus = (result.isPending && !result.results?.length) ? intl.formatMessage(messages.loading) : query.getString('q');
+    const title = titleStatus
+      ? intl.formatMessage(messages.title, { title: titleStatus })
+      : intl.formatMessage(messages.title_emptyq);
 
     return (
       <Screen title={title} >

@@ -63,7 +63,9 @@ class DownloadButton extends React.PureComponent {
     const { intl, document, dontWarnOnDownload } = this.props;
     const { checkboxChecked, isOpen } = this.state;
 
-    if (!document?.links?.file) {
+    const file = document?.links?.file || document?.links?.csv;
+
+    if (!file) {
       return null;
     }
 
@@ -74,7 +76,7 @@ class DownloadButton extends React.PureComponent {
           position={Position.BOTTOM_RIGHT}
         >
           <AnchorButton
-            href={document.links.file}
+            href={file}
             icon="download"
             download
             target="_blank"
@@ -134,7 +136,7 @@ class DownloadButton extends React.PureComponent {
           </div>
           <div className={Classes.ALERT_FOOTER}>
             <AnchorButton
-              href={document.links.file}
+              href={file}
               icon="download"
               download
               target="_blank"

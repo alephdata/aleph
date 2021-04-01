@@ -166,9 +166,11 @@ class XrefApiTestCase(TestCase):
 
         res = self.client.get(url, headers=headers)
         assert res.json["total"] == 2, res.json
-        xref0 = res.json["results"][0]
-        assert xref0["id"] == xref["id"], (xref0, xref)
-        assert xref0.get("judgement") == "positive", xref0
+        judgement = None
+        for xrefi in res.json["results"]:
+            if xrefi["id"] == xref["id"]:
+                judgement = xrefi.get("judgement")
+        assert judgement == "positive", xrefi
 
         res = self.client.post(
             pairwise_url,
@@ -182,5 +184,8 @@ class XrefApiTestCase(TestCase):
         assert res.status_code == 200, res.json
 
         res = self.client.get(url, headers=headers)
-        xref0 = res.json["results"][0]
-        assert xref0.get("judgement") == "negative", xref0
+        judgement = None
+        for xrefi in res.json["results"]:
+            if xrefi["id"] == xref["id"]:
+                judgement = xrefi.get("judgement")
+        assert judgement == "negative", xrefi

@@ -68,8 +68,6 @@ class EntityDecisionHotkeys extends Component {
   render() {
     const { children, } = this.props;
 
-    console.log(this.props.selectedIndex)
-
     return (
       <HotKeysContainer
         hotKeys={[
