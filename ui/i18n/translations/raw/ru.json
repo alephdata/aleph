@@ -6,7 +6,7 @@
     "defaultMessage": "Создать новое оповещение"
   },
   "alerts.delete": {
-    "defaultMessage": "Remove alert"
+    "defaultMessage": "Удалить оповещение"
   },
   "alerts.heading": {
     "defaultMessage": "Оповещения о новых результатах поиска"
@@ -93,7 +93,7 @@
     "defaultMessage": "Расследования"
   },
   "clipboard.copy.after": {
-    "defaultMessage": "Successfully copied to clipboard"
+    "defaultMessage": "Скопировано в буфер"
   },
   "clipboard.copy.before": {
     "defaultMessage": "Скопировать в буфер"
@@ -471,7 +471,7 @@
     "defaultMessage": "Рабочая среда"
   },
   "dataset.search.placeholder": {
-    "defaultMessage": "Search this dataset"
+    "defaultMessage": "Поиск этом в наборе данных"
   },
   "diagram.create.button": {
     "defaultMessage": "Новая диаграмма"
@@ -492,34 +492,34 @@
     "defaultMessage": "Создать диаграмму"
   },
   "diagram.embed.error": {
-    "defaultMessage": "Error generating diagram embed"
+    "defaultMessage": "Ошибка создания встраиваемой диаграммы"
   },
   "diagram.export.embed.description": {
-    "defaultMessage": "Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
+    "defaultMessage": "Создать встраиваемую интерактивную версию диаграммы для вставки в статьи. Сгенерированная встраиваемая диаграмма не будет отражать более поздние изменения в основной диаграмме."
   },
   "diagram.export.error": {
-    "defaultMessage": "Error exporting diagram"
+    "defaultMessage": "Ошибка экспорта диаграммы"
   },
   "diagram.export.ftm": {
-    "defaultMessage": "Export as .ftm"
+    "defaultMessage": "Экспорт в формате .ftm"
   },
   "diagram.export.ftm.description": {
-    "defaultMessage": "Download the diagram as a data file that can be used in {link} or another Aleph site."
+    "defaultMessage": "Скачать диаграмму в виде файла данных, который можно использовать в {link} или на другом сайте с Алефом."
   },
   "diagram.export.ftm.link": {
-    "defaultMessage": "Aleph Data Desktop"
+    "defaultMessage": "Алеф Дата Десктоп"
   },
   "diagram.export.iframe": {
-    "defaultMessage": "Embed iframe"
+    "defaultMessage": "Вставить iframe"
   },
   "diagram.export.svg": {
-    "defaultMessage": "Export as SVG"
+    "defaultMessage": "Экспорт в формате SVG"
   },
   "diagram.export.svg.description": {
-    "defaultMessage": "Download a vector graphic with the contents of the diagram."
+    "defaultMessage": "Скачать векторную графику с содержимым диаграммы."
   },
   "diagram.export.title": {
-    "defaultMessage": "Export options"
+    "defaultMessage": "Настройки экспорта"
   },
   "diagram.import.button": {
     "defaultMessage": "Импортировать диаграмму"
@@ -642,10 +642,10 @@
     "defaultMessage": "{numberOfFiles, number} файлов, {totalSize}"
   },
   "document.upload.title": {
-    "defaultMessage": "Upload documents"
+    "defaultMessage": "Загрузить документы"
   },
   "document.upload.title_in_folder": {
-    "defaultMessage": "Upload documents to {folder}"
+    "defaultMessage": "Загрузить документы в {folder}"
   },
   "document.viewer.ignored_file": {
     "defaultMessage": "Работа с данным типом файлов не поддерживается. Для просмотра попробуйте скачать файл."
@@ -717,7 +717,7 @@
     "defaultMessage": "Информация"
   },
   "entity.info.last_view": {
-    "defaultMessage": "Last viewed {time}"
+    "defaultMessage": "Последний просмотр"
   },
   "entity.info.similar": {
     "defaultMessage": "Совпадения"
@@ -777,16 +777,16 @@
     "defaultMessage": "У этой сущности отсутствуют связи"
   },
   "entity.references.no_results": {
-    "defaultMessage": "No {schema} match this search."
+    "defaultMessage": "Ничего не найдено для типа {schema}."
   },
   "entity.references.no_results_default": {
-    "defaultMessage": "No entities match this search."
+    "defaultMessage": "Сущности, удовлетворяющие запросу, не найдены."
   },
   "entity.references.search.placeholder": {
     "defaultMessage": "Искать в {schema}"
   },
   "entity.references.search.placeholder_default": {
-    "defaultMessage": "Search entities"
+    "defaultMessage": "Поиск сущностей"
   },
   "entity.remove.confirm": {
     "defaultMessage": "Удалить"
@@ -882,7 +882,7 @@
     "defaultMessage": "Удалить"
   },
   "entityset.delete.question": {
-    "defaultMessage": "Are you sure you want to delete {label}?"
+    "defaultMessage": "Вы уверены, что хотите удалить {label}?"
   },
   "entityset.delete.success": {
     "defaultMessage": "Успешно удалён {title}"
@@ -1029,40 +1029,40 @@
     "defaultMessage": "Расследование"
   },
   "infoMode.collection_dataset": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "Набор данных"
   },
   "infoMode.createdAt": {
-    "defaultMessage": "Created at"
+    "defaultMessage": "Дата создания"
   },
   "infoMode.creator": {
-    "defaultMessage": "Created by"
+    "defaultMessage": "Создано "
   },
   "infoMode.updatedAt": {
-    "defaultMessage": "Last updated"
+    "defaultMessage": "Последнее обновление"
   },
   "investigation.mentions.empty": {
     "defaultMessage": "Упоминания отсутствуют в этом расследовании."
   },
   "investigation.overview.guides": {
-    "defaultMessage": "Read more"
+    "defaultMessage": "Подробнее"
   },
   "investigation.overview.guides.access": {
-    "defaultMessage": "Managing access"
+    "defaultMessage": "Управление доступом"
   },
   "investigation.overview.guides.diagrams": {
-    "defaultMessage": "Drawing network diagrams"
+    "defaultMessage": "Создание диаграмм"
   },
   "investigation.overview.guides.documents": {
-    "defaultMessage": "Uploading documents"
+    "defaultMessage": "Загрузка документов"
   },
   "investigation.overview.guides.entities": {
-    "defaultMessage": "Creating & editing entities"
+    "defaultMessage": "Создание и редактирование сущностей"
   },
   "investigation.overview.guides.mappings": {
-    "defaultMessage": "Generating entities from a spreadsheet"
+    "defaultMessage": "Создание сущностей из таблиц"
   },
   "investigation.overview.guides.xref": {
-    "defaultMessage": "Cross-referencing your data"
+    "defaultMessage": "Перекрёстное сравнение данных"
   },
   "investigation.overview.notifications": {
     "defaultMessage": "Недавние события"
@@ -1074,7 +1074,7 @@
     "defaultMessage": "Приступить к работе"
   },
   "investigation.search.placeholder": {
-    "defaultMessage": "Search this investigation"
+    "defaultMessage": "Поиск в этом расследовании"
   },
   "investigation.shortcut.diagram": {
     "defaultMessage": "Создать диаграмму"
@@ -1095,7 +1095,7 @@
     "defaultMessage": "Сопоставить с другими наборами данных"
   },
   "judgement.disabled": {
-    "defaultMessage": "You must have edit access in order to make judgements."
+    "defaultMessage": "Для принятия решений необходимы права на редактирование"
   },
   "judgement.negative": {
     "defaultMessage": "Различаются"
@@ -1105,6 +1105,18 @@
   },
   "judgement.unsure": {
     "defaultMessage": "Недостаточно информации"
+  },
+  "landing.shortcut.alert": {
+    "defaultMessage": "Create a search alert"
+  },
+  "landing.shortcut.datasets": {
+    "defaultMessage": "Browse datasets"
+  },
+  "landing.shortcut.investigation": {
+    "defaultMessage": "Start an investigation"
+  },
+  "landing.shortcut.search": {
+    "defaultMessage": "Search entities"
   },
   "list.create.button": {
     "defaultMessage": "Новый список"
@@ -1203,7 +1215,7 @@
     "defaultMessage": "Вы уверены, что хотите удалить этот маппинг и все созданные сущности?"
   },
   "mapping.docs.link": {
-    "defaultMessage": "Aleph entity mapping documentation"
+    "defaultMessage": "Помощь по маппингу сущностей в Алефе"
   },
   "mapping.entityAssign.helpText": {
     "defaultMessage": "Необходимо создать объект типа \"{range}\" для {property}"
@@ -1257,7 +1269,7 @@
     "defaultMessage": "Выполните нижеследующие действия для маппинга данных в этом расследовании с сущностями модели Follow the Money. Подробнее см. {link}"
   },
   "mapping.info.link": {
-    "defaultMessage": "Aleph data mapping documentation"
+    "defaultMessage": "Помощь по маппингу данных в Алефе"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "Используйте колонки с идентификационными номерами, телефонными номерами, эл. адресами\n                и прочей уникальной информацией. Если колонки с уникальными значениями отсутствуют,\n                выберите одновременно несколько колонок, чтобы Алеф сгенерировал уникальные сущности из ваших данных."
@@ -1371,7 +1383,7 @@
     "defaultMessage": "Списки"
   },
   "nav.menu.cases": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Расследования"
   },
   "nav.settings": {
     "defaultMessage": "Настройки"
@@ -1439,8 +1451,20 @@
   "password_auth.signup": {
     "defaultMessage": "Зарегистрироваться"
   },
+  "profile.callout.details": {
+    "defaultMessage": "This profile aggregates attributes and relationships from {count} entities across different datasets."
+  },
+  "profile.callout.intro": {
+    "defaultMessage": "You're viewing {entity} as a profile."
+  },
+  "profile.callout.link": {
+    "defaultMessage": "View the <link>original entity</link>"
+  },
   "profile.delete.warning": {
-    "defaultMessage": "(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+    "defaultMessage": "(Удаление этого профиля не приведёт к удалению созданных сущностей и принятых решений)"
+  },
+  "profile.hint": {
+    "defaultMessage": "{entity} has been combined with entities from other datasets <link>into a profile</link>"
   },
   "profile.info.header": {
     "defaultMessage": "Профиль"
@@ -1455,7 +1479,7 @@
     "defaultMessage": "Объединённые сущности"
   },
   "profile.items.explanation": {
-    "defaultMessage": "Make decisions below to determine which source entities should be added or excluded from this profile."
+    "defaultMessage": "Решайте, какие исходные сущности следует отнести к данному профилю или исключить из него."
   },
   "profile.similar.no_results": {
     "defaultMessage": "Дополнительные сведения для профиля не найдены."
@@ -1506,7 +1530,7 @@
     "defaultMessage": "Добавить новый объект"
   },
   "screen.load_more": {
-    "defaultMessage": "Load more"
+    "defaultMessage": "Ещё"
   },
   "search.advanced.all.helptext": {
     "defaultMessage": "Результаты будут отсортированы по количеству вхождений искомых слов."
@@ -1620,10 +1644,10 @@
     "defaultMessage": "Распределение дат"
   },
   "search.screen.dates.show-hidden": {
-    "defaultMessage": "* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
+    "defaultMessage": "* В фильтре дат отображены только варианты от {start} до настоящего времени. { button } показать даты за пределами данного диапазона."
   },
   "search.screen.dates.show-hidden.click": {
-    "defaultMessage": "Click here"
+    "defaultMessage": "Нажмите здесь"
   },
   "search.screen.dates_disabled": {
     "defaultMessage": "Распределение дат недоступно"
@@ -1648,6 +1672,9 @@
   },
   "search.title": {
     "defaultMessage": "Поиск: {title}"
+  },
+  "search.title_emptyq": {
+    "defaultMessage": "Search"
   },
   "settings.api_key": {
     "defaultMessage": "API-ключ"
@@ -1776,12 +1803,12 @@
     "defaultMessage": "Оценка"
   },
   "xref.sort.default": {
-    "defaultMessage": "Default"
+    "defaultMessage": "По умолчанию"
   },
   "xref.sort.label": {
-    "defaultMessage": "Sort by:"
+    "defaultMessage": "Отсортировать:"
   },
   "xref.sort.random": {
-    "defaultMessage": "Random"
+    "defaultMessage": "Произвольно"
   }
 }
