@@ -20,8 +20,11 @@ upgrade: build
 	sleep 10
 	$(APPDOCKER) aleph upgrade
 
+api: services
+	$(COMPOSE) up --force-recreate api
+
 web: services
-	$(COMPOSE) up api ui
+	$(COMPOSE) up --abort-on-container-exit api ui
 
 worker: services
 	$(COMPOSE) run --rm app aleph worker
