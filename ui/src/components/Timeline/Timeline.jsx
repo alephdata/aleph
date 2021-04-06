@@ -22,10 +22,6 @@ const defaultFacets = [
 ];
 
 const messages = defineMessages({
-  // search_placeholder: {
-  //   id: 'entity.manager.search_placeholder',
-  //   defaultMessage: 'Search {schema}',
-  // },
   histogram_empty: {
     id: 'timeline.empty_histogram',
     defaultMessage: 'No dates found for selected range',

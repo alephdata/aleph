@@ -104,4 +104,9 @@ $timeline-item-padding: $aleph-grid-size;
       padding: 0 5px !important;
     }
   }
+
+  &__hidden-input {
+    position: absolute;
+    visibility: none;
+  }
 }

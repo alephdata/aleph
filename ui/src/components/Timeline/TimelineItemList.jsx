@@ -17,8 +17,6 @@ import SortingBar from 'components/SortingBar/SortingBar';
 import { deleteEntity, queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
-import './Timeline.scss';
-
 const defaultFacets = [
   'names', 'addresses', 'schema',
 ];
