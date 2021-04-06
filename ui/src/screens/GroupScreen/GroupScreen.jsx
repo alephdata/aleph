@@ -8,7 +8,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { Button, Callout, Icon, Intent } from '@blueprintjs/core';
+import { Callout, Intent } from '@blueprintjs/core';
 
 import Query from 'app/Query';
 import Dashboard from 'components/Dashboard/Dashboard';
@@ -95,12 +95,13 @@ export class GroupScreen extends Component {
                 defaultMessage="The list below shows all datasets and investigations that belong to this group."
               />
             </p>
-            <Callout intent={Intent.PRIMARY}>
+            <Callout intent={Intent.PRIMARY} style={{ marginTop: '20px' }}>
               <FormattedMessage
                 id="group.page.description"
-                defaultMessage="If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link>."
+                defaultMessage="If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
                 values={{
-                  link: chunks => <a role="button" onClick={this.goToEntitySearch} style={{ fontWeight: 'bold' }}>{chunks}</a>,
+                  // eslint-disable-next-line
+                  link: chunks => <a role="button" onClick={this.goToEntitySearch}>{chunks}</a>,
                 }}
               />
             </Callout>
