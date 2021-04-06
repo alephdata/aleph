@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   placeholder: {
     id: 'sources.index.placeholder',
-    defaultMessage: 'Search datasets and investigations belonging to {group}...',
+    defaultMessage: 'Search for a dataset or investigation belonging to {group}...',
   },
 });
 
