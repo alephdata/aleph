@@ -3,6 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import c from 'classnames';
 
 import { DualPane, ErrorSection, QueryInfiniteLoad } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
@@ -32,9 +33,32 @@ class Timeline extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showDraftItem: false
+      showDraftItem: false,
+      histogramFixed: false
     };
+    this.onScroll = this.onScroll.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
+    this.histogramRef = React.createRef();
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.onScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll);
+  }
+
+  onScroll() {
+    const { histogramFixed } = this.state;
+    const histTop = this.histogramRef.current.offsetTop;
+    const isOffScreen = window.pageYOffset > histTop;
+
+    if (!histogramFixed && isOffScreen) {
+      this.setState({ histogramFixed: true })
+    } else if (histogramFixed && !isOffScreen) {
+      this.setState({ histogramFixed: false })
+    }
   }
 
   updateQuery(newQuery) {
@@ -48,24 +72,30 @@ class Timeline extends Component {
 
   render() {
     const { entityManager, query, intl, result } = this.props;
-    const { showDraftItem } = this.state;
+    const { histogramFixed, showDraftItem } = this.state;
+
+    console.log(histogramFixed);
 
     return (
       <DualPane className="Timeline">
         <DualPane.SidePane>
-          <DateFacet
-            isOpen={true}
-            intervals={result.facets?.dates?.intervals}
-            query={query}
-            updateQuery={this.updateQuery}
-            emptyText={intl.formatMessage(messages.histogram_empty)}
-          />
+          <div className={c("Timeline__date-container", { fixed: histogramFixed })}>
+            <DateFacet
+              isOpen={true}
+              intervals={result.facets?.dates?.intervals}
+              query={query}
+              updateQuery={this.updateQuery}
+              emptyText={intl.formatMessage(messages.histogram_empty)}
+            />
+          </div>
           <SearchFacets
             query={query}
             result={result}
             updateQuery={this.updateQuery}
             facets={defaultFacets}
           />
+          <div className="Timeline__date-placeholder" ref={this.histogramRef}></div>
+
         </DualPane.SidePane>
         <DualPane.ContentPane>
           <QueryTags query={query} updateQuery={this.updateQuery} />
