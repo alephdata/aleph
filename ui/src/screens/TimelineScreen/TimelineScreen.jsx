@@ -14,7 +14,7 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import Timeline from 'components/Timeline/Timeline';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, UpdateStatus} from 'components/common';
+import { Breadcrumbs, SearchBox, UpdateStatus} from 'components/common';
 
 import './TimelineScreen.scss';
 
@@ -26,6 +26,7 @@ export class TimelineScreen extends Component {
       updateStatus: null
     }
     this.onStatusChange = this.onStatusChange.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
@@ -44,12 +45,27 @@ export class TimelineScreen extends Component {
     }
   }
 
+  onSearch(queryText) {
+    const { query } = this.props;
+    const newQuery = query.set('q', queryText);
+    this.updateQuery(newQuery)
+  }
+
+  updateQuery(newQuery) {
+    const { history, location } = this.props;
+    history.push({
+      pathname: location.pathname,
+      search: newQuery.toLocation(),
+      hash: location.hash,
+    });
+  }
+
   onStatusChange(updateStatus) {
     this.setState({ updateStatus });
   }
 
   render() {
-    const { entitiesQuery, entitiesResult, timeline, updateStatus } = this.props;
+    const { query, result, timeline, updateStatus } = this.props;
 
     if (timeline.isError) {
       return <ErrorScreen error={timeline.error} />;
@@ -59,6 +75,13 @@ export class TimelineScreen extends Component {
       return <LoadingScreen />;
     }
 
+    const search = (
+      <SearchBox
+        onSearch={this.onSearch}
+        placeholderLabel={timeline.label}
+      />
+    );
+
     const operation = (
       <EntitySetManageMenu entitySet={timeline} />
     );
@@ -66,7 +89,7 @@ export class TimelineScreen extends Component {
     const status = <UpdateStatus status={updateStatus} />;
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} status={status}>
+      <Breadcrumbs operation={operation} search={search} status={status}>
         <Breadcrumbs.Text>
           <CollectionView.Link id={collectionViewIds.TIMELINES} collection={timeline.collection} icon />
         </Breadcrumbs.Text>
@@ -82,8 +105,8 @@ export class TimelineScreen extends Component {
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
           <Timeline
-            query={entitiesQuery}
-            entities={entitiesResult?.results}
+            query={query}
+            entities={result?.results}
             collection={timeline.collection}
             onStatusChange={this.onStatusChange}
             mutateOnUpdate
@@ -99,7 +122,7 @@ const mapStateToProps = (state, ownProps) => {
   const { entitySetId } = match.params;
 
   const timeline = selectEntitySet(state, entitySetId);
-  const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000)
+  const query = entitySetEntitiesQuery(location, entitySetId, null, 1000)
     .add('facet', 'dates')
     .add('facet_interval:dates', 'year')
     .defaultFacet('schema')
@@ -111,8 +134,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     entitySetId,
     timeline,
-    entitiesQuery,
-    entitiesResult: selectEntitiesResult(state, entitiesQuery)
+    query,
+    result: selectEntitiesResult(state, query)
   };
 };
 

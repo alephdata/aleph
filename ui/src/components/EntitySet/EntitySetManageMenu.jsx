@@ -75,17 +75,18 @@ class EntitySetManageMenu extends Component {
 
   render() {
     const { entitySet } = this.props;
+    const isTimeline = entitySet.type === 'timeline';
     const isDiagram = entitySet.type === 'diagram';
 
     if (!entitySet.writeable && isDiagram) {
       return this.renderExport();
     }
 
-    if (isDiagram) {
+    if (isDiagram || isTimeline) {
       return (
         <ButtonGroup minimal>
           {this.renderSettings(false)}
-          {this.renderExport(false)}
+          {isDiagram && this.renderExport(false)}
           {this.renderDelete(false)}
         </ButtonGroup>
       );
