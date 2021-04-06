@@ -70,13 +70,30 @@ class TimelineItem extends Component {
     });
   }
 
-  onPropertyEdit(entity) {
-    this.setState({ entity });
-    this.props.onUpdate(entity);
+  onPropertyEdit(entity, propName) {
+    const validatedEntity = this.checkDates(entity, propName);
+    this.setState({ entity: validatedEntity });
+    this.props.onUpdate(validatedEntity);
   }
 
   onNewPropertyAdded(prop) {
     this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop.name] }));
+  }
+
+  checkDates(entity, editedProp) {
+    if (editedProp === 'endDate') {
+      const date = entity.getProperty('date');
+      const startDate = entity.getProperty('startDate');
+      const endDate = entity.getProperty('endDate');
+      if (endDate.length > 0 && !startDate.length) {
+        entity.properties.set(entity.schema.getProperty('startDate'), date);
+        entity.properties.delete(entity.schema.getProperty('date'));
+      } else if (!endDate.length && startDate.length > 0) {
+        entity.properties.set(entity.schema.getProperty('date'), startDate);
+        entity.properties.delete(entity.schema.getProperty('startDate'));
+      }
+    }
+    return entity;
   }
 
   getVisibleProperties() {
@@ -110,7 +127,7 @@ class TimelineItem extends Component {
         key={propName}
         entity={entity}
         prop={propName}
-        onEdit={this.onPropertyEdit}
+        onEdit={(updatedEntity) => this.onPropertyEdit(updatedEntity, propName)}
         fetchEntitySuggestions={fetchEntitySuggestions}
         {...options}
       />
@@ -201,7 +218,7 @@ class TimelineItem extends Component {
 
     const captionProp = isDraft && entity.schema.caption?.[0];
     // const otherRequiredProps = entity.schema.required.filter(prop => prop !== captionProp);
-    const reservedProps = [captionProp, 'date', 'endDate', 'description'];
+    const reservedProps = [captionProp, 'date', 'startDate', 'endDate', 'description'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -209,7 +226,8 @@ class TimelineItem extends Component {
       .sort((a, b) => a.label.localeCompare(b.label))
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
-    const showEndDate = entity.hasProperty('date');
+    const hasEndDate = entity.getProperty('endDate').length > 0;
+    const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length > 0)) ? 'startDate' : 'date';
 
     return (
       <div id={entity.id} ref={this.ref}>
@@ -221,13 +239,9 @@ class TimelineItem extends Component {
             </div>
             <div className="TimelineItem__main__content">
               <div className="TimelineItem__date">
-                {this.renderProperty('date')}
-                {showEndDate && (
-                  <>
-                    <span className="TimelineItem__date__divider text-muted">-</span>
-                    {this.renderProperty('endDate')}
-                  </>
-                )}
+                {this.renderProperty(dateProp)}
+                <span className="TimelineItem__date__divider text-muted">-</span>
+                {this.renderProperty('endDate')}
               </div>
             </div>
           </div>
@@ -253,7 +267,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     model: selectModel(state),
-    isActive: parsedHash.id === entity.id
+    isActive: entity && parsedHash.id === entity.id
   };
 };
 

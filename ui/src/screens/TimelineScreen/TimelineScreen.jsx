@@ -65,7 +65,8 @@ export class TimelineScreen extends Component {
   }
 
   render() {
-    const { query, result, timeline, updateStatus } = this.props;
+    const { query, result, timeline } = this.props;
+    const { updateStatus } = this.state;
 
     if (timeline.isError) {
       return <ErrorScreen error={timeline.error} />;
