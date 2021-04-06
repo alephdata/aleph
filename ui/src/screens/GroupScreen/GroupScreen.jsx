@@ -6,6 +6,9 @@ import {
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import queryString from 'query-string';
+import { Button, Callout, Icon, Intent } from '@blueprintjs/core';
 
 import Query from 'app/Query';
 import Dashboard from 'components/Dashboard/Dashboard';
@@ -14,6 +17,7 @@ import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import { fetchRole, queryCollections } from 'actions';
 import { selectRole } from 'selectors';
+import { showWarningToast } from 'app/toast';
 
 import './GroupScreen.scss';
 
@@ -31,6 +35,11 @@ const messages = defineMessages({
 
 
 export class GroupScreen extends Component {
+  constructor(props) {
+    super(props)
+
+    this.goToEntitySearch = this.goToEntitySearch.bind(this);
+  }
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -43,6 +52,30 @@ export class GroupScreen extends Component {
     const { group, groupId } = this.props;
     if (group.shouldLoad) {
       this.props.fetchRole({ id: groupId });
+    }
+  }
+
+  async goToEntitySearch() {
+    const { history, groupId } = this.props;
+
+    const query = new Query('collections', {}, { 'filter:team_id': groupId }, 'collections').limit(1000);
+    try {
+      const qReturn = await this.props.queryCollections({ query });
+      const groupCollections = qReturn.result?.results;
+      if (groupCollections) {
+        const params = {
+          'filter:collection_id': groupCollections.map(coll => coll.id),
+          facet: 'collection_id',
+          'facet_size:collection_id': 10,
+          'facet_total:collection_id': true,
+        };
+        history.push({
+          pathname: '/search',
+          search: queryString.stringify(params)
+        })
+      }
+    } catch (e) {
+      showWarningToast(e.message);
     }
   }
 
@@ -62,6 +95,15 @@ export class GroupScreen extends Component {
                 defaultMessage="The list below shows all datasets and investigations that belong to this group."
               />
             </p>
+            <Callout intent={Intent.PRIMARY}>
+              <FormattedMessage
+                id="group.page.description"
+                defaultMessage="If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link>."
+                values={{
+                  link: chunks => <a role="button" onClick={this.goToEntitySearch} style={{ fontWeight: 'bold' }}>{chunks}</a>,
+                }}
+              />
+            </Callout>
           </div>
           <CollectionIndex
             query={query}
@@ -90,6 +132,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default compose(
+  withRouter,
   connect(mapStateToProps, { fetchRole, queryCollections }),
   injectIntl,
 )(GroupScreen);
