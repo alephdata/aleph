@@ -74,8 +74,6 @@ class Timeline extends Component {
     const { entityManager, query, intl, result } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
-    console.log(histogramFixed);
-
     return (
       <DualPane className="Timeline">
         <DualPane.SidePane>

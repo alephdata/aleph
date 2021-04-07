@@ -3,6 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 
 import { DualPane, ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
@@ -39,15 +40,21 @@ class TimelineItemList extends Component {
   }
 
   async createNewItem({ schema, properties }) {
-    const { entityManager, onHideDraft } = this.props;
+    const { entityManager, history, location, onHideDraft } = this.props;
 
     const simplifiedProps = {};
     properties.forEach((value, prop) => {
       simplifiedProps[prop.name] = value
     })
 
-    await entityManager.createEntity({ schema, properties: simplifiedProps });
-    onHideDraft()
+    const entity = await entityManager.createEntity({ schema, properties: simplifiedProps });
+    onHideDraft();
+    console.log('finished', entity);
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify({ id: entity.id })
+    })
   }
 
   render() {

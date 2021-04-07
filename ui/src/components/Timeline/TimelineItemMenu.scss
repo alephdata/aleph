@@ -1,0 +1,14 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.TimelineItemMenu {
+  position: absolute;
+  top: 0;
+  @include rtl(right, 0, null);
+  @include rtl(left, null, 0);
+
+  &__hidden-input {
+    position: absolute;
+    visibility: none;
+  }
+}

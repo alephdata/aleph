@@ -12,12 +12,6 @@ $timeline-item-padding: $aleph-grid-size;
     padding: 0;
   }
 
-  &__actions {
-    position: absolute;
-    top: 0;
-    @include rtl(right, 0, null);
-    @include rtl(left, null, 0);
-  }
 
   &__secondary {
     flex: 1 1 70%;

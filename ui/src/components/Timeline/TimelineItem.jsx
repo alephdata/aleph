@@ -2,38 +2,19 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
-import { Button, Card, Divider, Intent, Menu, Popover, Tooltip } from '@blueprintjs/core';
+import { injectIntl } from 'react-intl';
+import { Button, Card, Divider } from '@blueprintjs/core';
 import { PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
-import c from 'classnames';
 
-import { showSuccessToast } from 'app/toast';
 import { selectModel } from 'selectors';
-import { Collection, Entity, Property, Schema } from 'components/common';
-
+import { Entity, Property, Schema } from 'components/common';
+import TimelineItemMenu from 'components/Timeline/TimelineItemMenu';
 import './TimelineItem.scss';
 
 
-const messages = defineMessages({
-  link_copy: {
-    id: 'timeline.item.link_copy',
-    defaultMessage: 'Copy link to this item',
-  },
-  link_copy_success: {
-    id: 'timeline.item.link_copy_success',
-    defaultMessage: 'Successfully copied link to clipboard.',
-  },
-  remove: {
-    id: 'timeline.item.remove',
-    defaultMessage: 'Remove from timeline',
-  },
-  delete: {
-    id: 'timeline.item.delete',
-    defaultMessage: 'Delete from {collection}',
-  }
-});
+// const messages = defineMessages({});
 
 class TimelineItem extends Component {
   constructor(props) {
@@ -50,12 +31,11 @@ class TimelineItem extends Component {
     this.getVisibleProperties = this.getVisibleProperties.bind(this);
     this.renderProperty = this.renderProperty.bind(this);
     this.onNewPropertyAdded = this.onNewPropertyAdded.bind(this);
-    this.onCopyLink = this.onCopyLink.bind(this);
     this.ref = React.createRef();
   }
 
   componentDidMount() {
-    const { isActive, entity } = this.props;
+    const { isActive } = this.props;
 
     if (isActive) {
       this.ref.current?.scrollIntoView();
@@ -102,22 +82,6 @@ class TimelineItem extends Component {
     return Array.from(new Set([...entity.schema.featured, ...entity.getProperties().map(prop => prop.name), ...addedProps]));
   }
 
-  onCopyLink() {
-    const { entity, intl } = this.props;
-
-    const location = window.location;
-    const shadowInput = document.createElement("input");
-    const itemHash = queryString.stringify({ id: entity.id });
-    shadowInput.type = "text";
-    shadowInput.value = `${location.origin}${location.pathname}${location.search}#${itemHash}`;
-    shadowInput.classList.add('TimelineItem__hidden-input')
-    document.body.appendChild(shadowInput);
-
-    shadowInput.select();
-    document.execCommand('copy');
-    showSuccessToast(intl.formatMessage(messages.link_copy_success));
-  }
-
   renderProperty(propName, options) {
     const { fetchEntitySuggestions } = this.props;
     const { entity } = this.state;
@@ -132,41 +96,6 @@ class TimelineItem extends Component {
         {...options}
       />
     )
-  }
-
-  renderActionMenu() {
-    const { intl, isDraft, onDelete, onRemove } = this.props;
-    const { entity } = this.state;
-
-    if (isDraft) {
-      return (
-        <Button className="TimelineItem__menu-toggle" minimal icon="cross" onClick={() => onDelete()} />
-      )
-    }
-
-    return (
-      <Popover>
-        <Button className="TimelineItem__menu-toggle" minimal icon="more" />
-        <Menu>
-          <Menu.Item
-            onClick={this.onCopyLink}
-            text={intl.formatMessage(messages.link_copy)}
-            icon="link"
-          />
-          <Menu.Item
-            onClick={() => onRemove(entity.id)}
-            text={intl.formatMessage(messages.remove)}
-            icon="remove"
-          />
-          <Menu.Item
-            onClick={() => onDelete(entity.id)}
-            text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
-            icon="trash"
-            intent={Intent.DANGER}
-          />
-        </Menu>
-      </Popover>
-    );
   }
 
   renderTitle() {
@@ -213,7 +142,7 @@ class TimelineItem extends Component {
 
 
   render() {
-    const { isActive, isDraft } = this.props;
+    const { isActive, isDraft, onDelete, onRemove } = this.props;
     const { entity } = this.state;
 
     const captionProp = isDraft && entity.schema.caption?.[0];
@@ -232,7 +161,12 @@ class TimelineItem extends Component {
     return (
       <div id={entity.id} ref={this.ref}>
         <Card elevation={isActive ? 3 : 1} className="TimelineItem">
-          <div className="TimelineItem__actions">{this.renderActionMenu()}</div>
+          <TimelineItemMenu
+            entity={entity}
+            isDraft={isDraft}
+            onDelete={onDelete}
+            onRemove={onRemove}
+          />
           <div className="TimelineItem__main">
             <div className="TimelineItem__title bp3-heading">
               {this.renderTitle()}
