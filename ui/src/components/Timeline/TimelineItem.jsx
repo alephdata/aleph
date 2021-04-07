@@ -147,7 +147,7 @@ class TimelineItem extends Component {
 
     const captionProp = isDraft && entity.schema.caption?.[0];
     // const otherRequiredProps = entity.schema.required.filter(prop => prop !== captionProp);
-    const reservedProps = [captionProp, 'date', 'startDate', 'endDate', 'description'];
+    const reservedProps = [captionProp, 'date', 'startDate', 'endDate', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -167,26 +167,38 @@ class TimelineItem extends Component {
             onDelete={onDelete}
             onRemove={onRemove}
           />
-          <div className="TimelineItem__main">
-            <div className="TimelineItem__title bp3-heading">
-              {this.renderTitle()}
-            </div>
-            <div className="TimelineItem__main__content">
-              <div className="TimelineItem__date">
+          <div className="TimelineItem__content">
+            <div className="TimelineItem__main">
+              <div className="TimelineItem__cell TimelineItem__date">
                 {this.renderProperty(dateProp)}
                 <span className="TimelineItem__date__divider text-muted">-</span>
                 {this.renderProperty('endDate')}
               </div>
+              <div className="TimelineItem__cell TimelineItem__title">
+                {this.renderTitle()}
+              </div>
             </div>
-          </div>
-          <div className="TimelineItem__secondary">
-            <div className="TimelineItem__secondary__content">
-              {visibleProps.map(prop => this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" }))}
-              <PropertySelect
-                properties={availableProps}
-                onSelected={this.onNewPropertyAdded}
-                buttonProps={{ minimal: true, small: true }}
-              />
+            <div className="TimelineItem__secondary">
+              <div className="TimelineItem__cell">
+              </div>
+              <div className="TimelineItem__cell TimelineItem__secondary__content">
+                <div className="TimelineItem__description">
+                  {this.renderProperty('description')}
+                </div>
+                <div className="TimelineItem__properties">
+                  {visibleProps.map(prop => this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" }))}
+                  <PropertySelect
+                    properties={availableProps}
+                    onSelected={this.onNewPropertyAdded}
+                    buttonProps={{ minimal: true, small: true }}
+                  />
+                </div>
+                {entity.schema.name === 'Event' && (
+                  <div className="TimelineItem__involved">
+                    {this.renderProperty('involved')}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Card>

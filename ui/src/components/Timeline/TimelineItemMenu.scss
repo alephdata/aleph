@@ -3,9 +3,15 @@
 
 .TimelineItemMenu {
   position: absolute;
-  top: 0;
-  @include rtl(right, 0, null);
-  @include rtl(left, null, 0);
+  top: $aleph-grid-size/2;
+  @include rtl(right, $aleph-grid-size/2, null);
+  @include rtl(left, null, $aleph-grid-size/2);
+
+  &__toggle.bp3-button {
+    .bp3-icon {
+      color: white;
+    }
+  }
 
   &__hidden-input {
     position: absolute;
