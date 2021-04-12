@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { EditableProperty as VLEditableProperty, Property as VLProperty, PropertyEditor } from '@alephdata/react-ftm';
+import { Button } from '@blueprintjs/core';
 
 import { Entity } from 'components/common';
 import { selectLocale, selectModel } from 'selectors';
@@ -23,10 +24,18 @@ class EditableProperty extends React.Component {
   }
 
   render() {
-    const { className, locale, onEdit, prop, entity, fetchEntitySuggestions, showLabel, minimal } = this.props;
+    const { className, locale, onEdit, prop, entity, fetchEntitySuggestions, showLabel, minimal, toggleButtonProps } = this.props;
     const { editing } = this.state;
 
     const property = entity.schema.getProperty(prop);
+
+    console.log(entity.hasProperty(property));
+
+    if (toggleButtonProps && !editing && !entity.hasProperty(property)) {
+      return (
+        <Button {...toggleButtonProps} onClick={this.toggleEditing} />
+      );
+    }
 
     return (
       <VLEditableProperty

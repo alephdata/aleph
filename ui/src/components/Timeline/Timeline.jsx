@@ -78,7 +78,6 @@ class Timeline extends Component {
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
-      hash: location.hash,
     });
   }
 
@@ -123,7 +122,10 @@ class Timeline extends Component {
               sortingFields={['properties.date', 'caption', 'created_at']}
             />
           </SearchActionBar>
-          <TimelineActionBar createNewItem={() => this.setState({ showDraftItem: true })} />
+          <TimelineActionBar
+            disabled={showDraftItem}
+            createNewItem={() => this.setState({ showDraftItem: true })}
+          />
           <TimelineItemList
             query={query}
             result={result}

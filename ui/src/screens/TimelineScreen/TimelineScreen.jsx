@@ -60,7 +60,6 @@ export class TimelineScreen extends Component {
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
-      hash: location.hash,
     });
   }
 
@@ -82,6 +81,7 @@ export class TimelineScreen extends Component {
 
     const search = (
       <SearchBox
+        query={query}
         onSearch={this.onSearch}
         placeholderLabel={timeline.label}
       />

@@ -14,8 +14,10 @@ import { Entity, Property, Schema } from 'components/common';
 import TimelineItemMenu from 'components/Timeline/TimelineItemMenu';
 import './TimelineItem.scss';
 
-
-// const messages = defineMessages({});
+//
+// const messages = defineMessages({
+//
+// });
 
 class TimelineItem extends Component {
   constructor(props) {
@@ -165,84 +167,86 @@ class TimelineItem extends Component {
     const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length > 0)) ? 'startDate' : 'date';
 
     return (
-      <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft })}>
-        <div className="TimelineItem__content">
-          <div className="TimelineItem__secondary">
-            {isDraft && (
-              <h5 className="TimelineItem__draft-text">
-                <FormattedMessage
-                  id="timeline.draft"
-                  defaultMessage="Draft"
-                />
-              </h5>
-            )}
-            <div className="TimelineItem__date">
-              <FormattedMessage
-                id="timeline.item.date"
-                defaultMessage="{start}to{end}"
-                values={{
-                  start: this.renderProperty(dateProp, { minimal: true }),
-                  end: this.renderProperty('endDate', { minimal: true })
-                }}
-              />
-            </div>
-          </div>
-          <div className="TimelineItem__main">
-            <div className="TimelineItem__title">
-              {this.renderTitle()}
-              {!isDraft && (
-                <TimelineItemMenu
-                  entity={entity}
-                  onDelete={onDelete}
-                  onRemove={onRemove}
-                />
-              )}
-            </div>
-            <div className="TimelineItem__description">
-              {this.renderProperty('description', { minimal: true })}
-            </div>
-            <div className="TimelineItem__properties">
-              {visibleProps.map(prop => (
-                <div className="TimelineItem__property">
-                  {this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" })}
-                </div>
-              ))}
-              {!isDraft && (
-                <div className="TimelineItem__property">
-                  <PropertySelect
-                    properties={availableProps}
-                    onSelected={this.onNewPropertyAdded}
-                    buttonProps={{ minimal: true, small: true }}
+      <>
+        <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft })}>
+          <div className="TimelineItem__content">
+            <div className="TimelineItem__secondary">
+              {isDraft && (
+                <div className="TimelineItem__draft-text">
+                  <FormattedMessage
+                    id="timeline.draft"
+                    defaultMessage="Draft"
                   />
                 </div>
               )}
-            </div>
-            {false && entity.schema.name === 'Event' && (
-              <div className="TimelineItem__involved">
-                {this.renderProperty('involved')}
+              <div className="TimelineItem__date">
+                <FormattedMessage
+                  id="timeline.item.date"
+                  defaultMessage="{start}to{end}"
+                  values={{
+                    start: this.renderProperty(dateProp, { minimal: true }),
+                    end: this.renderProperty('endDate', { minimal: true })
+                  }}
+                />
               </div>
-            )}
+              {entity.schema.name === 'Event' && (
+                <div className="TimelineItem__involved">
+                  {this.renderProperty('involved', { toggleButtonProps: { text: "Add an involved entity", icon: 'add', intent: Intent.PRIMARY, minimal: true, small: true, fill: true } })}
+                </div>
+              )}
+            </div>
+            <div className="TimelineItem__main">
+              <div className="TimelineItem__title">
+                {this.renderTitle()}
+                {!isDraft && (
+                  <TimelineItemMenu
+                    entity={entity}
+                    onDelete={onDelete}
+                    onRemove={onRemove}
+                  />
+                )}
+              </div>
+              <div className="TimelineItem__description TimelineItem__property">
+                {this.renderProperty('description')}
+              </div>
+              <div className="TimelineItem__properties">
+                {visibleProps.map(prop => (
+                  <div className="TimelineItem__property">
+                    {this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" })}
+                  </div>
+                ))}
+                {!isDraft && (
+                  <div className="TimelineItem__property">
+                    <PropertySelect
+                      properties={availableProps}
+                      onSelected={this.onNewPropertyAdded}
+                      buttonProps={{ minimal: true, small: true }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
+          {isDraft && (
+            <div className="TimelineItem__draft-buttons">
+              <ButtonGroup>
+                <Button onClick={onDelete} icon="cross">
+                  <FormattedMessage
+                    id="timeline.create.cancel"
+                    defaultMessage="Cancel"
+                  />
+                </Button>
+                <Button onClick={onSubmit} icon="add" intent={Intent.PRIMARY}>
+                  <FormattedMessage
+                    id="timeline.create.submit"
+                    defaultMessage="Create"
+                  />
+                </Button>
+              </ButtonGroup>
+            </div>
+          )}
         </div>
-        {isDraft && (
-          <div className="TimelineItem__draft-buttons">
-            <ButtonGroup>
-              <Button onClick={onDelete} icon="cross">
-                <FormattedMessage
-                  id="timeline.create.cancel"
-                  defaultMessage="Cancel"
-                />
-              </Button>
-              <Button onClick={onSubmit} icon="add" intent={Intent.PRIMARY}>
-                <FormattedMessage
-                  id="timeline.create.submit"
-                  defaultMessage="Create"
-                />
-              </Button>
-            </ButtonGroup>
-          </div>
-        )}
-      </div>
+      </>
     );
   }
 }

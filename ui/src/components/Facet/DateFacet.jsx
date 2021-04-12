@@ -91,9 +91,11 @@ export class DateFilter extends Component {
     if (filteredIntervals) {
       if (!filteredIntervals.length) {
         content = (
-          <ErrorSection
-            description={emptyText}
-          />
+          <div style={{ minHeight: `${DATE_FACET_HEIGHT}px` }}>
+            <ErrorSection
+              description={emptyText}
+            />
+          </div>
         )
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);

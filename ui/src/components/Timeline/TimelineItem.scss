@@ -4,14 +4,20 @@
 $timeline-item-padding: $aleph-grid-size;
 
 .TimelineItem {
-  margin-bottom: $aleph-grid-size;
-  padding-bottom: $aleph-grid-size;
-  border-bottom: 1px solid $aleph-border-color;
+  margin-top: $aleph-grid-size*1.5;
+  padding-top: $aleph-grid-size*1.5;
+  border-top: 1px solid $aleph-border-color;
+
+  &:first-child {
+    margin-top: 0;
+    border: none;
+  }
 
   &.draft {
-    box-shadow: $pt-elevation-shadow-2;
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, .1), 0 1px 1px rgba(16, 22, 26, .2), 0 2px 6px rgba(168, 42, 42, .3);
     padding: $aleph-grid-size/2;
     margin-bottom: $aleph-grid-size*2;
+    margin-top: $aleph-grid-size/2;
     border-radius: 5px;
     border: none;
   }
@@ -27,6 +33,7 @@ $timeline-item-padding: $aleph-grid-size;
 
   &__secondary {
     flex-basis: 15%;
+    min-width: $aleph-grid-size*20;
   }
 
   &__date, &__title {
@@ -36,19 +43,24 @@ $timeline-item-padding: $aleph-grid-size;
     .TextEdit__toggleMulti {
       display: none;
     }
+
+    .EditableProperty__label {
+      // display: none;
+    }
   }
 
   &__date {
-    min-width: $aleph-grid-size*17;
     color: $aleph-greyed-text;
     padding-left: 0;
     padding-right: 0;
     margin-left: 0;
     margin-right: 0;
+    background: $light-gray4;
+
     // font-weight: bold;
     // color: $blue2;
 
-    // border-radius: 5px;
+    border-radius: 5px;
     // box-shadow: $pt-elevation-shadow-2;
     // border-bottom: 1px solid $aleph-border-color;
     .EditableProperty__value {
@@ -67,38 +79,71 @@ $timeline-item-padding: $aleph-grid-size;
   &__title {
     display: flex;
     font-weight: bold;
-    color: white !important;
+    // color: white !important;
     background-color: $blue2;
     border-radius: 5px;
     margin: 5px;
     position: relative;
     padding: $timeline-item-padding;
+    @include rtlSupportInvertedProp(padding, right, $aleph-content-padding*2, null);
 
-    span, textarea {
+    span, .EditableProperty__value .bp3-input {
       color: white !important;
+      border-color: white !important;
     }
 
     .draft & {
-      background-color: $blue4;
-      // border: 1px solid $light-gray4;
+      background-color: $light-gray4;
+      span, .EditableProperty__value .bp3-input {
+        color: inherit !important;
+        border-color: inherit !important;
+      }
     }
 
     .EditableProperty {
       margin: 0 !important;
+      flex-grow: 1;
+
+      &.minimal:hover:not(.active) {
+        background-color: rgba(167, 182, 194, 0.3) !important;
+      }
     }
-
-
   }
 
   &__involved {
     .EditableProperty {
       background-color: white !important;
       border-color: white !important;
+      // padding: $aleph-grid-size 0 !important;
+
+      &:hover {
+        background-color: rgba(19, 124, 189, 0.15) !important;
+        border-color: white !important;
+      }
+    }
+    span, .EditableProperty__value .bp3-input {
+      color: $blue2 !important;
+      border-color: $blue2 !important;
+    }
+
+    .PropertyValues {
+      .separator {
+        display: none;
+      }
+      .EntityLabel {
+        display: inline-flex;
+        vertical-align: middle;
+        margin: 3px 0;
+
+        .bp3-icon {
+          margin-top: 2px;
+        }
+      }
     }
   }
 
   &__description {
-    display: none;
+    // display: none;
     // border-bottom: 1px solid $aleph-border-color;
     // padding-bottom: $timeline-item-padding;
   }
@@ -120,6 +165,19 @@ $timeline-item-padding: $aleph-grid-size;
     @media screen and (max-width: $aleph-screen-md-max-width) {
       column-count: 1;
     }
+  }
+
+  &__property {
+    padding: 5px;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+
+    & > * {
+      // Firefox fix to avoid break inside column
+      display: inline-block;
+      width: 100%;
+    }
 
     .EditableProperty {
       background-color: white !important;
@@ -129,28 +187,17 @@ $timeline-item-padding: $aleph-grid-size;
         background-color: $light-gray4 !important;
       }
     }
-  }
 
-  &__property {
-    padding: 5px;
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    break-inside: avoid;
-
-    // padding-bottom: 1.5em;
-    // padding-top: 1px;
-
-    & > * {
-      // Firefox fix to avoid break inside column
-      display: inline-block;
-      width: 100%;
+    .no-value {
+      display: inline-flex;
     }
   }
 
   &__draft-text {
     font-style: italic;
+    font-weight: bold;
     margin: 0;
-    font-weight: normal;
+    color: $red1;
     padding-left: 5px;
   }
 
