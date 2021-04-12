@@ -4,49 +4,57 @@
 $timeline-item-padding: $aleph-grid-size;
 
 .TimelineItem {
-  display: flex;
-  position: relative;
-  margin: $aleph-grid-size*2 0;
-  overflow: hidden;
+  margin-bottom: $aleph-grid-size;
+  padding-bottom: $aleph-grid-size;
+  border-bottom: 1px solid $aleph-border-color;
 
-  &.bp3-card {
-    padding: 0;
+  &.draft {
+    box-shadow: $pt-elevation-shadow-2;
+    padding: $aleph-grid-size/2;
+    margin-bottom: $aleph-grid-size*2;
+    border-radius: 5px;
+    border: none;
   }
 
   &__content {
-    display: table;
+    display: flex;
     width: 100%;
-  }
-
-  &__main, &__secondary {
-    display: table-row;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
   }
 
   &__main {
-    color: white;
+    flex-grow: 1;
   }
 
   &__secondary {
-    &__content {
-      background-color: $light-gray5;
-    }
+    flex-basis: 15%;
   }
 
-  &__cell {
-    display: table-cell;
-    vertical-align: middle;
+  &__date, &__title {
+    margin: 5px;
     padding: $timeline-item-padding;
+
+    .TextEdit__toggleMulti {
+      display: none;
+    }
   }
 
   &__date {
     min-width: $aleph-grid-size*17;
-    width: 15%;
-    font-weight: bold;
-    color: $blue2;
+    color: $aleph-greyed-text;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    // font-weight: bold;
+    // color: $blue2;
+
+    // border-radius: 5px;
+    // box-shadow: $pt-elevation-shadow-2;
     // border-bottom: 1px solid $aleph-border-color;
+    .EditableProperty__value {
+      font-weight: bold;
+      color: $blue2 !important;
+    }
 
     & > * {
       display: inline-block;
@@ -58,124 +66,105 @@ $timeline-item-padding: $aleph-grid-size;
 
   &__title {
     display: flex;
-    color: white;
     font-weight: bold;
+    color: white !important;
     background-color: $blue2;
+    border-radius: 5px;
+    margin: 5px;
+    position: relative;
+    padding: $timeline-item-padding;
+
+    span, textarea {
+      color: white !important;
+    }
+
+    .draft & {
+      background-color: $blue4;
+      // border: 1px solid $light-gray4;
+    }
+
+    .EditableProperty {
+      margin: 0 !important;
+    }
+
+
   }
 
   &__involved {
-
+    .EditableProperty {
+      background-color: white !important;
+      border-color: white !important;
+    }
   }
 
   &__description {
-    border-bottom: 1px solid $aleph-border-color;
-    padding-bottom: $timeline-item-padding;
-  }
-
-  &__involved {
-    border-top: 1px solid $aleph-border-color;
-    padding-top: $timeline-item-padding;
+    display: none;
+    // border-bottom: 1px solid $aleph-border-color;
+    // padding-bottom: $timeline-item-padding;
   }
 
   &__properties {
-    padding: $timeline-item-padding 0;
-    columns: 2;
+    // padding: $timeline-item-padding 0;
+    // display: flex;
+    // flex-flow: row wrap;
+    column-count: 3;
+    column-gap: 0;
+    table-layout : fixed;
+    column-fill: balance;
+    margin: 0 1px;
+
+    @media screen and (max-width: $aleph-screen-lg-max-width) {
+      column-count: 2;
+    }
+
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      column-count: 1;
+    }
+
+    .EditableProperty {
+      background-color: white !important;
+      border-color: $light-gray4 !important;
+
+      &:hover {
+        background-color: $light-gray4 !important;
+      }
+    }
   }
 
   &__property {
-    display: flex;
-    min-height: $aleph-grid-size*3;
-    margin-bottom: $timeline-item-padding/3;
-    cursor: pointer;
-    align-items: center;
+    padding: 5px;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
 
-    .PropertyName {
-      width: 100px;
-      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size/2, null);
-    }
+    // padding-bottom: 1.5em;
+    // padding-top: 1px;
 
-    .PropertyValues {
-      padding: 0 3px;
-      border-radius: 3px;
-      & > span {
-        display: inline-block !important;
-      }
-      &:hover {
-        background: $aleph-breadcrumbs-background;
-      }
+    & > * {
+      // Firefox fix to avoid break inside column
+      display: inline-block;
+      width: 100%;
     }
   }
 
-  .bp3-form-group {
+  &__draft-text {
+    font-style: italic;
     margin: 0;
+    font-weight: normal;
+    padding-left: 5px;
   }
 
-  .bp3-input {
-    font-size: 12px !important;
-    padding: 5px !important;
-    height: auto !important;
-
-    &.bp3-tag-input {
-      padding: 0 5px !important;
-    }
+  &__draft-buttons {
+    margin: $aleph-grid-size/2;
+    text-align: right;
   }
 
-  //
-  // &__secondary {
-  //   flex: 1 1 70%;
-  //
-  //   &__content {
-  //     padding: $timeline-item-padding/2 $timeline-item-padding;
-  //   }
-  // }
-  //
-  // &__main {
-  //   flex: 1 1 30%;
-  //   @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, none);
-  //
-  //   &__content {
-  //     padding: $timeline-item-padding;
-  //   }
-  // }
-  //
-  // &__schema {
+  // &__property {
+  //   display: flex;
+  //   min-height: $aleph-grid-size*3;
+  //   margin-bottom: $timeline-item-padding/3;
   //   cursor: pointer;
-  //   // font-size: $pt-font-size-small;
-  //   margin-bottom: $timeline-item-padding;
+  //   align-items: center;
   // }
-  //
-  // &__title.bp3-heading {
-  //   display: flex;
-  //   background: $light-gray4;
-  //   padding: $timeline-item-padding;
-  //   color: $blue1;
-  //   margin: 0;
-  //
-  //   .bp3-button {
-  //     margin-left: -5px;
-  //     // color: $blue1 !important;
-  //     // font-weight: bold;
-  //   }
-  //   // font-weight: bold;
-  //   // font-size: $pt-font-size-large;
-  // }
-  //
-  // &__date {
-  //   display: flex;
-  //   font-weight: 500;
-  //   font-size: $pt-font-size;
-  //
-  //   &__divider {
-  //     padding: 0 $aleph-grid-size/2;
-  //   }
-  // }
-  //
-  //
-  //
 
-  //
-  // &__hidden-input {
-  //   position: absolute;
-  //   visibility: none;
-  // }
 }

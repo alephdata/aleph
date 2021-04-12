@@ -93,7 +93,6 @@ class Timeline extends Component {
             facets={defaultFacets}
           />
           <div className="Timeline__date-placeholder" ref={this.histogramRef}></div>
-
         </DualPane.SidePane>
         <DualPane.ContentPane>
           <QueryTags query={query} updateQuery={this.updateQuery} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Property as VLProperty, PropertyEditor } from '@alephdata/react-ftm';
+import { EditableProperty as VLEditableProperty, Property as VLProperty, PropertyEditor } from '@alephdata/react-ftm';
 
 import { Entity } from 'components/common';
 import { selectLocale, selectModel } from 'selectors';
@@ -18,49 +18,27 @@ class EditableProperty extends React.Component {
   }
 
   toggleEditing = () => {
+    console.log('toggling')
     this.setState(({ editing }) => ({ editing: !editing }));
   }
 
-  renderLabel(options) {
-    const { prop, entity } = this.props;
-
-    return (
-      <span className="PropertyName text-muted">
-        <VLProperty.Name prop={entity.schema.getProperty(prop)} />
-        {options?.withSeparator && <span>:</span>}
-      </span>
-    );
-  }
-
   render() {
-    const { className, locale, onEdit, prop, entity, fetchEntitySuggestions, showLabel } = this.props;
+    const { className, locale, onEdit, prop, entity, fetchEntitySuggestions, showLabel, minimal } = this.props;
     const { editing } = this.state;
 
     const property = entity.schema.getProperty(prop);
 
-    if (editing) {
-      return (
-        <div className={className}>
-          {showLabel && this.renderLabel({ withSeparator: true })}
-          <PropertyEditor
-            locale={locale}
-            entity={entity}
-            property={property}
-            onSubmit={(entityData) => { this.toggleEditing(); onEdit(entityData); }}
-            fetchEntitySuggestions={fetchEntitySuggestions}
-          />
-        </div>
-      );
-    } else {
-      const values = entity.getProperty(property);
-      const isEmpty = values.length === 0;
-      return (
-        <div className={className} onClick={this.toggleEditing}>
-          {(isEmpty || showLabel) && this.renderLabel({ withSeparator: !isEmpty })}
-          {!isEmpty && <Property.Values prop={property} values={values} />}
-        </div>
-      );
-    }
+    return (
+      <VLEditableProperty
+        entity={entity}
+        property={property}
+        editing={editing}
+        onToggleEdit={this.toggleEditing}
+        onSubmit={(entity) => { this.toggleEditing(); onEdit(entity) }}
+        fetchEntitySuggestions={fetchEntitySuggestions}
+        minimal={minimal}
+      />
+    )
   }
 }
 

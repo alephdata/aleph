@@ -53,49 +53,32 @@ class TimelineItemMenu extends Component {
     showSuccessToast(intl.formatMessage(messages.link_copy_success));
   }
 
-  renderDraft() {
-    const { onDelete } = this.props;
-
-    return (
-      <Button className="TimelineItemMenu__toggle" minimal icon="cross" onClick={() => onDelete()} />
-    );
-  }
-
-  renderFull() {
+  render() {
     const { entity, intl, onDelete, onRemove } = this.props;
 
     return (
-      <Popover>
-        <Button className="TimelineItemMenu__toggle" minimal icon="more" />
-        <Menu>
-          <Menu.Item
-            onClick={this.onCopyLink}
-            text={intl.formatMessage(messages.link_copy)}
-            icon="link"
-          />
-          <Menu.Item
-            onClick={() => onRemove(entity.id)}
-            text={intl.formatMessage(messages.remove)}
-            icon="remove"
-          />
-          <Menu.Item
-            onClick={() => onDelete(entity.id)}
-            text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
-            icon="trash"
-            intent={Intent.DANGER}
-          />
-        </Menu>
-      </Popover>
-    );
-  }
-
-  render() {
-    const { isDraft } = this.props;
-
-    return (
       <div className="TimelineItemMenu">
-        {isDraft && this.renderDraft()}
-        {!isDraft && this.renderFull()}
+        <Popover>
+          <Button className="TimelineItemMenu__toggle" minimal icon="more" />
+          <Menu>
+            <Menu.Item
+              onClick={this.onCopyLink}
+              text={intl.formatMessage(messages.link_copy)}
+              icon="link"
+            />
+            <Menu.Item
+              onClick={() => onRemove(entity.id)}
+              text={intl.formatMessage(messages.remove)}
+              icon="remove"
+            />
+            <Menu.Item
+              onClick={() => onDelete(entity.id)}
+              text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
+              icon="trash"
+              intent={Intent.DANGER}
+            />
+          </Menu>
+        </Popover>
       </div>
     );
   }

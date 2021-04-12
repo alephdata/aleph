@@ -36,11 +36,15 @@ const messages = defineMessages({
 class TimelineItemList extends Component {
   constructor(props) {
     super(props);
+
+    this.state = { draftEntity: null };
+
     this.createNewItem = this.createNewItem.bind(this);
   }
 
-  async createNewItem({ schema, properties }) {
+  async createNewItem() {
     const { entityManager, history, location, onHideDraft } = this.props;
+    const { schema, properties } = this.state.draftEntity;
 
     const simplifiedProps = {};
     properties.forEach((value, prop) => {
@@ -49,7 +53,6 @@ class TimelineItemList extends Component {
 
     const entity = await entityManager.createEntity({ schema, properties: simplifiedProps });
     onHideDraft();
-    console.log('finished', entity);
     history.replace({
       pathname: location.pathname,
       search: location.search,
@@ -77,7 +80,8 @@ class TimelineItemList extends Component {
         {showDraftItem && (
           <TimelineItem
             isDraft
-            onUpdate={this.createNewItem}
+            onUpdate={entity => this.setState({ draftEntity: entity })}
+            onSubmit={this.createNewItem}
             onDelete={onHideDraft}
             fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
           />

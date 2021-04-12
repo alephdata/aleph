@@ -30,7 +30,7 @@ class TimelineActionBar extends Component {
     const { createNewItem } = this.props;
 
     return (
-      <ButtonGroup>
+      <ButtonGroup className="TimelineActionBar">
         <Button icon="add" onClick={createNewItem}>
           <FormattedMessage id="timeline.add_new" defaultMessage="Create new item" />
         </Button>

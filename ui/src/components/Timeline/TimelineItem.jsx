@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl } from 'react-intl';
-import { Button, Card, Divider } from '@blueprintjs/core';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { Button, ButtonGroup, Card, Divider, Intent } from '@blueprintjs/core';
 import { PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import { selectModel } from 'selectors';
 import { Entity, Property, Schema } from 'components/common';
@@ -77,9 +78,14 @@ class TimelineItem extends Component {
   }
 
   getVisibleProperties() {
+    const { isDraft } = this.props;
     const { addedProps, entity } = this.state;
 
-    return Array.from(new Set([...entity.schema.featured, ...entity.getProperties().map(prop => prop.name), ...addedProps]));
+    // if (isDraft) {
+    //   return entity.schema.required;
+    // } else {
+      return Array.from(new Set([...entity.schema.featured, ...entity.getProperties().map(prop => prop.name), ...addedProps]));
+    // }
   }
 
   renderProperty(propName, options) {
@@ -123,7 +129,7 @@ class TimelineItem extends Component {
           {captionProp && (
             <>
               <Divider />
-              {this.renderProperty(captionProp, { defaultEditing: true, className: "TimelineItem__property" })}
+              {this.renderProperty(captionProp, { defaultEditing: true, minimal: true, className: "TimelineItem__property" })}
             </>
           )}
         </>
@@ -132,7 +138,7 @@ class TimelineItem extends Component {
       return (
         <>
           <Schema.Icon schema={entity.schema} className="left-icon" />
-          {this.renderProperty(captionProp)}
+          {this.renderProperty(captionProp, { minimal: true })}
         </>
       );
     } else {
@@ -142,10 +148,10 @@ class TimelineItem extends Component {
 
 
   render() {
-    const { isActive, isDraft, onDelete, onRemove } = this.props;
+    const { isActive, isDraft, onDelete, onRemove, onSubmit } = this.props;
     const { entity } = this.state;
 
-    const captionProp = isDraft && entity.schema.caption?.[0];
+    const captionProp = entity.schema.caption?.[0];
     // const otherRequiredProps = entity.schema.required.filter(prop => prop !== captionProp);
     const reservedProps = [captionProp, 'date', 'startDate', 'endDate', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
@@ -159,49 +165,83 @@ class TimelineItem extends Component {
     const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length > 0)) ? 'startDate' : 'date';
 
     return (
-      <div id={entity.id} ref={this.ref}>
-        <Card elevation={isActive ? 3 : 1} className="TimelineItem">
-          <TimelineItemMenu
-            entity={entity}
-            isDraft={isDraft}
-            onDelete={onDelete}
-            onRemove={onRemove}
-          />
-          <div className="TimelineItem__content">
-            <div className="TimelineItem__main">
-              <div className="TimelineItem__cell TimelineItem__date">
-                {this.renderProperty(dateProp)}
-                <span className="TimelineItem__date__divider text-muted">-</span>
-                {this.renderProperty('endDate')}
-              </div>
-              <div className="TimelineItem__cell TimelineItem__title">
-                {this.renderTitle()}
-              </div>
+      <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft })}>
+        <div className="TimelineItem__content">
+          <div className="TimelineItem__secondary">
+            {isDraft && (
+              <h5 className="TimelineItem__draft-text">
+                <FormattedMessage
+                  id="timeline.draft"
+                  defaultMessage="Draft"
+                />
+              </h5>
+            )}
+            <div className="TimelineItem__date">
+              <FormattedMessage
+                id="timeline.item.date"
+                defaultMessage="{start}to{end}"
+                values={{
+                  start: this.renderProperty(dateProp, { minimal: true }),
+                  end: this.renderProperty('endDate', { minimal: true })
+                }}
+              />
             </div>
-            <div className="TimelineItem__secondary">
-              <div className="TimelineItem__cell">
-              </div>
-              <div className="TimelineItem__cell TimelineItem__secondary__content">
-                <div className="TimelineItem__description">
-                  {this.renderProperty('description')}
+          </div>
+          <div className="TimelineItem__main">
+            <div className="TimelineItem__title">
+              {this.renderTitle()}
+              {!isDraft && (
+                <TimelineItemMenu
+                  entity={entity}
+                  onDelete={onDelete}
+                  onRemove={onRemove}
+                />
+              )}
+            </div>
+            <div className="TimelineItem__description">
+              {this.renderProperty('description', { minimal: true })}
+            </div>
+            <div className="TimelineItem__properties">
+              {visibleProps.map(prop => (
+                <div className="TimelineItem__property">
+                  {this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" })}
                 </div>
-                <div className="TimelineItem__properties">
-                  {visibleProps.map(prop => this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" }))}
+              ))}
+              {!isDraft && (
+                <div className="TimelineItem__property">
                   <PropertySelect
                     properties={availableProps}
                     onSelected={this.onNewPropertyAdded}
                     buttonProps={{ minimal: true, small: true }}
                   />
                 </div>
-                {entity.schema.name === 'Event' && (
-                  <div className="TimelineItem__involved">
-                    {this.renderProperty('involved')}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
+            {false && entity.schema.name === 'Event' && (
+              <div className="TimelineItem__involved">
+                {this.renderProperty('involved')}
+              </div>
+            )}
           </div>
-        </Card>
+        </div>
+        {isDraft && (
+          <div className="TimelineItem__draft-buttons">
+            <ButtonGroup>
+              <Button onClick={onDelete} icon="cross">
+                <FormattedMessage
+                  id="timeline.create.cancel"
+                  defaultMessage="Cancel"
+                />
+              </Button>
+              <Button onClick={onSubmit} icon="add" intent={Intent.PRIMARY}>
+                <FormattedMessage
+                  id="timeline.create.submit"
+                  defaultMessage="Create"
+                />
+              </Button>
+            </ButtonGroup>
+          </div>
+        )}
       </div>
     );
   }
