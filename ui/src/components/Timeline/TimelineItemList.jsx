@@ -27,6 +27,10 @@ const messages = defineMessages({
     id: 'timeline.empty',
     defaultMessage: 'This timeline is empty',
   },
+  no_results: {
+    id: 'timeline.no_results',
+    defaultMessage: 'No items found matching query',
+  },
   histogram_empty: {
     id: 'timeline.empty_histogram',
     defaultMessage: 'No dates found for selected range',
@@ -61,7 +65,7 @@ class TimelineItemList extends Component {
   }
 
   render() {
-    const { deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft } = this.props;
+    const { entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft } = this.props;
 
     const items = result.results;
     const isEmpty = items.length === 0;
@@ -70,9 +74,9 @@ class TimelineItemList extends Component {
       return (
         <ErrorSection
           icon="gantt-chart"
-          title={intl.formatMessage(messages.empty)}
+          title={intl.formatMessage(messages[entitiesCount === 0 ? 'empty' : 'no_results'])}
         />
-      )
+      );
     }
 
     return (

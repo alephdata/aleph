@@ -23,9 +23,21 @@ const defaultFacets = [
 ];
 
 const messages = defineMessages({
-  histogram_empty: {
+  histogramEmpty: {
     id: 'timeline.empty_histogram',
     defaultMessage: 'No dates found for selected range',
+  },
+  itemsLabel: {
+    id: 'timeline.items_label',
+    defaultMessage: 'items',
+  },
+  resultText: {
+    id: 'timeline.result_text',
+    defaultMessage: '{count} timeline items',
+  },
+  resultTextQuery: {
+    id: 'timeline.result_text_query',
+    defaultMessage: 'Showing {count} (of {total}) items',
   }
 });
 
@@ -71,7 +83,7 @@ class Timeline extends Component {
   }
 
   render() {
-    const { entityManager, query, intl, result } = this.props;
+    const { entitiesCount, entityManager, query, intl, result } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
     return (
@@ -83,7 +95,8 @@ class Timeline extends Component {
               intervals={result.facets?.dates?.intervals}
               query={query}
               updateQuery={this.updateQuery}
-              emptyText={intl.formatMessage(messages.histogram_empty)}
+              dataLabel={intl.formatMessage(messages.itemsLabel)}
+              emptyText={intl.formatMessage(messages.histogramEmpty)}
             />
           </div>
           <SearchFacets
@@ -96,7 +109,14 @@ class Timeline extends Component {
         </DualPane.SidePane>
         <DualPane.ContentPane>
           <QueryTags query={query} updateQuery={this.updateQuery} />
-          <SearchActionBar result={result}>
+          <SearchActionBar
+            result={result}
+            customResultText={
+              result.total === entitiesCount.total
+                ? intl.formatMessage(messages.resultText, { count: result.total })
+                : intl.formatMessage(messages.resultTextQuery, { count: result.total, total: entitiesCount.total })
+            }
+          >
             <SortingBar
               query={query}
               updateQuery={this.updateQuery}
@@ -107,6 +127,7 @@ class Timeline extends Component {
           <TimelineItemList
             query={query}
             result={result}
+            entitiesCount={entitiesCount}
             showDraftItem={showDraftItem}
             onHideDraft={() => this.setState({ showDraftItem: false })}
             entityManager={entityManager}

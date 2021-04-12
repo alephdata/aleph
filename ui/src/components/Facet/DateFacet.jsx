@@ -81,7 +81,7 @@ export class DateFilter extends Component {
   }
 
   render() {
-    const { emptyText, filteredIntervals, intervals, intl, isOpen, displayShowHiddenToggle } = this.props;
+    const { dataLabel, emptyText, filteredIntervals, intervals, intl, isOpen, displayShowHiddenToggle } = this.props;
     if (!isOpen || (!filteredIntervals?.length && !emptyText)) {
       return null;
     }
@@ -96,7 +96,7 @@ export class DateFilter extends Component {
           />
         )
       } else {
-        const dataPropName = intl.formatMessage(messages.results);
+        const dataPropName = dataLabel || intl.formatMessage(messages.results);
         content = (
           <>
             <Histogram

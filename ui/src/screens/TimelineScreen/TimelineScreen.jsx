@@ -3,9 +3,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { fetchEntitySet } from 'actions';
+import { fetchEntitySet, queryEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
+import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
@@ -38,10 +39,13 @@ export class TimelineScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { timeline, entitySetId } = this.props;
+    const { entitiesCount, entitiesCountQuery, timeline, entitySetId } = this.props;
 
     if (timeline.shouldLoad) {
       this.props.fetchEntitySet({ id: entitySetId });
+    }
+    if (entitiesCount.shouldLoad) {
+      this.props.queryEntities({ query: entitiesCountQuery });
     }
   }
 
@@ -65,7 +69,7 @@ export class TimelineScreen extends Component {
   }
 
   render() {
-    const { query, result, timeline } = this.props;
+    const { entitiesCount, query, result, timeline } = this.props;
     const { updateStatus } = this.state;
 
     if (timeline.isError) {
@@ -108,6 +112,7 @@ export class TimelineScreen extends Component {
           <Timeline
             query={query}
             entities={result?.results}
+            entitiesCount={entitiesCount}
             collection={timeline.collection}
             onStatusChange={this.onStatusChange}
             mutateOnUpdate
@@ -131,11 +136,14 @@ const mapStateToProps = (state, ownProps) => {
     .defaultFacet('addresses')
     .defaultSortBy('properties.date', 'asc');
 
+  const entitiesCountQuery = new Query(`entitysets/${entitySetId}/entities`, {}, {}, 'entitySetEntities').limit(0)
 
   return {
     entitySetId,
     timeline,
     query,
+    entitiesCountQuery,
+    entitiesCount: selectEntitiesResult(state, entitiesCountQuery),
     result: selectEntitiesResult(state, query)
   };
 };
@@ -143,5 +151,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { fetchEntitySet }),
+  connect(mapStateToProps, { fetchEntitySet, queryEntities }),
 )(TimelineScreen);
