@@ -179,7 +179,7 @@ def format_proxy(proxy, collection):
     if proxy.schema.abstract:
         return None
 
-    data = proxy.to_full_dict()
+    data = proxy.to_full_dict(matchable=True)
     data["schemata"] = list(proxy.schema.names)
     data["caption"] = proxy.caption
 
