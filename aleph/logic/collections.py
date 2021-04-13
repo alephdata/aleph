@@ -169,7 +169,10 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     deleted_at = collection.deleted_at or datetime.utcnow()
     cancel_queue(collection)
     aggregator = get_aggregator(collection)
-    aggregator.drop()
+    if keep_metadata:
+        aggregator.delete()
+    else:
+        aggregator.drop()
     flush_notifications(collection, sync=sync)
     index.delete_entities(collection.id, sync=sync)
     xref_index.delete_xref(collection, sync=sync)
