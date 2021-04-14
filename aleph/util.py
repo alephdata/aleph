@@ -50,11 +50,22 @@ class Stub(object):
     pass
 
 
+def _get_logging_context():
+    """Get the current logging context"""
+    return structlog.contextvars.merge_contextvars(None, None, {})
+
+
 class LoggingTransport(Transport):
     def __init__(self, *args, **kwargs):
         super(LoggingTransport, self).__init__(*args, **kwargs)
 
     def perform_request(self, method, url, headers=None, params=None, body=None):
+        if headers is None:
+            headers = {}
+        ctx = _get_logging_context()
+        # link es tasks to a trace id
+        headers["x-opaque-id"] = ctx.get("trace_id")
+
         result = super(LoggingTransport, self).perform_request(
             method, url, headers, params, body
         )
@@ -65,5 +76,9 @@ class LoggingTransport(Transport):
             "es_req_body": body,
             "took": hasattr(result, "get") and result.get("took"),
         }
+        # Don't log the request body when writing entities to the index
+        # to prevent unnecessarily large logs
+        if url.endswith("_bulk"):
+            del payload["es_req_body"]
         log.info("Performed ES request", **payload)
         return result
