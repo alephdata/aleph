@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { EditableProperty as VLEditableProperty, Property as VLProperty, PropertyEditor } from '@alephdata/react-ftm';
+import { EditableProperty as VLEditableProperty, Property as VLProperty } from '@alephdata/react-ftm';
 import { Button } from '@blueprintjs/core';
 
 import { Entity } from 'components/common';
@@ -24,14 +24,17 @@ class EditableProperty extends React.Component {
   }
 
   render() {
-    const { className, locale, onEdit, prop, entity, fetchEntitySuggestions, showLabel, minimal, toggleButtonProps } = this.props;
+    const { onEdit, prop, entity, emptyPlaceholder, fetchEntitySuggestions, minimal, toggleButtonProps, writeable } = this.props;
     const { editing } = this.state;
 
     const property = entity.schema.getProperty(prop);
+    const hasValue = entity.hasProperty(property);
 
-    console.log(entity.hasProperty(property));
+    if (!writeable && !hasValue) {
+      return emptyPlaceholder || null;
+    }
 
-    if (toggleButtonProps && !editing && !entity.hasProperty(property)) {
+    if (!editing && !hasValue && toggleButtonProps) {
       return (
         <Button {...toggleButtonProps} onClick={this.toggleEditing} />
       );
@@ -46,6 +49,7 @@ class EditableProperty extends React.Component {
         onSubmit={(entity) => { this.toggleEditing(); onEdit(entity) }}
         fetchEntitySuggestions={fetchEntitySuggestions}
         minimal={minimal}
+        writeable={writeable}
       />
     )
   }

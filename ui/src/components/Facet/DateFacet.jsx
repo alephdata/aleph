@@ -81,7 +81,7 @@ export class DateFilter extends Component {
   }
 
   render() {
-    const { dataLabel, emptyText, filteredIntervals, intervals, intl, isOpen, displayShowHiddenToggle } = this.props;
+    const { dataLabel, emptyText, filteredIntervals, intl, isOpen, displayShowHiddenToggle } = this.props;
     if (!isOpen || (!filteredIntervals?.length && !emptyText)) {
       return null;
     }

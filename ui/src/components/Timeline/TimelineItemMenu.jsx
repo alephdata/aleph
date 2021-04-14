@@ -54,29 +54,33 @@ class TimelineItemMenu extends Component {
   }
 
   render() {
-    const { entity, intl, onDelete, onRemove } = this.props;
+    const { entity, intl, onDelete, onRemove, writeable } = this.props;
 
     return (
       <div className="TimelineItemMenu">
         <Popover>
-          <Button className="TimelineItemMenu__toggle" minimal icon="more" />
+          <Button className="TimelineItemMenu__toggle" minimal small icon="more" />
           <Menu>
             <Menu.Item
               onClick={this.onCopyLink}
               text={intl.formatMessage(messages.link_copy)}
               icon="link"
             />
-            <Menu.Item
-              onClick={() => onRemove(entity.id)}
-              text={intl.formatMessage(messages.remove)}
-              icon="remove"
-            />
-            <Menu.Item
-              onClick={() => onDelete(entity.id)}
-              text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
-              icon="trash"
-              intent={Intent.DANGER}
-            />
+            {writeable && (
+              <>
+                <Menu.Item
+                  onClick={() => onRemove(entity.id)}
+                  text={intl.formatMessage(messages.remove)}
+                  icon="remove"
+                />
+                <Menu.Item
+                  onClick={() => onDelete(entity.id)}
+                  text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
+                  icon="trash"
+                  intent={Intent.DANGER}
+                />
+              </>
+            )}
           </Menu>
         </Popover>
       </div>

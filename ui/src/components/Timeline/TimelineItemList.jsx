@@ -5,22 +5,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { DualPane, ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
-import SearchFacets from 'components/Facet/SearchFacets';
-import SearchActionBar from 'components/common/SearchActionBar';
-import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import TimelineActionBar from 'components/Timeline/TimelineActionBar';
+import { ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
 import TimelineItem from 'components/Timeline/TimelineItem';
-import DateFacet from 'components/Facet/DateFacet';
-import QueryTags from 'components/QueryTags/QueryTags';
-import SortingBar from 'components/SortingBar/SortingBar';
 
 import { deleteEntity, queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
 
-const defaultFacets = [
-  'names', 'addresses', 'schema',
-];
 
 const messages = defineMessages({
   empty: {
@@ -31,10 +20,6 @@ const messages = defineMessages({
     id: 'timeline.no_results',
     defaultMessage: 'No items found matching query',
   },
-  histogram_empty: {
-    id: 'timeline.empty_histogram',
-    defaultMessage: 'No dates found for selected range',
-  }
 });
 
 class TimelineItemList extends Component {
@@ -65,7 +50,7 @@ class TimelineItemList extends Component {
   }
 
   render() {
-    const { entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft } = this.props;
+    const { entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft, writeable } = this.props;
 
     const items = result.results;
     const isEmpty = items.length === 0;
@@ -74,7 +59,7 @@ class TimelineItemList extends Component {
       return (
         <ErrorSection
           icon="gantt-chart"
-          title={intl.formatMessage(messages[entitiesCount === 0 ? 'empty' : 'no_results'])}
+          title={intl.formatMessage(messages[entitiesCount.total === 0 ? 'empty' : 'no_results'])}
         />
       );
     }
@@ -88,6 +73,7 @@ class TimelineItemList extends Component {
             onSubmit={this.createNewItem}
             onDelete={onHideDraft}
             fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+            writeable
           />
         )}
         {!isEmpty && (
@@ -100,6 +86,7 @@ class TimelineItemList extends Component {
                 onRemove={entityId => entityManager.deleteEntities([entityId])}
                 onDelete={entityId => deleteEntity(entityId)}
                 fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+                writeable={writeable && item.writeable}
               />
             ))}
           </>

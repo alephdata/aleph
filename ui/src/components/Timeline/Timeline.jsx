@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
-import { DualPane, ErrorSection, QueryInfiniteLoad } from 'components/common';
+import { DualPane } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
 import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
@@ -25,7 +25,7 @@ const defaultFacets = [
 const messages = defineMessages({
   histogramEmpty: {
     id: 'timeline.empty_histogram',
-    defaultMessage: 'No dates found for selected range',
+    defaultMessage: 'No dates found',
   },
   itemsLabel: {
     id: 'timeline.items_label',
@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
   resultTextQuery: {
     id: 'timeline.result_text_query',
-    defaultMessage: 'Showing {count} (of {total}) items',
+    defaultMessage: 'Showing {count} (of {total} total) items',
   }
 });
 
@@ -82,7 +82,7 @@ class Timeline extends Component {
   }
 
   render() {
-    const { entitiesCount, entityManager, query, intl, result } = this.props;
+    const { entitiesCount, entityManager, query, intl, result, writeable } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
     return (
@@ -122,10 +122,12 @@ class Timeline extends Component {
               sortingFields={['properties.date', 'caption', 'created_at']}
             />
           </SearchActionBar>
-          <TimelineActionBar
-            disabled={showDraftItem}
-            createNewItem={() => this.setState({ showDraftItem: true })}
-          />
+          {writeable && (
+            <TimelineActionBar
+              disabled={showDraftItem}
+              createNewItem={() => this.setState({ showDraftItem: true })}
+            />
+          )}
           <TimelineItemList
             query={query}
             result={result}
@@ -133,6 +135,7 @@ class Timeline extends Component {
             showDraftItem={showDraftItem}
             onHideDraft={() => this.setState({ showDraftItem: false })}
             entityManager={entityManager}
+            writeable={writeable}
           />
         </DualPane.ContentPane>
       </DualPane>

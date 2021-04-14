@@ -2,17 +2,8 @@
 @import "app/mixins.scss";
 
 .TimelineItemMenu {
-  position: absolute;
-  top: $aleph-grid-size/2;
-  @include rtl(right, $aleph-grid-size/2, null);
-  @include rtl(left, null, $aleph-grid-size/2);
-
-  &__toggle.bp3-button {
-    .bp3-icon {
-      color: white;
-    }
-  }
-
+  padding: $aleph-grid-size/2;
+  
   &__hidden-input {
     position: absolute;
     visibility: none;

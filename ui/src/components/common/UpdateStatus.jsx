@@ -56,7 +56,7 @@ class UpdateStatus extends PureComponent {
   }
 
   showPrompt(location) {
-    const { pathname, hash } = window.location;
+    const { pathname } = window.location;
     return location.pathname !== pathname
   }
 

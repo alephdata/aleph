@@ -115,6 +115,7 @@ export class TimelineScreen extends Component {
             entitiesCount={entitiesCount}
             collection={timeline.collection}
             onStatusChange={this.onStatusChange}
+            writeable={timeline.writeable}
             mutateOnUpdate
           />
         </CollectionWrapper>

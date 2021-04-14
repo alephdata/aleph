@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, Card, Divider, Intent } from '@blueprintjs/core';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { Button, ButtonGroup, Divider, Intent } from '@blueprintjs/core';
 import { PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
@@ -14,10 +14,13 @@ import { Entity, Property, Schema } from 'components/common';
 import TimelineItemMenu from 'components/Timeline/TimelineItemMenu';
 import './TimelineItem.scss';
 
-//
-// const messages = defineMessages({
-//
-// });
+
+const messages = defineMessages({
+  involved_button_text: {
+    id: 'timeline.involved.button_text',
+    defaultMessage: 'Add involved entities'
+  }
+});
 
 class TimelineItem extends Component {
   constructor(props) {
@@ -80,18 +83,20 @@ class TimelineItem extends Component {
   }
 
   getVisibleProperties() {
-    const { isDraft } = this.props;
+    const { writeable } = this.props;
     const { addedProps, entity } = this.state;
 
-    // if (isDraft) {
-    //   return entity.schema.required;
-    // } else {
-      return Array.from(new Set([...entity.schema.featured, ...entity.getProperties().map(prop => prop.name), ...addedProps]));
-    // }
+    const filledProps = entity.getProperties().filter(prop => !prop.hidden).map(prop => prop.name);
+
+    if (!writeable) {
+      return filledProps;
+    } else {
+    return Array.from(new Set([...entity.schema.featured, ...filledProps, ...addedProps]));
+    }
   }
 
   renderProperty(propName, options) {
-    const { fetchEntitySuggestions } = this.props;
+    const { fetchEntitySuggestions, writeable } = this.props;
     const { entity } = this.state;
 
     return (
@@ -101,13 +106,38 @@ class TimelineItem extends Component {
         prop={propName}
         onEdit={(updatedEntity) => this.onPropertyEdit(updatedEntity, propName)}
         fetchEntitySuggestions={fetchEntitySuggestions}
+        writeable={writeable}
         {...options}
       />
     )
   }
 
+  renderDate() {
+    const { writeable } = this.props;
+    const { entity } = this.state;
+
+    const hasEndDate = entity.hasProperty('endDate');
+    const dateProp = (hasEndDate || (!entity.hasProperty('date') && entity.hasProperty('startDate'))) ? 'startDate' : 'date';
+    const date = this.renderProperty(dateProp, { minimal: true, emptyPlaceholder: ' - ' })
+
+    if (!writeable && !hasEndDate) {
+      return date;
+    }
+
+    return (
+      <FormattedMessage
+        id="timeline.item.date"
+        defaultMessage="{start}to{end}"
+        values={{
+          start: date,
+          end: this.renderProperty('endDate', { minimal: true, emptyPlaceholder: ' - ' })
+        }}
+      />
+    );
+  }
+
   renderTitle() {
-    const { isDraft } = this.props;
+    const { isDraft, writeable } = this.props;
     const { entity } = this.state;
 
     const captionProp = entity.schema.caption?.[0];
@@ -122,6 +152,7 @@ class TimelineItem extends Component {
             <Button
               minimal
               small
+              intent={Intent.PRIMARY}
               icon={<Schema.Icon schema={entity.schema} />}
               rightIcon="caret-down"
             >
@@ -136,25 +167,24 @@ class TimelineItem extends Component {
           )}
         </>
       )
-    } else if (captionProp) {
+    } else if (writeable && captionProp) {
       return (
         <>
-          <Schema.Icon schema={entity.schema} className="left-icon" />
+          <Schema.Icon schema={entity.schema} />
           {this.renderProperty(captionProp, { minimal: true })}
         </>
       );
     } else {
-      return <span style={{ textTransform: 'italic'}}><Entity.Label entity={entity} icon /></span>
+      return <Entity.Label entity={entity} icon />
     }
   }
 
 
   render() {
-    const { isActive, isDraft, onDelete, onRemove, onSubmit } = this.props;
+    const { intl, isDraft, onDelete, onRemove, onSubmit, writeable } = this.props;
     const { entity } = this.state;
 
     const captionProp = entity.schema.caption?.[0];
-    // const otherRequiredProps = entity.schema.required.filter(prop => prop !== captionProp);
     const reservedProps = [captionProp, 'date', 'startDate', 'endDate', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
@@ -163,46 +193,39 @@ class TimelineItem extends Component {
       .sort((a, b) => a.label.localeCompare(b.label))
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
-    const hasEndDate = entity.getProperty('endDate').length > 0;
-    const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length > 0)) ? 'startDate' : 'date';
-
     return (
       <>
+        {isDraft && (
+          <div className="TimelineItem__draft-text">
+            <FormattedMessage
+              id="timeline.draft"
+              defaultMessage="Draft"
+            />
+          </div>
+        )}
         <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft })}>
           <div className="TimelineItem__content">
             <div className="TimelineItem__secondary">
-              {isDraft && (
-                <div className="TimelineItem__draft-text">
-                  <FormattedMessage
-                    id="timeline.draft"
-                    defaultMessage="Draft"
-                  />
-                </div>
-              )}
               <div className="TimelineItem__date">
-                <FormattedMessage
-                  id="timeline.item.date"
-                  defaultMessage="{start}to{end}"
-                  values={{
-                    start: this.renderProperty(dateProp, { minimal: true }),
-                    end: this.renderProperty('endDate', { minimal: true })
-                  }}
-                />
+                {this.renderDate()}
               </div>
-              {entity.schema.name === 'Event' && (
+              {entity.schema.name === 'Event' && !isDraft && (
                 <div className="TimelineItem__involved">
-                  {this.renderProperty('involved', { toggleButtonProps: { text: "Add an involved entity", icon: 'add', intent: Intent.PRIMARY, minimal: true, small: true, fill: true } })}
+                  {this.renderProperty('involved', { toggleButtonProps: { text: intl.formatMessage(messages.involved_button_text), icon: 'add', minimal: true, small: true, fill: true } })}
                 </div>
               )}
             </div>
             <div className="TimelineItem__main">
               <div className="TimelineItem__title">
-                {this.renderTitle()}
+                <span className="TimelineItem__title__text">
+                  {this.renderTitle()}
+                </span>
                 {!isDraft && (
                   <TimelineItemMenu
                     entity={entity}
                     onDelete={onDelete}
                     onRemove={onRemove}
+                    writeable={writeable}
                   />
                 )}
               </div>
@@ -211,11 +234,11 @@ class TimelineItem extends Component {
               </div>
               <div className="TimelineItem__properties">
                 {visibleProps.map(prop => (
-                  <div className="TimelineItem__property">
+                  <div className="TimelineItem__property" key={prop}>
                     {this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" })}
                   </div>
                 ))}
-                {!isDraft && (
+                {!isDraft && writeable && (
                   <div className="TimelineItem__property">
                     <PropertySelect
                       properties={availableProps}
@@ -230,10 +253,10 @@ class TimelineItem extends Component {
           {isDraft && (
             <div className="TimelineItem__draft-buttons">
               <ButtonGroup>
-                <Button onClick={onDelete} icon="cross">
+                <Button onClick={onDelete} icon="trash">
                   <FormattedMessage
                     id="timeline.create.cancel"
-                    defaultMessage="Cancel"
+                    defaultMessage="Delete"
                   />
                 </Button>
                 <Button onClick={onSubmit} icon="add" intent={Intent.PRIMARY}>

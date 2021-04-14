@@ -4,24 +4,22 @@
 .Timeline {
   &__date-container {
     z-index: 10;
-    width: $aleph-sidebar-width - $aleph-content-padding;
+    width: inherit;
+    @include rtlSupportInvertedProp(padding, right, $aleph-content-padding !important, 0);
 
     &.fixed {
-      position: fixed;
-      top: $aleph-grid-size;
+      @media screen and (min-width: $aleph-screen-sm-max-width) {
+        position: fixed;
+        top: $aleph-content-padding;
+      }
     }
   }
 
   .DateFacet {
-    margin-top: $aleph-grid-size;
-    margin-bottom: $aleph-grid-size*2;
-  }
-
-  .ContentPane {
-    overflow: visible;
+    margin-bottom: $aleph-content-padding;
   }
 
   .TimelineActionBar {
-    margin-bottom: $aleph-content-padding;
+    margin: $aleph-grid-size/2 0;
   }
 }
