@@ -12,11 +12,10 @@ from aleph.index import collections as index
 from aleph.index import xref as xref_index
 from aleph.index import entities as entities_index
 from aleph.logic.notifications import publish, flush_notifications
-from aleph.logic.documents import ingest_flush
+from aleph.logic.documents import ingest_flush, MODEL_ORIGIN
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
-MODEL_ORIGIN = "model"
 
 
 def create_collection(data, authz, sync=False):
