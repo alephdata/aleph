@@ -76,5 +76,9 @@ class LoggingTransport(Transport):
             "es_req_body": body,
             "took": hasattr(result, "get") and result.get("took"),
         }
+        # Don't log the request body when writing entities to the index
+        # to prevent unnecessarily large logs
+        if url.endswith("_bulk"):
+            del payload["es_req_body"]
         log.info("Performed ES request", **payload)
         return result
