@@ -331,10 +331,10 @@ def index_settings(shards=5, replicas=settings.INDEX_REPLICAS):
             # "refresh_interval": refresh,
             "analysis": {
                 "analyzer": {
-                    "latin_index": {"tokenizer": "lowercase", "filter": ["latinize"]},
-                    "icu_latin": {"tokenizer": "lowercase", "filter": ["latinize"]},
+                    "latin_index": {"tokenizer": "standard", "filter": ["latinize"]},
+                    "icu_latin": {"tokenizer": "standard", "filter": ["latinize"]},
                     "latin_query": {
-                        "tokenizer": "lowercase",
+                        "tokenizer": "standard",
                         "filter": ["latinize", "synonames"],
                     },
                 },
