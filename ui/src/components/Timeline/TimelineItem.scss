@@ -180,7 +180,7 @@ $timeline-item-padding: $aleph-grid-size;
   }
 
   &__involved {
-    padding-top: $timeline-item-padding/2;
+    padding: $timeline-item-padding/2 0;
 
     .EditableProperty {
       background-color: white;
@@ -259,7 +259,7 @@ $timeline-item-padding: $aleph-grid-size;
       display: inline-flex;
     }
   }
-  
+
   &__draft-buttons {
     margin: $aleph-grid-size/2;
     text-align: right;

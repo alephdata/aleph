@@ -6,9 +6,10 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
+
+import { selectTester } from 'selectors';
 import { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
-
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
 
@@ -141,7 +142,7 @@ class EntitySetSelector extends Component {
   }
 
   render() {
-    const { collection, isOpen, toggleDialog } = this.props;
+    const { collection, isOpen, isTester, toggleDialog } = this.props;
     const { processing } = this.state;
 
     return (
@@ -176,20 +177,26 @@ class EntitySetSelector extends Component {
             onSelect={this.onSelect}
             onCreate={this.onCreate}
           />
-          <EntitySetSelectorSection
-            type="timeline"
-            collection={collection}
-            onSelect={this.onSelect}
-            onCreate={this.onCreate}
-          />
+          {isTester && (
+            <EntitySetSelectorSection
+              type="timeline"
+              collection={collection}
+              onSelect={this.onSelect}
+              onCreate={this.onCreate}
+            />
+          )}
         </div>
       </Drawer>
     );
   }
 }
 
+const mapStateToProps = (state) => ({
+  isTester: selectTester(state),
+});
+
 export default compose(
   withRouter,
   injectIntl,
-  connect(() => ({}), { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
+  connect(mapStateToProps, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
 )(EntitySetSelector);
