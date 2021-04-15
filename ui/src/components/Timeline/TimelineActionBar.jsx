@@ -1,45 +1,54 @@
 import React, { Component } from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 
-import { queryEntities } from 'actions';
+const messages = defineMessages({
+  collapse: {
+    id: 'timeline.button.collapse',
+    defaultMessage: 'Show collapsed view',
+  },
+  show_full: {
+    id: 'timeline.button.show_full',
+    defaultMessage: 'Show detailed view',
+  },
+});
 
 
 class TimelineActionBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selection: [],
-    };
-    this.updateQuery = this.updateQuery.bind(this);
+    this.toggleExpanded = this.toggleExpanded.bind(this);
   }
 
-  updateQuery(newQuery) {
-    const { history, location } = this.props;
+  toggleExpanded() {
+    const { expandedMode, history, location } = this.props;
     history.push({
-      pathname: location.pathname,
-      search: newQuery.toLocation(),
-      hash: location.hash,
-    });
+      ...location,
+      hash: queryString.stringify({ expanded: !expandedMode })
+    })
   }
 
   render() {
-    const { createNewItem, disabled } = this.props;
+    const { expandedMode, createNewItem, disabled, intl } = this.props;
 
     return (
       <ButtonGroup className="TimelineActionBar">
-        <Button icon="add" onClick={createNewItem} disabled={disabled}>
+        <Button icon={expandedMode ? 'collapse-all' : 'properties'} onClick={this.toggleExpanded}>
+          {intl.formatMessage(messages[expandedMode ? 'collapse' : 'show_full'])}
+        </Button>
+        <Button icon="add" onClick={createNewItem} disabled={disabled} intent={Intent.PRIMARY}>
           <FormattedMessage id="timeline.add_new" defaultMessage="Create new item" />
         </Button>
       </ButtonGroup>
     );
   }
 }
+
 export default compose(
   withRouter,
-  connect(null, { queryEntities }),
   injectIntl,
 )(TimelineActionBar);

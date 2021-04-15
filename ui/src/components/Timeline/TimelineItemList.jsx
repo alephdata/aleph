@@ -50,7 +50,7 @@ class TimelineItemList extends Component {
   }
 
   render() {
-    const { entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft, writeable } = this.props;
+    const { expandedMode, entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft, writeable } = this.props;
 
     const items = result.results;
     const isEmpty = items.length === 0;
@@ -74,6 +74,7 @@ class TimelineItemList extends Component {
             onDelete={onHideDraft}
             fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
             writeable
+            expandedMode={expandedMode}
           />
         )}
         {!isEmpty && (
@@ -82,6 +83,7 @@ class TimelineItemList extends Component {
               <TimelineItem
                 key={item.id}
                 entity={item}
+                expandedMode={expandedMode}
                 onUpdate={entityData => entityManager.updateEntity(entityData)}
                 onRemove={entityId => entityManager.deleteEntities([entityId])}
                 onDelete={entityId => deleteEntity(entityId)}

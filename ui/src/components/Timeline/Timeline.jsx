@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
+import queryString from 'query-string';
 
 import { DualPane } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
@@ -82,7 +83,7 @@ class Timeline extends Component {
   }
 
   render() {
-    const { entitiesCount, entityManager, query, intl, result, writeable } = this.props;
+    const { expandedMode, entitiesCount, entityManager, query, intl, result, writeable } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
     return (
@@ -125,6 +126,7 @@ class Timeline extends Component {
           {writeable && (
             <TimelineActionBar
               disabled={showDraftItem}
+              expandedMode={expandedMode}
               createNewItem={() => this.setState({ showDraftItem: true })}
             />
           )}
@@ -135,6 +137,7 @@ class Timeline extends Component {
             showDraftItem={showDraftItem}
             onHideDraft={() => this.setState({ showDraftItem: false })}
             entityManager={entityManager}
+            expandedMode={expandedMode}
             writeable={writeable}
           />
         </DualPane.ContentPane>
@@ -144,9 +147,11 @@ class Timeline extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { query } = ownProps;
+  const { query, location } = ownProps;
+  const parsedHash = queryString.parse(location.hash);
 
   return {
+    expandedMode: parsedHash.expanded === 'true',
     result: selectEntitiesResult(state, query)
   };
 };

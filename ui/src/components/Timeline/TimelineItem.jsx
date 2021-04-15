@@ -25,11 +25,12 @@ const messages = defineMessages({
 class TimelineItem extends Component {
   constructor(props) {
     super(props);
-    const { entity, model } = props;
+    const { entity, isActive, model } = props;
 
     this.state = {
       entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` }),
-      addedProps: []
+      addedProps: [],
+      itemExpanded: isActive,
     }
 
     this.onSchemaChange = this.onSchemaChange.bind(this);
@@ -37,6 +38,7 @@ class TimelineItem extends Component {
     this.getVisibleProperties = this.getVisibleProperties.bind(this);
     this.renderProperty = this.renderProperty.bind(this);
     this.onNewPropertyAdded = this.onNewPropertyAdded.bind(this);
+    this.toggleExpanded = this.toggleExpanded.bind(this);
     this.ref = React.createRef();
   }
 
@@ -46,6 +48,10 @@ class TimelineItem extends Component {
     if (isActive) {
       this.ref.current?.scrollIntoView();
     }
+  }
+
+  toggleExpanded() {
+    this.setState(({ itemExpanded }) => ({ itemExpanded: !itemExpanded }));
   }
 
   onSchemaChange(schema) {
@@ -181,8 +187,10 @@ class TimelineItem extends Component {
 
 
   render() {
-    const { intl, isDraft, onDelete, onRemove, onSubmit, writeable } = this.props;
-    const { entity } = this.state;
+    const { expandedMode, intl, isDraft, onDelete, onRemove, onSubmit, writeable } = this.props;
+    const { entity, itemExpanded } = this.state;
+
+    const expanded = expandedMode || itemExpanded;
 
     const captionProp = entity.schema.caption?.[0];
     const reservedProps = [captionProp, 'date', 'startDate', 'endDate', 'description', 'involved'];
@@ -203,15 +211,28 @@ class TimelineItem extends Component {
             />
           </div>
         )}
-        <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft })}>
+        <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft, collapsed: !expandedMode })}>
           <div className="TimelineItem__content">
+            {!expandedMode && (
+              <div className="TimelineItem__collapse-toggle">
+                <Button minimal small icon={itemExpanded ? 'chevron-down' : 'chevron-up'} onClick={this.toggleExpanded} />
+              </div>
+            )}
             <div className="TimelineItem__secondary">
               <div className="TimelineItem__date">
                 {this.renderDate()}
               </div>
-              {entity.schema.name === 'Event' && !isDraft && (
+              {expanded && entity.schema.name === 'Event' && !isDraft && (
                 <div className="TimelineItem__involved">
-                  {this.renderProperty('involved', { toggleButtonProps: { text: intl.formatMessage(messages.involved_button_text), icon: 'add', minimal: true, small: true, fill: true } })}
+                  {this.renderProperty('involved', { toggleButtonProps: {
+                    text: intl.formatMessage(messages.involved_button_text),
+                    icon: 'add',
+                    minimal: expandedMode,
+                    outlined: !expandedMode,
+                    intent: Intent.PRIMARY,
+                    small: true,
+                    fill: true
+                  }})}
                 </div>
               )}
             </div>
@@ -229,25 +250,29 @@ class TimelineItem extends Component {
                   />
                 )}
               </div>
-              <div className="TimelineItem__description TimelineItem__property">
-                {this.renderProperty('description')}
-              </div>
-              <div className="TimelineItem__properties">
-                {visibleProps.map(prop => (
-                  <div className="TimelineItem__property" key={prop}>
-                    {this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" })}
+              {expanded && (
+                <>
+                  <div className="TimelineItem__description TimelineItem__property">
+                    {this.renderProperty('description')}
                   </div>
-                ))}
-                {!isDraft && writeable && (
-                  <div className="TimelineItem__property">
-                    <PropertySelect
-                      properties={availableProps}
-                      onSelected={this.onNewPropertyAdded}
-                      buttonProps={{ minimal: true, small: true }}
-                    />
+                  <div className="TimelineItem__properties">
+                    {visibleProps.map(prop => (
+                      <div className="TimelineItem__property" key={prop}>
+                        {this.renderProperty(prop, { showLabel: true, className: "TimelineItem__property" })}
+                      </div>
+                    ))}
+                    {!isDraft && writeable && (
+                      <div className="TimelineItem__property">
+                        <PropertySelect
+                          properties={availableProps}
+                          onSelected={this.onNewPropertyAdded}
+                          buttonProps={{ minimal: true, small: true }}
+                        />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              )}
             </div>
           </div>
           {isDraft && (

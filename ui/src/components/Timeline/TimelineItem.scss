@@ -8,6 +8,7 @@ $timeline-item-padding: $aleph-grid-size;
   padding: $aleph-grid-size*1.5;
   border: 1px solid $aleph-border-color;
   border-radius: 5px;
+  transition: height .5s ease-in-out;
 
   &:first-child {
     // margin-top: 0;
@@ -20,6 +21,14 @@ $timeline-item-padding: $aleph-grid-size;
     margin: $aleph-grid-size/2 1px $aleph-grid-size*2;
     border-radius: 5px;
     border: none;
+  }
+
+  &.collapsed {
+    padding: 0;
+    border: none;
+    margin-top: $aleph-grid-size;
+    border-bottom: 1px solid $aleph-border-color;
+    border-radius: 0;
   }
 
   &__content {
@@ -40,6 +49,10 @@ $timeline-item-padding: $aleph-grid-size;
     flex-basis: 15%;
     min-width: $aleph-grid-size*22;
     @include rtlSupportInvertedProp(margin, right, $timeline-item-padding, null);
+  }
+
+  &__collapse-toggle {
+    padding: $aleph-grid-size/2 0;
   }
 
   &__date, &__title {
@@ -68,6 +81,20 @@ $timeline-item-padding: $aleph-grid-size;
     border-radius: 5px;
     padding: $timeline-item-padding $timeline-item-padding/2;
     display: flex;
+
+    .collapsed & {
+      background: none !important;
+      color: inherit;
+
+      span, .EditableProperty__value .bp3-input {
+        color: inherit !important;
+        border-color: inherit !important;
+      }
+
+      .EditableProperty.minimal:hover:not(.active) {
+        background-color: #f5f8fa !important;
+      }
+    }
 
     span, .EditableProperty__value .bp3-input {
       font-weight: bold;
@@ -135,9 +162,9 @@ $timeline-item-padding: $aleph-grid-size;
       &.active {
         flex-grow: 1;
       }
-      &.minimal:hover:not(.active) {
-        background-color: rgba(19, 124, 189, 0.15) !important;
-      }
+      // &.minimal:hover:not(.active) {
+      //   background-color: rgba(19, 124, 189, 0.15) !important;
+      // }
     }
 
     .bp3-icon.left-icon {
@@ -156,12 +183,16 @@ $timeline-item-padding: $aleph-grid-size;
     padding-top: $timeline-item-padding/2;
 
     .EditableProperty {
-      background-color: white !important;
+      background-color: white;
       border-color: white !important;
 
-      &:hover:not(.active) {
-        background-color: $light-gray4 !important;
+      .collapsed & {
+        border-color: rgba($blue2, .4) !important;
       }
+
+      // &:hover:not(.active) {
+      //   background-color: $light-gray4 !important;
+      // }
     }
     span, .EditableProperty__value .bp3-input {
       color: $blue2 !important;
@@ -196,6 +227,10 @@ $timeline-item-padding: $aleph-grid-size;
 
     @media screen and (max-width: $aleph-screen-md-max-width) {
       column-count: 1;
+    }
+
+    .collapsed & {
+      margin-bottom: $aleph-grid-size*2;
     }
   }
 
