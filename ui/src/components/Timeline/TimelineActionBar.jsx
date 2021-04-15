@@ -33,10 +33,10 @@ class TimelineActionBar extends Component {
   }
 
   render() {
-    const { expandedMode, createNewItem, disabled, intl } = this.props;
+    const { expandedMode, createNewItem, disabled, intl, buttonGroupProps = {} } = this.props;
 
     return (
-      <ButtonGroup className="TimelineActionBar">
+      <ButtonGroup className="TimelineActionBar" {...buttonGroupProps} >
         <Button icon={expandedMode ? 'collapse-all' : 'properties'} onClick={this.toggleExpanded}>
           {intl.formatMessage(messages[expandedMode ? 'collapse' : 'show_full'])}
         </Button>

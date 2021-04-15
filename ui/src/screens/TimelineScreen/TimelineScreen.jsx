@@ -60,6 +60,7 @@ export class TimelineScreen extends Component {
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
+      hash: location.hash
     });
   }
 

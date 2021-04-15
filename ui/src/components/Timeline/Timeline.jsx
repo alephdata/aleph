@@ -79,12 +79,22 @@ class Timeline extends Component {
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
+      hash: location.hash
     });
   }
 
   render() {
     const { expandedMode, entitiesCount, entityManager, query, intl, result, writeable } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
+
+    const actionBar = writeable && (
+      <TimelineActionBar
+        disabled={showDraftItem}
+        expandedMode={expandedMode}
+        createNewItem={() => this.setState({ showDraftItem: true })}
+        buttonGroupProps={{ fill: histogramFixed }}
+      />
+    );
 
     return (
       <DualPane className="Timeline">
@@ -98,6 +108,7 @@ class Timeline extends Component {
               dataLabel={intl.formatMessage(messages.itemsLabel)}
               emptyText={intl.formatMessage(messages.histogramEmpty)}
             />
+            {histogramFixed && actionBar}
           </div>
           <SearchFacets
             query={query}
@@ -123,13 +134,7 @@ class Timeline extends Component {
               sortingFields={['properties.date', 'caption', 'created_at']}
             />
           </SearchActionBar>
-          {writeable && (
-            <TimelineActionBar
-              disabled={showDraftItem}
-              expandedMode={expandedMode}
-              createNewItem={() => this.setState({ showDraftItem: true })}
-            />
-          )}
+          {actionBar}
           <TimelineItemList
             query={query}
             result={result}
