@@ -74,7 +74,7 @@ class TimelineItemList extends Component {
             onDelete={onHideDraft}
             fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
             writeable
-            expandedMode={expandedMode}
+            expandedMode={true}
           />
         )}
         {!isEmpty && (

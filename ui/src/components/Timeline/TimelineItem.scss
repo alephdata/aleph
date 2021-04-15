@@ -259,15 +259,7 @@ $timeline-item-padding: $aleph-grid-size;
       display: inline-flex;
     }
   }
-
-  &__draft-text {
-    font-style: italic;
-    font-weight: bold;
-    margin: $aleph-grid-size 0 0;
-    color: $red1;
-    padding-left: 5px;
-  }
-
+  
   &__draft-buttons {
     margin: $aleph-grid-size/2;
     text-align: right;
