@@ -1,8 +1,6 @@
-# coding: utf-8
 import json
-from datetime import datetime, date
-
 import structlog
+from datetime import datetime, date
 from normality import stringify
 from flask_babel.speaklater import LazyString
 from elasticsearch import Transport
@@ -63,8 +61,10 @@ class LoggingTransport(Transport):
         if headers is None:
             headers = {}
         ctx = _get_logging_context()
-        # link es tasks to a trace id
-        headers["x-opaque-id"] = ctx.get("trace_id")
+        trace_id = ctx.get("trace_id")
+        if trace_id is not None:
+            # link es tasks to a trace id
+            headers["x-opaque-id"] = trace_id
 
         result = super(LoggingTransport, self).perform_request(
             method, url, headers, params, body
@@ -80,5 +80,5 @@ class LoggingTransport(Transport):
         # to prevent unnecessarily large logs
         if url.endswith("_bulk"):
             del payload["es_req_body"]
-        log.info("Performed ES request", **payload)
+        log.debug("Performed ES request", **payload)
         return result
