@@ -1,4 +1,5 @@
 # coding: utf-8
+import sys
 import json
 import click
 import logging
@@ -99,19 +100,14 @@ def collections(secret, casefile):
 
 @cli.command()
 @click.option(
-    "-s",
-    "--sync",
-    is_flag=True,
-    default=False,
-    help="Run without threads and quit when no tasks are left.",
+    "--blocking/--non-blocking", default=True, help="Wait for tasks indefinitely."
 )
-def worker(sync=False):
+@click.option("--threads", required=False, type=int)
+def worker(blocking=True, threads=None):
     """Run the queue-based worker service."""
-    worker = get_worker()
-    if sync:
-        worker.sync()
-    else:
-        worker.run()
+    worker = get_worker(num_threads=threads)
+    code = worker.run(blocking=blocking)
+    sys.exit(code)
 
 
 @cli.command()
