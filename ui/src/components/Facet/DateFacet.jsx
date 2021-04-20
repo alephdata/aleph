@@ -93,7 +93,7 @@ export class DateFilter extends Component {
         content = (
           <div style={{ minHeight: `${DATE_FACET_HEIGHT}px` }}>
             <ErrorSection
-              description={emptyText}
+              title={emptyText}
             />
           </div>
         )

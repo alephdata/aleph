@@ -123,8 +123,8 @@ class TimelineItem extends Component {
     const { writeable } = this.props;
     const { entity } = this.state;
 
-    const hasEndDate = entity.hasProperty('endDate');
-    const dateProp = (hasEndDate || (!entity.hasProperty('date') && entity.hasProperty('startDate'))) ? 'startDate' : 'date';
+    const hasEndDate = entity.getProperty('endDate').length;
+    const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length)) ? 'startDate' : 'date';
     const date = this.renderProperty(dateProp, { minimal: true, emptyPlaceholder: ' - ' })
 
     if (!writeable && !hasEndDate) {
@@ -182,11 +182,17 @@ class TimelineItem extends Component {
           )}
         </>
       )
-    } else if (writeable && captionProp) {
+    } else if (writeable) {
+      const hasCaption = captionProp && entity.getProperty(captionProp).length;
+      const schemaLabel = hasCaption
+        ? <Schema.Icon schema={entity.schema} />
+        : <Schema.Label schema={entity.schema} icon />
+
       return (
         <>
-          <Schema.Icon schema={entity.schema} />
-          {this.renderProperty(captionProp, { minimal: true })}
+          {schemaLabel}
+          {!!captionProp && !hasCaption && <Divider />}
+          {captionProp && this.renderProperty(captionProp, { minimal: true })}
         </>
       );
     } else {
@@ -246,7 +252,7 @@ class TimelineItem extends Component {
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
     return (
-      <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft, active: isActive, collapsed: !expandedMode })}>
+      <div id={entity.id} ref={this.ref} className={c("TimelineItem", { draft: isDraft, active: isActive, 'item-expanded': itemExpanded })}>
         <div className="TimelineItem__content">
           {!expandedMode && (
             <div className="TimelineItem__collapse-toggle">

@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import { ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
 import TimelineItem from 'components/Timeline/TimelineItem';
@@ -70,7 +71,7 @@ class TimelineItemList extends Component {
     }
 
     return (
-      <div className="Timeline__content">
+      <div className={c("Timeline__content", { collapsed: !expandedMode})}>
         {showDraftItem && (
           <TimelineItem
             isDraft
