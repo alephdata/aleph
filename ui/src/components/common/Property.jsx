@@ -19,12 +19,11 @@ class EditableProperty extends React.Component {
   }
 
   toggleEditing = () => {
-    console.log('toggling')
     this.setState(({ editing }) => ({ editing: !editing }));
   }
 
   render() {
-    const { onEdit, prop, entity, emptyPlaceholder, fetchEntitySuggestions, minimal, toggleButtonProps, writeable } = this.props;
+    const { onEdit, createNewReferencedEntity, prop, entity, emptyPlaceholder, fetchEntitySuggestions, minimal, toggleButtonProps, writeable } = this.props;
     const { editing } = this.state;
 
     const property = entity.schema.getProperty(prop);
@@ -48,6 +47,7 @@ class EditableProperty extends React.Component {
         onToggleEdit={this.toggleEditing}
         onSubmit={(entity) => { this.toggleEditing(); onEdit(entity) }}
         fetchEntitySuggestions={fetchEntitySuggestions}
+        createNewReferencedEntity={createNewReferencedEntity}
         minimal={minimal}
         writeable={writeable}
       />

@@ -32,4 +32,24 @@
   &__create {
     padding: $aleph-grid-size 3px;
   }
+
+  .ErrorSection {
+    min-height: 100px;
+  }
+
+  .bp3-non-ideal-state {
+    .bp3-icon {
+      svg {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    .bp3-non-ideal-state-visual {
+      font-size: 30px;
+      margin-bottom: $aleph-grid-size;
+    }
+    .bp3-heading {
+      font-size: 16px;
+    }
+  }
 }

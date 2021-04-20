@@ -10,22 +10,22 @@ $timeline-item-padding: $aleph-grid-size;
   border-radius: 5px;
   transition: height .5s ease-in-out;
 
-  &:first-child {
-    // margin-top: 0;
-    // border: none;
+  &.draft, &.active {
+    box-shadow: $pt-elevation-shadow-3;
+    border: none;
+    margin-left: 1px;
+    margin-right: 1px;
   }
 
   &.draft {
-    box-shadow: $pt-elevation-shadow-2;
     padding: $aleph-grid-size $aleph-grid-size*1.5;
-    margin: $aleph-grid-size/2 1px $aleph-grid-size*2;
-    border-radius: 5px;
-    border: none;
+    margin-bottom: $aleph-grid-size*2;
   }
 
   &.collapsed {
     padding: 0;
     border: none;
+    box-shadow: none;
     margin-top: $aleph-grid-size;
     border-bottom: 1px solid $aleph-border-color;
     border-radius: 0;
@@ -65,11 +65,8 @@ $timeline-item-padding: $aleph-grid-size;
     .EditableProperty {
       margin: 0 3px !important;
       padding: 0 3px !important;
+      border: none !important;
       transition: none;
-    }
-
-    .EditableProperty__label {
-      // display: none;
     }
   }
 
@@ -140,35 +137,18 @@ $timeline-item-padding: $aleph-grid-size;
     position: relative;
     color: $blue2;
     min-height: 38px;
-    // border-bottom: 1px solid $light-gray4;
     margin-bottom: 5px;
-    // padding-bottom: 5px;
-    // background-color: $light-gray4;
 
     .EditableProperty__value, .EditableProperty__value .bp3-input, .EditableProperty__label, {
       color: $blue2 !important;
       border-color: $blue2 !important;
     }
 
-    .draft & {
-      // background-color: $light-gray4;
-      // span, .EditableProperty__value .bp3-input {
-      //   color: inherit !important;
-      //   border-color: inherit !important;
-      // }
-    }
-
     .EditableProperty {
+      background: none;
       &.active {
         flex-grow: 1;
       }
-      // &.minimal:hover:not(.active) {
-      //   background-color: rgba(19, 124, 189, 0.15) !important;
-      // }
-    }
-
-    .bp3-icon.left-icon {
-      // margin: 0 !important;
     }
 
     &__text {
@@ -189,10 +169,6 @@ $timeline-item-padding: $aleph-grid-size;
       .collapsed & {
         border-color: rgba($blue2, .4) !important;
       }
-
-      // &:hover:not(.active) {
-      //   background-color: $light-gray4 !important;
-      // }
     }
     span, .EditableProperty__value .bp3-input {
       color: $blue2 !important;

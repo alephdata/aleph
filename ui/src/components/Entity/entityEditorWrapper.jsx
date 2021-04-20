@@ -75,11 +75,11 @@ const entityEditorWrapper = (EditorComponent) => {
         });
       }
 
-      async createEntity(entity) {
+      async createEntity(entity, local = true) {
         const { collection, entitySetId, onStatusChange } = this.props;
         onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
         try {
-          if (entitySetId) {
+          if (entitySetId && local) {
             await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
           } else {
             await this.props.createEntity({ entity, collection_id: collection.id });

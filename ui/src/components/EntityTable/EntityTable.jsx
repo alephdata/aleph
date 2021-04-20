@@ -240,7 +240,8 @@ export class EntityTable extends Component {
             dialogProps={{
               collection,
               entities: selectedEntities,
-              onSuccess: this.clearSelection
+              onSuccess: this.clearSelection,
+              showTimelines: schema.isA('Interval')
             }}
           />
           <EntityDeleteButton

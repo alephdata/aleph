@@ -46,7 +46,7 @@ class TimelineItem extends Component {
     const { isActive } = this.props;
 
     if (isActive) {
-      this.ref.current?.scrollIntoView();
+      this.ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
@@ -102,9 +102,8 @@ class TimelineItem extends Component {
   }
 
   renderProperty(propName, options) {
-    const { fetchEntitySuggestions, writeable } = this.props;
+    const { createNewEntity, fetchEntitySuggestions, writeable } = this.props;
     const { entity } = this.state;
-
 
     return (
       <Property.Editable
@@ -114,6 +113,7 @@ class TimelineItem extends Component {
         onEdit={(updatedEntity) => this.onPropertyEdit(updatedEntity, propName)}
         fetchEntitySuggestions={fetchEntitySuggestions}
         writeable={writeable}
+        createNewReferencedEntity={createNewEntity}
         {...options}
       />
     )
@@ -177,7 +177,7 @@ class TimelineItem extends Component {
           {captionProp && (
             <>
               <Divider />
-              {this.renderProperty(captionProp, { defaultEditing: true, minimal: true, className: "TimelineItem__property" })}
+              {this.renderProperty(captionProp, { defaultEditing: true, className: "TimelineItem__property" })}
             </>
           )}
         </>
@@ -199,8 +199,6 @@ class TimelineItem extends Component {
     const { entity } = this.state;
 
     const schemaName = entity.schema.name;
-
-    console.log(entity.schema);
 
     if (schemaName === 'Event') {
       return (
@@ -232,7 +230,7 @@ class TimelineItem extends Component {
 
 
   render() {
-    const { expandedMode, intl, isDraft, onDelete, onRemove, onSubmit, writeable } = this.props;
+    const { expandedMode, isActive, isDraft, onDelete, onRemove, onSubmit, writeable } = this.props;
     const { entity, itemExpanded } = this.state;
 
     const expanded = expandedMode || itemExpanded;
@@ -248,7 +246,7 @@ class TimelineItem extends Component {
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
     return (
-      <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft, collapsed: !expandedMode })}>
+      <div id={entity.id} ref={this.ref} className={c("TimelineItem theme-light", { 'draft': isDraft, active: isActive, collapsed: !expandedMode })}>
         <div className="TimelineItem__content">
           {!expandedMode && (
             <div className="TimelineItem__collapse-toggle">

@@ -58,6 +58,7 @@ export function entitySetSchemaCountsQuery(entitySetId) {
 }
 
 export function entitySetEntitiesQuery(location, entitySetId, schema, limit = Query.MAX_LIMIT) {
+  console.log('in entity set entities query', limit);
   const context = {}
   if (schema) {
     context['filter:schema'] = schema;

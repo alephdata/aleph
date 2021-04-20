@@ -42,7 +42,7 @@ class TimelineItemMenu extends Component {
 
     const location = window.location;
     const shadowInput = document.createElement("input");
-    const itemHash = queryString.stringify({ id: entity.id });
+    const itemHash = queryString.stringify({ ...queryString.parse(location.hash), id: entity.id });
     shadowInput.type = "text";
     shadowInput.value = `${location.origin}${location.pathname}${location.search}#${itemHash}`;
     shadowInput.classList.add('TimelineItemMenu__hidden-input')

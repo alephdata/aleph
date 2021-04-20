@@ -130,13 +130,14 @@ const mapStateToProps = (state, ownProps) => {
   const { entitySetId } = match.params;
 
   const timeline = selectEntitySet(state, entitySetId);
-  const query = entitySetEntitiesQuery(location, entitySetId, null, 1000)
+  const query = entitySetEntitiesQuery(location, entitySetId, null)
     .add('facet', 'dates')
     .add('facet_interval:dates', 'year')
     .defaultFacet('schema')
     .defaultFacet('names')
     .defaultFacet('addresses')
-    .defaultSortBy('properties.date', 'asc');
+    .defaultSortBy('properties.date', 'asc')
+    .limit(1000);
 
   const entitiesCountQuery = new Query(`entitysets/${entitySetId}/entities`, {}, {}, 'entitySetEntities').limit(0)
 

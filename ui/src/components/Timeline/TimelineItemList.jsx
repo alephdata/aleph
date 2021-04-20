@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import { ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
 import TimelineItem from 'components/Timeline/TimelineItem';
 
-import { deleteEntity, queryEntities } from 'actions';
+import { createEntity, deleteEntity, queryEntities } from 'actions';
 
 
 const messages = defineMessages({
@@ -45,8 +45,13 @@ class TimelineItemList extends Component {
     history.replace({
       pathname: location.pathname,
       search: location.search,
-      hash: queryString.stringify({ id: entity.id })
+      hash: queryString.stringify({ ...queryString.parse(location.hash), id: entity.id })
     })
+  }
+
+  createNewReferencedEntity(entity) {
+    const { collection } = this.props;
+    return this.props.createEntity({ entity, collection_id: collection.id });
   }
 
   render() {
@@ -73,6 +78,7 @@ class TimelineItemList extends Component {
             onSubmit={this.createNewItem}
             onDelete={onHideDraft}
             fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+            createNewEntity={entityData => entityManager.createEntity(entityData, false)}
             writeable
             expandedMode={true}
           />
@@ -88,6 +94,7 @@ class TimelineItemList extends Component {
                 onRemove={entityId => entityManager.deleteEntities([entityId])}
                 onDelete={entityId => deleteEntity(entityId)}
                 fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+                createNewEntity={entityData => entityManager.createEntity(entityData, false)}
                 writeable={writeable && item.writeable}
               />
             ))}
@@ -108,6 +115,6 @@ class TimelineItemList extends Component {
 
 export default compose(
   withRouter,
-  connect(null, { deleteEntity, queryEntities }),
+  connect(null, { createEntity, deleteEntity, queryEntities }),
   injectIntl,
 )(TimelineItemList );

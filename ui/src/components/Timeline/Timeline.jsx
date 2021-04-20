@@ -84,7 +84,7 @@ class Timeline extends Component {
   }
 
   render() {
-    const { expandedMode, entitiesCount, entityManager, query, intl, result, writeable } = this.props;
+    const { collection, expandedMode, entitiesCount, entityManager, query, intl, result, writeable } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
     const actionBar = writeable && (
@@ -131,7 +131,7 @@ class Timeline extends Component {
             <SortingBar
               query={query}
               updateQuery={this.updateQuery}
-              sortingFields={['properties.date', 'caption', 'created_at']}
+              sortingFields={['properties.date', 'properties.endDate', 'caption', 'created_at']}
             />
           </SearchActionBar>
           {actionBar}
@@ -144,6 +144,7 @@ class Timeline extends Component {
             entityManager={entityManager}
             expandedMode={expandedMode}
             writeable={writeable}
+            collection={collection}
           />
         </DualPane.ContentPane>
       </DualPane>

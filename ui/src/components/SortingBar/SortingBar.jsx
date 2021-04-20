@@ -33,6 +33,10 @@ const messages = defineMessages({
     id: 'sorting.bar.date',
     defaultMessage: 'Date',
   },
+  'properties.endDate': {
+    id: 'sorting.bar.endDate',
+    defaultMessage: 'End date',
+  },
   filter_button_label: {
     id: 'sorting.bar.label',
     defaultMessage: 'Show:',

@@ -142,7 +142,7 @@ class EntitySetSelector extends Component {
   }
 
   render() {
-    const { collection, isOpen, isTester, toggleDialog } = this.props;
+    const { collection, isOpen, isTester, showTimelines = true, toggleDialog } = this.props;
     const { processing } = this.state;
 
     return (
@@ -177,7 +177,7 @@ class EntitySetSelector extends Component {
             onSelect={this.onSelect}
             onCreate={this.onCreate}
           />
-          {isTester && (
+          {isTester && showTimelines && (
             <EntitySetSelectorSection
               type="timeline"
               collection={collection}
