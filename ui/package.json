@@ -5,10 +5,10 @@
   "dependencies": {
     "@alephdata/followthemoney": "2.5.0",
     "@alephdata/react-ftm": "2.3.10",
-    "@blueprintjs/core": "3.42.0",
+    "@blueprintjs/core": "3.43.0",
     "@blueprintjs/datetime": "3.22.0",
     "@blueprintjs/icons": "3.26.0",
-    "@blueprintjs/select": "3.15.9",
+    "@blueprintjs/select": "3.15.10",
     "@blueprintjs/table": "3.8.28",
     "@formatjs/cli": "^4.2.2",
     "@formatjs/intl-locale": "^2.4.14",
