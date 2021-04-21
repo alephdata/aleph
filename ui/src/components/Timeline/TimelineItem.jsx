@@ -3,15 +3,17 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, Divider, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
 import c from 'classnames';
 
 import { selectModel } from 'selectors';
-import { Entity, Property, Schema } from 'components/common';
+import { Property } from 'components/common';
 import TimelineItemMenu from 'components/Timeline/TimelineItemMenu';
+import TimelineItemTitle from 'components/Timeline/TimelineItemTitle';
+
 import './TimelineItem.scss';
 
 
@@ -143,63 +145,6 @@ class TimelineItem extends Component {
     );
   }
 
-  renderTitle() {
-    const { isDraft, writeable } = this.props;
-    const { entity } = this.state;
-
-    const captionProp = entity.schema.caption?.[0];
-
-    if (isDraft) {
-      return (
-        <>
-          <div>
-            <p className="EditableProperty__label">
-              <FormattedMessage
-                id="timeline.schema_select.label"
-                defaultMessage="type"
-              />
-            </p>
-            <Schema.Select
-              optionsFilter={schema => schema.isA('Interval') }
-              onSelect={this.onSchemaChange}
-            >
-              <Button
-                outlined
-                small
-                intent={Intent.PRIMARY}
-                icon={<Schema.Icon schema={entity.schema} />}
-                rightIcon="caret-down"
-              >
-                <Schema.Label schema={entity.schema} />
-              </Button>
-            </Schema.Select>
-          </div>
-          {captionProp && (
-            <>
-              <Divider />
-              {this.renderProperty(captionProp, { defaultEditing: true, className: "TimelineItem__property" })}
-            </>
-          )}
-        </>
-      )
-    } else if (writeable) {
-      const hasCaption = captionProp && entity.getProperty(captionProp).length;
-      const schemaLabel = hasCaption
-        ? <Schema.Icon schema={entity.schema} />
-        : <Schema.Label schema={entity.schema} icon />
-
-      return (
-        <>
-          {schemaLabel}
-          {!!captionProp && !hasCaption && <Divider />}
-          {captionProp && this.renderProperty(captionProp, { minimal: true })}
-        </>
-      );
-    } else {
-      return <Entity.Label entity={entity} icon />
-    }
-  }
-
   renderInvolved() {
     const { expandedMode, intl } = this.props;
     const { entity } = this.state;
@@ -266,10 +211,13 @@ class TimelineItem extends Component {
             {expanded && this.renderInvolved()}
           </div>
           <div className="TimelineItem__main">
-            <div className="TimelineItem__title">
-              <span className="TimelineItem__title__text">
-                {this.renderTitle()}
-              </span>
+            <TimelineItemTitle
+              entity={entity}
+              isDraft={isDraft}
+              writeable={writeable}
+              onSchemaChange={this.onSchemaChange}
+              renderProperty={this.renderProperty}
+            >
               {!isDraft && (
                 <TimelineItemMenu
                   entity={entity}
@@ -278,7 +226,7 @@ class TimelineItem extends Component {
                   writeable={writeable}
                 />
               )}
-            </div>
+            </TimelineItemTitle>
             {expanded && (
               <>
                 <div className="TimelineItem__description TimelineItem__property">
