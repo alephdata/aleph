@@ -17,7 +17,6 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, SearchBox, UpdateStatus} from 'components/common';
 
-import './TimelineScreen.scss';
 
 export class TimelineScreen extends Component {
   constructor(props) {
