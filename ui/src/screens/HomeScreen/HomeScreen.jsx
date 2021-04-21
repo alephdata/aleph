@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import ReactMarkdown from 'react-markdown/with-html';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw'
 import { Redirect } from 'react-router-dom';
 import queryString from 'query-string';
 import { compose } from 'redux';
@@ -67,7 +68,7 @@ export class HomeScreen extends Component {
     }
 
     const appHomePage = metadata.pages.find(page => page.home);
-    const { description, html, samples, title } = appHomePage;
+    const { description, samples, title } = appHomePage;
     const samplesList = wordList(samples, ', ').join('');
 
     return (
@@ -111,7 +112,7 @@ export class HomeScreen extends Component {
           </section>
           {appHomePage?.content && (
             <ReactMarkdown
-              escapeHtml={!html}
+              rehypePlugins={[rehypeRaw]}
             >
               {appHomePage.content}
             </ReactMarkdown>

@@ -1,5 +1,4 @@
 import logging
-from pprint import pprint
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.graph import Node
@@ -107,6 +106,8 @@ def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
     values = set()
     for prop, value in proxy.itervalues():
         if prop.type not in prop_types:
+            continue
+        if not prop.matchable:
             continue
         if prop.specificity(value) > 0.1:
             values.add((prop.type, value))

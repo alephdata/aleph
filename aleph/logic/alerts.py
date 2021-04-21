@@ -20,16 +20,17 @@ def get_alert(alert_id):
 
 def check_alerts():
     """Go through all alerts."""
-    for alert_id in list(Alert.all_ids()):
-        check_alert(alert_id)
+    for alert in Alert.all(deleted=False):
+        check_alert(alert)
+    db.session.commit()
 
 
-def check_alert(alert_id):
-    alert = Alert.by_id(alert_id)
-    if alert is None or alert.role is None:
+def check_alert(alert):
+    role = alert.role
+    if role is None:
         return
-    log.info("Check alert [%s]: %s", alert.id, alert.query)
-    authz = Authz.from_role(alert.role)
+    log.debug("Check alert [%s]: %s", alert.id, alert.query)
+    authz = Authz.from_role(role)
     try:
         query = alert_query(alert, authz)
         index = entities_read_index(schema=Entity.THING)
@@ -37,7 +38,6 @@ def check_alert(alert_id):
     except RequestError as re:
         log.error("Invalid query [%s]: %r", alert.query, re.error)
         alert.delete()
-        db.session.commit()
         return
 
     for result in result.get("hits").get("hits", []):
@@ -47,16 +47,16 @@ def check_alert(alert_id):
         log.info("Alert [%s]: %s", alert.query, entity.get("id"))
         params = {
             "alert": alert,
-            "role": alert.role,
+            "role": role,
             "entity": entity.get("id"),
             "collection": entity.get("collection_id"),
         }
-        channels = [alert.role]
+        channels = [role]
         # channels.append(channel_tag(collection_id, Collection))
         publish(Events.MATCH_ALERT, params=params, channels=channels)
 
     alert.update()
-    db.session.commit()
+    db.session.flush()
 
 
 def alert_query(alert, authz):

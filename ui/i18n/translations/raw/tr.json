@@ -1106,6 +1106,18 @@
   "judgement.unsure": {
     "defaultMessage": "Not enough information"
   },
+  "landing.shortcut.alert": {
+    "defaultMessage": "Create a search alert"
+  },
+  "landing.shortcut.datasets": {
+    "defaultMessage": "Browse datasets"
+  },
+  "landing.shortcut.investigation": {
+    "defaultMessage": "Start an investigation"
+  },
+  "landing.shortcut.search": {
+    "defaultMessage": "Search entities"
+  },
   "list.create.button": {
     "defaultMessage": "New list"
   },
@@ -1439,8 +1451,20 @@
   "password_auth.signup": {
     "defaultMessage": "Sign up"
   },
+  "profile.callout.details": {
+    "defaultMessage": "This profile aggregates attributes and relationships from {count} entities across different datasets."
+  },
+  "profile.callout.intro": {
+    "defaultMessage": "You're viewing {entity} as a profile."
+  },
+  "profile.callout.link": {
+    "defaultMessage": "View the <link>original entity</link>"
+  },
   "profile.delete.warning": {
     "defaultMessage": "(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+  },
+  "profile.hint": {
+    "defaultMessage": "{entity} has been combined with entities from other datasets <link>into a profile</link>"
   },
   "profile.info.header": {
     "defaultMessage": "Profile"
@@ -1648,6 +1672,9 @@
   },
   "search.title": {
     "defaultMessage": "Search: {title}"
+  },
+  "search.title_emptyq": {
+    "defaultMessage": "Search"
   },
   "settings.api_key": {
     "defaultMessage": "API Secret Access Key"
