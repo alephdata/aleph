@@ -60,6 +60,9 @@ def _get_groups(provider, oauth_token, id_token):
     client = clients.get(provider.client_id, {})
     groups.extend(client.get("roles", []))
 
+    # Auth0
+    groups.extend(access_token.get("permissions", []))
+
     # Please feel free to provider PRs for further providers.
 
     return set([g for g in groups if g is not None])
