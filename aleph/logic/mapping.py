@@ -29,14 +29,19 @@ def _get_table_csv_link(table):
     return url
 
 
+def _get_table(mapping, aggregator):
+    table = get_entity(mapping.table_id)
+    if table is None:
+        table = aggregator.get(mapping.table_id)
+    return table
+
+
 def mapping_origin(mapping_id):
     return "mapping:%s" % mapping_id
 
 
 def map_to_aggregator(collection, mapping, aggregator):
-    table = get_entity(mapping.table_id)
-    if table is None:
-        table = aggregator.get(mapping.table_id)
+    table = _get_table(mapping, aggregator)
     if table is None:
         raise RuntimeError("Table cannot be found: %s" % mapping.table_id)
     config = {"csv_url": _get_table_csv_link(table), "entities": mapping.query}
@@ -104,3 +109,16 @@ def flush_mapping(collection, mapping_id, sync=True):
     aggregator.delete(origin=origin)
     delete_entities(collection.id, origin=origin, sync=sync)
     update_collection(collection, sync=sync)
+
+
+def cleanup_mappings():
+    """Delete mappings where the associated table is gone."""
+    for mapping in Mapping.all().order_by(Mapping.collection_id.desc()):
+        aggregator = get_aggregator(mapping.collection)
+        table = _get_table(mapping, aggregator)
+        if table is not None:
+            continue
+        log.info("Orphaned mapping: %s", mapping.id)
+        flush_mapping(mapping.collection, mapping.id)
+        mapping.delete()
+    db.session.commit()

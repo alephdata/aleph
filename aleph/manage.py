@@ -25,6 +25,7 @@ from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.collections import compute_collection
 from aleph.logic.processing import bulk_write
+from aleph.logic.mapping import cleanup_mappings
 from aleph.logic.documents import crawl_directory
 from aleph.logic.archive import cleanup_archive
 from aleph.logic.xref import xref_collection
@@ -218,6 +219,7 @@ def update():
     """Re-index all collections and clear some caches."""
     update_roles()
     upgrade_collections()
+    cleanup_mappings()
 
 
 @cli.command()
