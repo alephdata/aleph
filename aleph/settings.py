@@ -95,6 +95,9 @@ PASSWORD_LOGIN = env.to_bool("ALEPH_PASSWORD_LOGIN", not OAUTH)
 ROLE_INACTIVE = env.to_int("ALEPH_ROLE_INACTIVE", 6 * 30)
 ROLE_INACTIVE = timedelta(days=ROLE_INACTIVE)
 
+# Delete notifications after N days.
+NOTIFICATIONS_DELETE = env.to_int("ALEPH_NOTIFICATIONS_DELETE", 3 * 30)
+NOTIFICATIONS_DELETE = timedelta(days=NOTIFICATIONS_DELETE)
 
 ###############################################################################
 # Content processing options
