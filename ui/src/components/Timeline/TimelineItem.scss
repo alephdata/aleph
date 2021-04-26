@@ -88,6 +88,21 @@ $timeline-item-padding: $aleph-grid-size;
     border-radius: 5px;
     padding: $timeline-item-padding $timeline-item-padding/2;
     display: flex;
+    justify-content: space-between;
+
+    &__value {
+      display: flex;
+    }
+
+    .bp3-popover-wrapper {
+      max-height: 18px;
+
+      .bp3-popover-target {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
 
     .collapsed & {
       background: none !important;

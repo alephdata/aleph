@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, Colors, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, Colors, Intent, Tooltip } from '@blueprintjs/core';
 import { PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
@@ -33,6 +33,7 @@ class TimelineItem extends Component {
     this.state = {
       entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` }),
       addedProps: [],
+      showEndDate: false,
       itemExpanded: isActive,
     }
 
@@ -125,25 +126,37 @@ class TimelineItem extends Component {
 
   renderDate() {
     const { writeable } = this.props;
-    const { entity } = this.state;
+    const { entity, showEndDate } = this.state;
 
     const hasEndDate = entity.getProperty('endDate').length;
     const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length)) ? 'startDate' : 'date';
     const date = this.renderProperty(dateProp, { minimal: true, emptyPlaceholder: ' - ' })
 
-    if (!writeable && !hasEndDate) {
+    if (!hasEndDate && !showEndDate) {
+      if (writeable) {
+        return (
+          <>
+            {date}
+            <Tooltip content="Add end date">
+              <Button minimal small icon="array-date" onClick={() => this.setState({ showEndDate: true })} />
+            </Tooltip>
+          </>
+        )
+      }
       return date;
     }
 
     return (
-      <FormattedMessage
-        id="timeline.item.date"
-        defaultMessage="{start}to{end}"
-        values={{
-          start: date,
-          end: this.renderProperty('endDate', { minimal: true, emptyPlaceholder: ' - ' })
-        }}
-      />
+      <span className="TimelineItem__date__value">
+        <FormattedMessage
+          id="timeline.item.date"
+          defaultMessage="{start}to{end}"
+          values={{
+            start: date,
+            end: this.renderProperty('endDate', { minimal: true, emptyPlaceholder: ' - ' })
+          }}
+        />
+      </span>
     );
   }
 
