@@ -13,8 +13,8 @@ class TimelineItemTitle extends Component {
     this.renderNondraft = this.renderNondraft.bind(this);
   }
 
-  renderDraft(captionProp) {
-    const { entity, onSchemaChange, renderProperty } = this.props;
+  renderDraft() {
+    const { captionProp, entity, onSchemaChange, renderProperty } = this.props;
 
     return (
       <>
@@ -50,37 +50,51 @@ class TimelineItemTitle extends Component {
     );
   }
 
-  renderNondraft(captionProp) {
-    const { entity, renderProperty, writeable } = this.props;
+  renderEdgeLabel() {
+    const { captionProp, entity, renderProperty, writeable } = this.props;
+    const { label, source, target } = entity.schema.edge;
+    return (
+      <>
+        {renderProperty(source, { minimal: true })}
+        {` ${label} `}
+        {renderProperty(target, { minimal: true })}
+        {!!captionProp && (
+          <>
+            {`(`}
+            {renderProperty(captionProp, { minimal: true })}
+            {`)`}
+          </>
+        )}
+      </>
+    );
+  }
 
-    if (writeable) {
-      const hasCaption = captionProp && entity.getProperty(captionProp).length;
-      const schemaLabel = hasCaption
-        ? <Schema.Icon schema={entity.schema} />
-        : <Schema.Label schema={entity.schema} icon />
+  renderNondraft() {
+    const { captionProp, entity, renderProperty, writeable } = this.props;
+    const { schema } = entity
 
+    if (!!schema.edge) {
+      return this.renderEdgeLabel();
+    } else if (captionProp) {
       return (
         <>
-          {schemaLabel}
-          {!!captionProp && !hasCaption && <Divider />}
-          {captionProp && renderProperty(captionProp, { minimal: true })}
+          <Schema.Icon schema={schema} />
+          {renderProperty(captionProp, { minimal: true })}
         </>
       );
-    } else {
-      return <Entity.Label entity={entity} icon />
     }
+
+    return <Entity.Label entity={entity} icon />
   }
 
   render() {
     const { children, entity, isDraft } = this.props;
 
-    const captionProp = entity.schema.caption?.[0];
-
     return (
       <div className="TimelineItemTitle">
         <span className="TimelineItemTitle__text">
-          {isDraft && this.renderDraft(captionProp)}
-          {!isDraft && this.renderNondraft(captionProp)}
+          {isDraft && this.renderDraft()}
+          {!isDraft && this.renderNondraft()}
         </span>
         {children}
       </div>

@@ -186,7 +186,7 @@ class TimelineItem extends Component {
 
     const expanded = expandedMode || itemExpanded;
 
-    const captionProp = entity.schema.caption?.[0];
+    const captionProp = entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0];
     const edgeProps = [entity.schema.edge?.source, entity.schema.edge?.target];
     const reservedProps = [captionProp, ...edgeProps, 'date', 'startDate', 'endDate', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
@@ -213,6 +213,7 @@ class TimelineItem extends Component {
           <div className="TimelineItem__main">
             <TimelineItemTitle
               entity={entity}
+              captionProp={captionProp}
               isDraft={isDraft}
               writeable={writeable}
               onSchemaChange={this.onSchemaChange}
