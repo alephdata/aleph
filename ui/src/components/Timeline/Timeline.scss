@@ -15,6 +15,10 @@
     }
   }
 
+  &__content.collapsed {
+    margin-top: $aleph-grid-size*1.5;
+  }
+
   .DateFacet {
     margin-bottom: $aleph-content-padding;
   }

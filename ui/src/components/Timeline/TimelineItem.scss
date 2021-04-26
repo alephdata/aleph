@@ -85,7 +85,7 @@ $timeline-item-padding: $aleph-grid-size;
     color: white;
     margin-left: 0;
     margin-right: 0;
-    background: $blue2;
+    background: var(--item-color);
     border-radius: 5px;
     padding: $timeline-item-padding $timeline-item-padding/2;
     display: flex;
@@ -148,12 +148,12 @@ $timeline-item-padding: $aleph-grid-size;
       border-color: white !important;
 
       .collapsed & {
-        border-color: rgba($blue2, .4) !important;
+        border-color: var(--item-color) !important;
       }
     }
-    span, .EditableProperty__value .bp3-input {
-      color: $blue2 !important;
-      border-color: $blue2 !important;
+    span, .EditableProperty__value .bp3-input, .bp3-button.bp3-outlined {
+      color: var(--item-color) !important;
+      border-color: var(--item-color) !important;
     }
 
     .PropertyValues {

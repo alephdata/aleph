@@ -7,13 +7,13 @@
   font-weight: bold;
   border-radius: 5px;
   position: relative;
-  color: $blue2;
+  color: var(--item-color);
   min-height: 38px;
   margin-bottom: 5px;
 
   .EditableProperty__value, .EditableProperty__value .bp3-input, .EditableProperty__label, {
-    color: $blue2 !important;
-    border-color: $blue2 !important;
+    color: var(--item-color) !important;
+    border-color: var(--item-color) !important;
   }
 
   .EditableProperty {

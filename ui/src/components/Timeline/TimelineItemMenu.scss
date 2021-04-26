@@ -3,9 +3,15 @@
 
 .TimelineItemMenu {
   padding: $aleph-grid-size/2;
-  
+
   &__hidden-input {
     position: absolute;
     visibility: none;
+  }
+
+  &__menu {
+    .ColorPicker {
+      padding: $aleph-grid-size;
+    }
   }
 }

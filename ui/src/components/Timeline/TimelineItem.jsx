@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, Colors, Intent } from '@blueprintjs/core';
 import { PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
@@ -16,6 +16,7 @@ import TimelineItemTitle from 'components/Timeline/TimelineItemTitle';
 
 import './TimelineItem.scss';
 
+const DEFAULT_COLOR = Colors.BLUE2;
 
 const messages = defineMessages({
   involved_button_text: {
@@ -74,6 +75,7 @@ class TimelineItem extends Component {
     this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop.name] }));
   }
 
+  // swap date and startDate prop values depending on entity having an endDate
   checkDates(entity, editedProp) {
     if (editedProp === 'endDate') {
       const date = entity.getProperty('date');
@@ -159,7 +161,6 @@ class TimelineItem extends Component {
             icon: 'add',
             minimal: expandedMode,
             outlined: !expandedMode,
-            intent: Intent.PRIMARY,
             small: true,
             fill: true
           }})}
@@ -179,9 +180,8 @@ class TimelineItem extends Component {
     }
   }
 
-
   render() {
-    const { expandedMode, isActive, isDraft, onDelete, onRemove, onSubmit, writeable } = this.props;
+    const { color, expandedMode, isActive, isDraft, onColorSelect, onDelete, onRemove, onSubmit, writeable } = this.props;
     const { entity, itemExpanded } = this.state;
 
     const expanded = expandedMode || itemExpanded;
@@ -197,7 +197,7 @@ class TimelineItem extends Component {
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
     return (
-      <div id={entity.id} ref={this.ref} className={c("TimelineItem", { draft: isDraft, active: isActive, 'item-expanded': itemExpanded })}>
+      <div id={entity.id} ref={this.ref} className={c("TimelineItem", { draft: isDraft, active: isActive, 'item-expanded': itemExpanded })} style={{"--item-color": color || DEFAULT_COLOR}}>
         <div className="TimelineItem__content">
           {!expandedMode && (
             <div className="TimelineItem__collapse-toggle">
@@ -221,6 +221,8 @@ class TimelineItem extends Component {
               {!isDraft && (
                 <TimelineItemMenu
                   entity={entity}
+                  color={color}
+                  onColorSelect={(col) => onColorSelect(entity.id, col)}
                   onDelete={onDelete}
                   onRemove={onRemove}
                   writeable={writeable}

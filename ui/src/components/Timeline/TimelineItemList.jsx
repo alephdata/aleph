@@ -9,7 +9,7 @@ import c from 'classnames';
 import { ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
 import TimelineItem from 'components/Timeline/TimelineItem';
 
-import { createEntity, deleteEntity, queryEntities } from 'actions';
+import { createEntity, deleteEntity, queryEntities, updateEntitySet } from 'actions';
 
 
 const messages = defineMessages({
@@ -30,6 +30,7 @@ class TimelineItemList extends Component {
     this.state = { draftEntity: null };
 
     this.createNewItem = this.createNewItem.bind(this);
+    this.onColorSelect = this.onColorSelect.bind(this);
   }
 
   async createNewItem() {
@@ -51,12 +52,38 @@ class TimelineItemList extends Component {
   }
 
   createNewReferencedEntity(entity) {
-    const { collection } = this.props;
-    return this.props.createEntity({ entity, collection_id: collection.id });
+    const { timeline } = this.props;
+    return this.props.createEntity({ entity, collection_id: timeline.collection.id });
+  }
+
+  getItemColor(id) {
+    const { timeline } = this.props;
+    return timeline.layout?.vertices?.find(item => item.entityId === id)?.color;
+  }
+
+  onColorSelect(entityId, color) {
+    const { timeline } = this.props;
+    const obj = { entityId, color };
+
+    if (timeline.layout?.vertices) {
+      const index = timeline.layout.vertices.findIndex(item => item.entityId === entityId);
+
+      if (index >= 0) {
+        timeline.layout.vertices[index] = obj;
+      } else {
+        timeline.layout.vertices.push(obj);
+      }
+      // @FIXME backend layout validation should allow null edges prop
+      timeline.layout.edges = [];
+    } else {
+      timeline.layout = { edges: [], vertices: [obj] };
+    }
+
+    this.props.updateEntitySet(timeline.id, timeline);
   }
 
   render() {
-    const { expandedMode, entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft, writeable } = this.props;
+    const { expandedMode, entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft, timeline } = this.props;
 
     const items = result.results;
     const isEmpty = items.length === 0;
@@ -71,7 +98,7 @@ class TimelineItemList extends Component {
     }
 
     return (
-      <div className={c("Timeline__content", { collapsed: !expandedMode})}>
+      <>
         {showDraftItem && (
           <TimelineItem
             isDraft
@@ -84,38 +111,42 @@ class TimelineItemList extends Component {
             expandedMode={true}
           />
         )}
-        {!isEmpty && (
-          <>
-            {items.map((item) => (
-              <TimelineItem
-                key={item.id}
-                entity={item}
-                expandedMode={expandedMode}
-                onUpdate={entityData => entityManager.updateEntity(entityData)}
-                onRemove={entityId => entityManager.deleteEntities([entityId])}
-                onDelete={entityId => deleteEntity(entityId)}
-                fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
-                createNewEntity={entityData => entityManager.createEntity(entityData, false)}
-                writeable={writeable && item.writeable}
-              />
-            ))}
-          </>
-        )}
-        {result.isPending && (
-          <SectionLoading />
-        )}
-        <QueryInfiniteLoad
-          query={query}
-          result={result}
-          fetch={this.props.queryEntities}
-        />
-      </div>
+        <div className={c("Timeline__content", { collapsed: !expandedMode})}>
+          {!isEmpty && (
+            <>
+              {items.map((item) => (
+                <TimelineItem
+                  key={item.id}
+                  entity={item}
+                  expandedMode={expandedMode}
+                  onUpdate={entityData => entityManager.updateEntity(entityData)}
+                  onRemove={entityId => entityManager.deleteEntities([entityId])}
+                  onDelete={entityId => deleteEntity(entityId)}
+                  fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+                  createNewEntity={entityData => entityManager.createEntity(entityData, false)}
+                  writeable={timeline.writeable && item.writeable}
+                  color={this.getItemColor(item.id)}
+                  onColorSelect={this.onColorSelect}
+                />
+              ))}
+            </>
+          )}
+          {result.isPending && (
+            <SectionLoading />
+          )}
+          <QueryInfiniteLoad
+            query={query}
+            result={result}
+            fetch={this.props.queryEntities}
+          />
+        </div>
+      </>
     );
   }
 }
 
 export default compose(
   withRouter,
-  connect(null, { createEntity, deleteEntity, queryEntities }),
+  connect(null, { createEntity, deleteEntity, queryEntities, updateEntitySet }),
   injectIntl,
 )(TimelineItemList );

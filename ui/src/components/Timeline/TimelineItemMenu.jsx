@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Intent, Menu, Popover } from '@blueprintjs/core';
+import { ColorPicker } from '@alephdata/react-ftm';
 import queryString from 'query-string';
 
 import { showSuccessToast } from 'app/toast';
@@ -54,13 +55,22 @@ class TimelineItemMenu extends Component {
   }
 
   render() {
-    const { entity, intl, onDelete, onRemove, writeable } = this.props;
+    const { color, entity, intl, onColorSelect, onDelete, onRemove, writeable } = this.props;
 
     return (
       <div className="TimelineItemMenu">
         <Popover>
           <Button className="TimelineItemMenu__toggle" minimal small icon="more" />
-          <Menu>
+          <Menu className="TimelineItemMenu__menu">
+            {writeable && (
+              <>
+                <ColorPicker
+                  currSelected={color}
+                  onSelect={onColorSelect}
+                />
+                <Menu.Divider />
+              </>
+            )}
             <Menu.Item
               onClick={this.onCopyLink}
               text={intl.formatMessage(messages.link_copy)}

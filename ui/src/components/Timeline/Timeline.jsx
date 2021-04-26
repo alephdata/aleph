@@ -84,10 +84,10 @@ class Timeline extends Component {
   }
 
   render() {
-    const { collection, expandedMode, entitiesCount, entityManager, query, intl, result, writeable } = this.props;
+    const { expandedMode, entitiesCount, entityManager, query, intl, result, timeline } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
-    const actionBar = writeable && (
+    const actionBar = timeline.writeable && (
       <TimelineActionBar
         disabled={showDraftItem}
         expandedMode={expandedMode}
@@ -143,8 +143,7 @@ class Timeline extends Component {
             onHideDraft={() => this.setState({ showDraftItem: false })}
             entityManager={entityManager}
             expandedMode={expandedMode}
-            writeable={writeable}
-            collection={collection}
+            timeline={timeline}
           />
         </DualPane.ContentPane>
       </DualPane>

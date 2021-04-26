@@ -111,11 +111,11 @@ export class TimelineScreen extends Component {
           {breadcrumbs}
           <Timeline
             query={query}
+            timeline={timeline}
+            collection={timeline.collection}
             entities={result?.results}
             entitiesCount={entitiesCount}
-            collection={timeline.collection}
             onStatusChange={this.onStatusChange}
-            writeable={timeline.writeable}
             mutateOnUpdate
           />
         </CollectionWrapper>
