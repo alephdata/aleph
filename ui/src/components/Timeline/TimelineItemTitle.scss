@@ -18,16 +18,28 @@
 
   .EditableProperty {
     background: none;
+    display: inline-flex;
     &.active {
       flex-grow: 1;
+    }
+
+    &:first-child {
+      @include rtlSupportInvertedProp(margin, left, 0 !important, null);
+      @include rtlSupportInvertedProp(padding, left, 0 !important, null);
     }
   }
 
   &__text {
-    display: flex;
+    display: inline-flex;
     align-self: center;
     padding: 0 $aleph-grid-size/2;
     flex-grow: 1;
+    flex-wrap: wrap;
+
+    .no-wrap {
+      display: inline-flex;
+      flex-wrap: nowrap;
+    }
   }
 
   .bp3-divider {

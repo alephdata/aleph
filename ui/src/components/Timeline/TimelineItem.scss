@@ -3,6 +3,13 @@
 
 $timeline-item-padding: $aleph-grid-size;
 
+@mixin between-breakpoints {
+  @media screen and (min-width: $aleph-screen-sm-max-width) and (max-width: 850px) {
+    @content;
+  }
+}
+
+
 .TimelineItem {
   margin: $aleph-grid-size*2 0;
   padding: $aleph-grid-size*1.5;
@@ -33,8 +40,8 @@ $timeline-item-padding: $aleph-grid-size;
     display: flex;
     width: 100%;
 
-    @media screen and (min-width: $aleph-screen-sm-max-width) and (max-width: $aleph-screen-md-max-width) {
-      display: block;
+    @include between-breakpoints {
+      flex-wrap: wrap;
     }
 
     .collapsed .item-expanded & {
@@ -45,16 +52,27 @@ $timeline-item-padding: $aleph-grid-size;
   &__main {
     flex-grow: 1;
     overflow-y: hidden;
+    @include between-breakpoints {
+      min-width: 100%;
+    }
   }
 
   &__secondary {
     flex-basis: 15%;
     min-width: $aleph-grid-size*22;
     @include rtlSupportInvertedProp(margin, right, $timeline-item-padding, null);
+
+    @media screen and (max-width: $aleph-screen-sm-max-width) {
+      min-width: $aleph-grid-size*15;
+    }
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      min-width: $aleph-grid-size*18;
+    }
   }
 
   &__collapse-toggle {
     padding: $aleph-grid-size/2 0;
+    @include rtlSupportInvertedProp(margin, right, $timeline-item-padding/3, null);
   }
 
   &__date, .TimelineItemTitle {
@@ -91,7 +109,7 @@ $timeline-item-padding: $aleph-grid-size;
     justify-content: space-between;
 
     &__value {
-      display: flex;
+      display: flex wrap;
     }
 
     .bp3-popover-wrapper {
@@ -104,8 +122,8 @@ $timeline-item-padding: $aleph-grid-size;
       }
     }
 
-    .collapsed & {
-      background: none !important;
+    .collapsed &:not(.item-expanded) {
+      background: none;
       color: inherit;
 
       span, .EditableProperty__value .bp3-input {
@@ -128,12 +146,16 @@ $timeline-item-padding: $aleph-grid-size;
       white-space: nowrap;
     }
 
+    .EditableProperty {
+      display: inline-flex;
+    }
+
     .EditableProperty__label {
       margin: 0;
       font-size: 12px;
 
       span {
-        vertical-align: middle;
+        vertical-align: unset;
       }
     }
 
@@ -157,14 +179,15 @@ $timeline-item-padding: $aleph-grid-size;
   &__involved {
     padding: $timeline-item-padding/2 0;
 
+    @include between-breakpoints {
+      display: none;
+    }
+
     .EditableProperty {
       background-color: white;
       border-color: white !important;
-
-      .collapsed & {
-        border-color: var(--item-color) !important;
-      }
     }
+
     span, .EditableProperty__value .bp3-input, .bp3-button.bp3-outlined {
       color: var(--item-color) !important;
       border-color: var(--item-color) !important;
@@ -183,6 +206,10 @@ $timeline-item-padding: $aleph-grid-size;
           margin-top: 1px;
         }
       }
+    }
+
+    .bp3-input {
+      min-width: unset !important;
     }
   }
 

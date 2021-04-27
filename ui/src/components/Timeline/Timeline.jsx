@@ -87,12 +87,12 @@ class Timeline extends Component {
     const { expandedMode, entitiesCount, entityManager, query, intl, result, timeline } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
-    const actionBar = timeline.writeable && (
+    const actionBar = (
       <TimelineActionBar
-        disabled={showDraftItem}
+        createDisabled={showDraftItem}
         expandedMode={expandedMode}
         createNewItem={() => this.setState({ showDraftItem: true })}
-        buttonGroupProps={{ fill: histogramFixed }}
+        writeable={timeline.writeable}
       />
     );
 

@@ -19,6 +19,10 @@ import './TimelineItem.scss';
 const DEFAULT_COLOR = Colors.BLUE2;
 
 const messages = defineMessages({
+  end_date_toggle: {
+    id: 'timeline.dates.button_text',
+    defaultMessage: 'Add end date'
+  },
   involved_button_text: {
     id: 'timeline.involved.button_text',
     defaultMessage: 'Add involved entities'
@@ -125,19 +129,19 @@ class TimelineItem extends Component {
   }
 
   renderDate() {
-    const { writeable } = this.props;
-    const { entity, showEndDate } = this.state;
+    const { expandedMode, intl, writeable } = this.props;
+    const { entity, itemExpanded, showEndDate } = this.state;
 
     const hasEndDate = entity.getProperty('endDate').length;
     const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length)) ? 'startDate' : 'date';
     const date = this.renderProperty(dateProp, { minimal: true, emptyPlaceholder: ' - ' })
 
     if (!hasEndDate && !showEndDate) {
-      if (writeable) {
+      if (writeable && (expandedMode || itemExpanded)) {
         return (
           <>
             {date}
-            <Tooltip content="Add end date">
+            <Tooltip content={intl.formatMessage(messages.end_date_toggle)}>
               <Button minimal small icon="array-date" onClick={() => this.setState({ showEndDate: true })} />
             </Tooltip>
           </>
@@ -199,7 +203,7 @@ class TimelineItem extends Component {
 
     const expanded = expandedMode || itemExpanded;
 
-    const captionProp = entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0];
+    const captionProp = !entity.schema.edge && (entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0]);
     const edgeProps = [entity.schema.edge?.source, entity.schema.edge?.target];
     const reservedProps = [captionProp, ...edgeProps, 'date', 'startDate', 'endDate', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
@@ -218,7 +222,7 @@ class TimelineItem extends Component {
             </div>
           )}
           <div className="TimelineItem__secondary">
-            <div className="TimelineItem__date">
+            <div className={c("TimelineItem__date", { 'item-expanded': itemExpanded })}>
               {this.renderDate()}
             </div>
             {expanded && this.renderInvolved()}

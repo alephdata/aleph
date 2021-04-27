@@ -56,15 +56,8 @@ class TimelineItemTitle extends Component {
     return (
       <>
         {renderProperty(source, { minimal: true })}
-        {` ${label} `}
+        {`${label}`}
         {renderProperty(target, { minimal: true })}
-        {!!captionProp && (
-          <>
-            {`(`}
-            {renderProperty(captionProp, { minimal: true })}
-            {`)`}
-          </>
-        )}
       </>
     );
   }
@@ -77,10 +70,10 @@ class TimelineItemTitle extends Component {
       return this.renderEdgeLabel();
     } else if (captionProp) {
       return (
-        <>
+        <div class="no-wrap">
           <Schema.Icon schema={schema} />
           {renderProperty(captionProp, { minimal: true })}
-        </>
+        </div>
       );
     }
 

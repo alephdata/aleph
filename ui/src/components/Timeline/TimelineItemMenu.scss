@@ -12,6 +12,8 @@
   &__menu {
     .ColorPicker {
       padding: $aleph-grid-size;
+      max-width: $aleph-grid-size*22;
+      margin: auto;
     }
   }
 }
