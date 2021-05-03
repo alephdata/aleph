@@ -1,10 +1,39 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 
 import { HotkeysContainer } from 'components/common';
+
+
+const messages = defineMessages({
+  groupLabel: {
+    id: 'hotkeys.judgement.group_label',
+    defaultMessage: 'Entity decisions'
+  },
+  same: {
+    id: 'hotkeys.judgement.same',
+    defaultMessage: 'Decide same'
+  },
+  unsure: {
+    id: 'hotkeys.judgement.unsure',
+    defaultMessage: 'Decide not enough information'
+  },
+  different: {
+    id: 'hotkeys.judgement.different',
+    defaultMessage: 'Decide different'
+  },
+  previous: {
+    id: 'hotkeys.judgement.previous',
+    defaultMessage: 'Select previous result'
+  },
+  next: {
+    id: 'hotkeys.judgement.next',
+    defaultMessage: 'Select next result'
+  },
+});
 
 
 class EntityDecisionHotkeys extends Component {
@@ -66,25 +95,27 @@ class EntityDecisionHotkeys extends Component {
   }
 
   render() {
-    const { children, } = this.props;
+    const { children, intl } = this.props;
+
+    const commonProps = { group: intl.formatMessage(messages.groupLabel) }
 
     return (
       <HotkeysContainer
         hotkeys={[
           {
-            combo: 'y', global: true, label: 'Decide same', onKeyDown: () => this.onDecideSelected('positive'),
+            combo: 'y', label: intl.formatMessage(messages.same), onKeyDown: () => this.onDecideSelected('positive'), ...commonProps
           },
           {
-            combo: 'h', global: true, label: 'Decide not enough information', onKeyDown: () => this.onDecideSelected('unsure'),
+            combo: 'h', label: intl.formatMessage(messages.unsure), onKeyDown: () => this.onDecideSelected('unsure'), ...commonProps
           },
           {
-            combo: 'n', global: true, label: 'Decide different', onKeyDown: () => this.onDecideSelected('negative'),
+            combo: 'n', label: intl.formatMessage(messages.different), onKeyDown: () => this.onDecideSelected('negative'), ...commonProps
           },
           {
-            combo: 'up', global: true, label: 'Select previous cross reference result', onKeyDown: this.selectPrevious,
+            combo: 'up', label: intl.formatMessage(messages.previous), onKeyDown: this.selectPrevious, ...commonProps
           },
           {
-            combo: 'down', global: true, label: 'Select next cross reference result', onKeyDown: this.selectNext,
+            combo: 'down', label: intl.formatMessage(messages.next), onKeyDown: this.selectNext, ...commonProps
           },
         ]}
       >
@@ -104,4 +135,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
+  injectIntl,
 )(EntityDecisionHotkeys);

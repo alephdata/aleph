@@ -75,16 +75,6 @@ export class Navbar extends React.Component {
     const alertQuery = result?.query_text || queryText;
     const menuPages = pages.filter((page) => page.menu);
 
-    const hotkeys = [
-      {
-        combo: "/",
-        global: true,
-        label: "Refresh data",
-        onKeyDown: () => this.inputRef?.current?.focus(),
-        preventDefault: true,
-      },
-    ];
-
     return (
       <>
         <div className="Navbar" ref={this.navbarRef}>

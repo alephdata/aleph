@@ -30,6 +30,18 @@ const messages = defineMessages({
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
   },
+  group_label: {
+    id: 'hotkeys.search.group_label',
+    defaultMessage: 'Search preview'
+  },
+  next: {
+    id: 'hotkeys.search.unsure',
+    defaultMessage: 'Preview next result'
+  },
+  previous: {
+    id: 'hotkeys.search.different',
+    defaultMessage: 'Preview previous result'
+  },
 });
 
 export class FacetedEntitySearch extends React.Component {
@@ -114,20 +126,22 @@ export class FacetedEntitySearch extends React.Component {
       />
     );
 
+    const hotkeysGroupLabel = { group: intl.formatMessage(messages.group_label) }
+
     return (
       <HotkeysContainer
         hotkeys={[
           {
-            combo: 'j', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
+            combo: 'j', label: intl.formatMessage(messages.next), onKeyDown: this.showNextPreview, ...hotkeysGroupLabel
           },
           {
-            combo: 'k', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
+            combo: 'k', label: intl.formatMessage(messages.previous), onKeyDown: this.showPreviousPreview, ...hotkeysGroupLabel
           },
           {
-            combo: 'up', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
+            combo: 'up', label: intl.formatMessage(messages.previous), onKeyDown: this.showPreviousPreview, ...hotkeysGroupLabel
           },
           {
-            combo: 'down', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
+            combo: 'down', label: intl.formatMessage(messages.next), onKeyDown: this.showNextPreview, ...hotkeysGroupLabel
           },
         ]}
       >
