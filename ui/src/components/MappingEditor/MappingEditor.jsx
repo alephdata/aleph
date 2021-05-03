@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Intent, Tooltip } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
 import { selectModel } from 'selectors';
 import { Collection, EntitySet, Schema } from 'components/common';

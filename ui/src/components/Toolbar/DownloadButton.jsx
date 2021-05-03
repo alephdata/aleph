@@ -1,7 +1,8 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { AnchorButton, Button, Callout, Checkbox, Classes, Dialog, Icon, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { AnchorButton, Button, Callout, Checkbox, Classes, Dialog, Icon, Intent, Position } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { dispatchSetConfigValue } from 'actions/configActions';
 
@@ -71,10 +72,7 @@ class DownloadButton extends React.PureComponent {
 
     if (dontWarnOnDownload) {
       return (
-        <Tooltip
-          content={intl.formatMessage(messages.mode_download)}
-          position={Position.BOTTOM_RIGHT}
-        >
+        <Tooltip content={intl.formatMessage(messages.mode_download)}>
           <AnchorButton
             href={file}
             icon="download"
@@ -90,10 +88,7 @@ class DownloadButton extends React.PureComponent {
 
     return (
       <>
-        <Tooltip
-          content={intl.formatMessage(messages.mode_download)}
-          position={Position.BOTTOM_RIGHT}
-        >
+        <Tooltip content={intl.formatMessage(messages.mode_download)}>
           <Button
             icon="download"
             text={intl.formatMessage(messages.download)}

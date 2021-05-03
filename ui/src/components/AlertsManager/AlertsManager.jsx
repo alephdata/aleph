@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { ControlGroup, InputGroup, Button, Intent, Icon, Tooltip } from '@blueprintjs/core';
+import { ControlGroup, InputGroup, Button, Intent, Icon } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';

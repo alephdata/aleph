@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Tooltip } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import { createAlert, deleteAlert, queryAlerts } from 'actions';
 import { selectSession, selectAlertResult } from 'selectors';
 import { alertsQuery } from 'queries';

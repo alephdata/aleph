@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Intent, Position, Tooltip } from '@blueprintjs/core';
-import { selectSession } from 'selectors';
+import { Button, ButtonGroup, Intent, Position } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
+import { selectSession } from 'selectors';
 import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
 
 const messages = defineMessages({
