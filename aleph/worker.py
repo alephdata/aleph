@@ -22,7 +22,7 @@ from aleph.queues import (
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import reingest_collection, reindex_collection
 from aleph.logic.collections import compute_collections, refresh_collection
-from aleph.logic.notifications import generate_digest
+from aleph.logic.notifications import generate_digest, delete_old_notifications
 from aleph.logic.roles import update_roles
 from aleph.logic.export import delete_expired_exports, export_entities
 from aleph.logic.processing import index_many
@@ -90,6 +90,7 @@ class AlephWorker(Worker):
                 check_alerts()
                 generate_digest()
                 delete_expired_exports()
+                delete_old_notifications()
 
     def dispatch_task(self, task):
         collection = get_dataset_collection_id(task.job.dataset.name)

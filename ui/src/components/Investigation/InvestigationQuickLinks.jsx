@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EntityCreateDialog } from '@alephdata/react-ftm';
 
+import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { showSuccessToast, showErrorToast } from 'app/toast';
 import { DialogToggleButton } from 'components/Toolbar';
@@ -154,6 +155,7 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
+  entityEditorWrapper,
   connect(mapStateToProps),
   injectIntl,
 )(InvestigationQuickLinks);

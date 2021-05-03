@@ -10,12 +10,16 @@ log = logging.getLogger(__name__)
 
 def configure_oauth(app, cache):
     if settings.OAUTH:
+        authorize_params = {}
+        if settings.OAUTH_AUDIENCE:
+            authorize_params["audience"] = settings.OAUTH_AUDIENCE
         oauth.provider = oauth.register(
             name=settings.OAUTH_HANDLER,
             client_id=settings.OAUTH_KEY,
             client_secret=settings.OAUTH_SECRET,
             client_kwargs={"scope": settings.OAUTH_SCOPE},
             server_metadata_url=settings.OAUTH_METADATA_URL,
+            authorize_params=authorize_params,
         )
     oauth.init_app(app, cache=cache)
     return oauth
@@ -55,6 +59,9 @@ def _get_groups(provider, oauth_token, id_token):
     clients = access_token.get("resource_access", {})
     client = clients.get(provider.client_id, {})
     groups.extend(client.get("roles", []))
+
+    # Auth0
+    groups.extend(access_token.get("permissions", []))
 
     # Please feel free to provider PRs for further providers.
 
