@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { AnchorButton, Button, Callout, Checkbox, Classes, Dialog, Icon, Intent, Position } from '@blueprintjs/core';
+import { AnchorButton, Button, Callout, Checkbox, Classes, Dialog, Icon, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { dispatchSetConfigValue } from 'actions/configActions';
