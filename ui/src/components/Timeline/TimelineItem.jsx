@@ -70,32 +70,31 @@ class TimelineItem extends Component {
     });
   }
 
-  onPropertyEdit(entity, propName) {
-    const validatedEntity = this.checkDates(entity, propName);
-    this.setState({ entity: validatedEntity });
-    this.props.onUpdate(validatedEntity);
+  onPropertyEdit(entity) {
+    this.setState({ entity });
+    this.props.onUpdate(entity);
   }
 
   onNewPropertyAdded(prop) {
     this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop.name] }));
   }
 
-  // swap date and startDate prop values depending on entity having an endDate
-  checkDates(entity, editedProp) {
-    if (editedProp === 'endDate') {
-      const date = entity.getProperty('date');
-      const startDate = entity.getProperty('startDate');
-      const endDate = entity.getProperty('endDate');
-      if (endDate.length > 0 && !startDate.length) {
-        entity.properties.set(entity.schema.getProperty('startDate'), date);
-        entity.properties.delete(entity.schema.getProperty('date'));
-      } else if (!endDate.length && startDate.length > 0) {
-        entity.properties.set(entity.schema.getProperty('date'), startDate);
-        entity.properties.delete(entity.schema.getProperty('startDate'));
-      }
-    }
-    return entity;
-  }
+  // TODO: swap date and startDate prop values depending on entity having an endDate
+  // checkDates(entity, editedProp) {
+  //   if (editedProp === 'endDate') {
+  //     const date = entity.getProperty('date');
+  //     const startDate = entity.getProperty('startDate');
+  //     const endDate = entity.getProperty('endDate');
+  //     if (endDate.length > 0 && !startDate.length) {
+  //       entity.properties.set(entity.schema.getProperty('startDate'), date);
+  //       entity.properties.delete(entity.schema.getProperty('date'));
+  //     } else if (!endDate.length && startDate.length > 0) {
+  //       entity.properties.set(entity.schema.getProperty('date'), startDate);
+  //       entity.properties.delete(entity.schema.getProperty('startDate'));
+  //     }
+  //   }
+  //   return entity;
+  // }
 
   getVisibleProperties() {
     const { writeable } = this.props;
@@ -119,7 +118,7 @@ class TimelineItem extends Component {
         key={propName}
         entity={entity}
         prop={propName}
-        onEdit={(updatedEntity) => this.onPropertyEdit(updatedEntity, propName)}
+        onEdit={this.onPropertyEdit}
         fetchEntitySuggestions={fetchEntitySuggestions}
         writeable={writeable}
         createNewReferencedEntity={createNewEntity}
@@ -203,7 +202,7 @@ class TimelineItem extends Component {
 
     const expanded = expandedMode || itemExpanded;
 
-    const captionProp = !entity.schema.edge && (entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0]);
+    const captionProp = (entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0]);
     const edgeProps = [entity.schema.edge?.source, entity.schema.edge?.target];
     const reservedProps = [captionProp, ...edgeProps, 'date', 'startDate', 'endDate', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
