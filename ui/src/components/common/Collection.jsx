@@ -1,5 +1,6 @@
 import React, { Component, PureComponent } from 'react';
-import { Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
+import { Button, Icon, MenuItem, Spinner } from '@blueprintjs/core';
+import { Popover2 as Popover } from '@blueprintjs/popover2';
 import { Link } from 'react-router-dom';
 import truncateText from 'truncate';
 import { connect } from 'react-redux';
@@ -76,7 +77,7 @@ class CollectionUpdateStatus extends PureComponent {
         <Popover
           lazy
           interactionKind="hover"
-          autofocus={false}
+          autoFocus={false}
           enforceFocus={false}
           popoverClassName="CollectionUpdateStatus__popover"
           target={collectionLabel}

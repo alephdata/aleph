@@ -41,18 +41,17 @@ $status-width: 120px;
     }
   }
 
-  &__delete, .bp3-popover-wrapper .bp3-button  {
+  &__delete, .bp3-popover2-target .bp3-button  {
     border-top-right-radius: $aleph-border-radius !important;
     border-bottom-right-radius: $aleph-border-radius !important;
   }
 
   &__overflow-list {
-    .bp3-popover-content {
-      padding: $aleph-grid-size/2;
-
-      .Count {
-        @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
-      }
+    .bp3-popover2-content {
+      padding: $aleph-grid-size/2 0;
+    }
+    .Count {
+      @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
     }
   }
 

@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position,
-} from '@blueprintjs/core';
+import { Button, Icon, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { Popover2 as Popover } from '@blueprintjs/popover2';
 
 import { fetchRole } from 'actions';
 import { selectCurrentRole, selectCurrentRoleId, selectMetadata, selectTester } from 'selectors';
@@ -95,8 +94,9 @@ export class AuthButtons extends Component {
       return (
         <span className="AuthButtons">
           <Popover
+            popoverClassName="AuthButtons__popover"
             content={(
-              <Menu className="AuthButtons__popover">
+              <Menu className="AuthButtons__popover__menu">
                 <Link to="/notifications" className="bp3-menu-item">
                   <Icon icon="notifications" />
                   {' '}
@@ -162,7 +162,7 @@ export class AuthButtons extends Component {
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
             )}
-            position={Position.BOTTOM_LEFT}
+            placement='bottom-end'
             fill
           >
             <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
