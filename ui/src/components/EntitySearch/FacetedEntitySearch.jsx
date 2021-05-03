@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { DualPane, ErrorSection, HotKeysContainer } from 'components/common';
+import { DualPane, ErrorSection, HotkeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import EntitySearchManageMenu from 'components/EntitySearch/EntitySearchManageMenu';
 import SearchActionBar from 'components/common/SearchActionBar';
@@ -115,8 +115,8 @@ export class FacetedEntitySearch extends React.Component {
     );
 
     return (
-      <HotKeysContainer
-        hotKeys={[
+      <HotkeysContainer
+        hotkeys={[
           {
             combo: 'j', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
           },
@@ -184,7 +184,7 @@ export class FacetedEntitySearch extends React.Component {
             />
           </DualPane.ContentPane>
         </DualPane>
-      </HotKeysContainer>
+      </HotkeysContainer>
     );
   }
 }

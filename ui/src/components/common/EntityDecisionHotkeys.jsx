@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 
-import { HotKeysContainer } from 'components/common';
+import { HotkeysContainer } from 'components/common';
 
 
 class EntityDecisionHotkeys extends Component {
@@ -69,8 +69,8 @@ class EntityDecisionHotkeys extends Component {
     const { children, } = this.props;
 
     return (
-      <HotKeysContainer
-        hotKeys={[
+      <HotkeysContainer
+        hotkeys={[
           {
             combo: 'y', global: true, label: 'Decide same', onKeyDown: () => this.onDecideSelected('positive'),
           },
@@ -89,7 +89,7 @@ class EntityDecisionHotkeys extends Component {
         ]}
       >
         {children}
-      </HotKeysContainer>
+      </HotkeysContainer>
     );
   }
 }
