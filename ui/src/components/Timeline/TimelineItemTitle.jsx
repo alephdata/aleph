@@ -51,7 +51,7 @@ class TimelineItemTitle extends Component {
   }
 
   renderEdgeLabel() {
-    const { captionProp, entity, renderProperty, writeable } = this.props;
+    const { entity, renderProperty } = this.props;
     const { label, source, target } = entity.schema.edge;
     return (
       <>
@@ -63,17 +63,17 @@ class TimelineItemTitle extends Component {
   }
 
   renderNondraft() {
-    const { captionProp, entity, renderProperty, writeable } = this.props;
+    const { captionProp, entity, renderProperty } = this.props;
     const { schema } = entity
 
     if (!!schema.edge) {
       return this.renderEdgeLabel();
     } else if (captionProp) {
       return (
-        <div class="no-wrap">
+        <span className="no-wrap">
           <Schema.Icon schema={schema} />
           {renderProperty(captionProp, { minimal: true })}
-        </div>
+        </span>
       );
     }
 
@@ -81,7 +81,7 @@ class TimelineItemTitle extends Component {
   }
 
   render() {
-    const { children, entity, isDraft } = this.props;
+    const { children, isDraft } = this.props;
 
     return (
       <div className="TimelineItemTitle">

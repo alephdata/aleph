@@ -109,7 +109,7 @@ $timeline-item-padding: $aleph-grid-size;
     justify-content: space-between;
 
     &__value {
-      display: flex wrap;
+      line-height: 1.5;
     }
 
     .bp3-popover-wrapper {
