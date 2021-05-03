@@ -7,7 +7,7 @@ import EntityDecisionHotkeys from './EntityDecisionHotkeys';
 import EntityDecisionRow from './EntityDecisionRow';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
-import HotKeysContainer from './HotKeysContainer';
+import HotkeysContainer from './HotkeysContainer';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Count from './Count';
@@ -59,7 +59,7 @@ export {
   Collection,
   EntitySet,
   DualPane,
-  HotKeysContainer,
+  HotkeysContainer,
   Entity,
   AppItem,
   Facet,
