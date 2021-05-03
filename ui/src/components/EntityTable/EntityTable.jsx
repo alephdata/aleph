@@ -74,7 +74,10 @@ export class EntityTable extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (prevProps.schema !== this.props.schema) {
+      this.clearSelection();
+    }
     this.fetchIfNeeded();
   }
 
@@ -240,7 +243,8 @@ export class EntityTable extends Component {
             dialogProps={{
               collection,
               entities: selectedEntities,
-              onSuccess: this.clearSelection
+              onSuccess: this.clearSelection,
+              showTimelines: schema.isA('Interval')
             }}
           />
           <EntityDeleteButton

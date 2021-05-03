@@ -1,0 +1,59 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.TimelineItemTitle {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  border-radius: 5px;
+  position: relative;
+  color: var(--item-color);
+  min-height: 38px;
+  margin-bottom: 5px;
+
+  .EditableProperty__value, .EditableProperty__value .bp3-input, .EditableProperty__label, {
+    color: var(--item-color) !important;
+    border-color: var(--item-color) !important;
+  }
+
+  .EditableProperty {
+    background: none;
+    display: inline-flex;
+
+    .draft & {
+      display: block;
+    }
+
+    &:first-child {
+      @include rtlSupportInvertedProp(margin, left, 0 !important, null);
+      @include rtlSupportInvertedProp(padding, left, 0 !important, null);
+    }
+  }
+
+  &__text {
+    display: inline-flex;
+    align-self: center;
+    align-items: center;
+    padding: 0 $aleph-grid-size/2;
+    flex-grow: 1;
+    flex-wrap: wrap;
+
+    .no-wrap {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      flex-grow: 1;
+
+      .EditableProperty, .EditableProperty__value {
+        width: 100%;
+      }
+    }
+  }
+
+  .bp3-divider {
+    margin: 0 $aleph-grid-size;
+  }
+
+  .SchemaLabel {
+    font-style: italic;
+  }
+}

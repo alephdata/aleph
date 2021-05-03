@@ -54,6 +54,7 @@ const propConfigs = {
     field: 'addresses',
     label: messages.facet_addresses,
     icon: 'map',
+    defaultSize: 30,
   },
   category: {
     field: 'category',
@@ -102,6 +103,7 @@ const propConfigs = {
     field: 'names',
     label: messages.facet_names,
     icon: 'id-number',
+    defaultSize: 30,
   },
   phones: {
     field: 'phones',

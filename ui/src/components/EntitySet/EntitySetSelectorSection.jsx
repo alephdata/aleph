@@ -38,6 +38,18 @@ const messages = defineMessages({
     id: 'diagram.selector.select_empty',
     defaultMessage: 'No existing diagram',
   },
+  timeline: {
+    id: 'timelines',
+    defaultMessage: 'Timelines',
+  },
+  timeline_create: {
+    id: 'timeline.selector.create',
+    defaultMessage: 'Create a new timeline',
+  },
+  timeline_empty: {
+    id: 'timeline.selector.select_empty',
+    defaultMessage: 'No existing timeline',
+  },
 });
 
 
