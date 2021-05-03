@@ -2,9 +2,17 @@
 @import "app/mixins.scss";
 
 .Restricted {
-    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
+    &__content {
+      @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
+    }
 
     &__message {
         max-width: 25em;
+    }
+
+    &__popover {
+      .bp3-popover2-arrow-fill {
+        fill: rgb(249, 237, 223) !important;
+      }
     }
 }

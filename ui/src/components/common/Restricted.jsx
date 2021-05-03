@@ -36,8 +36,8 @@ class Restricted extends PureComponent {
     )
 
     return (
-      <Popover interactionKind="hover" position={Position.BOTTOM} content={content}>
-        <Tag intent={Intent.WARNING} icon="warning-sign" className="Restricted">
+      <Popover position={Position.BOTTOM} content={content} defaultIsOpen popoverClassName="Restricted__popover">
+        <Tag intent={Intent.WARNING} icon="warning-sign" className="Restricted__content">
           <FormattedMessage id="restricted.tag" defaultMessage="RESTRICTED" />
         </Tag>
       </Popover>
