@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: ghcr.io/alephdata/aleph-elasticsearch:fc76f89bb369132171af4629cc12cd7f57098ba6
+    image: ghcr.io/alephdata/aleph-elasticsearch:564fdd523d70bc15b4f5bbeae9cea6d222114e75
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
