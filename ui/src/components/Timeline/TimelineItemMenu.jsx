@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, Intent, Menu, Popover } from '@blueprintjs/core';
+import { Button, Intent, Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core';
 import { ColorPicker } from '@alephdata/react-ftm';
 import queryString from 'query-string';
 
@@ -68,22 +68,22 @@ class TimelineItemMenu extends Component {
                   currSelected={color}
                   onSelect={onColorSelect}
                 />
-                <Menu.Divider />
+                <MenuDivider />
               </>
             )}
-            <Menu.Item
+            <MenuItem
               onClick={this.onCopyLink}
               text={intl.formatMessage(messages.link_copy)}
               icon="link"
             />
             {writeable && (
               <>
-                <Menu.Item
+                <MenuItem
                   onClick={() => onRemove(entity.id)}
                   text={intl.formatMessage(messages.remove)}
                   icon="remove"
                 />
-                <Menu.Item
+                <MenuItem
                   onClick={() => onDelete(entity.id)}
                   text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
                   icon="trash"
