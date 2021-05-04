@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
+import { ProgressBar, Intent, Button } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
 
 import { Numeric } from 'components/common';

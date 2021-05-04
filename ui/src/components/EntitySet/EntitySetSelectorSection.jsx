@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Collapse, InputGroup, Tooltip } from '@blueprintjs/core';
+import { Button, ButtonGroup, Collapse, InputGroup } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';

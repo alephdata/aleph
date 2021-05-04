@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { Button, InputGroup, Tooltip } from '@blueprintjs/core';
+import { Button, InputGroup } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { showSuccessToast } from 'app/toast';

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Tag as Bp3Tag, Tooltip } from '@blueprintjs/core';
+import { Tag as Bp3Tag } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { Count, Property, Tag } from 'components/common';

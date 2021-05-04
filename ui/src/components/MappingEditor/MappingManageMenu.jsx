@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { AnchorButton, Button, ButtonGroup, Intent, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import YAML from 'yaml';
 
 import { showErrorToast, showInfoToast } from 'app/toast';

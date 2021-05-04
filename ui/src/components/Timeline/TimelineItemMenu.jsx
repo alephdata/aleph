@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, Intent, Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core';
+import { Button, Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { Popover2 as Popover } from '@blueprintjs/popover2';
 import { ColorPicker } from '@alephdata/react-ftm';
 import queryString from 'query-string';
 
@@ -59,39 +60,42 @@ class TimelineItemMenu extends Component {
 
     return (
       <div className="TimelineItemMenu">
-        <Popover>
+        <Popover
+          content={
+            <Menu className="TimelineItemMenu__menu">
+              {writeable && (
+                <>
+                  <ColorPicker
+                    currSelected={color}
+                    onSelect={onColorSelect}
+                  />
+                  <MenuDivider />
+                </>
+              )}
+              <MenuItem
+                onClick={this.onCopyLink}
+                text={intl.formatMessage(messages.link_copy)}
+                icon="link"
+              />
+              {writeable && (
+                <>
+                  <MenuItem
+                    onClick={() => onRemove(entity.id)}
+                    text={intl.formatMessage(messages.remove)}
+                    icon="remove"
+                  />
+                  <MenuItem
+                    onClick={() => onDelete(entity.id)}
+                    text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
+                    icon="trash"
+                    intent={Intent.DANGER}
+                  />
+                </>
+              )}
+            </Menu>
+          }
+        >
           <Button className="TimelineItemMenu__toggle" minimal small icon="more" />
-          <Menu className="TimelineItemMenu__menu">
-            {writeable && (
-              <>
-                <ColorPicker
-                  currSelected={color}
-                  onSelect={onColorSelect}
-                />
-                <MenuDivider />
-              </>
-            )}
-            <MenuItem
-              onClick={this.onCopyLink}
-              text={intl.formatMessage(messages.link_copy)}
-              icon="link"
-            />
-            {writeable && (
-              <>
-                <MenuItem
-                  onClick={() => onRemove(entity.id)}
-                  text={intl.formatMessage(messages.remove)}
-                  icon="remove"
-                />
-                <MenuItem
-                  onClick={() => onDelete(entity.id)}
-                  text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
-                  icon="trash"
-                  intent={Intent.DANGER}
-                />
-              </>
-            )}
-          </Menu>
         </Popover>
       </div>
     );

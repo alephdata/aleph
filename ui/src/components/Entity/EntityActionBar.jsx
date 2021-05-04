@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Boundary, Button, ButtonGroup, ControlGroup, Divider, OverflowList, Popover } from '@blueprintjs/core';
+import { Boundary, Button, ButtonGroup, ControlGroup, Divider, OverflowList } from '@blueprintjs/core';
+import { Popover2 as Popover } from '@blueprintjs/popover2';
 import c from 'classnames';
 import { ResultText, SearchBox, UpdateStatus } from 'components/common';
 import { selectEntitiesResult } from 'selectors';
@@ -13,10 +14,9 @@ class EntityActionBar extends Component {
     return (
       <Popover
         content={<ButtonGroup vertical minimal alignText="left">{menuContent}</ButtonGroup>}
-        position="bottom-left"
+        placement="bottom-start"
         minimal
         popoverClassName="EntityActionBar__overflow-list"
-        boundary="viewport"
       >
         <Button icon="caret-down" />
       </Popover>

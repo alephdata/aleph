@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Popover, Position, Tag, Intent, Callout } from '@blueprintjs/core';
+import { Position, Tag, Intent, Callout } from '@blueprintjs/core';
+import { Popover2 as Popover } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
 import { Role } from 'components/common';
@@ -24,7 +25,7 @@ class Restricted extends PureComponent {
     if (!collection.restricted) {
         return null;
     }
-    const creator = collection.creator && collection.creator.id ? 
+    const creator = collection.creator && collection.creator.id ?
       <Role.Label icon={false} role={collection.creator} /> :
       intl.formatMessage(messages.no_creator);
 
@@ -35,8 +36,8 @@ class Restricted extends PureComponent {
     )
 
     return (
-      <Popover interactionKind="hover" position={Position.BOTTOM} content={content}>
-        <Tag intent={Intent.WARNING} icon="warning-sign" className="Restricted">
+      <Popover position={Position.BOTTOM} content={content} defaultIsOpen popoverClassName="Restricted__popover">
+        <Tag intent={Intent.WARNING} icon="warning-sign" className="Restricted__content">
           <FormattedMessage id="restricted.tag" defaultMessage="RESTRICTED" />
         </Tag>
       </Popover>

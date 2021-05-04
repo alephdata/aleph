@@ -107,19 +107,18 @@ $timeline-item-padding: $aleph-grid-size;
     padding: $timeline-item-padding $timeline-item-padding/2;
     display: flex;
     justify-content: space-between;
+    position: relative;
 
     &__value {
       line-height: 1.5;
     }
 
-    .bp3-popover-wrapper {
-      max-height: 18px;
-
-      .bp3-popover-target {
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
-      }
+    .bp3-popover2-target {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      @include rtl(right, $timeline-item-padding/2, null);
+      @include rtl(left, null, $timeline-item-padding/2);
     }
 
     .collapsed &:not(.item-expanded) {
