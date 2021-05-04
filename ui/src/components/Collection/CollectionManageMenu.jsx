@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Button, Popover, Menu, Intent } from '@blueprintjs/core';
+import { Button, Popover, Menu, MenuItem, Intent } from '@blueprintjs/core';
 
 import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAccessDialog';
@@ -60,31 +60,31 @@ class CollectionManageMenu extends React.Component {
         <Popover>
           <Button icon="cog" rightIcon="caret-down" />
           <Menu>
-            <Menu.Item
+            <MenuItem
               key={"edit"}
               onClick={() => this.toggleDialog('isEditOpen')}
               text={intl.formatMessage(messages.edit)}
               icon="cog"
             />
-            <Menu.Item
+            <MenuItem
               key={"access"}
               onClick={() => this.toggleDialog('isAccessOpen')}
               text={intl.formatMessage(messages.access)}
               icon="key"
             />
-            <Menu.Item
+            <MenuItem
               key={"reingest"}
               onClick={() => this.toggleDialog('isReingestOpen')}
               text={intl.formatMessage(messages.reingest)}
               icon="automatic-updates"
             />
-            <Menu.Item
+            <MenuItem
               key={"reindex"}
               onClick={() => this.toggleDialog('isReindexOpen')}
               text={intl.formatMessage(messages.reindex)}
               icon="search-template"
             />
-            <Menu.Item
+            <MenuItem
               key={"delete"}
               onClick={() => this.toggleDialog('isDeleteOpen')}
               text={intl.formatMessage(deleteMessage)}
