@@ -12,13 +12,17 @@ import AdvancedSearch from 'components/AdvancedSearch/AdvancedSearch';
 import AuthButtons from 'components/AuthButtons/AuthButtons';
 import { selectMetadata, selectSession, selectPages, selectEntitiesResult } from 'selectors';
 import SearchAlert from 'components/SearchAlert/SearchAlert';
-import { SearchBox } from 'components/common';
+import { HotkeysContainer, SearchBox } from 'components/common';
 import getPageLink from 'util/getPageLink';
 import { entitiesQuery } from 'queries';
 
 import './Navbar.scss';
 
 const messages = defineMessages({
+  hotkey_focus: {
+    id: 'hotkeys.search_focus',
+    defaultMessage: 'Search',
+  },
   placeholder: {
     id: 'search.placeholder',
     defaultMessage: 'Search companies, people and documents',
@@ -37,6 +41,7 @@ export class Navbar extends React.Component {
     this.onToggleAdvancedSearch = this.onToggleAdvancedSearch.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.navbarRef = React.createRef();
+    this.inputRef = React.createRef();
   }
 
   onToggleMobileSearch(event) {
@@ -89,6 +94,7 @@ export class Navbar extends React.Component {
                         onSearch={this.onSearchSubmit}
                         query={query}
                         inputProps={{
+                          inputRef: this.inputRef,
                           rightElement: <SearchAlert alertQuery={alertQuery} />
                         }}
                         placeholder={intl.formatMessage(messages.placeholder)}
@@ -152,6 +158,17 @@ export class Navbar extends React.Component {
           isOpen={advancedSearchOpen}
           onToggle={this.onToggleAdvancedSearch}
           navbarRef={this.navbarRef}
+        />
+        <HotkeysContainer
+          hotkeys={[
+            {
+              combo: "/",
+              global: true,
+              preventDefault: true,
+              label: intl.formatMessage(messages.hotkey_focus),
+              onKeyDown: () => this.inputRef?.current?.focus(),
+            }
+          ]}
         />
       </>
     );
