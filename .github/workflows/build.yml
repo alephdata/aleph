@@ -18,7 +18,9 @@ jobs:
         run: |
           docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
       - name: Push docker image (hash)
-        if: secrets.DOCKER_PASSWORD != null
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        if: env.DOCKER_PASSWORD != null
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin 
           docker push alephdata/aleph-ui-production:${GITHUB_SHA}
@@ -51,7 +53,9 @@ jobs:
       - name: Run aleph tests
         run: make ALEPH_TAG=${GITHUB_SHA} test
       - name: Push docker image (hash)
-        if: secrets.DOCKER_PASSWORD != null
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        if: env.DOCKER_PASSWORD != null
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin 
           docker push alephdata/aleph:${GITHUB_SHA}
