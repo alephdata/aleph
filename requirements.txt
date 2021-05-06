@@ -1,6 +1,5 @@
 # Dependencies maintained by OCCRP
 banal==1.0.6
-urlnormalizer==1.2.5
 followthemoney==2.5.1
 followthemoney-store[postgresql]==3.0.3
 fingerprints==1.0.3

@@ -1,6 +1,5 @@
 from normality import stringify
 from flask_babel import gettext
-from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.namespace import Namespace
@@ -53,8 +52,8 @@ def check_entitysettype(value):
 
 @checker.checks("url", raises=ValueError)
 def check_url(value):
-    value = stringify(value)
-    if value is not None and normalize_url(value) is None:
+    value = registry.language.clean(value)
+    if not registry.language.validate(value):
         raise ValueError(gettext("Invalid URL."))
     return True
 
