@@ -13,8 +13,8 @@ down_revision = "5b681871c1ab"
 
 
 def upgrade():
-    op.drop_index("ix_query_log_role_id", table_name="query_log")
-    op.drop_table("query_log")
+    # op.drop_index("ix_query_log_role_id", table_name="query_log")
+    # op.drop_table("query_log")
     op.add_column(
         "collection", sa.Column("data_updated_at", sa.DateTime(), nullable=True)
     )
