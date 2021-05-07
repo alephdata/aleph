@@ -36,7 +36,7 @@ EntitySetCreate:
         properties:
           id:
             type: string
-            format: entity_id
+            format: entity-id
         required: ["id", "schema", "properties"]
   required: ["label", "type", "collection_id"]
 

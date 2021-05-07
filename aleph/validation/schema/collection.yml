@@ -68,20 +68,20 @@ CollectionCreate:
         format: ftm-language
     data_url:
       type: string
-      format: url
+      format: ftm-url
       nullable: true
     foreign_id:
       type: string
     info_url:
       type: string
-      format: url
+      format: ftm-url
       nullable: true
     publisher:
       type: string
       nullable: true
     publisher_url:
       type: string
-      format: url
+      format: ftm-url
       nullable: true
     category:
       type: string

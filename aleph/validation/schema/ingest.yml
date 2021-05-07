@@ -7,7 +7,7 @@ DocumentIngest:
       example: John Doe
     authored_at:
       type: string
-      format: "partial-date"
+      format: "ftm-date"
       nullable: true
     countries:
       type: array
@@ -20,7 +20,7 @@ DocumentIngest:
     date:
       type: string
       nullable: true
-      format: "partial-date"
+      format: "ftm-date"
     file_name:
       type: string
       nullable: true
@@ -47,8 +47,8 @@ DocumentIngest:
       nullable: true
     modified_at:
       type: string
+      format: "ftm-date"
       nullable: true
-      format: "partial-date"
     parent_id:
       type: string
       nullable: true
@@ -56,16 +56,16 @@ DocumentIngest:
       $ref: "#/components/schemas/Entity"
     published_at:
       type: string
+      format: "ftm-date"
       nullable: true
-      format: "partial-date"
     retrieved_at:
       type: string
+      format: "ftm-date"
       nullable: true
-      format: "partial-date"
     source_url:
       type: string
+      format: ftm-url
       nullable: true
-      format: url
     summary:
       type: string
       nullable: true
