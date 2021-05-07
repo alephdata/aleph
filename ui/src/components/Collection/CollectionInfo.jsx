@@ -95,9 +95,19 @@ class CollectionInfo extends PureComponent {
             </div>
           </div>
         )}
+        { !!collection.data_updated_at && (
+          <div className="CollectionInfo__item">
+            <div className="key text-muted">
+              <FormattedMessage id="collection.data_updated_at" defaultMessage="Content updated" />
+            </div>
+            <div className="value">
+              <Date value={collection.data_updated_at} />
+            </div>
+          </div>
+        )}
         <div className="CollectionInfo__item">
           <div className="key text-muted">
-            <FormattedMessage id="collection.updated_at" defaultMessage="Last updated" />
+            <FormattedMessage id="collection.updated_at" defaultMessage="Metadata updated" />
           </div>
           <div className="value" itemProp="dateModified">
             <Date value={collection.updated_at} />

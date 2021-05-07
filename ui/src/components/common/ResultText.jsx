@@ -5,12 +5,16 @@ import './ResultText.scss'
 
 class ResultText extends PureComponent {
   renderText() {
-    const { result } = this.props;
+    const { customText, result } = this.props;
     if (result?.isError) {
       return <FormattedMessage id="result.error" defaultMessage="Error" />;
     }
     if (!result || result.total === undefined) {
       return <FormattedMessage id="result.searching" defaultMessage="Searching..." />;
+    }
+
+    if (customText) {
+      return customText;
     }
     if (result.total_type === 'gte') {
       return (

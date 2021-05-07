@@ -177,9 +177,10 @@ def format_proxy(proxy, collection):
     # Abstract entities can appear when profile fragments for a missing entity
     # are present.
     if proxy.schema.abstract:
+        log.warning("Tried to index an abstract-typed entity: %r", proxy)
         return None
 
-    data = proxy.to_full_dict()
+    data = proxy.to_full_dict(matchable=True)
     data["schemata"] = list(proxy.schema.names)
     data["caption"] = proxy.caption
 

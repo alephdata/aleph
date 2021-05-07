@@ -1,4 +1,5 @@
 # coding: utf-8
+import sys
 import json
 import click
 import logging
@@ -24,6 +25,7 @@ from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.collections import compute_collection
 from aleph.logic.processing import bulk_write
+from aleph.logic.mapping import cleanup_mappings
 from aleph.logic.documents import crawl_directory
 from aleph.logic.archive import cleanup_archive
 from aleph.logic.xref import xref_collection
@@ -99,19 +101,14 @@ def collections(secret, casefile):
 
 @cli.command()
 @click.option(
-    "-s",
-    "--sync",
-    is_flag=True,
-    default=False,
-    help="Run without threads and quit when no tasks are left.",
+    "--blocking/--non-blocking", default=True, help="Wait for tasks indefinitely."
 )
-def worker(sync=False):
+@click.option("--threads", required=False, type=int)
+def worker(blocking=True, threads=None):
     """Run the queue-based worker service."""
-    worker = get_worker()
-    if sync:
-        worker.sync()
-    else:
-        worker.run()
+    worker = get_worker(num_threads=threads)
+    code = worker.run(blocking=blocking)
+    sys.exit(code)
 
 
 @cli.command()
@@ -222,6 +219,7 @@ def update():
     """Re-index all collections and clear some caches."""
     update_roles()
     upgrade_collections()
+    cleanup_mappings()
 
 
 @cli.command()
@@ -389,6 +387,7 @@ def publish(foreign_id):
     editor = Role.load_cli_user()
     update_permission(role, collection, True, False, editor_id=editor.id)
     update_collection(collection)
+    db.session.commit()
 
 
 @cli.command()

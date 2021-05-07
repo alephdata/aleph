@@ -12,7 +12,7 @@ from servicelayer.archive.util import checksum, ensure_path
 
 from aleph.core import archive, db, settings
 from aleph.queues import queue_task
-from aleph.model import Export, Events, Role, Status
+from aleph.model import Export, Events, Role, Status, Entity
 from aleph.index.entities import iter_proxies, checksums_count
 from aleph.index.collections import get_collection
 from aleph.logic.util import entity_url, ui_url, archive_url
@@ -66,7 +66,8 @@ def export_entities(export_id):
             excel_name = safe_filename(export.label, extension="xlsx")
             excel_path = export_dir.joinpath(excel_name)
             exporter = ExcelExporter(excel_path, extra=EXTRA_HEADERS)
-            for idx, entity in enumerate(iter_proxies(filters=filters)):
+            proxies = iter_proxies(schemata=Entity.THING, filters=filters)
+            for idx, entity in enumerate(proxies):
                 collection_id = entity.context.get("collection_id")
                 if collection_id not in collections:
                     collections[collection_id] = get_collection(collection_id)

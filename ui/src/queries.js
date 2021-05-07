@@ -50,7 +50,7 @@ export function collectionSearchQuery(location, collectionId) {
 
 export function entitySetSchemaCountsQuery(entitySetId) {
   const path = entitySetId ? `entitysets/${entitySetId}/entities` : undefined;
-  return new Query(path, {}, {}, 'entitySetEntities')
+  return new Query(path, {}, {}, 'entities')
     .add('facet', 'schema')
     .add('filter:schemata', 'Thing')
     .add('filter:schemata', 'Interval')
@@ -63,7 +63,7 @@ export function entitySetEntitiesQuery(location, entitySetId, schema, limit = Qu
     context['filter:schema'] = schema;
   }
   const path = entitySetId ? `entitysets/${entitySetId}/entities` : undefined;
-  return Query.fromLocation(path, location, context, 'entitySetEntities')
+  return Query.fromLocation(path, location, context, 'entities')
     .limit(limit);
 }
 

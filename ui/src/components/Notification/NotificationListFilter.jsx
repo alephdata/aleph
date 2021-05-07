@@ -1,13 +1,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
 
-import { Count, SelectWrapper } from 'components/common';
+import SortingBar from 'components/SortingBar/SortingBar';
+import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
 
-import 'src/components/common/SortingBar.scss';
 
 const messages = defineMessages({
   filter_all: {
@@ -21,15 +20,6 @@ class NotificationListFilter extends Component {
     super(props);
     this.onSelect = this.onSelect.bind(this);
   }
-
-  renderOption = (option, { handleClick }) => (
-    <MenuItem
-      key={option.field || 'all'}
-      onClick={handleClick}
-      text={option.label}
-      label={<Count count={option.count} />}
-    />
-  )
 
   onSelect(selected) {
     const { query, updateQuery } = this.props;
@@ -49,41 +39,15 @@ class NotificationListFilter extends Component {
     const activeItem = typeOptions.find(item => item.active) || defaultOption;
 
     return (
-      <div className="SortingBar">
-        <span className="SortingBar__label">
-          <FormattedMessage
-            id="notifications.type_filter"
-            defaultMessage="Show:"
-          />
-        </span>
-        <div className="SortingBar__control">
-          <SelectWrapper
-            itemRenderer={this.renderOption}
+      <SortingBar
+        filterButton={(
+          <SortingBarSelect
             items={typeOptions}
-            onItemSelect={this.onSelect}
+            onSelect={this.onSelect}
             activeItem={activeItem}
-            popoverProps={{
-              minimal: true,
-              fill: false,
-              className: 'SortingBar__item__popover',
-            }}
-            inputProps={{
-              fill: false,
-            }}
-            filterable={false}
-            resetOnClose
-            resetOnSelect
-          >
-            <Button
-              text={activeItem?.label}
-              alignText={Alignment.LEFT}
-              minimal
-              intent={Intent.PRIMARY}
-              rightIcon="caret-down"
-            />
-          </SelectWrapper>
-        </div>
-      </div>
+          />
+        )}
+      />
     );
   }
 }

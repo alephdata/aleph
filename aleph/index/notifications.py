@@ -53,7 +53,7 @@ def index_notification(event, actor_id, params, channels, sync=False):
     return index_safe(index, id_, data, sync=sync)
 
 
-def delete_notifications(channel, sync=False):
-    """Delete entities from a collection."""
-    query = {"bool": {"filter": [{"term": {"channels": channel}}]}}
+def delete_notifications(filter_, sync=False):
+    """Delete notifications from a specific channel."""
+    query = {"bool": {"filter": [filter_]}}
     query_delete(notifications_index(), query, sync=sync)

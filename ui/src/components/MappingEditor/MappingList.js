@@ -25,6 +25,7 @@ class MappingList {
       });
     }
 
+    this.removeProperty = this.removeProperty.bind(this)
     this.changeId = this.changeId.bind(this)
   }
 

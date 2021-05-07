@@ -72,6 +72,7 @@ class Export(db.Model, IdModel, DatedModel):
         if collection is not None:
             export.collection_id = collection.id
         export.mime_type = mime_type
+        export.updated_at = datetime.utcnow()
         export.expires_at = datetime.utcnow() + cls.DEFAULT_EXPIRATION
         export.meta = meta or {}
         db.session.add(export)
@@ -83,6 +84,7 @@ class Export(db.Model, IdModel, DatedModel):
 
     def set_status(self, status):
         self.status = status
+        self.updated_at = datetime.utcnow()
         db.session.add(self)
 
     def should_delete_publication(self):

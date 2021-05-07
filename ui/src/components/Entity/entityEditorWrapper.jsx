@@ -10,6 +10,7 @@ import {
   createEntity,
   deleteEntity,
   entitySetAddEntity,
+  updateEntitySetItemMutate,
   updateEntitySetItemNoMutate,
   queryEntities,
   queryEntityExpand,
@@ -74,11 +75,11 @@ const entityEditorWrapper = (EditorComponent) => {
         });
       }
 
-      async createEntity(entity) {
+      async createEntity(entity, local = true) {
         const { collection, entitySetId, onStatusChange } = this.props;
         onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
         try {
-          if (entitySetId) {
+          if (entitySetId && local) {
             await this.props.entitySetAddEntity({ entity, entitySetId, sync: true });
           } else {
             await this.props.createEntity({ entity, collection_id: collection.id });
@@ -112,13 +113,14 @@ const entityEditorWrapper = (EditorComponent) => {
       }
 
       async deleteEntity(entityId) {
-        const { entitySetId, onStatusChange } = this.props;
+        const { entitySetId, mutateOnUpdate, onStatusChange } = this.props;
 
         onStatusChange && onStatusChange(UpdateStatus.IN_PROGRESS);
 
         try {
           if (entitySetId) {
-            await this.props.updateEntitySetItemNoMutate({
+            const updateAction = mutateOnUpdate ? this.props.updateEntitySetItemMutate : this.props.updateEntitySetItemNoMutate;
+            await updateAction({
               entityId,
               entitySetId,
               judgement: 'no_judgement'
@@ -180,6 +182,7 @@ const mapDispatchToProps = {
   createEntity,
   deleteEntity,
   entitySetAddEntity,
+  updateEntitySetItemMutate,
   updateEntitySetItemNoMutate,
   queryEntities,
   queryEntityExpand,

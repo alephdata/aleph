@@ -1,3 +1,4 @@
+from datetime import datetime
 from normality import stringify
 
 from aleph.core import db
@@ -42,6 +43,7 @@ class Permission(db.Model, IdModel, DatedModel):
             permission.collection_id = collection.id
         permission.read = True
         permission.write = write
+        permission.updated_at = datetime.utcnow()
         db.session.add(permission)
         db.session.flush()
         return permission

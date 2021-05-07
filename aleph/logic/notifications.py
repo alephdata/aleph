@@ -11,13 +11,8 @@ from aleph.model import Collection, Entity, Role, Alert, EntitySet, Export
 from aleph.model import Event, Events
 from aleph.logic.mail import email_role
 from aleph.logic.html import html_link
-from aleph.logic.util import (
-    collection_url,
-    entity_url,
-    ui_url,
-    entityset_url,
-    archive_url,
-)
+from aleph.logic.util import collection_url, entity_url
+from aleph.logic.util import entityset_url, archive_url, ui_url
 from aleph.index.notifications import index_notification, delete_notifications
 from aleph.index.notifications import notifications_index
 from aleph.index.util import unpack_result
@@ -44,9 +39,18 @@ def publish(event, actor_id=None, params=None, channels=None):
     index_notification(event, actor_id, params, channels)
 
 
+def delete_old_notifications(sync=False):
+    """Delete out-dated notifications from the index."""
+    cutoff = datetime.utcnow() - settings.NOTIFICATIONS_DELETE
+    filter_ = {"range": {"created_at": {"lt": cutoff}}}
+    log.debug("Deleting old notifications before: %r", cutoff)
+    delete_notifications(filter_, sync=sync)
+
+
 def flush_notifications(obj, clazz=None, sync=False):
     """Delete all notifications in a given channel."""
-    delete_notifications(channel_tag(obj, clazz=clazz), sync=sync)
+    filter_ = {"term": {"channels": channel_tag(obj, clazz=clazz)}}
+    delete_notifications(filter_, sync=sync)
 
 
 def get_role_channels(role):

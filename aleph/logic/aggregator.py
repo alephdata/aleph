@@ -2,6 +2,7 @@ import logging
 from ftmstore import get_dataset
 
 log = logging.getLogger(__name__)
+MODEL_ORIGIN = "model"
 
 
 def get_aggregator_name(collection):

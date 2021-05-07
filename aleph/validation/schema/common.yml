@@ -6,7 +6,7 @@ QueryResponse:
       example: 30
     next:
       type: string
-      format: url
+      format: ftm-url
       nullable: true
       description: URL of the next set of results or null
     offset:
@@ -22,7 +22,7 @@ QueryResponse:
       example: 42
     previous:
       type: string
-      format: url
+      format: ftm-url
       nullable: true
       description: URL of the previous set of results or null
     status:
@@ -44,9 +44,9 @@ DatedModel:
       readOnly: true
     created_at:
       type: string
-      format: partial-date
+      format: ftm-date
       readOnly: true
     updated_at:
       type: string
-      format: partial-date
+      format: ftm-date
       readOnly: true

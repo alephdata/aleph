@@ -24,7 +24,7 @@ api: services
 	$(COMPOSE) up --abort-on-container-exit api
 
 web: services
-	$(COMPOSE) up --abort-on-container-exit api ui
+	$(COMPOSE) up api ui
 
 worker: services
 	$(COMPOSE) run --rm app aleph worker

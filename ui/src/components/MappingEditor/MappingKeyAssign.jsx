@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, Collapse, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
+import { Button, Card, Collapse, FormGroup, Icon, MenuItem } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { MultiSelect } from '@blueprintjs/select';
 import SelectWrapper from 'components/common/SelectWrapper';
 import { Schema } from 'components/common';
@@ -196,7 +197,6 @@ export class MappingKeyAssignItem extends Component {
                 range: propertyRange.label,
                 property: property.label,
               })}
-              position="auto"
             >
               <Icon icon="help" />
             </Tooltip>

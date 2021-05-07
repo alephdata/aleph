@@ -34,9 +34,9 @@ def bulk_write(collection, entities, safe=False, role_id=None, mutable=True):
     writer = aggregator.bulk()
     for data in entities:
         entity = model.get_proxy(data, cleaned=False)
+        entity = collection.ns.apply(entity)
         if entity.id is None:
             raise InvalidData("No ID for entity", errors=entity.to_dict())
-        entity = collection.ns.apply(entity)
         if safe:
             entity = remove_checksums(entity)
         entity.context = {"role_id": role_id, "mutable": mutable}

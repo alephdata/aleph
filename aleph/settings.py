@@ -77,6 +77,7 @@ OAUTH_HANDLER = env.get("ALEPH_OAUTH_HANDLER", "oidc")
 OAUTH_KEY = env.get("ALEPH_OAUTH_KEY")
 OAUTH_SECRET = env.get("ALEPH_OAUTH_SECRET")
 OAUTH_SCOPE = env.get("ALEPH_OAUTH_SCOPE", "openid email profile")
+OAUTH_AUDIENCE = env.get("ALEPH_OAUTH_AUDIENCE")
 OAUTH_METADATA_URL = env.get("ALEPH_OAUTH_METADATA_URL")
 OAUTH_TOKEN_METHOD = env.get("ALEPH_OAUTH_TOKEN_METHOD", "POST")
 OAUTH_ADMIN_GROUP = env.get("ALEPH_OAUTH_ADMIN_GROUP", "superuser")
@@ -95,6 +96,9 @@ PASSWORD_LOGIN = env.to_bool("ALEPH_PASSWORD_LOGIN", not OAUTH)
 ROLE_INACTIVE = env.to_int("ALEPH_ROLE_INACTIVE", 6 * 30)
 ROLE_INACTIVE = timedelta(days=ROLE_INACTIVE)
 
+# Delete notifications after N days.
+NOTIFICATIONS_DELETE = env.to_int("ALEPH_NOTIFICATIONS_DELETE", 3 * 30)
+NOTIFICATIONS_DELETE = timedelta(days=NOTIFICATIONS_DELETE)
 
 ###############################################################################
 # Content processing options

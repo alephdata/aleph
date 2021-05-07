@@ -37,4 +37,14 @@
       display: contents;
     }
   }
+
+  .ErrorSection {
+    min-height: unset;
+
+    .bp3-non-ideal-state {
+      .bp3-heading {
+        font-size: 16px;
+      }
+    }
+  }
 }

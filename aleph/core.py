@@ -133,7 +133,7 @@ def get_es():
                 settings._es_instance = es
             return settings._es_instance
         except TransportError as exc:
-            log.warning("ElasticSearch error: %s", exc.error)
+            log.exception("ElasticSearch error: %s", exc.error)
             backoff(failures=attempt)
     raise RuntimeError("Could not connect to ElasticSearch")
 

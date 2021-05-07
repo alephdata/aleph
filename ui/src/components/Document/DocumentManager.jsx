@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { AnchorButton, Callout, Divider, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, Callout, Divider } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { ErrorSection, QueryInfiniteLoad } from 'components/common';
+
+import { EntitySet, ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryEntitySets } from 'actions';
 import EntitySetIndexItem from 'components/EntitySet/EntitySetIndexItem';
 
@@ -15,7 +16,12 @@ const messages = defineMessages({
     id: 'lists.no_lists',
     defaultMessage: 'There are no lists.',
   },
+  no_timeline: {
+    id: 'timelines.no_timelines',
+    defaultMessage: 'There are no timelines.',
+  },
 });
+
 
 class EntitySetIndex extends Component {
   componentDidMount() {
@@ -38,12 +44,11 @@ class EntitySetIndex extends Component {
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
-    const icon = type === 'diagram' ? 'graph' : 'list';
 
     if (result.isError || result.total === 0) {
       return (
         <ErrorSection
-          icon={icon}
+          icon={<EntitySet.Icon entitySet={{ type }} iconSize={60} />}
           title={result.isError ? result.error.message : intl.formatMessage(messages[`no_${type}`])}
         />
       );

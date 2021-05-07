@@ -1,6 +1,5 @@
 from normality import stringify
 from flask_babel import gettext
-from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.namespace import Namespace
@@ -21,7 +20,7 @@ def check_locale(value):
     return True
 
 
-@checker.checks("entity_id", raises=ValueError)
+@checker.checks("entity-id", raises=ValueError)
 def check_entity_id(value):
     value, _ = Namespace.parse(value)
     if not registry.entity.validate(value):
@@ -51,10 +50,9 @@ def check_entitysettype(value):
     return True
 
 
-@checker.checks("url", raises=ValueError)
+@checker.checks("ftm-url", raises=ValueError)
 def check_url(value):
-    value = stringify(value)
-    if value is not None and normalize_url(value) is None:
+    if not registry.url.validate(value):
         raise ValueError(gettext("Invalid URL."))
     return True
 
@@ -85,7 +83,7 @@ def check_schema(value):
     return True
 
 
-@checker.checks("partial-date", raises=ValueError)
+@checker.checks("ftm-date", raises=ValueError)
 def check_partial_date(value):
     if not registry.date.validate(value):
         raise ValueError(gettext("Invalid date: %s") % value)

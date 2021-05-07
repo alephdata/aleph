@@ -20,6 +20,7 @@ class Alert(db.Model, DatedModel):
 
     def update(self):
         self.notified_at = datetime.utcnow()
+        self.updated_at = self.notified_at
         db.session.add(self)
         db.session.flush()
 

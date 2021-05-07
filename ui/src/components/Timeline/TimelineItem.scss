@@ -1,0 +1,260 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+$timeline-item-padding: $aleph-grid-size;
+
+@mixin between-breakpoints {
+  @media screen and (min-width: $aleph-screen-sm-max-width) and (max-width: 850px) {
+    @content;
+  }
+}
+
+
+.TimelineItem {
+  margin: $aleph-grid-size*2 0;
+  padding: $aleph-grid-size*1.5;
+  border: 1px solid $aleph-border-color;
+  border-radius: 5px;
+
+  &.draft, &.active {
+    box-shadow: $pt-elevation-shadow-3;
+    border: none;
+    margin-left: 1px;
+    margin-right: 1px;
+  }
+
+  &.draft {
+    margin-bottom: $aleph-grid-size*2;
+  }
+
+  .collapsed & {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    margin: $aleph-grid-size 0;
+    border-bottom: 1px solid $aleph-border-color;
+    border-radius: 0;
+  }
+
+  &__content {
+    display: flex;
+    width: 100%;
+
+    @include between-breakpoints {
+      flex-wrap: wrap;
+    }
+
+    .collapsed .item-expanded & {
+      padding-bottom: $aleph-grid-size*2;
+    }
+  }
+
+  &__main {
+    flex-grow: 1;
+    overflow-y: hidden;
+    @include between-breakpoints {
+      min-width: 100%;
+    }
+  }
+
+  &__secondary {
+    flex-basis: 15%;
+    min-width: $aleph-grid-size*22;
+    @include rtlSupportInvertedProp(margin, right, $timeline-item-padding, null);
+
+    @media screen and (max-width: $aleph-screen-sm-max-width) {
+      min-width: $aleph-grid-size*15;
+    }
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      min-width: $aleph-grid-size*18;
+    }
+  }
+
+  &__collapse-toggle {
+    padding: $aleph-grid-size/2 0;
+    @include rtlSupportInvertedProp(margin, right, $timeline-item-padding/3, null);
+  }
+
+  &__date, .TimelineItemTitle {
+    margin-bottom: $timeline-item-padding/2;
+
+    .TextEdit__toggleMulti {
+      display: none;
+    }
+
+    .EditableProperty {
+      margin: 0 3px !important;
+      padding: 0 3px !important;
+      border: none !important;
+      transition: none;
+    }
+
+    .EditableProperty__label {
+      font-size: 12px;
+
+      span {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  &__date {
+    color: white;
+    margin-left: 0;
+    margin-right: 0;
+    background: var(--item-color);
+    border-radius: 5px;
+    padding: $timeline-item-padding $timeline-item-padding/2;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+
+    &__value {
+      line-height: 1.5;
+    }
+
+    .bp3-popover2-target {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      @include rtl(right, $timeline-item-padding/2, null);
+      @include rtl(left, null, $timeline-item-padding/2);
+    }
+
+    .collapsed &:not(.item-expanded) {
+      background: none;
+      color: inherit;
+
+      span, .EditableProperty__value .bp3-input {
+        color: inherit !important;
+        border-color: inherit !important;
+      }
+
+      .EditableProperty.minimal:hover:not(.active) {
+        background-color: #f5f8fa !important;
+      }
+    }
+
+    span, .EditableProperty__value .bp3-input {
+      font-weight: bold;
+      color: white !important;
+      border-color: white !important;
+    }
+
+    .PropertyValues, textarea {
+      white-space: nowrap;
+    }
+
+    .EditableProperty {
+      display: inline-flex;
+    }
+
+    .EditableProperty__label {
+      margin: 0;
+      font-size: 12px;
+
+      span {
+        vertical-align: unset;
+      }
+    }
+
+    .EditableProperty.active {
+      .EditableProperty__label {
+        display: none;
+      }
+    }
+
+    .EditableProperty.minimal:hover:not(.active) {
+      background-color: rgba(white, 0.3) !important;
+    }
+
+    .error-text {
+      background: white;
+      border-radius: 5px;
+      margin-top: $aleph-grid-size/2;
+    }
+  }
+
+  &__involved {
+    padding: $timeline-item-padding/2 0;
+
+    @include between-breakpoints {
+      display: none;
+    }
+
+    .EditableProperty {
+      background-color: white;
+      border-color: white !important;
+    }
+
+    span, .EditableProperty__value .bp3-input, .bp3-button.bp3-outlined {
+      color: var(--item-color) !important;
+      border-color: var(--item-color) !important;
+    }
+
+    .PropertyValues {
+      .separator {
+        display: none;
+      }
+      .EntityLabel {
+        display: block;
+        vertical-align: middle;
+        margin: 3px 0;
+
+        .bp3-icon {
+          margin-top: 1px;
+        }
+      }
+    }
+
+    .bp3-input {
+      min-width: unset !important;
+    }
+  }
+
+  &__properties {
+    column-count: 3;
+    column-gap: $timeline-item-padding;
+    table-layout: fixed;
+    column-fill: balance;
+
+    @media screen and (max-width: $aleph-screen-lg-max-width) {
+      column-count: 2;
+    }
+
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      column-count: 1;
+    }
+  }
+
+  &__property {
+    padding: $timeline-item-padding/2 0;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+
+    & > * {
+      // Firefox fix to avoid break inside column
+      display: inline-block;
+      width: 100%;
+    }
+
+    .EditableProperty {
+      background-color: white !important;
+      border-color: $light-gray4 !important;
+
+      &:hover:not(.active) {
+        background-color: $light-gray4 !important;
+      }
+    }
+
+    .no-value {
+      display: inline-flex;
+    }
+  }
+
+  &__draft-buttons {
+    margin: $aleph-grid-size/2;
+    text-align: right;
+  }
+}

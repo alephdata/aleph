@@ -1,0 +1,38 @@
+@import "app/variables.scss";
+@import "app/mixins.scss";
+
+.Timeline {
+  &__date-container {
+    z-index: 10;
+
+
+    &.fixed {
+      @media screen and (min-width: $aleph-screen-sm-max-width) {
+        position: fixed;
+        top: $aleph-content-padding;
+        width: inherit;
+        @include rtlSupportInvertedProp(padding, right, $aleph-content-padding !important, 0);
+      }
+    }
+
+    .TimelineActionBar {
+      @media screen and (min-width: $aleph-screen-sm-max-width) and (max-width: 900px) {
+        .bp3-button:first-child {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &__content.collapsed {
+    margin-top: $aleph-grid-size*1.5;
+  }
+
+  .DateFacet {
+    margin-bottom: $aleph-content-padding;
+  }
+
+  .TimelineActionBar {
+    margin: $aleph-grid-size/2 0;
+  }
+}

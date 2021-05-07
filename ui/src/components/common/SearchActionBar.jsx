@@ -6,11 +6,11 @@ import { ResultText } from 'components/common';
 import './SearchActionBar.scss';
 
 
-const SearchActionBar = ({ children, intl, result }) => {
+const SearchActionBar = ({ children, customResultText, intl, result }) => {
   return (
     <ControlGroup className="SearchActionBar" fill>
       <div className="SearchActionBar__main">
-        <ResultText result={result} />
+        <ResultText result={result} customText={customResultText} />
       </div>
       {children}
     </ControlGroup>

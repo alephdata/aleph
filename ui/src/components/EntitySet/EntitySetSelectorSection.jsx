@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Collapse, InputGroup, Tooltip } from '@blueprintjs/core';
+import { Button, ButtonGroup, Collapse, InputGroup } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -37,6 +38,18 @@ const messages = defineMessages({
   diagram_empty: {
     id: 'diagram.selector.select_empty',
     defaultMessage: 'No existing diagram',
+  },
+  timeline: {
+    id: 'timelines',
+    defaultMessage: 'Timelines',
+  },
+  timeline_create: {
+    id: 'timeline.selector.create',
+    defaultMessage: 'Create a new timeline',
+  },
+  timeline_empty: {
+    id: 'timeline.selector.select_empty',
+    defaultMessage: 'No existing timeline',
   },
 });
 
