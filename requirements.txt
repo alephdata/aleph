@@ -1,10 +1,10 @@
 # Dependencies maintained by OCCRP
 banal==1.0.6
-followthemoney==2.5.1
+followthemoney==2.5.2
 followthemoney-store[postgresql]==3.0.3
 fingerprints==1.0.3
 servicelayer[google,amazon]==1.18.1
-normality==2.2.1
+normality==2.2.2
 pantomime==0.4.1
 
 # Flask ecosystem
@@ -15,8 +15,8 @@ Flask-Migrate==2.7.0
 Flask-Cors==3.0.10
 Flask-Babel==2.0.0
 flask-talisman==0.7.0
-SQLAlchemy==1.4.13
-alembic==1.6.0
+SQLAlchemy==1.4.14
+alembic==1.6.1
 authlib==0.15.3
 
 elasticsearch==7.12.1
