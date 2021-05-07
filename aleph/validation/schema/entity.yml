@@ -29,7 +29,7 @@ Entity:
       type: array
       items:
         type: string
-        format: partial-date
+        format: ftm-date
     highlight:
       type: array
       items:
@@ -38,28 +38,28 @@ Entity:
       properties:
         tags:
           type: string
-          format: url
+          format: ftm-url
         csv:
           type: string
           nullable: true
-          format: url
+          format: ftm-url
         file:
           type: string
           nullable: true
-          format: url
+          format: ftm-url
         pdf:
           type: string
           nullable: true
-          format: url
+          format: ftm-url
         reference:
           type: string
-          format: url
+          format: ftm-url
         self:
           type: string
-          format: url
+          format: ftm-url
         ui:
           type: string
-          format: url
+          format: ftm-url
       type: object
     name:
       type: string
