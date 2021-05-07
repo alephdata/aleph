@@ -387,6 +387,7 @@ def publish(foreign_id):
     editor = Role.load_cli_user()
     update_permission(role, collection, True, False, editor_id=editor.id)
     update_collection(collection)
+    db.session.commit()
 
 
 @cli.command()

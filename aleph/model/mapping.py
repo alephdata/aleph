@@ -52,17 +52,18 @@ class Mapping(db.Model, DatedModel):
         }
 
     def update(self, query=None, table_id=None, entityset_id=None):
-        self.updated_at = datetime.utcnow()
         if query:
             self.query = query
         if table_id:
             self.table_id = table_id
         self.entityset_id = entityset_id
+        self.updated_at = datetime.utcnow()
         db.session.add(self)
 
     def set_status(self, status, error=None):
         self.last_run_status = status
         self.last_run_err_msg = error
+        self.updated_at = datetime.utcnow()
         db.session.add(self)
 
     def to_dict(self):

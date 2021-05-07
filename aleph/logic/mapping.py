@@ -93,6 +93,7 @@ def load_mapping(collection, mapping_id, sync=False):
         aggregate_model(collection, aggregator)
         index_aggregator(collection, aggregator, sync=sync)
         mapping.set_status(status=Status.SUCCESS)
+        collection.touch()
         db.session.commit()
     except Exception as exc:
         log.exception("Failed to load mapping.")
@@ -109,6 +110,8 @@ def flush_mapping(collection, mapping_id, sync=True):
     aggregator.delete(origin=origin)
     delete_entities(collection.id, origin=origin, sync=sync)
     update_collection(collection, sync=sync)
+    collection.touch()
+    db.session.commit()
 
 
 def cleanup_mappings():

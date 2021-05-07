@@ -69,6 +69,13 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     info_url = db.Column(db.Unicode, nullable=True)
     data_url = db.Column(db.Unicode, nullable=True)
 
+    # Collection inherits the `updated_at` column from `DatedModel`.
+    # These two fields are used to express different semantics: while
+    # `updated_at` is used to describe the last change of the metadata,
+    # `data_updated_at` keeps application-level information on the last
+    # change to the data within this collection.
+    data_updated_at = db.Column(db.DateTime, nullable=True)
+
     # This collection is marked as super-secret:
     restricted = db.Column(db.Boolean, default=False)
 
@@ -80,7 +87,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     def touch(self):
         # https://www.youtube.com/watch?v=wv-34w8kGPM
-        self.updated_at = datetime.utcnow()
+        self.data_updated_at = datetime.utcnow()
         db.session.add(self)
 
     def update(self, data, authz):
@@ -103,6 +110,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.frequency = data.get("frequency", self.frequency)
         self.restricted = data.get("restricted", self.restricted)
         self.xref = data.get("xref", self.xref)
+        self.updated_at = datetime.utcnow()
 
         # Some fields are editable only by admins in order to have
         # a strict separation between source evidence and case
@@ -115,7 +123,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             if creator is not None:
                 self.creator = creator
 
-        self.touch()
+        db.session.add(self)
         db.session.flush()
 
     @property
@@ -171,6 +179,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
                 "collection_id": stringify(self.id),
                 "foreign_id": self.foreign_id,
                 "creator_id": stringify(self.creator_id),
+                "data_updated_at": self.data_updated_at,
                 "team_id": self.team_id,
                 "label": self.label,
                 "summary": self.summary,
@@ -234,8 +243,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection.foreign_id = foreign_id
             collection.category = cls.CASEFILE
             collection.creator = authz.role
-        collection.update(data, authz)
         collection.deleted_at = None
+        collection.data_updated_at = None
+        collection.update(data, authz)
+        db.session.flush()
         if collection.creator is not None:
             Permission.grant(collection, collection.creator, True, True)
         return collection

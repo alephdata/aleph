@@ -27,14 +27,14 @@ class Document(db.Model, DatedModel):
     schema = db.Column(db.String(255), nullable=False)
     meta = db.Column(JSONB, default={})
 
-    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=True)  # noqa
-    parent_id = db.Column(db.BigInteger, nullable=True, index=True)  # noqa
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=True)
+    parent_id = db.Column(db.BigInteger, nullable=True, index=True)
     collection_id = db.Column(
         db.Integer, db.ForeignKey("collection.id"), nullable=False, index=True
-    )  # noqa
+    )
     collection = db.relationship(
         Collection, backref=db.backref("documents", lazy="dynamic")
-    )  # noqa
+    )
 
     def __init__(self, **kw):
         self.meta = {}
