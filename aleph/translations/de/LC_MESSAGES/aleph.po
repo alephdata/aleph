@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-01 14:36+0200\n"
+"POT-Creation-Date: 2021-05-07 15:03+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -138,15 +138,15 @@ msgstr "monatlich"
 msgid "annual"
 msgstr "jährlich"
 
-#: aleph/model/common.py:116
+#: aleph/model/common.py:114
 msgid "pending"
 msgstr "aktiv"
 
-#: aleph/model/common.py:117
+#: aleph/model/common.py:115
 msgid "successful"
 msgstr "erfolgreich"
 
-#: aleph/model/common.py:118
+#: aleph/model/common.py:116
 msgid "failed"
 msgstr "Fehlgeschlagen"
 
@@ -310,46 +310,46 @@ msgstr ""
 "      Um ihre Anmeldung fertig zu stellen besuchen sie bitte <a href=\"%(url)s\">die Anmeldeseite</a>.\n"
 "    "
 
-#: aleph/validation/formats.py:20
+#: aleph/validation/formats.py:19
 msgid "Invalid user locale."
 msgstr "Ungültige Oberflächensprache."
 
-#: aleph/validation/formats.py:28
+#: aleph/validation/formats.py:27
 #, python-format
 msgid "Invalid entity ID: %s"
 msgstr "Ungültige Entity-ID: %s"
 
-#: aleph/validation/formats.py:36
+#: aleph/validation/formats.py:35
 msgid "Invalid category."
 msgstr "Ungültige Kategorie."
 
-#: aleph/validation/formats.py:43
+#: aleph/validation/formats.py:42
 msgid "Invalid frequency."
 msgstr "Ungültige Aktualisierungsrate"
 
-#: aleph/validation/formats.py:50
+#: aleph/validation/formats.py:49
 msgid "Invalid set type."
 msgstr "Ungültiger Set-Typ"
 
-#: aleph/validation/formats.py:58
+#: aleph/validation/formats.py:56
 msgid "Invalid URL."
 msgstr "Ungültige URL."
 
-#: aleph/validation/formats.py:66
+#: aleph/validation/formats.py:64
 msgid "Invalid language code."
 msgstr "Ungültiger Sprachkennung."
 
-#: aleph/validation/formats.py:74
+#: aleph/validation/formats.py:72
 #, python-format
 msgid "Invalid country code: %s"
 msgstr "Ungültiger Ländercode: %s"
 
-#: aleph/validation/formats.py:83
+#: aleph/validation/formats.py:81
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "Ungültige Schemakennung: %s"
 
-#: aleph/validation/formats.py:91
+#: aleph/validation/formats.py:89
 #, python-format
 msgid "Invalid date: %s"
 msgstr "Ungültiges Datum: %s"

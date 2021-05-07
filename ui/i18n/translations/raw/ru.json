@@ -116,6 +116,9 @@
   "collection.creator": {
     "defaultMessage": "Автор"
   },
+  "collection.data_updated_at": {
+    "defaultMessage": "Content updated"
+  },
   "collection.data_url": {
     "defaultMessage": "Ссылка на данные"
   },
@@ -251,18 +254,6 @@
   "collection.index.placeholder": {
     "defaultMessage": "Поиск наборов данных..."
   },
-  "collection.index.sort.count": {
-    "defaultMessage": "Размер"
-  },
-  "collection.index.sort.created_at": {
-    "defaultMessage": "Дата создания"
-  },
-  "collection.index.sort.label": {
-    "defaultMessage": "Название"
-  },
-  "collection.index.sort.updated_at": {
-    "defaultMessage": "Дата обновления"
-  },
   "collection.index.title": {
     "defaultMessage": "Наборы данных"
   },
@@ -322,6 +313,12 @@
   },
   "collection.info.search": {
     "defaultMessage": "Поиск"
+  },
+  "collection.info.timelines": {
+    "defaultMessage": "Хронологии"
+  },
+  "collection.info.timelines_description": {
+    "defaultMessage": "Хронологии служат для просмотра и организации событий во времени."
   },
   "collection.info.xref": {
     "defaultMessage": "Перекрёстное сравнение"
@@ -411,7 +408,7 @@
     "defaultMessage": "Доступ"
   },
   "collection.updated_at": {
-    "defaultMessage": "Последнее изменение"
+    "defaultMessage": "Metadata updated"
   },
   "collection.xref.cancel": {
     "defaultMessage": "Отменить"
@@ -463,6 +460,9 @@
   },
   "dashboard.subheading": {
     "defaultMessage": "Статус операций анализа, загрузки или обработки данных."
+  },
+  "dashboard.timelines": {
+    "defaultMessage": "Хронологии"
   },
   "dashboard.title": {
     "defaultMessage": "Системный статус"
@@ -996,7 +996,7 @@
     "defaultMessage": "Алеф {version}"
   },
   "group.page.description": {
-    "defaultMessage": "Список всех наборов данных и расследований, принадлежащих этой группе."
+    "defaultMessage": "Если вы хотите поискать определённые сущности или документы в других наборах данных, относящихся к этой группе, <link> нажмите здесь </link>."
   },
   "home.counts.countries": {
     "defaultMessage": "Страны и территории"
@@ -1024,6 +1024,36 @@
   },
   "home.title": {
     "defaultMessage": "Искать публичные записи и секретные документы"
+  },
+  "hotkeys.judgement.different": {
+    "defaultMessage": "Различаются"
+  },
+  "hotkeys.judgement.group_label": {
+    "defaultMessage": "Распознавание сущностей"
+  },
+  "hotkeys.judgement.next": {
+    "defaultMessage": "Выбрать следующий результат"
+  },
+  "hotkeys.judgement.previous": {
+    "defaultMessage": "Выбрать предыдущий результат"
+  },
+  "hotkeys.judgement.same": {
+    "defaultMessage": "Одно и то же"
+  },
+  "hotkeys.judgement.unsure": {
+    "defaultMessage": "Недостаточно информации"
+  },
+  "hotkeys.search.different": {
+    "defaultMessage": "Просмотр предыдущего результата"
+  },
+  "hotkeys.search.group_label": {
+    "defaultMessage": "Просмотр результатов поиска"
+  },
+  "hotkeys.search.unsure": {
+    "defaultMessage": "Просмотр следующего результата"
+  },
+  "hotkeys.search_focus": {
+    "defaultMessage": "Поиск"
   },
   "infoMode.collection_casefile": {
     "defaultMessage": "Расследование"
@@ -1107,16 +1137,16 @@
     "defaultMessage": "Недостаточно информации"
   },
   "landing.shortcut.alert": {
-    "defaultMessage": "Create a search alert"
+    "defaultMessage": "Создать оповещение для поиска"
   },
   "landing.shortcut.datasets": {
-    "defaultMessage": "Browse datasets"
+    "defaultMessage": "Просмотр наборов данных"
   },
   "landing.shortcut.investigation": {
-    "defaultMessage": "Start an investigation"
+    "defaultMessage": "Начать новое расследование"
   },
   "landing.shortcut.search": {
-    "defaultMessage": "Search entities"
+    "defaultMessage": "Поиск сущностей"
   },
   "list.create.button": {
     "defaultMessage": "Новый список"
@@ -1397,6 +1427,9 @@
   "nav.status": {
     "defaultMessage": "Системный статус"
   },
+  "nav.timelines": {
+    "defaultMessage": "Хронологии"
+  },
   "nav.view_notifications": {
     "defaultMessage": "Уведомления"
   },
@@ -1417,9 +1450,6 @@
   },
   "notifications.title": {
     "defaultMessage": "Последние уведомления"
-  },
-  "notifications.type_filter": {
-    "defaultMessage": "Отобразить:"
   },
   "notifications.type_filter.all": {
     "defaultMessage": "Все"
@@ -1452,19 +1482,19 @@
     "defaultMessage": "Зарегистрироваться"
   },
   "profile.callout.details": {
-    "defaultMessage": "This profile aggregates attributes and relationships from {count} entities across different datasets."
+    "defaultMessage": "В этом профиле собраны аттрибуты и связи из {count} сущностей из прочих наборов данных."
   },
   "profile.callout.intro": {
-    "defaultMessage": "You're viewing {entity} as a profile."
+    "defaultMessage": "Вы просматриваете {entity} в виде профиля."
   },
   "profile.callout.link": {
-    "defaultMessage": "View the <link>original entity</link>"
+    "defaultMessage": "Показать <link>исходной сущности</link>"
   },
   "profile.delete.warning": {
     "defaultMessage": "(Удаление этого профиля не приведёт к удалению созданных сущностей и принятых решений)"
   },
   "profile.hint": {
-    "defaultMessage": "{entity} has been combined with entities from other datasets <link>into a profile</link>"
+    "defaultMessage": "{entity} объединена с сущностями из других наборов данных <link> в профиль </link>"
   },
   "profile.info.header": {
     "defaultMessage": "Профиль"
@@ -1489,6 +1519,9 @@
   },
   "queryFilters.clearAll": {
     "defaultMessage": "Очистить все"
+  },
+  "queryFilters.showHidden": {
+    "defaultMessage": "Ещё фильтры: {count}..."
   },
   "refresh.callout_message": {
     "defaultMessage": "Обрабатываем документы. Пожалуйста, подождите..."
@@ -1674,7 +1707,7 @@
     "defaultMessage": "Поиск: {title}"
   },
   "search.title_emptyq": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Поиск"
   },
   "settings.api_key": {
     "defaultMessage": "API-ключ"
@@ -1751,20 +1784,38 @@
   "signup.title": {
     "defaultMessage": "Войти"
   },
-  "sorting.bar.created_by": {
-    "defaultMessage": "Отобразить:"
+  "sorting.bar.caption": {
+    "defaultMessage": "Название"
+  },
+  "sorting.bar.count": {
+    "defaultMessage": "Размер"
+  },
+  "sorting.bar.created_at": {
+    "defaultMessage": "Дата создания"
+  },
+  "sorting.bar.date": {
+    "defaultMessage": "Дата"
   },
   "sorting.bar.direction": {
     "defaultMessage": "Направление:"
   },
+  "sorting.bar.endDate": {
+    "defaultMessage": "Дата окончания"
+  },
+  "sorting.bar.label": {
+    "defaultMessage": "Отобразить:"
+  },
   "sorting.bar.sort": {
     "defaultMessage": "Отсортировать:"
+  },
+  "sorting.bar.updated_at": {
+    "defaultMessage": "Обновить дату"
   },
   "sources.index.empty": {
     "defaultMessage": "Эта группа не привязана к какому-либо набору данных или расследованию."
   },
   "sources.index.placeholder": {
-    "defaultMessage": "Поиск по наборам данных и расследованиям, относящимся к {group}..."
+    "defaultMessage": "Поиск наборов данных или расследований, относящихся к {group}..."
   },
   "status.no_collection": {
     "defaultMessage": "Прочие задачи"
@@ -1777,6 +1828,111 @@
   },
   "text.loading": {
     "defaultMessage": "Загрузка..."
+  },
+  "timeline.add_new": {
+    "defaultMessage": "Создать новый объект"
+  },
+  "timeline.button.collapse": {
+    "defaultMessage": "Краткий вид"
+  },
+  "timeline.button.show_full": {
+    "defaultMessage": "Подробный вид"
+  },
+  "timeline.create.button": {
+    "defaultMessage": "Создать хронологию"
+  },
+  "timeline.create.cancel": {
+    "defaultMessage": "Удалить"
+  },
+  "timeline.create.label_placeholder": {
+    "defaultMessage": "Безымянная хронология"
+  },
+  "timeline.create.login": {
+    "defaultMessage": "Для создания хронологии необходимо авторизоваться"
+  },
+  "timeline.create.submit": {
+    "defaultMessage": "Создать"
+  },
+  "timeline.create.success": {
+    "defaultMessage": "Вы создали хронологию"
+  },
+  "timeline.create.summary_placeholder": {
+    "defaultMessage": "Краткое описание хронологии"
+  },
+  "timeline.create.title": {
+    "defaultMessage": "Создать хронологию"
+  },
+  "timeline.dates.button_text": {
+    "defaultMessage": "Добавить дату окончания"
+  },
+  "timeline.empty": {
+    "defaultMessage": "Хронология не содержит событий"
+  },
+  "timeline.empty_histogram": {
+    "defaultMessage": "Даты не найдены"
+  },
+  "timeline.involved.button_text": {
+    "defaultMessage": "Добавить вовлечённые сущности"
+  },
+  "timeline.item.date": {
+    "defaultMessage": "{start} до {end}"
+  },
+  "timeline.item.delete": {
+    "defaultMessage": "Удалить из {collection}"
+  },
+  "timeline.item.link_copy": {
+    "defaultMessage": "Скопировать ссылку на этот объект"
+  },
+  "timeline.item.link_copy_success": {
+    "defaultMessage": "Ссылка скопирована в буфер обмена."
+  },
+  "timeline.item.remove": {
+    "defaultMessage": "Удалить из хронологии"
+  },
+  "timeline.items_label": {
+    "defaultMessage": "объекты"
+  },
+  "timeline.no_results": {
+    "defaultMessage": "Нет результатов, удовлетворяющих запросу"
+  },
+  "timeline.result_text": {
+    "defaultMessage": "Событий в хронологии: {count}"
+  },
+  "timeline.result_text_query": {
+    "defaultMessage": "Отображено {count} (из {total} всего)"
+  },
+  "timeline.schema_select.label": {
+    "defaultMessage": "тип"
+  },
+  "timeline.selector.create": {
+    "defaultMessage": "Создать новую хронологию"
+  },
+  "timeline.selector.select_empty": {
+    "defaultMessage": "Хронологии отсутствуют"
+  },
+  "timeline.update.label_placeholder": {
+    "defaultMessage": "Безымянная хронология"
+  },
+  "timeline.update.success": {
+    "defaultMessage": "Вы обновили хронологию"
+  },
+  "timeline.update.summary_placeholder": {
+    "defaultMessage": "Краткое описание хронологии"
+  },
+  "timeline.update.title": {
+    "defaultMessage": "Настройки хронологии"
+  },
+  "timelines": {
+    "defaultMessage": "Хронологии"
+  },
+  "timelines.description": {
+    "defaultMessage": "Хронологии служат для просмотра и организации событий во времени."
+  },
+  "timelines.no_timelines": {
+    "defaultMessage": "Хронологии отсутствуют."
+  },
+  "timelines.title": {
+    "defaultMessage": "Хронологии"
   },
   "valuelink.tooltip": {
     "defaultMessage": "Упоминаний в {appName}: {count}"

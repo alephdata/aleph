@@ -116,6 +116,9 @@
   "collection.creator": {
     "defaultMessage": "Manager"
   },
+  "collection.data_updated_at": {
+    "defaultMessage": "Content updated"
+  },
   "collection.data_url": {
     "defaultMessage": "Data URL"
   },
@@ -251,18 +254,6 @@
   "collection.index.placeholder": {
     "defaultMessage": "Search datasets..."
   },
-  "collection.index.sort.count": {
-    "defaultMessage": "Size"
-  },
-  "collection.index.sort.created_at": {
-    "defaultMessage": "Creation Date"
-  },
-  "collection.index.sort.label": {
-    "defaultMessage": "Title"
-  },
-  "collection.index.sort.updated_at": {
-    "defaultMessage": "Update Date"
-  },
   "collection.index.title": {
     "defaultMessage": "Datasets"
   },
@@ -322,6 +313,12 @@
   },
   "collection.info.search": {
     "defaultMessage": "Search"
+  },
+  "collection.info.timelines": {
+    "defaultMessage": "Timelines"
+  },
+  "collection.info.timelines_description": {
+    "defaultMessage": "Timelines are a way to view and organize events chronologically."
   },
   "collection.info.xref": {
     "defaultMessage": "Cross-reference"
@@ -411,7 +408,7 @@
     "defaultMessage": "Accessible to"
   },
   "collection.updated_at": {
-    "defaultMessage": "Last updated"
+    "defaultMessage": "Metadata updated"
   },
   "collection.xref.cancel": {
     "defaultMessage": "Cancel"
@@ -463,6 +460,9 @@
   },
   "dashboard.subheading": {
     "defaultMessage": "Check the progress of ongoing data analysis, upload, and processing tasks."
+  },
+  "dashboard.timelines": {
+    "defaultMessage": "Timelines"
   },
   "dashboard.title": {
     "defaultMessage": "System Status"
@@ -996,7 +996,7 @@
     "defaultMessage": "Aleph {version}"
   },
   "group.page.description": {
-    "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
+    "defaultMessage": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
   },
   "home.counts.countries": {
     "defaultMessage": "Countries & territories"
@@ -1024,6 +1024,36 @@
   },
   "home.title": {
     "defaultMessage": "Find public records and leaks"
+  },
+  "hotkeys.judgement.different": {
+    "defaultMessage": "Decide different"
+  },
+  "hotkeys.judgement.group_label": {
+    "defaultMessage": "Entity decisions"
+  },
+  "hotkeys.judgement.next": {
+    "defaultMessage": "Select next result"
+  },
+  "hotkeys.judgement.previous": {
+    "defaultMessage": "Select previous result"
+  },
+  "hotkeys.judgement.same": {
+    "defaultMessage": "Decide same"
+  },
+  "hotkeys.judgement.unsure": {
+    "defaultMessage": "Decide not enough information"
+  },
+  "hotkeys.search.different": {
+    "defaultMessage": "Preview previous result"
+  },
+  "hotkeys.search.group_label": {
+    "defaultMessage": "Search preview"
+  },
+  "hotkeys.search.unsure": {
+    "defaultMessage": "Preview next result"
+  },
+  "hotkeys.search_focus": {
+    "defaultMessage": "Search"
   },
   "infoMode.collection_casefile": {
     "defaultMessage": "Investigation"
@@ -1397,6 +1427,9 @@
   "nav.status": {
     "defaultMessage": "System status"
   },
+  "nav.timelines": {
+    "defaultMessage": "Timelines"
+  },
   "nav.view_notifications": {
     "defaultMessage": "Notifications"
   },
@@ -1417,9 +1450,6 @@
   },
   "notifications.title": {
     "defaultMessage": "Recent notifications"
-  },
-  "notifications.type_filter": {
-    "defaultMessage": "Show:"
   },
   "notifications.type_filter.all": {
     "defaultMessage": "All"
@@ -1489,6 +1519,9 @@
   },
   "queryFilters.clearAll": {
     "defaultMessage": "Clear all"
+  },
+  "queryFilters.showHidden": {
+    "defaultMessage": "Show {count} more filters..."
   },
   "refresh.callout_message": {
     "defaultMessage": "Documents are being processed. Please wait..."
@@ -1751,20 +1784,38 @@
   "signup.title": {
     "defaultMessage": "Sign in"
   },
-  "sorting.bar.created_by": {
-    "defaultMessage": "Show:"
+  "sorting.bar.caption": {
+    "defaultMessage": "Title"
+  },
+  "sorting.bar.count": {
+    "defaultMessage": "Size"
+  },
+  "sorting.bar.created_at": {
+    "defaultMessage": "Creation Date"
+  },
+  "sorting.bar.date": {
+    "defaultMessage": "Date"
   },
   "sorting.bar.direction": {
     "defaultMessage": "Direction:"
   },
+  "sorting.bar.endDate": {
+    "defaultMessage": "End date"
+  },
+  "sorting.bar.label": {
+    "defaultMessage": "Show:"
+  },
   "sorting.bar.sort": {
     "defaultMessage": "Sort by:"
+  },
+  "sorting.bar.updated_at": {
+    "defaultMessage": "Update Date"
   },
   "sources.index.empty": {
     "defaultMessage": "This group is not linked to any datasets or investigations."
   },
   "sources.index.placeholder": {
-    "defaultMessage": "Search datasets and investigations belonging to {group}..."
+    "defaultMessage": "Search for a dataset or investigation belonging to {group}..."
   },
   "status.no_collection": {
     "defaultMessage": "Other tasks"
@@ -1777,6 +1828,111 @@
   },
   "text.loading": {
     "defaultMessage": "Loading…"
+  },
+  "timeline.add_new": {
+    "defaultMessage": "Create new item"
+  },
+  "timeline.button.collapse": {
+    "defaultMessage": "Show collapsed view"
+  },
+  "timeline.button.show_full": {
+    "defaultMessage": "Show detailed view"
+  },
+  "timeline.create.button": {
+    "defaultMessage": "New timeline"
+  },
+  "timeline.create.cancel": {
+    "defaultMessage": "Delete"
+  },
+  "timeline.create.label_placeholder": {
+    "defaultMessage": "Untitled timeline"
+  },
+  "timeline.create.login": {
+    "defaultMessage": "You must log in to create a timeline"
+  },
+  "timeline.create.submit": {
+    "defaultMessage": "Create"
+  },
+  "timeline.create.success": {
+    "defaultMessage": "Your timeline has been created successfully."
+  },
+  "timeline.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the timeline"
+  },
+  "timeline.create.title": {
+    "defaultMessage": "Create a timeline"
+  },
+  "timeline.dates.button_text": {
+    "defaultMessage": "Add end date"
+  },
+  "timeline.empty": {
+    "defaultMessage": "This timeline is empty"
+  },
+  "timeline.empty_histogram": {
+    "defaultMessage": "No dates found"
+  },
+  "timeline.involved.button_text": {
+    "defaultMessage": "Add involved entities"
+  },
+  "timeline.item.date": {
+    "defaultMessage": "{start}to{end}"
+  },
+  "timeline.item.delete": {
+    "defaultMessage": "Delete from {collection}"
+  },
+  "timeline.item.link_copy": {
+    "defaultMessage": "Copy link to this item"
+  },
+  "timeline.item.link_copy_success": {
+    "defaultMessage": "Successfully copied link to clipboard."
+  },
+  "timeline.item.remove": {
+    "defaultMessage": "Remove from timeline"
+  },
+  "timeline.items_label": {
+    "defaultMessage": "items"
+  },
+  "timeline.no_results": {
+    "defaultMessage": "No items found matching query"
+  },
+  "timeline.result_text": {
+    "defaultMessage": "{count} timeline items"
+  },
+  "timeline.result_text_query": {
+    "defaultMessage": "Showing {count} (of {total} total) items"
+  },
+  "timeline.schema_select.label": {
+    "defaultMessage": "type"
+  },
+  "timeline.selector.create": {
+    "defaultMessage": "Create a new timeline"
+  },
+  "timeline.selector.select_empty": {
+    "defaultMessage": "No existing timeline"
+  },
+  "timeline.update.label_placeholder": {
+    "defaultMessage": "Untitled timeline"
+  },
+  "timeline.update.success": {
+    "defaultMessage": "Your timeline has been updated successfully."
+  },
+  "timeline.update.summary_placeholder": {
+    "defaultMessage": "A brief description of the timeline"
+  },
+  "timeline.update.title": {
+    "defaultMessage": "Timeline settings"
+  },
+  "timelines": {
+    "defaultMessage": "Timelines"
+  },
+  "timelines.description": {
+    "defaultMessage": "Timelines are a way to view and organize events chronologically."
+  },
+  "timelines.no_timelines": {
+    "defaultMessage": "There are no timelines."
+  },
+  "timelines.title": {
+    "defaultMessage": "Timelines"
   },
   "valuelink.tooltip": {
     "defaultMessage": "{count} mentions in {appName}"

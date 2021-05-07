@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-01 14:36+0200\n"
+"POT-Creation-Date: 2021-05-07 15:03+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Mohammed AlKawmani <komani@arij.net>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
@@ -140,15 +140,15 @@ msgstr "شهري"
 msgid "annual"
 msgstr "سنوي"
 
-#: aleph/model/common.py:116
+#: aleph/model/common.py:114
 msgid "pending"
 msgstr "قيد الانتظار"
 
-#: aleph/model/common.py:117
+#: aleph/model/common.py:115
 msgid "successful"
 msgstr ""
 
-#: aleph/model/common.py:118
+#: aleph/model/common.py:116
 msgid "failed"
 msgstr "فشلت العملية"
 
@@ -298,46 +298,46 @@ msgstr ""
 "\n"
 "لإتمام التسجيل، يرجى زيارة <a href=\"%(url)s\">صفحة التسجيل</a> لدينا"
 
-#: aleph/validation/formats.py:20
+#: aleph/validation/formats.py:19
 msgid "Invalid user locale."
 msgstr "اسم المستخدم غير صحيح"
 
-#: aleph/validation/formats.py:28
+#: aleph/validation/formats.py:27
 #, python-format
 msgid "Invalid entity ID: %s"
 msgstr "معرف الكيان غير صحيح: %s"
 
-#: aleph/validation/formats.py:36
+#: aleph/validation/formats.py:35
 msgid "Invalid category."
 msgstr "الفئة غير متاحة"
 
-#: aleph/validation/formats.py:43
+#: aleph/validation/formats.py:42
 msgid "Invalid frequency."
 msgstr "لم يتكرر"
 
-#: aleph/validation/formats.py:50
+#: aleph/validation/formats.py:49
 msgid "Invalid set type."
 msgstr "نوع المجموعة غير صالح"
 
-#: aleph/validation/formats.py:58
+#: aleph/validation/formats.py:56
 msgid "Invalid URL."
 msgstr "عنوان URL غير صحيح"
 
-#: aleph/validation/formats.py:66
+#: aleph/validation/formats.py:64
 msgid "Invalid language code."
 msgstr "رمز اللغة غير صحيح"
 
-#: aleph/validation/formats.py:74
+#: aleph/validation/formats.py:72
 #, python-format
 msgid "Invalid country code: %s"
 msgstr "رمز الدولة غير صحيح:1 %s"
 
-#: aleph/validation/formats.py:83
+#: aleph/validation/formats.py:81
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "اسم مخطط غير صحيح : 1%s"
 
-#: aleph/validation/formats.py:91
+#: aleph/validation/formats.py:89
 #, python-format
 msgid "Invalid date: %s"
 msgstr "تاريخ خاطئ 1%s"
