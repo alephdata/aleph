@@ -16,13 +16,17 @@ For further details on the software, how to use it, install it or manage data
 imports, please check the documentation at: 
 
 * https://docs.alephdata.org
+* Installation: https://docs.alephdata.org/developers/installation
+* Changes: https://docs.alephdata.org/developers/changelog
 
 
 Support
 -------
 
-Aleph is used and developed by multiple organisations and interested individuals. If you're
-interested in participating in this process, please read the support policy (`SUPPORT.md`)
-and the contribution rules (`CONTRIBUTING.md`) and then get in touch:
+Aleph is used and developed by multiple organisations and interested individuals.
+If you're interested in participating in this process, please read the support
+policy (`SUPPORT.md`) and the contribution rules (`CONTRIBUTING.md`) and then get
+in touch:
 
 * https://docs.alephdata.org/get-in-touch
+
