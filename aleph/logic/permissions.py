@@ -12,7 +12,7 @@ def update_permission(role, collection, read, write, editor_id=None):
     """Update a roles permission to access a given collection."""
     pre = Permission.by_collection_role(collection, role)
     post = Permission.grant(collection, role, read, write)
-    db.session.commit()
+    db.session.flush()
     refresh_role(role)
     if post is None:
         return

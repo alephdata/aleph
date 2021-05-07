@@ -20,6 +20,10 @@ Collection:
         format: ftm-country
     creator:
       $ref: "#/components/schemas/Role"
+    data_updated_at:
+      type: string
+      format: ftm-date
+      readOnly: true
     foreign_id:
       type: string
     label:

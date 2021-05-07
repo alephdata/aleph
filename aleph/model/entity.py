@@ -44,7 +44,6 @@ class Entity(db.Model, DatedModel):
         if sign:
             proxy = collection.ns.apply(proxy)
         self.schema = proxy.schema.name
-        self.updated_at = datetime.utcnow()
         previous = self.to_proxy()
         for prop in proxy.schema.properties.values():
             # Do not allow the user to overwrite hashes because this could
@@ -53,6 +52,7 @@ class Entity(db.Model, DatedModel):
                 prev = previous.get(prop)
                 proxy.set(prop, prev, cleaned=True, quiet=True)
         self.data = proxy.properties
+        self.updated_at = datetime.utcnow()
         db.session.add(self)
 
     def to_proxy(self):
