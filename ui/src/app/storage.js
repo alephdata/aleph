@@ -60,3 +60,11 @@ export const expireRecentlyViewed = () => {
   
   localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
 }
+
+export const setFacetConfig = (config) => {
+  localStorage.setItem('facetConfig', JSON.stringify(config));
+}
+
+export const getFacetConfig = () => {
+  return JSON.parse(localStorage.getItem('facetConfig'));
+}
