@@ -72,6 +72,7 @@ class EntitySet(db.Model, SoftDeleteModel):
         entityset.layout = {}
         entityset.role_id = authz.id
         entityset.collection_id = collection.id
+        entityset.collection = collection
         entityset.created_at = datetime.utcnow()
         entityset.update(data)
         return entityset
@@ -239,6 +240,7 @@ class EntitySet(db.Model, SoftDeleteModel):
         self.layout = data.get("layout", self.layout)
         self.updated_at = datetime.utcnow()
         self.deleted_at = None
+        self.collection.touch()
         db.session.add(self)
 
     def delete(self, deleted_at=None):

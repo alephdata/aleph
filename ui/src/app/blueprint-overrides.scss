@@ -165,21 +165,21 @@ table {
         }
       }
 
-      > .bp3-popover-wrapper:not(:first-child) .bp3-button {
+      > .bp3-popover2-target:not(:first-child) .bp3-button {
         @include buttonNotFirstChild;
       }
 
-      > .bp3-popover-wrapper:not(:last-child) .bp3-button{
+      > .bp3-popover2-target:not(:last-child) .bp3-button{
         @include buttonNotLastChild;
       }
     }
 
     &.bp3-vertical {
-      > .bp3-popover-wrapper:last-child .bp3-button,  > .bp3-button:last-child {
+      > .bp3-popover2-target:last-child .bp3-button,  > .bp3-button:last-child {
         border-radius: 0 0 3px 3px;
       }
 
-      > .bp3-popover-wrapper:first-child .bp3-button,  > .bp3-button:first-child {
+      > .bp3-popover2-target:first-child .bp3-button,  > .bp3-button:first-child {
         border-radius: 3px 3px 0 0;
       }
     }
@@ -262,14 +262,6 @@ table {
 
   .bp3-dialog-footer-actions .bp3-button {
     @include rtlSupportInvertedProp(margin, left, 10px, 0px);
-  }
-}
-
-.bp3-overlay {
-  .bp3-popover-content {
-    .bp3-input {
-      @include rtlSupportInvertedProp(padding, left, 30px, 0px);
-    }
   }
 }
 

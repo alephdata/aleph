@@ -45,6 +45,22 @@ const messages = defineMessages({
     id: 'diagram.update.success',
     defaultMessage: 'Your diagram has been updated successfully.',
   },
+  timeline_title: {
+    id: 'timeline.update.title',
+    defaultMessage: 'Timeline settings',
+  },
+  timeline_label_placeholder: {
+    id: 'timeline.update.label_placeholder',
+    defaultMessage: 'Untitled timeline',
+  },
+  timeline_summary_placeholder: {
+    id: 'timeline.update.summary_placeholder',
+    defaultMessage: 'A brief description of the timeline',
+  },
+  timeline_success: {
+    id: 'timeline.update.success',
+    defaultMessage: 'Your timeline has been updated successfully.',
+  },
 });
 
 

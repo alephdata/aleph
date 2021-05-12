@@ -22,6 +22,10 @@ const messages = defineMessages({
     id: 'lists.title',
     defaultMessage: 'Lists',
   },
+  timeline_title: {
+    id: 'timelines.title',
+    defaultMessage: 'Timelines',
+  },
   diagram_description: {
     id: 'diagrams.description',
     defaultMessage: 'Network diagrams let you visualize complex relationships within an investigation.',
@@ -29,6 +33,10 @@ const messages = defineMessages({
   list_description: {
     id: 'lists.description',
     defaultMessage: 'Lists let you organize and group related entities of interest.',
+  },
+  timeline_description: {
+    id: 'timelines.description',
+    defaultMessage: 'Timelines are a way to view and organize events chronologically.',
   },
 });
 
@@ -95,7 +103,14 @@ export class EntitySetIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const type = location.pathname === '/diagrams' ? 'diagram' : 'list';
+  let type;
+  if (location.pathname === '/diagrams') {
+    type = 'diagram';
+  } else if (location.pathname === '/timelines') {
+    type = 'timeline';
+  } else {
+    type = 'list';
+  }
   const context = {
     'filter:type': type
   };

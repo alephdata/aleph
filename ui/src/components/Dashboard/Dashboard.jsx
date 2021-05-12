@@ -8,7 +8,7 @@ import c from 'classnames';
 
 import { queryRoles } from 'actions';
 import { groupsQuery } from 'queries';
-import { selectRolesResult, selectCurrentRole } from 'selectors';
+import { selectRolesResult, selectCurrentRole, selectTester } from 'selectors';
 
 import './Dashboard.scss';
 
@@ -36,6 +36,10 @@ const messages = defineMessages({
   lists: {
     id: 'dashboard.lists',
     defaultMessage: 'Lists',
+  },
+  timelines: {
+    id: 'dashboard.timelines',
+    defaultMessage: 'Timelines',
   },
   settings: {
     id: 'dashboard.settings',
@@ -74,7 +78,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { role, intl, location, groupsResult } = this.props;
+    const { role, intl, isTester, location, groupsResult } = this.props;
     const current = location.pathname;
 
     return (
@@ -127,6 +131,15 @@ class Dashboard extends React.Component {
                 onClick={() => this.navigate('/diagrams')}
                 active={current === '/diagrams'}
               />
+              {isTester && (
+                <MenuItem
+                  icon="gantt-chart"
+                  text={intl.formatMessage(messages.timelines)}
+                  label={<Count count={role?.counts?.entitysets?.timeline} />}
+                  onClick={() => this.navigate('/timelines')}
+                  active={current === '/timelines'}
+                />
+              )}
               <MenuItem
                 icon="list"
                 text={intl.formatMessage(messages.lists)}
@@ -187,6 +200,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = groupsQuery(location);
   return {
     role: selectCurrentRole(state),
+    isTester: selectTester(state),
     groupsQuery: query,
     groupsResult: selectRolesResult(state, query),
   };

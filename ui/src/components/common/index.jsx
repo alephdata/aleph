@@ -7,7 +7,7 @@ import EntityDecisionHotkeys from './EntityDecisionHotkeys';
 import EntityDecisionRow from './EntityDecisionRow';
 import Frequency from './Frequency';
 import Restricted from './Restricted';
-import HotKeysContainer from './HotKeysContainer';
+import HotkeysContainer from './HotkeysContainer';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Count from './Count';
@@ -33,7 +33,6 @@ import Tag from './Tag';
 import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
 import Skeleton from './Skeleton';
-import SortingBar from './SortingBar';
 import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
@@ -59,7 +58,7 @@ export {
   Collection,
   EntitySet,
   DualPane,
-  HotKeysContainer,
+  HotkeysContainer,
   Entity,
   AppItem,
   Facet,
@@ -83,7 +82,6 @@ export {
   SchemaCounts,
   SearchBox,
   Skeleton,
-  SortingBar,
   QueryText,
   QueryInfiniteLoad,
   QuickLinks,

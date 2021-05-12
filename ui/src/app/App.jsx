@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { FocusStyleManager } from '@blueprintjs/core';
+import { FocusStyleManager, HotkeysProvider } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
 import { inRange } from 'lodash';
 import { logout } from 'actions/sessionActions';
@@ -87,9 +87,11 @@ function App() {
   return (
     <Provider store={store}>
       <Translator>
-        <BrowserRouter>
-          <Route path="/" component={Router} />
-        </BrowserRouter>
+        <HotkeysProvider>
+          <BrowserRouter>
+            <Route path="/" component={Router} />
+          </BrowserRouter>
+        </HotkeysProvider>
       </Translator>
     </Provider>
   );

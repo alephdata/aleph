@@ -2,6 +2,9 @@ name: package
 
 on: [push]
 
+permissions:
+  packages: write
+
 jobs:
   ui:
     runs-on: ubuntu-latest
@@ -15,8 +18,11 @@ jobs:
         run: |
           docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
       - name: Push docker image (hash)
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        if: env.DOCKER_PASSWORD != null
         run: |
-          docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin 
           docker push alephdata/aleph-ui-production:${GITHUB_SHA}
       - name: Push docker image (tagged)
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
@@ -47,8 +53,11 @@ jobs:
       - name: Run aleph tests
         run: make ALEPH_TAG=${GITHUB_SHA} test
       - name: Push docker image (hash)
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        if: env.DOCKER_PASSWORD != null
         run: |
-          docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin 
           docker push alephdata/aleph:${GITHUB_SHA}
       - name: Push docker images for tags
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')

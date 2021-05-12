@@ -3,7 +3,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { AnchorButton, ButtonGroup, Classes, Tooltip } from '@blueprintjs/core';
+import { AnchorButton, ButtonGroup, Classes } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
 import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import { triggerQueryExport } from 'src/actions';

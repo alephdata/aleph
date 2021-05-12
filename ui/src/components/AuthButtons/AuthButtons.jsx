@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position,
-} from '@blueprintjs/core';
+import { Button, Icon, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { Popover2 as Popover } from '@blueprintjs/popover2';
 
 import { fetchRole } from 'actions';
-import { selectCurrentRole, selectCurrentRoleId, selectMetadata } from 'selectors';
+import { selectCurrentRole, selectCurrentRoleId, selectMetadata, selectTester } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { DialogToggleButton } from 'components/Toolbar'
 import { Skeleton } from 'components/common'
@@ -23,6 +22,10 @@ const messages = defineMessages({
   diagrams: {
     id: 'nav.diagrams',
     defaultMessage: 'Network diagrams',
+  },
+  timelines: {
+    id: 'nav.timelines',
+    defaultMessage: 'Timelines',
   },
   lists: {
     id: 'nav.lists',
@@ -81,7 +84,7 @@ export class AuthButtons extends Component {
   }
 
   render() {
-    const { role, metadata, intl } = this.props;
+    const { role, metadata, intl, isTester } = this.props;
 
     if (!role.id && role.isPending) {
       return this.renderSkeleton();
@@ -91,8 +94,9 @@ export class AuthButtons extends Component {
       return (
         <span className="AuthButtons">
           <Popover
+            popoverClassName="AuthButtons__popover"
             content={(
-              <Menu className="AuthButtons__popover">
+              <Menu className="AuthButtons__popover__menu">
                 <Link to="/notifications" className="bp3-menu-item">
                   <Icon icon="notifications" />
                   {' '}
@@ -126,6 +130,14 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.diagrams)}
                   </div>
                 </Link>
+                {isTester && (
+                  <Link to="/timelines" className="bp3-menu-item">
+                    <Icon icon="gantt-chart" />
+                    <div className="bp3-text-overflow-ellipsis bp3-fill">
+                      {intl.formatMessage(messages.timelines)}
+                    </div>
+                  </Link>
+                )}
                 <Link to="/lists" className="bp3-menu-item">
                   <Icon icon="list" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
@@ -150,7 +162,7 @@ export class AuthButtons extends Component {
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
             )}
-            position={Position.BOTTOM_LEFT}
+            placement='bottom-end'
             fill
           >
             <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
@@ -180,6 +192,7 @@ export class AuthButtons extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  isTester: selectTester(state),
   role: selectCurrentRole(state),
   roleId: selectCurrentRoleId(state),
   metadata: selectMetadata(state),

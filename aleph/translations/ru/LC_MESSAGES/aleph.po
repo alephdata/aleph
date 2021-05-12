@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-01 14:36+0200\n"
+"POT-Creation-Date: 2021-05-07 15:03+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -138,15 +138,15 @@ msgstr "ежемесячно"
 msgid "annual"
 msgstr "ежегодно"
 
-#: aleph/model/common.py:116
+#: aleph/model/common.py:114
 msgid "pending"
 msgstr "в ожидании"
 
-#: aleph/model/common.py:117
+#: aleph/model/common.py:115
 msgid "successful"
 msgstr "успешно"
 
-#: aleph/model/common.py:118
+#: aleph/model/common.py:116
 msgid "failed"
 msgstr "неудача"
 
@@ -304,46 +304,46 @@ msgstr ""
 "\n"
 "    Для завершения регистрации, пожалуйста, перейдите на <a href=\"%(url)s\"> страницу регистрации </a>."
 
-#: aleph/validation/formats.py:20
+#: aleph/validation/formats.py:19
 msgid "Invalid user locale."
 msgstr "Неверные региональные настройки."
 
-#: aleph/validation/formats.py:28
+#: aleph/validation/formats.py:27
 #, python-format
 msgid "Invalid entity ID: %s"
 msgstr "Неверный ID сущности: %s"
 
-#: aleph/validation/formats.py:36
+#: aleph/validation/formats.py:35
 msgid "Invalid category."
 msgstr "Неверная категория"
 
-#: aleph/validation/formats.py:43
+#: aleph/validation/formats.py:42
 msgid "Invalid frequency."
 msgstr "Некорректная частота"
 
-#: aleph/validation/formats.py:50
+#: aleph/validation/formats.py:49
 msgid "Invalid set type."
 msgstr "Неверный тип."
 
-#: aleph/validation/formats.py:58
+#: aleph/validation/formats.py:56
 msgid "Invalid URL."
 msgstr "Некорректная ссылка."
 
-#: aleph/validation/formats.py:66
+#: aleph/validation/formats.py:64
 msgid "Invalid language code."
 msgstr "Некорректный языковой код."
 
-#: aleph/validation/formats.py:74
+#: aleph/validation/formats.py:72
 #, python-format
 msgid "Invalid country code: %s"
 msgstr "Некорректный код страны: %s"
 
-#: aleph/validation/formats.py:83
+#: aleph/validation/formats.py:81
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "Некорректное имя схемы: %s"
 
-#: aleph/validation/formats.py:91
+#: aleph/validation/formats.py:89
 #, python-format
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, HTMLTable, MenuItem, Tooltip } from '@blueprintjs/core';
+import { Button, Card, HTMLTable, MenuItem } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { PropertyEditor } from '@alephdata/react-ftm';
 import { Property } from 'components/common';
 

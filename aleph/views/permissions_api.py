@@ -1,6 +1,8 @@
 from banal import ensure_dict
+from datetime import datetime
 from flask import Blueprint, request
 
+from aleph.core import db
 from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible
 from aleph.logic.permissions import update_permission
@@ -133,5 +135,7 @@ def update(collection_id):
             permission["write"],
             editor_id=request.authz.id,
         )
+    collection.updated_at = datetime.utcnow()
     update_collection(collection)
+    db.session.commit()
     return index(collection_id)

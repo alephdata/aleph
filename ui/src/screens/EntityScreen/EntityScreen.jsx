@@ -92,7 +92,7 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-    
+
     const operation = (
       <ButtonGroup>
         <DownloadButton document={entity} />
@@ -106,7 +106,8 @@ class EntityScreen extends Component {
               Dialog={EntitySetSelector}
               dialogProps={{
                 collection: entity.collection,
-                entities: [entity]
+                entities: [entity],
+                showTimelines: entity.schema.isA('Interval')
               }}
             />
             <EntityDeleteButton

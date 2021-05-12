@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { ButtonGroup, Tooltip } from '@blueprintjs/core';
+import { ButtonGroup } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
 import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetEditDialog from 'dialogs/EntitySetEditDialog/EntitySetEditDialog';
@@ -75,17 +76,18 @@ class EntitySetManageMenu extends Component {
 
   render() {
     const { entitySet } = this.props;
+    const isTimeline = entitySet.type === 'timeline';
     const isDiagram = entitySet.type === 'diagram';
 
     if (!entitySet.writeable && isDiagram) {
       return this.renderExport();
     }
 
-    if (isDiagram) {
+    if (isDiagram || isTimeline) {
       return (
         <ButtonGroup minimal>
           {this.renderSettings(false)}
-          {this.renderExport(false)}
+          {isDiagram && this.renderExport(false)}
           {this.renderDelete(false)}
         </ButtonGroup>
       );
