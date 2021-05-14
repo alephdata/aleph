@@ -14,8 +14,9 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: ghcr.io/alephdata/aleph-elasticsearch:564fdd523d70bc15b4f5bbeae9cea6d222114e75
+    image: ghcr.io/alephdata/aleph-elasticsearch:c4c9b703d274df3844175565253f2daff3dd760b
     hostname: elasticsearch
+    restart: on-failure
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"

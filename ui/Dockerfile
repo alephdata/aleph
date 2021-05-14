@@ -1,5 +1,10 @@
-FROM node:14-slim
+FROM node:16-slim
 
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get -qq -y update \
+    && apt-get -qq -y install python build-essential
+    
 RUN mkdir /alephui
 WORKDIR /alephui
 
