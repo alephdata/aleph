@@ -14,7 +14,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: ghcr.io/alephdata/aleph-elasticsearch:c4c9b703d274df3844175565253f2daff3dd760b
+    image: ghcr.io/alephdata/aleph-elasticsearch:163f452dbe790a1702967d6991460ec4d7db5e60
     hostname: elasticsearch
     restart: on-failure
     environment:
