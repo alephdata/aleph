@@ -6,7 +6,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getFacetConfig } from 'app/storage';
+import { getCustomFacets } from 'app/storage';
+import getFacetConfig from 'util/getFacetConfig';
 import { DualPane, ErrorSection, HotkeysContainer } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar'
 import EntitySearch from 'components/EntitySearch/EntitySearch';
@@ -20,7 +21,7 @@ import togglePreview from 'util/togglePreview';
 
 import './FacetedEntitySearch.scss';
 
-const defaultFacets = [
+const defaultFacetKeys = [
   'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
 ];
 
@@ -117,13 +118,13 @@ export class FacetedEntitySearch extends React.Component {
   }
 
   render() {
-    const { additionalFacets = [], children, dateFacetIsOpen, dateFacetIntervals, customFacets, query, result, intl } = this.props;
+    const { additionalFacets = [], children, dateFacetIsOpen, dateFacetIntervals, facets, query, result, intl } = this.props;
     const { hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
     const noResults = !result.isPending && result.total === 0;
     const dateFacetDisabled = result.isPending || noResults || (dateFacetIsOpen && (!dateFacetIntervals || dateFacetIntervals.length <= 1));
-    const facets = [...additionalFacets, ...(customFacets || defaultFacets)];
+    const fullFacetList = [...additionalFacets.map(getFacetConfig), ...facets];
 
     const empty = (
       <ErrorSection
@@ -172,7 +173,7 @@ export class FacetedEntitySearch extends React.Component {
                 query={query}
                 result={result}
                 updateQuery={this.updateQuery}
-                facets={facets}
+                facets={fullFacetList}
                 isCollapsible
               />
               <DialogToggleButton
@@ -181,7 +182,7 @@ export class FacetedEntitySearch extends React.Component {
                   icon: "filter-list"
                 }}
                 Dialog={FacetConfigDialog}
-                dialogProps={{ }}
+                dialogProps={{ facets }}
               />
             </div>
           </DualPane.SidePane>
@@ -223,7 +224,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     dateFacetIsOpen: query.hasFacet('dates'),
     dateFacetIntervals: result?.facets?.dates?.intervals,
-    customFacets: getFacetConfig()
+    facets: getCustomFacets() || defaultFacetKeys.map(getFacetConfig)
   };
 };
 

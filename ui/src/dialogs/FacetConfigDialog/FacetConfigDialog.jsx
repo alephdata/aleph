@@ -10,9 +10,10 @@ import {
   createCollection,
   updateCollectionPermissions,
 } from 'actions';
+import { setCustomFacets } from 'app/storage';
+import { selectModel } from 'selectors';
 import { showWarningToast } from 'app/toast';
-import { getFacetConfig } from 'app/storage';
-import { Language, Role } from 'components/common';
+import { Facet, Language, Role } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
 import getCollectionLink from 'util/getCollectionLink';
 
@@ -27,63 +28,78 @@ const messages = defineMessages({
 
 class FacetConfigDialog extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+
+    this.state = { facets: props.facets };
+
+    this.renderFacetRow = this.renderFacetRow.bind(this);
+    this.onFacetAdd = this.onFacetAdd.bind(this);
+    this.onFacetRemove = this.onFacetRemove.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onNewPropertyAdded(prop) {
-    console.log('adding', prop)
+  onFacetAdd(facet) {
+    console.log('adding', facet)
+
+    this.setState(({ facets }) => ({ facets: [...facets, facet] }))
   }
 
-  async onSubmit() {
-    // const { history, createCollection, toggleDialog, updateCollectionPermissions, preventRedirect } = this.props;
-    // const { collection, permissions } = this.state;
-    // if (!this.checkValid()) return;
-    // this.setState({ blocking: true });
-    // try {
-    //   const response = await createCollection(collection);
-    //   const collectionId = response.data.id;
-    //   await updateCollectionPermissions(collectionId, permissions);
-    //   this.setState({ blocking: false });
-    //   if (preventRedirect) {
-    //     toggleDialog(response.data);
-    //   } else {
-    //     history.push(getCollectionLink({ collection: response.data }));
-    //   }
-    // } catch (e) {
-    //   this.setState({ blocking: false });
-    //   showWarningToast(e.message);
-    // }
+  onFacetRemove(facet) {
+    this.setState(({ facets }) => ({ facets: facets.filter(f => f.field !== facet.field) }));
+  }
+
+  onSubmit() {
+    setCustomFacets(this.state.facets);
   }
 
   renderFacetRow(facet) {
     return (
-      <>
-      </>
-    )
+      <tr key={facet.field}>
+        <td className="bp3-heading">
+          <Facet.Label field={facet.field} />
+        </td>
+        <td className="numeric narrow">
+          <Button
+            minimal
+            small
+            intent={Intent.DANGER}
+            icon="remove"
+            onClick={() => this.onFacetRemove(facet)}
+            text="Remove"
+          />
+        </td>
+      </tr>
+    );
   }
 
   render() {
-    const { facetConfig, intl, isOpen, toggleDialog } = this.props;
-    // const { collection, permissions, blocking } = this.state;
-    // const exclude = permissions.map(perm => parseInt(perm.role.id, 10));
-    // const disabled = blocking || !this.checkValid();
+    const { intl, isOpen, properties, toggleDialog } = this.props;
+    const { facets } = this.state;
+
+    console.log('facets', facets);
 
     return (
       <Dialog
         icon="filter-list"
         isOpen={this.props.isOpen}
-        onClose={this.props.toggleDialog}
+        onClose={() => { this.onSubmit(); this.props.toggleDialog(); }}
         title={intl.formatMessage(messages.title)}
+        autoFocus={false}
+        enforceFocus={false}
       >
         <div className="bp3-dialog-body">
           <FormattedMessage
             id="search.facets.help"
             defaultMessage="Select facets below."
           />
-          {facetConfig.map(this.renderFacetRow)}
+          <table className="data-table">
+            <tbody>
+              {facets.map(this.renderFacetRow)}
+            </tbody>
+          </table>
           <PropertySelect
-            properties={[]}
-            onSelected={this.onNewPropertyAdded}
+            properties={properties}
+            onSelected={(prop) => this.onFacetAdd({ field: prop.name, label: prop.label })}
             buttonProps={{ text: 'Test' }}
           />
         </div>
@@ -93,9 +109,17 @@ class FacetConfigDialog extends Component {
 }
 
 
-const mapStateToProps = () => ({
-  facetConfig: getFacetConfig()
-});
+const mapStateToProps = (state) => {
+  const model = selectModel(state);
+
+  const properties = model.getProperties()
+    .filter(prop => prop.matchable && !prop.hidden)
+    .sort((a, b) => a.label > b.label ? 1 : -1)
+
+  return ({
+    properties: _.uniqBy(properties, 'name')
+  });
+}
 
 export default compose(
   withRouter,

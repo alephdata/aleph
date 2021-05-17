@@ -10,7 +10,6 @@ import {
 } from '@blueprintjs/core';
 import c from 'classnames';
 
-import getFacetConfig from 'util/getFacetConfig';
 import { CheckboxList, Schema } from 'components/common';
 
 import './SearchFacet.scss';
@@ -167,13 +166,14 @@ class SearchFacet extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { query, field } = ownProps;
-  const facetConfig = getFacetConfig(field);
-  const defaultSize = facetConfig.defaultSize || 10;
+  const { query, facet } = ownProps;
+  const { field } = facet;
+  const defaultSize = facet.defaultSize || 10;
   const facetSize = query.getInt(`facet_size:${field}`, 0);
   const isOpen = query.hasFacet(field) && facetSize > 0;
   return {
     facetSize,
+    field,
     defaultSize,
     isOpen,
   };

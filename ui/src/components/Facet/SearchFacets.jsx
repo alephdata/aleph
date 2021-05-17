@@ -11,13 +11,13 @@ function SearchFacets(props) {
   return (
     <ul className="SearchFacets bp3-large">
       {facets.map(facet => (
-        <li className="facet" key={facet}>
+        <li className="facet" key={facet.field}>
           <SearchFacet
             query={query}
             result={result}
             updateQuery={updateQuery}
-            field={facet}
-            label={<Facet.Label field={facet} />}
+            facet={facet}
+            label={<Facet.Label field={facet.field} />}
             isCollapsible={isCollapsible}
           />
         </li>
