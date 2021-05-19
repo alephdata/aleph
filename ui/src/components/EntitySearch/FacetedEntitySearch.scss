@@ -44,6 +44,10 @@
       margin: $aleph-grid-size/2 0 $aleph-grid-size*2;
     }
   }
+
+  .SearchFacets {
+    margin-bottom: $aleph-grid-size;
+  }
 }
 
 @media screen and (max-width: $aleph-screen-sm-max-width) {

@@ -15,6 +15,8 @@ import { Facet, Language, Role } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
 import getCollectionLink from 'util/getCollectionLink';
 
+import './FacetConfigDialog.scss';
+
 const allTypeFacets = [
   'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes'
 ];
@@ -22,15 +24,13 @@ const allTypeFacets = [
 const messages = defineMessages({
   prop_select_label: {
     id: 'search.facets.prop_select',
-    defaultMessage: 'Add a property',
+    defaultMessage: 'Add a property facet',
   },
   title: {
     id: 'search.facets.configure',
     defaultMessage: 'Configure search facets',
   },
 });
-
-/* eslint-disable */
 
 class FacetConfigDialog extends Component {
   constructor(props) {
@@ -122,36 +122,37 @@ class FacetConfigDialog extends Component {
         title={intl.formatMessage(messages.title)}
         autoFocus={false}
         enforceFocus={false}
+        className="FacetConfigDialog"
       >
         <div className="bp3-dialog-body">
-          <h5 className="bp3-heading">
-            <FormattedMessage
-              id="search.facets.groups"
-              defaultMessage="Type facets"
-            />
-          </h5>
-          <table className="data-table">
-            <tbody>
-              {typeFacets.map(this.renderFacetRow)}
-              {availableTypeFacets.map(facet => this.renderFacetRow(facet, { showAddButton: true }))}
-            </tbody>
-          </table>
-          <h5 className="bp3-heading">
-            <FormattedMessage
-              id="search.facets.properties"
-              defaultMessage="Property facets"
-            />
-          </h5>
-          <table className="data-table">
-            <tbody>
-              {propFacets.map(this.renderFacetRow)}
-            </tbody>
-          </table>
-          <PropertySelect
-            properties={availableProperties}
-            onSelected={(prop) => this.onFacetAdd({ field: prop.name, label: prop.label, isProperty: true })}
-            buttonProps={{ text: intl.formatMessage(messages.prop_select_label) }}
-          />
+          <div className="FacetConfigDialog__section">
+            <table className="data-table">
+              <tbody>
+                {typeFacets.map(this.renderFacetRow)}
+                {availableTypeFacets.map(facet => this.renderFacetRow(facet, { showAddButton: true }))}
+              </tbody>
+            </table>
+          </div>
+          <div className="FacetConfigDialog__section">
+            <h5 className="FacetConfigDialog__section__title bp3-heading">
+              <FormattedMessage
+                id="search.facets.properties"
+                defaultMessage="Property facets"
+              />
+            </h5>
+            <table className="data-table">
+              <tbody>
+                {propFacets.map(this.renderFacetRow)}
+              </tbody>
+            </table>
+            <div className="FacetConfigDialog__add-property">
+              <PropertySelect
+                properties={availableProperties}
+                onSelected={(prop) => this.onFacetAdd({ field: prop.name, label: prop.label, isProperty: true })}
+                buttonProps={{ text: intl.formatMessage(messages.prop_select_label) }}
+              />
+            </div>
+          </div>
         </div>
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
