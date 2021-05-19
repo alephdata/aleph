@@ -53,8 +53,17 @@ class FacetConfigDialog extends Component {
   }
 
   onSubmit() {
-    const { toggleDialog } = this.props;
+    const { history, location, toggleDialog } = this.props;
+    const { facets } = this.state;
+
     setCustomFacets(this.state.facets);
+
+    // clear facets and filters when config is saved
+    history.replace({
+      pathname: location.pathname,
+      hash: location.hash,
+    });
+
     toggleDialog();
   }
 
@@ -108,8 +117,8 @@ class FacetConfigDialog extends Component {
     return (
       <Dialog
         icon="filter-list"
-        isOpen={this.props.isOpen}
-        onClose={this.onSubmit}
+        isOpen={isOpen}
+        onClose={toggleDialog}
         title={intl.formatMessage(messages.title)}
         autoFocus={false}
         enforceFocus={false}
