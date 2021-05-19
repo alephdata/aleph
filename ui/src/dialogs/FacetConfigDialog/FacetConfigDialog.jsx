@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { Button, Dialog, Intent } from '@blueprintjs/core';
 import { PropertySelect } from '@alephdata/react-ftm';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
@@ -6,10 +7,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import {
-  createCollection,
-  updateCollectionPermissions,
-} from 'actions';
+import getFacetConfig from 'util/getFacetConfig';
 import { setCustomFacets } from 'app/storage';
 import { selectModel } from 'selectors';
 import { showWarningToast } from 'app/toast';
@@ -17,7 +15,15 @@ import { Facet, Language, Role } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
 import getCollectionLink from 'util/getCollectionLink';
 
+const allTypeFacets = [
+  'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes'
+];
+
 const messages = defineMessages({
+  prop_select_label: {
+    id: 'search.facets.prop_select',
+    defaultMessage: 'Add a property',
+  },
   title: {
     id: 'search.facets.configure',
     defaultMessage: 'Configure search facets',
@@ -39,8 +45,6 @@ class FacetConfigDialog extends Component {
   }
 
   onFacetAdd(facet) {
-    console.log('adding', facet)
-
     this.setState(({ facets }) => ({ facets: [...facets, facet] }))
   }
 
@@ -49,59 +53,109 @@ class FacetConfigDialog extends Component {
   }
 
   onSubmit() {
+    const { toggleDialog } = this.props;
     setCustomFacets(this.state.facets);
+    toggleDialog();
   }
 
-  renderFacetRow(facet) {
+  renderAddButton(facet) {
+    return (
+      <Button minimal small
+        intent={Intent.SUCCESS}
+        icon="add"
+        onClick={() => this.onFacetAdd(facet)}
+      >
+        <FormattedMessage id="search.facets.add" defaultMessage="Add" />
+      </Button>
+    );
+  }
+
+  renderRemoveButton(facet) {
+    return (
+      <Button minimal small
+        intent={Intent.DANGER}
+        icon="remove"
+        onClick={() => this.onFacetRemove(facet)}
+      >
+        <FormattedMessage id="search.facets.remove" defaultMessage="Remove" />
+      </Button>
+    );
+  }
+
+  renderFacetRow(facet, { showAddButton }) {
     return (
       <tr key={facet.field}>
         <td className="bp3-heading">
           <Facet.Label field={facet.field} />
         </td>
         <td className="numeric narrow">
-          <Button
-            minimal
-            small
-            intent={Intent.DANGER}
-            icon="remove"
-            onClick={() => this.onFacetRemove(facet)}
-            text="Remove"
-          />
+          {showAddButton && this.renderAddButton(facet)}
+          {!showAddButton && this.renderRemoveButton(facet)}
         </td>
       </tr>
     );
   }
 
   render() {
-    const { intl, isOpen, properties, toggleDialog } = this.props;
+    const { intl, isOpen, availableProperties, toggleDialog } = this.props;
     const { facets } = this.state;
 
-    console.log('facets', facets);
+    const [propFacets, typeFacets] = _.partition(facets, facet => facet.isProperty);
+    const availableTypeFacets = allTypeFacets
+      .filter(facet => !typeFacets.find(f => f.field === facet))
+      .map(getFacetConfig)
 
     return (
       <Dialog
         icon="filter-list"
         isOpen={this.props.isOpen}
-        onClose={() => { this.onSubmit(); this.props.toggleDialog(); }}
+        onClose={this.onSubmit}
         title={intl.formatMessage(messages.title)}
         autoFocus={false}
         enforceFocus={false}
       >
         <div className="bp3-dialog-body">
-          <FormattedMessage
-            id="search.facets.help"
-            defaultMessage="Select facets below."
-          />
+          <h5 className="bp3-heading">
+            <FormattedMessage
+              id="search.facets.groups"
+              defaultMessage="Type facets"
+            />
+          </h5>
           <table className="data-table">
             <tbody>
-              {facets.map(this.renderFacetRow)}
+              {typeFacets.map(this.renderFacetRow)}
+              {availableTypeFacets.map(facet => this.renderFacetRow(facet, { showAddButton: true }))}
+            </tbody>
+          </table>
+          <h5 className="bp3-heading">
+            <FormattedMessage
+              id="search.facets.properties"
+              defaultMessage="Property facets"
+            />
+          </h5>
+          <table className="data-table">
+            <tbody>
+              {propFacets.map(this.renderFacetRow)}
             </tbody>
           </table>
           <PropertySelect
-            properties={properties}
-            onSelected={(prop) => this.onFacetAdd({ field: prop.name, label: prop.label })}
-            buttonProps={{ text: 'Test' }}
+            properties={availableProperties}
+            onSelected={(prop) => this.onFacetAdd({ field: prop.name, label: prop.label, isProperty: true })}
+            buttonProps={{ text: intl.formatMessage(messages.prop_select_label) }}
           />
+        </div>
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
+            <Button
+              intent={Intent.PRIMARY}
+              onClick={this.onSubmit}
+            >
+              <FormattedMessage
+                id="search.facets.submit"
+                defaultMessage="Submit"
+              />
+            </Button>
+          </div>
         </div>
       </Dialog>
     );
@@ -117,7 +171,7 @@ const mapStateToProps = (state) => {
     .sort((a, b) => a.label > b.label ? 1 : -1)
 
   return ({
-    properties: _.uniqBy(properties, 'name')
+    availableProperties: _.uniqBy(properties, 'name')
   });
 }
 
