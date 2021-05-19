@@ -10,10 +10,7 @@ import { withRouter } from 'react-router';
 import getFacetConfig from 'util/getFacetConfig';
 import { setCustomFacets } from 'app/storage';
 import { selectModel } from 'selectors';
-import { showWarningToast } from 'app/toast';
-import { Facet, Language, Role } from 'components/common';
-import FormDialog from 'dialogs/common/FormDialog';
-import getCollectionLink from 'util/getCollectionLink';
+import { Facet } from 'components/common';
 
 import './FacetConfigDialog.scss';
 
@@ -56,15 +53,14 @@ class FacetConfigDialog extends Component {
     const { history, location, toggleDialog } = this.props;
     const { facets } = this.state;
 
-    setCustomFacets(this.state.facets);
+    setCustomFacets(facets);
+    toggleDialog();
 
     // clear facets and filters when config is saved
     history.replace({
       pathname: location.pathname,
       hash: location.hash,
     });
-
-    toggleDialog();
   }
 
   renderAddButton(facet) {

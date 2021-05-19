@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import { injectIntl } from 'react-intl';
 import { Icon } from '@blueprintjs/core';
-import getFacetConfig from 'util/getFacetConfig';
-
 
 class FacetLabel extends PureComponent {
   render() {
@@ -15,7 +13,7 @@ class FacetLabel extends PureComponent {
     return (
       <>
         <Icon icon={icon || 'info'} className="left-icon" />
-        {facet.isProperty ? label : intl.formatMessage(label, { count })}
+        {isProperty ? label : intl.formatMessage(label, { count })}
       </>
     );
   }
