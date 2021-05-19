@@ -172,11 +172,14 @@ class FacetConfigDialog extends Component {
 }
 
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const { facets } = ownProps;
   const model = selectModel(state);
 
   const properties = model.getProperties()
-    .filter(prop => prop.matchable && !prop.hidden)
+    .filter(({ matchable, hidden, name }) => {
+      return matchable && !hidden && !facets.find(facet => facet.field === name)
+    })
     .sort((a, b) => a.label > b.label ? 1 : -1)
 
   return ({
