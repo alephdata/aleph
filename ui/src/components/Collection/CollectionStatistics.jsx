@@ -7,6 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
+import getFacetConfig from 'util/getFacetConfig';
 import { Country, Facet, Numeric, Schema, Statistics } from 'components/common';
 import { selectCollection, selectModel } from 'selectors';
 import { collectionSearchQuery } from 'queries';
@@ -67,7 +68,7 @@ class CollectionStatistics extends PureComponent {
             <Numeric num={filteredTotal} abbr={3} />
           </h5>
           <h5 className="CollectionStatistics__heading__label">
-            <Facet.Label field={field} count={filteredTotal} />
+            <Facet.Label facet={getFacetConfig(field)} count={filteredTotal} />
           </h5>
         </div>
         <Statistics

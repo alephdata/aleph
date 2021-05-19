@@ -17,7 +17,7 @@ function SearchFacets(props) {
             result={result}
             updateQuery={updateQuery}
             facet={facet}
-            label={<Facet.Label field={facet.field} />}
+            label={<Facet.Label facet={facet} />}
             isCollapsible={isCollapsible}
           />
         </li>

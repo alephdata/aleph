@@ -6,17 +6,16 @@ import getFacetConfig from 'util/getFacetConfig';
 
 class FacetLabel extends PureComponent {
   render() {
-    const { field, intl, count = 0 } = this.props;
-    const config = getFacetConfig(field);
-    if (!field || !config) {
+    const { facet, intl, count = 0 } = this.props;
+    if (!facet) {
       return null;
     }
-    const { icon, label } = config;
+    const { icon, isProperty, label } = facet;
 
     return (
       <>
-        <Icon icon={icon} className="left-icon" />
-        {intl.formatMessage(label, { count })}
+        <Icon icon={icon || 'info'} className="left-icon" />
+        {facet.isProperty ? label : intl.formatMessage(label, { count })}
       </>
     );
   }

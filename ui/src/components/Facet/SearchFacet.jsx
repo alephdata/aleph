@@ -167,7 +167,7 @@ class SearchFacet extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query, facet } = ownProps;
-  const { field } = facet;
+  const field = facet.isProperty ? `properties.${facet.field}` : facet.field
   const defaultSize = facet.defaultSize || 10;
   const facetSize = query.getInt(`facet_size:${field}`, 0);
   const isOpen = query.hasFacet(field) && facetSize > 0;
