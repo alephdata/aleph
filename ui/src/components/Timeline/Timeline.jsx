@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import c from 'classnames';
 import queryString from 'query-string';
 
+import getFacetConfig from 'util/getFacetConfig';
 import { DualPane } from 'components/common';
 import SearchFacets from 'components/Facet/SearchFacets';
 import SearchActionBar from 'components/common/SearchActionBar';
@@ -114,7 +115,7 @@ class Timeline extends Component {
             query={query}
             result={result}
             updateQuery={this.updateQuery}
-            facets={defaultFacets}
+            facets={defaultFacets.map(getFacetConfig)}
           />
           <div className="Timeline__date-placeholder" ref={this.histogramRef}></div>
         </DualPane.SidePane>
