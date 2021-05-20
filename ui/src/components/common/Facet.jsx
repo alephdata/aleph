@@ -12,7 +12,7 @@ class FacetLabel extends PureComponent {
 
     return (
       <>
-        <Icon icon={icon || 'info'} className="left-icon" />
+        <Icon icon={icon || 'filter'} className="left-icon" />
         {isProperty ? label : intl.formatMessage(label, { count })}
       </>
     );
