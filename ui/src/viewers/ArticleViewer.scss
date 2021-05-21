@@ -1,18 +1,24 @@
 @import "app/variables.scss";
 
 .ArticleViewer {
-  overflow-x: hidden;
-  padding: $aleph-grid-size;
-  box-shadow: $pt-elevation-shadow-1;
-  margin-bottom: 2 * $aleph-grid-size;
 
-  pre {
-    margin: 0;
-    padding: 0;
+  .article-header table {
+    width: 100%;
+    th, td {
+      box-shadow: none !important;
+      border-bottom: 1px solid $aleph-border-color;
+    } 
+  }
+
+  .article-body {
+    padding: $aleph-grid-size;
     border: 0;
-    font-family: $pt-font-family;
-    line-height: 1.4;
-    font-size: 1.1 * $aleph-font-size;
     box-shadow: unset;
+
+    pre {
+      padding: 0;
+      border: 0;
+      box-shadow: unset;
+    }
   }
 }
