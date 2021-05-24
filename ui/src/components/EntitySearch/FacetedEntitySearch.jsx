@@ -193,7 +193,6 @@ export class FacetedEntitySearch extends React.Component {
               <SearchActionBar result={result}>
                 <EntitySearchManageMenu
                   query={query}
-                  result={result}
                   dateFacetDisabled={dateFacetDisabled}
                   dateFacetIsOpen={dateFacetIsOpen}
                   updateQuery={this.updateQuery}
