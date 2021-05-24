@@ -11,7 +11,7 @@ import {
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {
-    const { hideCollection, documentMode, updateSelection, writeable } = this.props;
+    const { defaultColumns, updateSelection, writeable } = this.props;
 
     return (
       <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')} key="skeleton">
@@ -20,29 +20,36 @@ class EntitySearchResultsRow extends Component {
             <Skeleton.Text type="span" length={2} />
           </td>
         )}
-        <td className="entity">
-          <Skeleton.Text type="span" length={30} />
-        </td>
-        {!hideCollection && (
-          <td className="collection">
-            <Skeleton.Text type="span" length={15} />
+        {defaultColumns.map(field => (
+          <td key={field} className={field}>
+            <Skeleton.Text type="span" length={field === 'caption' || field === 'collection_id' ? 30 : 15} />
           </td>
-        )}
-        {!documentMode && (
-          <td className="country">
-            <Skeleton.Text type="span" length={15} />
-          </td>
-        )}
-        <td className="date">
-          <Skeleton.Text type="span" length={10} />
-        </td>
-        {documentMode && (
-          <td className="file-size">
-            <Skeleton.Text type="span" length={20} />
-          </td>
-        )}
+        ))}
       </tr>
     );
+  }
+
+  renderCellContent(field) {
+    const { entity, showPreview } = this.props;
+
+    if (typeof field === 'string') {
+      switch(field) {
+        case 'caption':
+          return <Entity.Link preview={showPreview} entity={entity} icon />
+        case 'collection_id':
+          return <Collection.Link preview collection={entity.collection} icon />
+        case 'countries':
+          return <Country.List codes={entity.getTypeValues('country')} />;
+        case 'dates':
+          return <Date.Earliest values={entity.getTypeValues('date')} />;
+      }
+    } else {
+      if (field.name === 'fileSize') {
+        return <FileSize value={entity.getFirst('fileSize')} />;
+      } else {
+        return entity.getProperty(field);
+      }
+    }
   }
 
   render() {
@@ -50,8 +57,7 @@ class EntitySearchResultsRow extends Component {
       entity,
       isPending,
       location,
-      hideCollection,
-      documentMode,
+      defaultColumns,
       showPreview,
       updateSelection,
       selection,
@@ -84,34 +90,14 @@ class EntitySearchResultsRow extends Component {
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
             </td>
           )}
-          <td key="entity" className="entity">
-            <Entity.Link
-              preview={showPreview}
-              documentMode={documentMode}
-              entity={entity}
-              icon
-            />
-          </td>
-          {!hideCollection
-            && (
-              <td key="collection" className="collection">
-                <Collection.Link preview collection={entity.collection} icon />
-              </td>
-            )
-          }
-          {!documentMode && (
-            <td key="country" className="country">
-              <Country.List codes={entity.getTypeValues('country')} />
-            </td>
-          )}
-          <td key="date" className="date">
-            <Date.Earliest values={entity.getTypeValues('date')} />
-          </td>
-          {documentMode && (
-            <td key="file-size" className="file-size">
-              <FileSize value={entity.getFirst('fileSize')} />
-            </td>
-          )}
+          {defaultColumns.map(field => {
+            const content = this.renderCellContent(field);
+            if (typeof field === 'string') {
+              return <td key={field} className={field}>{content}</td>
+            } else {
+              return <td key={field.name} className={field.type.name}>{content}</td>
+            }
+          })}
         </tr>
         {!!highlights.length
           && (

@@ -203,6 +203,7 @@ export class FacetedEntitySearch extends React.Component {
               updateQuery={this.updateQuery}
               result={result}
               emptyComponent={empty}
+              defaultColumns={['caption', 'collection_id', 'countries', 'dates']}
             />
           </DualPane.ContentPane>
         </DualPane>
