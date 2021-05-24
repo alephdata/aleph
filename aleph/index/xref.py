@@ -27,6 +27,10 @@ def configure_xref():
         "dynamic": False,
         "properties": {
             "score": {"type": "float"},
+            "doubt": {"type": "float"},
+            "method": KEYWORD,
+            # TODO: remove "random" field once "doubt" field has fermented
+            # in production
             "random": {"type": "integer"},
             "entity_id": KEYWORD,
             "collection_id": KEYWORD,
@@ -45,25 +49,26 @@ def configure_xref():
 
 def _index_form(collection, matches):
     now = datetime.utcnow().isoformat()
-    for (score, entity, match_collection_id, match, entityset_ids) in matches:
-        xref_id = hash_data((entity.id, collection.id, match.id))
-        text = set([entity.caption, match.caption])
-        text.update(entity.get_type_values(registry.name)[:MAX_NAMES])
-        text.update(match.get_type_values(registry.name)[:MAX_NAMES])
-        countries = set(entity.get_type_values(registry.country))
-        countries.update(match.get_type_values(registry.country))
+    for match in matches:
+        xref_id = hash_data((match.entity.id, collection.id, match.match.id))
+        text = set([match.entity.caption, match.match.caption])
+        text.update(match.entity.get_type_values(registry.name)[:MAX_NAMES])
+        text.update(match.match.get_type_values(registry.name)[:MAX_NAMES])
+        countries = set(match.entity.get_type_values(registry.country))
+        countries.update(match.match.get_type_values(registry.country))
         yield {
             "_id": xref_id,
             "_index": xref_index(),
             "_source": {
-                "score": score,
+                "score": match.score,
+                "doubt": match.doubt,
                 "random": randint(1, 2 ** 31),
-                "entity_id": entity.id,
-                "schema": match.schema.name,
+                "entity_id": match.entity.id,
+                "schema": match.match.schema.name,
                 "collection_id": collection.id,
-                "entityset_ids": list(entityset_ids),
-                "match_id": match.id,
-                "match_collection_id": match_collection_id,
+                "entityset_ids": list(match.entityset_ids),
+                "match_id": match.match.id,
+                "match_collection_id": match.collection_id,
                 "countries": list(countries),
                 "text": list(text),
                 "created_at": now,

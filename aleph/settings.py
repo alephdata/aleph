@@ -177,3 +177,7 @@ INDEX_EXPAND_CLAUSE_LIMIT = env.to_int("ALEPH_INDEX_EXPAND_CLAUSE_LIMIT", 10)
 INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
     "ALEPH_INDEX_DELETE_BY_QUERY_BATCHSIZE", 100
 )
+
+###############################################################################
+# XREF Model Selection
+XREF_MODEL = env.get("FTM_COMPARE_MODEL", None)

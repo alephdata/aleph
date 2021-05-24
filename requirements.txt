@@ -2,6 +2,7 @@
 banal==1.0.6
 followthemoney==2.7.3
 followthemoney-store[postgresql]==3.0.3
+followthemoney-compare==0.4.1
 fingerprints==1.0.3
 servicelayer[google,amazon]==1.18.2
 normality==2.2.5

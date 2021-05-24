@@ -1,17 +1,21 @@
 import shutil
 import logging
+import typing
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
+from dataclasses import dataclass
 
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.compare import compare
 from followthemoney.export.excel import ExcelWriter
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import name_entity
+from followthemoney import compare
+from followthemoney_compare.models import GLMBernoulli2EEvaluator
+from followthemoney.proxy import EntityProxy
 from servicelayer.archive.util import ensure_path
 
-from aleph.core import es, db
+from aleph.core import es, db, settings
 from aleph.model import Collection, Entity, Role, Export, Status
 from aleph.model import EntitySet
 from aleph.authz import Authz
@@ -32,6 +36,40 @@ from aleph.logic.export import complete_export
 
 log = logging.getLogger(__name__)
 ORIGIN = "xref"
+MODEL = None
+
+
+@dataclass
+class Match:
+    # TODO: Add "method" field and propogate it from _bulk_compare out to index/xref/_index_from
+    score: float
+    entity: EntityProxy
+    collection_id: str
+    match: EntityProxy
+    entityset_ids: typing.Sequence[str]
+    doubt: typing.Optional[float] = None
+
+
+def _bulk_compare(proxies):
+    if not proxies:
+        return
+    global MODEL
+    if settings.XREF_MODEL is None:
+        for left, right in proxies:
+            score = compare.compare(model, left, right)
+            yield score, None
+        return
+    elif MODEL is None:
+        try:
+            with open(settings.XREF_MODEL, "rb") as fd:
+                MODEL = GLMBernoulli2EEvaluator.from_pickles(fd.read())
+        except FileNotFoundError:
+            log.exception(
+                f"Could not find model file: {settings.XREF_MODEL}. Falling back to followthemoney"
+            )
+            settings.XREF_MODEL = None
+            yield from _compare(proxies)
+    yield from zip(*MODEL.predict_proba_std(proxies))
 
 
 def _merge_schemata(proxy, schemata):
@@ -49,21 +87,36 @@ def _query_item(entity, entitysets=True):
     if query == none_query():
         return
 
-    log.debug("Candidate [%s]: %s", entity.schema.name, entity.caption)
     entityset_ids = EntitySet.entity_entitysets(entity.id) if entitysets else []
     query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
     schemata = list(entity.schema.matchable_schemata)
     index = entities_read_index(schema=schemata, expand=False)
     result = es.search(index=index, body=query)
+    candidates = []
     for result in result.get("hits").get("hits"):
         result = unpack_result(result)
         if result is None:
             continue
-        match = model.get_proxy(result)
-        score = compare(model, entity, match)
+        candidate = model.get_proxy(result)
+        candidates.append(candidate)
+    log.debug(
+        "Candidate [%s]: %s: %d possible matches",
+        entity.schema.name,
+        entity.caption,
+        len(candidates),
+    )
+    results = _bulk_compare([(entity, c) for c in candidates])
+    for match, (score, doubt) in zip(candidates, results):
+        log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
         if score > 0:
-            log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
-            yield score, entity, result.get("collection_id"), match, entityset_ids
+            yield Match(
+                score=score,
+                doubt=doubt,
+                entity=entity,
+                collection_id=result.get("collection_id"),
+                match=match,
+                entityset_ids=entityset_ids,
+            )
 
 
 def _iter_mentions(collection):
@@ -95,10 +148,11 @@ def _query_mentions(collection):
     for proxy in _iter_mentions(collection):
         schemata = set()
         countries = set()
-        for score, _, collection_id, match, _ in _query_item(proxy, entitysets=False):
-            schemata.add(match.schema)
-            countries.update(match.get_type_values(registry.country))
-            yield score, proxy, collection_id, match, []
+        for match in _query_item(proxy, entitysets=False):
+            schemata.add(match.match.schema)
+            countries.update(match.match.get_type_values(registry.country))
+            match.entityset_ids = []
+            yield match
         if len(schemata):
             # Assign only those countries that are backed by one of
             # the matches:
@@ -179,6 +233,7 @@ def _iter_match_batch(stub, sheet, batch):
         sheet.append(
             [
                 obj.get("score"),
+                obj.get("doubt"),
                 eproxy.caption,
                 _format_date(eproxy),
                 _format_country(eproxy),
@@ -206,6 +261,7 @@ def export_matches(export_id):
         excel = ExcelWriter()
         headers = [
             "Score",
+            "Doubt",
             "Entity Name",
             "Entity Date",
             "Entity Countries",
