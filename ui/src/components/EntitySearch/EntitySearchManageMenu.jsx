@@ -3,7 +3,14 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { AnchorButton, ButtonGroup, Classes } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
+import { DialogToggleButton } from 'components/Toolbar';
+import FacetConfigDialog from 'dialogs/FacetConfigDialog/FacetConfigDialog';
+
 const messages = defineMessages({
+  configure_facets: {
+    id: 'search.facets.button_text',
+    defaultMessage: 'Configure facets',
+  },
   dates: {
     id: 'search.screen.dates',
     defaultMessage: 'Date distribution',
@@ -13,7 +20,6 @@ const messages = defineMessages({
     defaultMessage: 'No date distribution available',
   },
 });
-
 
 class EntitySearchManageMenu extends Component {
   constructor(props) {
@@ -36,12 +42,12 @@ class EntitySearchManageMenu extends Component {
   }
 
   render() {
-    const { dateFacetDisabled, dateFacetIsOpen, intl } = this.props;
+    const { dateFacetDisabled, dateFacetIsOpen, facets, intl } = this.props;
 
     const dateTooltip = intl.formatMessage(messages.date_facet_disabled);
 
     return (
-      <ButtonGroup className={Classes.FIXED}>
+      <ButtonGroup className="EntitySearchManageMenu">
         <Tooltip content={dateTooltip} disabled={!dateFacetDisabled}>
           <AnchorButton
             icon="calendar"
@@ -51,6 +57,14 @@ class EntitySearchManageMenu extends Component {
             text={intl.formatMessage(messages.dates)}
           />
         </Tooltip>
+        <DialogToggleButton
+          buttonProps={{
+            text: intl.formatMessage(messages.configure_facets),
+            icon: "filter-list"
+          }}
+          Dialog={FacetConfigDialog}
+          dialogProps={{ facets }}
+        />
       </ButtonGroup>
     );
   }

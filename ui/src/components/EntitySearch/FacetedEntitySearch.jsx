@@ -9,15 +9,14 @@ import { withRouter } from 'react-router';
 import { getCustomFacets } from 'app/storage';
 import getFacetConfig from 'util/getFacetConfig';
 import { DualPane, ErrorSection, HotkeysContainer } from 'components/common';
-import { DialogToggleButton } from 'components/Toolbar'
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import EntitySearchManageMenu from 'components/EntitySearch/EntitySearchManageMenu';
 import SearchActionBar from 'components/common/SearchActionBar';
 import SearchFacets from 'components/Facet/SearchFacets';
 import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
-import FacetConfigDialog from 'dialogs/FacetConfigDialog/FacetConfigDialog';
 import togglePreview from 'util/togglePreview';
+import SortingBar from 'components/SortingBar/SortingBar';
 
 import './FacetedEntitySearch.scss';
 
@@ -26,10 +25,6 @@ const defaultFacetKeys = [
 ];
 
 const messages = defineMessages({
-  configure_facets: {
-    id: 'search.facets.button_text',
-    defaultMessage: 'Configure facets',
-  },
   no_results_title: {
     id: 'search.no_results_title',
     defaultMessage: 'No search results',
@@ -169,20 +164,19 @@ export class FacetedEntitySearch extends React.Component {
               </span>
             </div>
             <div className={hideFacetsClass}>
+              <EntitySearchManageMenu
+                query={query}
+                facets={facets}
+                dateFacetDisabled={dateFacetDisabled}
+                dateFacetIsOpen={dateFacetIsOpen}
+                updateQuery={this.updateQuery}
+              />
               <SearchFacets
                 query={query}
                 result={result}
                 updateQuery={this.updateQuery}
                 facets={fullFacetList}
                 isCollapsible
-              />
-              <DialogToggleButton
-                buttonProps={{
-                  text: intl.formatMessage(messages.configure_facets),
-                  icon: "filter-list"
-                }}
-                Dialog={FacetConfigDialog}
-                dialogProps={{ facets }}
               />
             </div>
           </DualPane.SidePane>
@@ -191,11 +185,10 @@ export class FacetedEntitySearch extends React.Component {
             <div className="FacetedEntitySearch__controls">
               <QueryTags query={query} updateQuery={this.updateQuery} />
               <SearchActionBar result={result}>
-                <EntitySearchManageMenu
+                <SortingBar
                   query={query}
-                  dateFacetDisabled={dateFacetDisabled}
-                  dateFacetIsOpen={dateFacetIsOpen}
                   updateQuery={this.updateQuery}
+                  sortingFields={['caption']}
                 />
               </SearchActionBar>
             </div>
