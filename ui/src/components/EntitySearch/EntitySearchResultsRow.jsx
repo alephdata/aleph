@@ -32,20 +32,23 @@ class EntitySearchResultsRow extends Component {
   renderCellContent(field) {
     const { entity, showPreview } = this.props;
 
-    switch(field) {
-      case 'caption':
-        return <Entity.Link preview={showPreview} entity={entity} icon />
-      case 'collection_id':
-        return <Collection.Link preview collection={entity.collection} icon />
-      case 'countries':
-        return <Country.List codes={entity.getTypeValues('country')} />;
-      case 'dates':
-        return <Date.Earliest values={entity.getTypeValues('date')} />;
-      case 'properties.fileSize':
+    if (typeof field === 'string') {
+      switch(field) {
+        case 'caption':
+          return <Entity.Link preview={showPreview} entity={entity} icon />
+        case 'collection_id':
+          return <Collection.Link preview collection={entity.collection} icon />
+        case 'countries':
+          return <Country.List codes={entity.getTypeValues('country')} />;
+        case 'dates':
+          return <Date.Earliest values={entity.getTypeValues('date')} />;
+      }
+    } else {
+      if (field.name === 'fileSize') {
         return <FileSize value={entity.getFirst('fileSize')} />;
-      default:
-        // TODO display using Property.Values component
+      } else {
         return entity.getProperty(field);
+      }
     }
   }
 
@@ -87,11 +90,14 @@ class EntitySearchResultsRow extends Component {
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
             </td>
           )}
-          {defaultColumns.map(field => (
-            <td key={field} className={field}>
-              {this.renderCellContent(field)}
-            </td>
-          ))}
+          {defaultColumns.map(field => {
+            const content = this.renderCellContent(field);
+            if (typeof field === 'string') {
+              return <td key={field} className={field}>{content}</td>
+            } else {
+              return <td key={field.name} className={field.type.name}>{content}</td>
+            }
+          })}
         </tr>
         {!!highlights.length
           && (

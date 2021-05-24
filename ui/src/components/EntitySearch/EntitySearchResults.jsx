@@ -57,15 +57,17 @@ class EntitySearchResults extends Component {
   renderHeaderCell = (field) => {
     const { intl, query } = this.props;
     const { field: sortedField, direction } = query.getSort();
+    const text = typeof field === 'string' ? intl.formatMessage(messages[`column_${field}`]) : field.label
+    const fieldName = typeof field === 'string' ? field : `properties.${field.name}`;
     return (
       <SortableTH
-        key={field}
-        sortable={field !== 'collection_id'}
-        className={c({ wide: field === 'caption' || field === 'collection_id' })}
-        sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
-        onClick={() => this.sortColumn(field)}
+        key={fieldName}
+        sortable={fieldName !== 'collection_id'}
+        className={c({ wide: fieldName === 'caption' || fieldName === 'collection_id' })}
+        sorted={sortedField === fieldName && (direction === 'desc' ? 'desc' : 'asc')}
+        onClick={() => this.sortColumn(fieldName)}
       >
-        {intl.formatMessage(messages[`column_${field}`])}
+        {text}
       </SortableTH>
     );
   }
