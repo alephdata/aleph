@@ -9,7 +9,7 @@ function SortableTH(props) {
   } = props;
   if (!sortable) {
     return (
-      <th>{children}</th>
+      <th className={className}>{children}</th>
     );
   }
   const iconClass = c('caret', 'bp3-icon-large',

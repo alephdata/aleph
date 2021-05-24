@@ -190,13 +190,12 @@ export class DocumentManager extends Component {
         <div className="DocumentManager__content">
           <EntitySearch
             query={query}
-            hideCollection
-            documentMode
             showPreview={false}
             selection={selection}
             writeable={showActions}
             updateSelection={this.updateSelection}
             emptyComponent={emptyComponent}
+            defaultColumns={['caption', 'dates', 'properties.fileSize']}
           />
         </div>
       </div>

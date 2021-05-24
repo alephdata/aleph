@@ -54,9 +54,25 @@ class EntitySearchResults extends Component {
     ));
   }
 
+  renderHeaderCell = (field) => {
+    const { intl, query } = this.props;
+    const { field: sortedField, direction } = query.getSort();
+    return (
+      <SortableTH
+        key={field}
+        sortable={field !== 'collection_id'}
+        className={c({ wide: field === 'caption' || field === 'collection_id' })}
+        sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
+        onClick={() => this.sortColumn(field)}
+      >
+        {intl.formatMessage(messages[`column_${field}`])}
+      </SortableTH>
+    );
+  }
+
   render() {
-    const { result, intl, location, query, writeable } = this.props;
-    const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
+    const { defaultColumns, result, intl, location, query, writeable } = this.props;
+    const { showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
     const { field: sortedField, direction } = query.getSort();
 
@@ -70,37 +86,12 @@ class EntitySearchResults extends Component {
 
     const skeletonItems = [...Array(15).keys()];
 
-    const TH = ({
-      sortable, field, className, ...otherProps
-    }) => {
-      return (
-        <SortableTH
-          sortable={sortable}
-          className={className}
-          sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
-          onClick={() => this.sortColumn(field)}
-          {...otherProps}
-        >
-          {intl.formatMessage(messages[`column_${field}`])}
-        </SortableTH>
-      );
-    };
     return (
       <table className="EntitySearchResults data-table">
         <thead>
           <tr>
             {writeable && updateSelection && (<th className="select" />)}
-            <TH field="caption" className="wide" sortable />
-            {!hideCollection && (
-              <TH field="collection_id" className="wide" />
-            )}
-            {!documentMode && (
-              <TH className="header-country" field="countries" sortable />
-            )}
-            <TH className="header-dates" field="dates" sortable />
-            {documentMode && (
-              <TH className="header-size" field="properties.fileSize" sortable />
-            )}
+            {defaultColumns.map(this.renderHeaderCell)}
           </tr>
         </thead>
         <tbody className={c({ updating: result.isPending })}>
@@ -109,21 +100,19 @@ class EntitySearchResults extends Component {
               key={entity.id}
               entity={entity}
               location={location}
-              hideCollection={hideCollection}
               showPreview={showPreview}
-              documentMode={documentMode}
               updateSelection={updateSelection}
               selection={selection}
               writeable={writeable}
+              defaultColumns={defaultColumns}
             />
           ))}
           {result.isPending && skeletonItems.map(item => (
             <EntitySearchResultsRow
               key={item}
-              hideCollection={hideCollection}
-              documentMode={documentMode}
               updateSelection={updateSelection}
               writeable={writeable}
+              defaultColumns={defaultColumns}
               isPending
             />
           ))}

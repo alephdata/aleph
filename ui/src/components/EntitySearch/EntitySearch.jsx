@@ -50,8 +50,7 @@ export class EntitySearch extends Component {
 
   render() {
     const {
-      query, result, intl, className,
-      documentMode, hideCollection,
+      query, result, intl, className, defaultColumns,
       showPreview, updateSelection, selection,
       emptyComponent, collection, writeable,
     } = this.props;
@@ -74,14 +73,13 @@ export class EntitySearch extends Component {
         <EntitySearchResults
           query={query}
           result={result}
-          documentMode={documentMode}
-          hideCollection={hideCollection}
           showPreview={showPreview}
           updateQuery={this.updateQuery}
           updateSelection={updateSelection}
           selection={selection}
           collection={collection}
           writeable={writeable}
+          defaultColumns={defaultColumns}
         />
         <QueryInfiniteLoad
           query={query}
