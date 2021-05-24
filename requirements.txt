@@ -8,7 +8,7 @@ normality==2.2.2
 pantomime==0.4.1
 
 # Flask ecosystem
-Flask==2.0.0
+Flask==2.0.1
 Flask-SQLAlchemy==2.5.1
 Flask-Mail==0.9.1
 Flask-Migrate==3.0.0
