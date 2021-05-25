@@ -12,6 +12,8 @@ import ImageViewer from 'viewers/ImageViewer';
 import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
 import VideoViewer from 'viewers/VideoViewer';
+import ArticleViewer from 'viewers/ArticleViewer';
+
 import { SectionLoading } from 'components/common';
 import { selectEntityDirectionality } from 'selectors';
 
@@ -95,7 +97,11 @@ export class DocumentViewMode extends React.Component {
         <FolderViewer document={document} dir={dir} />
       );
     }
-
+    if (document.schema.isA('Article')) {
+      return (
+        <ArticleViewer document={document} dir={dir} />
+      );
+    }
     return <DefaultViewer document={document} dir={dir} />;
   }
 

@@ -117,7 +117,7 @@
     "defaultMessage": "Автор"
   },
   "collection.data_updated_at": {
-    "defaultMessage": "Content updated"
+    "defaultMessage": "Данные обновлены"
   },
   "collection.data_url": {
     "defaultMessage": "Ссылка на данные"
@@ -408,7 +408,7 @@
     "defaultMessage": "Доступ"
   },
   "collection.updated_at": {
-    "defaultMessage": "Metadata updated"
+    "defaultMessage": "Метаданные обновлены"
   },
   "collection.xref.cancel": {
     "defaultMessage": "Отменить"
@@ -996,7 +996,10 @@
     "defaultMessage": "Алеф {version}"
   },
   "group.page.description": {
-    "defaultMessage": "Если вы хотите поискать определённые сущности или документы в других наборах данных, относящихся к этой группе, <link> нажмите здесь </link>."
+    "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
+  },
+  "group.page.search.description": {
+    "defaultMessage": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
   },
   "home.counts.countries": {
     "defaultMessage": "Страны и территории"
@@ -1784,6 +1787,9 @@
   "signup.title": {
     "defaultMessage": "Войти"
   },
+  "sorting.bar.button.label": {
+    "defaultMessage": "Show:"
+  },
   "sorting.bar.caption": {
     "defaultMessage": "Название"
   },
@@ -1803,7 +1809,7 @@
     "defaultMessage": "Дата окончания"
   },
   "sorting.bar.label": {
-    "defaultMessage": "Отобразить:"
+    "defaultMessage": "Title"
   },
   "sorting.bar.sort": {
     "defaultMessage": "Отсортировать:"
