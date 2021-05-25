@@ -1,0 +1,24 @@
+@import "app/variables.scss";
+
+.ArticleViewer {
+
+  .article-header table {
+    width: 100%;
+    th, td {
+      box-shadow: none !important;
+      border-bottom: 1px solid $aleph-border-color;
+    } 
+  }
+
+  .article-body {
+    padding: $aleph-grid-size;
+    border: 0;
+    box-shadow: unset;
+
+    pre {
+      padding: 0;
+      border: 0;
+      box-shadow: unset;
+    }
+  }
+}
