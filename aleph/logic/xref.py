@@ -5,6 +5,7 @@ from pprint import pprint  # noqa
 from tempfile import mkdtemp
 from dataclasses import dataclass
 
+import followthemoney
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.export.excel import ExcelWriter
@@ -37,12 +38,13 @@ from aleph.logic.export import complete_export
 log = logging.getLogger(__name__)
 ORIGIN = "xref"
 MODEL = None
+FTM_VERSION_STR = f"ftm-{followthemoney.__version__}"
 
 
 @dataclass
 class Match:
-    # TODO: Add "method" field and propogate it from _bulk_compare out to index/xref/_index_from
     score: float
+    method: str
     entity: EntityProxy
     collection_id: str
     match: EntityProxy
@@ -50,26 +52,32 @@ class Match:
     doubt: typing.Optional[float] = None
 
 
+def _bulk_compare_ftm(proxies):
+    for left, right in proxies:
+        score = compare.compare(model, left, right)
+        yield score, None, FTM_VERSION_STR
+
+
+def _bulk_compare_ftmc_model(proxies):
+    for score, confidence in zip(*MODEL.predict_proba_std(proxies)):
+        yield score, confidence, MODEL.version
+
+
 def _bulk_compare(proxies):
     if not proxies:
         return
-    global MODEL
     if settings.XREF_MODEL is None:
-        for left, right in proxies:
-            score = compare.compare(model, left, right)
-            yield score, None
-        return
-    elif MODEL is None:
+        yield from _bulk_compare_ftm(proxies)
+    global MODEL
+    if MODEL is None:
         try:
             with open(settings.XREF_MODEL, "rb") as fd:
                 MODEL = GLMBernoulli2EEvaluator.from_pickles(fd.read())
         except FileNotFoundError:
-            log.exception(
-                f"Could not find model file: {settings.XREF_MODEL}. Falling back to followthemoney"
-            )
+            log.exception(f"Could not find model file: {settings.XREF_MODEL}")
             settings.XREF_MODEL = None
-            yield from _compare(proxies)
-    yield from zip(*MODEL.predict_proba_std(proxies))
+            yield from _bulk_compare_ftm(proxies)
+    yield from _bulk_compare_ftmc_model(proxies)
 
 
 def _merge_schemata(proxy, schemata):
@@ -106,12 +114,20 @@ def _query_item(entity, entitysets=True):
         len(candidates),
     )
     results = _bulk_compare([(entity, c) for c in candidates])
-    for match, (score, doubt) in zip(candidates, results):
-        log.debug("Match: %s <[%.2f]> %s", entity.caption, score, match.caption)
+    for match, (score, doubt, method) in zip(candidates, results):
+        log.debug(
+            "Match: %s: %s <[%.2f]@%0.2f> %s",
+            method,
+            entity.caption,
+            score or 0.0,
+            doubt or 0.0,
+            match.caption,
+        )
         if score > 0:
             yield Match(
                 score=score,
                 doubt=doubt,
+                method=method,
                 entity=entity,
                 collection_id=result.get("collection_id"),
                 match=match,
