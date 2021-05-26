@@ -3,6 +3,10 @@ import {
 } from 'react-intl';
 
 const messages = defineMessages({
+  facet_dates: {
+    id: 'facet.dates',
+    defaultMessage: '{count, plural, one {Date} other {Dates}}',
+  },
   facet_schema: {
     id: 'facet.schema',
     defaultMessage: '{count, plural, one {Type} other {Types}}',
@@ -72,6 +76,11 @@ const propConfigs = {
     label: messages.facet_collection_id,
     icon: 'database',
     defaultSize: 10,
+  },
+  dates: {
+    field: 'dates',
+    label: messages.facet_dates,
+    icon: 'calendar',
   },
   countries: {
     field: 'countries',

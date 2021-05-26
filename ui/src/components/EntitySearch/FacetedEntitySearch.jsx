@@ -21,7 +21,7 @@ import SortingBar from 'components/SortingBar/SortingBar';
 import './FacetedEntitySearch.scss';
 
 const defaultFacetKeys = [
-  'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
+  'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
 ];
 
 const messages = defineMessages({
@@ -47,7 +47,7 @@ const messages = defineMessages({
   },
 });
 
-export class FacetedEntitySearch extends React.Component {
+class FacetedEntitySearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

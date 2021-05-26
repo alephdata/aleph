@@ -5,12 +5,11 @@ import {
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import {
-  Icon, Collapse, Spinner,
-} from '@blueprintjs/core';
+import { Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { CheckboxList, Schema } from 'components/common';
+import DateFacet from 'components/Facet/DateFacet';
 
 import './SearchFacet.scss';
 
@@ -24,6 +23,8 @@ class SearchFacet extends Component {
     this.onToggleOpen = this.onToggleOpen.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onClear = this.onClear.bind(this);
+    this.renderList = this.renderList.bind(this);
+    this.renderDates = this.renderDates.bind(this);
     this.showMore = this.showMore.bind(this);
   }
 
@@ -40,6 +41,7 @@ class SearchFacet extends Component {
   }
 
   onToggleOpen() {
+    console.log('calling toggle open')
     const { isOpen, defaultSize } = this.props;
     const newSize = isOpen ? undefined : defaultSize;
     this.updateFacetSize(newSize);
@@ -58,14 +60,22 @@ class SearchFacet extends Component {
 
   updateFacetSize(newSize) {
     const { query, field } = this.props;
+    const isDate = field === 'dates';
+
     let newQuery = query.set(`facet_size:${field}`, newSize);
     if (!newSize) {
       newQuery = newQuery.remove('facet', field);
       newQuery = newQuery.add(`facet_total:${field}`, undefined);
       newQuery = newQuery.set(`facet_size:${field}`, undefined);
+      if (isDate) {
+        newQuery = newQuery.remove('facet_interval:dates', 'year');
+      }
     } else {
       newQuery = newQuery.add('facet', field);
       newQuery = newQuery.add(`facet_total:${field}`, true);
+      if (isDate) {
+        newQuery = newQuery.add('facet_interval:dates', 'year');
+      }
     }
     this.props.updateQuery(newQuery);
     this.setState({ isExpanding: true });
@@ -77,6 +87,53 @@ class SearchFacet extends Component {
     this.updateFacetSize(facetSize + defaultSize);
   }
 
+  renderDates() {
+    const { facet, query, result } = this.props;
+
+    console.log('facet is', facet, result);
+
+    return (
+      <DateFacet
+        isOpen={true}
+        intervals={result?.facets?.dates?.intervals}
+        query={query}
+        updateQuery={this.props.updateQuery}
+      />
+    );
+  }
+
+  renderList(selectedItems) {
+    const { facet, facetSize, field } = this.props;
+    const isMultiSelect = field !== 'schema';
+    const hasMoreValues = facetSize < facet.total;
+
+    const values = field === 'schema'
+      ? facet?.values?.map(({ id, label, ...rest }) => ({ label: <Schema.Label schema={id} icon />, id, ...rest }))
+      : facet?.values;
+
+    if (values !== undefined) {
+      return (
+        <CheckboxList
+          items={values}
+          selectedItems={selectedItems}
+          onItemClick={this.onSelect}
+          isMultiSelect={isMultiSelect}
+        >
+          {hasMoreValues && (
+            <a className="ShowMore" onClick={this.showMore} href="/">
+              <FormattedMessage
+                id="search.facets.showMore"
+                defaultMessage="Show more…"
+                style={{ paddingTop: 10 }}
+              />
+            </a>
+          )}
+        </CheckboxList>
+      );
+    }
+    return null;
+  }
+
   render() {
     const {
       query, facetSize, isOpen, result, field, label, intl, isCollapsible,
@@ -85,13 +142,8 @@ class SearchFacet extends Component {
     const current = query.getFilter(field);
     const count = current ? current.length : 0;
     const isFiltered = query.getFilter(field).length > 0;
-    const hasMoreValues = facetSize < facet.total;
     const isUpdating = result.total === undefined;
-    const isMultiSelect = field !== 'schema';
-
-    const values = field === 'schema'
-      ? facet?.values?.map(({ id, label, ...rest }) => ({ label: <Schema.Label schema={id} icon />, id, ...rest }))
-      : facet?.values;
+    const isDate = field === 'dates';
 
     return (
       <div className="SearchFacet">
@@ -123,7 +175,7 @@ class SearchFacet extends Component {
             </>
           )}
 
-          {isOpen && (
+          {(!isDate && isOpen) && (
             <>
               {facet.total === 0 && (
                 <span className="bp3-tag bp3-small bp3-round bp3-minimal">0</span>
@@ -138,24 +190,8 @@ class SearchFacet extends Component {
           )}
         </div>
         <Collapse isOpen={isOpen} className={c({ updating: isUpdating })}>
-          {values !== undefined && (
-            <CheckboxList
-              items={values}
-              selectedItems={current}
-              onItemClick={this.onSelect}
-              isMultiSelect={isMultiSelect}
-            >
-              {!isUpdating && hasMoreValues && (
-                <a className="ShowMore" onClick={this.showMore} href="/">
-                  <FormattedMessage
-                    id="search.facets.showMore"
-                    defaultMessage="Show more…"
-                    style={{ paddingTop: 10 }}
-                  />
-                </a>
-              )}
-            </CheckboxList>
-          )}
+          {isDate && this.renderDates()}
+          {!isDate && this.renderList(current)}
           {(isExpanding && isOpen) && (
             <Spinner className="bp3-small spinner" />
           )}

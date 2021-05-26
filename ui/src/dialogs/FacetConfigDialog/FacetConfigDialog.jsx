@@ -15,7 +15,7 @@ import { Facet } from 'components/common';
 import './FacetConfigDialog.scss';
 
 const allTypeFacets = [
-  'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes'
+  'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes'
 ];
 
 const messages = defineMessages({
