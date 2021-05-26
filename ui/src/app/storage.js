@@ -61,10 +61,10 @@ export const expireRecentlyViewed = () => {
   localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
 }
 
-export const setCustomFacets = (facetConfig) => {
-  localStorage.setItem('customFacets', JSON.stringify(facetConfig));
+export const setSearchConfig = (searchConfig) => {
+  localStorage.setItem('searchConfig', JSON.stringify(searchConfig));
 }
 
-export const getCustomFacets = () => {
-  return JSON.parse(localStorage.getItem('customFacets'));
+export const getSearchConfig = () => {
+  return JSON.parse(localStorage.getItem('searchConfig'));
 }

@@ -1,14 +1,14 @@
 import React from 'react';
 import queryString from 'query-string';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Icon } from '@blueprintjs/core';
+import { Button, Icon, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getCustomFacets } from 'app/storage';
+import { getSearchConfig } from 'app/storage';
 import getFacetConfig from 'util/getFacetConfig';
-import { DualPane, ErrorSection, HotkeysContainer } from 'components/common';
+import { Count, DualPane, ErrorSection, HotkeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import FacetConfigDialog from 'dialogs/FacetConfigDialog/FacetConfigDialog';
 import SearchActionBar from 'components/common/SearchActionBar';
@@ -16,6 +16,7 @@ import SearchFacets from 'components/Facet/SearchFacets';
 import QueryTags from 'components/QueryTags/QueryTags';
 import togglePreview from 'util/togglePreview';
 import SortingBar from 'components/SortingBar/SortingBar';
+import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
 import { DialogToggleButton } from 'components/Toolbar'
 
 import './FacetedEntitySearch.scss';
@@ -23,6 +24,7 @@ import './FacetedEntitySearch.scss';
 const defaultFacetKeys = [
   'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
 ];
+const defaultColumns = ['caption', 'collection_id', 'countries', 'dates'];
 
 const messages = defineMessages({
   no_results_title: {
@@ -49,6 +51,10 @@ const messages = defineMessages({
     id: 'search.facets.configure',
     defaultMessage: 'Configure facets',
   },
+  columns: {
+    id: 'search.columns.configure',
+    defaultMessage: 'Columns {count}'
+  }
 });
 
 class FacetedEntitySearch extends React.Component {
@@ -117,7 +123,7 @@ class FacetedEntitySearch extends React.Component {
   }
 
   render() {
-    const { additionalFacets = [], children, facets, query, result, intl } = this.props;
+    const { additionalFacets = [], columns, children, facets, query, result, intl } = this.props;
     const { hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
@@ -191,7 +197,15 @@ class FacetedEntitySearch extends React.Component {
                 <SortingBar
                   query={query}
                   updateQuery={this.updateQuery}
-                  sortingFields={['caption']}
+                  sortingFields={columns}
+                  filterButtonLabel=""
+                  filterButton={
+                    <SortingBarSelect
+                      items={[]}
+                      onSelect={this.onSelect}
+                      activeItem={{ label: intl.formatMessage(messages.columns, { count: <Count count={columns.length} className='bp3-intent-primary' /> }) }}
+                    />
+                  }
                 />
               </SearchActionBar>
             </div>
@@ -200,7 +214,7 @@ class FacetedEntitySearch extends React.Component {
               updateQuery={this.updateQuery}
               result={result}
               emptyComponent={empty}
-              defaultColumns={['caption', 'collection_id', 'countries', 'dates']}
+              defaultColumns={columns}
             />
           </DualPane.ContentPane>
         </DualPane>
@@ -209,8 +223,10 @@ class FacetedEntitySearch extends React.Component {
   }
 }
 const mapStateToProps = () => {
+  const searchConfig = getSearchConfig();
   return {
-    facets: getCustomFacets() || defaultFacetKeys.map(getFacetConfig)
+    facets: searchConfig?.facets || defaultFacetKeys.map(getFacetConfig),
+    columns: searchConfig?.columns || defaultColumns
   };
 };
 

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import getFacetConfig from 'util/getFacetConfig';
-import { setCustomFacets } from 'app/storage';
+import { setSearchConfig } from 'app/storage';
 import { selectModel } from 'selectors';
 import { Facet } from 'components/common';
 
@@ -53,7 +53,7 @@ class FacetConfigDialog extends Component {
     const { history, location, toggleDialog } = this.props;
     const { facets } = this.state;
 
-    setCustomFacets(facets);
+    setSearchConfig({ facets });
     toggleDialog();
 
     // clear facets and filters when config is saved
