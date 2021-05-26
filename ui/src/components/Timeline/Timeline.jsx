@@ -102,7 +102,6 @@ class Timeline extends Component {
         <DualPane.SidePane>
           <div className={c("Timeline__date-container", { fixed: histogramFixed })}>
             <DateFacet
-              isOpen={true}
               intervals={result.facets?.dates?.intervals}
               query={query}
               updateQuery={this.updateQuery}

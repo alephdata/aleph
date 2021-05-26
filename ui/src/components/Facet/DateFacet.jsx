@@ -81,15 +81,11 @@ export class DateFilter extends Component {
   }
 
   render() {
-    const { dataLabel, emptyText, filteredIntervals, intl, isOpen, displayShowHiddenToggle } = this.props;
-    if (!isOpen || (!filteredIntervals?.length && !emptyText)) {
-      return null;
-    }
-
+    const { dataLabel, emptyText, filteredIntervals, intl, displayShowHiddenToggle, showLabel = true } = this.props;
     let content;
 
     if (filteredIntervals) {
-      if (!filteredIntervals.length) {
+      if (!filteredIntervals.length && emptyText) {
         content = (
           <div style={{ minHeight: `${DATE_FACET_HEIGHT}px` }}>
             <ErrorSection
@@ -123,13 +119,15 @@ export class DateFilter extends Component {
 
     return (
       <Card className="DateFacet">
-        <div className="DateFacet__label">
-          <Icon icon="calendar" className="left-icon" />
-          <span className="DateFacet__label__text">
-            <FormattedMessage id="search.screen.dates_title" defaultMessage="Dates" />
-            {displayShowHiddenToggle && "*"}
-          </span>
-        </div>
+        {showLabel && (
+          <div className="DateFacet__label">
+            <Icon icon="calendar" className="left-icon" />
+            <span className="DateFacet__label__text">
+              <FormattedMessage id="search.screen.dates_title" defaultMessage="Dates" />
+              {displayShowHiddenToggle && "*"}
+            </span>
+          </div>
+        )}
         {content}
       </Card>
     );

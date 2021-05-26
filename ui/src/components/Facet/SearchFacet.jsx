@@ -13,13 +13,10 @@ import DateFacet from 'components/Facet/DateFacet';
 
 import './SearchFacet.scss';
 
-const defaultFacet = {};
-
-
 class SearchFacet extends Component {
   constructor(props) {
     super(props);
-    this.state = { facet: defaultFacet, isExpanding: false };
+    this.state = { facet: {}, isExpanding: false };
     this.onToggleOpen = this.onToggleOpen.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onClear = this.onClear.bind(this);
@@ -33,7 +30,7 @@ class SearchFacet extends Component {
     if (result.total !== undefined && !result.isPending) {
       const facets = result.facets || {};
       return {
-        facet: facets[field] || defaultFacet,
+        facet: facets[field] || {},
         isExpanding: false,
       };
     }
@@ -41,7 +38,6 @@ class SearchFacet extends Component {
   }
 
   onToggleOpen() {
-    console.log('calling toggle open')
     const { isOpen, defaultSize } = this.props;
     const newSize = isOpen ? undefined : defaultSize;
     this.updateFacetSize(newSize);
@@ -88,62 +84,77 @@ class SearchFacet extends Component {
   }
 
   renderDates() {
-    const { facet, query, result } = this.props;
+    const { query, result } = this.props;
+    const { facet } = this.state;
+    const { intervals } = facet;
 
-    console.log('facet is', facet, result);
+    if (!result.isPending && !intervals?.length) {
+      return (
+        <span className="faint">
+          <FormattedMessage
+            id="search.facets.no_items"
+            defaultMessage="No options"
+          />
+        </span>
+      );
+    }
 
     return (
       <DateFacet
-        isOpen={true}
-        intervals={result?.facets?.dates?.intervals}
+        intervals={intervals}
         query={query}
         updateQuery={this.props.updateQuery}
+        showLabel={false}
       />
     );
   }
 
-  renderList(selectedItems) {
-    const { facet, facetSize, field } = this.props;
+  renderList() {
+    const { query, facetSize, field, isOpen, result } = this.props;
+    const { facet, isExpanding } =  this.state;
     const isMultiSelect = field !== 'schema';
     const hasMoreValues = facetSize < facet.total;
+    const isUpdating = result.total === undefined;
 
     const values = field === 'schema'
       ? facet?.values?.map(({ id, label, ...rest }) => ({ label: <Schema.Label schema={id} icon />, id, ...rest }))
       : facet?.values;
 
-    if (values !== undefined) {
-      return (
-        <CheckboxList
-          items={values}
-          selectedItems={selectedItems}
-          onItemClick={this.onSelect}
-          isMultiSelect={isMultiSelect}
-        >
-          {hasMoreValues && (
-            <a className="ShowMore" onClick={this.showMore} href="/">
-              <FormattedMessage
-                id="search.facets.showMore"
-                defaultMessage="Show more…"
-                style={{ paddingTop: 10 }}
-              />
-            </a>
-          )}
-        </CheckboxList>
-      );
-    }
-    return null;
+    return (
+      <>
+        {values !== undefined && (
+          <CheckboxList
+            items={values}
+            selectedItems={query.getFilter(field)}
+            onItemClick={this.onSelect}
+            isMultiSelect={isMultiSelect}
+          >
+            {(!isUpdating && hasMoreValues) && (
+              <a className="ShowMore" onClick={this.showMore} href="/">
+                <FormattedMessage
+                  id="search.facets.showMore"
+                  defaultMessage="Show more…"
+                  style={{ paddingTop: 10 }}
+                />
+              </a>
+            )}
+          </CheckboxList>
+        )}
+        {(isExpanding && isOpen) && (
+          <Spinner className="bp3-small spinner" />
+        )}
+      </>
+    );
   }
 
   render() {
-    const {
-      query, facetSize, isOpen, result, field, label, intl, isCollapsible,
-    } = this.props;
-    const { facet, isExpanding } = this.state;
+    const { query, isOpen, result, field, label, intl, isCollapsible } = this.props;
+    const { facet } = this.state;
     const current = query.getFilter(field);
     const count = current ? current.length : 0;
     const isFiltered = query.getFilter(field).length > 0;
-    const isUpdating = result.total === undefined;
     const isDate = field === 'dates';
+    const isUpdating = result.total === undefined;
 
     return (
       <div className="SearchFacet">
@@ -191,10 +202,7 @@ class SearchFacet extends Component {
         </div>
         <Collapse isOpen={isOpen} className={c({ updating: isUpdating })}>
           {isDate && this.renderDates()}
-          {!isDate && this.renderList(current)}
-          {(isExpanding && isOpen) && (
-            <Spinner className="bp3-small spinner" />
-          )}
+          {!isDate && this.renderList()}
         </Collapse>
       </div>
     );

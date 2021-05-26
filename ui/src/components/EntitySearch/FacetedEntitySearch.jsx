@@ -10,13 +10,13 @@ import { getCustomFacets } from 'app/storage';
 import getFacetConfig from 'util/getFacetConfig';
 import { DualPane, ErrorSection, HotkeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
-import EntitySearchManageMenu from 'components/EntitySearch/EntitySearchManageMenu';
+import FacetConfigDialog from 'dialogs/FacetConfigDialog/FacetConfigDialog';
 import SearchActionBar from 'components/common/SearchActionBar';
 import SearchFacets from 'components/Facet/SearchFacets';
-import DateFacet from 'components/Facet/DateFacet';
 import QueryTags from 'components/QueryTags/QueryTags';
 import togglePreview from 'util/togglePreview';
 import SortingBar from 'components/SortingBar/SortingBar';
+import { DialogToggleButton } from 'components/Toolbar'
 
 import './FacetedEntitySearch.scss';
 
@@ -44,6 +44,10 @@ const messages = defineMessages({
   previous: {
     id: 'hotkeys.search.different',
     defaultMessage: 'Preview previous result'
+  },
+  configure_facets: {
+    id: 'search.facets.configure',
+    defaultMessage: 'Configure facets',
   },
 });
 
@@ -113,12 +117,10 @@ class FacetedEntitySearch extends React.Component {
   }
 
   render() {
-    const { additionalFacets = [], children, dateFacetIsOpen, dateFacetIntervals, facets, query, result, intl } = this.props;
+    const { additionalFacets = [], children, facets, query, result, intl } = this.props;
     const { hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
-    const noResults = !result.isPending && result.total === 0;
-    const dateFacetDisabled = result.isPending || noResults || (dateFacetIsOpen && (!dateFacetIntervals || dateFacetIntervals.length <= 1));
     const fullFacetList = [...additionalFacets.map(getFacetConfig), ...facets];
 
     const empty = (
@@ -164,19 +166,20 @@ class FacetedEntitySearch extends React.Component {
               </span>
             </div>
             <div className={hideFacetsClass}>
-              <EntitySearchManageMenu
-                query={query}
-                facets={facets}
-                dateFacetDisabled={dateFacetDisabled}
-                dateFacetIsOpen={dateFacetIsOpen}
-                updateQuery={this.updateQuery}
-              />
               <SearchFacets
                 query={query}
                 result={result}
                 updateQuery={this.updateQuery}
                 facets={fullFacetList}
                 isCollapsible
+              />
+              <DialogToggleButton
+                buttonProps={{
+                  text: intl.formatMessage(messages.configure_facets),
+                  icon: "filter-list"
+                }}
+                Dialog={FacetConfigDialog}
+                dialogProps={{ facets }}
               />
             </div>
           </DualPane.SidePane>
@@ -192,12 +195,6 @@ class FacetedEntitySearch extends React.Component {
                 />
               </SearchActionBar>
             </div>
-            <DateFacet
-              isOpen={dateFacetDisabled ? false : dateFacetIsOpen}
-              intervals={dateFacetIntervals}
-              query={query}
-              updateQuery={this.updateQuery}
-            />
             <EntitySearch
               query={query}
               updateQuery={this.updateQuery}
@@ -211,12 +208,8 @@ class FacetedEntitySearch extends React.Component {
     );
   }
 }
-const mapStateToProps = (state, ownProps) => {
-  const { query, result } = ownProps;
-
+const mapStateToProps = () => {
   return {
-    dateFacetIsOpen: query.hasFacet('dates'),
-    dateFacetIntervals: result?.facets?.dates?.intervals,
     facets: getCustomFacets() || defaultFacetKeys.map(getFacetConfig)
   };
 };

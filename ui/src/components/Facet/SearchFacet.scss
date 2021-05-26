@@ -72,6 +72,11 @@
     padding-top: $aleph-grid-size;
   }
 
+  .DateFacet.bp3-card {
+    box-shadow: none;
+    padding: $aleph-grid-size $aleph-grid-size 0;
+  }
+
   p {
     text-align: center;
   }
