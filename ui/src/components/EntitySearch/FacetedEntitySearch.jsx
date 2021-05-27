@@ -13,6 +13,7 @@ import EntitySearch from 'components/EntitySearch/EntitySearch';
 import FacetConfigDialog from 'dialogs/FacetConfigDialog/FacetConfigDialog';
 import SearchActionBar from 'components/common/SearchActionBar';
 import SearchFacets from 'components/Facet/SearchFacets';
+import SearchFieldSelect from 'components/EntitySearch/SearchFieldSelect';
 import QueryTags from 'components/QueryTags/QueryTags';
 import togglePreview from 'util/togglePreview';
 import SortingBar from 'components/SortingBar/SortingBar';
@@ -122,6 +123,10 @@ class FacetedEntitySearch extends React.Component {
     this.setState(({ hideFacets }) => ({ hideFacets: !hideFacets }));
   }
 
+  onFacetConfigEdit(edit) {
+    console.log('edited', edit);
+  }
+
   render() {
     const { additionalFacets = [], columns, children, facets, query, result, intl } = this.props;
     const { hideFacets } = this.state;
@@ -179,14 +184,12 @@ class FacetedEntitySearch extends React.Component {
                 facets={fullFacetList}
                 isCollapsible
               />
-              <DialogToggleButton
-                buttonProps={{
-                  text: intl.formatMessage(messages.configure_facets),
-                  icon: "filter-list"
-                }}
-                Dialog={FacetConfigDialog}
-                dialogProps={{ facets }}
-              />
+              <SearchFieldSelect
+                onSelect={this.onFacetConfigEdit}
+                selected={facets}
+              >
+                <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
+              </SearchFieldSelect>
             </div>
           </DualPane.SidePane>
           <DualPane.ContentPane>
