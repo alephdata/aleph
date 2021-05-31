@@ -3,7 +3,7 @@ banal==1.0.6
 followthemoney==2.5.3
 followthemoney-store[postgresql]==3.0.3
 fingerprints==1.0.3
-servicelayer[google,amazon]==1.18.1
+servicelayer[google,amazon]==1.18.2
 normality==2.2.2
 pantomime==0.4.1
 
@@ -11,11 +11,11 @@ pantomime==0.4.1
 Flask==2.0.1
 Flask-SQLAlchemy==2.5.1
 Flask-Mail==0.9.1
-Flask-Migrate==3.0.0
+Flask-Migrate==3.0.1
 Flask-Cors==3.0.10
 Flask-Babel==2.0.0
 flask-talisman==0.7.0
-SQLAlchemy==1.4.15
+SQLAlchemy==1.4.17
 alembic==1.6.5
 authlib==0.15.3
 
