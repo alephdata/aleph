@@ -11,7 +11,7 @@ import {
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {
-    const { defaultColumns, updateSelection, writeable } = this.props;
+    const { columns, updateSelection, writeable } = this.props;
 
     return (
       <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')} key="skeleton">
@@ -20,20 +20,20 @@ class EntitySearchResultsRow extends Component {
             <Skeleton.Text type="span" length={2} />
           </td>
         )}
-        {defaultColumns.map(field => (
-          <td key={field} className={field}>
-            <Skeleton.Text type="span" length={field === 'caption' || field === 'collection_id' ? 30 : 15} />
+        {columns.map(column => (
+          <td key={column} className={column.type?.name || column.name}>
+            <Skeleton.Text type="span" length={column.name === 'caption' || column.name === 'collection_id' ? 30 : 15} />
           </td>
         ))}
       </tr>
     );
   }
 
-  renderCellContent(field) {
+  renderCellContent(column) {
     const { entity, showPreview } = this.props;
 
-    if (typeof field === 'string') {
-      switch(field) {
+    if (!column.isProperty) {
+      switch(column.name) {
         case 'caption':
           return <Entity.Link preview={showPreview} entity={entity} icon />
         case 'collection_id':
@@ -44,7 +44,7 @@ class EntitySearchResultsRow extends Component {
           return <Date.Earliest values={entity.getTypeValues('date')} />;
       }
     } else {
-      if (field.name === 'fileSize') {
+      if (column.name === 'fileSize') {
         return <FileSize value={entity.getFirst('fileSize')} />;
       } else {
         return entity.getProperty(field);
@@ -57,7 +57,7 @@ class EntitySearchResultsRow extends Component {
       entity,
       isPending,
       location,
-      defaultColumns,
+      columns,
       showPreview,
       updateSelection,
       selection,
@@ -90,13 +90,9 @@ class EntitySearchResultsRow extends Component {
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
             </td>
           )}
-          {defaultColumns.map(field => {
-            const content = this.renderCellContent(field);
-            if (typeof field === 'string') {
-              return <td key={field} className={field}>{content}</td>
-            } else {
-              return <td key={field.name} className={field.type.name}>{content}</td>
-            }
+          {columns.map(column => {
+            const content = this.renderCellContent(column);
+            return <td key={column.name} className={column.type?.name || column.name}>{content}</td>
           })}
         </tr>
         {!!highlights.length

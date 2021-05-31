@@ -22,10 +22,10 @@ import { DialogToggleButton } from 'components/Toolbar'
 
 import './FacetedEntitySearch.scss';
 
-const defaultFacetKeys = [
+const defaultFacets = [
   'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
 ];
-const defaultColumns = ['caption', 'collection_id', 'countries', 'dates'];
+const defaultColumns = ['collection_id', 'countries', 'dates'];
 
 const messages = defineMessages({
   no_results_title: {
@@ -223,7 +223,7 @@ class FacetedEntitySearch extends React.Component {
                   filterButton={
                     <SearchFieldSelect
                       onSelect={(field) => this.onSearchConfigEdit('columns', field)}
-                      selected={facets}
+                      selected={columns}
                     >
                       <Button
                         text={intl.formatMessage(messages.columns, { count: <Count count={columns.length} className='bp3-intent-primary' /> })}
@@ -241,7 +241,7 @@ class FacetedEntitySearch extends React.Component {
               updateQuery={this.updateQuery}
               result={result}
               emptyComponent={empty}
-              defaultColumns={columns}
+              columns={columns}
             />
           </DualPane.ContentPane>
         </DualPane>
@@ -252,8 +252,8 @@ class FacetedEntitySearch extends React.Component {
 const mapStateToProps = () => {
   const searchConfig = getSearchConfig();
   return {
-    facets: searchConfig?.facets || defaultFacetKeys.map(getGroupField),
-    columns: searchConfig?.columns || defaultColumns
+    facets: searchConfig?.facets || defaultFacets.map(getGroupField),
+    columns: searchConfig?.columns || defaultColumns.map(getGroupField)
   };
 };
 

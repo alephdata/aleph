@@ -4,15 +4,16 @@ import { Icon } from '@blueprintjs/core';
 
 class SearchFieldLabel extends PureComponent {
   render() {
-    const { field, intl, count = 0 } = this.props;
+    const { field, icon, intl, count = 0 } = this.props;
     if (!field) {
       return null;
     }
-    const { icon, isProperty, label } = field;
+    console.log('field', field);
+    const {isProperty, label } = field;
 
     return (
       <>
-        <Icon icon={icon || 'filter'} className="left-icon" />
+        {icon && <Icon icon={field.icon || 'filter'} className="left-icon" />}
         {isProperty ? label : intl.formatMessage(label, { count })}
       </>
     );

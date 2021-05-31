@@ -195,7 +195,7 @@ export class DocumentManager extends Component {
             writeable={showActions}
             updateSelection={this.updateSelection}
             emptyComponent={emptyComponent}
-            defaultColumns={['caption', 'dates', fileSizeProp]}
+            columns={['dates', fileSizeProp]}
           />
         </div>
       </div>

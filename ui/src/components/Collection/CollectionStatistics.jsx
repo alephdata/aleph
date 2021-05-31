@@ -69,7 +69,7 @@ class CollectionStatistics extends PureComponent {
             <Numeric num={filteredTotal} abbr={3} />
           </h5>
           <h5 className="CollectionStatistics__heading__label">
-            <SearchField.Label field={getGroupField(field)} count={filteredTotal} />
+            <SearchField.Label field={getGroupField(field)} count={filteredTotal} icon />
           </h5>
         </div>
         <Statistics

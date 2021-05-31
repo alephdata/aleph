@@ -37,7 +37,7 @@ class SearchFieldSelect extends PureComponent {
         onClick={handleClick}
         intent={isSelected && Intent.SUCCESS}
         label={isSelected && <Icon icon="tick" />}
-        text={<SearchField.Label field={item} />}
+        text={<SearchField.Label field={item} icon />}
         key={item.field}
       />
     );

@@ -91,7 +91,7 @@ class FacetConfigDialog extends Component {
     return (
       <tr key={facet.field}>
         <td className="bp3-heading">
-          <SearchField.Label field={facet.field} />
+          <SearchField.Label field={facet.field} icon />
         </td>
         <td className="numeric narrow">
           {showAddButton && this.renderAddButton(facet)}

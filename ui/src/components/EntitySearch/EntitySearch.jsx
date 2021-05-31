@@ -9,6 +9,7 @@ import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import EntitySearchResults from './EntitySearchResults';
 import { ErrorSection, QueryInfiniteLoad } from 'components/common';
+import { getGroupField } from 'components/SearchField/util';
 
 import './EntitySearch.scss';
 
@@ -50,11 +51,13 @@ export class EntitySearch extends Component {
 
   render() {
     const {
-      query, result, intl, className, defaultColumns,
+      query, result, intl, className, columns,
       showPreview, updateSelection, selection,
       emptyComponent, collection, writeable,
     } = this.props;
     const isEmpty = !query.hasQuery();
+
+    console.log('in entity search, columns are', columns)
 
     return (
       <div className={c('EntitySearch', className)}>
@@ -79,7 +82,7 @@ export class EntitySearch extends Component {
           selection={selection}
           collection={collection}
           writeable={writeable}
-          defaultColumns={defaultColumns}
+          columns={[getGroupField('caption'), ...columns]}
         />
         <QueryInfiniteLoad
           query={query}

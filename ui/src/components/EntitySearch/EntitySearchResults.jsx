@@ -4,9 +4,9 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import { SortableTH } from 'components/common';
 import EntitySearchResultsRow from './EntitySearchResultsRow';
-import { ErrorSection } from 'components/common';
+import { ErrorSection, SortableTH } from 'components/common';
+import SearchField from 'components/SearchField/SearchField';
 
 import './EntitySearchResults.scss';
 
@@ -57,8 +57,7 @@ class EntitySearchResults extends Component {
   renderHeaderCell = (field) => {
     const { intl, query } = this.props;
     const { field: sortedField, direction } = query.getSort();
-    const text = typeof field === 'string' ? intl.formatMessage(messages[`column_${field}`]) : field.label
-    const fieldName = typeof field === 'string' ? field : `properties.${field.name}`;
+    const fieldName = field.isProperty ? `properties.${field.name}` : field.name;
     return (
       <SortableTH
         key={fieldName}
@@ -67,13 +66,13 @@ class EntitySearchResults extends Component {
         sorted={sortedField === fieldName && (direction === 'desc' ? 'desc' : 'asc')}
         onClick={() => this.sortColumn(fieldName)}
       >
-        {text}
+        <SearchField.Label field={field} />
       </SortableTH>
     );
   }
 
   render() {
-    const { defaultColumns, result, intl, location, query, writeable } = this.props;
+    const { columns, result, intl, location, query, writeable } = this.props;
     const { showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
     const { field: sortedField, direction } = query.getSort();
@@ -93,7 +92,7 @@ class EntitySearchResults extends Component {
         <thead>
           <tr>
             {writeable && updateSelection && (<th className="select" />)}
-            {defaultColumns.map(this.renderHeaderCell)}
+            {columns.map(this.renderHeaderCell)}
           </tr>
         </thead>
         <tbody className={c({ updating: result.isPending })}>
@@ -106,7 +105,7 @@ class EntitySearchResults extends Component {
               updateSelection={updateSelection}
               selection={selection}
               writeable={writeable}
-              defaultColumns={defaultColumns}
+              columns={columns}
             />
           ))}
           {result.isPending && skeletonItems.map(item => (
@@ -114,7 +113,7 @@ class EntitySearchResults extends Component {
               key={item}
               updateSelection={updateSelection}
               writeable={writeable}
-              defaultColumns={defaultColumns}
+              columns={columns}
               isPending
             />
           ))}

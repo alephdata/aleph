@@ -17,7 +17,7 @@ function Facets(props) {
             result={result}
             updateQuery={updateQuery}
             facet={facet}
-            label={<SearchField.Label field={facet} />}
+            label={<SearchField.Label field={facet} icon />}
             isCollapsible={isCollapsible}
           />
         </li>
