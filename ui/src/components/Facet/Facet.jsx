@@ -11,9 +11,9 @@ import c from 'classnames';
 import { CheckboxList, Schema } from 'components/common';
 import DateFacet from 'components/Facet/DateFacet';
 
-import './SearchFacet.scss';
+import './Facet.scss';
 
-class SearchFacet extends Component {
+class Facet extends Component {
   constructor(props) {
     super(props);
     this.state = { facet: {}, isExpanding: false };
@@ -157,7 +157,7 @@ class SearchFacet extends Component {
     const isUpdating = result.total === undefined;
 
     return (
-      <div className="SearchFacet">
+      <div className="Facet">
         <div
           className={c('opener', { clickable: isCollapsible, active: !isUpdating && isFiltered })}
           onClick={this.onToggleOpen}
@@ -211,7 +211,7 @@ class SearchFacet extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query, facet } = ownProps;
-  const field = facet.isProperty ? `properties.${facet.field}` : facet.field
+  const field = facet.isProperty ? `properties.${facet.name}` : facet.name
   const defaultSize = facet.defaultSize || 10;
   const facetSize = query.getInt(`facet_size:${field}`, 0);
   const isOpen = query.hasFacet(field) && facetSize > 0;
@@ -227,4 +227,4 @@ export default compose(
   withRouter,
   connect(mapStateToProps),
   injectIntl,
-)(SearchFacet);
+)(Facet);

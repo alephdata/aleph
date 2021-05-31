@@ -1,23 +1,23 @@
 import React from 'react';
-import { Facet } from 'components/common';
-import SearchFacet from './SearchFacet';
+import SearchField from 'components/SearchField/SearchField';
+import Facet from './Facet';
 
-import './SearchFacets.scss';
+import './Facets.scss';
 
-function SearchFacets(props) {
+function Facets(props) {
   const {
     facets, query, result, updateQuery, isCollapsible,
   } = props;
   return (
-    <ul className="SearchFacets bp3-large">
+    <ul className="Facets bp3-large">
       {facets.map(facet => (
-        <li className="facet" key={facet.field}>
-          <SearchFacet
+        <li className="facet" key={facet.name}>
+          <Facet
             query={query}
             result={result}
             updateQuery={updateQuery}
             facet={facet}
-            label={<Facet.Label facet={facet} />}
+            label={<SearchField.Label field={facet} />}
             isCollapsible={isCollapsible}
           />
         </li>
@@ -26,4 +26,4 @@ function SearchFacets(props) {
   );
 }
 
-export default SearchFacets;
+export default Facets;

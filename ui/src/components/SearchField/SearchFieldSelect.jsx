@@ -6,13 +6,11 @@ import { connect } from 'react-redux';
 import { Property as FTMProperty } from '@alephdata/followthemoney';
 import { Icon, Intent, Menu, MenuItem } from '@blueprintjs/core';
 
-import getFacetConfig from 'util/getFacetConfig';
-import { Facet, Property, SelectWrapper } from 'components/common';
+import { GROUP_FIELDS, getGroupField } from 'components/SearchField/util';
+import SearchField from 'components/SearchField/SearchField';
+import { Property, SelectWrapper } from 'components/common';
 import { selectModel } from 'selectors';
 
-const TYPES = [
-  'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes'
-];
 
 class SearchFieldSelect extends PureComponent {
   constructor(props) {
@@ -39,7 +37,7 @@ class SearchFieldSelect extends PureComponent {
         onClick={handleClick}
         intent={isSelected && Intent.SUCCESS}
         label={isSelected && <Icon icon="tick" />}
-        text={<Facet.Label facet={item} />}
+        text={<SearchField.Label field={item} />}
         key={item.field}
       />
     );
@@ -50,19 +48,19 @@ class SearchFieldSelect extends PureComponent {
   }
 
   isSelected(item) {
-    return this.props.selected.find(({ field }) => field === item.field)
+    return this.props.selected.find(({ name }) => name === item.name)
   }
 
   itemListRenderer = ({ items, itemsParentRef, renderItem }) => {
-    const { properties, selected, types } = this.props;
-    const [selectedTypes, availableTypes] = _.partition(types, this.isSelected);
+    const { properties, selected, groups } = this.props;
+    const [selectedGroups, availableGroups] = _.partition(groups, this.isSelected);
     const [selectedProps, availableProps] = _.partition(properties, this.isSelected);
 
     return (
       <Menu ulRef={itemsParentRef}>
         <li className="bp3-menu-header"><h6 className="bp3-heading">Groups</h6></li>
-        {selectedTypes.map(renderItem)}
-        {availableTypes.map(renderItem)}
+        {selectedGroups.map(renderItem)}
+        {availableGroups.map(renderItem)}
         <li className="bp3-menu-header"><h6 className="bp3-heading">Properties</h6></li>
         {selectedProps.map((...props) => renderItem(...props, true))}
         {availableProps.map(renderItem)}
@@ -71,7 +69,7 @@ class SearchFieldSelect extends PureComponent {
   }
 
   render() {
-    const { children, onSelect, properties, types } = this.props;
+    const { children, onSelect, properties, groups } = this.props;
 
     return (
       <SelectWrapper
@@ -80,7 +78,7 @@ class SearchFieldSelect extends PureComponent {
         itemListRenderer={this.itemListRenderer}
         filterable={true}
         onItemSelect={this.props.onSelect}
-        items={[...types, ...properties]}
+        items={[...groups, ...properties]}
         resetOnSelect
         resetOnQuery
       >
@@ -99,9 +97,9 @@ const mapStateToProps = (state, ownProps) => {
     .sort((a, b) => a.label > b.label ? 1 : -1)
 
   return {
-    types: TYPES.map(getFacetConfig),
+    groups: GROUP_FIELDS.map(getGroupField),
     properties: _.uniqBy(properties, 'name')
-      .map(prop => ({ field: prop.name, label: prop.label, isProperty: true }))
+      .map(prop => ({ name: prop.name, label: prop.label, isProperty: true }))
   };
 };
 

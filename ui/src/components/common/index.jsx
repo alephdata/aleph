@@ -16,7 +16,6 @@ import csvContextLoader from './csvContextLoader';
 import EntitySet from './EntitySet';
 import DualPane from './DualPane';
 import Entity from './Entity';
-import Facet from './Facet';
 import FileImport from './FileImport';
 import Mention from './Mention';
 import Property from './Property';
@@ -61,7 +60,6 @@ export {
   HotkeysContainer,
   Entity,
   AppItem,
-  Facet,
   FileImport,
   Mention,
   Property,

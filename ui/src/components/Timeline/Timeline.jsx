@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 import c from 'classnames';
 import queryString from 'query-string';
 
-import getFacetConfig from 'util/getFacetConfig';
+import { getGroupField } from 'components/SearchField/util';
 import { DualPane } from 'components/common';
-import SearchFacets from 'components/Facet/SearchFacets';
+import Facets from 'components/Facet/Facets';
 import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import TimelineActionBar from 'components/Timeline/TimelineActionBar';
@@ -110,11 +110,11 @@ class Timeline extends Component {
             />
             {histogramFixed && actionBar}
           </div>
-          <SearchFacets
+          <Facets
             query={query}
             result={result}
             updateQuery={this.updateQuery}
-            facets={defaultFacets.map(getFacetConfig)}
+            facets={defaultFacets.map(getGroupField)}
           />
           <div className="Timeline__date-placeholder" ref={this.histogramRef}></div>
         </DualPane.SidePane>

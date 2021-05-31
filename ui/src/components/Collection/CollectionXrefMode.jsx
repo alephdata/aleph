@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 import { Button, Intent } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import getFacetConfig from 'util/getFacetConfig';
+import { getGroupField } from 'components/SearchField/util';
 import SearchActionBar from 'components/common/SearchActionBar';
-import SearchFacets from 'components/Facet/SearchFacets';
+import Facets from 'components/Facet/Facets';
 import { QueryInfiniteLoad } from 'components/common';
 import CollectionXrefManageMenu from 'components/Collection/CollectionXrefManageMenu';
 import XrefTable from 'components/XrefTable/XrefTable';
@@ -68,8 +68,8 @@ export class CollectionXrefMode extends React.Component {
       <section className="CollectionXrefMode">
         <div className="pane-layout">
           <div className="pane-layout-side">
-            <SearchFacets
-              facets={['match_collection_id', 'schema', 'countries'].map(getFacetConfig)}
+            <Facets
+              facets={['match_collection_id', 'schema', 'countries'].map(getGroupField)}
               query={query}
               result={result}
               updateQuery={this.updateQuery}

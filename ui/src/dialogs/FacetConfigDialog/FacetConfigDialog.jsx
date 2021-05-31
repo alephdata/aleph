@@ -7,10 +7,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import getFacetConfig from 'util/getFacetConfig';
+import SearchField from 'components/SearchField/SearchField';
+import { getGroupField } from 'components/SearchField/util';
 import { setSearchConfig } from 'app/storage';
 import { selectModel } from 'selectors';
-import { Facet } from 'components/common';
 
 import './FacetConfigDialog.scss';
 
@@ -91,7 +91,7 @@ class FacetConfigDialog extends Component {
     return (
       <tr key={facet.field}>
         <td className="bp3-heading">
-          <Facet.Label facet={facet} />
+          <SearchField.Label field={facet.field} />
         </td>
         <td className="numeric narrow">
           {showAddButton && this.renderAddButton(facet)}
@@ -108,7 +108,7 @@ class FacetConfigDialog extends Component {
     const [propFacets, typeFacets] = _.partition(facets, facet => facet.isProperty);
     const availableTypeFacets = allTypeFacets
       .filter(facet => !typeFacets.find(f => f.field === facet))
-      .map(getFacetConfig)
+      .map(getGroupField)
 
     return (
       <Dialog

@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react';
 import { injectIntl } from 'react-intl';
 import { Icon } from '@blueprintjs/core';
 
-class FacetLabel extends PureComponent {
+class SearchFieldLabel extends PureComponent {
   render() {
-    const { facet, intl, count = 0 } = this.props;
-    if (!facet) {
+    const { field, intl, count = 0 } = this.props;
+    if (!field) {
       return null;
     }
-    const { icon, isProperty, label } = facet;
+    const { icon, isProperty, label } = field;
 
     return (
       <>
@@ -19,8 +19,8 @@ class FacetLabel extends PureComponent {
   }
 }
 
-class Facet {
-  static Label = injectIntl(FacetLabel);
+class SearchField {
+  static Label = injectIntl(SearchFieldLabel);
 }
 
-export default Facet;
+export default SearchField;

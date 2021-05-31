@@ -1,7 +1,7 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-.SearchFacets {
+.Facets {
   display: flex;
   flex-flow: column nowrap;
   @include rtlSupportInvertedProp(padding, left, 0, null);

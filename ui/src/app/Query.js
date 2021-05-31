@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import queryString from 'query-string';
 import ensureArray from 'util/ensureArray';
-import getFacetConfig from 'util/getFacetConfig';
+import { getGroupField } from 'components/SearchField/util';
 
 class Query {
   // State of a particular API query. This doesn't need to be specific to any one
@@ -190,7 +190,7 @@ class Query {
   }
 
   addFacet(field, total = false) {
-    const config = getFacetConfig(field);
+    const config = getGroupField(field);
     return this.add('facet', field)
       .set(`facet_size:${field}`, config.defaultSize)
       .set(`facet_total:${field}`, total);
