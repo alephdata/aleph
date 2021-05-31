@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getSearchConfig } from 'app/storage';
+import { setSearchConfig, getSearchConfig } from 'app/storage';
 import getFacetConfig from 'util/getFacetConfig';
 import { Count, DualPane, ErrorSection, HotkeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
@@ -50,7 +50,7 @@ const messages = defineMessages({
   },
   configure_facets: {
     id: 'search.facets.configure',
-    defaultMessage: 'Configure facets',
+    defaultMessage: 'Configure filters',
   },
   columns: {
     id: 'search.columns.configure',
@@ -68,6 +68,7 @@ class FacetedEntitySearch extends React.Component {
     this.updateQuery = this.updateQuery.bind(this);
     this.toggleFacets = this.toggleFacets.bind(this);
     this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
+    this.onSearchConfigEdit = this.onSearchConfigEdit.bind(this);
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);
     this.showPreview = this.showPreview.bind(this);
@@ -123,8 +124,23 @@ class FacetedEntitySearch extends React.Component {
     this.setState(({ hideFacets }) => ({ hideFacets: !hideFacets }));
   }
 
-  onFacetConfigEdit(edit) {
-    console.log('edited', edit);
+  onSearchConfigEdit(configKey, edited) {
+    const { columns, facets, history, location } = this.props;
+    const current = this.props[configKey];
+    let next;
+
+    if (current.find(({ field }) => field === edited.field)) {
+      next = current.filter(({ field }) => field !== edited.field);;
+    } else {
+      next = [...current, edited]
+    }
+
+    setSearchConfig({ columns, facets, [configKey]: next });
+
+    history.replace({
+      pathname: location.pathname,
+      hash: location.hash,
+    });
   }
 
   render() {
@@ -185,7 +201,7 @@ class FacetedEntitySearch extends React.Component {
                 isCollapsible
               />
               <SearchFieldSelect
-                onSelect={this.onFacetConfigEdit}
+                onSelect={(field) => this.onSearchConfigEdit('facets', field)}
                 selected={facets}
               >
                 <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
@@ -203,11 +219,17 @@ class FacetedEntitySearch extends React.Component {
                   sortingFields={columns}
                   filterButtonLabel=""
                   filterButton={
-                    <SortingBarSelect
-                      items={[]}
-                      onSelect={this.onSelect}
-                      activeItem={{ label: intl.formatMessage(messages.columns, { count: <Count count={columns.length} className='bp3-intent-primary' /> }) }}
-                    />
+                    <SearchFieldSelect
+                      onSelect={(field) => this.onSearchConfigEdit('columns', field)}
+                      selected={facets}
+                    >
+                      <Button
+                        text={intl.formatMessage(messages.columns, { count: <Count count={columns.length} className='bp3-intent-primary' /> })}
+                        minimal
+                        intent={Intent.PRIMARY}
+                        rightIcon="caret-down"
+                      />
+                    </SearchFieldSelect>
                   }
                 />
               </SearchActionBar>

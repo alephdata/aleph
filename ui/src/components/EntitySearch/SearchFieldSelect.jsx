@@ -81,6 +81,8 @@ class SearchFieldSelect extends PureComponent {
         filterable={true}
         onItemSelect={this.props.onSelect}
         items={[...types, ...properties]}
+        resetOnSelect
+        resetOnQuery
       >
         {children}
       </SelectWrapper>

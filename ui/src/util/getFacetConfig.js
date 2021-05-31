@@ -31,6 +31,10 @@ const messages = defineMessages({
     id: 'facet.phones',
     defaultMessage: '{count, plural, one {Phone number} other {Phone numbers}}',
   },
+  facet_caption: {
+    id: 'facet.caption',
+    defaultMessage: '{count, plural, one {Name} other {Names}}',
+  },
   facet_countries: {
     id: 'facet.countries',
     defaultMessage: '{count, plural, one {Country} other {Countries}}',
@@ -59,6 +63,10 @@ const propConfigs = {
     label: messages.facet_addresses,
     icon: 'map',
     defaultSize: 30,
+  },
+  caption: {
+    field: 'caption',
+    label: messages.facet_caption,
   },
   category: {
     field: 'category',
