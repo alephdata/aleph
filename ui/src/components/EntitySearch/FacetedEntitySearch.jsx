@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import queryString from 'query-string';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Icon, Intent } from '@blueprintjs/core';
@@ -246,11 +247,24 @@ class FacetedEntitySearch extends React.Component {
     );
   }
 }
-const mapStateToProps = () => {
+const mapStateToProps = (state, ownProps) => {
+  const { query } = ownProps;
   const searchConfig = getSearchConfig();
+  const facets = searchConfig?.facets || defaultFacets.map(getGroupField);
+  const columns = searchConfig?.columns || defaultColumns.map(getGroupField);
+
+  // add any active facets to the list of displayed columns
+  const activeFacetKeys = query.getList('facet');
+  const activeFacets = activeFacetKeys
+    .map(key => {
+      const sanitizedKey = key.replace('properties.', '');
+      return facets.find(facet => facet.name === sanitizedKey);
+    })
+    .filter(facet => !!facet);
+
   return {
-    facets: searchConfig?.facets || defaultFacets.map(getGroupField),
-    columns: searchConfig?.columns || defaultColumns.map(getGroupField)
+    facets,
+    columns: _.uniqBy([...columns, ...activeFacets], facet => facet.name)
   };
 };
 
