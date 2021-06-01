@@ -99,7 +99,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     groups: GROUP_FIELDS.map(getGroupField),
     properties: _.uniqBy(properties, 'name')
-      .map(prop => ({ name: prop.name, label: prop.label, isProperty: true }))
+      .map(prop => ({ name: prop.name, label: prop.label, type: prop.type.name, isProperty: true }))
   };
 };
 

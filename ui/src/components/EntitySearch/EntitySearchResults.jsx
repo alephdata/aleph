@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
@@ -9,33 +8,6 @@ import { ErrorSection, SortableTH } from 'components/common';
 import SearchField from 'components/SearchField/SearchField';
 
 import './EntitySearchResults.scss';
-
-const messages = defineMessages({
-  column_caption: {
-    id: 'entity.column.caption',
-    defaultMessage: 'Name',
-  },
-  column_collection_id: {
-    id: 'entity.column.collection_id',
-    defaultMessage: 'Dataset',
-  },
-  column_schema: {
-    id: 'entity.column.schema',
-    defaultMessage: 'Type',
-  },
-  column_countries: {
-    id: 'entity.column.countries',
-    defaultMessage: 'Countries',
-  },
-  'column_properties.fileSize': {
-    id: 'entity.column.file_size',
-    defaultMessage: 'Size',
-  },
-  column_dates: {
-    id: 'entity.column.dates',
-    defaultMessage: 'Date',
-  },
-});
 
 
 class EntitySearchResults extends Component {
@@ -55,7 +27,7 @@ class EntitySearchResults extends Component {
   }
 
   renderHeaderCell = (field) => {
-    const { intl, query } = this.props;
+    const { query } = this.props;
     const { field: sortedField, direction } = query.getSort();
     const fieldName = field.isProperty ? `properties.${field.name}` : field.name;
     return (
@@ -72,7 +44,7 @@ class EntitySearchResults extends Component {
   }
 
   render() {
-    const { columns, result, intl, location, query, writeable } = this.props;
+    const { columns, result, location, query, writeable } = this.props;
     const { showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
     const { field: sortedField, direction } = query.getSort();
@@ -125,5 +97,4 @@ class EntitySearchResults extends Component {
 
 export default compose(
   withRouter,
-  injectIntl,
 )(EntitySearchResults);

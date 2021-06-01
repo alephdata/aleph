@@ -216,9 +216,6 @@ class FacetedEntitySearch extends React.Component {
               <QueryTags query={query} updateQuery={this.updateQuery} />
               <SearchActionBar result={result}>
                 <SortingBar
-                  query={query}
-                  updateQuery={this.updateQuery}
-                  sortingFields={columns}
                   filterButtonLabel=""
                   filterButton={
                     <SearchFieldSelect
@@ -226,7 +223,7 @@ class FacetedEntitySearch extends React.Component {
                       selected={columns}
                     >
                       <Button
-                        text={intl.formatMessage(messages.columns, { count: <Count count={columns.length} className='bp3-intent-primary' /> })}
+                        text={intl.formatMessage(messages.columns, { count: <Count count={columns.length + 1} className='bp3-intent-primary' /> })}
                         minimal
                         intent={Intent.PRIMARY}
                         rightIcon="caret-down"

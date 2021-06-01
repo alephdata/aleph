@@ -4,25 +4,25 @@ import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
+import wordList from 'util/wordList';
 import {
-  Country, Collection, Entity, FileSize, Date, Skeleton,
+  Country, Collection, Entity, FileSize, Date, Property, Schema, Skeleton, Language,
 } from 'components/common';
-/* eslint-disable */
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {
-    const { columns, updateSelection, writeable } = this.props;
+    const { columns, updateSelection, key, writeable } = this.props;
 
     return (
-      <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')} key="skeleton">
+      <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')}>
         {writeable && updateSelection && (
           <td className="select">
             <Skeleton.Text type="span" length={2} />
           </td>
         )}
-        {columns.map(column => (
-          <td key={column} className={column.type?.name || column.name}>
-            <Skeleton.Text type="span" length={column.name === 'caption' || column.name === 'collection_id' ? 30 : 15} />
+        {columns.map(({ name, type }) => (
+          <td key={name} className={type?.name || name}>
+            <Skeleton.Text type="span" length={name === 'caption' || name === 'collection_id' ? 30 : 15} />
           </td>
         ))}
       </tr>
@@ -42,12 +42,28 @@ class EntitySearchResultsRow extends Component {
           return <Country.List codes={entity.getTypeValues('country')} />;
         case 'dates':
           return <Date.Earliest values={entity.getTypeValues('date')} />;
+        case 'languages':
+          return <Language.List codes={entity.getTypeValues('language')} />;
+        case 'schema':
+          return <Schema.Label schema={entity.schema} icon />;
+        case 'names':
+          return wordList(entity.getTypeValues('name'), ',');
+        case 'phones':
+          return wordList(entity.getTypeValues('phone'), ',');
+        case 'addresses':
+          return wordList(entity.getTypeValues('address'), ',');
+        case 'emails':
+          return wordList(entity.getTypeValues('email'), ',');
+        case 'mimetypes':
+          return wordList(entity.getTypeValues('mimetype'), ',');
+        default:
+          return null;
       }
     } else {
       if (column.name === 'fileSize') {
         return <FileSize value={entity.getFirst('fileSize')} />;
       } else {
-        return entity.getProperty(field);
+        return <Property.Values prop={{ name: column.name, type: { name: column.type }}} values={entity.getProperty(column.name)} />
       }
     }
   }

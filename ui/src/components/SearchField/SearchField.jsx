@@ -8,7 +8,6 @@ class SearchFieldLabel extends PureComponent {
     if (!field) {
       return null;
     }
-    console.log('field', field);
     const {isProperty, label } = field;
 
     return (

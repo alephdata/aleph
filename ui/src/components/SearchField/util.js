@@ -11,11 +11,11 @@ const messages = defineMessages({
   },
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: '{count, plural, one {Type} other {Types}}',
+    defaultMessage: 'Entity type',
   },
   facet_collection_id: {
     id: 'facet.collection_id',
-    defaultMessage: '{count, plural, one {Dataset} other {Datasets}}',
+    defaultMessage: 'Dataset',
   },
   facet_ibans: {
     id: 'facet.ibans',
@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
   facet_caption: {
     id: 'facet.caption',
-    defaultMessage: '{count, plural, one {Name} other {Names}}',
+    defaultMessage: 'Name',
   },
   facet_countries: {
     id: 'facet.countries',
