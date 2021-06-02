@@ -15,7 +15,7 @@ import XrefTable from 'components/XrefTable/XrefTable';
 import SortingBar from 'components/SortingBar/SortingBar';
 import { collectionXrefFacetsQuery } from 'queries';
 import { selectCollection, selectCollectionXrefResult, selectTester } from 'selectors';
-import { queryCollectionXref, queryRoles } from 'actions';
+import { queryCollectionXref, queryRoles, triggerCollectionXrefDownload } from 'actions';
 
 import './CollectionXrefMode.scss';
 
@@ -64,8 +64,12 @@ export class CollectionXrefMode extends React.Component {
 
   render() {
     const { collection, isRandomSort, intl, isTester, query, result } = this.props;
+
+    const exportLink = collection?.links?.xref_export;
+
     return (
       <section className="CollectionXrefMode">
+
         <div className="pane-layout">
           <div className="pane-layout-side">
             <Facets
@@ -82,7 +86,11 @@ export class CollectionXrefMode extends React.Component {
                 result={result}
                 query={query}
               />
-              <SearchActionBar result={result}>
+              <SearchActionBar
+                result={result}
+                exportDisabled={!exportLink}
+                onExport={() => this.props.triggerCollectionXrefDownload(collection.id)}
+              >
                 {isTester && (
                   <SortingBar
                     filterButtonLabel={intl.formatMessage(messages.sort_label)}
@@ -125,6 +133,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryCollectionXref, queryRoles }),
+  connect(mapStateToProps, { queryCollectionXref, queryRoles, triggerCollectionXrefDownload }),
   injectIntl,
 )(CollectionXrefMode);

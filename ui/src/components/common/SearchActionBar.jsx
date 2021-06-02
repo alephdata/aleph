@@ -7,7 +7,6 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
 import { ResultText } from 'components/common';
 import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
-import { triggerQueryExport } from 'src/actions';
 import { DialogToggleButton } from 'components/Toolbar';
 
 import './SearchActionBar.scss';
@@ -33,21 +32,22 @@ const messages = defineMessages({
 
 class SearchActionBar extends React.Component {
   render() {
-    const { children, customResultText, intl, result } = this.props;
+    const { children, customResultText, intl, result, onExport, exportDisabled } = this.props;
 
-    const exportLink = result.total > 0 ? result.links?.export : null;
     let tooltipText;
-    if (exportLink) {
-      tooltipText = intl.formatMessage(messages.export_helptext);
+    if (!result.total) {
+      tooltipText = intl.formatMessage(messages.export_disabled_empty);
+    } else if (result.total > 10000) {
+      tooltipText = intl.formatMessage(messages.export_disabled);
     } else {
-      tooltipText = intl.formatMessage(result.total > 0 ? messages.export_disabled : messages.export_disabled_empty);
+      tooltipText = intl.formatMessage(messages.export_helptext);
     }
 
     return (
       <ControlGroup className="SearchActionBar" fill>
         <div className="SearchActionBar__main">
           <ResultText result={result} customText={customResultText} />
-          {!result.isPending && (
+          {(!!onExport && !!result.total) && (
             <span className="SearchActionBar__export">
               <Tooltip content={tooltipText}>
                 <DialogToggleButton
@@ -55,14 +55,12 @@ class SearchActionBar extends React.Component {
                   buttonProps={{
                     icon: "export",
                     text: intl.formatMessage(messages.export),
-                    disabled: !exportLink,
+                    disabled: exportDisabled,
                     small: true,
                     outlined: true
                   }}
                   Dialog={ExportDialog}
-                  dialogProps={{
-                    onExport: () => this.props.triggerQueryExport(exportLink)
-                  }}
+                  dialogProps={{ onExport }}
                 />
               </Tooltip>
             </span>
@@ -74,7 +72,4 @@ class SearchActionBar extends React.Component {
   }
 }
 
-export default compose(
-  connect(null, { triggerQueryExport }),
-  injectIntl,
-)(SearchActionBar);
+export default injectIntl(SearchActionBar);

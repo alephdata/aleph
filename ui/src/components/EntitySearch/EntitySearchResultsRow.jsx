@@ -114,7 +114,7 @@ class EntitySearchResultsRow extends Component {
         {!!highlights.length
           && (
             <tr key={`${entity.id}-hl`} className={highlightsClass}>
-              <td colSpan="5" className="highlights">
+              <td colSpan="100%" className="highlights">
                 {highlights.map((phrase, index) => (
                   <span key={index}>
                     <span dangerouslySetInnerHTML={{ __html: phrase }} />

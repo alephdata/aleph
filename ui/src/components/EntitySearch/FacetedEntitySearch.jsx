@@ -7,6 +7,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { triggerQueryExport } from 'src/actions';
 import { setSearchConfig, getSearchConfig } from 'app/storage';
 import { getGroupField } from 'components/SearchField/util';
 import { Count, DualPane, ErrorSection, HotkeysContainer } from 'components/common';
@@ -23,7 +24,7 @@ import './FacetedEntitySearch.scss';
 const defaultFacets = [
   'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
 ];
-const defaultColumns = ['collection_id', 'countries', 'dates'];
+const defaultColumns = ['countries', 'dates'];
 
 const messages = defineMessages({
   no_results_title: {
@@ -149,11 +150,10 @@ class FacetedEntitySearch extends React.Component {
   }
 
   render() {
-    const { additionalFacets = [], columns, children, facets, query, result, intl, hasCustomColumns, hasCustomFacets } = this.props;
+    const { additionalFields = [], columns, children, facets, query, result, intl, hasCustomColumns, hasCustomFacets } = this.props;
     const { hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
-    const fullFacetList = [...additionalFacets.map(getGroupField), ...facets];
 
     const empty = (
       <ErrorSection
@@ -162,6 +162,8 @@ class FacetedEntitySearch extends React.Component {
         description={intl.formatMessage(messages.no_results_description)}
       />
     );
+
+    const exportLink = result.total > 0 ? result.links?.export : null;
 
     const hotkeysGroupLabel = { group: intl.formatMessage(messages.group_label) }
 
@@ -202,7 +204,7 @@ class FacetedEntitySearch extends React.Component {
                 query={query}
                 result={result}
                 updateQuery={this.updateQuery}
-                facets={fullFacetList}
+                facets={[...additionalFields.map(getGroupField), ...facets]}
                 isCollapsible
               />
               <SearchFieldSelect
@@ -218,7 +220,11 @@ class FacetedEntitySearch extends React.Component {
             {children}
             <div className="FacetedEntitySearch__controls">
               <QueryTags query={query} updateQuery={this.updateQuery} />
-              <SearchActionBar result={result}>
+              <SearchActionBar
+                result={result}
+                exportDisabled={!exportLink}
+                onExport={() => this.props.triggerQueryExport(exportLink)}
+              >
                 <SortingBar
                   filterButtonLabel=""
                   filterButton={
@@ -243,7 +249,7 @@ class FacetedEntitySearch extends React.Component {
               updateQuery={this.updateQuery}
               result={result}
               emptyComponent={empty}
-              columns={columns}
+              columns={[...additionalFields.map(getGroupField), ...columns]}
             />
           </DualPane.ContentPane>
         </DualPane>
@@ -276,6 +282,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, { triggerQueryExport }),
   injectIntl,
 )(FacetedEntitySearch);

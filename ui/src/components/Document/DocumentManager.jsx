@@ -15,6 +15,7 @@ import EntityActionBar from 'components/Entity/EntityActionBar';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'components/common';
+import { getGroupField } from 'components/SearchField/util';
 import getEntityLink from 'util/getEntityLink';
 import { selectEntitiesResult, selectModel } from 'selectors';
 import { deleteEntity, queryEntities } from 'actions';
@@ -195,7 +196,7 @@ export class DocumentManager extends Component {
             writeable={showActions}
             updateSelection={this.updateSelection}
             emptyComponent={emptyComponent}
-            columns={['dates', fileSizeProp]}
+            columns={[getGroupField('dates'), fileSizeProp]}
           />
         </div>
       </div>
@@ -206,7 +207,9 @@ export class DocumentManager extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
   const model = selectModel(state);
-  const fileSizeProp = model.getSchema('Document').getProperty('fileSize');
+  const fileSizeProp = model
+    .getSchema('Document')
+    .getProperty('fileSize');
 
   let { query } = ownProps;
   query = query.defaultSortBy('caption', 'asc');
@@ -215,7 +218,11 @@ const mapStateToProps = (state, ownProps) => {
   }
   const result = selectEntitiesResult(state, query);
 
-  return { query, result, fileSizeProp };
+  return {
+    query,
+    result,
+    fileSizeProp: { name: 'fileSize', label: fileSizeProp.label, type: fileSizeProp.type.name, isProperty: true }
+  };
 };
 
 export default compose(
