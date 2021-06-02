@@ -1,15 +1,16 @@
 import React, { PureComponent } from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Icon, Intent, Menu, MenuItem } from '@blueprintjs/core';
+import { Button, Icon, Intent, Menu, MenuItem } from '@blueprintjs/core';
 
 import { GROUP_FIELDS, getGroupField } from 'components/SearchField/util';
 import SearchField from 'components/SearchField/SearchField';
 import { SelectWrapper } from 'components/common';
 import { selectModel } from 'selectors';
 
+import './SearchFieldSelect.scss'
 
 class SearchFieldSelect extends PureComponent {
   constructor(props) {
@@ -51,19 +52,33 @@ class SearchFieldSelect extends PureComponent {
   }
 
   itemListRenderer = ({ items, itemsParentRef, renderItem }) => {
-    const { properties, groups } = this.props;
+    const { properties, groups, onReset } = this.props;
     const [selectedGroups, availableGroups] = _.partition(groups, this.isSelected);
     const [selectedProps, availableProps] = _.partition(properties, this.isSelected);
 
     return (
-      <Menu ulRef={itemsParentRef}>
-        <li className="bp3-menu-header"><h6 className="bp3-heading">Groups</h6></li>
-        {selectedGroups.map(renderItem)}
-        {availableGroups.map(renderItem)}
-        <li className="bp3-menu-header"><h6 className="bp3-heading">Properties</h6></li>
-        {selectedProps.map((...props) => renderItem(...props, true))}
-        {availableProps.map(renderItem)}
-      </Menu>
+      <>
+        <Menu ulRef={itemsParentRef}>
+          <li className="bp3-menu-header"><h6 className="bp3-heading">Groups</h6></li>
+          {selectedGroups.map(renderItem)}
+          {availableGroups.map(renderItem)}
+          <li className="bp3-menu-header"><h6 className="bp3-heading">Properties</h6></li>
+          {selectedProps.map((...props) => renderItem(...props, true))}
+          {availableProps.map(renderItem)}
+        </Menu>
+        {!!onReset && (
+          <Button
+            outlined
+            icon="reset"
+            fill
+            intent={Intent.DANGER}
+            className="SearchFieldSelect__reset"
+            onClick={onReset}
+          >
+            <FormattedMessage id="search.config.reset" defaultMessage="Reset to default" />
+          </Button>
+        )}
+      </>
     );
   }
 
@@ -80,6 +95,7 @@ class SearchFieldSelect extends PureComponent {
         items={[...groups, ...properties]}
         resetOnSelect
         resetOnQuery
+        className="SearchFieldSelect"
       >
         {children}
       </SelectWrapper>

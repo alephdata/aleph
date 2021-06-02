@@ -123,7 +123,7 @@ class FacetedEntitySearch extends React.Component {
   }
 
   onSearchConfigEdit(configKey, edited) {
-    const { columns, facets, history, location } = this.props;
+    const { columns, facets } = this.props;
     const current = this.props[configKey];
     let next;
 
@@ -133,7 +133,13 @@ class FacetedEntitySearch extends React.Component {
       next = [...current, edited]
     }
 
-    setSearchConfig({ columns, facets, [configKey]: next });
+    this.saveSearchConfig({ columns, facets, [configKey]: next });
+  }
+
+  saveSearchConfig(config) {
+    const { history, location } = this.props;
+
+    setSearchConfig(config);
 
     history.replace({
       pathname: location.pathname,
@@ -143,7 +149,7 @@ class FacetedEntitySearch extends React.Component {
   }
 
   render() {
-    const { additionalFacets = [], columns, children, facets, query, result, intl } = this.props;
+    const { additionalFacets = [], columns, children, facets, query, result, intl, hasCustomColumns, hasCustomFacets } = this.props;
     const { hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
@@ -201,6 +207,7 @@ class FacetedEntitySearch extends React.Component {
               />
               <SearchFieldSelect
                 onSelect={(field) => this.onSearchConfigEdit('facets', field)}
+                onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
                 selected={facets}
               >
                 <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
@@ -217,6 +224,7 @@ class FacetedEntitySearch extends React.Component {
                   filterButton={
                     <SearchFieldSelect
                       onSelect={(field) => this.onSearchConfigEdit('columns', field)}
+                      onReset={hasCustomColumns && (() => this.saveSearchConfig({ columns: null, facets }))}
                       selected={columns}
                     >
                       <Button
@@ -259,6 +267,8 @@ const mapStateToProps = (state, ownProps) => {
     .filter(facet => !!facet);
 
   return {
+    hasCustomFacets: !!searchConfig?.facets,
+    hasCustomColumns: !!searchConfig?.columns,
     facets,
     columns: _.uniqBy([...columns, ...activeFacets], facet => facet.name)
   };

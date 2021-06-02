@@ -1,0 +1,7 @@
+@import "app/variables.scss";
+
+.SearchFieldSelect {
+  &__reset {
+    margin-top: $aleph-grid-size/2;
+  }
+}
