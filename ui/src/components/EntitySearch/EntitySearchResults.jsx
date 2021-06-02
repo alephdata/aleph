@@ -44,10 +44,9 @@ class EntitySearchResults extends Component {
   }
 
   render() {
-    const { columns, result, location, query, writeable } = this.props;
+    const { columns, result, location, writeable } = this.props;
     const { showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
-    const { field: sortedField, direction } = query.getSort();
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;

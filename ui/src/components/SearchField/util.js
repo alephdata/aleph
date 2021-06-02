@@ -11,7 +11,7 @@ const messages = defineMessages({
   },
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: 'Entity type',
+    defaultMessage: 'Type',
   },
   facet_collection_id: {
     id: 'facet.collection_id',

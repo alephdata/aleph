@@ -11,15 +11,12 @@ import { setSearchConfig, getSearchConfig } from 'app/storage';
 import { getGroupField } from 'components/SearchField/util';
 import { Count, DualPane, ErrorSection, HotkeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
-import FacetConfigDialog from 'dialogs/FacetConfigDialog/FacetConfigDialog';
 import SearchActionBar from 'components/common/SearchActionBar';
 import Facets from 'components/Facet/Facets';
 import SearchFieldSelect from 'components/SearchField/SearchFieldSelect';
 import QueryTags from 'components/QueryTags/QueryTags';
 import togglePreview from 'util/togglePreview';
 import SortingBar from 'components/SortingBar/SortingBar';
-import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
-import { DialogToggleButton } from 'components/Toolbar'
 
 import './FacetedEntitySearch.scss';
 
@@ -136,12 +133,11 @@ class FacetedEntitySearch extends React.Component {
       next = [...current, edited]
     }
 
-    console.log(current, next);
-
     setSearchConfig({ columns, facets, [configKey]: next });
 
     history.replace({
       pathname: location.pathname,
+      search: location.search,
       hash: location.hash,
     });
   }

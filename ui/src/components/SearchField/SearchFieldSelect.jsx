@@ -3,12 +3,11 @@ import { injectIntl } from 'react-intl';
 import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Property as FTMProperty } from '@alephdata/followthemoney';
 import { Icon, Intent, Menu, MenuItem } from '@blueprintjs/core';
 
 import { GROUP_FIELDS, getGroupField } from 'components/SearchField/util';
 import SearchField from 'components/SearchField/SearchField';
-import { Property, SelectWrapper } from 'components/common';
+import { SelectWrapper } from 'components/common';
 import { selectModel } from 'selectors';
 
 
@@ -52,7 +51,7 @@ class SearchFieldSelect extends PureComponent {
   }
 
   itemListRenderer = ({ items, itemsParentRef, renderItem }) => {
-    const { properties, selected, groups } = this.props;
+    const { properties, groups } = this.props;
     const [selectedGroups, availableGroups] = _.partition(groups, this.isSelected);
     const [selectedProps, availableProps] = _.partition(properties, this.isSelected);
 
@@ -77,7 +76,7 @@ class SearchFieldSelect extends PureComponent {
         itemRenderer={this.itemRenderer}
         itemListRenderer={this.itemListRenderer}
         filterable={true}
-        onItemSelect={this.props.onSelect}
+        onItemSelect={onSelect}
         items={[...groups, ...properties]}
         resetOnSelect
         resetOnQuery
@@ -89,7 +88,6 @@ class SearchFieldSelect extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { selected } = ownProps;
   const model = selectModel(state);
 
   const properties = model.getProperties()

@@ -57,8 +57,6 @@ export class EntitySearch extends Component {
     } = this.props;
     const isEmpty = !query.hasQuery();
 
-    console.log('in entity search, columns are', columns)
-
     return (
       <div className={c('EntitySearch', className)}>
         {result.total === 0 && (

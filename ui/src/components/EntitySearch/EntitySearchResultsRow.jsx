@@ -11,7 +11,7 @@ import {
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {
-    const { columns, updateSelection, key, writeable } = this.props;
+    const { columns, updateSelection, writeable } = this.props;
 
     return (
       <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')}>
