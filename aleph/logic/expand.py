@@ -1,4 +1,5 @@
 import logging
+from pprint import pformat  # noqa
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.graph import Node
@@ -14,6 +15,8 @@ from aleph.index.util import field_filter_query, authz_query, unpack_result
 log = logging.getLogger(__name__)
 DEFAULT_TAGS = set(registry.pivots)
 DEFAULT_TAGS.remove(registry.entity)
+FILTERS_COUNT_LIMIT = 50
+QUERY_COUNT_LIMIT = 30
 
 
 def _expand_properties(proxies, properties):
@@ -164,20 +167,34 @@ def _counted_msearch(queries, authz, limit=0):
 
     log.debug("Counts: %s queries, %s groups", len(queries), len(grouped))
 
-    body = []
+    grouped_queries = []
     for group in grouped.values():
-        body.append({"index": group.get("index")})
+        index = {"index": group.get("index")}
         filters = group.get("filters")
-        if limit == 0 and len(filters) > 1:
-            filters = [{"bool": {"should": filters, "minimum_should_match": 1}}]
-        filters.append(authz_query(authz))
-        query = {
-            "size": limit,
-            "query": {"bool": {"filter": filters}},
-            "aggs": {"counts": {"filters": {"filters": group.get("counts")}}},
-            "_source": ENTITY_SOURCE,
-        }
-        body.append(query)
+        counts = list(group.get("counts").items())
+
+        # Having too many filters in a single query can force Elasticsearch
+        # to use more heap memory than available. So we group the filters into
+        # smaller batches.
+        while len(filters) > 0:
+            filters_batch = filters[:FILTERS_COUNT_LIMIT]
+            filters = filters[FILTERS_COUNT_LIMIT:]
+            counts_batch = dict(counts[:FILTERS_COUNT_LIMIT])
+            counts = counts[FILTERS_COUNT_LIMIT:]
+            if limit == 0 and len(filters_batch) > 1:
+                filters_batch = [
+                    {"bool": {"should": filters_batch, "minimum_should_match": 1}}
+                ]
+            filters_batch.append(authz_query(authz))
+            query = {
+                "size": limit,
+                "query": {"bool": {"filter": filters_batch}},
+                "aggs": {"counts": {"filters": {"filters": counts_batch}}},
+                "_source": ENTITY_SOURCE,
+            }
+            grouped_queries.append((index, query))
+
+    log.debug("Counts: %s grouped queries", len(grouped_queries))
 
     counts = {}
     # FIXME: This doesn't actually retain context on which query a particular
@@ -185,14 +202,26 @@ def _counted_msearch(queries, authz, limit=0):
     # everything into an FtMGraph and then traverse for adjacency.
     entities = []
 
-    if not len(body):
+    if not len(grouped_queries):
         return entities, counts
 
-    response = es.msearch(body=body)
-    for resp in response.get("responses", []):
-        for result in resp.get("hits", {}).get("hits", []):
-            entities.append(unpack_result(result))
-        buckets = resp.get("aggregations", {}).get("counts", {}).get("buckets", {})
-        for key, count in buckets.items():
-            counts[key] = count.get("doc_count", 0)
+    # We don't want to run too many queries in parallel through msearch. So we
+    # batch them across multiple requests. This means our response to the user
+    # is delayed. But we don't cause an OOM error on ElasticSearch
+    while len(grouped_queries) > 0:
+        queries_batch = grouped_queries[:QUERY_COUNT_LIMIT]
+        grouped_queries = grouped_queries[QUERY_COUNT_LIMIT:]
+        body = []
+        for (index, query) in queries_batch:
+            body.append(index)
+            body.append(query)
+        # log.debug(pformat(body))
+        response = es.msearch(body=body)
+        # log.debug(pformat(response))
+        for resp in response.get("responses", []):
+            for result in resp.get("hits", {}).get("hits", []):
+                entities.append(unpack_result(result))
+            buckets = resp.get("aggregations", {}).get("counts", {}).get("buckets", {})
+            for key, count in buckets.items():
+                counts[key] = count.get("doc_count", 0)
     return entities, counts
