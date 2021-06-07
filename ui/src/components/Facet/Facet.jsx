@@ -5,7 +5,7 @@ import {
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Icon, Collapse, Spinner } from '@blueprintjs/core';
+import { Button, Icon, Intent, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { CheckboxList, Schema } from 'components/common';
@@ -19,7 +19,7 @@ class Facet extends Component {
     this.state = { facet: {}, isExpanding: false };
     this.onToggleOpen = this.onToggleOpen.bind(this);
     this.onSelect = this.onSelect.bind(this);
-    this.onClear = this.onClear.bind(this);
+    this.onClearDates = this.onClearDates.bind(this);
     this.renderList = this.renderList.bind(this);
     this.renderDates = this.renderDates.bind(this);
     this.showMore = this.showMore.bind(this);
@@ -48,10 +48,14 @@ class Facet extends Component {
     this.props.updateQuery(query.toggleFilter(field, value));
   }
 
-  onClear(event) {
+  onClearDates(event) {
     event.stopPropagation();
-    const { field, query } = this.props;
-    this.props.updateQuery(query.clearFilter(field));
+    const { query } = this.props;
+    const newQuery = query
+      .clearFilter('lte:dates')
+      .clearFilter('gte:dates');
+
+    this.props.updateQuery(newQuery);
   }
 
   updateFacetSize(newSize) {
@@ -198,6 +202,14 @@ class Facet extends Component {
                 </span>
               )}
             </>
+          )}
+          {(isDate && isOpen && (query.hasFilter('gte:dates') || query.hasFilter('lte:dates'))) && (
+            <Button small minimal icon="reset" className="Facet__action" intent={Intent.DANGER} onClick={this.onClearDates}>
+              <FormattedMessage
+                id="search.facets.clearDates"
+                defaultMessage="Clear"
+              />
+            </Button>
           )}
         </div>
         <Collapse isOpen={isOpen} className={c({ updating: isUpdating })}>

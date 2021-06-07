@@ -56,10 +56,13 @@
       }
     }
 
-    .bp3-tag {
+    .Facet__action, .bp3-tag {
       position: absolute;
       @include rtl(right, $aleph-grid-size, null);
       @include rtl(left, null, $aleph-grid-size);
+    }
+
+    .bp3-tag {
       padding-top: 0;
       padding-bottom: 0;
       font-weight: bold;

@@ -9,7 +9,7 @@ function Facets(props) {
     facets, query, result, updateQuery, isCollapsible,
   } = props;
   return (
-    <ul className="Facets bp3-large">
+    <ul className="Facets">
       {facets.map(facet => (
         <li className="facet" key={facet.name}>
           <Facet
