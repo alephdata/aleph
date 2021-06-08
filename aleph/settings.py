@@ -163,7 +163,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 ALEMBIC_DIR = os.path.join(APP_DIR, "migrate")
 
 ELASTICSEARCH_URL = env.get("ALEPH_ELASTICSEARCH_URI", "http://localhost:9200")
-ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 30)
+ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 60)
 
 # Number of replicas to maintain. '2' means 3 overall copies.
 INDEX_REPLICAS = env.to_int("ALEPH_INDEX_REPLICAS", 0)
