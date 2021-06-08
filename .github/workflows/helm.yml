@@ -32,6 +32,9 @@ jobs:
             rm -f charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz
             helm package helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}-dev --destination charts/
       - name: Upload chart to GCS
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        if: env.GCP_PROJECT_ID != null
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz gs://aleph-helm-charts
       - name: Package chart
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
@@ -39,7 +42,9 @@ jobs:
         with:
           exec: helm package helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }} --destination charts/
       - name: Upload chart to GCS
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        if: env.GCP_PROJECT_ID != null && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://aleph-helm-charts
 
       - name: Generate index
