@@ -252,4 +252,11 @@ def handle_es_error(err):
         error = err.info.get("error", {})
         for root_cause in error.get("root_cause", []):
             message = root_cause.get("reason", message)
-    return jsonify({"status": "error", "message": message}, status=err.status_code)
+    try:
+        # Sometimes elasticsearch-py generates non-numeric status codes like
+        # "TIMEOUT", "N/A". Werkzeug converts them into status 0 which confuses
+        # web browsers. Replace the weird status codes with 500 instead.
+        status = int(err.status_code)
+    except ValueError:
+        status = 500
+    return jsonify({"status": "error", "message": message}, status=status)
