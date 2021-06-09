@@ -11,7 +11,7 @@ const messages = defineMessages({
   },
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: 'Type',
+    defaultMessage: 'Entity type',
   },
   facet_collection_id: {
     id: 'facet.collection_id',
@@ -132,7 +132,7 @@ const configs = {
   schema: {
     name: 'schema',
     label: messages.facet_schema,
-    icon: 'list-columns',
+    icon: 'layout-grid',
     defaultSize: 1000,
   },
 };

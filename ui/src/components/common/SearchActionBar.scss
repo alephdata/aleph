@@ -6,9 +6,17 @@
   margin-bottom: $aleph-grid-size;
   padding-right: 1px;
   flex-wrap: wrap;
+  justify-content: space-between;
 
   &__main {
     @include rtlSupportInvertedProp(margin, right, $aleph-grid-size/2 !important, null);
+  }
+  &__secondary {
+    flex: 0 0 auto !important;
+
+    .bp3-button {
+      border-radius: $aleph-border-radius !important;
+    }
   }
 
   &__export {

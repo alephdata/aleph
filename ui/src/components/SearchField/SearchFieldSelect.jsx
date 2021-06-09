@@ -59,10 +59,18 @@ class SearchFieldSelect extends PureComponent {
     return (
       <>
         <Menu ulRef={itemsParentRef}>
-          <li className="bp3-menu-header"><h6 className="bp3-heading">Groups</h6></li>
+          <li className="bp3-menu-header">
+            <h6 className="bp3-heading">
+              <FormattedMessage id="search.config.groups" defaultMessage="Property groups" />
+            </h6>
+          </li>
           {selectedGroups.map(renderItem)}
           {availableGroups.map(renderItem)}
-          <li className="bp3-menu-header"><h6 className="bp3-heading">Properties</h6></li>
+          <li className="bp3-menu-header">
+            <h6 className="bp3-heading">
+              <FormattedMessage id="search.config.properties" defaultMessage="Properties" />
+            </h6>
+          </li>
           {selectedProps.map((...props) => renderItem(...props, true))}
           {availableProps.map(renderItem)}
         </Menu>
@@ -83,7 +91,7 @@ class SearchFieldSelect extends PureComponent {
   }
 
   render() {
-    const { children, onSelect, properties, groups } = this.props;
+    const { children, onSelect, properties, groups, inputProps = {} } = this.props;
 
     return (
       <SelectWrapper
@@ -96,6 +104,7 @@ class SearchFieldSelect extends PureComponent {
         resetOnSelect
         resetOnQuery
         className="SearchFieldSelect"
+        inputProps={inputProps}
       >
         {children}
       </SelectWrapper>

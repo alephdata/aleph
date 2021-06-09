@@ -51,10 +51,18 @@ const messages = defineMessages({
     id: 'search.facets.configure',
     defaultMessage: 'Configure filters',
   },
-  columns: {
+  configure_facets_placeholder: {
+    id: 'search.facets.configure_placeholder',
+    defaultMessage: 'Search for a filter...',
+  },
+  configure_columns: {
     id: 'search.columns.configure',
-    defaultMessage: 'Columns {count}'
-  }
+    defaultMessage: 'Configure columns'
+  },
+  configure_columns_placeholder: {
+    id: 'search.columns.configure_placeholder',
+    defaultMessage: 'Search for a column...',
+  },
 });
 
 class FacetedEntitySearch extends React.Component {
@@ -211,6 +219,7 @@ class FacetedEntitySearch extends React.Component {
                 onSelect={(field) => this.onSearchConfigEdit('facets', field)}
                 onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
                 selected={facets}
+                inputProps={{ placeholder: intl.formatMessage(messages.configure_facets_placeholder) }}
               >
                 <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
               </SearchFieldSelect>
@@ -225,23 +234,19 @@ class FacetedEntitySearch extends React.Component {
                 exportDisabled={!exportLink}
                 onExport={() => this.props.triggerQueryExport(exportLink)}
               >
-                <SortingBar
-                  filterButtonLabel=""
-                  filterButton={
-                    <SearchFieldSelect
-                      onSelect={(field) => this.onSearchConfigEdit('columns', field)}
-                      onReset={hasCustomColumns && (() => this.saveSearchConfig({ columns: null, facets }))}
-                      selected={columns}
-                    >
-                      <Button
-                        text={intl.formatMessage(messages.columns, { count: <Count count={columns.length + 1} className='bp3-intent-primary' /> })}
-                        minimal
-                        intent={Intent.PRIMARY}
-                        rightIcon="caret-down"
-                      />
-                    </SearchFieldSelect>
-                  }
-                />
+                <div className="SearchActionBar__secondary">
+                  <SearchFieldSelect
+                    onSelect={(field) => this.onSearchConfigEdit('columns', field)}
+                    onReset={hasCustomColumns && (() => this.saveSearchConfig({ columns: null, facets }))}
+                    selected={columns}
+                    inputProps={{ placeholder: intl.formatMessage(messages.configure_columns_placeholder) }}
+                  >
+                    <Button
+                      icon='two-columns'
+                      text={intl.formatMessage(messages.configure_columns)}
+                    />
+                  </SearchFieldSelect>
+                </div>
               </SearchActionBar>
             </div>
             <EntitySearch
