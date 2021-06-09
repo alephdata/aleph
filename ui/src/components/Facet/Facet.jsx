@@ -92,16 +92,16 @@ class Facet extends Component {
     const { facet } = this.state;
     const { intervals } = facet;
 
-    if (!result.isPending && !intervals?.length) {
-      return (
-        <span className="faint">
-          <FormattedMessage
-            id="search.facets.no_items"
-            defaultMessage="No options"
-          />
-        </span>
-      );
-    }
+    // if (!result.isPending && !intervals?.length) {
+    //   return (
+    //     <div className="Facet__no-options">
+    //       <FormattedMessage
+    //         id="search.facets.no_items"
+    //         defaultMessage="No options"
+    //       />
+    //     </div>
+    //   );
+    // }
 
     return (
       <DateFacet
@@ -109,6 +109,14 @@ class Facet extends Component {
         query={query}
         updateQuery={this.props.updateQuery}
         showLabel={false}
+        emptyComponent={(
+          <div className="Facet__no-options">
+            <FormattedMessage
+              id="search.facets.no_items"
+              defaultMessage="No options"
+            />
+          </div>
+        )}
       />
     );
   }

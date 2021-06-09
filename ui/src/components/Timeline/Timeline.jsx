@@ -7,7 +7,7 @@ import c from 'classnames';
 import queryString from 'query-string';
 
 import { getGroupField } from 'components/SearchField/util';
-import { DualPane } from 'components/common';
+import { DualPane, ErrorSection } from 'components/common';
 import Facets from 'components/Facet/Facets';
 import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
@@ -106,7 +106,9 @@ class Timeline extends Component {
               query={query}
               updateQuery={this.updateQuery}
               dataLabel={intl.formatMessage(messages.itemsLabel)}
-              emptyText={intl.formatMessage(messages.histogramEmpty)}
+              emptyComponent={(
+                <ErrorSection title={intl.formatMessage(messages.histogramEmpty)} />
+              )}
             />
             {histogramFixed && actionBar}
           </div>

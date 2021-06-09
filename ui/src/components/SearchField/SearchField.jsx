@@ -5,7 +5,6 @@ import { Icon } from '@blueprintjs/core';
 class SearchFieldLabel extends PureComponent {
   render() {
     const { field, icon, intl, count = 0 } = this.props;
-    console.log(field)
     if (!field) {
       return null;
     }

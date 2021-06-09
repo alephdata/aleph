@@ -90,20 +90,15 @@ export class DateFilter extends Component {
   }
 
   render() {
-    const { dataLabel, emptyText, filteredIntervals, intl, displayShowHiddenToggle, showAll, showLabel = true } = this.props;
+    const { dataLabel, emptyComponent, filteredIntervals, intl, displayShowHiddenToggle, showAll, showLabel = true } = this.props;
     let content;
 
     if (filteredIntervals) {
-      if (!filteredIntervals.length && emptyText) {
-        content = (
-          <div style={{ minHeight: `${DATE_FACET_HEIGHT}px` }}>
-            <ErrorSection
-              title={emptyText}
-            />
-          </div>
-        )
+      if (!filteredIntervals.length) {
+        content = emptyComponent;
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);
+        console.log('rendering')
         content = (
           <>
             <Histogram
