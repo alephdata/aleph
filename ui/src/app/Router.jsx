@@ -28,6 +28,7 @@ import DiagramScreen from 'screens/DiagramScreen/DiagramScreen';
 import ProfileScreen from 'screens/ProfileScreen/ProfileScreen';
 import ListScreen from 'screens/ListScreen/ListScreen';
 import TimelineScreen from 'screens/TimelineScreen/TimelineScreen';
+import EntitySetScreen from 'screens/EntitySetScreen/EntitySetScreen';
 import EntityScreen from 'screens/EntityScreen/EntityScreen';
 import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
 
@@ -93,6 +94,7 @@ class Router extends Component {
             <Route path="/lists" exact component={EntitySetIndexScreen} />
             <Route path="/timelines/:entitySetId" exact component={TimelineScreen} />
             <Route path="/timelines" exact component={EntitySetIndexScreen} />
+            <Route path="/sets/:entitySetId" exact component={EntitySetScreen} />
             <Route path="/search" exact component={SearchScreen} />
             <Route path="/notifications" exact component={NotificationsScreen} />
             <Route path="/alerts" exact component={AlertsScreen} />
