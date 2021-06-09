@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import queryString from 'query-string';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Icon, Intent } from '@blueprintjs/core';
+import { Button, Icon } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -10,14 +10,13 @@ import { withRouter } from 'react-router';
 import { triggerQueryExport } from 'src/actions';
 import { setSearchConfig, getSearchConfig } from 'app/storage';
 import { getGroupField } from 'components/SearchField/util';
-import { Count, DualPane, ErrorSection, HotkeysContainer } from 'components/common';
+import { DualPane, ErrorSection, HotkeysContainer } from 'components/common';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import SearchActionBar from 'components/common/SearchActionBar';
 import Facets from 'components/Facet/Facets';
 import SearchFieldSelect from 'components/SearchField/SearchFieldSelect';
 import QueryTags from 'components/QueryTags/QueryTags';
 import togglePreview from 'util/togglePreview';
-import SortingBar from 'components/SortingBar/SortingBar';
 
 import './FacetedEntitySearch.scss';
 

@@ -1,7 +1,5 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { AnchorButton, ControlGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 

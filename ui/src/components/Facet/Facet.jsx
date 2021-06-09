@@ -88,20 +88,9 @@ class Facet extends Component {
   }
 
   renderDates() {
-    const { query, result } = this.props;
+    const { query } = this.props;
     const { facet } = this.state;
     const { intervals } = facet;
-
-    // if (!result.isPending && !intervals?.length) {
-    //   return (
-    //     <div className="Facet__no-options">
-    //       <FormattedMessage
-    //         id="search.facets.no_items"
-    //         defaultMessage="No options"
-    //       />
-    //     </div>
-    //   );
-    // }
 
     return (
       <DateFacet

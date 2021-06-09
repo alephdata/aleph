@@ -74,7 +74,6 @@ class EntitySearchResultsRow extends Component {
       isPending,
       location,
       columns,
-      showPreview,
       updateSelection,
       selection,
       writeable,

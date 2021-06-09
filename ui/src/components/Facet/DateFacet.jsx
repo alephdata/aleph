@@ -8,7 +8,6 @@ import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 
 import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToYear } from 'components/Facet/util';
-import { ErrorSection } from 'components/common';
 
 
 import './DateFacet.scss';
