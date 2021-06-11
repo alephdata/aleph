@@ -97,7 +97,7 @@ export class GroupScreen extends Component {
             </p>
             <Callout intent={Intent.PRIMARY} style={{ marginTop: '20px' }}>
               <FormattedMessage
-                id="group.page.description"
+                id="group.page.search.description"
                 defaultMessage="If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
                 values={{
                   // eslint-disable-next-line

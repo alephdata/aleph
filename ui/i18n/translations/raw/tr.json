@@ -996,6 +996,9 @@
     "defaultMessage": "Aleph {version}"
   },
   "group.page.description": {
+    "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
+  },
+  "group.page.search.description": {
     "defaultMessage": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
   },
   "home.counts.countries": {
@@ -1784,6 +1787,9 @@
   "signup.title": {
     "defaultMessage": "Sign in"
   },
+  "sorting.bar.button.label": {
+    "defaultMessage": "Show:"
+  },
   "sorting.bar.caption": {
     "defaultMessage": "Title"
   },
@@ -1803,7 +1809,7 @@
     "defaultMessage": "End date"
   },
   "sorting.bar.label": {
-    "defaultMessage": "Show:"
+    "defaultMessage": "Title"
   },
   "sorting.bar.sort": {
     "defaultMessage": "Sort by:"

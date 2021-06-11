@@ -50,7 +50,7 @@ const messages = defineMessages({
     defaultMessage: 'End date',
   },
   filter_button_label: {
-    id: 'sorting.bar.label',
+    id: 'sorting.bar.button.label',
     defaultMessage: 'Show:',
   },
 });

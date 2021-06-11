@@ -5,7 +5,7 @@ menu: true
 icon: help
 ---
 
-OCCRP Aleph is an investigative data platform that helps reporters **follow the money**. We provide public access to a vast archive of government records and open databases. For journalists, we also grant access to an archive of informal, leaked material. Reporters can also upload your their files to an investigation, sketch a diagram to summarize their investigative findings, and cross-reference persons of interest in bulk.
+OCCRP Aleph is an investigative data platform that helps reporters **follow the money**. We provide public access to a vast archive of government records and open databases. For journalists, we also grant access to an archive of informal, leaked material. Reporters can also upload their files to an investigation, sketch a diagram to summarize their investigative findings, and cross-reference persons of interest in bulk.
 
 ### What data is in Aleph?
 
