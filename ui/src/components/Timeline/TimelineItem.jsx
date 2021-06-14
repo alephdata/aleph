@@ -20,10 +20,6 @@ import './TimelineItem.scss';
 const DEFAULT_COLOR = Colors.BLUE2;
 
 const messages = defineMessages({
-  end_date_toggle: {
-    id: 'timeline.dates.button_text',
-    defaultMessage: 'Add end date'
-  },
   involved_button_text: {
     id: 'timeline.involved.button_text',
     defaultMessage: 'Add involved entities'
@@ -38,7 +34,6 @@ class TimelineItem extends Component {
     this.state = {
       entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` }),
       addedProps: [],
-      showEndDate: false,
       itemExpanded: isActive,
     }
 
@@ -80,23 +75,6 @@ class TimelineItem extends Component {
     this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop.name] }));
   }
 
-  // TODO: swap date and startDate prop values depending on entity having an endDate
-  // checkDates(entity, editedProp) {
-  //   if (editedProp === 'endDate') {
-  //     const date = entity.getProperty('date');
-  //     const startDate = entity.getProperty('startDate');
-  //     const endDate = entity.getProperty('endDate');
-  //     if (endDate.length > 0 && !startDate.length) {
-  //       entity.properties.set(entity.schema.getProperty('startDate'), date);
-  //       entity.properties.delete(entity.schema.getProperty('date'));
-  //     } else if (!endDate.length && startDate.length > 0) {
-  //       entity.properties.set(entity.schema.getProperty('date'), startDate);
-  //       entity.properties.delete(entity.schema.getProperty('startDate'));
-  //     }
-  //   }
-  //   return entity;
-  // }
-
   getVisibleProperties() {
     const { writeable } = this.props;
     const { addedProps, entity } = this.state;
@@ -126,42 +104,6 @@ class TimelineItem extends Component {
         {...options}
       />
     )
-  }
-
-  renderDate() {
-    const { expandedMode, intl, writeable } = this.props;
-    const { entity, itemExpanded, showEndDate } = this.state;
-
-    const hasEndDate = entity.getProperty('endDate').length;
-    const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length)) ? 'startDate' : 'date';
-    const date = this.renderProperty(dateProp, { minimal: true, emptyPlaceholder: ' - ' })
-
-    if (!hasEndDate && !showEndDate) {
-      if (writeable && (expandedMode || itemExpanded)) {
-        return (
-          <>
-            {date}
-            <Tooltip content={intl.formatMessage(messages.end_date_toggle)}>
-              <Button minimal small icon="array-date" onClick={() => this.setState({ showEndDate: true })} />
-            </Tooltip>
-          </>
-        )
-      }
-      return date;
-    }
-
-    return (
-      <span className="TimelineItem__date__value">
-        <FormattedMessage
-          id="timeline.item.date"
-          defaultMessage="{start}to{end}"
-          values={{
-            start: date,
-            end: this.renderProperty('endDate', { minimal: true, emptyPlaceholder: ' - ' })
-          }}
-        />
-      </span>
-    );
   }
 
   renderInvolved() {
@@ -202,10 +144,9 @@ class TimelineItem extends Component {
     const { entity, itemExpanded } = this.state;
 
     const expanded = expandedMode || itemExpanded;
-
     const captionProp = (entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0]);
     const edgeProps = [entity.schema.edge?.source, entity.schema.edge?.target];
-    const reservedProps = [captionProp, ...edgeProps, 'date', 'startDate', 'endDate', 'description', 'involved'];
+    const reservedProps = [captionProp, ...edgeProps, 'date', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -223,7 +164,7 @@ class TimelineItem extends Component {
           )}
           <div className="TimelineItem__secondary">
             <div className={c("TimelineItem__date", { 'item-expanded': itemExpanded })}>
-              {this.renderDate()}
+              {this.renderProperty('date', { minimal: true, emptyPlaceholder: ' - ' })}
             </div>
             {expanded && this.renderInvolved()}
           </div>
