@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Colors, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { PropertySelect } from '@alephdata/react-ftm';
@@ -18,13 +18,6 @@ import TimelineItemTitle from 'components/Timeline/TimelineItemTitle';
 import './TimelineItem.scss';
 
 const DEFAULT_COLOR = Colors.BLUE2;
-
-const messages = defineMessages({
-  involved_button_text: {
-    id: 'timeline.involved.button_text',
-    defaultMessage: 'Add involved entities'
-  }
-});
 
 class TimelineItem extends Component {
   constructor(props) {
@@ -106,36 +99,18 @@ class TimelineItem extends Component {
     )
   }
 
-  renderInvolved() {
-    const { expandedMode, intl } = this.props;
-    const { entity } = this.state;
+  getInvolvedEntityProps() {
+    const { schema } = this.state.entity;
 
-    const schemaName = entity.schema.name;
-
-    if (schemaName === 'Event') {
-      return (
-        <div className="TimelineItem__involved">
-          {this.renderProperty('involved', { toggleButtonProps: {
-            text: intl.formatMessage(messages.involved_button_text),
-            icon: 'add',
-            minimal: expandedMode,
-            outlined: !expandedMode,
-            small: true,
-            fill: true
-          }})}
-        </div>
-      );
-    } else if (entity.schema.edge) {
-      return (
-        <>
-          <div className="TimelineItem__involved">
-            {this.renderProperty(entity.schema.edge.source)}
-          </div>
-          <div className="TimelineItem__involved">
-            {this.renderProperty(entity.schema.edge.target)}
-          </div>
-        </>
-      );
+    if (schema.name === 'Event') {
+      return ['involved'];
+    } else if (schema.edge) {
+      const { source, target } = schema.edge;
+      return [source, target]
+    } else {
+      return schema.getFeaturedProperties()
+        .filter(prop => prop.type.toString() === 'entity')
+        .map(prop => prop.name);
     }
   }
 
@@ -145,8 +120,8 @@ class TimelineItem extends Component {
 
     const expanded = expandedMode || itemExpanded;
     const captionProp = (entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0]);
-    const edgeProps = [entity.schema.edge?.source, entity.schema.edge?.target];
-    const reservedProps = [captionProp, ...edgeProps, 'date', 'description', 'involved'];
+    const involvedEntityProps = this.getInvolvedEntityProps();
+    const reservedProps = [captionProp, ...involvedEntityProps, 'date', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -166,7 +141,11 @@ class TimelineItem extends Component {
             <div className={c("TimelineItem__date", { 'item-expanded': itemExpanded })}>
               {this.renderProperty('date', { minimal: true, emptyPlaceholder: ' - ' })}
             </div>
-            {expanded && this.renderInvolved()}
+            {expanded && involvedEntityProps.map(prop => (
+              <div key={prop.name} className="TimelineItem__involved">
+                {this.renderProperty(prop)}
+              </div>
+            ))}
           </div>
           <div className="TimelineItem__main">
             <TimelineItemTitle
