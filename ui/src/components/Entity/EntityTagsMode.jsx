@@ -6,7 +6,7 @@ import {
   defineMessages, FormattedNumber, FormattedMessage, injectIntl,
 } from 'react-intl';
 
-import { Tag, ErrorSection } from 'components/common';
+import { Skeleton, Tag, ErrorSection } from 'components/common';
 import { selectEntityTags, selectModel } from 'selectors';
 import getValueLink from 'util/getValueLink';
 
@@ -21,6 +21,19 @@ const messages = defineMessages({
 
 
 class EntityTagsMode extends React.Component {
+  renderSkeletonRow(key) {
+    return (
+      <tr key={key}>
+        <td className="entity">
+          <Skeleton.Text type="span" length={15} />
+        </td>
+        <td className="numeric">
+          <Skeleton.Text type="span" length={5} />
+        </td>
+      </tr>
+    );
+  }
+
   renderRow(tag) {
     const { model } = this.props;
     const type = Object.values(model.types).find(t => t.group === tag.field);
@@ -44,7 +57,8 @@ class EntityTagsMode extends React.Component {
 
   render() {
     const { intl, entity, tags } = this.props;
-    if (!entity?.links || !tags?.results || tags.results.length === 0) {
+
+    if (!tags.isPending && (!entity?.links || !tags?.results || tags.results.length === 0)) {
       return (
         <ErrorSection
           icon="tag"
@@ -52,6 +66,8 @@ class EntityTagsMode extends React.Component {
         />
       );
     }
+
+    const skeletonItems = [...Array(15).keys()];
 
     return (
       <>
@@ -77,7 +93,8 @@ class EntityTagsMode extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {tags.results.map(tag => this.renderRow(tag))}
+            {tags.results?.map(tag => this.renderRow(tag))}
+            {tags.isPending && skeletonItems.map(i => this.renderSkeletonRow(i))}
           </tbody>
         </table>
       </>
