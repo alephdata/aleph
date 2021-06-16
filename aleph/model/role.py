@@ -114,6 +114,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         db.session.add(self)
         self.updated_at = datetime.utcnow()
 
+    def remove_role(self, role):
+        """Remove an existing role as a membership of a group"""
+        self.roles.remove(role)
+        db.session.add(role)
+        db.session.add(self)
+        self.updated_at = datetime.utcnow()
+
     def set_password(self, secret):
         """Hashes and sets the role password.
 
