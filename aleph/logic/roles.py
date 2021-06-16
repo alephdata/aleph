@@ -94,6 +94,40 @@ def rename_user(email, name):
     return role
 
 
+def create_group(name):
+    """Create a group"""
+    foreign_id = "group:{}".format(name)
+    role = Role.load_or_create(foreign_id, Role.GROUP, name)
+    db.session.add(role)
+    db.session.commit()
+    update_role(role)
+    return role
+
+
+def user_add(user, group):
+    user = Role.by_email(user)
+    if user is None:
+        user = Role.by_foreign_id(user)
+    group = Role.by_foreign_id("group:{}".format(group))
+    if user is not None and group is not None:
+        user.add_role(group)
+        db.session.commit()
+        update_role(user)
+    return user, group
+
+
+def user_del(user, group):
+    user = Role.by_email(user)
+    if user is None:
+        user = Role.by_foreign_id(user)
+    group = Role.by_foreign_id("group:{}".format(group))
+    if user is not None and group is not None:
+        user.remove_role(group)
+        db.session.commit()
+        update_role(user)
+    return user, group
+
+
 def update_role(role):
     """Synchronize denormalised role configuration."""
     refresh_role(role)
