@@ -2,13 +2,13 @@
 @import "app/mixins.scss";
 
 $timeline-item-padding: $aleph-grid-size;
+$timeline-text-color: $dark-gray5;
 
 @mixin between-breakpoints {
   @media screen and (min-width: $aleph-screen-sm-max-width) and (max-width: 850px) {
     @content;
   }
 }
-
 
 .TimelineItem {
   margin: $aleph-grid-size*2 0;
@@ -147,6 +147,7 @@ $timeline-item-padding: $aleph-grid-size;
 
     .EditableProperty {
       display: inline-flex;
+      color: $timeline-text-color;
     }
 
     .EditableProperty__label {
@@ -242,10 +243,7 @@ $timeline-item-padding: $aleph-grid-size;
     .EditableProperty {
       background-color: white !important;
       border-color: $light-gray4 !important;
-
-      &:hover:not(.active) {
-        background-color: $light-gray4 !important;
-      }
+      color: $timeline-text-color !important;
     }
 
     .no-value {
@@ -256,5 +254,12 @@ $timeline-item-padding: $aleph-grid-size;
   &__draft-buttons {
     margin: $aleph-grid-size/2;
     text-align: right;
+  }
+
+  .EditableProperty {
+    margin-bottom: 0 !important;
+    &:hover:not(.active) {
+      background-color: $light-gray4 !important;
+    }
   }
 }

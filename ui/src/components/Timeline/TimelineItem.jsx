@@ -77,7 +77,7 @@ class TimelineItem extends Component {
     if (!writeable) {
       return filledProps;
     } else {
-    return Array.from(new Set([...entity.schema.featured, ...filledProps, ...addedProps]));
+      return Array.from(new Set([...entity.schema.featured, ...filledProps, ...addedProps]));
     }
   }
 
