@@ -22,7 +22,7 @@ class EntitySearchResults extends Component {
     // Toggle through sorting states: ascending, descending, or unsorted.
     updateQuery(query.sortBy(
       currentField,
-      direction === 'asc' ? 'desc' : undefined
+      direction === 'asc' ? 'desc' : 'asc'
     ));
   }
 
