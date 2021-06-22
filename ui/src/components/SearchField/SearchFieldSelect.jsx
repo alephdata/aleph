@@ -116,7 +116,7 @@ const mapStateToProps = (state, ownProps) => {
   const model = selectModel(state);
 
   const properties = model.getProperties()
-    .filter(({ matchable, hidden, name }) => (matchable && !hidden))
+    .filter(({ hidden, stub }) => (!stub && !hidden))
     .sort((a, b) => a.label > b.label ? 1 : -1)
 
   return {
