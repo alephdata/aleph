@@ -97,7 +97,6 @@ export class DateFilter extends Component {
         content = emptyComponent;
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);
-        console.log('rendering')
         content = (
           <>
             <Histogram
