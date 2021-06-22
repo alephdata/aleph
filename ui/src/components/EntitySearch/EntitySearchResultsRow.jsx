@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
+import { selectModel } from 'selectors';
 
 import wordList from 'util/wordList';
 import {
@@ -30,10 +32,11 @@ class EntitySearchResultsRow extends Component {
   }
 
   renderCellContent(column) {
-    const { entity, showPreview } = this.props;
+    const { entity, model, showPreview } = this.props;
+    const { isProperty, name, type } = column;
 
-    if (!column.isProperty) {
-      switch(column.name) {
+    if (!isProperty) {
+      switch(name) {
         case 'caption':
           return <Entity.Link preview={showPreview} entity={entity} icon />
         case 'collection_id':
@@ -60,10 +63,10 @@ class EntitySearchResultsRow extends Component {
           return null;
       }
     } else {
-      if (column.name === 'fileSize') {
+      if (name === 'fileSize') {
         return <FileSize value={entity.getFirst('fileSize')} />;
       } else {
-        return <Property.Values prop={{ name: column.name, type: { name: column.type }}} values={entity.getProperty(column.name)} />
+        return <Property.Values prop={{ name, type: { name: type, values: model.types[type]?.values }}} values={entity.getProperty(name)} />
       }
     }
   }
@@ -129,4 +132,9 @@ class EntitySearchResultsRow extends Component {
   }
 }
 
-export default EntitySearchResultsRow;
+const mapStateToProps = (state) => {
+  const model = selectModel(state);
+  return { model };
+};
+
+export default connect(mapStateToProps)(EntitySearchResultsRow);
