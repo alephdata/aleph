@@ -61,7 +61,7 @@ class CollectionInfo extends PureComponent {
               <FormattedMessage id="collection.creator" defaultMessage="Manager" />
             </div>
             <div className="value">
-              <Role.Link role={collection.creator} truncate={25} />
+              <Role.Link role={collection.creator} />
             </div>
           </div>
         )}
@@ -71,7 +71,7 @@ class CollectionInfo extends PureComponent {
               <FormattedMessage id="collection.team" defaultMessage="Accessible to" />
             </div>
             <div className="value">
-              <Role.List roles={collection.team} separateItems={false} truncate={25} />
+              <Role.List roles={collection.team} separateItems={false} />
             </div>
           </div>
         )}
