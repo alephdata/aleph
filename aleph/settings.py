@@ -15,6 +15,8 @@ APP_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Show error messages to the user.
 DEBUG = env.to_bool("ALEPH_DEBUG", False)
+# Run a interactive debugger
+DEBUGGER = env.to_bool("ALEPH_DEBUGGER", False)
 # Profile requests
 PROFILE = env.to_bool("ALEPH_PROFILE", False)
 # Propose HTTP caching to the user agents.
