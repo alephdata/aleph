@@ -85,6 +85,7 @@ services:
       - SYS_PTRACE
     environment:
       ALEPH_DEBUG: 'true'
+      ALEPH_DEBUGGER: 'true'
       ALEPH_SECRET_KEY: 'development'
     env_file:
       - aleph.env
@@ -110,6 +111,7 @@ services:
       - "./aleph:/aleph/aleph"
     environment:
       ALEPH_DEBUG: 'true'
+      ALEPH_DEBUGGER: 'true'
       ALEPH_SECRET_KEY: 'development'
       ALEPH_PASSWORD_LOGIN: 'false'
       ALEPH_OAUTH: 'true'
