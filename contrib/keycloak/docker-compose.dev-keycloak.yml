@@ -27,10 +27,10 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
   redis:
-      image: redis:alpine
-      command: ["redis-server", "--appendonly", "yes"]
-      volumes:
-        - redis-data:/data
+    image: redis:alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
 
   convert-document:
     image: alephdata/convert-document:39e678f717b1504984f52a116a9e4fe2af206d31
@@ -84,8 +84,8 @@ services:
     cap_add:
       - SYS_PTRACE
     environment:
-      ALEPH_DEBUG: 'true'
-      ALEPH_SECRET_KEY: 'development'
+      ALEPH_DEBUG: "true"
+      ALEPH_SECRET_KEY: "development"
     env_file:
       - aleph.env
 
@@ -109,17 +109,17 @@ services:
       - archive-data:/data
       - "./aleph:/aleph/aleph"
     environment:
-      ALEPH_DEBUG: 'true'
-      ALEPH_SECRET_KEY: 'development'
-      ALEPH_PASSWORD_LOGIN: 'false'
-      ALEPH_OAUTH: 'true'
-      ALEPH_OAUTH_HANDLER: 'keycloak'
-      ALEPH_OAUTH_KEY: 'aleph-ui'
-      ALEPH_OAUTH_BASE_URL: 'http://keycloak:8080/'
-      ALEPH_OAUTH_AUTHORIZE_URL: 'http://localhost:1580/auth/realms/aleph-users/protocol/openid-connect/auth'
-      ALEPH_OAUTH_TOKEN_URL: 'http://keycloak:8080/auth/realms/aleph-users/protocol/openid-connect/token'
-      ALEPH_OAUTH_SCOPE: 'read'
-      ALEPH_OAUTH_TOKEN_METHOD: 'POST'
+      ALEPH_DEBUG: "true"
+      ALEPH_SECRET_KEY: "development"
+      ALEPH_PASSWORD_LOGIN: "false"
+      ALEPH_OAUTH: "true"
+      ALEPH_OAUTH_HANDLER: "keycloak"
+      ALEPH_OAUTH_KEY: "aleph-ui"
+      ALEPH_OAUTH_BASE_URL: "http://keycloak:8080/"
+      ALEPH_OAUTH_AUTHORIZE_URL: "http://localhost:1580/auth/realms/aleph-users/protocol/openid-connect/auth"
+      ALEPH_OAUTH_TOKEN_URL: "http://keycloak:8080/auth/realms/aleph-users/protocol/openid-connect/token"
+      ALEPH_OAUTH_SCOPE: "read"
+      ALEPH_OAUTH_TOKEN_METHOD: "POST"
     env_file:
       - aleph.env
 
@@ -137,8 +137,8 @@ services:
       - "./ui/public:/alephui/public"
       - "./ui/package.json:/alephui/package.json"
     environment:
-      PORT: '8080'
-      CI: 'true'
+      PORT: "8080"
+      CI: "true"
     env_file:
       - aleph.env
 
