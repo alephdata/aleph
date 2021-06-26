@@ -4,6 +4,8 @@ from followthemoney.types import registry
 from aleph.model import Collection, Events
 from aleph.logic import resolver
 
+from datetime import datetime
+
 
 class Facet(object):
     def __init__(self, name, aggregations, parser):
@@ -86,6 +88,12 @@ class EventFacet(Facet):
     def update(self, result, key):
         event = Events.get(key)
         result["label"] = key if event is None else event.title
+
+
+class DateFacet(Facet):
+    def update(self, result, key):
+        timestamp = int(key) / 1000
+        result["label"] = datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d")
 
 
 class LanguageFacet(Facet):
