@@ -63,6 +63,8 @@ class Facet extends Component {
     const isDate = field === 'dates';
 
     let newQuery = query.set(`facet_size:${field}`, newSize);
+    newQuery = newQuery.add(`facet_type:${field}`, this.props.facet.type);
+
     if (!newSize) {
       newQuery = newQuery.remove('facet', field);
       newQuery = newQuery.add(`facet_total:${field}`, undefined);
@@ -77,6 +79,7 @@ class Facet extends Component {
         newQuery = newQuery.add('facet_interval:dates', 'year');
       }
     }
+
     this.props.updateQuery(newQuery);
     this.setState({ isExpanding: true });
   }
@@ -112,7 +115,7 @@ class Facet extends Component {
 
   renderList() {
     const { query, facetSize, field, isOpen, result } = this.props;
-    const { facet, isExpanding } =  this.state;
+    const { facet, isExpanding } = this.state;
     const isMultiSelect = field !== 'schema';
     const hasMoreValues = facetSize < facet.total;
     const isUpdating = result.total === undefined;

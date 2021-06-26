@@ -162,6 +162,9 @@ class SearchQueryParser(QueryParser):
             return False
         return self.getbool("facet_values:%s" % name, True)
 
+    def get_facet_type(self, name):
+        return self.get("facet_type:%s" % name)
+
     def get_facet_interval(self, name):
         """Interval to facet on when faceting on date properties
 
