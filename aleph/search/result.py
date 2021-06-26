@@ -78,6 +78,7 @@ class SearchQueryResult(QueryResult):
         "match_collection_id": CollectionFacet,
         "languages": LanguageFacet,
         "countries": CountryFacet,
+        "country": CountryFacet,
         "category": CategoryFacet,
         "schema": SchemaFacet,
         "schemata": SchemaFacet,
@@ -102,7 +103,12 @@ class SearchQueryResult(QueryResult):
     def get_facets(self):
         facets = {}
         for name in self.parser.facet_names:
-            facet_cls = self.FACETS.get(name, Facet)
+            facet_type = self.parser.get_facet_type(name)
+
+            if facet_type is None:
+                facet_type = name
+
+            facet_cls = self.FACETS.get(facet_type, Facet)
             facets[name] = facet_cls(name, self.aggregations, self.parser)
         return facets
 
