@@ -77,6 +77,7 @@ class SearchQueryResult(QueryResult):
         "collection_id": CollectionFacet,
         "match_collection_id": CollectionFacet,
         "languages": LanguageFacet,
+        "language": LanguageFacet,
         "countries": CountryFacet,
         "country": CountryFacet,
         "category": CategoryFacet,
