@@ -1,9 +1,11 @@
 import logging
+from pprint import pformat  # noqa
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.graph import Node
 from followthemoney.types import registry
 
+from aleph import settings
 from aleph.core import es
 from aleph.model import Entity
 from aleph.logic.graph import Graph
@@ -14,6 +16,7 @@ from aleph.index.util import field_filter_query, authz_query, unpack_result
 log = logging.getLogger(__name__)
 DEFAULT_TAGS = set(registry.pivots)
 DEFAULT_TAGS.remove(registry.entity)
+FILTERS_COUNT_LIMIT = settings.INDEX_EXPAND_CLAUSE_LIMIT
 
 
 def _expand_properties(proxies, properties):
@@ -166,18 +169,33 @@ def _counted_msearch(queries, authz, limit=0):
 
     body = []
     for group in grouped.values():
-        body.append({"index": group.get("index")})
+        index = {"index": group.get("index")}
         filters = group.get("filters")
-        if limit == 0 and len(filters) > 1:
-            filters = [{"bool": {"should": filters, "minimum_should_match": 1}}]
-        filters.append(authz_query(authz))
-        query = {
-            "size": limit,
-            "query": {"bool": {"filter": filters}},
-            "aggs": {"counts": {"filters": {"filters": group.get("counts")}}},
-            "_source": ENTITY_SOURCE,
-        }
-        body.append(query)
+        counts = list(group.get("counts").items())
+
+        # Having too many filters in a single query increase heap memory
+        # usage in ElasticSearch. This can lead to OOM errors in the worst
+        # case. So we group the filters into smaller batches.
+        while len(filters) > 0:
+            filters_batch = filters[:FILTERS_COUNT_LIMIT]
+            filters = filters[FILTERS_COUNT_LIMIT:]
+            counts_batch = dict(counts[:FILTERS_COUNT_LIMIT])
+            counts = counts[FILTERS_COUNT_LIMIT:]
+            if limit == 0 and len(filters_batch) > 1:
+                filters_batch = [
+                    {"bool": {"should": filters_batch, "minimum_should_match": 1}}
+                ]
+            filters_batch.append(authz_query(authz))
+            query = {
+                "size": limit,
+                "query": {"bool": {"filter": filters_batch}},
+                "aggs": {"counts": {"filters": {"filters": counts_batch}}},
+                "_source": ENTITY_SOURCE,
+            }
+            body.append(index)
+            body.append(query)
+
+    log.debug("Counts: %s grouped queries", len(body) // 2)
 
     counts = {}
     # FIXME: This doesn't actually retain context on which query a particular
@@ -188,7 +206,9 @@ def _counted_msearch(queries, authz, limit=0):
     if not len(body):
         return entities, counts
 
+    # log.debug(pformat(body))
     response = es.msearch(body=body)
+    # log.debug(pformat(response))
     for resp in response.get("responses", []):
         for result in resp.get("hits", {}).get("hits", []):
             entities.append(unpack_result(result))
