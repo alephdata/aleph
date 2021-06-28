@@ -957,37 +957,37 @@
     "defaultMessage": "Exports ready for download"
   },
   "facet.addresses": {
-    "defaultMessage": "{count, plural, zero {عناوين} one {عنوان} two {عناوين} few {عناوين} many {عناوين} other {عناوين}}"
+    "defaultMessage": "{count, plural, one {عنوان} two {عناوين} few {عناوين} many {عناوين} other {عناوين}}"
   },
   "facet.category": {
-    "defaultMessage": "{count, plural, zero {فئات} one {فئة} two {فئات} few {فئات} many {فئات} other {فئات}}"
+    "defaultMessage": "{count, plural, one {فئة} two {فئات} few {فئات} many {فئات} other {فئات}}"
   },
   "facet.collection_id": {
-    "defaultMessage": "{count, plural, zero {مجموعات بيانات} one {مجموعة بيانات} two {مجموعات بيانات} few {مجموعات بيانات} many {مجموعات بيانات} other {مجموعات بيانات}}"
+    "defaultMessage": "{count, plural, one {مجموعة بيانات} two {مجموعات بيانات} few {مجموعات بيانات} many {مجموعات بيانات} other {مجموعات بيانات}}"
   },
   "facet.countries": {
-    "defaultMessage": "{count, plural, zero {دول} one {دولة} two {دول} few {دول} many {دول} other {دول}}"
+    "defaultMessage": "{count, plural, one {دولة} two {دول} few {دول} many {دول} other {دول}}"
   },
   "facet.emails": {
-    "defaultMessage": "{count, plural, zero {إيميلات} one {ايميل} two {إيميلات} few {إيميلات} many {إيميلات} other {إيميلات}}"
+    "defaultMessage": "{count, plural, one {ايميل} two {إيميلات} few {إيميلات} many {إيميلات} other {إيميلات}}"
   },
   "facet.ibans": {
-    "defaultMessage": "{count, plural, zero {أرقام الحسابات} one {رقم الحساب} two {أرقام الحسابات} few {أرقام الحسابات} many {أرقام الحسابات} other {أرقام حسابات  IBAN}}"
+    "defaultMessage": "{count, plural, one {رقم الحساب} two {أرقام الحسابات} few {أرقام الحسابات} many {أرقام الحسابات} other {أرقام حسابات  IBAN}}"
   },
   "facet.languages": {
-    "defaultMessage": "{count, plural, zero {لغات} one {لغة} two {لغات} few {لغات} many {لغات} other {لغات}}"
+    "defaultMessage": "{count, plural, one {لغة} two {لغات} few {لغات} many {لغات} other {لغات}}"
   },
   "facet.mimetypes": {
-    "defaultMessage": "{count, plural, zero {نوع الملفات} one {نوع الملف} two {نوع الملفات} few {نوع الملفات} many {نوع الملفات} other {نوع الملفات}}"
+    "defaultMessage": "{count, plural, one {نوع الملف} two {نوع الملفات} few {نوع الملفات} many {نوع الملفات} other {نوع الملفات}}"
   },
   "facet.names": {
-    "defaultMessage": "{count, plural, zero {اسماء} one {اسم} two {اسماء} few {اسماء} many {اسماء} other {اسماء}}"
+    "defaultMessage": "{count, plural, one {اسم} two {اسماء} few {اسماء} many {اسماء} other {اسماء}}"
   },
   "facet.phones": {
-    "defaultMessage": "{count, plural, zero {أرقام هواتف} one {رقم الهاتف} two {أرقام هواتف} few {أرقام هواتف} many {أرقام هواتف} other {أرقام هواتف}}"
+    "defaultMessage": "{count, plural, one {رقم الهاتف} two {أرقام هواتف} few {أرقام هواتف} many {أرقام هواتف} other {أرقام هواتف}}"
   },
   "facet.schema": {
-    "defaultMessage": "{count, plural, zero {أنواع} one {نوع} two {أنواع} few {أنواع} many {أنواع} other {أنواع}}"
+    "defaultMessage": "{count, plural, one {نوع} two {أنواع} few {أنواع} many {أنواع} other {أنواع}}"
   },
   "file_import.error": {
     "defaultMessage": "خطأ في استيراد الملف"
