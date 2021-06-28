@@ -91,7 +91,7 @@ services:
       - SYS_PTRACE
     environment:
       ALEPH_DEBUG: "true"
-      ALEPH_DEBUGGER: "true"
+      ALEPH_DEBUGGER: "false"
       ALEPH_SECRET_KEY: "development"
     env_file:
       - aleph.env
@@ -117,7 +117,7 @@ services:
       - "./site:/aleph/site"
     environment:
       ALEPH_DEBUG: "true"
-      ALEPH_DEBUGGER: "true"
+      ALEPH_DEBUGGER: "false"
       ALEPH_PROFILE: "false"
       ALEPH_SECRET_KEY: "development"
     env_file:
