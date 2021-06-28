@@ -17,7 +17,7 @@ class Facet extends Component {
   constructor(props) {
     super(props);
     this.state = { facet: {}, isExpanding: false };
-    this.onToggleOpen = this.onToggleOpen.bind(this);
+    this.onToggleFacet = this.onToggleFacet.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onClearDates = this.onClearDates.bind(this);
     this.renderList = this.renderList.bind(this);
@@ -37,10 +37,15 @@ class Facet extends Component {
     return null;
   }
 
-  onToggleOpen() {
-    const { isOpen, defaultSize } = this.props;
-    const newSize = isOpen ? undefined : defaultSize;
-    this.updateFacetSize(newSize);
+  onToggleFacet() {
+    const { facet, isOpen, query } = this.props;
+
+    if (isOpen) {
+      this.props.updateQuery(query.removeFacet(facet));
+    } else {
+      this.props.updateQuery(query.addFacet(facet));
+      this.setState({ isExpanding: true });
+    }
   }
 
   onSelect(value) {
@@ -60,27 +65,7 @@ class Facet extends Component {
 
   updateFacetSize(newSize) {
     const { query, field } = this.props;
-    const isDate = field === 'dates';
-
-    let newQuery = query.set(`facet_size:${field}`, newSize);
-    newQuery = newQuery.add(`facet_type:${field}`, this.props.facet.type);
-
-    if (!newSize) {
-      newQuery = newQuery.remove('facet', field);
-      newQuery = newQuery.add(`facet_total:${field}`, undefined);
-      newQuery = newQuery.set(`facet_size:${field}`, undefined);
-      if (isDate) {
-        newQuery = newQuery.remove('facet_interval:dates', 'year');
-      }
-    } else {
-      newQuery = newQuery.add('facet', field);
-      newQuery = newQuery.add(`facet_total:${field}`, true);
-      if (isDate) {
-        newQuery = newQuery.add('facet_interval:dates', 'year');
-      }
-    }
-
-    this.props.updateQuery(newQuery);
+    this.props.updateQuery(query.set(`facet_size:${field}`, newSize));
     this.setState({ isExpanding: true });
   }
 
@@ -164,8 +149,8 @@ class Facet extends Component {
       <div className="Facet">
         <div
           className={c('opener', { clickable: isCollapsible, active: !isUpdating && isFiltered })}
-          onClick={this.onToggleOpen}
-          onKeyPress={this.onToggleOpen}
+          onClick={this.onToggleFacet}
+          onKeyPress={this.onToggleFacet}
           tabIndex={0}
           style={{ position: 'relative' }}
           role="switch"
