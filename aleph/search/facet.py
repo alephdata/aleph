@@ -94,6 +94,9 @@ class EventFacet(Facet):
 
 
 class DateFacet(Facet):
+    def update(self, result, key):
+        result["label"] = datetime.strptime(key, "%Y-%m-%dT%H:%M:%S").date()
+
     def get_key(self, bucket):
         return bucket.get("key_as_string")
 
