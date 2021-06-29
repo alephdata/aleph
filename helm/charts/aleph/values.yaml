@@ -15,7 +15,6 @@ global:
 
   env:
     ALEPH_DEBUG: "false"
-    ALEPH_DEBUGGER: "false"
     ALEPH_CACHE: "true"
     ALEPH_FORCE_HTTPS: "false"
     ALEPH_URL_SCHEME: "https"

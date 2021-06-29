@@ -27,7 +27,7 @@ web: services
 	$(COMPOSE) up api ui
 
 worker: services
-	$(COMPOSE) run --rm app aleph worker
+	$(COMPOSE) run -p 127.0.0.1:5679:5679 --rm app python3 -m debugpy --listen 0.0.0.0:5679 /usr/local/bin/aleph worker
 
 tail:
 	$(COMPOSE) logs -f
