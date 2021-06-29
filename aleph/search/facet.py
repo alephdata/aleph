@@ -29,6 +29,9 @@ class Facet(object):
     def update(self, result, key):
         pass
 
+    def get_key(self, bucket):
+        return str(bucket.get("key"))
+
     def to_dict(self):
         active = list(self.parser.filters.get(self.name, []))
         data = {"filters": active}
@@ -38,7 +41,7 @@ class Facet(object):
         if self.parser.get_facet_values(self.name):
             results = []
             for bucket in self.data.get("buckets", []):
-                key = str(bucket.get("key"))
+                key = self.get_key(bucket)
                 results.append(
                     {
                         "id": key,
@@ -91,9 +94,8 @@ class EventFacet(Facet):
 
 
 class DateFacet(Facet):
-    def update(self, result, key):
-        timestamp = int(key) / 1000
-        result["label"] = datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d")
+    def get_key(self, bucket):
+        return bucket.get("key_as_string")
 
 
 class LanguageFacet(Facet):
