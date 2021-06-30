@@ -69,6 +69,7 @@ class Document(db.Model, DatedModel):
             "title",
             "summary",
             "author",
+            "publisher",
             "crawler",
             "source_url",
             "file_name",
@@ -201,8 +202,11 @@ class Document(db.Model, DatedModel):
         proxy.set("parent", ns.sign(self.parent_id))
         proxy.set("ancestors", [ns.sign(a) for a in self.ancestors])
         proxy.set("crawler", meta.get("crawler"))
+        proxy.set("author", meta.get("author"))
+        proxy.set("publisher", meta.get("publisher"))
         proxy.set("sourceUrl", meta.get("source_url"))
         proxy.set("title", meta.get("title"))
+        proxy.set("summary", meta.get("summary"))
         proxy.set("fileName", meta.get("file_name"))
         if not proxy.has("fileName"):
             disposition = headers.get("content_disposition")
@@ -215,11 +219,11 @@ class Document(db.Model, DatedModel):
         proxy.set("language", meta.get("languages"))
         proxy.set("country", meta.get("countries"))
         proxy.set("keywords", meta.get("keywords"))
+        proxy.set("date", meta.get("date"))
         proxy.set("authoredAt", meta.get("authored_at"))
         proxy.set("modifiedAt", meta.get("modified_at"))
         proxy.set("publishedAt", meta.get("published_at"))
         proxy.set("retrievedAt", meta.get("retrieved_at"))
-        proxy.set("sourceUrl", meta.get("source_url"))
         return proxy
 
     def __repr__(self):
