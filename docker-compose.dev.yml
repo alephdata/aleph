@@ -92,7 +92,6 @@ services:
     environment:
       ALEPH_DEBUG: "true"
       ALEPH_SECRET_KEY: "development"
-      FLASK_APP: "aleph.wsgi"
     env_file:
       - aleph.env
 
@@ -119,6 +118,7 @@ services:
       ALEPH_DEBUG: "true"
       ALEPH_PROFILE: "false"
       ALEPH_SECRET_KEY: "development"
+      FLASK_APP: "aleph.wsgi"
     env_file:
       - aleph.env
 
