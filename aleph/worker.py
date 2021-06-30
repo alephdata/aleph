@@ -32,17 +32,6 @@ from aleph.logic.mapping import load_mapping, flush_mapping
 
 log = structlog.get_logger(__name__)
 
-if settings.DEBUGGER == True:
-    import debugpy
-
-    try:
-        log.info("Starting debugpy on port 5678 and waiting for client attach...")
-        debugpy.listen(("0.0.0.0", 5678))
-        debugpy.wait_for_client()
-        log.info("Client connected")
-    except RuntimeError:
-        log.error("Likely that the debugger is already running")
-
 app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
 
 

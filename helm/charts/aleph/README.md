@@ -24,7 +24,6 @@ Helm chart for Aleph
 | global.env.ALEPH_APP_TITLE | string | `"Aleph"` | App title |
 | global.env.ALEPH_CACHE | string | `"true"` |  |
 | global.env.ALEPH_DEBUG | string | `"false"` |  |
-| global.env.ALEPH_DEBUGGER | string | `"false"` | Start aleph with debugpy attached. Will wait for client |
 | global.env.ALEPH_ELASTICSEARCH_URI | string | `"http://aleph-index-master.default.svc.cluster.local:9200"` |  |
 | global.env.ALEPH_FORCE_HTTPS | string | `"false"` |  |
 | global.env.ALEPH_INDEX_PREFIX | string | `"aleph"` |  |
