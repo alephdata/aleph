@@ -212,6 +212,10 @@ class Query {
       .remove('facet_interval:dates', 'year');
   }
 
+  getFacetType(field) {
+    return this.getString(`facet_type:${field}`);
+  }
+
   hasFacet(field) {
     return this.getList('facet').indexOf(field) !== -1;
   }
