@@ -215,6 +215,7 @@ class FacetedEntitySearch extends React.Component {
                 isCollapsible
               />
               <SearchFieldSelect
+                filterPropOptions={prop => prop.type.name !== 'entity'}
                 onSelect={(field) => this.onSearchConfigEdit('facets', field)}
                 onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
                 selected={facets}
