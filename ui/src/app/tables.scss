@@ -29,7 +29,7 @@ table {
   }
 
   // Make these columns take the minimal width that fits the content
-  tr td.date {
+  tr td.dates {
     width: 1%;
     white-space: nowrap;
     overflow: visible;
@@ -49,7 +49,7 @@ table {
     }
   }
 
-  tr td.file-size {
+  tr td.fileSize {
     width: 10%;
     white-space: nowrap;
     overflow: visible;
@@ -86,7 +86,7 @@ table {
     max-width: unset;
   }
 
-  td.entity {
+  td.entity, td.caption {
     font-weight: bold;
     max-width: unset;
     white-space: normal !important;
@@ -104,7 +104,7 @@ table {
     }
   }
 
-  td.collection {
+  td.collection_id {
     .CollectionLabel {
       display: flex !important;
     }

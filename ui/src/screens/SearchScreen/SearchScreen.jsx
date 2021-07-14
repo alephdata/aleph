@@ -50,7 +50,7 @@ export class SearchScreen extends React.Component {
         <FacetedEntitySearch
           query={query}
           result={result}
-          additionalFacets={['collection_id']}
+          additionalFields={['collection_id']}
         >
           <SignInCallout />
         </FacetedEntitySearch>

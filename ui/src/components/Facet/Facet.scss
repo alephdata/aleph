@@ -1,7 +1,7 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-.SearchFacet {
+.Facet {
   margin-bottom: $aleph-grid-size;
 
   & > .opener {
@@ -56,10 +56,13 @@
       }
     }
 
-    .bp3-tag {
+    .Facet__action, .bp3-tag {
       position: absolute;
       @include rtl(right, $aleph-grid-size, null);
       @include rtl(left, null, $aleph-grid-size);
+    }
+
+    .bp3-tag {
       padding-top: 0;
       padding-bottom: 0;
       font-weight: bold;
@@ -69,7 +72,17 @@
   }
 
   .CheckboxList {
-    padding-top: $aleph-grid-size;
+    margin-top: $aleph-grid-size;
+  }
+
+  &__no-options {
+    color: $aleph-greyed-text;
+    margin: 0 $aleph-grid-size*2.5 $aleph-grid-size*1.5;
+  }
+
+  .DateFacet.bp3-card {
+    box-shadow: none;
+    padding: $aleph-grid-size*1.5 $aleph-grid-size 0;
   }
 
   p {

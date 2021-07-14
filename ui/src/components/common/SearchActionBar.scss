@@ -6,8 +6,30 @@
   margin-bottom: $aleph-grid-size;
   padding-right: 1px;
   flex-wrap: wrap;
+  justify-content: space-between;
 
   &__main {
-    margin-right: 5px !important;
+    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size/2 !important, null);
+  }
+  &__secondary {
+    flex: 0 0 auto !important;
+
+    .bp3-button {
+      border-radius: $aleph-border-radius !important;
+    }
+  }
+
+  &__export {
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
+    font-weight: 500;
+
+    .bp3-icon, .bp3-button-text {
+      color: $aleph-greyed-text !important;
+    }
+
+    svg {
+      height: 12px !important;
+      width: 12px !important;
+    }
   }
 }

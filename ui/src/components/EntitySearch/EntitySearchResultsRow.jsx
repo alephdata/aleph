@@ -1,48 +1,74 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
+import { selectModel } from 'selectors';
 
+import wordList from 'util/wordList';
 import {
-  Country, Collection, Entity, FileSize, Date, Skeleton,
+  Country, Collection, Entity, FileSize, Date, Property, Schema, Skeleton, Language,
 } from 'components/common';
-/* eslint-disable */
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {
-    const { hideCollection, documentMode, updateSelection, writeable } = this.props;
+    const { columns, updateSelection, writeable } = this.props;
 
     return (
-      <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')} key="skeleton">
+      <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')}>
         {writeable && updateSelection && (
           <td className="select">
             <Skeleton.Text type="span" length={2} />
           </td>
         )}
-        <td className="entity">
-          <Skeleton.Text type="span" length={30} />
-        </td>
-        {!hideCollection && (
-          <td className="collection">
-            <Skeleton.Text type="span" length={15} />
+        {columns.map(({ name, type }) => (
+          <td key={name} className={type?.name || name}>
+            <Skeleton.Text type="span" length={name === 'caption' || name === 'collection_id' ? 30 : 15} />
           </td>
-        )}
-        {!documentMode && (
-          <td className="country">
-            <Skeleton.Text type="span" length={15} />
-          </td>
-        )}
-        <td className="date">
-          <Skeleton.Text type="span" length={10} />
-        </td>
-        {documentMode && (
-          <td className="file-size">
-            <Skeleton.Text type="span" length={20} />
-          </td>
-        )}
+        ))}
       </tr>
     );
+  }
+
+  renderCellContent(column) {
+    const { entity, model, showPreview } = this.props;
+    const { isProperty, name, type } = column;
+
+    if (!isProperty) {
+      switch(name) {
+        case 'caption':
+          return <Entity.Link preview={showPreview} entity={entity} icon />
+        case 'collection_id':
+          return <Collection.Link preview collection={entity.collection} icon />
+        case 'countries':
+          return <Country.List codes={entity.getTypeValues('country')} />;
+        case 'dates':
+          return <Date.Earliest values={entity.getTypeValues('date')} />;
+        case 'languages':
+          return <Language.List codes={entity.getTypeValues('language')} />;
+        case 'schema':
+          return <Schema.Label schema={entity.schema} icon />;
+        case 'names':
+          return wordList(entity.getTypeValues('name'), ',');
+        case 'phones':
+          return wordList(entity.getTypeValues('phone'), ',');
+        case 'addresses':
+          return wordList(entity.getTypeValues('address'), ',');
+        case 'emails':
+          return wordList(entity.getTypeValues('email'), ',');
+        case 'mimetypes':
+          return wordList(entity.getTypeValues('mimetype'), ',');
+        default:
+          return null;
+      }
+    } else {
+      if (name === 'fileSize') {
+        return <FileSize value={entity.getFirst('fileSize')} />;
+      } else {
+        return <Property.Values prop={{ name, type: { name: type, values: model.types[type]?.values }}} values={entity.getProperty(name)} />
+      }
+    }
   }
 
   render() {
@@ -50,9 +76,7 @@ class EntitySearchResultsRow extends Component {
       entity,
       isPending,
       location,
-      hideCollection,
-      documentMode,
-      showPreview,
+      columns,
       updateSelection,
       selection,
       writeable,
@@ -84,39 +108,15 @@ class EntitySearchResultsRow extends Component {
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
             </td>
           )}
-          <td key="entity" className="entity">
-            <Entity.Link
-              preview={showPreview}
-              documentMode={documentMode}
-              entity={entity}
-              icon
-            />
-          </td>
-          {!hideCollection
-            && (
-              <td key="collection" className="collection">
-                <Collection.Link preview collection={entity.collection} icon />
-              </td>
-            )
-          }
-          {!documentMode && (
-            <td key="country" className="country">
-              <Country.List codes={entity.getTypeValues('country')} />
-            </td>
-          )}
-          <td key="date" className="date">
-            <Date.Earliest values={entity.getTypeValues('date')} />
-          </td>
-          {documentMode && (
-            <td key="file-size" className="file-size">
-              <FileSize value={entity.getFirst('fileSize')} />
-            </td>
-          )}
+          {columns.map(column => {
+            const content = this.renderCellContent(column);
+            return <td key={column.name} className={column.type?.name || column.name}>{content}</td>
+          })}
         </tr>
         {!!highlights.length
           && (
             <tr key={`${entity.id}-hl`} className={highlightsClass}>
-              <td colSpan="5" className="highlights">
+              <td colSpan="100%" className="highlights">
                 {highlights.map((phrase, index) => (
                   <span key={index}>
                     <span dangerouslySetInnerHTML={{ __html: phrase }} />
@@ -132,4 +132,9 @@ class EntitySearchResultsRow extends Component {
   }
 }
 
-export default EntitySearchResultsRow;
+const mapStateToProps = (state) => {
+  const model = selectModel(state);
+  return { model };
+};
+
+export default connect(mapStateToProps)(EntitySearchResultsRow);

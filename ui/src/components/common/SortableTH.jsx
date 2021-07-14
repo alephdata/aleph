@@ -9,11 +9,11 @@ function SortableTH(props) {
   } = props;
   if (!sortable) {
     return (
-      <th>{children}</th>
+      <th className={className}>{children}</th>
     );
   }
   const iconClass = c('caret', 'bp3-icon-large',
-    `bp3-icon-caret-${sorted === 'desc' ? 'up' : 'down'}`,
+    `bp3-icon-caret-${sorted === 'desc' ? 'down' : 'up'}`,
     { hidden: !sorted });
   return (
     <th className={c('SortableTH clickable', className)} onClick={onClick} {...otherProps}>

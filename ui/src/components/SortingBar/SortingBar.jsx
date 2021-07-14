@@ -29,6 +29,18 @@ const messages = defineMessages({
     id: 'sorting.bar.caption',
     defaultMessage: 'Title',
   },
+  dates: {
+    id: 'sorting.bar.dates',
+    defaultMessage: 'Dates',
+  },
+  countries: {
+    id: 'sorting.bar.countries',
+    defaultMessage: 'Countries',
+  },
+  collection_id: {
+    id: 'sorting.bar.collection_id',
+    defaultMessage: 'Dataset',
+  },
   'properties.date': {
     id: 'sorting.bar.date',
     defaultMessage: 'Date',
@@ -120,7 +132,7 @@ class SortingBar extends Component {
         {filterButton && (
           <div className="SortingBar__item">
             <span className="SortingBar__label">
-              {filterButtonLabel || intl.formatMessage(messages.filter_button_label)}
+              {filterButtonLabel !== undefined ? filterButtonLabel : intl.formatMessage(messages.filter_button_label)}
             </span>
             <div className="SortingBar__control">
               {filterButton}

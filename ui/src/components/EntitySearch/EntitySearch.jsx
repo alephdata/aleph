@@ -9,6 +9,7 @@ import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import EntitySearchResults from './EntitySearchResults';
 import { ErrorSection, QueryInfiniteLoad } from 'components/common';
+import { getGroupField } from 'components/SearchField/util';
 
 import './EntitySearch.scss';
 
@@ -50,8 +51,7 @@ export class EntitySearch extends Component {
 
   render() {
     const {
-      query, result, intl, className,
-      documentMode, hideCollection,
+      query, result, intl, className, columns,
       showPreview, updateSelection, selection,
       emptyComponent, collection, writeable,
     } = this.props;
@@ -74,14 +74,13 @@ export class EntitySearch extends Component {
         <EntitySearchResults
           query={query}
           result={result}
-          documentMode={documentMode}
-          hideCollection={hideCollection}
           showPreview={showPreview}
           updateQuery={this.updateQuery}
           updateSelection={updateSelection}
           selection={selection}
           collection={collection}
           writeable={writeable}
+          columns={[getGroupField('caption'), ...columns]}
         />
         <QueryInfiniteLoad
           query={query}

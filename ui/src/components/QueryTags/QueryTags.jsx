@@ -54,7 +54,7 @@ class QueryTags extends Component {
 
     const filterTags = _.flatten(
       activeFilters
-        .map(filter => query.getFilter(filter).map(value => ({ filter, value })))
+        .map(filter => query.getFilter(filter).map(value => ({ filter, value, type: query.getFacetType(filter) })))
     );
     const allTags = [...filterTags, ...addlTags];
     const visibleTags = showHidden ? allTags : allTags.slice(0, HIDDEN_TAGS_CUTOFF);
@@ -68,9 +68,10 @@ class QueryTags extends Component {
     // "?ancestors={id}"
     return (
       <div className="QueryTags">
-        {visibleTags.map(({ filter, value }) => (
+        {visibleTags.map(({ filter, type, value }) => (
           <QueryFilterTag
             filter={filter}
+            type={type}
             value={value}
             remove={this.removeFilterValue}
             key={value}

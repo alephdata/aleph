@@ -1,41 +1,13 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
-import { SortableTH } from 'components/common';
 import EntitySearchResultsRow from './EntitySearchResultsRow';
-import { ErrorSection } from 'components/common';
+import { ErrorSection, SortableTH } from 'components/common';
+import SearchField from 'components/SearchField/SearchField';
 
 import './EntitySearchResults.scss';
-
-const messages = defineMessages({
-  column_caption: {
-    id: 'entity.column.caption',
-    defaultMessage: 'Name',
-  },
-  column_collection_id: {
-    id: 'entity.column.collection_id',
-    defaultMessage: 'Dataset',
-  },
-  column_schema: {
-    id: 'entity.column.schema',
-    defaultMessage: 'Type',
-  },
-  column_countries: {
-    id: 'entity.column.countries',
-    defaultMessage: 'Countries',
-  },
-  'column_properties.fileSize': {
-    id: 'entity.column.file_size',
-    defaultMessage: 'Size',
-  },
-  column_dates: {
-    id: 'entity.column.dates',
-    defaultMessage: 'Date',
-  },
-});
 
 
 class EntitySearchResults extends Component {
@@ -50,15 +22,31 @@ class EntitySearchResults extends Component {
     // Toggle through sorting states: ascending, descending, or unsorted.
     updateQuery(query.sortBy(
       currentField,
-      direction === 'asc' ? 'desc' : undefined
+      direction === 'asc' ? 'desc' : 'asc'
     ));
   }
 
-  render() {
-    const { result, intl, location, query, writeable } = this.props;
-    const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
-    const { updateSelection, selection } = this.props;
+  renderHeaderCell = (field) => {
+    const { query } = this.props;
     const { field: sortedField, direction } = query.getSort();
+    const fieldName = field.isProperty ? `properties.${field.name}` : field.name;
+    return (
+      <SortableTH
+        key={fieldName}
+        sortable={true}
+        className={c({ wide: fieldName === 'caption' || fieldName === 'collection_id' })}
+        sorted={sortedField === fieldName && (direction === 'desc' ? 'desc' : 'asc')}
+        onClick={() => this.sortColumn(fieldName)}
+      >
+        <SearchField.Label field={field} />
+      </SortableTH>
+    );
+  }
+
+  render() {
+    const { columns, result, location, writeable } = this.props;
+    const { showPreview = true } = this.props;
+    const { updateSelection, selection } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -70,37 +58,12 @@ class EntitySearchResults extends Component {
 
     const skeletonItems = [...Array(15).keys()];
 
-    const TH = ({
-      sortable, field, className, ...otherProps
-    }) => {
-      return (
-        <SortableTH
-          sortable={sortable}
-          className={className}
-          sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
-          onClick={() => this.sortColumn(field)}
-          {...otherProps}
-        >
-          {intl.formatMessage(messages[`column_${field}`])}
-        </SortableTH>
-      );
-    };
     return (
       <table className="EntitySearchResults data-table">
         <thead>
           <tr>
             {writeable && updateSelection && (<th className="select" />)}
-            <TH field="caption" className="wide" sortable />
-            {!hideCollection && (
-              <TH field="collection_id" className="wide" />
-            )}
-            {!documentMode && (
-              <TH className="header-country" field="countries" sortable />
-            )}
-            <TH className="header-dates" field="dates" sortable />
-            {documentMode && (
-              <TH className="header-size" field="properties.fileSize" sortable />
-            )}
+            {columns.map(this.renderHeaderCell)}
           </tr>
         </thead>
         <tbody className={c({ updating: result.isPending })}>
@@ -109,21 +72,19 @@ class EntitySearchResults extends Component {
               key={entity.id}
               entity={entity}
               location={location}
-              hideCollection={hideCollection}
               showPreview={showPreview}
-              documentMode={documentMode}
               updateSelection={updateSelection}
               selection={selection}
               writeable={writeable}
+              columns={columns}
             />
           ))}
           {result.isPending && skeletonItems.map(item => (
             <EntitySearchResultsRow
               key={item}
-              hideCollection={hideCollection}
-              documentMode={documentMode}
               updateSelection={updateSelection}
               writeable={writeable}
+              columns={columns}
               isPending
             />
           ))}
@@ -135,5 +96,4 @@ class EntitySearchResults extends Component {
 
 export default compose(
   withRouter,
-  injectIntl,
 )(EntitySearchResults);

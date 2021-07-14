@@ -4,6 +4,8 @@ from followthemoney.types import registry
 from aleph.model import Collection, Events
 from aleph.logic import resolver
 
+from datetime import datetime
+
 
 class Facet(object):
     def __init__(self, name, aggregations, parser):
@@ -27,6 +29,9 @@ class Facet(object):
     def update(self, result, key):
         pass
 
+    def get_key(self, bucket):
+        return str(bucket.get("key"))
+
     def to_dict(self):
         active = list(self.parser.filters.get(self.name, []))
         data = {"filters": active}
@@ -36,7 +41,7 @@ class Facet(object):
         if self.parser.get_facet_values(self.name):
             results = []
             for bucket in self.data.get("buckets", []):
-                key = str(bucket.get("key"))
+                key = self.get_key(bucket)
                 results.append(
                     {
                         "id": key,
@@ -86,6 +91,14 @@ class EventFacet(Facet):
     def update(self, result, key):
         event = Events.get(key)
         result["label"] = key if event is None else event.title
+
+
+class DateFacet(Facet):
+    def update(self, result, key):
+        result["label"] = datetime.strptime(key, "%Y-%m-%dT%H:%M:%S").date()
+
+    def get_key(self, bucket):
+        return bucket.get("key_as_string")
 
 
 class LanguageFacet(Facet):
