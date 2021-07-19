@@ -29,7 +29,7 @@ export class DateFilter extends Component {
   }
 
   onSelect(selected) {
-    const { query, updateQuery } = this.props;
+    const { field, query, updateQuery } = this.props;
 
     let newRange;
     if (Array.isArray(selected)) {
@@ -38,8 +38,8 @@ export class DateFilter extends Component {
       const year = formatDateQParam(selected);
       newRange = [year, year];
     }
-    const newQuery = query.setFilter('gte:dates', newRange[0])
-      .setFilter('lte:dates', newRange[1]);
+    const newQuery = query.setFilter(`gte:${field}`, newRange[0])
+      .setFilter(`lte:${field}`, newRange[1]);
 
     updateQuery(newQuery)
   }

@@ -103,9 +103,9 @@ class QueryFilterTag extends PureComponent {
       case 'gte:dates':
       case 'date':
         let prefix;
-        if (filter === 'gte:dates') {
+        if (filter.includes('gte')) {
           prefix = <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After " />
-        } else if (filter === 'lte:dates') {
+        } else if (filter.includes('lte')) {
           prefix = <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before " />
         }
 

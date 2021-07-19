@@ -55,10 +55,10 @@ class Facet extends Component {
 
   onClearDates(event) {
     event.stopPropagation();
-    const { query } = this.props;
+    const { field, query } = this.props;
     const newQuery = query
-      .clearFilter('lte:dates')
-      .clearFilter('gte:dates');
+      .clearFilter(`lte:${field}`)
+      .clearFilter(`gte:${field}`);
 
     this.props.updateQuery(newQuery);
   }
@@ -76,7 +76,7 @@ class Facet extends Component {
   }
 
   renderDates() {
-    const { query } = this.props;
+    const { field, query } = this.props;
     const { facet } = this.state;
     const { intervals } = facet;
 
@@ -86,6 +86,7 @@ class Facet extends Component {
         query={query}
         updateQuery={this.props.updateQuery}
         showLabel={false}
+        field={field}
         emptyComponent={(
           <div className="Facet__no-options">
             <FormattedMessage
@@ -142,7 +143,7 @@ class Facet extends Component {
     const current = query.getFilter(field);
     const count = current ? current.length : 0;
     const isFiltered = query.getFilter(field).length > 0;
-    const isDate = field === 'dates';
+    const isDate = field === 'dates' || this.props.facet.type === 'date';
     const isUpdating = result.total === undefined;
 
     return (
@@ -188,7 +189,7 @@ class Facet extends Component {
               )}
             </>
           )}
-          {(isDate && isOpen && (query.hasFilter('gte:dates') || query.hasFilter('lte:dates'))) && (
+          {(isDate && isOpen && (query.hasFilter(`gte:${field}`) || query.hasFilter(`lte:${field}`))) && (
             <Button small minimal icon="reset" className="Facet__action" intent={Intent.DANGER} onClick={this.onClearDates}>
               <FormattedMessage
                 id="search.facets.clearDates"
