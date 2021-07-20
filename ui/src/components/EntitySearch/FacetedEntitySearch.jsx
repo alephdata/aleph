@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import queryString from 'query-string';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Icon } from '@blueprintjs/core';
+import { Button, Drawer, DrawerSize, Icon, Position } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -69,6 +69,7 @@ class FacetedEntitySearch extends React.Component {
     super(props);
     this.state = {
       hideFacets: false,
+      facetsOpen: true,
     };
 
     this.updateQuery = this.updateQuery.bind(this);
@@ -158,7 +159,7 @@ class FacetedEntitySearch extends React.Component {
 
   render() {
     const { additionalFields = [], columns, children, facets, query, result, intl, hasCustomColumns, hasCustomFacets } = this.props;
-    const { hideFacets } = this.state;
+    const { facetsOpen, hideFacets } = this.state;
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
 
@@ -192,39 +193,53 @@ class FacetedEntitySearch extends React.Component {
         ]}
       >
         <DualPane className="FacetedEntitySearch">
-          <DualPane.SidePane>
-            <div
-              role="switch"
-              aria-checked={!hideFacets}
-              tabIndex={0}
-              className="visible-sm-flex facets total-count bp3-text-muted"
-              onClick={this.toggleFacets}
-              onKeyPress={this.toggleFacets}
-            >
-              <Icon icon={plusMinusIcon} />
-              <span className="total-count-span">
-                <FormattedMessage id="search.screen.filters" defaultMessage="Filters" />
-              </span>
-            </div>
-            <div className={hideFacetsClass}>
-              <Facets
-                query={query}
-                result={result}
-                updateQuery={this.updateQuery}
-                facets={[...additionalFields.map(getGroupField), ...facets]}
-                isCollapsible
-              />
-              <SearchFieldSelect
-                filterPropOptions={prop => prop.type.name !== 'entity'}
-                onSelect={(field) => this.onSearchConfigEdit('facets', field)}
-                onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
-                selected={facets}
-                inputProps={{ placeholder: intl.formatMessage(messages.configure_facets_placeholder) }}
+          <Drawer
+            autoFocus={false}
+            enforceFocus={false}
+            hasBackdrop={false}
+            usePortal={false}
+            isCloseButtonShown={false}
+            isOpen={facetsOpen}
+            canEscapeKeyClose={false}
+            canOutsideClickClose={false}
+            position={Position.LEFT}
+            size={350}
+          >
+              <div
+                role="switch"
+                aria-checked={!hideFacets}
+                tabIndex={0}
+                className="visible-sm-flex facets total-count bp3-text-muted"
+                onClick={this.toggleFacets}
+                onKeyPress={this.toggleFacets}
               >
-                <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
-              </SearchFieldSelect>
-            </div>
-          </DualPane.SidePane>
+                <Icon icon={plusMinusIcon} />
+                <span className="total-count-span">
+                  <FormattedMessage id="search.screen.filters" defaultMessage="Filters" />
+                </span>
+              </div>
+              <div className={hideFacetsClass}>
+                <Facets
+                  query={query}
+                  result={result}
+                  updateQuery={this.updateQuery}
+                  facets={[...additionalFields.map(getGroupField), ...facets]}
+                  isCollapsible
+                />
+                <SearchFieldSelect
+                  filterPropOptions={prop => prop.type.name !== 'entity'}
+                  onSelect={(field) => this.onSearchConfigEdit('facets', field)}
+                  onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
+                  selected={facets}
+                  inputProps={{ placeholder: intl.formatMessage(messages.configure_facets_placeholder) }}
+                >
+                  <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
+                </SearchFieldSelect>
+              </div>
+          </Drawer>
+          {facetsOpen && (
+            <DualPane.SidePane />
+          )}
           <DualPane.ContentPane>
             {children}
             <div className="FacetedEntitySearch__controls">

@@ -46,6 +46,15 @@
     margin-bottom: $aleph-grid-size*2;
   }
 
+  .DualPane__inner-container {
+    position: relative;
+  }
+
+  .bp3-drawer {
+    box-shadow: none;
+    @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, 0);
+    @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, none);
+  }
 }
 
 @media screen and (max-width: $aleph-screen-sm-max-width) {
