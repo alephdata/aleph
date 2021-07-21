@@ -1,7 +1,27 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
-.EntitySearchResults-container {
+.EntitySearchResults-outer-container {
+  position: relative;
+
+  &.overflowEnd {
+    &::after {
+      content:'';
+      display:block;
+      position:absolute;
+      top:0;
+      bottom:0;
+      right:0;
+      width: 100px;
+      background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+    }
+  }
+}
+
+.EntitySearchResults-inner-container {
   overflow-x: scroll;
   overflow-y: visible;
   padding: 0;
@@ -26,8 +46,17 @@
     left: 0;
     z-index: 9998;
     background: white;
-    border-right: 1px solid $aleph-border-color;
+
+    .overflowStart & {
+      border-right: 1px solid $aleph-border-color;
+    }
   }
+  //
+  // &__scroll-help-text {
+  //   text-align: end;
+  //   font-size: 10px;
+  //   line-height: 1;
+  // }
 }
 
 .EntitySearchResultsRow {
@@ -47,13 +76,13 @@
   }
 
   td {
-    min-width: 110px;
+    min-width: 120px;
 
     &.caption {
-      min-width: 220px;
+      min-width: 240px;
     }
     &.collection_id {
-      min-width: 170px;
+      min-width: 175px;
     }
   }
 }

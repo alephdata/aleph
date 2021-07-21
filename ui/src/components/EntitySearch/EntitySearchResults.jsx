@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import c from 'classnames';
+import { FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
+import { Icon } from '@blueprintjs/core';
 
 import EntitySearchResultsRow from './EntitySearchResultsRow';
 import { ErrorSection, SortableTH } from 'components/common';
@@ -11,6 +13,36 @@ import './EntitySearchResults.scss';
 
 
 class EntitySearchResults extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      overflowEnd: false,
+      overflowStart: false
+    }
+
+    this.containerRef = React.createRef();
+    this.tableRef = React.createRef();
+    this.checkHorizontalOverflow = this.checkHorizontalOverflow.bind(this)
+  }
+
+  componentDidMount() {
+    this.checkHorizontalOverflow()
+  }
+
+  checkHorizontalOverflow() {
+    const container = this.containerRef?.current?.getBoundingClientRect();
+    const table = this.tableRef?.current?.getBoundingClientRect();
+    if (!table || !container) { return; }
+
+    this.setState(({ overflowStart, overflowEnd }) => {
+      return ({
+        overflowStart: table.x < container.left,
+        overflowEnd: (table.left + table.width - 20) > container.right,
+      })
+    });
+  }
+
   sortColumn(newField) {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
@@ -44,9 +76,8 @@ class EntitySearchResults extends Component {
   }
 
   render() {
-    const { columns, result, location, writeable } = this.props;
-    const { showPreview = true } = this.props;
-    const { updateSelection, selection } = this.props;
+    const { columns, result, location, writeable, showPreview = true, updateSelection, selection } = this.props;
+    const { overflowStart, overflowEnd } = this.state;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -58,39 +89,46 @@ class EntitySearchResults extends Component {
 
     const skeletonItems = [...Array(15).keys()];
 
+    // <span className="EntitySearchResults__scroll-help-text">
+    //   <FormattedMessage id="search.results.scroll" defaultMessage="Scroll for more" />
+    //   <Icon icon="arrow-right" />
+    // </span>
+
     return (
-      <div className="EntitySearchResults-container">
-        <table className="EntitySearchResults data-table">
-          <thead>
-            <tr>
-              {writeable && updateSelection && (<th className="select" />)}
-              {columns.map(this.renderHeaderCell)}
-            </tr>
-          </thead>
-          <tbody className={c({ updating: result.isPending })}>
-            {result.results.map(entity => (
-              <EntitySearchResultsRow
-                key={entity.id}
-                entity={entity}
-                location={location}
-                showPreview={showPreview}
-                updateSelection={updateSelection}
-                selection={selection}
-                writeable={writeable}
-                columns={columns}
-              />
-            ))}
-            {result.isPending && skeletonItems.map(item => (
-              <EntitySearchResultsRow
-                key={item}
-                updateSelection={updateSelection}
-                writeable={writeable}
-                columns={columns}
-                isPending
-              />
-            ))}
-          </tbody>
-        </table>
+      <div ref={this.containerRef} className={c("EntitySearchResults-outer-container", { overflowEnd, overflowStart })} onScroll={this.checkHorizontalOverflow}>
+        <div className="EntitySearchResults-inner-container">
+          <table className="EntitySearchResults data-table" ref={this.tableRef}>
+            <thead>
+              <tr>
+                {writeable && updateSelection && (<th className="select" />)}
+                {columns.map(this.renderHeaderCell)}
+              </tr>
+            </thead>
+            <tbody className={c({ updating: result.isPending })}>
+              {result.results.map(entity => (
+                <EntitySearchResultsRow
+                  key={entity.id}
+                  entity={entity}
+                  location={location}
+                  showPreview={showPreview}
+                  updateSelection={updateSelection}
+                  selection={selection}
+                  writeable={writeable}
+                  columns={columns}
+                />
+              ))}
+              {result.isPending && skeletonItems.map(item => (
+                <EntitySearchResultsRow
+                  key={item}
+                  updateSelection={updateSelection}
+                  writeable={writeable}
+                  columns={columns}
+                  isPending
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
