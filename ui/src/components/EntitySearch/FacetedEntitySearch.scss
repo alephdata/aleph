@@ -1,6 +1,12 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
+@mixin small {
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    @content;
+  }
+}
+
 .FacetedEntitySearch {
   .total-count-span {
     display: inline-flex;
@@ -46,6 +52,12 @@
     margin-bottom: $aleph-grid-size*2;
   }
 
+  .SearchFieldSelect {
+    @include small {
+      display: none;
+    }
+  }
+
   .DualPane__inner-container {
     position: relative;
   }
@@ -63,15 +75,19 @@
     position: relative;
     transition: width 120ms linear;
     min-height: 100vh;
+    width: $aleph-sidebar-width !important;
 
     .collapsed & {
-      width: 0;
+      width: 0 !important;
       padding: 0;
     }
   }
 
   &__expand-toggle {
     $toggle-width: $aleph-grid-size*3;
+    @include small {
+      display: none;
+    }
 
     position: fixed;
     top: 30px;
@@ -105,18 +121,12 @@
       }
     }
   }
-}
 
-@media screen and (max-width: $aleph-screen-sm-max-width) {
-  .hide {
-    display: none;
+  &__mobile-expand-toggle {
+    margin-bottom: $aleph-grid-size*2;
   }
 
-  .show {
-    display: block;
-  }
-
-  .SidePane {
-    padding-bottom: 0 !important;
+  .bp3-divider {
+    margin: 0 0 $aleph-grid-size;
   }
 }
