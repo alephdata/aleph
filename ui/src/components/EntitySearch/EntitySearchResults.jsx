@@ -59,37 +59,39 @@ class EntitySearchResults extends Component {
     const skeletonItems = [...Array(15).keys()];
 
     return (
-      <table className="EntitySearchResults data-table">
-        <thead>
-          <tr>
-            {writeable && updateSelection && (<th className="select" />)}
-            {columns.map(this.renderHeaderCell)}
-          </tr>
-        </thead>
-        <tbody className={c({ updating: result.isPending })}>
-          {result.results.map(entity => (
-            <EntitySearchResultsRow
-              key={entity.id}
-              entity={entity}
-              location={location}
-              showPreview={showPreview}
-              updateSelection={updateSelection}
-              selection={selection}
-              writeable={writeable}
-              columns={columns}
-            />
-          ))}
-          {result.isPending && skeletonItems.map(item => (
-            <EntitySearchResultsRow
-              key={item}
-              updateSelection={updateSelection}
-              writeable={writeable}
-              columns={columns}
-              isPending
-            />
-          ))}
-        </tbody>
-      </table>
+      <div className="EntitySearchResults-container">
+        <table className="EntitySearchResults data-table">
+          <thead>
+            <tr>
+              {writeable && updateSelection && (<th className="select" />)}
+              {columns.map(this.renderHeaderCell)}
+            </tr>
+          </thead>
+          <tbody className={c({ updating: result.isPending })}>
+            {result.results.map(entity => (
+              <EntitySearchResultsRow
+                key={entity.id}
+                entity={entity}
+                location={location}
+                showPreview={showPreview}
+                updateSelection={updateSelection}
+                selection={selection}
+                writeable={writeable}
+                columns={columns}
+              />
+            ))}
+            {result.isPending && skeletonItems.map(item => (
+              <EntitySearchResultsRow
+                key={item}
+                updateSelection={updateSelection}
+                writeable={writeable}
+                columns={columns}
+                isPending
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

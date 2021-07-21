@@ -1,6 +1,13 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
+.EntitySearchResults-container {
+  overflow-x: scroll;
+  overflow-y: visible;
+  padding: 0;
+  position: relative;
+}
+
 .EntitySearchResults {
   border-color: $aleph-border-color;
   .schema {
@@ -12,6 +19,14 @@
 
   .bp3-control {
     margin-bottom: 0 !important;
+  }
+
+  th:first-child, td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 9998;
+    background: white;
+    border-right: 1px solid $aleph-border-color;
   }
 }
 
@@ -29,6 +44,17 @@
 
   .highlights {
     @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
+  }
+
+  td {
+    min-width: 110px;
+
+    &.caption {
+      min-width: 220px;
+    }
+    &.collection_id {
+      min-width: 170px;
+    }
   }
 }
 
