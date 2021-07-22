@@ -191,14 +191,15 @@ class Query {
 
   addFacet(facet) {
     const field = facet.isProperty ? `properties.${facet.name}` : facet.name;
-    const newQuery = this.add('facet', field)
+    let newQuery = this.add('facet', field)
       .set(`facet_size:${field}`, facet.defaultSize || 10)
       .set(`facet_total:${field}`, true);
 
-    if (field === 'dates') {
-      return newQuery.add('facet_interval:dates', 'year');
-    } else if (facet.isProperty) {
-      return newQuery.set(`facet_type:${field}`, facet.type);
+    if (field === 'dates' || facet.type === 'date') {
+      newQuery = newQuery.add(`facet_interval:${field}`, 'year');
+    }
+    if (facet.isProperty) {
+      newQuery = newQuery.set(`facet_type:${field}`, facet.type);
     }
     return newQuery;
   }
@@ -209,11 +210,12 @@ class Query {
       .set(`facet_size:${field}`, undefined)
       .set(`facet_total:${field}`, undefined)
       .set(`facet_type:${field}`, undefined)
-      .remove('facet_interval:dates', 'year');
+      .remove(`facet_interval:${field}`, 'year');
   }
 
   getFacetType(field) {
-    return this.getString(`facet_type:${field}`);
+    const cleanedField = field.replace('gte:', '').replace('lte:', '').replace('eq:', '')
+    return this.getString(`facet_type:${cleanedField}`);
   }
 
   hasFacet(field) {
