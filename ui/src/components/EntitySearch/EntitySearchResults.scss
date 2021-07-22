@@ -44,7 +44,7 @@
   th:first-child, td:first-child {
     position: sticky;
     left: 0;
-    z-index: 9998;
+    z-index: 10;
     background: white;
 
     .overflowStart & {
