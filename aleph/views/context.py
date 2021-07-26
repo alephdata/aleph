@@ -15,7 +15,7 @@ from aleph import __version__
 from aleph.queues import get_rate_limit
 from aleph.core import settings
 from aleph.authz import Authz
-from aleph.model import Role
+from aleph.views.util import get_authz
 
 log = structlog.get_logger(__name__)
 local = threading.local()
@@ -70,28 +70,8 @@ def _get_remote_ip():
     return request.remote_addr
 
 
-def _get_credential_authz(credential):
-    if credential is None or not len(credential):
-        return
-    if " " in credential:
-        method, credential = credential.split(" ", 1)
-        if method == "Token":
-            return Authz.from_token(credential)
-
-    role = Role.by_api_key(credential)
-    if role is not None:
-        return Authz.from_role(role=role)
-
-
 def enable_authz(request):
-    authz = None
-
-    if "Authorization" in request.headers:
-        credential = request.headers.get("Authorization")
-        authz = _get_credential_authz(credential)
-
-    if authz is None and "api_key" in request.args:
-        authz = _get_credential_authz(request.args.get("api_key"))
+    authz = get_authz(request)
 
     authz = authz or Authz.from_role(role=None)
     request.authz = authz
