@@ -4,6 +4,10 @@
 
 // Column & row customisation for any tables.
 table {
+  tr {
+    background-color: white;
+  }
+
   // Force a table-row to be a single line, truncating contents of large cells.
   tr.nowrap > td, td.nowrap,
   tr.nowrap > th {

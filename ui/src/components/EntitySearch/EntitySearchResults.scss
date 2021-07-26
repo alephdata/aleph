@@ -45,18 +45,12 @@
     position: sticky;
     left: 0;
     z-index: 10;
-    background: white;
+    background-color: inherit;
 
     .overflowStart & {
       border-right: 1px solid $aleph-border-color;
     }
   }
-  //
-  // &__scroll-help-text {
-  //   text-align: end;
-  //   font-size: 10px;
-  //   line-height: 1;
-  // }
 }
 
 .EntitySearchResultsRow {
