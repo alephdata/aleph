@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import c from 'classnames';
-import { FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { Icon } from '@blueprintjs/core';
 
 import EntitySearchResultsRow from './EntitySearchResultsRow';
 import { ErrorSection, SortableTH } from 'components/common';
@@ -28,6 +26,11 @@ class EntitySearchResults extends Component {
 
   componentDidMount() {
     this.checkHorizontalOverflow()
+    window.addEventListener('resize', this.checkHorizontalOverflow);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkHorizontalOverflow);
   }
 
   checkHorizontalOverflow() {
