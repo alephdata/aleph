@@ -106,6 +106,7 @@ class Timeline extends Component {
               query={query}
               updateQuery={this.updateQuery}
               dataLabel={intl.formatMessage(messages.itemsLabel)}
+              field="dates"
               emptyComponent={(
                 <ErrorSection title={intl.formatMessage(messages.histogramEmpty)} />
               )}
