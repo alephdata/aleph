@@ -23,6 +23,10 @@ const messages = defineMessages({
     id: 'home.title',
     defaultMessage: 'Find public records and leaks',
   },
+  access_disabled: {
+    id: 'home.access_disabled',
+    defaultMessage: 'Public access temporarily disabled',
+  },
   placeholder: {
     id: 'home.placeholder',
     defaultMessage: 'Try searching: {samples}',
@@ -84,11 +88,11 @@ export class HomeScreen extends Component {
               {description && (
                 <p className="HomeScreen__description">{description}</p>
               )}
-              {metadata?.auth?.auth_required && (
-                <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning">
+              {true && (
+                <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning" title={intl.formatMessage(messages.access_disabled)}>
                   <FormattedMessage
                     id="home.auth_required"
-                    defaultMessage="As of July 26, 2021, all users must log in to view content and execute searches on {title}. We hope to offer public access without requiring a login once again soon, but are working to find a solution in the interim.{br}{br}If you experience problems with an application that uses the Aleph API, please email data@occrp.org.{br}{br}Thank you for your patience and understanding."
+                    defaultMessage="All users currently must log in to view content and execute searches on {title}. We hope to offer public access without requiring a login once again soon, but are working to find a solution in the interim.{br}{br}If you experience problems with an application that uses the Aleph API, please email data@occrp.org.{br}{br}Thank you for your patience and understanding."
                     values={{ br: <br />, title: metadata.app.title }}
                   />
                 </Callout>
