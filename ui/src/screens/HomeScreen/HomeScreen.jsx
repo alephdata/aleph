@@ -84,7 +84,7 @@ export class HomeScreen extends Component {
               {description && (
                 <p className="HomeScreen__description">{description}</p>
               )}
-              {metadata.auth.auth_required && (
+              {metadata?.auth?.auth_required && (
                 <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning">
                   <FormattedMessage
                     id="home.auth_required"
