@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { Callout, Intent } from '@blueprintjs/core';
 
 import { AnimatedCount, SearchBox, Category, Country, Schema, Statistics } from 'components/common';
 import { fetchStatistics } from 'actions/index';
@@ -82,6 +83,15 @@ export class HomeScreen extends Component {
               <h1 className="HomeScreen__app-title">{title}</h1>
               {description && (
                 <p className="HomeScreen__description">{description}</p>
+              )}
+              {metadata.auth.auth_required && (
+                <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning">
+                  <FormattedMessage
+                    id="home.auth_required"
+                    defaultMessage="As of July 26, 2021, all users must log in to view content and execute searches on {title}. We hope to offer public access without requiring a login once again soon, but are working to find a solution in the interim.{br}{br}If you experience problems with an application that uses the Aleph API, please email data@occrp.org.{br}{br}Thank you for your patience and understanding."
+                    values={{ br: <br />, title: metadata.app.title }}
+                  />
+                </Callout>
               )}
               <div className="HomeScreen__search">
                 <SearchBox

@@ -95,6 +95,13 @@ $vertical-spacing: $aleph-grid-size*5;
     margin: $aleph-grid-size*3 0;
   }
 
+  &__auth-warning {
+    max-width: 500px;
+    text-align: left;
+    margin: auto;
+    margin-bottom: $aleph-content-padding;
+  }
+
   &__paragraph {
     margin: 0 0 $vertical-spacing/2;
     text-align: left;
