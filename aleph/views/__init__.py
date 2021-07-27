@@ -1,6 +1,3 @@
-from werkzeug.exceptions import Unauthorized
-from flask import request
-
 from aleph.views.context import blueprint as cache
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.sessions_api import blueprint as sessions_api
@@ -22,44 +19,25 @@ from aleph.views.mappings_api import blueprint as mappings_api
 from aleph.views.entitysets_api import blueprint as entitysets_api
 from aleph.views.exports_api import blueprint as exports_api
 
-from aleph.core import settings
-from aleph.views.util import get_authz
-
-
-def require_auth():
-    authz = get_authz(request)
-    if authz is None:
-        raise Unauthorized()
-
-
-def register_blueprint(app, blueprint, **kw):
-    if settings.REQUIRE_AUTH:
-        # Raise 403 error for anonymous requests for all endpoints other than
-        # the base api endpoints (metadata, statistics, health checks etc) and
-        # authentication endpoints
-        if blueprint.name not in (base_api.name, sessions_api.name):
-            blueprint.before_request(require_auth)
-    app.register_blueprint(blueprint, **kw)
-
 
 def mount_app_blueprints(app):
-    register_blueprint(app, cache)
-    register_blueprint(app, base_api)
-    register_blueprint(app, sessions_api)
-    register_blueprint(app, roles_api)
-    register_blueprint(app, groups_api)
-    register_blueprint(app, permissions_api, url_prefix="/api/2/collections")
-    register_blueprint(app, collections_api, url_prefix="/api/2/collections")
-    register_blueprint(app, entities_api)
-    register_blueprint(app, profiles_api)
-    register_blueprint(app, alerts_api)
-    register_blueprint(app, ingest_api, url_prefix="/api/2/collections")
-    register_blueprint(app, reconcile_api)
-    register_blueprint(app, notifications_api)
-    register_blueprint(app, xref_api)
-    register_blueprint(app, stream_api)
-    register_blueprint(app, archive_api)
-    register_blueprint(app, status_api)
-    register_blueprint(app, mappings_api, url_prefix="/api/2/collections")
-    register_blueprint(app, entitysets_api)
-    register_blueprint(app, exports_api)
+    app.register_blueprint(cache)
+    app.register_blueprint(base_api)
+    app.register_blueprint(sessions_api)
+    app.register_blueprint(roles_api)
+    app.register_blueprint(groups_api)
+    app.register_blueprint(permissions_api, url_prefix="/api/2/collections")
+    app.register_blueprint(collections_api, url_prefix="/api/2/collections")
+    app.register_blueprint(entities_api)
+    app.register_blueprint(profiles_api)
+    app.register_blueprint(alerts_api)
+    app.register_blueprint(ingest_api, url_prefix="/api/2/collections")
+    app.register_blueprint(reconcile_api)
+    app.register_blueprint(notifications_api)
+    app.register_blueprint(xref_api)
+    app.register_blueprint(stream_api)
+    app.register_blueprint(archive_api)
+    app.register_blueprint(status_api)
+    app.register_blueprint(mappings_api, url_prefix="/api/2/collections")
+    app.register_blueprint(entitysets_api)
+    app.register_blueprint(exports_api)

@@ -131,6 +131,7 @@ def index():
       tags:
       - Entity
     """
+    require(request.authz.can_browse_anonymous)
     # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.values, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
@@ -209,6 +210,7 @@ def match():
       tags:
       - Entity
     """
+    require(request.authz.can_browse_anonymous)
     entity = parse_request("EntityUpdate")
     entity = model.get_proxy(entity, cleaned=False)
     tag_request(schema=entity.schema.name, caption=entity.caption)
