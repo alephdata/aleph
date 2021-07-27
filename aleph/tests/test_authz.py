@@ -25,6 +25,18 @@ class AuthzTestCase(TestCase):
         assert authz.role is None, authz.role
         assert len(authz.roles) == 1, authz.roles
 
+    def test_require_logged_in(self):
+        authz = Authz.from_role(None)
+        assert authz.can_browse_anonymous is True, authz
+        settings.REQUIRE_LOGGED_IN = True
+        authz = Authz.from_role(None)
+        assert authz.can_browse_anonymous is False, authz
+        authz = Authz.from_role(self.user)
+        assert authz.can_browse_anonymous is True, authz
+        settings.REQUIRE_LOGGED_IN = False
+        authz = Authz.from_role(self.user)
+        assert authz.can_browse_anonymous is True, authz
+
     def test_user(self):
         authz = Authz.from_role(self.user)
         assert authz.logged_in is True, authz
