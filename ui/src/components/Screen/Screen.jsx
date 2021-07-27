@@ -30,13 +30,14 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      session, metadata, isHomePage, requireSession, title, description, className,
+      exemptFromRequiredAuth, session, metadata, requireSession, title, description, className,
     } = this.props;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
-    
+
+
     let forceAuth = false;
-    if (metadata?.auth?.auth_required && !isHomePage) {
-      forceAuth = !session.loggedIn
+    if (metadata?.auth?.auth_required) {
+      forceAuth = !exemptFromRequiredAuth && !session.loggedIn
     } else {
       forceAuth = requireSession && !session.loggedIn
     }
@@ -82,15 +83,10 @@ export class Screen extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-
-  return ({
-    isHomePage: location.pathname === '/',
-    metadata: selectMetadata(state),
-    session: selectSession(state),
-  });
-}
+const mapStateToProps = (state, ownProps) => ({
+  metadata: selectMetadata(state),
+  session: selectSession(state),
+});
 
 export default compose(
   withRouter,

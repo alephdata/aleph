@@ -80,6 +80,7 @@ export class HomeScreen extends Component {
       <Screen
         title={intl.formatMessage(messages.title)}
         description={description}
+        exemptFromRequiredAuth
       >
         <div className="HomeScreen">
           <section className="HomeScreen__section title-section">
