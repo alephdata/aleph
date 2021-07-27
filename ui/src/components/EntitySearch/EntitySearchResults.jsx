@@ -11,41 +11,6 @@ import './EntitySearchResults.scss';
 
 
 class EntitySearchResults extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      overflowEnd: false,
-      overflowStart: false
-    }
-
-    this.containerRef = React.createRef();
-    this.tableRef = React.createRef();
-    this.checkHorizontalOverflow = this.checkHorizontalOverflow.bind(this)
-  }
-
-  componentDidMount() {
-    this.checkHorizontalOverflow()
-    window.addEventListener('resize', this.checkHorizontalOverflow);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.checkHorizontalOverflow);
-  }
-
-  checkHorizontalOverflow() {
-    const container = this.containerRef?.current?.getBoundingClientRect();
-    const table = this.tableRef?.current?.getBoundingClientRect();
-    if (!table || !container) { return; }
-
-    this.setState(({ overflowStart, overflowEnd }) => {
-      return ({
-        overflowStart: table.x < container.left,
-        overflowEnd: (table.left + table.width - 20) > container.right,
-      })
-    });
-  }
-
   sortColumn(newField) {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
@@ -80,7 +45,6 @@ class EntitySearchResults extends Component {
 
   render() {
     const { columns, result, location, writeable, showPreview = true, updateSelection, selection } = this.props;
-    const { overflowStart, overflowEnd } = this.state;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -92,15 +56,10 @@ class EntitySearchResults extends Component {
 
     const skeletonItems = [...Array(15).keys()];
 
-    // <span className="EntitySearchResults__scroll-help-text">
-    //   <FormattedMessage id="search.results.scroll" defaultMessage="Scroll for more" />
-    //   <Icon icon="arrow-right" />
-    // </span>
-
     return (
-      <div ref={this.containerRef} className={c("EntitySearchResults-outer-container", { overflowEnd, overflowStart })} onScroll={this.checkHorizontalOverflow}>
+      <div className="EntitySearchResults-outer-container">
         <div className="EntitySearchResults-inner-container">
-          <table className="EntitySearchResults data-table" ref={this.tableRef}>
+          <table className="EntitySearchResults data-table">
             <thead>
               <tr>
                 {writeable && updateSelection && (<th className="select" />)}
