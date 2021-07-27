@@ -36,7 +36,7 @@ export class Screen extends React.Component {
 
 
     let forceAuth = false;
-    if (metadata?.auth?.auth_required) {
+    if (metadata?.auth?.require_logged_in) {
       forceAuth = !exemptFromRequiredAuth && !session.loggedIn
     } else {
       forceAuth = requireSession && !session.loggedIn

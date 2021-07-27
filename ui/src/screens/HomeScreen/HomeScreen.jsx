@@ -89,10 +89,10 @@ export class HomeScreen extends Component {
               {description && (
                 <p className="HomeScreen__description">{description}</p>
               )}
-              {metadata?.auth?.auth_required && (
+              {metadata?.auth?.require_logged_in && (
                 <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning" title={intl.formatMessage(messages.access_disabled)}>
                   <FormattedMessage
-                    id="home.auth_required"
+                    id="home.require_logged_in"
                     defaultMessage="All users currently must log in to view content and execute searches on {title}. We hope to offer public access without requiring a login once again soon, but are working to find a solution in the interim.{br}{br}If you experience problems with an application that uses the Aleph API, please email data@occrp.org.{br}{br}Thank you for your patience and understanding."
                     values={{ br: <br />, title: metadata.app.title }}
                   />
