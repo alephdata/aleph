@@ -10,7 +10,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
 from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
-from aleph.views.util import get_index_entity, get_session_id, obj_or_404
+from aleph.views.util import get_index_entity, get_session_id, obj_or_404, require
 
 
 blueprint = Blueprint("mappings_api", __name__)
@@ -76,6 +76,7 @@ def index(collection_id):
         - Collection
         - Mapping
     """
+    require(request.authz.can_browse_anonymous)
     collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
     table_id = first(parser.filters.get("table"))

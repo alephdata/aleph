@@ -1,12 +1,11 @@
-import jwt
 import logging
-from datetime import datetime
 from flask.wrappers import Response
 from flask import Blueprint, redirect, send_file, request
 
-from aleph.core import archive, settings
+from aleph.core import archive
 from aleph.logic.util import archive_token
 from aleph.views.context import tag_request
+from aleph.views.util import require
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("archive_api", __name__)
@@ -35,6 +34,7 @@ def retrieve():
       tags:
       - Archive
     """
+    require(request.authz.can_browse_anonymous)
     token = request.args.get("token")
     content_hash, file_name, mime_type, expire = archive_token(token)
     tag_request(content_hash=content_hash, file_name=file_name)

@@ -183,29 +183,3 @@ def stream_csv(iterable):
 def render_xml(template, **kwargs):
     data = render_template(template, **kwargs)
     return Response(data, mimetype="text/xml")
-
-
-def _get_credential_authz(credential):
-    if credential is None or not len(credential):
-        return
-    if " " in credential:
-        method, credential = credential.split(" ", 1)
-        if method == "Token":
-            return Authz.from_token(credential)
-
-    role = Role.by_api_key(credential)
-    if role is not None:
-        return Authz.from_role(role=role)
-
-
-def get_authz(request):
-    authz = None
-
-    if "Authorization" in request.headers:
-        credential = request.headers.get("Authorization")
-        authz = _get_credential_authz(credential)
-
-    if authz is None and "api_key" in request.args:
-        authz = _get_credential_authz(request.args.get("api_key"))
-
-    return authz
