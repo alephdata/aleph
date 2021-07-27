@@ -73,7 +73,7 @@ export class HomeScreen extends Component {
     }
 
     const appHomePage = metadata.pages.find(page => page.home);
-    const { description, samples, title } = appHomePage;
+    const { description, samples, title, warning_title, warning_body } = appHomePage;
     const samplesList = wordList(samples, ', ').join('');
 
     return (
@@ -89,13 +89,9 @@ export class HomeScreen extends Component {
               {description && (
                 <p className="HomeScreen__description">{description}</p>
               )}
-              {metadata?.auth?.auth_required && (
-                <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning" title={intl.formatMessage(messages.access_disabled)}>
-                  <FormattedMessage
-                    id="home.auth_required"
-                    defaultMessage="All users currently must log in to view content and execute searches on {title}. We hope to offer public access without requiring a login once again soon, but are working to find a solution in the interim.{br}{br}If you experience problems with an application that uses the Aleph API, please email data@occrp.org.{br}{br}Thank you for your patience and understanding."
-                    values={{ br: <br />, title: metadata.app.title }}
-                  />
+              {(warning_title || warning_body) && (
+                <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning" title={warning_title}>
+                  {warning_body}
                 </Callout>
               )}
               <div className="HomeScreen__search">
