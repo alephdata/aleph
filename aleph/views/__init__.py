@@ -34,7 +34,10 @@ def require_auth():
 
 def register_blueprint(app, blueprint, **kw):
     if settings.REQUIRE_AUTH:
-        if blueprint.name != base_api.name:
+        # Raise 403 error for anonymous requests for all endpoints other than
+        # the base api endpoints (metadata, statistics, health checks etc) and
+        # authentication endpoints
+        if blueprint.name not in (base_api.name, sessions_api.name):
             blueprint.before_request(require_auth)
     app.register_blueprint(blueprint, **kw)
 
