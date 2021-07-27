@@ -33,7 +33,7 @@
   }
 
   .highlights {
-    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
+    // @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
     &__content {
       max-width: $aleph-content-width-limit;
     }

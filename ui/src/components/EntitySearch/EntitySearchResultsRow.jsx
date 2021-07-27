@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
-import { selectModel } from 'selectors';
 
-import wordList from 'util/wordList';
+import { selectModel } from 'selectors';
 import {
-  Country, Collection, Entity, FileSize, Date, Property, Schema, Skeleton, Language,
+  Collection, Entity, FileSize, Property, Schema, Skeleton,
 } from 'components/common';
 
 class EntitySearchResultsRow extends Component {
