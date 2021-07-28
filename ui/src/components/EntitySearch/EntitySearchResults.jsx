@@ -33,7 +33,7 @@ class EntitySearchResults extends Component {
     return (
       <SortableTH
         key={fieldName}
-        sortable={true}
+        sortable={field.type !== 'text'}
         className={c({ wide: fieldName === 'caption' || fieldName === 'collection_id' })}
         sorted={sortedField === fieldName && (direction === 'desc' ? 'desc' : 'asc')}
         onClick={() => this.sortColumn(fieldName)}
