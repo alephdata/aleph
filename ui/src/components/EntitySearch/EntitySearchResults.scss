@@ -33,20 +33,27 @@
   }
 
   .highlights {
-    // @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
+    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
     &__content {
-      max-width: $aleph-content-width-limit;
+      max-width: $aleph-grid-size * 100;
     }
   }
 
   td {
-    min-width: 120px;
+    min-width: $aleph-grid-size * 13;
 
     &.caption {
-      min-width: 240px;
+      min-width: $aleph-grid-size * 24;
     }
     &.collection_id {
-      min-width: 175px;
+      min-width: $aleph-grid-size * 17;
+    }
+  }
+  .more-text {
+    &.bp3-button {
+      padding: 0 3px;
+      min-height: 20px;
+      color: $aleph-greyed-text !important;
     }
   }
 }

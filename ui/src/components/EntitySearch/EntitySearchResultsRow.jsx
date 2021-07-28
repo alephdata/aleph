@@ -37,13 +37,13 @@ class EntitySearchResultsRow extends Component {
     if (name === 'caption') {
       return <Entity.Link preview={showPreview} entity={entity} icon />
     } else if (name === 'collection_id') {
-      return <Collection.Link preview collection={entity.collection} icon />
+      return <Collection.Link preview collection={entity.collection} icon truncate={30} />
     } else if (name === 'schema') {
       return <Schema.Label schema={entity.schema} icon />
     } else if (name === 'fileSize') {
       return <FileSize value={entity.getFirst('fileSize')} />;
     } else if (isProperty) {
-      return <Property.Values prop={{ name, type: { name: type, values: model.types[type]?.values }}} values={entity.getProperty(name)} missing="-"/>
+      return <Property.Values prop={{ name, type: { name: type, values: model.types[type]?.values }}} values={entity.getProperty(name)} missing="-" truncate={1} truncateItem={30} />
     } else {
       let key;
       switch(name) {
@@ -58,7 +58,7 @@ class EntitySearchResultsRow extends Component {
         default: return null;
       }
       const values = entity.getTypeValues(key);
-      return <Property.Values prop={{ type: { name: key, values: model.types[key]?.values }}} values={values} missing="-" />
+      return <Property.Values prop={{ type: { name: key, values: model.types[key]?.values }}} values={values} missing="-" truncate={1} truncateItem={30} />
     }
   }
 
@@ -88,7 +88,7 @@ class EntitySearchResultsRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    const resultClass = c('EntitySearchResultsRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
+    const resultClass = c('EntitySearchResultsRow', { active: isActive }, { prefix: isPrefix });
     const highlightsClass = c('EntitySearchResultsRow', { active: isActive });
 
     return (
