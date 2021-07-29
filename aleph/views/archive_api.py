@@ -34,7 +34,6 @@ def retrieve():
       tags:
       - Archive
     """
-    require(request.authz.can_browse_anonymous)
     token = request.args.get("token")
     content_hash, file_name, mime_type, expire = archive_token(token)
     tag_request(content_hash=content_hash, file_name=file_name)
