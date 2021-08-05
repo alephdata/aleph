@@ -21,6 +21,8 @@ import togglePreview from 'util/togglePreview';
 
 import './FacetedEntitySearch.scss';
 
+const SMALL_SCR_BREAKPOINT = 620;
+
 const defaultFacets = [
   'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
 ];
@@ -105,7 +107,7 @@ class FacetedEntitySearch extends React.Component {
     const width = this.ref.current?.clientWidth;
     if (!width) { return; }
 
-    if (width < 620) {
+    if (width < SMALL_SCR_BREAKPOINT) {
       this.setState(({ isMobile }) => {
         if (!isMobile) {
           return ({ isMobile: true, hideFacets: true });

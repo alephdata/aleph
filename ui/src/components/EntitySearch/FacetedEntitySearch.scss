@@ -71,14 +71,14 @@
   }
 
   &__side-placeholder.SidePane {
-    height: auto !important;
+    height: auto;
     position: relative;
     transition: width 120ms linear;
     min-height: 100vh;
-    width: $aleph-sidebar-width !important;
+    width: $aleph-sidebar-width;
 
     .collapsed & {
-      width: 0 !important;
+      width: 0;
       padding: 0;
     }
   }
