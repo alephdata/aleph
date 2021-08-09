@@ -1,11 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
 import queryString from 'query-string';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Icon } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Alignment, Button, Divider, Drawer, Intent, Position } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import c from 'classnames'
 
 import { triggerQueryExport } from 'src/actions';
 import { setSearchConfig, getSearchConfig } from 'app/storage';
@@ -19,6 +20,8 @@ import QueryTags from 'components/QueryTags/QueryTags';
 import togglePreview from 'util/togglePreview';
 
 import './FacetedEntitySearch.scss';
+
+const SMALL_SCR_BREAKPOINT = 620;
 
 const defaultFacets = [
   'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
@@ -62,6 +65,14 @@ const messages = defineMessages({
     id: 'search.columns.configure_placeholder',
     defaultMessage: 'Search for a column...',
   },
+  show_facets: {
+    id: 'search.facets.show',
+    defaultMessage: 'Show filters'
+  },
+  hide_facets: {
+    id: 'search.facets.hide',
+    defaultMessage: 'Hide filters'
+  },
 });
 
 class FacetedEntitySearch extends React.Component {
@@ -69,6 +80,7 @@ class FacetedEntitySearch extends React.Component {
     super(props);
     this.state = {
       hideFacets: false,
+      isMobile: false,
     };
 
     this.updateQuery = this.updateQuery.bind(this);
@@ -78,6 +90,36 @@ class FacetedEntitySearch extends React.Component {
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);
     this.showPreview = this.showPreview.bind(this);
+    this.checkMobileWidth = this.checkMobileWidth.bind(this)
+    this.ref = React.createRef();
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.checkMobileWidth);
+    this.checkMobileWidth();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkMobileWidth);
+  }
+
+  checkMobileWidth() {
+    const width = this.ref.current?.clientWidth;
+    if (!width) { return; }
+
+    if (width < SMALL_SCR_BREAKPOINT) {
+      this.setState(({ isMobile }) => {
+        if (!isMobile) {
+          return ({ isMobile: true, hideFacets: true });
+        }
+      })
+    } else {
+      this.setState(({ isMobile }) => {
+        if (isMobile) {
+          return ({ isMobile: false, hideFacets: false });
+        }
+      })
+    }
   }
 
   getCurrentPreviewIndex() {
@@ -156,11 +198,34 @@ class FacetedEntitySearch extends React.Component {
     });
   }
 
+  renderFacets() {
+    const { additionalFields = [], columns, facets, query, result, intl, hasCustomFacets } = this.props;
+
+    return (
+      <div className="FacetedEntitySearch__facets">
+        <Facets
+          query={query}
+          result={result}
+          updateQuery={this.updateQuery}
+          facets={[...additionalFields.map(getGroupField), ...facets]}
+          isCollapsible
+        />
+        <SearchFieldSelect
+          filterPropOptions={prop => prop.type.name !== 'entity'}
+          onSelect={(field) => this.onSearchConfigEdit('facets', field)}
+          onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
+          selected={facets}
+          inputProps={{ placeholder: intl.formatMessage(messages.configure_facets_placeholder) }}
+        >
+          <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
+        </SearchFieldSelect>
+      </div>
+    )
+  }
+
   render() {
-    const { additionalFields = [], columns, children, facets, query, result, intl, hasCustomColumns, hasCustomFacets } = this.props;
-    const { hideFacets } = this.state;
-    const hideFacetsClass = hideFacets ? 'show' : 'hide';
-    const plusMinusIcon = hideFacets ? 'minus' : 'plus';
+    const { additionalFields = [], columns, children, facets, query, result, intl, hasCustomColumns } = this.props;
+    const { hideFacets, isMobile } = this.state;
 
     const empty = (
       <ErrorSection
@@ -191,73 +256,80 @@ class FacetedEntitySearch extends React.Component {
           },
         ]}
       >
-        <DualPane className="FacetedEntitySearch">
-          <DualPane.SidePane>
-            <div
-              role="switch"
-              aria-checked={!hideFacets}
-              tabIndex={0}
-              className="visible-sm-flex facets total-count bp3-text-muted"
-              onClick={this.toggleFacets}
-              onKeyPress={this.toggleFacets}
-            >
-              <Icon icon={plusMinusIcon} />
-              <span className="total-count-span">
-                <FormattedMessage id="search.screen.filters" defaultMessage="Filters" />
-              </span>
-            </div>
-            <div className={hideFacetsClass}>
-              <Facets
+        <div ref={this.ref}>
+          <DualPane className={c("FacetedEntitySearch", { collapsed: hideFacets })}>
+            {!isMobile && (
+              <DualPane.SidePane className="FacetedEntitySearch__side-placeholder">
+                <Drawer
+                  autoFocus={false}
+                  enforceFocus={false}
+                  hasBackdrop={false}
+                  usePortal={false}
+                  isCloseButtonShown={false}
+                  isOpen={!hideFacets}
+                  canEscapeKeyClose={false}
+                  canOutsideClickClose={false}
+                  position={Position.LEFT}
+                  size={325}
+                >
+                  {this.renderFacets()}
+                </Drawer>
+              </DualPane.SidePane>
+            )}
+            {isMobile && (
+              <div>
+                <Button
+                  className="FacetedEntitySearch__mobile-expand-toggle"
+                  onClick={this.toggleFacets}
+                  text={intl.formatMessage(messages[hideFacets ? 'show_facets' : 'hide_facets'])}
+                  icon={hideFacets ? 'add' : 'remove'}
+                  alignText={Alignment.LEFT}
+                  intent={Intent.PRIMARY}
+                  fill={false}
+                  large
+                  outlined
+                />
+                <Divider />
+                {!hideFacets && this.renderFacets()}
+              </div>
+            )}
+            <DualPane.ContentPane>
+              {children}
+              <div className="FacetedEntitySearch__controls">
+                <QueryTags query={query} updateQuery={this.updateQuery} />
+                <SearchActionBar
+                  result={result}
+                  exportDisabled={!exportLink}
+                  onExport={() => this.props.triggerQueryExport(exportLink)}
+                >
+                  <div className="SearchActionBar__secondary">
+                    <SearchFieldSelect
+                      onSelect={(field) => this.onSearchConfigEdit('columns', field)}
+                      onReset={hasCustomColumns && (() => this.saveSearchConfig({ columns: null, facets }))}
+                      selected={columns}
+                      inputProps={{ placeholder: intl.formatMessage(messages.configure_columns_placeholder) }}
+                    >
+                      <Button
+                        icon='two-columns'
+                        text={intl.formatMessage(messages.configure_columns)}
+                      />
+                    </SearchFieldSelect>
+                  </div>
+                </SearchActionBar>
+              </div>
+              <EntitySearch
                 query={query}
-                result={result}
                 updateQuery={this.updateQuery}
-                facets={[...additionalFields.map(getGroupField), ...facets]}
-                isCollapsible
-              />
-              <SearchFieldSelect
-                filterPropOptions={prop => prop.type.name !== 'entity'}
-                onSelect={(field) => this.onSearchConfigEdit('facets', field)}
-                onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
-                selected={facets}
-                inputProps={{ placeholder: intl.formatMessage(messages.configure_facets_placeholder) }}
-              >
-                <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
-              </SearchFieldSelect>
-            </div>
-          </DualPane.SidePane>
-          <DualPane.ContentPane>
-            {children}
-            <div className="FacetedEntitySearch__controls">
-              <QueryTags query={query} updateQuery={this.updateQuery} />
-              <SearchActionBar
                 result={result}
-                exportDisabled={!exportLink}
-                onExport={() => this.props.triggerQueryExport(exportLink)}
-              >
-                <div className="SearchActionBar__secondary">
-                  <SearchFieldSelect
-                    onSelect={(field) => this.onSearchConfigEdit('columns', field)}
-                    onReset={hasCustomColumns && (() => this.saveSearchConfig({ columns: null, facets }))}
-                    selected={columns}
-                    inputProps={{ placeholder: intl.formatMessage(messages.configure_columns_placeholder) }}
-                  >
-                    <Button
-                      icon='two-columns'
-                      text={intl.formatMessage(messages.configure_columns)}
-                    />
-                  </SearchFieldSelect>
-                </div>
-              </SearchActionBar>
+                emptyComponent={empty}
+                columns={[...additionalFields.map(getGroupField), ...columns]}
+              />
+            </DualPane.ContentPane>
+            <div className="FacetedEntitySearch__expand-toggle">
+              <Button onClick={this.toggleFacets} icon={hideFacets ? "chevron-right" : "chevron-left"} outlined className="FacetedEntitySearch__expand-toggle__button" />
             </div>
-            <EntitySearch
-              query={query}
-              updateQuery={this.updateQuery}
-              result={result}
-              emptyComponent={empty}
-              columns={[...additionalFields.map(getGroupField), ...columns]}
-            />
-          </DualPane.ContentPane>
-        </DualPane>
+          </DualPane>
+        </div>
       </HotkeysContainer>
     );
   }

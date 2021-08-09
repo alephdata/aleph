@@ -1,4 +1,4 @@
-const DEFAULT_START_INTERVAL = 1900;
+const DEFAULT_START_INTERVAL = 1950;
 const ES_SUFFIX = '||/y';
 
 const formatDateQParam = (datetime) => {

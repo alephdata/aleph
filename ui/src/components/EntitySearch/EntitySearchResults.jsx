@@ -33,7 +33,7 @@ class EntitySearchResults extends Component {
     return (
       <SortableTH
         key={fieldName}
-        sortable={true}
+        sortable={field.type !== 'text'}
         className={c({ wide: fieldName === 'caption' || fieldName === 'collection_id' })}
         sorted={sortedField === fieldName && (direction === 'desc' ? 'desc' : 'asc')}
         onClick={() => this.sortColumn(fieldName)}
@@ -44,9 +44,7 @@ class EntitySearchResults extends Component {
   }
 
   render() {
-    const { columns, result, location, writeable } = this.props;
-    const { showPreview = true } = this.props;
-    const { updateSelection, selection } = this.props;
+    const { columns, result, location, writeable, showPreview = true, updateSelection, selection } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -59,37 +57,41 @@ class EntitySearchResults extends Component {
     const skeletonItems = [...Array(15).keys()];
 
     return (
-      <table className="EntitySearchResults data-table">
-        <thead>
-          <tr>
-            {writeable && updateSelection && (<th className="select" />)}
-            {columns.map(this.renderHeaderCell)}
-          </tr>
-        </thead>
-        <tbody className={c({ updating: result.isPending })}>
-          {result.results.map(entity => (
-            <EntitySearchResultsRow
-              key={entity.id}
-              entity={entity}
-              location={location}
-              showPreview={showPreview}
-              updateSelection={updateSelection}
-              selection={selection}
-              writeable={writeable}
-              columns={columns}
-            />
-          ))}
-          {result.isPending && skeletonItems.map(item => (
-            <EntitySearchResultsRow
-              key={item}
-              updateSelection={updateSelection}
-              writeable={writeable}
-              columns={columns}
-              isPending
-            />
-          ))}
-        </tbody>
-      </table>
+      <div className="EntitySearchResults-outer-container">
+        <div className="EntitySearchResults-inner-container">
+          <table className="EntitySearchResults data-table">
+            <thead>
+              <tr>
+                {writeable && updateSelection && (<th className="select" />)}
+                {columns.map(this.renderHeaderCell)}
+              </tr>
+            </thead>
+            <tbody className={c({ updating: result.isPending })}>
+              {result.results.map(entity => (
+                <EntitySearchResultsRow
+                  key={entity.id}
+                  entity={entity}
+                  location={location}
+                  showPreview={showPreview}
+                  updateSelection={updateSelection}
+                  selection={selection}
+                  writeable={writeable}
+                  columns={columns}
+                />
+              ))}
+              {result.isPending && skeletonItems.map(item => (
+                <EntitySearchResultsRow
+                  key={item}
+                  updateSelection={updateSelection}
+                  writeable={writeable}
+                  columns={columns}
+                  isPending
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 }

@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
-import { selectModel } from 'selectors';
 
-import wordList from 'util/wordList';
+import { selectModel } from 'selectors';
 import {
-  Country, Collection, Entity, FileSize, Date, Property, Schema, Skeleton, Language,
+  Collection, Entity, FileSize, Property, Schema, Skeleton,
 } from 'components/common';
 
 class EntitySearchResultsRow extends Component {
@@ -35,39 +34,31 @@ class EntitySearchResultsRow extends Component {
     const { entity, model, showPreview } = this.props;
     const { isProperty, name, type } = column;
 
-    if (!isProperty) {
-      switch(name) {
-        case 'caption':
-          return <Entity.Link preview={showPreview} entity={entity} icon />
-        case 'collection_id':
-          return <Collection.Link preview collection={entity.collection} icon />
-        case 'countries':
-          return <Country.List codes={entity.getTypeValues('country')} />;
-        case 'dates':
-          return <Date.Earliest values={entity.getTypeValues('date')} />;
-        case 'languages':
-          return <Language.List codes={entity.getTypeValues('language')} />;
-        case 'schema':
-          return <Schema.Label schema={entity.schema} icon />;
-        case 'names':
-          return wordList(entity.getTypeValues('name'), ',');
-        case 'phones':
-          return wordList(entity.getTypeValues('phone'), ',');
-        case 'addresses':
-          return wordList(entity.getTypeValues('address'), ',');
-        case 'emails':
-          return wordList(entity.getTypeValues('email'), ',');
-        case 'mimetypes':
-          return wordList(entity.getTypeValues('mimetype'), ',');
-        default:
-          return null;
-      }
+    if (name === 'caption') {
+      return <Entity.Link preview={showPreview} entity={entity} icon />
+    } else if (name === 'collection_id') {
+      return <Collection.Link preview collection={entity.collection} icon truncate={30} />
+    } else if (name === 'schema') {
+      return <Schema.Label schema={entity.schema} icon />
+    } else if (name === 'fileSize') {
+      return <FileSize value={entity.getFirst('fileSize')} />;
+    } else if (isProperty) {
+      return <Property.Values prop={{ name, type: { name: type, values: model.types[type]?.values }}} values={entity.getProperty(name)} missing="-" truncate={1} truncateItem={30} />
     } else {
-      if (name === 'fileSize') {
-        return <FileSize value={entity.getFirst('fileSize')} />;
-      } else {
-        return <Property.Values prop={{ name, type: { name: type, values: model.types[type]?.values }}} values={entity.getProperty(name)} />
+      let key;
+      switch(name) {
+        case 'countries': key = 'country'; break;
+        case 'dates': key = 'date'; break;
+        case 'languages': key = 'language'; break;
+        case 'names': key = 'name'; break;
+        case 'phones': key = 'phone'; break;
+        case 'addresses': key = 'address'; break;
+        case 'emails': key = 'email'; break;
+        case 'mimetypes': key = 'mimetype'; break;
+        default: return null;
       }
+      const values = entity.getTypeValues(key);
+      return <Property.Values prop={{ type: { name: key, values: model.types[key]?.values }}} values={values} missing="-" truncate={1} truncateItem={30} />
     }
   }
 
@@ -97,7 +88,7 @@ class EntitySearchResultsRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    const resultClass = c('EntitySearchResultsRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
+    const resultClass = c('EntitySearchResultsRow', { active: isActive }, { prefix: isPrefix });
     const highlightsClass = c('EntitySearchResultsRow', { active: isActive });
 
     return (
@@ -117,12 +108,13 @@ class EntitySearchResultsRow extends Component {
           && (
             <tr key={`${entity.id}-hl`} className={highlightsClass}>
               <td colSpan="100%" className="highlights">
-                {highlights.map((phrase, index) => (
-                  <span key={index}>
-                    <span dangerouslySetInnerHTML={{ __html: phrase }} />
-…
-                  </span>
-                ))}
+                <div className="highlights__content">
+                  {highlights.map((phrase, index) => (
+                    <span key={index}>
+                      <span dangerouslySetInnerHTML={{ __html: phrase }} />
+                    </span>
+                  ))}
+                </div>
               </td>
             </tr>
           )
