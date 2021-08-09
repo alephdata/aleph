@@ -85,6 +85,9 @@ OAUTH_ADMIN_GROUP = env.get("ALEPH_OAUTH_ADMIN_GROUP", "superuser")
 # No authentication. Everyone is admin.
 SINGLE_USER = env.to_bool("ALEPH_SINGLE_USER")
 
+# Require authentication. No anonymous access
+REQUIRE_LOGGED_IN = env.to_bool("ALEPH_REQUIRE_LOGGED_IN", False)
+
 # Default session duration.
 SESSION_EXPIRE = 800_000 if SINGLE_USER else 60_000
 SESSION_EXPIRE = env.to_int("ALEPH_SESSION_EXPIRE", SESSION_EXPIRE)

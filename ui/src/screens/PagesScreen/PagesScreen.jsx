@@ -49,7 +49,7 @@ export class PagesScreen extends React.Component {
     const contentDir = isLangRtl(page.lang) ? "rtl" : "ltr";
 
     return (
-      <Screen title={page.title}>
+      <Screen title={page.title} exemptFromRequiredAuth>
         <div className="Pages">
           <div className="Pages__body">
             <h5 className="Pages__title" dir={contentDir}>{page.title}</h5>
