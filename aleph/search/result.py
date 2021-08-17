@@ -7,7 +7,7 @@ from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
 from aleph.search.facet import LanguageFacet, SchemaFacet, EventFacet, Facet
-from aleph.search.facet import DateFacet
+from aleph.search.facet import DateFacet, EntityFacet
 
 log = logging.getLogger(__name__)
 
@@ -86,6 +86,7 @@ class SearchQueryResult(QueryResult):
         "schemata": SchemaFacet,
         "event": EventFacet,
         "date": DateFacet,
+        "entity": EntityFacet,
     }
 
     def __init__(self, request, query):
