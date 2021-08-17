@@ -16,6 +16,7 @@ from aleph.index.util import (
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.index.entities import get_field_type
+from aleph.search.utils import get_index_field_type
 
 log = structlog.get_logger(__name__)
 
@@ -204,6 +205,9 @@ class Query(object):
             field = self.SORT_FIELDS.get(field, field)
             type_ = get_field_type(field)
             config = {"order": direction, "missing": "_last"}
+            es_type = get_index_field_type(type_)
+            if es_type:
+                config["unmapped_type"] = es_type
             if field == registry.date.group:
                 field = "numeric.dates"
                 config["mode"] = "min"
