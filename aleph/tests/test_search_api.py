@@ -64,7 +64,7 @@ class SearchApiTestCase(TestCase):
         res = self.client.get(self.url + "&facet=schema", headers=headers)
         assert res.status_code == 200, res
         facet = res.json["facets"]["schema"]
-        assert len(facet["values"]) == 11, len(facet["values"])
+        assert len(facet["values"]) == 12, len(facet["values"])
         keys = [val["id"] for val in facet["values"]]
         assert "PlainText" in keys, facet
         assert "Company" in keys, facet
@@ -130,3 +130,12 @@ class SearchApiTestCase(TestCase):
         res = self.client.get(self.url + "&q=banana AND nana", headers=headers)
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json
+
+    def test_entity_facet(self):
+        res = self.client.get(
+            self.url + "&facet=properties.entity&facet_type:properties.entity=entity"
+        )
+        assert res.status_code == 200, res
+        facet = res.json["facets"]["properties.entity"]
+        assert len(facet["values"]) == 1, facet["values"]
+        assert facet["values"][0]["label"] == "KwaZulu", facet["values"]

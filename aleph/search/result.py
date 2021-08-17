@@ -5,9 +5,16 @@ from pprint import pprint, pformat  # noqa
 from aleph.core import url_external
 from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
-from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
-from aleph.search.facet import LanguageFacet, SchemaFacet, EventFacet, Facet
-from aleph.search.facet import DateFacet
+from aleph.search.facet import (
+    CategoryFacet,
+    CollectionFacet,
+    CountryFacet,
+    LanguageFacet,
+    SchemaFacet,
+    EventFacet,
+    Facet,
+    EntityFacet,
+)
 
 log = logging.getLogger(__name__)
 
@@ -85,7 +92,7 @@ class SearchQueryResult(QueryResult):
         "schema": SchemaFacet,
         "schemata": SchemaFacet,
         "event": EventFacet,
-        "date": DateFacet,
+        "entity": EntityFacet,
     }
 
     def __init__(self, request, query):

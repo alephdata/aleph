@@ -1,10 +1,12 @@
+import logging
+
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.model import Collection, Events
+from aleph.model import Collection, Events, Entity
 from aleph.logic import resolver
 
-from datetime import datetime
+log = logging.getLogger(__name__)
 
 
 class Facet(object):
@@ -93,12 +95,17 @@ class EventFacet(Facet):
         result["label"] = key if event is None else event.title
 
 
-class DateFacet(Facet):
-    def update(self, result, key):
-        result["label"] = datetime.strptime(key, "%Y-%m-%dT%H:%M:%S").date()
+class EntityFacet(Facet):
+    def expand(self, keys):
+        for key in keys:
+            resolver.queue(self.parser, Entity, key)
+        resolver.resolve(self.parser)
 
-    def get_key(self, bucket):
-        return bucket.get("key_as_string")
+    def update(self, result, key):
+        entity = resolver.get(self.parser, Entity, key)
+        if entity is not None:
+            proxy = model.get_proxy(entity)
+            result["label"] = proxy.caption
 
 
 class LanguageFacet(Facet):

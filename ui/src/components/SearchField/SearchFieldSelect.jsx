@@ -113,11 +113,10 @@ class SearchFieldSelect extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { filterPropOptions } = ownProps;
   const model = selectModel(state);
 
   const properties = model.getProperties()
-    .filter(prop => (!prop.stub && !prop.hidden && (!filterPropOptions || filterPropOptions(prop))))
+    .filter(prop => (!prop.stub && !prop.hidden))
     .sort((a, b) => a.label > b.label ? 1 : -1)
 
   return {
