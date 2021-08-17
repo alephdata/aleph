@@ -93,14 +93,6 @@ class EventFacet(Facet):
         result["label"] = key if event is None else event.title
 
 
-class DateFacet(Facet):
-    def update(self, result, key):
-        result["label"] = datetime.strptime(key, "%Y-%m-%dT%H:%M:%S").date()
-
-    def get_key(self, bucket):
-        return bucket.get("key_as_string")
-
-
 class EntityFacet(Facet):
     def expand(self, keys):
         for key in keys:
