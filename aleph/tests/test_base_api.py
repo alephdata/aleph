@@ -29,10 +29,10 @@ class BaseApiTestCase(TestCase):
         res = self.client.get("/api/2/statistics")
         assert res.status_code == 200, res
         assert res.json["collections"] == 1, res.json
-        assert res.json["things"] == 1, res.json
+        assert res.json["things"] == 2, res.json
 
         _, headers = self.login(is_admin=True)
         res = self.client.get("/api/2/statistics", headers=headers)
         assert res.status_code == 200, res
         assert res.json["collections"] == 1, res.json
-        assert res.json["things"] == 1, res.json
+        assert res.json["things"] == 2, res.json

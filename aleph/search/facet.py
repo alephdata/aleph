@@ -1,10 +1,12 @@
+import logging
+
 from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.model import Collection, Events, Entity
 from aleph.logic import resolver
 
-from datetime import datetime
+log = logging.getLogger(__name__)
 
 
 class Facet(object):
