@@ -40,10 +40,11 @@ export function collectionEntitiesQuery(location, collectionId, schema) {
   return collectionContextQuery(context, location, collectionId, 'entities');
 }
 
-export function collectionSearchQuery(location, collectionId) {
+export function collectionSearchQuery(location, collectionId, options = {}) {
   const context = {
     'filter:collection_id': collectionId,
     'filter:schemata': 'Thing',
+    ...options
   };
   return collectionContextQuery(context, location, collectionId, 'cs');
 }
