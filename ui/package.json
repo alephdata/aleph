@@ -35,7 +35,7 @@
     "react-helmet": "^6.0.0-beta",
     "react-intl": "^5.4.6",
     "react-json-pretty": "^2.2.0",
-    "react-markdown": "^6.0.0",
+    "react-markdown": "^7.0.0",
     "react-pdf": "^5.0.0",
     "react-redux": "^7.1.1",
     "react-router": "^5.1.2",
