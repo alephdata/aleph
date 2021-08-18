@@ -264,7 +264,6 @@ class FacetedEntitySearch extends React.Component {
                   enforceFocus={false}
                   hasBackdrop={false}
                   usePortal={false}
-                  isCloseButtonShown={false}
                   isOpen={!hideFacets}
                   canEscapeKeyClose={false}
                   canOutsideClickClose={false}
