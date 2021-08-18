@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alephdata/followthemoney": "2.6.0",
-    "@alephdata/react-ftm": "2.5.1",
+    "@alephdata/react-ftm": "2.5.3",
     "@blueprintjs/core": "3.47.0",
     "@blueprintjs/icons": "3.27.0",
     "@blueprintjs/popover2": "^0.11.0",
@@ -35,7 +35,7 @@
     "react-helmet": "^6.0.0-beta",
     "react-intl": "^5.4.6",
     "react-json-pretty": "^2.2.0",
-    "react-markdown": "^6.0.0",
+    "react-markdown": "^7.0.0",
     "react-pdf": "^5.0.0",
     "react-redux": "^7.1.1",
     "react-router": "^5.1.2",

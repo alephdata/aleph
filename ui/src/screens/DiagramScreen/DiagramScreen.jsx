@@ -15,7 +15,7 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
+import { Breadcrumbs, ErrorBoundary, SearchBox, UpdateStatus } from 'components/common';
 import { showErrorToast } from 'app/toast';
 
 const fileDownload = require('js-file-download');
@@ -24,6 +24,10 @@ const messages = defineMessages({
   export_error: {
     id: 'diagram.export.error',
     defaultMessage: 'Error exporting diagram',
+  },
+  render_error: {
+    id: 'diagram.render.error',
+    defaultMessage: 'Error rendering diagram',
   },
 })
 
@@ -89,7 +93,7 @@ export class DiagramScreen extends Component {
   }
 
   render() {
-    const { diagram, entitiesResult } = this.props;
+    const { diagram, entitiesResult, intl } = this.props;
     const { filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
@@ -134,14 +138,16 @@ export class DiagramScreen extends Component {
         >
           <CollectionWrapper collection={diagram.collection}>
             {breadcrumbs}
-            <DiagramEditor
-              setRef={ref => this.editorRef = ref}
-              collection={diagram.collection}
-              onStatusChange={this.onStatusChange}
-              diagram={diagram}
-              entities={entitiesResult?.results}
-              filterText={filterText}
-            />
+            <ErrorBoundary errorTitle={intl.formatMessage(messages.render_error)}>
+              <DiagramEditor
+                setRef={ref => this.editorRef = ref}
+                collection={diagram.collection}
+                onStatusChange={this.onStatusChange}
+                diagram={diagram}
+                entities={entitiesResult?.results}
+                filterText={filterText}
+              />
+            </ErrorBoundary>
           </CollectionWrapper>
         </Screen>
       </>
