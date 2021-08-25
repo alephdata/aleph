@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-06-28 17:31+0530\n"
+"POT-Creation-Date: 2021-08-25 12:50+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -364,12 +364,12 @@ msgstr "Ошибка сервера."
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 
-#: aleph/views/entities_api.py:168
+#: aleph/views/entities_api.py:169
 #, python-format
 msgid "Search: %s"
 msgstr "Найти: %s"
 
-#: aleph/views/entitysets_api.py:215
+#: aleph/views/entitysets_api.py:216
 msgid "Only diagrams can be embedded!"
 msgstr "Вставлять можно только диаграммы!"
 

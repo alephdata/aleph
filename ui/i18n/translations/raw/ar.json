@@ -530,6 +530,9 @@
   "diagram.import.title": {
     "defaultMessage": "استيراد رسم بياني من الشبكة"
   },
+  "diagram.render.error": {
+    "defaultMessage": "Error rendering diagram"
+  },
   "diagram.selector.create": {
     "defaultMessage": "Create a new diagram"
   },
@@ -655,24 +658,6 @@
   },
   "email.body.empty": {
     "defaultMessage": "لا يوجد نص الرسالة"
-  },
-  "entity.column.caption": {
-    "defaultMessage": "Name"
-  },
-  "entity.column.collection_id": {
-    "defaultMessage": "مجموعة البيانات"
-  },
-  "entity.column.countries": {
-    "defaultMessage": "الدول"
-  },
-  "entity.column.dates": {
-    "defaultMessage": "التاريخ"
-  },
-  "entity.column.file_size": {
-    "defaultMessage": "الحجم"
-  },
-  "entity.column.schema": {
-    "defaultMessage": "النوع"
   },
   "entity.delete.cancel": {
     "defaultMessage": "الغاء"
@@ -957,37 +942,43 @@
     "defaultMessage": "Exports ready for download"
   },
   "facet.addresses": {
-    "defaultMessage": "{count, plural, one {عنوان} two {عناوين} few {عناوين} many {عناوين} other {عناوين}}"
+    "defaultMessage": "{count, plural, zero {عناوين} one {عنوان} two {عناوين} few {عناوين} many {عناوين} other {عناوين}}"
+  },
+  "facet.caption": {
+    "defaultMessage": "Name"
   },
   "facet.category": {
-    "defaultMessage": "{count, plural, one {فئة} two {فئات} few {فئات} many {فئات} other {فئات}}"
+    "defaultMessage": "{count, plural, zero {فئات} one {فئة} two {فئات} few {فئات} many {فئات} other {فئات}}"
   },
   "facet.collection_id": {
-    "defaultMessage": "{count, plural, one {مجموعة بيانات} two {مجموعات بيانات} few {مجموعات بيانات} many {مجموعات بيانات} other {مجموعات بيانات}}"
+    "defaultMessage": "Dataset"
   },
   "facet.countries": {
-    "defaultMessage": "{count, plural, one {دولة} two {دول} few {دول} many {دول} other {دول}}"
+    "defaultMessage": "{count, plural, zero {دول} one {دولة} two {دول} few {دول} many {دول} other {دول}}"
+  },
+  "facet.dates": {
+    "defaultMessage": "{count, plural, one {Date} other {Dates}}"
   },
   "facet.emails": {
-    "defaultMessage": "{count, plural, one {ايميل} two {إيميلات} few {إيميلات} many {إيميلات} other {إيميلات}}"
+    "defaultMessage": "{count, plural, zero {إيميلات} one {ايميل} two {إيميلات} few {إيميلات} many {إيميلات} other {إيميلات}}"
   },
   "facet.ibans": {
-    "defaultMessage": "{count, plural, one {رقم الحساب} two {أرقام الحسابات} few {أرقام الحسابات} many {أرقام الحسابات} other {أرقام حسابات  IBAN}}"
+    "defaultMessage": "{count, plural, zero {أرقام الحسابات} one {رقم الحساب} two {أرقام الحسابات} few {أرقام الحسابات} many {أرقام الحسابات} other {أرقام حسابات  IBAN}}"
   },
   "facet.languages": {
-    "defaultMessage": "{count, plural, one {لغة} two {لغات} few {لغات} many {لغات} other {لغات}}"
+    "defaultMessage": "{count, plural, zero {لغات} one {لغة} two {لغات} few {لغات} many {لغات} other {لغات}}"
   },
   "facet.mimetypes": {
-    "defaultMessage": "{count, plural, one {نوع الملف} two {نوع الملفات} few {نوع الملفات} many {نوع الملفات} other {نوع الملفات}}"
+    "defaultMessage": "{count, plural, zero {نوع الملفات} one {نوع الملف} two {نوع الملفات} few {نوع الملفات} many {نوع الملفات} other {نوع الملفات}}"
   },
   "facet.names": {
-    "defaultMessage": "{count, plural, one {اسم} two {اسماء} few {اسماء} many {اسماء} other {اسماء}}"
+    "defaultMessage": "{count, plural, zero {اسماء} one {اسم} two {اسماء} few {اسماء} many {اسماء} other {اسماء}}"
   },
   "facet.phones": {
-    "defaultMessage": "{count, plural, one {رقم الهاتف} two {أرقام هواتف} few {أرقام هواتف} many {أرقام هواتف} other {أرقام هواتف}}"
+    "defaultMessage": "{count, plural, zero {أرقام هواتف} one {رقم الهاتف} two {أرقام هواتف} few {أرقام هواتف} many {أرقام هواتف} other {أرقام هواتف}}"
   },
   "facet.schema": {
-    "defaultMessage": "{count, plural, one {نوع} two {أنواع} few {أنواع} many {أنواع} other {أنواع}}"
+    "defaultMessage": "Entity type"
   },
   "file_import.error": {
     "defaultMessage": "خطأ في استيراد الملف"
@@ -1000,6 +991,9 @@
   },
   "group.page.search.description": {
     "defaultMessage": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
+  },
+  "home.access_disabled": {
+    "defaultMessage": "Public access temporarily disabled"
   },
   "home.counts.countries": {
     "defaultMessage": "Countries & territories"
@@ -1634,11 +1628,41 @@
   "search.callout_message.button_text": {
     "defaultMessage": "تسجيل الدخول"
   },
+  "search.columns.configure": {
+    "defaultMessage": "Configure columns"
+  },
+  "search.columns.configure_placeholder": {
+    "defaultMessage": "Search for a column..."
+  },
+  "search.config.groups": {
+    "defaultMessage": "Property groups"
+  },
+  "search.config.properties": {
+    "defaultMessage": "Properties"
+  },
+  "search.config.reset": {
+    "defaultMessage": "Reset to default"
+  },
+  "search.facets.clearDates": {
+    "defaultMessage": "Clear"
+  },
+  "search.facets.configure": {
+    "defaultMessage": "Configure filters"
+  },
+  "search.facets.configure_placeholder": {
+    "defaultMessage": "Search for a filter..."
+  },
   "search.facets.filtersSelected": {
     "defaultMessage": "{count} محدد"
   },
+  "search.facets.hide": {
+    "defaultMessage": "Hide filters"
+  },
   "search.facets.no_items": {
     "defaultMessage": "لا توجد خيارات"
+  },
+  "search.facets.show": {
+    "defaultMessage": "Show filters"
   },
   "search.facets.showMore": {
     "defaultMessage": "اعرض المزيد:"
@@ -1676,17 +1700,14 @@
   "search.placeholder_label": {
     "defaultMessage": "Search in {label}"
   },
-  "search.screen.dates": {
-    "defaultMessage": "Date distribution"
+  "search.screen.dates.show-all": {
+    "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
   },
   "search.screen.dates.show-hidden": {
     "defaultMessage": "* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
   },
   "search.screen.dates.show-hidden.click": {
     "defaultMessage": "Click here"
-  },
-  "search.screen.dates_disabled": {
-    "defaultMessage": "No date distribution available"
   },
   "search.screen.dates_label": {
     "defaultMessage": "نتائج"
@@ -1703,8 +1724,8 @@
   "search.screen.export_disabled_empty": {
     "defaultMessage": "No results to export."
   },
-  "search.screen.filters": {
-    "defaultMessage": "تصفية"
+  "search.screen.export_helptext": {
+    "defaultMessage": "Export results"
   },
   "search.title": {
     "defaultMessage": "Search: {title}"
@@ -1793,14 +1814,23 @@
   "sorting.bar.caption": {
     "defaultMessage": "Title"
   },
+  "sorting.bar.collection_id": {
+    "defaultMessage": "Dataset"
+  },
   "sorting.bar.count": {
     "defaultMessage": "Size"
+  },
+  "sorting.bar.countries": {
+    "defaultMessage": "Countries"
   },
   "sorting.bar.created_at": {
     "defaultMessage": "Creation Date"
   },
   "sorting.bar.date": {
     "defaultMessage": "Date"
+  },
+  "sorting.bar.dates": {
+    "defaultMessage": "Dates"
   },
   "sorting.bar.direction": {
     "defaultMessage": "اتجاه:"
@@ -1945,9 +1975,6 @@
   },
   "xref.compute": {
     "defaultMessage": "احسب"
-  },
-  "xref.download": {
-    "defaultMessage": "Export results"
   },
   "xref.entity": {
     "defaultMessage": "مرجع"
