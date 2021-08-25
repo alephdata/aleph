@@ -30,6 +30,7 @@ class Authz(object):
         self.token_id = token_id
         self.expire = expire or settings.SESSION_EXPIRE
         self.session_write = not settings.MAINTENANCE and self.logged_in
+        self.can_browse_anonymous = not settings.REQUIRE_LOGGED_IN or self.logged_in
         self._collections = {}
 
     def collections(self, action):
@@ -60,6 +61,8 @@ class Authz(object):
     def can(self, collection, action):
         """Query permissions to see if the user can perform the specified
         action on the given collection."""
+        if not self.can_browse_anonymous:
+            return False
         if action == self.WRITE and not self.session_write:
             return False
         if self.is_admin:
@@ -74,12 +77,12 @@ class Authz(object):
         return collection in self.collections(action)
 
     def can_bulk_import(self):
-        if not self.session_write:
+        if not self.can_browse_anonymous or not self.session_write:
             return False
         return self.logged_in
 
     def can_write_role(self, role_id):
-        if not self.session_write:
+        if not self.can_browse_anonymous or not self.session_write:
             return False
         if self.is_admin:
             return True

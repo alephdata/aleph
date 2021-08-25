@@ -1,6 +1,12 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
+@mixin small {
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    @content;
+  }
+}
+
 .FacetedEntitySearch {
   .total-count-span {
     display: inline-flex;
@@ -37,25 +43,90 @@
     }
   }
 
-  .DateFacet {
-    &.bp3-card {
-      border: 1px solid $aleph-border-color;
-      box-shadow: none;
-      margin: $aleph-grid-size/2 0 $aleph-grid-size*2;
+  .Facets {
+    margin-bottom: $aleph-grid-size;
+  }
+
+  .SidePane .SearchFieldSelect {
+    display: block;
+    margin-bottom: $aleph-grid-size*2;
+  }
+
+  .SearchFieldSelect {
+    @include small {
+      display: none;
     }
   }
-}
 
-@media screen and (max-width: $aleph-screen-sm-max-width) {
-  .hide {
-    display: none;
+  .DualPane__inner-container {
+    position: relative;
   }
 
-  .show {
-    display: block;
+  .bp3-drawer {
+    box-shadow: none;
   }
 
-  .SidePane {
-    padding-bottom: 0 !important;
+  .bp3-overlay {
+    width: $aleph-sidebar-width;
+  }
+
+  &__side-placeholder.SidePane {
+    height: auto;
+    position: relative;
+    transition: width 120ms linear;
+    min-height: 100vh;
+    width: $aleph-sidebar-width;
+
+    .collapsed & {
+      width: 0;
+      padding: 0;
+    }
+  }
+
+  &__expand-toggle {
+    $toggle-width: $aleph-grid-size*3;
+    @include small {
+      display: none;
+    }
+
+    position: fixed;
+    top: 30px;
+    width: $toggle-width;
+    z-index: 100;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    transform: translateX($aleph-sidebar-width - $toggle-width/2);
+
+    &:hover {
+      opacity: 1;
+    }
+
+    .collapsed & {
+      transform: translateX(0);
+      left: $aleph-grid-size;
+      opacity: 1;
+    }
+
+    &__button.bp3-button.bp3-outlined {
+      background: white;
+      border-radius: 15px;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &:hover {
+        background: $light-gray3;
+      }
+    }
+  }
+
+  &__mobile-expand-toggle {
+    margin-bottom: $aleph-grid-size*2;
+  }
+
+  .bp3-divider {
+    margin: 0 0 $aleph-grid-size;
   }
 }

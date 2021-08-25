@@ -6,11 +6,11 @@
     display: flex;
 
     .caret {
-      @include rtlSupportInvertedProp(margin, left, auto, null);
+      @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/3, null);
       transition: opacity 0.1s;
 
       &.hidden {
-        opacity: 0.1;
+        opacity: 0;
       }
     }
   }

@@ -15,8 +15,9 @@ import EntityActionBar from 'components/Entity/EntityActionBar';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import EntitySearch from 'components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'components/common';
+import { getGroupField } from 'components/SearchField/util';
 import getEntityLink from 'util/getEntityLink';
-import { selectEntitiesResult } from 'selectors';
+import { selectEntitiesResult, selectModel } from 'selectors';
 import { deleteEntity, queryEntities } from 'actions';
 
 import './DocumentManager.scss';
@@ -106,7 +107,7 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, query, result, hasPending, intl,
+      collection, document, fileSizeProp, query, result, hasPending, intl,
     } = this.props;
     const { selection } = this.state;
     const mutableDocument = document === undefined || document?.schema?.name === 'Folder';
@@ -190,13 +191,12 @@ export class DocumentManager extends Component {
         <div className="DocumentManager__content">
           <EntitySearch
             query={query}
-            hideCollection
-            documentMode
             showPreview={false}
             selection={selection}
             writeable={showActions}
             updateSelection={this.updateSelection}
             emptyComponent={emptyComponent}
+            columns={[getGroupField('dates'), fileSizeProp]}
           />
         </div>
       </div>
@@ -206,13 +206,23 @@ export class DocumentManager extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
+  const model = selectModel(state);
+  const fileSizeProp = model
+    .getSchema('Document')
+    .getProperty('fileSize');
+
   let { query } = ownProps;
   query = query.defaultSortBy('caption', 'asc');
   if (collection.writeable) {
     query = query.set('cache', 'false');
   }
   const result = selectEntitiesResult(state, query);
-  return { query, result };
+
+  return {
+    query,
+    result,
+    fileSizeProp: { name: 'fileSize', label: fileSizeProp.label, type: fileSizeProp.type.name, isProperty: true }
+  };
 };
 
 export default compose(

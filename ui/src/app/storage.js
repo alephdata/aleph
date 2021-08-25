@@ -60,3 +60,11 @@ export const expireRecentlyViewed = () => {
   
   localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
 }
+
+export const setSearchConfig = (searchConfig) => {
+  localStorage.setItem('searchConfig', JSON.stringify(searchConfig));
+}
+
+export const getSearchConfig = () => {
+  return JSON.parse(localStorage.getItem('searchConfig'));
+}

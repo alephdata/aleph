@@ -5,7 +5,7 @@ from pprint import pformat
 
 from followthemoney.types import registry
 
-from aleph.core import db
+from aleph.core import db, settings
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase, get_caption, JSON
@@ -63,6 +63,12 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json["total"] == 0, res.json
         assert len(res.json["facets"]["collection_id"]["values"]) == 0, res.json
+
+        settings.REQUIRE_LOGGED_IN = True
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+        settings.REQUIRE_LOGGED_IN = False
+
         _, headers = self.login(is_admin=True)
         res = self.client.get(url + "&facet=collection_id", headers=headers)
         assert res.status_code == 200, res
@@ -611,7 +617,7 @@ class EntitiesApiTestCase(TestCase):
         for res in results:
             prop = res["property"]
             assert prop in (
-                "passport",
+                "identificiation",
                 "ownershipOwner",
             ), results
             if prop == "ownershipOwner":
@@ -619,7 +625,7 @@ class EntitiesApiTestCase(TestCase):
                 assert len(res["entities"]) == 2
                 for nested in res["entities"]:
                     assert nested["schema"] in ("Ownership", "Company"), nested
-            if prop == "passport":
+            if prop == "identificiation":
                 assert res["count"] == 1
                 assert res["entities"][0]["schema"] == "Passport", res
 

@@ -9,7 +9,7 @@ from aleph.core import settings, url_for, talisman
 from aleph.model import Entity
 from aleph.search import SearchQueryParser
 from aleph.search import EntitiesQuery, MatchQuery
-from aleph.views.util import jsonify, get_index_collection
+from aleph.views.util import jsonify, get_index_collection, require
 from aleph.index.collections import get_collection_things
 from aleph.logic.util import entity_url
 from aleph.index.util import unpack_result
@@ -129,6 +129,7 @@ def reconcile(collection_id=None):
       tags:
       - Collection
     """
+    require(request.authz.can_browse_anonymous)
     collection = None
     if collection_id is not None:
         collection = get_index_collection(collection_id)
@@ -177,6 +178,7 @@ def reconcile_op(query, collection=None):
 @talisman(content_security_policy=CSP)
 def suggest_entity():
     """Suggest API, emulates Google Refine API."""
+    require(request.authz.can_browse_anonymous)
     prefix = request.args.get("prefix", "")
     tag_request(prefix=prefix)
     types = request.args.getlist("type") or Entity.THING
@@ -202,6 +204,7 @@ def suggest_entity():
 @blueprint.route("/api/freebase/property", methods=["GET", "POST"])
 @talisman(content_security_policy=CSP)
 def suggest_property():
+    require(request.authz.can_browse_anonymous)
     prefix = request.args.get("prefix", "").lower().strip()
     tag_request(prefix=prefix)
     schema = request.args.get("schema", Entity.THING)
@@ -233,6 +236,7 @@ def suggest_property():
 @blueprint.route("/api/freebase/type", methods=["GET", "POST"])
 @talisman(content_security_policy=CSP)
 def suggest_type():
+    require(request.authz.can_browse_anonymous)
     prefix = request.args.get("prefix", "").lower().strip()
     tag_request(prefix=prefix)
     matches = []

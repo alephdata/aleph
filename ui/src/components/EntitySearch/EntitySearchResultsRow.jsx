@@ -1,48 +1,65 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
+import { selectModel } from 'selectors';
 import {
-  Country, Collection, Entity, FileSize, Date, Skeleton,
+  Collection, Entity, FileSize, Property, Schema, Skeleton,
 } from 'components/common';
-/* eslint-disable */
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {
-    const { hideCollection, documentMode, updateSelection, writeable } = this.props;
+    const { columns, updateSelection, writeable } = this.props;
 
     return (
-      <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')} key="skeleton">
+      <tr className={c('EntitySearchResultsRow', 'nowrap', 'skeleton')}>
         {writeable && updateSelection && (
           <td className="select">
             <Skeleton.Text type="span" length={2} />
           </td>
         )}
-        <td className="entity">
-          <Skeleton.Text type="span" length={30} />
-        </td>
-        {!hideCollection && (
-          <td className="collection">
-            <Skeleton.Text type="span" length={15} />
+        {columns.map(({ name, type }) => (
+          <td key={name} className={type?.name || name}>
+            <Skeleton.Text type="span" length={name === 'caption' || name === 'collection_id' ? 30 : 15} />
           </td>
-        )}
-        {!documentMode && (
-          <td className="country">
-            <Skeleton.Text type="span" length={15} />
-          </td>
-        )}
-        <td className="date">
-          <Skeleton.Text type="span" length={10} />
-        </td>
-        {documentMode && (
-          <td className="file-size">
-            <Skeleton.Text type="span" length={20} />
-          </td>
-        )}
+        ))}
       </tr>
     );
+  }
+
+  renderCellContent(column) {
+    const { entity, model, showPreview } = this.props;
+    const { isProperty, name, type } = column;
+
+    if (name === 'caption') {
+      return <Entity.Link preview={showPreview} entity={entity} icon />
+    } else if (name === 'collection_id') {
+      return <Collection.Link preview collection={entity.collection} icon truncate={30} />
+    } else if (name === 'schema') {
+      return <Schema.Label schema={entity.schema} icon />
+    } else if (name === 'fileSize') {
+      return <FileSize value={entity.getFirst('fileSize')} />;
+    } else if (isProperty) {
+      return <Property.Values prop={{ name, type: { name: type, values: model.types[type]?.values }}} values={entity.getProperty(name)} missing="-" truncate={1} truncateItem={30} />
+    } else {
+      let key;
+      switch(name) {
+        case 'countries': key = 'country'; break;
+        case 'dates': key = 'date'; break;
+        case 'languages': key = 'language'; break;
+        case 'names': key = 'name'; break;
+        case 'phones': key = 'phone'; break;
+        case 'addresses': key = 'address'; break;
+        case 'emails': key = 'email'; break;
+        case 'mimetypes': key = 'mimetype'; break;
+        default: return null;
+      }
+      const values = entity.getTypeValues(key);
+      return <Property.Values prop={{ type: { name: key, values: model.types[key]?.values }}} values={values} missing="-" truncate={1} truncateItem={30} />
+    }
   }
 
   render() {
@@ -50,9 +67,7 @@ class EntitySearchResultsRow extends Component {
       entity,
       isPending,
       location,
-      hideCollection,
-      documentMode,
-      showPreview,
+      columns,
       updateSelection,
       selection,
       writeable,
@@ -73,7 +88,7 @@ class EntitySearchResultsRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    const resultClass = c('EntitySearchResultsRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
+    const resultClass = c('EntitySearchResultsRow', { active: isActive }, { prefix: isPrefix });
     const highlightsClass = c('EntitySearchResultsRow', { active: isActive });
 
     return (
@@ -84,45 +99,22 @@ class EntitySearchResultsRow extends Component {
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
             </td>
           )}
-          <td key="entity" className="entity">
-            <Entity.Link
-              preview={showPreview}
-              documentMode={documentMode}
-              entity={entity}
-              icon
-            />
-          </td>
-          {!hideCollection
-            && (
-              <td key="collection" className="collection">
-                <Collection.Link preview collection={entity.collection} icon />
-              </td>
-            )
-          }
-          {!documentMode && (
-            <td key="country" className="country">
-              <Country.List codes={entity.getTypeValues('country')} />
-            </td>
-          )}
-          <td key="date" className="date">
-            <Date.Earliest values={entity.getTypeValues('date')} />
-          </td>
-          {documentMode && (
-            <td key="file-size" className="file-size">
-              <FileSize value={entity.getFirst('fileSize')} />
-            </td>
-          )}
+          {columns.map(column => {
+            const content = this.renderCellContent(column);
+            return <td key={column.name} className={column.type?.name || column.name}>{content}</td>
+          })}
         </tr>
         {!!highlights.length
           && (
             <tr key={`${entity.id}-hl`} className={highlightsClass}>
-              <td colSpan="5" className="highlights">
-                {highlights.map((phrase, index) => (
-                  <span key={index}>
-                    <span dangerouslySetInnerHTML={{ __html: phrase }} />
-…
-                  </span>
-                ))}
+              <td colSpan="100%" className="highlights">
+                <div className="highlights__content">
+                  {highlights.map((phrase, index) => (
+                    <span key={index}>
+                      <span dangerouslySetInnerHTML={{ __html: phrase }} />
+                    </span>
+                  ))}
+                </div>
               </td>
             </tr>
           )
@@ -132,4 +124,9 @@ class EntitySearchResultsRow extends Component {
   }
 }
 
-export default EntitySearchResultsRow;
+const mapStateToProps = (state) => {
+  const model = selectModel(state);
+  return { model };
+};
+
+export default connect(mapStateToProps)(EntitySearchResultsRow);

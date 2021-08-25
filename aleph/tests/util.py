@@ -199,6 +199,13 @@ class TestCase(unittest.TestCase):
             },
             self.public_coll,
         )
+        self._note = self.create_entity(
+            {
+                "schema": "Note",
+                "properties": {"description": "note", "entity": self._kwazulu.id},
+            },
+            self.public_coll,
+        )
         visitor = Role.by_foreign_id(Role.SYSTEM_GUEST)
         Permission.grant(self.public_coll, visitor, True, False)
         db.session.commit()

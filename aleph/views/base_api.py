@@ -27,7 +27,7 @@ def _metadata_locale(locale):
     # This is cached in part because latency on this endpoint is
     # particularly relevant to the first render being shown to a
     # user.
-    auth = {"oauth": settings.OAUTH}
+    auth = {"oauth": settings.OAUTH, "require_logged_in": settings.REQUIRE_LOGGED_IN}
     if settings.PASSWORD_LOGIN:
         auth["password_login_uri"] = url_for("sessions_api.password_login")
     if settings.PASSWORD_LOGIN and not settings.MAINTENANCE:

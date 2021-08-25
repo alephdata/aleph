@@ -14,4 +14,4 @@ class StreamApiTestCase(TestCase):
         res = self.client.get("/api/2/entities/_stream", headers=headers)
         assert res.status_code == 200, res
         lines = len(res.data.split(b"\n"))
-        assert 26 == lines, lines
+        assert 27 == lines, lines

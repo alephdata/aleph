@@ -4,8 +4,7 @@
 .CheckboxList {
   list-style: none;
   @include rtlSupportInvertedProp(padding, left, 0, null);
-  padding-bottom: $aleph-grid-size;
-  margin: 0;
+  margin-bottom: $aleph-grid-size;
 
   & > li {
     position: relative;

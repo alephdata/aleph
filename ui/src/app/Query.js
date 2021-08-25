@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import queryString from 'query-string';
 import ensureArray from 'util/ensureArray';
-import getFacetConfig from 'util/getFacetConfig';
+import { getGroupField } from 'components/SearchField/util';
 
 class Query {
   // State of a particular API query. This doesn't need to be specific to any one
@@ -189,11 +189,33 @@ class Query {
     return this.set('offset', `${count}`);
   }
 
-  addFacet(field, total = false) {
-    const config = getFacetConfig(field);
-    return this.add('facet', field)
-      .set(`facet_size:${field}`, config.defaultSize)
-      .set(`facet_total:${field}`, total);
+  addFacet(facet) {
+    const field = facet.isProperty ? `properties.${facet.name}` : facet.name;
+    let newQuery = this.add('facet', field)
+      .set(`facet_size:${field}`, facet.defaultSize || 10)
+      .set(`facet_total:${field}`, true);
+
+    if (field === 'dates' || facet.type === 'date') {
+      newQuery = newQuery.add(`facet_interval:${field}`, 'year');
+    }
+    if (facet.isProperty) {
+      newQuery = newQuery.set(`facet_type:${field}`, facet.type);
+    }
+    return newQuery;
+  }
+
+  removeFacet(facet) {
+    const field = facet.isProperty ? `properties.${facet.name}` : facet.name;
+    return this.remove('facet', field)
+      .set(`facet_size:${field}`, undefined)
+      .set(`facet_total:${field}`, undefined)
+      .set(`facet_type:${field}`, undefined)
+      .remove(`facet_interval:${field}`, 'year');
+  }
+
+  getFacetType(field) {
+    const cleanedField = field.replace('gte:', '').replace('lte:', '').replace('eq:', '')
+    return this.getString(`facet_type:${cleanedField}`);
   }
 
   hasFacet(field) {
@@ -202,7 +224,7 @@ class Query {
 
   defaultFacet(field, total = false) {
     if (!this.hasFacet(field)) {
-      return this.addFacet(field, total);
+      return this.addFacet(getGroupField(field));
     }
     return this;
   }

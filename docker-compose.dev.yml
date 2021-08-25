@@ -99,9 +99,10 @@ services:
     build:
       context: .
     image: alephdata/aleph:${ALEPH_TAG:-latest}
-    command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
+    command: python3 -m debugpy --listen 0.0.0.0:5678 -m flask run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
+      - "127.0.0.1:5678:5678"
     restart: on-failure
     depends_on:
       - postgres
@@ -117,6 +118,7 @@ services:
       ALEPH_DEBUG: "true"
       ALEPH_PROFILE: "false"
       ALEPH_SECRET_KEY: "development"
+      FLASK_APP: "aleph.wsgi"
     env_file:
       - aleph.env
 

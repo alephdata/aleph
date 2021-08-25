@@ -5,8 +5,16 @@ from pprint import pprint, pformat  # noqa
 from aleph.core import url_external
 from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
-from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
-from aleph.search.facet import LanguageFacet, SchemaFacet, EventFacet, Facet
+from aleph.search.facet import (
+    CategoryFacet,
+    CollectionFacet,
+    CountryFacet,
+    LanguageFacet,
+    SchemaFacet,
+    EventFacet,
+    Facet,
+    EntityFacet,
+)
 
 log = logging.getLogger(__name__)
 
@@ -77,11 +85,14 @@ class SearchQueryResult(QueryResult):
         "collection_id": CollectionFacet,
         "match_collection_id": CollectionFacet,
         "languages": LanguageFacet,
+        "language": LanguageFacet,
         "countries": CountryFacet,
+        "country": CountryFacet,
         "category": CategoryFacet,
         "schema": SchemaFacet,
         "schemata": SchemaFacet,
         "event": EventFacet,
+        "entity": EntityFacet,
     }
 
     def __init__(self, request, query):
@@ -102,7 +113,12 @@ class SearchQueryResult(QueryResult):
     def get_facets(self):
         facets = {}
         for name in self.parser.facet_names:
-            facet_cls = self.FACETS.get(name, Facet)
+            facet_type = self.parser.get_facet_type(name)
+
+            if facet_type is None:
+                facet_type = name
+
+            facet_cls = self.FACETS.get(facet_type, Facet)
             facets[name] = facet_cls(name, self.aggregations, self.parser)
         return facets
 

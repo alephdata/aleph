@@ -6,8 +6,9 @@ import { withRouter } from 'react-router';
 import c from 'classnames';
 import queryString from 'query-string';
 
-import { DualPane } from 'components/common';
-import SearchFacets from 'components/Facet/SearchFacets';
+import { getGroupField } from 'components/SearchField/util';
+import { DualPane, ErrorSection } from 'components/common';
+import Facets from 'components/Facet/Facets';
 import SearchActionBar from 'components/common/SearchActionBar';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import TimelineActionBar from 'components/Timeline/TimelineActionBar';
@@ -101,20 +102,22 @@ class Timeline extends Component {
         <DualPane.SidePane>
           <div className={c("Timeline__date-container", { fixed: histogramFixed })}>
             <DateFacet
-              isOpen={true}
               intervals={result.facets?.dates?.intervals}
               query={query}
               updateQuery={this.updateQuery}
               dataLabel={intl.formatMessage(messages.itemsLabel)}
-              emptyText={intl.formatMessage(messages.histogramEmpty)}
+              field="dates"
+              emptyComponent={(
+                <ErrorSection title={intl.formatMessage(messages.histogramEmpty)} />
+              )}
             />
             {histogramFixed && actionBar}
           </div>
-          <SearchFacets
+          <Facets
             query={query}
             result={result}
             updateQuery={this.updateQuery}
-            facets={defaultFacets}
+            facets={defaultFacets.map(getGroupField)}
           />
           <div className="Timeline__date-placeholder" ref={this.histogramRef}></div>
         </DualPane.SidePane>

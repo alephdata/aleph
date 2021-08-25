@@ -16,7 +16,6 @@ import csvContextLoader from './csvContextLoader';
 import EntitySet from './EntitySet';
 import DualPane from './DualPane';
 import Entity from './Entity';
-import Facet from './Facet';
 import FileImport from './FileImport';
 import Mention from './Mention';
 import Property from './Property';
@@ -25,6 +24,7 @@ import Role from './Role';
 import Schema from './Schema';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
+import ErrorBoundary from './ErrorBoundary';
 import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
@@ -61,7 +61,6 @@ export {
   HotkeysContainer,
   Entity,
   AppItem,
-  Facet,
   FileImport,
   Mention,
   Property,
@@ -69,6 +68,7 @@ export {
   Schema,
   SectionLoading,
   TextLoading,
+  ErrorBoundary,
   ErrorSection,
   EntityDecisionHotkeys,
   EntityDecisionRow,

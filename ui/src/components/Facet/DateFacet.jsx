@@ -8,7 +8,6 @@ import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 
 import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToYear } from 'components/Facet/util';
-import { ErrorSection } from 'components/common';
 
 
 import './DateFacet.scss';
@@ -30,7 +29,7 @@ export class DateFilter extends Component {
   }
 
   onSelect(selected) {
-    const { query, updateQuery } = this.props;
+    const { field, query, updateQuery } = this.props;
 
     let newRange;
     if (Array.isArray(selected)) {
@@ -39,17 +38,17 @@ export class DateFilter extends Component {
       const year = formatDateQParam(selected);
       newRange = [year, year];
     }
-    const newQuery = query.setFilter('gte:dates', newRange[0])
-      .setFilter('lte:dates', newRange[1]);
+    const newQuery = query.setFilter(`gte:${field}`, newRange[0])
+      .setFilter(`lte:${field}`, newRange[1]);
 
     updateQuery(newQuery)
   }
 
   toggleShowHidden() {
-    const { query, history, location } = this.props;
+    const { query, history, location, showAll } = this.props;
 
     const parsedHash = queryString.parse(location.hash);
-    parsedHash['show_all_dates'] = true;
+    parsedHash['show_all_dates'] = !showAll;
 
     history.push({
       pathname: location.pathname,
@@ -59,44 +58,43 @@ export class DateFilter extends Component {
   }
 
   renderShowHiddenToggle() {
+    const { showAll } = this.props;
+    const button = (
+      <Button minimal small intent={Intent.PRIMARY} onClick={this.toggleShowHidden}>
+        <FormattedMessage
+          id="search.screen.dates.show-hidden.click"
+          defaultMessage="Click here"
+        />
+      </Button>
+    );
+
     return (
       <div className="DateFacet__secondary text-muted">
-        <FormattedMessage
-          id="search.screen.dates.show-hidden"
-          defaultMessage="* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
-          values={{
-            start: DEFAULT_START_INTERVAL,
-            button: (
-              <Button minimal small intent={Intent.PRIMARY} onClick={this.toggleShowHidden}>
-                <FormattedMessage
-                  id="search.screen.dates.show-hidden.click"
-                  defaultMessage="Click here"
-                />
-              </Button>
-            ),
-          }}
-        />
+        {!showAll && (
+          <FormattedMessage
+            id="search.screen.dates.show-hidden"
+            defaultMessage="* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
+            values={{ start: DEFAULT_START_INTERVAL, button }}
+          />
+        )}
+        {showAll && (
+          <FormattedMessage
+            id="search.screen.dates.show-all"
+            defaultMessage="* Showing all date filter options. { button } to view recent dates only."
+            values={{ button }}
+          />
+        )}
       </div>
     );
   }
 
   render() {
-    const { dataLabel, emptyText, filteredIntervals, intl, isOpen, displayShowHiddenToggle } = this.props;
-    if (!isOpen || (!filteredIntervals?.length && !emptyText)) {
-      return null;
-    }
-
+    const { dataLabel, emptyComponent, filteredIntervals, intl, displayShowHiddenToggle, showAll, showLabel = true } = this.props;
     let content;
 
     if (filteredIntervals) {
       if (!filteredIntervals.length) {
-        content = (
-          <div style={{ minHeight: `${DATE_FACET_HEIGHT}px` }}>
-            <ErrorSection
-              title={emptyText}
-            />
-          </div>
-        )
+        content = emptyComponent;
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);
         content = (
@@ -109,7 +107,7 @@ export class DateFilter extends Component {
                 height: DATE_FACET_HEIGHT,
               }}
             />
-            {displayShowHiddenToggle && this.renderShowHiddenToggle()}
+            {(displayShowHiddenToggle || showAll) && this.renderShowHiddenToggle()}
           </>
         )
       }
@@ -123,13 +121,15 @@ export class DateFilter extends Component {
 
     return (
       <Card className="DateFacet">
-        <div className="DateFacet__label">
-          <Icon icon="calendar" className="left-icon" />
-          <span className="DateFacet__label__text">
-            <FormattedMessage id="search.screen.dates_title" defaultMessage="Dates" />
-            {displayShowHiddenToggle && "*"}
-          </span>
-        </div>
+        {showLabel && (
+          <div className="DateFacet__label">
+            <Icon icon="calendar" className="left-icon" />
+            <span className="DateFacet__label__text">
+              <FormattedMessage id="search.screen.dates_title" defaultMessage="Dates" />
+              {displayShowHiddenToggle && "*"}
+            </span>
+          </div>
+        )}
         {content}
       </Card>
     );
@@ -140,11 +140,14 @@ const mapStateToProps = (state, ownProps) => {
   const { location, intervals, query } = ownProps;
   const hashQuery = queryString.parse(location.hash);
 
+  const showAll = hashQuery.show_all_dates === 'true';
+
   if (intervals) {
-    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ query, intervals, useDefaultBounds: !hashQuery.show_all_dates })
+    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ query, intervals, useDefaultBounds: !showAll })
     return {
       filteredIntervals,
-      displayShowHiddenToggle: hasOutOfRange
+      displayShowHiddenToggle: hasOutOfRange,
+      showAll
     };
   }
   return {};
