@@ -11,7 +11,7 @@ Helm chart for Aleph
 | global.amazon | bool | `true` | Are we using AWS services like s3? |
 | global.google | bool | `false` | Are we using GCE services like storage, vision api? |
 | global.image.repository | string | `"alephdata/aleph"` | Aleph docker image repo |
-| global.image.tag | string | `"3.10.5"` | Aleph docker image tag |
+| global.image.tag | string | `"3.11.0"` | Aleph docker image tag |
 | global.image.tag | string | `"Always"` |  |
 | global.namingPrefix | string | `"aleph"` | Prefix for the names of k8s resources |
 
