@@ -214,6 +214,7 @@ class FacetedEntitySearch extends React.Component {
           onSelect={(field) => this.onSearchConfigEdit('facets', field)}
           onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
           selected={facets}
+          filterProps={prop => prop?.type?.name !== 'text'}
           inputProps={{ placeholder: intl.formatMessage(messages.configure_facets_placeholder) }}
         >
           <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
