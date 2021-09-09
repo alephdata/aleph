@@ -530,6 +530,9 @@
   "diagram.import.title": {
     "defaultMessage": "Import a network diagram"
   },
+  "diagram.render.error": {
+    "defaultMessage": "Error rendering diagram"
+  },
   "diagram.selector.create": {
     "defaultMessage": "Create a new diagram"
   },
@@ -655,24 +658,6 @@
   },
   "email.body.empty": {
     "defaultMessage": "No message body."
-  },
-  "entity.column.caption": {
-    "defaultMessage": "Name"
-  },
-  "entity.column.collection_id": {
-    "defaultMessage": "Dataset"
-  },
-  "entity.column.countries": {
-    "defaultMessage": "Countries"
-  },
-  "entity.column.dates": {
-    "defaultMessage": "Date"
-  },
-  "entity.column.file_size": {
-    "defaultMessage": "Size"
-  },
-  "entity.column.schema": {
-    "defaultMessage": "Type"
   },
   "entity.delete.cancel": {
     "defaultMessage": "Cancel"
@@ -959,14 +944,20 @@
   "facet.addresses": {
     "defaultMessage": "{count, plural, one {Address} other {Addresses}}"
   },
+  "facet.caption": {
+    "defaultMessage": "Name"
+  },
   "facet.category": {
     "defaultMessage": "{count, plural, one {Category} other {Categories}}"
   },
   "facet.collection_id": {
-    "defaultMessage": "{count, plural, one {Dataset} other {Datasets}}"
+    "defaultMessage": "Dataset"
   },
   "facet.countries": {
     "defaultMessage": "{count, plural, one {Country} other {Countries}}"
+  },
+  "facet.dates": {
+    "defaultMessage": "{count, plural, one {Date} other {Dates}}"
   },
   "facet.emails": {
     "defaultMessage": "{count, plural, one {E-Mail} other {E-Mails}}"
@@ -987,7 +978,7 @@
     "defaultMessage": "{count, plural, one {Phone number} other {Phone numbers}}"
   },
   "facet.schema": {
-    "defaultMessage": "{count, plural, one {Type} other {Types}}"
+    "defaultMessage": "Entity type"
   },
   "file_import.error": {
     "defaultMessage": "Error importing file"
@@ -1000,6 +991,9 @@
   },
   "group.page.search.description": {
     "defaultMessage": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
+  },
+  "home.access_disabled": {
+    "defaultMessage": "Public access temporarily disabled"
   },
   "home.counts.countries": {
     "defaultMessage": "Countries & territories"
@@ -1634,11 +1628,41 @@
   "search.callout_message.button_text": {
     "defaultMessage": "Sign in"
   },
+  "search.columns.configure": {
+    "defaultMessage": "Configure columns"
+  },
+  "search.columns.configure_placeholder": {
+    "defaultMessage": "Search for a column..."
+  },
+  "search.config.groups": {
+    "defaultMessage": "Property groups"
+  },
+  "search.config.properties": {
+    "defaultMessage": "Properties"
+  },
+  "search.config.reset": {
+    "defaultMessage": "Reset to default"
+  },
+  "search.facets.clearDates": {
+    "defaultMessage": "Clear"
+  },
+  "search.facets.configure": {
+    "defaultMessage": "Configure filters"
+  },
+  "search.facets.configure_placeholder": {
+    "defaultMessage": "Search for a filter..."
+  },
   "search.facets.filtersSelected": {
     "defaultMessage": "{count} selected"
   },
+  "search.facets.hide": {
+    "defaultMessage": "Hide filters"
+  },
   "search.facets.no_items": {
     "defaultMessage": "No options"
+  },
+  "search.facets.show": {
+    "defaultMessage": "Show filters"
   },
   "search.facets.showMore": {
     "defaultMessage": "Show more…"
@@ -1676,17 +1700,14 @@
   "search.placeholder_label": {
     "defaultMessage": "Search in {label}"
   },
-  "search.screen.dates": {
-    "defaultMessage": "Date distribution"
+  "search.screen.dates.show-all": {
+    "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
   },
   "search.screen.dates.show-hidden": {
     "defaultMessage": "* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
   },
   "search.screen.dates.show-hidden.click": {
     "defaultMessage": "Click here"
-  },
-  "search.screen.dates_disabled": {
-    "defaultMessage": "No date distribution available"
   },
   "search.screen.dates_label": {
     "defaultMessage": "results"
@@ -1703,8 +1724,8 @@
   "search.screen.export_disabled_empty": {
     "defaultMessage": "No results to export."
   },
-  "search.screen.filters": {
-    "defaultMessage": "Filters"
+  "search.screen.export_helptext": {
+    "defaultMessage": "Export results"
   },
   "search.title": {
     "defaultMessage": "Search: {title}"
@@ -1793,14 +1814,23 @@
   "sorting.bar.caption": {
     "defaultMessage": "Title"
   },
+  "sorting.bar.collection_id": {
+    "defaultMessage": "Dataset"
+  },
   "sorting.bar.count": {
     "defaultMessage": "Size"
+  },
+  "sorting.bar.countries": {
+    "defaultMessage": "Countries"
   },
   "sorting.bar.created_at": {
     "defaultMessage": "Creation Date"
   },
   "sorting.bar.date": {
     "defaultMessage": "Date"
+  },
+  "sorting.bar.dates": {
+    "defaultMessage": "Dates"
   },
   "sorting.bar.direction": {
     "defaultMessage": "Direction:"
@@ -1945,9 +1975,6 @@
   },
   "xref.compute": {
     "defaultMessage": "Compute"
-  },
-  "xref.download": {
-    "defaultMessage": "Export results"
   },
   "xref.entity": {
     "defaultMessage": "Reference"

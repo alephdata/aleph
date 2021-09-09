@@ -38,6 +38,7 @@ def index():
       tags:
       - Collection
     """
+    require(request.authz.can_browse_anonymous)
     result = CollectionsQuery.handle(request)
     return CollectionSerializer.jsonify_result(result)
 
@@ -96,6 +97,7 @@ def view(collection_id):
       tags:
       - Collection
     """
+    require(request.authz.can_browse_anonymous)
     data = get_index_collection(collection_id)
     cobj = get_db_collection(collection_id)
     if get_flag("refresh", False):

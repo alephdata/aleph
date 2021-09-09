@@ -1,15 +1,21 @@
-import {
-  defineMessages,
-} from 'react-intl';
+import { defineMessages } from 'react-intl';
+
+export const GROUP_FIELDS = [
+  'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes'
+];
 
 const messages = defineMessages({
+  facet_dates: {
+    id: 'facet.dates',
+    defaultMessage: '{count, plural, one {Date} other {Dates}}',
+  },
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: '{count, plural, one {Type} other {Types}}',
+    defaultMessage: 'Entity type',
   },
   facet_collection_id: {
     id: 'facet.collection_id',
-    defaultMessage: '{count, plural, one {Dataset} other {Datasets}}',
+    defaultMessage: 'Dataset',
   },
   facet_ibans: {
     id: 'facet.ibans',
@@ -26,6 +32,10 @@ const messages = defineMessages({
   facet_phones: {
     id: 'facet.phones',
     defaultMessage: '{count, plural, one {Phone number} other {Phone numbers}}',
+  },
+  facet_caption: {
+    id: 'facet.caption',
+    defaultMessage: 'Name',
   },
   facet_countries: {
     id: 'facet.countries',
@@ -49,77 +59,84 @@ const messages = defineMessages({
   },
 });
 
-const propConfigs = {
+const configs = {
   addresses: {
-    field: 'addresses',
+    name: 'addresses',
     label: messages.facet_addresses,
     icon: 'map',
     defaultSize: 30,
   },
+  caption: {
+    name: 'caption',
+    label: messages.facet_caption,
+  },
   category: {
-    field: 'category',
+    name: 'category',
     label: messages.facet_category,
     icon: 'list',
     defaultSize: 1000,
   },
   collection_id: {
-    field: 'collection_id',
+    name: 'collection_id',
     label: messages.facet_collection_id,
     icon: 'database',
   },
   match_collection_id: {
-    field: 'match_collection_id',
+    name: 'match_collection_id',
     label: messages.facet_collection_id,
     icon: 'database',
     defaultSize: 10,
   },
+  dates: {
+    name: 'dates',
+    label: messages.facet_dates,
+    icon: 'calendar',
+  },
   countries: {
-    field: 'countries',
+    name: 'countries',
     label: messages.facet_countries,
     icon: 'globe',
     defaultSize: 1000,
   },
   emails: {
-    field: 'emails',
+    name: 'emails',
     label: messages.facet_emails,
     icon: 'envelope',
   },
   ibans: {
-    field: 'ibans',
+    name: 'ibans',
     label: messages.facet_ibans,
     icon: 'credit-card',
   },
   languages: {
-    field: 'languages',
+    name: 'languages',
     label: messages.facet_languages,
     icon: 'translate',
   },
   mimetypes: {
-    field: 'mimetypes',
+    name: 'mimetypes',
     label: messages.facet_mime_type,
     icon: 'document',
   },
   names: {
-    field: 'names',
+    name: 'names',
     label: messages.facet_names,
     icon: 'id-number',
     defaultSize: 30,
   },
   phones: {
-    field: 'phones',
+    name: 'phones',
     label: messages.facet_phones,
     icon: 'phone',
   },
   schema: {
-    field: 'schema',
+    name: 'schema',
     label: messages.facet_schema,
-    icon: 'list-columns',
+    icon: 'layout-grid',
     defaultSize: 1000,
   },
 };
 
-const getFacetConfig = (key) => (
-  propConfigs[key]
+export const getGroupField = (key) => (
+  configs[key]
 );
-
-export default getFacetConfig;

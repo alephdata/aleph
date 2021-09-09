@@ -54,6 +54,9 @@ DocumentIngest:
       nullable: true
     parent:
       $ref: "#/components/schemas/Entity"
+    publisher:
+      type: string
+      nullable: true
     published_at:
       type: string
       format: "ftm-date"

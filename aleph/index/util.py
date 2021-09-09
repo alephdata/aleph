@@ -191,6 +191,7 @@ def query_delete(index, query, sync=False, **kwargs):
                 refresh=refresh_sync(sync),
                 request_timeout=MAX_REQUEST_TIMEOUT,
                 timeout=MAX_TIMEOUT,
+                scroll_size=settings.INDEX_DELETE_BY_QUERY_BATCHSIZE,
                 **kwargs
             )
             return

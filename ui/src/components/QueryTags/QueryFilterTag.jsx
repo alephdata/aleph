@@ -21,16 +21,18 @@ class QueryFilterTag extends PureComponent {
     remove(filter, value);
   }
 
-  label = (filter, value) => {
-    switch (filter) {
+  label = (filter, type, value) => {
+    switch (type || filter) {
       case 'schema':
         return (
           <Schema.Label schema={value} icon plural />
         );
+      case 'country':
       case 'countries':
         return (
           <Country.Name code={value} />
         );
+      case 'language':
       case 'languages':
         return (
           <Language.Name code={value} />
@@ -76,6 +78,7 @@ class QueryFilterTag extends PureComponent {
             )}
           </Entity.Load>
         );
+      case 'entity':
       case 'entities':
         return (
           <Entity.Load id={value} renderWhenLoading="…">
@@ -98,10 +101,11 @@ class QueryFilterTag extends PureComponent {
       case 'eq:dates':
       case 'lte:dates':
       case 'gte:dates':
+      case 'date':
         let prefix;
-        if (filter === 'gte:dates') {
+        if (filter.includes('gte')) {
           prefix = <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After " />
-        } else if (filter === 'lte:dates') {
+        } else if (filter.includes('lte')) {
           prefix = <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before " />
         }
 
@@ -118,7 +122,7 @@ class QueryFilterTag extends PureComponent {
   }
 
   render() {
-    const { filter, value } = this.props;
+    const { filter, type, value } = this.props;
 
     return (
       <TagWidget
@@ -126,7 +130,7 @@ class QueryFilterTag extends PureComponent {
         className="QueryFilterTag"
         onRemove={this.onRemove}
       >
-        {this.label(filter, value)}
+        {this.label(filter, type, value)}
       </TagWidget>
     );
   }

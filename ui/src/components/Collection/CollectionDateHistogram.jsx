@@ -61,6 +61,7 @@ class CollectionDateHistogram extends React.Component {
             isOpen={true}
             intervals={intervals}
             query={datesQuery}
+            field="dates"
             updateQuery={this.onDateIntervalSelect}
           />
         </div>

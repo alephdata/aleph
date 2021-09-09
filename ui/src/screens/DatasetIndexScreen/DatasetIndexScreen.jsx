@@ -3,9 +3,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { getGroupField } from 'components/SearchField/util';
 import { selectCollectionsResult } from 'selectors';
 import { DualPane, SignInCallout } from 'components/common';
-import SearchFacets from 'components/Facet/SearchFacets';
+import Facets from 'components/Facet/Facets';
 import Screen from 'components/Screen/Screen';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
 import { datasetsQuery } from 'queries';
@@ -32,14 +33,11 @@ const messages = defineMessages({
   },
 });
 
-const facetKeys = [
-  'category', 'countries',
-];
+const facetKeys = ['category', 'countries'];
 
 export class DatasetIndexScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { facets: facetKeys };
     this.updateQuery = this.updateQuery.bind(this);
   }
 
@@ -61,8 +59,8 @@ export class DatasetIndexScreen extends Component {
       >
         <DualPane>
           <DualPane.SidePane>
-            <SearchFacets
-              facets={this.state.facets}
+            <Facets
+              facets={facetKeys.map(getGroupField)}
               query={query}
               result={result}
               updateQuery={this.updateQuery}

@@ -530,6 +530,9 @@
   "diagram.import.title": {
     "defaultMessage": "Импортировать диаграмму"
   },
+  "diagram.render.error": {
+    "defaultMessage": "Error rendering diagram"
+  },
   "diagram.selector.create": {
     "defaultMessage": "Создать диаграмму"
   },
@@ -655,24 +658,6 @@
   },
   "email.body.empty": {
     "defaultMessage": "Текст письма отсутствует"
-  },
-  "entity.column.caption": {
-    "defaultMessage": "Название"
-  },
-  "entity.column.collection_id": {
-    "defaultMessage": "Набор данных"
-  },
-  "entity.column.countries": {
-    "defaultMessage": "Страны"
-  },
-  "entity.column.dates": {
-    "defaultMessage": "Дата"
-  },
-  "entity.column.file_size": {
-    "defaultMessage": "Размер"
-  },
-  "entity.column.schema": {
-    "defaultMessage": "Тип"
   },
   "entity.delete.cancel": {
     "defaultMessage": "Отменить"
@@ -959,14 +944,20 @@
   "facet.addresses": {
     "defaultMessage": "{count, plural, one {Адрес} few {Адреса} many {Адреса} other {Адреса}}"
   },
+  "facet.caption": {
+    "defaultMessage": "Name"
+  },
   "facet.category": {
     "defaultMessage": "{count, plural, one {Категория} few {Категории} many {Категории} other {Категории}}"
   },
   "facet.collection_id": {
-    "defaultMessage": "{count, plural, one {Набор данных} few {Наборы данных} many {Наборы данных} other {Наборы данных}}"
+    "defaultMessage": "Dataset"
   },
   "facet.countries": {
     "defaultMessage": "{count, plural, one {Страна} few {Страны} many {Страны} other {Страны}}"
+  },
+  "facet.dates": {
+    "defaultMessage": "{count, plural, one {Date} other {Dates}}"
   },
   "facet.emails": {
     "defaultMessage": "{count, plural, one {E-мэйл} few {E-мэйлы} many {E-мэйлы} other {E-мэйлы}}"
@@ -987,7 +978,7 @@
     "defaultMessage": "{count, plural, one {Номер телефона} few {Номера телефонов} many {Номера телефонов} other {Номера телефонов}}"
   },
   "facet.schema": {
-    "defaultMessage": "{count, plural, one {Тип} few {Типы} many {Типы} other {Типы}}"
+    "defaultMessage": "Entity type"
   },
   "file_import.error": {
     "defaultMessage": "Ошибка импорта файла"
@@ -1000,6 +991,9 @@
   },
   "group.page.search.description": {
     "defaultMessage": "Если вы хотите поискать определённые сущности или документы в наборах данных, относящихся к этой группе, <link> нажмите здесь </link>."
+  },
+  "home.access_disabled": {
+    "defaultMessage": "Public access temporarily disabled"
   },
   "home.counts.countries": {
     "defaultMessage": "Страны и территории"
@@ -1634,11 +1628,41 @@
   "search.callout_message.button_text": {
     "defaultMessage": "Войти"
   },
+  "search.columns.configure": {
+    "defaultMessage": "Configure columns"
+  },
+  "search.columns.configure_placeholder": {
+    "defaultMessage": "Search for a column..."
+  },
+  "search.config.groups": {
+    "defaultMessage": "Property groups"
+  },
+  "search.config.properties": {
+    "defaultMessage": "Properties"
+  },
+  "search.config.reset": {
+    "defaultMessage": "Reset to default"
+  },
+  "search.facets.clearDates": {
+    "defaultMessage": "Clear"
+  },
+  "search.facets.configure": {
+    "defaultMessage": "Configure filters"
+  },
+  "search.facets.configure_placeholder": {
+    "defaultMessage": "Search for a filter..."
+  },
   "search.facets.filtersSelected": {
     "defaultMessage": "{count} выбрано"
   },
+  "search.facets.hide": {
+    "defaultMessage": "Hide filters"
+  },
   "search.facets.no_items": {
     "defaultMessage": "Варианты отсутствуют"
+  },
+  "search.facets.show": {
+    "defaultMessage": "Show filters"
   },
   "search.facets.showMore": {
     "defaultMessage": "Ещё..."
@@ -1676,17 +1700,14 @@
   "search.placeholder_label": {
     "defaultMessage": "Поиск в {label}"
   },
-  "search.screen.dates": {
-    "defaultMessage": "Распределение дат"
+  "search.screen.dates.show-all": {
+    "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
   },
   "search.screen.dates.show-hidden": {
     "defaultMessage": "* В фильтре дат отображены только варианты от {start} до настоящего времени. { button } показать даты за пределами данного диапазона."
   },
   "search.screen.dates.show-hidden.click": {
     "defaultMessage": "Нажмите здесь"
-  },
-  "search.screen.dates_disabled": {
-    "defaultMessage": "Распределение дат недоступно"
   },
   "search.screen.dates_label": {
     "defaultMessage": "результаты"
@@ -1703,8 +1724,8 @@
   "search.screen.export_disabled_empty": {
     "defaultMessage": "Результатов для экспорта нет."
   },
-  "search.screen.filters": {
-    "defaultMessage": "Фильтры"
+  "search.screen.export_helptext": {
+    "defaultMessage": "Export results"
   },
   "search.title": {
     "defaultMessage": "Поиск: {title}"
@@ -1793,14 +1814,23 @@
   "sorting.bar.caption": {
     "defaultMessage": "Название"
   },
+  "sorting.bar.collection_id": {
+    "defaultMessage": "Dataset"
+  },
   "sorting.bar.count": {
     "defaultMessage": "Размер"
+  },
+  "sorting.bar.countries": {
+    "defaultMessage": "Countries"
   },
   "sorting.bar.created_at": {
     "defaultMessage": "Дата создания"
   },
   "sorting.bar.date": {
     "defaultMessage": "Дата"
+  },
+  "sorting.bar.dates": {
+    "defaultMessage": "Dates"
   },
   "sorting.bar.direction": {
     "defaultMessage": "Направление:"
@@ -1945,9 +1975,6 @@
   },
   "xref.compute": {
     "defaultMessage": "Обработать"
-  },
-  "xref.download": {
-    "defaultMessage": "Экспортировать результаты"
   },
   "xref.entity": {
     "defaultMessage": "Запись"

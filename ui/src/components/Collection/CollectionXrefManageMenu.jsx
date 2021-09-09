@@ -6,9 +6,7 @@ import { ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { DialogToggleButton } from 'components/Toolbar';
-import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
 import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
-import { triggerCollectionXrefDownload } from 'actions';
 import { selectSession } from 'selectors';
 
 
@@ -21,10 +19,6 @@ const messages = defineMessages({
     id: 'xref.recompute',
     defaultMessage: 'Re-compute',
   },
-  export: {
-    id: 'xref.download',
-    defaultMessage: 'Export results',
-  }
 });
 
 class CollectionXrefManageMenu extends Component {
@@ -34,9 +28,6 @@ class CollectionXrefManageMenu extends Component {
       return null;
     }
 
-    /* eslint-disable camelcase */
-    const downloadLink = collection?.links?.xref_export;
-    const showDownload = !(result.total === undefined) && downloadLink && result.total > 0;
     const xrefButtonText = result.total > 0
       ? intl.formatMessage(messages.recompute)
       : intl.formatMessage(messages.compute);
@@ -54,19 +45,6 @@ class CollectionXrefManageMenu extends Component {
             Dialog={CollectionXrefDialog}
             dialogProps={{ collection }}
           />
-          {showDownload && (
-            <DialogToggleButton
-              buttonProps={{
-                text: intl.formatMessage(messages.export),
-                icon: "export",
-                className: "bp3-intent-primary"
-              }}
-              Dialog={ExportDialog}
-              dialogProps={{
-                onExport: () => this.props.triggerCollectionXrefDownload(collection.id)
-              }}
-            />
-          )}
         </ButtonGroup>
       </>
     );
@@ -78,6 +56,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default compose(
-  connect(mapStateToProps, { triggerCollectionXrefDownload }),
+  connect(mapStateToProps),
   injectIntl,
 )(CollectionXrefManageMenu);

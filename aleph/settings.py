@@ -85,6 +85,9 @@ OAUTH_ADMIN_GROUP = env.get("ALEPH_OAUTH_ADMIN_GROUP", "superuser")
 # No authentication. Everyone is admin.
 SINGLE_USER = env.to_bool("ALEPH_SINGLE_USER")
 
+# Require authentication. No anonymous access
+REQUIRE_LOGGED_IN = env.to_bool("ALEPH_REQUIRE_LOGGED_IN", False)
+
 # Default session duration.
 SESSION_EXPIRE = 800_000 if SINGLE_USER else 60_000
 SESSION_EXPIRE = env.to_int("ALEPH_SESSION_EXPIRE", SESSION_EXPIRE)
@@ -163,10 +166,14 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 ALEMBIC_DIR = os.path.join(APP_DIR, "migrate")
 
 ELASTICSEARCH_URL = env.get("ALEPH_ELASTICSEARCH_URI", "http://localhost:9200")
-ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 30)
+ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 60)
 
 # Number of replicas to maintain. '2' means 3 overall copies.
 INDEX_REPLICAS = env.to_int("ALEPH_INDEX_REPLICAS", 0)
 INDEX_PREFIX = env.get("ALEPH_INDEX_PREFIX", APP_NAME)
 INDEX_WRITE = env.get("ALEPH_INDEX_WRITE", "v1")
 INDEX_READ = env.to_list("ALEPH_INDEX_READ", [INDEX_WRITE])
+INDEX_EXPAND_CLAUSE_LIMIT = env.to_int("ALEPH_INDEX_EXPAND_CLAUSE_LIMIT", 10)
+INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
+    "ALEPH_INDEX_DELETE_BY_QUERY_BATCHSIZE", 100
+)

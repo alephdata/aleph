@@ -1,14 +1,19 @@
 @import "app/variables.scss";
 @import "app/mixins.scss";
 
+.EntitySearchResults-outer-container {
+  position: relative;
+}
+
+.EntitySearchResults-inner-container {
+  overflow-x: scroll;
+  overflow-y: visible;
+  padding: 0;
+  position: relative;
+}
+
 .EntitySearchResults {
   border-color: $aleph-border-color;
-  .schema {
-    max-width: 8em;
-    @media screen and (max-width: $aleph-screen-md-max-width) {
-      display: none;
-    }
-  }
 
   .bp3-control {
     margin-bottom: 0 !important;
@@ -29,6 +34,27 @@
 
   .highlights {
     @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
+    &__content {
+      max-width: $aleph-grid-size * 100;
+    }
+  }
+
+  td {
+    min-width: $aleph-grid-size * 13;
+
+    &.caption {
+      min-width: $aleph-grid-size * 24;
+    }
+    &.collection_id {
+      min-width: $aleph-grid-size * 17;
+    }
+  }
+  .more-text {
+    &.bp3-button {
+      padding: 0 3px;
+      min-height: 20px;
+      color: $aleph-greyed-text !important;
+    }
   }
 }
 

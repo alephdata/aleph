@@ -18,7 +18,7 @@ from aleph.views.context import tag_request
 from aleph.views.entities_api import view as entity_view
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
-from aleph.views.util import jsonify, get_flag, get_session_id
+from aleph.views.util import jsonify, get_flag, get_session_id, require
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
 from aleph.views.util import parse_request, get_db_collection
 
@@ -70,6 +70,7 @@ def index():
       tags:
         - EntitySet
     """
+    require(request.authz.can_browse_anonymous)
     parser = QueryParser(request.args, request.authz)
     types = parser.filters.get("type")
     q = EntitySet.by_authz(request.authz, types=types, prefix=parser.prefix)

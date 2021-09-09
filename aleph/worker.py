@@ -31,6 +31,7 @@ from aleph.logic.entities import update_entity, prune_entity
 from aleph.logic.mapping import load_mapping, flush_mapping
 
 log = structlog.get_logger(__name__)
+
 app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
 
 

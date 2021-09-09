@@ -83,7 +83,7 @@ def _get_credential_authz(credential):
         return Authz.from_role(role=role)
 
 
-def enable_authz(request):
+def get_authz(request):
     authz = None
 
     if "Authorization" in request.headers:
@@ -92,6 +92,12 @@ def enable_authz(request):
 
     if authz is None and "api_key" in request.args:
         authz = _get_credential_authz(request.args.get("api_key"))
+
+    return authz
+
+
+def enable_authz(request):
+    authz = get_authz(request)
 
     authz = authz or Authz.from_role(role=None)
     request.authz = authz

@@ -18,9 +18,10 @@ class QueryTags extends Component {
   removeFilterValue(filter, value) {
     const { query, updateQuery } = this.props;
     let newQuery;
-    if (filter === 'eq:dates') {
-      newQuery = query.removeFilter('gte:dates', value)
-        .removeFilter('lte:dates', value);
+    if (filter.includes('eq:')) {
+      const field = filter.replace('eq:', '')
+      newQuery = query.removeFilter(`gte:${field}`, value)
+        .removeFilter(`lte:${field}`, value);
     } else {
       newQuery = query.removeFilter(filter, value);
     }
@@ -37,24 +38,29 @@ class QueryTags extends Component {
     const { showHidden } = this.state;
 
     let activeFilters = query ? query.filters() : [];
-
     if (activeFilters.length === 0) {
       return null;
     }
 
+    // if gte and lte are equal to the same value for a field, remove and replace with a single equals tag
     let addlTags = [];
-    if (query.hasFilter('gte:dates') && query.hasFilter('lte:dates')) {
-      const gte = query.getFilter('gte:dates')[0];
-      const lte = query.getFilter('lte:dates')[0];
-      if (gte === lte) {
-        activeFilters = activeFilters.filter(f => (f !== 'gte:dates' && f !== 'lte:dates'))
-        addlTags.push({ filter: 'eq:dates', value: gte });
-      }
-    }
+    activeFilters
+      .filter(f => f.includes('gte:'))
+      .forEach(f => {
+        const field = f.replace('gte:', '');
+        if (query.hasFilter(`lte:${field}`)) {
+          const gte = query.getFilter(`gte:${field}`)[0];
+          const lte = query.getFilter(`lte:${field}`)[0];
+          if (gte === lte) {
+            activeFilters = activeFilters.filter(f => (f !== `gte:${field}` && f !== `lte:${field}`))
+            addlTags.push({ filter: `eq:${field}`, value: gte, type: 'date' });
+          }
+        }
+      })
 
     const filterTags = _.flatten(
       activeFilters
-        .map(filter => query.getFilter(filter).map(value => ({ filter, value })))
+        .map(filter => query.getFilter(filter).map(value => ({ filter, value, type: query.getFacetType(filter) })))
     );
     const allTags = [...filterTags, ...addlTags];
     const visibleTags = showHidden ? allTags : allTags.slice(0, HIDDEN_TAGS_CUTOFF);
@@ -68,9 +74,10 @@ class QueryTags extends Component {
     // "?ancestors={id}"
     return (
       <div className="QueryTags">
-        {visibleTags.map(({ filter, value }) => (
+        {visibleTags.map(({ filter, type, value }) => (
           <QueryFilterTag
             filter={filter}
+            type={type}
             value={value}
             remove={this.removeFilterValue}
             key={value}

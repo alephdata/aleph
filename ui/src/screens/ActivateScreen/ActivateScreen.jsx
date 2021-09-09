@@ -34,7 +34,7 @@ export class ActivateScreen extends Component {
     }
 
     return (
-      <Screen>
+      <Screen exemptFromRequiredAuth>
         <div className="small-screen-outer">
           <div className="small-screen-inner">
             <section className="small-screen">
