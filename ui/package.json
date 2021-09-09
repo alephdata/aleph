@@ -10,7 +10,7 @@
     "@blueprintjs/icons": "3.29.0",
     "@blueprintjs/popover2": "^0.11.0",
     "@blueprintjs/select": "3.17.0",
-    "@blueprintjs/table": "3.9.1",
+    "@blueprintjs/table": "3.9.3",
     "@formatjs/cli": "^4.2.2",
     "@formatjs/intl-locale": "^2.4.14",
     "@formatjs/intl-pluralrules": "^4.0.6",
