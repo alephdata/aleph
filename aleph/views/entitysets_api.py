@@ -136,7 +136,7 @@ def view(entityset_id):
     """
     entityset = get_entityset(entityset_id, request.authz.READ)
     if entityset.type == EntitySet.PROFILE:
-        return redirect(url_for("profile_api.view", profile_id=entityset_id))
+        return redirect(url_for("profiles_api.view", profile_id=entityset_id))
     data = entityset.to_dict()
     data["shallow"] = False
     return EntitySetSerializer.jsonify(data)
