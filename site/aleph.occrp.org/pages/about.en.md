@@ -7,7 +7,7 @@ icon: help
 
 OCCRP Aleph is an investigative data platform that helps reporters **follow the money**. We provide public access to a vast archive of government records and open databases. Much of the Aleph archive is protected from public access due to concerns about data protection and civil rights. OCCRP may grant access to journalists, activists or academia after an individual application (see below).
 
-Reporters can also upload their own files to private investigations, extract text, sketch a diagram to summarize their investigative findings, and cross-reference persons of interest. Aleph is more than just a document search engine: it also imports structured data from spreadsheets and databases, enabling journalists to express detailed data about persons of interest, companies, financial transactions, and more.
+Reporters and researchers can also upload their own files to private investigations, extract text, sketch a diagram to summarize their investigative findings, and cross-reference persons of interest. Aleph is more than just a document search engine: it also imports structured data from spreadsheets and databases, enabling journalists to express detailed data about persons of interest, companies, financial transactions, and more.
 
 ### What data is in Aleph?
 
@@ -19,9 +19,9 @@ Our geographic focus is on Central and Eastern Europe, Sub-Saharan Africa, South
 
 Please [fill out this form](https://forms.gle/Dm9eLbecFNKnAtRGA) if you would like to receive access to protected material on Aleph that we curated for journalistic investigations, called the "Friends of OCCRP" datasets.
 
-### Applying for access as campaigner, researcher or advocat
+### Applying for access as researcher or activist
 
-We also collect datasets that we will share with activists and researchers. Please [fill out this form](https://forms.gle/XkrePGy4SeqfejNR7) if you would like to receive access to this group.
+We also collect datasets that we will share with activists and researchers. Please [fill out this form](https://forms.gle/XkrePGy4SeqfejNR7) if you would like to gain access to this group.
 
 ### About OCCRP
 
