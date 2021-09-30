@@ -1,13 +1,32 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+
+import { showErrorToast } from 'src/app/toast';
 
 import './DocumentUploadForm.scss';
 
+const messages = defineMessages({
+  file_rejected: {
+    id: 'document.upload.rejected',
+    defaultMessage: '{fileName} is missing a file type, so it cannot be uploaded.',
+  },
+});
 
 export class DocumentUploadForm extends PureComponent {
   onFilesChange = (event) => {
-    const files = Array.from(event.target.files).filter(file => file.type !== '');
+    const { intl } = this.props
+    const rejectedFiles = []
 
+    const files = Array.from(event.target.files)
+      .filter(file => {
+        if (true || !file.type || file.type === '') {
+          rejectedFiles.push(file)
+          return false;
+        }
+        return true;
+      })
+
+    rejectedFiles.forEach(f => showErrorToast(intl.formatMessage(messages.file_rejected, { fileName: f.name })))
     this.props.onFilesChange(files);
   }
 
