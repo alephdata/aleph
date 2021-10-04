@@ -48,7 +48,7 @@
     "redux-act": "^1.7.4",
     "redux-thunk": "^2.3.0",
     "rehype-raw": "^6.0.0",
-    "truncate": "^2.0.1",
+    "truncate": "^3.0.0",
     "typescript": "^4.0.2",
     "uuid": "^8.0.0",
     "yaml": "^1.8.3"
