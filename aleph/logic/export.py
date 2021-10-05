@@ -66,7 +66,8 @@ def export_entities(export_id):
             excel_name = safe_filename(export.label, extension="xlsx")
             excel_path = export_dir.joinpath(excel_name)
             exporter = ExcelExporter(excel_path, extra=EXTRA_HEADERS)
-            proxies = iter_proxies(schemata=Entity.THING, filters=filters)
+            schemata = export.meta.get("schemata", [Entity.THING])
+            proxies = iter_proxies(schemata=schemata, filters=filters)
             for idx, entity in enumerate(proxies):
                 collection_id = entity.context.get("collection_id")
                 if collection_id not in collections:
