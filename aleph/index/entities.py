@@ -123,6 +123,7 @@ def entities_by_ids(
 
     missing = [i for i in ids if entities.get(id) is None]
     index = entities_read_index(schema=schemata)
+    print(schemata)
     query = {
         "query": {"ids": {"values": missing}},
         "_source": _source_spec(includes, excludes),
