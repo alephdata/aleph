@@ -21,7 +21,7 @@ def load_query():
     try:
         query = request.json.get("mapping_query", {})
         # just for validation
-        model.make_mapping({"entities": query})
+        model.make_mapping({"entities": query, "csv_url": "file:///dev/null"})
     except Exception as ex:
         log.exception("Validation error: %s", request.json)
         raise BadRequest(str(ex))

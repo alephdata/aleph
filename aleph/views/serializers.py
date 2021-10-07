@@ -238,7 +238,7 @@ class EntitySerializer(Serializer):
 
 class XrefSerializer(Serializer):
     def collect(self, obj):
-        matchable = tuple([s.matchable for s in model])
+        matchable = tuple([s for s in model if s.matchable])
         self.queue(Entity, obj.get("entity_id"), matchable)
         self.queue(Entity, obj.get("match_id"), matchable)
         self.queue(Collection, obj.get("collection_id"))
