@@ -16,7 +16,7 @@ Flask-Cors==3.0.10
 Flask-Babel==2.0.0
 flask-talisman==0.8.1
 SQLAlchemy==1.4.25
-alembic==1.7.3
+alembic==1.7.4
 authlib==0.15.4
 
 elasticsearch==7.15.0
