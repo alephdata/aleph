@@ -19,11 +19,19 @@ const messages = defineMessages({
   },
   all_label: {
     id: 'search.advanced.all.label',
-    defaultMessage: 'Any of these words',
+    defaultMessage: 'All of these words (Default)',
   },
   all_helptext: {
     id: 'search.advanced.all.helptext',
-    defaultMessage: 'Results containing all of the given terms will be prioritized, followed by those with one or more of the terms.',
+    defaultMessage: 'Only results containing all of the given terms will be returned',
+  },
+  any_label: {
+    id: 'search.advanced.any.label',
+    defaultMessage: 'Any of these words',
+  },
+  any_helptext: {
+    id: 'search.advanced.any.helptext',
+    defaultMessage: 'Results containing any of the given terms will be returned',
   },
   exact_label: {
     id: 'search.advanced.exact.label',
@@ -40,14 +48,6 @@ const messages = defineMessages({
   none_helptext: {
     id: 'search.advanced.none.helptext',
     defaultMessage: 'Exclude results with these words',
-  },
-  must_label: {
-    id: 'search.advanced.must.label',
-    defaultMessage: 'Must contain these words',
-  },
-  must_helptext: {
-    id: 'search.advanced.must.helptext',
-    defaultMessage: 'Only results with these words will be returned',
   },
   variants_label: {
     id: 'search.advanced.variants.label',
@@ -83,9 +83,9 @@ class AdvancedSearch extends React.Component {
 
     this.state = {
       all: [],
+      any: [],
       exact: [],
       none: [],
-      must: [],
       variants: [],
       proximity: []
     };
@@ -135,9 +135,9 @@ class AdvancedSearch extends React.Component {
     this.updateQuery(e, true);
     this.setState({
       all: [],
+      any: [],
       exact: [],
       none: [],
-      must: [],
       variants: [],
       proximity: []
     });

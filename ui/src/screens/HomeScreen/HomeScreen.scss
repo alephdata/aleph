@@ -136,7 +136,9 @@ $vertical-spacing: $aleph-grid-size*5;
   }
 
   &__halves {
-    align-items: center;
+    iframe {
+      width: 100% !important;
+    }
     & > * {
       flex-basis: 50%;
     }

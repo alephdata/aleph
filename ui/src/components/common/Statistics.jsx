@@ -58,7 +58,7 @@ class Statistics extends PureComponent {
     const { seeMoreButtonText, statistic } = this.props;
     const { listLen } = this.state;
 
-    const list = Object.entries(statistic);
+    const list = Object.entries(statistic).sort((a, b) => a[1] > b[1] ? -1 : 1);
     const trimmedList = seeMoreButtonText ? list.splice(0, listLen) : list;
     const rest = list.length - listLen;
     const showSeeMoreButton = seeMoreButtonText && rest > 0;
