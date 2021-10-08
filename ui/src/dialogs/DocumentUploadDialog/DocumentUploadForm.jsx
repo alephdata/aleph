@@ -19,7 +19,7 @@ export class DocumentUploadForm extends PureComponent {
 
     const files = Array.from(event.target.files)
       .filter(file => {
-        if (true || !file.type || file.type === '') {
+        if (!file.type || file.type === '') {
           rejectedFiles.push(file)
           return false;
         }
