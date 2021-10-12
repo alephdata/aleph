@@ -16,6 +16,12 @@ $timeline-text-color: $dark-gray5;
   border: 1px solid $aleph-border-color;
   border-radius: 5px;
 
+  @include between-breakpoints {
+    .collapsed & {
+      padding-bottom: $aleph-grid-size !important;
+    }
+  }
+
   &.draft, &.active {
     box-shadow: $pt-elevation-shadow-3;
     border: none;
@@ -68,11 +74,27 @@ $timeline-text-color: $dark-gray5;
     @media screen and (max-width: $aleph-screen-md-max-width) {
       min-width: $aleph-grid-size*18;
     }
+    @include between-breakpoints {
+      flex-basis: auto;
+    }
   }
 
   &__collapse-toggle {
     padding: $aleph-grid-size/2 0;
+    margin-bottom: $aleph-grid-size/2;
+    // align-self: center;
     @include rtlSupportInvertedProp(margin, right, $timeline-item-padding/3, null);
+
+    .collapsed & {
+      align-self: center;
+
+      @media screen and (max-width: $aleph-screen-md-max-width) {
+        padding: 0;
+      }
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        align-self: start;
+      }
+    }
   }
 
   &__date, .TimelineItemTitle {
@@ -109,6 +131,12 @@ $timeline-text-color: $dark-gray5;
     justify-content: space-between;
     position: relative;
 
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      .collapsed & {
+        padding: 2px 0;
+      }
+    }
+
     &__value {
       line-height: 1.5;
     }
@@ -123,7 +151,7 @@ $timeline-text-color: $dark-gray5;
 
     .collapsed &:not(.item-expanded) {
       background: none;
-      color: inherit;
+      color: $timeline-text-color;
 
       span, .EditableProperty__value .bp3-input {
         color: inherit !important;

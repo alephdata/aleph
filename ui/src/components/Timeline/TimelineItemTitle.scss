@@ -23,11 +23,6 @@
     .draft & {
       display: block;
     }
-
-    &:first-child {
-      @include rtlSupportInvertedProp(margin, left, 0 !important, null);
-      @include rtlSupportInvertedProp(padding, left, 0 !important, null);
-    }
   }
 
   &__text {
@@ -37,6 +32,10 @@
     padding: 0 $aleph-grid-size/2;
     flex-grow: 1;
     flex-wrap: wrap;
+
+    .draft & {
+      align-items: start;
+    }
 
     .no-wrap {
       display: inline-flex;
