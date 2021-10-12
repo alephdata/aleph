@@ -20,6 +20,13 @@ import './TimelineItem.scss';
 
 const DEFAULT_COLOR = Colors.BLUE2;
 
+const messages = defineMessages({
+  end_date_toggle: {
+    id: 'timeline.dates.button_text',
+    defaultMessage: 'Add end date'
+  },
+});
+
 class TimelineItem extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +35,7 @@ class TimelineItem extends Component {
     this.state = {
       entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` }),
       addedProps: [],
+      showEndDate: false,
       itemExpanded: isActive,
     }
 
@@ -100,6 +108,41 @@ class TimelineItem extends Component {
     )
   }
 
+  renderDate() {
+    const { expandedMode, intl, writeable } = this.props;
+    const { entity, itemExpanded, showEndDate } = this.state;
+
+    const hasEndDate = entity.getProperty('endDate').length;
+    const dateProp = this.renderProperty('date', { minimal: true, emptyPlaceholder: ' - ' })
+
+    if (!hasEndDate && !showEndDate) {
+      if (writeable && (expandedMode || itemExpanded)) {
+        return (
+          <>
+            {dateProp}
+            <Tooltip content={intl.formatMessage(messages.end_date_toggle)}>
+              <Button minimal small icon="array-date" onClick={() => this.setState({ showEndDate: true })} />
+            </Tooltip>
+          </>
+        )
+      }
+      return dateProp;
+    }
+
+    return (
+      <span className="TimelineItem__date__value">
+        <FormattedMessage
+          id="timeline.item.date"
+          defaultMessage="{start}to{end}"
+          values={{
+            start: dateProp,
+            end: this.renderProperty('endDate', { minimal: true, emptyPlaceholder: ' - ' })
+          }}
+        />
+      </span>
+    );
+  }
+
   getInvolvedEntityProps() {
     const { schema } = this.state.entity;
 
@@ -120,9 +163,9 @@ class TimelineItem extends Component {
     const { entity, itemExpanded } = this.state;
 
     const expanded = expandedMode || itemExpanded;
-    const captionProp = (entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0]);
+    const captionProp = ((!isDraft && entity.schema.caption.find(prop => entity.hasProperty(prop))) || entity.schema.caption?.[0]);
     const involvedEntityProps = this.getInvolvedEntityProps();
-    const reservedProps = [captionProp, ...involvedEntityProps, 'date', 'description', 'involved'];
+    const reservedProps = [captionProp, ...involvedEntityProps, 'date', 'endDate', 'description', 'involved'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -140,7 +183,7 @@ class TimelineItem extends Component {
           )}
           <div className="TimelineItem__secondary">
             <div className={c("TimelineItem__date", { 'item-expanded': itemExpanded })}>
-              {this.renderProperty('date', { minimal: true, emptyPlaceholder: ' - ' })}
+              {this.renderDate()}
             </div>
             {expanded && involvedEntityProps.map(prop => (
               <div key={prop.name} className="TimelineItem__involved">
