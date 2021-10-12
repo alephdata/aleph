@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { Button, Checkbox, Intent } from '@blueprintjs/core';
+import { Button, Callout, Checkbox, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -226,6 +226,12 @@ class CollectionAccessDialog extends Component {
                       onSelect={this.onAddRole}
                       exclude={exclude}
                     />
+                    <Callout intent={Intent.WARNING}>
+                      <FormattedMessage
+                        id="collection.edit.permissions_warning"
+                        defaultMessage="Note: User must already have an Aleph account in order to receive access."
+                      />
+                    </Callout>
                   </td>
                 </tr>
               </tbody>

@@ -11,26 +11,26 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 
 
 function SchemaLink({ collection, location, schema, ...rest }) {
-  if (schema.isDocument()) {
-    return <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS} icon />
-  } else {
-    const viewProps = { collection };
-    if (collection.casefile) {
+  const viewProps = { collection };
+  if (collection.casefile) {
+    if (schema.isDocument()) {
+      return <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS} icon />
+    } else {
       viewProps.id = collectionViewIds.ENTITIES;
       viewProps.hash = { type: schema };
-    } else {
-      viewProps.id = collectionViewIds.SEARCH;
-      const query = collectionSearchQuery(location, collection.id)
-        .setFilter('schema', schema);
-      viewProps.search = query.toLocation();
     }
-
-    return (
-      <CollectionView.Link {...viewProps}>
-        <VLSchema.Label schema={schema} icon={true} {...rest} />
-      </CollectionView.Link>
-    );
+  } else {
+    viewProps.id = collectionViewIds.SEARCH;
+    const query = collectionSearchQuery(location, collection.id)
+      .setFilter('schema', schema);
+    viewProps.search = query.toLocation();
   }
+
+  return (
+    <CollectionView.Link {...viewProps}>
+      <VLSchema.Label schema={schema} icon={true} {...rest} />
+    </CollectionView.Link>
+  );
 }
 
 const SchemaDescription = ({ schema }) => {
