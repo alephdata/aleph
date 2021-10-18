@@ -57,4 +57,9 @@
   .SchemaLabel {
     font-style: italic;
   }
+
+  .SchemaSelect button {
+    color: var(--item-color);
+    border-color: var(--item-color);
+  }
 }

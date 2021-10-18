@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Divider, Intent } from '@blueprintjs/core';
+import { Button, Divider } from '@blueprintjs/core';
 
 import { Entity, Schema } from 'components/common';
 
@@ -32,7 +32,6 @@ class TimelineItemTitle extends Component {
             <Button
               outlined
               small
-              intent={Intent.PRIMARY}
               icon={<Schema.Icon schema={entity.schema} />}
               rightIcon="caret-down"
             >

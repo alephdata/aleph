@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
-import { PropertySelect } from '@alephdata/react-ftm';
+import { ColorPicker, PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
 import c from 'classnames';
@@ -18,7 +18,7 @@ import TimelineItemTitle from 'components/Timeline/TimelineItemTitle';
 
 import './TimelineItem.scss';
 
-const DEFAULT_COLOR = Colors.BLUE2;
+const DEFAULT_COLOR = Colors.BLUE1;
 
 const messages = defineMessages({
   end_date_toggle: {
@@ -35,6 +35,7 @@ class TimelineItem extends Component {
     this.state = {
       entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` }),
       addedProps: [],
+      draftColor: DEFAULT_COLOR,
       showEndDate: false,
       itemExpanded: isActive,
     }
@@ -45,6 +46,7 @@ class TimelineItem extends Component {
     this.renderProperty = this.renderProperty.bind(this);
     this.onNewPropertyAdded = this.onNewPropertyAdded.bind(this);
     this.toggleExpanded = this.toggleExpanded.bind(this);
+    this.setDraftColor = this.setDraftColor.bind(this);
     this.ref = React.createRef();
   }
 
@@ -75,6 +77,10 @@ class TimelineItem extends Component {
 
   onNewPropertyAdded(prop) {
     this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop] }));
+  }
+
+  setDraftColor(draftColor) {
+    this.setState({ draftColor });
   }
 
   getVisibleProperties() {
@@ -173,12 +179,11 @@ class TimelineItem extends Component {
 
   render() {
     const { color, expandedMode, isActive, isDraft, onColorSelect, onDelete, onRemove, onSubmit, writeable } = this.props;
-    const { entity, itemExpanded } = this.state;
-
+    const { draftColor, entity, itemExpanded } = this.state;
     const expanded = expandedMode || itemExpanded;
     const captionProp = ((!isDraft && entity.schema.caption.find(prop => entity.hasProperty(prop))) || entity.schema.caption?.[0]);
     const entityTypeProps = this.getEntityTypeProps();
-    const reservedProps = [captionProp, ...entityTypeProps, 'date', 'endDate', 'description'];
+    const reservedProps = [captionProp, ...entityTypeProps, 'date', 'endDate', 'startDate', 'description'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -187,7 +192,7 @@ class TimelineItem extends Component {
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
     return (
-      <div id={entity.id} ref={this.ref} className={c("TimelineItem", { draft: isDraft, active: isActive, 'item-expanded': itemExpanded })} style={{"--item-color": color || DEFAULT_COLOR}}>
+      <div id={entity.id} ref={this.ref} className={c("TimelineItem", { draft: isDraft, active: isActive, 'item-expanded': itemExpanded })} style={{"--item-color": color || draftColor }}>
         <div className="TimelineItem__content">
           {!expandedMode && (
             <div className="TimelineItem__collapse-toggle">
@@ -251,6 +256,10 @@ class TimelineItem extends Component {
         </div>
         {isDraft && (
           <div className="TimelineItem__draft-buttons">
+            <ColorPicker
+              currSelected={draftColor}
+              onSelect={this.setDraftColor}
+            />
             <ButtonGroup>
               <Button onClick={onDelete} icon="trash">
                 <FormattedMessage
@@ -258,7 +267,7 @@ class TimelineItem extends Component {
                   defaultMessage="Delete"
                 />
               </Button>
-              <Button onClick={onSubmit} icon="add" intent={Intent.PRIMARY}>
+              <Button onClick={() => onSubmit(draftColor)} icon="add" intent={Intent.PRIMARY}>
                 <FormattedMessage
                   id="timeline.create.submit"
                   defaultMessage="Create"
