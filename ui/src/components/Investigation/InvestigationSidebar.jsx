@@ -10,7 +10,6 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { SchemaCounts } from 'components/common';
 import InvestigationHeading from 'components/Investigation/InvestigationHeading';
-import { selectTester } from 'selectors';
 
 import './InvestigationSidebar.scss';
 
@@ -49,9 +48,9 @@ class InvestigationSidebar extends React.Component {
   }
 
   render() {
-    const { collection, activeMode, activeType, isTester, schemaCounts } = this.props;
+    const { collection, activeMode, activeType, schemaCounts } = this.props;
 
-    const entityTools = [collectionViewIds.DIAGRAMS, ...(isTester ? [collectionViewIds.TIMELINES] : []), collectionViewIds.LISTS, collectionViewIds.XREF];
+    const entityTools = [collectionViewIds.DIAGRAMS, collectionViewIds.TIMELINES, collectionViewIds.LISTS, collectionViewIds.XREF];
     const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS, collectionViewIds.MENTIONS];
 
     return (
@@ -91,7 +90,6 @@ const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
 
   return {
-    isTester: selectTester(state),
     schemaCounts: collection?.statistics?.schema?.values || {}
   };
 };
