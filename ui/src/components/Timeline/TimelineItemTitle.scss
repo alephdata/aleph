@@ -41,6 +41,8 @@
       display: inline-flex;
       flex-wrap: nowrap;
       flex-grow: 1;
+      margin-left: 3px;
+      padding-left: 3px;
 
       .EditableProperty, .EditableProperty__value {
         width: 100%;

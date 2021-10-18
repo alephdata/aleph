@@ -74,19 +74,21 @@ class TimelineItem extends Component {
   }
 
   onNewPropertyAdded(prop) {
-    this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop.name] }));
+    this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop] }));
   }
 
   getVisibleProperties() {
     const { writeable } = this.props;
     const { addedProps, entity } = this.state;
 
-    const filledProps = entity.getProperties().filter(prop => !prop.hidden).map(prop => prop.name);
+    const filledProps = [...entity.getProperties(), ...addedProps]
+      .filter(prop => !prop.hidden && prop.type.toString() !== 'entity')
+      .map(prop => prop.name);
 
     if (!writeable) {
       return filledProps;
     } else {
-      return Array.from(new Set([...entity.schema.featured, ...filledProps, ...addedProps]));
+      return Array.from(new Set([...entity.schema.featured, ...filledProps]));
     }
   }
 
@@ -143,19 +145,28 @@ class TimelineItem extends Component {
     );
   }
 
-  getInvolvedEntityProps() {
-    const { schema } = this.state.entity;
+  getEntityTypeProps() {
+    const { addedProps, entity } = this.state;
+    const { schema } = entity;
+
+    let baseList;
 
     if (schema.name === 'Event') {
-      return ['involved'];
+      baseList = ['involved'];
     } else if (schema.edge) {
       const { source, target } = schema.edge;
-      return [source, target]
+      baseList = [source, target]
     } else {
-      return schema.getFeaturedProperties()
+      baseList = schema.getFeaturedProperties()
         .filter(prop => prop.type.toString() === 'entity')
         .map(prop => prop.name);
     }
+
+    const additionalEntityProps = [...entity.getProperties(), ...addedProps]
+      .filter(prop => prop.type.toString() === 'entity')
+      .map(prop => prop.name);
+
+    return Array.from(new Set([...baseList, ...additionalEntityProps]))
   }
 
   render() {
@@ -164,8 +175,8 @@ class TimelineItem extends Component {
 
     const expanded = expandedMode || itemExpanded;
     const captionProp = ((!isDraft && entity.schema.caption.find(prop => entity.hasProperty(prop))) || entity.schema.caption?.[0]);
-    const involvedEntityProps = this.getInvolvedEntityProps();
-    const reservedProps = [captionProp, ...involvedEntityProps, 'date', 'endDate', 'description', 'involved'];
+    const entityTypeProps = this.getEntityTypeProps();
+    const reservedProps = [captionProp, ...entityTypeProps, 'date', 'endDate', 'description'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -185,7 +196,7 @@ class TimelineItem extends Component {
             <div className={c("TimelineItem__date", { 'item-expanded': itemExpanded })}>
               {this.renderDate()}
             </div>
-            {expanded && involvedEntityProps.map(prop => (
+            {expanded && entityTypeProps.map(prop => (
               <div key={prop.name} className="TimelineItem__involved">
                 {this.renderProperty(prop)}
               </div>
