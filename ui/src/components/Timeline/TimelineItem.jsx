@@ -88,7 +88,9 @@ class TimelineItem extends Component {
     if (!writeable) {
       return filledProps;
     } else {
-      return Array.from(new Set([...entity.schema.featured, ...filledProps]));
+      // hide summary featured prop for events to avoid redundancy
+      const featuredProps = entity.schema.featured.filter(prop => prop !== 'summary')
+      return Array.from(new Set([...featuredProps, ...filledProps]));
     }
   }
 
