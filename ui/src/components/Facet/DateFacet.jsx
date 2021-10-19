@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedDate } from 'react-intl'
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -7,7 +8,8 @@ import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 
-import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToYear } from 'components/Facet/util';
+import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToLabel } from 'components/Facet/util';
+import { selectLocale } from 'selectors'
 
 
 import './DateFacet.scss';
@@ -29,21 +31,20 @@ export class DateFilter extends Component {
   }
 
   onSelect(selected) {
-    const { field, query, updateQuery } = this.props;
+    const { facetInterval, field, query, updateQuery } = this.props;
 
-    const currFacetInterval = query.getString(`facet_interval:${field}`)
     let newRange;
     let newQuery = query;
 
     if (Array.isArray(selected)) {
-      newRange = selected.sort().map(val => formatDateQParam(val, currFacetInterval));
+      newRange = selected.sort().map(val => formatDateQParam(val, facetInterval));
     } else {
-      if (currFacetInterval === 'year') {
+      if (facetInterval === 'year') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'month')
         const dateObj = new Date(selected)
         const end = new Date(Date.UTC(dateObj.getFullYear(), 11, 31)).toISOString()
         newRange = [formatDateQParam(selected, 'month'), formatDateQParam(end, 'month')]
-      } else if (currFacetInterval === 'month') {
+      } else if (facetInterval === 'month') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'day')
         const dateObj = new Date(selected)
         const end = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), 31)).toISOString()
@@ -102,11 +103,25 @@ export class DateFilter extends Component {
     );
   }
 
-  render() {
-    const { dataLabel, emptyComponent, filteredIntervals, intl, displayShowHiddenToggle, showAll, showLabel = true } = this.props;
-    let content;
+  renderParentLabel() {
+    const { facetInterval, filteredIntervals } = this.props;
 
-    console.log('intervals', filteredIntervals)
+    const sampleDate = filteredIntervals[0].label
+
+    return facetInterval === 'month'
+      ? new Date(sampleDate).getFullYear()
+      : (
+        <FormattedDate
+          value={sampleDate}
+          year="numeric"
+          month="long"
+        />
+      )
+  }
+
+  render() {
+    const { dataLabel, emptyComponent, facetInterval, filteredIntervals, intl, displayShowHiddenToggle, locale, showAll, showLabel = true } = this.props;
+    let content;
 
     if (filteredIntervals) {
       if (!filteredIntervals.length) {
@@ -116,8 +131,9 @@ export class DateFilter extends Component {
 
         content = (
           <>
+            {facetInterval !== 'year' && this.renderParentLabel()}
             <Histogram
-              data={filteredIntervals.map(({ label, count, ...rest }) => ({ label: timestampToYear(label), [dataPropName]: count, ...rest }))}
+              data={filteredIntervals.map(({ label, count, ...rest }) => ({ label: timestampToLabel(label, facetInterval, locale), [dataPropName]: count, ...rest }))}
               dataPropName={dataPropName}
               onSelect={this.onSelect}
               containerProps={{
@@ -164,7 +180,9 @@ const mapStateToProps = (state, ownProps) => {
     return {
       filteredIntervals,
       displayShowHiddenToggle: hasOutOfRange,
-      showAll
+      facetInterval: query.getString(`facet_interval:${field}`),
+      showAll,
+      locale: selectLocale(state)
     };
   }
   return {};

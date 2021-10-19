@@ -17,8 +17,15 @@ const cleanDateQParam = (value) => {
     .replace('||/d', '');
 };
 
-const timestampToYear = timestamp => {
-  return new Date(timestamp).getFullYear();
+const timestampToLabel = (timestamp, granularity, locale) => {
+  const dateObj = new Date(timestamp)
+
+  if (granularity === 'month') {
+    return new Intl.DateTimeFormat(locale, { month: 'short' }).format(dateObj)
+  } else if (granularity === 'day') {
+    return `${dateObj.getDate()}`
+  }
+  return dateObj.getFullYear()
 }
 
 const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
@@ -59,6 +66,6 @@ export {
   cleanDateQParam,
   DEFAULT_START_INTERVAL,
   formatDateQParam,
-  timestampToYear,
+  timestampToLabel,
   filterDateIntervals
 }
