@@ -1,17 +1,20 @@
 const DEFAULT_START_INTERVAL = 1950;
 
 const formatDateQParam = (datetime, granularity) => {
-  const dateObj = new Date(datetime)
+  const date = datetime.split('T')[0]
   if (granularity === 'month') {
-    return `${datetime}||/M`
+    return `${date}||/M`
+  } else if (granularity === 'day') {
+    return `${date}||/d`
   }
-  return `${datetime}||/y`
+  return `${date}||/y`
 };
 
 const cleanDateQParam = (value) => {
   return value
     .replace('||/y', '')
-    .replace('||/M', '');
+    .replace('||/M', '')
+    .replace('||/d', '');
 };
 
 const timestampToYear = timestamp => {
@@ -31,8 +34,8 @@ const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
     ? cleanDateQParam(query.getFilter(`lte:${field}`)[0])
     : (useDefaultBounds && defaultEndInterval);
 
-  const gt = gtRaw && new Date(gtRaw)
-  const lt = ltRaw && new Date(ltRaw)
+  const gt = gtRaw && new Date(`${gtRaw}T00:00:00`)
+  const lt = ltRaw && new Date(`${ltRaw}T00:00:00`)
 
   let gtOutOfRange, ltOutOfRange = false;
   const filteredIntervals = intervals.filter(({ id }) => {

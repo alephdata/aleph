@@ -31,14 +31,28 @@ export class DateFilter extends Component {
   onSelect(selected) {
     const { field, query, updateQuery } = this.props;
 
+    const currFacetInterval = query.getString(`facet_interval:${field}`)
     let newRange;
+    let newQuery = query;
+
     if (Array.isArray(selected)) {
-      newRange = selected.sort().map(formatDateQParam);
+      newRange = selected.sort().map(val => formatDateQParam(val, currFacetInterval));
     } else {
-      const year = formatDateQParam(selected);
-      newRange = [year, year];
+      if (currFacetInterval === 'year') {
+        newQuery = newQuery.set(`facet_interval:${field}`, 'month')
+        const dateObj = new Date(selected)
+        const end = new Date(Date.UTC(dateObj.getFullYear(), 11, 31)).toISOString()
+        newRange = [formatDateQParam(selected, 'month'), formatDateQParam(end, 'month')]
+      } else if (currFacetInterval === 'month') {
+        newQuery = newQuery.set(`facet_interval:${field}`, 'day')
+        const dateObj = new Date(selected)
+        const end = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), 31)).toISOString()
+        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(end, 'day')]
+      } else {
+        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(selected, 'day')]
+      }
     }
-    const newQuery = query.setFilter(`gte:${field}`, newRange[0])
+    newQuery = newQuery.setFilter(`gte:${field}`, newRange[0])
       .setFilter(`lte:${field}`, newRange[1]);
 
     updateQuery(newQuery)
@@ -92,11 +106,14 @@ export class DateFilter extends Component {
     const { dataLabel, emptyComponent, filteredIntervals, intl, displayShowHiddenToggle, showAll, showLabel = true } = this.props;
     let content;
 
+    console.log('intervals', filteredIntervals)
+
     if (filteredIntervals) {
       if (!filteredIntervals.length) {
         content = emptyComponent;
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);
+
         content = (
           <>
             <Histogram
@@ -137,13 +154,13 @@ export class DateFilter extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, intervals, query } = ownProps;
+  const { field, location, intervals, query } = ownProps;
   const hashQuery = queryString.parse(location.hash);
 
   const showAll = hashQuery.show_all_dates === 'true';
 
   if (intervals) {
-    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ query, intervals, useDefaultBounds: !showAll })
+    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ field, query, intervals, useDefaultBounds: !showAll })
     return {
       filteredIntervals,
       displayShowHiddenToggle: hasOutOfRange,
