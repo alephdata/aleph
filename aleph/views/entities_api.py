@@ -166,13 +166,16 @@ def export():
     parser = SearchQueryParser(request.args, request.authz)
     tag_request(query=parser.text, prefix=parser.prefix)
     query = EntitiesQuery(parser)
+    schemata = parser.getlist("filter:schema")
+    if not len(schemata):
+        schemata = parser.getlist("filter:schemata")
     label = gettext("Search: %s") % query.to_text()
     export = create_export(
         operation=OP_EXPORT_SEARCH,
         role_id=request.authz.id,
         label=label,
         mime_type=ZIP,
-        meta={"query": query.get_full_query()},
+        meta={"query": query.get_full_query(), "schemata": schemata},
     )
     job_id = get_session_id()
     queue_task(None, OP_EXPORT_SEARCH, job_id=job_id, export_id=export.id)

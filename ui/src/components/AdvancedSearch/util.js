@@ -7,22 +7,22 @@ export const FIELDS = [
     compose: t => t,
   },
   {
-    key: 'exact',
-    re: /"[^"]+"/g,
-    process: t => t.replace(/"/g,''),
-    compose: t => `"${t}"`,
-  },
-  {
-    key: 'must',
-    re: /(^|\s)\+[^\s]+/g,
-    process: t => t.replace(/\+/g,''),
-    compose: t => `+${t.trim()}`
+    key: 'any',
+    re: /[^\s]+( OR [^\s]+)+/g,
+    process: t => t.split(" OR "),
+    compose: (t, i) => i === 0 ? t : `OR ${t}`,
   },
   {
     key: 'none',
     re: /(^|\s)-[^\s]+/g,
     process: t => t.replace(/-/g,''),
     compose: t => `-${t.trim()}`,
+  },
+  {
+    key: 'exact',
+    re: /"[^"]+"/g,
+    process: t => t.replace(/"/g,''),
+    compose: t => `"${t}"`,
   },
   {
     key: 'variants',
@@ -45,7 +45,7 @@ export const parseQueryText = (queryText) => {
 
   [...FIELDS].reverse().forEach(({ key, re, process }) => {
     const matches = qt.match(re) || [];
-    parsedResults[key] = matches.map(process)
+    parsedResults[key] = matches.map(process).flat()
     qt = qt.replace(re, '');
   })
 

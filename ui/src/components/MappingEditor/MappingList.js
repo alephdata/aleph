@@ -1,5 +1,5 @@
 import { Entity } from '@alephdata/followthemoney';
-import { Colors } from '@blueprintjs/core';
+import { Colors } from '@blueprintjs/colors';
 
 const colorOptions = [
   Colors.BLUE1, Colors.TURQUOISE1, Colors.VIOLET1, Colors.ORANGE1, Colors.GREEN1, Colors.RED1,

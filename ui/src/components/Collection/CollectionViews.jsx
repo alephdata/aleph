@@ -101,7 +101,7 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
-  const searchQuery = collectionSearchQuery(location, collectionId);
+  const searchQuery = collectionSearchQuery(location, collectionId, { highlight: true });
 
   return {
     collection: selectCollection(state, collectionId),
