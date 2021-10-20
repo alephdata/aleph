@@ -41,12 +41,8 @@ const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
     ? cleanDateQParam(query.getFilter(`lte:${field}`)[0])
     : (useDefaultBounds && defaultEndInterval);
 
-  console.log(ltRaw)
-
   const gt = gtRaw && new Date(`${gtRaw}T00:00:00`)
   const lt = ltRaw && new Date(`${ltRaw}T00:00:00`)
-
-  console.log(lt)
 
   let gtOutOfRange, ltOutOfRange = false;
   const filteredIntervals = intervals.filter(({ id }) => {

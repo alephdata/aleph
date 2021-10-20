@@ -22,7 +22,6 @@ class QueryFilterTag extends PureComponent {
   }
 
   label = (query, filter, type, value) => {
-    console.log(query, filter, type, value)
     switch (type || filter) {
       case 'schema':
         return (

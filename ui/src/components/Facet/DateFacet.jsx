@@ -107,7 +107,7 @@ export class DateFilter extends Component {
 
     const sampleDate = filteredIntervals[0].label
 
-    return facetInterval === 'month'
+    const content = facetInterval === 'month'
       ? new Date(sampleDate).getFullYear()
       : (
         <FormattedDate
@@ -116,6 +116,7 @@ export class DateFilter extends Component {
           month="long"
         />
       )
+    return <span className="DateFacet__parent-label">{content}</span>
   }
 
   render() {
