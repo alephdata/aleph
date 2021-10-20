@@ -215,6 +215,9 @@
   "collection.edit.info.summary": {
     "defaultMessage": "Summary"
   },
+  "collection.edit.permissions_warning": {
+    "defaultMessage": "Note: User must already have an Aleph account in order to receive access."
+  },
   "collection.edit.permissionstable.edit": {
     "defaultMessage": "Éditer"
   },
@@ -634,6 +637,9 @@
   },
   "document.upload.progress": {
     "defaultMessage": "{done} of {total} files done, {errors} errors."
+  },
+  "document.upload.rejected": {
+    "defaultMessage": "{fileName} is missing a file type, so it cannot be uploaded."
   },
   "document.upload.retry": {
     "defaultMessage": "Retry"
@@ -1563,9 +1569,15 @@
     "defaultMessage": "Load more"
   },
   "search.advanced.all.helptext": {
-    "defaultMessage": "Results containing all of the given terms will be prioritized, followed by those with one or more of the terms."
+    "defaultMessage": "Only results containing all of the given terms will be returned"
   },
   "search.advanced.all.label": {
+    "defaultMessage": "All of these words (Default)"
+  },
+  "search.advanced.any.helptext": {
+    "defaultMessage": "Results containing any of the given terms will be returned"
+  },
+  "search.advanced.any.label": {
     "defaultMessage": "Any of these words"
   },
   "search.advanced.clear": {
@@ -1576,12 +1588,6 @@
   },
   "search.advanced.exact.label": {
     "defaultMessage": "This exact word/phrase"
-  },
-  "search.advanced.must.helptext": {
-    "defaultMessage": "Only results with these words will be returned"
-  },
-  "search.advanced.must.label": {
-    "defaultMessage": "Must contain these words"
   },
   "search.advanced.none.helptext": {
     "defaultMessage": "Exclude results with these words"
