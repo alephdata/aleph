@@ -21,7 +21,8 @@ class QueryFilterTag extends PureComponent {
     remove(filter, value);
   }
 
-  label = (filter, type, value) => {
+  label = (query, filter, type, value) => {
+    console.log(query, filter, type, value)
     switch (type || filter) {
       case 'schema':
         return (
@@ -102,6 +103,9 @@ class QueryFilterTag extends PureComponent {
       case 'lte:dates':
       case 'gte:dates':
       case 'date':
+        const field = filter.replace('lte:', '').replace('gte:', '').replace('eq:', '')
+        const facetInterval = query.getString(`facet_interval:${field}`)
+
         let prefix;
         if (filter.includes('gte')) {
           prefix = <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After " />
@@ -109,11 +113,19 @@ class QueryFilterTag extends PureComponent {
           prefix = <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before " />
         }
 
+        let label = cleanDateQParam(value)
+        if (facetInterval === 'year') {
+          label = label.split('-')[0]
+        } else if (facetInterval === 'month') {
+          const dateParts = label.split('-')
+          label = [dateParts[0], dateParts[1]].join('-')
+        }
+
         return (
           <>
             <Icon icon="calendar" className="left-icon" />
             {prefix}
-            <Date value={cleanDateQParam(value)} />
+            <Date value={label} />
           </>
         );
       default:
@@ -122,7 +134,7 @@ class QueryFilterTag extends PureComponent {
   }
 
   render() {
-    const { filter, type, value } = this.props;
+    const { filter, type, value, query } = this.props;
 
     return (
       <TagWidget
@@ -130,7 +142,7 @@ class QueryFilterTag extends PureComponent {
         className="QueryFilterTag"
         onRemove={this.onRemove}
       >
-        {this.label(filter, type, value)}
+        {this.label(query, filter, type, value)}
       </TagWidget>
     );
   }

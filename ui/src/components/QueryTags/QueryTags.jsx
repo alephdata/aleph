@@ -76,6 +76,7 @@ class QueryTags extends Component {
       <div className="QueryTags">
         {visibleTags.map(({ filter, type, value }) => (
           <QueryFilterTag
+            query={query}
             filter={filter}
             type={type}
             value={value}
