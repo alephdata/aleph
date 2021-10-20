@@ -6,7 +6,7 @@ global:
 
   image:
     repository: alephdata/aleph
-    tag: "3.11.0"
+    tag: "3.11.1"
     pullPolicy: Always
 
   commonEnv:
