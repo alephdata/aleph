@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import _ from 'lodash';
+
 import { Button } from '@blueprintjs/core';
 import QueryFilterTag from './QueryFilterTag';
+import { cleanDateQParam } from 'components/Facet/util';
 
 const HIDDEN_TAGS_CUTOFF = 10;
 
@@ -15,16 +17,18 @@ class QueryTags extends Component {
     this.state = { showHidden: false };
   }
 
-  removeFilterValue(filter, value) {
+  removeFilterValue(filter, type, value) {
     const { query, updateQuery } = this.props;
     let newQuery;
-    if (filter.includes('eq:')) {
-      const field = filter.replace('eq:', '')
-      newQuery = query.removeFilter(`gte:${field}`, value)
-        .removeFilter(`lte:${field}`, value);
+
+    if (type === 'date') {
+      newQuery = query.clearFilter(`gte:${filter}`)
+        .clearFilter(`lte:${filter}`)
+        .set(`facet_interval:${filter}`, 'year')
     } else {
       newQuery = query.removeFilter(filter, value);
     }
+
     updateQuery(newQuery);
   }
 
@@ -33,40 +37,43 @@ class QueryTags extends Component {
     updateQuery(query.removeAllFilters());
   }
 
+  getTagsList(tagsList) {
+    const { query } = this.props;
+
+    const tags = _.flatten(
+      query.filters()
+        .map(filter => query.getFilter(filter).map(value => ({ filter, value, type: query.getFacetType(filter) })))
+    );
+
+    const [dateTags, otherTags] = _.partition(tags, tag => tag.filter.includes(":"));
+    const dateProps = _.groupBy(dateTags, tag => tag.filter.split(':')[1])
+
+    const processedDateTags = Object.entries(dateProps).map(([propName, values]) => {
+      const gt = cleanDateQParam(values.find(({ filter }) => filter.includes('gte'))?.value)
+      const lt = cleanDateQParam(values.find(({ filter }) => filter.includes('lte'))?.value)
+
+      if (!gt || !lt) { return null; }
+      const combinedValue = gt === lt ? gt : `${gt} - ${lt}`
+
+      return ({ filter: propName, value: combinedValue, type: 'date' })
+    })
+
+    return [...processedDateTags, ...otherTags];
+  }
+
   render() {
     const { query } = this.props;
     const { showHidden } = this.state;
 
-    let activeFilters = query ? query.filters() : [];
-    if (activeFilters.length === 0) {
+    if (!query || query.filters().length === 0) {
       return null;
     }
 
-    // if gte and lte are equal to the same value for a field, remove and replace with a single equals tag
-    let addlTags = [];
-    activeFilters
-      .filter(f => f.includes('gte:'))
-      .forEach(f => {
-        const field = f.replace('gte:', '');
-        if (query.hasFilter(`lte:${field}`)) {
-          const gte = query.getFilter(`gte:${field}`)[0];
-          const lte = query.getFilter(`lte:${field}`)[0];
-          if (gte === lte) {
-            activeFilters = activeFilters.filter(f => (f !== `gte:${field}` && f !== `lte:${field}`))
-            addlTags.push({ filter: `eq:${field}`, value: gte, type: 'date' });
-          }
-        }
-      })
+    const filterTags = this.getTagsList();
+    const visibleTags = showHidden ? filterTags : filterTags.slice(0, HIDDEN_TAGS_CUTOFF);
 
-    const filterTags = _.flatten(
-      activeFilters
-        .map(filter => query.getFilter(filter).map(value => ({ filter, value, type: query.getFacetType(filter) })))
-    );
-    const allTags = [...filterTags, ...addlTags];
-    const visibleTags = showHidden ? allTags : allTags.slice(0, HIDDEN_TAGS_CUTOFF);
-
-    const showHiddenToggle = !showHidden && allTags.length > HIDDEN_TAGS_CUTOFF;
-    const showClearAll = allTags.length > 1;
+    const showHiddenToggle = !showHidden && filterTags.length > HIDDEN_TAGS_CUTOFF;
+    const showClearAll = filterTags.length > 1;
 
     // @FIXME This should still selectively display filters for the following:
     // "?exclude={id}"
@@ -93,7 +100,7 @@ class QueryTags extends Component {
             <FormattedMessage
               id="queryFilters.showHidden"
               defaultMessage="Show {count} more filters..."
-              values={{ count: allTags.length - visibleTags.length }}
+              values={{ count: filterTags.length - visibleTags.length }}
             />
           </Button>
         )}

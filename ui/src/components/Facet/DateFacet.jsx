@@ -140,7 +140,7 @@ export class DateFilter extends Component {
                 height: DATE_FACET_HEIGHT,
               }}
             />
-            {(displayShowHiddenToggle || showAll) && this.renderShowHiddenToggle()}
+            {displayShowHiddenToggle && this.renderShowHiddenToggle()}
           </>
         )
       }

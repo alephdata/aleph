@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Icon, Tag as TagWidget } from '@blueprintjs/core';
-import { cleanDateQParam } from 'components/Facet/util';
 
 import {
-  Schema, Tag, Country, Language, Category, Collection, Date, Entity,
+  Schema, Tag, Country, Language, Category, Collection, Entity,
 } from 'components/common';
 
 import './QueryFilterTag.scss';
@@ -17,8 +16,8 @@ class QueryFilterTag extends PureComponent {
   }
 
   onRemove() {
-    const { filter, value, remove } = this.props;
-    remove(filter, value);
+    const { filter, type, value, remove } = this.props;
+    remove(filter, type, value);
   }
 
   label = (query, filter, type, value) => {
@@ -98,33 +97,11 @@ class QueryFilterTag extends PureComponent {
             {value}
           </>
         );
-      case 'eq:dates':
-      case 'lte:dates':
-      case 'gte:dates':
       case 'date':
-        const field = filter.replace('lte:', '').replace('gte:', '').replace('eq:', '')
-        const facetInterval = query.getString(`facet_interval:${field}`)
-
-        let prefix;
-        if (filter.includes('gte')) {
-          prefix = <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After " />
-        } else if (filter.includes('lte')) {
-          prefix = <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before " />
-        }
-
-        let label = cleanDateQParam(value)
-        if (facetInterval === 'year') {
-          label = label.split('-')[0]
-        } else if (facetInterval === 'month') {
-          const dateParts = label.split('-')
-          label = [dateParts[0], dateParts[1]].join('-')
-        }
-
         return (
           <>
             <Icon icon="calendar" className="left-icon" />
-            {prefix}
-            <Date value={label} />
+            {value}
           </>
         );
       default:

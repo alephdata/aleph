@@ -11,10 +11,17 @@ const formatDateQParam = (datetime, granularity) => {
 };
 
 const cleanDateQParam = (value) => {
-  return value
-    .replace('||/y', '')
-    .replace('||/M', '')
-    .replace('||/d', '');
+  if (!value) { return; }
+  const [date, suffix] = value.split('||/');
+
+  if (suffix === 'y') {
+    return date.split('-')[0]
+  } else if (suffix === 'M') {
+    const dateParts = date.split('-')
+    return [dateParts[0], dateParts[1]].join('-')
+  } else {
+    return date;
+  }
 };
 
 const timestampToLabel = (timestamp, granularity, locale) => {

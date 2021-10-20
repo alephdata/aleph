@@ -41,7 +41,7 @@
   &__parent-label {
     font-weight: bold;
     color: $blue2;
-    text-decoration: underline;
+    margin-bottom: $aleph-grid-size/2;
   }
 
   .ErrorSection {
