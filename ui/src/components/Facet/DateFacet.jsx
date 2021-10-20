@@ -39,16 +39,15 @@ export class DateFilter extends Component {
     if (Array.isArray(selected)) {
       newRange = selected.sort().map(val => formatDateQParam(val, facetInterval));
     } else {
+      const dateObj = new Date(selected)
       if (facetInterval === 'year') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'month')
-        const dateObj = new Date(selected)
-        const end = new Date(Date.UTC(dateObj.getFullYear(), 11, 31)).toISOString()
-        newRange = [formatDateQParam(selected, 'month'), formatDateQParam(end, 'month')]
+        const end = dateObj.setFullYear(dateObj.getFullYear() + 1)
+        newRange = [formatDateQParam(selected, 'month'), formatDateQParam(new Date(end - 1).toISOString(), 'month')]
       } else if (facetInterval === 'month') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'day')
-        const dateObj = new Date(selected)
-        const end = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), 31)).toISOString()
-        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(end, 'day')]
+        const end = dateObj.setMonth(dateObj.getMonth() + 1)
+        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(new Date(end - 1).toISOString(), 'day')]
       } else {
         newRange = [formatDateQParam(selected, 'day'), formatDateQParam(selected, 'day')]
       }
