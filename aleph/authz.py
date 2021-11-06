@@ -166,6 +166,19 @@ class Authz(object):
         )
 
     @classmethod
+    def from_access_token(cls, token):
+        email = token.get("email", token.get("upn"))
+        sub = token.get("sub", email)
+        if not sub:
+            raise Unauthorized()
+        role_id = "%s:%s" % (settings.OAUTH_HANDLER, sub)
+        role = Role.by_foreign_id(role_id)
+        if role is None:
+            name = token.get("name", token.get("given_name"))
+            role = Role.load_or_create(role_id, Role.USER, name, email=email)
+        return Authz.from_role(role)
+
+    @classmethod
     def flush(cls):
         cache.kv.delete(cls.ACCESS)
 

@@ -76,3 +76,31 @@ class AuthzTestCase(TestCase):
             Authz.from_token("banana")
         sauthz = Authz.from_token(token)
         assert sauthz.id == authz.id
+
+    def test_access_token(self):
+        with self.assertRaises(Unauthorized):
+            Authz.from_access_token({})
+
+        authz_from_upn = Authz.from_access_token({
+            'name': self.user.name,
+            'upn': 'user.upn'
+        })
+        authz_from_email = Authz.from_access_token({
+            'name': self.user.name,
+            'email': self.user.email
+        })
+        authz_from_sub = Authz.from_access_token({
+            'name': self.user.name,
+            'sub': 'user.sub'
+        })
+        authz_from_all = Authz.from_access_token({
+            'name': self.user.name,
+            'upn': 'user.upn',
+            'email': self.user.email,
+            'sub': 'user.sub'
+        })
+
+        assert authz_from_email.id != authz_from_upn.id
+        assert authz_from_sub.id != authz_from_upn.id
+        assert authz_from_sub.id != authz_from_email.id
+        assert authz_from_sub.id == authz_from_all.id

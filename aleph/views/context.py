@@ -16,6 +16,7 @@ from aleph.queues import get_rate_limit
 from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Role
+from aleph.oauth import parse_jwt_token, oauth
 
 log = structlog.get_logger(__name__)
 local = threading.local()
@@ -72,35 +73,33 @@ def _get_remote_ip():
 
 def _get_credential_authz(credential):
     if credential is None or not len(credential):
-        return
+        return None
     if " " in credential:
         method, credential = credential.split(" ", 1)
         if method == "Token":
             return Authz.from_token(credential)
+        elif method == "Bearer":
+            token = parse_jwt_token(oauth.provider, credential)
+            return Authz.from_access_token(token)
 
     role = Role.by_api_key(credential)
     if role is not None:
         return Authz.from_role(role=role)
+    return None
 
 
-def get_authz(request):
-    authz = None
-
-    if "Authorization" in request.headers:
-        credential = request.headers.get("Authorization")
-        authz = _get_credential_authz(credential)
-
-    if authz is None and "api_key" in request.args:
-        authz = _get_credential_authz(request.args.get("api_key"))
-
-    return authz
+def _get_request_headers_authz(request):
+    return _get_credential_authz(request.headers.get("Authorization"))
 
 
-def enable_authz(request):
-    authz = get_authz(request)
+def _get_request_args_authz(request):
+    return _get_credential_authz(request.args.get("api_key"))
 
-    authz = authz or Authz.from_role(role=None)
-    request.authz = authz
+
+def _get_authz(request):
+    return _get_request_headers_authz(request) or \
+           _get_request_args_authz(request) or \
+           Authz.from_role(role=None)
 
 
 def enable_rate_limit(request):
@@ -130,7 +129,7 @@ def setup_request():
 
     # First set up auth context so that we know who we are dealing with
     # when we log their activity or enforce rate limits
-    enable_authz(request)
+    request.authz = _get_authz(request)
     setup_logging_context(request)
     enable_rate_limit(request)
 

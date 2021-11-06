@@ -29,7 +29,10 @@ def _parse_access_token(provider, oauth_token):
     token = oauth_token.get("access_token")
     if token is None:
         return {}
+    return parse_jwt_token(provider, token)
 
+
+def parse_jwt_token(provider, token):
     def load_key(header, payload):
         jwk_set = JsonWebKey.import_key_set(provider.fetch_jwk_set(force=True))
         return jwk_set.find_by_kid(header.get("kid"))
