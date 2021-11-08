@@ -98,7 +98,7 @@ class Timeline extends Component {
     );
 
     return (
-      <DualPane className="Timeline theme-light">
+      <DualPane className="Timeline">
         <DualPane.SidePane>
           <div className={c("Timeline__date-container", { fixed: histogramFixed })}>
             <DateFacet

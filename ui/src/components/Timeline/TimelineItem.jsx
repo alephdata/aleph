@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
-import { PropertySelect } from '@alephdata/react-ftm';
+import { ColorPicker, PropertySelect } from '@alephdata/react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
 import c from 'classnames';
@@ -18,17 +18,13 @@ import TimelineItemTitle from 'components/Timeline/TimelineItemTitle';
 
 import './TimelineItem.scss';
 
-const DEFAULT_COLOR = Colors.BLUE2;
+const DEFAULT_COLOR = Colors.BLUE1;
 
 const messages = defineMessages({
   end_date_toggle: {
     id: 'timeline.dates.button_text',
     defaultMessage: 'Add end date'
   },
-  involved_button_text: {
-    id: 'timeline.involved.button_text',
-    defaultMessage: 'Add involved entities'
-  }
 });
 
 class TimelineItem extends Component {
@@ -39,6 +35,7 @@ class TimelineItem extends Component {
     this.state = {
       entity: entity || new FTMEntity(model, { schema: 'Event', id: `${Math.random()}` }),
       addedProps: [],
+      draftColor: DEFAULT_COLOR,
       showEndDate: false,
       itemExpanded: isActive,
     }
@@ -49,6 +46,7 @@ class TimelineItem extends Component {
     this.renderProperty = this.renderProperty.bind(this);
     this.onNewPropertyAdded = this.onNewPropertyAdded.bind(this);
     this.toggleExpanded = this.toggleExpanded.bind(this);
+    this.setDraftColor = this.setDraftColor.bind(this);
     this.ref = React.createRef();
   }
 
@@ -78,36 +76,27 @@ class TimelineItem extends Component {
   }
 
   onNewPropertyAdded(prop) {
-    this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop.name] }));
+    this.setState(({ addedProps }) => ({ addedProps: [...addedProps, prop] }));
   }
 
-  // TODO: swap date and startDate prop values depending on entity having an endDate
-  // checkDates(entity, editedProp) {
-  //   if (editedProp === 'endDate') {
-  //     const date = entity.getProperty('date');
-  //     const startDate = entity.getProperty('startDate');
-  //     const endDate = entity.getProperty('endDate');
-  //     if (endDate.length > 0 && !startDate.length) {
-  //       entity.properties.set(entity.schema.getProperty('startDate'), date);
-  //       entity.properties.delete(entity.schema.getProperty('date'));
-  //     } else if (!endDate.length && startDate.length > 0) {
-  //       entity.properties.set(entity.schema.getProperty('date'), startDate);
-  //       entity.properties.delete(entity.schema.getProperty('startDate'));
-  //     }
-  //   }
-  //   return entity;
-  // }
+  setDraftColor(draftColor) {
+    this.setState({ draftColor });
+  }
 
   getVisibleProperties() {
     const { writeable } = this.props;
     const { addedProps, entity } = this.state;
 
-    const filledProps = entity.getProperties().filter(prop => !prop.hidden).map(prop => prop.name);
+    const filledProps = [...entity.getProperties(), ...addedProps]
+      .filter(prop => !prop.hidden && prop.type.toString() !== 'entity')
+      .map(prop => prop.name);
 
     if (!writeable) {
       return filledProps;
     } else {
-    return Array.from(new Set([...entity.schema.featured, ...filledProps, ...addedProps]));
+      // hide summary featured prop for events to avoid redundancy
+      const featuredProps = entity.schema.featured.filter(prop => prop !== 'summary')
+      return Array.from(new Set([...featuredProps, ...filledProps]));
     }
   }
 
@@ -134,21 +123,20 @@ class TimelineItem extends Component {
     const { entity, itemExpanded, showEndDate } = this.state;
 
     const hasEndDate = entity.getProperty('endDate').length;
-    const dateProp = (hasEndDate || (!entity.getProperty('date').length && entity.getProperty('startDate').length)) ? 'startDate' : 'date';
-    const date = this.renderProperty(dateProp, { minimal: true, emptyPlaceholder: ' - ' })
+    const dateProp = this.renderProperty('date', { minimal: true, emptyPlaceholder: ' - ' })
 
     if (!hasEndDate && !showEndDate) {
       if (writeable && (expandedMode || itemExpanded)) {
         return (
           <>
-            {date}
+            {dateProp}
             <Tooltip content={intl.formatMessage(messages.end_date_toggle)}>
               <Button minimal small icon="array-date" onClick={() => this.setState({ showEndDate: true })} />
             </Tooltip>
           </>
         )
       }
-      return date;
+      return dateProp;
     }
 
     return (
@@ -157,7 +145,7 @@ class TimelineItem extends Component {
           id="timeline.item.date"
           defaultMessage="{start}to{end}"
           values={{
-            start: date,
+            start: dateProp,
             end: this.renderProperty('endDate', { minimal: true, emptyPlaceholder: ' - ' })
           }}
         />
@@ -165,48 +153,37 @@ class TimelineItem extends Component {
     );
   }
 
-  renderInvolved() {
-    const { expandedMode, intl } = this.props;
-    const { entity } = this.state;
+  getEntityTypeProps() {
+    const { addedProps, entity } = this.state;
+    const { schema } = entity;
 
-    const schemaName = entity.schema.name;
+    let baseList;
 
-    if (schemaName === 'Event') {
-      return (
-        <div className="TimelineItem__involved">
-          {this.renderProperty('involved', { toggleButtonProps: {
-            text: intl.formatMessage(messages.involved_button_text),
-            icon: 'add',
-            minimal: expandedMode,
-            outlined: !expandedMode,
-            small: true,
-            fill: true
-          }})}
-        </div>
-      );
-    } else if (entity.schema.edge) {
-      return (
-        <>
-          <div className="TimelineItem__involved">
-            {this.renderProperty(entity.schema.edge.source)}
-          </div>
-          <div className="TimelineItem__involved">
-            {this.renderProperty(entity.schema.edge.target)}
-          </div>
-        </>
-      );
+    if (schema.name === 'Event') {
+      baseList = ['involved'];
+    } else if (schema.edge) {
+      const { source, target } = schema.edge;
+      baseList = [source, target]
+    } else {
+      baseList = schema.getFeaturedProperties()
+        .filter(prop => prop.type.toString() === 'entity')
+        .map(prop => prop.name);
     }
+
+    const additionalEntityProps = [...entity.getProperties(), ...addedProps]
+      .filter(prop => prop.type.toString() === 'entity')
+      .map(prop => prop.name);
+
+    return Array.from(new Set([...baseList, ...additionalEntityProps]))
   }
 
   render() {
     const { color, expandedMode, isActive, isDraft, onColorSelect, onDelete, onRemove, onSubmit, writeable } = this.props;
-    const { entity, itemExpanded } = this.state;
-
+    const { draftColor, entity, itemExpanded } = this.state;
     const expanded = expandedMode || itemExpanded;
-
-    const captionProp = (entity.schema.caption.find(prop => entity.hasProperty(prop)) || entity.schema.caption?.[0]);
-    const edgeProps = [entity.schema.edge?.source, entity.schema.edge?.target];
-    const reservedProps = [captionProp, ...edgeProps, 'date', 'startDate', 'endDate', 'description', 'involved'];
+    const captionProp = ((!isDraft && entity.schema.caption.find(prop => entity.hasProperty(prop))) || entity.schema.caption?.[0]);
+    const entityTypeProps = this.getEntityTypeProps();
+    const reservedProps = [captionProp, ...entityTypeProps, 'date', 'endDate', 'startDate', 'description'];
     const visibleProps = this.getVisibleProperties()
       .filter(prop => reservedProps.indexOf(prop) < 0);
 
@@ -215,7 +192,7 @@ class TimelineItem extends Component {
       .filter(prop => [...reservedProps, ...visibleProps].indexOf(prop.name) < 0);
 
     return (
-      <div id={entity.id} ref={this.ref} className={c("TimelineItem", { draft: isDraft, active: isActive, 'item-expanded': itemExpanded })} style={{"--item-color": color || DEFAULT_COLOR}}>
+      <div id={entity.id} ref={this.ref} className={c("TimelineItem", { draft: isDraft, active: isActive, 'item-expanded': itemExpanded })} style={{"--item-color": color || draftColor }}>
         <div className="TimelineItem__content">
           {!expandedMode && (
             <div className="TimelineItem__collapse-toggle">
@@ -226,7 +203,11 @@ class TimelineItem extends Component {
             <div className={c("TimelineItem__date", { 'item-expanded': itemExpanded })}>
               {this.renderDate()}
             </div>
-            {expanded && this.renderInvolved()}
+            {expanded && entityTypeProps.map(prop => (
+              <div key={prop.name} className="TimelineItem__involved">
+                {this.renderProperty(prop)}
+              </div>
+            ))}
           </div>
           <div className="TimelineItem__main">
             <TimelineItemTitle
@@ -275,6 +256,10 @@ class TimelineItem extends Component {
         </div>
         {isDraft && (
           <div className="TimelineItem__draft-buttons">
+            <ColorPicker
+              currSelected={draftColor}
+              onSelect={this.setDraftColor}
+            />
             <ButtonGroup>
               <Button onClick={onDelete} icon="trash">
                 <FormattedMessage
@@ -282,7 +267,7 @@ class TimelineItem extends Component {
                   defaultMessage="Delete"
                 />
               </Button>
-              <Button onClick={onSubmit} icon="add" intent={Intent.PRIMARY}>
+              <Button onClick={() => onSubmit(draftColor)} icon="add" intent={Intent.PRIMARY}>
                 <FormattedMessage
                   id="timeline.create.submit"
                   defaultMessage="Create"

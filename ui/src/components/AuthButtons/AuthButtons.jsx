@@ -7,7 +7,7 @@ import { Button, Icon, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 
 import { fetchRole } from 'actions';
-import { selectCurrentRole, selectCurrentRoleId, selectMetadata, selectTester } from 'selectors';
+import { selectCurrentRole, selectCurrentRoleId, selectMetadata } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { DialogToggleButton } from 'components/Toolbar'
 import { Skeleton } from 'components/common'
@@ -85,7 +85,7 @@ export class AuthButtons extends Component {
   }
 
   render() {
-    const { role, metadata, intl, isTester } = this.props;
+    const { role, metadata, intl } = this.props;
 
     if (!role.id && role.isPending) {
       return this.renderSkeleton();
@@ -131,14 +131,12 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.diagrams)}
                   </div>
                 </Link>
-                {isTester && (
-                  <Link to="/timelines" className="bp3-menu-item">
-                    <Icon icon="gantt-chart" />
-                    <div className="bp3-text-overflow-ellipsis bp3-fill">
-                      {intl.formatMessage(messages.timelines)}
-                    </div>
-                  </Link>
-                )}
+                <Link to="/timelines" className="bp3-menu-item">
+                  <Icon icon="gantt-chart" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.timelines)}
+                  </div>
+                </Link>
                 <Link to="/lists" className="bp3-menu-item">
                   <Icon icon="list" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
@@ -195,7 +193,6 @@ export class AuthButtons extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isTester: selectTester(state),
   role: selectCurrentRole(state),
   roleId: selectCurrentRoleId(state),
   metadata: selectMetadata(state),

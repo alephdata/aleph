@@ -33,7 +33,7 @@ class TimelineItemList extends Component {
     this.onColorSelect = this.onColorSelect.bind(this);
   }
 
-  async createNewItem() {
+  async createNewItem(color) {
     const { entityManager, history, location, onHideDraft } = this.props;
     const { schema, properties } = this.state.draftEntity;
 
@@ -43,7 +43,9 @@ class TimelineItemList extends Component {
     })
 
     const entity = await entityManager.createEntity({ schema, properties: simplifiedProps });
+    this.onColorSelect(entity.id, color);
     onHideDraft();
+
     history.replace({
       pathname: location.pathname,
       search: location.search,
