@@ -215,6 +215,9 @@
   "collection.edit.info.summary": {
     "defaultMessage": "Краткое описание"
   },
+  "collection.edit.permissions_warning": {
+    "defaultMessage": "Note: User must already have an Aleph account in order to receive access."
+  },
   "collection.edit.permissionstable.edit": {
     "defaultMessage": "Редактирование"
   },
@@ -531,7 +534,7 @@
     "defaultMessage": "Импортировать диаграмму"
   },
   "diagram.render.error": {
-    "defaultMessage": "Error rendering diagram"
+    "defaultMessage": "Ошибка отображения диаграммы"
   },
   "diagram.selector.create": {
     "defaultMessage": "Создать диаграмму"
@@ -634,6 +637,9 @@
   },
   "document.upload.progress": {
     "defaultMessage": "{done} из {total} файлов готовы, ошибок: {errors}."
+  },
+  "document.upload.rejected": {
+    "defaultMessage": "{fileName} is missing a file type, so it cannot be uploaded."
   },
   "document.upload.retry": {
     "defaultMessage": "Попробовать ещё раз"
@@ -945,19 +951,19 @@
     "defaultMessage": "{count, plural, one {Адрес} few {Адреса} many {Адреса} other {Адреса}}"
   },
   "facet.caption": {
-    "defaultMessage": "Name"
+    "defaultMessage": "Название"
   },
   "facet.category": {
     "defaultMessage": "{count, plural, one {Категория} few {Категории} many {Категории} other {Категории}}"
   },
   "facet.collection_id": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "Набор данных"
   },
   "facet.countries": {
     "defaultMessage": "{count, plural, one {Страна} few {Страны} many {Страны} other {Страны}}"
   },
   "facet.dates": {
-    "defaultMessage": "{count, plural, one {Date} other {Dates}}"
+    "defaultMessage": "{count, plural, one {Дата} few {Даты} many {Даты} other {Даты}}"
   },
   "facet.emails": {
     "defaultMessage": "{count, plural, one {E-мэйл} few {E-мэйлы} many {E-мэйлы} other {E-мэйлы}}"
@@ -978,7 +984,7 @@
     "defaultMessage": "{count, plural, one {Номер телефона} few {Номера телефонов} many {Номера телефонов} other {Номера телефонов}}"
   },
   "facet.schema": {
-    "defaultMessage": "Entity type"
+    "defaultMessage": "Тип сущности"
   },
   "file_import.error": {
     "defaultMessage": "Ошибка импорта файла"
@@ -993,7 +999,7 @@
     "defaultMessage": "Если вы хотите поискать определённые сущности или документы в наборах данных, относящихся к этой группе, <link> нажмите здесь </link>."
   },
   "home.access_disabled": {
-    "defaultMessage": "Public access temporarily disabled"
+    "defaultMessage": "Публичный доступ временно закрыт"
   },
   "home.counts.countries": {
     "defaultMessage": "Страны и территории"
@@ -1563,10 +1569,16 @@
     "defaultMessage": "Ещё"
   },
   "search.advanced.all.helptext": {
-    "defaultMessage": "Результаты будут отсортированы по количеству вхождений искомых слов."
+    "defaultMessage": "Only results containing all of the given terms will be returned"
   },
   "search.advanced.all.label": {
-    "defaultMessage": "Любые из этих слов"
+    "defaultMessage": "All of these words (Default)"
+  },
+  "search.advanced.any.helptext": {
+    "defaultMessage": "Results containing any of the given terms will be returned"
+  },
+  "search.advanced.any.label": {
+    "defaultMessage": "Any of these words"
   },
   "search.advanced.clear": {
     "defaultMessage": "Очистить все"
@@ -1576,12 +1588,6 @@
   },
   "search.advanced.exact.label": {
     "defaultMessage": "Только это слово или фраза"
-  },
-  "search.advanced.must.helptext": {
-    "defaultMessage": "Будут отображены только те результаты, в которых есть указанные слова"
-  },
-  "search.advanced.must.label": {
-    "defaultMessage": "Встречаются все указанные слова"
   },
   "search.advanced.none.helptext": {
     "defaultMessage": "Исключить результаты с этими словами"
@@ -1629,40 +1635,40 @@
     "defaultMessage": "Войти"
   },
   "search.columns.configure": {
-    "defaultMessage": "Configure columns"
+    "defaultMessage": "Настроить колонки"
   },
   "search.columns.configure_placeholder": {
-    "defaultMessage": "Search for a column..."
+    "defaultMessage": "Найти колонку..."
   },
   "search.config.groups": {
-    "defaultMessage": "Property groups"
+    "defaultMessage": "Группы свойств"
   },
   "search.config.properties": {
-    "defaultMessage": "Properties"
+    "defaultMessage": "Свойства"
   },
   "search.config.reset": {
-    "defaultMessage": "Reset to default"
+    "defaultMessage": "Настройки по умолчанию"
   },
   "search.facets.clearDates": {
-    "defaultMessage": "Clear"
+    "defaultMessage": "Очистить"
   },
   "search.facets.configure": {
-    "defaultMessage": "Configure filters"
+    "defaultMessage": "Настроить фильтры"
   },
   "search.facets.configure_placeholder": {
-    "defaultMessage": "Search for a filter..."
+    "defaultMessage": "Найти фильтр..."
   },
   "search.facets.filtersSelected": {
     "defaultMessage": "{count} выбрано"
   },
   "search.facets.hide": {
-    "defaultMessage": "Hide filters"
+    "defaultMessage": "Скрыть фильтры"
   },
   "search.facets.no_items": {
     "defaultMessage": "Варианты отсутствуют"
   },
   "search.facets.show": {
-    "defaultMessage": "Show filters"
+    "defaultMessage": "Отобразить фильтры"
   },
   "search.facets.showMore": {
     "defaultMessage": "Ещё..."
@@ -1701,7 +1707,7 @@
     "defaultMessage": "Поиск в {label}"
   },
   "search.screen.dates.show-all": {
-    "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
+    "defaultMessage": "* Показаны все настройки фильтра дат. { button } отобразить только ближайшие даты."
   },
   "search.screen.dates.show-hidden": {
     "defaultMessage": "* В фильтре дат отображены только варианты от {start} до настоящего времени. { button } показать даты за пределами данного диапазона."
@@ -1725,7 +1731,7 @@
     "defaultMessage": "Результатов для экспорта нет."
   },
   "search.screen.export_helptext": {
-    "defaultMessage": "Export results"
+    "defaultMessage": "Экспортировать результаты"
   },
   "search.title": {
     "defaultMessage": "Поиск: {title}"
@@ -1815,13 +1821,13 @@
     "defaultMessage": "Название"
   },
   "sorting.bar.collection_id": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "Набор данных"
   },
   "sorting.bar.count": {
     "defaultMessage": "Размер"
   },
   "sorting.bar.countries": {
-    "defaultMessage": "Countries"
+    "defaultMessage": "Страны"
   },
   "sorting.bar.created_at": {
     "defaultMessage": "Дата создания"
@@ -1830,7 +1836,7 @@
     "defaultMessage": "Дата"
   },
   "sorting.bar.dates": {
-    "defaultMessage": "Dates"
+    "defaultMessage": "Даты"
   },
   "sorting.bar.direction": {
     "defaultMessage": "Направление:"
