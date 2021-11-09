@@ -192,5 +192,5 @@ class EntitySetSelector extends Component {
 export default compose(
   withRouter,
   injectIntl,
-  connect({}, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
+  connect(null, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
 )(EntitySetSelector);
