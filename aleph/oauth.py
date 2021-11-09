@@ -26,7 +26,7 @@ def configure_oauth(app, cache):
 
 
 def _parse_access_token(provider, oauth_token):
-    token = oauth_token.get("access_token")
+    token = oauth_token.get("id_token")
     if token is None:
         return {}
 
