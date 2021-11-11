@@ -107,7 +107,7 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, fileSizeProp, query, result, hasPending, intl,
+      collection, document, fileSizeProp, query, result, hasPending, intl, showSearch = true
     } = this.props;
     const { selection } = this.state;
     const mutableDocument = document === undefined || document?.schema?.name === 'Folder';
@@ -139,47 +139,49 @@ export class DocumentManager extends Component {
 
     return (
       <div className="DocumentManager">
-        <EntityActionBar
-          query={query}
-          writeable={showActions}
-          selection={selection}
-          resetSelection={() => this.setState({ selection: [] })}
-          onSearchSubmit={this.onSearchSubmit}
-          searchPlaceholder={searchPlaceholder}
-          searchDisabled={result.total === 0 && !query.hasQuery()}
-        >
-          {canUpload && (
+        {(showSearch || showActions) && (
+          <EntityActionBar
+            query={query}
+            writeable={showActions}
+            selection={selection}
+            resetSelection={() => this.setState({ selection: [] })}
+            onSearchSubmit={this.onSearchSubmit}
+            searchPlaceholder={searchPlaceholder}
+            searchDisabled={result.total === 0 && !query.hasQuery()}
+          >
+            {canUpload && (
+              <DialogToggleButton
+                buttonProps={{
+                  text: intl.formatMessage(messages.upload),
+                  icon: "upload"
+                }}
+                Dialog={DocumentUploadDialog}
+                dialogProps={{ collection, parent: document }}
+              />
+            )}
             <DialogToggleButton
               buttonProps={{
-                text: intl.formatMessage(messages.upload),
-                icon: "upload"
+                text: intl.formatMessage(messages.new),
+                icon: "folder-new"
               }}
-              Dialog={DocumentUploadDialog}
+              Dialog={DocumentFolderDialog}
               dialogProps={{ collection, parent: document }}
             />
-          )}
-          <DialogToggleButton
-            buttonProps={{
-              text: intl.formatMessage(messages.new),
-              icon: "folder-new"
-            }}
-            Dialog={DocumentFolderDialog}
-            dialogProps={{ collection, parent: document }}
-          />
-          <Divider />
-          <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)} className="prevent-flex-grow">
-            <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
-              <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
-            </AnchorButton>
-          </Tooltip>
-          <EntityDeleteButton
-            entities={selection}
-            onSuccess={() => this.setState({ selection: [] })}
-            actionType="delete"
-            deleteEntity={this.props.deleteEntity}
-            showCount
-          />
-        </EntityActionBar>
+            <Divider />
+            <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)} className="prevent-flex-grow">
+              <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
+                <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
+              </AnchorButton>
+            </Tooltip>
+            <EntityDeleteButton
+              entities={selection}
+              onSuccess={() => this.setState({ selection: [] })}
+              actionType="delete"
+              deleteEntity={this.props.deleteEntity}
+              showCount
+            />
+          </EntityActionBar>
+        )}
         {hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">
             <FormattedMessage

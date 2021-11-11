@@ -69,10 +69,10 @@ class CollectionViews extends React.Component {
           className="CollectionViews__tab"
           title={
             <>
-              <CollectionView.Label id={collectionViewIds.SOURCE_FILES} icon />
+              <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon isCasefile={false} />
               <CollectionView.Count id={collectionViewIds.DOCUMENTS} collectionId={collectionId} />
             </>}
-          panel={<CollectionDocumentsMode collectionId={collectionId} />}
+          panel={<CollectionDocumentsMode collectionId={collectionId} showSearch={false} />}
         />
         <Tab
           id={collectionViewIds.XREF}
