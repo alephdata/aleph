@@ -119,23 +119,30 @@ export class DocumentManager extends Component {
       ? intl.formatMessage(messages.search_placeholder_document, { label: document.getCaption() })
       : intl.formatMessage(messages.search_placeholder);
 
-    const emptyComponent = (
-      <div className="DocumentManager__content__empty">
-        <DialogToggleButton
-          buttonProps={{
-            minimal: true,
-            fill: true,
-          }}
-          Dialog={DocumentUploadDialog}
-          dialogProps={{ collection, parent: document }}
-        >
-          <ErrorSection
-            icon={canUpload ? 'plus' : 'folder-open'}
-            title={intl.formatMessage(canUpload ? messages.emptyCanUpload : messages.empty)}
-          />
-        </DialogToggleButton>
-      </div>
-    );
+    const emptyComponent = canUpload
+      ? (
+        <div className="DocumentManager__content__empty">
+          <DialogToggleButton
+            buttonProps={{
+              minimal: true,
+              fill: true,
+            }}
+            Dialog={DocumentUploadDialog}
+            dialogProps={{ collection, parent: document }}
+          >
+            <ErrorSection
+              icon='plus'
+              title={intl.formatMessage(messages.emptyCanUpload)}
+            />
+          </DialogToggleButton>
+        </div>
+      )
+      : (
+        <ErrorSection
+          icon='folder-open'
+          title={intl.formatMessage(messages.empty)}
+        />
+      );
 
     return (
       <div className="DocumentManager">
