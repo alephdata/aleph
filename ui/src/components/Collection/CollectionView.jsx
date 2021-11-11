@@ -52,6 +52,10 @@ const messages = defineMessages({
     id: 'collection.info.browse',
     defaultMessage: 'Documents',
   },
+  source_files: {
+    id: 'collection.info.source_files',
+    defaultMessage: 'Source files',
+  },
   entities: {
     id: 'collection.info.entities',
     defaultMessage: 'Entities',
@@ -81,6 +85,7 @@ const messages = defineMessages({
 const icons = {
   overview: 'grouped-bar-chart',
   documents: 'document',
+  source_files: 'document',
   entities: 'list-columns',
   xref: 'comparison',
   diagrams: 'graph',

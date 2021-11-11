@@ -64,18 +64,16 @@ class CollectionViews extends React.Component {
             <CollectionOverviewMode isCasefile={false} collectionId={collectionId} />
           )}
         />
-        {collection.writeable && (
-          <Tab
-            id={collectionViewIds.DOCUMENTS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon />
-                <CollectionView.Count id={collectionViewIds.DOCUMENTS} collectionId={collectionId} />
-              </>}
-            panel={<CollectionDocumentsMode collectionId={collectionId} />}
-          />
-        )}
+        <Tab
+          id={collectionViewIds.DOCUMENTS}
+          className="CollectionViews__tab"
+          title={
+            <>
+              <CollectionView.Label id={collectionViewIds.SOURCE_FILES} icon />
+              <CollectionView.Count id={collectionViewIds.DOCUMENTS} collectionId={collectionId} />
+            </>}
+          panel={<CollectionDocumentsMode collectionId={collectionId} />}
+        />
         <Tab
           id={collectionViewIds.XREF}
           className="CollectionViews__tab"
