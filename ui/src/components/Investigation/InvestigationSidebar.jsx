@@ -37,7 +37,7 @@ class InvestigationSidebar extends React.Component {
       <Button
         key={id}
         icon={<CollectionView.Icon id={id} />}
-        text={<CollectionView.Label id={id} />}
+        text={<CollectionView.Label id={id} isCasefile />}
         rightIcon={<CollectionView.Count id={id} collectionId={collection.id} />}
         onClick={() => this.navigate(id)}
         active={activeMode === id}

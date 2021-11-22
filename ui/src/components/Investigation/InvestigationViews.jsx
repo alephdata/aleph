@@ -73,7 +73,7 @@ class InvestigationViews extends React.Component {
       title = <Schema.Label schema={activeType} plural icon />;
       subheading = <Schema.Description schema={activeType} />
     } else if (!!activeMode) {
-      title = <CollectionView.Label id={activeMode} icon />;
+      title = <CollectionView.Label id={activeMode} icon isCasefile />;
       subheading = <CollectionView.Description id={activeMode} />
     }
 
