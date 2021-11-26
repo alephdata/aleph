@@ -68,6 +68,7 @@ def _bulk_compare(proxies):
         return
     if settings.XREF_MODEL is None:
         yield from _bulk_compare_ftm(proxies)
+        return
     global MODEL
     if MODEL is None:
         try:
@@ -77,6 +78,7 @@ def _bulk_compare(proxies):
             log.exception(f"Could not find model file: {settings.XREF_MODEL}")
             settings.XREF_MODEL = None
             yield from _bulk_compare_ftm(proxies)
+            return
     yield from _bulk_compare_ftmc_model(proxies)
 
 
