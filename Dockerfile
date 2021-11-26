@@ -29,10 +29,12 @@ WORKDIR /aleph
 ENV PYTHONPATH /aleph
 RUN pip install -q -e /aleph
 
+ENV ALEPH_WORD_FREQUENCY_URI=https://public.data.occrp.org/develop/models/word-frequencies/word_frequencies-v0.4.1.zip
+ENV ALEPH_FTM_COMPARE_MODEL_URI=https://public.data.occrp.org/develop/models/xref/glm_bernoulli_2e_wf-v0.4.1.pkl
 RUN mkdir -p /opt/ftm-compare/word-frequencies/ && \
-    curl -L -o "/opt/ftm-compare/word-frequencies/word-frequencies.zip" "https://public.data.occrp.org/develop/models/word-frequencies/word_frequencies.zip" && \
+    curl -L -o "/opt/ftm-compare/word-frequencies/word-frequencies.zip" "$ALEPH_WORD_FREQUENCY_URI" && \
     python3 -m zipfile --extract /opt/ftm-compare/word-frequencies/word-frequencies.zip /opt/ftm-compare/word-frequencies/ && \
-    curl -L -o "/opt/ftm-compare/model.pkl" "https://public.data.occrp.org/develop/models/xref/glm_bernoulli_2e_wf-v0.4.1.pkl"
+    curl -L -o "/opt/ftm-compare/model.pkl" "$ALEPH_FTM_COMPARE_MODEL_URI"
 
 # Configure some docker defaults:
 ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
