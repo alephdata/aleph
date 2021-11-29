@@ -1,6 +1,8 @@
 import logging
+from pprint import pformat  # noqa
 from authlib.jose import JsonWebToken, JsonWebKey
 from authlib.integrations.flask_client import OAuth
+from authlib.jose.errors import DecodeError
 
 from aleph import settings
 
@@ -43,7 +45,13 @@ def _parse_access_token(provider, oauth_token):
 
 def _get_groups(provider, oauth_token, id_token):
     """Groups are not standardised in OIDC, so this is provider-specific."""
-    access_token = _parse_access_token(provider, oauth_token)
+    try:
+        access_token = _parse_access_token(provider, oauth_token)
+    except DecodeError:
+        # Failed to parse the access_token as JWT. Most probably, the required
+        # information about groups is in the id_token.
+        access_token = {}
+
     groups = []
 
     # Amazon Cognito
