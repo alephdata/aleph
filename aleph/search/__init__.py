@@ -88,6 +88,7 @@ class XrefQuery(Query):
     SORT_DEFAULT = [{"score": "desc"}]
     SORT_FIELDS = {
         "random": "random",
+        "doubt": "doubt",
         "score": "_score",
     }
     AUTHZ_FIELD = "match_collection_id"
@@ -103,7 +104,7 @@ class XrefQuery(Query):
         filters = super(XrefQuery, self).get_filters(**kwargs)
         filters.append({"term": {"collection_id": self.collection_id}})
         sorts = [f for (f, _) in self.parser.sorts]
-        if "random" not in sorts:
+        if "random" not in sorts and "doubt" not in sorts:
             filters.append({"range": {"score": {"gt": self.SCORE_CUTOFF}}})
         return filters
 
