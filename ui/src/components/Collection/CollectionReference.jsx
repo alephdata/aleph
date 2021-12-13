@@ -17,7 +17,7 @@ class CollectionReference extends React.PureComponent {
             <FormattedMessage id="collection.foreign_id" defaultMessage="Foreign ID" />
           </div>
           <div className="value">
-            <code>{collection.foreign_id}</code>
+            <ClipboardInput value={collection.foreign_id} />
           </div>
         </div>
         <Divider />
