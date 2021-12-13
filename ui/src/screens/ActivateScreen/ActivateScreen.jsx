@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -30,7 +30,7 @@ export class ActivateScreen extends Component {
     const { match: { params }, session, intl } = this.props;
 
     if (!params.code || session.loggedIn) {
-      return <Redirect to="/" />;
+      return <Navigate to="/" />;
     }
 
     return (
