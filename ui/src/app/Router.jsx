@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { Route, Navigate, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
@@ -74,19 +74,19 @@ class Router extends Component {
             <Route path="/pages/:page" exact component={PagesScreen} />
             <Route path="/activate/:code" exact component={ActivateScreen} />
             <Route path="/entities/:entityId" exact component={EntityScreen} />
-            <Redirect from="/text/:documentId" to="/entities/:documentId" />
-            <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
-            <Redirect from="/documents/:documentId" to="/entities/:documentId" />
+            <Navigate from="/text/:documentId" to="/entities/:documentId" />
+            <Navigate from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
+            <Navigate from="/documents/:documentId" to="/entities/:documentId" />
             <Route path="/datasets" exact component={DatasetIndexScreen} />
-            <Redirect from="/sources" to="/datasets" />
+            <Navigate from="/sources" to="/datasets" />
             <Route path="/investigations" exact component={InvestigationIndexScreen} />
-            <Redirect from="/cases" to="/investigations" />
-            <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
+            <Navigate from="/cases" to="/investigations" />
+            <Navigate from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
             <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
             <Route path="/investigations/:collectionId" exact component={InvestigationScreen} />
-            <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
-            <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
-            <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
+            <Navigate from="/collections/:collectionId" to="/datasets/:collectionId" />
+            <Navigate from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
+            <Navigate from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
             <Route path="/profiles/:profileId" exact component={ProfileScreen} />
             <Route path="/diagrams/:entitySetId" exact component={DiagramScreen} />
             <Route path="/diagrams" exact component={EntitySetIndexScreen} />
