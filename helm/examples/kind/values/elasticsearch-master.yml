@@ -1,19 +1,19 @@
 ---
-clusterName: "search-index"
 nodeGroup: "master"
-masterService: "search-index-master"
+masterService: "aleph-index-master"
+clusterName: "aleph-index"
 
 roles:
   master: "true"
   ingest: "false"
   data: "false"
+  ml: "false"
+  remote_cluster_client: "false"
 
 replicas: 2
-minimumMasterNodes: 1
-esMajorVersion: 7
 
-image: "alephdata/aleph-elasticsearch"
-imageTag: "latest"
+image: "ghcr.io/alephdata/aleph-elasticsearch"
+imageTag: "3bb5dbed97cfdb9955324d11e5c623a5c5bbc410"
 imagePullPolicy: "IfNotPresent"
 
 esJavaOpts: "-Xmx1g -Xms1g"
@@ -26,10 +26,6 @@ esConfig:
         enabled: "false"
       security:
         enabled: "false"
-# secretMounts:
-#   - name: search-index-secret
-#     secretName: search-index-secret
-#     path: /secrets
 
 resources:
   requests:
@@ -46,11 +42,4 @@ volumeClaimTemplate:
     requests:
       storage: 1Gi
 
-protocol: http
-httpPort: 9200
-transportPort: 9300
-
-# antiAffinity: "disable"
-# podManagementPolicy: "Parallel"
-# nodeSelector:
-#   lifespan: permanent
+antiAffinity: disable

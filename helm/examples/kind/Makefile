@@ -1,5 +1,4 @@
 ENV="staging"
-PREFIX="aleph"
 
 create-cluster:
 	@echo "🔴 Creating a k8s cluster ..."
@@ -25,20 +24,20 @@ update-helm:
 
 install-postgres: update-helm
 	@echo "🔴 Installing Postgres database ..."
-	helm install $(PREFIX)-postgres bitnami/postgresql -f values/postgres.yml -n $(ENV)
+	helm install aleph-postgres bitnami/postgresql -f values/postgres.yml -n $(ENV)
 
 install-elasticsearch: update-helm
 	@echo "🔴 Installing Elasticsearch cluster ..."
-	helm install $(PREFIX)-index-master elastic/elasticsearch -f values/elasticsearch-master.yml --set masterService="$(PREFIX)-index-master" --set clusterName="$(PREFIX)-index" -n $(ENV)
-	helm install $(PREFIX)-index-data elastic/elasticsearch -f values/elasticsearch-data.yml --set masterService="$(PREFIX)-index-master" --set clusterName="$(PREFIX)-index" -n $(ENV)
+	helm install aleph-index-master elastic/elasticsearch -f values/elasticsearch-master.yml -n $(ENV)
+	helm install aleph-index-data elastic/elasticsearch -f values/elasticsearch-data.yml -n $(ENV)
 
 install-redis: update-helm
 	@echo "🔴 Installing Redis ..."
-	helm install $(PREFIX)-redis bitnami/redis -f values/redis.yml -n $(ENV)
+	helm install aleph-redis bitnami/redis -f values/redis.yml -n $(ENV)
 
 install-minio: update-helm
 	@echo "🔴 Installing MinIO ..."
-	helm install $(PREFIX)-minio minio/minio --set accessKey=myaccesskey,secretKey=mysecretkey -n $(ENV)
+	helm install aleph-minio minio/minio --set accessKey=myaccesskey,secretKey=mysecretkey -n $(ENV)
 
 install-ingress:
 	@echo "🔴 Installing Nginx Ingress  ..."
