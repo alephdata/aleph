@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: aleph-ingress-dev
@@ -9,10 +9,16 @@ spec:
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              serviceName: aleph-ui
-              servicePort: 80
+              service: 
+                name: aleph-ui
+                port: 
+                  number: 80
           - path: /api
+            pathType: Prefix
             backend:
-              serviceName: aleph-api
-              servicePort: 8000
+              service: 
+                name: aleph-api
+                port: 
+                  number: 8000
