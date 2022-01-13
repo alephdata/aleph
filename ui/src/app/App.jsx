@@ -83,13 +83,15 @@ function App() {
   // extends blueprint icon renderer to render icons from the ftm iconRegistry
   initializeIconRenderer();
   expireRecentlyViewed();
-  
+
   return (
     <Provider store={store}>
       <Translator>
         <HotkeysProvider>
           <BrowserRouter>
-            <Route path="/" component={Router} />
+            <Route path="/">
+              <Router />
+            </Route>
           </BrowserRouter>
         </HotkeysProvider>
       </Translator>
