@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { FocusStyleManager, HotkeysProvider } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
@@ -89,9 +89,7 @@ function App() {
       <Translator>
         <HotkeysProvider>
           <BrowserRouter>
-            <Route path="/">
-              <Router />
-            </Route>
+            <Router />
           </BrowserRouter>
         </HotkeysProvider>
       </Translator>
