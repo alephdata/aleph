@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup } from '@blueprintjs/core';
@@ -79,7 +79,7 @@ class EntityScreen extends Component {
     const { entity, entityId, intl, parsedHash } = this.props;
     if (entity.profileId && parsedHash.profile === undefined) {
       parsedHash.via = entity.id;
-      return <Redirect to={getProfileLink(entity.profileId, parsedHash)} />;
+      return <Navigate to={getProfileLink(entity.profileId, parsedHash)} replace />;
     }
 
     if (entity.isError) {

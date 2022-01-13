@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Redirect, Routes } from 'react-router-dom';
+import { Route, Navigate, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
@@ -74,19 +74,19 @@ class Router extends Component {
             <Route path="/pages/:page" exact children={<PagesScreen />} />
             <Route path="/activate/:code" exact children={<ActivateScreen />} />
             <Route path="/entities/:entityId" exact children={<EntityScreen />} />
-            <Route path="/text/:documentId" render={() => <Redirect to="/entities/:documentId" />} />
-            <Route path="/tabular/:documentId/:sheet" render={() => <Redirect to="/entities/:documentId" />} />
-            <Route path="/documents/:documentId" render={() => <Redirect to="/entities/:documentId" />} />
+            <Route path="/text/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
+            <Route path="/tabular/:documentId/:sheet" render={() => <Navigate to="/entities/:documentId" replace />} />
+            <Route path="/documents/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
             <Route path="/datasets" exact children={<DatasetIndexScreen />} />
-            <Route path="/sources" render={() => <Redirect to="/datasets" />} />
+            <Route path="/sources" render={() => <Navigate to="/datasets" replace />} />
             <Route path="/investigations" exact children={<InvestigationIndexScreen />} />
-            <Route path="/cases" render={() => <Redirect to="/investigations" />} />
-            <Route path="/collections/:collectionId/documents" render={() => <Redirect to="/datasets/:collectionId" />} />
+            <Route path="/cases" render={() => <Navigate to="/investigations" replace />} />
+            <Route path="/collections/:collectionId/documents" render={() => <Navigate to="/datasets/:collectionId" replace />} />
             <Route path="/datasets/:collectionId" exact children={<CollectionScreen />} />
             <Route path="/investigations/:collectionId" exact children={<InvestigationScreen />} />
-            <Route path="/collections/:collectionId" render={() => <Redirect to="/datasets/:collectionId" />} />
-            <Route path="/collections/:collectionId/xref/:otherId" render={() => <Redirect to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />} />
-            <Route path="/datasets/:collectionId/xref/:otherId" render={() => <Redirect to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />} />
+            <Route path="/collections/:collectionId" render={() => <Navigate to="/datasets/:collectionId" replace />} />
+            <Route path="/collections/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
+            <Route path="/datasets/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
             <Route path="/profiles/:profileId" exact children={<ProfileScreen />} />
             <Route path="/diagrams/:entitySetId" exact children={<DiagramScreen />} />
             <Route path="/diagrams" exact children={<EntitySetIndexScreen />} />

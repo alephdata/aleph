@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
 import withRouter from 'app/withRouter'
 import { fetchEntitySet } from 'actions';
@@ -39,13 +39,13 @@ export class EntitySetScreen extends Component {
 
     switch(entitySet.type) {
       case 'diagram':
-        return <Redirect to={`/diagrams/${entitySetId}`} />;
+        return <Navigate to={`/diagrams/${entitySetId}`} replace />;
       case 'list':
-        return <Redirect to={`/lists/${entitySetId}`} />;
+        return <Navigate to={`/lists/${entitySetId}`} replace />;
       case 'timeline':
-        return <Redirect to={`/timelines/${entitySetId}`} />;
+        return <Navigate to={`/timelines/${entitySetId}`} replace />;
       case 'profile':
-        return <Redirect to={`/profiles/${entitySetId}`} />;
+        return <Navigate to={`/profiles/${entitySetId}`} replace />;
       default:
         return <ErrorScreen error={entitySet.error} />;
     }

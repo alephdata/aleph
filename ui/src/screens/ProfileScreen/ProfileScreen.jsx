@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router-dom';
 import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
@@ -108,7 +108,7 @@ class ProfileScreen extends Component {
 
     if (profile.isError || (!itemsResult.isPending && !itemsResult.total)) {
       if (viaEntityId) {
-        return <Redirect to={getEntityLink(viaEntityId, false)} />;
+        return <Navigate to={getEntityLink(viaEntityId, false)} replace />;
       }
       return <ErrorScreen error={profile.error} />;
     }

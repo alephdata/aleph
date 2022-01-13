@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
 import withRouter from 'app/withRouter'
 import Screen from 'components/Screen/Screen';
@@ -27,7 +27,7 @@ export class InvestigationScreen extends Component {
     }
 
     if (collection.casefile === false) {
-      return <Redirect to={`/datasets/${collectionId}`} />;
+      return <Navigate to={`/datasets/${collectionId}`} replace />;
     }
 
     const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;

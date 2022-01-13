@@ -1,6 +1,6 @@
 import React from 'react';
 import queryString from 'query-string';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { loginWithToken } from 'actions/sessionActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ class OAuthScreen extends React.Component {
     const { location } = this.props;
     const query = queryString.parse(location.search);
     const nextPath = query.next || '/';
-    return <Redirect to={nextPath} />;
+    return <Navigate to={nextPath} replace />;
   }
 }
 

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw'
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -69,7 +69,7 @@ export class HomeScreen extends Component {
   render() {
     const { intl, metadata, statistics = {}, session } = this.props;
     if (session.loggedIn) {
-      return <Redirect to="/notifications" />;
+      return <Navigate to="/notifications" replace />;
     }
 
     const appHomePage = metadata.pages.find(page => page.home);
