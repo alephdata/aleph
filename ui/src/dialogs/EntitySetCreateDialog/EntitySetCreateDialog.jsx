@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import Query from 'app/Query';
 import { Collection, EntitySet, FileImport } from 'components/common';
 import CreateInvestigationDialog from 'dialogs/CreateInvestigationDialog/CreateInvestigationDialog';

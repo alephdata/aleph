@@ -1,8 +1,8 @@
 import React from 'react';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
+import withRouter from 'app/withRouter'
 import CollectionStatistics from './CollectionStatistics';
 import CollectionDateHistogram from './CollectionDateHistogram';
 import { selectCollection } from 'selectors';

@@ -3,11 +3,11 @@ import React from 'react';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import {
   selectEntitiesResult, selectSchema,
 } from 'selectors';

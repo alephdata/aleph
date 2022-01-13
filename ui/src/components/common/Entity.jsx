@@ -1,10 +1,10 @@
 import React, { Component, PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import c from 'classnames';
 import { Entity as VLEntity } from '@alephdata/react-ftm';
 
+import withRouter from 'app/withRouter'
 import EntitySelect from 'components/common/EntitySelect';
 import togglePreview from 'util/togglePreview';
 import { fetchEntity } from 'actions';

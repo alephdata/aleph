@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { fetchEntitySet, queryEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router';
+import { Redirect } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup } from '@blueprintjs/core';
@@ -24,6 +24,7 @@ import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
 import { setRecentlyViewedItem } from 'app/storage';
+import withRouter from 'app/withRouter'
 
 import 'components/common/ItemOverview.scss';
 

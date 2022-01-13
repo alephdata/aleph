@@ -2,10 +2,10 @@ import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import { collectionMappingsQuery } from 'queries';
 import getEntityLink from 'util/getEntityLink';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';

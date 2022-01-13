@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Alignment, ButtonGroup, Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { SchemaCounts } from 'components/common';

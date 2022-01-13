@@ -5,8 +5,8 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { ErrorSection, Date, QueryInfiniteLoad, QueryText, Skeleton } from 'components/common';
 import { queryAlerts, createAlert, deleteAlert } from 'actions';
 import { selectAlertResult } from 'selectors';

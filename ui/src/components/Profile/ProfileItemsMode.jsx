@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout, Intent } from '@blueprintjs/core';
 import c from 'classnames';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { selectEntitySetItemsResult } from 'selectors';
 import {
   JudgementButtons, Collection, EntityDecisionHotkeys, EntityDecisionRow,

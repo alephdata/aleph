@@ -4,7 +4,8 @@ import { Tab, Tabs, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';

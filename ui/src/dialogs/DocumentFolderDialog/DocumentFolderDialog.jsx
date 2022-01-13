@@ -3,7 +3,8 @@ import { Intent, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import { forceMutate, ingestDocument } from 'actions';
 import { showErrorToast } from 'app/toast';
 import FormDialog from 'dialogs/common/FormDialog';

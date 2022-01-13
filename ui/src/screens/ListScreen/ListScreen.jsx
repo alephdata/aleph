@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult, selectModel } from 'selectors';
 import { entitySetSchemaCountsQuery, entitySetEntitiesQuery } from 'queries';

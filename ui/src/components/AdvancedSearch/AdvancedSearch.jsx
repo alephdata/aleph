@@ -2,7 +2,7 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import withRouter from 'app/withRouter'
 import queryString from 'query-string';
 import { Button, Classes, Drawer, FormGroup, Intent, Position, TagInput } from '@blueprintjs/core';
 

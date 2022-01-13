@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router';
+import { Redirect } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import Screen from 'components/Screen/Screen';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';

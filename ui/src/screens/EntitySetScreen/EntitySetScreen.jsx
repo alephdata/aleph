@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router';
+import { Redirect } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { fetchEntitySet } from 'actions';
 import { selectEntitySet } from 'selectors';
 import LoadingScreen from 'components/Screen/LoadingScreen';

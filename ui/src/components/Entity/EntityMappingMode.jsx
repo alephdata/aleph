@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-
+import withRouter from 'app/withRouter'
 import { csvContextLoader, SectionLoading } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import MappingImportDialog from 'dialogs/MappingImportDialog/MappingImportDialog';

@@ -3,8 +3,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { HotkeysContainer } from 'components/common';
 
 

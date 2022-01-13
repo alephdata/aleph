@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import { Count, ResultCount } from 'components/common';
 import { collectionXrefFacetsQuery } from 'queries';
 import { selectCollection, selectModel, selectCollectionXrefResult } from 'selectors';

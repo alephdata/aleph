@@ -6,10 +6,10 @@ import {
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Callout, Intent } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import Query from 'app/Query';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Screen from 'components/Screen/Screen';

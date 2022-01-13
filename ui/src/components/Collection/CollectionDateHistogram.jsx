@@ -1,10 +1,10 @@
 import React from 'react';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { collectionSearchQuery } from 'queries';
 import { selectCollection, selectEntitiesResult } from 'selectors';
 import { queryEntities } from 'actions';

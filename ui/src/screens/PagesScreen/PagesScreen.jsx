@@ -5,8 +5,8 @@ import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import Screen from 'components/Screen/Screen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { AppItem } from 'components/common';

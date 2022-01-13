@@ -5,9 +5,9 @@ import queryString from 'query-string';
 import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import AdvancedSearch from 'components/AdvancedSearch/AdvancedSearch';
 import AuthButtons from 'components/AuthButtons/AuthButtons';
 import { selectMetadata, selectSession, selectPages, selectEntitiesResult } from 'selectors';

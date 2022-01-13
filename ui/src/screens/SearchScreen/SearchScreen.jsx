@@ -2,7 +2,8 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import { selectEntitiesResult } from 'selectors';
 import { triggerQueryExport } from 'src/actions';
 import { SignInCallout } from 'components/common';

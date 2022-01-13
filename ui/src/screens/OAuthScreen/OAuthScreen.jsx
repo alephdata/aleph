@@ -4,7 +4,8 @@ import { Redirect } from 'react-router-dom';
 import { loginWithToken } from 'actions/sessionActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 
 
 class OAuthScreen extends React.Component {

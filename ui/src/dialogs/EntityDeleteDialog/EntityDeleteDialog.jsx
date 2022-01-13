@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import { Alert, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { Entity } from 'components/common';
 import { showErrorToast, showSuccessToast } from 'app/toast';
 import getCollectionLink from 'util/getCollectionLink';

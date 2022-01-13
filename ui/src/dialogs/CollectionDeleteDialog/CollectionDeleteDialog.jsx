@@ -3,7 +3,8 @@ import { Alert, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import { deleteCollection } from 'actions';
 import { Collection } from 'components/common';
 

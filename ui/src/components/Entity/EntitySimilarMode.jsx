@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { querySimilar } from 'actions';
 import { selectSimilarResult } from 'selectors';
 import {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
+import withRouter from 'app/withRouter'
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';

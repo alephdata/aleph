@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import EntitySearchResults from './EntitySearchResults';

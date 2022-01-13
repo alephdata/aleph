@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { selectModel } from 'selectors';
 import { collectionSearchQuery } from 'queries';
 import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';

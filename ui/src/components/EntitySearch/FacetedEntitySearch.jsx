@@ -5,9 +5,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Alignment, Button, Divider, Drawer, Intent, Position } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import c from 'classnames'
 
+import withRouter from 'app/withRouter'
 import { triggerQueryExport } from 'src/actions';
 import { setSearchConfig, getSearchConfig } from 'app/storage';
 import { getGroupField } from 'components/SearchField/util';

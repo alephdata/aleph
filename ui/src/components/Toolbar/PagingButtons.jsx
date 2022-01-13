@@ -1,9 +1,9 @@
 import React from 'react';
-import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup, AnchorButton, Divider, InputGroup } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
 
 import './PagingButtons.scss';

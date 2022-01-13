@@ -2,10 +2,10 @@ import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Button, ProgressBar, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
+import withRouter from 'app/withRouter'
 import { Collection, ErrorSection, Numeric, Skeleton } from 'components/common';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';

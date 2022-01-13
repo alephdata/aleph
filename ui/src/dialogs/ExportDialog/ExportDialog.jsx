@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
+import withRouter from 'app/withRouter'
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 
 const messages = defineMessages({

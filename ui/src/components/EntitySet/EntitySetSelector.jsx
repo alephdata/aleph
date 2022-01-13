@@ -3,9 +3,9 @@ import { Drawer, Spinner } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
 import { showSuccessToast, showWarningToast } from 'app/toast';

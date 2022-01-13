@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import DocumentDropzone from 'components/Document/DocumentDropzone';

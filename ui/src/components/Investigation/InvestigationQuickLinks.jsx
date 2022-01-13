@@ -2,10 +2,10 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EntityCreateDialog } from '@alephdata/react-ftm';
 
+import withRouter from 'app/withRouter'
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { showSuccessToast, showErrorToast } from 'app/toast';

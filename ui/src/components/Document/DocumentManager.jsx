@@ -5,9 +5,9 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';

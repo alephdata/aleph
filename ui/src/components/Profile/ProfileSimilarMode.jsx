@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { selectSimilarResult } from 'selectors';
 import {
   QueryInfiniteLoad, JudgementButtons, Score, Collection, EntityDecisionHotkeys, EntityDecisionRow,

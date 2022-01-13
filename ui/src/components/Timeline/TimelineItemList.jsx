@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
 import TimelineItem from 'components/Timeline/TimelineItem';
 

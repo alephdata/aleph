@@ -4,7 +4,8 @@ import { throttle } from 'lodash';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import Query from 'app/Query';
 import { PagingButtons } from 'components/Toolbar';
 import { SectionLoading, Skeleton } from 'components/common';

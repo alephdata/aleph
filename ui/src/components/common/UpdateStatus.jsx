@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Prompt, withRouter } from 'react-router';
+import { Prompt } from 'react-router';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
+
+import withRouter from 'app/withRouter'
 
 const messages = defineMessages({
   status_success: {

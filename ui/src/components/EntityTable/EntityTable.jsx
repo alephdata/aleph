@@ -4,10 +4,10 @@ import { Divider } from '@blueprintjs/core';
 import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
+import withRouter from 'app/withRouter'
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { Count, ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';

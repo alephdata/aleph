@@ -2,11 +2,11 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import SearchField from 'components/SearchField/SearchField';
 import { getGroupField } from 'components/SearchField/util';
 import { Country, Numeric, Schema, Statistics } from 'components/common';

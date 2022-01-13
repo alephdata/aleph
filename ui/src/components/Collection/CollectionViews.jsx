@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
