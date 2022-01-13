@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import { FormattedDate } from 'react-intl'
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, FormattedDate, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 
-import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToLabel } from 'components/Facet/util';
+import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToLabel, isDateIntervalUncertain } from 'components/Facet/util';
 import { selectLocale } from 'selectors'
-
 
 import './DateFacet.scss';
 
@@ -119,8 +117,22 @@ export class DateFilter extends Component {
     return <span className="DateFacet__parent-label">{content}</span>
   }
 
+  formatData(dataPropName) {
+    const { facetInterval, filteredIntervals, locale } = this.props;
+
+    return filteredIntervals.map(({ label, count, id }) => {
+      const isUncertain = facetInterval !== 'year' && isDateIntervalUncertain(label, facetInterval)
+      return ({
+        ...timestampToLabel(label, facetInterval, locale, isUncertain),
+        [dataPropName]: count,
+        isUncertain,
+        id
+      })
+    })
+  }
+
   render() {
-    const { dataLabel, emptyComponent, facetInterval, filteredIntervals, intl, displayShowHiddenToggle, locale, showAll, showLabel = true } = this.props;
+    const { dataLabel, emptyComponent, facetInterval, filteredIntervals, intl, displayShowHiddenToggle, showLabel = true } = this.props;
     let content;
 
     if (filteredIntervals) {
@@ -129,11 +141,13 @@ export class DateFilter extends Component {
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);
 
+        console.log(this.formatData(dataPropName))
+
         content = (
           <>
             {facetInterval !== 'year' && this.renderParentLabel()}
             <Histogram
-              data={filteredIntervals.map(({ label, count, ...rest }) => ({ label: timestampToLabel(label, facetInterval, locale), [dataPropName]: count, ...rest }))}
+              data={this.formatData(dataPropName)}
               dataPropName={dataPropName}
               onSelect={this.onSelect}
               containerProps={{
@@ -177,12 +191,13 @@ const mapStateToProps = (state, ownProps) => {
 
   if (intervals) {
     const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ field, query, intervals, useDefaultBounds: !showAll })
+    const locale = selectLocale(state);
     return {
       filteredIntervals,
       displayShowHiddenToggle: hasOutOfRange,
       facetInterval: query.getString(`facet_interval:${field}`),
       showAll,
-      locale: selectLocale(state)
+      locale: locale === 'en' ? 'en-gb' : locale
     };
   }
   return {};

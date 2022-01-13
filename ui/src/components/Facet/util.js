@@ -24,15 +24,35 @@ const cleanDateQParam = (value) => {
   }
 };
 
-const timestampToLabel = (timestamp, granularity, locale) => {
+const timestampToLabel = (timestamp, granularity, locale, isUncertain) => {
   const dateObj = new Date(timestamp)
+  let label, tooltipLabel;
 
   if (granularity === 'month') {
-    return new Intl.DateTimeFormat(locale, { month: 'short' }).format(dateObj)
+    label = new Intl.DateTimeFormat(locale, { month: 'short' }).format(dateObj)
+    tooltipLabel = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dateObj)
+
+    if (isUncertain) {
+      tooltipLabel = `${dateObj.getFullYear()} / ${tooltipLabel}`
+    }
   } else if (granularity === 'day') {
-    return `${dateObj.getDate()}`
+    label = dateObj.getDate()
+    tooltipLabel = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric', day: 'numeric' }).format(dateObj)
+
+    if (isUncertain) {
+      const uncertainMonth = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dateObj)
+
+      if (dateObj.getMonth() === 0) {
+        tooltipLabel = `${dateObj.getFullYear()} / ${uncertainMonth} / ${tooltipLabel}`
+      } else {
+        tooltipLabel = `${uncertainMonth} / ${tooltipLabel}`
+      }
+    }
+  } else {
+    label = tooltipLabel = dateObj.getFullYear();
   }
-  return dateObj.getFullYear()
+
+  return ({ label, tooltipLabel })
 }
 
 const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
@@ -69,10 +89,23 @@ const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
   return { filteredIntervals, hasOutOfRange };
 }
 
+const isDateIntervalUncertain = (timestamp, granularity) => {
+  const dateObj = new Date(timestamp)
+
+  if (granularity === 'month' && dateObj.getMonth() === 0) {
+    return true;
+  } else if (granularity === 'day' && dateObj.getDate() === 1) {
+    return true;
+  }
+
+  return false;
+}
+
 export {
   cleanDateQParam,
   DEFAULT_START_INTERVAL,
   formatDateQParam,
   timestampToLabel,
+  isDateIntervalUncertain,
   filterDateIntervals
 }
