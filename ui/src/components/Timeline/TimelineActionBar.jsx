@@ -25,8 +25,8 @@ class TimelineActionBar extends Component {
   }
 
   toggleExpanded() {
-    const { expandedMode, history, location } = this.props;
-    history.push({
+    const { expandedMode, navigate, location } = this.props;
+    navigate({
       ...location,
       hash: queryString.stringify({ expanded: !expandedMode })
     })

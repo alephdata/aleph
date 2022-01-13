@@ -25,10 +25,10 @@ class ProfileViews extends React.Component {
   }
 
   handleTabChange(mode) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.mode = mode;
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),

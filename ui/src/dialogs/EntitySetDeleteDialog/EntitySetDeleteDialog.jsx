@@ -33,12 +33,12 @@ class EntitySetDeleteDialog extends Component {
   }
 
   onDelete() {
-    const { entitySet, history, intl } = this.props;
+    const { entitySet, navigate, intl } = this.props;
     this.props.deleteEntitySet(entitySet.id).then(() => (
       showSuccessToast(intl.formatMessage(messages.success, { title: entitySet.label }))
     ));
 
-    history.push(
+    navigate(
       getCollectionLink({ collection: entitySet.collection })
     );
   }

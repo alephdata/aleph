@@ -84,7 +84,7 @@ class CreateInvestigationDialog extends Component {
 
 
   async onSubmit() {
-    const { history, createCollection, toggleDialog, updateCollectionPermissions, preventRedirect } = this.props;
+    const { navigate, createCollection, toggleDialog, updateCollectionPermissions, preventRedirect } = this.props;
     const { collection, permissions } = this.state;
     if (!this.checkValid()) return;
     this.setState({ blocking: true });
@@ -96,7 +96,7 @@ class CreateInvestigationDialog extends Component {
       if (preventRedirect) {
         toggleDialog(response.data);
       } else {
-        history.push(getCollectionLink({ collection: response.data }));
+        navigate(getCollectionLink({ collection: response.data }));
       }
     } catch (e) {
       this.setState({ blocking: false });

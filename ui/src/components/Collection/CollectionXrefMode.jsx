@@ -42,11 +42,11 @@ export class CollectionXrefMode extends React.Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.selectedId = undefined;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: queryString.stringify(parsedHash),

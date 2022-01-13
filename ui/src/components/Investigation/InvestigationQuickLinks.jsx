@@ -31,16 +31,16 @@ const messages = defineMessages({
 
 class InvestigationQuickLinks extends React.Component {
   onDocUpload = () => {
-    const { history, location, } = this.props;
+    const { navigate, location, } = this.props;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       hash: queryString.stringify({ mode: collectionViewIds.DOCUMENTS }),
     });
   }
 
   onEntityCreate = async (entityData) => {
-    const { entityManager, history, intl, location, } = this.props;
+    const { entityManager, navigate, intl, location, } = this.props;
 
     if (!entityData) {
       showErrorToast(intl.formatMessage(messages.entity_create_error));
@@ -49,7 +49,7 @@ class InvestigationQuickLinks extends React.Component {
     const entity = await entityManager.createEntity(entityData);
     if (entity) {
       showSuccessToast(intl.formatMessage(messages.entity_create_success, { name: entity.getCaption() }));
-      history.push({
+      navigate({
         pathname: location.pathname,
         hash: queryString.stringify({ mode: collectionViewIds.ENTITIES, type: entityData.schema.name }),
       });
@@ -57,8 +57,8 @@ class InvestigationQuickLinks extends React.Component {
   }
 
   onXrefSubmit = () => {
-    const { history, location } = this.props;
-    history.push({
+    const { navigate, location } = this.props;
+    navigate({
       pathname: location.pathname,
       hash: queryString.stringify({ mode: collectionViewIds.XREF }),
     });

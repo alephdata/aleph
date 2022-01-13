@@ -28,10 +28,10 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { collection, history } = this.props;
+    const { collection, navigate } = this.props;
     const path = collection.casefile ? '/investigations' : '/datasets';
     await this.props.deleteCollection(collection);
-    history.push({ pathname: path });
+    navigate({ pathname: path });
   }
 
   render() {

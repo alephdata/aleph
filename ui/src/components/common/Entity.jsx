@@ -20,10 +20,10 @@ class EntityLink extends PureComponent {
   }
 
   onClick(event) {
-    const { entity, history, preview, profile = true} = this.props;
+    const { entity, navigate, location, preview, profile = true} = this.props;
     if (preview) {
       event.preventDefault();
-      togglePreview(history, entity, profile);
+      togglePreview(navigate, location, entity, profile);
     }
   }
 

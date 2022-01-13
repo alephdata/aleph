@@ -35,7 +35,7 @@ export class PagesScreen extends React.Component {
   }
 
   navigate(path) {
-    this.props.history.push(path);
+    this.props.navigate(path);
   }
 
   render() {

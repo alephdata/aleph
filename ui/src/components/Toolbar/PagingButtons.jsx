@@ -50,12 +50,12 @@ class PagingButtons extends React.Component {
 
   goToPage = (e) => {
     e.preventDefault();
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
 
     const parsedHash = queryString.parse(location.hash);
     parsedHash.page = this.state.pageInputVal;
 
-    history.push({
+    navigate({
       hash: queryString.stringify(parsedHash),
     });
   }

@@ -35,9 +35,9 @@ class CollectionDateHistogram extends React.Component {
   }
 
   onDateIntervalSelect(newQuery) {
-    const { collection, history } = this.props;
+    const { collection, navigate } = this.props;
 
-    history.push(
+    navigate(
       getCollectionLink({
         collection,
         mode: collectionViewIds.SEARCH,

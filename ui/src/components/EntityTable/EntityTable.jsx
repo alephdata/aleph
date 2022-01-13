@@ -89,8 +89,8 @@ export class EntityTable extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.push({
+    const { navigate, location } = this.props;
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: location.hash,
@@ -111,8 +111,8 @@ export class EntityTable extends Component {
 
   onEntityClick = (entity) => {
     if (entity) {
-      const { history } = this.props;
-      history.push(getEntityLink(entity));
+      const { navigate } = this.props;
+      navigate(getEntityLink(entity));
     }
   }
 
@@ -167,9 +167,9 @@ export class EntityTable extends Component {
 
   onDocSelected(table) {
     if (!table?.id) return;
-    const { history, schema } = this.props;
+    const { navigate, schema } = this.props;
     const pathname = getEntityLink(table);
-    history.push({ pathname, hash: queryString.stringify({ mode: 'mapping', schema: schema.name }) });
+    navigate({ pathname, hash: queryString.stringify({ mode: 'mapping', schema: schema.name }) });
   }
 
   clearSelection() {

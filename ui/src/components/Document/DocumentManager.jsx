@@ -84,8 +84,8 @@ export class DocumentManager extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.push({
+    const { navigate, location } = this.props;
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: location.hash,
@@ -99,10 +99,10 @@ export class DocumentManager extends Component {
   }
 
   openMappingEditor() {
-    const { history } = this.props;
+    const { navigate } = this.props;
     const { selection } = this.state;
     const pathname = getEntityLink(selection[0]);
-    history.push({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
+    navigate({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
   }
 
   render() {

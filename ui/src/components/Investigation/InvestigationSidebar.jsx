@@ -20,11 +20,11 @@ class InvestigationSidebar extends React.Component {
   }
 
   navigate(mode, type) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.mode = mode;
     parsedHash.type = type || undefined;
-    history.push({
+    navigate({
       pathname: location.pathname,
       hash: queryString.stringify(parsedHash),
     });

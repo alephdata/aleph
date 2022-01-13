@@ -32,7 +32,7 @@ export class ExportDialog extends Component {
   }
 
   async onExport() {
-    const { history, intl, onExport, toggleDialog } = this.props;
+    const { navigate, intl, onExport, toggleDialog } = this.props;
     try {
       await onExport();
       showSuccessToast({
@@ -41,7 +41,7 @@ export class ExportDialog extends Component {
           small: true,
           icon: 'share',
           text: intl.formatMessage(messages.dashboard_link),
-          onClick: () => history.push('/exports')
+          onClick: () => navigate('/exports')
         }
       });
       toggleDialog();

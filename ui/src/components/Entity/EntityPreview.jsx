@@ -41,8 +41,9 @@ export class EntityPreview extends React.Component {
   }
 
   onClose(event) {
+    const { navigate, location } = this.props
     this.onUnmount();
-    togglePreview(this.props.history, null);
+    togglePreview(navigate, location, null);
   }
 
   renderContext() {

@@ -97,10 +97,10 @@ export class PdfViewer extends Component {
   }
 
   onSearch(queryText) {
-    const { history, location, baseQuery } = this.props;
+    const { navigate, location, baseQuery } = this.props;
     const newQuery = baseQuery.setString('q', queryText);
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
     });

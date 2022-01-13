@@ -34,7 +34,7 @@ class TimelineItemList extends Component {
   }
 
   async createNewItem(color) {
-    const { entityManager, history, location, onHideDraft } = this.props;
+    const { entityManager, navigate, location, onHideDraft } = this.props;
     const { schema, properties } = this.state.draftEntity;
 
     const simplifiedProps = {};
@@ -46,11 +46,11 @@ class TimelineItemList extends Component {
     this.onColorSelect(entity.id, color);
     onHideDraft();
 
-    history.replace({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify({ ...queryString.parse(location.hash), id: entity.id })
-    })
+    }, { replace: true })
   }
 
   createNewReferencedEntity(entity) {

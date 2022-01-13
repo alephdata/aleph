@@ -65,16 +65,16 @@ class EntityDecisionHotkeys extends Component {
   }
 
   updateQuery(nextSelected) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
 
     const parsedHash = queryString.parse(location.hash);
     parsedHash.selectedIndex = nextSelected;
 
-    history.replace({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),
-    });
+    }, { replace: true });
   }
 
   selectNext() {

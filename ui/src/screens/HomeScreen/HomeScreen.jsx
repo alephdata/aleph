@@ -57,8 +57,8 @@ export class HomeScreen extends Component {
   }
 
   onSubmit(queryText) {
-    const { history } = this.props;
-    history.push({
+    const { navigate } = this.props;
+    navigate({
       pathname: '/search',
       search: queryString.stringify({
         q: queryText,

@@ -64,10 +64,10 @@ class AlertsDialog extends Component {
   }
 
   onSearch(alert, event) {
-    const { history } = this.props;
+    const { navigate } = this.props;
     event.preventDefault();
     const search = queryString.stringify({ q: alert.query });
-    history.push({ pathname: '/search', search: search });
+    navigate({ pathname: '/search', search: search });
   }
 
   onChangeAddingInput({ target }) {

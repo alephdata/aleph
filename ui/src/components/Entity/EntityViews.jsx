@@ -32,14 +32,14 @@ class EntityViews extends React.Component {
   }
 
   handleTabChange(mode) {
-    const { history, location, isPreview } = this.props;
+    const { navigate, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
     if (isPreview) {
       parsedHash['preview:mode'] = mode;
     } else {
       parsedHash.mode = mode;
     }
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),

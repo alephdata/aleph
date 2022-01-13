@@ -47,7 +47,7 @@ export class DocumentFolderDialog extends Component {
 
   async onSubmit() {
     const {
-      intl, collection, parent, history,
+      intl, collection, parent, navigate,
     } = this.props;
     const { title } = this.state;
     this.setState({ blocking: true });
@@ -65,7 +65,7 @@ export class DocumentFolderDialog extends Component {
 
       this.props.forceMutate();
 
-      history.push({
+      navigate({
         pathname: `/documents/${result.id}`,
       });
     } catch (e) {

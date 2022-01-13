@@ -45,12 +45,12 @@ export class DateFilter extends Component {
   }
 
   toggleShowHidden() {
-    const { query, history, location, showAll } = this.props;
+    const { query, navigate, location, showAll } = this.props;
 
     const parsedHash = queryString.parse(location.hash);
     parsedHash['show_all_dates'] = !showAll;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: query.toLocation(),
       hash: queryString.stringify(parsedHash),

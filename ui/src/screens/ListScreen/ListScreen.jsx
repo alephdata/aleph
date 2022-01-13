@@ -45,10 +45,10 @@ export class ListScreen extends Component {
   }
 
   navigate(schema) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = schema;
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: "",
       hash: queryString.stringify(parsedHash),

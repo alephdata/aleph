@@ -54,14 +54,14 @@ export class Navbar extends React.Component {
   }
 
   onSearchSubmit(queryText) {
-    const { history, query } = this.props;
+    const { navigate, query } = this.props;
     let search = queryString.stringify({ q: queryText });
     if (query) {
       const newQuery = query.set('q', queryText);
       search = newQuery.toLocation();
     }
 
-    history.push({
+    navigate({
       pathname: '/search',
       search
     });

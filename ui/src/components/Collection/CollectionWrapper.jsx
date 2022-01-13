@@ -33,20 +33,20 @@ export class CollectionWrapper extends Component {
   }
 
   onSearch(queryText) {
-    const { collection, history, query } = this.props;
+    const { collection, navigate, query } = this.props;
     const newQuery = query.set('q', queryText);
-    history.push(
+    navigate(
       getCollectionLink({ collection, mode: collectionViewIds.SEARCH, search: newQuery.toLocation() })
     );
   }
 
   onUploadSuccess() {
-    const { collection, dropzoneFolderParent, history, location } = this.props;
+    const { collection, dropzoneFolderParent, navigate, location } = this.props;
     if (dropzoneFolderParent) {
       return;
     }
 
-    history.push(
+    navigate(
       getCollectionLink({
         collection,
         mode: collectionViewIds.DOCUMENTS,

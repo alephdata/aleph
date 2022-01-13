@@ -23,7 +23,7 @@ class ProfileItemsMode extends Component {
   }
 
   async onDecide(obj) {
-    const { profile, location, history } = this.props;
+    const { profile, location, navigate } = this.props;
     try {
       const item = await this.props.updateEntitySetItemMutate({
         judgement: obj.judgement,
@@ -31,11 +31,11 @@ class ProfileItemsMode extends Component {
         entityId: obj.entity.id,
       });
       if (item.data.entityset_id && profile.id !== item.data.entityset_id) {
-        history.replace({
+        navigate({
           pathname: `/profiles/${item.data.entityset_id}`,
           search: location.search,
           hash: location.hash,
-        });
+        }, { replace: true });
       }
     } catch (e) {
       showWarningToast(e.message);

@@ -24,10 +24,10 @@ const messages = defineMessages({
 
 class CollectionMappingsMode extends React.Component {
   onDocSelected = (doc) => {
-    const { history } = this.props;
+    const { navigate } = this.props;
     const pathname = getEntityLink(doc);
     if (pathname) {
-      history.push({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
+      navigate({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
     }
   }
 

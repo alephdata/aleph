@@ -56,7 +56,7 @@ export class GroupScreen extends Component {
   }
 
   async goToEntitySearch() {
-    const { history, groupId } = this.props;
+    const { navigate, groupId } = this.props;
 
     const query = new Query('collections', {}, { 'filter:team_id': groupId }, 'collections').limit(1000);
     try {
@@ -69,7 +69,7 @@ export class GroupScreen extends Component {
           'facet_size:collection_id': 10,
           'facet_total:collection_id': true,
         };
-        history.push({
+        navigate({
           pathname: '/search',
           search: queryString.stringify(params)
         })

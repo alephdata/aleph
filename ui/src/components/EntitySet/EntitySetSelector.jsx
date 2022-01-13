@@ -105,7 +105,7 @@ class EntitySetSelector extends Component {
   }
 
   onSuccess(entitySet) {
-    const { entities, history, intl, onSuccess, toggleDialog, triggerMutationOnCreate = true } = this.props;
+    const { entities, navigate, intl, onSuccess, toggleDialog, triggerMutationOnCreate = true } = this.props;
     this.setState({ processing: false });
 
     if (triggerMutationOnCreate) {
@@ -115,7 +115,7 @@ class EntitySetSelector extends Component {
           small: true,
           icon: 'share',
           text: intl.formatMessage(messages.success_button),
-          onClick: () => history.push({ pathname: getEntitySetLink(entitySet) })
+          onClick: () => navigate({ pathname: getEntitySetLink(entitySet) })
         }
       });
     }

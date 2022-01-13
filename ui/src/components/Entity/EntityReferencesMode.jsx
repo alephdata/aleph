@@ -50,9 +50,9 @@ class EntityReferencesMode extends React.Component {
   }
 
   onSearchSubmit(queryText) {
-    const { query, history, location } = this.props;
+    const { query, navigate, location } = this.props;
     const newQuery = query.set('q', queryText);
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: location.hash,
@@ -60,13 +60,13 @@ class EntityReferencesMode extends React.Component {
   }
 
   onExpand(entity) {
-    const { expandedId, parsedHash, history, location } = this.props;
+    const { expandedId, parsedHash, navigate, location } = this.props;
     parsedHash.expand = expandedId === entity.id ? undefined : entity.id;
-    history.replace({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),
-    });
+    }, { replace: true });
   }
 
   renderCell(prop, entity) {

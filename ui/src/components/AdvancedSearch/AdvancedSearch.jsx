@@ -116,10 +116,10 @@ class AdvancedSearch extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { history } = this.props;
+    const { navigate } = this.props;
     const queryText = isClear ? '' : composeQueryText(this.state);
 
-    history.push({
+    navigate({
       pathname: '/search',
       search: queryString.stringify({ q: queryText }),
     });

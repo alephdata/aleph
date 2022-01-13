@@ -118,7 +118,7 @@ class EntitySetCreateDialog extends Component {
   }
 
   async onSubmit() {
-    const { history, entitySet, intl } = this.props;
+    const { navigate, entitySet, intl } = this.props;
     const { label, entities, summary, collection, layout } = this.state;
     if (!this.checkValid()) return;
     const { type } = entitySet;
@@ -139,7 +139,7 @@ class EntitySetCreateDialog extends Component {
       }
 
       const response = await this.props.createEntitySet(newEntitySet);
-      history.push({
+      navigate({
         pathname: getEntitySetLink(response.data),
       });
 

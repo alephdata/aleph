@@ -29,13 +29,13 @@ class CollectionViews extends React.Component {
   }
 
   handleTabChange(mode) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     parsedHash.mode = mode;
     delete parsedHash.type;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       hash: queryString.stringify(parsedHash),
     });

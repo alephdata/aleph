@@ -61,17 +61,17 @@ class EntityScreen extends Component {
   }
 
   cleanHash() {
-    const { entity, history, location, parsedHash } = this.props;
+    const { entity, navigate, location, parsedHash } = this.props;
 
     // if an entity does not have an associated profile, ensure profile=false is removed from hash
     if (!!entity.id && !entity.profileId && !!parsedHash.profile) {
       delete parsedHash.profile;
 
-      history.replace({
+      navigate({
         pathname: location.pathname,
         search: location.search,
         hash: queryString.stringify(parsedHash),
-      });
+      }, { replace: true });
     }
   }
 
