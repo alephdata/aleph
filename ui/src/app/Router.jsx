@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { Route, Redirect, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
@@ -68,7 +68,7 @@ class Router extends Component {
       <>
         <Navbar />
         <Suspense fallback={Loading}>
-          <Switch>
+          <Routes>
             <Route path="/oauth" exact children={<OAuthScreen />} />
             <Route path="/logout" exact children={<LogoutScreen />} />
             <Route path="/pages/:page" exact children={<PagesScreen />} />
@@ -104,7 +104,7 @@ class Router extends Component {
             <Route path="/groups/:groupId" exact children={<GroupScreen />} />
             <Route path="/" exact children={<HomeScreen />} />
             <Route children={<NotFoundScreen />} />
-          </Switch>
+          </Routes>
         </Suspense>
       </>
     );
