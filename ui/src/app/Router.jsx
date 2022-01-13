@@ -69,41 +69,41 @@ class Router extends Component {
         <Navbar />
         <Suspense fallback={Loading}>
           <Routes>
-            <Route path="/oauth" exact children={<OAuthScreen />} />
-            <Route path="/logout" exact children={<LogoutScreen />} />
-            <Route path="/pages/:page" exact children={<PagesScreen />} />
-            <Route path="/activate/:code" exact children={<ActivateScreen />} />
-            <Route path="/entities/:entityId" exact children={<EntityScreen />} />
+            <Route path="/oauth" exact element={<OAuthScreen />} />
+            <Route path="/logout" exact element={<LogoutScreen />} />
+            <Route path="/pages/:page" exact element={<PagesScreen />} />
+            <Route path="/activate/:code" exact element={<ActivateScreen />} />
+            <Route path="/entities/:entityId" exact element={<EntityScreen />} />
             <Route path="/text/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
             <Route path="/tabular/:documentId/:sheet" render={() => <Navigate to="/entities/:documentId" replace />} />
             <Route path="/documents/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
-            <Route path="/datasets" exact children={<DatasetIndexScreen />} />
+            <Route path="/datasets" exact element={<DatasetIndexScreen />} />
             <Route path="/sources" render={() => <Navigate to="/datasets" replace />} />
-            <Route path="/investigations" exact children={<InvestigationIndexScreen />} />
+            <Route path="/investigations" exact element={<InvestigationIndexScreen />} />
             <Route path="/cases" render={() => <Navigate to="/investigations" replace />} />
             <Route path="/collections/:collectionId/documents" render={() => <Navigate to="/datasets/:collectionId" replace />} />
-            <Route path="/datasets/:collectionId" exact children={<CollectionScreen />} />
-            <Route path="/investigations/:collectionId" exact children={<InvestigationScreen />} />
+            <Route path="/datasets/:collectionId" exact element={<CollectionScreen />} />
+            <Route path="/investigations/:collectionId" exact element={<InvestigationScreen />} />
             <Route path="/collections/:collectionId" render={() => <Navigate to="/datasets/:collectionId" replace />} />
             <Route path="/collections/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
             <Route path="/datasets/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
-            <Route path="/profiles/:profileId" exact children={<ProfileScreen />} />
-            <Route path="/diagrams/:entitySetId" exact children={<DiagramScreen />} />
-            <Route path="/diagrams" exact children={<EntitySetIndexScreen />} />
-            <Route path="/lists/:entitySetId" exact children={<ListScreen />} />
-            <Route path="/lists" exact children={<EntitySetIndexScreen />} />
-            <Route path="/timelines/:entitySetId" exact children={<TimelineScreen />} />
-            <Route path="/timelines" exact children={<EntitySetIndexScreen />} />
-            <Route path="/sets/:entitySetId" exact children={<EntitySetScreen />} />
-            <Route path="/search" exact children={<SearchScreen />} />
-            <Route path="/notifications" exact children={<NotificationsScreen />} />
-            <Route path="/alerts" exact children={<AlertsScreen />} />
-            <Route path="/exports" exact children={<ExportsScreen />} />
-            <Route path="/settings" exact children={<SettingsScreen />} />
-            <Route path="/status" exact children={<SystemStatusScreen />} />
-            <Route path="/groups/:groupId" exact children={<GroupScreen />} />
-            <Route path="/" exact children={<HomeScreen />} />
-            <Route children={<NotFoundScreen />} />
+            <Route path="/profiles/:profileId" exact element={<ProfileScreen />} />
+            <Route path="/diagrams/:entitySetId" exact element={<DiagramScreen />} />
+            <Route path="/diagrams" exact element={<EntitySetIndexScreen />} />
+            <Route path="/lists/:entitySetId" exact element={<ListScreen />} />
+            <Route path="/lists" exact element={<EntitySetIndexScreen />} />
+            <Route path="/timelines/:entitySetId" exact element={<TimelineScreen />} />
+            <Route path="/timelines" exact element={<EntitySetIndexScreen />} />
+            <Route path="/sets/:entitySetId" exact element={<EntitySetScreen />} />
+            <Route path="/search" exact element={<SearchScreen />} />
+            <Route path="/notifications" exact element={<NotificationsScreen />} />
+            <Route path="/alerts" exact element={<AlertsScreen />} />
+            <Route path="/exports" exact element={<ExportsScreen />} />
+            <Route path="/settings" exact element={<SettingsScreen />} />
+            <Route path="/status" exact element={<SystemStatusScreen />} />
+            <Route path="/groups/:groupId" exact element={<GroupScreen />} />
+            <Route path="/" exact element={<HomeScreen />} />
+            <Route element={<NotFoundScreen />} />
           </Routes>
         </Suspense>
       </>
