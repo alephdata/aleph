@@ -1,7 +1,11 @@
+// Prompt component was temporarily unsupported as of react-router v6.2.1
+//  future support is planned in future v6 releases
+//  see https://reactrouter.com/docs/en/v6/upgrading/v5#prompt-is-not-currently-supported for reference
+
 import React, { PureComponent } from 'react';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Prompt } from 'react-router';
+// import { Prompt } from 'react-router';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
 
 import withRouter from 'app/withRouter'
@@ -19,14 +23,14 @@ const messages = defineMessages({
     id: 'entity.status.in_progress',
     defaultMessage: 'Saving...',
   },
-  error_warning: {
-    id: 'entity.status.error_warning',
-    defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
-  },
-  in_progress_warning: {
-    id: 'entity.status.in_progress_warning',
-    defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
-  },
+  // error_warning: {
+  //   id: 'entity.status.error_warning',
+  //   defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
+  // },
+  // in_progress_warning: {
+  //   id: 'entity.status.in_progress_warning',
+  //   defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
+  // },
 });
 
 class UpdateStatus extends PureComponent {
@@ -57,10 +61,10 @@ class UpdateStatus extends PureComponent {
     }
   }
 
-  showPrompt(location) {
-    const { pathname } = window.location;
-    return location.pathname !== pathname
-  }
+  // showPrompt(location) {
+  //   const { pathname } = window.location;
+  //   return location.pathname !== pathname
+  // }
 
   render() {
     const { intl, status } = this.props;
@@ -68,22 +72,26 @@ class UpdateStatus extends PureComponent {
 
     return (
       <>
-        <Prompt
-          when={status === 'IN_PROGRESS'}
-          message={location => {
-            if (this.showPrompt(location)) {
-              return intl.formatMessage(messages.in_progress_warning);
-            }
-          }}
-        />
-        <Prompt
-          when={status === 'ERROR'}
-          message={location => {
-            if (this.showPrompt(location)) {
-              return intl.formatMessage(messages.error_warning);
-            }
-          }}
-        />
+        {/*
+          <Prompt
+            when={status === 'IN_PROGRESS'}
+            message={location => {
+              if (this.showPrompt(location)) {
+                return intl.formatMessage(messages.in_progress_warning);
+              }
+            }}
+          />
+        */}
+        {/*
+          <Prompt
+            when={status === 'ERROR'}
+            message={location => {
+              if (this.showPrompt(location)) {
+                return intl.formatMessage(messages.error_warning);
+              }
+            }}
+          />
+        */}
         <Tag large minimal intent={intent} className="UpdateStatus" icon={icon}>
           {intl.formatMessage(text)}
         </Tag>
