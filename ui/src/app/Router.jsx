@@ -74,19 +74,19 @@ class Router extends Component {
             <Route path="/pages/:page" exact children={<PagesScreen />} />
             <Route path="/activate/:code" exact children={<ActivateScreen />} />
             <Route path="/entities/:entityId" exact children={<EntityScreen />} />
-            <Redirect from="/text/:documentId" to="/entities/:documentId" />
-            <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
-            <Redirect from="/documents/:documentId" to="/entities/:documentId" />
+            <Route path="/text/:documentId" render={() => <Redirect to="/entities/:documentId" />} />
+            <Route path="/tabular/:documentId/:sheet" render={() => <Redirect to="/entities/:documentId" />} />
+            <Route path="/documents/:documentId" render={() => <Redirect to="/entities/:documentId" />} />
             <Route path="/datasets" exact children={<DatasetIndexScreen />} />
-            <Redirect from="/sources" to="/datasets" />
+            <Route path="/sources" render={() => <Redirect to="/datasets" />} />
             <Route path="/investigations" exact children={<InvestigationIndexScreen />} />
-            <Redirect from="/cases" to="/investigations" />
-            <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
+            <Route path="/cases" render={() => <Redirect to="/investigations" />} />
+            <Route path="/collections/:collectionId/documents" render={() => <Redirect to="/datasets/:collectionId" />} />
             <Route path="/datasets/:collectionId" exact children={<CollectionScreen />} />
             <Route path="/investigations/:collectionId" exact children={<InvestigationScreen />} />
-            <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
-            <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
-            <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
+            <Route path="/collections/:collectionId" render={() => <Redirect to="/datasets/:collectionId" />} />
+            <Route path="/collections/:collectionId/xref/:otherId" render={() => <Redirect to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />} />
+            <Route path="/datasets/:collectionId/xref/:otherId" render={() => <Redirect to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />} />
             <Route path="/profiles/:profileId" exact children={<ProfileScreen />} />
             <Route path="/diagrams/:entitySetId" exact children={<DiagramScreen />} />
             <Route path="/diagrams" exact children={<EntitySetIndexScreen />} />
