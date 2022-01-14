@@ -67,7 +67,7 @@ class UpdateStatus extends PureComponent {
   // }
 
   render() {
-    const { intl, status } = this.props;
+    const { intl } = this.props;
     const { text, intent, icon } = this.getStatusValue();
 
     return (

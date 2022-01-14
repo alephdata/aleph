@@ -43,7 +43,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, collectionId, activeMode, searchQuery, searchResult
+      collectionId, activeMode, searchQuery, searchResult
     } = this.props;
 
     return (
