@@ -84,7 +84,7 @@ export class PagesScreen extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { page } = ownProps.match.params;
+  const { page } = ownProps.params;
   return {
     pages: selectPages(state),
     page: selectPage(state, page),

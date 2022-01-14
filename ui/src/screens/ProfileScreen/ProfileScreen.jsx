@@ -161,7 +161,7 @@ class ProfileScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { profileId } = ownProps.match.params;
+  const { profileId } = ownProps.params;
   const { location } = ownProps;
   const parsedHash = queryString.parse(location.hash);
   const similarQuery = profileSimilarQuery(location, profileId);

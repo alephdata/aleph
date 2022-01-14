@@ -47,7 +47,7 @@ export class CollectionScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.match.params;
+  const { collectionId } = ownProps.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const activeMode = hashQuery.mode || collectionViewIds.OVERVIEW;

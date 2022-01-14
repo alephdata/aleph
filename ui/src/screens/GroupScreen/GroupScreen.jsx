@@ -117,8 +117,8 @@ export class GroupScreen extends Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { groupId } = match.params;
+  const { location, params } = ownProps;
+  const { groupId } = params;
 
   const context = { 'filter:team_id': groupId };
   const query = Query.fromLocation('collections', location, context, 'collections')

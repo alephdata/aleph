@@ -125,8 +125,8 @@ export class TimelineScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entitySetId } = match.params;
+  const { location, params } = ownProps;
+  const { entitySetId } = params;
 
   const timeline = selectEntitySet(state, entitySetId);
   const query = entitySetEntitiesQuery(location, entitySetId, null)

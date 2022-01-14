@@ -156,8 +156,8 @@ export class DiagramScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entitySetId } = match.params;
+  const { location, params } = ownProps;
+  const { entitySetId } = params;
   const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000);
 
   return {

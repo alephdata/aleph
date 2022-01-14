@@ -21,7 +21,7 @@ const withRouter = (Component) => {
         {...props}
         location={location}
         navigate={navigate}
-        match={{ params }}
+        params={params}
       />
     );
   }

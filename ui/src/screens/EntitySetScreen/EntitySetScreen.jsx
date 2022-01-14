@@ -53,7 +53,7 @@ export class EntitySetScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entitySetId } = ownProps.match.params;
+  const { entitySetId } = ownProps.params;
   const entitySet = selectEntitySet(state, entitySetId);
   return { entitySet, entitySetId };
 };

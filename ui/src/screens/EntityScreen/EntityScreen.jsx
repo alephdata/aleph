@@ -170,8 +170,8 @@ class EntityScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entityId } = match.params;
+  const { location, params } = ownProps;
+  const { entityId } = params;
   const entity = selectEntity(state, entityId);
   const parsedHash = queryString.parse(location.hash);
   parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);

@@ -125,8 +125,8 @@ export class ListScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entitySetId } = match.params;
+  const { location, params } = ownProps;
+  const { entitySetId } = params;
 
   const model = selectModel(state);
   const list = selectEntitySet(state, entitySetId);
