@@ -52,6 +52,10 @@ const messages = defineMessages({
     id: 'collection.info.browse',
     defaultMessage: 'Documents',
   },
+  source_documents: {
+    id: 'collection.info.source_documents',
+    defaultMessage: 'Source documents',
+  },
   entities: {
     id: 'collection.info.entities',
     defaultMessage: 'Entities',
@@ -99,9 +103,9 @@ const CollectionViewIcon = ({ id, className }) => {
 
 class CollectionViewLabel extends PureComponent {
   render() {
-    const { icon, id, intl } = this.props;
+    const { icon, id, intl, isCasefile } = this.props;
     if (!id) { return null; }
-    const messageKey = messages[id];
+    const messageKey = messages[id === 'documents' && !isCasefile ? 'source_documents' : id];
     if (!messageKey) { return null; }
 
     return (
@@ -114,7 +118,7 @@ class CollectionViewLabel extends PureComponent {
 }
 
 const CollectionViewLink = ({ id, collection, hash, search, children, ...rest }) => {
-  const content = children || <CollectionViewLabel id={id} {...rest} />
+  const content = children || <CollectionViewLabel id={id} isCasefile={collection.casefile} {...rest} />
   return (
     <Link to={getCollectionLink({ collection, mode: id, hash, search })}>
       {content}

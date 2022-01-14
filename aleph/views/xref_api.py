@@ -33,12 +33,6 @@ def index(collection_id):
         required: true
         schema:
           type: integer
-      - in: query
-        name: evaluation_mode
-        required: false
-        schema:
-          type: bool
-          default: false
       responses:
         '200':
           description: OK

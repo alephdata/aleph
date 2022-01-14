@@ -6,8 +6,6 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
-
-import { selectTester } from 'selectors';
 import { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
 import { showSuccessToast, showWarningToast } from 'app/toast';
@@ -142,7 +140,7 @@ class EntitySetSelector extends Component {
   }
 
   render() {
-    const { collection, isOpen, isTester, showTimelines = true, toggleDialog } = this.props;
+    const { collection, isOpen, showTimelines = true, toggleDialog } = this.props;
     const { processing } = this.state;
 
     return (
@@ -177,7 +175,7 @@ class EntitySetSelector extends Component {
             onSelect={this.onSelect}
             onCreate={this.onCreate}
           />
-          {isTester && showTimelines && (
+          {showTimelines && (
             <EntitySetSelectorSection
               type="timeline"
               collection={collection}
@@ -191,12 +189,8 @@ class EntitySetSelector extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  isTester: selectTester(state),
-});
-
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
+  connect(null, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
 )(EntitySetSelector);

@@ -23,11 +23,6 @@
     .draft & {
       display: block;
     }
-
-    &:first-child {
-      @include rtlSupportInvertedProp(margin, left, 0 !important, null);
-      @include rtlSupportInvertedProp(padding, left, 0 !important, null);
-    }
   }
 
   &__text {
@@ -38,10 +33,16 @@
     flex-grow: 1;
     flex-wrap: wrap;
 
+    .draft & {
+      align-items: start;
+    }
+
     .no-wrap {
       display: inline-flex;
       flex-wrap: nowrap;
       flex-grow: 1;
+      margin-left: 3px;
+      padding-left: 3px;
 
       .EditableProperty, .EditableProperty__value {
         width: 100%;
@@ -55,5 +56,10 @@
 
   .SchemaLabel {
     font-style: italic;
+  }
+
+  .SchemaSelect button {
+    color: var(--item-color);
+    border-color: var(--item-color);
   }
 }
