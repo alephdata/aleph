@@ -103,7 +103,7 @@ class Router extends Component {
             <Route path="status" element={<SystemStatusScreen />} />
             <Route path="groups/:groupId" element={<GroupScreen />} />
             <Route path="/" element={<HomeScreen />} />
-            <Route element={<NotFoundScreen />} />
+            <Route path="*" element={<NotFoundScreen />} />
           </Routes>
         </Suspense>
       </>
