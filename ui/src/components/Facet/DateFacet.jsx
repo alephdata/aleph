@@ -37,7 +37,7 @@ export class DateFilter extends Component {
     if (Array.isArray(selected)) {
       newRange = selected.sort().map(val => formatDateQParam(val, facetInterval));
     } else {
-      const dateObj = new Date(selected)
+      const dateObj = new Date(`${selected}Z`)
       if (facetInterval === 'year') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'month')
         const end = dateObj.setFullYear(dateObj.getFullYear() + 1)
