@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import c from 'classnames';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import EntitySearchResultsRow from './EntitySearchResultsRow';
 import { ErrorSection, SortableTH } from 'components/common';
 import SearchField from 'components/SearchField/SearchField';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Count, Skeleton, AppItem } from 'components/common';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { queryRoles } from 'actions';
 import { groupsQuery } from 'queries';
 import { selectRolesResult, selectCurrentRole } from 'selectors';
@@ -74,7 +74,7 @@ class Dashboard extends React.Component {
   }
 
   navigate(path) {
-    this.props.history.push(path);
+    this.props.navigate(path);
   }
 
   render() {

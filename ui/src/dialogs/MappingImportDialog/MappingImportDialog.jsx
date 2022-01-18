@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Dialog, Button, Intent, Radio, RadioGroup } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import YAML from 'yaml';
 
+import withRouter from 'app/withRouter'
 import MappingQueryLabel from 'dialogs/MappingImportDialog/MappingQueryLabel';
 import { FileImport } from 'components/common';
 import { showSuccessToast } from 'app/toast';

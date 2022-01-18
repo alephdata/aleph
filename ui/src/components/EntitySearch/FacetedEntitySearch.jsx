@@ -5,9 +5,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Alignment, Button, Divider, Drawer, Intent, Position } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import c from 'classnames'
 
+import withRouter from 'app/withRouter'
 import { triggerQueryExport } from 'src/actions';
 import { setSearchConfig, getSearchConfig } from 'app/storage';
 import { getGroupField } from 'components/SearchField/util';
@@ -131,13 +131,13 @@ class FacetedEntitySearch extends React.Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     // make it so the preview disappears if the query is changed.
     const parsedHash = queryString.parse(location.hash);
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: queryString.stringify(parsedHash),
@@ -165,7 +165,8 @@ class FacetedEntitySearch extends React.Component {
   }
 
   showPreview(entity) {
-    togglePreview(this.props.history, entity);
+    const { navigate, location } = this.props
+    togglePreview(navigate, location, entity);
   }
 
   toggleFacets() {
@@ -187,15 +188,15 @@ class FacetedEntitySearch extends React.Component {
   }
 
   saveSearchConfig(config) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
 
     setSearchConfig(config);
 
-    history.replace({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: location.hash,
-    });
+    }, { replace: true });
   }
 
   renderFacets() {

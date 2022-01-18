@@ -1,7 +1,8 @@
 import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import {
   fetchEntity, fetchEntityTags, queryEntities, querySimilar, queryEntityExpand,
 } from 'actions';

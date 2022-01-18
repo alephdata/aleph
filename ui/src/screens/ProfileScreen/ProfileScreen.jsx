@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router';
+import { Navigate } from 'react-router-dom';
 import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import Screen from 'components/Screen/Screen';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityProperties from 'components/Entity/EntityProperties';
@@ -107,7 +108,7 @@ class ProfileScreen extends Component {
 
     if (profile.isError || (!itemsResult.isPending && !itemsResult.total)) {
       if (viaEntityId) {
-        return <Redirect to={getEntityLink(viaEntityId, false)} />;
+        return <Navigate to={getEntityLink(viaEntityId, false)} replace />;
       }
       return <ErrorScreen error={profile.error} />;
     }
@@ -160,7 +161,7 @@ class ProfileScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { profileId } = ownProps.match.params;
+  const { profileId } = ownProps.params;
   const { location } = ownProps;
   const parsedHash = queryString.parse(location.hash);
   const similarQuery = profileSimilarQuery(location, profileId);

@@ -2,10 +2,10 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Button, Intent } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { getGroupField } from 'components/SearchField/util';
 import SearchActionBar from 'components/common/SearchActionBar';
 import Facets from 'components/Facet/Facets';
@@ -42,11 +42,11 @@ export class CollectionXrefMode extends React.Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.selectedId = undefined;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: queryString.stringify(parsedHash),

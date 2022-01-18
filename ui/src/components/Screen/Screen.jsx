@@ -3,7 +3,8 @@ import { Helmet } from 'react-helmet';
 import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import EntityPreview from 'components/Entity/EntityPreview';
 import { selectSession, selectMetadata } from 'selectors';

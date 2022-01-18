@@ -1,7 +1,6 @@
 import queryString from 'query-string';
 
-export default function togglePreview(history, entity, profile) {
-  const { location } = history;
+export default function togglePreview(navigate, location, entity, profile) {
   const parsed = queryString.parse(location.hash);
   parsed['preview:mode'] = undefined;
   if (entity) {
@@ -12,7 +11,7 @@ export default function togglePreview(history, entity, profile) {
     parsed['preview:profile'] = undefined;
     parsed.page = undefined;
   }
-  history.push({
+  navigate({
     pathname: location.pathname,
     search: location.search,
     hash: queryString.stringify(parsed),

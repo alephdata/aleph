@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryMappings } from 'actions';
 import { selectMappingsResult } from 'selectors';

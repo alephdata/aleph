@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
@@ -11,6 +10,7 @@ import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { selectModel } from 'selectors';
 import { Property } from 'components/common';
 import TimelineItemMenu from 'components/Timeline/TimelineItemMenu';

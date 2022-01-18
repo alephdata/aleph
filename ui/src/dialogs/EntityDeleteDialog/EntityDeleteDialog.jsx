@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import { Alert, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { Entity } from 'components/common';
 import { showErrorToast, showSuccessToast } from 'app/toast';
 import getCollectionLink from 'util/getCollectionLink';
@@ -73,7 +73,7 @@ export class EntityDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { actionType, deleteEntity, entities, history, intl, redirectOnSuccess, toggleDialog } = this.props;
+    const { actionType, deleteEntity, entities, navigate, intl, redirectOnSuccess, toggleDialog } = this.props;
     const { blocking } = this.state;
 
     if (!blocking) {
@@ -94,7 +94,7 @@ export class EntityDeleteDialog extends Component {
           const parent = entities[0]?.getFirst('parent');
           const collection = entities[0]?.collection;
 
-          history.push(parent ? { pathname: getEntityLink(parent) } : getCollectionLink({ collection }));
+          navigate(parent ? { pathname: getEntityLink(parent) } : getCollectionLink({ collection }));
         }
         this.setState({ blocking: false });
         toggleDialog(true);

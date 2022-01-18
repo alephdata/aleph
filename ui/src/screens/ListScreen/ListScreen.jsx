@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult, selectModel } from 'selectors';
 import { entitySetSchemaCountsQuery, entitySetEntitiesQuery } from 'queries';
@@ -45,10 +45,10 @@ export class ListScreen extends Component {
   }
 
   navigate(schema) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = schema;
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: "",
       hash: queryString.stringify(parsedHash),
@@ -125,8 +125,8 @@ export class ListScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entitySetId } = match.params;
+  const { location, params } = ownProps;
+  const { entitySetId } = params;
 
   const model = selectModel(state);
   const list = selectEntitySet(state, entitySetId);

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { fetchEntitySet, queryEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
@@ -55,8 +55,8 @@ export class TimelineScreen extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.push({
+    const { navigate, location } = this.props;
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: location.hash
@@ -125,8 +125,8 @@ export class TimelineScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entitySetId } = match.params;
+  const { location, params } = ownProps;
+  const { entitySetId } = params;
 
   const timeline = selectEntitySet(state, entitySetId);
   const query = entitySetEntitiesQuery(location, entitySetId, null)

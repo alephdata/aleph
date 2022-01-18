@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 
+import withRouter from 'app/withRouter'
 import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToYear } from 'components/Facet/util';
 
 
@@ -45,12 +45,12 @@ export class DateFilter extends Component {
   }
 
   toggleShowHidden() {
-    const { query, history, location, showAll } = this.props;
+    const { query, navigate, location, showAll } = this.props;
 
     const parsedHash = queryString.parse(location.hash);
     parsedHash['show_all_dates'] = !showAll;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: query.toLocation(),
       hash: queryString.stringify(parsedHash),

@@ -4,8 +4,8 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { createAlert, deleteAlert, queryAlerts } from 'actions';
 import { selectSession, selectAlertResult } from 'selectors';
 import { alertsQuery } from 'queries';
