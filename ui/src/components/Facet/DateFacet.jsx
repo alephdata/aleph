@@ -8,7 +8,7 @@ import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
 
 import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToLabel, isDateIntervalUncertain } from 'components/Facet/util';
-import { selectLocale } from 'selectors'
+import { selectEntitiesResult, selectLocale } from 'selectors'
 
 import './DateFacet.scss';
 
@@ -141,8 +141,6 @@ export class DateFilter extends Component {
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);
 
-        console.log(this.formatData(dataPropName))
-
         content = (
           <>
             {facetInterval !== 'year' && this.renderParentLabel()}
@@ -188,8 +186,9 @@ const mapStateToProps = (state, ownProps) => {
   const hashQuery = queryString.parse(location.hash);
 
   const showAll = hashQuery.show_all_dates === 'true';
+  const result = selectEntitiesResult(state, query);
 
-  if (intervals) {
+  if (intervals && !result.isPending) {
     const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ field, query, intervals, useDefaultBounds: !showAll })
     const locale = selectLocale(state);
     return {
