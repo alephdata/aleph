@@ -48,12 +48,22 @@ class QueryTags extends Component {
     const [dateTags, otherTags] = _.partition(tags, tag => tag.filter.includes(":"));
     const dateProps = _.groupBy(dateTags, tag => tag.filter.split(':')[1])
 
+    // combines "greater than" and "less than" filters into a single tag
     const processedDateTags = Object.entries(dateProps).map(([propName, values]) => {
       const gt = cleanDateQParam(values.find(({ filter }) => filter.includes('gte'))?.value)
       const lt = cleanDateQParam(values.find(({ filter }) => filter.includes('lte'))?.value)
 
-      if (!gt || !lt) { return null; }
-      const combinedValue = gt === lt ? gt : `${gt} - ${lt}`
+      let combinedValue;
+      if (!gt || !lt) {
+        return null;
+      } else if (gt === lt) {
+        combinedValue = gt
+      // if timespan between greater than and less than is exactly a year, displays year in query tag
+      } else if (gt.split("-")[1] === '01' && lt.split("-")[1] === '12') {
+        combinedValue = gt.split("-")[0]
+      } else {
+        combinedValue = `${gt} - ${lt}`
+      }
 
       return ({ filter: propName, value: combinedValue, type: 'date' })
     })
