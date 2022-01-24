@@ -53,11 +53,11 @@ export class DateFilter extends Component {
 
       if (facetInterval === 'year') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'month')
-        const end = moment.utc(selected).add(1, 'y').subtract(1, 'ms').format('YYYY-MM-DD')
+        const end = moment.utc(selected).endOf('year').format('YYYY-MM-DD')
         newRange = [formatDateQParam(selected, 'month'), formatDateQParam(end, 'month')]
       } else if (facetInterval === 'month') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'day')
-        const end = moment.utc(selected).add(1, 'M').subtract(1, 'ms').format('YYYY-MM-DD')
+        const end = moment.utc(selected).endOf('month').format('YYYY-MM-DD')
         newRange = [formatDateQParam(selected, 'day'), formatDateQParam(end, 'day')]
       } else {
         newRange = [formatDateQParam(selected, 'day'), formatDateQParam(selected, 'day')]
@@ -119,7 +119,7 @@ export class DateFilter extends Component {
     const sampleDate = filteredIntervals[0].label
 
     const content = facetInterval === 'month'
-      ? new Date(sampleDate).getFullYear()
+      ? moment.utc(sampleDate).year()
       : (
         <FormattedDate
           value={sampleDate}

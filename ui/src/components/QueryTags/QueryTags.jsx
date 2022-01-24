@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import _ from 'lodash';
+import moment from 'moment';
 
 import { Button } from '@blueprintjs/core';
 import QueryFilterTag from './QueryFilterTag';
@@ -52,15 +53,16 @@ class QueryTags extends Component {
     const processedDateTags = Object.entries(dateProps).map(([propName, values]) => {
       const gt = cleanDateQParam(values.find(({ filter }) => filter.includes('gte'))?.value)
       const lt = cleanDateQParam(values.find(({ filter }) => filter.includes('lte'))?.value)
-
       let combinedValue;
       if (!gt || !lt) {
         return null;
       } else if (gt === lt) {
         combinedValue = gt
       // if timespan between greater than and less than is exactly a year, displays year in query tag
-      } else if (gt.split("-")[1] === '01' && lt.split("-")[1] === '12') {
-        combinedValue = gt.split("-")[0]
+      } else if (moment.utc(gt).month() === 0 && moment.utc(lt).month() === 11) {
+        combinedValue = moment.utc(gt).year()
+      } else if (moment.utc(gt).isSame(moment.utc(gt).startOf('month'), 'day') && moment.utc(lt).isSame(moment.utc(lt).endOf('month'), 'day')) {
+        combinedValue = moment.utc(gt).format('MMMM yyyy')
       } else {
         combinedValue = `${gt} - ${lt}`
       }

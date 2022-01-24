@@ -1,7 +1,9 @@
-const DEFAULT_START_INTERVAL = 1950;
+import moment from 'moment';
+
+const DEFAULT_START_INTERVAL = '1950';
 
 const formatDateQParam = (datetime, granularity) => {
-  const date = datetime.split('T')[0]
+  const date = moment.utc(datetime).format("YYYY-MM-DD")
   if (granularity === 'month') {
     return `${date}||/M`
   } else if (granularity === 'day') {
@@ -15,10 +17,9 @@ const cleanDateQParam = (value) => {
   const [date, suffix] = value.split('||/');
 
   if (suffix === 'y') {
-    return date.split('-')[0]
+    return moment.utc(date).format('YYYY')
   } else if (suffix === 'M') {
-    const dateParts = date.split('-')
-    return [dateParts[0], dateParts[1]].join('-')
+    return moment.utc(date).format('YYYY-MM')
   } else {
     return date;
   }
@@ -43,7 +44,7 @@ const timestampToLabel = (timestamp, granularity, intl) => {
 }
 
 const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
-  const defaultEndInterval = new Date().getFullYear();
+  const defaultEndInterval = moment.utc().format('YYYY-MM-DD');
   const hasGtFilter = query.hasFilter(`gte:${field}`);
   const hasLtFilter = query.hasFilter(`lte:${field}`);
 
@@ -55,33 +56,33 @@ const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
     ? cleanDateQParam(query.getFilter(`lte:${field}`)[0])
     : (useDefaultBounds && defaultEndInterval);
 
-  const gt = gtRaw && new Date(`${gtRaw}T00:00:00`)
-  const lt = ltRaw && new Date(`${ltRaw}T00:00:00`)
+  const gt = gtRaw && moment(gtRaw)
+  const lt = ltRaw && moment(ltRaw)
 
   let gtOutOfRange, ltOutOfRange = false;
   const filteredIntervals = intervals.filter(({ id }) => {
-    const date = new Date(id)
-    if (gt && date < gt) {
+    if (gt && gt.isAfter(id)) {
       gtOutOfRange = true;
       return false;
     }
-    if (lt && date > lt) {
+    if (lt && lt.isBefore(id)) {
       ltOutOfRange = true;
       return false;
     }
     return true;
   })
+
   const hasOutOfRange = useDefaultBounds && ((!hasGtFilter && gtOutOfRange) || (!hasLtFilter && ltOutOfRange));
 
   return { filteredIntervals, hasOutOfRange };
 }
 
 const isDateIntervalUncertain = (timestamp, granularity) => {
-  const dateObj = new Date(timestamp)
+  const dateObj = moment.utc(timestamp)
 
-  if (granularity === 'month' && dateObj.getMonth() === 0) {
+  if (granularity === 'month' && dateObj.month() === 0) {
     return true;
-  } else if (granularity === 'day' && dateObj.getDate() === 1) {
+  } else if (granularity === 'day' && dateObj.date() === 1) {
     return true;
   }
 
