@@ -20,7 +20,7 @@
     "@types/node": "^17.0.8",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.1",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "classnames": "^2.2.6",
     "http-proxy-middleware": "^2.0.0",
     "js-file-download": "^0.4.9",
