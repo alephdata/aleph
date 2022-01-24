@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alephdata/followthemoney": "2.8.0",
-    "@alephdata/react-ftm": "2.6.2",
+    "@alephdata/react-ftm": "2.6.4",
     "@blueprintjs/colors": "^3.0.0",
     "@blueprintjs/core": "3.52.0",
     "@blueprintjs/icons": "3.31.0",
@@ -26,6 +26,7 @@
     "js-file-download": "^0.4.9",
     "jwt-decode": "^3.0.0",
     "lodash": "^4.17.11",
+    "moment": "^2.29.1",
     "node-sass": "^7.0.0",
     "numeral": "^2.0.6",
     "papaparse": "^5.1.0",

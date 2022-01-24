@@ -6,6 +6,7 @@ import { defineMessages, FormattedMessage, FormattedDate, injectIntl } from 'rea
 import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
+import moment from 'moment';
 
 import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToLabel, isDateIntervalUncertain } from 'components/Facet/util';
 import { selectEntitiesResult, selectLocale } from 'selectors'
@@ -18,6 +19,18 @@ const messages = defineMessages({
   results: {
     id: 'search.screen.dates_label',
     defaultMessage: 'results',
+  },
+  uncertainMonth: {
+    id: 'search.screen.dates_uncertain_month',
+    defaultMessage: '* this count includes dates in {year} where no month is specified',
+  },
+  uncertainDay: {
+    id: 'search.screen.dates_uncertain_day',
+    defaultMessage: '* this count includes dates where no day is specified',
+  },
+  uncertainDayMonth: {
+    id: 'search.screen.dates_uncertain_day_month',
+    defaultMessage: '* this count includes dates in {year} where no day or month is specified',
   },
 });
 
@@ -37,15 +50,15 @@ export class DateFilter extends Component {
     if (Array.isArray(selected)) {
       newRange = selected.sort().map(val => formatDateQParam(val, facetInterval));
     } else {
-      const dateObj = new Date(`${selected}Z`)
+
       if (facetInterval === 'year') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'month')
-        const end = dateObj.setFullYear(dateObj.getFullYear() + 1)
-        newRange = [formatDateQParam(selected, 'month'), formatDateQParam(new Date(end - 1).toISOString(), 'month')]
+        const end = moment.utc(selected).add(1, 'y').subtract(1, 'ms').format('YYYY-MM-DD')
+        newRange = [formatDateQParam(selected, 'month'), formatDateQParam(end, 'month')]
       } else if (facetInterval === 'month') {
         newQuery = newQuery.set(`facet_interval:${field}`, 'day')
-        const end = dateObj.setMonth(dateObj.getMonth() + 1)
-        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(new Date(end - 1).toISOString(), 'day')]
+        const end = moment.utc(selected).add(1, 'M').subtract(1, 'ms').format('YYYY-MM-DD')
+        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(end, 'day')]
       } else {
         newRange = [formatDateQParam(selected, 'day'), formatDateQParam(selected, 'day')]
       }
@@ -117,15 +130,30 @@ export class DateFilter extends Component {
     return <span className="DateFacet__parent-label">{content}</span>
   }
 
+  formatUncertainWarning(timestamp) {
+    const { facetInterval, intl } = this.props;
+    const year = moment.utc(timestamp).year()
+
+    if (facetInterval === 'month') {
+      return intl.formatMessage(messages.uncertainMonth, { year })
+    } else {
+      const isFirstMonth = moment.utc(timestamp).month() === 0
+      return intl.formatMessage(messages[isFirstMonth ? 'uncertainDayMonth' : 'uncertainDay'], { year });
+    }
+  }
+
   formatData(dataPropName) {
     const { facetInterval, filteredIntervals, locale } = this.props;
 
     return filteredIntervals.map(({ label, count, id }) => {
       const isUncertain = facetInterval !== 'year' && isDateIntervalUncertain(label, facetInterval)
+      const uncertainWarning = isUncertain && this.formatUncertainWarning(label)
+
       return ({
         ...timestampToLabel(label, facetInterval, locale, isUncertain),
         [dataPropName]: count,
         isUncertain,
+        uncertainWarning,
         id
       })
     })

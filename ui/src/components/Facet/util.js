@@ -24,30 +24,17 @@ const cleanDateQParam = (value) => {
   }
 };
 
-const timestampToLabel = (timestamp, granularity, locale, isUncertain) => {
+const timestampToLabel = (timestamp, granularity, intl) => {
+  const { locale } = intl
   const dateObj = new Date(timestamp)
   let label, tooltipLabel;
 
   if (granularity === 'month') {
     label = new Intl.DateTimeFormat(locale, { month: 'short' }).format(dateObj)
     tooltipLabel = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dateObj)
-
-    if (isUncertain) {
-      tooltipLabel = `${dateObj.getFullYear()} / ${tooltipLabel}`
-    }
   } else if (granularity === 'day') {
     label = dateObj.getDate()
     tooltipLabel = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric', day: 'numeric' }).format(dateObj)
-
-    if (isUncertain) {
-      const uncertainMonth = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dateObj)
-
-      if (dateObj.getMonth() === 0) {
-        tooltipLabel = `${dateObj.getFullYear()} / ${uncertainMonth} / ${tooltipLabel}`
-      } else {
-        tooltipLabel = `${uncertainMonth} / ${tooltipLabel}`
-      }
-    }
   } else {
     label = tooltipLabel = dateObj.getFullYear();
   }
