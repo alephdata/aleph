@@ -150,7 +150,7 @@ export class DateFilter extends Component {
       const uncertainWarning = isUncertain && this.formatUncertainWarning(label)
 
       return ({
-        ...timestampToLabel(label, facetInterval, locale, isUncertain),
+        ...timestampToLabel(label, facetInterval, locale),
         [dataPropName]: count,
         isUncertain,
         uncertainWarning,

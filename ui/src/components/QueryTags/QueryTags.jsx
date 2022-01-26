@@ -62,7 +62,7 @@ class QueryTags extends Component {
       } else if (moment.utc(gt).month() === 0 && moment.utc(lt).month() === 11) {
         combinedValue = moment.utc(gt).year()
       } else if (moment.utc(gt).isSame(moment.utc(gt).startOf('month'), 'day') && moment.utc(lt).isSame(moment.utc(lt).endOf('month'), 'day')) {
-        combinedValue = moment.utc(gt).format('MMMM yyyy')
+        combinedValue = moment.utc(gt).format('yyyy-MM')
       } else {
         combinedValue = `${gt} - ${lt}`
       }

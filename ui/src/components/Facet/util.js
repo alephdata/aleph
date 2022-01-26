@@ -25,8 +25,7 @@ const cleanDateQParam = (value) => {
   }
 };
 
-const timestampToLabel = (timestamp, granularity, intl) => {
-  const { locale } = intl
+const timestampToLabel = (timestamp, granularity, locale) => {
   const dateObj = new Date(timestamp)
   let label, tooltipLabel;
 
