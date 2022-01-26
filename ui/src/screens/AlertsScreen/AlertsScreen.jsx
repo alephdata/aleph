@@ -21,9 +21,9 @@ export class AlertsScreen extends React.Component {
   }
 
   handleTabChange() {
-    const { activeTab, history } = this.props;
+    const { activeTab, navigate } = this.props;
     const nextTabId = activeTab === 'searches' ? 'alerts' : 'searches';
-    history.push({
+    navigate({
       hash: nextTabId,
     });
   }

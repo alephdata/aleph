@@ -1,7 +1,7 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import DocumentManager from 'components/Document/DocumentManager';
 import { collectionDocumentsQuery } from 'queries';
 import { selectCollection } from 'selectors';

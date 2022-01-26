@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router';
+import { Navigate } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup } from '@blueprintjs/core';
@@ -24,6 +24,7 @@ import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
 import { setRecentlyViewedItem } from 'app/storage';
+import withRouter from 'app/withRouter'
 
 import 'components/common/ItemOverview.scss';
 
@@ -60,17 +61,17 @@ class EntityScreen extends Component {
   }
 
   cleanHash() {
-    const { entity, history, location, parsedHash } = this.props;
+    const { entity, navigate, location, parsedHash } = this.props;
 
     // if an entity does not have an associated profile, ensure profile=false is removed from hash
     if (!!entity.id && !entity.profileId && !!parsedHash.profile) {
       delete parsedHash.profile;
 
-      history.replace({
+      navigate({
         pathname: location.pathname,
         search: location.search,
         hash: queryString.stringify(parsedHash),
-      });
+      }, { replace: true });
     }
   }
 
@@ -78,7 +79,7 @@ class EntityScreen extends Component {
     const { entity, entityId, intl, parsedHash } = this.props;
     if (entity.profileId && parsedHash.profile === undefined) {
       parsedHash.via = entity.id;
-      return <Redirect to={getProfileLink(entity.profileId, parsedHash)} />;
+      return <Navigate to={getProfileLink(entity.profileId, parsedHash)} replace />;
     }
 
     if (entity.isError) {
@@ -169,8 +170,8 @@ class EntityScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entityId } = match.params;
+  const { location, params } = ownProps;
+  const { entityId } = params;
   const entity = selectEntity(state, entityId);
   const parsedHash = queryString.parse(location.hash);
   parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);

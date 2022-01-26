@@ -3,8 +3,8 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { ErrorSection, EntityDecisionHotkeys } from 'components/common';
 import { showWarningToast } from 'app/toast';
 import { pairwiseJudgement } from 'actions';

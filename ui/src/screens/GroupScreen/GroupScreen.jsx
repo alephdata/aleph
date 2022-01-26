@@ -6,10 +6,10 @@ import {
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Callout, Intent } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import Query from 'app/Query';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Screen from 'components/Screen/Screen';
@@ -56,7 +56,7 @@ export class GroupScreen extends Component {
   }
 
   async goToEntitySearch() {
-    const { history, groupId } = this.props;
+    const { navigate, groupId } = this.props;
 
     const query = new Query('collections', {}, { 'filter:team_id': groupId }, 'collections').limit(1000);
     try {
@@ -69,7 +69,7 @@ export class GroupScreen extends Component {
           'facet_size:collection_id': 10,
           'facet_total:collection_id': true,
         };
-        history.push({
+        navigate({
           pathname: '/search',
           search: queryString.stringify(params)
         })
@@ -117,8 +117,8 @@ export class GroupScreen extends Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { groupId } = match.params;
+  const { location, params } = ownProps;
+  const { groupId } = params;
 
   const context = { 'filter:team_id': groupId };
   const query = Query.fromLocation('collections', location, context, 'collections')

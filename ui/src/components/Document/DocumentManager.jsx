@@ -5,9 +5,9 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';
@@ -84,8 +84,8 @@ export class DocumentManager extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.push({
+    const { navigate, location } = this.props;
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: location.hash,
@@ -99,10 +99,10 @@ export class DocumentManager extends Component {
   }
 
   openMappingEditor() {
-    const { history } = this.props;
+    const { navigate } = this.props;
     const { selection } = this.state;
     const pathname = getEntityLink(selection[0]);
-    history.push({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
+    navigate({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
   }
 
   render() {

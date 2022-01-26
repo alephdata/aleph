@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
+import withRouter from 'app/withRouter'
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
@@ -156,8 +156,8 @@ export class DiagramScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { entitySetId } = match.params;
+  const { location, params } = ownProps;
+  const { entitySetId } = params;
   const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000);
 
   return {

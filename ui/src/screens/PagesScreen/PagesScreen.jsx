@@ -5,8 +5,8 @@ import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import Screen from 'components/Screen/Screen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { AppItem } from 'components/common';
@@ -35,7 +35,7 @@ export class PagesScreen extends React.Component {
   }
 
   navigate(path) {
-    this.props.history.push(path);
+    this.props.navigate(path);
   }
 
   render() {
@@ -84,7 +84,7 @@ export class PagesScreen extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { page } = ownProps.match.params;
+  const { page } = ownProps.params;
   return {
     pages: selectPages(state),
     page: selectPage(state, page),

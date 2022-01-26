@@ -4,10 +4,10 @@ import {
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Button, Icon, Intent, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { CheckboxList, Schema } from 'components/common';
 import DateFacet from 'components/Facet/DateFacet';
 

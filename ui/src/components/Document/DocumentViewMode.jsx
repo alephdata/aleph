@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import AudioViewer from 'viewers/AudioViewer';
 import DefaultViewer from 'viewers/DefaultViewer';
@@ -13,7 +12,7 @@ import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
 import VideoViewer from 'viewers/VideoViewer';
 import ArticleViewer from 'viewers/ArticleViewer';
-
+import withRouter from 'app/withRouter'
 import { SectionLoading } from 'components/common';
 import { selectEntityDirectionality } from 'selectors';
 

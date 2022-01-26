@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
+import withRouter from 'app/withRouter'
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 
 const messages = defineMessages({
@@ -32,7 +32,7 @@ export class ExportDialog extends Component {
   }
 
   async onExport() {
-    const { history, intl, onExport, toggleDialog } = this.props;
+    const { navigate, intl, onExport, toggleDialog } = this.props;
     try {
       await onExport();
       showSuccessToast({
@@ -41,7 +41,7 @@ export class ExportDialog extends Component {
           small: true,
           icon: 'share',
           text: intl.formatMessage(messages.dashboard_link),
-          onClick: () => history.push('/exports')
+          onClick: () => navigate('/exports')
         }
       });
       toggleDialog();

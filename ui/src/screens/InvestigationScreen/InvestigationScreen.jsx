@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
+import withRouter from 'app/withRouter'
 import Screen from 'components/Screen/Screen';
 import { DualPane } from 'components/common';
 import collectionViewIds from 'components/Collection/collectionViewIds';
@@ -26,7 +27,7 @@ export class InvestigationScreen extends Component {
     }
 
     if (collection.casefile === false) {
-      return <Redirect to={`/datasets/${collectionId}`} />;
+      return <Navigate to={`/datasets/${collectionId}`} replace />;
     }
 
     const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
@@ -61,7 +62,7 @@ export class InvestigationScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.match.params;
+  const { collectionId } = ownProps.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const activeMode = hashQuery.mode;

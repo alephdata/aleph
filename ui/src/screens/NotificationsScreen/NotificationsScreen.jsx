@@ -2,8 +2,8 @@ import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import Screen from 'components/Screen/Screen';

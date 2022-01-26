@@ -3,8 +3,9 @@ import truncateText from 'truncate';
 import { Button, Icon, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import c from 'classnames';
+
+import withRouter from 'app/withRouter'
 import getEntitySetLink from 'util/getEntitySetLink';
 
 const ICONS = {

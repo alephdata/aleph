@@ -1,9 +1,9 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import EntityTable from 'components/EntityTable/EntityTable';
 import { selectCollection, selectModel } from 'selectors';
 import { collectionEntitiesQuery } from 'queries';

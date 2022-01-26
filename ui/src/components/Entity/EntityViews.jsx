@@ -4,7 +4,8 @@ import { Callout, Tab, Tabs, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import {
   Count, Entity, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
@@ -31,14 +32,14 @@ class EntityViews extends React.Component {
   }
 
   handleTabChange(mode) {
-    const { history, location, isPreview } = this.props;
+    const { navigate, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
     if (isPreview) {
       parsedHash['preview:mode'] = mode;
     } else {
       parsedHash.mode = mode;
     }
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),

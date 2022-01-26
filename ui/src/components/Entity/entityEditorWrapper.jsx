@@ -1,9 +1,10 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Namespace } from '@alephdata/followthemoney';
 import { EntityManager } from '@alephdata/react-ftm';
+
+import withRouter from 'app/withRouter'
 import { entityExpandQuery, entitySuggestQuery } from 'queries';
 import { selectLocale, selectModel, selectEntitiesResult, selectEntityExpandResult } from 'selectors';
 import {
@@ -154,8 +155,7 @@ const entityEditorWrapper = (EditorComponent) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { match } = ownProps;
-  const { entitySetId } = match.params;
+  const { entitySetId } = ownProps.params;
 
   return ({
     model: selectModel(state),

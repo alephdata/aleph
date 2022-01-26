@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { Route, Navigate, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
@@ -68,43 +68,43 @@ class Router extends Component {
       <>
         <Navbar />
         <Suspense fallback={Loading}>
-          <Switch>
-            <Route path="/oauth" exact component={OAuthScreen} />
-            <Route path="/logout" exact component={LogoutScreen} />
-            <Route path="/pages/:page" exact component={PagesScreen} />
-            <Route path="/activate/:code" exact component={ActivateScreen} />
-            <Route path="/entities/:entityId" exact component={EntityScreen} />
-            <Redirect from="/text/:documentId" to="/entities/:documentId" />
-            <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
-            <Redirect from="/documents/:documentId" to="/entities/:documentId" />
-            <Route path="/datasets" exact component={DatasetIndexScreen} />
-            <Redirect from="/sources" to="/datasets" />
-            <Route path="/investigations" exact component={InvestigationIndexScreen} />
-            <Redirect from="/cases" to="/investigations" />
-            <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
-            <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
-            <Route path="/investigations/:collectionId" exact component={InvestigationScreen} />
-            <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
-            <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
-            <Redirect from="/datasets/:collectionId/xref/:otherId" to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" />
-            <Route path="/profiles/:profileId" exact component={ProfileScreen} />
-            <Route path="/diagrams/:entitySetId" exact component={DiagramScreen} />
-            <Route path="/diagrams" exact component={EntitySetIndexScreen} />
-            <Route path="/lists/:entitySetId" exact component={ListScreen} />
-            <Route path="/lists" exact component={EntitySetIndexScreen} />
-            <Route path="/timelines/:entitySetId" exact component={TimelineScreen} />
-            <Route path="/timelines" exact component={EntitySetIndexScreen} />
-            <Route path="/sets/:entitySetId" exact component={EntitySetScreen} />
-            <Route path="/search" exact component={SearchScreen} />
-            <Route path="/notifications" exact component={NotificationsScreen} />
-            <Route path="/alerts" exact component={AlertsScreen} />
-            <Route path="/exports" exact component={ExportsScreen} />
-            <Route path="/settings" exact component={SettingsScreen} />
-            <Route path="/status" exact component={SystemStatusScreen} />
-            <Route path="/groups/:groupId" exact component={GroupScreen} />
-            <Route path="/" exact component={HomeScreen} />
-            <Route component={NotFoundScreen} />
-          </Switch>
+          <Routes>
+            <Route path="oauth" element={<OAuthScreen />} />
+            <Route path="logout" element={<LogoutScreen />} />
+            <Route path="pages/:page" element={<PagesScreen />} />
+            <Route path="activate/:code" element={<ActivateScreen />} />
+            <Route path="entities/:entityId" element={<EntityScreen />} />
+            <Route path="text/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
+            <Route path="tabular/:documentId/:sheet" render={() => <Navigate to="/entities/:documentId" replace />} />
+            <Route path="documents/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
+            <Route path="datasets" element={<DatasetIndexScreen />} />
+            <Route path="sources" render={() => <Navigate to="/datasets" replace />} />
+            <Route path="investigations" element={<InvestigationIndexScreen />} />
+            <Route path="cases" render={() => <Navigate to="/investigations" replace />} />
+            <Route path="collections/:collectionId/documents" render={() => <Navigate to="/datasets/:collectionId" replace />} />
+            <Route path="datasets/:collectionId" element={<CollectionScreen />} />
+            <Route path="investigations/:collectionId" element={<InvestigationScreen />} />
+            <Route path="collections/:collectionId" render={() => <Navigate to="/datasets/:collectionId" replace />} />
+            <Route path="collections/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
+            <Route path="datasets/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
+            <Route path="profiles/:profileId" element={<ProfileScreen />} />
+            <Route path="diagrams/:entitySetId" element={<DiagramScreen />} />
+            <Route path="diagrams" element={<EntitySetIndexScreen />} />
+            <Route path="lists/:entitySetId" element={<ListScreen />} />
+            <Route path="lists" element={<EntitySetIndexScreen />} />
+            <Route path="timelines/:entitySetId" element={<TimelineScreen />} />
+            <Route path="timelines" element={<EntitySetIndexScreen />} />
+            <Route path="sets/:entitySetId" element={<EntitySetScreen />} />
+            <Route path="search" element={<SearchScreen />} />
+            <Route path="notifications" element={<NotificationsScreen />} />
+            <Route path="alerts" element={<AlertsScreen />} />
+            <Route path="exports" element={<ExportsScreen />} />
+            <Route path="settings" element={<SettingsScreen />} />
+            <Route path="status" element={<SystemStatusScreen />} />
+            <Route path="groups/:groupId" element={<GroupScreen />} />
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="*" element={<NotFoundScreen />} />
+          </Routes>
         </Suspense>
       </>
     );
