@@ -317,6 +317,9 @@
   "collection.info.search": {
     "defaultMessage": "Search"
   },
+  "collection.info.source_documents": {
+    "defaultMessage": "Source documents"
+  },
   "collection.info.timelines": {
     "defaultMessage": "Timelines"
   },
@@ -722,6 +725,9 @@
   "entity.info.view": {
     "defaultMessage": "Darstellung"
   },
+  "entity.info.workbook_warning": {
+    "defaultMessage": "This sheet is part of workbook {link}"
+  },
   "entity.manager.bulk_import.description.1": {
     "defaultMessage": "Select a table below from which to import new {schema} entities."
   },
@@ -815,14 +821,8 @@
   "entity.status.error": {
     "defaultMessage": "Error saving"
   },
-  "entity.status.error_warning": {
-    "defaultMessage": "There was an error saving your latest changes, are you sure you want to leave?"
-  },
   "entity.status.in_progress": {
     "defaultMessage": "Saving..."
-  },
-  "entity.status.in_progress_warning": {
-    "defaultMessage": "Changes are still being saved, are you sure you want to leave?"
   },
   "entity.status.success": {
     "defaultMessage": "Saved"
@@ -1912,9 +1912,6 @@
   },
   "timeline.empty_histogram": {
     "defaultMessage": "No dates found"
-  },
-  "timeline.involved.button_text": {
-    "defaultMessage": "Add involved entities"
   },
   "timeline.item.date": {
     "defaultMessage": "{start}to{end}"

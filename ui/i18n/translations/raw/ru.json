@@ -216,7 +216,7 @@
     "defaultMessage": "Краткое описание"
   },
   "collection.edit.permissions_warning": {
-    "defaultMessage": "Note: User must already have an Aleph account in order to receive access."
+    "defaultMessage": "Для доступа необходима учётная запись в Алефе."
   },
   "collection.edit.permissionstable.edit": {
     "defaultMessage": "Редактирование"
@@ -316,6 +316,9 @@
   },
   "collection.info.search": {
     "defaultMessage": "Поиск"
+  },
+  "collection.info.source_documents": {
+    "defaultMessage": "Source documents"
   },
   "collection.info.timelines": {
     "defaultMessage": "Хронологии"
@@ -639,7 +642,7 @@
     "defaultMessage": "{done} из {total} файлов готовы, ошибок: {errors}."
   },
   "document.upload.rejected": {
-    "defaultMessage": "{fileName} is missing a file type, so it cannot be uploaded."
+    "defaultMessage": "Невозможно загрузить {fileName}, поскольку не известен тип файла."
   },
   "document.upload.retry": {
     "defaultMessage": "Попробовать ещё раз"
@@ -721,6 +724,9 @@
   },
   "entity.info.view": {
     "defaultMessage": "Просмотр"
+  },
+  "entity.info.workbook_warning": {
+    "defaultMessage": "This sheet is part of workbook {link}"
   },
   "entity.manager.bulk_import.description.1": {
     "defaultMessage": "Ниже выберите таблицу для импорта новых сущностей {schema}."
@@ -815,14 +821,8 @@
   "entity.status.error": {
     "defaultMessage": "Ошибка сохранения"
   },
-  "entity.status.error_warning": {
-    "defaultMessage": "Произошла ошибка при сохранении последних изменений, вы хотите уйти?"
-  },
   "entity.status.in_progress": {
     "defaultMessage": "Сохраняется..."
-  },
-  "entity.status.in_progress_warning": {
-    "defaultMessage": "Вы уверены, что не хотите дождаться сохранения изменений?"
   },
   "entity.status.success": {
     "defaultMessage": "Сохранено"
@@ -1569,16 +1569,16 @@
     "defaultMessage": "Ещё"
   },
   "search.advanced.all.helptext": {
-    "defaultMessage": "Only results containing all of the given terms will be returned"
+    "defaultMessage": "Будут отображены результаты, в которых есть все искомые слова"
   },
   "search.advanced.all.label": {
-    "defaultMessage": "All of these words (Default)"
+    "defaultMessage": "Все слова (по умолчанию)"
   },
   "search.advanced.any.helptext": {
-    "defaultMessage": "Results containing any of the given terms will be returned"
+    "defaultMessage": "Будут отображены результаты, в которых есть любое из искомых слов"
   },
   "search.advanced.any.label": {
-    "defaultMessage": "Any of these words"
+    "defaultMessage": "Любые из этих слов"
   },
   "search.advanced.clear": {
     "defaultMessage": "Очистить все"
@@ -1851,7 +1851,7 @@
     "defaultMessage": "Отсортировать:"
   },
   "sorting.bar.updated_at": {
-    "defaultMessage": "Обновить дату"
+    "defaultMessage": "Дата обновления"
   },
   "sources.index.empty": {
     "defaultMessage": "Эта группа не привязана к какому-либо набору данных или расследованию."
@@ -1912,9 +1912,6 @@
   },
   "timeline.empty_histogram": {
     "defaultMessage": "Даты не найдены"
-  },
-  "timeline.involved.button_text": {
-    "defaultMessage": "Добавить вовлечённые сущности"
   },
   "timeline.item.date": {
     "defaultMessage": "{start} до {end}"
