@@ -28,12 +28,12 @@ services:
 
   redis:
     image: redis:alpine
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:39e678f717b1504984f52a116a9e4fe2af206d31
+    image: alephdata/convert-document:3.16.1
     restart: on-failure
     tmpfs:
       - /tmp
@@ -43,7 +43,7 @@ services:
   ingest-file:
     build:
       context: services/ingest-file
-    image: alephdata/ingest-file:${ALEPH_TAG:-latest}
+    image: alephdata/ingest-file:3.16.1
     hostname: ingest
     tmpfs: /tmp
     volumes:
