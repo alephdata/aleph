@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import { queryCollections } from 'actions';
 import { selectCollectionsResult, selectCurrentRole } from 'selectors';
 import { ErrorSection, SearchBox, QueryInfiniteLoad } from 'components/common';
@@ -43,9 +43,9 @@ export class CollectionIndex extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
     });

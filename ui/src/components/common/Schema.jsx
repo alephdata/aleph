@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { selectModel } from 'selectors';
 import { collectionSearchQuery } from 'queries';
 import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
@@ -12,18 +12,19 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 
 function SchemaLink({ collection, location, schema, ...rest }) {
   const viewProps = { collection };
-  if (collection.casefile) {
-    if (schema.isDocument()) {
-      return <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS} icon />
-    } else {
+
+  if (schema.isDocument()) {
+    return <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS} icon />
+  } else {
+    if (collection.casefile) {
       viewProps.id = collectionViewIds.ENTITIES;
       viewProps.hash = { type: schema };
+    } else {
+      viewProps.id = collectionViewIds.SEARCH;
+      const query = collectionSearchQuery(location, collection.id)
+        .setFilter('schema', schema);
+      viewProps.search = query.toLocation();
     }
-  } else {
-    viewProps.id = collectionViewIds.SEARCH;
-    const query = collectionSearchQuery(location, collection.id)
-      .setFilter('schema', schema);
-    viewProps.search = query.toLocation();
   }
 
   return (

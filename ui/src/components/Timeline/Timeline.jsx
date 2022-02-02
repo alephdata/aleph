@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import c from 'classnames';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import { getGroupField } from 'components/SearchField/util';
 import { DualPane, ErrorSection } from 'components/common';
 import Facets from 'components/Facet/Facets';
@@ -76,8 +76,8 @@ class Timeline extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.push({
+    const { navigate, location } = this.props;
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: location.hash
@@ -98,7 +98,7 @@ class Timeline extends Component {
     );
 
     return (
-      <DualPane className="Timeline theme-light">
+      <DualPane className="Timeline">
         <DualPane.SidePane>
           <div className={c("Timeline__date-container", { fixed: histogramFixed })}>
             <DateFacet

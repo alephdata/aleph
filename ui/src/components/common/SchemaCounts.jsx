@@ -4,8 +4,8 @@ import { Alignment, ButtonGroup, Divider, Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { Count, Schema } from 'components/common';
 import { selectModel } from 'selectors';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import withRouter from 'app/withRouter'
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
@@ -29,13 +29,13 @@ class CollectionViews extends React.Component {
   }
 
   handleTabChange(mode) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     parsedHash.mode = mode;
     delete parsedHash.type;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       hash: queryString.stringify(parsedHash),
     });
@@ -43,7 +43,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, collectionId, activeMode, searchQuery, searchResult
+      collectionId, activeMode, searchQuery, searchResult
     } = this.props;
 
     return (
@@ -64,18 +64,16 @@ class CollectionViews extends React.Component {
             <CollectionOverviewMode isCasefile={false} collectionId={collectionId} />
           )}
         />
-        {collection.writeable && (
-          <Tab
-            id={collectionViewIds.DOCUMENTS}
-            className="CollectionViews__tab"
-            title={
-              <>
-                <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon />
-                <CollectionView.Count id={collectionViewIds.DOCUMENTS} collectionId={collectionId} />
-              </>}
-            panel={<CollectionDocumentsMode collectionId={collectionId} />}
-          />
-        )}
+        <Tab
+          id={collectionViewIds.DOCUMENTS}
+          className="CollectionViews__tab"
+          title={
+            <>
+              <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon isCasefile={false} />
+              <CollectionView.Count id={collectionViewIds.DOCUMENTS} collectionId={collectionId} />
+            </>}
+          panel={<CollectionDocumentsMode collectionId={collectionId} showSearch={false} />}
+        />
         <Tab
           id={collectionViewIds.XREF}
           className="CollectionViews__tab"

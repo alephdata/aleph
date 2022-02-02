@@ -35,7 +35,7 @@ class SearchActionBar extends React.Component {
     let tooltipText;
     if (!result.total) {
       tooltipText = intl.formatMessage(messages.export_disabled_empty);
-    } else if (result.total > 10000) {
+    } else if (result.total >= 10000) {
       tooltipText = intl.formatMessage(messages.export_disabled);
     } else {
       tooltipText = intl.formatMessage(messages.export_helptext);

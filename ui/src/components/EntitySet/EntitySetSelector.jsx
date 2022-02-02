@@ -3,11 +3,9 @@ import { Drawer, Spinner } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import c from 'classnames';
 
-
-import { selectTester } from 'selectors';
+import withRouter from 'app/withRouter'
 import { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity } from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
 import { showSuccessToast, showWarningToast } from 'app/toast';
@@ -107,7 +105,7 @@ class EntitySetSelector extends Component {
   }
 
   onSuccess(entitySet) {
-    const { entities, history, intl, onSuccess, toggleDialog, triggerMutationOnCreate = true } = this.props;
+    const { entities, navigate, intl, onSuccess, toggleDialog, triggerMutationOnCreate = true } = this.props;
     this.setState({ processing: false });
 
     if (triggerMutationOnCreate) {
@@ -117,7 +115,7 @@ class EntitySetSelector extends Component {
           small: true,
           icon: 'share',
           text: intl.formatMessage(messages.success_button),
-          onClick: () => history.push({ pathname: getEntitySetLink(entitySet) })
+          onClick: () => navigate({ pathname: getEntitySetLink(entitySet) })
         }
       });
     }
@@ -142,7 +140,7 @@ class EntitySetSelector extends Component {
   }
 
   render() {
-    const { collection, isOpen, isTester, showTimelines = true, toggleDialog } = this.props;
+    const { collection, isOpen, showTimelines = true, toggleDialog } = this.props;
     const { processing } = this.state;
 
     return (
@@ -177,7 +175,7 @@ class EntitySetSelector extends Component {
             onSelect={this.onSelect}
             onCreate={this.onCreate}
           />
-          {isTester && showTimelines && (
+          {showTimelines && (
             <EntitySetSelectorSection
               type="timeline"
               collection={collection}
@@ -191,12 +189,8 @@ class EntitySetSelector extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  isTester: selectTester(state),
-});
-
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
+  connect(null, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
 )(EntitySetSelector);

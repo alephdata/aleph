@@ -3,7 +3,8 @@ import { Alert, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import { deleteCollection } from 'actions';
 import { Collection } from 'components/common';
 
@@ -27,10 +28,10 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { collection, history } = this.props;
+    const { collection, navigate } = this.props;
     const path = collection.casefile ? '/investigations' : '/datasets';
     await this.props.deleteCollection(collection);
-    history.push({ pathname: path });
+    navigate({ pathname: path });
   }
 
   render() {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { queryEntitySets } from 'actions';
 import { selectEntitySetsResult } from 'selectors';
 import Query from 'app/Query';
@@ -55,9 +55,9 @@ export class EntitySetIndexScreen extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
 
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
     });

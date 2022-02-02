@@ -1,10 +1,10 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Drawer, Position } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
 
+import withRouter from 'app/withRouter'
 import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityToolbar from 'components/Entity/EntityToolbar';
@@ -41,8 +41,9 @@ export class EntityPreview extends React.Component {
   }
 
   onClose(event) {
+    const { navigate, location } = this.props
     this.onUnmount();
-    togglePreview(this.props.history, null);
+    togglePreview(navigate, location, null);
   }
 
   renderContext() {

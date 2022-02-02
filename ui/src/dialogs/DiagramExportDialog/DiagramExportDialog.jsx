@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import { Button, Card, Dialog } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
+import withRouter from 'app/withRouter'
 import { fetchDiagramEmbed } from 'actions';
 import { showErrorToast } from 'app/toast';
 import { ClipboardInput } from 'components/common';

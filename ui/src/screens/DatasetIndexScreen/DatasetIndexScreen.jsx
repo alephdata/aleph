@@ -3,6 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import withRouter from 'app/withRouter'
 import { getGroupField } from 'components/SearchField/util';
 import { selectCollectionsResult } from 'selectors';
 import { DualPane, SignInCallout } from 'components/common';
@@ -42,8 +43,8 @@ export class DatasetIndexScreen extends Component {
   }
 
   updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.push({
+    const { navigate, location } = this.props;
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
     });
@@ -92,6 +93,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default compose(
+  withRouter,
   connect(mapStateToProps, {}),
   injectIntl,
 )(DatasetIndexScreen);

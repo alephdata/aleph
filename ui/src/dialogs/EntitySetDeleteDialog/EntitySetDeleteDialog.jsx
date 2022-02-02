@@ -3,7 +3,8 @@ import { Alert, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import { deleteEntitySet } from 'actions';
 import { showSuccessToast } from 'app/toast';
 import getCollectionLink from 'util/getCollectionLink';
@@ -32,12 +33,12 @@ class EntitySetDeleteDialog extends Component {
   }
 
   onDelete() {
-    const { entitySet, history, intl } = this.props;
+    const { entitySet, navigate, intl } = this.props;
     this.props.deleteEntitySet(entitySet.id).then(() => (
       showSuccessToast(intl.formatMessage(messages.success, { title: entitySet.label }))
     ));
 
-    history.push(
+    navigate(
       getCollectionLink({ collection: entitySet.collection })
     );
   }

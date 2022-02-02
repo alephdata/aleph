@@ -3,7 +3,8 @@ import { Intent, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import { forceMutate, ingestDocument } from 'actions';
 import { showErrorToast } from 'app/toast';
 import FormDialog from 'dialogs/common/FormDialog';
@@ -46,7 +47,7 @@ export class DocumentFolderDialog extends Component {
 
   async onSubmit() {
     const {
-      intl, collection, parent, history,
+      intl, collection, parent, navigate,
     } = this.props;
     const { title } = this.state;
     this.setState({ blocking: true });
@@ -64,7 +65,7 @@ export class DocumentFolderDialog extends Component {
 
       this.props.forceMutate();
 
-      history.push({
+      navigate({
         pathname: `/documents/${result.id}`,
       });
     } catch (e) {

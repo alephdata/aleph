@@ -1,10 +1,10 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { AnchorButton, Intent } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import InvestigationQuickLinks from 'components/Investigation/InvestigationQuickLinks';

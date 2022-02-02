@@ -143,7 +143,7 @@ PAGES_PATH = env.get("ALEPH_PAGES_PATH", PAGES_PATH)
 
 # Publishing network diagram embeds
 REACT_FTM_URL = (
-    "https://cdn.jsdelivr.net/npm/@alephdata/react-ftm@2.3.1/dist/react-ftm-embed.js"
+    "https://cdn.jsdelivr.net/npm/@alephdata/react-ftm@latest/dist/react-ftm-embed.js"
 )
 
 ##############################################################################
@@ -177,3 +177,7 @@ INDEX_EXPAND_CLAUSE_LIMIT = env.to_int("ALEPH_INDEX_EXPAND_CLAUSE_LIMIT", 10)
 INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
     "ALEPH_INDEX_DELETE_BY_QUERY_BATCHSIZE", 100
 )
+
+###############################################################################
+# XREF Model Selection
+XREF_MODEL = env.get("FTM_COMPARE_MODEL", None)

@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
+import withRouter from 'app/withRouter'
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
@@ -73,7 +73,7 @@ class InvestigationViews extends React.Component {
       title = <Schema.Label schema={activeType} plural icon />;
       subheading = <Schema.Description schema={activeType} />
     } else if (!!activeMode) {
-      title = <CollectionView.Label id={activeMode} icon />;
+      title = <CollectionView.Label id={activeMode} icon isCasefile />;
       subheading = <CollectionView.Description id={activeMode} />
     }
 

@@ -4,7 +4,8 @@ import { Tab, Tabs, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+
+import withRouter from 'app/withRouter'
 import {
   Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
 } from 'components/common';
@@ -24,10 +25,10 @@ class ProfileViews extends React.Component {
   }
 
   handleTabChange(mode) {
-    const { history, location } = this.props;
+    const { navigate, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.mode = mode;
-    history.push({
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),

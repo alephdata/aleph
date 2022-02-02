@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
 import TimelineItem from 'components/Timeline/TimelineItem';
 
@@ -33,8 +33,8 @@ class TimelineItemList extends Component {
     this.onColorSelect = this.onColorSelect.bind(this);
   }
 
-  async createNewItem() {
-    const { entityManager, history, location, onHideDraft } = this.props;
+  async createNewItem(color) {
+    const { entityManager, navigate, location, onHideDraft } = this.props;
     const { schema, properties } = this.state.draftEntity;
 
     const simplifiedProps = {};
@@ -43,12 +43,14 @@ class TimelineItemList extends Component {
     })
 
     const entity = await entityManager.createEntity({ schema, properties: simplifiedProps });
+    this.onColorSelect(entity.id, color);
     onHideDraft();
-    history.replace({
+
+    navigate({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify({ ...queryString.parse(location.hash), id: entity.id })
-    })
+    }, { replace: true })
   }
 
   createNewReferencedEntity(entity) {

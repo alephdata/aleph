@@ -4,8 +4,8 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { queryEntitySets } from 'actions';
 import { collectionEntitySetsQuery } from 'queries';
 import { selectEntitySetsResult } from 'selectors';

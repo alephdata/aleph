@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Classes, Dialog } from '@blueprintjs/core';
-import { withRouter } from 'react-router';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import withRouter from 'app/withRouter'
 import { Entity, Schema } from 'components/common';
 import { entitySuggestQuery } from 'queries';
 import { queryEntities } from 'actions';

@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Count, Skeleton, AppItem } from 'components/common';
 import c from 'classnames';
 
+import withRouter from 'app/withRouter'
 import { queryRoles } from 'actions';
 import { groupsQuery } from 'queries';
-import { selectRolesResult, selectCurrentRole, selectTester } from 'selectors';
+import { selectRolesResult, selectCurrentRole } from 'selectors';
 
 import './Dashboard.scss';
 
@@ -74,11 +74,11 @@ class Dashboard extends React.Component {
   }
 
   navigate(path) {
-    this.props.history.push(path);
+    this.props.navigate(path);
   }
 
   render() {
-    const { role, intl, isTester, location, groupsResult } = this.props;
+    const { role, intl, location, groupsResult } = this.props;
     const current = location.pathname;
 
     return (
@@ -131,15 +131,13 @@ class Dashboard extends React.Component {
                 onClick={() => this.navigate('/diagrams')}
                 active={current === '/diagrams'}
               />
-              {isTester && (
-                <MenuItem
-                  icon="gantt-chart"
-                  text={intl.formatMessage(messages.timelines)}
-                  label={<Count count={role?.counts?.entitysets?.timeline} />}
-                  onClick={() => this.navigate('/timelines')}
-                  active={current === '/timelines'}
-                />
-              )}
+              <MenuItem
+                icon="gantt-chart"
+                text={intl.formatMessage(messages.timelines)}
+                label={<Count count={role?.counts?.entitysets?.timeline} />}
+                onClick={() => this.navigate('/timelines')}
+                active={current === '/timelines'}
+              />
               <MenuItem
                 icon="list"
                 text={intl.formatMessage(messages.lists)}
@@ -200,7 +198,6 @@ const mapStateToProps = (state, ownProps) => {
   const query = groupsQuery(location);
   return {
     role: selectCurrentRole(state),
-    isTester: selectTester(state),
     groupsQuery: query,
     groupsResult: selectRolesResult(state, query),
   };

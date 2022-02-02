@@ -2,8 +2,8 @@ import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Intent, FormGroup, InputGroup, Checkbox, Alignment, MenuItem, Classes } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { showSuccessToast } from 'app/toast';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';

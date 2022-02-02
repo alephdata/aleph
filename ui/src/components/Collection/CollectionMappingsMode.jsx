@@ -2,10 +2,10 @@ import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import { collectionMappingsQuery } from 'queries';
 import getEntityLink from 'util/getEntityLink';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
@@ -24,10 +24,10 @@ const messages = defineMessages({
 
 class CollectionMappingsMode extends React.Component {
   onDocSelected = (doc) => {
-    const { history } = this.props;
+    const { navigate } = this.props;
     const pathname = getEntityLink(doc);
     if (pathname) {
-      history.push({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
+      navigate({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
     }
   }
 

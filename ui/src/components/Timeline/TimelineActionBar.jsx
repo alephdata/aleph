@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
+
+import withRouter from 'app/withRouter'
 
 const messages = defineMessages({
   collapse: {
@@ -24,8 +25,8 @@ class TimelineActionBar extends Component {
   }
 
   toggleExpanded() {
-    const { expandedMode, history, location } = this.props;
-    history.push({
+    const { expandedMode, navigate, location } = this.props;
+    navigate({
       ...location,
       hash: queryString.stringify({ expanded: !expandedMode })
     })

@@ -1,9 +1,9 @@
 import React from 'react';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
+import withRouter from 'app/withRouter'
 import { QuickLinks } from 'components/common';
 
 

@@ -5,8 +5,8 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
+import withRouter from 'app/withRouter'
 import { ErrorSection, Date, QueryInfiniteLoad, QueryText, Skeleton } from 'components/common';
 import { queryAlerts, createAlert, deleteAlert } from 'actions';
 import { selectAlertResult } from 'selectors';
@@ -64,10 +64,10 @@ class AlertsDialog extends Component {
   }
 
   onSearch(alert, event) {
-    const { history } = this.props;
+    const { navigate } = this.props;
     event.preventDefault();
     const search = queryString.stringify({ q: alert.query });
-    history.push({ pathname: '/search', search: search });
+    navigate({ pathname: '/search', search: search });
   }
 
   onChangeAddingInput({ target }) {

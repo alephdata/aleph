@@ -1,10 +1,11 @@
 # Dependencies maintained by OCCRP
 banal==1.0.6
-followthemoney==2.7.3
+followthemoney==2.8.2
 followthemoney-store[postgresql]==3.0.3
+followthemoney-compare==0.4.3
 fingerprints==1.0.3
 servicelayer[google,amazon]==1.18.2
-normality==2.2.3
+normality==2.2.5
 pantomime==0.5.1
 
 # Flask ecosystem
@@ -15,14 +16,14 @@ Flask-Migrate==3.1.0
 Flask-Cors==3.0.10
 Flask-Babel==2.0.0
 flask-talisman==0.8.1
-SQLAlchemy==1.4.25
-alembic==1.7.4
+SQLAlchemy==1.4.31
+alembic==1.7.6
 authlib==0.15.5
 
-elasticsearch==7.15.1
+elasticsearch==7.17.0
 marshmallow==2.19.2
 gunicorn[eventlet]==20.1.0
-jsonschema==4.1.0
+jsonschema==4.4.0
 apispec==5.1.1
 apispec-webframeworks==0.5.2
 blinker==1.4
@@ -30,9 +31,9 @@ Babel==2.9.1
 PyYAML==5.4.1
 python-frontmatter==1.0.0
 pyjwt >= 2.0.1, < 2.4.0
-cryptography >= 3.4.4, < 36.0.0
+cryptography >= 36.0.0, < 37.0.0
 requests[security] >= 2.25.1, < 3.0.0
-urllib3==1.26.7
+urllib3==1.26.8
 tabulate==0.8.9
 zipstream-new==1.1.8
 

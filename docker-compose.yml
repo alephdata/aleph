@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: ghcr.io/alephdata/aleph-elasticsearch:0dda9342826b9a0ae18c92b5d06d7c5b33d50627
+    image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -20,19 +20,19 @@ services:
 
   redis:
     image: redis:alpine
-    command: ["redis-server", "--save", "3600", "10"]
+    command: [ "redis-server", "--save", "3600", "10" ]
     volumes:
       - redis-data:/data
 
   convert-document:
-    image: ghcr.io/alephdata/convert-document:3.15.2
+    image: ghcr.io/alephdata/convert-document:3.16.1
     read_only: true
     restart: on-failure
     user: app
     tmpfs: /tmp
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.15.2
+    image: ghcr.io/alephdata/ingest-file:3.16.1
     tmpfs:
       - /tmp:mode=777
     volumes:

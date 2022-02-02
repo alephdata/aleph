@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
+
+import withRouter from 'app/withRouter'
 import { ErrorSection } from "src/components/common";
 import { selectExports } from "selectors";
 import { fetchExports } from "src/actions";
