@@ -318,7 +318,7 @@
     "defaultMessage": "Поиск"
   },
   "collection.info.source_documents": {
-    "defaultMessage": "Source documents"
+    "defaultMessage": "Исходные документы"
   },
   "collection.info.timelines": {
     "defaultMessage": "Хронологии"
@@ -726,7 +726,7 @@
     "defaultMessage": "Просмотр"
   },
   "entity.info.workbook_warning": {
-    "defaultMessage": "This sheet is part of workbook {link}"
+    "defaultMessage": "Этот лист является частью рабочей книги {link}"
   },
   "entity.manager.bulk_import.description.1": {
     "defaultMessage": "Ниже выберите таблицу для импорта новых сущностей {schema}."
