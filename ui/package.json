@@ -80,6 +80,6 @@
     ]
   },
   "devDependencies": {
-    "file-selector": "^0.2.2"
+    "file-selector": "^0.4.0"
   }
 }
