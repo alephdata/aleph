@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Callout, Intent } from '@blueprintjs/core';
 
+import withRouter from 'app/withRouter'
 import { AnimatedCount, SearchBox, Category, Country, Schema, Statistics } from 'components/common';
 import { fetchStatistics } from 'actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'selectors';
@@ -207,6 +208,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default compose(
+  withRouter,
   connect(mapStateToProps, { fetchStatistics }),
   injectIntl,
 )(HomeScreen);
