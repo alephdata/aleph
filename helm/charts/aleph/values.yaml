@@ -65,6 +65,8 @@ api:
     fsGroup: 1000
 
   image:
+    repository: alephdata/aleph
+    tag: "3.12.1"
     pullPolicy: Always
 
   containerSecurityContext:
