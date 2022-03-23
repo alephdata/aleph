@@ -15,7 +15,7 @@ from structlog.contextvars import clear_contextvars, bind_contextvars
 from aleph import __version__
 from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
-from aleph.queues import get_rate_limit
+from aleph.queues import get_rate_limit, QUEUE_ALEPH
 from aleph.queues import (
     OP_INDEX,
     OP_REINDEX,
@@ -168,11 +168,11 @@ class AlephWorker:
                 try:
                     self.connect()
                     self.threadlocal._channel.queue_declare(
-                        queue="task_queue", durable=True
+                        queue=QUEUE_ALEPH, durable=True
                     )
                     self.threadlocal._channel.basic_qos(prefetch_count=1)
                     self.threadlocal._channel.basic_consume(
-                        queue="task_queue", on_message_callback=self.on_message
+                        queue=QUEUE_ALEPH, on_message_callback=self.on_message
                     )
                     self.threadlocal._channel.start_consuming()
                 # Don't recover if connection was closed by broker
@@ -187,11 +187,11 @@ class AlephWorker:
         else:
             # non-blocking worker is used for tests. We can go easy on connection recovery
             self.connect()
-            self.threadlocal._channel.queue_declare(queue="task_queue", durable=True)
+            self.threadlocal._channel.queue_declare(queue=QUEUE_ALEPH, durable=True)
             self.threadlocal._channel.basic_qos(prefetch_count=1)
             while True:
                 method, properties, body = self.threadlocal._channel.basic_get(
-                    queue="task_queue"
+                    queue=QUEUE_ALEPH
                 )
                 if method == None:
                     return

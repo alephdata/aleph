@@ -26,19 +26,22 @@ OP_PRUNE_ENTITY = "pruneentity"
 
 NO_COLLECTION = "null"
 
+QUEUE_ALEPH = "aleph_queue"
+QUEUE_INGEST = "ingest_queue"
+
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=settings.RABBITMQ_URL)
 )
 channel = connection.channel()
 
-channel.queue_declare(queue="task_queue", durable=True)
-channel.queue_declare(queue="ingest_queue", durable=True)
+channel.queue_declare(queue=QUEUE_ALEPH, durable=True)
+channel.queue_declare(queue=QUEUE_INGEST, durable=True)
 
 
 def flush_queue():
-    channel.queue_purge("task_queue")
-    channel.queue_purge("ingest_queue")
+    channel.queue_purge(QUEUE_ALEPH)
+    channel.queue_purge(QUEUE_INGEST)
 
 
 def dataset_from_collection(collection):
@@ -77,7 +80,7 @@ def queue_task(dataset, stage, job_id=None, context=None, **payload):
 
     channel.basic_publish(
         exchange="",
-        routing_key="task_queue",
+        routing_key=QUEUE_ALEPH,
         body=json.dumps(body),
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
@@ -137,7 +140,7 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
 
     channel.basic_publish(
         exchange="",
-        routing_key="ingest_queue",
+        routing_key=QUEUE_INGEST,
         body=json.dumps(body),
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
@@ -165,7 +168,7 @@ def pipeline_entity(collection, proxy, job_id=None):
 
     channel.basic_publish(
         exchange="",
-        routing_key="ingest_queue",
+        routing_key=QUEUE_INGEST,
         body=json.dumps(body),
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
