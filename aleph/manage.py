@@ -16,7 +16,7 @@ from aleph.authz import Authz
 from aleph.model import Collection, Role, EntitySet
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
-from aleph.queues import get_status, cancel_queue
+from aleph.queues import get_status, cancel_queue, flush_queue
 from aleph.queues import get_active_dataset_status
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
@@ -415,6 +415,11 @@ def resetcache():
 @click.option("-p", "--prefix", help="Scan a subset with a prefix")
 def cleanuparchive(prefix):
     cleanup_archive(prefix=prefix)
+
+
+@cli.command()
+def flushqueue():
+    flush_queue()
 
 
 @cli.command()

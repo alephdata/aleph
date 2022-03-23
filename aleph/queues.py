@@ -1,7 +1,10 @@
 import logging
+import json
 
+
+import pika
 from servicelayer.rate_limit import RateLimit
-from servicelayer.jobs import Job, Dataset, Stage
+from servicelayer.jobs import Job, Dataset
 
 from aleph.core import kv, settings
 from aleph.model import Entity
@@ -22,6 +25,20 @@ OP_UPDATE_ENTITY = "updateentity"
 OP_PRUNE_ENTITY = "pruneentity"
 
 NO_COLLECTION = "null"
+
+
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=settings.RABBITMQ_URL)
+)
+channel = connection.channel()
+
+channel.queue_declare(queue="task_queue", durable=True)
+channel.queue_declare(queue="ingest_queue", durable=True)
+
+
+def flush_queue():
+    channel.queue_purge("task_queue")
+    channel.queue_purge("ingest_queue")
 
 
 def dataset_from_collection(collection):
@@ -50,18 +67,28 @@ def get_stage(collection, stage, job_id=None):
 
 
 def queue_task(dataset, stage, job_id=None, context=None, **payload):
-    stage = get_stage(dataset, stage, job_id=job_id)
-    stage.queue(payload or {}, context or {})
+    body = {
+        "collection_id": dataset.id,
+        "job_id": job_id or Job.random_id(),
+        "operation": stage,
+        "context": context,
+        "payload": payload,
+    }
+
+    channel.basic_publish(
+        exchange="",
+        routing_key="task_queue",
+        body=json.dumps(body),
+        properties=pika.BasicProperties(
+            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
+        ),
+    )
+
     if settings.TESTING:
         from aleph.worker import get_worker
 
         worker = get_worker()
-        while True:
-            stages = worker.get_stages()
-            task = Stage.get_task(worker.conn, stages, timeout=None)
-            if task is None:
-                break
-            worker.dispatch_task(task)
+        worker.process(blocking=False)
 
 
 def get_status(collection):
@@ -95,12 +122,27 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
     """Send the given entity proxy to the ingest-file service."""
 
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
-    stage = get_stage(collection, OP_INGEST, job_id=job_id)
     pipeline = list(settings.INGEST_PIPELINE)
     if index:
         pipeline.append(OP_INDEX)
     context = get_context(collection, pipeline)
-    stage.queue(proxy.to_dict(), context)
+
+    body = {
+        "collection_id": collection.id,
+        "job_id": job_id or Job.random_id(),
+        "operation": OP_INGEST,
+        "context": context,
+        "payload": proxy.to_dict(),
+    }
+
+    channel.basic_publish(
+        exchange="",
+        routing_key="ingest_queue",
+        body=json.dumps(body),
+        properties=pika.BasicProperties(
+            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
+        ),
+    )
 
 
 def pipeline_entity(collection, proxy, job_id=None):
@@ -111,6 +153,21 @@ def pipeline_entity(collection, proxy, job_id=None):
         if proxy.schema.is_a(Entity.ANALYZABLE):
             pipeline.extend(settings.INGEST_PIPELINE)
     pipeline.append(OP_INDEX)
-    stage = get_stage(collection, pipeline.pop(0), job_id=job_id)
     context = get_context(collection, pipeline)
-    stage.queue({"entity_ids": [proxy.id]}, context)
+
+    body = {
+        "collection_id": collection.id,
+        "job_id": job_id or Job.random_id(),
+        "operation": pipeline.pop(0),
+        "context": context,
+        "payload": {"entity_ids": [proxy.id]},
+    }
+
+    channel.basic_publish(
+        exchange="",
+        routing_key="ingest_queue",
+        body=json.dumps(body),
+        properties=pika.BasicProperties(
+            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
+        ),
+    )

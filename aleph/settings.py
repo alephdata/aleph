@@ -4,6 +4,7 @@
 # setup. Wherever possible use environment variables to override the
 # defaults.
 import os
+import multiprocessing
 from servicelayer import env
 from urllib.parse import urlparse
 from flask_babel import lazy_gettext
@@ -181,3 +182,8 @@ INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
 ###############################################################################
 # XREF Model Selection
 XREF_MODEL = env.get("FTM_COMPARE_MODEL", None)
+
+###############################################################################
+# Task Queuue
+RABBITMQ_URL = env.get("ALEPH_RABBITMQ_URL", "rabbitmq")
+WORKER_THREADS = env.get("ALEPH_WORKER_THREADS", multiprocessing.cpu_count())
