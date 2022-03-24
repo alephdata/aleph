@@ -109,7 +109,7 @@ NOTIFICATIONS_DELETE = timedelta(days=NOTIFICATIONS_DELETE)
 DEFAULT_LANGUAGE = env.get("ALEPH_DEFAULT_LANGUAGE", "en")
 
 # User interface
-UI_LANGUAGES = ["ru", "es", "de", "en", "ar"]
+UI_LANGUAGES = ["ru", "es", "de", "en", "ar", "fr"]
 UI_LANGUAGES = env.to_list("ALEPH_UI_LANGUAGES", UI_LANGUAGES)
 UI_LANGUAGES = [lang.lower().strip() for lang in UI_LANGUAGES]
 
