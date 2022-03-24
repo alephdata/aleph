@@ -1,6 +1,8 @@
 import json
-import structlog
+import uuid
 from datetime import datetime, date
+
+import structlog
 from normality import stringify
 from flask_babel.speaklater import LazyString
 from elasticsearch import Transport
@@ -82,3 +84,7 @@ class LoggingTransport(Transport):
             del payload["es_req_body"]
         log.debug("Performed ES request", **payload)
         return result
+
+
+def random_id():
+    return uuid.uuid4().hex

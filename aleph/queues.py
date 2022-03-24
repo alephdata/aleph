@@ -8,6 +8,7 @@ from servicelayer.jobs import Job, Dataset
 
 from aleph.core import kv, settings
 from aleph.model import Entity
+from aleph.util import random_id
 
 log = logging.getLogger(__name__)
 
@@ -64,7 +65,7 @@ def get_rate_limit(resource, limit=100, interval=60, unit=1):
 
 def get_stage(collection, stage, job_id=None):
     dataset = dataset_from_collection(collection)
-    job_id = job_id or Job.random_id()
+    job_id = job_id or random_id()
     job = Job(kv, dataset, job_id)
     return job.get_stage(stage)
 
@@ -72,7 +73,7 @@ def get_stage(collection, stage, job_id=None):
 def queue_task(dataset, stage, job_id=None, context=None, **payload):
     body = {
         "collection_id": dataset.id,
-        "job_id": job_id or Job.random_id(),
+        "job_id": job_id or random_id(),
         "operation": stage,
         "context": context,
         "payload": payload,
@@ -132,7 +133,7 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
 
     body = {
         "collection_id": collection.id,
-        "job_id": job_id or Job.random_id(),
+        "job_id": job_id or random_id(),
         "operation": OP_INGEST,
         "context": context,
         "payload": proxy.to_dict(),
@@ -160,7 +161,7 @@ def pipeline_entity(collection, proxy, job_id=None):
 
     body = {
         "collection_id": collection.id,
-        "job_id": job_id or Job.random_id(),
+        "job_id": job_id or random_id(),
         "operation": pipeline.pop(0),
         "context": context,
         "payload": {"entity_ids": [proxy.id]},

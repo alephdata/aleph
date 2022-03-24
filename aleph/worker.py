@@ -38,6 +38,7 @@ from aleph.logic.processing import index_many
 from aleph.logic.xref import xref_collection, export_matches
 from aleph.logic.entities import update_entity, prune_entity
 from aleph.logic.mapping import load_mapping, flush_mapping
+from aleph.util import random_id
 
 log = structlog.get_logger(__name__)
 
@@ -102,7 +103,7 @@ def get_task(body, delivery_tag) -> Task:
         collection = Collection.by_id(body["collection_id"], deleted=True)
     return Task(
         collection=collection,
-        task_id=uuid.uuid4().hex,
+        task_id=random_id(),
         job_id=body["job_id"],
         delivery_tag=delivery_tag,
         operation=body["operation"],
@@ -121,7 +122,7 @@ def apply_task_context(task: Task, **kwargs):
         stage=task.operation,
         dataset=task.collection.foreign_id,
         start_time=time.time(),
-        trace_id=str(uuid.uuid4()),
+        trace_id=random_id(),
         **kwargs,
     )
 
