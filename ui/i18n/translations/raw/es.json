@@ -132,7 +132,7 @@
     "defaultMessage": "Are you sure you want to delete {collectionLabel} and all contained items?"
   },
   "collection.edit.access_title": {
-    "defaultMessage": "Access control"
+    "defaultMessage": "Control de acceso"
   },
   "collection.edit.cancel_button": {
     "defaultMessage": "Cancelar"
@@ -231,7 +231,7 @@
     "defaultMessage": "Sus cambios han sido guardados."
   },
   "collection.edit.title": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Configuraciones"
   },
   "collection.edit.users": {
     "defaultMessage": "Usuarios"
@@ -264,7 +264,7 @@
     "defaultMessage": "Compartir"
   },
   "collection.info.browse": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Documentos"
   },
   "collection.info.delete": {
     "defaultMessage": "Eliminar conjunto de datos"
@@ -279,13 +279,13 @@
     "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
   },
   "collection.info.documents": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Documentos"
   },
   "collection.info.edit": {
     "defaultMessage": "Configuraciones"
   },
   "collection.info.entities": {
-    "defaultMessage": "Entities"
+    "defaultMessage": "Entidades"
   },
   "collection.info.lists": {
     "defaultMessage": "Lists"
@@ -300,13 +300,13 @@
     "defaultMessage": "Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document"
   },
   "collection.info.mentions": {
-    "defaultMessage": "Mentions"
+    "defaultMessage": "Menciones"
   },
   "collection.info.mentions_description": {
     "defaultMessage": "Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation."
   },
   "collection.info.overview": {
-    "defaultMessage": "Overview"
+    "defaultMessage": "Resumen"
   },
   "collection.info.reindex": {
     "defaultMessage": "Reindexar todo el contenido"
@@ -315,7 +315,7 @@
     "defaultMessage": "Reintroducir documentos"
   },
   "collection.info.search": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Buscar"
   },
   "collection.info.source_documents": {
     "defaultMessage": "Source documents"
@@ -327,7 +327,7 @@
     "defaultMessage": "Timelines are a way to view and organize events chronologically."
   },
   "collection.info.xref": {
-    "defaultMessage": "Cross-reference"
+    "defaultMessage": "Cruce de base de datos"
   },
   "collection.info.xref_description": {
     "defaultMessage": "Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation."
@@ -480,19 +480,19 @@
     "defaultMessage": "Search this dataset"
   },
   "diagram.create.button": {
-    "defaultMessage": "New diagram"
+    "defaultMessage": "Nuevo diagrama"
   },
   "diagram.create.label_placeholder": {
-    "defaultMessage": "Untitled diagram"
+    "defaultMessage": "Diagrama sin título"
   },
   "diagram.create.login": {
-    "defaultMessage": "You must log in to create a diagram"
+    "defaultMessage": "Debes iniciar sesión para crear un diagrama"
   },
   "diagram.create.success": {
-    "defaultMessage": "Your diagram has been created successfully."
+    "defaultMessage": "Tu diagrama se ha creado correctamente."
   },
   "diagram.create.summary_placeholder": {
-    "defaultMessage": "A brief description of the diagram"
+    "defaultMessage": "Una breve descripción del diagrama"
   },
   "diagram.create.title": {
     "defaultMessage": "Create a diagram"
@@ -528,7 +528,7 @@
     "defaultMessage": "Export options"
   },
   "diagram.import.button": {
-    "defaultMessage": "Import diagram"
+    "defaultMessage": "Importar diagrama"
   },
   "diagram.import.placeholder": {
     "defaultMessage": "Drop a .ftm or .vis file here or click to import an existing diagram"
@@ -540,25 +540,25 @@
     "defaultMessage": "Error rendering diagram"
   },
   "diagram.selector.create": {
-    "defaultMessage": "Create a new diagram"
+    "defaultMessage": "Crear un diagrama nuevo"
   },
   "diagram.selector.select_empty": {
     "defaultMessage": "No existing diagram"
   },
   "diagram.update.label_placeholder": {
-    "defaultMessage": "Untitled diagram"
+    "defaultMessage": "Diagrama sin título"
   },
   "diagram.update.success": {
     "defaultMessage": "Your diagram has been updated successfully."
   },
   "diagram.update.summary_placeholder": {
-    "defaultMessage": "A brief description of the diagram"
+    "defaultMessage": "Una breve descripción del diagrama"
   },
   "diagram.update.title": {
-    "defaultMessage": "Diagram settings"
+    "defaultMessage": "Configuración de diagrama"
   },
   "diagrams": {
-    "defaultMessage": "Diagrams"
+    "defaultMessage": "Diagramas"
   },
   "diagrams.description": {
     "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
@@ -573,10 +573,10 @@
     "defaultMessage": "Descargar"
   },
   "document.download.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Cancelar"
   },
   "document.download.confirm": {
-    "defaultMessage": "Download"
+    "defaultMessage": "Descargar"
   },
   "document.download.dont_warn": {
     "defaultMessage": "Don't warn me in the future when downloading source documents"
@@ -591,7 +591,7 @@
     "defaultMessage": "Se produjo un error al crear la carpeta."
   },
   "document.folder.new": {
-    "defaultMessage": "New folder"
+    "defaultMessage": "Nueva carpeta"
   },
   "document.folder.save": {
     "defaultMessage": "Crear"
@@ -618,7 +618,7 @@
     "defaultMessage": "Subir"
   },
   "document.upload.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Cancelar"
   },
   "document.upload.close": {
     "defaultMessage": "Close"
@@ -699,7 +699,7 @@
     "defaultMessage": "Buscar documentos"
   },
   "entity.document.manager.search_placeholder_document": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "Buscar en {label}"
   },
   "entity.info.attachments": {
     "defaultMessage": "Anexos"
@@ -729,13 +729,13 @@
     "defaultMessage": "This sheet is part of workbook {link}"
   },
   "entity.manager.bulk_import.description.1": {
-    "defaultMessage": "Select a table below from which to import new {schema} entities."
+    "defaultMessage": "Seleccione una tabla de abajo desde la cual importar nuevas entidades de {schema}."
   },
   "entity.manager.bulk_import.description.2": {
-    "defaultMessage": "Once selected, you will be prompted to assign columns from that table to properties of the generated entities."
+    "defaultMessage": "Al seleccionar, se te pedirá que asignes columnas de esa tabla a las propiedades de las entidades generadas."
   },
   "entity.manager.bulk_import.description.3": {
-    "defaultMessage": "Don't see the table you're looking for? {link}"
+    "defaultMessage": "¿No puedes ver la tabla que estás buscando? {link}"
   },
   "entity.manager.bulk_import.link_text": {
     "defaultMessage": "Upload a new table document"
@@ -747,7 +747,7 @@
     "defaultMessage": "Seleccionar un documento de tabla"
   },
   "entity.manager.delete": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Borrar"
   },
   "entity.manager.edge_create_success": {
     "defaultMessage": "Se enlazó exitosamente {source} y {target}"
@@ -756,7 +756,7 @@
     "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
   },
   "entity.manager.remove": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "Eliminar"
   },
   "entity.manager.search_empty": {
     "defaultMessage": "No se encontraron {schema} que coincidan"
@@ -786,7 +786,7 @@
     "defaultMessage": "Search entities"
   },
   "entity.remove.confirm": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "Eliminar"
   },
   "entity.remove.error": {
     "defaultMessage": "An error occured while attempting to remove this entity."
@@ -819,13 +819,13 @@
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
   },
   "entity.status.error": {
-    "defaultMessage": "Error saving"
+    "defaultMessage": "Error al guardar"
   },
   "entity.status.in_progress": {
-    "defaultMessage": "Saving..."
+    "defaultMessage": "Guardando..."
   },
   "entity.status.success": {
-    "defaultMessage": "Saved"
+    "defaultMessage": "Guardado"
   },
   "entity.tags.no_tags": {
     "defaultMessage": "No se extrajeron selectores de esta entidad."
@@ -840,10 +840,10 @@
     "defaultMessage": "Importación en bloque"
   },
   "entity.viewer.search_placeholder": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "Buscar en {label}"
   },
   "entitySet.last_updated": {
-    "defaultMessage": "Updated {date}"
+    "defaultMessage": "Actualizado {date}"
   },
   "entityset.choose.name": {
     "defaultMessage": "Título"
@@ -894,7 +894,7 @@
     "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
   },
   "entityset.selector.success_toast_button": {
-    "defaultMessage": "View"
+    "defaultMessage": "Vista"
   },
   "entityset.selector.title": {
     "defaultMessage": "Add {firstCaption} {titleSecondary} to..."
@@ -906,7 +906,7 @@
     "defaultMessage": "and {count} other {count, plural, one {entity} other {entities}}"
   },
   "entityset.update.submit": {
-    "defaultMessage": "Save changes"
+    "defaultMessage": "Guardar cambios"
   },
   "error.screen.not_found": {
     "defaultMessage": "No se encontró la página solicitada."
@@ -915,10 +915,10 @@
     "defaultMessage": "<bold>Initiate your export.</bold> {br}{br} Exports take some time to generate. You will receive an email once the data is ready. {br}{br} Please trigger this export only once."
   },
   "exports.dialog.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Cancelar"
   },
   "exports.dialog.confirm": {
-    "defaultMessage": "Export"
+    "defaultMessage": "Exportar"
   },
   "exports.dialog.dashboard_link": {
     "defaultMessage": "View progress"
@@ -933,13 +933,13 @@
     "defaultMessage": "Below is a list of your exports. Make sure to download them before they expire."
   },
   "exports.name": {
-    "defaultMessage": "Name"
+    "defaultMessage": "Nombre"
   },
   "exports.no_exports": {
     "defaultMessage": "You have no exports to download"
   },
   "exports.size": {
-    "defaultMessage": "Size"
+    "defaultMessage": "Tamaño"
   },
   "exports.status": {
     "defaultMessage": "Status"
@@ -951,13 +951,13 @@
     "defaultMessage": "{count, plural, one {Address} other {Direcciones}}"
   },
   "facet.caption": {
-    "defaultMessage": "Name"
+    "defaultMessage": "Nombre"
   },
   "facet.category": {
     "defaultMessage": "{count, plural, one {Category} other {Categorías}}"
   },
   "facet.collection_id": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "Conjunto de datos"
   },
   "facet.countries": {
     "defaultMessage": "{count, plural, one {Country} other {Países}}"
@@ -1056,13 +1056,13 @@
     "defaultMessage": "Preview next result"
   },
   "hotkeys.search_focus": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Buscar"
   },
   "infoMode.collection_casefile": {
     "defaultMessage": "Investigation"
   },
   "infoMode.collection_dataset": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "Conjunto de datos"
   },
   "infoMode.createdAt": {
     "defaultMessage": "Created at"
@@ -1071,7 +1071,7 @@
     "defaultMessage": "Created by"
   },
   "infoMode.updatedAt": {
-    "defaultMessage": "Last updated"
+    "defaultMessage": "Última actualización"
   },
   "investigation.mentions.empty": {
     "defaultMessage": "There are no mentions yet in this investigation."
@@ -1263,7 +1263,7 @@
     "defaultMessage": "Select a List or Diagram"
   },
   "mapping.entityset.remove": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "Eliminar"
   },
   "mapping.error.keyMissing": {
     "defaultMessage": "Error de clave: {id} la entidad debe tener al menos una clave"
@@ -1302,7 +1302,7 @@
     "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
   },
   "mapping.info.link": {
-    "defaultMessage": "Aleph data mapping documentation"
+    "defaultMessage": "Documentación de mapeo de datos de Aleph"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
@@ -1428,7 +1428,7 @@
     "defaultMessage": "Cerrar sesión"
   },
   "nav.status": {
-    "defaultMessage": "System status"
+    "defaultMessage": "Estado del sistema"
   },
   "nav.timelines": {
     "defaultMessage": "Timelines"
@@ -1455,7 +1455,7 @@
     "defaultMessage": "Notificaciones recientes"
   },
   "notifications.type_filter.all": {
-    "defaultMessage": "All"
+    "defaultMessage": "Todos"
   },
   "pages.not.found": {
     "defaultMessage": "Página no encontrada"
@@ -1581,7 +1581,7 @@
     "defaultMessage": "Any of these words"
   },
   "search.advanced.clear": {
-    "defaultMessage": "Clear all"
+    "defaultMessage": "Borrar todo"
   },
   "search.advanced.exact.helptext": {
     "defaultMessage": "Only results with this exact word or phrase will be returned"
@@ -1611,7 +1611,7 @@
     "defaultMessage": "Second term"
   },
   "search.advanced.submit": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Buscar"
   },
   "search.advanced.title": {
     "defaultMessage": "Advanced Search"
@@ -1644,7 +1644,7 @@
     "defaultMessage": "Property groups"
   },
   "search.config.properties": {
-    "defaultMessage": "Properties"
+    "defaultMessage": "Propiedades"
   },
   "search.config.reset": {
     "defaultMessage": "Reset to default"
@@ -1698,13 +1698,13 @@
     "defaultMessage": "Sin resultados de búsqueda"
   },
   "search.placeholder": {
-    "defaultMessage": "Search companies, people and documents"
+    "defaultMessage": "Buscar empresas, personas y documentos"
   },
   "search.placeholder_default": {
-    "defaultMessage": "Search…"
+    "defaultMessage": "Buscar..."
   },
   "search.placeholder_label": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "Buscar en {label}"
   },
   "search.screen.dates.show-all": {
     "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
@@ -1737,7 +1737,7 @@
     "defaultMessage": "Search: {title}"
   },
   "search.title_emptyq": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Buscar"
   },
   "settings.api_key": {
     "defaultMessage": "Clave de acceso secreto a la API"
@@ -1794,7 +1794,7 @@
     "defaultMessage": "Expandir"
   },
   "signup.activate": {
-    "defaultMessage": "Activate your account"
+    "defaultMessage": "Activar su cuenta"
   },
   "signup.inbox.desc": {
     "defaultMessage": "Le enviaremos un correo electrónico, por favor ingrese al enlace para completar su registro"
@@ -1812,31 +1812,31 @@
     "defaultMessage": "¿No tiene cuenta? ¡Regístrese!"
   },
   "signup.title": {
-    "defaultMessage": "Sign in"
+    "defaultMessage": "Iniciar sesión"
   },
   "sorting.bar.button.label": {
-    "defaultMessage": "Show:"
+    "defaultMessage": "Mostrar:"
   },
   "sorting.bar.caption": {
-    "defaultMessage": "Title"
+    "defaultMessage": "Título"
   },
   "sorting.bar.collection_id": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "Conjunto de datos"
   },
   "sorting.bar.count": {
-    "defaultMessage": "Size"
+    "defaultMessage": "Tamaño"
   },
   "sorting.bar.countries": {
-    "defaultMessage": "Countries"
+    "defaultMessage": "Países"
   },
   "sorting.bar.created_at": {
-    "defaultMessage": "Creation Date"
+    "defaultMessage": "Fecha de creación"
   },
   "sorting.bar.date": {
-    "defaultMessage": "Date"
+    "defaultMessage": "Fecha"
   },
   "sorting.bar.dates": {
-    "defaultMessage": "Dates"
+    "defaultMessage": "Fechas"
   },
   "sorting.bar.direction": {
     "defaultMessage": "Dirección:"
@@ -1845,13 +1845,13 @@
     "defaultMessage": "End date"
   },
   "sorting.bar.label": {
-    "defaultMessage": "Title"
+    "defaultMessage": "Título"
   },
   "sorting.bar.sort": {
-    "defaultMessage": "Sort by:"
+    "defaultMessage": "Ordenar por:"
   },
   "sorting.bar.updated_at": {
-    "defaultMessage": "Update Date"
+    "defaultMessage": "Fecha de actualización"
   },
   "sources.index.empty": {
     "defaultMessage": "This group is not linked to any datasets or investigations."
@@ -1884,7 +1884,7 @@
     "defaultMessage": "New timeline"
   },
   "timeline.create.cancel": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Borrar"
   },
   "timeline.create.label_placeholder": {
     "defaultMessage": "Untitled timeline"
@@ -1893,7 +1893,7 @@
     "defaultMessage": "You must log in to create a timeline"
   },
   "timeline.create.submit": {
-    "defaultMessage": "Create"
+    "defaultMessage": "Crear"
   },
   "timeline.create.success": {
     "defaultMessage": "Your timeline has been created successfully."
@@ -1998,7 +1998,7 @@
     "defaultMessage": "Default"
   },
   "xref.sort.label": {
-    "defaultMessage": "Sort by:"
+    "defaultMessage": "Ordenar por:"
   },
   "xref.sort.random": {
     "defaultMessage": "Random"

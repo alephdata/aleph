@@ -66,7 +66,7 @@
     "defaultMessage": "Sačuvaj"
   },
   "case.share.with": {
-    "defaultMessage": "Share with"
+    "defaultMessage": "Podijeli sa"
   },
   "case.summary": {
     "defaultMessage": "A brief description of the investigation"
@@ -132,7 +132,7 @@
     "defaultMessage": "Are you sure you want to delete {collectionLabel} and all contained items?"
   },
   "collection.edit.access_title": {
-    "defaultMessage": "Access control"
+    "defaultMessage": "Kontrola pristupa"
   },
   "collection.edit.cancel_button": {
     "defaultMessage": "Otkaži"
@@ -231,7 +231,7 @@
     "defaultMessage": "Vaše izmjene su sačuvane."
   },
   "collection.edit.title": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Podešavanja"
   },
   "collection.edit.users": {
     "defaultMessage": "Korisnici"
@@ -306,7 +306,7 @@
     "defaultMessage": "Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation."
   },
   "collection.info.overview": {
-    "defaultMessage": "Overview"
+    "defaultMessage": "Sažetak"
   },
   "collection.info.reindex": {
     "defaultMessage": "Re-index all content"
@@ -315,7 +315,7 @@
     "defaultMessage": "Re-ingest documents"
   },
   "collection.info.search": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Pretraži"
   },
   "collection.info.source_documents": {
     "defaultMessage": "Source documents"
@@ -327,7 +327,7 @@
     "defaultMessage": "Timelines are a way to view and organize events chronologically."
   },
   "collection.info.xref": {
-    "defaultMessage": "Cross-reference"
+    "defaultMessage": "Povezane reference"
   },
   "collection.info.xref_description": {
     "defaultMessage": "Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation."
@@ -438,7 +438,7 @@
     "defaultMessage": "Activity"
   },
   "dashboard.alerts": {
-    "defaultMessage": "Alerts"
+    "defaultMessage": "Pretplata"
   },
   "dashboard.cases": {
     "defaultMessage": "Investigations"
@@ -573,10 +573,10 @@
     "defaultMessage": "Preuzmi"
   },
   "document.download.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Otkaži"
   },
   "document.download.confirm": {
-    "defaultMessage": "Download"
+    "defaultMessage": "Preuzmi"
   },
   "document.download.dont_warn": {
     "defaultMessage": "Don't warn me in the future when downloading source documents"
@@ -591,7 +591,7 @@
     "defaultMessage": "There was an error creating the folder."
   },
   "document.folder.new": {
-    "defaultMessage": "New folder"
+    "defaultMessage": "Nova datoteka"
   },
   "document.folder.save": {
     "defaultMessage": "Kreiraj"
@@ -618,7 +618,7 @@
     "defaultMessage": "Unos"
   },
   "document.upload.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Otkaži"
   },
   "document.upload.close": {
     "defaultMessage": "Close"
@@ -654,7 +654,7 @@
     "defaultMessage": "{numberOfFiles, number} files, {totalSize}"
   },
   "document.upload.title": {
-    "defaultMessage": "Upload documents"
+    "defaultMessage": "Unos dokumenata"
   },
   "document.upload.title_in_folder": {
     "defaultMessage": "Upload documents to {folder}"
@@ -702,13 +702,13 @@
     "defaultMessage": "Search in {label}"
   },
   "entity.info.attachments": {
-    "defaultMessage": "Attachments"
+    "defaultMessage": "Prilozi"
   },
   "entity.info.documents": {
     "defaultMessage": "Documents"
   },
   "entity.info.info": {
-    "defaultMessage": "Info"
+    "defaultMessage": "Informacije"
   },
   "entity.info.last_view": {
     "defaultMessage": "Last viewed {time}"
@@ -720,7 +720,7 @@
     "defaultMessage": "Mentions"
   },
   "entity.info.text": {
-    "defaultMessage": "Text"
+    "defaultMessage": "Tekst"
   },
   "entity.info.view": {
     "defaultMessage": "Pregled"
@@ -747,7 +747,7 @@
     "defaultMessage": "Select a table document"
   },
   "entity.manager.delete": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Izbriši"
   },
   "entity.manager.edge_create_success": {
     "defaultMessage": "Successfully linked {source} and {target}"
@@ -756,7 +756,7 @@
     "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
   },
   "entity.manager.remove": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "Ukloni"
   },
   "entity.manager.search_empty": {
     "defaultMessage": "No matching {schema} results found"
@@ -786,7 +786,7 @@
     "defaultMessage": "Search entities"
   },
   "entity.remove.confirm": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "Ukloni"
   },
   "entity.remove.error": {
     "defaultMessage": "An error occured while attempting to remove this entity."
@@ -843,7 +843,7 @@
     "defaultMessage": "Search in {label}"
   },
   "entitySet.last_updated": {
-    "defaultMessage": "Updated {date}"
+    "defaultMessage": "Ažurirano {date}"
   },
   "entityset.choose.name": {
     "defaultMessage": "Title"
@@ -894,7 +894,7 @@
     "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
   },
   "entityset.selector.success_toast_button": {
-    "defaultMessage": "View"
+    "defaultMessage": "Pregled"
   },
   "entityset.selector.title": {
     "defaultMessage": "Add {firstCaption} {titleSecondary} to..."
@@ -906,7 +906,7 @@
     "defaultMessage": "and {count} other {count, plural, one {entity} other {entities}}"
   },
   "entityset.update.submit": {
-    "defaultMessage": "Save changes"
+    "defaultMessage": "Sačuvaj izmjene"
   },
   "error.screen.not_found": {
     "defaultMessage": "Tražena stranica nije pronađena."
@@ -915,7 +915,7 @@
     "defaultMessage": "<bold>Initiate your export.</bold> {br}{br} Exports take some time to generate. You will receive an email once the data is ready. {br}{br} Please trigger this export only once."
   },
   "exports.dialog.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Otkaži"
   },
   "exports.dialog.confirm": {
     "defaultMessage": "Export"
@@ -933,13 +933,13 @@
     "defaultMessage": "Below is a list of your exports. Make sure to download them before they expire."
   },
   "exports.name": {
-    "defaultMessage": "Name"
+    "defaultMessage": "Ime"
   },
   "exports.no_exports": {
     "defaultMessage": "You have no exports to download"
   },
   "exports.size": {
-    "defaultMessage": "Size"
+    "defaultMessage": "Veličina"
   },
   "exports.status": {
     "defaultMessage": "Status"
@@ -951,7 +951,7 @@
     "defaultMessage": "{count, plural, one {Address} other {Addresses}}"
   },
   "facet.caption": {
-    "defaultMessage": "Name"
+    "defaultMessage": "Ime"
   },
   "facet.category": {
     "defaultMessage": "{count, plural, one {Category} other {Categories}}"
@@ -1056,7 +1056,7 @@
     "defaultMessage": "Preview next result"
   },
   "hotkeys.search_focus": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Pretraži"
   },
   "infoMode.collection_casefile": {
     "defaultMessage": "Investigation"
@@ -1071,7 +1071,7 @@
     "defaultMessage": "Created by"
   },
   "infoMode.updatedAt": {
-    "defaultMessage": "Last updated"
+    "defaultMessage": "Posljednja izmjena"
   },
   "investigation.mentions.empty": {
     "defaultMessage": "There are no mentions yet in this investigation."
@@ -1122,7 +1122,7 @@
     "defaultMessage": "Successfully created {name}"
   },
   "investigation.shortcut.upload": {
-    "defaultMessage": "Upload documents"
+    "defaultMessage": "Unos dokumenata"
   },
   "investigation.shortcut.xref": {
     "defaultMessage": "Compare with other datasets"
@@ -1263,7 +1263,7 @@
     "defaultMessage": "Select a List or Diagram"
   },
   "mapping.entityset.remove": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "Ukloni"
   },
   "mapping.error.keyMissing": {
     "defaultMessage": "Key Error: {id} entity must have at least one key"
@@ -1275,7 +1275,7 @@
     "defaultMessage": "Otkaži"
   },
   "mapping.flush.confirm": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "Ukloni"
   },
   "mapping.flush.question": {
     "defaultMessage": "Are you sure you want to remove entities generated using this mapping?"
@@ -1389,7 +1389,7 @@
     "defaultMessage": "Objects"
   },
   "mapping.types.relationships": {
-    "defaultMessage": "Relationships"
+    "defaultMessage": "Veze"
   },
   "mapping.warning.empty": {
     "defaultMessage": "You must create at least one entity"
@@ -1398,7 +1398,7 @@
     "defaultMessage": "You have not generated any mappings yet"
   },
   "nav.alerts": {
-    "defaultMessage": "Alerts"
+    "defaultMessage": "Pretplata"
   },
   "nav.cases": {
     "defaultMessage": "Investigations"
@@ -1458,7 +1458,7 @@
     "defaultMessage": "All"
   },
   "pages.not.found": {
-    "defaultMessage": "Page not found"
+    "defaultMessage": "Stranica nije pronađena"
   },
   "pass.auth.not_same": {
     "defaultMessage": "Vaše šifre nisu iste!"
@@ -1500,7 +1500,7 @@
     "defaultMessage": "{entity} has been combined with entities from other datasets <link>into a profile</link>"
   },
   "profile.info.header": {
-    "defaultMessage": "Profile"
+    "defaultMessage": "Profil"
   },
   "profile.info.items": {
     "defaultMessage": "Entity decisions"
@@ -1611,7 +1611,7 @@
     "defaultMessage": "Second term"
   },
   "search.advanced.submit": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Pretraži"
   },
   "search.advanced.title": {
     "defaultMessage": "Advanced Search"
@@ -1701,7 +1701,7 @@
     "defaultMessage": "Search companies, people and documents"
   },
   "search.placeholder_default": {
-    "defaultMessage": "Search…"
+    "defaultMessage": "Pretraži..."
   },
   "search.placeholder_label": {
     "defaultMessage": "Search in {label}"
@@ -1716,7 +1716,7 @@
     "defaultMessage": "Click here"
   },
   "search.screen.dates_label": {
-    "defaultMessage": "results"
+    "defaultMessage": "rezultata"
   },
   "search.screen.dates_title": {
     "defaultMessage": "Dates"
@@ -1737,7 +1737,7 @@
     "defaultMessage": "Search: {title}"
   },
   "search.title_emptyq": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Pretraži"
   },
   "settings.api_key": {
     "defaultMessage": "API tajni pristupni ključ"
@@ -1764,7 +1764,7 @@
     "defaultMessage": "Test new features before they are finished"
   },
   "settings.locale": {
-    "defaultMessage": "Language"
+    "defaultMessage": "Jezik"
   },
   "settings.name": {
     "defaultMessage": "Ime"
@@ -1794,7 +1794,7 @@
     "defaultMessage": "Expand"
   },
   "signup.activate": {
-    "defaultMessage": "Activate your account"
+    "defaultMessage": "Aktiviraj svoj profil"
   },
   "signup.inbox.desc": {
     "defaultMessage": "Poslali smo Vam e-mail, molimo da pomoću linka završite svoju registraciju"
@@ -1812,7 +1812,7 @@
     "defaultMessage": "Nemate kreiran profil? Registrujte se!"
   },
   "signup.title": {
-    "defaultMessage": "Sign in"
+    "defaultMessage": "Prijava"
   },
   "sorting.bar.button.label": {
     "defaultMessage": "Show:"
@@ -1824,16 +1824,16 @@
     "defaultMessage": "Dataset"
   },
   "sorting.bar.count": {
-    "defaultMessage": "Size"
+    "defaultMessage": "Veličina"
   },
   "sorting.bar.countries": {
-    "defaultMessage": "Countries"
+    "defaultMessage": "Države"
   },
   "sorting.bar.created_at": {
     "defaultMessage": "Creation Date"
   },
   "sorting.bar.date": {
-    "defaultMessage": "Date"
+    "defaultMessage": "Datum"
   },
   "sorting.bar.dates": {
     "defaultMessage": "Dates"
@@ -1884,7 +1884,7 @@
     "defaultMessage": "New timeline"
   },
   "timeline.create.cancel": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Izbriši"
   },
   "timeline.create.label_placeholder": {
     "defaultMessage": "Untitled timeline"
@@ -1893,7 +1893,7 @@
     "defaultMessage": "You must log in to create a timeline"
   },
   "timeline.create.submit": {
-    "defaultMessage": "Create"
+    "defaultMessage": "Kreiraj"
   },
   "timeline.create.success": {
     "defaultMessage": "Your timeline has been created successfully."
