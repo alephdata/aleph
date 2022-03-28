@@ -1,0 +1,2006 @@
+{
+  "alert.manager.description": {
+    "defaultMessage": "Du vil motta varsler når det dukker opp et nytt søkeresultat som matcher et av de lagrede søkene du har satt opp."
+  },
+  "alerts.add_placeholder": {
+    "defaultMessage": "Opprett et nytt lagret søk"
+  },
+  "alerts.delete": {
+    "defaultMessage": "Fjern varsel"
+  },
+  "alerts.heading": {
+    "defaultMessage": "Rediger dine lagrede søk"
+  },
+  "alerts.no_alerts": {
+    "defaultMessage": "Du har ingen lagrede søk"
+  },
+  "alerts.save": {
+    "defaultMessage": "Oppdater"
+  },
+  "alerts.title": {
+    "defaultMessage": "Lagrede søk"
+  },
+  "alerts.track": {
+    "defaultMessage": "Track"
+  },
+  "auth.bad_request": {
+    "defaultMessage": "Serveren aksepterte ikke det du skrev inn"
+  },
+  "auth.server_error": {
+    "defaultMessage": "Server-feil"
+  },
+  "auth.success": {
+    "defaultMessage": "Vellykket"
+  },
+  "auth.unauthorized": {
+    "defaultMessage": "Ingen tilgang"
+  },
+  "auth.unknown_error": {
+    "defaultMessage": "En ukjent feil har oppstått"
+  },
+  "case.choose.name": {
+    "defaultMessage": "Tittel"
+  },
+  "case.choose.summary": {
+    "defaultMessage": "Sammendrag"
+  },
+  "case.chose.languages": {
+    "defaultMessage": "Språk"
+  },
+  "case.create.login": {
+    "defaultMessage": "Du må logge inn for å laste opp egne data"
+  },
+  "case.description": {
+    "defaultMessage": "Ved å opprette en gransking kan du laste opp og dele dokumenter og data som hører til et prosjekt du jobber med. Du kan laste opp PDFer, e-postarkiver og regneark, og de blir gjort tilgjengelige for raskt søk og oversikt."
+  },
+  "case.label_placeholder": {
+    "defaultMessage": "Gransking uten navn"
+  },
+  "case.language_placeholder": {
+    "defaultMessage": "Velg språk"
+  },
+  "case.languages.helper": {
+    "defaultMessage": "Brukt for optisk tegngjenkjenning i ikke-latinske alfabeter."
+  },
+  "case.save": {
+    "defaultMessage": "Lagre"
+  },
+  "case.share.with": {
+    "defaultMessage": "Del med"
+  },
+  "case.summary": {
+    "defaultMessage": "En kort beskrivelse av granskingen"
+  },
+  "case.title": {
+    "defaultMessage": "Opprett en ny gransking"
+  },
+  "case.users": {
+    "defaultMessage": "Søk etter brukere"
+  },
+  "cases.create": {
+    "defaultMessage": "Ny gransking"
+  },
+  "cases.empty": {
+    "defaultMessage": "Du har ikke opprettet noen granskinger ennå"
+  },
+  "cases.no_results": {
+    "defaultMessage": "Fant ingen granskinger som passer med ditt søk"
+  },
+  "cases.placeholder": {
+    "defaultMessage": "Søk etter gransking..."
+  },
+  "cases.title": {
+    "defaultMessage": "Granskinger"
+  },
+  "clipboard.copy.after": {
+    "defaultMessage": "Kopiert til utklippstavlen"
+  },
+  "clipboard.copy.before": {
+    "defaultMessage": "Kopiér til utklippstavlen"
+  },
+  "collection.addSchema.placeholder": {
+    "defaultMessage": "Legg til ny entitets-type"
+  },
+  "collection.analyze.alert.text": {
+    "defaultMessage": "Du er i ferd med å re-indeksere entitetene i {collectionLabel}. Dette kan være nyttig hvis det er uregelmessigheter i hvordan dataene blir presentert."
+  },
+  "collection.analyze.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "collection.cancel.button": {
+    "defaultMessage": "Avbryt"
+  },
+  "collection.countries": {
+    "defaultMessage": "Land"
+  },
+  "collection.creator": {
+    "defaultMessage": "Ansvarlig"
+  },
+  "collection.data_updated_at": {
+    "defaultMessage": "Innhold oppdatert"
+  },
+  "collection.data_url": {
+    "defaultMessage": "Data URL"
+  },
+  "collection.delete.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "collection.delete.confirm": {
+    "defaultMessage": "Slett"
+  },
+  "collection.delete.question": {
+    "defaultMessage": "Er du sikker på at du vil slette {collectionLabel} og alle enhetene?"
+  },
+  "collection.edit.access_title": {
+    "defaultMessage": "Tilgangskontroll"
+  },
+  "collection.edit.cancel_button": {
+    "defaultMessage": "Avbryt"
+  },
+  "collection.edit.groups": {
+    "defaultMessage": "Grupper"
+  },
+  "collection.edit.info.analyze": {
+    "defaultMessage": "Re-prosesser"
+  },
+  "collection.edit.info.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "collection.edit.info.category": {
+    "defaultMessage": "Kategori"
+  },
+  "collection.edit.info.countries": {
+    "defaultMessage": "Land"
+  },
+  "collection.edit.info.creator": {
+    "defaultMessage": "Ansvarlig"
+  },
+  "collection.edit.info.data_url": {
+    "defaultMessage": "Data-kilde URL"
+  },
+  "collection.edit.info.delete": {
+    "defaultMessage": "Slett"
+  },
+  "collection.edit.info.foreign_id": {
+    "defaultMessage": "Ekstern ID"
+  },
+  "collection.edit.info.frequency": {
+    "defaultMessage": "Oppdateringsfrekvens"
+  },
+  "collection.edit.info.info_url": {
+    "defaultMessage": "Informasjons-URL"
+  },
+  "collection.edit.info.label": {
+    "defaultMessage": "Merkelapp"
+  },
+  "collection.edit.info.languages": {
+    "defaultMessage": "Språk"
+  },
+  "collection.edit.info.placeholder_country": {
+    "defaultMessage": "Velg land"
+  },
+  "collection.edit.info.placeholder_data_url": {
+    "defaultMessage": "Lenke til nedlastbare rådata"
+  },
+  "collection.edit.info.placeholder_info_url": {
+    "defaultMessage": "Lenke til ytterligere informasjon"
+  },
+  "collection.edit.info.placeholder_label": {
+    "defaultMessage": "En merkelapp"
+  },
+  "collection.edit.info.placeholder_language": {
+    "defaultMessage": "Velg språk"
+  },
+  "collection.edit.info.placeholder_publisher": {
+    "defaultMessage": "Organisasjon eller person som publiserere disse datene"
+  },
+  "collection.edit.info.placeholder_publisher_url": {
+    "defaultMessage": "Lenke til publiserings-kilden"
+  },
+  "collection.edit.info.placeholder_summary": {
+    "defaultMessage": "Et kort sammendrag"
+  },
+  "collection.edit.info.publisher": {
+    "defaultMessage": "Publisert av"
+  },
+  "collection.edit.info.publisher_url": {
+    "defaultMessage": "URL til publiserings-kilden"
+  },
+  "collection.edit.info.restricted": {
+    "defaultMessage": "Dette datasettet er begrenset/sensitivt og brukere bør få opp en advarsel."
+  },
+  "collection.edit.info.save": {
+    "defaultMessage": "Lagre endringer"
+  },
+  "collection.edit.info.summary": {
+    "defaultMessage": "Sammendrag"
+  },
+  "collection.edit.permissions_warning": {
+    "defaultMessage": "NB: Brukeren må ha en Aleph-bruker for å kunne få tilgang."
+  },
+  "collection.edit.permissionstable.edit": {
+    "defaultMessage": "Rediger"
+  },
+  "collection.edit.permissionstable.view": {
+    "defaultMessage": "Vis"
+  },
+  "collection.edit.save_button": {
+    "defaultMessage": "Lagre endringer"
+  },
+  "collection.edit.save_success": {
+    "defaultMessage": "Dine endringer er lagret."
+  },
+  "collection.edit.title": {
+    "defaultMessage": "Innstillinger"
+  },
+  "collection.edit.users": {
+    "defaultMessage": "Brukere"
+  },
+  "collection.foreign_id": {
+    "defaultMessage": "Ekstern ID"
+  },
+  "collection.frequency": {
+    "defaultMessage": "Oppdateringer"
+  },
+  "collection.index.empty": {
+    "defaultMessage": "Fant ingen datasett."
+  },
+  "collection.index.filter.all": {
+    "defaultMessage": "Alle"
+  },
+  "collection.index.filter.mine": {
+    "defaultMessage": "Opprettet av meg"
+  },
+  "collection.index.no_results": {
+    "defaultMessage": "Fant ingen datasett som passer til ditt søk."
+  },
+  "collection.index.placeholder": {
+    "defaultMessage": "Søk etter datasett..."
+  },
+  "collection.index.title": {
+    "defaultMessage": "Datasett"
+  },
+  "collection.info.access": {
+    "defaultMessage": "Del"
+  },
+  "collection.info.browse": {
+    "defaultMessage": "Dokumenter"
+  },
+  "collection.info.delete": {
+    "defaultMessage": "Slett datasett"
+  },
+  "collection.info.delete_casefile": {
+    "defaultMessage": "Slett gransking"
+  },
+  "collection.info.diagrams": {
+    "defaultMessage": "Nettverksdiagram"
+  },
+  "collection.info.diagrams_description": {
+    "defaultMessage": "Nettverksdiagram lar deg visualisere komplekse relasjoner i en gransking."
+  },
+  "collection.info.documents": {
+    "defaultMessage": "Dokumenter"
+  },
+  "collection.info.edit": {
+    "defaultMessage": "Innstillinger"
+  },
+  "collection.info.entities": {
+    "defaultMessage": "Entiteter"
+  },
+  "collection.info.lists": {
+    "defaultMessage": "Lister"
+  },
+  "collection.info.lists_description": {
+    "defaultMessage": "Lister lar deg organisere og gruppere relaterte entiteter av interesse."
+  },
+  "collection.info.mappings": {
+    "defaultMessage": "Kobling av entiteter"
+  },
+  "collection.info.mappings_description": {
+    "defaultMessage": "Entitetskobling lar deg generere strukturerte data som følger Follow The Money-modellen (slik som personer, selskaper og relasjonene mellom dem). Du kan importere entitetene fra rader i et regneark eller en CSV-fil."
+  },
+  "collection.info.mentions": {
+    "defaultMessage": "Henvisninger"
+  },
+  "collection.info.mentions_description": {
+    "defaultMessage": "Aleph finner automatisk navn, adresser, telefonnummer og e-postadresser som er nevnt i de opplastede dokumentene og entitetene i din gransking. {br}{br} Klikk på et av ordene som er funnet i listen under for å se hvor i dokumentene dine det finnes."
+  },
+  "collection.info.overview": {
+    "defaultMessage": "Oversikt"
+  },
+  "collection.info.reindex": {
+    "defaultMessage": "Re-indekser alt innhold"
+  },
+  "collection.info.reingest": {
+    "defaultMessage": "Last inn dokumenter på nytt"
+  },
+  "collection.info.search": {
+    "defaultMessage": "Søk"
+  },
+  "collection.info.source_documents": {
+    "defaultMessage": "Kildedokumenter"
+  },
+  "collection.info.timelines": {
+    "defaultMessage": "Tidslinjer"
+  },
+  "collection.info.timelines_description": {
+    "defaultMessage": "Tidslinjer er en måte å organisere hendelser på kronologisk."
+  },
+  "collection.info.xref": {
+    "defaultMessage": "Finn kryssreferanser"
+  },
+  "collection.info.xref_description": {
+    "defaultMessage": "Finne kryssreferanser lar deg søke i resten av Aleph etter entiteter som likner på de som er i din gransking."
+  },
+  "collection.info_url": {
+    "defaultMessage": "Informasjons-URL"
+  },
+  "collection.last_updated": {
+    "defaultMessage": "Sist oppdatert {date}"
+  },
+  "collection.mappings.create": {
+    "defaultMessage": "Lag en ny entitetskobling"
+  },
+  "collection.mappings.create_docs_link": {
+    "defaultMessage": "For mer informasjon, klikk på lenken {link}"
+  },
+  "collection.overview.empty": {
+    "defaultMessage": "Dette datasettet er tomt."
+  },
+  "collection.publisher": {
+    "defaultMessage": "Publisert av"
+  },
+  "collection.reconcile": {
+    "defaultMessage": "Sammenstilling av data"
+  },
+  "collection.reconcile.description": {
+    "defaultMessage": "Sammenstill dine egne data med entitetene i denne samlingen ved bruk av  {openrefine}-verktøyet og ved å legge til sammenstillings-endepunktet."
+  },
+  "collection.reindex.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "collection.reindex.confirm": {
+    "defaultMessage": "Start indeksering"
+  },
+  "collection.reindex.flush": {
+    "defaultMessage": "Tøm indeks før re-indeksering"
+  },
+  "collection.reindex.processing": {
+    "defaultMessage": "Indeksering startet."
+  },
+  "collection.reingest.confirm": {
+    "defaultMessage": "Start prosessering"
+  },
+  "collection.reingest.index": {
+    "defaultMessage": "Indekser dokumenter etter hvert som de blir prosessert."
+  },
+  "collection.reingest.processing": {
+    "defaultMessage": "Innlasting har startet på nytt"
+  },
+  "collection.reingest.text": {
+    "defaultMessage": "Du er i ferd med å re-prosessere alle dokumentene i  {collectionLabel}. Dette kan ta litt tid."
+  },
+  "collection.statistics.showmore": {
+    "defaultMessage": "Vis mer"
+  },
+  "collection.status.cancel_button": {
+    "defaultMessage": "Avbryt prosesssen"
+  },
+  "collection.status.collection": {
+    "defaultMessage": "Datasett"
+  },
+  "collection.status.finished_tasks": {
+    "defaultMessage": "Ferdig"
+  },
+  "collection.status.jobs": {
+    "defaultMessage": "Jobber"
+  },
+  "collection.status.message": {
+    "defaultMessage": "Ta deg en trall mens dataene dine blir behandlet."
+  },
+  "collection.status.no_active": {
+    "defaultMessage": "Det er ingen pågående oppgaver"
+  },
+  "collection.status.pending_tasks": {
+    "defaultMessage": "På vent"
+  },
+  "collection.status.progress": {
+    "defaultMessage": "Oppgaver"
+  },
+  "collection.status.title": {
+    "defaultMessage": "Oppdatering pågår  ({percent}%)"
+  },
+  "collection.team": {
+    "defaultMessage": "Tilgjengelig for"
+  },
+  "collection.updated_at": {
+    "defaultMessage": "Metadata oppdatert"
+  },
+  "collection.xref.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "collection.xref.confirm": {
+    "defaultMessage": "Bekreft"
+  },
+  "collection.xref.empty": {
+    "defaultMessage": "Det er ingen kryssreferanse-resultater."
+  },
+  "collection.xref.processing": {
+    "defaultMessage": "Har startet å lete etter kryssreferanser."
+  },
+  "collection.xref.text": {
+    "defaultMessage": "Du vil nå lete etter kryssreferanser mellom {collectionLabel} og andre kilder. Start denne prosessen én gang og vent til den er ferdig."
+  },
+  "collection.xref.title": {
+    "defaultMessage": "Finn kryssreferanser"
+  },
+  "dashboard.activity": {
+    "defaultMessage": "Aktivitet"
+  },
+  "dashboard.alerts": {
+    "defaultMessage": "Lagrede søk"
+  },
+  "dashboard.cases": {
+    "defaultMessage": "Granskinger"
+  },
+  "dashboard.diagrams": {
+    "defaultMessage": "Nettverksdiagram"
+  },
+  "dashboard.exports": {
+    "defaultMessage": "Eksporter"
+  },
+  "dashboard.groups": {
+    "defaultMessage": "Grupper"
+  },
+  "dashboard.lists": {
+    "defaultMessage": "Lists"
+  },
+  "dashboard.notifications": {
+    "defaultMessage": "Varsler"
+  },
+  "dashboard.settings": {
+    "defaultMessage": "Innstillinger"
+  },
+  "dashboard.status": {
+    "defaultMessage": "System status"
+  },
+  "dashboard.subheading": {
+    "defaultMessage": "Sjekk fremdriften i pågående dataanalyser, opplastinger eller prosseseringsoppgaver."
+  },
+  "dashboard.timelines": {
+    "defaultMessage": "Timelines"
+  },
+  "dashboard.title": {
+    "defaultMessage": "System Status"
+  },
+  "dashboard.workspace": {
+    "defaultMessage": "Arbeidsområde"
+  },
+  "dataset.search.placeholder": {
+    "defaultMessage": "Søk i dette datasettet"
+  },
+  "diagram.create.button": {
+    "defaultMessage": "Nytt diagram"
+  },
+  "diagram.create.label_placeholder": {
+    "defaultMessage": "Diagram uten navn"
+  },
+  "diagram.create.login": {
+    "defaultMessage": "Du må logge inn for å opprette et diagram"
+  },
+  "diagram.create.success": {
+    "defaultMessage": "Ditt diagram har blitt opprettet"
+  },
+  "diagram.create.summary_placeholder": {
+    "defaultMessage": "En kort beskrivelse av diagrammet"
+  },
+  "diagram.create.title": {
+    "defaultMessage": "Opprett et diagram"
+  },
+  "diagram.embed.error": {
+    "defaultMessage": "En feil oppsto ved generering av embed-kode for diagrammet."
+  },
+  "diagram.export.embed.description": {
+    "defaultMessage": "Generer en interaktiv versjon av diagrammet som kan bygges inn i en artikkel. Denne versjonen vil ikke bli oppdater med eventuelle endringer du gjør i diagrammet i fremtiden."
+  },
+  "diagram.export.error": {
+    "defaultMessage": "En feil oppsto ved eksport av diagrammet"
+  },
+  "diagram.export.ftm": {
+    "defaultMessage": "Eksporter som .ftm"
+  },
+  "diagram.export.ftm.description": {
+    "defaultMessage": "Last ned diagrammet som en datafil som kan bli brukt i {link} eller en annen Aleph site."
+  },
+  "diagram.export.ftm.link": {
+    "defaultMessage": "Aleph Data Desktop"
+  },
+  "diagram.export.iframe": {
+    "defaultMessage": "Embed iframe"
+  },
+  "diagram.export.svg": {
+    "defaultMessage": "Eksporter som SVG"
+  },
+  "diagram.export.svg.description": {
+    "defaultMessage": "Last ned en vektorgrafikk med innholdet fra diagrammet."
+  },
+  "diagram.export.title": {
+    "defaultMessage": "Eksport-alternativer"
+  },
+  "diagram.import.button": {
+    "defaultMessage": "Importer diagram"
+  },
+  "diagram.import.placeholder": {
+    "defaultMessage": "Slipp en .ftm- eller .vis- fil her eller klikk for å importere et eksisterende diagram."
+  },
+  "diagram.import.title": {
+    "defaultMessage": "Importer et nettverksdiagram"
+  },
+  "diagram.render.error": {
+    "defaultMessage": "Feil ved uttegning av diagrammet"
+  },
+  "diagram.selector.create": {
+    "defaultMessage": "Opprett et diagram"
+  },
+  "diagram.selector.select_empty": {
+    "defaultMessage": "Det finnes ikke noe eksisterende diagram"
+  },
+  "diagram.update.label_placeholder": {
+    "defaultMessage": "Diagram uten navn"
+  },
+  "diagram.update.success": {
+    "defaultMessage": "Ditt diagram er oppdatert."
+  },
+  "diagram.update.summary_placeholder": {
+    "defaultMessage": "En kort beskrivelse av diagrammet"
+  },
+  "diagram.update.title": {
+    "defaultMessage": "Diagram-innstillinger"
+  },
+  "diagrams": {
+    "defaultMessage": "Diagrammer"
+  },
+  "diagrams.description": {
+    "defaultMessage": "Nettverksdiagram lar deg visualisere komplekse relasjoner i en gransking."
+  },
+  "diagrams.no_diagrams": {
+    "defaultMessage": "Det finnes ingen nettverksdiagrammer."
+  },
+  "diagrams.title": {
+    "defaultMessage": "Nettverksdiagrammer"
+  },
+  "document.download": {
+    "defaultMessage": "Last ned"
+  },
+  "document.download.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "document.download.confirm": {
+    "defaultMessage": "Last ned"
+  },
+  "document.download.dont_warn": {
+    "defaultMessage": "Ikke advar meg om nedlasting av kildedokumenter i fremtiden"
+  },
+  "document.download.tooltip": {
+    "defaultMessage": "Last ned originaldokumentet"
+  },
+  "document.download.warning": {
+    "defaultMessage": "<bold>Du er i ferd med å last ned et originaldokument.</bold> {br}{br} Originaldokumenter kan inneholde virus og kode som varsler de som har laget det om at du har åpnet det. {br}{br} Dersom det er snakk om sensitive data anbefaler vi at du åpner dokumentene på en pc som ikke er eller har vært koblet til internett. "
+  },
+  "document.folder.error": {
+    "defaultMessage": "Det oppsto en feil ved opprettelse av mappen."
+  },
+  "document.folder.new": {
+    "defaultMessage": "Ny mappe"
+  },
+  "document.folder.save": {
+    "defaultMessage": "Opprett"
+  },
+  "document.folder.title": {
+    "defaultMessage": "Ny mappe"
+  },
+  "document.folder.untitled": {
+    "defaultMessage": "Mappe-navn"
+  },
+  "document.mapping.start": {
+    "defaultMessage": "Generer entiteter"
+  },
+  "document.paging": {
+    "defaultMessage": "Side {pageInput} av {numberOfPages}"
+  },
+  "document.pdf.search.page": {
+    "defaultMessage": "Side {page}"
+  },
+  "document.search.no_match": {
+    "defaultMessage": "Det er ingen enkeltside i dette dokumentet der det er treff på alle søkeuttrykkene."
+  },
+  "document.upload.button": {
+    "defaultMessage": "Last opp"
+  },
+  "document.upload.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "document.upload.close": {
+    "defaultMessage": "Lukk"
+  },
+  "document.upload.errors": {
+    "defaultMessage": "Noen filer kunne ikke overføres. Du kan bruke Prøv på nytt-knappen for å starte alle opplastinger som feilet på nytt."
+  },
+  "document.upload.files": {
+    "defaultMessage": "Velg filer du vil laste opp..."
+  },
+  "document.upload.folder": {
+    "defaultMessage": "Hvis du vil laste opp mapper i stedet { button }."
+  },
+  "document.upload.folder-toggle": {
+    "defaultMessage": "klikk her"
+  },
+  "document.upload.notice": {
+    "defaultMessage": "Opplastingen er ferdig. Det tar en liten stund før dokumentene er behandlet og er søkbare. "
+  },
+  "document.upload.progress": {
+    "defaultMessage": "{done} av {total} filer ferdig, {errors} feil."
+  },
+  "document.upload.rejected": {
+    "defaultMessage": "{fileName} mangler filtype, så den kan ikke lastes opp."
+  },
+  "document.upload.retry": {
+    "defaultMessage": "Prøv på nytt"
+  },
+  "document.upload.save": {
+    "defaultMessage": "Last opp"
+  },
+  "document.upload.summary": {
+    "defaultMessage": "{numberOfFiles, number} filer, {totalSize}"
+  },
+  "document.upload.title": {
+    "defaultMessage": "Last opp dokumenter"
+  },
+  "document.upload.title_in_folder": {
+    "defaultMessage": "Last opp dokumenter til {folder}"
+  },
+  "document.viewer.ignored_file": {
+    "defaultMessage": "Systemet virker ikke med denne typen filer. Last ned filen for å se den."
+  },
+  "document.viewer.no_viewer": {
+    "defaultMessage": "Forhåndsvisning er ikke tilgjengelig for dette dokumentet"
+  },
+  "email.body.empty": {
+    "defaultMessage": "Ikke noe innhold i meldingen"
+  },
+  "entity.delete.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "entity.delete.confirm": {
+    "defaultMessage": "Slett"
+  },
+  "entity.delete.error": {
+    "defaultMessage": "En feil oppsto ved sletting av denne entiteten"
+  },
+  "entity.delete.progress": {
+    "defaultMessage": "Sletter..."
+  },
+  "entity.delete.question.multiple": {
+    "defaultMessage": "Are you sure you want to delete the following {count, plural, one {item} other {items}}?"
+  },
+  "entity.delete.success": {
+    "defaultMessage": "Slettingen var vellykket"
+  },
+  "entity.document.manager.cannot_map": {
+    "defaultMessage": "Velg en tabell for å opprette strukturerte entiteter"
+  },
+  "entity.document.manager.empty": {
+    "defaultMessage": "Ingen filer eller mapper"
+  },
+  "entity.document.manager.emptyCanUpload": {
+    "defaultMessage": "Ingen filer eller mapper. Slipp filer her eller klikk for å laste opp."
+  },
+  "entity.document.manager.search_placeholder": {
+    "defaultMessage": "Søk etter dokumenter"
+  },
+  "entity.document.manager.search_placeholder_document": {
+    "defaultMessage": "Søk i {label}"
+  },
+  "entity.info.attachments": {
+    "defaultMessage": "Vedlegg"
+  },
+  "entity.info.documents": {
+    "defaultMessage": "Dokumenter"
+  },
+  "entity.info.info": {
+    "defaultMessage": "Informasjon"
+  },
+  "entity.info.last_view": {
+    "defaultMessage": "Sist vist {time}"
+  },
+  "entity.info.similar": {
+    "defaultMessage": "Liknende"
+  },
+  "entity.info.tags": {
+    "defaultMessage": "Henvisninger"
+  },
+  "entity.info.text": {
+    "defaultMessage": "Tekst"
+  },
+  "entity.info.view": {
+    "defaultMessage": "Vis"
+  },
+  "entity.info.workbook_warning": {
+    "defaultMessage": "Dette arket er del av arbeidsboken {link}"
+  },
+  "entity.manager.bulk_import.description.1": {
+    "defaultMessage": "Velg en tabell under som du vil importere nye {schema}-entiteter fra."
+  },
+  "entity.manager.bulk_import.description.2": {
+    "defaultMessage": "Once selected, you will be prompted to assign columns from that table to properties of the generated entities."
+  },
+  "entity.manager.bulk_import.description.3": {
+    "defaultMessage": "Ser du ikke tabellen du leter etter? {link}"
+  },
+  "entity.manager.bulk_import.link_text": {
+    "defaultMessage": "Last opp et nytt tabell-dokument."
+  },
+  "entity.manager.bulk_import.no_results": {
+    "defaultMessage": "Fant ingen dokumenter som samsvarte med søket."
+  },
+  "entity.manager.bulk_import.placeholder": {
+    "defaultMessage": "Velg et tabell-dokument"
+  },
+  "entity.manager.delete": {
+    "defaultMessage": "Slett"
+  },
+  "entity.manager.edge_create_success": {
+    "defaultMessage": "Opprettelsen av koblingen mellom {source} og {target} var vellykket."
+  },
+  "entity.manager.entity_set_add_success": {
+    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
+  },
+  "entity.manager.remove": {
+    "defaultMessage": "Fjern"
+  },
+  "entity.manager.search_empty": {
+    "defaultMessage": "No matching {schema} results found"
+  },
+  "entity.manager.search_placeholder": {
+    "defaultMessage": "Search {schema}"
+  },
+  "entity.mapping.view": {
+    "defaultMessage": "Generer entiteter"
+  },
+  "entity.properties.missing": {
+    "defaultMessage": "ukjent"
+  },
+  "entity.references.no_relationships": {
+    "defaultMessage": "Denne entiteten har ikke noen relasjoner"
+  },
+  "entity.references.no_results": {
+    "defaultMessage": "Det er ingen {schema} som passer til ditt søk"
+  },
+  "entity.references.no_results_default": {
+    "defaultMessage": "Det er ingen entiteter som passer til søket"
+  },
+  "entity.references.search.placeholder": {
+    "defaultMessage": "Søk etter {schema}"
+  },
+  "entity.references.search.placeholder_default": {
+    "defaultMessage": "Søk etter entiteter"
+  },
+  "entity.remove.confirm": {
+    "defaultMessage": "Fjern"
+  },
+  "entity.remove.error": {
+    "defaultMessage": "En feil oppsto ved fjerning av denne entiteten"
+  },
+  "entity.remove.progress": {
+    "defaultMessage": "Fjerner..."
+  },
+  "entity.remove.question.multiple": {
+    "defaultMessage": "Er du sikker på at du vil fjerne følgende {count, plural, one {item} other {items}}?"
+  },
+  "entity.remove.success": {
+    "defaultMessage": "Successfully removed"
+  },
+  "entity.search.empty_title": {
+    "defaultMessage": "This folder is empty"
+  },
+  "entity.search.no_results_description": {
+    "defaultMessage": "Try making your search more general"
+  },
+  "entity.search.no_results_title": {
+    "defaultMessage": "No search results"
+  },
+  "entity.similar.empty": {
+    "defaultMessage": "There are no similar entities."
+  },
+  "entity.similar.entity": {
+    "defaultMessage": "Similar entity"
+  },
+  "entity.similar.found_text": {
+    "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
+  },
+  "entity.status.error": {
+    "defaultMessage": "Error saving"
+  },
+  "entity.status.in_progress": {
+    "defaultMessage": "Saving..."
+  },
+  "entity.status.success": {
+    "defaultMessage": "Saved"
+  },
+  "entity.tags.no_tags": {
+    "defaultMessage": "No selectors were extracted from this entity."
+  },
+  "entity.viewer.add_link": {
+    "defaultMessage": "Create link"
+  },
+  "entity.viewer.add_to": {
+    "defaultMessage": "Add to..."
+  },
+  "entity.viewer.bulk_import": {
+    "defaultMessage": "Bulk import"
+  },
+  "entity.viewer.search_placeholder": {
+    "defaultMessage": "Søk i {label}"
+  },
+  "entitySet.last_updated": {
+    "defaultMessage": "Updated {date}"
+  },
+  "entityset.choose.name": {
+    "defaultMessage": "Tittel"
+  },
+  "entityset.choose.summary": {
+    "defaultMessage": "Sammendrag"
+  },
+  "entityset.create.collection": {
+    "defaultMessage": "Investigation"
+  },
+  "entityset.create.collection.existing": {
+    "defaultMessage": "Select an investigation"
+  },
+  "entityset.create.collection.new": {
+    "defaultMessage": "Don't see the investigation you're looking for? {link}"
+  },
+  "entityset.create.collection.new_link": {
+    "defaultMessage": "Create a new investigation"
+  },
+  "entityset.create.submit": {
+    "defaultMessage": "Opprett"
+  },
+  "entityset.delete.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "entityset.delete.confirm": {
+    "defaultMessage": "Slett"
+  },
+  "entityset.delete.question": {
+    "defaultMessage": "Are you sure you want to delete {label}?"
+  },
+  "entityset.delete.success": {
+    "defaultMessage": "Successfully deleted {title}"
+  },
+  "entityset.info.delete": {
+    "defaultMessage": "Slett"
+  },
+  "entityset.info.edit": {
+    "defaultMessage": "Innstillinger"
+  },
+  "entityset.info.export": {
+    "defaultMessage": "Export"
+  },
+  "entityset.selector.placeholder": {
+    "defaultMessage": "Search existing"
+  },
+  "entityset.selector.success": {
+    "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
+  },
+  "entityset.selector.success_toast_button": {
+    "defaultMessage": "Vis"
+  },
+  "entityset.selector.title": {
+    "defaultMessage": "Add {firstCaption} {titleSecondary} to..."
+  },
+  "entityset.selector.title_default": {
+    "defaultMessage": "Add entities to..."
+  },
+  "entityset.selector.title_other": {
+    "defaultMessage": "and {count} other {count, plural, one {entity} other {entities}}"
+  },
+  "entityset.update.submit": {
+    "defaultMessage": "Lagre endringer"
+  },
+  "error.screen.not_found": {
+    "defaultMessage": "The requested page could not be found."
+  },
+  "export.dialog.text": {
+    "defaultMessage": "<bold>Initiate your export.</bold> {br}{br} Exports take some time to generate. You will receive an email once the data is ready. {br}{br} Please trigger this export only once."
+  },
+  "exports.dialog.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "exports.dialog.confirm": {
+    "defaultMessage": "Export"
+  },
+  "exports.dialog.dashboard_link": {
+    "defaultMessage": "View progress"
+  },
+  "exports.dialog.success": {
+    "defaultMessage": "Your export has begun."
+  },
+  "exports.expiration": {
+    "defaultMessage": "Expiration"
+  },
+  "exports.manager.description": {
+    "defaultMessage": "Below is a list of your exports. Make sure to download them before they expire."
+  },
+  "exports.name": {
+    "defaultMessage": "Name"
+  },
+  "exports.no_exports": {
+    "defaultMessage": "You have no exports to download"
+  },
+  "exports.size": {
+    "defaultMessage": "Size"
+  },
+  "exports.status": {
+    "defaultMessage": "Status"
+  },
+  "exports.title": {
+    "defaultMessage": "Exports ready for download"
+  },
+  "facet.addresses": {
+    "defaultMessage": "{count, plural, one {Address} other {Addresses}}"
+  },
+  "facet.caption": {
+    "defaultMessage": "Name"
+  },
+  "facet.category": {
+    "defaultMessage": "{count, plural, one {Category} other {Categories}}"
+  },
+  "facet.collection_id": {
+    "defaultMessage": "Datasett"
+  },
+  "facet.countries": {
+    "defaultMessage": "{count, plural, one {Country} other {Countries}}"
+  },
+  "facet.dates": {
+    "defaultMessage": "{count, plural, one {Date} other {Dates}}"
+  },
+  "facet.emails": {
+    "defaultMessage": "{count, plural, one {E-Mail} other {E-Mails}}"
+  },
+  "facet.ibans": {
+    "defaultMessage": "{count, plural, one {IBAN} other {IBANs}}"
+  },
+  "facet.languages": {
+    "defaultMessage": "{count, plural, one {Language} other {Languages}}"
+  },
+  "facet.mimetypes": {
+    "defaultMessage": "{count, plural, one {File type} other {File types}}"
+  },
+  "facet.names": {
+    "defaultMessage": "{count, plural, one {Name} other {Names}}"
+  },
+  "facet.phones": {
+    "defaultMessage": "{count, plural, one {Phone number} other {Phone numbers}}"
+  },
+  "facet.schema": {
+    "defaultMessage": "Entity type"
+  },
+  "file_import.error": {
+    "defaultMessage": "Error importing file"
+  },
+  "footer.aleph": {
+    "defaultMessage": "Aleph {version}"
+  },
+  "group.page.description": {
+    "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
+  },
+  "group.page.search.description": {
+    "defaultMessage": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
+  },
+  "home.access_disabled": {
+    "defaultMessage": "Public access temporarily disabled"
+  },
+  "home.counts.countries": {
+    "defaultMessage": "Countries & territories"
+  },
+  "home.counts.datasets": {
+    "defaultMessage": "Public datasets"
+  },
+  "home.counts.entities": {
+    "defaultMessage": "Public entities"
+  },
+  "home.placeholder": {
+    "defaultMessage": "Try searching: {samples}"
+  },
+  "home.statistics.categories": {
+    "defaultMessage": "Dataset categories"
+  },
+  "home.statistics.countries": {
+    "defaultMessage": "Countries and territories"
+  },
+  "home.statistics.schemata": {
+    "defaultMessage": "Entity types"
+  },
+  "home.stats.title": {
+    "defaultMessage": "Get started exploring public data"
+  },
+  "home.title": {
+    "defaultMessage": "Find public records and leaks"
+  },
+  "hotkeys.judgement.different": {
+    "defaultMessage": "Decide different"
+  },
+  "hotkeys.judgement.group_label": {
+    "defaultMessage": "Entity decisions"
+  },
+  "hotkeys.judgement.next": {
+    "defaultMessage": "Select next result"
+  },
+  "hotkeys.judgement.previous": {
+    "defaultMessage": "Select previous result"
+  },
+  "hotkeys.judgement.same": {
+    "defaultMessage": "Decide same"
+  },
+  "hotkeys.judgement.unsure": {
+    "defaultMessage": "Decide not enough information"
+  },
+  "hotkeys.search.different": {
+    "defaultMessage": "Preview previous result"
+  },
+  "hotkeys.search.group_label": {
+    "defaultMessage": "Search preview"
+  },
+  "hotkeys.search.unsure": {
+    "defaultMessage": "Preview next result"
+  },
+  "hotkeys.search_focus": {
+    "defaultMessage": "Søk"
+  },
+  "infoMode.collection_casefile": {
+    "defaultMessage": "Investigation"
+  },
+  "infoMode.collection_dataset": {
+    "defaultMessage": "Datasett"
+  },
+  "infoMode.createdAt": {
+    "defaultMessage": "Created at"
+  },
+  "infoMode.creator": {
+    "defaultMessage": "Created by"
+  },
+  "infoMode.updatedAt": {
+    "defaultMessage": "Last updated"
+  },
+  "investigation.mentions.empty": {
+    "defaultMessage": "There are no mentions yet in this investigation."
+  },
+  "investigation.overview.guides": {
+    "defaultMessage": "Read more"
+  },
+  "investigation.overview.guides.access": {
+    "defaultMessage": "Managing access"
+  },
+  "investigation.overview.guides.diagrams": {
+    "defaultMessage": "Drawing network diagrams"
+  },
+  "investigation.overview.guides.documents": {
+    "defaultMessage": "Uploading documents"
+  },
+  "investigation.overview.guides.entities": {
+    "defaultMessage": "Creating & editing entities"
+  },
+  "investigation.overview.guides.mappings": {
+    "defaultMessage": "Generating entities from a spreadsheet"
+  },
+  "investigation.overview.guides.xref": {
+    "defaultMessage": "Cross-referencing your data"
+  },
+  "investigation.overview.notifications": {
+    "defaultMessage": "Recent activity"
+  },
+  "investigation.overview.shortcuts": {
+    "defaultMessage": "Quick links"
+  },
+  "investigation.overview.shortcuts_empty": {
+    "defaultMessage": "Getting started"
+  },
+  "investigation.search.placeholder": {
+    "defaultMessage": "Search this investigation"
+  },
+  "investigation.shortcut.diagram": {
+    "defaultMessage": "Sketch a network diagram"
+  },
+  "investigation.shortcut.entities": {
+    "defaultMessage": "Create new entities"
+  },
+  "investigation.shortcut.entity_create_error": {
+    "defaultMessage": "Unable to create entity"
+  },
+  "investigation.shortcut.entity_create_success": {
+    "defaultMessage": "Successfully created {name}"
+  },
+  "investigation.shortcut.upload": {
+    "defaultMessage": "Last opp dokumenter"
+  },
+  "investigation.shortcut.xref": {
+    "defaultMessage": "Compare with other datasets"
+  },
+  "judgement.disabled": {
+    "defaultMessage": "You must have edit access in order to make judgements."
+  },
+  "judgement.negative": {
+    "defaultMessage": "Different"
+  },
+  "judgement.positive": {
+    "defaultMessage": "Same"
+  },
+  "judgement.unsure": {
+    "defaultMessage": "Not enough information"
+  },
+  "landing.shortcut.alert": {
+    "defaultMessage": "Create a search alert"
+  },
+  "landing.shortcut.datasets": {
+    "defaultMessage": "Browse datasets"
+  },
+  "landing.shortcut.investigation": {
+    "defaultMessage": "Start an investigation"
+  },
+  "landing.shortcut.search": {
+    "defaultMessage": "Søk etter entiteter"
+  },
+  "list.create.button": {
+    "defaultMessage": "New list"
+  },
+  "list.create.label_placeholder": {
+    "defaultMessage": "Untitled list"
+  },
+  "list.create.login": {
+    "defaultMessage": "You must log in to create a list"
+  },
+  "list.create.success": {
+    "defaultMessage": "Your list has been created successfully."
+  },
+  "list.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the list"
+  },
+  "list.create.title": {
+    "defaultMessage": "Create a list"
+  },
+  "list.selector.create": {
+    "defaultMessage": "Create a new list"
+  },
+  "list.selector.select_empty": {
+    "defaultMessage": "No existing list"
+  },
+  "list.update.label_placeholder": {
+    "defaultMessage": "Untitled list"
+  },
+  "list.update.success": {
+    "defaultMessage": "Your list has been updated successfully."
+  },
+  "list.update.summary_placeholder": {
+    "defaultMessage": "A brief description of the list"
+  },
+  "list.update.title": {
+    "defaultMessage": "List settings"
+  },
+  "lists": {
+    "defaultMessage": "Lists"
+  },
+  "lists.description": {
+    "defaultMessage": "Lister lar deg organisere og gruppere relaterte entiteter av interesse."
+  },
+  "lists.no_lists": {
+    "defaultMessage": "There are no lists."
+  },
+  "lists.title": {
+    "defaultMessage": "Lists"
+  },
+  "login.oauth": {
+    "defaultMessage": "Sign in via OAuth"
+  },
+  "mapping.actions.create": {
+    "defaultMessage": "Generer entiteter"
+  },
+  "mapping.actions.create.toast": {
+    "defaultMessage": "Generating entities..."
+  },
+  "mapping.actions.delete": {
+    "defaultMessage": "Slett"
+  },
+  "mapping.actions.delete.toast": {
+    "defaultMessage": "Deleting mapping and any generated entities..."
+  },
+  "mapping.actions.export": {
+    "defaultMessage": "Export mapping"
+  },
+  "mapping.actions.flush": {
+    "defaultMessage": "Remove generated entities"
+  },
+  "mapping.actions.flush.toast": {
+    "defaultMessage": "Removing generated entities..."
+  },
+  "mapping.actions.save": {
+    "defaultMessage": "Lagre endringer"
+  },
+  "mapping.actions.save.toast": {
+    "defaultMessage": "Re-generating entities..."
+  },
+  "mapping.create.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "mapping.create.confirm": {
+    "defaultMessage": "Generate"
+  },
+  "mapping.create.question": {
+    "defaultMessage": "Are you sure you are ready to generate entities using this mapping?"
+  },
+  "mapping.delete.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "mapping.delete.confirm": {
+    "defaultMessage": "Slett"
+  },
+  "mapping.delete.question": {
+    "defaultMessage": "Are you sure you want to delete this mapping and all generated entities?"
+  },
+  "mapping.docs.link": {
+    "defaultMessage": "Aleph entity mapping documentation"
+  },
+  "mapping.entityAssign.helpText": {
+    "defaultMessage": "You must create an object of type \"{range}\" to be the {property}"
+  },
+  "mapping.entityAssign.noResults": {
+    "defaultMessage": "No matching objects available"
+  },
+  "mapping.entityAssign.placeholder": {
+    "defaultMessage": "Select an object"
+  },
+  "mapping.entity_set_select": {
+    "defaultMessage": "Select a List or Diagram"
+  },
+  "mapping.entityset.remove": {
+    "defaultMessage": "Fjern"
+  },
+  "mapping.error.keyMissing": {
+    "defaultMessage": "Key Error: {id} entity must have at least one key"
+  },
+  "mapping.error.relationshipMissing": {
+    "defaultMessage": "Relationship Error: {id} entity must have a {source} and {target} assigned"
+  },
+  "mapping.flush.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "mapping.flush.confirm": {
+    "defaultMessage": "Fjern"
+  },
+  "mapping.flush.question": {
+    "defaultMessage": "Are you sure you want to remove entities generated using this mapping?"
+  },
+  "mapping.import.button": {
+    "defaultMessage": "Import existing mapping"
+  },
+  "mapping.import.placeholder": {
+    "defaultMessage": "Drop a .yml file here or click to import an existing mapping file"
+  },
+  "mapping.import.querySelect": {
+    "defaultMessage": "Select a mapping query from this file to import:"
+  },
+  "mapping.import.submit": {
+    "defaultMessage": "Submit"
+  },
+  "mapping.import.success": {
+    "defaultMessage": "Your mapping has been imported successfully."
+  },
+  "mapping.import.title": {
+    "defaultMessage": "Import a mapping"
+  },
+  "mapping.info": {
+    "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
+  },
+  "mapping.info.link": {
+    "defaultMessage": "Aleph data mapping documentation"
+  },
+  "mapping.keyAssign.additionalHelpText": {
+    "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
+  },
+  "mapping.keyAssign.additionalHelpToggle.less": {
+    "defaultMessage": "Less"
+  },
+  "mapping.keyAssign.additionalHelpToggle.more": {
+    "defaultMessage": "More about keys"
+  },
+  "mapping.keyAssign.helpText": {
+    "defaultMessage": "Specify which columns from the source data will be used to identify unique entities."
+  },
+  "mapping.keyAssign.noResults": {
+    "defaultMessage": "No results"
+  },
+  "mapping.keyAssign.placeholder": {
+    "defaultMessage": "Select keys from available columns"
+  },
+  "mapping.keys": {
+    "defaultMessage": "Keys"
+  },
+  "mapping.propAssign.errorBlank": {
+    "defaultMessage": "Columns with no header cannot be assigned"
+  },
+  "mapping.propAssign.errorDuplicate": {
+    "defaultMessage": "Columns with duplicate headers cannot be assigned"
+  },
+  "mapping.propAssign.literalButtonText": {
+    "defaultMessage": "Add a fixed value"
+  },
+  "mapping.propAssign.literalPlaceholder": {
+    "defaultMessage": "Add fixed value text"
+  },
+  "mapping.propAssign.other": {
+    "defaultMessage": "Other"
+  },
+  "mapping.propAssign.placeholder": {
+    "defaultMessage": "Assign a property"
+  },
+  "mapping.propRemove": {
+    "defaultMessage": "Remove this property from mapping"
+  },
+  "mapping.props": {
+    "defaultMessage": "Properties"
+  },
+  "mapping.save.cancel": {
+    "defaultMessage": "Avbryt"
+  },
+  "mapping.save.confirm": {
+    "defaultMessage": "Update mapping & re-generate"
+  },
+  "mapping.save.question": {
+    "defaultMessage": "Updating this mapping will delete any previously generated entities and re-generate them. Are you sure you would like to continue?"
+  },
+  "mapping.section1.title": {
+    "defaultMessage": "1. Select entity types to generate"
+  },
+  "mapping.section2.title": {
+    "defaultMessage": "2. Map columns to entity properties"
+  },
+  "mapping.section3.title": {
+    "defaultMessage": "3. Verify"
+  },
+  "mapping.section4.description": {
+    "defaultMessage": "Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the investigation, please click below and select from the available options."
+  },
+  "mapping.section4.title": {
+    "defaultMessage": "4. Select a destination for generated entities (optional)"
+  },
+  "mapping.status.error": {
+    "defaultMessage": "Error:"
+  },
+  "mapping.status.status": {
+    "defaultMessage": "Status:"
+  },
+  "mapping.status.updated": {
+    "defaultMessage": "Last updated:"
+  },
+  "mapping.title": {
+    "defaultMessage": "Generate structured entities"
+  },
+  "mapping.types.objects": {
+    "defaultMessage": "Objects"
+  },
+  "mapping.types.relationships": {
+    "defaultMessage": "Relationships"
+  },
+  "mapping.warning.empty": {
+    "defaultMessage": "You must create at least one entity"
+  },
+  "mappings.no_mappings": {
+    "defaultMessage": "You have not generated any mappings yet"
+  },
+  "nav.alerts": {
+    "defaultMessage": "Lagrede søk"
+  },
+  "nav.cases": {
+    "defaultMessage": "Granskinger"
+  },
+  "nav.collections": {
+    "defaultMessage": "Datasett"
+  },
+  "nav.diagrams": {
+    "defaultMessage": "Nettverksdiagrammer"
+  },
+  "nav.exports": {
+    "defaultMessage": "Eksporter"
+  },
+  "nav.lists": {
+    "defaultMessage": "Lists"
+  },
+  "nav.menu.cases": {
+    "defaultMessage": "Granskinger"
+  },
+  "nav.settings": {
+    "defaultMessage": "Innstillinger"
+  },
+  "nav.signin": {
+    "defaultMessage": "Sign in"
+  },
+  "nav.signout": {
+    "defaultMessage": "Sign out"
+  },
+  "nav.status": {
+    "defaultMessage": "System status"
+  },
+  "nav.timelines": {
+    "defaultMessage": "Tidslinjer"
+  },
+  "nav.view_notifications": {
+    "defaultMessage": "Varsler"
+  },
+  "navbar.alert_add": {
+    "defaultMessage": "Click to receive alerts about new results for this search."
+  },
+  "navbar.alert_remove": {
+    "defaultMessage": "You are receiving alerts about this search."
+  },
+  "notification.description": {
+    "defaultMessage": "View the latest updates to datasets, investigations, groups and tracking alerts you follow."
+  },
+  "notifications.greeting": {
+    "defaultMessage": "What's new, {role}?"
+  },
+  "notifications.no_notifications": {
+    "defaultMessage": "You have no unseen notifications"
+  },
+  "notifications.title": {
+    "defaultMessage": "Recent notifications"
+  },
+  "notifications.type_filter.all": {
+    "defaultMessage": "Alle"
+  },
+  "pages.not.found": {
+    "defaultMessage": "Page not found"
+  },
+  "pass.auth.not_same": {
+    "defaultMessage": "Your passwords are not the same!"
+  },
+  "password_auth.activate": {
+    "defaultMessage": "Activate"
+  },
+  "password_auth.confirm": {
+    "defaultMessage": "Confirm password"
+  },
+  "password_auth.email": {
+    "defaultMessage": "Email address"
+  },
+  "password_auth.name": {
+    "defaultMessage": "Your Name"
+  },
+  "password_auth.password": {
+    "defaultMessage": "Password"
+  },
+  "password_auth.signin": {
+    "defaultMessage": "Sign in"
+  },
+  "password_auth.signup": {
+    "defaultMessage": "Sign up"
+  },
+  "profile.callout.details": {
+    "defaultMessage": "This profile aggregates attributes and relationships from {count} entities across different datasets."
+  },
+  "profile.callout.intro": {
+    "defaultMessage": "You're viewing {entity} as a profile."
+  },
+  "profile.callout.link": {
+    "defaultMessage": "View the <link>original entity</link>"
+  },
+  "profile.delete.warning": {
+    "defaultMessage": "(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+  },
+  "profile.hint": {
+    "defaultMessage": "{entity} has been combined with entities from other datasets <link>into a profile</link>"
+  },
+  "profile.info.header": {
+    "defaultMessage": "Profile"
+  },
+  "profile.info.items": {
+    "defaultMessage": "Entity decisions"
+  },
+  "profile.info.similar": {
+    "defaultMessage": "Suggested"
+  },
+  "profile.items.entity": {
+    "defaultMessage": "Combined entities"
+  },
+  "profile.items.explanation": {
+    "defaultMessage": "Make decisions below to determine which source entities should be added or excluded from this profile."
+  },
+  "profile.similar.no_results": {
+    "defaultMessage": "No suggested additions for this profile were found."
+  },
+  "profileinfo.api_desc": {
+    "defaultMessage": "Use the API key to read and write data via remote applications."
+  },
+  "queryFilters.clearAll": {
+    "defaultMessage": "Clear all"
+  },
+  "queryFilters.showHidden": {
+    "defaultMessage": "Show {count} more filters..."
+  },
+  "refresh.callout_message": {
+    "defaultMessage": "Documents are being processed. Please wait..."
+  },
+  "restricted.explain": {
+    "defaultMessage": "Use of this dataset is restricted. Read the description and contact {creator} before using this material."
+  },
+  "restricted.explain.creator": {
+    "defaultMessage": "the dataset owner"
+  },
+  "restricted.tag": {
+    "defaultMessage": "RESTRICTED"
+  },
+  "result.error": {
+    "defaultMessage": "Error"
+  },
+  "result.more_results": {
+    "defaultMessage": "More than {total} results"
+  },
+  "result.none": {
+    "defaultMessage": "No results found"
+  },
+  "result.results": {
+    "defaultMessage": "Found {total} results"
+  },
+  "result.searching": {
+    "defaultMessage": "Searching..."
+  },
+  "result.solo": {
+    "defaultMessage": "One result found"
+  },
+  "role.select.user": {
+    "defaultMessage": "Choose a user"
+  },
+  "schemaSelect.button.relationship": {
+    "defaultMessage": "Add a new relationship"
+  },
+  "schemaSelect.button.thing": {
+    "defaultMessage": "Add a new object"
+  },
+  "screen.load_more": {
+    "defaultMessage": "Load more"
+  },
+  "search.advanced.all.helptext": {
+    "defaultMessage": "Only results containing all of the given terms will be returned"
+  },
+  "search.advanced.all.label": {
+    "defaultMessage": "All of these words (Default)"
+  },
+  "search.advanced.any.helptext": {
+    "defaultMessage": "Results containing any of the given terms will be returned"
+  },
+  "search.advanced.any.label": {
+    "defaultMessage": "Any of these words"
+  },
+  "search.advanced.clear": {
+    "defaultMessage": "Clear all"
+  },
+  "search.advanced.exact.helptext": {
+    "defaultMessage": "Only results with this exact word or phrase will be returned"
+  },
+  "search.advanced.exact.label": {
+    "defaultMessage": "This exact word/phrase"
+  },
+  "search.advanced.none.helptext": {
+    "defaultMessage": "Exclude results with these words"
+  },
+  "search.advanced.none.label": {
+    "defaultMessage": "None of these words"
+  },
+  "search.advanced.proximity.distance": {
+    "defaultMessage": "Distance"
+  },
+  "search.advanced.proximity.helptext": {
+    "defaultMessage": "Search for two terms within a certain distance of each other. For example, return results with the terms \"Bank\" and \"America\" occurring within two words from each other, such as \"Bank of America\", \"Bank in America\", even \"America has a Bank\"."
+  },
+  "search.advanced.proximity.label": {
+    "defaultMessage": "Terms in proximity to each other"
+  },
+  "search.advanced.proximity.term": {
+    "defaultMessage": "First term"
+  },
+  "search.advanced.proximity.term2": {
+    "defaultMessage": "Second term"
+  },
+  "search.advanced.submit": {
+    "defaultMessage": "Søk"
+  },
+  "search.advanced.title": {
+    "defaultMessage": "Advanced Search"
+  },
+  "search.advanced.variants.distance": {
+    "defaultMessage": "Letters different"
+  },
+  "search.advanced.variants.helptext": {
+    "defaultMessage": "Increase the fuzziness of a search. For example, Wladimir~2 will return not just the term “Wladimir” but also similar spellings such as \"Wladimyr\" or \"Vladimyr\". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant."
+  },
+  "search.advanced.variants.label": {
+    "defaultMessage": "Spelling variations"
+  },
+  "search.advanced.variants.term": {
+    "defaultMessage": "Term"
+  },
+  "search.callout_message": {
+    "defaultMessage": "Some sources are hidden from anonymous users. {signInButton} to see all results you are authorised to access."
+  },
+  "search.callout_message.button_text": {
+    "defaultMessage": "Sign in"
+  },
+  "search.columns.configure": {
+    "defaultMessage": "Configure columns"
+  },
+  "search.columns.configure_placeholder": {
+    "defaultMessage": "Search for a column..."
+  },
+  "search.config.groups": {
+    "defaultMessage": "Property groups"
+  },
+  "search.config.properties": {
+    "defaultMessage": "Properties"
+  },
+  "search.config.reset": {
+    "defaultMessage": "Reset to default"
+  },
+  "search.facets.clearDates": {
+    "defaultMessage": "Clear"
+  },
+  "search.facets.configure": {
+    "defaultMessage": "Configure filters"
+  },
+  "search.facets.configure_placeholder": {
+    "defaultMessage": "Search for a filter..."
+  },
+  "search.facets.filtersSelected": {
+    "defaultMessage": "{count} selected"
+  },
+  "search.facets.hide": {
+    "defaultMessage": "Hide filters"
+  },
+  "search.facets.no_items": {
+    "defaultMessage": "No options"
+  },
+  "search.facets.show": {
+    "defaultMessage": "Show filters"
+  },
+  "search.facets.showMore": {
+    "defaultMessage": "Show more…"
+  },
+  "search.filterTag.ancestors": {
+    "defaultMessage": "in:"
+  },
+  "search.filterTag.dates_after": {
+    "defaultMessage": "After"
+  },
+  "search.filterTag.dates_before": {
+    "defaultMessage": "Before"
+  },
+  "search.filterTag.exclude": {
+    "defaultMessage": "not:"
+  },
+  "search.filterTag.role": {
+    "defaultMessage": "Filter by access"
+  },
+  "search.loading": {
+    "defaultMessage": "Loading..."
+  },
+  "search.no_results_description": {
+    "defaultMessage": "Try making your search more general"
+  },
+  "search.no_results_title": {
+    "defaultMessage": "No search results"
+  },
+  "search.placeholder": {
+    "defaultMessage": "Search companies, people and documents"
+  },
+  "search.placeholder_default": {
+    "defaultMessage": "Search…"
+  },
+  "search.placeholder_label": {
+    "defaultMessage": "Søk i {label}"
+  },
+  "search.screen.dates.show-all": {
+    "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
+  },
+  "search.screen.dates.show-hidden": {
+    "defaultMessage": "* Showing only date filter options from {start} to the present. { button } to view dates outside this range."
+  },
+  "search.screen.dates.show-hidden.click": {
+    "defaultMessage": "Click here"
+  },
+  "search.screen.dates_label": {
+    "defaultMessage": "results"
+  },
+  "search.screen.dates_title": {
+    "defaultMessage": "Dates"
+  },
+  "search.screen.export": {
+    "defaultMessage": "Export"
+  },
+  "search.screen.export_disabled": {
+    "defaultMessage": "Cannot export more than 10,000 results at a time"
+  },
+  "search.screen.export_disabled_empty": {
+    "defaultMessage": "No results to export."
+  },
+  "search.screen.export_helptext": {
+    "defaultMessage": "Export results"
+  },
+  "search.title": {
+    "defaultMessage": "Search: {title}"
+  },
+  "search.title_emptyq": {
+    "defaultMessage": "Søk"
+  },
+  "settings.api_key": {
+    "defaultMessage": "API Secret Access Key"
+  },
+  "settings.confirm": {
+    "defaultMessage": "(confirm)"
+  },
+  "settings.current_explain": {
+    "defaultMessage": "Enter your current password to set a new one."
+  },
+  "settings.current_password": {
+    "defaultMessage": "Current password"
+  },
+  "settings.email": {
+    "defaultMessage": "E-mail Address"
+  },
+  "settings.email.muted": {
+    "defaultMessage": "Receive daily notification e-mails"
+  },
+  "settings.email.no_change": {
+    "defaultMessage": "Your e-mail address cannot be changed"
+  },
+  "settings.email.tester": {
+    "defaultMessage": "Test new features before they are finished"
+  },
+  "settings.locale": {
+    "defaultMessage": "Language"
+  },
+  "settings.name": {
+    "defaultMessage": "Name"
+  },
+  "settings.new_password": {
+    "defaultMessage": "New password"
+  },
+  "settings.password.missmatch": {
+    "defaultMessage": "Passwords do not match"
+  },
+  "settings.password.rules": {
+    "defaultMessage": "Use at least six characters"
+  },
+  "settings.password.title": {
+    "defaultMessage": "Change your password"
+  },
+  "settings.save": {
+    "defaultMessage": "Oppdater"
+  },
+  "settings.saved": {
+    "defaultMessage": "It's official, your profile is updated."
+  },
+  "settings.title": {
+    "defaultMessage": "Innstillinger"
+  },
+  "sidebar.open": {
+    "defaultMessage": "Expand"
+  },
+  "signup.activate": {
+    "defaultMessage": "Activate your account"
+  },
+  "signup.inbox.desc": {
+    "defaultMessage": "We've sent you an email, please follow the link to complete your registration"
+  },
+  "signup.inbox.title": {
+    "defaultMessage": "Check your inbox"
+  },
+  "signup.login": {
+    "defaultMessage": "Already have account? Sign in!"
+  },
+  "signup.register": {
+    "defaultMessage": "Register"
+  },
+  "signup.register.question": {
+    "defaultMessage": "Don't have account? Register!"
+  },
+  "signup.title": {
+    "defaultMessage": "Sign in"
+  },
+  "sorting.bar.button.label": {
+    "defaultMessage": "Show:"
+  },
+  "sorting.bar.caption": {
+    "defaultMessage": "Tittel"
+  },
+  "sorting.bar.collection_id": {
+    "defaultMessage": "Datasett"
+  },
+  "sorting.bar.count": {
+    "defaultMessage": "Size"
+  },
+  "sorting.bar.countries": {
+    "defaultMessage": "Land"
+  },
+  "sorting.bar.created_at": {
+    "defaultMessage": "Creation Date"
+  },
+  "sorting.bar.date": {
+    "defaultMessage": "Date"
+  },
+  "sorting.bar.dates": {
+    "defaultMessage": "Dates"
+  },
+  "sorting.bar.direction": {
+    "defaultMessage": "Direction:"
+  },
+  "sorting.bar.endDate": {
+    "defaultMessage": "End date"
+  },
+  "sorting.bar.label": {
+    "defaultMessage": "Tittel"
+  },
+  "sorting.bar.sort": {
+    "defaultMessage": "Sort by:"
+  },
+  "sorting.bar.updated_at": {
+    "defaultMessage": "Update Date"
+  },
+  "sources.index.empty": {
+    "defaultMessage": "This group is not linked to any datasets or investigations."
+  },
+  "sources.index.placeholder": {
+    "defaultMessage": "Search for a dataset or investigation belonging to {group}..."
+  },
+  "status.no_collection": {
+    "defaultMessage": "Other tasks"
+  },
+  "tags.results": {
+    "defaultMessage": "Mention count"
+  },
+  "tags.title": {
+    "defaultMessage": "Term"
+  },
+  "text.loading": {
+    "defaultMessage": "Loading…"
+  },
+  "timeline.add_new": {
+    "defaultMessage": "Create new item"
+  },
+  "timeline.button.collapse": {
+    "defaultMessage": "Show collapsed view"
+  },
+  "timeline.button.show_full": {
+    "defaultMessage": "Show detailed view"
+  },
+  "timeline.create.button": {
+    "defaultMessage": "New timeline"
+  },
+  "timeline.create.cancel": {
+    "defaultMessage": "Slett"
+  },
+  "timeline.create.label_placeholder": {
+    "defaultMessage": "Untitled timeline"
+  },
+  "timeline.create.login": {
+    "defaultMessage": "You must log in to create a timeline"
+  },
+  "timeline.create.submit": {
+    "defaultMessage": "Opprett"
+  },
+  "timeline.create.success": {
+    "defaultMessage": "Your timeline has been created successfully."
+  },
+  "timeline.create.summary_placeholder": {
+    "defaultMessage": "A brief description of the timeline"
+  },
+  "timeline.create.title": {
+    "defaultMessage": "Create a timeline"
+  },
+  "timeline.dates.button_text": {
+    "defaultMessage": "Add end date"
+  },
+  "timeline.empty": {
+    "defaultMessage": "This timeline is empty"
+  },
+  "timeline.empty_histogram": {
+    "defaultMessage": "No dates found"
+  },
+  "timeline.item.date": {
+    "defaultMessage": "{start}to{end}"
+  },
+  "timeline.item.delete": {
+    "defaultMessage": "Delete from {collection}"
+  },
+  "timeline.item.link_copy": {
+    "defaultMessage": "Copy link to this item"
+  },
+  "timeline.item.link_copy_success": {
+    "defaultMessage": "Successfully copied link to clipboard."
+  },
+  "timeline.item.remove": {
+    "defaultMessage": "Remove from timeline"
+  },
+  "timeline.items_label": {
+    "defaultMessage": "items"
+  },
+  "timeline.no_results": {
+    "defaultMessage": "No items found matching query"
+  },
+  "timeline.result_text": {
+    "defaultMessage": "{count} timeline items"
+  },
+  "timeline.result_text_query": {
+    "defaultMessage": "Showing {count} (of {total} total) items"
+  },
+  "timeline.schema_select.label": {
+    "defaultMessage": "type"
+  },
+  "timeline.selector.create": {
+    "defaultMessage": "Create a new timeline"
+  },
+  "timeline.selector.select_empty": {
+    "defaultMessage": "No existing timeline"
+  },
+  "timeline.update.label_placeholder": {
+    "defaultMessage": "Untitled timeline"
+  },
+  "timeline.update.success": {
+    "defaultMessage": "Your timeline has been updated successfully."
+  },
+  "timeline.update.summary_placeholder": {
+    "defaultMessage": "A brief description of the timeline"
+  },
+  "timeline.update.title": {
+    "defaultMessage": "Timeline settings"
+  },
+  "timelines": {
+    "defaultMessage": "Tidslinjer"
+  },
+  "timelines.description": {
+    "defaultMessage": "Tidslinjer er en måte å organisere hendelser på kronologisk."
+  },
+  "timelines.no_timelines": {
+    "defaultMessage": "There are no timelines."
+  },
+  "timelines.title": {
+    "defaultMessage": "Tidslinjer"
+  },
+  "valuelink.tooltip": {
+    "defaultMessage": "{count} mentions in {appName}"
+  },
+  "xref.compute": {
+    "defaultMessage": "Compute"
+  },
+  "xref.entity": {
+    "defaultMessage": "Reference"
+  },
+  "xref.match": {
+    "defaultMessage": "Possible match"
+  },
+  "xref.match_collection": {
+    "defaultMessage": "Datasett"
+  },
+  "xref.recompute": {
+    "defaultMessage": "Re-compute"
+  },
+  "xref.score": {
+    "defaultMessage": "Score"
+  },
+  "xref.sort.default": {
+    "defaultMessage": "Default"
+  },
+  "xref.sort.label": {
+    "defaultMessage": "Sort by:"
+  },
+  "xref.sort.random": {
+    "defaultMessage": "Random"
+  }
+}

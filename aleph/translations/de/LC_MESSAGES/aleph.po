@@ -11,7 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-03-24 13:21+0100\n"
+=======
+"POT-Creation-Date: 2022-03-28 10:50+0200\n"
+>>>>>>> main
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
