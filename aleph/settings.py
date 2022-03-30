@@ -182,8 +182,3 @@ INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
 ###############################################################################
 # XREF Model Selection
 XREF_MODEL = env.get("FTM_COMPARE_MODEL", None)
-
-###############################################################################
-# Task Queuue
-RABBITMQ_URL = env.get("ALEPH_RABBITMQ_URL", "rabbitmq")
-WORKER_THREADS = env.get("ALEPH_WORKER_THREADS", multiprocessing.cpu_count())

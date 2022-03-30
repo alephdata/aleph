@@ -25,6 +25,7 @@ from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
 from aleph.oauth import oauth
+from aleph.queues import flush_queue
 
 log = logging.getLogger(__name__)
 APP_NAME = "aleph-test"
@@ -234,6 +235,7 @@ class TestCase(unittest.TestCase):
                 db.engine.execute(q)
 
         kv.flushall()
+        flush_queue()
         create_system_roles()
 
     def tearDown(self):

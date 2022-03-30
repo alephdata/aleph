@@ -1,10 +1,18 @@
 import logging
 import json
+import threading
 
 
 import pika
 from servicelayer.rate_limit import RateLimit
-from servicelayer.jobs import Job, Dataset
+from servicelayer.taskqueue import (
+    Dataset,
+    NO_COLLECTION,
+    QUEUE_INGEST,
+    QUEUE_ALEPH,
+    collection_id_from_dataset,  # noqa
+)
+from servicelayer import settings as sls
 
 from aleph.core import kv, settings
 from aleph.model import Entity
@@ -25,19 +33,18 @@ OP_EXPORT_XREF = "exportxref"
 OP_UPDATE_ENTITY = "updateentity"
 OP_PRUNE_ENTITY = "pruneentity"
 
-NO_COLLECTION = "null"
-
-QUEUE_ALEPH = "aleph_queue"
-QUEUE_INGEST = "ingest_queue"
+OP_INGEST = "ingest"
+INGEST_OPS = tuple([OP_INGEST] + settings.INGEST_PIPELINE)
 
 
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=settings.RABBITMQ_URL)
-)
+lock = threading.Lock()
+
+# ToDo: Move to aleph.core
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=sls.RABBITMQ_URL))
 channel = connection.channel()
-
 channel.queue_declare(queue=QUEUE_ALEPH, durable=True)
 channel.queue_declare(queue=QUEUE_INGEST, durable=True)
+channel.confirm_delivery()
 
 
 def flush_queue():
@@ -52,47 +59,48 @@ def dataset_from_collection(collection):
     return str(collection.id)
 
 
-def get_dataset_collection_id(dataset):
-    """Invert the servicelayer dataset into a collection ID"""
-    if dataset == NO_COLLECTION:
-        return None
-    return int(dataset)
-
-
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
 
 
-def get_stage(collection, stage, job_id=None):
-    dataset = dataset_from_collection(collection)
-    job_id = job_id or random_id()
-    job = Job(kv, dataset, job_id)
-    return job.get_stage(stage)
-
-
-def queue_task(dataset, stage, job_id=None, context=None, **payload):
+# ToDo: Move this to servicelayer??
+def queue_task(collection, stage, job_id=None, context=None, **payload):
+    task_id = random_id()
     body = {
-        "collection_id": dataset.id,
+        "collection_id": dataset_from_collection(collection),
         "job_id": job_id or random_id(),
+        "task_id": task_id,
         "operation": stage,
         "context": context,
         "payload": payload,
     }
 
-    channel.basic_publish(
-        exchange="",
-        routing_key=QUEUE_ALEPH,
-        body=json.dumps(body),
-        properties=pika.BasicProperties(
-            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
-        ),
-    )
+    # ToDo: Use an exchange to route tasks instead
+    if stage in INGEST_OPS:
+        routing_key = QUEUE_INGEST
+    else:
+        routing_key = QUEUE_ALEPH
 
-    if settings.TESTING:
+    try:
+        channel.basic_publish(
+            exchange="",
+            routing_key=routing_key,
+            body=json.dumps(body),
+            properties=pika.BasicProperties(
+                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
+            ),
+        )
+        dataset = Dataset(conn=kv, name=dataset_from_collection(collection))
+        dataset.add_task(task_id)
+    except pika.exceptions.UnroutableError:
+        log.exception("Error while queuing task")
+
+    if settings.TESTING and lock.acquire(False):
         from aleph.worker import get_worker
 
         worker = get_worker()
         worker.process(blocking=False)
+        lock.release()
 
 
 def get_status(collection):
@@ -131,22 +139,7 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
         pipeline.append(OP_INDEX)
     context = get_context(collection, pipeline)
 
-    body = {
-        "collection_id": collection.id,
-        "job_id": job_id or random_id(),
-        "operation": OP_INGEST,
-        "context": context,
-        "payload": proxy.to_dict(),
-    }
-
-    channel.basic_publish(
-        exchange="",
-        routing_key=QUEUE_INGEST,
-        body=json.dumps(body),
-        properties=pika.BasicProperties(
-            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
-        ),
-    )
+    queue_task(collection, OP_INGEST, job_id, context, **proxy.to_dict())
 
 
 def pipeline_entity(collection, proxy, job_id=None):
@@ -159,19 +152,7 @@ def pipeline_entity(collection, proxy, job_id=None):
     pipeline.append(OP_INDEX)
     context = get_context(collection, pipeline)
 
-    body = {
-        "collection_id": collection.id,
-        "job_id": job_id or random_id(),
-        "operation": pipeline.pop(0),
-        "context": context,
-        "payload": {"entity_ids": [proxy.id]},
-    }
+    operation = pipeline.pop(0)
+    payload = {"entity_ids": [proxy.id]}
 
-    channel.basic_publish(
-        exchange="",
-        routing_key=QUEUE_INGEST,
-        body=json.dumps(body),
-        properties=pika.BasicProperties(
-            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
-        ),
-    )
+    queue_task(collection, operation, job_id, context, **payload)
