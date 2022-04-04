@@ -1,8 +1,10 @@
 import logging
 from flask import Blueprint, request
 
+from servicelayer.taskqueue import collection_id_from_dataset
+
 from aleph.model import Collection
-from aleph.queues import get_active_dataset_status, collection_id_from_dataset
+from aleph.queues import get_active_dataset_status
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import jsonify, require
 

@@ -12,11 +12,18 @@ from flask_babel import Babel
 from flask_talisman import Talisman
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch, TransportError
+import pika
 from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 from servicelayer.util import service_retries, backoff
 from servicelayer.logs import configure_logging, LOG_FORMAT_JSON
+from servicelayer.taskqueue import (
+    get_rabbitmq_channel,
+    QUEUE_ALEPH,
+    QUEUE_INDEX,
+    QUEUE_INGEST,
+)
 from servicelayer import settings as sls
 
 from aleph import settings
@@ -150,10 +157,27 @@ def get_cache():
     return settings._cache
 
 
+def get_rmq_channel():
+    for attempt in service_retries():
+        try:
+            if not hasattr(settings, "_rmq_channel") or settings._rmq_channel is None:
+                settings._rmq_channel = get_rabbitmq_channel()
+            # check if channel is active
+            settings._rmq_channel.queue_declare(queue=QUEUE_ALEPH, durable=True)
+            settings._rmq_channel.queue_declare(queue=QUEUE_INGEST, durable=True)
+            settings._rmq_channel.queue_declare(queue=QUEUE_INDEX, durable=True)
+        except pika.exceptions.AMQPConnectionError as exc:
+            log.exception("RabbitMQ error: %s", exc.error)
+            backoff(failures=attempt)
+        return settings._rmq_channel
+    raise RuntimeError("Could not connect to RabbitMQ")
+
+
 es = LocalProxy(get_es)
 kv = LocalProxy(get_redis)
 cache = LocalProxy(get_cache)
 archive = LocalProxy(get_archive)
+rabbitmq_channel = LocalProxy(get_rmq_channel)
 
 
 def url_for(*a, **kw):

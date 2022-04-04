@@ -10,11 +10,12 @@ from servicelayer.taskqueue import (
     NO_COLLECTION,
     QUEUE_INGEST,
     QUEUE_ALEPH,
-    collection_id_from_dataset,  # noqa
+    QUEUE_INDEX,
+    get_routing_key,
 )
 from servicelayer import settings as sls
 
-from aleph.core import kv, settings
+from aleph.core import kv, settings, rabbitmq_channel
 from aleph.model import Entity
 from aleph.util import random_id
 
@@ -33,23 +34,14 @@ OP_EXPORT_XREF = "exportxref"
 OP_UPDATE_ENTITY = "updateentity"
 OP_PRUNE_ENTITY = "pruneentity"
 
-OP_INGEST = "ingest"
-INGEST_OPS = tuple([OP_INGEST] + settings.INGEST_PIPELINE)
-
 
 lock = threading.Lock()
 
-# ToDo: Move to aleph.core
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=sls.RABBITMQ_URL))
-channel = connection.channel()
-channel.queue_declare(queue=QUEUE_ALEPH, durable=True)
-channel.queue_declare(queue=QUEUE_INGEST, durable=True)
-channel.confirm_delivery()
-
 
 def flush_queue():
-    channel.queue_purge(QUEUE_ALEPH)
-    channel.queue_purge(QUEUE_INGEST)
+    rabbitmq_channel.queue_purge(QUEUE_ALEPH)
+    rabbitmq_channel.queue_purge(QUEUE_INGEST)
+    rabbitmq_channel.queue_purge(QUEUE_INDEX)
 
 
 def dataset_from_collection(collection):
@@ -75,16 +67,10 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
         "payload": payload,
     }
 
-    # ToDo: Use an exchange to route tasks instead
-    if stage in INGEST_OPS:
-        routing_key = QUEUE_INGEST
-    else:
-        routing_key = QUEUE_ALEPH
-
     try:
-        channel.basic_publish(
+        rabbitmq_channel.basic_publish(
             exchange="",
-            routing_key=routing_key,
+            routing_key=get_routing_key(stage),
             body=json.dumps(body),
             properties=pika.BasicProperties(
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
@@ -92,7 +78,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
         )
         dataset = Dataset(conn=kv, name=dataset_from_collection(collection))
         dataset.add_task(task_id)
-    except pika.exceptions.UnroutableError:
+    except (pika.exceptions.UnroutableError, pika.exceptions.AMQPConnectionError):
         log.exception("Error while queuing task")
 
     if settings.TESTING and lock.acquire(False):

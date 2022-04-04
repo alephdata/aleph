@@ -8,7 +8,7 @@ from servicelayer import settings as sls
 from aleph import __version__
 from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
-from aleph.queues import get_rate_limit, QUEUE_ALEPH
+from aleph.queues import get_rate_limit, QUEUE_ALEPH, QUEUE_INDEX
 from aleph.queues import (
     OP_INDEX,
     OP_REINDEX,
@@ -73,12 +73,8 @@ OPERATIONS = {
 
 
 class AlephWorker(Worker):
-    def __init__(
-        self, queue_name, conn=None, num_threads=sls.WORKER_THREADS, version=None
-    ):
-        super().__init__(
-            queue_name, conn=conn, num_threads=num_threads, version=version
-        )
+    def __init__(self, queues, conn=None, num_threads=sls.WORKER_THREADS, version=None):
+        super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
 
@@ -131,5 +127,8 @@ def get_worker(num_threads=None):
     operations = tuple(OPERATIONS.keys())
     log.info(f"Worker active, stages: {operations}")
     return AlephWorker(
-        queue_name=QUEUE_ALEPH, conn=kv, num_threads=num_threads, version=__version__
+        queues=[QUEUE_ALEPH, QUEUE_INDEX],
+        conn=kv,
+        num_threads=num_threads,
+        version=__version__,
     )
