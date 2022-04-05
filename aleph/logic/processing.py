@@ -1,29 +1,24 @@
 import logging
+from typing import List
+
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
+from servicelayer.taskqueue import Task
 
 from aleph.logic.collections import index_aggregator, refresh_collection
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
-BATCH_SIZE = 100
 
 
-def index_many(stage, collection, sync=False, entity_ids=None, batch=BATCH_SIZE):
+def index_many(collection, tasks: List[Task], sync=False):
     """Project the contents of the collections aggregator into the index."""
-    if entity_ids is not None:
-        entity_ids = ensure_list(entity_ids)
-        # ToDo: Restore the ability to batch indexing jobs
-
-        # WEIRD: Instead of indexing a single entity, this will try
-        # pull a whole batch of them off the queue and do it at once.
-        # tasks = stage.get_tasks(limit=max(1, batch - len(entity_ids)))
-        # for task in tasks:
-        #     entity_ids.extend(ensure_list(task.payload.get("entity_ids")))
-        # stage.mark_done(len(tasks))
+    entity_ids = []
+    for task in tasks:
+        entity_ids.extend(ensure_list(task.payload.get("entity_ids")))
     aggregator = get_aggregator(collection)
     index_aggregator(collection, aggregator, entity_ids=entity_ids, sync=sync)
     refresh_collection(collection.id)

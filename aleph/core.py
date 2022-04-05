@@ -166,8 +166,9 @@ def get_rmq_channel():
             settings._rmq_channel.queue_declare(queue=QUEUE_ALEPH, durable=True)
             settings._rmq_channel.queue_declare(queue=QUEUE_INGEST, durable=True)
             settings._rmq_channel.queue_declare(queue=QUEUE_INDEX, durable=True)
-        except pika.exceptions.AMQPConnectionError as exc:
+        except (pika.exceptions.AMQPConnectionError, pika.exceptions.AMQPError) as exc:
             log.exception("RabbitMQ error: %s", exc.error)
+            settings._rmq_channel = None
             backoff(failures=attempt)
         return settings._rmq_channel
     raise RuntimeError("Could not connect to RabbitMQ")

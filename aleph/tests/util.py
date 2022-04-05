@@ -99,6 +99,7 @@ class TestCase(unittest.TestCase):
         settings.INDEX_READ = [settings.INDEX_WRITE]
         settings.TAG_ENTITIES = True
         settings._gcp_logger = None
+        settings.INDEXING_BATCH_SIZE = 1
         app = create_app({})
         return app
 
