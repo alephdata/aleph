@@ -24,6 +24,7 @@ from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
 from aleph.logic.collections import compute_collection
+from aleph.logic.collections import export_collection, import_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.mapping import cleanup_mappings
 from aleph.logic.documents import crawl_directory
@@ -423,3 +424,29 @@ def evilshit():
     delete_index()
     destroy_db()
     upgrade()
+
+
+@cli.command("export")
+@click.argument("foreign_id")
+@click.option("-o", "--outfile", type=click.File("w"), default="-")
+@click.option("--start-date", help="only items changed since this date (isoformat)")
+@click.option("--end-date", help="only items changed until this date (isoformat)")
+def _export_collection(foreign_id, outfile, start_date, end_date):
+    """dump the collection metadata, ftm entities, documents from archive,
+    mappings and entitysets to outfile"""
+    collection = get_collection(foreign_id)
+    for item in export_collection(collection, start_date, end_date):
+        outfile.write(item + "\n")
+
+
+@cli.command("import")
+@click.argument("foreign_id")
+@click.option("-i", "--infile", type=click.File("r"), default="-")
+def _import_collection(foreign_id, infile):
+    """import collection metadata, ftm entities, documents to archive,
+    mappings and entitysets from infile"""
+    authz = Authz.from_role(Role.load_cli_user())
+    collection = ensure_collection(foreign_id, foreign_id)
+    log.info("[%s] Starting to import", collection)
+    import_collection(collection, infile, authz)
+    log.info("[%s] Finished import", collection)

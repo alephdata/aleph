@@ -1,9 +1,12 @@
+import base64
 import logging
+import json
+from tempfile import NamedTemporaryFile
 from datetime import datetime
-from collections import defaultdict
+from collections import Counter, defaultdict
 from servicelayer.jobs import Job
 
-from aleph.core import db, cache
+from aleph.core import archive, db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity, get_status
 from aleph.model import Collection, Entity, Document, Mapping
@@ -14,6 +17,7 @@ from aleph.index import entities as entities_index
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.documents import ingest_flush, MODEL_ORIGIN
 from aleph.logic.aggregator import get_aggregator
+from aleph.util import JSONEncoder
 
 log = logging.getLogger(__name__)
 
@@ -195,3 +199,109 @@ def upgrade_collections():
             compute_collection(collection, force=True)
     # update global cache:
     compute_collections()
+
+
+def export_collection(collection, start_date=None, end_date=None):
+    PREFIXES = {
+        "Collection": "C@",
+        "Mapping": "M@",
+        "EntitySet": "S@",
+    }
+
+    def _dump_file(content_hash):
+        buffer = archive.load_file(content_hash)
+        with open(buffer, "rb") as f:
+            content = f.read()
+        return base64.b64encode(content).decode()
+
+    encoder = JSONEncoder(sort_keys=True)
+    res = Counter()
+
+    # log.info("[%s] Exporting collection metadata...", collection)
+    yield PREFIXES["Collection"] + encoder.encode(collection)
+
+    # log.info("[%s] Exporting mappings metadata...", collection)
+    for mapping in Mapping.by_collection(collection.id):
+        yield PREFIXES["Mapping"] + encoder.encode(mapping)
+        res["Mappings"] += 1
+
+    # log.info("[%s] Exporting documents...", collection)
+    for document in Document.by_collection(collection.id):
+        blob = _dump_file(document.content_hash)
+        meta = encoder.encode(document.to_proxy())
+        yield f"@{meta}@{blob}"
+        res["Documents"] += 1
+
+    # log.info("[%s] Exporting ftm entities...", collection)
+    for entity in Entity.by_collection(collection.id):
+        yield encoder.encode(entity.to_proxy())
+        res["Entities"] += 1
+
+    # log.info("[%s] Exporting entitysets metadata...", collection)
+    for entityset in EntitySet.by_collection_id(collection.id):
+        data = entityset.to_dict()
+        data["entities"] = entityset.entities
+        yield PREFIXES["EntitySet"] + encoder.encode(data)
+        res["EntitySets"] += 1
+
+    return res
+
+
+def import_collection(collection, infile, authz):
+    from aleph.logic.processing import bulk_write  # FIXME
+
+    res = Counter()
+    job_id = Job.random_id()
+
+    class BulkWriter(object):
+        data = []
+
+        def add(self, data):
+            if len(self.data) == 10000:
+                self.flush()
+            self.data.append(data)
+
+        def flush(self):
+            if self.data:
+                for _ in bulk_write(collection, self.data, safe=True):
+                    pass
+                self.data = []
+
+    writer = BulkWriter()
+
+    def _import_file(b64string):
+        with NamedTemporaryFile() as f:
+            content = base64.b64decode(b64string.encode())
+            f.write(content)
+            return archive.archive_file(f.name)
+
+    for line in infile.readlines():
+        if line.startswith("C@"):
+            data = json.loads(line[2:])
+            collection.update(data, authz)
+        elif line.startswith("@"):
+            data, content = line[1:].split("@", 1)
+            data = json.loads(data)
+            content_hash = _import_file(content)
+            meta = {"file_name": data["properties"].get("fileName", [None])[0]}
+            document = Document.save(
+                collection,
+                content_hash=content_hash,
+                meta=meta,
+            )
+            db.session.commit()
+            proxy = document.to_proxy()
+            ingest_flush(collection, entity_id=proxy.id)
+            ingest_entity(collection, proxy, job_id=job_id)
+            res["Documents"] += 1
+        elif line.startswith("M@"):
+            pass
+        elif line.startswith("S@"):
+            pass
+        elif line.startswith("{"):
+            writer.add(json.loads(line))
+
+    writer.flush()
+    reindex_collection(collection)
+
+    return res
