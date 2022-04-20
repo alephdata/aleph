@@ -122,7 +122,7 @@ def crawldir(path, language=None, foreign_id=None, name=None):
     path = Path(path)
     if foreign_id is None:
         foreign_id = "directory:%s" % slugify(path)
-    collection = ensure_collection(foreign_id, path.name)
+    collection = ensure_collection(foreign_id, name)
     log.info("Crawling %s to %s (%s)...", path, foreign_id, collection.id)
     crawl_directory(collection, path)
     log.info("Complete. Make sure a worker is running :)")
