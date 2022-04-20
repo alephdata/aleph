@@ -5,17 +5,19 @@ import threading
 
 import pika
 from servicelayer.rate_limit import RateLimit
+from servicelayer.cache import make_key
 from servicelayer.taskqueue import (
     Dataset,
     NO_COLLECTION,
     QUEUE_INGEST,
     QUEUE_ALEPH,
     QUEUE_INDEX,
+    PREFIX,
     get_routing_key,
 )
 from servicelayer import settings as sls
 
-from aleph.core import kv, settings, rabbitmq_channel
+from aleph.core import kv, settings, rabbitmq_conn
 from aleph.model import Entity
 from aleph.util import random_id
 
@@ -39,9 +41,13 @@ lock = threading.Lock()
 
 
 def flush_queue():
-    rabbitmq_channel.queue_purge(QUEUE_ALEPH)
-    rabbitmq_channel.queue_purge(QUEUE_INGEST)
-    rabbitmq_channel.queue_purge(QUEUE_INDEX)
+    channel = rabbitmq_conn.channel()
+    channel.queue_purge(QUEUE_ALEPH)
+    channel.queue_purge(QUEUE_INGEST)
+    channel.queue_purge(QUEUE_INDEX)
+    channel.close()
+    for key in kv.scan_iter(make_key(PREFIX, "*")):
+        kv.delete(key)
 
 
 def dataset_from_collection(collection):
@@ -68,7 +74,8 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
     }
 
     try:
-        rabbitmq_channel.basic_publish(
+        channel = rabbitmq_conn.channel()
+        channel.basic_publish(
             exchange="",
             routing_key=get_routing_key(stage),
             body=json.dumps(body),
@@ -78,6 +85,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
         )
         dataset = Dataset(conn=kv, name=dataset_from_collection(collection))
         dataset.add_task(task_id)
+        channel.close()
     except (pika.exceptions.UnroutableError, pika.exceptions.AMQPConnectionError):
         log.exception("Error while queuing task")
 

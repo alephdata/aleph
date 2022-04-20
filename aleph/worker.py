@@ -1,13 +1,18 @@
+from concurrent.futures import thread
 import structlog
 from pprint import pformat  # noqa
 from collections import defaultdict
 import time
+import threading
+import functools
+import queue
+from typing import List
 
-from servicelayer.taskqueue import Worker, Task
+from servicelayer.taskqueue import Worker, Task, get_task, get_rabbitmq_connection
 from servicelayer import settings as sls
 
 from aleph import __version__
-from aleph.core import kv, db, create_app, settings
+from aleph.core import kv, db, create_app, settings, rabbitmq_conn
 from aleph.model import Collection
 from aleph.queues import get_rate_limit, QUEUE_ALEPH, QUEUE_INDEX
 from aleph.queues import (
@@ -38,20 +43,19 @@ INDEXING_TIMEOUT = 10  # run all available indexing jobs in a batch after 10 sec
 log = structlog.get_logger(__name__)
 
 app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
+indexing_lock = threading.Lock()
 
 
-def op_index(collection_id, batch, worker=None):
+def op_index(collection_id: str, batch: List[Task], worker: Worker):
     collection = Collection.by_id(collection_id)
-    if worker is None:
-        worker = get_worker()
-        worker.connect()
     sync = any(task.context.get("sync", False) for task in batch)
     index_many(collection, sync=sync, tasks=batch)
     for task in batch:
         # acknowledge batched tasks
         log.info(f"Task [{task.collection_id}]: {task.operation} (done)")
         task.context["skip_ack"] = False
-        worker.after_task(task)
+        cb = functools.partial(worker.ack_message, task, task._channel)
+        task._channel.connection.add_callback_threadsafe(cb)
 
 
 def op_reingest(collection, task):
@@ -94,12 +98,16 @@ class AlephWorker(Worker):
         # (specified by INDEXING_TIMEOUT) before triggering an batched run of all available indexing tasks
         self.indexing_batch_last_updated = defaultdict(lambda: None)
         self.indexing_batches = defaultdict(list)
+        self.local_queue = queue.Queue()
 
-    def on_message(self, _, method, properties, body):
-        super().on_message(_, method, properties, body)
-        if not settings.TESTING:
-            # ToDo: periodic task execution should be independent
-            self.periodic()
+    def on_message(self, channel, method, properties, body, args):
+        connection = args[0]
+        log.info(f"Received message # {method.delivery_tag}: {body}")
+        task = get_task(body, method.delivery_tag)
+        # the task needs to be acknowledged in the same channel that it was received. So store the channel.
+        # This is useful when executing batched indexing tasks since they are acknowledged late.
+        task._channel = channel
+        self.local_queue.put((task, channel, connection))
 
     def process(self, blocking=True):
         if blocking:
@@ -109,22 +117,25 @@ class AlephWorker(Worker):
             self.process_nonblocking()
 
     def periodic(self):
-        db.session.remove()
-        if self.often.check():
-            self.often.update()
-            log.info("Self-check...")
-            compute_collections()
+        try:
+            db.session.remove()
+            if self.often.check():
+                self.often.update()
+                log.info("Self-check...")
+                compute_collections()
 
-        if self.daily.check():
-            self.daily.update()
-            log.info("Running daily tasks...")
-            update_roles()
-            check_alerts()
-            generate_digest()
-            delete_expired_exports()
-            delete_old_notifications()
+            if self.daily.check():
+                self.daily.update()
+                log.info("Running daily tasks...")
+                update_roles()
+                check_alerts()
+                generate_digest()
+                delete_expired_exports()
+                delete_old_notifications()
 
-        self.run_indexing_batches()
+            self.run_indexing_batches()
+        except Exception:
+            log.exception("Error while executing periodic tasks")
 
     def dispatch_task(self, task: Task) -> Task:
         log.info(f"Task [{task.collection_id}]: {task.operation} (started)")
@@ -135,49 +146,54 @@ class AlephWorker(Worker):
 
         # Task batching for index operation
         if task.operation == OP_INDEX:
-            batch = self.indexing_batches[task.collection_id]
-            batch.append(task)
-            self.indexing_batch_last_updated[task.collection_id] = time.time()
-            if len(batch) >= settings.INDEXING_BATCH_SIZE:
-                # batch size limit reached; execute the existing batch and reset
-                op_index(task.collection_id, batch, worker=self)
-                del self.indexing_batches[task.collection_id]
-                del self.indexing_batch_last_updated[task.collection_id]
-            else:
-                log.info(f"Task [{task.collection_id}]: {task.operation} (batched)")
-            # skip acknowledgement for batched task; the batch processing function
-            # will acknowledge tasks after execution is complete
-            task.context["skip_ack"] = True
-            return task
+            with indexing_lock:
+                batch = self.indexing_batches[task.collection_id]
+                batch.append(task)
+                self.indexing_batch_last_updated[task.collection_id] = time.time()
+                if len(batch) >= settings.INDEXING_BATCH_SIZE:
+                    # batch size limit reached; execute the existing batch and reset
+                    op_index(task.collection_id, batch, worker=self)
+                    del self.indexing_batches[task.collection_id]
+                    del self.indexing_batch_last_updated[task.collection_id]
+                else:
+                    log.info(f"Task [{task.collection_id}]: {task.operation} (batched)")
+                # skip acknowledgement for batched task; the batch processing function
+                # will acknowledge tasks after execution is complete
+                task.context["skip_ack"] = True
+                return task
 
         handler(collection, task)
         log.info(f"Task [{task.collection_id}]: {task.operation} (done)")
         return task
 
     def after_task(self, task):
-        super().after_task(task)
         if not settings.TESTING:
-            if task.collection_id and task.get_dataset().is_done():
+            if task.collection_id and task.get_dataset(conn=kv).is_done():
                 refresh_collection(task.collection_id)
 
     def run_indexing_batches(self):
-        for collection_id, batch in self.indexing_batches.items():
-            now = time.time()
-            if (
-                int(now - self.indexing_batch_last_updated[collection_id])
-                > INDEXING_TIMEOUT
-            ):
-                op_index(collection_id, batch, worker=self)
-                del self.indexing_batch_last_updated[collection_id]
-                del self.indexing_batches[collection_id]
+        """Run remaining batched indexing tasks after waiting for a maximum of INDEXING_TIMEOUT seconds"""
+        if indexing_lock.acquire(False):
+            batches = list(self.indexing_batches.items())
+            indexing_lock.release()
+            for collection_id, batch in batches:
+                now = time.time()
+                if (
+                    int(now - self.indexing_batch_last_updated[collection_id])
+                    > INDEXING_TIMEOUT
+                ):
+                    log.debug(f"Running batch indexing for collection {collection_id}")
+                    op_index(collection_id, batch, worker=self)
+                    del self.indexing_batch_last_updated[collection_id]
+                    del self.indexing_batches[collection_id]
 
 
-def get_worker(num_threads=None):
+def get_worker(num_threads=1):
     operations = tuple(OPERATIONS.keys())
     log.info(f"Worker active, stages: {operations}")
     return AlephWorker(
         queues=[QUEUE_ALEPH, QUEUE_INDEX],
         conn=kv,
-        num_threads=num_threads,
+        num_threads=num_threads or 1,
         version=__version__,
     )

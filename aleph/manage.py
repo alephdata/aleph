@@ -100,14 +100,11 @@ def collections(secret, casefile):
 
 
 @cli.command()
-@click.option(
-    "--blocking/--non-blocking", default=True, help="Wait for tasks indefinitely."
-)
 @click.option("--threads", required=False, type=int)
-def worker(blocking=True, threads=None):
+def worker(threads=1):
     """Run the queue-based worker service."""
     worker = get_worker(num_threads=threads)
-    code = worker.run(blocking=blocking)
+    code = worker.run()
     sys.exit(code)
 
 
