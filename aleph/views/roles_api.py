@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from itsdangerous import BadSignature
 from werkzeug.exceptions import BadRequest
 
-from aleph.core import db
+from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
@@ -146,7 +146,7 @@ def create():
             status=409,
         )
 
-    role = create_user(email, data.get("name"), data.get("password"))
+    role = create_user(email, data.get("name"), data.get("password"), is_admin=settings.is_admin(email))
     # Let the serializer return more info about this user
     request.authz = Authz.from_role(role)
     tag_request(role_id=role.id)

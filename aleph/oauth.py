@@ -92,7 +92,7 @@ def handle_oauth(provider, oauth_token):
             role.foreign_id = role_id
             role.update({"name": name})
     if role is None:
-        role = Role.load_or_create(role_id, Role.USER, name, email=email)
+        role = Role.load_or_create(role_id, Role.USER, name, email=email, is_admin=settings.is_admin(email))
     if not role.is_actor:
         return None
     role.clear_roles()

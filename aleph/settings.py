@@ -64,6 +64,10 @@ SECRET_KEY = env.get("ALEPH_SECRET_KEY")
 # Assumes a comma-separated list.
 ADMINS = env.to_list("ALEPH_ADMINS")
 
+def is_admin(email):
+    auto_admins = [a.lower() for a in ADMINS]
+    return email is not None and email.lower() in auto_admins
+
 # Set the foreign ID of the default system user.
 SYSTEM_USER = env.get("ALEPH_SYSTEM_USER", "system:aleph")
 
