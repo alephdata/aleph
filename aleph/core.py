@@ -160,10 +160,11 @@ def get_rmq_connection():
                 )
                 settings._rmq_connection = connection
             if settings._rmq_connection.is_open:
-                # channel = settings._rmq_connection.channel()
-                # channel.queue_declare(queue=QUEUE_ALEPH, durable=True)
-                # channel.queue_declare(queue=QUEUE_INGEST, durable=True)
-                # channel.queue_declare(queue=QUEUE_INDEX, durable=True)
+                channel = settings._rmq_connection.channel()
+                channel.queue_declare(queue=sls.QUEUE_ALEPH, durable=True)
+                channel.queue_declare(queue=sls.QUEUE_INGEST, durable=True)
+                channel.queue_declare(queue=sls.QUEUE_INDEX, durable=True)
+                channel.close()
                 return settings._rmq_connection
         except (pika.exceptions.AMQPConnectionError, pika.exceptions.AMQPError) as exc:
             log.exception("RabbitMQ error: %s", exc)

@@ -81,6 +81,9 @@ class TestCase(unittest.TestCase):
         # have actually been evaluated.
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
+        sls.QUEUE_ALEPH = "test-aleph-queue"
+        sls.QUEUE_INDEX = "test-index-queue"
+        sls.QUEUE_INGEST = "test-ingest-queue"
         # ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
         settings.APP_NAME = APP_NAME
         settings.TESTING = True

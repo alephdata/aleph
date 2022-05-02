@@ -9,9 +9,6 @@ from servicelayer.cache import make_key
 from servicelayer.taskqueue import (
     Dataset,
     NO_COLLECTION,
-    QUEUE_INGEST,
-    QUEUE_ALEPH,
-    QUEUE_INDEX,
     PREFIX,
     get_routing_key,
 )
@@ -41,11 +38,14 @@ lock = threading.Lock()
 
 
 def flush_queue():
-    channel = rabbitmq_conn.channel()
-    channel.queue_purge(QUEUE_ALEPH)
-    channel.queue_purge(QUEUE_INGEST)
-    channel.queue_purge(QUEUE_INDEX)
-    channel.close()
+    try:
+        channel = rabbitmq_conn.channel()
+        channel.queue_purge(sls.QUEUE_ALEPH)
+        channel.queue_purge(sls.QUEUE_INGEST)
+        channel.queue_purge(sls.QUEUE_INDEX)
+        channel.close()
+    except pika.exceptions.AMQPError as ex:
+        logging.exception("Error while flushing task queue")
     for key in kv.scan_iter(make_key(PREFIX, "*")):
         kv.delete(key)
 

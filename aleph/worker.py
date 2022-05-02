@@ -12,9 +12,9 @@ from servicelayer.taskqueue import Worker, Task, get_task, get_rabbitmq_connecti
 from servicelayer import settings as sls
 
 from aleph import __version__
-from aleph.core import kv, db, create_app, settings, rabbitmq_conn
+from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
-from aleph.queues import get_rate_limit, QUEUE_ALEPH, QUEUE_INDEX
+from aleph.queues import get_rate_limit
 from aleph.queues import (
     OP_INDEX,
     OP_REINDEX,
@@ -192,7 +192,7 @@ def get_worker(num_threads=1):
     operations = tuple(OPERATIONS.keys())
     log.info(f"Worker active, stages: {operations}")
     return AlephWorker(
-        queues=[QUEUE_ALEPH, QUEUE_INDEX],
+        queues=[sls.QUEUE_ALEPH, sls.QUEUE_INDEX],
         conn=kv,
         num_threads=num_threads or 1,
         version=__version__,
