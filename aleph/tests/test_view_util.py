@@ -42,26 +42,18 @@ class ViewUtilTest(TestCase):
         data = json.loads('{"name":"Bob","password":"1234","code":"token"}')
 
         # then
-        with self.assertRaises(BadRequest):
+        with self.assertRaises(BadRequest) as ctx:
             validate(data, schema)
 
-        # and
-        try:
-            validate(data, schema)
-        except BadRequest as err:
-            self.assertEqual(err.response.get_json().get("errors"), {"name": "'Bob' is too short", "password": "'1234' is too short"})
+        self.assertEqual(ctx.exception.response.get_json().get("errors"), {"name": "'Bob' is too short", "password": "'1234' is too short"})
 
     def test_validate_concatenates_multiple_errors_for_the_same_path(self):
         # given
         schema = "RoleCreate" # requires password and code 
-        data = json.loads('{"wrong":"No password nor code"}')
+        data = json.loads('{"wrong":"No password, no code"}')
 
         # then
-        with self.assertRaises(BadRequest):
+        with self.assertRaises(BadRequest) as ctx:
             validate(data, schema)
 
-        # and
-        try:
-            validate(data, schema)
-        except BadRequest as err:
-            self.assertEqual(err.response.get_json().get("errors"), {"": "'password' is a required property; 'code' is a required property"})
+        self.assertEqual(ctx.exception.response.get_json().get("errors"), {"": "'password' is a required property; 'code' is a required property"})
