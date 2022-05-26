@@ -1,10 +1,10 @@
 import logging
-from pprint import pformat  # noqa
 from authlib.jose import JsonWebToken, JsonWebKey
 from authlib.integrations.flask_client import OAuth
 from authlib.jose.errors import DecodeError
 
 from aleph import settings
+from aleph.util import is_auto_admin
 
 oauth = OAuth()
 log = logging.getLogger(__name__)
@@ -92,7 +92,7 @@ def handle_oauth(provider, oauth_token):
             role.foreign_id = role_id
             role.update({"name": name})
     if role is None:
-        role = Role.load_or_create(role_id, Role.USER, name, email=email)
+        role = Role.load_or_create(role_id, Role.USER, name, email=email, is_admin=is_auto_admin(email))
     if not role.is_actor:
         return None
     role.clear_roles()

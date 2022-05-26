@@ -7,6 +7,8 @@ from normality import stringify
 from flask_babel.speaklater import LazyString
 from elasticsearch import Transport
 
+from aleph import settings
+
 
 log = structlog.get_logger(__name__)
 
@@ -88,3 +90,8 @@ class LoggingTransport(Transport):
 
 def random_id():
     return uuid.uuid4().hex
+
+
+def is_auto_admin(email):
+    auto_admins = [a.lower() for a in settings.ADMINS]
+    return email is not None and email.lower() in auto_admins
