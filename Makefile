@@ -7,7 +7,7 @@ all: build upgrade web
 services:
 	$(COMPOSE) up -d --remove-orphans \
 		postgres elasticsearch ingest-file \
-		convert-document
+		convert-document redis rabbitmq
 
 shell: services
 	$(APPDOCKER) /bin/bash
