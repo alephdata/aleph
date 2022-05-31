@@ -231,7 +231,7 @@
     "defaultMessage": "تم حفظ التغييرات"
   },
   "collection.edit.title": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "الإعدادات"
   },
   "collection.edit.users": {
     "defaultMessage": "المستخدمون"
@@ -264,7 +264,7 @@
     "defaultMessage": "مشاركة"
   },
   "collection.info.browse": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "الوثائق/ المستندات"
   },
   "collection.info.delete": {
     "defaultMessage": "حذف قاعدة بيانات"
@@ -279,13 +279,13 @@
     "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
   },
   "collection.info.documents": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "الوثائق/ المستندات"
   },
   "collection.info.edit": {
     "defaultMessage": "الإعدادات"
   },
   "collection.info.entities": {
-    "defaultMessage": "Entities"
+    "defaultMessage": "كيانات"
   },
   "collection.info.lists": {
     "defaultMessage": "Lists"
@@ -300,13 +300,13 @@
     "defaultMessage": "Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document"
   },
   "collection.info.mentions": {
-    "defaultMessage": "Mentions"
+    "defaultMessage": "تذكير"
   },
   "collection.info.mentions_description": {
     "defaultMessage": "Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation."
   },
   "collection.info.overview": {
-    "defaultMessage": "Overview"
+    "defaultMessage": "نظرة عامة"
   },
   "collection.info.reindex": {
     "defaultMessage": "أعد فهرسة كل المحتوى"
@@ -315,7 +315,10 @@
     "defaultMessage": "إعادة استيعاب المستندات"
   },
   "collection.info.search": {
-    "defaultMessage": "Search"
+    "defaultMessage": "بحث"
+  },
+  "collection.info.source_documents": {
+    "defaultMessage": "Source documents"
   },
   "collection.info.timelines": {
     "defaultMessage": "Timelines"
@@ -324,7 +327,7 @@
     "defaultMessage": "Timelines are a way to view and organize events chronologically."
   },
   "collection.info.xref": {
-    "defaultMessage": "Cross-reference"
+    "defaultMessage": "تطابق"
   },
   "collection.info.xref_description": {
     "defaultMessage": "Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation."
@@ -477,19 +480,19 @@
     "defaultMessage": "Search this dataset"
   },
   "diagram.create.button": {
-    "defaultMessage": "New diagram"
+    "defaultMessage": "رسم تخطيطي جديد"
   },
   "diagram.create.label_placeholder": {
-    "defaultMessage": "Untitled diagram"
+    "defaultMessage": "رسم تخطيطي بدون عنوان"
   },
   "diagram.create.login": {
-    "defaultMessage": "You must log in to create a diagram"
+    "defaultMessage": "يجب عليك تسجيل الدخول لإنشاء رسم تخطيطي"
   },
   "diagram.create.success": {
-    "defaultMessage": "Your diagram has been created successfully."
+    "defaultMessage": "تم إنشاء الرسم التخطيطي الخاص بك بنجاح."
   },
   "diagram.create.summary_placeholder": {
-    "defaultMessage": "A brief description of the diagram"
+    "defaultMessage": "وصف موجز للرسم البياني"
   },
   "diagram.create.title": {
     "defaultMessage": "Create a diagram"
@@ -525,7 +528,7 @@
     "defaultMessage": "Export options"
   },
   "diagram.import.button": {
-    "defaultMessage": "Import diagram"
+    "defaultMessage": "استيراد الرسم التخطيطي"
   },
   "diagram.import.placeholder": {
     "defaultMessage": "Drop a .ftm or .vis file here or click to import an existing diagram"
@@ -537,25 +540,25 @@
     "defaultMessage": "Error rendering diagram"
   },
   "diagram.selector.create": {
-    "defaultMessage": "Create a new diagram"
+    "defaultMessage": "قم بإنشاء رسم بياني جديد"
   },
   "diagram.selector.select_empty": {
     "defaultMessage": "No existing diagram"
   },
   "diagram.update.label_placeholder": {
-    "defaultMessage": "Untitled diagram"
+    "defaultMessage": "رسم تخطيطي بدون عنوان"
   },
   "diagram.update.success": {
     "defaultMessage": "Your diagram has been updated successfully."
   },
   "diagram.update.summary_placeholder": {
-    "defaultMessage": "A brief description of the diagram"
+    "defaultMessage": "وصف موجز للرسم البياني"
   },
   "diagram.update.title": {
-    "defaultMessage": "Diagram settings"
+    "defaultMessage": "إعدادات الرسم البياني"
   },
   "diagrams": {
-    "defaultMessage": "Diagrams"
+    "defaultMessage": "الرسوم البيانية"
   },
   "diagrams.description": {
     "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
@@ -570,10 +573,10 @@
     "defaultMessage": "تحميل"
   },
   "document.download.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "الغاء"
   },
   "document.download.confirm": {
-    "defaultMessage": "Download"
+    "defaultMessage": "تحميل"
   },
   "document.download.dont_warn": {
     "defaultMessage": "Don't warn me in the future when downloading source documents"
@@ -588,7 +591,7 @@
     "defaultMessage": "حدث خطأ أثناء إنشاء المجلد."
   },
   "document.folder.new": {
-    "defaultMessage": "New folder"
+    "defaultMessage": "مجلد جديد"
   },
   "document.folder.save": {
     "defaultMessage": "إنشاء"
@@ -615,7 +618,7 @@
     "defaultMessage": "تحميل"
   },
   "document.upload.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "الغاء"
   },
   "document.upload.close": {
     "defaultMessage": "Close"
@@ -696,7 +699,7 @@
     "defaultMessage": "البحث عن الملفات"
   },
   "entity.document.manager.search_placeholder_document": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "بحث في {label}"
   },
   "entity.info.attachments": {
     "defaultMessage": "مرفقات"
@@ -722,14 +725,17 @@
   "entity.info.view": {
     "defaultMessage": "عرض"
   },
+  "entity.info.workbook_warning": {
+    "defaultMessage": "This sheet is part of workbook {link}"
+  },
   "entity.manager.bulk_import.description.1": {
-    "defaultMessage": "Select a table below from which to import new {schema} entities."
+    "defaultMessage": "حدد جدولاً أدناه ليتم استيراد كيانات {schema} الجديدة منه."
   },
   "entity.manager.bulk_import.description.2": {
-    "defaultMessage": "Once selected, you will be prompted to assign columns from that table to properties of the generated entities."
+    "defaultMessage": "بمجرد الاختيار، ستتم مطالبتك بتعيين أعمدة من هذا الجدول إلى خصائص الكيانات التي تم إنشاؤها"
   },
   "entity.manager.bulk_import.description.3": {
-    "defaultMessage": "Don't see the table you're looking for? {link}"
+    "defaultMessage": "هل تجد الجدول الذي تبحث عنه؟ {link}"
   },
   "entity.manager.bulk_import.link_text": {
     "defaultMessage": "Upload a new table document"
@@ -741,7 +747,7 @@
     "defaultMessage": "حدد جدول المستند"
   },
   "entity.manager.delete": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "حذف"
   },
   "entity.manager.edge_create_success": {
     "defaultMessage": "تم ربط {source} و {target} بنجاح"
@@ -750,7 +756,7 @@
     "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
   },
   "entity.manager.remove": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "إزالة"
   },
   "entity.manager.search_empty": {
     "defaultMessage": "لم يتم العثور على نتائج مطابقة لـ {schema}"
@@ -780,7 +786,7 @@
     "defaultMessage": "Search entities"
   },
   "entity.remove.confirm": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "إزالة"
   },
   "entity.remove.error": {
     "defaultMessage": "An error occured while attempting to remove this entity."
@@ -813,19 +819,13 @@
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
   },
   "entity.status.error": {
-    "defaultMessage": "Error saving"
-  },
-  "entity.status.error_warning": {
-    "defaultMessage": "There was an error saving your latest changes, are you sure you want to leave?"
+    "defaultMessage": "خطأ في الحفظ"
   },
   "entity.status.in_progress": {
-    "defaultMessage": "Saving..."
-  },
-  "entity.status.in_progress_warning": {
-    "defaultMessage": "Changes are still being saved, are you sure you want to leave?"
+    "defaultMessage": "جاري الحفظ"
   },
   "entity.status.success": {
-    "defaultMessage": "Saved"
+    "defaultMessage": "تم الحفط"
   },
   "entity.tags.no_tags": {
     "defaultMessage": "لم تستخرج أي محددات من هذا الكيان"
@@ -840,10 +840,10 @@
     "defaultMessage": "إدخال بالجملة"
   },
   "entity.viewer.search_placeholder": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "بحث في {label}"
   },
   "entitySet.last_updated": {
-    "defaultMessage": "Updated {date}"
+    "defaultMessage": "تم التحديث {date}"
   },
   "entityset.choose.name": {
     "defaultMessage": "عنوان"
@@ -894,7 +894,7 @@
     "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
   },
   "entityset.selector.success_toast_button": {
-    "defaultMessage": "View"
+    "defaultMessage": "عرض"
   },
   "entityset.selector.title": {
     "defaultMessage": "Add {firstCaption} {titleSecondary} to..."
@@ -906,7 +906,7 @@
     "defaultMessage": "and {count} other {count, plural, one {entity} other {entities}}"
   },
   "entityset.update.submit": {
-    "defaultMessage": "Save changes"
+    "defaultMessage": "حفظ التغييرات"
   },
   "error.screen.not_found": {
     "defaultMessage": " لا يمكن العثور على الصفحة المطلوبة"
@@ -915,10 +915,10 @@
     "defaultMessage": "<bold>Initiate your export.</bold> {br}{br} Exports take some time to generate. You will receive an email once the data is ready. {br}{br} Please trigger this export only once."
   },
   "exports.dialog.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "الغاء"
   },
   "exports.dialog.confirm": {
-    "defaultMessage": "Export"
+    "defaultMessage": "تصدير"
   },
   "exports.dialog.dashboard_link": {
     "defaultMessage": "View progress"
@@ -933,13 +933,13 @@
     "defaultMessage": "Below is a list of your exports. Make sure to download them before they expire."
   },
   "exports.name": {
-    "defaultMessage": "Name"
+    "defaultMessage": "الاسم"
   },
   "exports.no_exports": {
     "defaultMessage": "You have no exports to download"
   },
   "exports.size": {
-    "defaultMessage": "Size"
+    "defaultMessage": "الحجم"
   },
   "exports.status": {
     "defaultMessage": "Status"
@@ -951,13 +951,13 @@
     "defaultMessage": "{count, plural, zero {عناوين} one {عنوان} two {عناوين} few {عناوين} many {عناوين} other {عناوين}}"
   },
   "facet.caption": {
-    "defaultMessage": "Name"
+    "defaultMessage": "الاسم"
   },
   "facet.category": {
     "defaultMessage": "{count, plural, zero {فئات} one {فئة} two {فئات} few {فئات} many {فئات} other {فئات}}"
   },
   "facet.collection_id": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "مجموعة البيانات"
   },
   "facet.countries": {
     "defaultMessage": "{count, plural, zero {دول} one {دولة} two {دول} few {دول} many {دول} other {دول}}"
@@ -1056,13 +1056,13 @@
     "defaultMessage": "Preview next result"
   },
   "hotkeys.search_focus": {
-    "defaultMessage": "Search"
+    "defaultMessage": "بحث"
   },
   "infoMode.collection_casefile": {
     "defaultMessage": "Investigation"
   },
   "infoMode.collection_dataset": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "مجموعة البيانات"
   },
   "infoMode.createdAt": {
     "defaultMessage": "Created at"
@@ -1071,7 +1071,7 @@
     "defaultMessage": "Created by"
   },
   "infoMode.updatedAt": {
-    "defaultMessage": "Last updated"
+    "defaultMessage": "آخر تحديث"
   },
   "investigation.mentions.empty": {
     "defaultMessage": "There are no mentions yet in this investigation."
@@ -1263,7 +1263,7 @@
     "defaultMessage": "Select a List or Diagram"
   },
   "mapping.entityset.remove": {
-    "defaultMessage": "Remove"
+    "defaultMessage": "إزالة"
   },
   "mapping.error.keyMissing": {
     "defaultMessage": "خطأ رئيسي: يجب أن يحتوي {id} الكيان على مفتاح واحد على الأقل"
@@ -1302,7 +1302,7 @@
     "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
   },
   "mapping.info.link": {
-    "defaultMessage": "Aleph data mapping documentation"
+    "defaultMessage": "آلف لتوثيق بيانات البحث الشامل"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
@@ -1428,7 +1428,7 @@
     "defaultMessage": "تسجيل الخروج"
   },
   "nav.status": {
-    "defaultMessage": "System status"
+    "defaultMessage": "حالة النظام"
   },
   "nav.timelines": {
     "defaultMessage": "Timelines"
@@ -1455,7 +1455,7 @@
     "defaultMessage": "اشعارات حديثة"
   },
   "notifications.type_filter.all": {
-    "defaultMessage": "All"
+    "defaultMessage": "الكل"
   },
   "pages.not.found": {
     "defaultMessage": "الصفحة غير موجودة"
@@ -1581,7 +1581,7 @@
     "defaultMessage": "Any of these words"
   },
   "search.advanced.clear": {
-    "defaultMessage": "Clear all"
+    "defaultMessage": "حذف الكل"
   },
   "search.advanced.exact.helptext": {
     "defaultMessage": "Only results with this exact word or phrase will be returned"
@@ -1611,7 +1611,7 @@
     "defaultMessage": "Second term"
   },
   "search.advanced.submit": {
-    "defaultMessage": "Search"
+    "defaultMessage": "بحث"
   },
   "search.advanced.title": {
     "defaultMessage": "Advanced Search"
@@ -1644,7 +1644,7 @@
     "defaultMessage": "Property groups"
   },
   "search.config.properties": {
-    "defaultMessage": "Properties"
+    "defaultMessage": "الخصائص"
   },
   "search.config.reset": {
     "defaultMessage": "Reset to default"
@@ -1698,13 +1698,13 @@
     "defaultMessage": "لم يتم العثور على نتائج"
   },
   "search.placeholder": {
-    "defaultMessage": "Search companies, people and documents"
+    "defaultMessage": "ابحث عن شركات وأشخاص ومستندات"
   },
   "search.placeholder_default": {
     "defaultMessage": "Search…"
   },
   "search.placeholder_label": {
-    "defaultMessage": "Search in {label}"
+    "defaultMessage": "بحث في {label}"
   },
   "search.screen.dates.show-all": {
     "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
@@ -1737,7 +1737,7 @@
     "defaultMessage": "Search: {title}"
   },
   "search.title_emptyq": {
-    "defaultMessage": "Search"
+    "defaultMessage": "بحث"
   },
   "settings.api_key": {
     "defaultMessage": "مفتاح API الوصول السري "
@@ -1794,7 +1794,7 @@
     "defaultMessage": "توسيع النطاق"
   },
   "signup.activate": {
-    "defaultMessage": "Activate your account"
+    "defaultMessage": "فعل حسابك"
   },
   "signup.inbox.desc": {
     "defaultMessage": "لقد أرسلنا لك بريدًا إلكترونيًا ، يرجى اتباع الرابط لإتمام عملية التسجيل"
@@ -1812,31 +1812,31 @@
     "defaultMessage": "ليس لديك حساب؟ سجل!"
   },
   "signup.title": {
-    "defaultMessage": "Sign in"
+    "defaultMessage": "تسجيل الدخول"
   },
   "sorting.bar.button.label": {
-    "defaultMessage": "Show:"
+    "defaultMessage": "إظهار"
   },
   "sorting.bar.caption": {
-    "defaultMessage": "Title"
+    "defaultMessage": "العنوان"
   },
   "sorting.bar.collection_id": {
-    "defaultMessage": "Dataset"
+    "defaultMessage": "مجموعة البيانات"
   },
   "sorting.bar.count": {
-    "defaultMessage": "Size"
+    "defaultMessage": "الحجم"
   },
   "sorting.bar.countries": {
-    "defaultMessage": "Countries"
+    "defaultMessage": "الدول"
   },
   "sorting.bar.created_at": {
-    "defaultMessage": "Creation Date"
+    "defaultMessage": "انشاء تاريخ"
   },
   "sorting.bar.date": {
-    "defaultMessage": "Date"
+    "defaultMessage": "التاريخ"
   },
   "sorting.bar.dates": {
-    "defaultMessage": "Dates"
+    "defaultMessage": "تواريخ "
   },
   "sorting.bar.direction": {
     "defaultMessage": "اتجاه:"
@@ -1845,13 +1845,13 @@
     "defaultMessage": "End date"
   },
   "sorting.bar.label": {
-    "defaultMessage": "Title"
+    "defaultMessage": "العنوان"
   },
   "sorting.bar.sort": {
-    "defaultMessage": "Sort by:"
+    "defaultMessage": "ترتيب حسب:"
   },
   "sorting.bar.updated_at": {
-    "defaultMessage": "Update Date"
+    "defaultMessage": "تحديث التاريخ"
   },
   "sources.index.empty": {
     "defaultMessage": "This group is not linked to any datasets or investigations."
@@ -1884,7 +1884,7 @@
     "defaultMessage": "New timeline"
   },
   "timeline.create.cancel": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "حذف"
   },
   "timeline.create.label_placeholder": {
     "defaultMessage": "Untitled timeline"
@@ -1893,7 +1893,7 @@
     "defaultMessage": "You must log in to create a timeline"
   },
   "timeline.create.submit": {
-    "defaultMessage": "Create"
+    "defaultMessage": "إنشاء"
   },
   "timeline.create.success": {
     "defaultMessage": "Your timeline has been created successfully."
@@ -1912,9 +1912,6 @@
   },
   "timeline.empty_histogram": {
     "defaultMessage": "No dates found"
-  },
-  "timeline.involved.button_text": {
-    "defaultMessage": "Add involved entities"
   },
   "timeline.item.date": {
     "defaultMessage": "{start}to{end}"
@@ -2001,7 +1998,7 @@
     "defaultMessage": "Default"
   },
   "xref.sort.label": {
-    "defaultMessage": "Sort by:"
+    "defaultMessage": "ترتيب حسب:"
   },
   "xref.sort.random": {
     "defaultMessage": "Random"

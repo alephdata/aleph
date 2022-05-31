@@ -1,0 +1,236 @@
+version: "3.3"
+
+services:
+  postgres:
+    image: postgres:13.6
+    hostname: postgres
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - "./DATA/aleph-postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: aleph
+      POSTGRES_PASSWORD: aleph
+      POSTGRES_DATABASE: aleph
+    labels:
+      - "traefik.enable=false"
+
+  elasticsearch:
+    image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
+    hostname: elasticsearch
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "127.0.0.1:19200:9200"
+    volumes:
+      - "./DATA/elasticsearch-data:/usr/share/elasticsearch/data"
+    labels:
+      - "traefik.enable=false"
+
+  redis:
+    image: redis:alpine
+    command: [ "redis-server", "--save", "3600", "10" ]
+    volumes:
+      - "./DATA/redis-data:/data"
+    labels:
+      - "traefik.enable=false"
+
+  convert-document:
+    image: ghcr.io/alephdata/convert-document:3.16.1
+    read_only: true
+    restart: on-failure
+    user: app
+    tmpfs: /tmp
+    labels:
+      - "traefik.enable=false"
+
+  ingest-file:
+    image: ghcr.io/alephdata/ingest-file:3.16.1
+    tmpfs:
+      - /tmp:mode=777
+    volumes:
+      - ./DATA/archive-data:/data
+    links:
+      - postgres
+      - redis
+      - convert-document
+    depends_on:
+      - postgres
+      - redis
+      - convert-document
+    restart: on-failure
+    env_file:
+      - aleph.env
+    labels:
+      - "traefik.enable=false"
+
+  worker:
+    image: alephdata/aleph:${ALEPH_TAG:-3.12.2}
+    command: aleph worker
+    restart: on-failure
+    links:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+      - keycloak-postgres
+      - keycloak
+    tmpfs:
+      - /tmp
+    volumes:
+      - "./DATA/archive-data:/data"
+    env_file:
+      - aleph.env
+    labels:
+      - "traefik.enable=false"
+
+  shell:
+    image: alephdata/aleph:${ALEPH_TAG:-3.12.2}
+    command: /bin/bash
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+      - worker
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./DATA/archive-data:/data
+      - "./mappings:/aleph/mappings"
+      - "~:/host"
+    env_file:
+      - aleph.env
+    labels:
+      - "traefik.enable=false"
+
+  api:
+    image: alephdata/aleph:${ALEPH_TAG:-3.12.2}
+    command: gunicorn -w 6 -b 0.0.0.0:8000 --log-level debug --log-file - aleph.wsgi:app
+    expose:
+      - 8000
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - worker
+      - ingest-file
+      - minio
+      - traefik
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./DATA/archive-data:/data
+    env_file:
+      - aleph.env
+    labels:
+      - "traefik.enable=false"
+
+  ui:
+    image: alephdata/aleph-ui-production:${ALEPH_TAG:-3.12.2}
+    depends_on:
+      - api
+      - traefik
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ui.rule=Host(`your-base-domain`)
+      - traefik.http.services.ui.loadbalancer.server.port=8080
+      - traefik.http.routers.ui.entrypoints=websecure
+      - traefik.http.routers.ui.tls=true
+      - traefik.http.routers.ui.tls.certresolver=lets-encrypt
+
+  keycloak-postgres:
+    image: postgres:13.6
+    hostname: keycloak-postgres
+    ports:
+      - "127.0.0.1:25432:5432"
+    volumes:
+      - "./DATA/keycloak-postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    labels:
+      - "traefik.enable=false"
+
+  keycloak:
+    image: jboss/keycloak
+    hostname: keycloak
+    links:
+      - keycloak-postgres
+    volumes:
+      - "./contrib/keycloak/keycloak-create-realm.sh:/usr/local/bin/keycloak-create-realm.sh"
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keycloak-postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: keycloak
+      # KEYCLOAK_USER: admin
+      # KEYCLOAK_PASSWORD: REDACTED
+      JDBC_PARAMS: "ssl=false"
+      PROXY_ADDRESS_FORWARDING: "true"
+      KEYCLOAK_FRONTEND_URL: "https://auth.your-base-domain/auth/"
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.keycloak.rule=Host(`auth.your-base-domain`)
+      - traefik.http.services.keycloak.loadbalancer.server.port=8080
+      - traefik.http.routers.keycloak.entrypoints=websecure
+      - traefik.http.routers.keycloak.tls=true
+      - traefik.http.routers.keycloak.tls.certresolver=lets-encrypt
+
+  traefik:
+    image: "traefik:v2.6"
+    container_name: "traefik"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./DATA/LETSENCRYPT/:/letsencrypt"
+      - "./traefik.toml:/traefik.toml"
+      - "./traefik_dynamic.toml:/traefik_dynamic.toml"
+    labels:
+      - "traefik.enable=true"
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "whoami.your-base-domain"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami.rule=Host(`whoami.your-base-domain`)
+      - traefik.http.routers.whoami.entrypoints=websecure
+      - traefik.http.routers.whoami.tls=true
+      - traefik.http.routers.whoami.tls.certresolver=lets-encrypt
+
+  # root user is access_key root password is secret key
+  minio:
+    image: 'bitnami/minio:latest'
+    hostname: minio
+    ports:
+      - '127.0.0.1:9000:9000'
+      - '127.0.0.1:9001:9001'
+    volumes:
+      - './DATA/minio_data:/data'
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    labels:
+      - "traefik.enable=false"
+
+
+volumes:
+  archive-data: {}
+  postgres-data: {}
+  redis-data: {}
+  elasticsearch-data: {}

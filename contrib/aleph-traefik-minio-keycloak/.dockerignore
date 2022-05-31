@@ -1,0 +1,14 @@
+build
+ui
+helm
+aleph.env
+aleph.egg-info
+docker-compose.*
+celerybeat-schedul*
+contrib/allCountries.zip
+.git
+.vscode
+.github
+.travis.yml
+.env
+.tx

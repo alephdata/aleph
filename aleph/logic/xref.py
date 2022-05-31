@@ -1,7 +1,7 @@
 import shutil
 import logging
 import typing
-from pprint import pprint  # noqa
+from pprint import pformat, pprint  # noqa
 from tempfile import mkdtemp
 from dataclasses import dataclass
 
@@ -131,7 +131,7 @@ def _query_item(entity, entitysets=True):
                 doubt=doubt,
                 method=method,
                 entity=entity,
-                collection_id=result.get("collection_id"),
+                collection_id=match.context.get("collection_id"),
                 match=match,
                 entityset_ids=entityset_ids,
             )

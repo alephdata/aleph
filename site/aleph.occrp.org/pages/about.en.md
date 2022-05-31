@@ -15,13 +15,9 @@ Aleph contains material from a [wide range of sources](/datasets). We’re focus
 
 Our geographic focus is on Central and Eastern Europe, Sub-Saharan Africa, South America, and various offshore jurisdictions. The archive is built in tandem with our stories. Often, we scrape or index material related to ongoing investigations.
 
-### Applying for access as a journalist
+### Applying for extended data access
 
-Please [fill out this form](https://forms.gle/Dm9eLbecFNKnAtRGA) if you would like to receive access to protected material on Aleph that we curated for journalistic investigations, called the "Friends of OCCRP" datasets.
-
-### Applying for access as a researcher or activist
-
-We also collect datasets that we will share with activists and researchers. Please [fill out this form](https://forms.gle/XkrePGy4SeqfejNR7) if you would like to gain access to this group. 
+Please [fill out this form](https://form.asana.com/?k=hsYmAKHX1ViTzUoe410y8Q&d=24418422500834) if you would like to receive access to protected material and leaks that we curated for journalistic investigations and for activists and researchers.
 
 ### About OCCRP
 
