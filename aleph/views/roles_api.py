@@ -10,6 +10,7 @@ from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role, create_user, get_deep_role
+from aleph.util import is_auto_admin
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
 from aleph.views.context import tag_request
@@ -146,7 +147,7 @@ def create():
             status=409,
         )
 
-    role = create_user(email, data.get("name"), data.get("password"))
+    role = create_user(email, data.get("name"), data.get("password"), is_admin=is_auto_admin(email))
     # Let the serializer return more info about this user
     request.authz = Authz.from_role(role)
     tag_request(role_id=role.id)

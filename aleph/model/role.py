@@ -177,7 +177,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def load_or_create(cls, foreign_id, type_, name, email=None, is_admin=None):
+    def load_or_create(cls, foreign_id, type_, name, email=None, is_admin=False):
         role = cls.by_foreign_id(foreign_id)
 
         if role is None:
@@ -185,7 +185,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.foreign_id = foreign_id
             role.name = name or email
             role.type = type_
-            role.is_admin = False
+            role.is_admin = is_admin
             role.is_muted = False
             role.is_tester = False
             role.is_blocked = False
@@ -196,14 +196,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         if email is not None:
             role.email = email
-
-        if is_admin is not None:
-            role.is_admin = is_admin
-
-        # see: https://github.com/alephdata/aleph/issues/111
-        auto_admins = [a.lower() for a in settings.ADMINS]
-        if email is not None and email.lower() in auto_admins:
-            role.is_admin = True
 
         db.session.add(role)
         db.session.flush()
