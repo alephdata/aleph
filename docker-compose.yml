@@ -80,11 +80,7 @@ services:
       - aleph.env
 
   api:
-<<<<<<< HEAD
-    image: alephdata/aleph:${ALEPH_TAG:-3.12.2}
-=======
     image: alephdata/aleph:${ALEPH_TAG:-3.12.3}
->>>>>>> main
     command: gunicorn -w 6 -b 0.0.0.0:8000 --timeout 3600 --log-level debug --log-file - aleph.wsgi:app
     expose:
       - 8000
