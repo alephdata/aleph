@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-28 10:50+0200\n"
+"POT-Creation-Date: 2022-06-01 09:22+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Mohammed AlKawmani <komani@arij.net>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
@@ -367,23 +367,23 @@ msgstr ""
 msgid "Only diagrams can be embedded!"
 msgstr ""
 
-#: aleph/views/roles_api.py:61
+#: aleph/views/roles_api.py:62
 msgid "prefix filter is too short"
 msgstr "مرشح البادئة قصير جدًا"
 
-#: aleph/views/roles_api.py:106
+#: aleph/views/roles_api.py:107
 msgid "To proceed, please check your email."
 msgstr "للمتابعة ، يرجى مراجعة بريدك الإلكتروني."
 
-#: aleph/views/roles_api.py:139
+#: aleph/views/roles_api.py:140
 msgid "Invalid code"
 msgstr "الرمز غير صحيح"
 
-#: aleph/views/roles_api.py:145
+#: aleph/views/roles_api.py:146
 msgid "Email is already registered"
 msgstr " البريد الإلكتروني مسجل سابقا"
 
-#: aleph/views/roles_api.py:232
+#: aleph/views/roles_api.py:233
 msgid "Incorrect password."
 msgstr "كلمة المرور خاطئة"
 
@@ -395,6 +395,6 @@ msgstr "اسم مستخدم أو كلمة مرور غير صحيحة"
 msgid "Authentication has failed."
 msgstr "فشل التوثيق "
 
-#: aleph/views/util.py:76
+#: aleph/views/util.py:78
 msgid "Error during data validation"
 msgstr "حدث خطأ أثناء التحقق من صحة البيانات"
