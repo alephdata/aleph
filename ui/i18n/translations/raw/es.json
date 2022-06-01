@@ -948,40 +948,40 @@
     "defaultMessage": "Exports ready for download"
   },
   "facet.addresses": {
-    "defaultMessage": "{count, plural, one {Address} other {Direcciones}}"
+    "defaultMessage": "{count, plural, one {Address} many {Direcciones} other {Direcciones}}"
   },
   "facet.caption": {
     "defaultMessage": "Nombre"
   },
   "facet.category": {
-    "defaultMessage": "{count, plural, one {Category} other {Categorías}}"
+    "defaultMessage": "{count, plural, one {Category} many {Categorías} other {Categorías}}"
   },
   "facet.collection_id": {
     "defaultMessage": "Conjunto de datos"
   },
   "facet.countries": {
-    "defaultMessage": "{count, plural, one {Country} other {Países}}"
+    "defaultMessage": "{count, plural, one {Country} many {Países} other {Países}}"
   },
   "facet.dates": {
     "defaultMessage": "{count, plural, one {Date} other {Dates}}"
   },
   "facet.emails": {
-    "defaultMessage": "{count, plural, one {E-Mail} other {Correos electrónicos}}"
+    "defaultMessage": "{count, plural, one {E-Mail} many {Correos electrónicos} other {Correos electrónicos}}"
   },
   "facet.ibans": {
-    "defaultMessage": "{count, plural, one {IBAN} other {IBANs}}"
+    "defaultMessage": "{count, plural, one {IBAN} many {IBANs} other {IBANs}}"
   },
   "facet.languages": {
-    "defaultMessage": "{count, plural, one {Language} other {Idiomas}}"
+    "defaultMessage": "{count, plural, one {Language} many {Idiomas} other {Idiomas}}"
   },
   "facet.mimetypes": {
-    "defaultMessage": "{count, plural, one {File type} other {Tipos de archivo}}"
+    "defaultMessage": "{count, plural, one {File type} many {Tipos de archivo} other {Tipos de archivo}}"
   },
   "facet.names": {
-    "defaultMessage": "{count, plural, one {Name} other {Nombres}}"
+    "defaultMessage": "{count, plural, one {Name} many {Nombres} other {Nombres}}"
   },
   "facet.phones": {
-    "defaultMessage": "{count, plural, one {Phone number} other {Números de teléfono}}"
+    "defaultMessage": "{count, plural, one {Phone number} many {Números de teléfono} other {Números de teléfono}}"
   },
   "facet.schema": {
     "defaultMessage": "Entity type"
