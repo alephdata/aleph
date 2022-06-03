@@ -47,4 +47,4 @@ pytest-cov
 # Development & debugging
 debugpy >= 1.3.0
 
-https://github.com/alephdata/servicelayer/archive/8b9c2f255290875e316c5dfcffa3f0c80dbe9cea.zip
+servicelayer[google,amazon] @ https://github.com/alephdata/servicelayer/archive/8b9c2f255290875e316c5dfcffa3f0c80dbe9cea.zip
