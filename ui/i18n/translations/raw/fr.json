@@ -948,40 +948,40 @@
     "defaultMessage": "Exports prêts au téléchargement"
   },
   "facet.addresses": {
-    "defaultMessage": "{count, plural, one {Address} other {Addresses}}"
+    "defaultMessage": "{count, plural, one {Address} many {Addresses} other {Addresses}}"
   },
   "facet.caption": {
     "defaultMessage": "Nom"
   },
   "facet.category": {
-    "defaultMessage": "{count, plural, one {Category} other {Categories}}"
+    "defaultMessage": "{count, plural, one {Category} many {Categories} other {Categories}}"
   },
   "facet.collection_id": {
     "defaultMessage": "Ensemble de données"
   },
   "facet.countries": {
-    "defaultMessage": "{count, plural, one {Country} other {Countries}}"
+    "defaultMessage": "{count, plural, one {Country} many {Countries} other {Countries}}"
   },
   "facet.dates": {
-    "defaultMessage": "{count, plural, one {Date} other {Dates}}"
+    "defaultMessage": "{count, plural, one {Date} many {Dates} other {Dates}}"
   },
   "facet.emails": {
-    "defaultMessage": "{count, plural, one {E-Mail} other {E-Mails}}"
+    "defaultMessage": "{count, plural, one {E-Mail} many {E-Mails} other {E-Mails}}"
   },
   "facet.ibans": {
-    "defaultMessage": "{count, plural, one {IBAN} other {IBANs}}"
+    "defaultMessage": "{count, plural, one {IBAN} many {IBANs} other {IBANs}}"
   },
   "facet.languages": {
-    "defaultMessage": "{count, plural, one {Language} other {Languages}}"
+    "defaultMessage": "{count, plural, one {Language} many {Languages} other {Languages}}"
   },
   "facet.mimetypes": {
-    "defaultMessage": "{count, plural, one {File type} other {File types}}"
+    "defaultMessage": "{count, plural, one {File type} many {File types} other {File types}}"
   },
   "facet.names": {
-    "defaultMessage": "{count, plural, one {Name} other {Names}}"
+    "defaultMessage": "{count, plural, one {Name} many {Names} other {Names}}"
   },
   "facet.phones": {
-    "defaultMessage": "{count, plural, one {Phone number} other {Phone numbers}}"
+    "defaultMessage": "{count, plural, one {Phone number} many {Phone numbers} other {Phone numbers}}"
   },
   "facet.schema": {
     "defaultMessage": "Type d’entité"

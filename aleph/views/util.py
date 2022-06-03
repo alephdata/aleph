@@ -58,11 +58,13 @@ def parse_request(schema):
 def validate(data, schema):
     """Validate the data inside a request against a schema."""
     validator = get_validator(schema)
-    # data = clean_object(data)
     errors = {}
     for error in validator.iter_errors(data):
         path = ".".join((str(c) for c in error.path))
-        errors[path] = error.message
+        if path not in errors:
+            errors[path] = error.message
+        else:
+            errors[path] += '; ' + error.message
         log.info("ERROR [%s]: %s", path, error.message)
 
     if not len(errors):
