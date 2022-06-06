@@ -155,8 +155,13 @@ def get_rmq_connection():
     for attempt in service_retries():
         try:
             if not hasattr(settings, "_rmq_connection") or not settings._rmq_connection:
+                credentials = pika.PlainCredentials(
+                    sls.RABBITMQ_USERNAME, sls.RABBITMQ_PASSWORD
+                )
                 connection = pika.BlockingConnection(
-                    pika.ConnectionParameters(host=sls.RABBITMQ_URL)
+                    pika.ConnectionParameters(
+                        host=sls.RABBITMQ_URL, credentials=credentials
+                    )
                 )
                 settings._rmq_connection = connection
             if settings._rmq_connection.is_open:
