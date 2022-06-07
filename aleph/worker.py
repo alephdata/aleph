@@ -1,5 +1,3 @@
-from concurrent.futures import thread
-import structlog
 from pprint import pformat  # noqa
 from collections import defaultdict
 import time
@@ -8,7 +6,8 @@ import functools
 import queue
 from typing import List
 
-from servicelayer.taskqueue import Worker, Task, get_task, get_rabbitmq_connection
+import structlog
+from servicelayer.taskqueue import Worker, Task, Dataset, get_task
 from servicelayer import settings as sls
 
 from aleph import __version__
@@ -123,6 +122,7 @@ class AlephWorker(Worker):
                 self.often.update()
                 log.info("Self-check...")
                 compute_collections()
+                Dataset.cleanup_dataset_status(kv)
 
             if self.daily.check():
                 self.daily.update()
