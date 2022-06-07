@@ -113,7 +113,6 @@ export class SystemStatusScreen extends React.Component {
             <FormattedMessage id="status.no_collection" defaultMessage="Other tasks" />
           )}
         </td>
-        <td className="numeric narrow">{res.jobs.length}</td>
         <td>
           <ProgressBar value={progress} intent={Intent.PRIMARY} />
         </td>
