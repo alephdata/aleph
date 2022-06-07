@@ -160,7 +160,10 @@ def get_rmq_connection():
                 )
                 connection = pika.BlockingConnection(
                     pika.ConnectionParameters(
-                        host=sls.RABBITMQ_URL, credentials=credentials
+                        host=sls.RABBITMQ_URL,
+                        credentials=credentials,
+                        heartbeat=sls.RABBITMQ_HEARTBEAT,
+                        blocked_connection_timeout=sls.RABBITMQ_BLOCKED_CONNECTION_TIMEOUT,
                     )
                 )
                 settings._rmq_connection = connection
