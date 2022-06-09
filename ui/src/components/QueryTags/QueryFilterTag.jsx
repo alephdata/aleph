@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Icon, Tag as TagWidget } from '@blueprintjs/core';
-import { cleanDateQParam } from 'components/Facet/util';
 
 import {
-  Schema, Tag, Country, Language, Category, Collection, Date, Entity,
+  Schema, Tag, Country, Language, Category, Collection, Entity,
 } from 'components/common';
 
 import './QueryFilterTag.scss';
@@ -17,11 +16,11 @@ class QueryFilterTag extends PureComponent {
   }
 
   onRemove() {
-    const { filter, value, remove } = this.props;
-    remove(filter, value);
+    const { filter, type, value, remove } = this.props;
+    remove(filter, type, value);
   }
 
-  label = (filter, type, value) => {
+  label = (query, filter, type, value) => {
     switch (type || filter) {
       case 'schema':
         return (
@@ -98,22 +97,11 @@ class QueryFilterTag extends PureComponent {
             {value}
           </>
         );
-      case 'eq:dates':
-      case 'lte:dates':
-      case 'gte:dates':
       case 'date':
-        let prefix;
-        if (filter.includes('gte')) {
-          prefix = <FormattedMessage id="search.filterTag.dates_after" defaultMessage="After " />
-        } else if (filter.includes('lte')) {
-          prefix = <FormattedMessage id="search.filterTag.dates_before" defaultMessage="Before " />
-        }
-
         return (
           <>
             <Icon icon="calendar" className="left-icon" />
-            {prefix}
-            <Date value={cleanDateQParam(value)} />
+            {value}
           </>
         );
       default:
@@ -122,7 +110,7 @@ class QueryFilterTag extends PureComponent {
   }
 
   render() {
-    const { filter, type, value } = this.props;
+    const { filter, type, value, query } = this.props;
 
     return (
       <TagWidget
@@ -130,7 +118,7 @@ class QueryFilterTag extends PureComponent {
         className="QueryFilterTag"
         onRemove={this.onRemove}
       >
-        {this.label(filter, type, value)}
+        {this.label(query, filter, type, value)}
       </TagWidget>
     );
   }

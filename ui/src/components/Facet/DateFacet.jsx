@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, FormattedDate, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
 import { Histogram } from '@alephdata/react-ftm';
+import moment from 'moment';
 
 import withRouter from 'app/withRouter'
-import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToYear } from 'components/Facet/util';
-
+import { DEFAULT_START_INTERVAL, filterDateIntervals, formatDateQParam, timestampToLabel, isDateIntervalUncertain } from 'components/Facet/util';
+import { selectEntitiesResult, selectLocale } from 'selectors'
 
 import './DateFacet.scss';
 
@@ -18,6 +19,18 @@ const messages = defineMessages({
   results: {
     id: 'search.screen.dates_label',
     defaultMessage: 'results',
+  },
+  uncertainMonth: {
+    id: 'search.screen.dates_uncertain_month',
+    defaultMessage: '* this count includes dates in {year} where no month is specified',
+  },
+  uncertainDay: {
+    id: 'search.screen.dates_uncertain_day',
+    defaultMessage: '* this count includes dates where no day is specified',
+  },
+  uncertainDayMonth: {
+    id: 'search.screen.dates_uncertain_day_month',
+    defaultMessage: '* this count includes dates in {year} where no day or month is specified',
   },
 });
 
@@ -29,16 +42,28 @@ export class DateFilter extends Component {
   }
 
   onSelect(selected) {
-    const { field, query, updateQuery } = this.props;
+    const { facetInterval, field, query, updateQuery } = this.props;
 
     let newRange;
+    let newQuery = query;
+
     if (Array.isArray(selected)) {
-      newRange = selected.sort().map(formatDateQParam);
+      newRange = selected.sort().map(val => formatDateQParam(val, facetInterval));
     } else {
-      const year = formatDateQParam(selected);
-      newRange = [year, year];
+
+      if (facetInterval === 'year') {
+        newQuery = newQuery.set(`facet_interval:${field}`, 'month')
+        const end = moment.utc(selected).endOf('year').format('YYYY-MM-DD')
+        newRange = [formatDateQParam(selected, 'month'), formatDateQParam(end, 'month')]
+      } else if (facetInterval === 'month') {
+        newQuery = newQuery.set(`facet_interval:${field}`, 'day')
+        const end = moment.utc(selected).endOf('month').format('YYYY-MM-DD')
+        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(end, 'day')]
+      } else {
+        newRange = [formatDateQParam(selected, 'day'), formatDateQParam(selected, 'day')]
+      }
     }
-    const newQuery = query.setFilter(`gte:${field}`, newRange[0])
+    newQuery = newQuery.setFilter(`gte:${field}`, newRange[0])
       .setFilter(`lte:${field}`, newRange[1]);
 
     updateQuery(newQuery)
@@ -88,8 +113,54 @@ export class DateFilter extends Component {
     );
   }
 
+  renderParentLabel() {
+    const { facetInterval, filteredIntervals } = this.props;
+
+    const sampleDate = filteredIntervals[0].label
+
+    const content = facetInterval === 'month'
+      ? moment.utc(sampleDate).year()
+      : (
+        <FormattedDate
+          value={sampleDate}
+          year="numeric"
+          month="long"
+        />
+      )
+    return <span className="DateFacet__parent-label">{content}</span>
+  }
+
+  formatUncertainWarning(timestamp) {
+    const { facetInterval, intl } = this.props;
+    const year = moment.utc(timestamp).year()
+
+    if (facetInterval === 'month') {
+      return intl.formatMessage(messages.uncertainMonth, { year })
+    } else {
+      const isFirstMonth = moment.utc(timestamp).month() === 0
+      return intl.formatMessage(messages[isFirstMonth ? 'uncertainDayMonth' : 'uncertainDay'], { year });
+    }
+  }
+
+  formatData(dataPropName) {
+    const { facetInterval, filteredIntervals, locale } = this.props;
+
+    return filteredIntervals.map(({ label, count, id }) => {
+      const isUncertain = facetInterval !== 'year' && isDateIntervalUncertain(label, facetInterval)
+      const uncertainWarning = isUncertain && this.formatUncertainWarning(label)
+
+      return ({
+        ...timestampToLabel(label, facetInterval, locale),
+        [dataPropName]: count,
+        isUncertain,
+        uncertainWarning,
+        id
+      })
+    })
+  }
+
   render() {
-    const { dataLabel, emptyComponent, filteredIntervals, intl, displayShowHiddenToggle, showAll, showLabel = true } = this.props;
+    const { dataLabel, emptyComponent, facetInterval, filteredIntervals, intl, displayShowHiddenToggle, showLabel = true } = this.props;
     let content;
 
     if (filteredIntervals) {
@@ -97,17 +168,19 @@ export class DateFilter extends Component {
         content = emptyComponent;
       } else {
         const dataPropName = dataLabel || intl.formatMessage(messages.results);
+
         content = (
           <>
+            {facetInterval !== 'year' && this.renderParentLabel()}
             <Histogram
-              data={filteredIntervals.map(({ label, count, ...rest }) => ({ label: timestampToYear(label), [dataPropName]: count, ...rest }))}
+              data={this.formatData(dataPropName)}
               dataPropName={dataPropName}
               onSelect={this.onSelect}
               containerProps={{
                 height: DATE_FACET_HEIGHT,
               }}
             />
-            {(displayShowHiddenToggle || showAll) && this.renderShowHiddenToggle()}
+            {displayShowHiddenToggle && this.renderShowHiddenToggle()}
           </>
         )
       }
@@ -137,17 +210,21 @@ export class DateFilter extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, intervals, query } = ownProps;
+  const { field, location, intervals, query } = ownProps;
   const hashQuery = queryString.parse(location.hash);
 
   const showAll = hashQuery.show_all_dates === 'true';
+  const result = selectEntitiesResult(state, query);
 
-  if (intervals) {
-    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ query, intervals, useDefaultBounds: !showAll })
+  if (intervals && !result.isPending) {
+    const { filteredIntervals, hasOutOfRange } = filterDateIntervals({ field, query, intervals, useDefaultBounds: !showAll })
+    const locale = selectLocale(state);
     return {
       filteredIntervals,
       displayShowHiddenToggle: hasOutOfRange,
-      showAll
+      facetInterval: query.getString(`facet_interval:${field}`),
+      showAll,
+      locale: locale === 'en' ? 'en-gb' : locale
     };
   }
   return {};
