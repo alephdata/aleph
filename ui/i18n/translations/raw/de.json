@@ -1676,12 +1676,6 @@
   "search.filterTag.ancestors": {
     "defaultMessage": "in:"
   },
-  "search.filterTag.dates_after": {
-    "defaultMessage": "Nach"
-  },
-  "search.filterTag.dates_before": {
-    "defaultMessage": "Vor"
-  },
   "search.filterTag.exclude": {
     "defaultMessage": "nicht:"
   },
@@ -1720,6 +1714,15 @@
   },
   "search.screen.dates_title": {
     "defaultMessage": "Zeitleiste"
+  },
+  "search.screen.dates_uncertain_day": {
+    "defaultMessage": "* this count includes dates where no day is specified"
+  },
+  "search.screen.dates_uncertain_day_month": {
+    "defaultMessage": "* this count includes dates in {year} where no day or month is specified"
+  },
+  "search.screen.dates_uncertain_month": {
+    "defaultMessage": "* this count includes dates in {year} where no month is specified"
   },
   "search.screen.export": {
     "defaultMessage": "Export"
