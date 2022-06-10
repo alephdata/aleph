@@ -28,7 +28,9 @@ If you're trying to install Aleph and need help, or if you are running Aleph and
 
 ### Find the right task
 
-If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'good first issue', these issues should not be too challenging to work on but will certainly help benefit the community and the product. You can also find these issues on our [contribute page](https://github.com/alephdata/aleph/contribute)
+If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'good first issue', these issues should not be too challenging to work on but will certainly help benefit the community and the product. You can also find these issues on our [contribute page](https://github.com/alephdata/aleph/contribute).
+
+If, after reviewing the list you'd like to reach out and talk to us then [get in touch](https://docs.alephdata.org/get-in-touch).
 
 For more experienced developers we have a range of different labels that we use to try and compartmentalize our issues. To check the full list of labels [check the labels page on github](https://github.com/alephdata/aleph/labels).
 
@@ -54,7 +56,7 @@ Aleph uses two main branches. The **develop** branch is for any new work that ne
 
 ### Bugs, Features, and Raising Issues
 
-Not everyone that is involved in the community is a hardened developer. If you want to contribute by providing feedback on Aleph, whether its hightlight bugs or other issues, raising questions, or providing insights on potential new features then we'd really appreciate your help.
+Not everyone that is involved in the community is a hardened developer. If you want to contribute by providing feedback on Aleph, whether highlighting bugs or other issues, raising questions, or providing insights on potential new features then we'd really appreciate your help.
 
 We use github issues for all our public facing work. We try to keep a close eye on this, to respond to questions, and to make it clear when we pick up and start working on the issues that we raise.
 
@@ -78,4 +80,4 @@ If you believe that the issue you have found has security implications then plea
 
 #### Feature requests
 
-If you have a idea for a feature, or change in functionality that you'd like to see in Aleph then please create an issue with the 'feature-request' label along with a description and why you think it would be valuable to Aleph
+If you have an idea for a feature, or change in functionality that you'd like to see in Aleph then please create an issue with the 'feature-request' label along with a description and why you think it would be valuable to Aleph
