@@ -64,7 +64,7 @@ Before you raise a new issue, please take a few minutes to review the existing i
 
 #### Stale issues
 
-We're a small team, and as such we only have a limited amount of time to deal with and address issues. The unfortunate fact of the matter is that we probably aren't going to implement every feature and fix every bug. With this in mind we'll periodically review our open issues and close out any that we believe we aren't going to be able to get to. If you feel strongly that we've made a mistake in closing out one of these issue feel free to raise it again and we'll reconsider.
+We're a small team, and as such we only have a limited amount of time to deal with and address issues. The unfortunate fact of the matter is that we probably aren't going to implement every feature and fix every bug. With this in mind we'll periodically review our open issues and close out any that we believe we aren't going to be able to get to. If you feel strongly that we've made a mistake in closing out one of these issue feel free re-open it along with a comment explaining why you feel the issue should be addressed.
 
 #### Reporting new issues
 
