@@ -68,6 +68,14 @@ We're a small team, and as such we only have a limited amount of time to deal wi
 
 #### Reporting new issues
 
+If you've looked around but are unable to find an issue that fits the experience that you are having please raise an issue for us. When creating a issue, especially a bug report, take the time to provide as much detail as possible. Ideally if you can provide a list of steps that will help us to reproduce the issue you are seeing.
+
+When creating a bug report please add the 'bug' label so that we know to treat it as such.
+
 #### Security issues
 
+If you believe that the issue you have found has security implications then please add a security label so that we can properly review the issue and deal with it accordingly
+
 #### Feature requests
+
+If you have a idea for a feature, or change in functionality that you'd like to see in Aleph then please create an issue with the 'feature-request' label along with a description and why you think it would be valuable to Aleph
