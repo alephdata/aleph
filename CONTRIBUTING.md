@@ -1,34 +1,50 @@
 # How to Contribute
 
+Welcome friend.
+
+If you are reading this document then we're assuming you are looking for ways that you can help contribute to the devlopment of Aleph. This document has been created to serve as a guide to help you navigate your way to your first contribution. Please read on to learn more.
+
 Aleph is an open source project, and is under active development. We are always striving to make this project as easy, open, and transparent as possible for external contributors but we've got a long way to go. This document seeks to outline the best way to get started with contributing to Aleph, and will hopefully answer some of the questions that you may have.
 
 ## Code of Conduct
 
 The Aleph team have adopted the [contributor covenant](https://www.contributor-covenant.org/) as the basis for its code of conduct and we expect all contributors to adhere to it. Please take some time to read the [code of conduct](https://github.com/alephdata/aleph/blob/main/CODE_OF_CONDUCT.md) so that you can understand what is expected of you and what will happen if you do something which is not tolerated.
 
-## Open source development
+## Working on issues
 
-Please note that **we use GitHub issues to track software defects and enhancements**.
+### Find the right task
+
+### Create a fork and a branch
+
+### Pull request and Code review
+
+### Merge and release
 
 ## Versioning
 
 The Aleph team try to follow the concepts of semantic versioning. This means that we'll release patch versions for bugfixes, minor versions for new features and non breaking changes to existing functionality and major versions for large features and breaking changes.
 
-All significant changes are recorded in the [changelog file](https://github.com/alephdata/aleph/blob/main/CODE_OF_CONDUCT.md)
+All significant changes are recorded in our [changelog file](https://github.com/alephdata/docs/blob/master/developers/changelog.md)
 
 ## Branches
 
 Aleph uses two main branches. The **develop** branch is for any new work that needs to be merged into Aleph. If you have bugfixes, features, or any other changes you should open a pull request to the **develop** branch. As part of our release process we will merge all changes made to develop into the main branch just before a new release of the product. The main branch is designated as stable and should not be committed to directly.
 
-## Bugs
+## Bugs and Features
+
+We use github issues for all our public facing work. We try to keep a close eye on this, to respond to questions, and to make it clear when we pick up and start working on the issues that we raise.
 
 ### Known issues
+
+Before
+
+### Stale issues
 
 ### Reporting new issues
 
 ### Security issues
 
-## Feature requests
+### Feature requests
 
 ## How to get support
 
