@@ -4,7 +4,7 @@ import { Colors } from '@blueprintjs/colors';
 const colorOptions = [
   Colors.BLUE1, Colors.TURQUOISE1, Colors.VIOLET1, Colors.ORANGE1, Colors.GREEN1, Colors.RED1,
   Colors.INDIGO1, Colors.LIME1, Colors.SEPIA1, Colors.COBALT1, Colors.ROSE1,
-];
+]; 
 
 class MappingList {
   constructor(model, mappingData) {
