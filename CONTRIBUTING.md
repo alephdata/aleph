@@ -14,7 +14,13 @@ The Aleph team have adopted the [contributor covenant](https://www.contributor-c
 
 ### Find the right task
 
+If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'low hanging fruit', these issues should not be too challenging to work on but will certainly help benefit the community and the product.
+
+For more experienced developers we have a range of different labels that we use to try and compartmentalize our issues. To check the full list of labels [check the labels page in github](https://github.com/alephdata/aleph/labels).
+
 ### Create a fork and a branch
+
+All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this.
 
 ### Pull request and Code review
 
