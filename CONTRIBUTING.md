@@ -10,52 +10,6 @@ Aleph is an open source project, and is under active development. We are always 
 
 The Aleph team have adopted the [contributor covenant](https://www.contributor-covenant.org/) as the basis for its code of conduct and we expect all contributors to adhere to it. Please take some time to read the [code of conduct](https://github.com/alephdata/aleph/blob/main/CODE_OF_CONDUCT.md) so that you can understand what is expected of you and what will happen if you do something which is not tolerated.
 
-## Working on issues
-
-### Find the right task
-
-If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'low hanging fruit', these issues should not be too challenging to work on but will certainly help benefit the community and the product.
-
-For more experienced developers we have a range of different labels that we use to try and compartmentalize our issues. To check the full list of labels [check the labels page on github](https://github.com/alephdata/aleph/labels).
-
-### Create a fork and a branch
-
-All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this.
-
-### Pull request and Code review
-
-Like most teams we use pull requests to review code before accepting it into our codebase. Once you finished working on your issue you can create a pull request from your branch. We merge all work from issue branches into our 'develop' branch. This is then used for our staging server where we perform manual and automated smoke testing before finally committing changes to the 'main' branch in order to release a new version of Aleph.
-
-## Versioning
-
-The Aleph team try to follow the concepts of semantic versioning. This means that we'll release patch versions for bugfixes, minor versions for new features and non breaking changes to existing functionality and major versions for large features and breaking changes.
-
-All significant changes are recorded in our [changelog file](https://github.com/alephdata/docs/blob/master/developers/changelog.md)
-
-## Branches
-
-Aleph uses two main branches. The **develop** branch is for any new work that needs to be merged into Aleph. If you have bugfixes, features, or any other changes you should open a pull request to the **develop** branch. As part of our release process we will merge all changes made to develop into the main branch just before a new release of the product. The main branch is designated as stable and should not be committed to directly.
-
-## Bugs, Features, and Raising Issues
-
-Not everyone that is involved in the community is a hardened developer. If you want to contribute by providing feedback on Aleph, whether its hightlight bugs or other issues, raising questions, or providing insights on potential new features then we'd really appreciate your help.
-
-We use github issues for all our public facing work. We try to keep a close eye on this, to respond to questions, and to make it clear when we pick up and start working on the issues that we raise.
-
-### Known issues
-
-Before you raise a new issue, please take a few minutes to review the existing issues and to check that someone else hasn't already created something. If they have, please feel free to comment on that issue, add your own thoughts and experiences, and highlight the importance of the issue for us.
-
-### Stale issues
-
-We're a small team, and as such we only have a limited amount of time to deal with and address issues. The unfortunate fact of the matter is that we probably aren't going to implement every feature and fix every bug. With this in mind we'll periodically review our open issues and close out any that we believe we aren't going to be able to get to. If you feel strongly that we've made a mistake in closing out one of these issue feel free to raise it again and we'll reconsider.
-
-### Reporting new issues
-
-### Security issues
-
-### Feature requests
-
 ## How to get support
 
 If you're trying to install Aleph and need help, or if you are running Aleph and are experiencing problems then please:
@@ -69,3 +23,51 @@ If you're trying to install Aleph and need help, or if you are running Aleph and
 
 3. Only once you're **certain that the problem you are seeing is a bug**
    (and not a local configuration issue), file a report on GitHub for it.
+
+## Working on issues
+
+### Find the right task
+
+If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'low hanging fruit', these issues should not be too challenging to work on but will certainly help benefit the community and the product.
+
+For more experienced developers we have a range of different labels that we use to try and compartmentalize our issues. To check the full list of labels [check the labels page on github](https://github.com/alephdata/aleph/labels).
+
+### Forking and Branching
+
+All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this.
+
+### Pull Requests
+
+Like most teams we use pull requests to review code before accepting it into our codebase. Once you finished working on your issue you can create a pull request from your branch. We merge all work from issue branches into our 'develop' branch. This is then used for our staging server where we perform manual and automated smoke testing before finally committing changes to the 'main' branch in order to release a new version of Aleph.
+
+## Development practices
+
+### Versioning
+
+The Aleph team try to follow the concepts of semantic versioning. This means that we'll release patch versions for bugfixes, minor versions for new features and non breaking changes to existing functionality and major versions for large features and breaking changes.
+
+All significant changes are recorded in our [changelog file](https://github.com/alephdata/docs/blob/master/developers/changelog.md)
+
+### Branches
+
+Aleph uses two main branches. The **develop** branch is for any new work that needs to be merged into Aleph. If you have bugfixes, features, or any other changes you should open a pull request to the **develop** branch. As part of our release process we will merge all changes made to develop into the main branch just before a new release of the product. The main branch is designated as stable and should not be committed to directly.
+
+### Bugs, Features, and Raising Issues
+
+Not everyone that is involved in the community is a hardened developer. If you want to contribute by providing feedback on Aleph, whether its hightlight bugs or other issues, raising questions, or providing insights on potential new features then we'd really appreciate your help.
+
+We use github issues for all our public facing work. We try to keep a close eye on this, to respond to questions, and to make it clear when we pick up and start working on the issues that we raise.
+
+#### Known issues
+
+Before you raise a new issue, please take a few minutes to review the existing issues and to check that someone else hasn't already created something. If they have, please feel free to comment on that issue, add your own thoughts and experiences, and highlight the importance of the issue for us.
+
+#### Stale issues
+
+We're a small team, and as such we only have a limited amount of time to deal with and address issues. The unfortunate fact of the matter is that we probably aren't going to implement every feature and fix every bug. With this in mind we'll periodically review our open issues and close out any that we believe we aren't going to be able to get to. If you feel strongly that we've made a mistake in closing out one of these issue feel free to raise it again and we'll reconsider.
+
+#### Reporting new issues
+
+#### Security issues
+
+#### Feature requests
