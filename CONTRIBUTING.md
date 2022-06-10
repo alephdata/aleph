@@ -14,9 +14,19 @@ Please note that **we use GitHub issues to track software defects and enhancemen
 
 The Aleph team try to follow the concepts of semantic versioning. This means that we'll release patch versions for bugfixes, minor versions for new features and non breaking changes to existing functionality and major versions for large features and breaking changes.
 
+All significant changes are recorded in the [changelog file](https://github.com/alephdata/aleph/blob/main/CODE_OF_CONDUCT.md)
+
 ## Branches
 
+Aleph uses two main branches. The **develop** branch is for any new work that needs to be merged into Aleph. If you have bugfixes, features, or any other changes you should open a pull request to the **develop** branch. As part of our release process we will merge all changes made to develop into the main branch just before a new release of the product. The main branch is designated as stable and should not be committed to directly.
+
 ## Bugs
+
+### Known issues
+
+### Reporting new issues
+
+### Security issues
 
 ## Feature requests
 
