@@ -28,7 +28,7 @@ If you're trying to install Aleph and need help, or if you are running Aleph and
 
 ### Find the right task
 
-If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'low hanging fruit', these issues should not be too challenging to work on but will certainly help benefit the community and the product.
+If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'good first issue', these issues should not be too challenging to work on but will certainly help benefit the community and the product. You can also find these issues on our [contribute page](https://github.com/alephdata/aleph/contribute)
 
 For more experienced developers we have a range of different labels that we use to try and compartmentalize our issues. To check the full list of labels [check the labels page on github](https://github.com/alephdata/aleph/labels).
 
@@ -74,7 +74,7 @@ When creating a bug report please add the 'bug' label so that we know to treat i
 
 #### Security issues
 
-If you believe that the issue you have found has security implications then please add a security label so that we can properly review the issue and deal with it accordingly
+If you believe that the issue you have found has security implications then please add a security label so that we can properly review the issue and deal with it accordingly. For more information on security issues [check our security docs](https://github.com/alephdata/aleph/blob/main/SECURITY.md)
 
 #### Feature requests
 
