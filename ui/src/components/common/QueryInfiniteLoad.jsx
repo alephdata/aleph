@@ -33,7 +33,14 @@ class QueryInfiniteLoad extends Component {
 
   render() {
     const { loadOnScroll = true, result } = this.props;
-    const canLoadMore = result && result.next && !result.isPending && !result.isError && result.results.length < result.total;
+    const canLoadMore = (
+      result &&
+      result.next &&
+      !result.isPending &&
+      !result.isError &&
+      result.results.length > 0 &&
+      result.results.length < result.total
+    );
 
     if (canLoadMore) {
       if (loadOnScroll) {
