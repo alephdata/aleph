@@ -43,6 +43,8 @@ import SelectWrapper from './SelectWrapper';
 import ExportLink from './ExportLink';
 import UpdateStatus from './UpdateStatus';
 import JudgementButtons from './JudgementButtons';
+import LinkMenuItem from './LinkMenuItem';
+import LinkButton from './LinkButton';
 
 
 export {
@@ -91,6 +93,8 @@ export {
   ExportLink,
   UpdateStatus,
   JudgementButtons,
+  LinkMenuItem,
+  LinkButton,
 };
 
 export * from './types';

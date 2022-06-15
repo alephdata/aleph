@@ -12,7 +12,7 @@ import AdvancedSearch from 'components/AdvancedSearch/AdvancedSearch';
 import AuthButtons from 'components/AuthButtons/AuthButtons';
 import { selectMetadata, selectSession, selectPages, selectEntitiesResult } from 'selectors';
 import SearchAlert from 'components/SearchAlert/SearchAlert';
-import { HotkeysContainer, SearchBox } from 'components/common';
+import { HotkeysContainer, SearchBox, LinkButton } from 'components/common';
 import getPageLink from 'util/getPageLink';
 import { entitiesQuery } from 'queries';
 
@@ -126,24 +126,33 @@ export class Navbar extends React.Component {
               )}
               {!mobileSearchOpen && (
                 <>
-                  <Link to="/datasets">
-                    <Button icon="database" className="Navbar_collections-button bp3-minimal">
-                      <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
-                    </Button>
-                  </Link>
+                  <LinkButton
+                    to="/datasets"
+                    icon="database"
+                    minimal={true}
+                    className="Navbar_collections-button"
+                  >
+                    <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
+                  </LinkButton>
                   {session.loggedIn && (
-                    <Link to="/investigations">
-                      <Button icon="briefcase" className="Navbar__collections-button mobile-hide bp3-minimal">
-                        <FormattedMessage id="nav.cases" defaultMessage="Investigations" />
-                      </Button>
-                    </Link>
+                    <LinkButton
+                      to="/investigations"
+                      icon="briefcase"
+                      minimal={true}
+                      className="Navbar__collections-button mobile-hide"
+                    >
+                      <FormattedMessage id="nav.cases" defaultMessage="Investigations" />
+                    </LinkButton>
                   )}
                   {menuPages.map(page => (
-                    <Link to={getPageLink(page)} key={page.name}>
-                      <Button icon={page.icon} className="Navbar__collections-button mobile-hide bp3-minimal">
-                        {page.short}
-                      </Button>
-                    </Link>
+                    <LinkButton
+                      key={page.name}
+                      to={getPageLink(page)}
+                      icon={page.icon}
+                      minimal={true}
+                      className="Navbar__collections-button mobile-hide">
+                      {page.short}
+                    </LinkButton>
                   ))}
                 </>
               )}
