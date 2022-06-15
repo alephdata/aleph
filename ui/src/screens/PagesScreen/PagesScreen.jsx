@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Menu, MenuDivider } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import withRouter from 'app/withRouter'
 import Screen from 'components/Screen/Screen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import { AppItem } from 'components/common';
+import { AppItem, LinkMenuItem } from 'components/common';
 import { selectPages, selectPage } from 'selectors';
 
 import './PagesScreen.scss';
@@ -27,17 +27,7 @@ const messages = defineMessages({
   },
 });
 
-
 export class PagesScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.navigate = this.navigate.bind(this);
-  }
-
-  navigate(path) {
-    this.props.navigate(path);
-  }
-
   render() {
     const { intl, page, pages } = this.props;
     if (!page) {
@@ -62,11 +52,11 @@ export class PagesScreen extends React.Component {
               <div className="Pages__menu">
                 <Menu>
                   {menuPages.map(menuPage => (
-                    <MenuItem
+                    <LinkMenuItem
                       key={menuPage.name}
-                      icon={menuPage.icon}
+                      to={getPageLink(menuPage)}
                       text={menuPage.short}
-                      onClick={() => this.navigate(getPageLink(menuPage))}
+                      icon={menuPage.icon}
                       active={menuPage.name === page.name}
                     />
                   ))}
