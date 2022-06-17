@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 2014-2015 Friedrich Lindenberg, <friedrich@pudo.org>, et al.
+# SPDX-FileCopyrightText: 2022 2016-2020 Journalism Development Network,Inc
+#
+# SPDX-License-Identifier: MIT
+
 DESCRIPTION = """
 Aleph is a powerful tool for people who follow the money. It helps
 investigators to securely access and search large amounts of data - no

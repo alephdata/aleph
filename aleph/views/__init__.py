@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 2014-2015 Friedrich Lindenberg, <friedrich@pudo.org>, et al.
+# SPDX-FileCopyrightText: 2022 2016-2020 Journalism Development Network,Inc
+#
+# SPDX-License-Identifier: MIT
+
 from aleph.views.context import blueprint as cache
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.sessions_api import blueprint as sessions_api

@@ -1,3 +1,10 @@
+#SPDX-FileCopyrightText: 2022 2014-2015 Friedrich Lindenberg, <friedrich@pudo.org>, et al.
+# SPDX-FileCopyrightText: 2022 2016-2020 Journalism Development Network,Inc
+#
+# SPDX-License-Identifier: MIT
+
+
+
 President Trump on Wednesday praised his just-convicted former campaign chairman for refusing to “break” and cooperate with federal prosecutors investigating Russia’s interference in the 2016 election, expressing appreciation for the personal loyalty of a felon found guilty of defrauding the United States government.
 In a series of tweets the morning after an extraordinary day in which Paul Manafort, his former campaign chief, was convicted of tax and bank fraud and his longtime personal lawyer, Michael D. Cohen, pleaded guilty to campaign finance violations he said were directed by Mr. Trump, the president appeared to suggest he was more concerned with the fallout for himself than with the crimes.
 He compared Mr. Cohen unfavorably with Mr. Manafort, attacking Mr. Cohen as a bad lawyer who had caved to pressure from biased federal prosecutors while lauding Mr. Manafort as a “brave man” with a “wonderful family” who had stood strong.

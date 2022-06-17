@@ -1,9 +1,9 @@
-# Translations template for PROJECT.
 # Copyright (C) 2022 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
-# 
-#, fuzzy
+# SPDX-FileCopyrightText: 2022 2014-2015 Friedrich Lindenberg, <friedrich@pudo.org>, et al.
+# SPDX-FileCopyrightText: 2022 2016-2020 Journalism Development Network,Inc
+#
+# SPDX-License-Identifier: MIT
+
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
