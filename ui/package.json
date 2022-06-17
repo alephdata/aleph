@@ -24,11 +24,9 @@
     "classnames": "^2.2.6",
     "http-proxy-middleware": "^2.0.0",
     "js-file-download": "^0.4.9",
-    "jwt-decode": "^3.0.0",
     "lodash": "^4.17.11",
     "moment": "^2.29.1",
     "node-sass": "6.0.1",
-    "numeral": "^2.0.6",
     "papaparse": "^5.1.0",
     "query-string": "^7.0.0",
     "react": "^16.13.1",
@@ -36,7 +34,6 @@
     "react-dropzone": "^11.0.1",
     "react-helmet": "^6.0.0-beta",
     "react-intl": "^5.4.6",
-    "react-json-pretty": "^2.2.0",
     "react-markdown": "^8.0.0",
     "react-pdf": "^5.0.0",
     "react-redux": "^7.1.1",
@@ -79,8 +76,5 @@
       "last 5 firefox version",
       "last 5 safari version"
     ]
-  },
-  "devDependencies": {
-    "file-selector": "^0.6.0"
   }
 }
