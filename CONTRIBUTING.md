@@ -54,6 +54,12 @@ All significant changes are recorded in our [changelog file](https://github.com/
 
 Aleph uses two main branches. The **develop** branch is for any new work that needs to be merged into Aleph. If you have bugfixes, features, or any other changes you should open a pull request to the **develop** branch. As part of our release process we will merge all changes made to develop into the main branch just before a new release of the product. The main branch is designated as stable and should not be committed to directly.
 
+### Code Formatting and Linting
+
+We use automatic code formatters and linters to keep our code consistent and to spot bugs and style issues early in the process. For Python code, we use [black](https://black.readthedocs.io/en/stable/) and [flake8](https://flake8.pycqa.org/en/latest/). Our JavaScript code base uses [Prettier](https://prettier.io) and [ESLint](https://eslint.org/).
+
+When you open a pull request, your changes are automatically checked for consistency with our code formatting and linting rules. You can also run the checks in your local development environment. If you aren’t familiar with these tools yet, don’t worry. You can open a pull request even if your changes don’t pass these checks.
+
 ### Bugs, Features, and Raising Issues
 
 Not everyone that is involved in the community is a hardened developer. If you want to contribute by providing feedback on Aleph, whether highlighting bugs or other issues, raising questions, or providing insights on potential new features then we'd really appreciate your help.
