@@ -5,7 +5,6 @@ from flask import Blueprint, redirect, send_file, request
 from aleph.core import archive
 from aleph.logic.util import archive_token
 from aleph.views.context import tag_request
-from aleph.views.util import require
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("archive_api", __name__)

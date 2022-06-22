@@ -3,8 +3,6 @@ import datetime
 import logging
 from pprint import pformat
 
-from followthemoney.types import registry
-
 from aleph.core import db, settings
 from aleph.index.entities import index_entity
 from aleph.views.util import validate

@@ -122,7 +122,7 @@ class MappingAPITest(TestCase):
 
         origin = "mapping%%3A%s" % mapping_id
         url = (
-            "/api/2/entities?filter:collection_id=%s&filter:schema=Person&filter:origin=%s"
+            "/api/2/entities?filter:collection_id=%s&filter:schema=Person&filter:origin=%s"  # noqa: E501
             % (col_id, origin)
         )
         res = self.client.get(url, headers=self.headers)
