@@ -68,7 +68,7 @@ jobs:
         run: docker build -t alephdata/aleph:${GITHUB_SHA} .
 
       - name: Check code formatting
-        run: make format
+        run: make format-check
 
       - name: Run linter
         run: make lint

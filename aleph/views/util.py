@@ -65,7 +65,7 @@ def validate(data, schema):
         if path not in errors:
             errors[path] = error.message
         else:
-            errors[path] += '; ' + error.message
+            errors[path] += "; " + error.message
         log.info("ERROR [%s]: %s", path, error.message)
 
     if not len(errors):

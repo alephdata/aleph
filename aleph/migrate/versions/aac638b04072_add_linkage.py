@@ -25,9 +25,18 @@ def upgrade():
         sa.Column("decision", sa.Boolean(), nullable=True),
         sa.Column("decider_id", sa.Integer()),
         sa.Column("context_id", sa.Integer()),
-        sa.ForeignKeyConstraint(["collection_id"], ["collection.id"],),
-        sa.ForeignKeyConstraint(["context_id"], ["role.id"],),
-        sa.ForeignKeyConstraint(["decider_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["collection_id"],
+            ["collection.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["context_id"],
+            ["role.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["decider_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
