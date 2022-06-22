@@ -1,5 +1,6 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml
 APPDOCKER=$(COMPOSE) run --rm app
+UIDOCKER=$(COMPOSE) run --rm ui
 ALEPH_TAG=latest
 
 all: build upgrade web
@@ -12,8 +13,23 @@ services:
 shell: services
 	$(APPDOCKER) /bin/bash
 
+shell-ui: services
+	$(UIDOCKER) /bin/bash
+
 test:
 	$(APPDOCKER) contrib/test.sh
+
+test-ui:
+	$(UIDOCKER) npm run test
+
+lint-ui:
+	$(UIDOCKER) npm run lint
+
+format-ui:
+	$(UIDOCKER) npm run format
+	
+format-check-ui:
+	$(UIDOCKER) npm run format:check
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch

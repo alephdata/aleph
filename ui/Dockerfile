@@ -9,6 +9,7 @@ RUN mkdir /alephui
 WORKDIR /alephui
 
 COPY .npmrc /alephui/.npmrc
+COPY .prettierrc /alephui/.prettierrc
 COPY tsconfig.json /alephui/tsconfig.json
 COPY package.json /alephui
 
