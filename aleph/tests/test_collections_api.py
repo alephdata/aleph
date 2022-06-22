@@ -1,4 +1,3 @@
-from aleph import settings
 import json
 
 from aleph.core import db, settings
