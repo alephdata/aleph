@@ -22,12 +22,21 @@ test:
 test-ui:
 	$(UIDOCKER) npm run test
 
+lint:
+	$(APPDOCKER) flake8 aleph/
+
 lint-ui:
 	$(UIDOCKER) npm run lint
 
+format:
+	$(APPDOCKER) black aleph/
+
 format-ui:
 	$(UIDOCKER) npm run format
-	
+
+format-check:
+	$(APPDOCKER) black --check aleph/
+
 format-check-ui:
 	$(UIDOCKER) npm run format:check
 
