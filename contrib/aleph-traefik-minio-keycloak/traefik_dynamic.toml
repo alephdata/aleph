@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 [http.middlewares.simpleAuth.basicAuth]
   users = [
     "admin:$aThis-Password-REDACTED-6AM/"
