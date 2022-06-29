@@ -1,7 +1,10 @@
-<<<<<<< HEAD
 // SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
 //
 // SPDX-License-Identifier: MIT
+
+
+<<<<<<< HEAD
+
 
 const DEFAULT_START_INTERVAL = 1950;
 const ES_SUFFIX = '||/y';
