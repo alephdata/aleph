@@ -1676,12 +1676,6 @@
   "search.filterTag.ancestors": {
     "defaultMessage": "en:"
   },
-  "search.filterTag.dates_after": {
-    "defaultMessage": "After"
-  },
-  "search.filterTag.dates_before": {
-    "defaultMessage": "Before"
-  },
   "search.filterTag.exclude": {
     "defaultMessage": "no:"
   },
@@ -1720,6 +1714,15 @@
   },
   "search.screen.dates_title": {
     "defaultMessage": "Fechas"
+  },
+  "search.screen.dates_uncertain_day": {
+    "defaultMessage": "* this count includes dates where no day is specified"
+  },
+  "search.screen.dates_uncertain_day_month": {
+    "defaultMessage": "* this count includes dates in {year} where no day or month is specified"
+  },
+  "search.screen.dates_uncertain_month": {
+    "defaultMessage": "* this count includes dates in {year} where no month is specified"
   },
   "search.screen.export": {
     "defaultMessage": "Exportar"

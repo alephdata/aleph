@@ -64,7 +64,8 @@ class Facet extends Component {
     const { field, query } = this.props;
     const newQuery = query
       .clearFilter(`lte:${field}`)
-      .clearFilter(`gte:${field}`);
+      .clearFilter(`gte:${field}`)
+      .set(`facet_interval:${field}`, 'year')
 
     this.props.updateQuery(newQuery);
   }
