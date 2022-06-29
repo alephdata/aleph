@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 from aleph.views.context import blueprint as cache
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.sessions_api import blueprint as sessions_api

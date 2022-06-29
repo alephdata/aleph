@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+//
+// SPDX-License-Identifier: MIT
+
 import { createReducer } from 'redux-act';
 
 import { queryEntitySets, fetchEntitySet, fetchProfile, updateEntitySet, createEntitySetMutate, createEntitySetNoMutate, deleteEntitySet } from 'actions';

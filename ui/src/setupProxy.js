@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+//
+// SPDX-License-Identifier: MIT
+
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 // Proxy all requests for '/api' services to the development API.

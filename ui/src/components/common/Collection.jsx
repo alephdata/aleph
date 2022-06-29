@@ -1,3 +1,10 @@
+{/*
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+*/}
+
+
 import React, { Component, PureComponent } from 'react';
 import { Button, Icon, MenuItem, Spinner } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';

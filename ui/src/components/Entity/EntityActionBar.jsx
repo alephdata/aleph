@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Boundary, Button, ButtonGroup, ControlGroup, Divider, OverflowList } from '@blueprintjs/core';

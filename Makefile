@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 COMPOSE=docker-compose -f docker-compose.dev.yml
 APPDOCKER=$(COMPOSE) run --rm app
 ALEPH_TAG=latest

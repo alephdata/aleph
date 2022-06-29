@@ -1,3 +1,10 @@
+{/*
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+*/}
+
+
 // Prompt component was temporarily unsupported as of react-router v6.2.1
 //  future support is planned in future v6 releases
 //  see https://reactrouter.com/docs/en/v6/upgrading/v5#prompt-is-not-currently-supported for reference

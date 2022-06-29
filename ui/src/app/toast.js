@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+//
+// SPDX-License-Identifier: MIT
+
 import { defineMessages } from 'react-intl';
 import { Intent, Position, Toaster } from '@blueprintjs/core';
 

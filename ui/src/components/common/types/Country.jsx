@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Country as VLCountry, CountrySelect } from '@alephdata/react-ftm';

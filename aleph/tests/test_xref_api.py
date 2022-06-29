@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
+
 from aleph.core import db
 from aleph.queues import get_stage, OP_XREF
 from aleph.index.entities import index_entity

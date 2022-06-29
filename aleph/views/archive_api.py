@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 import logging
 from flask.wrappers import Response
 from flask import Blueprint, redirect, send_file, request

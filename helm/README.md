@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+-->
+
 # Helm Charts for Aleph
 
 This repository contains helm charts to install Aleph and its microservices in a Kubernetes cluster.

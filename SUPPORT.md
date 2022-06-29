@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+-->
+
 # Aleph Support Policy
 
 *Technology is neither good nor bad; nor is it neutral.* (Kranzberg)

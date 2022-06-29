@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+//
+// SPDX-License-Identifier: MIT
+
 import Papa from 'papaparse';
 
 export default function fetchCsvData(url, callback) {

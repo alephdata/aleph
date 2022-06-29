@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 """
 Profiles are a type of entity set that expresses the notion that several entities
 (often from different collections) refer to the same real-world thing.

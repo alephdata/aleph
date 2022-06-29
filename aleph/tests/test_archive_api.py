@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
+
 from aleph.core import archive
 from aleph.logic.util import archive_url
 from aleph.tests.util import TestCase

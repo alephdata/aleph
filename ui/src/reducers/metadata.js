@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+//
+// SPDX-License-Identifier: MIT
+
 import { createReducer } from 'redux-act';
 import { fetchMetadata } from 'actions';
 import { loadState, loadStart, loadError, loadComplete } from 'reducers/util';

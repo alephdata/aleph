@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import React, { Component } from 'react';
 import { Dialog, Button, Intent, Radio, RadioGroup } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';

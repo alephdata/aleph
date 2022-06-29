@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+//
+// SPDX-License-Identifier: MIT
 
 // Parse a PDF fragment identifier according to
 // <https://tools.ietf.org/html/rfc3778#section-3>.

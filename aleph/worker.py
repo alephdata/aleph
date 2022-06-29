@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
+
 import structlog
 from servicelayer.jobs import Dataset
 from servicelayer.worker import Worker

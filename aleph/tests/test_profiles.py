@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
+
 from aleph.model import Judgement
 from aleph.logic.profiles import decide_pairwise, collection_profiles
 from aleph.tests.util import TestCase

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+-->
+
 Aleph is an open project, we're happy to welcome contributions from anybody
 that help us make a better tool.
 

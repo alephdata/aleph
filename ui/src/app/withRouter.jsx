@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+*/}
+
 /*
   backfill for withRouter function removed in react-router v6
     necessary until we move to functional components with hooks

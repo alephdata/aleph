@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 KC_BIN=/opt/jboss/keycloak/bin
 REALM_NAME=aleph-users
 CLIENT_ID=aleph-ui

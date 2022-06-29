@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
+
 DESCRIPTION = """
 Aleph is a powerful tool for people who follow the money. It helps
 investigators to securely access and search large amounts of data - no

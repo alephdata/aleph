@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 global:
   google: false # Are we using any google services? Storage, Vision API?
   amazon: true # Are we using amazon s3 for storage?

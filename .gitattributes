@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 # Ensure bash scripts to be run in Docker have UNIX-style line endings.
 # Without this, the bash scripts will fail to run in Docker on Windows
 # as the COPY step in the Dockerfile will keep Windows-style line endings.

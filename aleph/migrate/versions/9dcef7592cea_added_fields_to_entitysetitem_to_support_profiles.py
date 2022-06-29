@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 """Added fields to EntitySetItem to support profiles and removed Linkage
 
 Revision ID: 9dcef7592cea

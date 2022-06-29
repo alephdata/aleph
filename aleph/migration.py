@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 import flask_migrate
 from sqlalchemy import MetaData, inspect
 from sqlalchemy.exc import InternalError

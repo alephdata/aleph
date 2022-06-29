@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
+
 from unittest import TestCase
 from aleph.search.parser import SearchQueryParser
 from aleph.search.query import Query

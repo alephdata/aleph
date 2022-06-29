@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+#
+# SPDX-License-Identifier: MIT
+
 # Bulk object resolver.
 # The purpose of this module is to quickly load objects of different
 # types from the backend. It's typically used by the API serialiser

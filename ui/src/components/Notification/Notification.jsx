@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import React, { PureComponent } from 'react';
 import { selectUnit } from '@formatjs/intl-utils';
 import { FormattedRelativeTime } from 'react-intl';

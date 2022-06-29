@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+//
+// SPDX-License-Identifier: MIT
+
 import _ from 'lodash';
 import { isEntityRtl } from '@alephdata/react-ftm';
 import { Model } from '@alephdata/followthemoney';
