@@ -1,6 +1,7 @@
 import logging
 from pprint import pprint, pformat  # noqa
 from flask import request
+from flask_babel import gettext
 from pantomime.types import PDF, CSV
 from banal import ensure_list
 from followthemoney import model
@@ -88,6 +89,13 @@ class Serializer(object):
         data = result.to_dict(serializer=cls)
         if extra is not None:
             data.update(extra)
+        if data.get("total") > 0 and not data.get("results"):
+            log.exception(f"Expected more results in the response: {data}")
+            data = {
+                "status": "error",
+                "errors": gettext("Failed to load expected results."),
+            }
+            return jsonify(data, status=500)
         return jsonify(data, **kwargs)
 
 
