@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2014 2014 Emma Prest, <emma@occrp.org> et al.
+
+SPDX-License-Identifier: MIT
+-->
+
 # User Interface
 
 This folder contains the Aleph user interface, a ReactJS-based application. 
