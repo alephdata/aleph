@@ -183,7 +183,7 @@ export class EntityTable extends Component {
   render() {
     const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, updateStatus, writeable } = this.props;
     const { selection } = this.state;
-    const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
+    const visitEntity = this.onEntityClick;
     const showEmptyComponent = result.total === 0 && query.hasQuery();
     const selectedEntities = selection.map(this.getEntity).filter(e => e !== undefined);
 
