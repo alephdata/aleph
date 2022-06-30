@@ -25,6 +25,6 @@ class SerializerTest(TestCase):
         result.total = 10
         response = Serializer.jsonify_result(result)
         assert response.status_code == 500, response.status_code
-        assert (
-            response.json["errors"] == "Failed to load expected results."
+        assert response.json["message"].startswith(
+            "We found 10 results, but could not load them"
         ), response.json
