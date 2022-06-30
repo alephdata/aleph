@@ -132,7 +132,7 @@ def similar(profile_id):
     result.results = []
     for obj in entities:
         item = {
-            "score": compare(model, profile["merged"], obj),
+            "score": compare(model, profile["merged"], model.get_proxy(obj)),
             "judgement": Judgement.NO_JUDGEMENT,
             "collection_id": profile.get("collection_id"),
             "entity": obj,
