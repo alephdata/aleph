@@ -67,6 +67,9 @@ jobs:
       - name: Build docker image
         run: docker build -t alephdata/aleph:${GITHUB_SHA} .
 
+      - name: Install development dependencies
+        run: make dev
+
       - name: Check code formatting
         run: make format-check
 
