@@ -1,6 +1,6 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml
 APPDOCKER=$(COMPOSE) run --rm app
-UIDOCKER=$(COMPOSE) run --rm ui
+UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
 
 all: build upgrade web
