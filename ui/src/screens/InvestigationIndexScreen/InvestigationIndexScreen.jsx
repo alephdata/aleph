@@ -3,13 +3,12 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
 import InvestigationCreateButton from 'components/Toolbar/InvestigationCreateButton';
 import { investigationsQuery } from 'queries';
-
 
 const messages = defineMessages({
   title: {
@@ -34,7 +33,6 @@ const messages = defineMessages({
   },
 });
 
-
 export class InvestigationIndexScreen extends Component {
   render() {
     const { query, intl } = this.props;
@@ -46,7 +44,9 @@ export class InvestigationIndexScreen extends Component {
       >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <h5 className="Dashboard__title">
+              {intl.formatMessage(messages.title)}
+            </h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="case.description"
@@ -81,5 +81,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, {}),
-  injectIntl,
+  injectIntl
 )(InvestigationIndexScreen);

@@ -1,44 +1,44 @@
-@import "app/mixins.scss";
+@import 'app/mixins.scss';
 
 /* pane-based layout elements. */
 .pane-layout {
-    flex-grow: 1;
-    display: flex;
-    flex-flow: row nowrap;
-    align-content: stretch;
-    align-items: stretch;
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+  align-items: stretch;
 
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      flex-flow: column;
-    }
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    flex-flow: column;
+  }
+}
+
+.pane-layout-main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    order: 2;
+  }
+}
+
+.pane-layout-side {
+  flex: none;
+  width: $aleph-sidebar-width;
+  height: 100%;
+  overflow: visible;
+
+  @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
+    width: 40%;
   }
 
-  .pane-layout-main {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: hidden;
-
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      order: 2;
-    }
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    margin-bottom: 1em;
+    @include rtlSupportInvertedProp(border, right, none, null);
+    border-bottom: 1px solid $aleph-border-color;
+    @include rtlSupportInvertedProp(padding, right, 0, null);
+    width: auto !important;
   }
-
-  .pane-layout-side {
-    flex: none;
-    width: $aleph-sidebar-width;
-    height: 100%;
-    overflow: visible;
-
-    @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
-      width: 40%;
-    }
-
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      margin-bottom: 1em;
-      @include rtlSupportInvertedProp(border, right, none, null);
-      border-bottom: 1px solid $aleph-border-color;
-      @include rtlSupportInvertedProp(padding, right, 0, null);
-      width: auto !important;
-    }
-  }
+}

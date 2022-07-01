@@ -6,15 +6,13 @@ import { Date } from 'components/common';
 import './MappingStatus.scss';
 
 const MappingStatus = ({ mapping }) => {
-  let intent = mapping.last_run_status === 'success' ? Intent.SUCCESS : Intent.PRIMARY;
+  let intent =
+    mapping.last_run_status === 'success' ? Intent.SUCCESS : Intent.PRIMARY;
   if (mapping.last_run_error) {
     intent = Intent.DANGER;
   }
   return (
-    <Callout
-      className="MappingStatus"
-      intent={intent}
-    >
+    <Callout className="MappingStatus" intent={intent}>
       <div>
         <h6 className="bp3-heading MappingStatus__statusItem">
           <span>
@@ -35,9 +33,7 @@ const MappingStatus = ({ mapping }) => {
                 defaultMessage="Status:"
               />
             </span>
-            <span>
-              {mapping.last_run_status}
-            </span>
+            <span>{mapping.last_run_status}</span>
           </h6>
         )}
         {mapping.last_run_err_msg && (
@@ -48,9 +44,7 @@ const MappingStatus = ({ mapping }) => {
                 defaultMessage="Error:"
               />
             </span>
-            <span>
-              {mapping.last_run_err_msg}
-            </span>
+            <span>{mapping.last_run_err_msg}</span>
           </h6>
         )}
       </div>

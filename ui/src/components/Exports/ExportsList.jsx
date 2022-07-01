@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
-import { compose } from "redux";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
-import { ErrorSection } from "src/components/common";
-import { selectExports } from "selectors";
-import { fetchExports } from "src/actions";
-import Export from "src/components/Exports/Export";
+import withRouter from 'app/withRouter';
+import { ErrorSection } from 'src/components/common';
+import { selectExports } from 'selectors';
+import { fetchExports } from 'src/actions';
+import Export from 'src/components/Exports/Export';
 
 const messages = defineMessages({
   no_exports: {
-    id: "exports.no_exports",
-    defaultMessage: "You have no exports to download",
+    id: 'exports.no_exports',
+    defaultMessage: 'You have no exports to download',
   },
 });
 

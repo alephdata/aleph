@@ -26,29 +26,23 @@ class FileImport extends Component {
     const reader = new FileReader();
 
     reader.onload = async (e) => {
-      const data = (e.target.result);
+      const data = e.target.result;
       this.props.onImport({ fileName, label, data });
     };
     reader.onerror = async () => {
       showWarningToast(intl.formatMessage(messages.import_error));
     };
     reader.readAsText(file);
-  }
+  };
 
   render() {
     const { accept, importedFile, placeholder } = this.props;
 
     return (
-      <Dropzone
-        accept={accept}
-        onDrop={this.onDrop}
-        noDragEventsBubbling
-      >
+      <Dropzone accept={accept} onDrop={this.onDrop} noDragEventsBubbling>
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()}>
-            <input
-              {...getInputProps()}
-            />
+            <input {...getInputProps()} />
             {importedFile && (
               <Button
                 className="FileImport__file-name"
@@ -59,9 +53,7 @@ class FileImport extends Component {
               />
             )}
             {!importedFile && (
-              <div className="FileImport__placeholder">
-                {placeholder}
-              </div>
+              <div className="FileImport__placeholder">{placeholder}</div>
             )}
           </div>
         )}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
@@ -42,9 +42,7 @@ class CollectionViews extends React.Component {
   }
 
   render() {
-    const {
-      collectionId, activeMode, searchQuery, searchResult
-    } = this.props;
+    const { collectionId, activeMode, searchQuery, searchResult } = this.props;
 
     return (
       <Tabs
@@ -57,22 +55,36 @@ class CollectionViews extends React.Component {
         <Tab
           id={collectionViewIds.OVERVIEW}
           className="CollectionViews__tab"
-          title={(
-            <CollectionView.Label id={collectionViewIds.OVERVIEW} icon />
-          )}
-          panel={(
-            <CollectionOverviewMode isCasefile={false} collectionId={collectionId} />
-          )}
+          title={<CollectionView.Label id={collectionViewIds.OVERVIEW} icon />}
+          panel={
+            <CollectionOverviewMode
+              isCasefile={false}
+              collectionId={collectionId}
+            />
+          }
         />
         <Tab
           id={collectionViewIds.DOCUMENTS}
           className="CollectionViews__tab"
           title={
             <>
-              <CollectionView.Label id={collectionViewIds.DOCUMENTS} icon isCasefile={false} />
-              <CollectionView.Count id={collectionViewIds.DOCUMENTS} collectionId={collectionId} />
-            </>}
-          panel={<CollectionDocumentsMode collectionId={collectionId} showSearch={false} />}
+              <CollectionView.Label
+                id={collectionViewIds.DOCUMENTS}
+                icon
+                isCasefile={false}
+              />
+              <CollectionView.Count
+                id={collectionViewIds.DOCUMENTS}
+                collectionId={collectionId}
+              />
+            </>
+          }
+          panel={
+            <CollectionDocumentsMode
+              collectionId={collectionId}
+              showSearch={false}
+            />
+          }
         />
         <Tab
           id={collectionViewIds.XREF}
@@ -80,17 +92,25 @@ class CollectionViews extends React.Component {
           title={
             <>
               <CollectionView.Label id={collectionViewIds.XREF} icon />
-              <CollectionView.Count id={collectionViewIds.XREF} collectionId={collectionId} />
-            </>}
+              <CollectionView.Count
+                id={collectionViewIds.XREF}
+                collectionId={collectionId}
+              />
+            </>
+          }
           panel={<CollectionXrefMode collectionId={collectionId} />}
         />
         <Tab
           id={collectionViewIds.SEARCH}
           className="CollectionViews__tab"
-          title={collectionViewIds.SEARCH === activeMode && (
-            <CollectionView.Label id={collectionViewIds.SEARCH} icon />
-          )}
-          panel={<FacetedEntitySearch query={searchQuery} result={searchResult} />}
+          title={
+            collectionViewIds.SEARCH === activeMode && (
+              <CollectionView.Label id={collectionViewIds.SEARCH} icon />
+            )
+          }
+          panel={
+            <FacetedEntitySearch query={searchQuery} result={searchResult} />
+          }
         />
       </Tabs>
     );
@@ -99,12 +119,14 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
-  const searchQuery = collectionSearchQuery(location, collectionId, { highlight: true });
+  const searchQuery = collectionSearchQuery(location, collectionId, {
+    highlight: true,
+  });
 
   return {
     collection: selectCollection(state, collectionId),
     searchQuery,
-    searchResult: selectEntitiesResult(state, searchQuery)
+    searchResult: selectEntitiesResult(state, searchQuery),
   };
 };
 

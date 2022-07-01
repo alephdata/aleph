@@ -10,7 +10,7 @@ class TextSkeleton extends PureComponent {
     return React.createElement(
       type,
       { className: c(Classes.SKELETON, className) },
-      placeholder,
+      placeholder
     );
   }
 }

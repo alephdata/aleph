@@ -20,7 +20,6 @@ const messages = defineMessages({
   },
 });
 
-
 class MentionLink extends Component {
   render() {
     const { intl, value, prop, count, metadata } = this.props;
@@ -31,7 +30,10 @@ class MentionLink extends Component {
     const href = getValueLink(prop.type, value);
     return (
       <Tooltip
-        content={intl.formatMessage(messages.tooltip, { count, appName: metadata.app.title })}
+        content={intl.formatMessage(messages.tooltip, {
+          count,
+          appName: metadata.app.title,
+        })}
         transitionDuration={0}
         hoverOpenDelay={100}
       >
@@ -68,13 +70,18 @@ MentionLink = injectIntl(MentionLink);
 class MentionList extends Component {
   render() {
     const { prop, values, separator = ' · ', missing = '—' } = this.props;
-    const vals = ensureArray(values).map(value => (
-      <MentionLink key={value.id || value} prop={prop} value={value} {...this.props} />
+    const vals = ensureArray(values).map((value) => (
+      <MentionLink
+        key={value.id || value}
+        prop={prop}
+        value={value}
+        {...this.props}
+      />
     ));
     if (!vals.length) {
-      return (<span className="no-value">{missing}</span>);
+      return <span className="no-value">{missing}</span>;
     }
-    return (<span>{ wordList(vals, separator) }</span>);
+    return <span>{wordList(vals, separator)}</span>;
   }
 }
 

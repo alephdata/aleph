@@ -1,14 +1,14 @@
 .SectionLoading {
-    min-height: 15em;
-    max-height: 80vh;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  min-height: 15em;
+  max-height: 80vh;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    .spinner {
-      align-self: center;
-      margin: auto;
-    }
+  .spinner {
+    align-self: center;
+    margin: auto;
+  }
 }

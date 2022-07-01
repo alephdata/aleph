@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .DiagramExportDialog {
   &.bp3-dialog {
@@ -6,7 +6,7 @@
   }
 
   &__section {
-    margin-bottom: $aleph-grid-size*1.5;
+    margin-bottom: $aleph-grid-size * 1.5;
 
     &:last-child {
       margin: 0;

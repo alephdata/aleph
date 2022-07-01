@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { getGroupField } from 'components/SearchField/util';
 import SearchActionBar from 'components/common/SearchActionBar';
 import Facets from 'components/Facet/Facets';
@@ -14,8 +14,16 @@ import CollectionXrefManageMenu from 'components/Collection/CollectionXrefManage
 import XrefTable from 'components/XrefTable/XrefTable';
 import SortingBar from 'components/SortingBar/SortingBar';
 import { collectionXrefFacetsQuery } from 'queries';
-import { selectCollection, selectCollectionXrefResult, selectTester } from 'selectors';
-import { queryCollectionXref, queryRoles, triggerCollectionXrefDownload } from 'actions';
+import {
+  selectCollection,
+  selectCollectionXrefResult,
+  selectTester,
+} from 'selectors';
+import {
+  queryCollectionXref,
+  queryRoles,
+  triggerCollectionXrefDownload,
+} from 'actions';
 
 import './CollectionXrefMode.scss';
 
@@ -29,9 +37,9 @@ const messages = defineMessages({
     defaultMessage: 'Default',
   },
   sort_label: {
-    id: "xref.sort.label",
-    defaultMessage: "Sort by:"
-  }
+    id: 'xref.sort.label',
+    defaultMessage: 'Sort by:',
+  },
 });
 
 export class CollectionXrefMode extends React.Component {
@@ -63,17 +71,19 @@ export class CollectionXrefMode extends React.Component {
   }
 
   render() {
-    const { collection, isRandomSort, intl, isTester, query, result } = this.props;
+    const { collection, isRandomSort, intl, isTester, query, result } =
+      this.props;
 
     const exportLink = collection?.links?.xref_export;
 
     return (
       <section className="CollectionXrefMode">
-
         <div className="pane-layout">
           <div className="pane-layout-side">
             <Facets
-              facets={['match_collection_id', 'schema', 'countries'].map(getGroupField)}
+              facets={['match_collection_id', 'schema', 'countries'].map(
+                getGroupField
+              )}
               query={query}
               result={result}
               updateQuery={this.updateQuery}
@@ -89,14 +99,20 @@ export class CollectionXrefMode extends React.Component {
               <SearchActionBar
                 result={result}
                 exportDisabled={!exportLink}
-                onExport={() => this.props.triggerCollectionXrefDownload(collection.id)}
+                onExport={() =>
+                  this.props.triggerCollectionXrefDownload(collection.id)
+                }
               >
                 {isTester && (
                   <SortingBar
                     filterButtonLabel={intl.formatMessage(messages.sort_label)}
                     filterButton={
                       <Button
-                        text={intl.formatMessage(messages[isRandomSort ? 'sort_random' : 'sort_default'])}
+                        text={intl.formatMessage(
+                          messages[
+                            isRandomSort ? 'sort_random' : 'sort_default'
+                          ]
+                        )}
                         onClick={this.toggleSort}
                         minimal
                         intent={Intent.PRIMARY}
@@ -133,6 +149,10 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryCollectionXref, queryRoles, triggerCollectionXrefDownload }),
-  injectIntl,
+  connect(mapStateToProps, {
+    queryCollectionXref,
+    queryRoles,
+    triggerCollectionXrefDownload,
+  }),
+  injectIntl
 )(CollectionXrefMode);

@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import c from 'classnames';
 import { compose } from 'redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import EntitySearchResultsRow from './EntitySearchResultsRow';
 import { ErrorSection, SortableTH } from 'components/common';
 import SearchField from 'components/SearchField/SearchField';
 
 import './EntitySearchResults.scss';
-
 
 class EntitySearchResults extends Component {
   sortColumn(newField) {
@@ -20,31 +19,44 @@ class EntitySearchResults extends Component {
     }
 
     // Toggle through sorting states: ascending, descending, or unsorted.
-    updateQuery(query.sortBy(
-      currentField,
-      direction === 'asc' ? 'desc' : 'asc'
-    ));
+    updateQuery(
+      query.sortBy(currentField, direction === 'asc' ? 'desc' : 'asc')
+    );
   }
 
   renderHeaderCell = (field) => {
     const { query } = this.props;
     const { field: sortedField, direction } = query.getSort();
-    const fieldName = field.isProperty ? `properties.${field.name}` : field.name;
+    const fieldName = field.isProperty
+      ? `properties.${field.name}`
+      : field.name;
     return (
       <SortableTH
         key={fieldName}
         sortable={field.type !== 'text'}
-        className={c({ wide: fieldName === 'caption' || fieldName === 'collection_id' })}
-        sorted={sortedField === fieldName && (direction === 'desc' ? 'desc' : 'asc')}
+        className={c({
+          wide: fieldName === 'caption' || fieldName === 'collection_id',
+        })}
+        sorted={
+          sortedField === fieldName && (direction === 'desc' ? 'desc' : 'asc')
+        }
         onClick={() => this.sortColumn(fieldName)}
       >
         <SearchField.Label field={field} />
       </SortableTH>
     );
-  }
+  };
 
   render() {
-    const { columns, result, location, writeable, showPreview = true, updateSelection, selection } = this.props;
+    const {
+      columns,
+      result,
+      location,
+      writeable,
+      showPreview = true,
+      updateSelection,
+      selection,
+    } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -62,12 +74,12 @@ class EntitySearchResults extends Component {
           <table className="EntitySearchResults data-table">
             <thead>
               <tr>
-                {writeable && updateSelection && (<th className="select" />)}
+                {writeable && updateSelection && <th className="select" />}
                 {columns.map(this.renderHeaderCell)}
               </tr>
             </thead>
             <tbody className={c({ updating: result.isPending })}>
-              {result.results.map(entity => (
+              {result.results.map((entity) => (
                 <EntitySearchResultsRow
                   key={entity.id}
                   entity={entity}
@@ -79,15 +91,16 @@ class EntitySearchResults extends Component {
                   columns={columns}
                 />
               ))}
-              {result.isPending && skeletonItems.map(item => (
-                <EntitySearchResultsRow
-                  key={item}
-                  updateSelection={updateSelection}
-                  writeable={writeable}
-                  columns={columns}
-                  isPending
-                />
-              ))}
+              {result.isPending &&
+                skeletonItems.map((item) => (
+                  <EntitySearchResultsRow
+                    key={item}
+                    updateSelection={updateSelection}
+                    writeable={writeable}
+                    columns={columns}
+                    isPending
+                  />
+                ))}
             </tbody>
           </table>
         </div>
@@ -96,6 +109,4 @@ class EntitySearchResults extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-)(EntitySearchResults);
+export default compose(withRouter)(EntitySearchResults);

@@ -1,7 +1,13 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { exportSvg, NetworkDiagram, GraphConfig, GraphLayout, Viewport } from '@alephdata/react-ftm';
+import {
+  exportSvg,
+  NetworkDiagram,
+  GraphConfig,
+  GraphLayout,
+  Viewport,
+} from '@alephdata/react-ftm';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
 import { UpdateStatus } from 'components/common';
@@ -10,7 +16,10 @@ import './DiagramEditor.scss';
 
 const fileDownload = require('js-file-download');
 
-const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left' });
+const config = new GraphConfig({
+  editorTheme: 'light',
+  toolbarPosition: 'left',
+});
 
 class DiagramEditor extends React.Component {
   constructor(props) {
@@ -21,10 +30,10 @@ class DiagramEditor extends React.Component {
     if (diagram) {
       const layoutData = { vertices: [], edges: [], selection: [] };
 
-      initialLayout = GraphLayout.fromJSON(
-        config,
-        {...layoutData, ...diagram.layout}
-      );
+      initialLayout = GraphLayout.fromJSON(config, {
+        ...layoutData,
+        ...diagram.layout,
+      });
       initialLayout.layout(entityManager.getEntities());
     } else {
       initialLayout = new GraphLayout(config);
@@ -64,7 +73,8 @@ class DiagramEditor extends React.Component {
         layout: layoutData,
       };
 
-      this.props.updateEntitySet(updatedDiagram.id, updatedDiagram)
+      this.props
+        .updateEntitySet(updatedDiagram.id, updatedDiagram)
         .then(() => {
           onStatusChange(UpdateStatus.SUCCESS);
         })
@@ -109,7 +119,7 @@ class DiagramEditor extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {
   updateEntitySet,
@@ -117,5 +127,5 @@ const mapDispatchToProps = {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true }),
-  entityEditorWrapper,
+  entityEditorWrapper
 )(DiagramEditor);

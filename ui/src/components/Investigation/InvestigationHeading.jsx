@@ -18,22 +18,27 @@ class InvestigationHeading extends React.Component {
 
   toggleMetadata = () => {
     this.setState(({ showMetadata }) => ({ showMetadata: !showMetadata }));
-  }
+  };
 
   render() {
     const { collection, activeMode } = this.props;
     const { showMetadata } = this.state;
 
     return (
-      <div className={c('InvestigationHeading', {'metadata-shown': showMetadata })}>
+      <div
+        className={c('InvestigationHeading', {
+          'metadata-shown': showMetadata,
+        })}
+      >
         <div className="InvestigationHeading__inner-container">
           <CollectionHeading collection={collection} link={!!activeMode} />
           {!!activeMode && (
             <div className="InvestigationHeading__metadata">
-              {collection.summary && (
-                <Summary text={collection.summary} />
-              )}
-              <CollectionStatus collection={collection} showCancel={collection.writeable} />
+              {collection.summary && <Summary text={collection.summary} />}
+              <CollectionStatus
+                collection={collection}
+                showCancel={collection.writeable}
+              />
               <div className="InvestigationHeading__divider" />
               <div className="InvestigationHeading__metadata__inner-container">
                 <CollectionInfo collection={collection} />

@@ -1,43 +1,51 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .CollectionXrefMode {
-    .CollectionXrefContextInfo {
-        margin-bottom: $aleph-content-padding;
+  .CollectionXrefContextInfo {
+    margin-bottom: $aleph-content-padding;
+  }
+
+  .CollectionXrefManageMenu {
+    margin-bottom: $aleph-grid-size * 1.5;
+  }
+
+  &__actions {
+    margin-bottom: $aleph-grid-size/2;
+  }
+
+  .pane-layout-side {
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $aleph-content-padding,
+      null
+    );
+    width: $aleph-sidebar-width * 0.8;
+  }
+
+  table.data-table {
+    table-layout: fixed;
+
+    th.numeric.narrow,
+    td.numeric.narrow {
+      width: 4em;
     }
 
-    .CollectionXrefManageMenu {
-      margin-bottom: $aleph-grid-size*1.5;
+    th.expand,
+    td.expand {
+      width: 2em;
     }
 
-    &__actions {
-      margin-bottom: $aleph-grid-size/2;
+    td.entity,
+    td.collection {
+      .EntityLink,
+      .CollectionLink {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
-
-    .pane-layout-side {
-        @include rtlSupportInvertedProp(margin, right, $aleph-content-padding, null);
-        width: $aleph-sidebar-width * 0.8;
-    }
-
-    table.data-table {
-        table-layout:fixed;
-
-        th.numeric.narrow, td.numeric.narrow {
-            width: 4em;
-        }
-
-        th.expand, td.expand {
-            width: 2em;
-        }
-
-        td.entity, td.collection {
-            .EntityLink, .CollectionLink {
-                display: block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-        }
-    }
-
+  }
 }

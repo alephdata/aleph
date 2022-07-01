@@ -1,9 +1,9 @@
 @import 'app/variables.scss';
 
-$vertical-spacing: $aleph-grid-size*5;
+$vertical-spacing: $aleph-grid-size * 5;
 
 .HomeScreen {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     font-size: 14px;
@@ -29,7 +29,7 @@ $vertical-spacing: $aleph-grid-size*5;
         background-repeat: no-repeat;
         background-position: 50% 50%;
         position: absolute;
-        content: "";
+        content: '';
         opacity: 0.09;
         top: 0;
         left: 0;
@@ -43,7 +43,7 @@ $vertical-spacing: $aleph-grid-size*5;
     &__content {
       max-width: 1150px;
       margin: auto;
-      padding: $aleph-grid-size*8 $aleph-grid-size*3;
+      padding: $aleph-grid-size * 8 $aleph-grid-size * 3;
       vertical-align: middle;
     }
 
@@ -77,14 +77,14 @@ $vertical-spacing: $aleph-grid-size*5;
 
   &__title {
     font-size: 2em;
-    margin: 0 0 $aleph-grid-size*6;
+    margin: 0 0 $aleph-grid-size * 6;
     font-weight: 700;
     color: $dark-gray3;
   }
 
   &__title-divider {
     width: 20%;
-    margin: $aleph-grid-size*4 auto $aleph-grid-size*5;
+    margin: $aleph-grid-size * 4 auto $aleph-grid-size * 5;
     border-bottom: 2px solid $blue1;
     -webkit-border-image: -webkit-linear-gradient(left, white, black);
     display: none;
@@ -92,7 +92,7 @@ $vertical-spacing: $aleph-grid-size*5;
 
   &__description {
     font-size: 1em;
-    margin: $aleph-grid-size*3 0;
+    margin: $aleph-grid-size * 3 0;
   }
 
   &__auth-warning {
@@ -116,7 +116,8 @@ $vertical-spacing: $aleph-grid-size*5;
     }
   }
 
-  &__thirds, &__halves {
+  &__thirds,
+  &__halves {
     display: flex;
     justify-content: space-between;
 
@@ -155,8 +156,8 @@ $vertical-spacing: $aleph-grid-size*5;
     &__content {
       margin: 0 $aleph-grid-size;
       border-radius: $aleph-grid-size;
-      padding: $aleph-grid-size*2.5;
-      background-color: rgba(white, .2);
+      padding: $aleph-grid-size * 2.5;
+      background-color: rgba(white, 0.2);
       height: 100%;
 
       img {
@@ -165,7 +166,7 @@ $vertical-spacing: $aleph-grid-size*5;
       }
       p {
         margin: auto;
-        margin-top: $aleph-grid-size*2;
+        margin-top: $aleph-grid-size * 2;
         text-align: center;
         line-height: 1.5;
         width: 90%;
@@ -175,7 +176,7 @@ $vertical-spacing: $aleph-grid-size*5;
 
   &__imageLink {
     &:hover {
-      opacity: .8;
+      opacity: 0.8;
     }
   }
 

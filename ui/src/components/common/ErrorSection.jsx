@@ -30,9 +30,7 @@ export class ErrorSection extends PureComponent {
   render() {
     const { error, metadata } = this.props;
     const { isOpen } = this.state;
-    const {
-      title = '', description = '', icon = 'error',
-    } = this.props;
+    const { title = '', description = '', icon = 'error' } = this.props;
     const message = error === undefined ? title : error.message;
 
     return (
@@ -57,7 +55,7 @@ export class ErrorSection extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
   session: selectSession(state),
 });

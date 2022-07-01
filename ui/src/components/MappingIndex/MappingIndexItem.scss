@@ -1,12 +1,12 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .MappingIndexItem {
   width: 100%;
   margin: $aleph-grid-size 0;
 
   &__title.bp3-heading {
-    margin-bottom: $aleph-grid-size*1.5;
+    margin-bottom: $aleph-grid-size * 1.5;
     display: inline-block;
   }
 
@@ -15,7 +15,7 @@
     .SchemaLabel {
       display: inline-flex;
       white-space: nowrap;
-      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*2, 0);
+      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size * 2, 0);
       font-weight: bolder;
     }
   }

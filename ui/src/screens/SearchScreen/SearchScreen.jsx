@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { selectEntitiesResult } from 'selectors';
 import { triggerQueryExport } from 'src/actions';
 import { SignInCallout } from 'components/common';
@@ -12,7 +12,6 @@ import Screen from 'components/Screen/Screen';
 import { entitiesQuery } from 'queries';
 
 import './SearchScreen.scss';
-
 
 const messages = defineMessages({
   no_results_title: {
@@ -41,13 +40,16 @@ export class SearchScreen extends React.Component {
   render() {
     const { query, result, intl } = this.props;
 
-    const titleStatus = (result.isPending && !result.results?.length) ? intl.formatMessage(messages.loading) : query.getString('q');
+    const titleStatus =
+      result.isPending && !result.results?.length
+        ? intl.formatMessage(messages.loading)
+        : query.getString('q');
     const title = titleStatus
       ? intl.formatMessage(messages.title, { title: titleStatus })
       : intl.formatMessage(messages.title_emptyq);
 
     return (
-      <Screen title={title} >
+      <Screen title={title}>
         <FacetedEntitySearch
           query={query}
           result={result}
@@ -70,5 +72,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { triggerQueryExport }),
-  injectIntl,
+  injectIntl
 )(SearchScreen);

@@ -4,16 +4,14 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { Entity, Schema } from 'components/common';
 import { entitySuggestQuery } from 'queries';
 import { queryEntities } from 'actions';
 import CollectionView from 'components/Collection/CollectionView';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 
-
 import './DocumentSelectDialog.scss';
-
 
 const messages = defineMessages({
   no_results: {
@@ -26,13 +24,12 @@ const messages = defineMessages({
   },
 });
 
-
 class DocumentSelectDialog extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      query: ''
+      query: '',
     };
     this.onQueryChange = this.onQueryChange.bind(this);
   }
@@ -45,14 +42,17 @@ class DocumentSelectDialog extends Component {
 
   onQueryChange(queryText) {
     const { collection, location } = this.props;
-    const query = entitySuggestQuery(location, collection, "Table", { q: queryText });
+    const query = entitySuggestQuery(location, collection, 'Table', {
+      q: queryText,
+    });
     this.props.queryEntities({ query });
 
     this.setState({ query });
   }
 
   render() {
-    const { collection, intl, schema, title, toggleDialog, isOpen, onSelect } = this.props;
+    const { collection, intl, schema, title, toggleDialog, isOpen, onSelect } =
+      this.props;
     const { query } = this.state;
 
     return (
@@ -66,19 +66,21 @@ class DocumentSelectDialog extends Component {
         <div className={Classes.DIALOG_BODY}>
           <p>
             <FormattedMessage
-              id='entity.manager.bulk_import.description.1'
-              defaultMessage={
-                `Select a table below from which to import new {schema} entities.`
-              }
-              values={{ schema: schema && <strong><Schema.Label schema={schema} /></strong> }}
+              id="entity.manager.bulk_import.description.1"
+              defaultMessage={`Select a table below from which to import new {schema} entities.`}
+              values={{
+                schema: schema && (
+                  <strong>
+                    <Schema.Label schema={schema} />
+                  </strong>
+                ),
+              }}
             />
           </p>
           <p>
             <FormattedMessage
-              id='entity.manager.bulk_import.description.2'
-              defaultMessage={
-                `Once selected, you will be prompted to assign columns from that table to properties of the generated entities.`
-              }
+              id="entity.manager.bulk_import.description.2"
+              defaultMessage={`Once selected, you will be prompted to assign columns from that table to properties of the generated entities.`}
             />
           </p>
 
@@ -87,25 +89,26 @@ class DocumentSelectDialog extends Component {
             onQueryChange={this.onQueryChange}
             onSelect={onSelect}
             noResultsText={intl.formatMessage(messages.no_results)}
-            buttonProps={{ placeholder: intl.formatMessage(messages.placeholder) }}
+            buttonProps={{
+              placeholder: intl.formatMessage(messages.placeholder),
+            }}
           />
           <div className="bp3-form-helper-text">
             <FormattedMessage
-              id='entity.manager.bulk_import.description.3'
-              defaultMessage={
-                `Don't see the table you're looking for? {link}`
-              }
+              id="entity.manager.bulk_import.description.3"
+              defaultMessage={`Don't see the table you're looking for? {link}`}
               values={{
                 link: (
-                  <CollectionView.Link collection={collection} id={collectionViewIds.DOCUMENTS}>
+                  <CollectionView.Link
+                    collection={collection}
+                    id={collectionViewIds.DOCUMENTS}
+                  >
                     <FormattedMessage
-                      id='entity.manager.bulk_import.link_text'
-                      defaultMessage={
-                        `Upload a new table document`
-                      }
+                      id="entity.manager.bulk_import.link_text"
+                      defaultMessage={`Upload a new table document`}
                     />
                   </CollectionView.Link>
-                )
+                ),
               }}
             />
           </div>
@@ -117,9 +120,8 @@ class DocumentSelectDialog extends Component {
 
 const mapStateToProps = () => ({});
 
-
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities }),
-  injectIntl,
+  injectIntl
 )(DocumentSelectDialog);

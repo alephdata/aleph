@@ -5,34 +5,38 @@ let counter = 1;
  * before dispatching the action, and one when dispatching has either completed
  * or erred.
  */
-export default function asyncActionCreator(actionCreator, {
-  name = actionCreator.name || `asyncAction_${counter += 1}`,
-  START = `${name}_START`,
-  ERROR = `${name}_ERROR`,
-  COMPLETE = `${name}_COMPLETE`,
-} = {}) {
-  const newActionCreator = (payload, ...otherArgs) => async function actionDispatch(dispatch) {
-    const action = actionCreator(payload, ...otherArgs);
-    dispatch({
-      type: START,
-      payload,
-    });
-    try {
-      const valueOrPromise = dispatch(action);
-      const value = await valueOrPromise;
+export default function asyncActionCreator(
+  actionCreator,
+  {
+    name = actionCreator.name || `asyncAction_${(counter += 1)}`,
+    START = `${name}_START`,
+    ERROR = `${name}_ERROR`,
+    COMPLETE = `${name}_COMPLETE`,
+  } = {}
+) {
+  const newActionCreator = (payload, ...otherArgs) =>
+    async function actionDispatch(dispatch) {
+      const action = actionCreator(payload, ...otherArgs);
       dispatch({
-        type: COMPLETE,
-        payload: value,
+        type: START,
+        payload,
       });
-      return value;
-    } catch (error) {
-      dispatch({
-        type: ERROR,
-        payload: { error, args: payload },
-      });
-      throw error;
-    }
-  };
+      try {
+        const valueOrPromise = dispatch(action);
+        const value = await valueOrPromise;
+        dispatch({
+          type: COMPLETE,
+          payload: value,
+        });
+        return value;
+      } catch (error) {
+        dispatch({
+          type: ERROR,
+          payload: { error, args: payload },
+        });
+        throw error;
+      }
+    };
 
   if (Object.getOwnPropertyDescriptor(newActionCreator, 'name').configurable) {
     Object.defineProperty(newActionCreator, 'name', { value: name });

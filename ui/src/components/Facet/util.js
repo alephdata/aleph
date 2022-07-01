@@ -3,44 +3,53 @@ import moment from 'moment';
 const DEFAULT_START_INTERVAL = '1950';
 
 const formatDateQParam = (datetime, granularity) => {
-  const date = moment.utc(datetime).format("YYYY-MM-DD")
+  const date = moment.utc(datetime).format('YYYY-MM-DD');
   if (granularity === 'month') {
-    return `${date}||/M`
+    return `${date}||/M`;
   } else if (granularity === 'day') {
-    return `${date}||/d`
+    return `${date}||/d`;
   }
-  return `${date}||/y`
+  return `${date}||/y`;
 };
 
 const cleanDateQParam = (value) => {
-  if (!value) { return; }
+  if (!value) {
+    return;
+  }
   const [date, suffix] = value.split('||/');
 
   if (suffix === 'y') {
-    return moment.utc(date).format('YYYY')
+    return moment.utc(date).format('YYYY');
   } else if (suffix === 'M') {
-    return moment.utc(date).format('YYYY-MM')
+    return moment.utc(date).format('YYYY-MM');
   } else {
     return date;
   }
 };
 
 const timestampToLabel = (timestamp, granularity, locale) => {
-  const dateObj = new Date(timestamp)
+  const dateObj = new Date(timestamp);
   let label, tooltipLabel;
 
   if (granularity === 'month') {
-    label = new Intl.DateTimeFormat(locale, { month: 'short' }).format(dateObj)
-    tooltipLabel = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dateObj)
+    label = new Intl.DateTimeFormat(locale, { month: 'short' }).format(dateObj);
+    tooltipLabel = new Intl.DateTimeFormat(locale, {
+      month: 'short',
+      year: 'numeric',
+    }).format(dateObj);
   } else if (granularity === 'day') {
-    label = dateObj.getDate()
-    tooltipLabel = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric', day: 'numeric' }).format(dateObj)
+    label = dateObj.getDate();
+    tooltipLabel = new Intl.DateTimeFormat(locale, {
+      month: 'short',
+      year: 'numeric',
+      day: 'numeric',
+    }).format(dateObj);
   } else {
     label = tooltipLabel = dateObj.getFullYear();
   }
 
-  return ({ label, tooltipLabel })
-}
+  return { label, tooltipLabel };
+};
 
 const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
   const defaultEndInterval = moment.utc().format('YYYY-MM-DD');
@@ -49,16 +58,17 @@ const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
 
   const gtRaw = hasGtFilter
     ? cleanDateQParam(query.getFilter(`gte:${field}`)[0])
-    : (useDefaultBounds && DEFAULT_START_INTERVAL);
+    : useDefaultBounds && DEFAULT_START_INTERVAL;
 
   const ltRaw = hasLtFilter
     ? cleanDateQParam(query.getFilter(`lte:${field}`)[0])
-    : (useDefaultBounds && defaultEndInterval);
+    : useDefaultBounds && defaultEndInterval;
 
-  const gt = gtRaw && moment(gtRaw)
-  const lt = ltRaw && moment(ltRaw)
+  const gt = gtRaw && moment(gtRaw);
+  const lt = ltRaw && moment(ltRaw);
 
-  let gtOutOfRange, ltOutOfRange = false;
+  let gtOutOfRange,
+    ltOutOfRange = false;
   const filteredIntervals = intervals.filter(({ id }) => {
     if (gt && gt.isAfter(id)) {
       gtOutOfRange = true;
@@ -69,15 +79,17 @@ const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
       return false;
     }
     return true;
-  })
+  });
 
-  const hasOutOfRange = useDefaultBounds && ((!hasGtFilter && gtOutOfRange) || (!hasLtFilter && ltOutOfRange));
+  const hasOutOfRange =
+    useDefaultBounds &&
+    ((!hasGtFilter && gtOutOfRange) || (!hasLtFilter && ltOutOfRange));
 
   return { filteredIntervals, hasOutOfRange };
-}
+};
 
 const isDateIntervalUncertain = (timestamp, granularity) => {
-  const dateObj = moment.utc(timestamp)
+  const dateObj = moment.utc(timestamp);
 
   if (granularity === 'month' && dateObj.month() === 0) {
     return true;
@@ -86,7 +98,7 @@ const isDateIntervalUncertain = (timestamp, granularity) => {
   }
 
   return false;
-}
+};
 
 export {
   cleanDateQParam,
@@ -94,5 +106,5 @@ export {
   formatDateQParam,
   timestampToLabel,
   isDateIntervalUncertain,
-  filterDateIntervals
-}
+  filterDateIntervals,
+};

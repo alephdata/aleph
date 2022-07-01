@@ -8,7 +8,6 @@ import { triggerCollectionXref } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import { Collection } from 'components/common';
 
-
 const messages = defineMessages({
   title: {
     id: 'collection.xref.title',
@@ -28,7 +27,6 @@ const messages = defineMessages({
   },
 });
 
-
 class CollectionXrefDialog extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +40,7 @@ class CollectionXrefDialog extends Component {
   }
 
   async onConfirm() {
-    const { collection, intl, onSubmit} = this.props;
+    const { collection, intl, onSubmit } = this.props;
     const { blocking } = this.state;
     if (blocking) return;
     this.setState({ blocking: true });
@@ -72,7 +70,11 @@ class CollectionXrefDialog extends Component {
           <FormattedMessage
             id="collection.xref.text"
             defaultMessage="You will now cross-reference {collectionLabel} against all other sources. Start this process once and then wait for it to complete."
-            values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
+            values={{
+              collectionLabel: (
+                <Collection.Label collection={collection} icon={false} />
+              ),
+            }}
           />
         </div>
         <div className="bp3-dialog-footer">
@@ -97,5 +99,5 @@ class CollectionXrefDialog extends Component {
 
 export default compose(
   connect(null, { triggerCollectionXref }),
-  injectIntl,
+  injectIntl
 )(CollectionXrefDialog);

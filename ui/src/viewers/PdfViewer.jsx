@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Query from 'app/Query';
 import { PagingButtons } from 'components/Toolbar';
 import { SectionLoading, Skeleton } from 'components/common';
@@ -24,7 +24,6 @@ const messages = defineMessages({
     defaultMessage: 'Search in {label}',
   },
 });
-
 
 export class PdfViewer extends Component {
   constructor(props) {
@@ -54,7 +53,10 @@ export class PdfViewer extends Component {
     if (this.state.width === null) {
       this.onResize();
     }
-    if (this.props.activeMode !== prevProps.activeMode || this.props.pdfUrl !== prevProps.pdfUrl) {
+    if (
+      this.props.activeMode !== prevProps.activeMode ||
+      this.props.pdfUrl !== prevProps.pdfUrl
+    ) {
       clearTimeout(this.resizeTimeout);
       this.onResize();
       this.resizeTimeout = setTimeout(() => {
@@ -111,7 +113,9 @@ export class PdfViewer extends Component {
     // For reference: https://github.com/wojtekmaj/react-pdf/issues/277#issuecomment-424464542
     if (this.pageData) {
       this.setState({
-        effectiveRotation: normalizeDegreeValue(this.pageData.rotate + (rotate || 0))
+        effectiveRotation: normalizeDegreeValue(
+          this.pageData.rotate + (rotate || 0)
+        ),
       });
     }
   }
@@ -124,9 +128,12 @@ export class PdfViewer extends Component {
     // itself scrolls in the preview (and possibly in the normal view too).
     const scrollBarWidth = 20;
     const PdfViewerElement = window.document.getElementById('PdfViewer');
-    const width = PdfViewerElement ? parseInt(
-      PdfViewerElement.getBoundingClientRect().width - scrollBarWidth, 10,
-    ) : null;
+    const width = PdfViewerElement
+      ? parseInt(
+          PdfViewerElement.getBoundingClientRect().width - scrollBarWidth,
+          10
+        )
+      : null;
 
     if (width !== null && width !== this.state.width) {
       this.setState({
@@ -144,18 +151,17 @@ export class PdfViewer extends Component {
   }
 
   fetchComponents() {
-    import(/* webpackChunkName:'pdf-lib' */'react-pdf')
-      .then(({ Document, Page, pdfjs }) => {
+    import(/* webpackChunkName:'pdf-lib' */ 'react-pdf').then(
+      ({ Document, Page, pdfjs }) => {
         // see https://github.com/wojtekmaj/react-pdf#create-react-app
         pdfjs.GlobalWorkerOptions.workerSrc = `/static/pdf.worker.min.js`;
         this.setState({ components: { Document, Page } });
-      });
+      }
+    );
   }
 
   renderPdf() {
-    const {
-      document, page, rotate, numPages, pdfUrl,
-    } = this.props;
+    const { document, page, rotate, numPages, pdfUrl } = this.props;
     const { effectiveRotation, width } = this.state;
     const { Document, Page } = this.state.components;
     const loading = <Skeleton.Text type="div" length={4000} />;
@@ -200,7 +206,15 @@ export class PdfViewer extends Component {
 
   render() {
     const {
-      document, dir, activeMode, baseQuery, searchQuery, intl, page, queryText, numPages,
+      document,
+      dir,
+      activeMode,
+      baseQuery,
+      searchQuery,
+      intl,
+      page,
+      queryText,
+      numPages,
     } = this.props;
 
     if (document.isPending || numPages === undefined || numPages === null) {
@@ -211,7 +225,9 @@ export class PdfViewer extends Component {
         <EntityActionBar
           query={searchQuery}
           onSearchSubmit={this.onSearch}
-          searchPlaceholder={intl.formatMessage(messages.placeholder, { label: document.getCaption() })}
+          searchPlaceholder={intl.formatMessage(messages.placeholder, {
+            label: document.getCaption(),
+          })}
           searchDisabled={document.getProperty('processingError')?.length}
         />
         <div className="outer">
@@ -252,10 +268,7 @@ const mapStateToProps = (state, ownProps) => {
     .setFilter('properties.document', document.id)
     .setFilter('schema', 'Page');
 
-  const countQuery = baseQuery
-    .setString('q', undefined)
-    .offset(0)
-    .limit(0);
+  const countQuery = baseQuery.setString('q', undefined).offset(0).limit(0);
 
   const searchQuery = baseQuery
     .set('highlight', true)
@@ -281,5 +294,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities }),
-  injectIntl,
+  injectIntl
 )(PdfViewer);

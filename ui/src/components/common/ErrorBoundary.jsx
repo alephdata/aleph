@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import ErrorSection from './ErrorSection'
+import ErrorSection from './ErrorSection';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class ErrorBoundary extends Component {
           title={errorTitle}
           description={this.state.error.toString()}
         />
-      )
+      );
     }
     return children;
   }

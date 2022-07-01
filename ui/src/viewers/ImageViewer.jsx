@@ -2,7 +2,6 @@ import React from 'react';
 
 import './ImageViewer.scss';
 
-
 function ImageViewer(props) {
   const { document } = props;
   return (
@@ -13,6 +12,5 @@ function ImageViewer(props) {
     </div>
   );
 }
-
 
 export default ImageViewer;

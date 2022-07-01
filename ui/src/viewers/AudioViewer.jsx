@@ -14,6 +14,6 @@ const AudioViewer = ({ document }) => {
       <audio controls src={src} />
     </div>
   );
-}
+};
 
 export default AudioViewer;

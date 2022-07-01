@@ -5,8 +5,10 @@ import { resultObjects } from 'reducers/util';
 
 const initialState = {};
 
-export default createReducer({
-
-    [querySimilar.COMPLETE]: (state, { result }) => resultObjects(state, result),
-
-}, initialState);
+export default createReducer(
+  {
+    [querySimilar.COMPLETE]: (state, { result }) =>
+      resultObjects(state, result),
+  },
+  initialState
+);

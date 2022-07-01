@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .QuickLinks {
   // grid fallback
@@ -8,7 +8,7 @@
   padding: 0 5px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
-  gap: $aleph-grid-size*1.5 $aleph-grid-size*1.5;
+  gap: $aleph-grid-size * 1.5 $aleph-grid-size * 1.5;
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
@@ -21,7 +21,7 @@
     &__content {
       border-radius: 5px;
       box-shadow: $pt-elevation-shadow-2 !important;
-      transition: box-shadow .1s ease-in-out;
+      transition: box-shadow 0.1s ease-in-out;
       cursor: pointer !important;
       height: 100%;
       width: 100%;
@@ -36,7 +36,7 @@
     }
 
     &__image {
-      min-height: $aleph-grid-size*10;
+      min-height: $aleph-grid-size * 10;
       margin: $aleph-grid-size;
       background-size: cover;
       background-repeat: no-repeat;
@@ -45,13 +45,13 @@
       border-radius: 5px;
 
       &:after {
-        background: rgba($white, .6);
+        background: rgba($white, 0.6);
         height: 100%;
         width: 100%;
         position: absolute;
         top: 0;
         left: 0;
-        content: "";
+        content: '';
       }
     }
 

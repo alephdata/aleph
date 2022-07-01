@@ -4,7 +4,7 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import EntityPreview from 'components/Entity/EntityPreview';
 import { selectSession, selectMetadata } from 'selectors';
@@ -22,25 +22,33 @@ export class Screen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.location && (this.props.location.pathname !== prevProps.location.pathname)) {
+    if (
+      this.props.location &&
+      this.props.location.pathname !== prevProps.location.pathname
+    ) {
       window.scrollTo(0, 0);
     }
   }
 
-  toggleAuthentication = event => event.preventDefault();
+  toggleAuthentication = (event) => event.preventDefault();
 
   render() {
     const {
-      exemptFromRequiredAuth, session, metadata, requireSession, title, description, className,
+      exemptFromRequiredAuth,
+      session,
+      metadata,
+      requireSession,
+      title,
+      description,
+      className,
     } = this.props;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
 
-
     let forceAuth = false;
     if (metadata?.auth?.require_logged_in) {
-      forceAuth = !exemptFromRequiredAuth && !session.loggedIn
+      forceAuth = !exemptFromRequiredAuth && !session.loggedIn;
     } else {
-      forceAuth = requireSession && !session.loggedIn
+      forceAuth = requireSession && !session.loggedIn;
     }
 
     const titleTemplate = hasMetadata ? `%s - ${metadata.app.title}` : '%s';
@@ -49,26 +57,20 @@ export class Screen extends React.Component {
     return (
       <div className={c('Screen', className)}>
         <Helmet titleTemplate={titleTemplate} defaultTitle={defaultTitle}>
-          {!!title && (
-            <title>{title}</title>
-          )}
-          {!!description && (
-            <meta name="description" content={description} />
-          )}
+          {!!title && <title>{title}</title>}
+          {!!description && <meta name="description" content={description} />}
           {!!metadata.app.favicon && (
             <link rel="shortcut icon" href={metadata.app.favicon} />
           )}
         </Helmet>
-        { (hasMetadata && !!metadata.app.banner) && (
+        {hasMetadata && !!metadata.app.banner && (
           <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
             {metadata.app.banner}
           </div>
         )}
         {!forceAuth && (
           <>
-            <main>
-              {this.props.children}
-            </main>
+            <main>{this.props.children}</main>
             <EntityPreview />
           </>
         )}
@@ -89,7 +91,4 @@ const mapStateToProps = (state, ownProps) => ({
   session: selectSession(state),
 });
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(Screen);
+export default compose(withRouter, connect(mapStateToProps))(Screen);

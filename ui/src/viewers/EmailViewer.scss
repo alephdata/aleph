@@ -1,14 +1,15 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .EmailViewer {
   margin-bottom: $aleph-grid-size * 2;
 
   .email-header table {
     width: 100%;
-    th, td {
+    th,
+    td {
       box-shadow: none !important;
       border-bottom: 1px solid $aleph-border-color;
-    } 
+    }
   }
 
   .email-body {
@@ -21,6 +22,5 @@
       border: 0;
       box-shadow: unset;
     }
-  
   }
 }

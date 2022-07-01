@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { selectLocale } from 'selectors';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   locale: selectLocale(state),
 });
 

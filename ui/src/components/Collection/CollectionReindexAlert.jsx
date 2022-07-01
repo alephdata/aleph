@@ -7,7 +7,6 @@ import { triggerCollectionReindex } from 'actions';
 import { showSuccessToast } from 'app/toast';
 import { Collection } from 'components/common';
 
-
 const messages = defineMessages({
   processing: {
     id: 'collection.reindex.processing',
@@ -64,7 +63,11 @@ class CollectionReindexAlert extends Component {
           <FormattedMessage
             id="collection.analyze.alert.text"
             defaultMessage="You're about to re-index the entities in {collectionLabel}. This can be helpful if there are inconsistencies in how the data is presented."
-            values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
+            values={{
+              collectionLabel: (
+                <Collection.Label collection={collection} icon={false} />
+              ),
+            }}
           />
         </p>
         <Checkbox
@@ -79,5 +82,5 @@ class CollectionReindexAlert extends Component {
 
 export default compose(
   connect(null, { triggerCollectionReindex }),
-  injectIntl,
+  injectIntl
 )(CollectionReindexAlert);

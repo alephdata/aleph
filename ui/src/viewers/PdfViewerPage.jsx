@@ -5,7 +5,6 @@ import { queryEntities } from 'actions';
 import { selectEntitiesResult, selectEntity } from 'selectors';
 import TextViewer from 'viewers/TextViewer';
 
-
 class PdfViewerPage extends Component {
   componentDidMount() {
     this.fetchPage();
@@ -30,7 +29,12 @@ class PdfViewerPage extends Component {
 
     return (
       <>
-        <PagingButtons document={document} numberOfPages={numPages} page={page} showRotateButtons={false} />
+        <PagingButtons
+          document={document}
+          numberOfPages={numPages}
+          page={page}
+          showRotateButtons={false}
+        />
         <TextViewer document={entity} dir={dir} noStyle />
       </>
     );

@@ -7,13 +7,16 @@ import { Button, Icon, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 
 import { fetchRole } from 'actions';
-import { selectCurrentRole, selectCurrentRoleId, selectMetadata } from 'selectors';
+import {
+  selectCurrentRole,
+  selectCurrentRoleId,
+  selectMetadata,
+} from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
-import { DialogToggleButton } from 'components/Toolbar'
-import { Skeleton } from 'components/common'
+import { DialogToggleButton } from 'components/Toolbar';
+import { Skeleton } from 'components/common';
 
 import './AuthButtons.scss';
-
 
 const messages = defineMessages({
   notifications: {
@@ -79,9 +82,7 @@ export class AuthButtons extends Component {
   }
 
   renderSkeleton() {
-    return (
-      <Skeleton.Text type="span" length="10" className="AuthButtons" />
-    )
+    return <Skeleton.Text type="span" length="10" className="AuthButtons" />;
   }
 
   render() {
@@ -96,12 +97,10 @@ export class AuthButtons extends Component {
         <span className="AuthButtons">
           <Popover
             popoverClassName="AuthButtons__popover"
-            content={(
+            content={
               <Menu className="AuthButtons__popover__menu">
                 <Link to="/notifications" className="bp3-menu-item">
-                  <Icon icon="notifications" />
-                  {' '}
-                  {' '}
+                  <Icon icon="notifications" />{' '}
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.notifications)}
                   </div>
@@ -119,7 +118,10 @@ export class AuthButtons extends Component {
                   </div>
                 </Link>
                 <MenuDivider />
-                <Link to="/investigations" className="bp3-menu-item mobile-show">
+                <Link
+                  to="/investigations"
+                  className="bp3-menu-item mobile-show"
+                >
                   <Icon icon="briefcase" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.cases)}
@@ -145,9 +147,7 @@ export class AuthButtons extends Component {
                 </Link>
                 <MenuDivider />
                 <Link to="/settings" className="bp3-menu-item">
-                  <Icon icon="cog" />
-                  {' '}
-                  {' '}
+                  <Icon icon="cog" />{' '}
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.settings)}
                   </div>
@@ -158,14 +158,20 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.status)}
                   </div>
                 </Link>
-                <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
+                <MenuItem
+                  icon="log-out"
+                  href="/logout"
+                  text={intl.formatMessage(messages.signout)}
+                />
               </Menu>
-            )}
-            placement='bottom-end'
+            }
+            placement="bottom-end"
             fill
           >
             <Button icon="user" className="bp3-minimal" rightIcon="caret-down">
-              <Truncate lines={2} width={120}>{role ? role.name : 'Profile'}</Truncate>
+              <Truncate lines={2} width={120}>
+                {role ? role.name : 'Profile'}
+              </Truncate>
             </Button>
           </Popover>
         </span>
@@ -179,7 +185,7 @@ export class AuthButtons extends Component {
             buttonProps={{
               text: intl.formatMessage(messages.signin),
               icon: 'log-in',
-              className: 'bp3-minimal'
+              className: 'bp3-minimal',
             }}
             Dialog={AuthenticationDialog}
             dialogProps={{ auth: metadata.auth }}

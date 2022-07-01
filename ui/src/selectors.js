@@ -31,7 +31,7 @@ function selectResult(state, query, expand) {
       results: [],
       shouldLoad: false,
       shouldLoadDeep: false,
-      isPending: true
+      isPending: true,
     };
   }
   const result = {
@@ -40,7 +40,7 @@ function selectResult(state, query, expand) {
   };
   if (expand) {
     result.results = result.results
-      .map(id => expand(state, id))
+      .map((id) => expand(state, id))
       .filter((r) => r.id !== undefined);
   }
   return result;
@@ -86,7 +86,7 @@ export function selectPage(state, name) {
 export function selectModel(state) {
   const metadata = selectMetadata(state);
   if (metadata.model && !metadata.ftmModel) {
-    metadata.ftmModel = new Model(metadata.model)
+    metadata.ftmModel = new Model(metadata.model);
   }
   return metadata.ftmModel;
 }
@@ -158,7 +158,7 @@ export function selectCollection(state, collectionId) {
 }
 
 export function selectEntity(state, entityId) {
-  const entity = selectObject(state, state.entities, entityId)
+  const entity = selectObject(state, state.entities, entityId);
   const lastViewed = getRecentlyViewedItem(entityId);
 
   if (!entity.selectorCache) {
@@ -193,7 +193,7 @@ export function selectEntity(state, entityId) {
 
 export function selectEntityDirectionality(state, entity) {
   const isRtl = isEntityRtl(entity, selectLocale(state), selectModel(state));
-  return isRtl ? "rtl" : "ltr";
+  return isRtl ? 'rtl' : 'ltr';
 }
 
 export function selectEntitySet(state, entitySetId) {
@@ -248,10 +248,15 @@ function buildReferences(references, schema) {
     const reverse = schema.getProperty(ref.property);
     const property = reverse.getReverse();
     return {
-      schema: property.schema, property, reverse, count: ref.count,
+      schema: property.schema,
+      property,
+      reverse,
+      count: ref.count,
     };
   });
-  references.results = references.results.filter((ref) => (ref.reverse.stub && !ref.reverse.hidden));
+  references.results = references.results.filter(
+    (ref) => ref.reverse.stub && !ref.reverse.hidden
+  );
   references.total = references.results.length;
   return references;
 }
@@ -269,7 +274,7 @@ export function selectEntityReferences(state, entityId) {
 
 export function selectEntityReference(state, entityId, qname) {
   const references = selectEntityReferences(state, entityId);
-  return references.results.find(ref => ref.property.qname === qname);
+  return references.results.find((ref) => ref.property.qname === qname);
 }
 
 export function selectProfileExpandResult(state, query) {
@@ -285,12 +290,16 @@ export function selectProfileReferences(state, profileId) {
 
 export function selectProfileReference(state, profileId, qname) {
   const references = selectProfileReferences(state, profileId);
-  return references.results.find(ref => ref.property.qname === qname);
+  return references.results.find((ref) => ref.property.qname === qname);
 }
 
 export function selectNotificationsResult(state, query) {
   const model = selectModel(state);
-  const result = selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
+  const result = selectResult(
+    state,
+    query,
+    (stateInner, id) => stateInner.notifications[id]
+  );
   result.results.forEach((notif) => {
     Object.entries(notif.event.params).forEach(([field, type]) => {
       if (type === 'entity' && notif.params[field]) {
@@ -333,7 +342,10 @@ export function selectEntityView(state, entityId, mode, isPreview) {
     return mode;
   }
   const { schema } = selectEntity(state, entityId);
-  if (schema && schema.isAny(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
+  if (
+    schema &&
+    schema.isAny(['Email', 'HyperText', 'Image', 'Pages', 'Table'])
+  ) {
     return 'view';
   }
   if (schema && schema.isA('Folder')) {

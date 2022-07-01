@@ -1,9 +1,9 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .CollectionStatisticsGroup {
   column-count: 3;
   column-gap: 1.5em;
-  table-layout : fixed;
+  table-layout: fixed;
   column-fill: balance;
   height: 100%;
   margin: 0 1px;

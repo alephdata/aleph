@@ -34,17 +34,26 @@ class DocumentDropzone extends Component {
     return (
       <>
         <Dropzone
-          onDrop={acceptedFiles => (
-            acceptedFiles && acceptedFiles.length ? this.openDialog(acceptedFiles) : null
-          )}
+          onDrop={(acceptedFiles) =>
+            acceptedFiles && acceptedFiles.length
+              ? this.openDialog(acceptedFiles)
+              : null
+          }
         >
           {({ getRootProps, getInputProps, isDragActive }) => (
             <div {...getRootProps()} className={'DocumentDropzone'}>
               <input
                 {...getInputProps()}
-                onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
               />
-              <div className={c('DocumentDropzone__content', { active: isDragActive })}>
+              <div
+                className={c('DocumentDropzone__content', {
+                  active: isDragActive,
+                })}
+              >
                 {children}
               </div>
             </div>

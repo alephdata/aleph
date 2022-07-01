@@ -12,19 +12,21 @@ const store = createStore(
   rootReducer,
   persistedState,
   // eslint-disable-next-line
-  /*window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(*/applyMiddleware(
+  /*window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(*/ applyMiddleware(
     thunk,
-    errorToastMiddleware,
+    errorToastMiddleware
     // logger
-  )/* ) */,
+  ) /* ) */
 );
 
-store.subscribe(throttle(() => {
-  const state = store.getState();
-  saveState({
-    session: state.session,
-    config: state.config,
-  });
-}));
+store.subscribe(
+  throttle(() => {
+    const state = store.getState();
+    saveState({
+      session: state.session,
+      config: state.config,
+    });
+  })
+);
 
 export default store;

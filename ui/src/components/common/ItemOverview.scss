@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .ItemOverview {
   height: auto !important;
@@ -8,14 +8,14 @@
 
     .preview & {
       background-color: $aleph-breadcrumbs-background;
-      padding: $aleph-grid-size*3 $aleph-grid-size*2;
+      padding: $aleph-grid-size * 3 $aleph-grid-size * 2;
       border: none;
     }
 
     .profile & {
       background-color: $aleph-profile-dark;
       color: white;
-      padding: $aleph-grid-size*4 $aleph-grid-size*2 $aleph-grid-size*2;
+      padding: $aleph-grid-size * 4 $aleph-grid-size * 2 $aleph-grid-size * 2;
       border-radius: $aleph-grid-size $aleph-grid-size 0 0;
 
       .bp3-text-muted {
@@ -23,7 +23,9 @@
       }
     }
 
-    &__title, &__subtitle, &__description {
+    &__title,
+    &__subtitle,
+    &__description {
       margin: 10px 0;
       overflow-wrap: break-word;
     }
@@ -38,10 +40,10 @@
   }
 
   &__callout {
-    padding: 0 0 2*$aleph-grid-size;
+    padding: 0 0 2 * $aleph-grid-size;
 
     .preview & {
-      margin-top: 2*$aleph-grid-size;
+      margin-top: 2 * $aleph-grid-size;
       padding-bottom: $aleph-grid-size;
     }
     .profile & {
@@ -52,7 +54,8 @@
   &__content {
     border-top: 1px solid $aleph-border-color;
 
-    .preview &, .profile & {
+    .preview &,
+    .profile & {
       border: none;
     }
 

@@ -1,8 +1,14 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .XrefTable {
-  th.bordered, td.bordered {
-    @include rtlSupportInvertedProp(border, right, 1px solid $aleph-table-border-color, null);
+  th.bordered,
+  td.bordered {
+    @include rtlSupportInvertedProp(
+      border,
+      right,
+      1px solid $aleph-table-border-color,
+      null
+    );
   }
 }

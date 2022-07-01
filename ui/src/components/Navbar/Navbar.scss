@@ -1,7 +1,7 @@
-@import "app/mixins.scss";
-@import "app/variables.scss";
+@import 'app/mixins.scss';
+@import 'app/variables.scss';
 
-$navbar-horizontal-padding: $aleph-grid-size*.8;
+$navbar-horizontal-padding: $aleph-grid-size * 0.8;
 
 .Navbar {
   .bp3-navbar {
@@ -55,7 +55,12 @@ $navbar-horizontal-padding: $aleph-grid-size*.8;
   }
 
   &__left-group {
-    @include rtlSupportInvertedProp(padding, right, $navbar-horizontal-padding, null);
+    @include rtlSupportInvertedProp(
+      padding,
+      right,
+      $navbar-horizontal-padding,
+      null
+    );
 
     @media screen and (max-width: $aleph-navbar-mobile-max-width) {
       &.hide {
@@ -84,7 +89,12 @@ $navbar-horizontal-padding: $aleph-grid-size*.8;
       vertical-align: middle;
       display: table-cell;
       white-space: nowrap;
-      @include rtlSupportInvertedProp(padding, left, $navbar-horizontal-padding, null);
+      @include rtlSupportInvertedProp(
+        padding,
+        left,
+        $navbar-horizontal-padding,
+        null
+      );
     }
 
     img {
@@ -93,12 +103,16 @@ $navbar-horizontal-padding: $aleph-grid-size*.8;
     }
   }
 
-
   &__search-container {
     flex: 4 1 auto;
     padding: $aleph-grid-size $aleph-grid-size/2;
-    max-width: $aleph-grid-size*50;
-    @include rtlSupportInvertedProp(margin, right, $navbar-horizontal-padding*2, null);
+    max-width: $aleph-grid-size * 50;
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $navbar-horizontal-padding * 2,
+      null
+    );
 
     &__content {
       display: flex;
@@ -111,9 +125,9 @@ $navbar-horizontal-padding: $aleph-grid-size*.8;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        border-radius: 0!important;
-        box-shadow: none!important;
-        padding: 0 30px!important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 30px !important;
       }
     }
 
@@ -134,13 +148,16 @@ $navbar-horizontal-padding: $aleph-grid-size*.8;
     }
   }
 
-  &__mobile-back-button, &__mobile-search-toggle, &__mobile-search-divider {
+  &__mobile-back-button,
+  &__mobile-search-toggle,
+  &__mobile-search-divider {
     @media screen and (min-width: $aleph-navbar-mobile-max-width) {
       display: none;
     }
   }
 
-  .bp3-button, .bp3-menu {
+  .bp3-button,
+  .bp3-menu {
     border-radius: 0;
   }
 

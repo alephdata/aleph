@@ -10,7 +10,7 @@ const handleSession = (state) => {
   // we track unique visitors using a session ID. The ID is
   // stored in browser localStorage and rotated every couple
   // of months in order to comply with privacy regulations.
-  const maxAge = timestamp() - (84600 * 30 * 6); // GDPR
+  const maxAge = timestamp() - 84600 * 30 * 6; // GDPR
   if (state.sessionStart === undefined || state.sessionStart < maxAge) {
     state.sessionId = undefined;
   }
@@ -32,15 +32,19 @@ const handleLogin = (state, token) => {
   });
 };
 
-const handleLogout = (state, { redirect }) => handleSession({
-  logoutRedirect: redirect,
-  loggedIn: false,
-});
+const handleLogout = (state, { redirect }) =>
+  handleSession({
+    logoutRedirect: redirect,
+    loggedIn: false,
+  });
 
-export default createReducer({
-  [loginWithToken]: handleLogin,
-  [logout.COMPLETE]: handleLogout,
-  [logout.ERROR]: handleLogout,
-  [fetchMetadata.COMPLETE]: (state, { metadata }) => handleLogin(state, metadata?.token),
-}, handleSession(initialState));
-
+export default createReducer(
+  {
+    [loginWithToken]: handleLogin,
+    [logout.COMPLETE]: handleLogout,
+    [logout.ERROR]: handleLogout,
+    [fetchMetadata.COMPLETE]: (state, { metadata }) =>
+      handleLogin(state, metadata?.token),
+  },
+  handleSession(initialState)
+);

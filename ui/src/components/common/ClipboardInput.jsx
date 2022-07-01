@@ -29,19 +29,19 @@ export default function ClipboardInput(props) {
       id={props.id}
       readOnly
       value={props.value}
-      rightElement={(
+      rightElement={
         <Tooltip content={tooltip}>
           <Button
             onClick={() => {
-                inputRef.current.select();
-                document.execCommand('copy');
-                showSuccessToast(intl.formatMessage(messages.success));
+              inputRef.current.select();
+              document.execCommand('copy');
+              showSuccessToast(intl.formatMessage(messages.success));
             }}
             icon="clipboard"
             minimal
           />
         </Tooltip>
-      )}
+      }
     />
   );
 }

@@ -5,8 +5,12 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
-import { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity } from 'actions';
+import withRouter from 'app/withRouter';
+import {
+  createEntitySetMutate,
+  createEntitySetNoMutate,
+  entitySetAddEntity,
+} from 'actions';
 import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
@@ -24,7 +28,8 @@ const messages = defineMessages({
   },
   title_secondary: {
     id: 'entityset.selector.title_other',
-    defaultMessage: 'and {count} other {count, plural, one {entity} other {entities}}',
+    defaultMessage:
+      'and {count} other {count, plural, one {entity} other {entities}}',
   },
   placeholder: {
     id: 'entityset.selector.placeholder',
@@ -36,10 +41,10 @@ const messages = defineMessages({
   },
   success_update: {
     id: 'entityset.selector.success',
-    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
+    defaultMessage:
+      'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
   },
 });
-
 
 class EntitySetSelector extends Component {
   constructor(props) {
@@ -57,8 +62,9 @@ class EntitySetSelector extends Component {
     const { collection, entities, triggerMutationOnCreate = true } = this.props;
     const { processing } = this.state;
 
-    if (processing) { return; }
-
+    if (processing) {
+      return;
+    }
 
     const entitySet = {
       collection_id: collection.id,
@@ -76,26 +82,26 @@ class EntitySetSelector extends Component {
     } catch (e) {
       this.onError(e);
     }
-
   }
 
   onSelect(entitySet) {
     const { entities } = this.props;
     const { processing } = this.state;
 
-    if (processing) { return; }
+    if (processing) {
+      return;
+    }
 
     const entitySetId = entitySet.id;
-
 
     try {
       this.setState({ processing: true });
       if (entities) {
-        const promises = entities.map(entity => (
-          this.props.entitySetAddEntity({ entitySetId , entity, sync: false })
-        ));
+        const promises = entities.map((entity) =>
+          this.props.entitySetAddEntity({ entitySetId, entity, sync: false })
+        );
 
-        Promise.all(promises).then(values => this.onSuccess(entitySet));
+        Promise.all(promises).then((values) => this.onSuccess(entitySet));
       } else {
         this.onSuccess(entitySet);
       }
@@ -105,18 +111,28 @@ class EntitySetSelector extends Component {
   }
 
   onSuccess(entitySet) {
-    const { entities, navigate, intl, onSuccess, toggleDialog, triggerMutationOnCreate = true } = this.props;
+    const {
+      entities,
+      navigate,
+      intl,
+      onSuccess,
+      toggleDialog,
+      triggerMutationOnCreate = true,
+    } = this.props;
     this.setState({ processing: false });
 
     if (triggerMutationOnCreate) {
       showSuccessToast({
-        message: intl.formatMessage(messages.success_update, {count: entities.length, entitySet: entitySet.label}),
+        message: intl.formatMessage(messages.success_update, {
+          count: entities.length,
+          entitySet: entitySet.label,
+        }),
         action: {
           small: true,
           icon: 'share',
           text: intl.formatMessage(messages.success_button),
-          onClick: () => navigate({ pathname: getEntitySetLink(entitySet) })
-        }
+          onClick: () => navigate({ pathname: getEntitySetLink(entitySet) }),
+        },
       });
     }
     onSuccess && onSuccess(entitySet);
@@ -135,12 +151,22 @@ class EntitySetSelector extends Component {
     }
     const entLength = entities.length;
     const firstCaption = entities?.[0]?.getCaption();
-    const titleSecondary = entLength === 1 ? "" : intl.formatMessage(messages.title_secondary, { count: entLength - 1 })
+    const titleSecondary =
+      entLength === 1
+        ? ''
+        : intl.formatMessage(messages.title_secondary, {
+            count: entLength - 1,
+          });
     return intl.formatMessage(messages.title, { firstCaption, titleSecondary });
   }
 
   render() {
-    const { collection, isOpen, showTimelines = true, toggleDialog } = this.props;
+    const {
+      collection,
+      isOpen,
+      showTimelines = true,
+      toggleDialog,
+    } = this.props;
     const { processing } = this.state;
 
     return (
@@ -157,7 +183,7 @@ class EntitySetSelector extends Component {
         canOutsideClickClose={false}
         portalClassName="EntitySetSelector__portal-container"
       >
-        <div className={c("bp3-drawer-body", { "blocking": processing })}>
+        <div className={c('bp3-drawer-body', { blocking: processing })}>
           {processing && (
             <div className="EntitySetSelector__overlay">
               <Spinner className="FormDialog__spinner bp3-large" />
@@ -192,5 +218,9 @@ class EntitySetSelector extends Component {
 export default compose(
   withRouter,
   injectIntl,
-  connect(null, { createEntitySetMutate, createEntitySetNoMutate, entitySetAddEntity }),
+  connect(null, {
+    createEntitySetMutate,
+    createEntitySetNoMutate,
+    entitySetAddEntity,
+  })
 )(EntitySetSelector);

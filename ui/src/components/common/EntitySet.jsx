@@ -5,15 +5,15 @@ import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import getEntitySetLink from 'util/getEntitySetLink';
 
 const ICONS = {
   diagram: 'graph',
   timeline: 'gantt-chart',
   profile: 'layers',
-  list: 'list'
-}
+  list: 'list',
+};
 
 const getIcon = ({ type }) => ICONS[type] || ICONS.list;
 
@@ -23,7 +23,7 @@ const EntitySetIcon = ({ entitySet, className, iconSize }) => {
   return (
     <Icon icon={getIcon(entitySet)} className={className} iconSize={iconSize} />
   );
-}
+};
 
 class EntitySetLabel extends PureComponent {
   render() {
@@ -51,7 +51,14 @@ class EntitySetLink extends PureComponent {
     const { entitySet, className } = this.props;
     const content = <EntitySet.Label {...this.props} />;
 
-    return <Link to={getEntitySetLink(entitySet)} className={c('EntitySetLink', className)}>{content}</Link>;
+    return (
+      <Link
+        to={getEntitySetLink(entitySet)}
+        className={c('EntitySetLink', className)}
+      >
+        {content}
+      </Link>
+    );
   }
 }
 
@@ -64,7 +71,7 @@ class EntitySetSelect extends PureComponent {
         text={<EntitySetLabel entitySet={entitySet} icon />}
       />
     );
-  }
+  };
 
   render() {
     const { buttonProps, items, noResults, onSelect } = this.props;
@@ -74,7 +81,7 @@ class EntitySetSelect extends PureComponent {
         itemRenderer={this.itemRenderer}
         items={items}
         onItemSelect={onSelect}
-        popoverProps={{ minimal: true, fill: true, position: "auto-start" }}
+        popoverProps={{ minimal: true, fill: true, position: 'auto-start' }}
         inputProps={{ fill: true }}
         filterable={false}
         noResults={<span className="error-text">{noResults}</span>}
@@ -89,7 +96,7 @@ class EntitySetSelect extends PureComponent {
           {...buttonProps}
         />
       </Select>
-    )
+    );
   }
 }
 

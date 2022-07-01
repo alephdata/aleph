@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { fetchEntitySet, queryEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
@@ -15,16 +15,15 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import Timeline from 'components/Timeline/Timeline';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, SearchBox, UpdateStatus} from 'components/common';
-
+import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
 
 export class TimelineScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      updateStatus: null
-    }
+      updateStatus: null,
+    };
     this.onStatusChange = this.onStatusChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
@@ -38,7 +37,8 @@ export class TimelineScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { entitiesCount, entitiesCountQuery, timeline, entitySetId } = this.props;
+    const { entitiesCount, entitiesCountQuery, timeline, entitySetId } =
+      this.props;
 
     if (timeline.shouldLoad) {
       this.props.fetchEntitySet({ id: entitySetId });
@@ -51,7 +51,7 @@ export class TimelineScreen extends Component {
   onSearch(queryText) {
     const { query } = this.props;
     const newQuery = query.set('q', queryText);
-    this.updateQuery(newQuery)
+    this.updateQuery(newQuery);
   }
 
   updateQuery(newQuery) {
@@ -59,7 +59,7 @@ export class TimelineScreen extends Component {
     navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
-      hash: location.hash
+      hash: location.hash,
     });
   }
 
@@ -87,26 +87,29 @@ export class TimelineScreen extends Component {
       />
     );
 
-    const operation = (
-      <EntitySetManageMenu entitySet={timeline} />
-    );
+    const operation = <EntitySetManageMenu entitySet={timeline} />;
 
     const status = <UpdateStatus status={updateStatus} />;
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} status={status}>
         <Breadcrumbs.Text>
-          <CollectionView.Link id={collectionViewIds.TIMELINES} collection={timeline.collection} icon />
+          <CollectionView.Link
+            id={collectionViewIds.TIMELINES}
+            collection={timeline.collection}
+            icon
+          />
         </Breadcrumbs.Text>
-        <Breadcrumbs.EntitySet key="timeline" entitySet={timeline} icon={false}/>
+        <Breadcrumbs.EntitySet
+          key="timeline"
+          entitySet={timeline}
+          icon={false}
+        />
       </Breadcrumbs>
     );
 
     return (
-      <Screen
-        title={timeline.label}
-        description={timeline.summary || ''}
-      >
+      <Screen title={timeline.label} description={timeline.summary || ''}>
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
           <Timeline
@@ -138,7 +141,12 @@ const mapStateToProps = (state, ownProps) => {
     .defaultSortBy('properties.date', 'asc')
     .limit(1000);
 
-  const entitiesCountQuery = new Query(`entitysets/${entitySetId}/entities`, {}, {}, 'entitySetEntities').limit(0)
+  const entitiesCountQuery = new Query(
+    `entitysets/${entitySetId}/entities`,
+    {},
+    {},
+    'entitySetEntities'
+  ).limit(0);
 
   return {
     entitySetId,
@@ -146,12 +154,11 @@ const mapStateToProps = (state, ownProps) => {
     query,
     entitiesCountQuery,
     entitiesCount: selectEntitiesResult(state, entitiesCountQuery),
-    result: selectEntitiesResult(state, query)
+    result: selectEntitiesResult(state, query),
   };
 };
 
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, { fetchEntitySet, queryEntities }),
+  connect(mapStateToProps, { fetchEntitySet, queryEntities })
 )(TimelineScreen);

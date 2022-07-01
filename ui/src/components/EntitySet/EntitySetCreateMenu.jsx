@@ -39,7 +39,7 @@ const BUTTON_ICON = {
   diagram: 'send-to-graph',
   list: 'add-to-artifact',
   timeline: 'add',
-}
+};
 
 class EntitySetCreateMenu extends Component {
   constructor(props) {
@@ -51,9 +51,8 @@ class EntitySetCreateMenu extends Component {
     this.toggleDialog = this.toggleDialog.bind(this);
   }
 
-  toggleDialog = (importEnabled) => this.setState(({ isOpen }) => (
-    { isOpen: !isOpen, importEnabled }
-  ));
+  toggleDialog = (importEnabled) =>
+    this.setState(({ isOpen }) => ({ isOpen: !isOpen, importEnabled }));
 
   render() {
     const { type, collection, intl, session } = this.props;
@@ -63,12 +62,24 @@ class EntitySetCreateMenu extends Component {
 
     const buttonContent = (
       <ButtonGroup>
-        <Button onClick={() => this.toggleDialog(false)} icon={BUTTON_ICON[type]} intent={Intent.PRIMARY} disabled={!canAdd}>
+        <Button
+          onClick={() => this.toggleDialog(false)}
+          icon={BUTTON_ICON[type]}
+          intent={Intent.PRIMARY}
+          disabled={!canAdd}
+        >
           {intl.formatMessage(messages[`${type}_create`])}
         </Button>
         {canImportDiagram && (
-          <Button onClick={() => this.toggleDialog(true)} icon="import" disabled={!canAdd}>
-            <FormattedMessage id="diagram.import.button" defaultMessage="Import diagram" />
+          <Button
+            onClick={() => this.toggleDialog(true)}
+            icon="import"
+            disabled={!canAdd}
+          >
+            <FormattedMessage
+              id="diagram.import.button"
+              defaultMessage="Import diagram"
+            />
           </Button>
         )}
       </ButtonGroup>
@@ -103,5 +114,5 @@ const mapStateToProps = (state) => ({
 
 export default compose(
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(EntitySetCreateMenu);

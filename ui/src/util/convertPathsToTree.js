@@ -1,7 +1,7 @@
-const convertPathsToTree = files => {
+const convertPathsToTree = (files) => {
   const retVal = {};
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const path = file.path || file.webkitRelativePath || file.name;
 
     // remove leading slash if present, then split into path segments and reduce to object
