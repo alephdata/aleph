@@ -23,19 +23,19 @@ test-ui:
 	$(UIDOCKER) npm run test
 
 lint:
-	$(APPDOCKER) flake8 aleph/
+	flake8 aleph/
 
 lint-ui:
 	$(UIDOCKER) npm run lint
 
 format:
-	$(APPDOCKER) black aleph/
+	black aleph/
 
 format-ui:
 	$(UIDOCKER) npm run format
 
 format-check:
-	$(APPDOCKER) black --check aleph/
+	black --check aleph/
 
 format-check-ui:
 	$(UIDOCKER) npm run format:check
@@ -81,7 +81,7 @@ ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
 
 dev: 
-	pip install -q bump2version babel jinja2
+	pip install -q -r requirements-dev.txt
 
 fixtures:
 	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
