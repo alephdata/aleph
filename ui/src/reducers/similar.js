@@ -1,16 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import {
-    queryEntities,
-    queryEntitySetEntities,
-    fetchEntity,
-    createEntity,
-    updateEntity,
-    deleteEntity,
-} from 'actions';
-import {
-    objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects,
-} from 'reducers/util';
+import { querySimilar } from 'actions';
+import { resultObjects } from 'reducers/util';
 
 const initialState = {};
 
