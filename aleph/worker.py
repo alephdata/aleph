@@ -5,6 +5,7 @@ import threading
 import functools
 import queue
 from typing import List
+import copy
 
 import structlog
 from servicelayer.taskqueue import Worker, Task, Dataset, get_task
@@ -51,10 +52,17 @@ def op_index(collection_id: str, batch: List[Task], worker: Worker):
     index_many(collection, sync=sync, tasks=batch)
     for task in batch:
         # acknowledge batched tasks
-        log.info(f"Task [{task.collection_id}]: {task.operation} (done)")
+        log.info(
+            f"Task [collection:{task.collection_id}]: "
+            f"op:{task.operation} task_id:{task.task_id} (done)"
+        )
+        # avoid data race with the main thread by using a copy of the task
+        channel = task._channel
+        delattr(task, "_channel")
+        task = copy.deepcopy(task)
         task.context["skip_ack"] = False
-        cb = functools.partial(worker.ack_message, task, task._channel)
-        task._channel.connection.add_callback_threadsafe(cb)
+        cb = functools.partial(worker.ack_message, task, channel)
+        channel.connection.add_callback_threadsafe(cb)
 
 
 def op_reingest(collection, task):
@@ -101,7 +109,6 @@ class AlephWorker(Worker):
 
     def on_message(self, channel, method, properties, body, args):
         connection = args[0]
-        log.info(f"Received message # {method.delivery_tag}: {body}")
         task = get_task(body, method.delivery_tag)
         # the task needs to be acknowledged in the same channel that it was received. So store the channel.
         # This is useful when executing batched indexing tasks since they are acknowledged late.
@@ -138,7 +145,10 @@ class AlephWorker(Worker):
             log.exception("Error while executing periodic tasks")
 
     def dispatch_task(self, task: Task) -> Task:
-        log.info(f"Task [{task.collection_id}]: {task.operation} (started)")
+        log.info(
+            f"Task [collection:{task.collection_id}]: "
+            f"op:{task.operation} task_id:{task.task_id} (started)"
+        )
         handler = OPERATIONS[task.operation]
         collection = None
         if task.collection_id is not None:
@@ -156,14 +166,20 @@ class AlephWorker(Worker):
                     del self.indexing_batches[task.collection_id]
                     del self.indexing_batch_last_updated[task.collection_id]
                 else:
-                    log.info(f"Task [{task.collection_id}]: {task.operation} (batched)")
+                    log.info(
+                        f"Task [collection:{task.collection_id}]: "
+                        f"op:{task.operation} task_id:{task.task_id} (batched)"
+                    )
                 # skip acknowledgement for batched task; the batch processing function
                 # will acknowledge tasks after execution is complete
                 task.context["skip_ack"] = True
                 return task
 
         handler(collection, task)
-        log.info(f"Task [{task.collection_id}]: {task.operation} (done)")
+        log.info(
+            f"Task [collection:{task.collection_id}]: "
+            f"op:{task.operation} task_id:{task.task_id} (done)"
+        )
         return task
 
     def after_task(self, task):
