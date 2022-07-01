@@ -3,11 +3,16 @@ import { FormattedMessage } from 'react-intl';
 import { Icon, Tag as TagWidget } from '@blueprintjs/core';
 
 import {
-  Schema, Tag, Country, Language, Category, Collection, Entity,
+  Schema,
+  Tag,
+  Country,
+  Language,
+  Category,
+  Collection,
+  Entity,
 } from 'components/common';
 
 import './QueryFilterTag.scss';
-
 
 class QueryFilterTag extends PureComponent {
   constructor(props) {
@@ -23,44 +28,40 @@ class QueryFilterTag extends PureComponent {
   label = (query, filter, type, value) => {
     switch (type || filter) {
       case 'schema':
-        return (
-          <Schema.Label schema={value} icon plural />
-        );
+        return <Schema.Label schema={value} icon plural />;
       case 'country':
       case 'countries':
-        return (
-          <Country.Name code={value} />
-        );
+        return <Country.Name code={value} />;
       case 'language':
       case 'languages':
-        return (
-          <Language.Name code={value} />
-        );
+        return <Language.Name code={value} />;
       case 'category':
-        return (
-          <Category.Label category={value} />
-        );
+        return <Category.Label category={value} />;
       case 'collection_id':
         return (
           <Collection.Load id={value}>
-            {collection => (
-              <Collection.Link collection={collection} />
-            )}
+            {(collection) => <Collection.Link collection={collection} />}
           </Collection.Load>
         );
       case 'team_id':
       case 'creator_id':
       case 'uploader_id':
         return (
-          <FormattedMessage id="search.filterTag.role" defaultMessage="Filter by access" />
+          <FormattedMessage
+            id="search.filterTag.role"
+            defaultMessage="Filter by access"
+          />
         );
       case 'ancestors':
       case 'parent.id':
         return (
           <Entity.Load id={value} renderWhenLoading="…">
-            {entity => (
+            {(entity) => (
               <>
-                <FormattedMessage id="search.filterTag.ancestors" defaultMessage="in:" />
+                <FormattedMessage
+                  id="search.filterTag.ancestors"
+                  defaultMessage="in:"
+                />
                 <Entity.Label entity={entity} icon />
               </>
             )}
@@ -69,9 +70,12 @@ class QueryFilterTag extends PureComponent {
       case 'exclude':
         return (
           <Entity.Load id={value} renderWhenLoading="…">
-            {entity => (
+            {(entity) => (
               <>
-                <FormattedMessage id="search.filterTag.exclude" defaultMessage="not:" />
+                <FormattedMessage
+                  id="search.filterTag.exclude"
+                  defaultMessage="not:"
+                />
                 <Entity.Label entity={entity} icon />
               </>
             )}
@@ -81,9 +85,7 @@ class QueryFilterTag extends PureComponent {
       case 'entities':
         return (
           <Entity.Load id={value} renderWhenLoading="…">
-            {entity => (
-              <Entity.Label entity={entity} icon />
-            )}
+            {(entity) => <Entity.Label entity={entity} icon />}
           </Entity.Load>
         );
       case 'names':
@@ -107,17 +109,13 @@ class QueryFilterTag extends PureComponent {
       default:
         return value;
     }
-  }
+  };
 
   render() {
     const { filter, type, value, query } = this.props;
 
     return (
-      <TagWidget
-        large
-        className="QueryFilterTag"
-        onRemove={this.onRemove}
-      >
+      <TagWidget large className="QueryFilterTag" onRemove={this.onRemove}>
         {this.label(query, filter, type, value)}
       </TagWidget>
     );

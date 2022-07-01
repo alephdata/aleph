@@ -12,24 +12,26 @@ export class MappingLabel extends Component {
 
     this.state = {
       editing: false,
-      editValue: this.getLabelText()
+      editValue: this.getLabelText(),
     };
   }
 
   toggleEditing = () => {
     this.setState(({ editing }) => ({ editing: !editing }));
-  }
+  };
 
   getLabelText = () => {
     const { mapping, truncate } = this.props;
     const text = mapping.altLabel || mapping.id;
     return truncate ? truncateText(text, truncate) : text;
-  }
+  };
 
   getLabelIcon = (className) => {
     const { icon = true, mapping } = this.props;
-    return icon && <Schema.Icon schema={mapping.schema} className={className} />
-  }
+    return (
+      icon && <Schema.Icon schema={mapping.schema} className={className} />
+    );
+  };
 
   onSubmit = (e) => {
     const { mapping, onEdit } = this.props;
@@ -38,7 +40,7 @@ export class MappingLabel extends Component {
     e.stopPropagation();
     onEdit(mapping.id, editValue);
     this.toggleEditing();
-  }
+  };
 
   renderEditor() {
     const { editValue } = this.state;
@@ -50,7 +52,9 @@ export class MappingLabel extends Component {
           value={editValue}
           leftIcon={this.getLabelIcon()}
           onChange={(e) => this.setState({ editValue: e.target.value })}
-          rightElement={<Button minimal icon="arrow-right" onClick={this.onSubmit} />}
+          rightElement={
+            <Button minimal icon="arrow-right" onClick={this.onSubmit} />
+          }
         />
       </form>
     );
@@ -73,7 +77,7 @@ export class MappingLabel extends Component {
   renderLabel() {
     return (
       <>
-        {this.getLabelIcon("left-icon")}
+        {this.getLabelIcon('left-icon')}
         {this.getLabelText()}
       </>
     );
@@ -94,7 +98,9 @@ export class MappingLabel extends Component {
     }
 
     return (
-      <span className="MappingLabel" style={{ color: mapping.color }}>{content}</span>
-    )
+      <span className="MappingLabel" style={{ color: mapping.color }}>
+        {content}
+      </span>
+    );
   }
-};
+}

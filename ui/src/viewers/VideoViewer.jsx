@@ -14,6 +14,6 @@ const VideoViewer = ({ document }) => {
       </div>
     </div>
   );
-}
+};
 
 export default VideoViewer;

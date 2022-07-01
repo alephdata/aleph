@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 
 import {
-  Collection, EntityDecisionRow, Skeleton, JudgementButtons, Score,
+  Collection,
+  EntityDecisionRow,
+  Skeleton,
+  JudgementButtons,
+  Score,
 } from 'components/common';
 
 import EntityCompare from 'components/Entity/EntityCompare';
@@ -43,10 +47,18 @@ class XrefTableRow extends Component {
           <JudgementButtons obj={xref} onChange={onDecide} />
         </td>
         <td className="entity bordered">
-          <EntityCompare entity={xref.entity} other={xref.match} showEmpty={true} />
+          <EntityCompare
+            entity={xref.entity}
+            other={xref.match}
+            showEmpty={true}
+          />
         </td>
         <td className="entity">
-          <EntityCompare entity={xref.match} other={xref.entity} showEmpty={true} />
+          <EntityCompare
+            entity={xref.match}
+            other={xref.entity}
+            showEmpty={true}
+          />
         </td>
         <td className="numeric narrow">
           <Score score={xref.score} />

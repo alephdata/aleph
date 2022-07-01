@@ -8,7 +8,6 @@ import { SectionLoading } from 'components/common';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
-
 class PdfViewerSearch extends Component {
   constructor(props) {
     super(props);
@@ -62,7 +61,7 @@ class PdfViewerSearch extends Component {
           </>
         )}
         <ul>
-          {result.results.map(res => (
+          {result.results.map((res) => (
             <li key={`page-${res.id}`}>
               <p dir={dir}>
                 <Link
@@ -81,7 +80,11 @@ class PdfViewerSearch extends Component {
               </p>
               <p>
                 {res.highlight !== undefined && (
-                  <span dangerouslySetInnerHTML={{ __html: res.highlight.join('  …  ') }} />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: res.highlight.join('  …  '),
+                    }}
+                  />
                 )}
               </p>
             </li>

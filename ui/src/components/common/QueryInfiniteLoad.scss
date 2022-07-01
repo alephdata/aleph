@@ -1,9 +1,9 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .QueryInfiniteLoad {
   width: 100%;
   &__button.bp3-button {
     display: flex;
-    margin: $aleph-grid-size*1.5 auto $aleph-grid-size;
+    margin: $aleph-grid-size * 1.5 auto $aleph-grid-size;
   }
 }

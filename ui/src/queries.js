@@ -1,12 +1,13 @@
 import Query from 'app/Query';
 
-
 export function groupsQuery(location) {
   return Query.fromLocation('groups', location, {}, 'groups');
 }
 
 export function alertsQuery(location) {
-  return Query.fromLocation('alerts', location, {}, 'alerts').limit(Query.MAX_LIMIT);
+  return Query.fromLocation('alerts', location, {}, 'alerts').limit(
+    Query.MAX_LIMIT
+  );
 }
 
 export function entitiesQuery(location) {
@@ -44,7 +45,7 @@ export function collectionSearchQuery(location, collectionId, options = {}) {
   const context = {
     'filter:collection_id': collectionId,
     'filter:schemata': 'Thing',
-    ...options
+    ...options,
   };
   return collectionContextQuery(context, location, collectionId, 'cs');
 }
@@ -58,25 +59,37 @@ export function entitySetSchemaCountsQuery(entitySetId) {
     .limit(0);
 }
 
-export function entitySetEntitiesQuery(location, entitySetId, schema, limit = Query.MAX_LIMIT) {
-  const context = {}
+export function entitySetEntitiesQuery(
+  location,
+  entitySetId,
+  schema,
+  limit = Query.MAX_LIMIT
+) {
+  const context = {};
   if (schema) {
     context['filter:schema'] = schema;
   }
   const path = entitySetId ? `entitysets/${entitySetId}/entities` : undefined;
-  return Query.fromLocation(path, location, context, 'entities')
-    .limit(limit);
+  return Query.fromLocation(path, location, context, 'entities').limit(limit);
 }
 
-export function entitySetItemsQuery(location, entitySetId, limit = Query.MAX_LIMIT) {
+export function entitySetItemsQuery(
+  location,
+  entitySetId,
+  limit = Query.MAX_LIMIT
+) {
   const path = entitySetId ? `entitysets/${entitySetId}/items` : undefined;
   return Query.fromLocation(path, location, {}, 'items').limit(limit);
 }
 
 export function investigationsQuery(location) {
   const context = { 'filter:category': 'casefile' };
-  return Query.fromLocation('collections', location, context, 'collections')
-    .defaultSortBy('created_at', 'desc');
+  return Query.fromLocation(
+    'collections',
+    location,
+    context,
+    'collections'
+  ).defaultSortBy('created_at', 'desc');
 }
 
 export function datasetsQuery(location) {
@@ -87,7 +100,6 @@ export function datasetsQuery(location) {
     .defaultSortBy('created_at', 'desc');
 }
 
-
 export function collectionEntitySetsQuery(location, collectionId) {
   const context = { 'filter:collection_id': collectionId };
   const path = collectionId ? `entitysets` : undefined;
@@ -95,7 +107,9 @@ export function collectionEntitySetsQuery(location, collectionId) {
 }
 
 export function collectionMappingsQuery(location, collectionId) {
-  const path = collectionId ? `collections/${collectionId}/mappings` : undefined;
+  const path = collectionId
+    ? `collections/${collectionId}/mappings`
+    : undefined;
   return Query.fromLocation(path, location, {}, 'mappings');
 }
 
@@ -115,8 +129,10 @@ export function folderDocumentsQuery(location, documentId, queryText) {
   // a flat listing of the immediate children of this directory is shown.
   const path = documentId ? 'entities' : undefined;
   const q = Query.fromLocation(path, location, {}, 'document').getString('q');
-  const hasSearch = (q.length !== 0 || queryText);
-  const field = hasSearch ? 'filter:properties.ancestors' : 'filter:properties.parent';
+  const hasSearch = q.length !== 0 || queryText;
+  const field = hasSearch
+    ? 'filter:properties.ancestors'
+    : 'filter:properties.parent';
   const context = { 'filter:schemata': 'Document', [field]: documentId };
   let query = Query.fromLocation(path, location, context, 'document');
   if (queryText) {
@@ -127,25 +143,36 @@ export function folderDocumentsQuery(location, documentId, queryText) {
 
 export function entitySimilarQuery(location, entityId) {
   const path = entityId ? `entities/${entityId}/similar` : undefined;
-  return Query.fromLocation(path, location, {}, 'similar')
-    .defaultFacet('collection_id', true);
+  return Query.fromLocation(path, location, {}, 'similar').defaultFacet(
+    'collection_id',
+    true
+  );
 }
 
 export function profileSimilarQuery(location, profileId) {
   const path = profileId ? `profiles/${profileId}/similar` : undefined;
-  return Query.fromLocation(path, location, {}, 'similar')
-    .defaultFacet('collection_id', true);
+  return Query.fromLocation(path, location, {}, 'similar').defaultFacet(
+    'collection_id',
+    true
+  );
 }
 
-export function entitySuggestQuery(location, collection, schemaName, queryText) {
+export function entitySuggestQuery(
+  location,
+  collection,
+  schemaName,
+  queryText
+) {
   const context = {
     'filter:schemata': schemaName,
     'filter:collection_id': collection?.id,
-    ...queryText
+    ...queryText,
   };
   const path = schemaName && collection?.id ? 'entities' : undefined;
-  return Query.fromLocation(path, location, context, 'entities')
-    .sortBy('caption', 'asc');
+  return Query.fromLocation(path, location, context, 'entities').sortBy(
+    'caption',
+    'asc'
+  );
 }
 
 export function entityExpandQuery(entityId, properties, limit = Query.LARGE) {
@@ -163,7 +190,10 @@ export function entityReferenceQuery(location, entity, reference) {
     [`filter:properties.${reference?.property?.name}`]: entity?.id,
     'filter:schemata': reference?.schema,
   };
-  const path = (entity?.id && reference?.schema && reference?.property) ? 'entities' : undefined;
+  const path =
+    entity?.id && reference?.schema && reference?.property
+      ? 'entities'
+      : undefined;
   return Query.fromLocation(path, location, context, reference?.property?.name);
 }
 
@@ -182,6 +212,9 @@ export function profileReferenceQuery(location, profile, reference) {
     [`filter:properties.${reference?.property?.name}`]: profile?.entities,
     'filter:schemata': reference?.schema,
   };
-  const path = (profile?.id && reference?.schema && reference?.property) ? 'entities' : undefined;
+  const path =
+    profile?.id && reference?.schema && reference?.property
+      ? 'entities'
+      : undefined;
   return Query.fromLocation(path, location, context, reference?.property?.name);
 }

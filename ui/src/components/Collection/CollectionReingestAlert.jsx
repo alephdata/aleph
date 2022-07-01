@@ -7,7 +7,6 @@ import { triggerCollectionReingest } from 'actions';
 import { showSuccessToast } from 'app/toast';
 import { Collection } from 'components/common';
 
-
 const messages = defineMessages({
   processing: {
     id: 'collection.reingest.processing',
@@ -64,7 +63,11 @@ class CollectionReingestAlert extends Component {
           <FormattedMessage
             id="collection.reingest.text"
             defaultMessage="You're about to re-process all documents in {collectionLabel}. This might take some time."
-            values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
+            values={{
+              collectionLabel: (
+                <Collection.Label collection={collection} icon={false} />
+              ),
+            }}
           />
         </p>
         <Checkbox
@@ -79,5 +82,5 @@ class CollectionReingestAlert extends Component {
 
 export default compose(
   connect(null, { triggerCollectionReingest }),
-  injectIntl,
+  injectIntl
 )(CollectionReingestAlert);

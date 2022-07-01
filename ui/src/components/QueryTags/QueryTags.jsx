@@ -23,9 +23,10 @@ class QueryTags extends Component {
     let newQuery;
 
     if (type === 'date') {
-      newQuery = query.clearFilter(`gte:${filter}`)
+      newQuery = query
+        .clearFilter(`gte:${filter}`)
         .clearFilter(`lte:${filter}`)
-        .set(`facet_interval:${filter}`, 'year')
+        .set(`facet_interval:${filter}`, 'year');
     } else {
       newQuery = query.removeFilter(filter, value);
     }
@@ -42,33 +43,52 @@ class QueryTags extends Component {
     const { query } = this.props;
 
     const tags = _.flatten(
-      query.filters()
-        .map(filter => query.getFilter(filter).map(value => ({ filter, value, type: query.getFacetType(filter) })))
+      query.filters().map((filter) =>
+        query.getFilter(filter).map((value) => ({
+          filter,
+          value,
+          type: query.getFacetType(filter),
+        }))
+      )
     );
 
-    const [dateTags, otherTags] = _.partition(tags, tag => tag.filter.includes(":"));
-    const dateProps = _.groupBy(dateTags, tag => tag.filter.split(':')[1])
+    const [dateTags, otherTags] = _.partition(tags, (tag) =>
+      tag.filter.includes(':')
+    );
+    const dateProps = _.groupBy(dateTags, (tag) => tag.filter.split(':')[1]);
 
     // combines "greater than" and "less than" filters into a single tag
-    const processedDateTags = Object.entries(dateProps).map(([propName, values]) => {
-      const gt = cleanDateQParam(values.find(({ filter }) => filter.includes('gte'))?.value)
-      const lt = cleanDateQParam(values.find(({ filter }) => filter.includes('lte'))?.value)
-      let combinedValue;
-      if (!gt || !lt) {
-        return null;
-      } else if (gt === lt) {
-        combinedValue = gt
-      // if timespan between greater than and less than is exactly a year, displays year in query tag
-      } else if (moment.utc(gt).month() === 0 && moment.utc(lt).month() === 11) {
-        combinedValue = moment.utc(gt).year()
-      } else if (moment.utc(gt).isSame(moment.utc(gt).startOf('month'), 'day') && moment.utc(lt).isSame(moment.utc(lt).endOf('month'), 'day')) {
-        combinedValue = moment.utc(gt).format('yyyy-MM')
-      } else {
-        combinedValue = `${gt} - ${lt}`
-      }
+    const processedDateTags = Object.entries(dateProps).map(
+      ([propName, values]) => {
+        const gt = cleanDateQParam(
+          values.find(({ filter }) => filter.includes('gte'))?.value
+        );
+        const lt = cleanDateQParam(
+          values.find(({ filter }) => filter.includes('lte'))?.value
+        );
+        let combinedValue;
+        if (!gt || !lt) {
+          return null;
+        } else if (gt === lt) {
+          combinedValue = gt;
+          // if timespan between greater than and less than is exactly a year, displays year in query tag
+        } else if (
+          moment.utc(gt).month() === 0 &&
+          moment.utc(lt).month() === 11
+        ) {
+          combinedValue = moment.utc(gt).year();
+        } else if (
+          moment.utc(gt).isSame(moment.utc(gt).startOf('month'), 'day') &&
+          moment.utc(lt).isSame(moment.utc(lt).endOf('month'), 'day')
+        ) {
+          combinedValue = moment.utc(gt).format('yyyy-MM');
+        } else {
+          combinedValue = `${gt} - ${lt}`;
+        }
 
-      return ({ filter: propName, value: combinedValue, type: 'date' })
-    })
+        return { filter: propName, value: combinedValue, type: 'date' };
+      }
+    );
 
     return [...processedDateTags, ...otherTags];
   }
@@ -82,9 +102,12 @@ class QueryTags extends Component {
     }
 
     const filterTags = this.getTagsList();
-    const visibleTags = showHidden ? filterTags : filterTags.slice(0, HIDDEN_TAGS_CUTOFF);
+    const visibleTags = showHidden
+      ? filterTags
+      : filterTags.slice(0, HIDDEN_TAGS_CUTOFF);
 
-    const showHiddenToggle = !showHidden && filterTags.length > HIDDEN_TAGS_CUTOFF;
+    const showHiddenToggle =
+      !showHidden && filterTags.length > HIDDEN_TAGS_CUTOFF;
     const showClearAll = filterTags.length > 1;
 
     // @FIXME This should still selectively display filters for the following:

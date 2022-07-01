@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { EditableProperty as VLEditableProperty, Property as VLProperty } from '@alephdata/react-ftm';
+import {
+  EditableProperty as VLEditableProperty,
+  Property as VLProperty,
+} from '@alephdata/react-ftm';
 import { Button } from '@blueprintjs/core';
 
 import { Entity } from 'components/common';
@@ -8,8 +11,7 @@ import { selectLocale, selectModel } from 'selectors';
 
 import './Property.scss';
 
-const getEntityLink = entity => <Entity.Link entity={entity} icon />;
-
+const getEntityLink = (entity) => <Entity.Link entity={entity} icon />;
 
 class EditableProperty extends React.Component {
   constructor(props) {
@@ -20,10 +22,20 @@ class EditableProperty extends React.Component {
 
   toggleEditing = () => {
     this.setState(({ editing }) => ({ editing: !editing }));
-  }
+  };
 
   render() {
-    const { onEdit, createNewReferencedEntity, prop, entity, emptyPlaceholder, fetchEntitySuggestions, minimal, toggleButtonProps, writeable } = this.props;
+    const {
+      onEdit,
+      createNewReferencedEntity,
+      prop,
+      entity,
+      emptyPlaceholder,
+      fetchEntitySuggestions,
+      minimal,
+      toggleButtonProps,
+      writeable,
+    } = this.props;
     const { editing } = this.state;
 
     const property = entity.schema.getProperty(prop);
@@ -34,9 +46,7 @@ class EditableProperty extends React.Component {
     }
 
     if (!editing && !hasValue && toggleButtonProps) {
-      return (
-        <Button {...toggleButtonProps} onClick={this.toggleEditing} />
-      );
+      return <Button {...toggleButtonProps} onClick={this.toggleEditing} />;
     }
 
     return (
@@ -45,17 +55,20 @@ class EditableProperty extends React.Component {
         property={property}
         editing={editing}
         onToggleEdit={this.toggleEditing}
-        onSubmit={(entity) => { this.toggleEditing(); onEdit(entity) }}
+        onSubmit={(entity) => {
+          this.toggleEditing();
+          onEdit(entity);
+        }}
         fetchEntitySuggestions={fetchEntitySuggestions}
         createNewReferencedEntity={createNewReferencedEntity}
         minimal={minimal}
         writeable={writeable}
       />
-    )
+    );
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   locale: selectLocale(state),
   model: selectModel(state),
 });
@@ -65,9 +78,13 @@ class Property {
 
   static Reverse = connect(mapStateToProps)(VLProperty.Reverse);
 
-  static Value = (props) => <VLProperty.Value {...props} getEntityLink={getEntityLink} />
+  static Value = (props) => (
+    <VLProperty.Value {...props} getEntityLink={getEntityLink} />
+  );
 
-  static Values = (props) => <VLProperty.Values {...props} getEntityLink={getEntityLink} />
+  static Values = (props) => (
+    <VLProperty.Values {...props} getEntityLink={getEntityLink} />
+  );
 
   static Editable = connect(mapStateToProps)(EditableProperty);
 }

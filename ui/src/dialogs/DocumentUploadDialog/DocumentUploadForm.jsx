@@ -8,27 +8,31 @@ import './DocumentUploadForm.scss';
 const messages = defineMessages({
   file_rejected: {
     id: 'document.upload.rejected',
-    defaultMessage: '{fileName} is missing a file type, so it cannot be uploaded.',
+    defaultMessage:
+      '{fileName} is missing a file type, so it cannot be uploaded.',
   },
 });
 
 export class DocumentUploadForm extends PureComponent {
   onFilesChange = (event) => {
-    const { intl } = this.props
-    const rejectedFiles = []
+    const { intl } = this.props;
+    const rejectedFiles = [];
 
-    const files = Array.from(event.target.files)
-      .filter(file => {
-        if (!file.type || file.type === '') {
-          rejectedFiles.push(file)
-          return false;
-        }
-        return true;
-      })
+    const files = Array.from(event.target.files).filter((file) => {
+      if (!file.type || file.type === '') {
+        rejectedFiles.push(file);
+        return false;
+      }
+      return true;
+    });
 
-    rejectedFiles.forEach(f => showErrorToast(intl.formatMessage(messages.file_rejected, { fileName: f.name })))
+    rejectedFiles.forEach((f) =>
+      showErrorToast(
+        intl.formatMessage(messages.file_rejected, { fileName: f.name })
+      )
+    );
     this.props.onFilesChange(files);
-  }
+  };
 
   render() {
     return (

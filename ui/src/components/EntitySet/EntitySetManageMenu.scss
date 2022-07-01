@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .EntitySetManageMenu {
   .bp3-input-group {
@@ -9,6 +9,4 @@
   .bp3-divider {
     margin: $aleph-grid-size/2 !important;
   }
-
-
 }

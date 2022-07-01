@@ -6,9 +6,11 @@ export default function getCollectionLink({ collection, mode, hash, search }) {
   }
   const collectionId = collection.id;
 
-  return ({
-    pathname: collection.casefile ? `/investigations/${collectionId}` : `/datasets/${collectionId}`,
+  return {
+    pathname: collection.casefile
+      ? `/investigations/${collectionId}`
+      : `/datasets/${collectionId}`,
     hash: queryString.stringify({ mode, ...hash }),
-    search
-  });
+    search,
+  };
 }

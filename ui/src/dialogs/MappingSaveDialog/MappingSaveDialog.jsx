@@ -4,9 +4,8 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { deleteCollection } from 'actions';
-
 
 const messages = defineMessages({
   button_confirm: {
@@ -18,7 +17,6 @@ const messages = defineMessages({
     defaultMessage: 'Cancel',
   },
 });
-
 
 class MappingSaveDialog extends Component {
   render() {
@@ -47,5 +45,5 @@ const mapDispatchToProps = { deleteCollection };
 export default compose(
   withRouter,
   connect(null, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(MappingSaveDialog);

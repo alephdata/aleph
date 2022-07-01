@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {
-  Classes, Dialog,
-} from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -15,7 +13,6 @@ import { Entity } from 'components/common';
 
 import './DocumentUploadDialog.scss';
 
-
 const messages = defineMessages({
   title: {
     id: 'document.upload.title',
@@ -24,7 +21,7 @@ const messages = defineMessages({
   title_in_folder: {
     id: 'document.upload.title_in_folder',
     defaultMessage: 'Upload documents to {folder}',
-  }
+  },
 });
 
 export class DocumentUploadDialog extends Component {
@@ -33,7 +30,7 @@ export class DocumentUploadDialog extends Component {
     this.state = {
       files: props.filesToUpload || [],
       uploadMeta: null,
-      uploadTraces: []
+      uploadTraces: [],
     };
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFilesChange = this.onFilesChange.bind(this);
@@ -48,9 +45,7 @@ export class DocumentUploadDialog extends Component {
   }
 
   async onFormSubmit(files) {
-    const {
-      parent,
-    } = this.props;
+    const { parent } = this.props;
 
     const fileTree = convertPathsToTree(files);
     await this.setState({
@@ -58,10 +53,10 @@ export class DocumentUploadDialog extends Component {
         totalUploadSize: files.reduce((result, file) => result + file.size, 0),
         totalFiles: files.length,
         status: UPLOAD_STATUS.PENDING,
-        cancelSource: axios.CancelToken.source()
+        cancelSource: axios.CancelToken.source(),
       },
-      uploadTraces: []
-    })
+      uploadTraces: [],
+    });
 
     this.uploadPromises.length = 0;
     await this.traverseFileTree(fileTree, parent);
@@ -86,22 +81,27 @@ export class DocumentUploadDialog extends Component {
     this.setState({
       files: [],
       uploadTraces: [],
-      uploadMeta: null
+      uploadMeta: null,
     });
   }
 
   async onRetry() {
     const { uploadTraces, uploadMeta } = this.state;
-    const errorTraces = uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.ERROR);
+    const errorTraces = uploadTraces.filter(
+      (trace) => trace.status === UPLOAD_STATUS.ERROR
+    );
     await this.setState({
       uploadMeta: Object.assign({}, uploadMeta, {
-        status: UPLOAD_STATUS.PENDING
+        status: UPLOAD_STATUS.PENDING,
       }),
-      uploadTraces: uploadTraces.filter(trace => trace.status !== UPLOAD_STATUS.ERROR)
+      uploadTraces: uploadTraces.filter(
+        (trace) => trace.status !== UPLOAD_STATUS.ERROR
+      ),
     });
     this.uploadPromises.length = 0;
-    return Promise.all(errorTraces.map(trace => trace.retryFn()))
-      .then(() => this.onUploadDone());
+    return Promise.all(errorTraces.map((trace) => trace.retryFn())).then(() =>
+      this.onUploadDone()
+    );
   }
 
   onCancel() {
@@ -111,34 +111,39 @@ export class DocumentUploadDialog extends Component {
 
   onUploadDone() {
     this.setState(({ uploadMeta, uploadTraces }) => {
-      if (uploadMeta) { // on cancellation uploadMeta could be none, as it takes a while to cancel all requests
+      if (uploadMeta) {
+        // on cancellation uploadMeta could be none, as it takes a while to cancel all requests
         return {
           uploadMeta: Object.assign({}, uploadMeta, {
-            status: uploadTraces.filter(trace => trace.status === UPLOAD_STATUS.SUCCESS).length > 0 ? UPLOAD_STATUS.SUCCESS : UPLOAD_STATUS.ERROR
-          })
-        }
+            status:
+              uploadTraces.filter(
+                (trace) => trace.status === UPLOAD_STATUS.SUCCESS
+              ).length > 0
+                ? UPLOAD_STATUS.SUCCESS
+                : UPLOAD_STATUS.ERROR,
+          }),
+        };
       }
     });
     this.props.forceMutate();
   }
 
   async traverseFileTree(tree, parent) {
-    const filePromises = Object.entries(tree)
-      .map(([key, value]) => {
-        // base case
-        if (value instanceof File) {
-          return this.uploadFile(value, parent);
+    const filePromises = Object.entries(tree).map(([key, value]) => {
+      // base case
+      if (value instanceof File) {
+        return this.uploadFile(value, parent);
       }
-        // recursive case
-        return this.uploadFolderRecursive(key, parent, value);
-      });
+      // recursive case
+      return this.uploadFolderRecursive(key, parent, value);
+    });
 
     await Promise.all(filePromises);
   }
 
   updateUploadTraces() {
     this.setState(({ uploadTraces }) => ({
-      uploadTraces: [...uploadTraces]
+      uploadTraces: [...uploadTraces],
     }));
   }
 
@@ -147,8 +152,8 @@ export class DocumentUploadDialog extends Component {
       const _uploadTraces = [...uploadTraces];
       _uploadTraces.push(uploadTrace);
       return {
-        uploadTraces: _uploadTraces
-      }
+        uploadTraces: _uploadTraces,
+      };
     });
   }
 
@@ -171,7 +176,13 @@ export class DocumentUploadDialog extends Component {
         await Promise.race(this.uploadPromises); // wait until the next promise is done
       }
 
-      const promise = ingestDocument(collection.id, metadata, file, (ev) => this.onFileProgress(uploadTrace, ev), uploadMeta.cancelSource.token)
+      const promise = ingestDocument(
+        collection.id,
+        metadata,
+        file,
+        (ev) => this.onFileProgress(uploadTrace, ev),
+        uploadMeta.cancelSource.token
+      )
         .then((result) => {
           uploadTrace.status = UPLOAD_STATUS.SUCCESS;
           this.updateUploadTraces();
@@ -185,10 +196,10 @@ export class DocumentUploadDialog extends Component {
         });
       this.uploadPromises.push(promise);
       promise.then(() => {
-        this.uploadPromises.splice(this.uploadPromises.indexOf(promise), 1)
-      })
+        this.uploadPromises.splice(this.uploadPromises.indexOf(promise), 1);
+      });
       return promise;
-    }
+    };
 
     return execute();
   }
@@ -200,7 +211,7 @@ export class DocumentUploadDialog extends Component {
       type: 'file',
       uploaded: 0,
       total: file.size,
-      status: UPLOAD_STATUS.PENDING
+      status: UPLOAD_STATUS.PENDING,
     };
 
     const metadata = {
@@ -219,7 +230,7 @@ export class DocumentUploadDialog extends Component {
     const uploadTrace = {
       name: title,
       type: 'directory',
-      status: UPLOAD_STATUS.PENDING
+      status: UPLOAD_STATUS.PENDING,
     };
 
     const metadata = {
@@ -236,12 +247,15 @@ export class DocumentUploadDialog extends Component {
 
   uploadFolderRecursive(title, parent, childTree) {
     const retryFn = () => this.uploadFolderRecursive(title, parent, childTree);
-    return this.uploadFolder(title, parent, retryFn)
-      .then(result => {
-        if (result?.id) { // id is not existent when folder upload failed
-          return this.traverseFileTree(childTree, { id: result.id, foreign_id: title });
-        }
-      });
+    return this.uploadFolder(title, parent, retryFn).then((result) => {
+      if (result?.id) {
+        // id is not existent when folder upload failed
+        return this.traverseFileTree(childTree, {
+          id: result.id,
+          foreign_id: title,
+        });
+      }
+    });
   }
 
   renderContent() {
@@ -249,15 +263,19 @@ export class DocumentUploadDialog extends Component {
 
     if (uploadMeta) {
       return (
-        <DocumentUploadStatus uploadTraces={uploadTraces} uploadMeta={uploadMeta} onClose={this.onClose}
-                              onRetry={this.onRetry}/>
+        <DocumentUploadStatus
+          uploadTraces={uploadTraces}
+          uploadMeta={uploadMeta}
+          onClose={this.onClose}
+          onRetry={this.onRetry}
+        />
       );
     }
     if (files && files.length) {
-      return <DocumentUploadView files={files} onSubmit={this.onFormSubmit}/>;
+      return <DocumentUploadView files={files} onSubmit={this.onFormSubmit} />;
     }
 
-    return <DocumentUploadForm onFilesChange={this.onFilesChange}/>;
+    return <DocumentUploadForm onFilesChange={this.onFilesChange} />;
   }
 
   render() {
@@ -273,20 +291,27 @@ export class DocumentUploadDialog extends Component {
         canEscapeKeyClose={closeable}
         canOutsideClickClose={closeable}
         isCloseButtonShown={closeable}
-        title={parent ? intl.formatMessage(messages.title_in_folder, { folder: <Entity.Label entity={parent} /> }) : intl.formatMessage(messages.title)}
+        title={
+          parent
+            ? intl.formatMessage(messages.title_in_folder, {
+                folder: <Entity.Label entity={parent} />,
+              })
+            : intl.formatMessage(messages.title)
+        }
         onClose={this.onClose}
       >
-        <div className={Classes.DIALOG_BODY}>
-          {this.renderContent()}
-        </div>
+        <div className={Classes.DIALOG_BODY}>{this.renderContent()}</div>
       </Dialog>
     );
   }
 }
 
-const mapDispatchToProps = { ingestDocument: ingestDocumentAction, forceMutate };
+const mapDispatchToProps = {
+  ingestDocument: ingestDocumentAction,
+  forceMutate,
+};
 
 export default compose(
   connect(null, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(DocumentUploadDialog);

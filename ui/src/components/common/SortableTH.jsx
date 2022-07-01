@@ -4,19 +4,23 @@ import c from 'classnames';
 import './SortableTH.scss';
 
 function SortableTH(props) {
-  const {
-    sortable, sorted, onClick, children, className, ...otherProps
-  } = props;
+  const { sortable, sorted, onClick, children, className, ...otherProps } =
+    props;
   if (!sortable) {
-    return (
-      <th className={className}>{children}</th>
-    );
+    return <th className={className}>{children}</th>;
   }
-  const iconClass = c('caret', 'bp3-icon-large',
+  const iconClass = c(
+    'caret',
+    'bp3-icon-large',
     `bp3-icon-caret-${sorted === 'desc' ? 'down' : 'up'}`,
-    { hidden: !sorted });
+    { hidden: !sorted }
+  );
   return (
-    <th className={c('SortableTH clickable', className)} onClick={onClick} {...otherProps}>
+    <th
+      className={c('SortableTH clickable', className)}
+      onClick={onClick}
+      {...otherProps}
+    >
       <div>
         {children}
         <span className={iconClass} />
@@ -24,6 +28,5 @@ function SortableTH(props) {
     </th>
   );
 }
-
 
 export default SortableTH;

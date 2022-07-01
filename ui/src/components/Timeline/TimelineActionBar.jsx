@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 
 const messages = defineMessages({
   collapse: {
@@ -17,7 +17,6 @@ const messages = defineMessages({
   },
 });
 
-
 class TimelineActionBar extends Component {
   constructor(props) {
     super(props);
@@ -28,21 +27,41 @@ class TimelineActionBar extends Component {
     const { expandedMode, navigate, location } = this.props;
     navigate({
       ...location,
-      hash: queryString.stringify({ expanded: !expandedMode })
-    })
+      hash: queryString.stringify({ expanded: !expandedMode }),
+    });
   }
 
   render() {
-    const { expandedMode, createNewItem, createDisabled, intl, buttonGroupProps = {}, writeable } = this.props;
+    const {
+      expandedMode,
+      createNewItem,
+      createDisabled,
+      intl,
+      buttonGroupProps = {},
+      writeable,
+    } = this.props;
 
     return (
-      <ButtonGroup className="TimelineActionBar" {...buttonGroupProps} >
-        <Button icon={expandedMode ? 'collapse-all' : 'properties'} onClick={this.toggleExpanded}>
-          {intl.formatMessage(messages[expandedMode ? 'collapse' : 'show_full'])}
+      <ButtonGroup className="TimelineActionBar" {...buttonGroupProps}>
+        <Button
+          icon={expandedMode ? 'collapse-all' : 'properties'}
+          onClick={this.toggleExpanded}
+        >
+          {intl.formatMessage(
+            messages[expandedMode ? 'collapse' : 'show_full']
+          )}
         </Button>
         {writeable && (
-          <Button icon="add" onClick={createNewItem} disabled={createDisabled} intent={Intent.PRIMARY}>
-            <FormattedMessage id="timeline.add_new" defaultMessage="Create new item" />
+          <Button
+            icon="add"
+            onClick={createNewItem}
+            disabled={createDisabled}
+            intent={Intent.PRIMARY}
+          >
+            <FormattedMessage
+              id="timeline.add_new"
+              defaultMessage="Create new item"
+            />
           </Button>
         )}
       </ButtonGroup>
@@ -50,7 +69,4 @@ class TimelineActionBar extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  injectIntl,
-)(TimelineActionBar);
+export default compose(withRouter, injectIntl)(TimelineActionBar);

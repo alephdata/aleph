@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import EntitySearchResults from './EntitySearchResults';
@@ -28,7 +28,6 @@ const messages = defineMessages({
   },
 });
 
-
 export class EntitySearch extends Component {
   constructor(props) {
     super(props);
@@ -51,9 +50,17 @@ export class EntitySearch extends Component {
 
   render() {
     const {
-      query, result, intl, className, columns,
-      showPreview, updateSelection, selection,
-      emptyComponent, collection, writeable,
+      query,
+      result,
+      intl,
+      className,
+      columns,
+      showPreview,
+      updateSelection,
+      selection,
+      emptyComponent,
+      collection,
+      writeable,
     } = this.props;
     const isEmpty = !query.hasQuery();
 
@@ -61,14 +68,16 @@ export class EntitySearch extends Component {
       <div className={c('EntitySearch', className)}>
         {result.total === 0 && (
           <section className="PartialError">
-            { !isEmpty && (
+            {!isEmpty && (
               <ErrorSection
                 icon="search"
                 title={intl.formatMessage(messages.no_results_title)}
-                description={intl.formatMessage(messages.no_results_description)}
+                description={intl.formatMessage(
+                  messages.no_results_description
+                )}
               />
             )}
-            { isEmpty && emptyComponent}
+            {isEmpty && emptyComponent}
           </section>
         )}
         <EntitySearchResults
@@ -100,5 +109,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities }),
-  injectIntl,
+  injectIntl
 )(EntitySearch);

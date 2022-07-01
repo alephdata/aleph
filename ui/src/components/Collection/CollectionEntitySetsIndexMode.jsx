@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { queryEntitySets } from 'actions';
 import { collectionEntitySetsQuery } from 'queries';
 import { selectCollection, selectEntitySetsResult } from 'selectors';
@@ -38,7 +38,10 @@ export class CollectionEntitySetsIndexMode extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location, type } = ownProps;
-  const query = collectionEntitySetsQuery(location, collectionId).setFilter('type', type);
+  const query = collectionEntitySetsQuery(location, collectionId).setFilter(
+    'type',
+    type
+  );
   return {
     collection: selectCollection(state, collectionId),
     query,
@@ -46,8 +49,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryEntitySets }),
+  connect(mapStateToProps, { queryEntitySets })
 )(CollectionEntitySetsIndexMode);

@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import SortingBar from 'components/SortingBar/SortingBar';
 import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
 
-
 const messages = defineMessages({
   filter_all: {
     id: 'notifications.type_filter.all',
@@ -23,8 +22,8 @@ class NotificationListFilter extends Component {
 
   onSelect(selected) {
     const { query, updateQuery } = this.props;
-    const newQuery = query.setFilter('event', selected.id)
-    updateQuery(newQuery)
+    const newQuery = query.setFilter('event', selected.id);
+    updateQuery(newQuery);
   }
 
   render() {
@@ -32,21 +31,21 @@ class NotificationListFilter extends Component {
 
     const defaultOption = {
       label: intl.formatMessage(messages.filter_all),
-      count: _.sumBy(eventFacetVals, val => val.count),
-    }
+      count: _.sumBy(eventFacetVals, (val) => val.count),
+    };
 
     const typeOptions = [defaultOption, ...eventFacetVals];
-    const activeItem = typeOptions.find(item => item.active) || defaultOption;
+    const activeItem = typeOptions.find((item) => item.active) || defaultOption;
 
     return (
       <SortingBar
-        filterButton={(
+        filterButton={
           <SortingBarSelect
             items={typeOptions}
             onSelect={this.onSelect}
             activeItem={activeItem}
           />
-        )}
+        }
       />
     );
   }
@@ -60,5 +59,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(NotificationListFilter);

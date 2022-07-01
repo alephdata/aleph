@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {
-  Callout, Intent, Dialog, MenuDivider, Button,
+  Callout,
+  Intent,
+  Dialog,
+  MenuDivider,
+  Button,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { endpoint } from 'app/api';
 import { showResponseToast } from 'app/toast';
-import { PasswordAuthLogin, PasswordAuthSignup } from 'components/auth/PasswordAuth';
+import {
+  PasswordAuthLogin,
+  PasswordAuthSignup,
+} from 'components/auth/PasswordAuth';
 import {
   loginWithPassword as loginWithPasswordAction,
   loginWithToken as loginWithTokenAction,
@@ -45,7 +52,10 @@ export class AuthenticationDialog extends Component {
   }
 
   onOAuthLogin() {
-    const { nextPath, metadata: { auth } } = this.props;
+    const {
+      nextPath,
+      metadata: { auth },
+    } = this.props;
     if (auth.oauth_uri) {
       const nextPathEnc = encodeURIComponent(nextPath || '/');
       window.location.replace(`/api/2/sessions/oauth?next=${nextPathEnc}`);
@@ -54,11 +64,14 @@ export class AuthenticationDialog extends Component {
 
   onSignup(data) {
     const { intl } = this.props;
-    endpoint.post('/roles/code', data).then(() => {
-      this.setState({ submitted: true });
-    }).catch((e) => {
-      showResponseToast(e.response, intl);
-    });
+    endpoint
+      .post('/roles/code', data)
+      .then(() => {
+        this.setState({ submitted: true });
+      })
+      .catch((e) => {
+        showResponseToast(e.response, intl);
+      });
   }
 
   async onLogin(data) {
@@ -82,9 +95,7 @@ export class AuthenticationDialog extends Component {
   }
 
   render() {
-    const {
-      metadata, intl, isOpen, toggleDialog,
-    } = this.props;
+    const { metadata, intl, isOpen, toggleDialog } = this.props;
     const { auth } = metadata;
     const { submitted, firstSection, secondSection } = this.state;
     const passwordLogin = auth.password_login_uri;
@@ -104,52 +115,70 @@ export class AuthenticationDialog extends Component {
         className="AuthenticationScreen"
         isOpen={isOpen}
         onClose={toggleDialog}
-        title={firstSection === '' ? intl.formatMessage(messages.title) : intl.formatMessage(messages.registration_title)}
+        title={
+          firstSection === ''
+            ? intl.formatMessage(messages.title)
+            : intl.formatMessage(messages.registration_title)
+        }
       >
         <div className="inner">
           <section className={firstSection}>
-            {passwordLogin && <PasswordAuthLogin buttonClassName="signin-button" onSubmit={this.onLogin} />}
             {passwordLogin && (
-            <div className="link-box">
-              <a key="oauth" href="/" onClick={this.onRegisterClick}>
-                <FormattedMessage
-                  id="signup.register.question"
-                  defaultMessage="Don't have account? Register!"
-                />
-              </a>
-            </div>
+              <PasswordAuthLogin
+                buttonClassName="signin-button"
+                onSubmit={this.onLogin}
+              />
+            )}
+            {passwordLogin && (
+              <div className="link-box">
+                <a key="oauth" href="/" onClick={this.onRegisterClick}>
+                  <FormattedMessage
+                    id="signup.register.question"
+                    defaultMessage="Don't have account? Register!"
+                  />
+                </a>
+              </div>
             )}
           </section>
           <section className={secondSection}>
-            {submitted
-              ? (
-                <Callout intent={Intent.SUCCESS} icon="tick">
-                  <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox" /></h5>
+            {submitted ? (
+              <Callout intent={Intent.SUCCESS} icon="tick">
+                <h5>
                   <FormattedMessage
-                    id="signup.inbox.desc"
-                    defaultMessage="We've sent you an email, please follow the link to complete your registration"
+                    id="signup.inbox.title"
+                    defaultMessage="Check your inbox"
                   />
-                </Callout>
-              )
-              : (
-                <span>
-                  <PasswordAuthSignup buttonClassName="signin-button" onSubmit={this.onSignup} />
-                  <div className="link-box">
-                    <a key="oauth" href="/" onClick={this.onSignInClick}>
-                      <FormattedMessage
-                        id="signup.login"
-                        defaultMessage="Already have account? Sign in!"
-                      />
-                    </a>
-                  </div>
-                </span>
-              )}
+                </h5>
+                <FormattedMessage
+                  id="signup.inbox.desc"
+                  defaultMessage="We've sent you an email, please follow the link to complete your registration"
+                />
+              </Callout>
+            ) : (
+              <span>
+                <PasswordAuthSignup
+                  buttonClassName="signin-button"
+                  onSubmit={this.onSignup}
+                />
+                <div className="link-box">
+                  <a key="oauth" href="/" onClick={this.onSignInClick}>
+                    <FormattedMessage
+                      id="signup.login"
+                      defaultMessage="Already have account? Sign in!"
+                    />
+                  </a>
+                </div>
+              </span>
+            )}
           </section>
           {auth.oauth_uri && (
             <>
               <MenuDivider className="menu-divider" />
               <Button icon="log-in" large fill onClick={this.onOAuthLogin}>
-                <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth" />
+                <FormattedMessage
+                  id="login.oauth"
+                  defaultMessage="Sign in via OAuth"
+                />
               </Button>
             </>
           )}
@@ -158,11 +187,12 @@ export class AuthenticationDialog extends Component {
     );
   }
 }
-const mapStateToProps = state => ({ metadata: selectMetadata(state) });
+const mapStateToProps = (state) => ({ metadata: selectMetadata(state) });
 const mapDispatchToProps = {
-  loginWithToken: loginWithTokenAction, loginWithPassword: loginWithPasswordAction,
+  loginWithToken: loginWithTokenAction,
+  loginWithPassword: loginWithPasswordAction,
 };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(AuthenticationDialog);

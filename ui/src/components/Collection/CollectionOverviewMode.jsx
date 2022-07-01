@@ -19,26 +19,33 @@ const messages = defineMessages({
   },
 });
 
-const CollectionOverviewMode = ({ collection, collectionId, intl, isCasefile }) => {
+const CollectionOverviewMode = ({
+  collection,
+  collectionId,
+  intl,
+  isCasefile,
+}) => {
   const emptyComponent = (
-    <ErrorSection
-      icon="database"
-      title={intl.formatMessage(messages.empty)}
-    />
+    <ErrorSection icon="database" title={intl.formatMessage(messages.empty)} />
   );
 
   return (
     <div className={c('CollectionOverviewMode', { casefile: isCasefile })}>
       <div className="CollectionOverviewMode__main">
         {isCasefile && <InvestigationOverview collectionId={collectionId} />}
-        {!isCasefile && <CollectionStatisticsGroup collectionId={collectionId} emptyComponent={emptyComponent} />}
+        {!isCasefile && (
+          <CollectionStatisticsGroup
+            collectionId={collectionId}
+            emptyComponent={emptyComponent}
+          />
+        )}
       </div>
       <div className="CollectionOverviewMode__secondary">
         <CollectionMetadataPanel collection={collection} />
       </div>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps;
@@ -50,5 +57,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(CollectionOverviewMode);

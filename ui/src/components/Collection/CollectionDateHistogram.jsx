@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { collectionSearchQuery } from 'queries';
 import { selectCollection, selectEntitiesResult } from 'selectors';
 import { queryEntities } from 'actions';
@@ -19,11 +19,11 @@ class CollectionDateHistogram extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchDatesIfNeeded()
+    this.fetchDatesIfNeeded();
   }
 
   componentDidUpdate() {
-    this.fetchDatesIfNeeded()
+    this.fetchDatesIfNeeded();
   }
 
   fetchDatesIfNeeded() {
@@ -41,7 +41,7 @@ class CollectionDateHistogram extends React.Component {
       getCollectionLink({
         collection,
         mode: collectionViewIds.SEARCH,
-        search: newQuery.toLocation()
+        search: newQuery.toLocation(),
       })
     );
   }
@@ -87,5 +87,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryEntities }),
+  connect(mapStateToProps, { queryEntities })
 )(CollectionDateHistogram);

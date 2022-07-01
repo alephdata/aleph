@@ -1,11 +1,10 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import DocumentManager from 'components/Document/DocumentManager';
 import { collectionDocumentsQuery } from 'queries';
 import { selectCollection } from 'selectors';
-
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
@@ -13,11 +12,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     collection: selectCollection(state, collectionId),
-    query
+    query,
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(DocumentManager);
+export default compose(withRouter, connect(mapStateToProps))(DocumentManager);

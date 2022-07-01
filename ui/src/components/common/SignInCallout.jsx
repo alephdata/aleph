@@ -4,18 +4,15 @@ import { FormattedMessage } from 'react-intl';
 import { Callout } from '@blueprintjs/core';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
-
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { selectSession, selectMetadata } from 'selectors';
 
 import './SignInCallout.scss';
 
-
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
   session: selectSession(state),
 });
-
 
 export class SignInCallout extends React.Component {
   constructor(props) {
@@ -30,7 +27,9 @@ export class SignInCallout extends React.Component {
   }
 
   onHideCallout() {
-    this.setState(({ isCalloutShown }) => ({ isCalloutShown: !isCalloutShown }));
+    this.setState(({ isCalloutShown }) => ({
+      isCalloutShown: !isCalloutShown,
+    }));
   }
 
   render() {
@@ -68,7 +67,11 @@ export class SignInCallout extends React.Component {
               ),
             }}
           />
-          <Button className="bp3-minimal button-close" icon="cross" onClick={this.onHideCallout} />
+          <Button
+            className="bp3-minimal button-close"
+            icon="cross"
+            onClick={this.onHideCallout}
+          />
         </Callout>
       </>
     );

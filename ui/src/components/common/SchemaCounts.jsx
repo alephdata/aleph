@@ -5,10 +5,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { Count, Schema } from 'components/common';
 import { selectModel } from 'selectors';
-
 
 import './SchemaCounts.scss';
 
@@ -19,10 +18,16 @@ const messages = defineMessages({
   },
 });
 
-
 class SchemaCounts extends React.PureComponent {
   render() {
-    const { activeSchema, visibleCounts, selectableSchemata, showSchemaAdd, intl, onSelect } = this.props;
+    const {
+      activeSchema,
+      visibleCounts,
+      selectableSchemata,
+      showSchemaAdd,
+      intl,
+      onSelect,
+    } = this.props;
     const hasVisibleSchemata = _.size(visibleCounts) > 0;
 
     if (!hasVisibleSchemata && !showSchemaAdd) {
@@ -31,7 +36,7 @@ class SchemaCounts extends React.PureComponent {
 
     return (
       <ButtonGroup vertical minimal className="SchemaCounts">
-        {Object.keys(visibleCounts).map(schema => (
+        {Object.keys(visibleCounts).map((schema) => (
           <Button
             key={schema}
             text={<Schema.Label schema={schema} plural />}
@@ -46,9 +51,11 @@ class SchemaCounts extends React.PureComponent {
         {hasVisibleSchemata && showSchemaAdd && <Divider />}
         {showSchemaAdd && (
           <Schema.Select
-            onSelect={schema => onSelect(schema)}
+            onSelect={(schema) => onSelect(schema)}
             fill
-            optionsFilter={schema => selectableSchemata.indexOf(schema.name) !== -1}
+            optionsFilter={(schema) =>
+              selectableSchemata.indexOf(schema.name) !== -1
+            }
           >
             <Button
               text={intl.formatMessage(messages.addSchemaPlaceholder)}
@@ -75,20 +82,26 @@ const mapStateToProps = (state, ownProps) => {
   const visibleCounts = _.pickBy(schemaCounts, (val, key) => {
     const schema = model.getSchema(key);
     return (!filterSchemata || filterSchemata(schema)) && !schema.hidden;
-  })
+  });
 
-  const selectableSchemata = model.getSchemata()
-    .filter((schema) => (!filterSchemata || filterSchemata(schema)) && !schema.hidden && !(schema in visibleCounts))
+  const selectableSchemata = model
+    .getSchemata()
+    .filter(
+      (schema) =>
+        (!filterSchemata || filterSchemata(schema)) &&
+        !schema.hidden &&
+        !(schema in visibleCounts)
+    )
     .map((schema) => schema.name);
 
   return {
     visibleCounts,
-    selectableSchemata
-  }
+    selectableSchemata,
+  };
 };
 
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(SchemaCounts);

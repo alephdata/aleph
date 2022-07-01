@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Screen from 'components/Screen/Screen';
 import CollectionHeading from 'components/Collection/CollectionHeading';
 import CollectionViews from 'components/Collection/CollectionViews';
@@ -13,7 +13,6 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import { SinglePane } from 'components/common';
 import { selectCollection } from 'selectors';
-
 
 export class CollectionScreen extends Component {
   render() {
@@ -28,10 +27,7 @@ export class CollectionScreen extends Component {
     }
 
     return (
-      <Screen
-        title={collection.label}
-        description={collection.summary}
-      >
+      <Screen title={collection.label} description={collection.summary}>
         <CollectionWrapper collectionId={collectionId} collection={collection}>
           <SinglePane>
             <CollectionHeading collection={collection} />
@@ -59,8 +55,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(CollectionScreen);
+export default compose(withRouter, connect(mapStateToProps))(CollectionScreen);

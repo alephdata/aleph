@@ -12,13 +12,15 @@ import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
 import VideoViewer from 'viewers/VideoViewer';
 import ArticleViewer from 'viewers/ArticleViewer';
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { SectionLoading } from 'components/common';
 import { selectEntityDirectionality } from 'selectors';
 
 import './DocumentViewMode.scss';
 
-const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer'));
+const PdfViewer = lazy(() =>
+  import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer')
+);
 
 export class DocumentViewMode extends React.Component {
   renderContent() {
@@ -31,9 +33,7 @@ export class DocumentViewMode extends React.Component {
 
     if (document.schema.isA('Email')) {
       if (activeMode === 'browse') {
-        return (
-          <FolderViewer document={document} dir={dir} />
-        );
+        return <FolderViewer document={document} dir={dir} />;
       }
       return (
         <EmailViewer document={document} activeMode={activeMode} dir={dir} />
@@ -41,78 +41,49 @@ export class DocumentViewMode extends React.Component {
     }
     if (document.schema.isA('Image')) {
       if (activeMode === 'text') {
-        return (
-          <TextViewer document={document} dir={dir} />
-        );
+        return <TextViewer document={document} dir={dir} />;
       }
       return (
-        <ImageViewer
-          document={document}
-          activeMode={activeMode}
-          dir={dir}
-        />
+        <ImageViewer document={document} activeMode={activeMode} dir={dir} />
       );
     }
     if (document.schema.isA('Audio')) {
-      return (
-        <AudioViewer document={document} dir={dir} />
-      );
+      return <AudioViewer document={document} dir={dir} />;
     }
 
     if (document.schema.isA('Video')) {
-      return (
-        <VideoViewer document={document} dir={dir} />
-      );
+      return <VideoViewer document={document} dir={dir} />;
     }
 
     if (document.schema.isA('Table')) {
-      return (
-        <TableViewer document={document} dir={dir} />
-      );
+      return <TableViewer document={document} dir={dir} />;
     }
     if (document.schema.isA('PlainText')) {
-      return (
-        <TextViewer document={document} dir={dir} />
-      );
+      return <TextViewer document={document} dir={dir} />;
     }
     if (document.schema.isA('HyperText')) {
-      return (
-        <HtmlViewer document={document} dir={dir} />
-      );
+      return <HtmlViewer document={document} dir={dir} />;
     }
     if (document.schema.isA('Pages')) {
       return (
         <Suspense fallback={<SectionLoading />}>
-          <PdfViewer
-            document={document}
-            activeMode={activeMode}
-            dir={dir}
-          />
+          <PdfViewer document={document} activeMode={activeMode} dir={dir} />
         </Suspense>
       );
     }
     if (document.schema.isA('Folder')) {
-      return (
-        <FolderViewer document={document} dir={dir} />
-      );
+      return <FolderViewer document={document} dir={dir} />;
     }
     if (document.schema.isA('Article')) {
-      return (
-        <ArticleViewer document={document} dir={dir} />
-      );
+      return <ArticleViewer document={document} dir={dir} />;
     }
     return <DefaultViewer document={document} dir={dir} />;
   }
 
   render() {
-    return (
-      <div className="DocumentViewMode">
-        {this.renderContent()}
-      </div>
-    );
+    return <div className="DocumentViewMode">{this.renderContent()}</div>;
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const { document } = ownProps;
@@ -121,7 +92,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(DocumentViewMode);
+export default compose(withRouter, connect(mapStateToProps))(DocumentViewMode);

@@ -4,11 +4,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { forceMutate, ingestDocument } from 'actions';
 import { showErrorToast } from 'app/toast';
 import FormDialog from 'dialogs/common/FormDialog';
-
 
 const messages = defineMessages({
   title: {
@@ -46,9 +45,7 @@ export class DocumentFolderDialog extends Component {
   }
 
   async onSubmit() {
-    const {
-      intl, collection, parent, navigate,
-    } = this.props;
+    const { intl, collection, parent, navigate } = this.props;
     const { title } = this.state;
     this.setState({ blocking: true });
     try {
@@ -113,7 +110,7 @@ export class DocumentFolderDialog extends Component {
             />
           </div>
         </div>
-      </FormDialog >
+      </FormDialog>
     );
   }
 }
@@ -121,5 +118,5 @@ const mapDispatchToProps = { forceMutate, ingestDocument };
 export default compose(
   withRouter,
   connect(null, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(DocumentFolderDialog);

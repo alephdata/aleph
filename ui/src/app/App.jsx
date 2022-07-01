@@ -24,14 +24,13 @@ import './App.scss';
 // have blueprint handle focus properly
 FocusStyleManager.onlyShowFocusOnTabs();
 
-
 // Configure endpoint to add session bearer token.
 endpoint.interceptors.request.use((config) => {
   const state = store.getState();
   const { session } = state;
   const locale = selectLocale(state);
   document.documentElement.lang = locale;
-  document.documentElement.dir = isLangRtl(locale) ? "rtl" : "ltr";
+  document.documentElement.dir = isLangRtl(locale) ? 'rtl' : 'ltr';
   if (session.loggedIn) {
     Object.assign(config.headers.common, {
       Authorization: `Token ${session.token}`,
@@ -52,32 +51,32 @@ endpoint.interceptors.request.use((config) => {
 
 // Upon 401 Unauthorised (e.g. session has expired), reset the whole app.
 endpoint.interceptors.response.use(
-  response => response,
+  (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       store.dispatch(logout());
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 // Use a response's error message when available.
 endpoint.interceptors.response.use(
-  response => response,
+  (response) => response,
   (error) => {
     if (
-      error.response
-      && inRange(error.response.status, 400, 500)
-      && error.response.data && error.response.data.message
+      error.response &&
+      inRange(error.response.status, 400, 500) &&
+      error.response.data &&
+      error.response.data.message
     ) {
       Object.assign(error, {
         message: error.response.data.message,
       });
     }
     return Promise.reject(error);
-  },
+  }
 );
-
 
 function App() {
   // extends blueprint icon renderer to render icons from the ftm iconRegistry

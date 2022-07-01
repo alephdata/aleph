@@ -3,16 +3,26 @@ import { Numeric, Skeleton } from 'components/common';
 
 import './AnimatedCount.scss';
 
-const AnimatedCount = ({ count, isPending, label}) => {
+const AnimatedCount = ({ count, isPending, label }) => {
   if (!isPending && count === undefined) {
     return null;
   }
   return (
     <div className="AnimatedCount">
-      {isPending && <Skeleton.Text className="AnimatedCount__count" type="span" length="3" />}
-      {!isPending && <span className="AnimatedCount__count"><Numeric num={count} abbr animate /></span>}
+      {isPending && (
+        <Skeleton.Text
+          className="AnimatedCount__count"
+          type="span"
+          length="3"
+        />
+      )}
+      {!isPending && (
+        <span className="AnimatedCount__count">
+          <Numeric num={count} abbr animate />
+        </span>
+      )}
       <p className="AnimatedCount__label">{label}</p>
     </div>
   );
-}
+};
 export default AnimatedCount;

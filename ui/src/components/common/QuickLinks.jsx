@@ -1,18 +1,19 @@
 import React from 'react';
 import { Skeleton } from 'components/common';
 
-
-import './QuickLinks.scss'
+import './QuickLinks.scss';
 
 class QuickLinks extends React.Component {
   renderSkeleton() {
-    return (
-      [...Array(4).keys()].map(key => (
-        <div className="QuickLinks__item" key={key}>
-          <Skeleton.Text type="div" length="250" className="QuickLinks__item__content" />
-        </div>
-      ))
-    );
+    return [...Array(4).keys()].map((key) => (
+      <div className="QuickLinks__item" key={key}>
+        <Skeleton.Text
+          type="div"
+          length="250"
+          className="QuickLinks__item__content"
+        />
+      </div>
+    ));
   }
 
   render() {
@@ -23,7 +24,7 @@ class QuickLinks extends React.Component {
         {isPending && this.renderSkeleton()}
         {!isPending && children}
       </div>
-    )
+    );
   }
 }
 

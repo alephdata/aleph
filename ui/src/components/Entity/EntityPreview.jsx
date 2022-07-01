@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Drawer, Position } from '@blueprintjs/core';
 import { isLangRtl } from '@alephdata/react-ftm';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityToolbar from 'components/Entity/EntityToolbar';
@@ -14,11 +14,10 @@ import { SectionLoading, ErrorSection } from 'components/common';
 import { selectEntity, selectEntityView, selectLocale } from 'selectors';
 import queryString from 'query-string';
 import togglePreview from 'util/togglePreview';
-import { setRecentlyViewedItem} from 'app/storage';
+import { setRecentlyViewedItem } from 'app/storage';
 
 import 'components/common/ItemOverview.scss';
 import './EntityPreview.scss';
-
 
 export class EntityPreview extends React.Component {
   constructor(props) {
@@ -28,12 +27,12 @@ export class EntityPreview extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.onUnmount);
+    window.addEventListener('beforeunload', this.onUnmount);
   }
 
   componentWillUnmount() {
     this.onUnmount();
-    window.removeEventListener("beforeunload", this.onUnmount);
+    window.removeEventListener('beforeunload', this.onUnmount);
   }
 
   onUnmount() {
@@ -41,7 +40,7 @@ export class EntityPreview extends React.Component {
   }
 
   onClose(event) {
-    const { navigate, location } = this.props
+    const { navigate, location } = this.props;
     this.onUnmount();
     togglePreview(navigate, location, null);
   }
@@ -91,9 +90,7 @@ export class EntityPreview extends React.Component {
           // canOutsideClickClose={false}
           portalClassName="EntityPreview__overlay-container"
         >
-          <div className="EntityPreview__content">
-            {this.renderContext()}
-          </div>
+          <div className="EntityPreview__content">{this.renderContext()}</div>
         </Drawer>
       </EntityContextLoader>
     );
@@ -116,7 +113,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(EntityPreview);
+export default compose(withRouter, connect(mapStateToProps))(EntityPreview);

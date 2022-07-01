@@ -34,7 +34,6 @@ import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
 
 import './Router.scss';
 
-
 class Router extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
@@ -57,7 +56,9 @@ class Router extends Component {
 
     const Loading = (
       <div className="RouterLoading">
-        <div className="spinner"><Spinner className="bp3-large" /></div>
+        <div className="spinner">
+          <Spinner className="bp3-large" />
+        </div>
       </div>
     );
     if (!isLoaded) {
@@ -74,19 +75,65 @@ class Router extends Component {
             <Route path="pages/:page" element={<PagesScreen />} />
             <Route path="activate/:code" element={<ActivateScreen />} />
             <Route path="entities/:entityId" element={<EntityScreen />} />
-            <Route path="text/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
-            <Route path="tabular/:documentId/:sheet" render={() => <Navigate to="/entities/:documentId" replace />} />
-            <Route path="documents/:documentId" render={() => <Navigate to="/entities/:documentId" replace />} />
+            <Route
+              path="text/:documentId"
+              render={() => <Navigate to="/entities/:documentId" replace />}
+            />
+            <Route
+              path="tabular/:documentId/:sheet"
+              render={() => <Navigate to="/entities/:documentId" replace />}
+            />
+            <Route
+              path="documents/:documentId"
+              render={() => <Navigate to="/entities/:documentId" replace />}
+            />
             <Route path="datasets" element={<DatasetIndexScreen />} />
-            <Route path="sources" render={() => <Navigate to="/datasets" replace />} />
-            <Route path="investigations" element={<InvestigationIndexScreen />} />
-            <Route path="cases" render={() => <Navigate to="/investigations" replace />} />
-            <Route path="collections/:collectionId/documents" render={() => <Navigate to="/datasets/:collectionId" replace />} />
-            <Route path="datasets/:collectionId" element={<CollectionScreen />} />
-            <Route path="investigations/:collectionId" element={<InvestigationScreen />} />
-            <Route path="collections/:collectionId" render={() => <Navigate to="/datasets/:collectionId" replace />} />
-            <Route path="collections/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
-            <Route path="datasets/:collectionId/xref/:otherId" render={() => <Navigate to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref" replace />} />
+            <Route
+              path="sources"
+              render={() => <Navigate to="/datasets" replace />}
+            />
+            <Route
+              path="investigations"
+              element={<InvestigationIndexScreen />}
+            />
+            <Route
+              path="cases"
+              render={() => <Navigate to="/investigations" replace />}
+            />
+            <Route
+              path="collections/:collectionId/documents"
+              render={() => <Navigate to="/datasets/:collectionId" replace />}
+            />
+            <Route
+              path="datasets/:collectionId"
+              element={<CollectionScreen />}
+            />
+            <Route
+              path="investigations/:collectionId"
+              element={<InvestigationScreen />}
+            />
+            <Route
+              path="collections/:collectionId"
+              render={() => <Navigate to="/datasets/:collectionId" replace />}
+            />
+            <Route
+              path="collections/:collectionId/xref/:otherId"
+              render={() => (
+                <Navigate
+                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
+                  replace
+                />
+              )}
+            />
+            <Route
+              path="datasets/:collectionId/xref/:otherId"
+              render={() => (
+                <Navigate
+                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
+                  replace
+                />
+              )}
+            />
             <Route path="profiles/:profileId" element={<ProfileScreen />} />
             <Route path="diagrams/:entitySetId" element={<DiagramScreen />} />
             <Route path="diagrams" element={<EntitySetIndexScreen />} />
@@ -111,10 +158,9 @@ class Router extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
   session: selectSession(state),
 });
-
 
 export default connect(mapStateToProps, { fetchMetadata })(Router);

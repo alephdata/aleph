@@ -5,16 +5,20 @@ import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { selectSimilarResult } from 'selectors';
 import {
-  QueryInfiniteLoad, JudgementButtons, Score, Collection, EntityDecisionHotkeys, EntityDecisionRow,
+  QueryInfiniteLoad,
+  JudgementButtons,
+  Score,
+  Collection,
+  EntityDecisionHotkeys,
+  EntityDecisionRow,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { profileSimilarQuery } from 'queries';
 import { querySimilar, updateEntitySetItemMutate } from 'actions';
 import { showWarningToast } from 'app/toast';
-
 
 class ProfileItemsMode extends Component {
   constructor(props) {
@@ -31,11 +35,14 @@ class ProfileItemsMode extends Component {
         entityId: obj.entity.id,
       });
       if (item.data.entityset_id && profile.id !== item.data.entityset_id) {
-        navigate({
-          pathname: `/profiles/${item.data.entityset_id}`,
-          search: location.search,
-          hash: location.hash,
-        }, { replace: true });
+        navigate(
+          {
+            pathname: `/profiles/${item.data.entityset_id}`,
+            search: location.search,
+            hash: location.hash,
+          },
+          { replace: true }
+        );
       }
     } catch (e) {
       showWarningToast(e.message);
@@ -45,12 +52,18 @@ class ProfileItemsMode extends Component {
   renderRow(item, index) {
     const { selectedIndex } = this.props;
     return (
-      <EntityDecisionRow key={item.id || item.entity.id} selected={index === selectedIndex}>
+      <EntityDecisionRow
+        key={item.id || item.entity.id}
+        selected={index === selectedIndex}
+      >
         <td className="numeric narrow">
           <JudgementButtons obj={item} onChange={this.onDecide} />
         </td>
         <td className="entity bordered">
-          <EntityCompare entity={item.entity} other={this.props.profile.entity} />
+          <EntityCompare
+            entity={item.entity}
+            other={this.props.profile.entity}
+          />
         </td>
         <td className="numeric narrow">
           <Score score={item.score} />
@@ -77,7 +90,7 @@ class ProfileItemsMode extends Component {
     return (
       <div className="ProfileSimilarMode">
         <EntityDecisionHotkeys result={result} onDecide={this.onDecide}>
-          <table className={c("data-table", { 'pending': result.isPending })}>
+          <table className={c('data-table', { pending: result.isPending })}>
             <thead>
               <tr>
                 <th className="numeric narrow" />
@@ -91,10 +104,7 @@ class ProfileItemsMode extends Component {
                 </th>
                 <th className="numeric narrow">
                   <span className="value">
-                    <FormattedMessage
-                      id="xref.score"
-                      defaultMessage="Score"
-                    />
+                    <FormattedMessage id="xref.score" defaultMessage="Score" />
                   </span>
                 </th>
                 <th className="collection">
@@ -130,10 +140,13 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query,
     result: selectSimilarResult(state, query),
-    selectedIndex: +parsedHash.selectedIndex
+    selectedIndex: +parsedHash.selectedIndex,
   };
 };
 
-ProfileItemsMode = connect(mapStateToProps, { querySimilar, updateEntitySetItemMutate })(ProfileItemsMode);
+ProfileItemsMode = connect(mapStateToProps, {
+  querySimilar,
+  updateEntitySetItemMutate,
+})(ProfileItemsMode);
 ProfileItemsMode = withRouter(ProfileItemsMode);
 export default ProfileItemsMode;

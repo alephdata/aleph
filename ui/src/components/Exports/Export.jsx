@@ -1,12 +1,12 @@
-import React, { PureComponent } from "react";
-import { selectUnit } from "@formatjs/intl-utils";
-import { FormattedRelativeTime } from "react-intl";
+import React, { PureComponent } from 'react';
+import { selectUnit } from '@formatjs/intl-utils';
+import { FormattedRelativeTime } from 'react-intl';
 import c from 'classnames';
 
-import { Skeleton, ExportLink, FileSize } from "src/components/common";
-import convertUTCDateToLocalDate from "util/convertUTCDateToLocalDate";
+import { Skeleton, ExportLink, FileSize } from 'src/components/common';
+import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
 
-import "./Export.scss";
+import './Export.scss';
 
 class Export extends PureComponent {
   renderSkeleton = () => (
@@ -38,7 +38,7 @@ class Export extends PureComponent {
     const expiryDate = convertUTCDateToLocalDate(new Date(expiresAt));
     const { value, unit } = selectUnit(expiryDate);
     return (
-      <tr key={id} className={c("Export nowrap", status)}>
+      <tr key={id} className={c('Export nowrap', status)}>
         <td className="export-label wide">
           <ExportLink export_={export_} icon="package" />
         </td>

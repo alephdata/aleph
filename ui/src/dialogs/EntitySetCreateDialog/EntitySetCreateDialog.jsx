@@ -3,7 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Query from 'app/Query';
 import { Collection, EntitySet, FileImport } from 'components/common';
 import CreateInvestigationDialog from 'dialogs/CreateInvestigationDialog/CreateInvestigationDialog';
@@ -11,7 +11,6 @@ import FormDialog from 'dialogs/common/FormDialog';
 import { createEntitySetMutate as createEntitySet } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
 import getEntitySetLink from 'util/getEntitySetLink';
-
 
 const messages = defineMessages({
   save: {
@@ -60,7 +59,8 @@ const messages = defineMessages({
   },
   diagram_import_placeholder: {
     id: 'diagram.import.placeholder',
-    defaultMessage: 'Drop a .ftm or .vis file here or click to import an existing diagram',
+    defaultMessage:
+      'Drop a .ftm or .vis file here or click to import an existing diagram',
   },
   timeline_title: {
     id: 'timeline.create.title',
@@ -79,7 +79,6 @@ const messages = defineMessages({
     defaultMessage: 'Your timeline has been created successfully.',
   },
 });
-
 
 class EntitySetCreateDialog extends Component {
   constructor(props) {
@@ -102,7 +101,8 @@ class EntitySetCreateDialog extends Component {
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onChangeCollection = this.onChangeCollection.bind(this);
     this.onImport = this.onImport.bind(this);
-    this.toggleCollectionCreateDialog = this.toggleCollectionCreateDialog.bind(this);
+    this.toggleCollectionCreateDialog =
+      this.toggleCollectionCreateDialog.bind(this);
   }
 
   componentWillUnmount() {
@@ -143,9 +143,7 @@ class EntitySetCreateDialog extends Component {
         pathname: getEntitySetLink(response.data),
       });
 
-      showSuccessToast(
-        intl.formatMessage(messages[`${type}_success`]),
-      );
+      showSuccessToast(intl.formatMessage(messages[`${type}_success`]));
     } catch (e) {
       showWarningToast(e.message);
     }
@@ -169,7 +167,12 @@ class EntitySetCreateDialog extends Component {
     // suppors legacy layout.entities from .vis files
     const { entities, selection, ...rest } = parsed.layout;
 
-    this.setState({ entities: entities || parsed.entities, label, layout: rest, importedFileName: fileName });
+    this.setState({
+      entities: entities || parsed.entities,
+      label,
+      layout: rest,
+      importedFileName: fileName,
+    });
   }
 
   getCollectionOptionsQuery() {
@@ -179,8 +182,12 @@ class EntitySetCreateDialog extends Component {
       'filter:writeable': true,
       'filter:casefile': true,
     };
-    return Query.fromLocation('collections', location, context, 'collections')
-      .sortBy('label', 'asc');
+    return Query.fromLocation(
+      'collections',
+      location,
+      context,
+      'collections'
+    ).sortBy('label', 'asc');
   }
 
   toggleCollectionCreateDialog(createdCollection) {
@@ -196,16 +203,33 @@ class EntitySetCreateDialog extends Component {
   }
 
   render() {
-    const { canChangeCollection, entitySet, importEnabled, intl, isOpen, toggleDialog } = this.props;
-    const { collection, collectionCreateIsOpen, importedFileName, label, summary, processing, layout } = this.state;
+    const {
+      canChangeCollection,
+      entitySet,
+      importEnabled,
+      intl,
+      isOpen,
+      toggleDialog,
+    } = this.props;
+    const {
+      collection,
+      collectionCreateIsOpen,
+      importedFileName,
+      label,
+      summary,
+      processing,
+      layout,
+    } = this.state;
     const { type } = entitySet;
     const disabled = processing || !this.checkValid();
 
-    const showTextFields = (!importEnabled || (importEnabled && layout));
+    const showTextFields = !importEnabled || (importEnabled && layout);
     const showCollectionField = canChangeCollection && showTextFields;
     const canImport = importEnabled && type === 'diagram';
 
-    const titleKey = canImport ? messages.diagram_import_title : messages[`${type}_title`];
+    const titleKey = canImport
+      ? messages.diagram_import_title
+      : messages[`${type}_title`];
 
     return (
       <FormDialog
@@ -221,7 +245,9 @@ class EntitySetCreateDialog extends Component {
           {canImport && (
             <FileImport
               accept={['.ftm', '.vis']}
-              placeholder={intl.formatMessage(messages.diagram_import_placeholder)}
+              placeholder={intl.formatMessage(
+                messages.diagram_import_placeholder
+              )}
               onImport={this.onImport}
               importedFile={importedFileName}
             />
@@ -230,14 +256,19 @@ class EntitySetCreateDialog extends Component {
             <>
               <div className="bp3-form-group">
                 <label className="bp3-label" htmlFor="label">
-                  <FormattedMessage id="entityset.choose.name" defaultMessage="Title" />
+                  <FormattedMessage
+                    id="entityset.choose.name"
+                    defaultMessage="Title"
+                  />
                   <div className="bp3-input-group bp3-fill">
                     <input
                       id="label"
                       type="text"
                       className="bp3-input"
                       autoComplete="off"
-                      placeholder={intl.formatMessage(messages[`${type}_label_placeholder`])}
+                      placeholder={intl.formatMessage(
+                        messages[`${type}_label_placeholder`]
+                      )}
                       onChange={this.onChangeLabel}
                       value={label}
                     />
@@ -254,7 +285,9 @@ class EntitySetCreateDialog extends Component {
                     <textarea
                       id="summary"
                       className="bp3-input"
-                      placeholder={intl.formatMessage(messages[`${type}_summary_placeholder`])}
+                      placeholder={intl.formatMessage(
+                        messages[`${type}_summary_placeholder`]
+                      )}
                       onChange={this.onChangeSummary}
                       value={summary}
                       rows={5}
@@ -277,27 +310,27 @@ class EntitySetCreateDialog extends Component {
                     onSelect={this.onChangeCollection}
                     query={this.getCollectionOptionsQuery()}
                     buttonProps={{
-                      label: intl.formatMessage(messages.collection_select_placeholder)
+                      label: intl.formatMessage(
+                        messages.collection_select_placeholder
+                      ),
                     }}
                   />
                   <div className="bp3-form-helper-text">
                     <FormattedMessage
-                      id='entityset.create.collection.new'
-                      defaultMessage={
-                        `Don't see the investigation you're looking for? {link}`
-                      }
+                      id="entityset.create.collection.new"
+                      defaultMessage={`Don't see the investigation you're looking for? {link}`}
                       values={{
                         link: (
                           /* eslint-disable */
-                          <a onClick={() => this.toggleCollectionCreateDialog()}>
+                          <a
+                            onClick={() => this.toggleCollectionCreateDialog()}
+                          >
                             <FormattedMessage
-                              id='entityset.create.collection.new_link'
-                              defaultMessage={
-                                `Create a new investigation`
-                              }
+                              id="entityset.create.collection.new_link"
+                              defaultMessage={`Create a new investigation`}
                             />
                           </a>
-                        )
+                        ),
                       }}
                     />
                   </div>
@@ -325,7 +358,6 @@ class EntitySetCreateDialog extends Component {
     );
   }
 }
-
 
 EntitySetCreateDialog = injectIntl(EntitySetCreateDialog);
 EntitySetCreateDialog = withRouter(EntitySetCreateDialog);

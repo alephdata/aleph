@@ -1,17 +1,21 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .Timeline {
   &__date-container {
     z-index: 10;
-
 
     &.fixed {
       @media screen and (min-width: $aleph-screen-sm-max-width) {
         position: fixed;
         top: $aleph-content-padding;
         width: inherit;
-        @include rtlSupportInvertedProp(padding, right, $aleph-content-padding !important, 0);
+        @include rtlSupportInvertedProp(
+          padding,
+          right,
+          $aleph-content-padding !important,
+          0
+        );
       }
     }
 
@@ -25,7 +29,7 @@
   }
 
   &__content.collapsed {
-    margin-top: $aleph-grid-size*1.5;
+    margin-top: $aleph-grid-size * 1.5;
   }
 
   .DateFacet {

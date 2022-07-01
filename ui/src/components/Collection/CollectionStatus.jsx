@@ -46,7 +46,11 @@ class CollectionStatus extends Component {
           />
         </h4>
         <div className="progress-area">
-          <ProgressBar animate intent={Intent.PRIMARY} value={status.progress} />
+          <ProgressBar
+            animate
+            intent={Intent.PRIMARY}
+            value={status.progress}
+          />
           {showCancel && (
             <Tooltip content={intl.formatMessage(messages.cancel_button)}>
               <Button onClick={this.onCancel} icon="delete" minimal />

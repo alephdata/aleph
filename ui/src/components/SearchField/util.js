@@ -1,7 +1,15 @@
 import { defineMessages } from 'react-intl';
 
 export const GROUP_FIELDS = [
-  'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes'
+  'dates',
+  'schema',
+  'countries',
+  'languages',
+  'emails',
+  'phones',
+  'names',
+  'addresses',
+  'mimetypes',
 ];
 
 const messages = defineMessages({
@@ -137,6 +145,4 @@ const configs = {
   },
 };
 
-export const getGroupField = (key) => (
-  configs[key]
-);
+export const getGroupField = (key) => configs[key];

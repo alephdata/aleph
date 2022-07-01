@@ -2,12 +2,11 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { collectionXrefFacetsQuery } from 'queries';
 import { fetchCollection, queryCollectionXref, forceMutate } from 'actions';
 import { selectCollection, selectCollectionXrefResult } from 'selectors';
 import timestamp from 'util/timestamp';
-
 
 class CollectionContextLoader extends PureComponent {
   constructor(props) {
@@ -49,7 +48,7 @@ class CollectionContextLoader extends PureComponent {
     clearTimeout(this.state.timeout);
     const staleDuration = status.active ? 3000 : 30000;
     const age = timestamp() - collection.loadedAt;
-    const shouldRefresh = (age > staleDuration) && !collection.isPending;
+    const shouldRefresh = age > staleDuration && !collection.isPending;
     if (shouldRefresh) {
       // this.props.forceMutate();
       this.props.fetchCollection(collection);
@@ -62,7 +61,6 @@ class CollectionContextLoader extends PureComponent {
     return this.props.children;
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const { location, collectionId } = ownProps;
@@ -77,10 +75,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   forceMutate,
   fetchCollection,
-  queryCollectionXref
+  queryCollectionXref,
 };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps)
 )(CollectionContextLoader);

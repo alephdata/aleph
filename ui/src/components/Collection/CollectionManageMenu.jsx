@@ -9,7 +9,6 @@ import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDel
 import CollectionReingestAlert from './CollectionReingestAlert';
 import CollectionReindexAlert from './CollectionReindexAlert';
 
-
 const messages = defineMessages({
   access: {
     id: 'collection.info.access',
@@ -37,7 +36,6 @@ const messages = defineMessages({
   },
 });
 
-
 class CollectionManageMenu extends React.Component {
   constructor(props) {
     super(props);
@@ -55,39 +53,40 @@ class CollectionManageMenu extends React.Component {
     if (!collection?.writeable) {
       return null;
     }
-    const deleteMessage = messages[collection?.casefile ? 'delete_casefile' : 'delete_dataset'];
+    const deleteMessage =
+      messages[collection?.casefile ? 'delete_casefile' : 'delete_dataset'];
     return (
       <>
         <Popover
-          placement='bottom-end'
+          placement="bottom-end"
           content={
             <Menu>
               <MenuItem
-                key={"edit"}
+                key={'edit'}
                 onClick={() => this.toggleDialog('isEditOpen')}
                 text={intl.formatMessage(messages.edit)}
                 icon="cog"
               />
               <MenuItem
-                key={"access"}
+                key={'access'}
                 onClick={() => this.toggleDialog('isAccessOpen')}
                 text={intl.formatMessage(messages.access)}
                 icon="key"
               />
               <MenuItem
-                key={"reingest"}
+                key={'reingest'}
                 onClick={() => this.toggleDialog('isReingestOpen')}
                 text={intl.formatMessage(messages.reingest)}
                 icon="automatic-updates"
               />
               <MenuItem
-                key={"reindex"}
+                key={'reindex'}
                 onClick={() => this.toggleDialog('isReindexOpen')}
                 text={intl.formatMessage(messages.reindex)}
                 icon="search-template"
               />
               <MenuItem
-                key={"delete"}
+                key={'delete'}
                 onClick={() => this.toggleDialog('isDeleteOpen')}
                 text={intl.formatMessage(deleteMessage)}
                 intent={Intent.DANGER}

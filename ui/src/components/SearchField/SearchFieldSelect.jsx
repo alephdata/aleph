@@ -10,7 +10,7 @@ import SearchField from 'components/SearchField/SearchField';
 import { SelectWrapper } from 'components/common';
 import { selectModel } from 'selectors';
 
-import './SearchFieldSelect.scss'
+import './SearchFieldSelect.scss';
 
 class SearchFieldSelect extends PureComponent {
   constructor(props) {
@@ -22,7 +22,7 @@ class SearchFieldSelect extends PureComponent {
 
   itemPredicate = (query, item) => {
     return this.getItemLabel(item).toLowerCase().includes(query.toLowerCase());
-  }
+  };
 
   itemRenderer = (item, { modifiers, handleClick }) => {
     if (!modifiers.matchesPredicate) {
@@ -41,34 +41,48 @@ class SearchFieldSelect extends PureComponent {
         key={item.name}
       />
     );
-  }
+  };
 
   getItemLabel(item) {
-    return item.isProperty ? item.label : this.props.intl.formatMessage(item.label, { count: 0 })
+    return item.isProperty
+      ? item.label
+      : this.props.intl.formatMessage(item.label, { count: 0 });
   }
 
   isSelected(item) {
-    return this.props.selected.find(({ name }) => name === item.name)
+    return this.props.selected.find(({ name }) => name === item.name);
   }
 
   itemListRenderer = ({ items, itemsParentRef, renderItem }) => {
     const { properties, groups, onReset } = this.props;
-    const [selectedGroups, availableGroups] = _.partition(groups, this.isSelected);
-    const [selectedProps, availableProps] = _.partition(properties, this.isSelected);
+    const [selectedGroups, availableGroups] = _.partition(
+      groups,
+      this.isSelected
+    );
+    const [selectedProps, availableProps] = _.partition(
+      properties,
+      this.isSelected
+    );
 
     return (
       <>
         <Menu ulRef={itemsParentRef}>
           <li className="bp3-menu-header">
             <h6 className="bp3-heading">
-              <FormattedMessage id="search.config.groups" defaultMessage="Property groups" />
+              <FormattedMessage
+                id="search.config.groups"
+                defaultMessage="Property groups"
+              />
             </h6>
           </li>
           {selectedGroups.map(renderItem)}
           {availableGroups.map(renderItem)}
           <li className="bp3-menu-header">
             <h6 className="bp3-heading">
-              <FormattedMessage id="search.config.properties" defaultMessage="Properties" />
+              <FormattedMessage
+                id="search.config.properties"
+                defaultMessage="Properties"
+              />
             </h6>
           </li>
           {selectedProps.map((...props) => renderItem(...props, true))}
@@ -83,15 +97,24 @@ class SearchFieldSelect extends PureComponent {
             className="SearchFieldSelect__reset"
             onClick={onReset}
           >
-            <FormattedMessage id="search.config.reset" defaultMessage="Reset to default" />
+            <FormattedMessage
+              id="search.config.reset"
+              defaultMessage="Reset to default"
+            />
           </Button>
         )}
       </>
     );
-  }
+  };
 
   render() {
-    const { children, onSelect, properties, groups, inputProps = {} } = this.props;
+    const {
+      children,
+      onSelect,
+      properties,
+      groups,
+      inputProps = {},
+    } = this.props;
 
     return (
       <SelectWrapper
@@ -116,18 +139,23 @@ const mapStateToProps = (state, ownProps) => {
   const model = selectModel(state);
   const { filterProps } = ownProps;
 
-  const properties = model.getProperties()
-    .filter(prop => !prop.stub && !prop.hidden && (!filterProps || filterProps(prop)))
-    .sort((a, b) => a.label > b.label ? 1 : -1)
+  const properties = model
+    .getProperties()
+    .filter(
+      (prop) =>
+        !prop.stub && !prop.hidden && (!filterProps || filterProps(prop))
+    )
+    .sort((a, b) => (a.label > b.label ? 1 : -1));
 
   return {
     groups: GROUP_FIELDS.map(getGroupField),
-    properties: _.uniqBy(properties, 'name')
-      .map(prop => ({ name: prop.name, label: prop.label, type: prop.type.name, isProperty: true }))
+    properties: _.uniqBy(properties, 'name').map((prop) => ({
+      name: prop.name,
+      label: prop.label,
+      type: prop.type.name,
+      isProperty: true,
+    })),
   };
 };
 
-export default compose(
-  connect(mapStateToProps),
-  injectIntl,
-)(SearchFieldSelect);
+export default compose(connect(mapStateToProps), injectIntl)(SearchFieldSelect);

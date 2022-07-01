@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, Collapse, FormGroup, Icon, MenuItem } from '@blueprintjs/core';
+import {
+  Button,
+  Card,
+  Collapse,
+  FormGroup,
+  Icon,
+  MenuItem,
+} from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { MultiSelect } from '@blueprintjs/select';
 import SelectWrapper from 'components/common/SelectWrapper';
@@ -29,7 +36,8 @@ const messages = defineMessages({
   },
   entityAssignHelpText: {
     id: 'mapping.entityAssign.helpText',
-    defaultMessage: 'You must create an object of type "{range}" to be the {property}',
+    defaultMessage:
+      'You must create an object of type "{range}" to be the {property}',
   },
   moreToggleText: {
     id: 'mapping.keyAssign.additionalHelpToggle.more',
@@ -59,7 +67,6 @@ const entityItemRenderer = (item, { handleClick }) => (
   />
 );
 
-
 export class MappingKeyAssignItem extends Component {
   constructor(props) {
     super(props);
@@ -72,13 +79,14 @@ export class MappingKeyAssignItem extends Component {
   }
 
   toggleKeyExplanation() {
-    this.setState(({ keyExplanationVisible }) => (
-      { keyExplanationVisible: !keyExplanationVisible }
-    ));
+    this.setState(({ keyExplanationVisible }) => ({
+      keyExplanationVisible: !keyExplanationVisible,
+    }));
   }
 
   renderKeySelect({ id, keys }) {
-    const { columnLabels, fullMappingsList, onKeyAdd, onKeyRemove, intl } = this.props;
+    const { columnLabels, fullMappingsList, onKeyAdd, onKeyRemove, intl } =
+      this.props;
     const { keyExplanationVisible } = this.state;
 
     const allKeys = fullMappingsList.getMappingKeys(id);
@@ -88,7 +96,7 @@ export class MappingKeyAssignItem extends Component {
 
     return (
       <FormGroup
-        helperText={(
+        helperText={
           <div className="MappingKeyAssign__item__keyHelp">
             <div className="MappingKeyAssign__item__keyHelp__main">
               <FormattedMessage
@@ -96,14 +104,15 @@ export class MappingKeyAssignItem extends Component {
                 defaultMessage="Specify which columns from the source data will be used to identify unique entities."
               />
             </div>
-            <Collapse isOpen={keyExplanationVisible} className="MappingKeyAssign__item__keyHelp__additional">
+            <Collapse
+              isOpen={keyExplanationVisible}
+              className="MappingKeyAssign__item__keyHelp__additional"
+            >
               <FormattedMessage
                 id="mapping.keyAssign.additionalHelpText"
-                defaultMessage={
-                  `The best keys are columns from your data that contain id numbers, phone numbers, email addresses,
+                defaultMessage={`The best keys are columns from your data that contain id numbers, phone numbers, email addresses,
                   or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow
-                  Aleph to generate unique entities correctly from your data.`
-                }
+                  Aleph to generate unique entities correctly from your data.`}
               />
             </Collapse>
             <Button
@@ -119,29 +128,37 @@ export class MappingKeyAssignItem extends Component {
               onClick={this.toggleKeyExplanation}
             />
           </div>
-        )}
+        }
       >
         <MultiSelect
           id="key-select"
           items={items}
           itemRenderer={keySelectItemRenderer}
-          tagRenderer={item => item}
-          onItemSelect={item => onKeyAdd(id, item)}
+          tagRenderer={(item) => item}
+          onItemSelect={(item) => onKeyAdd(id, item)}
           selectedItems={allKeys}
-          itemPredicate={(query, item) => item.toLowerCase().includes(query.toLowerCase())}
+          itemPredicate={(query, item) =>
+            item.toLowerCase().includes(query.toLowerCase())
+          }
           placeholder={intl.formatMessage(messages.keyAssignPlaceholder)}
           fill
           resetOnSelect
           tagInputProps={{
             tagProps: (key) => ({
               minimal: true,
-              onRemove: keys.indexOf(key) > -1 && (() => onKeyRemove(id, key))
-            })
+              onRemove: keys.indexOf(key) > -1 && (() => onKeyRemove(id, key)),
+            }),
           }}
           noResults={
-            <MenuItem disabled text={intl.formatMessage(messages.keyAssignNoResults)} />
+            <MenuItem
+              disabled
+              text={intl.formatMessage(messages.keyAssignNoResults)}
+            />
           }
-          popoverProps={{ minimal: true, popoverClassName: 'EntityMappingModeForm-popover' }}
+          popoverProps={{
+            minimal: true,
+            popoverClassName: 'EntityMappingModeForm-popover',
+          }}
         />
       </FormGroup>
     );
@@ -152,31 +169,42 @@ export class MappingKeyAssignItem extends Component {
     const { id } = mapping;
     const propertyRange = property.getRange();
 
-    const items = fullMappingsList.getValues()
+    const items = fullMappingsList
+      .getValues()
       .filter(({ schema }) => !schema.isEdge && schema.isA(propertyRange))
       .sort((a, b) => a.id.localeCompare(b.id));
 
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
-    const referredEntity = currValue?.entity && fullMappingsList.getMapping(currValue.entity);
+    const referredEntity =
+      currValue?.entity && fullMappingsList.getMapping(currValue.entity);
     const buttonText = referredEntity
       ? referredEntity.id
       : intl.formatMessage(messages.entityAssignPlaceholder);
 
     return (
       <div className="MappingKeyAssign__item__property">
-        <span className="MappingKeyAssign__item__property__label">{property.label}</span>
+        <span className="MappingKeyAssign__item__property__label">
+          {property.label}
+        </span>
         <span className="MappingKeyAssign__item__property__value">
           <FormGroup
             label=""
             labelFor="entity-select"
-            helperText={disabled ? intl.formatMessage(messages.entityAssignNoResults) : ''}
+            helperText={
+              disabled ? intl.formatMessage(messages.entityAssignNoResults) : ''
+            }
           >
             <SelectWrapper
               id="entity-select"
               items={items}
               itemRenderer={entityItemRenderer}
-              onItemSelect={entity => onPropertyAdd(id, property.name, { entity: entity.id, required: true })}
+              onItemSelect={(entity) =>
+                onPropertyAdd(id, property.name, {
+                  entity: entity.id,
+                  required: true,
+                })
+              }
               filterable={false}
               popoverProps={{ minimal: true }}
               activeItem={currValue}
@@ -185,7 +213,11 @@ export class MappingKeyAssignItem extends Component {
                 text={buttonText}
                 rightIcon="caret-down"
                 disabled={disabled}
-                icon={referredEntity && <Schema.Icon schema={referredEntity.schema} />}
+                icon={
+                  referredEntity && (
+                    <Schema.Icon schema={referredEntity.schema} />
+                  )
+                }
               />
             </SelectWrapper>
           </FormGroup>
@@ -203,7 +235,6 @@ export class MappingKeyAssignItem extends Component {
           </span>
         )}
       </div>
-
     );
   }
 
@@ -211,13 +242,20 @@ export class MappingKeyAssignItem extends Component {
     const { mapping, onMappingRemove, onMappingIdChange } = this.props;
     const { id, color, schema } = mapping;
 
-    const edgeProps = schema.isEdge ? [schema.edge.source, schema.edge.target] : [];
-    const requiredEntityProps = schema.required.filter(prop => (
-      schema.getProperty(prop)?.type?.isEntity && edgeProps.indexOf(prop) < 0
-    ));
+    const edgeProps = schema.isEdge
+      ? [schema.edge.source, schema.edge.target]
+      : [];
+    const requiredEntityProps = schema.required.filter(
+      (prop) =>
+        schema.getProperty(prop)?.type?.isEntity && edgeProps.indexOf(prop) < 0
+    );
 
     return (
-      <Card className="MappingKeyAssign__item" key={id} style={{ backgroundColor: color }}>
+      <Card
+        className="MappingKeyAssign__item"
+        key={id}
+        style={{ backgroundColor: color }}
+      >
         <Button
           className="MappingKeyAssign__item__close"
           icon="cross"
@@ -235,9 +273,9 @@ export class MappingKeyAssignItem extends Component {
             {this.renderKeySelect(mapping)}
           </span>
         </div>
-        {[...edgeProps, ...requiredEntityProps].map(prop => (
+        {[...edgeProps, ...requiredEntityProps].map((prop) =>
           this.renderEntitySelect(mapping, schema.getProperty(prop))
-        ))}
+        )}
       </Card>
     );
   }
@@ -245,12 +283,8 @@ export class MappingKeyAssignItem extends Component {
 
 const MappingKeyAssign = ({ items, ...props }) => (
   <div className="MappingKeyAssign">
-    {items.map(item => (
-      <MappingKeyAssignItem
-        key={item.id}
-        mapping={item}
-        {...props}
-      />
+    {items.map((item) => (
+      <MappingKeyAssignItem key={item.id} mapping={item} {...props} />
     ))}
   </div>
 );

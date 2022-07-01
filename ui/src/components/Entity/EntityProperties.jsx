@@ -12,8 +12,10 @@ class EntityProperties extends React.PureComponent {
     piece of information in itself. */
     const { entity, showMetadata = true } = this.props;
     const featured = entity.schema.getFeaturedProperties();
-    const existing = entity.getProperties().filter(prop => !prop.hidden);
-    const sorted = _.sortBy(existing, p => p.label).filter(p => featured.indexOf(p) === -1);
+    const existing = entity.getProperties().filter((prop) => !prop.hidden);
+    const sorted = _.sortBy(existing, (p) => p.label).filter(
+      (p) => featured.indexOf(p) === -1
+    );
     const properties = [...featured, ...sorted];
     const missing = (
       <FormattedMessage
@@ -25,13 +27,18 @@ class EntityProperties extends React.PureComponent {
       <>
         <div className="ItemOverview__content__section">
           <ul className="EntityProperties info-sheet">
-            { properties.map(prop => (
+            {properties.map((prop) => (
               <li key={prop.name}>
                 <span className="key">
                   <Property.Name prop={prop} />
                 </span>
                 <span className="value">
-                  <Mention.List prop={prop} values={entity.getProperty(prop)} missing={missing} translitLookup={entity.latinized} />
+                  <Mention.List
+                    prop={prop}
+                    values={entity.getProperty(prop)}
+                    missing={missing}
+                    translitLookup={entity.latinized}
+                  />
                 </span>
               </li>
             ))}

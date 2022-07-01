@@ -45,25 +45,29 @@ const showToast = (userProps, intentProps) => {
   toaster.show({ ...intentProps, ...userPropsConfig });
 };
 
-export const showInfoToast = props => showToast(props, {
-  intent: Intent.PRIMARY,
-  icon: 'info-sign',
-});
+export const showInfoToast = (props) =>
+  showToast(props, {
+    intent: Intent.PRIMARY,
+    icon: 'info-sign',
+  });
 
-export const showSuccessToast = props => showToast(props, {
-  intent: Intent.SUCCESS,
-  icon: 'tick',
-});
+export const showSuccessToast = (props) =>
+  showToast(props, {
+    intent: Intent.SUCCESS,
+    icon: 'tick',
+  });
 
-export const showWarningToast = props => showToast(props, {
-  intent: Intent.WARNING,
-  icon: 'warning-sign',
-});
+export const showWarningToast = (props) =>
+  showToast(props, {
+    intent: Intent.WARNING,
+    icon: 'warning-sign',
+  });
 
-export const showErrorToast = props => showToast(props, {
-  intent: Intent.DANGER,
-  icon: 'error',
-});
+export const showErrorToast = (props) =>
+  showToast(props, {
+    intent: Intent.DANGER,
+    icon: 'error',
+  });
 
 const translateMessage = (message, intl) => {
   if (intl) {
@@ -76,8 +80,10 @@ export const showResponseToast = (response, intl) => {
   if (!response || !response.status) {
     return showWarningToast(translateMessage(messages.unknown_error, intl));
   }
-  const errorFunction = response.status > 499 ? showErrorToast : showWarningToast;
-  const toastFunction = response.status > 399 ? errorFunction : showSuccessToast;
+  const errorFunction =
+    response.status > 499 ? showErrorToast : showWarningToast;
+  const toastFunction =
+    response.status > 399 ? errorFunction : showSuccessToast;
   if (response && response.data && response.data.message) {
     return toastFunction(response.data.message);
   }

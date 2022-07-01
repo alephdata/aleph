@@ -1,14 +1,14 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .InvestigationOverview {
   &__section {
     position: relative;
-    margin: $aleph-content-padding/2 0 $aleph-content-padding*1.5;
+    margin: $aleph-content-padding/2 0 $aleph-content-padding * 1.5;
 
     &__title.bp3-heading {
       margin-bottom: $aleph-content-padding/2;
-      padding-bottom: $aleph-grid-size*.7;
+      padding-bottom: $aleph-grid-size * 0.7;
       border-bottom: 1px solid $aleph-border-color;
     }
   }
@@ -18,7 +18,7 @@
       position: absolute;
       @include rtl(left, auto, 0);
       @include rtl(right, 0, auto);
-      top: -($aleph-grid-size)*.7;
+      top: -($aleph-grid-size) * 0.7;
 
       span {
         font-size: $pt-font-size-small;
@@ -41,7 +41,7 @@
     .bp3-button {
       margin: $guides-button-margin/2;
       background-color: rgba($blue2, 0.09) !important;
-      transition: background-color .05s ease-in-out;
+      transition: background-color 0.05s ease-in-out;
 
       &:hover {
         background-color: rgba($blue2, 0.04) !important;
