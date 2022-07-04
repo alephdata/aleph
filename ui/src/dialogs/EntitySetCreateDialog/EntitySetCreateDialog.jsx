@@ -244,7 +244,7 @@ class EntitySetCreateDialog extends Component {
         <div className="bp3-dialog-body">
           {canImport && (
             <FileImport
-              accept={['.ftm', '.vis']}
+              accept={{ '*': ['.ftm', '.vis'] }}
               placeholder={intl.formatMessage(
                 messages.diagram_import_placeholder
               )}
