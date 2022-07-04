@@ -102,7 +102,7 @@ class MappingImportDialog extends Component {
           <form onSubmit={this.onSubmit}>
             <div className="bp3-dialog-body">
               <FileImport
-                accept=".yml"
+                accept={{ '*': ['.yml', '.yaml'] }}
                 placeholder={intl.formatMessage(messages.placeholder)}
                 onImport={this.onImport}
                 importedFile={importedFileName}
