@@ -26,7 +26,7 @@
     "js-file-download": "^0.4.9",
     "lodash": "^4.17.11",
     "moment": "^2.29.1",
-    "node-sass": "6.0.1",
+    "node-sass": "7.0.1",
     "papaparse": "^5.1.0",
     "prettier": "^2.7.1",
     "query-string": "^7.0.0",
