@@ -39,7 +39,12 @@ class FileImport extends Component {
     const { accept, importedFile, placeholder } = this.props;
 
     return (
-      <Dropzone accept={accept} onDrop={this.onDrop} noDragEventsBubbling>
+      <Dropzone
+        accept={accept}
+        onDrop={this.onDrop}
+        noDragEventsBubbling
+        useFsAccessApi={false}
+      >
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()}>
             <input {...getInputProps()} />
