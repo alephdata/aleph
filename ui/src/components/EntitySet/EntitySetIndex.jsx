@@ -52,15 +52,15 @@ class EntitySetIndex extends Component {
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
 
-    if (result.isError || result.total === 0) {
+    if (result.isError) {
+      return <ErrorSection error={result.error} />;
+    }
+
+    if (result.total === 0) {
       return (
         <ErrorSection
           icon={<EntitySet.Icon entitySet={{ type }} iconSize={60} />}
-          title={
-            result.isError
-              ? result.error.message
-              : intl.formatMessage(messages[`no_${type}`])
-          }
+          title={intl.formatMessage(messages[`no_${type}`])}
         />
       );
     }
