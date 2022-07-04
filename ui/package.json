@@ -12,7 +12,7 @@
     "@blueprintjs/select": "3.19.1",
     "@blueprintjs/table": "3.9.13",
     "@formatjs/cli": "^5.0.2",
-    "@formatjs/intl-locale": "^2.4.14",
+    "@formatjs/intl-locale": "^3.0.2",
     "@formatjs/intl-pluralrules": "^4.0.6",
     "@formatjs/intl-relativetimeformat": "^11.0.1",
     "@formatjs/intl-utils": "^3.8.4",
