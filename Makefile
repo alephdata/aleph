@@ -81,7 +81,7 @@ ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
 
 dev: 
-	pip install -q -r requirements-dev.txt
+	python3 -m pip install -q -r requirements-dev.txt
 
 fixtures:
 	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
