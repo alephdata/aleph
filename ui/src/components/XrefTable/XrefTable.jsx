@@ -17,11 +17,6 @@ const messages = defineMessages({
     id: 'collection.xref.empty',
     defaultMessage: 'There are no cross-referencing results.',
   },
-  emptyError: {
-    id: 'collection.xref.empty_error',
-    defaultMessage:
-      'There are cross-referencing results, but for some reason we could not load them.',
-  },
 });
 
 class XrefTable extends Component {
@@ -75,10 +70,6 @@ class XrefTable extends Component {
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
-    }
-
-    if (result.total > 0 && result.results.length === 0) {
-      return <ErrorSection title={intl.formatMessage(messages.emptyError)} />;
     }
 
     if (result.total === 0) {
