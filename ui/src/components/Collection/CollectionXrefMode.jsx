@@ -47,6 +47,7 @@ export class CollectionXrefMode extends React.Component {
     super(props);
     this.updateQuery = this.updateQuery.bind(this);
     this.toggleSort = this.toggleSort.bind(this);
+    this.actions = this.actions.bind(this);
   }
 
   updateQuery(newQuery) {
@@ -71,10 +72,7 @@ export class CollectionXrefMode extends React.Component {
   }
 
   render() {
-    const { collection, isRandomSort, intl, isTester, query, result } =
-      this.props;
-
-    const exportLink = collection?.links?.xref_export;
+    const { query, result } = this.props;
 
     return (
       <section className="CollectionXrefMode">
@@ -90,38 +88,7 @@ export class CollectionXrefMode extends React.Component {
             />
           </div>
           <div className="pane-layout-main">
-            <div className="CollectionXrefMode__actions">
-              <CollectionXrefManageMenu
-                collection={collection}
-                result={result}
-                query={query}
-              />
-              <SearchActionBar
-                result={result}
-                exportDisabled={!exportLink}
-                onExport={() =>
-                  this.props.triggerCollectionXrefDownload(collection.id)
-                }
-              >
-                {isTester && (
-                  <SortingBar
-                    filterButtonLabel={intl.formatMessage(messages.sort_label)}
-                    filterButton={
-                      <Button
-                        text={intl.formatMessage(
-                          messages[
-                            isRandomSort ? 'sort_random' : 'sort_default'
-                          ]
-                        )}
-                        onClick={this.toggleSort}
-                        minimal
-                        intent={Intent.PRIMARY}
-                      />
-                    }
-                  />
-                )}
-              </SearchActionBar>
-            </div>
+            {!result.isError && this.actions()}
             <XrefTable result={result} />
             <QueryInfiniteLoad
               query={query}
@@ -131,6 +98,45 @@ export class CollectionXrefMode extends React.Component {
           </div>
         </div>
       </section>
+    );
+  }
+
+  actions() {
+    const { collection, result, query, isTester, isRandomSort, intl } =
+      this.props;
+    const exportLink = collection?.links?.xref_export;
+
+    return (
+      <div className="CollectionXrefMode__actions">
+        <CollectionXrefManageMenu
+          collection={collection}
+          result={result}
+          query={query}
+        />
+        <SearchActionBar
+          result={result}
+          exportDisabled={!exportLink}
+          onExport={() =>
+            this.props.triggerCollectionXrefDownload(collection.id)
+          }
+        >
+          {isTester && (
+            <SortingBar
+              filterButtonLabel={intl.formatMessage(messages.sort_label)}
+              filterButton={
+                <Button
+                  text={intl.formatMessage(
+                    messages[isRandomSort ? 'sort_random' : 'sort_default']
+                  )}
+                  onClick={this.toggleSort}
+                  minimal
+                  intent={Intent.PRIMARY}
+                />
+              }
+            />
+          )}
+        </SearchActionBar>
+      </div>
     );
   }
 }
