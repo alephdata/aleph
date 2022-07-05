@@ -101,9 +101,10 @@ class Serializer(object):
                 data = {
                     "status": "error",
                     "message": gettext(
-                        f"We found {total} results, but could not load them due "
+                        "We found %(total)d results, but could not load them due "
                         "to a technical problem. Please check back later and if "
-                        "the problem persists contact an Aleph administrator"
+                        "the problem persists contact an Aleph administrator",
+                        total=total,
                     ),
                 }
                 return jsonify(data, status=500)
