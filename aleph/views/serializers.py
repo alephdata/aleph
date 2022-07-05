@@ -89,18 +89,24 @@ class Serializer(object):
         data = result.to_dict(serializer=cls)
         if extra is not None:
             data.update(extra)
+        # Sometimes part of the result might be missing because of some
+        # inconsistency (eg: a failed re-indexing). We try to spot those
+        # inconsistencies.
         total = data.get("total", 0)
+        limit = data.get("limit", 0)
+        offset = data.get("offset", 0)
         if total > 0 and not data.get("results"):
-            log.exception(f"Expected more results in the response: {data}")
-            data = {
-                "status": "error",
-                "message": gettext(
-                    f"We found {total} results, but could not load them due "
-                    "to a technical problem. Please check back later and if "
-                    "the problem persists contact an Aleph administrator"
-                ),
-            }
-            return jsonify(data, status=500)
+            if not (limit == 0 or offset >= total):
+                log.exception(f"Expected more results in the response: {data}")
+                data = {
+                    "status": "error",
+                    "message": gettext(
+                        f"We found {total} results, but could not load them due "
+                        "to a technical problem. Please check back later and if "
+                        "the problem persists contact an Aleph administrator"
+                    ),
+                }
+                return jsonify(data, status=500)
         return jsonify(data, **kwargs)
 
 
