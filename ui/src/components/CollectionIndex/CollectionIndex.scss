@@ -1,9 +1,9 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .CollectionIndex {
   &__controls {
     .QueryTags {
-      margin-top: $aleph-grid-size*1.5;
+      margin-top: $aleph-grid-size * 1.5;
     }
 
     .bp3-input-group {

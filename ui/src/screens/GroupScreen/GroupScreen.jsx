@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import {
-  defineMessages,
-  injectIntl,
-  FormattedMessage,
-} from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Callout, Intent } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Query from 'app/Query';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Screen from 'components/Screen/Screen';
@@ -21,22 +17,22 @@ import { showWarningToast } from 'app/toast';
 
 import './GroupScreen.scss';
 
-
 const messages = defineMessages({
   empty: {
     id: 'sources.index.empty',
-    defaultMessage: 'This group is not linked to any datasets or investigations.',
+    defaultMessage:
+      'This group is not linked to any datasets or investigations.',
   },
   placeholder: {
     id: 'sources.index.placeholder',
-    defaultMessage: 'Search for a dataset or investigation belonging to {group}...',
+    defaultMessage:
+      'Search for a dataset or investigation belonging to {group}...',
   },
 });
 
-
 export class GroupScreen extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.goToEntitySearch = this.goToEntitySearch.bind(this);
   }
@@ -58,21 +54,26 @@ export class GroupScreen extends Component {
   async goToEntitySearch() {
     const { navigate, groupId } = this.props;
 
-    const query = new Query('collections', {}, { 'filter:team_id': groupId }, 'collections').limit(1000);
+    const query = new Query(
+      'collections',
+      {},
+      { 'filter:team_id': groupId },
+      'collections'
+    ).limit(1000);
     try {
       const qReturn = await this.props.queryCollections({ query });
       const groupCollections = qReturn.result?.results;
       if (groupCollections) {
         const params = {
-          'filter:collection_id': groupCollections.map(coll => coll.id),
+          'filter:collection_id': groupCollections.map((coll) => coll.id),
           facet: 'collection_id',
           'facet_size:collection_id': 10,
           'facet_total:collection_id': true,
         };
         navigate({
           pathname: '/search',
-          search: queryString.stringify(params)
-        })
+          search: queryString.stringify(params),
+        });
       }
     } catch (e) {
       showWarningToast(e.message);
@@ -101,7 +102,11 @@ export class GroupScreen extends Component {
                 defaultMessage="If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
                 values={{
                   // eslint-disable-next-line
-                  link: chunks => <a role="button" onClick={this.goToEntitySearch}>{chunks}</a>,
+                  link: (chunks) => (
+                    <a role="button" onClick={this.goToEntitySearch}>
+                      {chunks}
+                    </a>
+                  ),
                 }}
               />
             </Callout>
@@ -109,7 +114,9 @@ export class GroupScreen extends Component {
           <CollectionIndex
             query={query}
             emptyText={intl.formatMessage(messages.empty)}
-            placeholder={intl.formatMessage(messages.placeholder, { group: group.label })}
+            placeholder={intl.formatMessage(messages.placeholder, {
+              group: group.label,
+            })}
           />
         </Dashboard>
       </Screen>
@@ -121,7 +128,12 @@ const mapStateToProps = (state, ownProps) => {
   const { groupId } = params;
 
   const context = { 'filter:team_id': groupId };
-  const query = Query.fromLocation('collections', location, context, 'collections')
+  const query = Query.fromLocation(
+    'collections',
+    location,
+    context,
+    'collections'
+  )
     .defaultSortBy('created_at', 'desc')
     .limit(20);
 
@@ -135,5 +147,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { fetchRole, queryCollections }),
-  injectIntl,
+  injectIntl
 )(GroupScreen);

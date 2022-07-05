@@ -17,7 +17,6 @@ import MappingVerify from 'components/MappingEditor/MappingVerify';
 
 import './MappingEditor.scss';
 
-
 const messages = defineMessages({
   section1Title: {
     id: 'mapping.section1.title',
@@ -46,7 +45,7 @@ const messages = defineMessages({
   entityset_remove: {
     id: 'mapping.entityset.remove',
     defaultMessage: 'Remove',
-  }
+  },
 });
 
 export class MappingEditor extends Component {
@@ -82,7 +81,9 @@ export class MappingEditor extends Component {
   }
 
   onMappingAdd(schema) {
-    this.setState(({ mappings }) => ({ mappings: mappings.addMapping(schema) }));
+    this.setState(({ mappings }) => ({
+      mappings: mappings.addMapping(schema),
+    }));
   }
 
   onMappingRemove(id) {
@@ -90,7 +91,9 @@ export class MappingEditor extends Component {
   }
 
   onMappingIdChange(oldId, newId) {
-    this.setState(({ mappings }) => ({ mappings: mappings.changeId(oldId, newId) }));
+    this.setState(({ mappings }) => ({
+      mappings: mappings.changeId(oldId, newId),
+    }));
   }
 
   onKeyAdd(id, key) {
@@ -98,15 +101,21 @@ export class MappingEditor extends Component {
   }
 
   onKeyRemove(id, key) {
-    this.setState(({ mappings }) => ({ mappings: mappings.removeKey(id, key) }));
+    this.setState(({ mappings }) => ({
+      mappings: mappings.removeKey(id, key),
+    }));
   }
 
   onPropertyAdd(id, propName, value) {
-    this.setState(({ mappings }) => ({ mappings: mappings.addProperty(id, propName, value) }));
+    this.setState(({ mappings }) => ({
+      mappings: mappings.addProperty(id, propName, value),
+    }));
   }
 
   onPropertyRemove(id, propName) {
-    this.setState(({ mappings }) => ({ mappings: mappings.removeProperty(id, propName) }));
+    this.setState(({ mappings }) => ({
+      mappings: mappings.removeProperty(id, propName),
+    }));
   }
 
   onEntitySetAdd(entitySet) {
@@ -118,9 +127,9 @@ export class MappingEditor extends Component {
   }
 
   toggleEntitySetSelector() {
-    this.setState(({ entitySetSelectorIsOpen }) => (
-      { entitySetSelectorIsOpen: !entitySetSelectorIsOpen }
-    ));
+    this.setState(({ entitySetSelectorIsOpen }) => ({
+      entitySetSelectorIsOpen: !entitySetSelectorIsOpen,
+    }));
   }
 
   loadFromMappingData() {
@@ -133,7 +142,8 @@ export class MappingEditor extends Component {
   }
 
   render() {
-    const { document, existingMappingMetadata, csvData, csvHeader, intl } = this.props;
+    const { document, existingMappingMetadata, csvData, csvHeader, intl } =
+      this.props;
     const { entitySet, mappings } = this.state;
 
     const showPropertySections = mappings.getMappingsCount() > 0;
@@ -148,10 +158,12 @@ export class MappingEditor extends Component {
               </h5>
               <MappingSplitSection
                 mappings={mappings}
-                sectionContentsRenderer={((subitems, type) => (
+                sectionContentsRenderer={(subitems, type) => (
                   <>
                     <Schema.Select
-                      optionsFilter={schema => (type === 'thing' ? schema.isThing() : !schema.isThing())}
+                      optionsFilter={(schema) =>
+                        type === 'thing' ? schema.isThing() : !schema.isThing()
+                      }
                       onSelect={this.onMappingAdd}
                     >
                       <Button
@@ -170,7 +182,7 @@ export class MappingEditor extends Component {
                       onMappingRemove={this.onMappingRemove}
                     />
                   </>
-                ))}
+                )}
               />
             </div>
             {showPropertySections && (
@@ -194,7 +206,7 @@ export class MappingEditor extends Component {
                   </h5>
                   <MappingSplitSection
                     mappings={mappings}
-                    sectionContentsRenderer={(subitems => (
+                    sectionContentsRenderer={(subitems) => (
                       <MappingVerify
                         items={subitems}
                         fullMappingsList={mappings}
@@ -202,7 +214,7 @@ export class MappingEditor extends Component {
                         onPropertyAdd={this.onPropertyAdd}
                         onMappingIdChange={this.onMappingIdChange}
                       />
-                    ))}
+                    )}
                   />
                 </div>
                 <div className="MappingEditor__section">
@@ -213,7 +225,14 @@ export class MappingEditor extends Component {
                     <FormattedMessage
                       id="mapping.section4.description"
                       defaultMessage="Generated entities will be added to {collection} by default. If you would like to additionally add them to a list or diagram within the investigation, please click below and select from the available options."
-                      values={{ collection: <Collection.Label collection={document.collection} icon={false} /> }}
+                      values={{
+                        collection: (
+                          <Collection.Label
+                            collection={document.collection}
+                            icon={false}
+                          />
+                        ),
+                      }}
                     />
                   </p>
                   {entitySet && (
@@ -278,7 +297,4 @@ const mapStateToProps = (state) => ({
   model: selectModel(state),
 });
 
-export default compose(
-  connect(mapStateToProps),
-  injectIntl,
-)(MappingEditor);
+export default compose(connect(mapStateToProps), injectIntl)(MappingEditor);

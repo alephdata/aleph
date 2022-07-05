@@ -1,14 +1,14 @@
-import React from "react";
-import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
+import React from 'react';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import Screen from "src/components/Screen/Screen";
-import Dashboard from "src/components/Dashboard/Dashboard";
-import ExportsList from "src/components/Exports/ExportsList";
+import Screen from 'src/components/Screen/Screen';
+import Dashboard from 'src/components/Dashboard/Dashboard';
+import ExportsList from 'src/components/Exports/ExportsList';
 
 const messages = defineMessages({
   title: {
-    id: "exports.title",
-    defaultMessage: "Exports ready for download",
+    id: 'exports.title',
+    defaultMessage: 'Exports ready for download',
   },
 });
 

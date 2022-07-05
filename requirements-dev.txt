@@ -1,0 +1,4 @@
+bump2version==1.0.1
+Babel==2.10.3
+black==22.3.0
+flake8==4.0.1

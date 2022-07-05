@@ -9,7 +9,6 @@ import { showSuccessToast, showWarningToast } from 'app/toast';
 import { updateCollection } from 'actions';
 import { selectMetadata, selectAdmin } from 'selectors';
 
-
 const messages = defineMessages({
   placeholder_label: {
     id: 'collection.edit.info.placeholder_label',
@@ -90,7 +89,9 @@ export class CollectionEditDialog extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    const collection = state.changed ? state.collection : { ...props.collection };
+    const collection = state.changed
+      ? state.collection
+      : { ...props.collection };
     return { collection };
   }
 
@@ -156,7 +157,10 @@ export class CollectionEditDialog extends Component {
         <div className="bp3-dialog-body">
           <div className="bp3-form-group">
             <label className="bp3-label">
-              <FormattedMessage id="collection.edit.info.label" defaultMessage="Label" />
+              <FormattedMessage
+                id="collection.edit.info.label"
+                defaultMessage="Label"
+              />
             </label>
             <div className="bp3-form-content">
               <input
@@ -172,11 +176,18 @@ export class CollectionEditDialog extends Component {
           {isAdmin && (
             <div className="bp3-form-group">
               <label className="bp3-label">
-                <FormattedMessage id="collection.edit.info.category" defaultMessage="Category" />
+                <FormattedMessage
+                  id="collection.edit.info.category"
+                  defaultMessage="Category"
+                />
               </label>
               <div className="bp3-select bp3-fill">
-                <select id="category" onChange={this.onFieldChange} value={collection.category}>
-                  {Object.keys(categories).map(key => (
+                <select
+                  id="category"
+                  onChange={this.onFieldChange}
+                  value={collection.category}
+                >
+                  {Object.keys(categories).map((key) => (
                     <option key={key} value={key}>
                       {categories[key]}
                     </option>
@@ -187,7 +198,10 @@ export class CollectionEditDialog extends Component {
           )}
           <div className="bp3-form-group">
             <label className="bp3-label">
-              <FormattedMessage id="collection.edit.info.summary" defaultMessage="Summary" />
+              <FormattedMessage
+                id="collection.edit.info.summary"
+                defaultMessage="Summary"
+              />
             </label>
             <div className="bp3-form-content">
               <textarea
@@ -204,14 +218,19 @@ export class CollectionEditDialog extends Component {
             <>
               <div className="bp3-form-group">
                 <label className="bp3-label">
-                  <FormattedMessage id="collection.edit.info.publisher" defaultMessage="Publisher" />
+                  <FormattedMessage
+                    id="collection.edit.info.publisher"
+                    defaultMessage="Publisher"
+                  />
                 </label>
                 <div className="bp3-fill">
                   <input
                     id="publisher"
                     type="text"
                     className="bp3-input bp3-fill"
-                    placeholder={intl.formatMessage(messages.placeholder_publisher)}
+                    placeholder={intl.formatMessage(
+                      messages.placeholder_publisher
+                    )}
                     onChange={this.onFieldChange}
                     value={collection.publisher || ''}
                   />
@@ -219,14 +238,19 @@ export class CollectionEditDialog extends Component {
               </div>
               <div className="bp3-form-group">
                 <label className="bp3-label">
-                  <FormattedMessage id="collection.edit.info.publisher_url" defaultMessage="Publisher URL" />
+                  <FormattedMessage
+                    id="collection.edit.info.publisher_url"
+                    defaultMessage="Publisher URL"
+                  />
                 </label>
                 <div className="bp3-fill">
                   <input
                     id="publisher_url"
                     type="text"
                     className="bp3-input bp3-fill"
-                    placeholder={intl.formatMessage(messages.placeholder_publisher_url)}
+                    placeholder={intl.formatMessage(
+                      messages.placeholder_publisher_url
+                    )}
                     onChange={this.onFieldChange}
                     value={collection.publisher_url || ''}
                   />
@@ -234,14 +258,19 @@ export class CollectionEditDialog extends Component {
               </div>
               <div className="bp3-form-group">
                 <label className="bp3-label">
-                  <FormattedMessage id="collection.edit.info.info_url" defaultMessage="Information URL" />
+                  <FormattedMessage
+                    id="collection.edit.info.info_url"
+                    defaultMessage="Information URL"
+                  />
                 </label>
                 <div className="bp3-fill">
                   <input
                     id="info_url"
                     type="text"
                     className="bp3-input bp3-fill"
-                    placeholder={intl.formatMessage(messages.placeholder_info_url)}
+                    placeholder={intl.formatMessage(
+                      messages.placeholder_info_url
+                    )}
                     onChange={this.onFieldChange}
                     value={collection.info_url || ''}
                   />
@@ -249,14 +278,19 @@ export class CollectionEditDialog extends Component {
               </div>
               <div className="bp3-form-group">
                 <label className="bp3-label">
-                  <FormattedMessage id="collection.edit.info.data_url" defaultMessage="Data source URL" />
+                  <FormattedMessage
+                    id="collection.edit.info.data_url"
+                    defaultMessage="Data source URL"
+                  />
                 </label>
                 <div className="bp3-fill">
                   <input
                     id="data_url"
                     type="text"
                     className="bp3-input bp3-fill"
-                    placeholder={intl.formatMessage(messages.placeholder_data_url)}
+                    placeholder={intl.formatMessage(
+                      messages.placeholder_data_url
+                    )}
                     onChange={this.onFieldChange}
                     value={collection.data_url || ''}
                   />
@@ -264,11 +298,18 @@ export class CollectionEditDialog extends Component {
               </div>
               <div className="bp3-form-group">
                 <label className="bp3-label">
-                  <FormattedMessage id="collection.edit.info.frequency" defaultMessage="Update frequency" />
+                  <FormattedMessage
+                    id="collection.edit.info.frequency"
+                    defaultMessage="Update frequency"
+                  />
                 </label>
                 <div className="bp3-select bp3-fill">
-                  <select id="frequency" onChange={this.onFieldChange} value={collection.frequency || ''}>
-                    {Object.keys(frequencies).map(key => (
+                  <select
+                    id="frequency"
+                    onChange={this.onFieldChange}
+                    value={collection.frequency || ''}
+                  >
+                    {Object.keys(frequencies).map((key) => (
                       <option key={key} value={key || ''}>
                         {frequencies[key]}
                       </option>
@@ -281,7 +322,10 @@ export class CollectionEditDialog extends Component {
           {isAdmin && (
             <div className="bp3-form-group">
               <label className="bp3-label">
-                <FormattedMessage id="collection.edit.info.creator" defaultMessage="Manager" />
+                <FormattedMessage
+                  id="collection.edit.info.creator"
+                  defaultMessage="Manager"
+                />
               </label>
               <div className="bp3-form-content">
                 <Role.Select
@@ -293,7 +337,10 @@ export class CollectionEditDialog extends Component {
           )}
           <div className="bp3-form-group">
             <label className="bp3-label">
-              <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries" />
+              <FormattedMessage
+                id="collection.edit.info.countries"
+                defaultMessage="Countries"
+              />
             </label>
             <Country.MultiSelect
               onSubmit={this.onSelectCountries}
@@ -306,7 +353,10 @@ export class CollectionEditDialog extends Component {
           </div>
           <div className="bp3-form-group">
             <label className="bp3-label">
-              <FormattedMessage id="collection.edit.info.languages" defaultMessage="Languages" />
+              <FormattedMessage
+                id="collection.edit.info.languages"
+                defaultMessage="Languages"
+              />
             </label>
             <Language.MultiSelect
               onSubmit={this.onSelectLanguages}
@@ -327,7 +377,10 @@ export class CollectionEditDialog extends Component {
             <>
               <div className="bp3-form-group">
                 <label className="bp3-label">
-                  <FormattedMessage id="collection.edit.info.foreign_id" defaultMessage="Foreign ID" />
+                  <FormattedMessage
+                    id="collection.edit.info.foreign_id"
+                    defaultMessage="Foreign ID"
+                  />
                 </label>
                 <div className="bp3-form-content">
                   <input
@@ -365,12 +418,12 @@ export class CollectionEditDialog extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
   isAdmin: selectAdmin(state),
 });
 
 export default compose(
   connect(mapStateToProps, { updateCollection }),
-  injectIntl,
+  injectIntl
 )(CollectionEditDialog);

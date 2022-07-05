@@ -1,7 +1,8 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .EntityLink {
-  &.visited, &:visited {
+  &.visited,
+  &:visited {
     color: $aleph-visited-link-color;
   }
 }

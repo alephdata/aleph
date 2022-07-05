@@ -25,8 +25,14 @@ def upgrade():
         sa.Column("role_id", sa.Integer(), nullable=True),
         sa.Column("collection_id", sa.Integer(), nullable=True),
         sa.Column("table_id", sa.String(length=128), nullable=True),
-        sa.ForeignKeyConstraint(["collection_id"], ["collection.id"],),
-        sa.ForeignKeyConstraint(["role_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["collection_id"],
+            ["collection.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["role_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(

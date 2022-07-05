@@ -32,15 +32,15 @@ class EntitySetManageMenu extends Component {
     const button = (
       <DialogToggleButton
         buttonProps={{
-          icon: "cog",
-          text: showText && text
+          icon: 'cog',
+          text: showText && text,
         }}
         Dialog={EntitySetEditDialog}
         dialogProps={{ entitySet, canChangeCollection: false }}
       />
     );
     return showText ? button : <Tooltip content={text}>{button}</Tooltip>;
-  }
+  };
 
   renderExport = (showText = true) => {
     const { entitySet, exportFtm, exportSvg, intl } = this.props;
@@ -48,15 +48,15 @@ class EntitySetManageMenu extends Component {
     const button = (
       <DialogToggleButton
         buttonProps={{
-          icon: "export",
-          text: showText && text
+          icon: 'export',
+          text: showText && text,
         }}
         Dialog={DiagramExportDialog}
         dialogProps={{ entitySet, exportFtm, exportSvg }}
       />
     );
     return showText ? button : <Tooltip content={text}>{button}</Tooltip>;
-  }
+  };
 
   renderDelete = (showText = true) => {
     const { entitySet, intl } = this.props;
@@ -64,15 +64,15 @@ class EntitySetManageMenu extends Component {
     const button = (
       <DialogToggleButton
         buttonProps={{
-          icon: "trash",
-          text: showText && text
+          icon: 'trash',
+          text: showText && text,
         }}
         Dialog={EntitySetDeleteDialog}
         dialogProps={{ entitySet }}
       />
-    )
+    );
     return showText ? button : <Tooltip content={text}>{button}</Tooltip>;
-  }
+  };
 
   render() {
     const { entitySet } = this.props;

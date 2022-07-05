@@ -1,13 +1,13 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .ArticleViewer {
-
   .article-header table {
     width: 100%;
-    th, td {
+    th,
+    td {
       box-shadow: none !important;
       border-bottom: 1px solid $aleph-border-color;
-    } 
+    }
   }
 
   .article-body {

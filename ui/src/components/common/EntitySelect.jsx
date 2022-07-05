@@ -6,7 +6,8 @@ import { selectEntitiesResult } from 'selectors';
 
 class EntitySelect extends Component {
   render() {
-    const { buttonProps, noResultsText, onQueryChange, onSelect, result } = this.props;
+    const { buttonProps, noResultsText, onQueryChange, onSelect, result } =
+      this.props;
 
     return (
       <VLEntitySelect
@@ -14,12 +15,12 @@ class EntitySelect extends Component {
         values={[]}
         entitySuggestions={result.results}
         isFetching={result.isPending}
-        onSubmit={entities => onSelect(entities[0])}
+        onSubmit={(entities) => onSelect(entities[0])}
         onQueryChange={onQueryChange}
         noResultsText={noResultsText}
         buttonProps={buttonProps}
       />
-    )
+    );
   }
 }
 
@@ -30,6 +31,5 @@ const mapStateToProps = (state, ownProps) => {
     result: selectEntitiesResult(state, query),
   };
 };
-
 
 export default connect(mapStateToProps)(EntitySelect);

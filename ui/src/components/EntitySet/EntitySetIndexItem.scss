@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 $details-item-width: 175px;
 $vertical-padding: $aleph-grid-size/2;
@@ -34,7 +34,8 @@ $wrap-breakpoint: 800px;
       flex-wrap: wrap;
     }
 
-    .index-item__title, .index-item__details {
+    .index-item__title,
+    .index-item__details {
       // margin: $vertical-padding 0;
     }
 

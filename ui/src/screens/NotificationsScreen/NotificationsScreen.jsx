@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Query from 'app/Query';
 import NotificationList from 'components/Notification/NotificationList';
 import Screen from 'components/Screen/Screen';
@@ -14,7 +14,6 @@ import LandingQuickLinks from 'components/common/LandingQuickLinks';
 
 import './NotificationsScreen.scss';
 
-
 const messages = defineMessages({
   title: {
     id: 'notifications.title',
@@ -22,10 +21,9 @@ const messages = defineMessages({
   },
   greeting: {
     id: 'notifications.greeting',
-    defaultMessage: 'What\'s new, {role}?',
+    defaultMessage: "What's new, {role}?",
   },
 });
-
 
 export class NotificationsScreen extends React.Component {
   render() {
@@ -33,11 +31,11 @@ export class NotificationsScreen extends React.Component {
     const screenProps = {
       title: intl.formatMessage(messages.title),
       requireSession: true,
-      className: 'NotificationsScreen'
+      className: 'NotificationsScreen',
     };
 
     if (!role.id) {
-      return <LoadingScreen {...screenProps} />
+      return <LoadingScreen {...screenProps} />;
     }
 
     return (
@@ -65,8 +63,12 @@ export class NotificationsScreen extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
 
-  const query = Query.fromLocation('notifications', location, { 'facet': 'event' }, 'notifications')
-    .limit(40);
+  const query = Query.fromLocation(
+    'notifications',
+    location,
+    { facet: 'event' },
+    'notifications'
+  ).limit(40);
 
   return {
     query,
@@ -78,5 +80,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(NotificationsScreen);

@@ -4,7 +4,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { Count } from 'components/common';
 import EntityDeleteDialog from 'dialogs/EntityDeleteDialog/EntityDeleteDialog';
 
-
 const messages = defineMessages({
   delete: {
     id: 'entity.manager.delete',
@@ -15,7 +14,6 @@ const messages = defineMessages({
     defaultMessage: 'Remove',
   },
 });
-
 
 class EntityDeleteButton extends React.Component {
   constructor(props) {
@@ -36,7 +34,14 @@ class EntityDeleteButton extends React.Component {
   }
 
   render() {
-    const { deleteEntity, entities, intl, actionType, redirectOnSuccess, showCount } = this.props;
+    const {
+      deleteEntity,
+      entities,
+      intl,
+      actionType,
+      redirectOnSuccess,
+      showCount,
+    } = this.props;
     const { isOpen } = this.state;
 
     const buttonIcon = actionType === 'remove' ? 'delete' : 'trash';
@@ -44,7 +49,12 @@ class EntityDeleteButton extends React.Component {
 
     return (
       <>
-        <Button icon={buttonIcon} onClick={() => this.toggle()} disabled={!entities.length} className="EntityActionBar__delete">
+        <Button
+          icon={buttonIcon}
+          onClick={() => this.toggle()}
+          disabled={!entities.length}
+          className="EntityActionBar__delete"
+        >
           {buttonText}
           {showCount && <Count count={entities.length || null} />}
         </Button>

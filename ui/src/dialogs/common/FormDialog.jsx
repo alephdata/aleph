@@ -16,9 +16,7 @@ const FormDialog = ({ processing, children, onSubmit, ...rest }) => {
         <form onSubmit={!!onSubmit ? onSubmitForm : undefined}>
           {processing && <div className="FormDialog__overlay" />}
           {children}
-          {processing && (
-            <Spinner className="FormDialog__spinner bp3-large" />
-          )}
+          {processing && <Spinner className="FormDialog__spinner bp3-large" />}
         </form>
       </div>
     </Dialog>

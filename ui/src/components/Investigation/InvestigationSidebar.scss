@@ -1,13 +1,17 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
-$transition-duration: .3s;
-$sidebar-padding: $aleph-grid-size*2;
-
+$transition-duration: 0.3s;
+$sidebar-padding: $aleph-grid-size * 2;
 
 .InvestigationSidebar {
   width: $aleph-investigation-sidebar-width;
-  @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, none);
+  @include rtlSupportInvertedProp(
+    border,
+    right,
+    1px solid $aleph-border-color,
+    none
+  );
   @include rtlSupportInvertedProp(margin, right, $aleph-content-padding, 0);
   @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, 0);
 

@@ -25,12 +25,19 @@ const messages = defineMessages({
   export_disabled_empty: {
     id: 'search.screen.export_disabled_empty',
     defaultMessage: 'No results to export.',
-  }
+  },
 });
 
 class SearchActionBar extends React.Component {
   render() {
-    const { children, customResultText, intl, result, onExport, exportDisabled } = this.props;
+    const {
+      children,
+      customResultText,
+      intl,
+      result,
+      onExport,
+      exportDisabled,
+    } = this.props;
 
     let tooltipText;
     if (!result.total) {
@@ -45,17 +52,17 @@ class SearchActionBar extends React.Component {
       <ControlGroup className="SearchActionBar" fill>
         <div className="SearchActionBar__main">
           <ResultText result={result} customText={customResultText} />
-          {(!!onExport && !!result.total) && (
+          {!!onExport && !!result.total && (
             <span className="SearchActionBar__export">
               <Tooltip content={tooltipText}>
                 <DialogToggleButton
                   ButtonComponent={AnchorButton}
                   buttonProps={{
-                    icon: "export",
+                    icon: 'export',
                     text: intl.formatMessage(messages.export),
                     disabled: exportDisabled,
                     small: true,
-                    outlined: true
+                    outlined: true,
                   }}
                   Dialog={ExportDialog}
                   dialogProps={{ onExport }}

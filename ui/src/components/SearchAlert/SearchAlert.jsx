@@ -5,24 +5,23 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { createAlert, deleteAlert, queryAlerts } from 'actions';
 import { selectSession, selectAlertResult } from 'selectors';
 import { alertsQuery } from 'queries';
 import validAlertQuery from 'util/validAlertQuery';
 
-
 const messages = defineMessages({
   alert_add: {
     id: 'navbar.alert_add',
-    defaultMessage: 'Click to receive alerts about new results for this search.',
+    defaultMessage:
+      'Click to receive alerts about new results for this search.',
   },
   alert_remove: {
     id: 'navbar.alert_remove',
     defaultMessage: 'You are receiving alerts about this search.',
   },
 });
-
 
 class SearchAlert extends PureComponent {
   constructor(props) {
@@ -55,12 +54,14 @@ class SearchAlert extends PureComponent {
     }
 
     if (alertExists) {
-      await Promise.all(result.results.reduce((pool, alert) => {
-        if (alert.query.trim() === alertQuery.trim()) {
-          pool.push(this.props.deleteAlert(alert.id));
-        }
-        return pool;
-      }, []));
+      await Promise.all(
+        result.results.reduce((pool, alert) => {
+          if (alert.query.trim() === alertQuery.trim()) {
+            pool.push(this.props.deleteAlert(alert.id));
+          }
+          return pool;
+        }, [])
+      );
     } else {
       await this.props.createAlert({ query: alertQuery.trim() });
     }
@@ -71,7 +72,9 @@ class SearchAlert extends PureComponent {
     if (!loggedIn || result.isPending || !validAlertQuery(alertQuery)) {
       return false;
     }
-    return !!result.results.some(a => a.query && a.query.trim() === alertQuery.trim());
+    return !!result.results.some(
+      (a) => a.query && a.query.trim() === alertQuery.trim()
+    );
   }
 
   render() {
@@ -80,17 +83,24 @@ class SearchAlert extends PureComponent {
       return null;
     }
     const alertExists = this.alertExists();
-    const className = c('bp3-button',
+    const className = c(
+      'bp3-button',
       'bp3-minimal',
       { 'bp3-icon-feed': !alertExists },
       { 'bp3-icon-feed-subscribed': alertExists },
       'bp3-small',
-      { 'bp3-intent-primary': alertExists });
-    const tooltip = alertExists ? intl.formatMessage(messages.alert_remove)
+      { 'bp3-intent-primary': alertExists }
+    );
+    const tooltip = alertExists
+      ? intl.formatMessage(messages.alert_remove)
       : intl.formatMessage(messages.alert_add);
     return (
       <Tooltip content={tooltip}>
-        <button className={className} type="button" onClick={this.onToggleAlert} />
+        <button
+          className={className}
+          type="button"
+          onClick={this.onToggleAlert}
+        />
       </Tooltip>
     );
   }
@@ -102,7 +112,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query,
     result: selectAlertResult(state, query),
-    loggedIn: selectSession(state).loggedIn
+    loggedIn: selectSession(state).loggedIn,
   };
 };
 
@@ -110,5 +120,5 @@ const mapDispatchToProps = { createAlert, deleteAlert, queryAlerts };
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(SearchAlert);

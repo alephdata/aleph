@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { csvContextLoader, SectionLoading } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import MappingImportDialog from 'dialogs/MappingImportDialog/MappingImportDialog';
@@ -14,14 +14,12 @@ import { MappingEditor, MappingStatus } from 'components/MappingEditor/.';
 
 import './EntityMappingMode.scss';
 
-
 const messages = defineMessages({
   import: {
     id: 'mapping.import.button',
     defaultMessage: 'Import existing mapping',
   },
 });
-
 
 export class EntityMappingMode extends Component {
   constructor(props) {
@@ -53,29 +51,36 @@ export class EntityMappingMode extends Component {
     const headerColumns = this.useFirstRowAsHeader() ? rows[0] : columns;
 
     const processed = {};
-    Object.entries(mappingData).forEach(([id, { schema, keys, properties }]) => {
-      const processedKeys = keys.filter(key => headerColumns.indexOf(key) > -1);
-      const processedProps = {};
+    Object.entries(mappingData).forEach(
+      ([id, { schema, keys, properties }]) => {
+        const processedKeys = keys.filter(
+          (key) => headerColumns.indexOf(key) > -1
+        );
+        const processedProps = {};
 
-      if (properties) {
-        Object.entries(properties).forEach(([propName, propVal]) => {
-          if (propVal.columns || (propVal.column && headerColumns.indexOf(propVal.column) === -1)) {
-            return;
-          }
-          if (propVal.literal && typeof propVal.literal === 'string') {
-            processedProps[propName] = { literal: [propVal.literal] };
-            return;
-          }
-          processedProps[propName] = propVal;
-        });
+        if (properties) {
+          Object.entries(properties).forEach(([propName, propVal]) => {
+            if (
+              propVal.columns ||
+              (propVal.column && headerColumns.indexOf(propVal.column) === -1)
+            ) {
+              return;
+            }
+            if (propVal.literal && typeof propVal.literal === 'string') {
+              processedProps[propName] = { literal: [propVal.literal] };
+              return;
+            }
+            processedProps[propName] = propVal;
+          });
+        }
+
+        processed[id] = {
+          schema,
+          keys: processedKeys,
+          properties: processedProps,
+        };
       }
-
-      processed[id] = {
-        schema,
-        keys: processedKeys,
-        properties: processedProps,
-      };
-    });
+    );
 
     return processed;
   }
@@ -86,20 +91,31 @@ export class EntityMappingMode extends Component {
   }
 
   render() {
-    const { columns, document, existingMapping, intl, prefilledSchemaData, rows } = this.props;
+    const {
+      columns,
+      document,
+      existingMapping,
+      intl,
+      prefilledSchemaData,
+      rows,
+    } = this.props;
     const { importedMappingData } = this.state;
 
     if (!rows || !columns || existingMapping.isPending) {
       return <SectionLoading />;
     }
 
-    const showImport = !existingMapping.isPending && !importedMappingData && !existingMapping.id;
+    const showImport =
+      !existingMapping.isPending && !importedMappingData && !existingMapping.id;
 
     return (
       <div className="EntityMappingMode">
         <div className="EntityMappingMode__title-container">
           <h1 className="text-page-title">
-            <FormattedMessage id="mapping.title" defaultMessage="Generate structured entities" />
+            <FormattedMessage
+              id="mapping.title"
+              defaultMessage="Generate structured entities"
+            />
           </h1>
           <p className="text-page-subtitle">
             <FormattedMessage
@@ -127,23 +143,21 @@ export class EntityMappingMode extends Component {
           <DialogToggleButton
             buttonProps={{
               text: intl.formatMessage(messages.import),
-              icon: "import"
+              icon: 'import',
             }}
             Dialog={MappingImportDialog}
             dialogProps={{ onSubmit: this.onImport }}
           />
         )}
 
-        {existingMapping.id && (
-          <MappingStatus
-            mapping={existingMapping}
-          />
-        )}
+        {existingMapping.id && <MappingStatus mapping={existingMapping} />}
         <MappingEditor
           document={document}
           csvData={this.useFirstRowAsHeader() ? rows.slice(1) : rows}
           csvHeader={this.useFirstRowAsHeader() ? rows[0] : columns}
-          mappingData={importedMappingData || existingMapping?.query || prefilledSchemaData}
+          mappingData={
+            importedMappingData || existingMapping?.query || prefilledSchemaData
+          }
           existingMappingMetadata={existingMapping}
         />
       </div>
@@ -161,7 +175,9 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     existingMapping: selectEntityMapping(state, document.id),
-    prefilledSchemaData: urlSchema ? { [urlSchema]: { schema: urlSchema } } : null,
+    prefilledSchemaData: urlSchema
+      ? { [urlSchema]: { schema: urlSchema } }
+      : null,
   };
 };
 
@@ -169,5 +185,5 @@ export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
-  csvContextLoader,
+  csvContextLoader
 )(EntityMappingMode);

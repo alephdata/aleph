@@ -1,14 +1,15 @@
-@import "~src/app/tables";
-@import "app/mixins.scss";
+@import '~src/app/tables';
+@import 'app/mixins.scss';
 
 .StatusTable {
   @extend .data-table;
 
-  tr td, tr th {
+  tr td,
+  tr th {
     vertical-align: middle;
   }
 
   td.text {
-    @include rtlSupportInvertedProp(padding, left, 0, null)
+    @include rtlSupportInvertedProp(padding, left, 0, null);
   }
 }

@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .DocumentManager {
   &__content {
@@ -8,7 +8,8 @@
       cursor: pointer;
       max-width: $aleph-content-width-limit;
 
-      .bp3-heading, .bp3-button .bp3-icon {
+      .bp3-heading,
+      .bp3-button .bp3-icon {
         color: rgba(92, 112, 128, 0.6);
         line-height: 1.5;
       }
@@ -20,7 +21,12 @@
   }
 
   .Count {
-    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2 !important, null);
+    @include rtlSupportInvertedProp(
+      margin,
+      left,
+      $aleph-grid-size/2 !important,
+      null
+    );
   }
 
   .align-middle {

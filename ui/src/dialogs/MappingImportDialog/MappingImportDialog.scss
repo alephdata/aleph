@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .MappingImportDialog {
   .bp3-label {
@@ -10,7 +10,7 @@
     display: -webkit-inline-box;
     width: 100%;
     border-bottom: 1px solid $aleph-border-color;
-    padding: $aleph-grid-size*1.5 0;
+    padding: $aleph-grid-size * 1.5 0;
     margin: 0;
 
     &:last-child {

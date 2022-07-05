@@ -9,15 +9,14 @@ import { selectMetadata } from 'selectors';
 
 import './Category.scss';
 
-
 class CategoryLabel extends PureComponent {
   render() {
     const { category, categories, icon } = this.props;
     const label = categories[category];
     return (
       <span className="CategoryLabel" title={label}>
-        { !!icon && (<Icon icon={icon} className="left-icon" />)}
-        <span>{ label }</span>
+        {!!icon && <Icon icon={icon} className="left-icon" />}
+        <span>{label}</span>
       </span>
     );
   }
@@ -30,14 +29,17 @@ class CategoryLink extends PureComponent {
       return <Category.Label category={category} />;
     }
     return (
-      <Link to={getCategoryLink(category)} className={c('CategoryLink', className)}>
+      <Link
+        to={getCategoryLink(category)}
+        className={c('CategoryLink', className)}
+      >
         <Category.Label {...this.props} />
       </Link>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   categories: selectMetadata(state).categories,
 });
 

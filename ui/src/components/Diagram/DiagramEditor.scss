@@ -1,11 +1,11 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 $top-nav-height: 50px;
 $breadcrumb-height: 44px;
 
 .DiagramEditor {
   .NetworkDiagram {
-    height: calc(100vh - #{$top-nav-height + (2*$breadcrumb-height)});
+    height: calc(100vh - #{$top-nav-height + (2 * $breadcrumb-height)});
     background: white;
     overflow: hidden;
   }

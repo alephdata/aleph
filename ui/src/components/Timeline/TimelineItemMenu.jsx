@@ -6,12 +6,11 @@ import { Popover2 as Popover } from '@blueprintjs/popover2';
 import { ColorPicker } from '@alephdata/react-ftm';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { showSuccessToast } from 'app/toast';
 import { Collection } from 'components/common';
 
 import './TimelineItemMenu.scss';
-
 
 const messages = defineMessages({
   link_copy: {
@@ -29,7 +28,7 @@ const messages = defineMessages({
   delete: {
     id: 'timeline.item.delete',
     defaultMessage: 'Delete from {collection}',
-  }
+  },
 });
 
 class TimelineItemMenu extends Component {
@@ -43,11 +42,14 @@ class TimelineItemMenu extends Component {
     const { entity, intl } = this.props;
 
     const location = window.location;
-    const shadowInput = document.createElement("input");
-    const itemHash = queryString.stringify({ ...queryString.parse(location.hash), id: entity.id });
-    shadowInput.type = "text";
+    const shadowInput = document.createElement('input');
+    const itemHash = queryString.stringify({
+      ...queryString.parse(location.hash),
+      id: entity.id,
+    });
+    shadowInput.type = 'text';
     shadowInput.value = `${location.origin}${location.pathname}${location.search}#${itemHash}`;
-    shadowInput.classList.add('TimelineItemMenu__hidden-input')
+    shadowInput.classList.add('TimelineItemMenu__hidden-input');
     document.body.appendChild(shadowInput);
 
     shadowInput.select();
@@ -56,7 +58,15 @@ class TimelineItemMenu extends Component {
   }
 
   render() {
-    const { color, entity, intl, onColorSelect, onDelete, onRemove, writeable } = this.props;
+    const {
+      color,
+      entity,
+      intl,
+      onColorSelect,
+      onDelete,
+      onRemove,
+      writeable,
+    } = this.props;
 
     return (
       <div className="TimelineItemMenu">
@@ -65,10 +75,7 @@ class TimelineItemMenu extends Component {
             <Menu className="TimelineItemMenu__menu">
               {writeable && (
                 <>
-                  <ColorPicker
-                    currSelected={color}
-                    onSelect={onColorSelect}
-                  />
+                  <ColorPicker currSelected={color} onSelect={onColorSelect} />
                   <MenuDivider />
                 </>
               )}
@@ -86,7 +93,14 @@ class TimelineItemMenu extends Component {
                   />
                   <MenuItem
                     onClick={() => onDelete(entity.id)}
-                    text={intl.formatMessage(messages.delete, { collection: <Collection.Label collection={entity.collection} icon={false} /> })}
+                    text={intl.formatMessage(messages.delete, {
+                      collection: (
+                        <Collection.Label
+                          collection={entity.collection}
+                          icon={false}
+                        />
+                      ),
+                    })}
                     icon="trash"
                     intent={Intent.DANGER}
                   />
@@ -95,14 +109,16 @@ class TimelineItemMenu extends Component {
             </Menu>
           }
         >
-          <Button className="TimelineItemMenu__toggle" minimal small icon="more" />
+          <Button
+            className="TimelineItemMenu__toggle"
+            minimal
+            small
+            icon="more"
+          />
         </Popover>
       </div>
     );
   }
 }
 
-export default compose(
-  withRouter,
-  injectIntl,
-)(TimelineItemMenu);
+export default compose(withRouter, injectIntl)(TimelineItemMenu);

@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .GroupScreen {
   .note {
@@ -7,7 +7,7 @@
     padding-bottom: $aleph-grid-size * 2;
   }
 
-  .SignInCallout{
+  .SignInCallout {
     margin-bottom: $aleph-grid-size;
   }
 }

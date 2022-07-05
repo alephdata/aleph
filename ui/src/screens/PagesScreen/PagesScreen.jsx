@@ -6,7 +6,7 @@ import { isLangRtl } from '@alephdata/react-ftm';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Screen from 'components/Screen/Screen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { AppItem, LinkMenuItem } from 'components/common';
@@ -15,7 +15,6 @@ import { selectPages, selectPage } from 'selectors';
 import './PagesScreen.scss';
 import getPageLink from '../../util/getPageLink';
 
-
 const messages = defineMessages({
   not_found: {
     id: 'pages.not.found',
@@ -23,7 +22,7 @@ const messages = defineMessages({
   },
   greeting: {
     id: 'notifications.greeting',
-    defaultMessage: 'What\'s new, {role}?',
+    defaultMessage: "What's new, {role}?",
   },
 });
 
@@ -33,25 +32,26 @@ export class PagesScreen extends React.Component {
     if (!page) {
       return <ErrorScreen error={intl.formatMessage(messages.not_found)} />;
     }
-    const menuPages = pages.filter((page) => page.sidebar)
+    const menuPages = pages
+      .filter((page) => page.sidebar)
       .sort((a, b) => a.short.localeCompare(b.short));
 
-    const contentDir = isLangRtl(page.lang) ? "rtl" : "ltr";
+    const contentDir = isLangRtl(page.lang) ? 'rtl' : 'ltr';
 
     return (
       <Screen title={page.title} exemptFromRequiredAuth>
         <div className="Pages">
           <div className="Pages__body">
-            <h5 className="Pages__title" dir={contentDir}>{page.title}</h5>
+            <h5 className="Pages__title" dir={contentDir}>
+              {page.title}
+            </h5>
             <div className="Pages__content-container">
               <div className="Pages__content" dir={contentDir}>
-                <ReactMarkdown>
-                  {page.content}
-                </ReactMarkdown>
+                <ReactMarkdown>{page.content}</ReactMarkdown>
               </div>
               <div className="Pages__menu">
                 <Menu>
-                  {menuPages.map(menuPage => (
+                  {menuPages.map((menuPage) => (
                     <LinkMenuItem
                       key={menuPage.name}
                       to={getPageLink(menuPage)}
@@ -72,7 +72,6 @@ export class PagesScreen extends React.Component {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
   const { page } = ownProps.params;
   return {
@@ -84,5 +83,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(PagesScreen);

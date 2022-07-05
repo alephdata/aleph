@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import {
-  Cell, Column, Table, TruncatedFormat,
-} from '@blueprintjs/table';
+import { Cell, Column, Table, TruncatedFormat } from '@blueprintjs/table';
 import { csvContextLoader } from 'components/common';
 
 import './TableViewer.scss';
-
 
 class TableViewer extends Component {
   constructor(props) {
@@ -17,7 +14,8 @@ class TableViewer extends Component {
   componentDidUpdate(prevProps) {
     // Blueprint Table doesn't consistently re-render on initial data load.
     //  so force reloads the component to render the table correctly with incoming data
-    const initialDataLoad = prevProps.rows.length === 0 && this.props.rows.length !== 0;
+    const initialDataLoad =
+      prevProps.rows.length === 0 && this.props.rows.length !== 0;
     if (initialDataLoad) {
       this.forceUpdate();
     }
@@ -26,8 +24,8 @@ class TableViewer extends Component {
   onVisibleCellsChange(row) {
     const { fetchMoreRows, requestedRow } = this.props;
     // If we are scrolling to the end. Time to load more rows.
-    if ((row.rowIndexEnd + 50) > requestedRow) {
-      fetchMoreRows()
+    if (row.rowIndexEnd + 50 > requestedRow) {
+      fetchMoreRows();
     }
   }
 
@@ -36,9 +34,7 @@ class TableViewer extends Component {
     const value = row ? row[colIndex] : undefined;
     return (
       <Cell loading={value === undefined}>
-        <TruncatedFormat detectTruncation>
-          {value || ''}
-        </TruncatedFormat>
+        <TruncatedFormat detectTruncation>{value || ''}</TruncatedFormat>
       </Cell>
     );
   }

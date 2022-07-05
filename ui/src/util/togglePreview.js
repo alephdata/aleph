@@ -4,7 +4,8 @@ export default function togglePreview(navigate, location, entity, profile) {
   const parsed = queryString.parse(location.hash);
   parsed['preview:mode'] = undefined;
   if (entity) {
-    parsed['preview:id'] = parsed['preview:id'] === entity.id ? undefined : entity.id;
+    parsed['preview:id'] =
+      parsed['preview:id'] === entity.id ? undefined : entity.id;
     parsed['preview:profile'] = profile;
   } else {
     parsed['preview:id'] = undefined;

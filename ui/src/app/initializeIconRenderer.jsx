@@ -9,11 +9,14 @@ const renderSvgPaths = (pathsSize, iconName) => {
   const iconPaths = IconRegistry.getIcon(iconName);
   if (iconPaths) {
     return (
-      <g transform={`scale(${pathsSize/FTM_ICON_SIZE})`}>
-        {iconPaths.map(d => <path key={d} d={d} fillRule="evenodd" />)}
+      <g transform={`scale(${pathsSize / FTM_ICON_SIZE})`}>
+        {iconPaths.map((d) => (
+          <path key={d} d={d} fillRule="evenodd" />
+        ))}
       </g>
     );
-  } return BlueprintIcon.prototype._renderSvgPaths(pathsSize, iconName);
+  }
+  return BlueprintIcon.prototype._renderSvgPaths(pathsSize, iconName);
 };
 
 // extends blueprint icon renderer to render icons from the ftm iconRegistry
@@ -22,14 +25,13 @@ export default function initializeIconRenderer() {
     BlueprintIcon.prototype._render = BlueprintIcon.prototype.render;
   }
   if (!BlueprintIcon.prototype._renderSvgPaths) {
-    BlueprintIcon.prototype._renderSvgPaths = BlueprintIcon.prototype.renderSvgPaths;
+    BlueprintIcon.prototype._renderSvgPaths =
+      BlueprintIcon.prototype.renderSvgPaths;
   }
 
   Object.assign(BlueprintIcon.prototype, {
     render() {
-      return BlueprintIcon.prototype._render.apply(
-        { ...this, renderSvgPaths },
-      );
+      return BlueprintIcon.prototype._render.apply({ ...this, renderSvgPaths });
     },
   });
 }

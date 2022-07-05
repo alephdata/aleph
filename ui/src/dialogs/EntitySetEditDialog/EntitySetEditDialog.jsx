@@ -63,7 +63,6 @@ const messages = defineMessages({
   },
 });
 
-
 class EntitySetEditDialog extends Component {
   constructor(props) {
     super(props);
@@ -97,7 +96,7 @@ class EntitySetEditDialog extends Component {
       await this.props.updateEntitySet(entitySet.id, { label, summary });
       this.props.toggleDialog();
       showSuccessToast(
-        intl.formatMessage(messages[`${entitySet.type}_success`]),
+        intl.formatMessage(messages[`${entitySet.type}_success`])
       );
     } catch (e) {
       showWarningToast(e.message);
@@ -137,14 +136,19 @@ class EntitySetEditDialog extends Component {
         <div className="bp3-dialog-body">
           <div className="bp3-form-group">
             <label className="bp3-label" htmlFor="label">
-              <FormattedMessage id="entityset.choose.name" defaultMessage="Title" />
+              <FormattedMessage
+                id="entityset.choose.name"
+                defaultMessage="Title"
+              />
               <div className="bp3-input-group bp3-fill">
                 <input
                   id="label"
                   type="text"
                   className="bp3-input"
                   autoComplete="off"
-                  placeholder={intl.formatMessage(messages[`${type}_label_placeholder`])}
+                  placeholder={intl.formatMessage(
+                    messages[`${type}_label_placeholder`]
+                  )}
                   onChange={this.onChangeLabel}
                   value={label}
                 />
@@ -161,7 +165,9 @@ class EntitySetEditDialog extends Component {
                 <textarea
                   id="summary"
                   className="bp3-input"
-                  placeholder={intl.formatMessage(messages[`${type}_summary_placeholder`])}
+                  placeholder={intl.formatMessage(
+                    messages[`${type}_summary_placeholder`]
+                  )}
                   onChange={this.onChangeSummary}
                   value={summary}
                   rows={5}

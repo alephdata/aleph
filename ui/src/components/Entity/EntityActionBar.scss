@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 $search-bar-width: 200px;
 $status-width: 120px;
@@ -18,10 +18,16 @@ $status-width: 120px;
 
     .bp3-input-group {
       .bp3-input:not(:first-child) {
-        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3, null);
+        @include rtlSupportInvertedProp(
+          padding,
+          left,
+          $aleph-grid-size * 3,
+          null
+        );
       }
     }
-    .bp3-input-group, .bp3-button-group {
+    .bp3-input-group,
+    .bp3-button-group {
       border-radius: 3px;
     }
   }
@@ -41,7 +47,8 @@ $status-width: 120px;
     }
   }
 
-  &__delete, .bp3-popover2-target .bp3-button  {
+  &__delete,
+  .bp3-popover2-target .bp3-button {
     border-top-right-radius: $aleph-border-radius !important;
     border-bottom-right-radius: $aleph-border-radius !important;
   }

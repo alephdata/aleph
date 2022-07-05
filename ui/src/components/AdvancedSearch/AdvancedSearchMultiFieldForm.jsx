@@ -1,7 +1,12 @@
 import React, { PureComponent } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, ControlGroup, FormGroup, InputGroup, Slider } from '@blueprintjs/core';
-
+import {
+  Button,
+  ControlGroup,
+  FormGroup,
+  InputGroup,
+  Slider,
+} from '@blueprintjs/core';
 
 const messages = defineMessages({
   variants_term: {
@@ -47,13 +52,13 @@ class AdvancedSearchMultiFieldForm extends PureComponent {
 
     if (distance && term && (field !== 'proximity' || term2)) {
       this.props.onSubmit({ distance, term, term2 });
-      this.setState({ term: null, term2: null, distance: null })
+      this.setState({ term: null, term2: null, distance: null });
     }
   }
 
   onChange(field, value) {
     this.setState({
-      [field]: value
+      [field]: value,
     });
   }
 
@@ -62,13 +67,16 @@ class AdvancedSearchMultiFieldForm extends PureComponent {
     const { distance, term, term2 } = this.state;
 
     return (
-      <ControlGroup id={field} fill vertical={false} className="AdvancedSearchMultiField__form">
-        <FormGroup
-          helperText={intl.formatMessage(messages[`${field}_term`])}
-        >
+      <ControlGroup
+        id={field}
+        fill
+        vertical={false}
+        className="AdvancedSearchMultiField__form"
+      >
+        <FormGroup helperText={intl.formatMessage(messages[`${field}_term`])}>
           <InputGroup
             value={term || ''}
-            onChange={e => this.onChange("term", e.target.value)}
+            onChange={(e) => this.onChange('term', e.target.value)}
           />
         </FormGroup>
         <FormGroup
@@ -81,18 +89,16 @@ class AdvancedSearchMultiFieldForm extends PureComponent {
             min={0}
             max={field === 'proximity' ? 6 : 4}
             labelStepSize={1}
-            onChange={val => this.onChange("distance", val)}
+            onChange={(val) => this.onChange('distance', val)}
             value={+distance || 0}
           />
         </FormGroup>
         {field === 'proximity' && (
-          <FormGroup
-            helperText={intl.formatMessage(messages.proximity_term2)}
-          >
+          <FormGroup helperText={intl.formatMessage(messages.proximity_term2)}>
             <InputGroup
               inline
               value={term2 || ''}
-              onChange={e => this.onChange("term2", e.target.value)}
+              onChange={(e) => this.onChange('term2', e.target.value)}
             />
           </FormGroup>
         )}

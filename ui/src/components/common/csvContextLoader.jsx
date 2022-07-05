@@ -1,7 +1,7 @@
 import React from 'react';
 import fetchCsvData from 'util/fetchCsvData';
 
-const csvContextLoader = (Viewer) => (
+const csvContextLoader = (Viewer) =>
   class extends React.Component {
     constructor(props) {
       super(props);
@@ -97,7 +97,6 @@ const csvContextLoader = (Viewer) => (
         />
       );
     }
-  }
-);
+  };
 
 export default csvContextLoader;

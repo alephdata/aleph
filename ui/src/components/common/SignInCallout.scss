@@ -1,8 +1,8 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .SignInCallout.bp3-callout {
-  margin-bottom: $aleph-grid-size*2;
+  margin-bottom: $aleph-grid-size * 2;
 
   @include rtlSupportInvertedProp(padding, right, 40px, null);
 

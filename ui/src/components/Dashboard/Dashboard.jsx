@@ -5,7 +5,7 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Count, Skeleton, AppItem, LinkMenuItem } from 'components/common';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { queryRoles } from 'actions';
 import { groupsQuery } from 'queries';
 import { selectRolesResult, selectCurrentRole } from 'selectors';
@@ -51,7 +51,6 @@ const messages = defineMessages({
   },
 });
 
-
 class Dashboard extends React.Component {
   componentDidMount() {
     this.fetchIfNeeded();
@@ -79,7 +78,10 @@ class Dashboard extends React.Component {
             <Menu>
               <li className="bp3-menu-header">
                 <h6 className="bp3-heading">
-                  <FormattedMessage id="dashboard.activity" defaultMessage="Activity" />
+                  <FormattedMessage
+                    id="dashboard.activity"
+                    defaultMessage="Activity"
+                  />
                 </h6>
               </li>
               <LinkMenuItem
@@ -105,7 +107,10 @@ class Dashboard extends React.Component {
               <MenuDivider />
               <li className="bp3-menu-header">
                 <h6 className="bp3-heading">
-                  <FormattedMessage id="dashboard.workspace" defaultMessage="Workspace" />
+                  <FormattedMessage
+                    id="dashboard.workspace"
+                    defaultMessage="Workspace"
+                  />
                 </h6>
               </li>
               <LinkMenuItem
@@ -139,22 +144,34 @@ class Dashboard extends React.Component {
               {(groupsResult.total === undefined || groupsResult.total > 0) && (
                 <>
                   <MenuDivider />
-                  <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.total === undefined })}>
+                  <li
+                    className={c('bp3-menu-header', {
+                      [Classes.SKELETON]: groupsResult.total === undefined,
+                    })}
+                  >
                     <h6 className="bp3-heading">
-                      <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
+                      <FormattedMessage
+                        id="dashboard.groups"
+                        defaultMessage="Groups"
+                      />
                     </h6>
                   </li>
-                  {groupsResult.results !== undefined && groupsResult.results.map(group => (
-                    <LinkMenuItem
-                      key={group.id}
-                      icon="shield"
-                      text={group.label}
-                      to={`/groups/${group.id}`}
-                      active={current === `/groups/${group.id}`}
-                    />
-                  ))}
+                  {groupsResult.results !== undefined &&
+                    groupsResult.results.map((group) => (
+                      <LinkMenuItem
+                        key={group.id}
+                        icon="shield"
+                        text={group.label}
+                        to={`/groups/${group.id}`}
+                        active={current === `/groups/${group.id}`}
+                      />
+                    ))}
                   {groupsResult.total === undefined && (
-                    <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
+                    <Skeleton.Text
+                      type="li"
+                      length={20}
+                      className="bp3-menu-item"
+                    />
                   )}
                 </>
               )}
@@ -175,9 +192,7 @@ class Dashboard extends React.Component {
               <AppItem />
             </Menu>
           </div>
-          <div className="Dashboard__body">
-            {this.props.children}
-          </div>
+          <div className="Dashboard__body">{this.props.children}</div>
         </div>
       </div>
     );

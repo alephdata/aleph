@@ -12,7 +12,7 @@ class AdvancedSearchMultiField extends PureComponent {
 
     this.state = {
       showHelpText: false,
-    }
+    };
 
     this.onRemove = this.onRemove.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -31,7 +31,7 @@ class AdvancedSearchMultiField extends PureComponent {
 
   toggleHelpText = () => {
     this.setState(({ showHelpText }) => ({ showHelpText: !showHelpText }));
-  }
+  };
 
   render() {
     const { field, helperText, label, values } = this.props;
@@ -41,21 +41,24 @@ class AdvancedSearchMultiField extends PureComponent {
       <>
         <Divider />
         <FormGroup
-          label={(
+          label={
             <div className="AdvancedSearchMultiField__label">
               <span>{label}</span>
               <Button
                 small
                 minimal
-                icon={showHelpText ? "chevron-up" : "help"}
+                icon={showHelpText ? 'chevron-up' : 'help'}
                 className="AdvancedSearchMultiField__helptext__toggle"
                 onClick={this.toggleHelpText}
               />
             </div>
-          )}
+          }
           className="AdvancedSearchMultiField"
         >
-          <Collapse isOpen={showHelpText} className="AdvancedSearchMultiField__helptext">
+          <Collapse
+            isOpen={showHelpText}
+            className="AdvancedSearchMultiField__helptext"
+          >
             <span className="bp3-form-helper-text">{helperText}</span>
           </Collapse>
           {values.length > 0 && (

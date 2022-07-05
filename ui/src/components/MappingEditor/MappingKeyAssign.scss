@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .MappingKeyAssign {
   &__item {
@@ -21,20 +21,31 @@
 
     &__title.bp3-heading {
       color: white;
-      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*5, null);
+      @include rtlSupportInvertedProp(
+        margin,
+        right,
+        $aleph-grid-size * 5,
+        null
+      );
     }
 
     &__property {
       display: table;
       width: 100%;
 
-      &__label, &__value {
+      &__label,
+      &__value {
         display: table-cell;
       }
 
       &__value {
         width: 75%;
-        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*1.5, null);
+        @include rtlSupportInvertedProp(
+          padding,
+          left,
+          $aleph-grid-size * 1.5,
+          null
+        );
       }
 
       &__label {
@@ -54,7 +65,12 @@
       &__toggle {
         font-weight: bold;
         margin-top: 0 !important;
-        @include rtlSupportInvertedProp(margin, left, -$aleph-grid-size/2, null);
+        @include rtlSupportInvertedProp(
+          margin,
+          left,
+          -$aleph-grid-size/2,
+          null
+        );
 
         .bp3-icon {
           color: white !important;

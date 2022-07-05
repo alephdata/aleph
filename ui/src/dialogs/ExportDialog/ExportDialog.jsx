@@ -3,7 +3,7 @@ import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 
 const messages = defineMessages({
@@ -41,14 +41,13 @@ export class ExportDialog extends Component {
           small: true,
           icon: 'share',
           text: intl.formatMessage(messages.dashboard_link),
-          onClick: () => navigate('/exports')
-        }
+          onClick: () => navigate('/exports'),
+        },
       });
       toggleDialog();
     } catch (e) {
       showErrorToast(e);
     }
-
   }
 
   render() {
@@ -75,7 +74,7 @@ export class ExportDialog extends Component {
           `}
           values={{
             bold: (...chunks) => <b>{chunks}</b>,
-            br: <br />
+            br: <br />,
           }}
         />
       </Alert>
@@ -83,7 +82,4 @@ export class ExportDialog extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  injectIntl,
-)(ExportDialog);
+export default compose(withRouter, injectIntl)(ExportDialog);

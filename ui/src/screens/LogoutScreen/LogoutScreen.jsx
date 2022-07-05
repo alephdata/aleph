@@ -15,7 +15,7 @@ class LogoutScreen extends Component {
     if (!session.loggedIn && session.logoutRedirect) {
       window.location = session.logoutRedirect;
     }
-    return <LoadingScreen {...this.props} />
+    return <LoadingScreen {...this.props} />;
   }
 }
 

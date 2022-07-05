@@ -47,7 +47,8 @@ def upgrade():
     rp = bind.execute(q)
 
     profiles = groupby(
-        takewhile(lambda x: x is not None, rp), key=lambda x: str(x.profile_id),
+        takewhile(lambda x: x is not None, rp),
+        key=lambda x: str(x.profile_id),
     )
 
     judgement_lookup = {

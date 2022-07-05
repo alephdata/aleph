@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from servicelayer.jobs import Job
 
 from aleph.authz import Authz
-from aleph.model import Collection, EntitySet, Role
+from aleph.model import Collection, EntitySet
 from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
@@ -65,7 +65,7 @@ def validate(data, schema):
         if path not in errors:
             errors[path] = error.message
         else:
-            errors[path] += '; ' + error.message
+            errors[path] += "; " + error.message
         log.info("ERROR [%s]: %s", path, error.message)
 
     if not len(errors):

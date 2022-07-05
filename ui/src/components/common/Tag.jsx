@@ -4,7 +4,7 @@ import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import './Tag.scss';
 
 class TagIcon extends PureComponent {
-  className='tag-icon';
+  className = 'tag-icon';
 
   icons = {
     names: <Icon icon="tag" className={this.className} />,
@@ -20,7 +20,9 @@ class TagIcon extends PureComponent {
 
   render() {
     const { field } = this.props;
-    if (field === 'urls') { return null; }
+    if (field === 'urls') {
+      return null;
+    }
     return this.icons[field] || this.icons.link;
   }
 }

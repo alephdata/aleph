@@ -1,4 +1,3 @@
-
 // Parse a PDF fragment identifier according to
 // <https://tools.ietf.org/html/rfc3778#section-3>.
 // Returns the parameters as an array of objects.

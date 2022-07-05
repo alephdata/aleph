@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
 import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
 import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
@@ -18,8 +18,7 @@ import { ErrorSection, Schema } from 'components/common';
 import { collectionSearchQuery } from 'queries';
 import { selectEntitiesResult } from 'selectors';
 
-
-import './InvestigationViews.scss'
+import './InvestigationViews.scss';
 
 const messages = defineMessages({
   empty: {
@@ -30,14 +29,12 @@ const messages = defineMessages({
 
 class InvestigationViews extends React.Component {
   renderContent() {
-    const { collectionId, activeMode, intl, searchQuery, searchResult } = this.props;
+    const { collectionId, activeMode, intl, searchQuery, searchResult } =
+      this.props;
 
     const mentionsEmpty = (
-      <ErrorSection
-        icon="tag"
-        title={intl.formatMessage(messages.empty)}
-      />
-    )
+      <ErrorSection icon="tag" title={intl.formatMessage(messages.empty)} />
+    );
 
     switch (activeMode) {
       case 'documents':
@@ -45,21 +42,45 @@ class InvestigationViews extends React.Component {
       case 'entities':
         return <CollectionEntitiesMode collectionId={collectionId} />;
       case 'diagrams':
-        return <CollectionEntitySetsIndexMode collectionId={collectionId} type="diagram" />;
+        return (
+          <CollectionEntitySetsIndexMode
+            collectionId={collectionId}
+            type="diagram"
+          />
+        );
       case 'lists':
-        return <CollectionEntitySetsIndexMode collectionId={collectionId} type="list" />;
+        return (
+          <CollectionEntitySetsIndexMode
+            collectionId={collectionId}
+            type="list"
+          />
+        );
       case 'timelines':
-        return <CollectionEntitySetsIndexMode collectionId={collectionId} type="timeline" />;
+        return (
+          <CollectionEntitySetsIndexMode
+            collectionId={collectionId}
+            type="timeline"
+          />
+        );
       case 'mappings':
         return <CollectionMappingsMode collectionId={collectionId} />;
       case 'mentions':
-        return <CollectionStatisticsGroup collectionId={collectionId} emptyComponent={mentionsEmpty} />;
+        return (
+          <CollectionStatisticsGroup
+            collectionId={collectionId}
+            emptyComponent={mentionsEmpty}
+          />
+        );
       case 'search':
-        return <FacetedEntitySearch query={searchQuery} result={searchResult} />;
+        return (
+          <FacetedEntitySearch query={searchQuery} result={searchResult} />
+        );
       case 'xref':
         return <CollectionXrefMode collectionId={collectionId} />;
       default:
-        return <CollectionOverviewMode collectionId={collectionId} isCasefile />;
+        return (
+          <CollectionOverviewMode collectionId={collectionId} isCasefile />
+        );
     }
   }
 
@@ -71,10 +92,10 @@ class InvestigationViews extends React.Component {
       title = null;
     } else if (!!activeType) {
       title = <Schema.Label schema={activeType} plural icon />;
-      subheading = <Schema.Description schema={activeType} />
+      subheading = <Schema.Description schema={activeType} />;
     } else if (!!activeMode) {
       title = <CollectionView.Label id={activeMode} icon isCasefile />;
-      subheading = <CollectionView.Description id={activeMode} />
+      subheading = <CollectionView.Description id={activeMode} />;
     }
 
     return (
@@ -84,29 +105,33 @@ class InvestigationViews extends React.Component {
             <h5 className="InvestigationViews__title">
               <span>{title}</span>
             </h5>
-            {subheading && <p className="InvestigationViews__subheading">{subheading}</p>}
+            {subheading && (
+              <p className="InvestigationViews__subheading">{subheading}</p>
+            )}
           </div>
         )}
         <div className="InvestigationViews__content">
           {this.renderContent()}
         </div>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
-  const searchQuery = collectionSearchQuery(location, collectionId, { highlight: true });
+  const searchQuery = collectionSearchQuery(location, collectionId, {
+    highlight: true,
+  });
 
   return {
     searchQuery,
-    searchResult: selectEntitiesResult(state, searchQuery)
+    searchResult: selectEntitiesResult(state, searchQuery),
   };
 };
 
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(InvestigationViews);
