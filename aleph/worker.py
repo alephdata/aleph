@@ -170,7 +170,7 @@ class AlephWorker(Worker):
                         f"Task [collection:{task.collection_id}]: "
                         f"op:{task.operation} task_id:{task.task_id} (batched)"
                     )
-                # skip acknowledgement for batched task; the batch processing function
+                # skip acknowledgment for batched task; the batch processing function
                 # will acknowledge tasks after execution is complete
                 task.context["skip_ack"] = True
                 return task
