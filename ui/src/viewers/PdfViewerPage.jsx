@@ -46,7 +46,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = baseQuery
     .set('highlight', true)
     // TODO: This should not be hard coded
-    .setString('q', 'balance')
+    .setString('highlight_text', 'balance')
     .setFilter('properties.index', page);
   const result = selectEntitiesResult(state, query);
   const entity = result.results.length
