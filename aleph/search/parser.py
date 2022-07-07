@@ -132,10 +132,12 @@ class SearchQueryParser(QueryParser):
         # index.
         self.facet_names = set(self.getlist("facet"))
 
+        # Query to use for highlighting, defaults to the search query
+        self.highlight_text = self.get("highlight_text", self.text)
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool("highlight", False)
         self.highlight = self.highlight and settings.RESULT_HIGHLIGHT
-        self.highlight = self.highlight and self.text
+        self.highlight = self.highlight and self.highlight_text
         # Length of each snippet in characters
         self.highlight_length = self.getint("highlight_length", 120)
         # Number of snippets per document, 0 = return full document text.
