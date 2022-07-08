@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react';
 import { Pre } from '@blueprintjs/core';
 
 import { Skeleton } from 'components/common';
+import insertHighlights from 'util/insertHighlights';
+import convertHighlightsToReactElements from 'util/convertHighlightsToReactElements';
 
 import './TextViewer.scss';
-import convertHighlightsToReactElements from 'util/convertHighlightsToReactElements';
 
 class TextViewer extends PureComponent {
   constructor() {
@@ -28,18 +29,14 @@ class TextViewer extends PureComponent {
 
   highlightedText() {
     const { document } = this.props;
-    const text = document.getFirst('bodyText');
+    let text = document.getFirst('bodyText');
 
     if (!document.highlight) {
       return text;
     }
 
-    const withoutMarkup = highlight.replaceAll(/<\/?em>/g, '');
-    const html = document.highlight.reduce((text, highlight) => {
-      return text.replace(withoutMarkup, highlight);
-    }, text);
-
-    return convertHighlightsToReactElements(html);
+    const highlightedText = insertHighlights(text, document.highlight);
+    return convertHighlightsToReactElements(highlightedText);
   }
 }
 
