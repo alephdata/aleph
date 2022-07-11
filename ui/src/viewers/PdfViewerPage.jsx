@@ -42,16 +42,14 @@ class PdfViewerPage extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { baseQuery, page } = ownProps;
-  const query = baseQuery
-    .set('highlight', true)
-    // TODO: This should not be hard coded
-    .setString('highlight_text', 'balance')
-    .setFilter('properties.index', page);
+  const { query } = ownProps;
+
   const result = selectEntitiesResult(state, query);
+
   const entity = result.results.length
     ? result.results[0]
     : selectEntity(state, undefined);
+
   return {
     query,
     result,

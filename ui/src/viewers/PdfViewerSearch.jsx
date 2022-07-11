@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
-import getEntityLink from 'util/getEntityLink';
-import { SectionLoading } from 'components/common';
+import queryString from 'query-string';
+import { SectionLoading, SearchHighlight } from 'components/common';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
@@ -26,10 +26,16 @@ class PdfViewerSearch extends Component {
   }
 
   getResultLink(result) {
-    const { document, activeMode } = this.props;
-    const path = getEntityLink(document);
+    const { activeMode, query } = this.props;
     const page = result.getProperty('index').toString();
-    return `${path}#page=${page}&mode=${activeMode}`;
+
+    const hashQuery = {
+      page,
+      mode: activeMode,
+      q: query.getString('q'),
+    };
+
+    return `#${queryString.stringify(hashQuery)}`;
   }
 
   fetchPage() {
@@ -40,13 +46,12 @@ class PdfViewerSearch extends Component {
   }
 
   render() {
-    const { page, dir, query, result } = this.props;
-    if (!query.getString('q')) {
-      return this.props.children;
-    }
+    const { page, dir, result } = this.props;
+
     if (result.total === undefined) {
       return <SectionLoading />;
     }
+
     return (
       <div className="pages">
         {result.total === 0 && (
