@@ -288,6 +288,7 @@ const mapStateToProps = (state, ownProps) => {
   const pageQuery = baseQuery
     .set('highlight', true)
     .set('highlight_text', queryText)
+    .set('highlight_count', 15)
     .setFilter('properties.index', page)
     .set('limit', 1);
 
