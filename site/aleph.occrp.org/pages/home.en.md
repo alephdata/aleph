@@ -6,6 +6,8 @@ html: true
 samples:
 - "Vladimir Putin"
 - "TeliaSonera"
+warning_title: "2022/07/11 - Public access temporarily disabled"
+warning_body: "We have disabled public access to prevent Aleph from being overwhelmed by automated anonymous requests. We will resume providing public access soon."
 ---
 
 <section className="HomeScreen__section">
