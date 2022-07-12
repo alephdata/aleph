@@ -16,6 +16,8 @@
     "@formatjs/intl-pluralrules": "^5.0.2",
     "@formatjs/intl-relativetimeformat": "^11.0.1",
     "@formatjs/intl-utils": "^3.8.4",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^12.1.5",
     "@types/jest": "^28.1.4",
     "@types/node": "^17.0.8",
     "@types/react": "^17.0.1",
@@ -71,6 +73,9 @@
   "proxy": "http://api:5000/",
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "jest": {
+    "transformIgnorePatterns": []
   },
   "browserslist": {
     "production": [
