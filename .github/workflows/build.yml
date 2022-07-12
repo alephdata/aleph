@@ -25,6 +25,9 @@ jobs:
       - name: Run linter
         run: make lint-ui
 
+      - name: Run tests
+        run: make test-ui
+
       - name: Build production image
         run: docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
 
