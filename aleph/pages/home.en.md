@@ -4,8 +4,6 @@ title: 'Aleph'
 description: 'Search documents, companies and people'
 html: true
 samples: ["Vladimir Putin", "TeliaSonera"]
-warning_title: "Public access temporarily disabled"
-warning_body: "We have disabled public access to prevent Aleph from being overwhelmed by automated anonymous requests."
 ---
 
 <section className="HomeScreen__section">
