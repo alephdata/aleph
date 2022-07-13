@@ -228,7 +228,7 @@ export class PdfViewer extends Component {
     return (
       <div className="PdfViewer">
         <EntityActionBar
-          query={searchQuery}
+          query={shouldRenderSearch ? searchQuery : pageQuery}
           onSearchSubmit={this.onSearch}
           searchPlaceholder={intl.formatMessage(messages.placeholder, {
             label: document.getCaption(),
