@@ -11,9 +11,24 @@ class TextViewer extends PureComponent {
   constructor() {
     super();
     this.highlightedText.bind(this);
+    this.contents.bind(this);
   }
 
   render() {
+    const { noStyle } = this.props;
+
+    if (noStyle) {
+      return this.contents();
+    }
+
+    return (
+      <div className="outer">
+        <div className="inner">{this.contents()}</div>
+      </div>
+    );
+  }
+
+  contents() {
     const { document, dir } = this.props;
 
     if (document.isPending) {
