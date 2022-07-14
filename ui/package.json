@@ -74,6 +74,9 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "jest": {
+    "transformIgnorePatterns": []
+  },
   "browserslist": {
     "production": [
       ">0.2%",
