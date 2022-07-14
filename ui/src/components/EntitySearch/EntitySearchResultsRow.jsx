@@ -12,6 +12,7 @@ import {
   FileSize,
   Property,
   Schema,
+  SearchHighlight,
   Skeleton,
 } from 'components/common';
 
@@ -172,13 +173,7 @@ class EntitySearchResultsRow extends Component {
         {!!highlights.length && (
           <tr key={`${entity.id}-hl`} className={highlightsClass}>
             <td colSpan="100%" className="highlights">
-              <div className="highlights__content">
-                {highlights.map((phrase, index) => (
-                  <span key={index}>
-                    <span dangerouslySetInnerHTML={{ __html: phrase }} />
-                  </span>
-                ))}
-              </div>
+              <SearchHighlight highlight={highlights} />
             </td>
           </tr>
         )}
