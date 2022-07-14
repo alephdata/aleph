@@ -1,0 +1,6 @@
+@import 'app/variables.scss';
+
+.SearchHighlight em {
+  background-color: $aleph-text-highlight-color;
+  font-style: inherit;
+}

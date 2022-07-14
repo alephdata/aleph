@@ -83,15 +83,7 @@ class PdfViewerSearch extends Component {
                   />
                 </Link>
               </p>
-              <p>
-                {res.highlight !== undefined && (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: res.highlight.join('  …  '),
-                    }}
-                  />
-                )}
-              </p>
+              <SearchHighlight highlight={res.highlight} />
             </li>
           ))}
         </ul>
