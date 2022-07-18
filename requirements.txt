@@ -26,7 +26,7 @@ gunicorn[eventlet]==20.1.0
 jsonschema==4.7.2
 apispec==5.2.2
 apispec-webframeworks==0.5.2
-blinker==1.4
+blinker==1.5
 Babel==2.10.3
 PyYAML==6.0
 python-frontmatter==1.0.0
