@@ -61,10 +61,10 @@ As far as possible apply the rules of semantic versioning when determining the t
 If you need to perform an RC release of Aleph, follow these steps:
 
 1. Ensure that the `CHANGELOG`` is up to date on the develop branch and that all outstanding PR's have been merged
-2. From the develop branch run bump2version release this will create a x.x.x-rc1 version of aleph
+2. From the develop branch run bump2version (major, minor, patch) this will create a x.x.x-rc1 version of aleph
 3. push the tags to the remote with git push --tags
 4. push the version bump with git push
-5. If there are problems with the RC you can fix them and use bump2version build to generate new rc releases
+5. If there are problems with the RC you can fix them and use bump2version build to generate new rc release
 
 
 #### Major, minor, patch releases
@@ -74,7 +74,7 @@ If you need to perform an RC release of Aleph, follow these steps:
 3. Update translations using `make translate` 
 4. If you get npm errors, go into the ui folder and run `npm install`
 5. commit translations to `main` and push to remote
-6. run `bump2version` with patch, minor, major. Note that bump2version won't show changes when you make the change, but it will work (see `git log` to check)
+6. run `bump2version release`. Note that bump2version won't show changes when you make the change, but it will work (see `git log` to check)
 7. push the tags to the remote with `git push --tags`
 8. push version bump to remote with `git push`
-9. merge `main` back into `develop`. Slightly unrelated to the release process but this is a good time to do it so that the new version numbers appear in `develop`` as well
+9. merge `main` back into `develop`. Slightly unrelated to the release process but this is a good time to do it so that the new version numbers appear in `develop` as well
