@@ -35,7 +35,8 @@ Release process
 
 If you are interested in, or have been tasked with releasing a new version of Aleph. The following steps should be followed:
 
-### Overview
+Overview
+--------
 
 The basic process for releasing Aleph is this:
 
@@ -54,9 +55,11 @@ The basic process for releasing Aleph is this:
 
 As far as possible apply the rules of semantic versioning when determining the type of release to perform.
 
-### Technical process
+Technical process
+-----------------
 
-#### RC releases
+RC releases
+-----------
 
 If you need to perform an RC release of Aleph, follow these steps:
 
@@ -67,7 +70,8 @@ If you need to perform an RC release of Aleph, follow these steps:
 5. If there are problems with the RC you can fix them and use bump2version build to generate new rc release
 
 
-#### Major, minor, patch releases
+Major, minor, patch releases
+----------------------------
 
 1. switch to `main` and pull from remote
 2. If not already done merge `develop` into `main`
