@@ -83,7 +83,7 @@ def configure_schema(schema, version):
     mapping = {
         "date_detection": False,
         "dynamic": False,
-        "_source": {"excludes": ["text", "fingerprints"]},
+        "_source": {"excludes": ["fingerprints"]},
         "properties": {
             "caption": KEYWORD,
             "schema": KEYWORD,
@@ -113,7 +113,6 @@ def configure_schema(schema, version):
                 "analyzer": "latin_index",
                 "search_analyzer": "latin_query",
                 "search_quote_analyzer": "latin_index",
-                "term_vector": "with_positions_offsets",
             },
             "properties": {"type": "object", "properties": schema_mapping},
             "numeric": {"type": "object", "properties": numeric_mapping},
