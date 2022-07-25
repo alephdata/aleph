@@ -1716,13 +1716,13 @@
     "defaultMessage": "Даты"
   },
   "search.screen.dates_uncertain_day": {
-    "defaultMessage": "* this count includes dates where no day is specified"
+    "defaultMessage": "* в том числе неполные даты без указания дня"
   },
   "search.screen.dates_uncertain_day_month": {
-    "defaultMessage": "* this count includes dates in {year} where no day or month is specified"
+    "defaultMessage": "* в том числе неполные даты в {year} без указания дня или месяца"
   },
   "search.screen.dates_uncertain_month": {
-    "defaultMessage": "* this count includes dates in {year} where no month is specified"
+    "defaultMessage": "* в том числе даты в {year} без указания месяца"
   },
   "search.screen.export": {
     "defaultMessage": "Экспорт"
