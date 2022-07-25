@@ -1,27 +1,26 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .EntityCompare {
-    &__properties {
-      margin: $aleph-grid-size*1.5 0 0 0;
-      @include rtlSupportInvertedProp(margin, left, $aleph-grid-size*2.5, null);
-      background: none !important;
+  &__properties {
+    margin: $aleph-grid-size * 1.5 0 0 0;
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size * 2.5, null);
+    background: none !important;
+  }
+
+  &__property {
+    margin-bottom: $aleph-grid-size * 1.5;
+    &__name,
+    &__value {
+      display: block;
     }
-  
-    &__property {
-      margin-bottom: $aleph-grid-size*1.5;
-      &__name, &__value {
-        display: block;
-      }
-  
-      &__name {
-        font-weight: normal;
-      }
-  
-      &__value {
-        font-weight: normal;
-      }
+
+    &__name {
+      font-weight: normal;
+    }
+
+    &__value {
+      font-weight: normal;
     }
   }
-  
-  
+}

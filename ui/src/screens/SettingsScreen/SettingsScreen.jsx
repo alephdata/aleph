@@ -1,9 +1,18 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Intent, FormGroup, InputGroup, Checkbox, Alignment, MenuItem, Classes } from '@blueprintjs/core';
+import {
+  Button,
+  Intent,
+  FormGroup,
+  InputGroup,
+  Checkbox,
+  Alignment,
+  MenuItem,
+  Classes,
+} from '@blueprintjs/core';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { showSuccessToast } from 'app/toast';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
@@ -13,7 +22,6 @@ import { selectMetadata, selectLocale, selectCurrentRole } from 'selectors';
 import SelectWrapper from 'components/common/SelectWrapper';
 
 import './SettingsScreen.scss';
-
 
 const messages = defineMessages({
   title: {
@@ -38,7 +46,8 @@ const messages = defineMessages({
   },
   api_key_help: {
     id: 'profileinfo.api_desc',
-    defaultMessage: 'Use the API key to read and write data via remote applications.',
+    defaultMessage:
+      'Use the API key to read and write data via remote applications.',
   },
   email: {
     id: 'settings.email',
@@ -82,10 +91,9 @@ const messages = defineMessages({
   },
   saved: {
     id: 'settings.saved',
-    defaultMessage: 'It\'s official, your profile is updated.',
+    defaultMessage: "It's official, your profile is updated.",
   },
 });
-
 
 export class SettingsScreen extends React.Component {
   constructor(props) {
@@ -143,12 +151,16 @@ export class SettingsScreen extends React.Component {
   }
 
   validName() {
-    const { role: { name } } = this.state;
+    const {
+      role: { name },
+    } = this.state;
     return name !== undefined && name !== null && name.length > 2;
   }
 
   validPassword() {
-    const { role: { password } } = this.state;
+    const {
+      role: { password },
+    } = this.state;
     // if (!this.state.role.has_password) return true;
     if (password === undefined || password === null || password.length === 0) {
       return true;
@@ -157,12 +169,16 @@ export class SettingsScreen extends React.Component {
   }
 
   validPasswordConfirm() {
-    const { role: { password, passwordConfirm } } = this.state;
+    const {
+      role: { password, passwordConfirm },
+    } = this.state;
     return password === passwordConfirm;
   }
 
   valid() {
-    return this.validName() && this.validPassword() && this.validPasswordConfirm();
+    return (
+      this.validName() && this.validPassword() && this.validPasswordConfirm()
+    );
   }
 
   renderLocale(locale, { handleClick, modifiers }) {
@@ -187,7 +203,9 @@ export class SettingsScreen extends React.Component {
     const passwordIntent = this.validPassword() ? undefined : Intent.DANGER;
     const confirm = this.validPasswordConfirm();
     const confirmIntent = confirm ? undefined : Intent.DANGER;
-    const confirmHelper = confirm ? undefined : intl.formatMessage(messages.password_mismatch);
+    const confirmHelper = confirm
+      ? undefined
+      : intl.formatMessage(messages.password_mismatch);
     return (
       <>
         <h3>
@@ -303,11 +321,7 @@ export class SettingsScreen extends React.Component {
           labelFor="email"
           helperText={intl.formatMessage(messages.email_no_change)}
         >
-          <InputGroup
-            id="email"
-            readOnly
-            value={role.email}
-          />
+          <InputGroup id="email" readOnly value={role.email} />
         </FormGroup>
         <Checkbox
           checked={!role.is_muted}
@@ -337,10 +351,16 @@ export class SettingsScreen extends React.Component {
   render() {
     const { intl } = this.props;
     return (
-      <Screen title={intl.formatMessage(messages.title)} className="SettingsScreen" requireSession>
+      <Screen
+        title={intl.formatMessage(messages.title)}
+        className="SettingsScreen"
+        requireSession
+      >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <h5 className="Dashboard__title">
+              {intl.formatMessage(messages.title)}
+            </h5>
           </div>
           {this.renderForm()}
         </Dashboard>
@@ -349,7 +369,7 @@ export class SettingsScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
   role: {
     ...selectCurrentRole(state),

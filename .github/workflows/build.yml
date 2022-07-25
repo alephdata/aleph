@@ -10,13 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup
+        run: echo "ALEPH_SECRET=batman\n" >> aleph.env
+
       - name: Build development image
         run: |
           docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
           docker tag alephdata/aleph-ui:${GITHUB_SHA} alephdata/aleph-ui:latest
+
+      - name: Check code formatting
+        run: make format-check-ui
+
+      - name: Run linter
+        run: make lint-ui
+
       - name: Build production image
-        run: |
-          docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
+        run: docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
+
       - name: Push docker image (hash)
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -24,6 +35,7 @@ jobs:
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin 
           docker push alephdata/aleph-ui-production:${GITHUB_SHA}
+
       - name: Push docker image (tagged)
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
@@ -32,10 +44,13 @@ jobs:
           docker push alephdata/aleph-ui-production:${ALEPH_TAG};
           docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:latest;
           docker push alephdata/aleph-ui-production:latest;
+
   backend:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up
         run: |
           sudo sysctl -w vm.max_map_count=262144
@@ -43,15 +58,27 @@ jobs:
           echo "${GITHUB_REF}"
           docker --version
           docker-compose --version
+
       - name: Docker pull services
         run: |
           docker-compose pull --parallel --quiet elasticsearch convert-document ingest-file
           make ALEPH_TAG=${GITHUB_SHA} services
+
       - name: Build docker image
-        run: |
-          docker build -t alephdata/aleph:${GITHUB_SHA} .
+        run: docker build -t alephdata/aleph:${GITHUB_SHA} .
+
+      - name: Install development dependencies
+        run: make dev
+
+      - name: Check code formatting
+        run: make format-check
+
+      - name: Run linter
+        run: make lint
+
       - name: Run aleph tests
         run: make ALEPH_TAG=${GITHUB_SHA} test
+
       - name: Push docker image (hash)
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -59,6 +86,7 @@ jobs:
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin 
           docker push alephdata/aleph:${GITHUB_SHA}
+
       - name: Push docker images for tags
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |

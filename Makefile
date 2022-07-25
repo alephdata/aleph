@@ -1,5 +1,6 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml
 APPDOCKER=$(COMPOSE) run --rm app
+UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
 
 all: build upgrade web
@@ -12,8 +13,32 @@ services:
 shell: services
 	$(APPDOCKER) /bin/bash
 
+shell-ui: services
+	$(UIDOCKER) /bin/bash
+
 test:
 	$(APPDOCKER) contrib/test.sh
+
+test-ui:
+	$(UIDOCKER) npm run test
+
+lint:
+	flake8 aleph/
+
+lint-ui:
+	$(UIDOCKER) npm run lint
+
+format:
+	black aleph/
+
+format-ui:
+	$(UIDOCKER) npm run format
+
+format-check:
+	black --check aleph/
+
+format-check-ui:
+	$(UIDOCKER) npm run format:check
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
@@ -27,7 +52,7 @@ web: services
 	$(COMPOSE) up api ui
 
 worker: services
-	$(COMPOSE) run -p 127.0.0.1:5679:5679 --rm app python3 -m debugpy --listen 0.0.0.0:5679 /usr/local/bin/aleph worker
+	$(COMPOSE) run -p 127.0.0.1:5679:5679 --rm app python3 -m debugpy --listen 0.0.0.0:5679 -c "from aleph.manage import cli; cli()" worker
 
 tail:
 	$(COMPOSE) logs -f
@@ -56,7 +81,7 @@ ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
 
 dev: 
-	pip install -q bump2version babel jinja2
+	python3 -m pip install -q -r requirements-dev.txt
 
 fixtures:
 	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples

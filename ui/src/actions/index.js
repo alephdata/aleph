@@ -58,7 +58,11 @@ export {
   fetchProfileTags,
   pairwiseJudgement,
 } from './profileActions';
-export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
+export {
+  fetchMetadata,
+  fetchStatistics,
+  fetchSystemStatus,
+} from './metadataActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';
 export { fetchExports, triggerQueryExport } from './exportActions';
 

@@ -11,14 +11,16 @@ class ArticleViewer extends PureComponent {
     const { document } = this.props;
     const prop = document.schema.getProperty(name);
     const values = document.getProperty(prop).map((value) => {
-      let result = <Property.Value key={value.id || value} prop={prop} value={value} />;
+      let result = (
+        <Property.Value key={value.id || value} prop={prop} value={value} />
+      );
       return result;
     });
 
     if (values.length === 0) {
       return null;
     }
-    
+
     return (
       <tr key={prop.qname}>
         <th>{prop.label}</th>
@@ -35,24 +37,26 @@ class ArticleViewer extends PureComponent {
 
     return (
       <div className="article-header">
-      <table className="bp3-html-table">
-        <tbody>
-        {this.headerProperty('title')}
-        {this.headerProperty('author')}
-        {this.headerProperty('publishedAt')}
-        {this.headerProperty('description')}
-        </tbody>
-      </table>
+        <table className="bp3-html-table">
+          <tbody>
+            {this.headerProperty('title')}
+            {this.headerProperty('author')}
+            {this.headerProperty('publishedAt')}
+            {this.headerProperty('description')}
+          </tbody>
+        </table>
       </div>
     );
   }
-  
+
   renderBody() {
     const { document } = this.props;
-    const text = document.isPending
-      ? <Skeleton.Text type="pre" length={4000} />
-      : <Pre>{document.getFirst('bodyText')}</Pre>;
-    return (text);
+    const text = document.isPending ? (
+      <Skeleton.Text type="pre" length={4000} />
+    ) : (
+      <Pre>{document.getFirst('bodyText')}</Pre>
+    );
+    return text;
   }
 
   render() {

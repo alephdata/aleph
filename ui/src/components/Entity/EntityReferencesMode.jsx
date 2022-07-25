@@ -7,12 +7,16 @@ import { Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
+import { selectEntitiesResult, selectSchema } from 'selectors';
 import {
-  selectEntitiesResult, selectSchema,
-} from 'selectors';
-import {
-  Collection, Entity, ErrorSection, Property, QueryInfiniteLoad, Schema, Skeleton,
+  Collection,
+  Entity,
+  ErrorSection,
+  Property,
+  QueryInfiniteLoad,
+  Schema,
+  Skeleton,
 } from 'components/common';
 import EntityProperties from 'components/Entity/EntityProperties';
 import ensureArray from 'util/ensureArray';
@@ -42,7 +46,6 @@ const messages = defineMessages({
   },
 });
 
-
 class EntityReferencesMode extends React.Component {
   constructor(props) {
     super(props);
@@ -62,21 +65,30 @@ class EntityReferencesMode extends React.Component {
   onExpand(entity) {
     const { expandedId, parsedHash, navigate, location } = this.props;
     parsedHash.expand = expandedId === entity.id ? undefined : entity.id;
-    navigate({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
-    }, { replace: true });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: location.search,
+        hash: queryString.stringify(parsedHash),
+      },
+      { replace: true }
+    );
   }
 
   renderCell(prop, entity) {
     const { schema, isThing } = this.props;
-    const propVal = <Property.Values prop={prop} values={entity.getProperty(prop.name)} translitLookup={entity.latinized} />;
+    const propVal = (
+      <Property.Values
+        prop={prop}
+        values={entity.getProperty(prop.name)}
+        translitLookup={entity.latinized}
+      />
+    );
     if (isThing && schema.caption.indexOf(prop.name) !== -1) {
       return (
         <td key={prop.name} className="entity">
           <Entity.Link entity={entity}>
-            <Schema.Icon schema={entity.schema} className="left-icon"/>
+            <Schema.Icon schema={entity.schema} className="left-icon" />
             {propVal}
           </Entity.Link>
         </td>
@@ -96,13 +108,18 @@ class EntityReferencesMode extends React.Component {
 
     const mainRow = (
       <tr key={entity.id} className={c('nowrap', { prefix: isExpanded })}>
-        { !isThing && (
+        {!isThing && (
           <td className="expand">
-            <Button onClick={() => this.onExpand(entity)} small minimal icon={expandIcon} />
+            <Button
+              onClick={() => this.onExpand(entity)}
+              small
+              minimal
+              icon={expandIcon}
+            />
           </td>
         )}
-        {columns.map(prop => this.renderCell(prop, entity))}
-        { !hideCollection && (
+        {columns.map((prop) => this.renderCell(prop, entity))}
+        {!hideCollection && (
           <td key={entity.collection?.id}>
             <Collection.Link collection={entity.collection} />
           </td>
@@ -127,13 +144,17 @@ class EntityReferencesMode extends React.Component {
   renderSkeleton(columns, idx) {
     const { isThing, hideCollection } = this.props;
     return (
-      <tr key={idx} className='nowrap skeleton'>
+      <tr key={idx} className="nowrap skeleton">
         {!isThing && (
           <td className="expand">
-            <Button disabled small minimal icon='chevron-down' />
+            <Button disabled small minimal icon="chevron-down" />
           </td>
         )}
-        {columns.map(c => <td key={c}><Skeleton.Text type="span" length={10} /></td>)}
+        {columns.map((c) => (
+          <td key={c}>
+            <Skeleton.Text type="span" length={10} />
+          </td>
+        ))}
         {!hideCollection && (
           <td key="collection">
             <Skeleton.Text type="span" length={20} />
@@ -144,20 +165,29 @@ class EntityReferencesMode extends React.Component {
   }
 
   render() {
-    const {
-      intl, reference, query, result, schema, isThing, hideCollection
-    } = this.props;
+    const { intl, reference, query, result, schema, isThing, hideCollection } =
+      this.props;
 
     if (!reference) {
-      return <ErrorSection icon="graph" title={intl.formatMessage(messages.no_relationships)} />;
+      return (
+        <ErrorSection
+          icon="graph"
+          title={intl.formatMessage(messages.no_relationships)}
+        />
+      );
     }
     const { property } = reference;
     const results = _.uniqBy(ensureArray(result.results), 'id');
-    const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
+    const columns = schema
+      .getFeaturedProperties()
+      .filter((prop) => prop.name !== property.name);
     const schemaLabel = reference.schema.plural.toLowerCase();
-    const placeholder = schema.name === 'Thing'
-      ? intl.formatMessage(messages.search_placeholder_default)
-      : intl.formatMessage(messages.search_placeholder, { schema: schemaLabel })
+    const placeholder =
+      schema.name === 'Thing'
+        ? intl.formatMessage(messages.search_placeholder_default)
+        : intl.formatMessage(messages.search_placeholder, {
+            schema: schemaLabel,
+          });
     const skeletonItems = [...Array(15).keys()];
 
     return (
@@ -166,17 +196,14 @@ class EntityReferencesMode extends React.Component {
           query={query}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={placeholder}
-        >
-        </EntityActionBar>
+        ></EntityActionBar>
         {result.total !== 0 && (
           <>
             <table className="data-table references-data-table">
               <thead>
                 <tr>
-                  {!isThing && (
-                    <th key="expand" />
-                  )}
-                  {columns.map(prop => (
+                  {!isThing && <th key="expand" />}
+                  {columns.map((prop) => (
                     <th key={prop.name} className={prop.type}>
                       <Property.Name prop={prop} />
                     </th>
@@ -192,8 +219,9 @@ class EntityReferencesMode extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {results.map(entity => this.renderRow(columns, entity))}
-                {result.isPending && skeletonItems.map(idx => this.renderSkeleton(columns, idx))}
+                {results.map((entity) => this.renderRow(columns, entity))}
+                {result.isPending &&
+                  skeletonItems.map((idx) => this.renderSkeleton(columns, idx))}
               </tbody>
             </table>
             <QueryInfiniteLoad
@@ -205,10 +233,19 @@ class EntityReferencesMode extends React.Component {
         )}
         {result.total === 0 && (
           <ErrorSection
-            icon={<Schema.Icon schema={reference.schema} className="left-icon" size={60} />}
-            title={schema.name === 'Thing'
-              ? intl.formatMessage(messages.no_results_default)
-              : intl.formatMessage(messages.no_results, { schema: schemaLabel })
+            icon={
+              <Schema.Icon
+                schema={reference.schema}
+                className="left-icon"
+                size={60}
+              />
+            }
+            title={
+              schema.name === 'Thing'
+                ? intl.formatMessage(messages.no_results_default)
+                : intl.formatMessage(messages.no_results, {
+                    schema: schemaLabel,
+                  })
             }
           />
         )}
@@ -233,5 +270,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities }),
-  injectIntl,
+  injectIntl
 )(EntityReferencesMode);

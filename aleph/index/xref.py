@@ -63,7 +63,7 @@ def _index_form(collection, matches):
                 "score": match.score,
                 "doubt": match.doubt,
                 "method": match.method,
-                "random": randint(1, 2 ** 31),
+                "random": randint(1, 2**31),
                 "entity_id": match.entity.id,
                 "schema": match.match.schema.name,
                 "collection_id": collection.id,

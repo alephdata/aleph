@@ -2,8 +2,17 @@ import { Entity } from '@alephdata/followthemoney';
 import { Colors } from '@blueprintjs/colors';
 
 const colorOptions = [
-  Colors.BLUE1, Colors.TURQUOISE1, Colors.VIOLET1, Colors.ORANGE1, Colors.GREEN1, Colors.RED1,
-  Colors.INDIGO1, Colors.LIME1, Colors.SEPIA1, Colors.COBALT1, Colors.ROSE1,
+  Colors.BLUE1,
+  Colors.TURQUOISE1,
+  Colors.VIOLET1,
+  Colors.ORANGE1,
+  Colors.GREEN1,
+  Colors.RED1,
+  Colors.INDIGO1,
+  Colors.LIME1,
+  Colors.SEPIA1,
+  Colors.COBALT1,
+  Colors.ROSE1,
 ];
 
 class MappingList {
@@ -12,30 +21,30 @@ class MappingList {
     this.mappingItems = new Map();
 
     if (mappingData) {
-      Object.entries(mappingData).forEach(([id, { schema, keys, properties }], i) => {
-        const ftmSchema = model.getSchema(schema);
-        this.mappingItems.set(id, {
-          id,
-          color: this.assignColor(i),
-          altLabel: this.getLabelFromId(id, ftmSchema),
-          schema: ftmSchema,
-          keys: keys || [],
-          properties: properties || {},
-        });
-      });
+      Object.entries(mappingData).forEach(
+        ([id, { schema, keys, properties }], i) => {
+          const ftmSchema = model.getSchema(schema);
+          this.mappingItems.set(id, {
+            id,
+            color: this.assignColor(i),
+            altLabel: this.getLabelFromId(id, ftmSchema),
+            schema: ftmSchema,
+            keys: keys || [],
+            properties: properties || {},
+          });
+        }
+      );
     }
 
-    this.removeProperty = this.removeProperty.bind(this)
-    this.changeId = this.changeId.bind(this)
+    this.removeProperty = this.removeProperty.bind(this);
+    this.changeId = this.changeId.bind(this);
   }
 
   assignColor() {
     const colorIndex = this.getValues()
-      .map(mapping => colorOptions.indexOf(mapping.color))
+      .map((mapping) => colorOptions.indexOf(mapping.color))
       .sort()
-      .reduce((acc, currentValue) => (
-        acc === currentValue ? acc + 1 : acc
-      ), 0);
+      .reduce((acc, currentValue) => (acc === currentValue ? acc + 1 : acc), 0);
 
     return colorOptions[colorIndex % colorOptions.length];
   }
@@ -48,11 +57,15 @@ class MappingList {
   // for pre-existing mappings, generate display label from schema id
   getLabelFromId(id, schema) {
     const schemaName = schema?.name;
-    if (!schemaName) { return; }
+    if (!schemaName) {
+      return;
+    }
 
     const re = new RegExp(`^${schemaName}(?<index>([0-9]*))$`);
     const match = id.match(re)?.groups;
-    if (!match) { return; }
+    if (!match) {
+      return;
+    }
 
     const label = `${schema.label} ${match.index}`.trim();
     if (label !== id) {
@@ -68,10 +81,8 @@ class MappingList {
       this.mappingItems.set(newId, mapping);
 
       // replace any references to this mapping in other mappings' properties
-      this.applyToEntityRefs(oldId,
-        (mappingId, propName) => (
-          this.addProperty(mappingId, propName, { entity: newId })
-        )
+      this.applyToEntityRefs(oldId, (mappingId, propName) =>
+        this.addProperty(mappingId, propName, { entity: newId })
       );
       this.removeMapping(oldId);
     }
@@ -84,7 +95,8 @@ class MappingList {
   }
 
   getSchemaCount(schemaToAssign) {
-    return this.getValues().filter(({ schema }) => schema === schemaToAssign).length;
+    return this.getValues().filter(({ schema }) => schema === schemaToAssign)
+      .length;
   }
 
   getMappingsCount() {
@@ -97,11 +109,14 @@ class MappingList {
 
   getMappingKeys(id) {
     const mapping = this.getMapping(id);
-    if (!mapping) { return []; }
+    if (!mapping) {
+      return [];
+    }
     const { keys, properties, schema } = mapping;
 
     if (schema.isEdge) {
-      let sourceKeys = [], targetKeys = [];
+      let sourceKeys = [],
+        targetKeys = [];
       const { source, target } = schema.edge;
 
       if (properties[source]) {
@@ -111,7 +126,7 @@ class MappingList {
         targetKeys = this.getMappingKeys(properties[target].entity);
       }
 
-      return [...new Set([...sourceKeys, ...targetKeys, ...keys])]
+      return [...new Set([...sourceKeys, ...targetKeys, ...keys])];
     } else {
       return keys;
     }
@@ -126,7 +141,9 @@ class MappingList {
     Object.entries(properties)
       /* eslint-disable no-unused-vars */
       .filter(([_, value]) => value.literal)
-      .forEach(([key, value]) => { formattedProps[key] = value.literal; });
+      .forEach(([key, value]) => {
+        formattedProps[key] = value.literal;
+      });
 
     return new Entity(this.model, { id, schema, properties: formattedProps });
   }
@@ -145,7 +162,9 @@ class MappingList {
 
     const newMapping = {
       id,
-      altLabel: schemaCount ? `${schema.label} ${schemaCount + 1}` : schema.label,
+      altLabel: schemaCount
+        ? `${schema.label} ${schemaCount + 1}`
+        : schema.label,
       color: this.assignColor(),
       schema,
       keys: [],
@@ -164,7 +183,7 @@ class MappingList {
   }
 
   applyToEntityRefs(id, applyFunc) {
-    this.getValues().forEach(mapping => {
+    this.getValues().forEach((mapping) => {
       if (mapping?.properties) {
         Object.entries(mapping.properties).forEach(([propName, propValue]) => {
           if (propValue?.entity && propValue?.entity === id) {
@@ -205,17 +224,19 @@ class MappingList {
   getColumnAssignments() {
     const columnAssignments = new Map();
 
-    this.mappingItems.forEach(mapping => {
+    this.mappingItems.forEach((mapping) => {
       const { properties, schema } = mapping;
       if (properties) {
-        Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
-          if (propValue && propValue.column) {
-            columnAssignments.set(propValue.column, {
+        Array.from(Object.entries(properties)).forEach(
+          ([propKey, propValue]) => {
+            if (propValue && propValue.column) {
+              columnAssignments.set(propValue.column, {
                 ...mapping,
                 property: schema.getProperty(propKey),
-            });
+              });
+            }
           }
-        });
+        );
       }
     });
 
@@ -232,7 +253,10 @@ class MappingList {
         const { source, target } = schema.edge;
 
         if (!properties[source] || !properties[target]) {
-          errors.push({ error: 'relationshipError', values: { id, source, target } });
+          errors.push({
+            error: 'relationshipError',
+            values: { id, source, target },
+          });
         }
       }
     });
@@ -255,7 +279,7 @@ class MappingList {
       if (!schema?.isThing()) {
         queryItem.key_literal = schema.name;
       }
-      query[id] = queryItem
+      query[id] = queryItem;
     });
 
     return query;

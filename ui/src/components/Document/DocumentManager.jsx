@@ -7,7 +7,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { DialogToggleButton } from 'components/Toolbar';
 import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';
@@ -29,7 +29,8 @@ const messages = defineMessages({
   },
   emptyCanUpload: {
     id: 'entity.document.manager.emptyCanUpload',
-    defaultMessage: 'No files or directories. Drop files here or click to upload.',
+    defaultMessage:
+      'No files or directories. Drop files here or click to upload.',
   },
   search_placeholder: {
     id: 'entity.document.manager.search_placeholder',
@@ -53,7 +54,6 @@ const messages = defineMessages({
   },
 });
 
-
 export class DocumentManager extends Component {
   constructor(props) {
     super(props);
@@ -75,7 +75,8 @@ export class DocumentManager extends Component {
 
   canUpload() {
     const { collection, document } = this.props;
-    const parentFolder = document == null ? true : document.schema.isA('Folder');
+    const parentFolder =
+      document == null ? true : document.schema.isA('Folder');
 
     if (!parentFolder || !collection.writeable) {
       return false;
@@ -107,42 +108,50 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, fileSizeProp, query, result, hasPending, intl, showSearch = true
+      collection,
+      document,
+      fileSizeProp,
+      query,
+      result,
+      hasPending,
+      intl,
+      showSearch = true,
     } = this.props;
     const { selection } = this.state;
-    const mutableDocument = document === undefined || document?.schema?.name === 'Folder';
+    const mutableDocument =
+      document === undefined || document?.schema?.name === 'Folder';
     const showActions = collection?.writeable && mutableDocument;
     const canUpload = this.canUpload();
     const canMap = selection.length === 1 && selection[0].schema.isA('Table');
 
     const searchPlaceholder = !!document
-      ? intl.formatMessage(messages.search_placeholder_document, { label: document.getCaption() })
+      ? intl.formatMessage(messages.search_placeholder_document, {
+          label: document.getCaption(),
+        })
       : intl.formatMessage(messages.search_placeholder);
 
-    const emptyComponent = canUpload
-      ? (
-        <div className="DocumentManager__content__empty">
-          <DialogToggleButton
-            buttonProps={{
-              minimal: true,
-              fill: true,
-            }}
-            Dialog={DocumentUploadDialog}
-            dialogProps={{ collection, parent: document }}
-          >
-            <ErrorSection
-              icon='plus'
-              title={intl.formatMessage(messages.emptyCanUpload)}
-            />
-          </DialogToggleButton>
-        </div>
-      )
-      : (
-        <ErrorSection
-          icon='folder-open'
-          title={intl.formatMessage(messages.empty)}
-        />
-      );
+    const emptyComponent = canUpload ? (
+      <div className="DocumentManager__content__empty">
+        <DialogToggleButton
+          buttonProps={{
+            minimal: true,
+            fill: true,
+          }}
+          Dialog={DocumentUploadDialog}
+          dialogProps={{ collection, parent: document }}
+        >
+          <ErrorSection
+            icon="plus"
+            title={intl.formatMessage(messages.emptyCanUpload)}
+          />
+        </DialogToggleButton>
+      </div>
+    ) : (
+      <ErrorSection
+        icon="folder-open"
+        title={intl.formatMessage(messages.empty)}
+      />
+    );
 
     return (
       <div className="DocumentManager">
@@ -160,7 +169,7 @@ export class DocumentManager extends Component {
               <DialogToggleButton
                 buttonProps={{
                   text: intl.formatMessage(messages.upload),
-                  icon: "upload"
+                  icon: 'upload',
                 }}
                 Dialog={DocumentUploadDialog}
                 dialogProps={{ collection, parent: document }}
@@ -169,15 +178,25 @@ export class DocumentManager extends Component {
             <DialogToggleButton
               buttonProps={{
                 text: intl.formatMessage(messages.new),
-                icon: "folder-new"
+                icon: 'folder-new',
               }}
               Dialog={DocumentFolderDialog}
               dialogProps={{ collection, parent: document }}
             />
             <Divider />
-            <Tooltip content={canMap ? null : intl.formatMessage(messages.cannot_map)} className="prevent-flex-grow">
-              <AnchorButton icon="new-object" disabled={!canMap} onClick={this.openMappingEditor}>
-                <FormattedMessage id="document.mapping.start" defaultMessage="Generate entities" />
+            <Tooltip
+              content={canMap ? null : intl.formatMessage(messages.cannot_map)}
+              className="prevent-flex-grow"
+            >
+              <AnchorButton
+                icon="new-object"
+                disabled={!canMap}
+                onClick={this.openMappingEditor}
+              >
+                <FormattedMessage
+                  id="document.mapping.start"
+                  defaultMessage="Generate entities"
+                />
               </AnchorButton>
             </Tooltip>
             <EntityDeleteButton
@@ -216,9 +235,7 @@ export class DocumentManager extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
   const model = selectModel(state);
-  const fileSizeProp = model
-    .getSchema('Document')
-    .getProperty('fileSize');
+  const fileSizeProp = model.getSchema('Document').getProperty('fileSize');
 
   let { query } = ownProps;
   query = query.defaultSortBy('caption', 'asc');
@@ -230,12 +247,17 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query,
     result,
-    fileSizeProp: { name: 'fileSize', label: fileSizeProp.label, type: fileSizeProp.type.name, isProperty: true }
+    fileSizeProp: {
+      name: 'fileSize',
+      label: fileSizeProp.label,
+      type: fileSizeProp.type.name,
+      isProperty: true,
+    },
   };
 };
 
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities, deleteEntity }),
-  injectIntl,
+  injectIntl
 )(DocumentManager);

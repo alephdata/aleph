@@ -12,7 +12,6 @@ const messages = defineMessages({
   },
 });
 
-
 export class AlertsScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -31,10 +30,16 @@ export class AlertsScreen extends React.Component {
   render() {
     const { intl } = this.props;
     return (
-      <Screen title={intl.formatMessage(messages.title)} className="AlertsScreen" requireSession>
+      <Screen
+        title={intl.formatMessage(messages.title)}
+        className="AlertsScreen"
+        requireSession
+      >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <h5 className="Dashboard__title">
+              {intl.formatMessage(messages.title)}
+            </h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="alert.manager.description"

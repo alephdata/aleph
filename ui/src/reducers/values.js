@@ -15,9 +15,10 @@ function updateState(state, { data }) {
   return { ...values, ...state };
 }
 
-export default createReducer({
-
-  [fetchEntityTags.COMPLETE]: updateState,
-  [fetchProfileTags.COMPLETE]: updateState,
-
-}, initialState);
+export default createReducer(
+  {
+    [fetchEntityTags.COMPLETE]: updateState,
+    [fetchProfileTags.COMPLETE]: updateState,
+  },
+  initialState
+);

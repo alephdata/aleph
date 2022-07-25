@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import c from 'classnames';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { getGroupField } from 'components/SearchField/util';
 import { DualPane, ErrorSection } from 'components/common';
 import Facets from 'components/Facet/Facets';
@@ -20,9 +20,7 @@ import { selectEntitiesResult } from 'selectors';
 
 import './Timeline.scss';
 
-const defaultFacets = [
-  'names', 'addresses', 'schema',
-];
+const defaultFacets = ['names', 'addresses', 'schema'];
 
 const messages = defineMessages({
   histogramEmpty: {
@@ -40,7 +38,7 @@ const messages = defineMessages({
   resultTextQuery: {
     id: 'timeline.result_text_query',
     defaultMessage: 'Showing {count} (of {total} total) items',
-  }
+  },
 });
 
 class Timeline extends Component {
@@ -48,7 +46,7 @@ class Timeline extends Component {
     super(props);
     this.state = {
       showDraftItem: false,
-      histogramFixed: false
+      histogramFixed: false,
     };
     this.onScroll = this.onScroll.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
@@ -69,9 +67,9 @@ class Timeline extends Component {
     const isOffScreen = window.pageYOffset > histTop;
 
     if (!histogramFixed && isOffScreen) {
-      this.setState({ histogramFixed: true })
+      this.setState({ histogramFixed: true });
     } else if (histogramFixed && !isOffScreen) {
-      this.setState({ histogramFixed: false })
+      this.setState({ histogramFixed: false });
     }
   }
 
@@ -80,12 +78,20 @@ class Timeline extends Component {
     navigate({
       pathname: location.pathname,
       search: newQuery.toLocation(),
-      hash: location.hash
+      hash: location.hash,
     });
   }
 
   render() {
-    const { expandedMode, entitiesCount, entityManager, query, intl, result, timeline } = this.props;
+    const {
+      expandedMode,
+      entitiesCount,
+      entityManager,
+      query,
+      intl,
+      result,
+      timeline,
+    } = this.props;
     const { histogramFixed, showDraftItem } = this.state;
 
     const actionBar = (
@@ -100,16 +106,20 @@ class Timeline extends Component {
     return (
       <DualPane className="Timeline">
         <DualPane.SidePane>
-          <div className={c("Timeline__date-container", { fixed: histogramFixed })}>
+          <div
+            className={c('Timeline__date-container', { fixed: histogramFixed })}
+          >
             <DateFacet
               intervals={result.facets?.dates?.intervals}
               query={query}
               updateQuery={this.updateQuery}
               dataLabel={intl.formatMessage(messages.itemsLabel)}
               field="dates"
-              emptyComponent={(
-                <ErrorSection title={intl.formatMessage(messages.histogramEmpty)} />
-              )}
+              emptyComponent={
+                <ErrorSection
+                  title={intl.formatMessage(messages.histogramEmpty)}
+                />
+              }
             />
             {histogramFixed && actionBar}
           </div>
@@ -119,7 +129,10 @@ class Timeline extends Component {
             updateQuery={this.updateQuery}
             facets={defaultFacets.map(getGroupField)}
           />
-          <div className="Timeline__date-placeholder" ref={this.histogramRef}></div>
+          <div
+            className="Timeline__date-placeholder"
+            ref={this.histogramRef}
+          ></div>
         </DualPane.SidePane>
         <DualPane.ContentPane>
           <QueryTags query={query} updateQuery={this.updateQuery} />
@@ -127,14 +140,24 @@ class Timeline extends Component {
             result={result}
             customResultText={
               result.total === entitiesCount.total
-                ? intl.formatMessage(messages.resultText, { count: result.total })
-                : intl.formatMessage(messages.resultTextQuery, { count: result.total, total: entitiesCount.total })
+                ? intl.formatMessage(messages.resultText, {
+                    count: result.total,
+                  })
+                : intl.formatMessage(messages.resultTextQuery, {
+                    count: result.total,
+                    total: entitiesCount.total,
+                  })
             }
           >
             <SortingBar
               query={query}
               updateQuery={this.updateQuery}
-              sortingFields={['properties.date', 'properties.endDate', 'caption', 'created_at']}
+              sortingFields={[
+                'properties.date',
+                'properties.endDate',
+                'caption',
+                'created_at',
+              ]}
             />
           </SearchActionBar>
           {actionBar}
@@ -160,7 +183,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     expandedMode: parsedHash.expanded === 'true',
-    result: selectEntitiesResult(state, query)
+    result: selectEntitiesResult(state, query),
   };
 };
 
@@ -168,5 +191,5 @@ export default compose(
   withRouter,
   entityEditorWrapper,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(Timeline);

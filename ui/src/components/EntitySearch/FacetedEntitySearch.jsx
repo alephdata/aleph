@@ -2,12 +2,19 @@ import React from 'react';
 import _ from 'lodash';
 import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Alignment, Button, Divider, Drawer, Intent, Position } from '@blueprintjs/core';
+import {
+  Alignment,
+  Button,
+  Divider,
+  Drawer,
+  Intent,
+  Position,
+} from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import c from 'classnames'
+import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { triggerQueryExport } from 'src/actions';
 import { setSearchConfig, getSearchConfig } from 'app/storage';
 import { getGroupField } from 'components/SearchField/util';
@@ -24,7 +31,14 @@ import './FacetedEntitySearch.scss';
 const SMALL_SCR_BREAKPOINT = 620;
 
 const defaultFacets = [
-  'dates', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses',
+  'dates',
+  'schema',
+  'countries',
+  'languages',
+  'emails',
+  'phones',
+  'names',
+  'addresses',
 ];
 const defaultColumns = ['countries', 'dates'];
 
@@ -39,15 +53,15 @@ const messages = defineMessages({
   },
   group_label: {
     id: 'hotkeys.search.group_label',
-    defaultMessage: 'Search preview'
+    defaultMessage: 'Search preview',
   },
   next: {
     id: 'hotkeys.search.unsure',
-    defaultMessage: 'Preview next result'
+    defaultMessage: 'Preview next result',
   },
   previous: {
     id: 'hotkeys.search.different',
-    defaultMessage: 'Preview previous result'
+    defaultMessage: 'Preview previous result',
   },
   configure_facets: {
     id: 'search.facets.configure',
@@ -59,7 +73,7 @@ const messages = defineMessages({
   },
   configure_columns: {
     id: 'search.columns.configure',
-    defaultMessage: 'Configure columns'
+    defaultMessage: 'Configure columns',
   },
   configure_columns_placeholder: {
     id: 'search.columns.configure_placeholder',
@@ -67,11 +81,11 @@ const messages = defineMessages({
   },
   show_facets: {
     id: 'search.facets.show',
-    defaultMessage: 'Show filters'
+    defaultMessage: 'Show filters',
   },
   hide_facets: {
     id: 'search.facets.hide',
-    defaultMessage: 'Hide filters'
+    defaultMessage: 'Hide filters',
   },
 });
 
@@ -90,7 +104,7 @@ class FacetedEntitySearch extends React.Component {
     this.showNextPreview = this.showNextPreview.bind(this);
     this.showPreviousPreview = this.showPreviousPreview.bind(this);
     this.showPreview = this.showPreview.bind(this);
-    this.checkMobileWidth = this.checkMobileWidth.bind(this)
+    this.checkMobileWidth = this.checkMobileWidth.bind(this);
     this.ref = React.createRef();
   }
 
@@ -105,20 +119,22 @@ class FacetedEntitySearch extends React.Component {
 
   checkMobileWidth() {
     const width = this.ref.current?.clientWidth;
-    if (!width) { return; }
+    if (!width) {
+      return;
+    }
 
     if (width < SMALL_SCR_BREAKPOINT) {
       this.setState(({ isMobile }) => {
         if (!isMobile) {
-          return ({ isMobile: true, hideFacets: true });
+          return { isMobile: true, hideFacets: true };
         }
-      })
+      });
     } else {
       this.setState(({ isMobile }) => {
         if (isMobile) {
-          return ({ isMobile: false, hideFacets: false });
+          return { isMobile: false, hideFacets: false };
         }
-      })
+      });
     }
   }
 
@@ -126,7 +142,7 @@ class FacetedEntitySearch extends React.Component {
     const { location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     return this.props.result.results.findIndex(
-      entity => entity.id === parsedHash['preview:id'],
+      (entity) => entity.id === parsedHash['preview:id']
     );
   }
 
@@ -165,7 +181,7 @@ class FacetedEntitySearch extends React.Component {
   }
 
   showPreview(entity) {
-    const { navigate, location } = this.props
+    const { navigate, location } = this.props;
     togglePreview(navigate, location, entity);
   }
 
@@ -179,9 +195,9 @@ class FacetedEntitySearch extends React.Component {
     let next;
 
     if (current.find(({ name }) => name === edited.name)) {
-      next = current.filter(({ name }) => name !== edited.name);;
+      next = current.filter(({ name }) => name !== edited.name);
     } else {
-      next = [...current, edited]
+      next = [...current, edited];
     }
 
     this.saveSearchConfig({ columns, facets, [configKey]: next });
@@ -192,15 +208,26 @@ class FacetedEntitySearch extends React.Component {
 
     setSearchConfig(config);
 
-    navigate({
-      pathname: location.pathname,
-      search: location.search,
-      hash: location.hash,
-    }, { replace: true });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: location.search,
+        hash: location.hash,
+      },
+      { replace: true }
+    );
   }
 
   renderFacets() {
-    const { additionalFields = [], columns, facets, query, result, intl, hasCustomFacets } = this.props;
+    const {
+      additionalFields = [],
+      columns,
+      facets,
+      query,
+      result,
+      intl,
+      hasCustomFacets,
+    } = this.props;
 
     return (
       <div className="FacetedEntitySearch__facets">
@@ -213,19 +240,38 @@ class FacetedEntitySearch extends React.Component {
         />
         <SearchFieldSelect
           onSelect={(field) => this.onSearchConfigEdit('facets', field)}
-          onReset={hasCustomFacets && (() => this.saveSearchConfig({ facets: null, columns }))}
+          onReset={
+            hasCustomFacets &&
+            (() => this.saveSearchConfig({ facets: null, columns }))
+          }
           selected={facets}
-          filterProps={prop => prop?.type?.name !== 'text'}
-          inputProps={{ placeholder: intl.formatMessage(messages.configure_facets_placeholder) }}
+          filterProps={(prop) => prop?.type?.name !== 'text'}
+          inputProps={{
+            placeholder: intl.formatMessage(
+              messages.configure_facets_placeholder
+            ),
+          }}
         >
-          <Button icon="filter-list" text={intl.formatMessage(messages.configure_facets)} />
+          <Button
+            icon="filter-list"
+            text={intl.formatMessage(messages.configure_facets)}
+          />
         </SearchFieldSelect>
       </div>
-    )
+    );
   }
 
   render() {
-    const { additionalFields = [], columns, children, facets, query, result, intl, hasCustomColumns } = this.props;
+    const {
+      additionalFields = [],
+      columns,
+      children,
+      facets,
+      query,
+      result,
+      intl,
+      hasCustomColumns,
+    } = this.props;
     const { hideFacets, isMobile } = this.state;
 
     const empty = (
@@ -238,27 +284,43 @@ class FacetedEntitySearch extends React.Component {
 
     const exportLink = result.total > 0 ? result.links?.export : null;
 
-    const hotkeysGroupLabel = { group: intl.formatMessage(messages.group_label) }
+    const hotkeysGroupLabel = {
+      group: intl.formatMessage(messages.group_label),
+    };
 
     return (
       <HotkeysContainer
         hotkeys={[
           {
-            combo: 'j', label: intl.formatMessage(messages.next), onKeyDown: this.showNextPreview, ...hotkeysGroupLabel
+            combo: 'j',
+            label: intl.formatMessage(messages.next),
+            onKeyDown: this.showNextPreview,
+            ...hotkeysGroupLabel,
           },
           {
-            combo: 'k', label: intl.formatMessage(messages.previous), onKeyDown: this.showPreviousPreview, ...hotkeysGroupLabel
+            combo: 'k',
+            label: intl.formatMessage(messages.previous),
+            onKeyDown: this.showPreviousPreview,
+            ...hotkeysGroupLabel,
           },
           {
-            combo: 'up', label: intl.formatMessage(messages.previous), onKeyDown: this.showPreviousPreview, ...hotkeysGroupLabel
+            combo: 'up',
+            label: intl.formatMessage(messages.previous),
+            onKeyDown: this.showPreviousPreview,
+            ...hotkeysGroupLabel,
           },
           {
-            combo: 'down', label: intl.formatMessage(messages.next), onKeyDown: this.showNextPreview, ...hotkeysGroupLabel
+            combo: 'down',
+            label: intl.formatMessage(messages.next),
+            onKeyDown: this.showNextPreview,
+            ...hotkeysGroupLabel,
           },
         ]}
       >
         <div ref={this.ref}>
-          <DualPane className={c("FacetedEntitySearch", { collapsed: hideFacets })}>
+          <DualPane
+            className={c('FacetedEntitySearch', { collapsed: hideFacets })}
+          >
             {!isMobile && (
               <DualPane.SidePane className="FacetedEntitySearch__side-placeholder">
                 <Drawer
@@ -281,7 +343,9 @@ class FacetedEntitySearch extends React.Component {
                 <Button
                   className="FacetedEntitySearch__mobile-expand-toggle"
                   onClick={this.toggleFacets}
-                  text={intl.formatMessage(messages[hideFacets ? 'show_facets' : 'hide_facets'])}
+                  text={intl.formatMessage(
+                    messages[hideFacets ? 'show_facets' : 'hide_facets']
+                  )}
                   icon={hideFacets ? 'add' : 'remove'}
                   alignText={Alignment.LEFT}
                   intent={Intent.PRIMARY}
@@ -304,13 +368,22 @@ class FacetedEntitySearch extends React.Component {
                 >
                   <div className="SearchActionBar__secondary">
                     <SearchFieldSelect
-                      onSelect={(field) => this.onSearchConfigEdit('columns', field)}
-                      onReset={hasCustomColumns && (() => this.saveSearchConfig({ columns: null, facets }))}
+                      onSelect={(field) =>
+                        this.onSearchConfigEdit('columns', field)
+                      }
+                      onReset={
+                        hasCustomColumns &&
+                        (() => this.saveSearchConfig({ columns: null, facets }))
+                      }
                       selected={columns}
-                      inputProps={{ placeholder: intl.formatMessage(messages.configure_columns_placeholder) }}
+                      inputProps={{
+                        placeholder: intl.formatMessage(
+                          messages.configure_columns_placeholder
+                        ),
+                      }}
                     >
                       <Button
-                        icon='two-columns'
+                        icon="two-columns"
                         text={intl.formatMessage(messages.configure_columns)}
                       />
                     </SearchFieldSelect>
@@ -326,7 +399,12 @@ class FacetedEntitySearch extends React.Component {
               />
             </DualPane.ContentPane>
             <div className="FacetedEntitySearch__expand-toggle">
-              <Button onClick={this.toggleFacets} icon={hideFacets ? "chevron-right" : "chevron-left"} outlined className="FacetedEntitySearch__expand-toggle__button" />
+              <Button
+                onClick={this.toggleFacets}
+                icon={hideFacets ? 'chevron-right' : 'chevron-left'}
+                outlined
+                className="FacetedEntitySearch__expand-toggle__button"
+              />
             </div>
           </DualPane>
         </div>
@@ -343,22 +421,22 @@ const mapStateToProps = (state, ownProps) => {
   // add any active facets to the list of displayed columns
   const activeFacetKeys = query.getList('facet');
   const activeFacets = activeFacetKeys
-    .map(key => {
+    .map((key) => {
       const sanitizedKey = key.replace('properties.', '');
-      return facets.find(facet => facet.name === sanitizedKey);
+      return facets.find((facet) => facet.name === sanitizedKey);
     })
-    .filter(facet => !!facet);
+    .filter((facet) => !!facet);
 
   return {
     hasCustomFacets: !!searchConfig?.facets,
     hasCustomColumns: !!searchConfig?.columns,
     facets,
-    columns: _.uniqBy([...columns, ...activeFacets], facet => facet.name)
+    columns: _.uniqBy([...columns, ...activeFacets], (facet) => facet.name),
   };
 };
 
 export default compose(
   withRouter,
   connect(mapStateToProps, { triggerQueryExport }),
-  injectIntl,
+  injectIntl
 )(FacetedEntitySearch);

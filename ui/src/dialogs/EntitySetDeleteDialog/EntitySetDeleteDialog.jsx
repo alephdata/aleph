@@ -4,11 +4,10 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { deleteEntitySet } from 'actions';
 import { showSuccessToast } from 'app/toast';
 import getCollectionLink from 'util/getCollectionLink';
-
 
 const messages = defineMessages({
   button_confirm: {
@@ -25,7 +24,6 @@ const messages = defineMessages({
   },
 });
 
-
 class EntitySetDeleteDialog extends Component {
   constructor(props) {
     super(props);
@@ -34,13 +32,15 @@ class EntitySetDeleteDialog extends Component {
 
   onDelete() {
     const { entitySet, navigate, intl } = this.props;
-    this.props.deleteEntitySet(entitySet.id).then(() => (
-      showSuccessToast(intl.formatMessage(messages.success, { title: entitySet.label }))
-    ));
+    this.props
+      .deleteEntitySet(entitySet.id)
+      .then(() =>
+        showSuccessToast(
+          intl.formatMessage(messages.success, { title: entitySet.label })
+        )
+      );
 
-    navigate(
-      getCollectionLink({ collection: entitySet.collection })
-    );
+    navigate(getCollectionLink({ collection: entitySet.collection }));
   }
 
   render() {
@@ -82,5 +82,5 @@ class EntitySetDeleteDialog extends Component {
 export default compose(
   withRouter,
   connect(null, { deleteEntitySet }),
-  injectIntl,
+  injectIntl
 )(EntitySetDeleteDialog);

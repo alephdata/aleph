@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import c from 'classnames';
 
-
 import './EntityDecisionRow.scss';
 
 class EntityDecisionRow extends Component {
@@ -14,7 +13,7 @@ class EntityDecisionRow extends Component {
     const { selected } = this.props;
 
     if (selected) {
-      this.ref.current.scrollIntoView({ behavior: "smooth" });
+      this.ref.current.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
@@ -22,7 +21,7 @@ class EntityDecisionRow extends Component {
     const { selected } = this.props;
 
     if (selected && !prevProps.selected) {
-      this.ref.current.scrollIntoView({ behavior: "smooth" });
+      this.ref.current.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
@@ -30,7 +29,10 @@ class EntityDecisionRow extends Component {
     const { className, children, selected } = this.props;
 
     return (
-      <tr className={c("EntityDecisionRow", className, { selected })} ref={this.ref}>
+      <tr
+        className={c('EntityDecisionRow', className, { selected })}
+        ref={this.ref}
+      >
         {children}
       </tr>
     );

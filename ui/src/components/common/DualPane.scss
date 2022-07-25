@@ -1,13 +1,13 @@
-@import "app/variables.scss";
-@import "app/layouts.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/layouts.scss';
+@import 'app/mixins.scss';
 
 .DualPane {
   padding: $aleph-content-padding;
   flex-grow: 1;
   display: flex;
   flex-flow: column nowrap;
-  
+
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     padding: $aleph-mobile-content-padding;
   }
@@ -30,7 +30,12 @@
 
 .DualPane .SidePane {
   @extend .pane-layout-side;
-  @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
+  @include rtlSupportInvertedProp(
+    border,
+    right,
+    1px solid $aleph-border-color,
+    null
+  );
   @include rtlSupportInvertedProp(padding, right, $aleph-content-padding, null);
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {

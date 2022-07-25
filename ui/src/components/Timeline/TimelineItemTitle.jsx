@@ -26,7 +26,7 @@ class TimelineItemTitle extends Component {
             />
           </p>
           <Schema.Select
-            optionsFilter={schema => schema.isA('Interval') }
+            optionsFilter={(schema) => schema.isA('Interval')}
             onSelect={onSchemaChange}
           >
             <Button
@@ -42,7 +42,10 @@ class TimelineItemTitle extends Component {
         {captionProp && (
           <>
             <Divider />
-            {renderProperty(captionProp, { defaultEditing: true, className: "TimelineItem__property" })}
+            {renderProperty(captionProp, {
+              defaultEditing: true,
+              className: 'TimelineItem__property',
+            })}
           </>
         )}
       </>
@@ -63,7 +66,7 @@ class TimelineItemTitle extends Component {
 
   renderNondraft() {
     const { captionProp, entity, renderProperty } = this.props;
-    const { schema } = entity
+    const { schema } = entity;
 
     if (!!schema.edge) {
       return this.renderEdgeLabel();
@@ -76,7 +79,7 @@ class TimelineItemTitle extends Component {
       );
     }
 
-    return <Entity.Label entity={entity} icon />
+    return <Entity.Label entity={entity} icon />;
   }
 
   render() {

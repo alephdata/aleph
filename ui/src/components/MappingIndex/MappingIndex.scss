@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .MappingIndex {
   &__items {
@@ -8,6 +8,6 @@
   }
 
   li {
-    margin: 4*$aleph-grid-size 0;
+    margin: 4 * $aleph-grid-size 0;
   }
 }

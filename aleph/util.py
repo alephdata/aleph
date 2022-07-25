@@ -84,6 +84,7 @@ class LoggingTransport(Transport):
         log.debug("Performed ES request", **payload)
         return result
 
+
 def is_auto_admin(email):
     auto_admins = [a.lower() for a in settings.ADMINS]
     return email is not None and email.lower() in auto_admins

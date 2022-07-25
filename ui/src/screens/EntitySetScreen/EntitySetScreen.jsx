@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { fetchEntitySet } from 'actions';
 import { selectEntitySet } from 'selectors';
 import LoadingScreen from 'components/Screen/LoadingScreen';
@@ -37,7 +37,7 @@ export class EntitySetScreen extends Component {
       return <LoadingScreen />;
     }
 
-    switch(entitySet.type) {
+    switch (entitySet.type) {
       case 'diagram':
         return <Navigate to={`/diagrams/${entitySetId}`} replace />;
       case 'list':
@@ -60,5 +60,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { fetchEntitySet }),
+  connect(mapStateToProps, { fetchEntitySet })
 )(EntitySetScreen);

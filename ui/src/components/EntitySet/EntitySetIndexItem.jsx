@@ -2,7 +2,11 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Alignment, Button, Icon, H6 } from '@blueprintjs/core';
 import {
-  Collection, Date, EntitySet, Skeleton, Summary,
+  Collection,
+  Date,
+  EntitySet,
+  Skeleton,
+  Summary,
 } from 'components/common';
 
 import './EntitySetIndexItem.scss';
@@ -15,7 +19,13 @@ class EntitySetIndexItem extends React.PureComponent {
     if (isPending) {
       text = <Skeleton.Text type="span" length={50} />;
     } else {
-      text = <EntitySet.Label className="index-item__title__text" entitySet={entitySet} truncate="40" />;
+      text = (
+        <EntitySet.Label
+          className="index-item__title__text"
+          entitySet={entitySet}
+          truncate="40"
+        />
+      );
     }
 
     return (
@@ -24,7 +34,7 @@ class EntitySetIndexItem extends React.PureComponent {
         className="EntitySetIndexItem index-item"
         alignText={Alignment.LEFT}
         onClick={() => onSelect(entitySet)}
-        icon={<EntitySet.Icon entitySet={entitySet} /> }
+        icon={<EntitySet.Icon entitySet={entitySet} />}
       >
         {text}
       </Button>
@@ -43,25 +53,40 @@ class EntitySetIndexItem extends React.PureComponent {
             </H6>
             <p className="index-item__details">
               {showCollection && (
-                <Skeleton.Text className="index-item__details__item" type="span" length={20} />
+                <Skeleton.Text
+                  className="index-item__details__item"
+                  type="span"
+                  length={20}
+                />
               )}
-              <Skeleton.Text className="index-item__details__item" type="span" length={20} />
+              <Skeleton.Text
+                className="index-item__details__item"
+                type="span"
+                length={20}
+              />
             </p>
           </div>
         </>
-      )
+      );
     }
 
     return (
       <>
         <div className="EntitySetIndexItem__flex-content">
           <H6 className="index-item__title">
-            <EntitySet.Link className="index-item__title__text" entitySet={entitySet} icon />
+            <EntitySet.Link
+              className="index-item__title__text"
+              entitySet={entitySet}
+              icon
+            />
           </H6>
           <span className="index-item__details">
             {showCollection && (
               <span className="index-item__details__item">
-                <Collection.Link collection={entitySet.collection} className="bp3-text-muted" />
+                <Collection.Link
+                  collection={entitySet.collection}
+                  className="bp3-text-muted"
+                />
               </span>
             )}
             <span className="index-item__details__item">
@@ -77,7 +102,11 @@ class EntitySetIndexItem extends React.PureComponent {
           </span>
         </div>
         {entitySet.summary && (
-          <Summary text={entitySet.summary} className="index-item__summary" truncate={2} />
+          <Summary
+            text={entitySet.summary}
+            className="index-item__summary"
+            truncate={2}
+          />
         )}
       </>
     );
@@ -87,13 +116,8 @@ class EntitySetIndexItem extends React.PureComponent {
     const { onSelect } = this.props;
     const content = onSelect ? this.renderButton() : this.renderListItem();
 
-    return (
-      <li className="EntitySetIndexItem index-item">
-        {content}
-      </li>
-    );
+    return <li className="EntitySetIndexItem index-item">{content}</li>;
   }
 }
-
 
 export default EntitySetIndexItem;

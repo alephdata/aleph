@@ -54,7 +54,7 @@ class InvestigationCreateButton extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ session: selectSession(state) });
+const mapStateToProps = (state) => ({ session: selectSession(state) });
 
 InvestigationCreateButton = connect(mapStateToProps)(InvestigationCreateButton);
 InvestigationCreateButton = injectIntl(InvestigationCreateButton);

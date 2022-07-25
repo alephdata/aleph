@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { queryCollections } from 'actions';
 import { selectCollectionsResult, selectCurrentRole } from 'selectors';
 import { ErrorSection, SearchBox, QueryInfiniteLoad } from 'components/common';
@@ -12,7 +12,6 @@ import QueryTags from 'components/QueryTags/QueryTags';
 import SearchActionBar from 'components/common/SearchActionBar';
 import CollectionIndexItem from './CollectionIndexItem';
 import SortingBar from 'components/SortingBar/SortingBar';
-
 
 import './CollectionIndex.scss';
 
@@ -53,7 +52,9 @@ export class CollectionIndex extends Component {
 
   toggleCreatedBy() {
     const { createdByFilterVal, query, role } = this.props;
-    const newQuery = createdByFilterVal.length ? query.clearFilter('creator_id') : query.setFilter('creator_id', role.id);
+    const newQuery = createdByFilterVal.length
+      ? query.clearFilter('creator_id')
+      : query.setFilter('creator_id', role.id);
     this.updateQuery(newQuery);
   }
 
@@ -79,18 +80,26 @@ export class CollectionIndex extends Component {
 
     return (
       <ul className="index">
-        {result.results.map(
-          res => <CollectionIndexItem key={res.id} collection={res} />,
-        )}
-        {result.isPending && skeletonItems.map(
-          item => <CollectionIndexItem key={item} isPending />,
-        )}
+        {result.results.map((res) => (
+          <CollectionIndexItem key={res.id} collection={res} />
+        ))}
+        {result.isPending &&
+          skeletonItems.map((item) => (
+            <CollectionIndexItem key={item} isPending />
+          ))}
       </ul>
     );
   }
 
   render() {
-    const { createdByFilterVal, intl, placeholder, query, result, showQueryTags } = this.props;
+    const {
+      createdByFilterVal,
+      intl,
+      placeholder,
+      query,
+      result,
+      showQueryTags,
+    } = this.props;
 
     return (
       <div className="CollectionIndex">
@@ -111,7 +120,11 @@ export class CollectionIndex extends Component {
               sortingFields={['created_at', 'count', 'label', 'updated_at']}
               filterButton={
                 <Button
-                  text={intl.formatMessage(createdByFilterVal.length ? messages.show_mine : messages.show_all)}
+                  text={intl.formatMessage(
+                    createdByFilterVal.length
+                      ? messages.show_mine
+                      : messages.show_all
+                  )}
                   onClick={this.toggleCreatedBy}
                   minimal
                   intent={Intent.PRIMARY}
@@ -138,7 +151,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     result: selectCollectionsResult(state, query),
     role: selectCurrentRole(state),
-    createdByFilterVal
+    createdByFilterVal,
   };
 };
 

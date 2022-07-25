@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
 import DocumentDropzone from 'components/Document/DocumentDropzone';
@@ -12,7 +12,6 @@ import { Breadcrumbs, SearchBox } from 'components/common';
 import { collectionSearchQuery } from 'queries';
 import { selectCollection } from 'selectors';
 import getCollectionLink from 'util/getCollectionLink';
-
 
 const messages = defineMessages({
   dataset: {
@@ -36,7 +35,11 @@ export class CollectionWrapper extends Component {
     const { collection, navigate, query } = this.props;
     const newQuery = query.set('q', queryText);
     navigate(
-      getCollectionLink({ collection, mode: collectionViewIds.SEARCH, search: newQuery.toLocation() })
+      getCollectionLink({
+        collection,
+        mode: collectionViewIds.SEARCH,
+        search: newQuery.toLocation(),
+      })
     );
   }
 
@@ -50,16 +53,24 @@ export class CollectionWrapper extends Component {
       getCollectionLink({
         collection,
         mode: collectionViewIds.DOCUMENTS,
-        search: location.search
+        search: location.search,
       })
     );
   }
 
   render() {
     const {
-      children, collection, collectionId, dropzoneFolderParent, query, intl, isCasefile
+      children,
+      collection,
+      collectionId,
+      dropzoneFolderParent,
+      query,
+      intl,
+      isCasefile,
     } = this.props;
-    const message = intl.formatMessage(messages[isCasefile ? 'casefile' : 'dataset']);
+    const message = intl.formatMessage(
+      messages[isCasefile ? 'casefile' : 'dataset']
+    );
 
     const search = (
       <SearchBox
@@ -72,7 +83,11 @@ export class CollectionWrapper extends Component {
 
     const operation = <CollectionManageMenu collection={collection} />;
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} search={search} type={isCasefile ? 'casefile' : 'dataset'}>
+      <Breadcrumbs
+        operation={operation}
+        search={search}
+        type={isCasefile ? 'casefile' : 'dataset'}
+      >
         <Breadcrumbs.Collection key="collection" collection={collection} />
       </Breadcrumbs>
     );
@@ -108,9 +123,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(CollectionWrapper);

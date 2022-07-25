@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .CheckboxList {
   list-style: none;
@@ -10,7 +10,12 @@
     position: relative;
     display: flex;
     justify-content: space-between;
-    @include rtlSupportInvertedProp(padding, left, ($pt-icon-size-standard + $aleph-grid-size * 1.5), ($aleph-grid-size / 2));
+    @include rtlSupportInvertedProp(
+      padding,
+      left,
+      ($pt-icon-size-standard + $aleph-grid-size * 1.5),
+      ($aleph-grid-size / 2)
+    );
 
     &.faint {
       color: $aleph-greyed-text;
@@ -22,7 +27,7 @@
       @include rtl(right, null, ($aleph-grid-size / 2));
       top: 3px;
       opacity: 0.1;
-      transition: opacity 0.2s ease-out, color .2s ease-out;
+      transition: opacity 0.2s ease-out, color 0.2s ease-out;
     }
 
     &.active {

@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .DocumentUploadDialog {
   &.bp3-dialog {
@@ -10,7 +10,7 @@
     padding: $aleph-grid-size 0;
   }
   .document-upload-progress-bar {
-      margin-bottom: 1em;
+    margin-bottom: 1em;
   }
 
   .bp3-form-group {

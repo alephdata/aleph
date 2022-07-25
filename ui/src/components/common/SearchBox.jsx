@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InputGroup } from '@blueprintjs/core';
 
-
 const messages = defineMessages({
   placeholder: {
     id: 'search.placeholder_default',
@@ -23,8 +22,12 @@ export class SearchBox extends PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const nextQueryText = nextProps.query ? nextProps.query.getString('q') : prevState.queryText;
-    const queryChanged = !prevState?.prevQuery || prevState.prevQuery.getString('q') !== nextQueryText;
+    const nextQueryText = nextProps.query
+      ? nextProps.query.getString('q')
+      : prevState.queryText;
+    const queryChanged =
+      !prevState?.prevQuery ||
+      prevState.prevQuery.getString('q') !== nextQueryText;
     return {
       prevQuery: nextProps.query,
       queryText: queryChanged ? nextQueryText : prevState.queryText,
@@ -46,7 +49,8 @@ export class SearchBox extends PureComponent {
   }
 
   render() {
-    const { intl, placeholder, placeholderLabel, className, inputProps } = this.props;
+    const { intl, placeholder, placeholderLabel, className, inputProps } =
+      this.props;
     const { queryText } = this.state;
     if (!this.props.onSearch) {
       return null;
@@ -54,9 +58,11 @@ export class SearchBox extends PureComponent {
 
     let searchPlaceholder = intl.formatMessage(messages.placeholder);
     if (placeholder) {
-      searchPlaceholder = placeholder
+      searchPlaceholder = placeholder;
     } else if (placeholderLabel) {
-      searchPlaceholder = intl.formatMessage(messages.placeholder_label, { label: placeholderLabel })
+      searchPlaceholder = intl.formatMessage(messages.placeholder_label, {
+        label: placeholderLabel,
+      });
     }
 
     return (

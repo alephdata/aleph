@@ -1,13 +1,21 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { AnchorButton, Button, Callout, Checkbox, Classes, Dialog, Icon, Intent } from '@blueprintjs/core';
+import {
+  AnchorButton,
+  Button,
+  Callout,
+  Checkbox,
+  Classes,
+  Dialog,
+  Icon,
+  Intent,
+} from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { dispatchSetConfigValue } from 'actions/configActions';
 
 import './DownloadButton.scss';
-
 
 const messages = defineMessages({
   download: {
@@ -28,10 +36,10 @@ const messages = defineMessages({
   },
   checkbox_label: {
     id: 'document.download.dont_warn',
-    defaultMessage: "Don't warn me in the future when downloading source documents",
+    defaultMessage:
+      "Don't warn me in the future when downloading source documents",
   },
 });
-
 
 class DownloadButton extends React.PureComponent {
   constructor(props) {
@@ -48,9 +56,9 @@ class DownloadButton extends React.PureComponent {
       if (checkboxChecked) {
         this.props.dispatchSetConfigValue({ dontWarnOnDownload: true });
       }
-      return ({
+      return {
         isOpen: !isOpen,
-      });
+      };
     });
   }
 
@@ -95,10 +103,7 @@ class DownloadButton extends React.PureComponent {
             onClick={this.toggleDialog}
           />
         </Tooltip>
-        <Dialog
-          isOpen={isOpen}
-          className={Classes.ALERT}
-        >
+        <Dialog isOpen={isOpen} className={Classes.ALERT}>
           <div className={Classes.ALERT_BODY}>
             <Icon icon="warning-sign" iconSize={40} intent={Intent.DANGER} />
             <div className={Classes.ALERT_CONTENTS}>
@@ -114,13 +119,11 @@ class DownloadButton extends React.PureComponent {
                   `}
                   values={{
                     bold: (...chunks) => <b>{chunks}</b>,
-                    br: <br />
+                    br: <br />,
                   }}
                 />
               </p>
-              <Callout
-                className="DownloadButton__checkbox-container"
-              >
+              <Callout className="DownloadButton__checkbox-container">
                 <Checkbox
                   checked={checkboxChecked}
                   label={intl.formatMessage(messages.checkbox_label)}
@@ -151,9 +154,11 @@ class DownloadButton extends React.PureComponent {
     );
   }
 }
-const mapStateToProps = ({ config }) => ({ dontWarnOnDownload: config.dontWarnOnDownload });
+const mapStateToProps = ({ config }) => ({
+  dontWarnOnDownload: config.dontWarnOnDownload,
+});
 const mapDispatchToProps = { dispatchSetConfigValue };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(DownloadButton);

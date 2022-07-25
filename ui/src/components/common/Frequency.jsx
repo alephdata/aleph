@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { selectMetadata } from 'selectors';
 
-
 class FrequencyLabel extends PureComponent {
   render() {
     const { frequency, frequencies } = this.props;
@@ -19,7 +18,7 @@ class FrequencyLabel extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   frequencies: selectMetadata(state).frequencies,
 });
 

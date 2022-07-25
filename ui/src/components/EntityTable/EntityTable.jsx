@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { Count, ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
@@ -21,7 +21,6 @@ import { showErrorToast, showSuccessToast } from 'app/toast';
 import getEntityLink from 'util/getEntityLink';
 
 import './EntityTable.scss';
-
 
 const messages = defineMessages({
   search_placeholder: {
@@ -38,7 +37,8 @@ const messages = defineMessages({
   },
   add_to_success: {
     id: 'entity.manager.entity_set_add_success',
-    defaultMessage: 'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
+    defaultMessage:
+      'Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}',
   },
   bulk_import: {
     id: 'entity.viewer.bulk_import',
@@ -103,9 +103,9 @@ export class EntityTable extends Component {
       if (newVal) {
         newSelection = [...new Set([...selection, ...entityIds])];
       } else {
-        newSelection = selection.filter(id => entityIds.indexOf(id) < 0);
+        newSelection = selection.filter((id) => entityIds.indexOf(id) < 0);
       }
-      return ({ selection: newSelection });
+      return { selection: newSelection };
     });
   }
 
@@ -114,7 +114,7 @@ export class EntityTable extends Component {
       const { navigate } = this.props;
       navigate(getEntityLink(entity));
     }
-  }
+  };
 
   onSortColumn(newField) {
     const { query, sort } = this.props;
@@ -125,10 +125,12 @@ export class EntityTable extends Component {
     }
 
     // Toggle through sorting states: ascending, descending, or unsorted.
-    this.updateQuery(query.sortBy(
-      `properties.${currentField}`,
-      direction === 'asc' ? 'desc' : undefined
-    ));
+    this.updateQuery(
+      query.sortBy(
+        `properties.${currentField}`,
+        direction === 'asc' ? 'desc' : undefined
+      )
+    );
   }
 
   onSearchSubmit(queryText) {
@@ -153,11 +155,14 @@ export class EntityTable extends Component {
           properties: {
             [type.schema.edge.source]: source.id,
             [type.schema.edge.target]: target.id,
-          }
+          },
         });
       }
       showSuccessToast(
-        intl.formatMessage(messages.edge_create_success, { source: source.getCaption(), target: target.getCaption() })
+        intl.formatMessage(messages.edge_create_success, {
+          source: source.getCaption(),
+          target: target.getCaption(),
+        })
       );
       this.setState({ selection: [] });
     } catch (e) {
@@ -169,7 +174,10 @@ export class EntityTable extends Component {
     if (!table?.id) return;
     const { navigate, schema } = this.props;
     const pathname = getEntityLink(table);
-    navigate({ pathname, hash: queryString.stringify({ mode: 'mapping', schema: schema.name }) });
+    navigate({
+      pathname,
+      hash: queryString.stringify({ mode: 'mapping', schema: schema.name }),
+    });
   }
 
   clearSelection() {
@@ -181,11 +189,24 @@ export class EntityTable extends Component {
   }
 
   render() {
-    const { collection, entityManager, query, intl, result, schema, isEntitySet, sort, updateStatus, writeable } = this.props;
+    const {
+      collection,
+      entityManager,
+      query,
+      intl,
+      result,
+      schema,
+      isEntitySet,
+      sort,
+      updateStatus,
+      writeable,
+    } = this.props;
     const { selection } = this.state;
-    const visitEntity = schema.isThing() ? this.onEntityClick : undefined;
+    const visitEntity = this.onEntityClick;
     const showEmptyComponent = result.total === 0 && query.hasQuery();
-    const selectedEntities = selection.map(this.getEntity).filter(e => e !== undefined);
+    const selectedEntities = selection
+      .map(this.getEntity)
+      .filter((e) => e !== undefined);
 
     return (
       <div className="EntityTable">
@@ -194,7 +215,9 @@ export class EntityTable extends Component {
           writeable={writeable}
           onSearchSubmit={this.onSearchSubmit}
           updateStatus={updateStatus}
-          searchPlaceholder={intl.formatMessage(messages.search_placeholder, { schema: schema.plural.toLowerCase() })}
+          searchPlaceholder={intl.formatMessage(messages.search_placeholder, {
+            schema: schema.plural.toLowerCase(),
+          })}
           searchDisabled={result.total === 0 && !query.hasQuery()}
         >
           {!isEntitySet && (
@@ -202,13 +225,13 @@ export class EntityTable extends Component {
               <DialogToggleButton
                 buttonProps={{
                   text: intl.formatMessage(messages.bulk_import),
-                  icon: "import"
+                  icon: 'import',
                 }}
                 Dialog={DocumentSelectDialog}
                 dialogProps={{
                   schema,
                   collection,
-                  onSelect: this.onDocSelected
+                  onSelect: this.onDocSelected,
                 }}
               />
               <Divider />
@@ -218,8 +241,8 @@ export class EntityTable extends Component {
             <DialogToggleButton
               buttonProps={{
                 text: intl.formatMessage(messages.add_link),
-                icon: "new-link",
-                disabled: selection.length < 1 || selection.length > 2
+                icon: 'new-link',
+                disabled: selection.length < 1 || selection.length > 2,
               }}
               Dialog={EdgeCreateDialog}
               dialogProps={{
@@ -227,30 +250,35 @@ export class EntityTable extends Component {
                 target: selection.length > 1 ? selectedEntities[1] : undefined,
                 onSubmit: this.onEdgeCreate,
                 entityManager,
-                fetchEntitySuggestions: (queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata),
-                intl
+                fetchEntitySuggestions: (queryText, schemata) =>
+                  entityManager.getEntitySuggestions(
+                    false,
+                    queryText,
+                    schemata
+                  ),
+                intl,
               }}
             />
           )}
           <DialogToggleButton
             buttonProps={{
               text: intl.formatMessage(messages.add_to),
-              icon: "add-to-artifact",
+              icon: 'add-to-artifact',
               disabled: selection.length < 1,
-              rightIcon: <Count count={selection.length || null} />
+              rightIcon: <Count count={selection.length || null} />,
             }}
             Dialog={EntitySetSelector}
             dialogProps={{
               collection,
               entities: selectedEntities,
               onSuccess: this.clearSelection,
-              showTimelines: schema.isA('Interval')
+              showTimelines: schema.isA('Interval'),
             }}
           />
           <EntityDeleteButton
             entities={selectedEntities}
             onSuccess={this.clearSelection}
-            actionType={isEntitySet ? "remove" : "delete"}
+            actionType={isEntitySet ? 'remove' : 'delete'}
             deleteEntity={entityManager.overload.deleteEntity}
             showCount
           />
@@ -259,7 +287,9 @@ export class EntityTable extends Component {
           {showEmptyComponent && (
             <ErrorSection
               icon="search"
-              title={intl.formatMessage(messages.empty, { schema: schema.plural.toLowerCase() })}
+              title={intl.formatMessage(messages.empty, {
+                schema: schema.plural.toLowerCase(),
+              })}
             />
           )}
           {!showEmptyComponent && (
@@ -269,7 +299,9 @@ export class EntityTable extends Component {
                 entities={result.results}
                 schema={schema}
                 entityManager={entityManager}
-                fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
+                fetchEntitySuggestions={(queryText, schemata) =>
+                  entityManager.getEntitySuggestions(false, queryText, schemata)
+                }
                 sort={sort}
                 sortColumn={this.onSortColumn}
                 selection={selection}
@@ -296,11 +328,13 @@ const mapStateToProps = (state, ownProps) => {
   const sort = query.getSort();
 
   return {
-    sort: !_.isEmpty(sort) ? {
-      field: sort.field.replace('properties.', ''),
-      direction: sort.direction
-    } : {},
-    result: selectEntitiesResult(state, query)
+    sort: !_.isEmpty(sort)
+      ? {
+          field: sort.field.replace('properties.', ''),
+          direction: sort.direction,
+        }
+      : {},
+    result: selectEntitiesResult(state, query),
   };
 };
 
@@ -308,5 +342,5 @@ export default compose(
   withRouter,
   entityEditorWrapper,
   connect(mapStateToProps, { queryEntities }),
-  injectIntl,
+  injectIntl
 )(EntityTable);

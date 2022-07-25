@@ -4,11 +4,18 @@ import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { querySimilar } from 'actions';
 import { selectSimilarResult } from 'selectors';
 import {
-  ErrorSection, QueryInfiniteLoad, JudgementButtons, Score, Collection, Skeleton, EntityDecisionHotkeys, EntityDecisionRow,
+  ErrorSection,
+  QueryInfiniteLoad,
+  JudgementButtons,
+  Score,
+  Collection,
+  Skeleton,
+  EntityDecisionHotkeys,
+  EntityDecisionRow,
 } from 'components/common';
 import EntityCompare from 'components/Entity/EntityCompare';
 import { entitySimilarQuery } from 'queries';
@@ -22,7 +29,6 @@ const messages = defineMessages({
   },
 });
 
-
 class EntitySimilarMode extends Component {
   constructor(props) {
     super(props);
@@ -34,7 +40,7 @@ class EntitySimilarMode extends Component {
       await this.props.pairwiseJudgement({
         judgement: obj.judgement,
         entity: this.props.entity,
-        match: obj.entity
+        match: obj.entity,
       });
     } catch (e) {
       showWarningToast(e.message);
@@ -80,10 +86,7 @@ class EntitySimilarMode extends Component {
           </th>
           <th className="numeric narrow">
             <span className="value">
-              <FormattedMessage
-                id="xref.score"
-                defaultMessage="Score"
-              />
+              <FormattedMessage id="xref.score" defaultMessage="Score" />
             </span>
           </th>
           <th className="collection">
@@ -121,7 +124,10 @@ class EntitySimilarMode extends Component {
   renderRow(similar, index) {
     const { selectedIndex } = this.props;
     return (
-      <EntityDecisionRow key={similar.entity.id} selected={index === selectedIndex}>
+      <EntityDecisionRow
+        key={similar.entity.id}
+        selected={index === selectedIndex}
+      >
         <td className="numeric narrow">
           <JudgementButtons obj={similar} onChange={this.onDecide} />
         </td>
@@ -143,10 +149,12 @@ class EntitySimilarMode extends Component {
     const skeletonItems = [...Array(10).keys()];
 
     if (result.total === 0) {
-      return <ErrorSection
-        icon="similar"
-        title={intl.formatMessage(messages.empty)}
-      />
+      return (
+        <ErrorSection
+          icon="similar"
+          title={intl.formatMessage(messages.empty)}
+        />
+      );
     }
 
     return (
@@ -157,7 +165,8 @@ class EntitySimilarMode extends Component {
             {this.renderHeader()}
             <tbody>
               {result.results?.map((res, i) => this.renderRow(res, i))}
-              {result.isPending && skeletonItems.map(idx => this.renderSkeleton(idx))}
+              {result.isPending &&
+                skeletonItems.map((idx) => this.renderSkeleton(idx))}
             </tbody>
           </table>
         </EntityDecisionHotkeys>
@@ -181,7 +190,10 @@ const mapStateToProps = (state, ownProps) => {
   return { query, result, selectedIndex: +parsedHash.selectedIndex };
 };
 
-EntitySimilarMode = connect(mapStateToProps, { querySimilar, pairwiseJudgement })(EntitySimilarMode);
+EntitySimilarMode = connect(mapStateToProps, {
+  querySimilar,
+  pairwiseJudgement,
+})(EntitySimilarMode);
 EntitySimilarMode = withRouter(EntitySimilarMode);
 EntitySimilarMode = injectIntl(EntitySimilarMode);
 export default EntitySimilarMode;

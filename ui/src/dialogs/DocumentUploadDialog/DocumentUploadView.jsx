@@ -14,8 +14,8 @@ const messages = defineMessages({
   },
   summary: {
     id: 'document.upload.summary',
-    defaultMessage: '{numberOfFiles, number} files, {totalSize}'
-  }
+    defaultMessage: '{numberOfFiles, number} files, {totalSize}',
+  },
 });
 
 export class DocumentUploadView extends PureComponent {
@@ -39,7 +39,7 @@ export class DocumentUploadView extends PureComponent {
   toggleFile(file) {
     this.setState(({ filesToUpload }) => ({
       filesToUpload: filesToUpload.includes(file)
-        ? filesToUpload.filter(f => f !== file)
+        ? filesToUpload.filter((f) => f !== file)
         : [...filesToUpload, ...[file]],
     }));
   }
@@ -80,17 +80,22 @@ export class DocumentUploadView extends PureComponent {
     const { filesToUpload } = this.state;
 
     const fileTree = convertPathsToTree(files);
-    const totalFileSize = files.reduce((totalSize, file) => totalSize + file.size, 0);
+    const totalFileSize = files.reduce(
+      (totalSize, file) => totalSize + file.size,
+      0
+    );
 
     return (
       <div className="DocumentUploadView">
         <div className="DocumentUploadView__content">
           {this.renderFolder(fileTree)}
         </div>
-        <p>{intl.formatMessage(messages.summary, {
-          numberOfFiles: filesToUpload.length,
-          totalSize: <FileSize value={totalFileSize} />
-        })}</p>
+        <p>
+          {intl.formatMessage(messages.summary, {
+            numberOfFiles: filesToUpload.length,
+            totalSize: <FileSize value={totalFileSize} />,
+          })}
+        </p>
         <div className="bp3-dialog-footer-actions">
           <Button
             type="submit"

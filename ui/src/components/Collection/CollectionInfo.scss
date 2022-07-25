@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .CollectionInfo {
   &__item {
@@ -11,7 +11,12 @@
     }
 
     .key {
-      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*2, null);
+      @include rtlSupportInvertedProp(
+        margin,
+        right,
+        $aleph-grid-size * 2,
+        null
+      );
       color: $gray1 !important;
       margin-bottom: $aleph-grid-size/2;
     }

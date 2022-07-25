@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Screen from 'components/Screen/Screen';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityProperties from 'components/Entity/EntityProperties';
@@ -35,7 +35,11 @@ import {
   selectProfileExpandResult,
   selectEntitySetItemsResult,
 } from 'selectors';
-import { profileSimilarQuery, profileReferencesQuery, entitySetItemsQuery } from 'queries';
+import {
+  profileSimilarQuery,
+  profileReferencesQuery,
+  entitySetItemsQuery,
+} from 'queries';
 
 const messages = defineMessages({
   delete: {
@@ -43,7 +47,6 @@ const messages = defineMessages({
     defaultMessage: 'Delete',
   },
 });
-
 
 class ProfileScreen extends Component {
   componentDidMount() {
@@ -56,7 +59,9 @@ class ProfileScreen extends Component {
 
   fetchIfNeeded() {
     const { profileId, profile, tagsResult } = this.props;
-    if (!profileId) { return; }
+    if (!profileId) {
+      return;
+    }
 
     if (profile.shouldLoadDeep) {
       this.props.fetchProfile({ id: profileId });
@@ -91,7 +96,7 @@ class ProfileScreen extends Component {
             <DialogToggleButton
               buttonProps={{
                 text: intl.formatMessage(messages.delete),
-                icon: "trash"
+                icon: 'trash',
               }}
               Dialog={EntitySetDeleteDialog}
               dialogProps={{ entitySet: profile }}
@@ -99,7 +104,6 @@ class ProfileScreen extends Component {
           </ButtonGroup>
         )}
       </ControlGroup>
-
     );
   }
 
@@ -194,5 +198,5 @@ const mapDispatchToProps = {
 export default compose(
   withRouter,
   injectIntl,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps)
 )(ProfileScreen);

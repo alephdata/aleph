@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryNotifications } from 'actions';
 import { selectNotificationsResult } from 'selectors';
@@ -11,7 +11,6 @@ import Notification from 'components/Notification/Notification';
 import NotificationListFilter from 'components/Notification/NotificationListFilter';
 
 import './NotificationList.scss';
-
 
 const messages = defineMessages({
   no_notifications: {
@@ -36,28 +35,42 @@ class NotificationList extends Component {
   }
 
   render() {
-    const { query, result, intl, showCollectionLinks, loadOnScroll = true } = this.props;
+    const {
+      query,
+      result,
+      intl,
+      showCollectionLinks,
+      loadOnScroll = true,
+    } = this.props;
     const skeletonItems = [...Array(15).keys()];
 
-    if (result.isError || result.total === 0) {
-      return (
-        <ErrorSection
-          icon="notifications"
-          title={result.isError ? result.error.message : intl.formatMessage(messages.no_notifications)}
-        />
-      );
+    if (result.isError) {
+      return <ErrorSection error={result.error} />;
+    }
+
+    if (result.total === 0) {
+      const title = intl.formatMessage(messages.no_notifications);
+      return <ErrorSection icon="notifications" title={title} />;
     }
 
     return (
       <div className="NotificationList">
-        <NotificationListFilter query={query} updateQuery={this.updateQuery} result={result} />
+        <NotificationListFilter
+          query={query}
+          updateQuery={this.updateQuery}
+          result={result}
+        />
         <ul className="NotificationList__items">
-          {result.results && result.results.map(
-            notif => <Notification key={notif.id} notification={notif} showCollectionLinks={showCollectionLinks} />,
-          )}
-          {result.isPending && skeletonItems.map(
-            item => <Notification key={item} isPending />,
-          )}
+          {result.results &&
+            result.results.map((notif) => (
+              <Notification
+                key={notif.id}
+                notification={notif}
+                showCollectionLinks={showCollectionLinks}
+              />
+            ))}
+          {result.isPending &&
+            skeletonItems.map((item) => <Notification key={item} isPending />)}
         </ul>
         <QueryInfiniteLoad
           query={query}
@@ -79,5 +92,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryNotifications }),
-  injectIntl,
+  injectIntl
 )(NotificationList);

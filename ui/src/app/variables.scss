@@ -1,19 +1,20 @@
-@import "~@blueprintjs/core/lib/scss/variables";
-@import "~@blueprintjs/icons/lib/scss/variables";
+@import '~@blueprintjs/core/lib/scss/variables';
+@import '~@blueprintjs/icons/lib/scss/variables';
 
 $aleph-grid-size: $pt-grid-size;
 $aleph-font-size: $pt-font-size;
 $aleph-line-height: $pt-line-height;
 $aleph-border-radius: $pt-border-radius;
 $aleph-icon-padding: ($aleph-grid-size / 2);
-$aleph-content-padding: $aleph-grid-size*2.5;
-$aleph-mobile-content-padding: $aleph-grid-size*2;
+$aleph-content-padding: $aleph-grid-size * 2.5;
+$aleph-mobile-content-padding: $aleph-grid-size * 2;
 $aleph-content-width-limit: 750px;
 
 $aleph-screen-sm-max-width: 620px;
 $aleph-screen-md-max-width: 980px;
 $aleph-screen-lg-max-width: 1200px;
-$aleph-navbar-mobile-max-width: $aleph-screen-sm-max-width + $aleph-grid-size*12;
+$aleph-navbar-mobile-max-width: $aleph-screen-sm-max-width + $aleph-grid-size *
+  12;
 
 $aleph-breadcrumbs-background: $light-gray4;
 $aleph-page-background: white;
@@ -36,7 +37,7 @@ $aleph-profile-dark-visited: $gold1;
 
 $aleph-investigation-sidebar-width: $aleph-grid-size * 30;
 $aleph-investigation-theme: $blue1;
-$aleph-dataset-theme: rgba($dark-gray5, .8);
+$aleph-dataset-theme: rgba($dark-gray5, 0.8);
 
 $table-header-color: $blue3;
 
@@ -47,11 +48,11 @@ $aleph-sidebar-sm-width: $aleph-grid-size * 20;
 $aleph-sidepane-md-width: $aleph-grid-size * 27;
 
 $aleph-text-highlight-color: yellow;
-$aleph-visited-link-color: rgba($aleph-link-color, .6);
+$aleph-visited-link-color: rgba($aleph-link-color, 0.6);
 $warning-border-color: #faebcc;
 $warning-background-color: #fcf8e3;
 $warning-text-color: #8a6d3b;
 
 $button-color-hover: #137cbd;
-$views-menu-background-color: rgba(92,112,128,0.5);
+$views-menu-background-color: rgba(92, 112, 128, 0.5);
 $aleph-error-highlight-color: rgb(212, 19, 13);

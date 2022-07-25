@@ -5,7 +5,6 @@ import './EntityCompare.scss';
 import Skeleton from 'components/common/Skeleton';
 
 class EntityCompare extends PureComponent {
-
   getCommonProperties(entity, other, showEmpty) {
     const properties = [...entity.schema.getFeaturedProperties()];
 
@@ -57,7 +56,11 @@ class EntityCompare extends PureComponent {
                 <Property.Name prop={prop} />
               </span>
               <span className="EntityCompare__property__value">
-                <Property.Values prop={prop} values={entity.getProperty(prop)} translitLookup={entity.latinized} />
+                <Property.Values
+                  prop={prop}
+                  values={entity.getProperty(prop)}
+                  translitLookup={entity.latinized}
+                />
               </span>
             </div>
           ))}
@@ -65,6 +68,6 @@ class EntityCompare extends PureComponent {
       </>
     );
   }
-};
+}
 
 export default EntityCompare;

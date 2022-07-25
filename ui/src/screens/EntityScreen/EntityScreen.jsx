@@ -24,7 +24,7 @@ import { deleteEntity } from 'actions';
 import { selectEntity, selectEntityView } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
 import { setRecentlyViewedItem } from 'app/storage';
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 
 import 'components/common/ItemOverview.scss';
 
@@ -43,7 +43,7 @@ class EntityScreen extends Component {
 
   componentDidMount() {
     this.cleanHash();
-    window.addEventListener("beforeunload", this.onUnmount);
+    window.addEventListener('beforeunload', this.onUnmount);
   }
 
   componentDidUpdate() {
@@ -52,7 +52,7 @@ class EntityScreen extends Component {
 
   componentWillUnmount() {
     this.onUnmount();
-    window.removeEventListener("beforeunload", this.onUnmount);
+    window.removeEventListener('beforeunload', this.onUnmount);
   }
 
   onUnmount() {
@@ -67,11 +67,14 @@ class EntityScreen extends Component {
     if (!!entity.id && !entity.profileId && !!parsedHash.profile) {
       delete parsedHash.profile;
 
-      navigate({
-        pathname: location.pathname,
-        search: location.search,
-        hash: queryString.stringify(parsedHash),
-      }, { replace: true });
+      navigate(
+        {
+          pathname: location.pathname,
+          search: location.search,
+          hash: queryString.stringify(parsedHash),
+        },
+        { replace: true }
+      );
     }
   }
 
@@ -79,7 +82,9 @@ class EntityScreen extends Component {
     const { entity, entityId, intl, parsedHash } = this.props;
     if (entity.profileId && parsedHash.profile === undefined) {
       parsedHash.via = entity.id;
-      return <Navigate to={getProfileLink(entity.profileId, parsedHash)} replace />;
+      return (
+        <Navigate to={getProfileLink(entity.profileId, parsedHash)} replace />
+      );
     }
 
     if (entity.isError) {
@@ -102,13 +107,13 @@ class EntityScreen extends Component {
             <DialogToggleButton
               buttonProps={{
                 text: intl.formatMessage(messages.add_to),
-                icon: "add-to-artifact"
+                icon: 'add-to-artifact',
               }}
               Dialog={EntitySetSelector}
               dialogProps={{
                 collection: entity.collection,
                 entities: [entity],
-                showTimelines: entity.schema.isA('Interval')
+                showTimelines: entity.schema.isA('Interval'),
               }}
             />
             <EntityDeleteButton
@@ -138,7 +143,10 @@ class EntityScreen extends Component {
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.getCaption()}>
-          <CollectionWrapper collection={entity.collection} dropzoneFolderParent={entity.schema.isA('Folder') && entity}>
+          <CollectionWrapper
+            collection={entity.collection}
+            dropzoneFolderParent={entity.schema.isA('Folder') && entity}
+          >
             {breadcrumbs}
             <DualPane>
               <DualPane.SidePane className="ItemOverview">
@@ -181,5 +189,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { deleteEntity }),
-  injectIntl,
+  injectIntl
 )(EntityScreen);

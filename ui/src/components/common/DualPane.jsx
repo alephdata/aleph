@@ -3,7 +3,6 @@ import c from 'classnames';
 
 import './DualPane.scss';
 
-
 class SidePane extends PureComponent {
   render() {
     const { children, className } = this.props;
@@ -35,9 +34,7 @@ class DualPane extends PureComponent {
     const { children, className, ...restProps } = this.props;
     return (
       <article {...restProps} className={c('DualPane', className)}>
-        <div className="DualPane__inner-container">
-          { children }
-        </div>
+        <div className="DualPane__inner-container">{children}</div>
       </article>
     );
   }

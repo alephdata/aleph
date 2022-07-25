@@ -2,7 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import CollectionStatistics from './CollectionStatistics';
 import CollectionDateHistogram from './CollectionDateHistogram';
 import { selectCollection } from 'selectors';
@@ -10,7 +10,13 @@ import { selectCollection } from 'selectors';
 import './CollectionStatisticsGroup.scss';
 
 const statFields = [
-  'schema', 'countries', 'names', 'emails', 'addresses', 'ibans', 'phones',
+  'schema',
+  'countries',
+  'names',
+  'emails',
+  'addresses',
+  'ibans',
+  'phones',
 ];
 
 class CollectionStatisticsGroup extends React.Component {
@@ -29,7 +35,8 @@ class CollectionStatisticsGroup extends React.Component {
   }
 
   render() {
-    const { collectionId, emptyComponent, isPending, statsToRender } = this.props;
+    const { collectionId, emptyComponent, isPending, statsToRender } =
+      this.props;
     const skeletonItems = [...Array(3).keys()];
 
     if (!isPending && !statsToRender.length) {
@@ -38,9 +45,14 @@ class CollectionStatisticsGroup extends React.Component {
 
     return (
       <div className="CollectionStatisticsGroup">
-        <CollectionDateHistogram collectionId={collectionId} className="CollectionStatisticsGroup__item" />
-        {isPending && skeletonItems.map((key) => this.renderStatisticsItem({ key }))}
-        {!isPending && statsToRender.map((stat) => this.renderStatisticsItem(stat))}
+        <CollectionDateHistogram
+          collectionId={collectionId}
+          className="CollectionStatisticsGroup__item"
+        />
+        {isPending &&
+          skeletonItems.map((key) => this.renderStatisticsItem({ key }))}
+        {!isPending &&
+          statsToRender.map((stat) => this.renderStatisticsItem(stat))}
       </div>
     );
   }
@@ -55,13 +67,14 @@ const mapStateToProps = (state, ownProps) => {
     return { isPending: true, statsToRender: [] };
   }
 
-  const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
-    .filter(stat => stat && stat.total);
+  const statsToRender = statFields
+    .map((key) => ({ key, ...statistics[key] }))
+    .filter((stat) => stat && stat.total);
 
   return { statsToRender };
 };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps)
 )(CollectionStatisticsGroup);

@@ -5,8 +5,11 @@ import { loadState, loadStart, loadError, loadComplete } from 'reducers/util';
 
 const initialState = loadState();
 
-export default createReducer({
-  [fetchSystemStatus.START]: state => loadStart(state),
-  [fetchSystemStatus.ERROR]: (state, { error }) => loadError(state, error),
-  [fetchSystemStatus.COMPLETE]: (state, { status }) => loadComplete(status),
-}, initialState);
+export default createReducer(
+  {
+    [fetchSystemStatus.START]: (state) => loadStart(state),
+    [fetchSystemStatus.ERROR]: (state, { error }) => loadError(state, error),
+    [fetchSystemStatus.COMPLETE]: (state, { status }) => loadComplete(status),
+  },
+  initialState
+);

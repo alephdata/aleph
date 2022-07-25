@@ -2,10 +2,15 @@ import React, { PureComponent, Component } from 'react';
 import { ControlGroup, Divider, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Collection, Entity, EntitySet, Skeleton, Restricted } from 'components/common';
+import {
+  Collection,
+  Entity,
+  EntitySet,
+  Skeleton,
+  Restricted,
+} from 'components/common';
 
 import './Breadcrumbs.scss';
-
 
 class CollectionBreadcrumb extends PureComponent {
   renderSkeleton() {
@@ -46,20 +51,29 @@ class EntityBreadcrumb extends PureComponent {
 
     return (
       <>
-        { hasAncestors && (
+        {hasAncestors && (
           <li key="ancestors">
             <span className="bp3-breadcrumb">
               <Icon icon="more" />
             </span>
           </li>
         )}
-        { !!parent && (
+        {!!parent && (
           <li key={parent.id}>
-            <Entity.Link entity={parent} className="bp3-breadcrumb" icon truncate={30} />
+            <Entity.Link
+              entity={parent}
+              className="bp3-breadcrumb"
+              icon
+              truncate={30}
+            />
           </li>
         )}
         <li key={entity.id}>
-          <Entity.Label entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" truncate={30} />
+          <Entity.Label
+            entity={entity}
+            className="bp3-breadcrumb bp3-breadcrumb-current"
+            truncate={30}
+          />
         </li>
       </>
     );
@@ -71,12 +85,16 @@ class EntitySetBreadcrumb extends PureComponent {
     const { entitySet, icon } = this.props;
     return (
       <li key={entitySet.id}>
-        <EntitySet.Label entitySet={entitySet} className="bp3-breadcrumb bp3-breadcrumb-current" icon={icon} truncate={30} />
+        <EntitySet.Label
+          entitySet={entitySet}
+          className="bp3-breadcrumb bp3-breadcrumb-current"
+          icon={icon}
+          truncate={30}
+        />
       </li>
     );
   }
 }
-
 
 class TextBreadcrumb extends PureComponent {
   render() {
@@ -110,9 +128,9 @@ export default class Breadcrumbs extends Component {
     return (
       <ControlGroup>
         {status}
-        {(status && search) && <Divider />}
+        {status && search && <Divider />}
         {search}
-        {(search && operation) && <Divider />}
+        {search && operation && <Divider />}
         {operation}
       </ControlGroup>
     );
@@ -122,16 +140,12 @@ export default class Breadcrumbs extends Component {
     const { children, type } = this.props;
 
     return (
-      <nav className={c("Breadcrumbs", type)}>
+      <nav className={c('Breadcrumbs', type)}>
         <div className="Breadcrumbs__inner-container">
           <div className="Breadcrumbs__main">
-            <ul className="bp3-breadcrumbs">
-              {children}
-            </ul>
+            <ul className="bp3-breadcrumbs">{children}</ul>
           </div>
-          <div className="Breadcrumbs__right">
-            {this.renderOperations()}
-          </div>
+          <div className="Breadcrumbs__right">{this.renderOperations()}</div>
         </div>
       </nav>
     );

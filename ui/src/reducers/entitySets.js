@@ -1,49 +1,56 @@
 import { createReducer } from 'redux-act';
 
-import { queryEntitySets, fetchEntitySet, fetchProfile, updateEntitySet, createEntitySetMutate, createEntitySetNoMutate, deleteEntitySet } from 'actions';
-import { objectLoadComplete, objectLoadError, objectLoadStart, objectDelete, resultObjects } from 'reducers/util';
+import {
+  queryEntitySets,
+  fetchEntitySet,
+  fetchProfile,
+  updateEntitySet,
+  createEntitySetMutate,
+  createEntitySetNoMutate,
+  deleteEntitySet,
+} from 'actions';
+import {
+  objectLoadComplete,
+  objectLoadError,
+  objectLoadStart,
+  objectDelete,
+  resultObjects,
+} from 'reducers/util';
 
 const initialState = {};
 
-export default createReducer({
-  [queryEntitySets.COMPLETE]: (state, { result }) => resultObjects(state, result),
+export default createReducer(
+  {
+    [queryEntitySets.COMPLETE]: (state, { result }) =>
+      resultObjects(state, result),
 
-  [fetchEntitySet.START]: (state, { id }) => objectLoadStart(state, id),
+    [fetchEntitySet.START]: (state, { id }) => objectLoadStart(state, id),
 
-  [fetchEntitySet.ERROR]: (state, {
-    error, args: { id },
-  }) => objectLoadError(state, id, error),
+    [fetchEntitySet.ERROR]: (state, { error, args: { id } }) =>
+      objectLoadError(state, id, error),
 
-  [fetchEntitySet.COMPLETE]: (state, {
-    id, data,
-  }) => objectLoadComplete(state, id, data),
+    [fetchEntitySet.COMPLETE]: (state, { id, data }) =>
+      objectLoadComplete(state, id, data),
 
-  [fetchProfile.START]: (state, {
-    id
-  }) => objectLoadStart(state, id),
+    [fetchProfile.START]: (state, { id }) => objectLoadStart(state, id),
 
-  [fetchProfile.ERROR]: (state, {
-    error, args: { id },
-  }) => objectLoadError(state, id, error),
+    [fetchProfile.ERROR]: (state, { error, args: { id } }) =>
+      objectLoadError(state, id, error),
 
-  [fetchProfile.COMPLETE]: (state, {
-    id, data,
-  }) => objectLoadComplete(state, id, data),
+    [fetchProfile.COMPLETE]: (state, { id, data }) =>
+      objectLoadComplete(state, id, data),
 
-  [createEntitySetMutate.COMPLETE]: (state, {
-    entitySetId, data,
-  }) => objectLoadComplete(state, entitySetId, data),
+    [createEntitySetMutate.COMPLETE]: (state, { entitySetId, data }) =>
+      objectLoadComplete(state, entitySetId, data),
 
-  [createEntitySetNoMutate.COMPLETE]: (state, {
-    entitySetId, data,
-  }) => objectLoadComplete(state, entitySetId, data),
+    [createEntitySetNoMutate.COMPLETE]: (state, { entitySetId, data }) =>
+      objectLoadComplete(state, entitySetId, data),
 
-  [updateEntitySet.COMPLETE]: (state, {
-    entitySetId, data,
-  }) => objectLoadComplete(state, entitySetId, data),
+    [updateEntitySet.COMPLETE]: (state, { entitySetId, data }) =>
+      objectLoadComplete(state, entitySetId, data),
 
-  [deleteEntitySet.COMPLETE]: (state, {
-    entitySetId,
-  }) => objectDelete(state, entitySetId),
-
-}, initialState);
+    [deleteEntitySet.COMPLETE]: (state, { entitySetId }) =>
+      objectDelete(state, entitySetId),
+  },
+  initialState
+);

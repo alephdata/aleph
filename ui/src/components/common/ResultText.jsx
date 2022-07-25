@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
-import './ResultText.scss'
+import './ResultText.scss';
 
 class ResultText extends PureComponent {
   renderText() {
@@ -10,7 +10,9 @@ class ResultText extends PureComponent {
       return <FormattedMessage id="result.error" defaultMessage="Error" />;
     }
     if (!result || result.total === undefined) {
-      return <FormattedMessage id="result.searching" defaultMessage="Searching..." />;
+      return (
+        <FormattedMessage id="result.searching" defaultMessage="Searching..." />
+      );
     }
 
     if (customText) {
@@ -28,10 +30,14 @@ class ResultText extends PureComponent {
       );
     }
     if (result.total === 0) {
-      return <FormattedMessage id="result.none" defaultMessage="No results found" />;
+      return (
+        <FormattedMessage id="result.none" defaultMessage="No results found" />
+      );
     }
     if (result.total === 1) {
-      return <FormattedMessage id="result.solo" defaultMessage="One result found" />;
+      return (
+        <FormattedMessage id="result.solo" defaultMessage="One result found" />
+      );
     }
     return (
       <FormattedMessage
@@ -45,11 +51,7 @@ class ResultText extends PureComponent {
   }
 
   render() {
-    return (
-      <span className="ResultText text-muted">
-        {this.renderText()}
-      </span>
-    )
+    return <span className="ResultText text-muted">{this.renderText()}</span>;
   }
 }
 

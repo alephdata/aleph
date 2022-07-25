@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, Menu, MenuDivider, MenuItem, PopoverInteractionKind } from '@blueprintjs/core';
 import {
-  Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
+  Button,
+  Menu,
+  MenuDivider,
+  MenuItem,
+  PopoverInteractionKind,
+} from '@blueprintjs/core';
+import {
+  Cell,
+  Column,
+  ColumnHeaderCell,
+  Table,
+  TruncatedFormat,
 } from '@blueprintjs/table';
 import { MappingLabel } from 'components/MappingEditor/MappingLabel';
 import SelectWrapper from 'components/common/SelectWrapper';
@@ -30,11 +40,7 @@ const messages = defineMessages({
 });
 
 const itemRenderer = ({ property }, { handleClick }) => (
-  <MenuItem
-    key={property.label}
-    text={property.label}
-    onClick={handleClick}
-  />
+  <MenuItem key={property.label} text={property.label} onClick={handleClick} />
 );
 
 export class MappingPropertyAssign extends Component {
@@ -56,20 +62,24 @@ export class MappingPropertyAssign extends Component {
   }
 
   getAssignableProps = (schema) => {
-    const featuredProps = schema.getFeaturedProperties()
-      .filter(prop => !prop.type.isEntity)
+    const featuredProps = schema
+      .getFeaturedProperties()
+      .filter((prop) => !prop.type.isEntity)
       .sort((a, b) => (a.label > b.label ? 1 : -1));
-    const otherProps = schema.getEditableProperties()
-      .filter(prop => !prop.type.isEntity && featuredProps.indexOf(prop) === -1)
+    const otherProps = schema
+      .getEditableProperties()
+      .filter(
+        (prop) => !prop.type.isEntity && featuredProps.indexOf(prop) === -1
+      )
       .sort((a, b) => (a.label > b.label ? 1 : -1));
 
     return { featuredProps, otherProps };
-  }
+  };
 
   mappingListRenderer({ items, itemsParentRef, renderItem }) {
     return (
-      <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
-        {items.map(mapping => (
+      <Menu ulRef={itemsParentRef} onWheel={(e) => e.stopPropagation()}>
+        {items.map((mapping) => (
           <MenuItem
             key={mapping.id}
             text={<MappingLabel mapping={mapping} truncate={15} />}
@@ -91,23 +101,23 @@ export class MappingPropertyAssign extends Component {
       <>
         {showHeader && (
           <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading">
-            <h6 className="bp3-heading"><MappingLabel mapping={mapping} truncate={25} /></h6>
+            <h6 className="bp3-heading">
+              <MappingLabel mapping={mapping} truncate={25} />
+            </h6>
           </li>
         )}
-        {
-          featuredProps.map(prop => renderItem({ id, property: prop }))
-        }
+        {featuredProps.map((prop) => renderItem({ id, property: prop }))}
         {featuredProps.length > 0 && otherProps.length > 0 && <MenuDivider />}
-        {
-          otherProps.map(prop => renderItem({ id, property: prop }))
-        }
+        {otherProps.map((prop) => renderItem({ id, property: prop }))}
       </>
     );
   }
 
   checkColumnValidity(colLabel) {
     const { columnLabels, intl } = this.props;
-    const labelOccurrenceCount = columnLabels.filter(label => label === colLabel).length;
+    const labelOccurrenceCount = columnLabels.filter(
+      (label) => label === colLabel
+    ).length;
 
     if (colLabel === '') {
       return intl.formatMessage(messages.error_blank);
@@ -122,13 +132,8 @@ export class MappingPropertyAssign extends Component {
     const { intl, mappings, onPropertyRemove } = this.props;
 
     return (
-      <ColumnHeaderCell
-        name={colLabel || '-'}
-        style={style}
-      >
-        {colError && (
-          <p className="MappingPropertyAssign__error">{colError}</p>
-        )}
+      <ColumnHeaderCell name={colLabel || '-'} style={style}>
+        {colError && <p className="MappingPropertyAssign__error">{colError}</p>}
         {!colError && (
           <div className="MappingPropertyAssign__headerSelect">
             {colValue && (
@@ -140,14 +145,19 @@ export class MappingPropertyAssign extends Component {
                   id="property-select"
                   items={[]}
                   itemListRenderer={({ itemsParentRef, renderItem }) => (
-                    <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
+                    <Menu
+                      ulRef={itemsParentRef}
+                      onWheel={(e) => e.stopPropagation()}
+                    >
                       {this.propertyListRenderer(colValue, renderItem, true)}
                     </Menu>
                   )}
                   itemRenderer={itemRenderer}
                   popoverProps={{ minimal: true }}
                   filterable={false}
-                  onItemSelect={(item) => this.onItemSelect(item, colLabel, colValue)}
+                  onItemSelect={(item) =>
+                    this.onItemSelect(item, colLabel, colValue)
+                  }
                 >
                   <Button
                     text={colValue.property.label}
@@ -160,7 +170,9 @@ export class MappingPropertyAssign extends Component {
                     icon="cross"
                     minimal
                     small
-                    onClick={() => onPropertyRemove(colValue.id, colValue.property.name)}
+                    onClick={() =>
+                      onPropertyRemove(colValue.id, colValue.property.name)
+                    }
                   />
                 </div>
               </>
@@ -169,12 +181,18 @@ export class MappingPropertyAssign extends Component {
               <SelectWrapper
                 id="mapping-select"
                 fill
-                items={mappings.getValues().sort((a, b) => (a.id > b.id ? 1 : -1))}
-                itemListRenderer={listProps => this.mappingListRenderer(listProps)}
+                items={mappings
+                  .getValues()
+                  .sort((a, b) => (a.id > b.id ? 1 : -1))}
+                itemListRenderer={(listProps) =>
+                  this.mappingListRenderer(listProps)
+                }
                 itemRenderer={itemRenderer}
                 popoverProps={{ minimal: true }}
                 filterable={false}
-                onItemSelect={(item) => this.onItemSelect(item, colLabel, colValue)}
+                onItemSelect={(item) =>
+                  this.onItemSelect(item, colLabel, colValue)
+                }
               >
                 <Button
                   fill
@@ -196,9 +214,7 @@ export class MappingPropertyAssign extends Component {
 
     return (
       <Cell style={style}>
-        <TruncatedFormat detectTruncation>
-          {value || ''}
-        </TruncatedFormat>
+        <TruncatedFormat detectTruncation>{value || ''}</TruncatedFormat>
       </Cell>
     );
   }
@@ -241,12 +257,12 @@ export class MappingPropertyAssign extends Component {
                 key={colLabel}
                 id={i}
                 name={colLabel}
-                cellRenderer={(rowIndex, colIndex) => (
+                cellRenderer={(rowIndex, colIndex) =>
                   this.renderCell(rowIndex, colIndex, style, colError)
-                )}
-                columnHeaderCellRenderer={() => (
+                }
+                columnHeaderCellRenderer={() =>
                   this.renderHeaderCell(colLabel, colValue, style, colError)
-                )}
+                }
               />
             );
           })}
