@@ -108,12 +108,7 @@ def configure_schema(schema, version):
                 "copy_to": "text",
                 "fields": {"text": LATIN_TEXT},
             },
-            "text": {
-                "type": "text",
-                "analyzer": "latin_index",
-                "search_analyzer": "latin_query",
-                "search_quote_analyzer": "latin_index",
-            },
+            "text": LATIN_TEXT,
             "properties": {"type": "object", "properties": schema_mapping},
             "numeric": {"type": "object", "properties": numeric_mapping},
             "role_id": KEYWORD,

@@ -27,6 +27,7 @@ LATIN_TEXT = {
     "type": "text",
     "analyzer": "latin_index",
     "search_analyzer": "latin_query",
+    "search_quote_analyzer": "latin_index",
 }
 KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
