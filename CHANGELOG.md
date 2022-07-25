@@ -1,3 +1,9 @@
+## 3.12.6 (2022-07-25)
+
+- Develop QoL updates. Introduced prettier and eslint builds for github. Update code to meet new standards. Introduced the concept of RC versions for Aleph. Introduced Feature and Bugfix forms for easier issue creation. Bumped numerous libraries.
+
+- Fixed bug where you could hit an infinite scroll if the API returned inconsistent results.
+
 ## 3.12.4 (2022-06-13)
 
 - The histogram feature used for dates now allows you to zoom in and out to get a better view of the dates that are important to you. Note that histograms aren't yet great with vague dates (January 2021, 1984) so dates with no day or month will default to the first day of the month, year.
