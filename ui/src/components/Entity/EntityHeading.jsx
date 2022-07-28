@@ -1,8 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { selectUnit } from '@formatjs/intl-utils';
-import { FormattedRelativeTime } from 'react-intl';
-import { Entity, Schema } from 'components/common';
+import { Entity, Schema, RelativeTime } from 'components/common';
 
 import 'components/common/ItemOverview.scss';
 
@@ -12,7 +10,6 @@ class EntityHeading extends React.PureComponent {
     const lastViewedDate = entity.lastViewed
       ? new Date(parseInt(entity.lastViewed, 10))
       : Date.now();
-    const { value, unit } = selectUnit(lastViewedDate, Date.now());
 
     return (
       <>
@@ -36,17 +33,7 @@ class EntityHeading extends React.PureComponent {
             <FormattedMessage
               id="entity.info.last_view"
               defaultMessage="Last viewed {time}"
-              values={{
-                time: (
-                  <FormattedRelativeTime
-                    value={value}
-                    unit={unit}
-                    // eslint-disable-next-line
-                    style="long"
-                    numeric="auto"
-                  />
-                ),
-              }}
+              values={{ time: <RelativeTime date={lastViewedDate} /> }}
             />
           </span>
         )}

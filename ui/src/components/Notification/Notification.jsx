@@ -1,6 +1,4 @@
 import React, { PureComponent } from 'react';
-import { selectUnit } from '@formatjs/intl-utils';
-import { FormattedRelativeTime } from 'react-intl';
 
 import {
   Collection,
@@ -10,8 +8,8 @@ import {
   Role,
   Skeleton,
   ExportLink,
+  RelativeTime,
 } from 'src/components/common';
-import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
 
 import './Notification.scss';
 
@@ -94,19 +92,11 @@ class Notification extends PureComponent {
       }
     });
 
-    const createdDate = convertUTCDateToLocalDate(new Date(createdAt));
-    const { value, unit } = selectUnit(createdDate, Date.now());
     return (
       <li key={id} className="Notification">
         <div className="notification-action">{message}</div>
         <div className="timestamp">
-          <FormattedRelativeTime
-            value={value}
-            unit={unit}
-            // eslint-disable-next-line
-            style="long"
-            numeric="auto"
-          />
+          <RelativeTime utcDate={createdAt} />
         </div>
       </li>
     );
