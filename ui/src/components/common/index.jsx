@@ -38,6 +38,7 @@ import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
 import QueryInfiniteLoad from './QueryInfiniteLoad';
+import RelativeTime from './RelativeTime';
 import ResultCount from './ResultCount';
 import ResultText from './ResultText';
 import SelectWrapper from './SelectWrapper';
@@ -88,6 +89,7 @@ export {
   QueryText,
   QueryInfiniteLoad,
   QuickLinks,
+  RelativeTime,
   ResultCount,
   ResultText,
   SelectWrapper,
