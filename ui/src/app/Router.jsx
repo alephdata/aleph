@@ -40,7 +40,7 @@ import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
 
 import './Router.scss';
 
-const MESSAGES_INTERVAL = 10 * 1000; // every 10 seconds
+const MESSAGES_INTERVAL = 15 * 60 * 1000; // every 15 minutes
 
 class Router extends Component {
   componentDidMount() {
