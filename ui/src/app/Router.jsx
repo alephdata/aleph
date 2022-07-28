@@ -3,9 +3,15 @@ import { Route, Navigate, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
-import { fetchMetadata } from 'actions';
-import { selectSession, selectMetadata } from 'selectors';
+import { fetchMetadata, fetchMessages } from 'actions';
+import {
+  selectSession,
+  selectMetadata,
+  selectMessages,
+  selectPinnedMessage,
+} from 'selectors';
 import Navbar from 'components/Navbar/Navbar';
+import MessageBanner from 'components/MessageBanner/MessageBanner';
 
 import NotFoundScreen from 'screens/NotFoundScreen/NotFoundScreen';
 import OAuthScreen from 'screens/OAuthScreen/OAuthScreen';
@@ -34,19 +40,39 @@ import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
 
 import './Router.scss';
 
+const MESSAGES_INTERVAL = 10 * 1000; // every 10 seconds
+
 class Router extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
+
+    this.setState(() => ({
+      messagesInterval: setInterval(
+        () => this.props.fetchMessages(),
+        MESSAGES_INTERVAL
+      ),
+    }));
   }
 
   componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
+  componentWillUnmount() {
+    if (this.state?.messagesInterval) {
+      clearInterval(this.state.messagesInterval);
+    }
+  }
+
   fetchIfNeeded() {
-    const { metadata } = this.props;
+    const { metadata, messages } = this.props;
+
     if (metadata.shouldLoad) {
       this.props.fetchMetadata();
+    }
+
+    if (messages.shouldLoad) {
+      this.props.fetchMessages();
     }
   }
 
@@ -61,6 +87,7 @@ class Router extends Component {
         </div>
       </div>
     );
+
     if (!isLoaded) {
       return Loading;
     }
@@ -160,7 +187,12 @@ class Router extends Component {
 
 const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
+  messages: selectMessages(state),
+  pinnedMessage: selectPinnedMessage(state),
   session: selectSession(state),
 });
 
-export default connect(mapStateToProps, { fetchMetadata })(Router);
+export default connect(mapStateToProps, {
+  fetchMetadata,
+  fetchMessages,
+})(Router);

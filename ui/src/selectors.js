@@ -75,6 +75,20 @@ export function selectMetadata(state) {
   return metadata;
 }
 
+export function selectMessages(state) {
+  return selectObject(state, state, 'messages');
+}
+
+export function selectPinnedMessage(state) {
+  const { messages } = selectMessages(state);
+
+  if (!messages || messages.length <= 0) {
+    return null;
+  }
+
+  return messages[0];
+}
+
 export function selectPages(state) {
   return selectMetadata(state).pages;
 }
