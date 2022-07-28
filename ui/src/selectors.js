@@ -80,7 +80,12 @@ export function selectMessages(state) {
 }
 
 export function selectPinnedMessage(state) {
+  const metadata = selectMetadata(state);
   const { messages } = selectMessages(state);
+
+  if (metadata?.app?.banner) {
+    return { body: metadata.app.banner };
+  }
 
   if (!messages || messages.length <= 0) {
     return null;

@@ -25,21 +25,28 @@ function MessageBanner({ message }) {
   }
 
   const intent = MESSAGE_INTENTS[message.level] || Intent.WARNING;
+  const updates = message.updates || [];
 
   const latestUpdate =
-    message.updates.length > 0
-      ? message.updates[message.updates.length - 1]
-      : message;
+    updates.length > 0 ? updates[updates.length - 1] : message;
 
   return (
     <Wrapper>
       <Callout intent={intent} icon={null} className="MessageBanner__callout">
-        <strong className={Classes.HEADING}>{message.title}</strong>
-        <br />
+        {message.title && (
+          <>
+            <strong className={Classes.HEADING}>{message.title}</strong>
+            <br />
+          </>
+        )}
+
         {latestUpdate.body}
-        <span className="MessageBanner__meta">
-          <RelativeTime date={latestUpdate.createdAt} />
-        </span>
+
+        {latestUpdate.createdAt && (
+          <span className="MessageBanner__meta">
+            <RelativeTime date={latestUpdate.createdAt} />
+          </span>
+        )}
       </Callout>
     </Wrapper>
   );
