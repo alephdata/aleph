@@ -1,0 +1,48 @@
+import { Callout, Intent, Classes } from '@blueprintjs/core';
+import { injectIntl } from 'react-intl';
+import { RelativeTime } from 'components/common';
+
+import './MessageBanner.scss';
+
+const MESSAGE_INTENTS = {
+  info: Intent.PRIMARY,
+  warning: Intent.WARNING,
+  error: Intent.ERROR,
+  success: Intent.SUCCESS,
+};
+
+function Wrapper({ children }) {
+  return (
+    <div className="MessageBanner" role="status" aria-atomic="true">
+      {children}
+    </div>
+  );
+}
+
+function MessageBanner({ message }) {
+  if (!message) {
+    return <Wrapper />;
+  }
+
+  const intent = MESSAGE_INTENTS[message.level] || Intent.WARNING;
+
+  const latestUpdate =
+    message.updates.length > 0
+      ? message.updates[message.updates.length - 1]
+      : message;
+
+  return (
+    <Wrapper>
+      <Callout intent={intent} icon={null} className="MessageBanner__callout">
+        <strong className={Classes.HEADING}>{message.title}</strong>
+        <br />
+        {latestUpdate.body}
+        <span className="MessageBanner__meta">
+          <RelativeTime date={latestUpdate.createdAt} />
+        </span>
+      </Callout>
+    </Wrapper>
+  );
+}
+
+export default injectIntl(MessageBanner);
