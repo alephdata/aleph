@@ -1,10 +1,8 @@
 @import 'app/variables.scss';
 @import 'app/mixins.scss';
 
-$dashboard-padding: $aleph-grid-size * 2.5;
-
 .Dashboard {
-  padding: $dashboard-padding;
+  padding: $aleph-content-padding;
 
   &__inner-container {
     display: flex;
@@ -24,8 +22,18 @@ $dashboard-padding: $aleph-grid-size * 2.5;
       1px solid $aleph-border-color,
       null
     );
-    @include rtlSupportInvertedProp(margin, right, $dashboard-padding, null);
-    @include rtlSupportInvertedProp(padding, right, $dashboard-padding, null);
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $aleph-content-padding,
+      null
+    );
+    @include rtlSupportInvertedProp(
+      padding,
+      right,
+      $aleph-content-padding,
+      null
+    );
     min-width: 235px;
 
     @media screen and (max-width: $aleph-screen-sm-max-width) {
@@ -76,7 +84,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
   }
 
   &__title-container {
-    margin: $dashboard-padding 0;
+    margin: $aleph-content-padding 0;
   }
 
   &__title {
