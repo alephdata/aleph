@@ -58,6 +58,7 @@ export {
   fetchProfileTags,
   pairwiseJudgement,
 } from './profileActions';
+export { fetchMessages } from './messagesActions';
 export {
   fetchMetadata,
   fetchStatistics,
