@@ -1,0 +1,13 @@
+@import '../../app/variables.scss';
+
+.MessageBanner__callout.MessageBanner__callout {
+  padding: 0.5 * $aleph-content-padding $aleph-content-padding;
+}
+
+.MessageBanner__meta {
+  opacity: 0.6;
+}
+
+.MessageBanner__meta::before {
+  content: ' — ';
+}

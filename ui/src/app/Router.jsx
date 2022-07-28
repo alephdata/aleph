@@ -77,7 +77,7 @@ class Router extends Component {
   }
 
   render() {
-    const { metadata, session } = this.props;
+    const { metadata, session, pinnedMessage } = this.props;
     const isLoaded = metadata && metadata.app && session;
 
     const Loading = (
@@ -95,6 +95,7 @@ class Router extends Component {
     return (
       <>
         <Navbar />
+        <MessageBanner message={pinnedMessage} />
         <Suspense fallback={Loading}>
           <Routes>
             <Route path="oauth" element={<OAuthScreen />} />
