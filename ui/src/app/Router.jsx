@@ -45,13 +45,7 @@ const MESSAGES_INTERVAL = 15 * 60 * 1000; // every 15 minutes
 class Router extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
-
-    this.setState(() => ({
-      messagesInterval: setInterval(
-        () => this.props.fetchMessages(),
-        MESSAGES_INTERVAL
-      ),
-    }));
+    this.setMessagesInterval();
   }
 
   componentDidUpdate() {
@@ -59,9 +53,7 @@ class Router extends Component {
   }
 
   componentWillUnmount() {
-    if (this.state?.messagesInterval) {
-      clearInterval(this.state.messagesInterval);
-    }
+    this.clearMessagesInterval();
   }
 
   fetchIfNeeded() {
@@ -72,7 +64,26 @@ class Router extends Component {
     }
 
     if (messages.shouldLoad) {
-      this.props.fetchMessages();
+      this.fetchMessages();
+    }
+  }
+
+  fetchMessages() {
+    const { metadata } = this.props;
+
+    if (metadata?.app?.messages_url) {
+      this.props.fetchMessages(metadata.app.messages_url);
+    }
+  }
+
+  setMessagesInterval() {
+    const id = setInterval(() => this.fetchMessages(), MESSAGES_INTERVAL);
+    this.setState(() => ({ messagesInterval: id }));
+  }
+
+  clearMessagesInterval() {
+    if (this.state?.messagesInterval) {
+      clearInterval(this.state.messagesInterval);
     }
   }
 

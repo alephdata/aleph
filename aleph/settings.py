@@ -37,6 +37,7 @@ APP_FAVICON = env.get("ALEPH_FAVICON", "/static/favicon.png")
 
 # Show a system-wide banner in the user interface.
 APP_BANNER = env.get("ALEPH_APP_BANNER")
+APP_MESSAGES_URL = env.get("ALEPH_APP_MESSAGES_URL", None)
 
 # Force HTTPS here:
 FORCE_HTTPS = True if APP_UI_URL.lower().startswith("https") else False
