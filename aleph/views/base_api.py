@@ -51,6 +51,7 @@ def _metadata_locale(locale):
             "version": __version__,
             "banner": settings.APP_BANNER,
             "ui_uri": settings.APP_UI_URL,
+            "messages_url": settings.APP_MESSAGES_URL,
             "publish": archive.can_publish,
             "logo": app_logo,
             "favicon": settings.APP_FAVICON,
