@@ -7,7 +7,6 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Callout, Intent } from '@blueprintjs/core';
 
 import withRouter from 'app/withRouter';
 import {
@@ -80,8 +79,7 @@ export class HomeScreen extends Component {
     }
 
     const appHomePage = metadata.pages.find((page) => page.home);
-    const { description, samples, title, warning_title, warning_body } =
-      appHomePage;
+    const { description, samples, title } = appHomePage;
     const samplesList = wordList(samples, ', ').join('');
 
     return (
@@ -96,15 +94,6 @@ export class HomeScreen extends Component {
               <h1 className="HomeScreen__app-title">{title}</h1>
               {description && (
                 <p className="HomeScreen__description">{description}</p>
-              )}
-              {(warning_title || warning_body) && (
-                <Callout
-                  intent={Intent.WARNING}
-                  className="HomeScreen__auth-warning"
-                  title={warning_title}
-                >
-                  {warning_body}
-                </Callout>
               )}
               <div className="HomeScreen__search">
                 <SearchBox
