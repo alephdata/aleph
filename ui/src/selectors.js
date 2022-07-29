@@ -87,11 +87,19 @@ export function selectPinnedMessage(state) {
     return { body: metadata.app.banner };
   }
 
-  if (!messages || messages.length <= 0) {
+  if (!messages) {
     return null;
   }
 
-  return messages[0];
+  const activeMessages = messages.filter(({ displayUntil }) => {
+    return !displayUntil || Date.now() <= displayUntil;
+  });
+
+  if (activeMessages.length <= 0) {
+    return null;
+  }
+
+  return activeMessages[0];
 }
 
 export function selectPages(state) {

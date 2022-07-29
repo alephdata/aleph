@@ -2,7 +2,7 @@ import axios from 'axios';
 import asyncActionCreator from 'actions/asyncActionCreator';
 
 const MESSAGES_ENDPOINT =
-  'https://tillprochaska.github.io/status-github-api/messages.json';
+  'https://tillprochaska.github.io/status-page-workflow/messages.json';
 
 export const fetchMessages = asyncActionCreator(
   () => async () => {
