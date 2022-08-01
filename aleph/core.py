@@ -34,7 +34,10 @@ babel = Babel()
 talisman = Talisman()
 
 
-def create_app(config={}):
+def create_app(config=None):
+    if config is None:
+        config = {}
+
     configure_logging(level=logging.DEBUG)
     app = Flask("aleph")
     app.config.from_object(settings)
