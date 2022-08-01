@@ -33,20 +33,24 @@ function MessageBanner({ message }) {
   return (
     <Wrapper>
       <Callout intent={intent} icon={null} className="MessageBanner__callout">
-        {message.title && (
-          <>
-            <strong className={Classes.HEADING}>{message.title}</strong>
-            <br />
-          </>
-        )}
+        <p>
+          {message.title && (
+            <>
+              <strong className={Classes.HEADING}>{message.title}</strong>
+              <br />
+            </>
+          )}
 
-        {latestUpdate.body}
+          <span
+            dangerouslySetInnerHTML={{ __html: latestUpdate.safeHtmlBody }}
+          />
 
-        {latestUpdate.createdAt && (
-          <span className="MessageBanner__meta">
-            <RelativeTime date={latestUpdate.createdAt} />
-          </span>
-        )}
+          {latestUpdate.createdAt && (
+            <span className="MessageBanner__meta">
+              <RelativeTime date={latestUpdate.createdAt} />
+            </span>
+          )}
+        </p>
       </Callout>
     </Wrapper>
   );
