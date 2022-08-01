@@ -22,12 +22,26 @@ it('renders empty wrapper without message', () => {
 it('renders level, title, body, date', () => {
   const message = {
     title: 'Degraded ingest performance',
-    body: 'Processing ingested files currently takes longer than usual.',
+    safeHtmlBody:
+      'Processing ingested files currently takes longer than usual.',
   };
 
   render(<MessageBanner message={message} />);
   expect(screen.getByText('Degraded ingest performance')).toBeInTheDocument();
-  expect(screen.getByText(message.body)).toBeInTheDocument();
+  expect(screen.getByText(message.safeHtmlBody)).toBeInTheDocument();
+});
+
+it('renders HTML body', () => {
+  const message = {
+    safeHtmlBody: '<a href="https://example.org">Read more</a>',
+  };
+
+  render(<MessageBanner message={message} />);
+  expect(screen.getByText('Read more')).toBeInTheDocument();
+  expect(screen.getByText('Read more').closest('a')).toHaveAttribute(
+    'href',
+    'https://example.org'
+  );
 });
 
 it('renders correct intent', () => {
@@ -42,7 +56,7 @@ it('uses warning intent by default', () => {
 
 it('renders date', () => {
   const message = {
-    body: 'Hello World!',
+    safeHtmlBody: 'Hello World!',
     createdAt: '2022-01-01T00:00:00.000Z',
   };
 
@@ -51,18 +65,18 @@ it('renders date', () => {
 });
 
 it('renders successfully with only a body', () => {
-  render(<MessageBanner message={{ body: 'Hello World!' }} />);
+  render(<MessageBanner message={{ safeHtmlBody: 'Hello World!' }} />);
   expect(screen.getByRole('status')).toBeInTheDocument();
 });
 
 it('renders latest update', () => {
   const message = {
-    body: 'Aleph will be down for maintenance on Sunday.',
+    safeHtmlBody: 'Aleph will be down for maintenance on Sunday.',
     createdAt: '2022-01-01T00:00:00.000Z',
     updates: [
       {
         createdAt: '2022-01-02T00:00:00.000Z',
-        body: 'We’re back online!',
+        safeHtmlBody: 'We’re back online!',
       },
     ],
   };
