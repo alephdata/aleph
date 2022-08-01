@@ -4,6 +4,17 @@
   padding: 0.5 * $aleph-content-padding $aleph-content-padding;
 }
 
+.MessageBanner p {
+  margin: 0;
+}
+
+.MessageBanner a,
+.MessageBanner a:hover {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
 .MessageBanner__meta {
   opacity: 0.6;
 }
