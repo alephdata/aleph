@@ -92,7 +92,7 @@ export function selectPinnedMessage(state) {
   }
 
   const activeMessages = messages.filter(({ displayUntil }) => {
-    return !displayUntil || Date.now() <= displayUntil;
+    return !displayUntil || Date.now() <= new Date(displayUntil);
   });
 
   if (activeMessages.length <= 0) {
