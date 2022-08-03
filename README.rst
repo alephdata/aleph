@@ -25,8 +25,60 @@ Support
 
 Aleph is used and developed by multiple organisations and interested individuals.
 If you're interested in participating in this process, please read the support
-policy (`SUPPORT.md`) and the contribution rules (`CONTRIBUTING.md`) and then get
+policy (`SUPPORT.md`), the contribution rules (`CONTRIBUTING.md`), and the code of conduct (`CODE_OF_CONDUCT.md`) and then get
 in touch:
 
 * https://docs.alephdata.org/get-in-touch
 
+Release process
+---------------
+
+If you are interested in, or have been tasked with releasing a new version of Aleph. The following steps should be followed:
+
+Overview
+--------
+
+The basic process for releasing Aleph is this:
+
+1. Check internal libraries for updates and merge. Release our libraries in the following order
+1. servicelayer
+2. followthemoney
+3. ingest-file
+4. react-ftm
+2. Ensure that all libraries for a release are up to date in aleph and merged to the develop branch.
+3. Ensure that any features, bugfixes are merged into develop and that all builds are passing
+4. Ensure that the CHANGELOG.md file is up to date on the develop branch. Add information as required.
+5. Create a RC release of Aleph.
+6. Test and verify the RC. Perform further RC releases as required.
+7. Merge all changes to main
+8. Create a final version of Aleph
+
+As far as possible apply the rules of semantic versioning when determining the type of release to perform.
+
+Technical process
+-----------------
+
+RC releases
+-----------
+
+If you need to perform an RC release of Aleph, follow these steps:
+
+1. Ensure that the `CHANGELOG`` is up to date on the develop branch and that all outstanding PR's have been merged
+2. From the develop branch run bump2version (major, minor, patch) this will create a x.x.x-rc1 version of aleph
+3. push the tags to the remote with git push --tags
+4. push the version bump with git push
+5. If there are problems with the RC you can fix them and use bump2version build to generate new rc release
+
+
+Major, minor, patch releases
+----------------------------
+
+1. switch to `main` and pull from remote
+2. If not already done merge `develop` into `main`
+3. Update translations using `make translate` 
+4. If you get npm errors, go into the ui folder and run `npm install`
+5. commit translations to `main` and push to remote
+6. run `bump2version release`. Note that bump2version won't show changes when you make the change, but it will work (see `git log` to check)
+7. push the tags to the remote with `git push --tags`
+8. push version bump to remote with `git push`
+9. merge `main` back into `develop`. Slightly unrelated to the release process but this is a good time to do it so that the new version numbers appear in `develop` as well

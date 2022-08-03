@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 $metadata-width: $aleph-investigation-sidebar-width;
 $metadata-padding: $aleph-content-padding;
@@ -10,7 +10,8 @@ $casefile-breakpoint: $aleph-screen-md-max-width;
   @media screen and (max-width: $default-breakpoint) {
     @content;
   }
-  &.casefile, .casefile & {
+  &.casefile,
+  .casefile & {
     @media screen and (max-width: $casefile-breakpoint) {
       @content;
     }
@@ -26,7 +27,8 @@ $casefile-breakpoint: $aleph-screen-md-max-width;
     flex-direction: column-reverse;
   }
 
-  &__main, &__secondary {
+  &__main,
+  &__secondary {
     @include foldup {
       width: 100% !important;
     }
@@ -40,7 +42,12 @@ $casefile-breakpoint: $aleph-screen-md-max-width;
     width: $metadata-width;
     @include rtlSupportInvertedProp(margin, left, $metadata-padding, 0);
     @include rtlSupportInvertedProp(padding, left, $metadata-padding, 0);
-    @include rtlSupportInvertedProp(border, left, 1px solid $aleph-border-color, none);
+    @include rtlSupportInvertedProp(
+      border,
+      left,
+      1px solid $aleph-border-color,
+      none
+    );
 
     @include foldup {
       padding: 0 0 $metadata-padding !important;

@@ -16,14 +16,18 @@ const Summary = ({ className, text, truncate }) => {
     <ReactMarkdown
       skipHtml
       linkTarget="_blank"
-      renderers={truncate ? { paragraph: simpleRenderer, listItem: simpleRenderer } : {}}
+      renderers={
+        truncate ? { paragraph: simpleRenderer, listItem: simpleRenderer } : {}
+      }
     >
       {text}
     </ReactMarkdown>
   );
 
   return (
-    <div className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}>
+    <div
+      className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}
+    >
       {truncate && <Truncate lines={truncate}>{content}</Truncate>}
       {!truncate && content}
     </div>

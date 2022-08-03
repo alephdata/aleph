@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { ControlGroup, InputGroup, Button, Intent, Icon } from '@blueprintjs/core';
+import {
+  ControlGroup,
+  InputGroup,
+  Button,
+  Intent,
+  Icon,
+} from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
-import { ErrorSection, Date, QueryInfiniteLoad, QueryText, Skeleton } from 'components/common';
+import withRouter from 'app/withRouter';
+import {
+  ErrorSection,
+  Date,
+  QueryInfiniteLoad,
+  QueryText,
+  Skeleton,
+} from 'components/common';
 import { queryAlerts, createAlert, deleteAlert } from 'actions';
 import { selectAlertResult } from 'selectors';
 import { alertsQuery } from 'queries';
 import validAlertQuery from 'util/validAlertQuery';
 
 import './AlertsManager.scss';
-
 
 const messages = defineMessages({
   title: {
@@ -119,7 +130,7 @@ class AlertsDialog extends Component {
           </Tooltip>
         </td>
       </tr>
-    )
+    );
   }
 
   render() {
@@ -143,12 +154,14 @@ class AlertsDialog extends Component {
               disabled={!validAlertQuery(newAlert)}
               onClick={this.onAddAlert}
               intent={Intent.PRIMARY}
-              text={<FormattedMessage id="alerts.track" defaultMessage="Track" />}
+              text={
+                <FormattedMessage id="alerts.track" defaultMessage="Track" />
+              }
               large
             />
           </ControlGroup>
         </form>
-        { result.total === 0 && (
+        {result.total === 0 && (
           <ErrorSection
             icon="feed"
             title={intl.formatMessage(messages.no_alerts)}
@@ -157,7 +170,8 @@ class AlertsDialog extends Component {
         <table className="settings-table">
           <tbody>
             {result.results.map((i) => this.renderRow(i))}
-            {result.isPending && skeletonItems.map((i) => this.renderSkeleton(i))}
+            {result.isPending &&
+              skeletonItems.map((i) => this.renderSkeleton(i))}
           </tbody>
         </table>
         <QueryInfiniteLoad
@@ -175,7 +189,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = alertsQuery(location);
   return {
     query,
-    result: selectAlertResult(state, query)
+    result: selectAlertResult(state, query),
   };
 };
 
@@ -184,5 +198,5 @@ const mapDispatchToProps = { queryAlerts, createAlert, deleteAlert };
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(AlertsDialog);

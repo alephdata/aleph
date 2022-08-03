@@ -5,12 +5,10 @@ import Facet from './Facet';
 import './Facets.scss';
 
 function Facets(props) {
-  const {
-    facets, query, result, updateQuery, isCollapsible,
-  } = props;
+  const { facets, query, result, updateQuery, isCollapsible } = props;
   return (
     <ul className="Facets">
-      {facets.map(facet => (
+      {facets.map((facet) => (
         <li className="facet" key={facet.name}>
           <Facet
             query={query}

@@ -1,0 +1,392 @@
+# Translations template for PROJECT.
+# Copyright (C) 2022 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-07-25 10:14+0200\n"
+"PO-Revision-Date: 2018-03-15 07:37+0000\n"
+"Language-Team: Dutch (https://www.transifex.com/aleph/teams/76591/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: aleph/settings.py:31
+msgid "Aleph"
+msgstr ""
+
+#: aleph/logic/entities.py:105
+msgid "No schema on entity"
+msgstr ""
+
+#: aleph/logic/html.py:63
+msgid "[HTML removed: could not be sanitized]"
+msgstr ""
+
+#: aleph/logic/roles.py:59
+msgid "Registration"
+msgstr ""
+
+#: aleph/model/collection.py:27
+msgid "News archives"
+msgstr ""
+
+#: aleph/model/collection.py:28
+msgid "Leaks"
+msgstr ""
+
+#: aleph/model/collection.py:29
+msgid "Land registry"
+msgstr ""
+
+#: aleph/model/collection.py:30
+msgid "Gazettes"
+msgstr ""
+
+#: aleph/model/collection.py:31
+msgid "Court archives"
+msgstr ""
+
+#: aleph/model/collection.py:32
+msgid "Company registries"
+msgstr ""
+
+#: aleph/model/collection.py:33
+msgid "Sanctions lists"
+msgstr ""
+
+#: aleph/model/collection.py:34
+msgid "Procurement"
+msgstr ""
+
+#: aleph/model/collection.py:35
+msgid "Financial records"
+msgstr ""
+
+#: aleph/model/collection.py:36
+msgid "Grey literature"
+msgstr ""
+
+#: aleph/model/collection.py:37
+msgid "Document libraries"
+msgstr ""
+
+#: aleph/model/collection.py:38
+msgid "Licenses and concessions"
+msgstr ""
+
+#: aleph/model/collection.py:39
+msgid "Regulatory filings"
+msgstr ""
+
+#: aleph/model/collection.py:40
+msgid "Persons of interest"
+msgstr ""
+
+#: aleph/model/collection.py:41
+msgid "Customs declarations"
+msgstr ""
+
+#: aleph/model/collection.py:42
+msgid "Population census"
+msgstr ""
+
+#: aleph/model/collection.py:43
+msgid "Air and maritime registers"
+msgstr ""
+
+#: aleph/model/collection.py:44
+msgid "Investigations"
+msgstr ""
+
+#: aleph/model/collection.py:45
+msgid "Other material"
+msgstr ""
+
+#: aleph/model/collection.py:51
+msgid "not known"
+msgstr ""
+
+#: aleph/model/collection.py:52
+msgid "not updated"
+msgstr ""
+
+#: aleph/model/collection.py:53
+msgid "daily"
+msgstr ""
+
+#: aleph/model/collection.py:54
+msgid "weekly"
+msgstr ""
+
+#: aleph/model/collection.py:55
+msgid "monthly"
+msgstr ""
+
+#: aleph/model/collection.py:56
+msgid "annual"
+msgstr ""
+
+#: aleph/model/common.py:114
+msgid "pending"
+msgstr ""
+
+#: aleph/model/common.py:115
+msgid "successful"
+msgstr ""
+
+#: aleph/model/common.py:116
+msgid "failed"
+msgstr ""
+
+#: aleph/model/entity.py:75
+msgid "Invalid entity ID"
+msgstr ""
+
+#: aleph/model/event.py:49
+msgid "New datasets"
+msgstr ""
+
+#: aleph/model/event.py:50
+msgid "{{actor}} created {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:57
+msgid "Document uploads"
+msgstr ""
+
+#: aleph/model/event.py:58
+msgid "{{actor}} added {{document}} to {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:65
+msgid "Entities generated"
+msgstr ""
+
+#: aleph/model/event.py:66
+msgid "{{actor}} generated entities from {{table}} in {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:75
+msgid "New network diagram"
+msgstr ""
+
+#: aleph/model/event.py:76
+msgid "{{actor}} began diagramming {{diagram}} in {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:85
+msgid "New diagrams and lists"
+msgstr ""
+
+#: aleph/model/event.py:86
+msgid "{{actor}} created {{entityset}} in {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:93
+msgid "Alert notifications"
+msgstr ""
+
+#: aleph/model/event.py:94
+msgid "{{entity}} matches your alert for {{alert}}"
+msgstr ""
+
+#: aleph/model/event.py:101
+msgid "Dataset access change"
+msgstr ""
+
+#: aleph/model/event.py:102
+msgid "{{actor}} gave {{role}} access to {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:111
+msgid "Dataset published"
+msgstr ""
+
+#: aleph/model/event.py:112
+msgid "{{actor}} published {{collection}}"
+msgstr ""
+
+#: aleph/model/event.py:119
+msgid "Exports completed"
+msgstr ""
+
+#: aleph/model/event.py:120
+msgid "{{export}} is ready for download"
+msgstr ""
+
+#: aleph/search/__init__.py:52
+msgid "No schema is specified for the query."
+msgstr ""
+
+#: aleph/templates/email/export.html:5
+msgid ""
+"\n"
+"    The following export is ready for download:\n"
+"    "
+msgstr ""
+
+#: aleph/templates/email/export.html:13
+#, python-format
+msgid ""
+"\n"
+"    This download link will expire on %(expiration_date)s.\n"
+"    Browse all of your available exports here:\n"
+"    "
+msgstr ""
+
+#: aleph/templates/email/layout.html:45
+#, python-format
+msgid ""
+"\n"
+"        Dear %(name)s,\n"
+"      "
+msgstr ""
+
+#: aleph/templates/email/layout.html:53
+#, python-format
+msgid ""
+"\n"
+"          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>\n"
+"        "
+msgstr ""
+
+#: aleph/templates/email/notifications.html:5
+#, python-format
+msgid ""
+"\n"
+"      You have %(total_count)s pending notifications. Here are the latest\n"
+"      updates you may be interested in:\n"
+"    "
+msgstr ""
+
+#: aleph/templates/email/notifications.html:16
+msgid ""
+"\n"
+"      Browse and manage all of your notifications here:\n"
+"    "
+msgstr ""
+
+#: aleph/templates/email/registration_code.html:5
+#, python-format
+msgid ""
+"\n"
+"      To complete your registration, please visit <a href=\"%(url)s\">our signup page</a>.\n"
+"    "
+msgstr ""
+
+#: aleph/validation/formats.py:19
+msgid "Invalid user locale."
+msgstr ""
+
+#: aleph/validation/formats.py:27
+#, python-format
+msgid "Invalid entity ID: %s"
+msgstr ""
+
+#: aleph/validation/formats.py:35
+msgid "Invalid category."
+msgstr ""
+
+#: aleph/validation/formats.py:42
+msgid "Invalid frequency."
+msgstr ""
+
+#: aleph/validation/formats.py:49
+msgid "Invalid set type."
+msgstr ""
+
+#: aleph/validation/formats.py:56
+msgid "Invalid URL."
+msgstr ""
+
+#: aleph/validation/formats.py:64
+msgid "Invalid language code."
+msgstr ""
+
+#: aleph/validation/formats.py:72
+#, python-format
+msgid "Invalid country code: %s"
+msgstr ""
+
+#: aleph/validation/formats.py:81
+#, python-format
+msgid "Invalid schema name: %s"
+msgstr ""
+
+#: aleph/validation/formats.py:89
+#, python-format
+msgid "Invalid date: %s"
+msgstr ""
+
+#: aleph/views/base_api.py:214
+msgid "You are not authorized to do this."
+msgstr ""
+
+#: aleph/views/base_api.py:223
+msgid "This path does not exist."
+msgstr ""
+
+#: aleph/views/base_api.py:230
+msgid "Internal server error."
+msgstr ""
+
+#: aleph/views/base_api.py:244
+msgid "Access token is invalid."
+msgstr ""
+
+#: aleph/views/entities_api.py:172
+#, python-format
+msgid "Search: %s"
+msgstr ""
+
+#: aleph/views/entitysets_api.py:216
+msgid "Only diagrams can be embedded!"
+msgstr ""
+
+#: aleph/views/roles_api.py:62
+msgid "prefix filter is too short"
+msgstr ""
+
+#: aleph/views/roles_api.py:107
+msgid "To proceed, please check your email."
+msgstr ""
+
+#: aleph/views/roles_api.py:140
+msgid "Invalid code"
+msgstr ""
+
+#: aleph/views/roles_api.py:146
+msgid "Email is already registered"
+msgstr ""
+
+#: aleph/views/roles_api.py:235
+msgid "Incorrect password."
+msgstr ""
+
+#: aleph/views/serializers.py:103
+#, python-format
+msgid ""
+"We found %(total)d results, but could not load them due to a technical "
+"problem. Please check back later and if the problem persists contact an "
+"Aleph administrator"
+msgstr ""
+
+#: aleph/views/sessions_api.py:61
+msgid "Invalid user or password."
+msgstr ""
+
+#: aleph/views/sessions_api.py:95
+msgid "Authentication has failed."
+msgstr ""
+
+#: aleph/views/util.py:78
+msgid "Error during data validation"
+msgstr ""

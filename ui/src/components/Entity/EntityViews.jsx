@@ -5,15 +5,27 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import {
-  Count, Entity, Property, ResultCount, Schema, SectionLoading, TextLoading,
+  Count,
+  Entity,
+  Property,
+  ResultCount,
+  Schema,
+  SectionLoading,
+  TextLoading,
 } from 'components/common';
 import {
-  entityReferenceQuery, entitySimilarQuery, folderDocumentsQuery
+  entityReferenceQuery,
+  entitySimilarQuery,
+  folderDocumentsQuery,
 } from 'queries';
 import {
-  selectEntitiesResult, selectEntityReferences, selectEntityTags, selectEntityReference, selectSimilarResult
+  selectEntitiesResult,
+  selectEntityReferences,
+  selectEntityTags,
+  selectEntityReference,
+  selectSimilarResult,
 } from 'selectors';
 import EntityProperties from 'components/Entity/EntityProperties';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
@@ -23,7 +35,6 @@ import EntityMappingMode from 'components/Entity/EntityMappingMode';
 import DocumentViewMode from 'components/Document/DocumentViewMode';
 
 import './EntityViews.scss';
-
 
 class EntityViews extends React.Component {
   constructor(props) {
@@ -48,19 +59,37 @@ class EntityViews extends React.Component {
 
   render() {
     const {
-      isPreview, activeMode, entity, references, tags, similar, children, reference, referenceQuery
+      isPreview,
+      activeMode,
+      entity,
+      references,
+      tags,
+      similar,
+      children,
+      reference,
+      referenceQuery,
     } = this.props;
     if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
     }
     const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
     const hasBrowseMode = entity.schema.isA('Folder');
-    const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
+    const hasViewer = entity.schema.isAny([
+      'Pages',
+      'Email',
+      'Image',
+      'HyperText',
+      'Table',
+      'PlainText',
+    ]);
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
     const processingError = entity.getProperty('processingError');
-    const entityParent = entity.getFirst('parent')
-    const showWorkbookWarning = !isPreview && entity.schema.name === 'Table' && entityParent?.schema?.name === 'Workbook';
+    const entityParent = entity.getFirst('parent');
+    const showWorkbookWarning =
+      !isPreview &&
+      entity.schema.name === 'Table' &&
+      entityParent?.schema?.name === 'Workbook';
 
     return (
       <>
@@ -70,9 +99,7 @@ class EntityViews extends React.Component {
               id="entity.info.workbook_warning"
               defaultMessage="This sheet is part of workbook {link}"
               values={{
-                link: (
-                  <Entity.Link entity={entityParent} icon />
-                )
+                link: <Entity.Link entity={entityParent} icon />,
               }}
             />
           </Callout>
@@ -87,75 +114,92 @@ class EntityViews extends React.Component {
           {isPreview && (
             <Tab
               id="info"
-              title={(
+              title={
                 <>
                   <Icon icon="info" className="left-icon" />
                   <span className="tab-padding">
-                    <FormattedMessage id="entity.info.info" defaultMessage="Info" />
+                    <FormattedMessage
+                      id="entity.info.info"
+                      defaultMessage="Info"
+                    />
                   </span>
                 </>
-              )}
-              panel={
-                <EntityProperties entity={entity} />
               }
+              panel={<EntityProperties entity={entity} />}
             />
           )}
           {hasViewMode && (
             <Tab
               id="view"
-              title={(
+              title={
                 <>
                   <Icon icon="documentation" className="left-icon" />
-                  <FormattedMessage id="entity.info.view" defaultMessage="View" />
+                  <FormattedMessage
+                    id="entity.info.view"
+                    defaultMessage="View"
+                  />
                 </>
-              )}
-              panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
+              }
+              panel={
+                <DocumentViewMode document={entity} activeMode={activeMode} />
+              }
             />
           )}
           {hasTextMode && (
             <Tab
               id="text"
-              title={(
+              title={
                 <>
                   <Icon icon="plaintext" className="left-icon" />
-                  <FormattedMessage id="entity.info.text" defaultMessage="Text" />
+                  <FormattedMessage
+                    id="entity.info.text"
+                    defaultMessage="Text"
+                  />
                 </>
-              )}
-              panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
+              }
+              panel={
+                <DocumentViewMode document={entity} activeMode={activeMode} />
+              }
             />
           )}
           {hasBrowseMode && (
             <Tab
               id="browse"
               disabled={children.total < 1}
-              title={(
+              title={
                 <TextLoading loading={children.isPending}>
                   <Icon icon="folder" className="left-icon" />
-                  { entity.schema.isA('Email') && (
-                    <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
+                  {entity.schema.isA('Email') && (
+                    <FormattedMessage
+                      id="entity.info.attachments"
+                      defaultMessage="Attachments"
+                    />
                   )}
-                  { !entity.schema.isA('Email') && (
-                    <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                  {!entity.schema.isA('Email') && (
+                    <FormattedMessage
+                      id="entity.info.documents"
+                      defaultMessage="Documents"
+                    />
                   )}
                   <ResultCount result={children} />
                 </TextLoading>
-              )}
+              }
               panel={
                 <DocumentViewMode document={entity} activeMode={activeMode} />
               }
             />
           )}
-          {references.results.map(ref => (
+          {references.results.map((ref) => (
             <Tab
               id={ref.property.qname}
               key={ref.property.qname}
-              title={(
+              title={
                 <>
                   <Schema.Icon schema={ref.schema} className="left-icon" />
                   <Property.Reverse prop={ref.property} />
                   <Count count={ref.count} />
                 </>
-              )}
+              }
               panel={
                 <EntityReferencesMode
                   entity={entity}
@@ -168,48 +212,55 @@ class EntityViews extends React.Component {
             />
           ))}
           {!references.total && references.isPending && (
-            <Tab
-              id='loading'
-              title={<TextLoading loading={true} />}
-            />
+            <Tab id="loading" title={<TextLoading loading={true} />} />
           )}
-          { entity.schema.isDocument() && (!processingError || !processingError.length) && (
-            <Tab
-              id="tags"
-              disabled={tags.total < 1}
-              title={(
-                <TextLoading loading={tags.isPending}>
-                  <Icon icon="assessment" className="left-icon" />
-                  <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
-                  <ResultCount result={tags} />
-                </TextLoading>
-              )}
-              panel={<EntityTagsMode entity={entity} />}
-            />
-          )}
-          { entity?.schema?.matchable && !isPreview && (
+          {entity.schema.isDocument() &&
+            (!processingError || !processingError.length) && (
+              <Tab
+                id="tags"
+                disabled={tags.total < 1}
+                title={
+                  <TextLoading loading={tags.isPending}>
+                    <Icon icon="assessment" className="left-icon" />
+                    <FormattedMessage
+                      id="entity.info.tags"
+                      defaultMessage="Mentions"
+                    />
+                    <ResultCount result={tags} />
+                  </TextLoading>
+                }
+                panel={<EntityTagsMode entity={entity} />}
+              />
+            )}
+          {entity?.schema?.matchable && !isPreview && (
             <Tab
               id="similar"
               disabled={similar.total === 0}
-              title={(
+              title={
                 <TextLoading loading={similar.total === undefined}>
                   <Icon icon="similar" className="left-icon" />
-                  <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
+                  <FormattedMessage
+                    id="entity.info.similar"
+                    defaultMessage="Similar"
+                  />
                   <ResultCount result={similar} />
                 </TextLoading>
-              )}
+              }
               panel={<EntitySimilarMode entity={entity} />}
             />
           )}
-          { (entity?.collection?.writeable && entity.schema.isA('Table')) && (
+          {entity?.collection?.writeable && entity.schema.isA('Table') && (
             <Tab
               id="mapping"
-              title={(
+              title={
                 <>
                   <Icon icon="new-object" className="left-icon" />
-                  <FormattedMessage id="entity.mapping.view" defaultMessage="Generate entities" />
+                  <FormattedMessage
+                    id="entity.mapping.view"
+                    defaultMessage="Generate entities"
+                  />
                 </>
-              )}
+              }
               panel={<EntityMappingMode document={entity} />}
             />
           )}
@@ -228,12 +279,12 @@ const mapStateToProps = (state, ownProps) => {
     references: selectEntityReferences(state, entity.id),
     referenceQuery: entityReferenceQuery(location, entity, reference),
     tags: selectEntityTags(state, entity.id),
-    similar: selectSimilarResult(state, entitySimilarQuery(location, entity.id)),
+    similar: selectSimilarResult(
+      state,
+      entitySimilarQuery(location, entity.id)
+    ),
     children: selectEntitiesResult(state, childrenQuery),
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(EntityViews);
+export default compose(withRouter, connect(mapStateToProps))(EntityViews);

@@ -198,7 +198,7 @@ class EntitySetAPITest(TestCase):
         res = self.client.get(url, headers=self.headers)
         assert entityset_id in {e["id"] for e in res.json["results"]}, res.json
 
-        url = f"/api/2/entities/{ent_id}/entitysets?filter:collection_id={colid}&filter:type=diagram&filter:judgement=positive"
+        url = f"/api/2/entities/{ent_id}/entitysets?filter:collection_id={colid}&filter:type=diagram&filter:judgement=positive"  # noqa: E501
         res = self.client.get(url, headers=self.headers)
         assert entityset_id in {e["id"] for e in res.json["results"]}, res.json
 

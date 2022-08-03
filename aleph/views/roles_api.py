@@ -147,7 +147,9 @@ def create():
             status=409,
         )
 
-    role = create_user(email, data.get("name"), data.get("password"), is_admin=is_auto_admin(email))
+    role = create_user(
+        email, data.get("name"), data.get("password"), is_admin=is_auto_admin(email)
+    )
     # Let the serializer return more info about this user
     request.authz = Authz.from_role(role)
     tag_request(role_id=role.id)

@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .TimelineItemTitle {
   display: flex;
@@ -11,7 +11,9 @@
   min-height: 38px;
   margin-bottom: 5px;
 
-  .EditableProperty__value, .EditableProperty__value .bp3-input, .EditableProperty__label, {
+  .EditableProperty__value,
+  .EditableProperty__value .bp3-input,
+  .EditableProperty__label {
     color: var(--item-color) !important;
     border-color: var(--item-color) !important;
   }
@@ -44,7 +46,8 @@
       margin-left: 3px;
       padding-left: 3px;
 
-      .EditableProperty, .EditableProperty__value {
+      .EditableProperty,
+      .EditableProperty__value {
         width: 100%;
       }
     }

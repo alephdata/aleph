@@ -3,7 +3,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
-  defineMessages, FormattedNumber, FormattedMessage, injectIntl,
+  defineMessages,
+  FormattedNumber,
+  FormattedMessage,
+  injectIntl,
 } from 'react-intl';
 
 import { Skeleton, Tag, ErrorSection } from 'components/common';
@@ -18,7 +21,6 @@ const messages = defineMessages({
     defaultMessage: 'No selectors were extracted from this entity.',
   },
 });
-
 
 class EntityTagsMode extends React.Component {
   renderSkeletonRow(key) {
@@ -36,7 +38,7 @@ class EntityTagsMode extends React.Component {
 
   renderRow(tag) {
     const { model } = this.props;
-    const type = Object.values(model.types).find(t => t.group === tag.field);
+    const type = Object.values(model.types).find((t) => t.group === tag.field);
     if (!type) {
       return null;
     }
@@ -58,12 +60,12 @@ class EntityTagsMode extends React.Component {
   render() {
     const { intl, entity, tags } = this.props;
 
-    if (!tags.isPending && (!entity?.links || !tags?.results || tags.results.length === 0)) {
+    if (
+      !tags.isPending &&
+      (!entity?.links || !tags?.results || tags.results.length === 0)
+    ) {
       return (
-        <ErrorSection
-          icon="tag"
-          title={intl.formatMessage(messages.no_tags)}
-        />
+        <ErrorSection icon="tag" title={intl.formatMessage(messages.no_tags)} />
       );
     }
 
@@ -76,10 +78,7 @@ class EntityTagsMode extends React.Component {
             <tr>
               <th className="entity">
                 <span className="value">
-                  <FormattedMessage
-                    id="tags.title"
-                    defaultMessage="Term"
-                  />
+                  <FormattedMessage id="tags.title" defaultMessage="Term" />
                 </span>
               </th>
               <th className="numeric">
@@ -93,8 +92,9 @@ class EntityTagsMode extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {tags.results?.map(tag => this.renderRow(tag))}
-            {tags.isPending && skeletonItems.map(i => this.renderSkeletonRow(i))}
+            {tags.results?.map((tag) => this.renderRow(tag))}
+            {tags.isPending &&
+              skeletonItems.map((i) => this.renderSkeletonRow(i))}
           </tbody>
         </table>
       </>
@@ -107,7 +107,4 @@ const mapStateToProps = (state, ownProps) => ({
   model: selectModel(state),
 });
 
-export default compose(
-  connect(mapStateToProps),
-  injectIntl,
-)(EntityTagsMode);
+export default compose(connect(mapStateToProps), injectIntl)(EntityTagsMode);

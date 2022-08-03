@@ -4,10 +4,9 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { deleteCollection } from 'actions';
 import { Collection } from 'components/common';
-
 
 const messages = defineMessages({
   button_confirm: {
@@ -19,7 +18,6 @@ const messages = defineMessages({
     defaultMessage: 'Cancel',
   },
 });
-
 
 class CollectionDeleteDialog extends Component {
   constructor(props) {
@@ -49,7 +47,11 @@ class CollectionDeleteDialog extends Component {
         <FormattedMessage
           id="collection.delete.question"
           defaultMessage="Are you sure you want to delete {collectionLabel} and all contained items?"
-          values={{ collectionLabel: <Collection.Label collection={collection} icon={false} /> }}
+          values={{
+            collectionLabel: (
+              <Collection.Label collection={collection} icon={false} />
+            ),
+          }}
         />
       </Alert>
     );
@@ -61,5 +63,5 @@ const mapDispatchToProps = { deleteCollection };
 export default compose(
   withRouter,
   connect(null, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(CollectionDeleteDialog);

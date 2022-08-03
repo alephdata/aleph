@@ -1,10 +1,9 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import DocumentManager from 'components/Document/DocumentManager';
 import { folderDocumentsQuery } from 'queries';
-
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
@@ -16,7 +15,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(DocumentManager);
+export default compose(withRouter, connect(mapStateToProps))(DocumentManager);

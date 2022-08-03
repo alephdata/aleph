@@ -8,7 +8,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 // import { Prompt } from 'react-router';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 
 const messages = defineMessages({
   status_success: {
@@ -41,23 +41,23 @@ class UpdateStatus extends PureComponent {
   getStatusValue() {
     switch (this.props.status) {
       case 'IN_PROGRESS':
-        return ({
+        return {
           text: messages.status_in_progress,
           intent: Intent.PRIMARY,
-          icon: <Spinner size="16" intent={Intent.PRIMARY} />
-        });
+          icon: <Spinner size="16" intent={Intent.PRIMARY} />,
+        };
       case 'ERROR':
-        return ({
+        return {
           text: messages.status_error,
           intent: Intent.DANGER,
-          icon: 'error'
-        });
+          icon: 'error',
+        };
       default:
-        return ({
+        return {
           text: messages.status_success,
           intent: Intent.SUCCESS,
-          icon: 'tick'
-        });
+          icon: 'tick',
+        };
     }
   }
 
@@ -100,7 +100,4 @@ class UpdateStatus extends PureComponent {
   }
 }
 
-export default compose(
-  withRouter,
-  injectIntl
-)(UpdateStatus);
+export default compose(withRouter, injectIntl)(UpdateStatus);

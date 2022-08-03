@@ -121,8 +121,8 @@ class Query {
     // (i.e. not through the context)
     const fieldPrefix = `${this.queryName}filter:`;
     return _.keys(this.state)
-      .filter(name => name.startsWith(fieldPrefix))
-      .map(name => name.substr(fieldPrefix.length));
+      .filter((name) => name.startsWith(fieldPrefix))
+      .map((name) => name.substr(fieldPrefix.length));
   }
 
   getFilter(name) {
@@ -146,7 +146,9 @@ class Query {
     const filters = this.filters();
 
     const filterPrefix = `${this.queryName}filter:`;
-    filters.forEach((filterName) => { state[`${filterPrefix}${filterName}`] = []; });
+    filters.forEach((filterName) => {
+      state[`${filterPrefix}${filterName}`] = [];
+    });
 
     return new Query(this.path, state, this.context, this.queryName);
   }
@@ -214,7 +216,10 @@ class Query {
   }
 
   getFacetType(field) {
-    const cleanedField = field.replace('gte:', '').replace('lte:', '').replace('eq:', '')
+    const cleanedField = field
+      .replace('gte:', '')
+      .replace('lte:', '')
+      .replace('eq:', '');
     return this.getString(`facet_type:${cleanedField}`);
   }
 
@@ -234,9 +239,12 @@ class Query {
   }
 
   sameAs(other) {
-    return this.toLocation() === other.toLocation()
-      && queryString.stringify(this.context) === queryString.stringify(other.context)
-      && this.path === other.path;
+    return (
+      this.toLocation() === other.toLocation() &&
+      queryString.stringify(this.context) ===
+        queryString.stringify(other.context) &&
+      this.path === other.path
+    );
   }
 
   toLocation() {
@@ -247,18 +255,16 @@ class Query {
 
   toString() {
     // Return the full query string for this query, including implicit context.
-    if (!this.path) { return undefined; }
+    if (!this.path) {
+      return undefined;
+    }
     const query = queryString.stringify(this.toParams());
     return `${this.path}?${query}`;
   }
 
   toKey() {
     // Strip the parts of the query that are irrelevant to the result cache.
-    return this
-      .clear('offset')
-      .clear('limit')
-      .clear('next_limit')
-      .toString();
+    return this.clear('offset').clear('limit').clear('next_limit').toString();
   }
 
   toParams() {

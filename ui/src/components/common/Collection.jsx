@@ -14,7 +14,6 @@ import getCollectionLink from 'util/getCollectionLink';
 
 import './Collection.scss';
 
-
 class CollectionLabel extends PureComponent {
   getIcon(collection) {
     if (collection.casefile) {
@@ -27,7 +26,12 @@ class CollectionLabel extends PureComponent {
 
   render() {
     const {
-      collection, icon = true, label = true, updating = false, truncate, className,
+      collection,
+      icon = true,
+      label = true,
+      updating = false,
+      truncate,
+      className,
     } = this.props;
 
     if (!collection?.id) {
@@ -37,16 +41,20 @@ class CollectionLabel extends PureComponent {
       return null;
     }
 
-
     let text = collection.label;
     if (truncate) {
       text = truncateText(collection.label, truncate);
     }
-    const renderedIcon = updating ?
-      <Spinner size="16" /> :
-      <Icon icon={this.getIcon(collection)} />;
+    const renderedIcon = updating ? (
+      <Spinner size="16" />
+    ) : (
+      <Icon icon={this.getIcon(collection)} />
+    );
     return (
-      <span className={c('CollectionLabel', className)} title={collection.label}>
+      <span
+        className={c('CollectionLabel', className)}
+        title={collection.label}
+      >
         {icon && renderedIcon}
         <span>{label && text}</span>
       </span>
@@ -62,7 +70,11 @@ class CollectionLink extends PureComponent {
     if (!link) {
       return content;
     }
-    return <Link to={link} className={c('CollectionLink', className)}>{content}</Link>;
+    return (
+      <Link to={link} className={c('CollectionLink', className)}>
+        {content}
+      </Link>
+    );
   }
 }
 
@@ -70,7 +82,9 @@ class CollectionUpdateStatus extends PureComponent {
   render() {
     const { collection, LabelComponent } = this.props;
     const updating = !!collection?.status?.active;
-    const collectionLabel = <LabelComponent updating={updating} {...this.props} />;
+    const collectionLabel = (
+      <LabelComponent updating={updating} {...this.props} />
+    );
 
     if (updating) {
       return (
@@ -80,7 +94,13 @@ class CollectionUpdateStatus extends PureComponent {
           autoFocus={false}
           enforceFocus={false}
           popoverClassName="CollectionUpdateStatus__popover"
-          content={<CollectionStatus collection={collection} showCancel={false} className="bp3-callout bp3-intent-primary" />}
+          content={
+            <CollectionStatus
+              collection={collection}
+              showCancel={false}
+              className="bp3-callout bp3-intent-primary"
+            />
+          }
         >
           {collectionLabel}
         </Popover>
@@ -141,7 +161,7 @@ class CollectionSelect extends Component {
       onClick={handleClick}
       text={<CollectionLabel collection={collection} icon label />}
     />
-  )
+  );
 
   fetchIfNeeded() {
     const { query, result } = this.props;
@@ -152,7 +172,11 @@ class CollectionSelect extends Component {
 
   render() {
     const { buttonProps, collection, result } = this.props;
-    const label = collection ? <CollectionLabel collection={collection} icon={false} /> : buttonProps.label;
+    const label = collection ? (
+      <CollectionLabel collection={collection} icon={false} />
+    ) : (
+      buttonProps.label
+    );
 
     return (
       <SelectWrapper
@@ -170,12 +194,7 @@ class CollectionSelect extends Component {
         resetOnClose
         resetOnSelect
       >
-        <Button
-          fill
-          text={label}
-          icon="briefcase"
-          alignText="left"
-        />
+        <Button fill text={label} icon="briefcase" alignText="left" />
       </SelectWrapper>
     );
   }
@@ -200,12 +219,13 @@ class Collection {
 
   static Link = CollectionLink;
 
-  static Load = connect(loadMapStateToProps, { fetchCollection })(CollectionLoad);
+  static Load = connect(loadMapStateToProps, { fetchCollection })(
+    CollectionLoad
+  );
 
-  static Select = connect(
-    selectMapStateToProps,
-    { queryCollections },
-  )(CollectionSelect);
+  static Select = connect(selectMapStateToProps, { queryCollections })(
+    CollectionSelect
+  );
 }
 
 export default Collection;

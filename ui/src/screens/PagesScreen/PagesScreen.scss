@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 $pages-max-width: 1000px;
 $pages-padding: $aleph-grid-size * 2.5;
@@ -11,100 +11,105 @@ $pages-padding: $aleph-grid-size * 2.5;
 }
 
 .Pages {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: stretch;
+  padding: $pages-padding;
+
+  &__body {
     display: flex;
-    justify-content: center;
-    align-content: center;
+    flex-direction: column;
+    flex-grow: 6;
+    max-width: $pages-max-width;
+    @include rtlSupportInvertedProp(
+      padding,
+      left,
+      $aleph-grid-size / 2,
+      $aleph-grid-size / 2
+    );
+  }
+
+  &__title {
+    margin: 0;
+    border-bottom: 1px solid $aleph-border-color;
+    color: $dark-gray5;
+    font-size: $aleph-grid-size * 3.5;
+    padding: $pages-padding * 1.5 0 $pages-padding * 2;
+
+    @include large {
+      padding: $pages-padding * 2 $pages-padding $pages-padding * 2.5;
+    }
+  }
+
+  &__content-container {
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: stretch;
     align-items: stretch;
-    padding: $pages-padding;
+    padding: $pages-padding 0;
 
-    &__body {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 6;
-        max-width: $pages-max-width;
-        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size / 2, $aleph-grid-size / 2);
+    @include large {
+      padding: $pages-padding;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 6;
+    color: $dark-gray5;
+    line-height: 1.5;
+    clear: both;
+
+    font-size: $aleph-grid-size * 1.7;
+    font-weight: normal;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  &__menu {
+    flex: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    width: 20%;
+    @include rtlSupportInvertedProp(margin, left, $pages-padding * 2, null);
+    min-width: 220px;
+
+    @media screen and (max-width: $aleph-screen-sm-max-width) {
+      display: none;
     }
 
-    &__title {
-      margin: 0;
-      border-bottom: 1px solid $aleph-border-color;
-      color: $dark-gray5;
-      font-size: $aleph-grid-size * 3.5;
-      padding: $pages-padding*1.5 0 $pages-padding*2;
+    .bp3-menu {
+      background-color: inherit !important;
+      padding: 0;
+    }
 
-      @include large {
-        padding: $pages-padding*2 $pages-padding $pages-padding*2.5;
+    .bp3-menu-item {
+      padding: 6px 7px;
+      background-color: $light-gray4;
+
+      .bp3-icon {
+        @include rtlSupportInvertedProp(margin, right, 12px, null);
       }
     }
 
-    &__content-container {
-      display: flex;
-      flex-flow: row nowrap;
-      align-content: stretch;
-      align-items: stretch;
-      padding: $pages-padding 0;
+    .bp3-menu-header {
+      border: none;
+      @include rtlSupportInvertedProp(margin, left, 0, null);
+      margin-bottom: $aleph-grid-size;
 
-      @include large {
-        padding: $pages-padding;
+      .bp3-heading {
+        color: $blue1;
+        padding-top: 2px;
       }
     }
 
-    &__content {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 6;
-      color: $dark-gray5;
-      line-height: 1.5;
-      clear: both;
-
-      font-size: $aleph-grid-size * 1.7;
-      font-weight: normal;
-
-      a {
-        text-decoration: underline;
-      }
+    .bp3-menu-divider {
+      margin: $aleph-grid-size * 1.5 0;
+      border-color: $aleph-border-color;
     }
-
-    &__menu {
-      flex: flex;
-      flex-direction: column;
-      flex-grow: 0;
-      width: 20%;
-      @include rtlSupportInvertedProp(margin, left, $pages-padding * 2, null);
-      min-width: 220px;
-
-      @media screen and (max-width: $aleph-screen-sm-max-width) {
-        display: none;
-      }
-
-      .bp3-menu {
-        background-color: inherit !important;
-        padding: 0;
-      }
-
-      .bp3-menu-item {
-        padding: 6px 7px;
-        background-color: $light-gray4;
-
-        .bp3-icon {
-          @include rtlSupportInvertedProp(margin, right, 12px, null);
-        }
-      }
-
-      .bp3-menu-header {
-        border: none;
-        @include rtlSupportInvertedProp(margin, left, 0, null);
-        margin-bottom: $aleph-grid-size;
-
-        .bp3-heading {
-          color: $blue1;
-          padding-top: 2px;
-        }
-      }
-
-      .bp3-menu-divider {
-        margin: $aleph-grid-size * 1.5 0;
-        border-color:$aleph-border-color;
-      }
   }
 }

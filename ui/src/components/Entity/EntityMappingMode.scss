@@ -1,7 +1,7 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .EntityMappingMode {
   &__title-container {
-    margin: $aleph-grid-size*4 0 $aleph-grid-size*3;
+    margin: $aleph-grid-size * 4 0 $aleph-grid-size * 3;
   }
 }

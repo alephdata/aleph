@@ -47,7 +47,10 @@ def upgrade():
         sa.Column("query", sa.Unicode(), nullable=True),
         sa.Column("notified_at", sa.DateTime(), nullable=True),
         sa.Column("role_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(["role_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["role_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(op.f("ix_alert_role_id"), "alert", ["role_id"], unique=False)
@@ -69,7 +72,10 @@ def upgrade():
         sa.Column("data_url", sa.Unicode(), nullable=True),
         sa.Column("casefile", sa.Boolean(), nullable=True),
         sa.Column("creator_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(["creator_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["creator_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("foreign_id"),
     )
@@ -82,7 +88,10 @@ def upgrade():
         sa.Column("channels", postgresql.ARRAY(sa.String(length=255)), nullable=True),
         sa.Column("params", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
         sa.Column("actor_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(["actor_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["actor_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
@@ -98,7 +107,10 @@ def upgrade():
         sa.Column("read", sa.Boolean(), nullable=True),
         sa.Column("write", sa.Boolean(), nullable=True),
         sa.Column("collection_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(["role_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["role_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
@@ -111,7 +123,10 @@ def upgrade():
         sa.Column("session_id", sa.Unicode(), nullable=True),
         sa.Column("role_id", sa.Integer(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
-        sa.ForeignKeyConstraint(["role_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["role_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
@@ -121,8 +136,14 @@ def upgrade():
         "role_membership",
         sa.Column("group_id", sa.Integer(), nullable=True),
         sa.Column("member_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(["group_id"], ["role.id"],),
-        sa.ForeignKeyConstraint(["member_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["group_id"],
+            ["role.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["member_id"],
+            ["role.id"],
+        ),
     )
     op.create_table(
         "document",
@@ -136,9 +157,18 @@ def upgrade():
         sa.Column("uploader_id", sa.Integer(), nullable=True),
         sa.Column("parent_id", sa.BigInteger(), nullable=True),
         sa.Column("collection_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(["collection_id"], ["collection.id"],),
-        sa.ForeignKeyConstraint(["parent_id"], ["document.id"],),
-        sa.ForeignKeyConstraint(["uploader_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["collection_id"],
+            ["collection.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["parent_id"],
+            ["document.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["uploader_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
@@ -164,7 +194,10 @@ def upgrade():
         sa.Column("foreign_id", sa.Unicode(), nullable=True),
         sa.Column("data", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
         sa.Column("collection_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(["collection_id"], ["collection.id"],),
+        sa.ForeignKeyConstraint(
+            ["collection_id"],
+            ["collection.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
@@ -181,8 +214,14 @@ def upgrade():
         sa.Column("match_id", sa.String(length=128), nullable=True),
         sa.Column("match_collection_id", sa.Integer(), nullable=True),
         sa.Column("score", sa.Float(), nullable=True),
-        sa.ForeignKeyConstraint(["collection_id"], ["collection.id"],),
-        sa.ForeignKeyConstraint(["match_collection_id"], ["collection.id"],),
+        sa.ForeignKeyConstraint(
+            ["collection_id"],
+            ["collection.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["match_collection_id"],
+            ["collection.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(

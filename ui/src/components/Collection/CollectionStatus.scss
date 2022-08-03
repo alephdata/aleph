@@ -1,32 +1,32 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 $vertical-spacing: 5px;
 
 .CollectionStatus {
-    background-color: $light-gray4 !important;
-    color: $gray1;
+  background-color: $light-gray4 !important;
+  color: $gray1;
 
-    .total-count {
-      font-size: 12px;
-      margin: 0 !important;
+  .total-count {
+    font-size: 12px;
+    margin: 0 !important;
+  }
+
+  .progress-area {
+    flex-grow: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    min-height: $aleph-grid-size * 2;
+
+    .bp3-progress-bar {
+      flex-grow: 10;
+      @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
     }
+  }
 
-    .progress-area {
-        flex-grow: 1;
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-        min-height: $aleph-grid-size*2;
-
-        .bp3-progress-bar {
-            flex-grow: 10;
-            @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
-        }
-    }
-
-    .bp3-heading {
-      color: $blue2 !important;
-      margin-bottom: $vertical-spacing !important;
-    }
+  .bp3-heading {
+    color: $blue2 !important;
+    margin-bottom: $vertical-spacing !important;
+  }
 }

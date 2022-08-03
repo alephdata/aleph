@@ -6,27 +6,32 @@ import { connect } from 'react-redux';
 import { selectMetadata } from 'selectors';
 
 class AppItem extends PureComponent {
-    render() {
-      const { app } = this.props;
-      if (!app) {
-        return null;
-      }
-      const message = (
-        <FormattedMessage
-          id="footer.aleph"
-          defaultMessage="Aleph {version}"
-          values={{
-              version: app.version,
-          }}
-        />
-      );
-      return (
-        <MenuItem className="bp3-text-disabled" icon="code" text={message} href="https://docs.alephdata.org" />
-      );
+  render() {
+    const { app } = this.props;
+    if (!app) {
+      return null;
     }
+    const message = (
+      <FormattedMessage
+        id="footer.aleph"
+        defaultMessage="Aleph {version}"
+        values={{
+          version: app.version,
+        }}
+      />
+    );
+    return (
+      <MenuItem
+        className="bp3-text-disabled"
+        icon="code"
+        text={message}
+        href="https://docs.alephdata.org"
+      />
+    );
   }
+}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   app: selectMetadata(state).app,
 });
 

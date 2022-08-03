@@ -2,15 +2,26 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import {
-  fetchEntity, fetchEntityTags, queryEntities, querySimilar, queryEntityExpand,
+  fetchEntity,
+  fetchEntityTags,
+  queryEntities,
+  querySimilar,
+  queryEntityExpand,
 } from 'actions';
 import {
-  selectEntity, selectEntityTags, selectEntitiesResult, selectSimilarResult, selectEntityExpandResult
+  selectEntity,
+  selectEntityTags,
+  selectEntitiesResult,
+  selectSimilarResult,
+  selectEntityExpandResult,
 } from 'selectors';
-import { entitySimilarQuery, folderDocumentsQuery, entityReferencesQuery } from 'queries';
-
+import {
+  entitySimilarQuery,
+  folderDocumentsQuery,
+  entityReferencesQuery,
+} from 'queries';
 
 class EntityContextLoader extends PureComponent {
   componentDidMount() {
@@ -53,7 +64,6 @@ class EntityContextLoader extends PureComponent {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
   const { entityId, location } = ownProps;
   const similarQuery = entitySimilarQuery(location, entityId);
@@ -81,5 +91,5 @@ const mapDispatchToProps = {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps)
 )(EntityContextLoader);

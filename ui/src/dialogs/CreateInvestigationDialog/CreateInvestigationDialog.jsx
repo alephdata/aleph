@@ -3,11 +3,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
-import {
-  createCollection,
-  updateCollectionPermissions,
-} from 'actions';
+import withRouter from 'app/withRouter';
+import { createCollection, updateCollectionPermissions } from 'actions';
 import { showWarningToast } from 'app/toast';
 import { Language, Role } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
@@ -50,7 +47,7 @@ class CreateInvestigationDialog extends Component {
         label: '',
         summary: '',
         casefile: true,
-        languages: []
+        languages: [],
       },
       permissions: [],
       blocking: false,
@@ -72,7 +69,9 @@ class CreateInvestigationDialog extends Component {
 
   onDeleteRole(role) {
     const { permissions } = this.state;
-    const newPermissions = permissions.filter(permission => permission.role.id !== role.role.id);
+    const newPermissions = permissions.filter(
+      (permission) => permission.role.id !== role.role.id
+    );
     this.setState({ permissions: newPermissions });
   }
 
@@ -82,9 +81,14 @@ class CreateInvestigationDialog extends Component {
     this.setState({ collection });
   }
 
-
   async onSubmit() {
-    const { navigate, createCollection, toggleDialog, updateCollectionPermissions, preventRedirect } = this.props;
+    const {
+      navigate,
+      createCollection,
+      toggleDialog,
+      updateCollectionPermissions,
+      preventRedirect,
+    } = this.props;
     const { collection, permissions } = this.state;
     if (!this.checkValid()) return;
     this.setState({ blocking: true });
@@ -124,7 +128,7 @@ class CreateInvestigationDialog extends Component {
   render() {
     const { intl, isOpen, toggleDialog } = this.props;
     const { collection, permissions, blocking } = this.state;
-    const exclude = permissions.map(perm => parseInt(perm.role.id, 10));
+    const exclude = permissions.map((perm) => parseInt(perm.role.id, 10));
     const disabled = blocking || !this.checkValid();
 
     return (
@@ -174,7 +178,10 @@ class CreateInvestigationDialog extends Component {
           </div>
           <div className="bp3-form-group">
             <label className="bp3-label">
-              <FormattedMessage id="case.chose.languages" defaultMessage="Languages" />
+              <FormattedMessage
+                id="case.chose.languages"
+                defaultMessage="Languages"
+              />
             </label>
             <Language.MultiSelect
               onSubmit={this.onSelectLanguages}
@@ -203,14 +210,14 @@ class CreateInvestigationDialog extends Component {
           {permissions.length !== 0 && (
             <table className="settings-table">
               <tbody>
-                {permissions.map(permission => (
+                {permissions.map((permission) => (
                   <tr key={permission.role.id + 1}>
                     <td>
                       <Role.Label role={permission.role} icon={false} long />
                     </td>
                     <td>
                       <Button
-                        onClick={e => this.onDeleteRole(permission, e)}
+                        onClick={(e) => this.onDeleteRole(permission, e)}
                         small
                         minimal
                         icon="remove"
@@ -239,4 +246,6 @@ class CreateInvestigationDialog extends Component {
 
 CreateInvestigationDialog = injectIntl(CreateInvestigationDialog);
 CreateInvestigationDialog = withRouter(CreateInvestigationDialog);
-export default connect(null, { createCollection, updateCollectionPermissions })(CreateInvestigationDialog);
+export default connect(null, { createCollection, updateCollectionPermissions })(
+  CreateInvestigationDialog
+);

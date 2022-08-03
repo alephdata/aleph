@@ -1,7 +1,7 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .Count {
-  .bp3-tab[aria-disabled="true"] & {
-    opacity: .6;
+  .bp3-tab[aria-disabled='true'] & {
+    opacity: 0.6;
   }
 }

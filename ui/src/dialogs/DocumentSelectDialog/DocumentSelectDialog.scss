@@ -1,8 +1,8 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .DocumentSelectDialog {
   .EntitySelect {
-    margin: $aleph-grid-size*2 0;
+    margin: $aleph-grid-size * 2 0;
   }
   p:last-child {
     margin-bottom: 0;

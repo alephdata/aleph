@@ -8,7 +8,6 @@ from flask import json
 from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
-from ftmstore import settings as ftms
 from servicelayer import settings as sls
 from followthemoney import model
 from followthemoney.cli.util import read_entity

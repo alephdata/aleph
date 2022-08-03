@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { collectionMappingsQuery } from 'queries';
 import getEntityLink from 'util/getEntityLink';
 import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
@@ -29,7 +29,7 @@ class CollectionMappingsMode extends React.Component {
     if (pathname) {
       navigate({ pathname, hash: queryString.stringify({ mode: 'mapping' }) });
     }
-  }
+  };
 
   render() {
     const { collection, intl, query } = this.props;
@@ -63,14 +63,14 @@ class CollectionMappingsMode extends React.Component {
             <DialogToggleButton
               buttonProps={{
                 text: intl.formatMessage(messages.create),
-                icon: "new-object",
-                intent: Intent.PRIMARY
+                icon: 'new-object',
+                intent: Intent.PRIMARY,
               }}
               Dialog={DocumentSelectDialog}
               dialogProps={{
                 title: intl.formatMessage(messages.create),
                 collection,
-                onSelect: this.onDocSelected
+                onSelect: this.onDocSelected,
               }}
             />
           </div>
@@ -94,5 +94,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(CollectionMappingsMode);

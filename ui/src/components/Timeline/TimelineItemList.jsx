@@ -5,12 +5,20 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
-import { ErrorSection, QueryInfiniteLoad, SectionLoading } from 'components/common';
+import withRouter from 'app/withRouter';
+import {
+  ErrorSection,
+  QueryInfiniteLoad,
+  SectionLoading,
+} from 'components/common';
 import TimelineItem from 'components/Timeline/TimelineItem';
 
-import { createEntity, deleteEntity, queryEntities, updateEntitySet } from 'actions';
-
+import {
+  createEntity,
+  deleteEntity,
+  queryEntities,
+  updateEntitySet,
+} from 'actions';
 
 const messages = defineMessages({
   empty: {
@@ -39,28 +47,41 @@ class TimelineItemList extends Component {
 
     const simplifiedProps = {};
     properties.forEach((value, prop) => {
-      simplifiedProps[prop.name] = value
-    })
+      simplifiedProps[prop.name] = value;
+    });
 
-    const entity = await entityManager.createEntity({ schema, properties: simplifiedProps });
+    const entity = await entityManager.createEntity({
+      schema,
+      properties: simplifiedProps,
+    });
     this.onColorSelect(entity.id, color);
     onHideDraft();
 
-    navigate({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify({ ...queryString.parse(location.hash), id: entity.id })
-    }, { replace: true })
+    navigate(
+      {
+        pathname: location.pathname,
+        search: location.search,
+        hash: queryString.stringify({
+          ...queryString.parse(location.hash),
+          id: entity.id,
+        }),
+      },
+      { replace: true }
+    );
   }
 
   createNewReferencedEntity(entity) {
     const { timeline } = this.props;
-    return this.props.createEntity({ entity, collection_id: timeline.collection.id });
+    return this.props.createEntity({
+      entity,
+      collection_id: timeline.collection.id,
+    });
   }
 
   getItemColor(id) {
     const { timeline } = this.props;
-    return timeline.layout?.vertices?.find(item => item.entityId === id)?.color;
+    return timeline.layout?.vertices?.find((item) => item.entityId === id)
+      ?.color;
   }
 
   onColorSelect(entityId, color) {
@@ -68,7 +89,9 @@ class TimelineItemList extends Component {
     const obj = { entityId, color };
 
     if (timeline.layout?.vertices) {
-      const index = timeline.layout.vertices.findIndex(item => item.entityId === entityId);
+      const index = timeline.layout.vertices.findIndex(
+        (item) => item.entityId === entityId
+      );
 
       if (index >= 0) {
         timeline.layout.vertices[index] = obj;
@@ -85,7 +108,18 @@ class TimelineItemList extends Component {
   }
 
   render() {
-    const { expandedMode, entitiesCount, deleteEntity, entityManager, query, intl, result, showDraftItem, onHideDraft, timeline } = this.props;
+    const {
+      expandedMode,
+      entitiesCount,
+      deleteEntity,
+      entityManager,
+      query,
+      intl,
+      result,
+      showDraftItem,
+      onHideDraft,
+      timeline,
+    } = this.props;
 
     const items = result.results;
     const isEmpty = items.length === 0;
@@ -94,7 +128,9 @@ class TimelineItemList extends Component {
       return (
         <ErrorSection
           icon="gantt-chart"
-          title={intl.formatMessage(messages[entitiesCount.total === 0 ? 'empty' : 'no_results'])}
+          title={intl.formatMessage(
+            messages[entitiesCount.total === 0 ? 'empty' : 'no_results']
+          )}
         />
       );
     }
@@ -104,16 +140,20 @@ class TimelineItemList extends Component {
         {showDraftItem && (
           <TimelineItem
             isDraft
-            onUpdate={entity => this.setState({ draftEntity: entity })}
+            onUpdate={(entity) => this.setState({ draftEntity: entity })}
             onSubmit={this.createNewItem}
             onDelete={onHideDraft}
-            fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
-            createNewEntity={entityData => entityManager.createEntity(entityData, false)}
+            fetchEntitySuggestions={(queryText, schemata) =>
+              entityManager.getEntitySuggestions(false, queryText, schemata)
+            }
+            createNewEntity={(entityData) =>
+              entityManager.createEntity(entityData, false)
+            }
             writeable
             expandedMode={true}
           />
         )}
-        <div className={c("Timeline__content", { collapsed: !expandedMode})}>
+        <div className={c('Timeline__content', { collapsed: !expandedMode })}>
           {!isEmpty && (
             <>
               {items.map((item) => (
@@ -121,11 +161,23 @@ class TimelineItemList extends Component {
                   key={item.id}
                   entity={item}
                   expandedMode={expandedMode}
-                  onUpdate={entityData => entityManager.updateEntity(entityData)}
-                  onRemove={entityId => entityManager.deleteEntities([entityId])}
-                  onDelete={entityId => deleteEntity(entityId)}
-                  fetchEntitySuggestions={(queryText, schemata) => entityManager.getEntitySuggestions(false, queryText, schemata)}
-                  createNewEntity={entityData => entityManager.createEntity(entityData, false)}
+                  onUpdate={(entityData) =>
+                    entityManager.updateEntity(entityData)
+                  }
+                  onRemove={(entityId) =>
+                    entityManager.deleteEntities([entityId])
+                  }
+                  onDelete={(entityId) => deleteEntity(entityId)}
+                  fetchEntitySuggestions={(queryText, schemata) =>
+                    entityManager.getEntitySuggestions(
+                      false,
+                      queryText,
+                      schemata
+                    )
+                  }
+                  createNewEntity={(entityData) =>
+                    entityManager.createEntity(entityData, false)
+                  }
                   writeable={timeline.writeable && item.writeable}
                   color={this.getItemColor(item.id)}
                   onColorSelect={this.onColorSelect}
@@ -133,9 +185,7 @@ class TimelineItemList extends Component {
               ))}
             </>
           )}
-          {result.isPending && (
-            <SectionLoading />
-          )}
+          {result.isPending && <SectionLoading />}
           <QueryInfiniteLoad
             query={query}
             result={result}
@@ -150,5 +200,5 @@ class TimelineItemList extends Component {
 export default compose(
   withRouter,
   connect(null, { createEntity, deleteEntity, queryEntities, updateEntitySet }),
-  injectIntl,
-)(TimelineItemList );
+  injectIntl
+)(TimelineItemList);

@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .Breadcrumbs {
   z-index: 1;
@@ -7,7 +7,12 @@
   background-color: $aleph-breadcrumbs-background;
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
-    @include rtlSupportInvertedProp(padding, left, $aleph-mobile-content-padding, $aleph-mobile-content-padding);
+    @include rtlSupportInvertedProp(
+      padding,
+      left,
+      $aleph-mobile-content-padding,
+      $aleph-mobile-content-padding
+    );
   }
 
   &.casefile {
@@ -18,7 +23,8 @@
     background-color: $aleph-dataset-theme;
   }
 
-  &.casefile, &.dataset {
+  &.casefile,
+  &.dataset {
     .bp3-breadcrumb {
       color: white;
     }
@@ -35,7 +41,8 @@
     align-items: center;
   }
 
-  &__main, &__right {
+  &__main,
+  &__right {
     margin: 2px 0;
   }
 
@@ -54,12 +61,14 @@
       display: none;
     }
 
-    .bp3-control-group, .bp3-input, .bp3-button-group {
+    .bp3-control-group,
+    .bp3-input,
+    .bp3-button-group {
       border-radius: $aleph-border-radius !important;
     }
 
     .bp3-input-group {
-      min-width: $aleph-grid-size*20.5;
+      min-width: $aleph-grid-size * 20.5;
     }
   }
 

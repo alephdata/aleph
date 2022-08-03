@@ -1,4 +1,4 @@
-@import "app/mixins.scss";
+@import 'app/mixins.scss';
 
 /* Taming Blueprint icons and tags/badges when displayed inside tabs */
 .bp3-tabs .bp3-tab .bp3-tag {
@@ -20,7 +20,7 @@
 
 .bp3-tabs {
   &.bp3-vertical {
-    > .bp3-tab-panel{
+    > .bp3-tab-panel {
       @include rtlSupportInvertedProp(padding, left, 20px, null);
     }
   }
@@ -30,7 +30,8 @@
 .bp3-tag-input {
   @include rtlSupportInvertedProp(padding, left, 5px, 0);
 }
-.bp3-tag-input .bp3-tag-input-values::before, .bp3-tag-input .bp3-tag-input-values > * {
+.bp3-tag-input .bp3-tag-input-values::before,
+.bp3-tag-input .bp3-tag-input-values > * {
   @include rtlSupportInvertedProp(margin, right, 5px, 0);
 }
 .bp3-tag-input .bp3-tag-input-values {
@@ -39,15 +40,22 @@
 .bp3-tag > * {
   @include rtlSupportInvertedProp(margin, right, 4px, initial);
 }
-.bp3-tag:empty::before, .bp3-tag > :last-child {
+.bp3-tag:empty::before,
+.bp3-tag > :last-child {
   @include rtlSupportInvertedProp(margin, right, 0, initial);
 }
 
 /* next two rules affect the green save button in diagram page */
-.bp3-tag.bp3-large::before, .bp3-tag.bp3-large > *, .bp3-large .bp3-tag::before, .bp3-large .bp3-tag > * {
+.bp3-tag.bp3-large::before,
+.bp3-tag.bp3-large > *,
+.bp3-large .bp3-tag::before,
+.bp3-large .bp3-tag > * {
   @include rtlSupportInvertedProp(margin, right, 7px, 0);
 }
-.bp3-tag.bp3-large:empty::before, .bp3-tag.bp3-large > :last-child, .bp3-large .bp3-tag:empty::before, .bp3-large .bp3-tag > :last-child {
+.bp3-tag.bp3-large:empty::before,
+.bp3-tag.bp3-large > :last-child,
+.bp3-large .bp3-tag:empty::before,
+.bp3-large .bp3-tag > :last-child {
   margin: 0;
 }
 
@@ -67,15 +75,18 @@
   }
 }
 
-.bp3-button, .bp3-menu-item {
+.bp3-button,
+.bp3-menu-item {
   @include rtl(text-align, left, right);
 
-  .bp3-icon, .bp3-button-text {
+  .bp3-icon,
+  .bp3-button-text {
     @include rtlSupportInvertedProp(margin, right, 7px, 0);
   }
 }
 
-.bp3-button:empty::before, .bp3-button > :last-child {
+.bp3-button:empty::before,
+.bp3-button > :last-child {
   @include rtlSupportInvertedProp(margin, right, 0, null);
 }
 
@@ -84,17 +95,19 @@
 }
 
 table {
-  tr td, tr th {
+  tr td,
+  tr th {
     @include rtl(text-align, left, right);
-    &.numeric, &.number {
+    &.numeric,
+    &.number {
       @include rtl(text-align, right, left);
     }
   }
 }
 
 .bp3-input-group {
-  .bp3-input-action{
-    &:last-child{
+  .bp3-input-action {
+    &:last-child {
       @include rtl(right, 0, initial);
       @include rtl(left, initial, 0);
     }
@@ -108,7 +121,7 @@ table {
   }
 
   &.bp3-large {
-    .bp3-input:not(:first-child){
+    .bp3-input:not(:first-child) {
       @include rtlSupportInvertedProp(padding, left, 40px, null);
     }
   }
@@ -118,10 +131,10 @@ table {
     @include rtl(left, 0, initial);
   }
 
-// the blueprint logic here for the input and button is:
-// an input which is not the first child has an icon on it's left
-// if it is not the last child there is an icon on the right
-// a button which is the last child is absolute positioned at the end of the bp3-input-group
+  // the blueprint logic here for the input and button is:
+  // an input which is not the first child has an icon on it's left
+  // if it is not the last child there is an icon on the right
+  // a button which is the last child is absolute positioned at the end of the bp3-input-group
   .bp3-input {
     &:not(:last-child) {
       @include rtlSupportInvertedProp(padding, right, 30px, 10px);
@@ -134,10 +147,10 @@ table {
     line-height: normal !important;
   }
   > .bp3-button {
-      &:last-child {
-        @include rtl(right, 0, initial);
-        @include rtl(left, initial, 0);
-      }
+    &:last-child {
+      @include rtl(right, 0, initial);
+      @include rtl(left, initial, 0);
+    }
   }
 }
 
@@ -155,7 +168,7 @@ table {
 .bp3-button-group {
   &:not(.bp3-minimal) {
     &:not(.bp3-vertical) {
-      > .bp3-button{
+      > .bp3-button {
         &:not(:last-child) {
           @include buttonNotLastChild;
         }
@@ -169,17 +182,19 @@ table {
         @include buttonNotFirstChild;
       }
 
-      > .bp3-popover2-target:not(:last-child) .bp3-button{
+      > .bp3-popover2-target:not(:last-child) .bp3-button {
         @include buttonNotLastChild;
       }
     }
 
     &.bp3-vertical {
-      > .bp3-popover2-target:last-child .bp3-button,  > .bp3-button:last-child {
+      > .bp3-popover2-target:last-child .bp3-button,
+      > .bp3-button:last-child {
         border-radius: 0 0 3px 3px;
       }
 
-      > .bp3-popover2-target:first-child .bp3-button,  > .bp3-button:first-child {
+      > .bp3-popover2-target:first-child .bp3-button,
+      > .bp3-button:first-child {
         border-radius: 3px 3px 0 0;
       }
     }
@@ -230,7 +245,7 @@ table {
     @include rtlSupportInvertedProp(margin, right, 0, null);
   }
 
-  .bp3-button-group{
+  .bp3-button-group {
     padding: 5px;
     @include rtlSupportInvertedProp(padding, left, 0, null);
   }
@@ -246,10 +261,11 @@ table {
   }
 }
 
-.bp3-dialog{
+.bp3-dialog {
   .bp3-dialog-header {
     @include rtlSupportInvertedProp(padding, left, 20px, 5px);
-    .bp3-icon-large, .bp3-icon {
+    .bp3-icon-large,
+    .bp3-icon {
       @include rtlSupportInvertedProp(margin, right, 10px, 0);
     }
 
@@ -282,8 +298,10 @@ table {
 }
 
 // document pagingation arrows and a right caret when mapping entities to excel files
-.bp3-icon{
-  &.bp3-icon-arrow-right, &.bp3-icon-arrow-left, &.bp3-icon-caret-right {
+.bp3-icon {
+  &.bp3-icon-arrow-right,
+  &.bp3-icon-arrow-left,
+  &.bp3-icon-caret-right {
     @include rtl(transform, rotate(0deg), rotate(180deg));
   }
 }
@@ -325,13 +343,18 @@ table {
   .bp3-input-group {
     .bp3-input {
       &.TextEdit__singleInput {
-        @include rtlSupportInvertedProp(padding, left, 0!important, 30px!important);
+        @include rtlSupportInvertedProp(
+          padding,
+          left,
+          0!important,
+          30px!important
+        );
       }
     }
   }
 }
 // When mapping excel coloumns to properties
-[dir="rtl"] .bp3-table-header-content {
+[dir='rtl'] .bp3-table-header-content {
   direction: rtl;
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 
 export class CloseButton extends React.Component {
   constructor(props) {
@@ -26,7 +26,11 @@ export class CloseButton extends React.Component {
 
   render() {
     return (
-      <Button className="bp3-minimal button-close" icon="cross" onClick={this.close} />
+      <Button
+        className="bp3-minimal button-close"
+        icon="cross"
+        onClick={this.close}
+      />
     );
   }
 }

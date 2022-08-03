@@ -1,7 +1,7 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
-$preview-padding: $aleph-grid-size*1.5;
+$preview-padding: $aleph-grid-size * 1.5;
 
 .EntityPreview {
   &__content {

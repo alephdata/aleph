@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Button, ProgressBar, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { Collection, ErrorSection, Numeric, Skeleton } from 'components/common';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
@@ -14,7 +14,6 @@ import { triggerCollectionCancel, fetchSystemStatus } from 'actions';
 import { selectSystemStatus } from 'selectors';
 
 import './SystemStatusScreen.scss';
-
 
 const messages = defineMessages({
   title: {
@@ -30,7 +29,6 @@ const messages = defineMessages({
     defaultMessage: 'Cancel the process',
   },
 });
-
 
 export class SystemStatusScreen extends React.Component {
   constructor(props) {
@@ -65,7 +63,7 @@ export class SystemStatusScreen extends React.Component {
 
   fetchStatus() {
     this.cancelAll();
-    this.loadPromise = this.props.fetchSystemStatus()
+    this.loadPromise = this.props.fetchSystemStatus();
     this.loadPromise.finally(() => {
       this.timeout = setTimeout(this.fetchStatus, 3000);
     });
@@ -94,7 +92,7 @@ export class SystemStatusScreen extends React.Component {
         <Skeleton.Text type="span" length={10} />
       </td>
     </tr>
-  )
+  );
 
   renderRow(res) {
     const { intl } = this.props;
@@ -107,7 +105,10 @@ export class SystemStatusScreen extends React.Component {
         <td className="entity">
           <Collection.Link collection={res.collection} />
           {!res.collection && (
-            <FormattedMessage id="status.no_collection" defaultMessage="Other tasks" />
+            <FormattedMessage
+              id="status.no_collection"
+              defaultMessage="Other tasks"
+            />
           )}
         </td>
         <td>
@@ -122,8 +123,16 @@ export class SystemStatusScreen extends React.Component {
         <td className="numeric narrow">
           {collection && collection.writeable && (
             <Tooltip content={intl.formatMessage(messages.cancel_button)}>
-              <Button onClick={() => this.cancelCollection(collection)} icon="delete" minimal small>
-                <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
+              <Button
+                onClick={() => this.cancelCollection(collection)}
+                icon="delete"
+                minimal
+                small
+              >
+                <FormattedMessage
+                  id="collection.cancel.button"
+                  defaultMessage="Cancel"
+                />
               </Button>
             </Tooltip>
           )}
@@ -145,7 +154,9 @@ export class SystemStatusScreen extends React.Component {
         <Dashboard>
           <>
             <div className="Dashboard__title-container">
-              <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+              <h5 className="Dashboard__title">
+                {intl.formatMessage(messages.title)}
+              </h5>
               <p className="Dashboard__subheading">
                 <FormattedMessage
                   id="dashboard.subheading"
@@ -164,23 +175,36 @@ export class SystemStatusScreen extends React.Component {
                 <thead>
                   <tr>
                     <th>
-                      <FormattedMessage id="collection.status.collection" defaultMessage="Dataset" />
+                      <FormattedMessage
+                        id="collection.status.collection"
+                        defaultMessage="Dataset"
+                      />
                     </th>
                     <th>
-                      <FormattedMessage id="collection.status.progress" defaultMessage="Tasks" />
+                      <FormattedMessage
+                        id="collection.status.progress"
+                        defaultMessage="Tasks"
+                      />
                     </th>
                     <th className="numeric narrow">
-                      <FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished" />
+                      <FormattedMessage
+                        id="collection.status.finished_tasks"
+                        defaultMessage="Finished"
+                      />
                     </th>
                     <th className="numeric narrow">
-                      <FormattedMessage id="collection.status.pending_tasks" defaultMessage="Pending" />
+                      <FormattedMessage
+                        id="collection.status.pending_tasks"
+                        defaultMessage="Pending"
+                      />
                     </th>
                     <th className="numeric narrow" />
                   </tr>
                 </thead>
                 <tbody>
                   {results.map(this.renderRow)}
-                  {result.total === undefined && skeletonItems.map(this.renderRowSkeleton)}
+                  {result.total === undefined &&
+                    skeletonItems.map(this.renderRowSkeleton)}
                 </tbody>
               </table>
             )}
@@ -191,7 +215,6 @@ export class SystemStatusScreen extends React.Component {
   }
 }
 
-
 const mapStateToProps = (state) => {
   const status = selectSystemStatus(state);
   return { result: status };
@@ -200,5 +223,5 @@ const mapStateToProps = (state) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { triggerCollectionCancel, fetchSystemStatus }),
-  injectIntl,
+  injectIntl
 )(SystemStatusScreen);

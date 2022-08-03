@@ -1,14 +1,12 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 $font-size: 13px;
 
 .SortingBar {
   position: relative;
   white-space: nowrap;
-  @include rtl(text-align, right, left)
-
-  &__item {
+  @include rtl(text-align, right, left) &__item {
     display: inline-block;
     @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
 
@@ -17,7 +15,8 @@ $font-size: 13px;
     }
   }
 
-  &__label, &__control {
+  &__label,
+  &__control {
     display: inline-block !important;
   }
 

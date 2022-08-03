@@ -4,13 +4,13 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import Screen from 'components/Screen/Screen';
 import { DualPane } from 'components/common';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import InvestigationViews from 'components/Investigation/InvestigationViews';
-import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar'
+import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { selectCollection } from 'selectors';
 
@@ -32,11 +32,12 @@ export class InvestigationScreen extends Component {
 
     const showSidebar = sidebarHiddenViews.indexOf(activeMode) < 0;
     return (
-      <Screen
-        title={collection.label}
-        description={collection.summary}
-      >
-        <CollectionWrapper collectionId={collectionId} collection={collection} forceCasefile>
+      <Screen title={collection.label} description={collection.summary}>
+        <CollectionWrapper
+          collectionId={collectionId}
+          collection={collection}
+          forceCasefile
+        >
           <DualPane className="InvestigationScreen">
             {showSidebar && (
               <InvestigationSidebar
@@ -76,8 +77,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps)
 )(InvestigationScreen);

@@ -2,11 +2,23 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import queryString from 'query-string';
-import { Button, Classes, Drawer, FormGroup, Intent, Position, TagInput } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  Drawer,
+  FormGroup,
+  Intent,
+  Position,
+  TagInput,
+} from '@blueprintjs/core';
 
-import { FIELDS, composeQueryText, parseQueryText } from 'components/AdvancedSearch/util';
+import {
+  FIELDS,
+  composeQueryText,
+  parseQueryText,
+} from 'components/AdvancedSearch/util';
 import AdvancedSearchMultiField from 'components/AdvancedSearch/AdvancedSearchMultiField';
 import Query from 'app/Query';
 
@@ -23,7 +35,8 @@ const messages = defineMessages({
   },
   all_helptext: {
     id: 'search.advanced.all.helptext',
-    defaultMessage: 'Only results containing all of the given terms will be returned',
+    defaultMessage:
+      'Only results containing all of the given terms will be returned',
   },
   any_label: {
     id: 'search.advanced.any.label',
@@ -31,7 +44,8 @@ const messages = defineMessages({
   },
   any_helptext: {
     id: 'search.advanced.any.helptext',
-    defaultMessage: 'Results containing any of the given terms will be returned',
+    defaultMessage:
+      'Results containing any of the given terms will be returned',
   },
   exact_label: {
     id: 'search.advanced.exact.label',
@@ -39,7 +53,8 @@ const messages = defineMessages({
   },
   exact_helptext: {
     id: 'search.advanced.exact.helptext',
-    defaultMessage: 'Only results with this exact word or phrase will be returned',
+    defaultMessage:
+      'Only results with this exact word or phrase will be returned',
   },
   none_label: {
     id: 'search.advanced.none.label',
@@ -55,7 +70,8 @@ const messages = defineMessages({
   },
   variants_helptext: {
     id: 'search.advanced.variants.helptext',
-    defaultMessage: 'Increase the fuzziness of a search.  For example, Wladimir~2 will return not just the term “Wladimir” but also similar spellings such as "Wladimyr" or "Vladimyr". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant.',
+    defaultMessage:
+      'Increase the fuzziness of a search.  For example, Wladimir~2 will return not just the term “Wladimir” but also similar spellings such as "Wladimyr" or "Vladimyr". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant.',
   },
   proximity_label: {
     id: 'search.advanced.proximity.label',
@@ -63,7 +79,8 @@ const messages = defineMessages({
   },
   proximity_helptext: {
     id: 'search.advanced.proximity.helptext',
-    defaultMessage: 'Search for two terms within a certain distance of each other. For example, return results with the terms "Bank" and "America" occurring within two words from each other, such as "Bank of America", "Bank in America", even "America has a Bank".',
+    defaultMessage:
+      'Search for two terms within a certain distance of each other. For example, return results with the terms "Bank" and "America" occurring within two words from each other, such as "Bank of America", "Bank in America", even "America has a Bank".',
   },
   submit: {
     id: 'search.advanced.submit',
@@ -72,9 +89,8 @@ const messages = defineMessages({
   clear: {
     id: 'search.advanced.clear',
     defaultMessage: 'Clear all',
-  }
+  },
 });
-
 
 /* eslint-disable jsx-quotes */
 class AdvancedSearch extends React.Component {
@@ -87,7 +103,7 @@ class AdvancedSearch extends React.Component {
       exact: [],
       none: [],
       variants: [],
-      proximity: []
+      proximity: [],
     };
 
     this.ref = React.createRef();
@@ -96,18 +112,20 @@ class AdvancedSearch extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const nextQueryText = nextProps.query ? nextProps.query.getString('q') : prevState.queryText;
+    const nextQueryText = nextProps.query
+      ? nextProps.query.getString('q')
+      : prevState.queryText;
     const queryChanged = !prevState || prevState.queryText !== nextQueryText;
 
     if (queryChanged) {
-      const { query } = nextProps
+      const { query } = nextProps;
       const queryText = query.getString('q');
       const parsed = parseQueryText(queryText);
 
       return {
         queryText: nextQueryText,
-        ...parsed
-      }
+        ...parsed,
+      };
     }
     return prevState;
   }
@@ -127,9 +145,9 @@ class AdvancedSearch extends React.Component {
 
   onChange = (field, values) => {
     this.setState({
-      [field]: values
+      [field]: values,
     });
-  }
+  };
 
   onClear = (e) => {
     this.updateQuery(e, true);
@@ -139,9 +157,9 @@ class AdvancedSearch extends React.Component {
       exact: [],
       none: [],
       variants: [],
-      proximity: []
+      proximity: [],
     });
-  }
+  };
 
   renderField({ key }) {
     const { intl } = this.props;
@@ -153,7 +171,7 @@ class AdvancedSearch extends React.Component {
           values={values}
           label={intl.formatMessage(messages[`${key}_label`])}
           helperText={intl.formatMessage(messages[`${key}_helptext`])}
-          onChange={vals => this.onChange(key, vals)}
+          onChange={(vals) => this.onChange(key, vals)}
           field={key}
           key={key}
         />
@@ -180,7 +198,7 @@ class AdvancedSearch extends React.Component {
           fill
           values={values}
           separator={field !== 'exact' && ' '}
-          onChange={vals => this.onChange(field, vals)}
+          onChange={(vals) => this.onChange(field, vals)}
           tagProps={{ minimal: true }}
         />
       </FormGroup>
@@ -194,7 +212,11 @@ class AdvancedSearch extends React.Component {
         <span>{intl.formatMessage(messages.title)}</span>
         <span>
           <Button
-            text={<span className="bp3-text-muted">{intl.formatMessage(messages.clear)}</span>}
+            text={
+              <span className="bp3-text-muted">
+                {intl.formatMessage(messages.clear)}
+              </span>
+            }
             onClick={this.onClear}
             minimal
           />
@@ -213,8 +235,8 @@ class AdvancedSearch extends React.Component {
           />
         </span>
       </span>
-    )
-  }
+    );
+  };
 
   render() {
     const { isOpen, navbarRef } = this.props;
@@ -234,7 +256,11 @@ class AdvancedSearch extends React.Component {
           portalContainer={this.ref.current}
           onClose={(e) => {
             // prevent interaction with Navbar from closing
-            if (!navbarRef || !navbarRef.current || !navbarRef.current.contains(e.target)) {
+            if (
+              !navbarRef ||
+              !navbarRef.current ||
+              !navbarRef.current.contains(e.target)
+            ) {
               this.props.onToggle();
             }
           }}
@@ -245,22 +271,20 @@ class AdvancedSearch extends React.Component {
             </form>
           </div>
         </Drawer>
-
       </div>
     );
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('entities', location, {}, '');
 
   return { query };
-}
+};
 
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(AdvancedSearch);

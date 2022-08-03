@@ -8,10 +8,14 @@ import './TextViewer.scss';
 class TextViewer extends PureComponent {
   render() {
     const { document, dir, noStyle } = this.props;
-    const text = document.isPending
-      ? <Skeleton.Text type="pre" length={4000} />
-      : <Pre>{document.getFirst('bodyText')}</Pre>;
-    return noStyle ? text : (
+    const text = document.isPending ? (
+      <Skeleton.Text type="pre" length={4000} />
+    ) : (
+      <Pre>{document.getFirst('bodyText')}</Pre>
+    );
+    return noStyle ? (
+      text
+    ) : (
       <div className="outer">
         <div className="inner TextViewer" dir={dir}>
           {text}

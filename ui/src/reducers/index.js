@@ -19,7 +19,6 @@ import notifications from './notifications';
 import systemStatus from './systemStatus';
 import exports from './exports';
 
-
 const rootReducer = combineReducers({
   metadata,
   mutation,

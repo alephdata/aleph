@@ -12,15 +12,29 @@ const messages = defineMessages({
 /* eslint-disable */
 
 const PasswordAuth = ({
-  onSubmit, buttonClassName, showEmail, showName, showPassword, showConfirmPass, buttonText, children, intl, isActivation, className,
+  onSubmit,
+  buttonClassName,
+  showEmail,
+  showName,
+  showPassword,
+  showConfirmPass,
+  buttonText,
+  children,
+  intl,
+  isActivation,
+  className,
 }) => {
-  let emailElement; let passwordElement; let confirmElement; let
-    nameElement;
+  let emailElement;
+  let passwordElement;
+  let confirmElement;
+  let nameElement;
 
   const submit = (event) => {
     event.preventDefault();
 
-    const arePasswordsTheSame = isActivation ? passwordElement.value === confirmElement.value : true;
+    const arePasswordsTheSame = isActivation
+      ? passwordElement.value === confirmElement.value
+      : true;
 
     if (arePasswordsTheSame) {
       onSubmit({
@@ -36,69 +50,80 @@ const PasswordAuth = ({
   return (
     <form onSubmit={submit} className={className}>
       {showEmail && (
-      <label className="bp3-label">
-        <FormattedMessage id="password_auth.email" defaultMessage="Email address" />
-        <input
-          className="bp3-input bp3-fill"
-          type="email"
-          name="email"
-          required
-          autoFocus
-          ref={el => emailElement = el}
-        />
-      </label>
-      )}
-      {showName
-        && (
         <label className="bp3-label">
-          <FormattedMessage id="password_auth.name" defaultMessage="Your Name" />
+          <FormattedMessage
+            id="password_auth.email"
+            defaultMessage="Email address"
+          />
+          <input
+            className="bp3-input bp3-fill"
+            type="email"
+            name="email"
+            required
+            autoFocus
+            ref={(el) => (emailElement = el)}
+          />
+        </label>
+      )}
+      {showName && (
+        <label className="bp3-label">
+          <FormattedMessage
+            id="password_auth.name"
+            defaultMessage="Your Name"
+          />
           <input
             className="bp3-input bp3-fill"
             type="text"
             name="name"
             required
-            ref={el => nameElement = el}
+            ref={(el) => (nameElement = el)}
           />
         </label>
-        )}
-      {showPassword
-        && (
+      )}
+      {showPassword && (
         <label className="bp3-label">
-          <FormattedMessage id="password_auth.password" defaultMessage="Password" />
+          <FormattedMessage
+            id="password_auth.password"
+            defaultMessage="Password"
+          />
           <input
             id="pass"
             className="bp3-input bp3-fill"
             type="password"
             name="password"
             required
-            ref={el => passwordElement = el}
+            ref={(el) => (passwordElement = el)}
           />
         </label>
-        )}
-      {showConfirmPass
-      && (
-      <label className="bp3-label">
-        <FormattedMessage id="password_auth.confirm" defaultMessage="Confirm password" />
-        <input
-          id="confirm-pass"
-          className="bp3-input bp3-fill"
-          type="password"
-          name="confirm"
-          required
-          ref={el => confirmElement = el}
-        />
-      </label>
+      )}
+      {showConfirmPass && (
+        <label className="bp3-label">
+          <FormattedMessage
+            id="password_auth.confirm"
+            defaultMessage="Confirm password"
+          />
+          <input
+            id="confirm-pass"
+            className="bp3-input bp3-fill"
+            type="password"
+            name="confirm"
+            required
+            ref={(el) => (confirmElement = el)}
+          />
+        </label>
       )}
 
       <div className="flex-row">
         <span>
-          <Button className={`bp3-large ${buttonClassName}`} intent={Intent.PRIMARY} type="submit">
+          <Button
+            className={`bp3-large ${buttonClassName}`}
+            intent={Intent.PRIMARY}
+            type="submit"
+          >
             {buttonText}
           </Button>
         </span>
-        <span>
-          {children}
-        </span>
+        <span>{children}</span>
       </div>
     </form>
   );
@@ -110,7 +135,9 @@ export const PasswordAuthLogin = ({ onSubmit, buttonClassName }) => (
     showEmail
     showPassword
     buttonClassName={buttonClassName}
-    buttonText={<FormattedMessage id="password_auth.signin" defaultMessage="Sign in" />}
+    buttonText={
+      <FormattedMessage id="password_auth.signin" defaultMessage="Sign in" />
+    }
   >
     {' '}
   </PasswordAuth>
@@ -121,7 +148,9 @@ export const PasswordAuthSignup = ({ onSubmit, buttonClassName }) => (
     onSubmit={onSubmit}
     showEmail
     buttonClassName={buttonClassName}
-    buttonText={<FormattedMessage id="password_auth.signup" defaultMessage="Sign up" />}
+    buttonText={
+      <FormattedMessage id="password_auth.signup" defaultMessage="Sign up" />
+    }
   >
     {' '}
   </PasswordAuth>
@@ -136,6 +165,8 @@ export const PasswordAuthActivate = ({ onSubmit, intl, className }) => (
     className={className}
     intl={intl}
     showConfirmPass
-    buttonText={<FormattedMessage id="password_auth.activate" defaultMessage="Activate" />}
+    buttonText={
+      <FormattedMessage id="password_auth.activate" defaultMessage="Activate" />
+    }
   />
 );

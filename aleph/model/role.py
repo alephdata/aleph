@@ -224,13 +224,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return set([cls.load_id(cls.SYSTEM_USER), cls.load_id(cls.SYSTEM_GUEST)])
 
     @classmethod
-    def by_prefix(cls, prefix, exclude=[]):
+    def by_prefix(cls, prefix, exclude=None):
         """Load a list of roles matching a name, email address, or foreign_id.
 
         :param str pattern: Pattern to match.
         """
         q = cls.all_users()
-        if len(exclude):
+        if exclude:
             q = q.filter(not_(Role.id.in_(exclude)))
         q = q.filter(
             or_(func.lower(cls.email) == prefix.lower(), query_like(cls.name, prefix))

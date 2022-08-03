@@ -5,8 +5,7 @@ import { loginWithToken } from 'actions/sessionActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
-
+import withRouter from 'app/withRouter';
 
 class OAuthScreen extends React.Component {
   componentDidMount() {
@@ -33,5 +32,5 @@ const mapDispatchToProps = { loginWithToken };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps)
 )(OAuthScreen);

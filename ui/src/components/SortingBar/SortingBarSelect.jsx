@@ -11,7 +11,7 @@ class SortingBarSelect extends PureComponent {
       text={option.label}
       label={option.count && <Count count={option.count} />}
     />
-  )
+  );
 
   render() {
     const { activeItem, items, onSelect } = this.props;

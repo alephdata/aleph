@@ -70,19 +70,25 @@ class SortingBar extends Component {
         text={intl.formatMessage(field)}
       />
     );
-  }
+  };
 
   onSort({ field, direction }) {
     const { query, sortDirection, sortField, updateQuery } = this.props;
 
-    const newQuery = query.sortBy(field || sortField, direction || sortDirection);
+    const newQuery = query.sortBy(
+      field || sortField,
+      direction || sortDirection
+    );
     updateQuery(newQuery);
   }
 
   renderSortingButtons() {
     const { intl, sortingFields, sortDirection, sortField } = this.props;
 
-    const sortingItems = sortingFields.map(field => ({ field, label: intl.formatMessage(messages[field]) }));
+    const sortingItems = sortingFields.map((field) => ({
+      field,
+      label: intl.formatMessage(messages[field]),
+    }));
 
     let activeSort = sortingItems.filter(({ field }) => field === sortField);
     activeSort = activeSort.length ? activeSort[0] : sortingItems[0];
@@ -91,10 +97,7 @@ class SortingBar extends Component {
       <>
         <div className="SortingBar__item">
           <span className="SortingBar__label">
-            <FormattedMessage
-              id="sorting.bar.sort"
-              defaultMessage="Sort by:"
-            />
+            <FormattedMessage id="sorting.bar.sort" defaultMessage="Sort by:" />
           </span>
           <div className="SortingBar__control">
             <SortingBarSelect
@@ -114,7 +117,11 @@ class SortingBar extends Component {
           <div className="SortingBar__control">
             <Button
               icon={sortDirection === 'desc' ? 'arrow-down' : 'arrow-up'}
-              onClick={() => this.onSort({ direction: sortDirection === 'desc' ? 'asc' : 'desc' })}
+              onClick={() =>
+                this.onSort({
+                  direction: sortDirection === 'desc' ? 'asc' : 'desc',
+                })
+              }
               minimal
               intent={Intent.PRIMARY}
             />
@@ -132,11 +139,11 @@ class SortingBar extends Component {
         {filterButton && (
           <div className="SortingBar__item">
             <span className="SortingBar__label">
-              {filterButtonLabel !== undefined ? filterButtonLabel : intl.formatMessage(messages.filter_button_label)}
+              {filterButtonLabel !== undefined
+                ? filterButtonLabel
+                : intl.formatMessage(messages.filter_button_label)}
             </span>
-            <div className="SortingBar__control">
-              {filterButton}
-            </div>
+            <div className="SortingBar__control">{filterButton}</div>
           </div>
         )}
         {sortingFields && this.renderSortingButtons()}
@@ -156,10 +163,7 @@ const mapStateToProps = (state, ownProps) => {
       sortDirection: direction,
     };
   }
-  return {}
+  return {};
 };
 
-export default compose(
-  connect(mapStateToProps),
-  injectIntl,
-)(SortingBar);
+export default compose(connect(mapStateToProps), injectIntl)(SortingBar);

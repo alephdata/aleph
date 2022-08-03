@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { Entity } from 'components/common';
 import { showErrorToast, showSuccessToast } from 'app/toast';
 import getCollectionLink from 'util/getCollectionLink';
@@ -73,7 +73,15 @@ export class EntityDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { actionType, deleteEntity, entities, navigate, intl, redirectOnSuccess, toggleDialog } = this.props;
+    const {
+      actionType,
+      deleteEntity,
+      entities,
+      navigate,
+      intl,
+      redirectOnSuccess,
+      toggleDialog,
+    } = this.props;
     const { blocking } = this.state;
 
     if (!blocking) {
@@ -84,9 +92,10 @@ export class EntityDeleteDialog extends Component {
           this.setState({ processingEntity: entity.id });
           await deleteEntity(entity.id);
 
-          this.setState(({ deletedEntities }) => (
-            { deletedEntities: [...deletedEntities, entity.id], processingEntity: null }
-          ));
+          this.setState(({ deletedEntities }) => ({
+            deletedEntities: [...deletedEntities, entity.id],
+            processingEntity: null,
+          }));
         }
 
         showSuccessToast(intl.formatMessage(messages[`${actionType}_success`]));
@@ -94,7 +103,11 @@ export class EntityDeleteDialog extends Component {
           const parent = entities[0]?.getFirst('parent');
           const collection = entities[0]?.collection;
 
-          navigate(parent ? { pathname: getEntityLink(parent) } : getCollectionLink({ collection }));
+          navigate(
+            parent
+              ? { pathname: getEntityLink(parent) }
+              : getCollectionLink({ collection })
+          );
         }
         this.setState({ blocking: false });
         toggleDialog(true);
@@ -114,22 +127,32 @@ export class EntityDeleteDialog extends Component {
     return (
       <Alert
         isOpen={this.props.isOpen}
-        className={c('EntityDeleteDialog', { 'blocking': blocking })}
+        className={c('EntityDeleteDialog', { blocking: blocking })}
         icon={icon}
         intent={Intent.DANGER}
         cancelButtonText={intl.formatMessage(messages.cancel)}
-        confirmButtonText={intl.formatMessage(messages[`${actionType}_confirm`])}
+        confirmButtonText={intl.formatMessage(
+          messages[`${actionType}_confirm`]
+        )}
         onCancel={this.props.toggleDialog}
         onConfirm={this.onDelete}
       >
-        {!blocking && intl.formatMessage(messages[`${actionType}_question`], { count: entities.length})}
+        {!blocking &&
+          intl.formatMessage(messages[`${actionType}_question`], {
+            count: entities.length,
+          })}
         {blocking && intl.formatMessage(messages[`${actionType}_progress`])}
         <ul className="EntityDeleteDialog__file-list">
-          {entities.map(entity => {
+          {entities.map((entity) => {
             const isProcessing = processingEntity === entity.id;
             const isDeleted = deletedEntities.indexOf(entity.id) > -1;
             return (
-              <li key={entity.id} className={c('EntityDeleteDialog__file-list__item', { 'deleted': isDeleted })}>
+              <li
+                key={entity.id}
+                className={c('EntityDeleteDialog__file-list__item', {
+                  deleted: isDeleted,
+                })}
+              >
                 {(isProcessing || isDeleted) && (
                   <span className="EntityDeleteDialog__file-list__item__icon">
                     {isProcessing && <Spinner size={14} />}
@@ -140,7 +163,7 @@ export class EntityDeleteDialog extends Component {
                   <Entity.Label entity={entity} truncate={30} icon />
                 </span>
               </li>
-            )
+            );
           })}
         </ul>
       </Alert>
@@ -148,7 +171,4 @@ export class EntityDeleteDialog extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  injectIntl,
-)(EntityDeleteDialog);
+export default compose(withRouter, injectIntl)(EntityDeleteDialog);

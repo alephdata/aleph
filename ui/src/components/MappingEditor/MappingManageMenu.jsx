@@ -6,7 +6,12 @@ import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import YAML from 'yaml';
 
 import { showErrorToast, showInfoToast } from 'app/toast';
-import { createEntityMapping, flushEntityMapping, deleteEntityMapping, updateEntityMapping } from 'actions';
+import {
+  createEntityMapping,
+  flushEntityMapping,
+  deleteEntityMapping,
+  updateEntityMapping,
+} from 'actions';
 
 import MappingCreateDialog from 'dialogs/MappingCreateDialog/MappingCreateDialog';
 import MappingFlushDialog from 'dialogs/MappingFlushDialog/MappingFlushDialog';
@@ -39,14 +44,14 @@ const messages = defineMessages({
   },
   relationshipError: {
     id: 'mapping.error.relationshipMissing',
-    defaultMessage: 'Relationship Error: {id} entity must have a {source} and {target} assigned',
+    defaultMessage:
+      'Relationship Error: {id} entity must have a {source} and {target} assigned',
   },
   emptyWarning: {
     id: 'mapping.warning.empty',
     defaultMessage: 'You must create at least one entity',
   },
 });
-
 
 class MappingManageMenu extends Component {
   constructor(props) {
@@ -73,7 +78,11 @@ class MappingManageMenu extends Component {
     const { document, existingMappingMetadata, intl } = this.props;
     if (this.validateMappings()) {
       try {
-        this.props.updateEntityMapping(document, existingMappingMetadata.id, this.formatMappings());
+        this.props.updateEntityMapping(
+          document,
+          existingMappingMetadata.id,
+          this.formatMappings()
+        );
         showInfoToast(intl.formatMessage(messages.save));
       } catch (e) {
         showErrorToast(e);
@@ -119,19 +128,17 @@ class MappingManageMenu extends Component {
     this.toggleFlush();
   }
 
-  toggleCreate = () => this.setState(({ createIsOpen }) => (
-    { createIsOpen: !createIsOpen }
-  ));
+  toggleCreate = () =>
+    this.setState(({ createIsOpen }) => ({ createIsOpen: !createIsOpen }));
 
-  toggleSave = () => this.setState(({ saveIsOpen }) => (
-    { saveIsOpen: !saveIsOpen }
-  ));
+  toggleSave = () =>
+    this.setState(({ saveIsOpen }) => ({ saveIsOpen: !saveIsOpen }));
 
-  toggleFlush = () => this.setState(({ flushIsOpen }) => (
-    { flushIsOpen: !flushIsOpen }
-  ));
+  toggleFlush = () =>
+    this.setState(({ flushIsOpen }) => ({ flushIsOpen: !flushIsOpen }));
 
-  toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
+  toggleDelete = () =>
+    this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   formatMappings() {
     const { document, entitySet, mappings } = this.props;
@@ -163,8 +170,8 @@ class MappingManageMenu extends Component {
     const { document, mappings } = this.props;
 
     try {
-      const fileData = { [document.id]:
-        {
+      const fileData = {
+        [document.id]: {
           label: document.getCaption(),
           info_url: document.links.ui,
           query: { entities: mappings.toApiFormat() },
@@ -178,7 +185,7 @@ class MappingManageMenu extends Component {
   }
 
   render() {
-    const { existingMappingMetadata, intl, isEmpty} = this.props;
+    const { existingMappingMetadata, intl, isEmpty } = this.props;
     const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
 
     const hasExisting = existingMappingMetadata?.id !== undefined;
@@ -187,25 +194,52 @@ class MappingManageMenu extends Component {
       <>
         <ButtonGroup>
           {!hasExisting && (
-            <Button icon="add" intent={Intent.PRIMARY} onClick={this.toggleCreate}>
-              <FormattedMessage id="mapping.actions.create" defaultMessage="Generate entities" />
+            <Button
+              icon="add"
+              intent={Intent.PRIMARY}
+              onClick={this.toggleCreate}
+            >
+              <FormattedMessage
+                id="mapping.actions.create"
+                defaultMessage="Generate entities"
+              />
             </Button>
           )}
           {hasExisting && (
             <>
-              <Tooltip content={intl.formatMessage(messages.emptyWarning)} disabled={!isEmpty}>
-                <AnchorButton icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave} disabled={isEmpty}>
-                  <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
+              <Tooltip
+                content={intl.formatMessage(messages.emptyWarning)}
+                disabled={!isEmpty}
+              >
+                <AnchorButton
+                  icon="floppy-disk"
+                  intent={Intent.PRIMARY}
+                  onClick={this.toggleSave}
+                  disabled={isEmpty}
+                >
+                  <FormattedMessage
+                    id="mapping.actions.save"
+                    defaultMessage="Save changes"
+                  />
                 </AnchorButton>
               </Tooltip>
               <Button icon="export" onClick={this.exportMappingData}>
-                <FormattedMessage id="mapping.actions.export" defaultMessage="Export mapping" />
+                <FormattedMessage
+                  id="mapping.actions.export"
+                  defaultMessage="Export mapping"
+                />
               </Button>
               <Button icon="delete" onClick={this.toggleFlush}>
-                <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />
+                <FormattedMessage
+                  id="mapping.actions.flush"
+                  defaultMessage="Remove generated entities"
+                />
               </Button>
               <Button icon="trash" onClick={this.toggleDelete}>
-                <FormattedMessage id="mapping.actions.delete" defaultMessage="Delete" />
+                <FormattedMessage
+                  id="mapping.actions.delete"
+                  defaultMessage="Delete"
+                />
               </Button>
             </>
           )}
@@ -242,8 +276,11 @@ const mapDispatchToProps = {
   updateEntityMapping,
 };
 
-const mapStateToProps = state => ({ session: selectSession(state) });
+const mapStateToProps = (state) => ({ session: selectSession(state) });
 
-MappingManageMenu = connect(mapStateToProps, mapDispatchToProps)(MappingManageMenu);
+MappingManageMenu = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MappingManageMenu);
 MappingManageMenu = injectIntl(MappingManageMenu);
 export default MappingManageMenu;

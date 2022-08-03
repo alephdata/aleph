@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .MappingVerify {
   &__item {
@@ -8,7 +8,7 @@
   }
 
   &__section {
-    margin-bottom: $aleph-grid-size*2;
+    margin-bottom: $aleph-grid-size * 2;
     &__title {
       font-weight: 500;
     }
