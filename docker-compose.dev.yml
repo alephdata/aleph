@@ -35,7 +35,10 @@ services:
   rabbitmq:
     image: rabbitmq:3.9-management-alpine
     ports:
+      - '127.0.0.1:5672:5672'
       - '127.0.0.1:15672:15672'
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
 
   convert-document:
     image: ghcr.io/alephdata/convert-document:latest
@@ -154,3 +157,4 @@ volumes:
   elasticsearch-data: {}
   postgres-data: {}
   redis-data: {}
+  rabbitmq-data: {}
