@@ -2,7 +2,6 @@ import json
 import datetime
 import logging
 from pprint import pformat
-import time
 
 from aleph.core import db, settings
 from aleph.index.entities import index_entity

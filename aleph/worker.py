@@ -100,9 +100,10 @@ class AlephWorker(Worker):
         super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
-        # special treatment for indexing jobs - indexing jobs need to be batched in batches
-        # of 100 (specified by INDEXING_BATCH_SIZE) or we wait for 10 seconds
-        # (specified by INDEXING_TIMEOUT) before triggering an batched run of all available indexing tasks
+        # special treatment for indexing jobs - indexing jobs need to be batched
+        # in batches of 100 (specified by INDEXING_BATCH_SIZE) or we wait for 10
+        # seconds (specified by INDEXING_TIMEOUT) before triggering an batched
+        # run of all available indexing tasks
         self.indexing_batch_last_updated = defaultdict(lambda: None)
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
@@ -110,8 +111,9 @@ class AlephWorker(Worker):
     def on_message(self, channel, method, properties, body, args):
         connection = args[0]
         task = get_task(body, method.delivery_tag)
-        # the task needs to be acknowledged in the same channel that it was received. So store the channel.
-        # This is useful when executing batched indexing tasks since they are acknowledged late.
+        # the task needs to be acknowledged in the same channel that it was
+        # received. So store the channel. This is useful when executing batched
+        # indexing tasks since they are acknowledged late.
         task._channel = channel
         self.local_queue.put((task, channel, connection))
 
@@ -188,16 +190,17 @@ class AlephWorker(Worker):
                 refresh_collection(task.collection_id)
 
     def run_indexing_batches(self):
-        """Run remaining batched indexing tasks after waiting for a maximum of INDEXING_TIMEOUT seconds"""
+        """Run remaining batched indexing tasks after waiting for a maximum of
+        INDEXING_TIMEOUT seconds"""
         if indexing_lock.acquire(False):
             batches = list(self.indexing_batches.items())
             indexing_lock.release()
             for collection_id, batch in batches:
                 now = time.time()
-                if (
-                    int(now - self.indexing_batch_last_updated[collection_id])
-                    > INDEXING_TIMEOUT
-                ):
+                since_last_update = int(
+                    now - self.indexing_batch_last_updated[collection_id]
+                )
+                if since_last_update > INDEXING_TIMEOUT:
                     log.debug(f"Running batch indexing for collection {collection_id}")
                     op_index(collection_id, batch, worker=self)
                     del self.indexing_batch_last_updated[collection_id]

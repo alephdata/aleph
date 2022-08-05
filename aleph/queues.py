@@ -44,7 +44,7 @@ def flush_queue():
         channel.queue_purge(sls.QUEUE_INGEST)
         channel.queue_purge(sls.QUEUE_INDEX)
         channel.close()
-    except pika.exceptions.AMQPError as ex:
+    except pika.exceptions.AMQPError:
         logging.exception("Error while flushing task queue")
     for key in kv.scan_iter(make_key(PREFIX, "*")):
         kv.delete(key)

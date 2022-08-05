@@ -4,7 +4,6 @@
 # setup. Wherever possible use environment variables to override the
 # defaults.
 import os
-import multiprocessing
 from servicelayer import env
 from urllib.parse import urlparse
 from flask_babel import lazy_gettext

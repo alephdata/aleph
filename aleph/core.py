@@ -166,7 +166,7 @@ def get_rmq_connection():
                         host=sls.RABBITMQ_URL,
                         credentials=credentials,
                         heartbeat=sls.RABBITMQ_HEARTBEAT,
-                        blocked_connection_timeout=sls.RABBITMQ_BLOCKED_CONNECTION_TIMEOUT,
+                        blocked_connection_timeout=sls.RABBITMQ_BLOCKED_CONNECTION_TIMEOUT,  # noqa
                     )
                 )
                 settings._rmq_connection = connection

@@ -4,7 +4,7 @@ from pprint import pprint  # noqa
 
 from aleph.model import Document
 from aleph.tests.util import TestCase
-from aleph.queues import get_status, OP_INGEST
+from aleph.queues import get_status
 from aleph.logic.collections import reindex_collection
 
 
