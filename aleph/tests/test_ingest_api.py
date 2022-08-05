@@ -4,7 +4,7 @@ from pprint import pprint  # noqa
 
 from aleph.model import Document
 from aleph.tests.util import TestCase
-from aleph.queues import get_status, OP_INGEST
+from aleph.queues import get_status
 from aleph.logic.collections import reindex_collection
 
 
@@ -51,11 +51,6 @@ class IngestApiTestCase(TestCase):
 
         status = get_status(self.col)
         assert status.get("pending") == 1, status
-        job = status.get("jobs")[0]
-        assert job.get("pending") == 1, job
-        stage = job.get("stages")[0]
-        assert stage.get("stage") == OP_INGEST, stage
-        assert stage.get("pending") == 1, stage
 
     def test_invalid_meta(self):
         _, headers = self.login(is_admin=True)

@@ -24,6 +24,7 @@ from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
 from aleph.oauth import oauth
+from aleph.queues import flush_queue
 
 log = logging.getLogger(__name__)
 APP_NAME = "aleph-test"
@@ -79,6 +80,9 @@ class TestCase(unittest.TestCase):
         # have actually been evaluated.
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
+        sls.QUEUE_ALEPH = "test-aleph-queue"
+        sls.QUEUE_INDEX = "test-index-queue"
+        sls.QUEUE_INGEST = "test-ingest-queue"
         # ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
         settings.APP_NAME = APP_NAME
         settings.TESTING = True
@@ -97,6 +101,7 @@ class TestCase(unittest.TestCase):
         settings.INDEX_READ = [settings.INDEX_WRITE]
         settings.TAG_ENTITIES = True
         settings._gcp_logger = None
+        settings.INDEXING_BATCH_SIZE = 1
         app = create_app({})
         return app
 
@@ -233,6 +238,7 @@ class TestCase(unittest.TestCase):
                 db.engine.execute(q)
 
         kv.flushall()
+        flush_queue()
         create_system_roles()
 
     def tearDown(self):
