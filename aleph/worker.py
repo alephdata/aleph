@@ -49,20 +49,25 @@ indexing_lock = threading.Lock()
 def op_index(collection_id: str, batch: List[Task], worker: Worker):
     collection = Collection.by_id(collection_id)
     sync = any(task.context.get("sync", False) for task in batch)
-    index_many(collection, sync=sync, tasks=batch)
-    for task in batch:
-        # acknowledge batched tasks
-        log.info(
-            f"Task [collection:{task.collection_id}]: "
-            f"op:{task.operation} task_id:{task.task_id} (done)"
-        )
-        # avoid data race with the main thread by using a copy of the task
-        channel = task._channel
-        delattr(task, "_channel")
-        task = copy.deepcopy(task)
-        task.context["skip_ack"] = False
-        cb = functools.partial(worker.ack_message, task, channel)
-        channel.connection.add_callback_threadsafe(cb)
+    # ToDo: nack in case of failure?
+    try:
+        index_many(collection, sync=sync, tasks=batch)
+    except Exception:
+        log.exception(f"Error while indexing entities from collection: {collection_id}")
+    finally:
+        for task in batch:
+            # acknowledge batched tasks
+            log.info(
+                f"Task [collection:{task.collection_id}]: "
+                f"op:{task.operation} task_id:{task.task_id} (done)"
+            )
+            # avoid data race with the main thread by using a copy of the task
+            channel = task._channel
+            delattr(task, "_channel")
+            task = copy.deepcopy(task)
+            task.context["skip_ack"] = False
+            cb = functools.partial(worker.ack_message, task, channel)
+            channel.connection.add_callback_threadsafe(cb)
 
 
 def op_reingest(collection, task):
