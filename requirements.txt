@@ -4,7 +4,7 @@ followthemoney==3.0.3
 followthemoney-store[postgresql]==3.0.3
 followthemoney-compare==0.4.3
 fingerprints==1.0.3
-servicelayer[google,amazon]==1.20.0
+servicelayer[google,amazon]==1.20.1
 normality==2.4.0
 pantomime==0.5.1
 
