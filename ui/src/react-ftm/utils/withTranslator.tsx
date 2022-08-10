@@ -2,20 +2,24 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 import translations from 'react-ftm/translations/translations.json';
 
+type Locale = keyof typeof translations;
+
 export function withTranslator<T>(WrappedComponent: React.ComponentType<T>) {
   return class extends React.Component<any> {
     render() {
       const { locale, ...rest } = this.props;
 
-      //  override arabic locale to marocan version
+      const normalized: Locale = locale in translations ? locale : 'en';
+
+      // Override arabic locale to marocan version
       // We want all dates and numbers in latin instead of default ar eastern digits
-      const modifiedLocale = locale === 'ar' ? 'ar-ma' : locale;
+      const modified = normalized === 'ar' ? 'ar-ma' : normalized;
 
       return (
         <IntlProvider
-          locale={modifiedLocale || 'en'}
+          locale={modified}
           key={locale || 'en'}
-          messages={translations[locale || 'en']}
+          messages={translations[normalized]}
         >
           <WrappedComponent {...(rest as T)} />
         </IntlProvider>

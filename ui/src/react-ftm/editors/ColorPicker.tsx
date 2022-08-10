@@ -41,14 +41,16 @@ const messages = defineMessages({
   },
 });
 
-const colorOptions = {
-  blue: Colors.BLUE1,
-  green: Colors.GREEN1,
-  orange: Colors.ORANGE1,
-  red: Colors.RED1,
-  violet: Colors.VIOLET1,
-  turquoise: Colors.TURQUOISE1,
-};
+type ColorName = 'blue' | 'green' | 'orange' | 'red' | 'violet' | 'turquoise';
+
+const colorOptions = new Map<ColorName, string>([
+  ['blue', Colors.BLUE1],
+  ['green', Colors.GREEN1],
+  ['orange', Colors.ORANGE1],
+  ['red', Colors.RED1],
+  ['violet', Colors.VIOLET1],
+  ['turquoise', Colors.TURQUOISE1],
+]);
 
 interface IColorPickerProps extends WrappedComponentProps {
   currSelected?: string;
@@ -63,7 +65,11 @@ class ColorPicker extends React.PureComponent<IColorPickerProps> {
     this.renderColor = this.renderColor.bind(this);
   }
 
-  renderColor(id: string, color: string | undefined, isCustom: boolean) {
+  renderColor(
+    id: ColorName | 'custom',
+    color: string | undefined,
+    isCustom: boolean
+  ) {
     const { currSelected, onSelect, swatchShape, intl } = this.props;
 
     const style = {
@@ -98,11 +104,12 @@ class ColorPicker extends React.PureComponent<IColorPickerProps> {
   render() {
     const { currSelected, onSelect } = this.props;
     const hasCustomColor =
-      !!currSelected && Object.values(colorOptions).indexOf(currSelected) < 0;
+      !!currSelected &&
+      !Array.from(colorOptions.values()).includes(currSelected);
 
     return (
       <div className="ColorPicker">
-        {Object.entries(colorOptions).map(([id, color]) =>
+        {Array.from(colorOptions.entries()).map(([id, color]) =>
           this.renderColor(id, color, false)
         )}
         <Popover
