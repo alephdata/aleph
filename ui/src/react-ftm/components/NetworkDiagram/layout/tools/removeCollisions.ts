@@ -36,3 +36,5 @@
 // }
 //
 // export default removeCollisions;
+
+export default () => {};

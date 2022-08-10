@@ -9,6 +9,7 @@ import { Button, Checkbox, Classes, Icon, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import {
   Entity as FTMEntity,
+  EntityProperties,
   Property as FTMProperty,
   Schema as FTMSchema,
   Value,
@@ -608,7 +609,10 @@ class TableEditorBase extends React.Component<
   handleNewRow = (row: number, changes: any) => {
     const { intl, schema } = this.props;
     const { entityRows, showTopAddRow } = this.state;
-    const entityData = { schema, properties: {} };
+    const entityData = { schema, properties: {} } as {
+      schema: FTMSchema;
+      properties: EntityProperties;
+    };
     const shouldPrepend = showTopAddRow && row === 1;
 
     changes.forEach(({ cell, value, col }: any) => {

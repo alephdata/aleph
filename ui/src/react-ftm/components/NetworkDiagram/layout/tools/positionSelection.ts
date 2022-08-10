@@ -13,9 +13,11 @@ const positioning = {
   forceLayout: forceLayout,
 };
 
+export type PositionType = keyof typeof positioning;
+
 const positionSelection = (
   layout: GraphLayout,
-  type: string,
+  type: PositionType,
   options?: any
 ) => {
   let vertices;

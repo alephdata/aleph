@@ -3,7 +3,7 @@ import { withTranslator } from 'react-ftm/utils/withTranslator';
 import CountBase from './Count';
 import Date from './Date';
 import EdgeType from './EdgeType';
-import Entity, { FTMEntityExtended } from './Entity';
+import Entity, { type FTMEntityExtended } from './Entity';
 import EnumValue from './EnumValue';
 import FileSize from './FileSize';
 import Transliterate from './Transliterate';

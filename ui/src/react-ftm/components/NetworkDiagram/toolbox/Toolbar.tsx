@@ -21,6 +21,7 @@ import {
   Point,
   centerAround,
   positionSelection,
+  type PositionType,
 } from 'react-ftm/components/NetworkDiagram/layout';
 
 import { History } from 'react-ftm/components/NetworkDiagram/History';
@@ -140,7 +141,7 @@ export class Toolbar extends React.Component<IToolbarProps> {
     updateLayout(layout);
   }
 
-  onPosition(type: string) {
+  onPosition(type: PositionType) {
     const { layout, updateLayout } = this.context;
     const { actions } = this.props;
     updateLayout(positionSelection(layout, type), null, {

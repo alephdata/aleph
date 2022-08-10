@@ -7,7 +7,7 @@ interface IMIMETypeCommonProps {
   className?: string;
 }
 
-const MIMETypeRegistry = {
+const MIMETypeRegistry: { [index: string]: any } = {
   'application/json': { icon: 'code', label: 'JSON' },
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
     icon: 'th',
