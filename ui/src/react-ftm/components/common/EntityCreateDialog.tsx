@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { defineMessages, WrappedComponentProps } from 'react-intl';
+import { injectIntl, defineMessages, WrappedComponentProps } from 'react-intl';
 import { Alignment, Button, ControlGroup, InputGroup } from '@blueprintjs/core';
 import {
   Entity,
@@ -51,7 +51,7 @@ interface IEntityCreateDialogState {
   suggestions: Entity[];
 }
 
-export class EntityCreateDialog extends React.Component<
+class UnwrappedEntityCreateDialog extends React.Component<
   IEntityCreateDialogProps,
   IEntityCreateDialogState
 > {
@@ -245,3 +245,5 @@ export class EntityCreateDialog extends React.Component<
     );
   }
 }
+
+export const EntityCreateDialog = injectIntl(UnwrappedEntityCreateDialog);

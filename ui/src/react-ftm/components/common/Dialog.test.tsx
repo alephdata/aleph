@@ -1,5 +1,4 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from 'testUtils';
 import { Dialog } from './Dialog';
 
 const renderDialog = (props: object = {}) => {

@@ -563,7 +563,6 @@ class NetworkDiagramBase extends React.Component<
                       )
                   : undefined
               }
-              intl={intl}
             />
             <GroupingCreateDialog
               isOpen={interactionMode === modes.GROUPING_CREATE}
@@ -596,7 +595,6 @@ class NetworkDiagramBase extends React.Component<
               ) =>
                 entityManager.getEntitySuggestions(true, queryText, schemata)
               }
-              intl={intl}
             />
           </>
         )}
