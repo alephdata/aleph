@@ -1,9 +1,7 @@
-import React from 'react';
 import { EdgeCreateDialog } from './EdgeCreateDialog';
-import { intl } from '../../setupTests';
 import { EntityManager } from './EntityManager';
 import { Model, Entity } from '@alephdata/followthemoney';
-import { render } from '@testing-library/react';
+import { render } from 'testUtils';
 
 const model = new Model({
   schemata: {
@@ -34,7 +32,6 @@ describe('<EdgeCreateDialog />', () => {
       <EdgeCreateDialog
         entityManager={entityManager}
         source={source}
-        intl={intl}
         isOpen={true}
         toggleDialog={() => {
           /* no-op */

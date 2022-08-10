@@ -56,7 +56,7 @@ interface IEdgeCreateDialogState {
   isProcessing: boolean;
 }
 
-export class EdgeCreateDialog extends React.Component<
+class UnwrappedEdgeCreateDialog extends React.Component<
   IEdgeCreateDialogProps,
   IEdgeCreateDialogState
 > {
@@ -334,4 +334,4 @@ export class EdgeCreateDialog extends React.Component<
   }
 }
 
-export default injectIntl(EdgeCreateDialog);
+export const EdgeCreateDialog = injectIntl(UnwrappedEdgeCreateDialog);

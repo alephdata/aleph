@@ -264,7 +264,6 @@ class EntitySelect extends React.Component<
             toggleDialog={() => this.setState({ createNewDialogOpen: false })}
             schemaRange={referencedEntityRange}
             model={model}
-            intl={intl}
             initialCaption={query}
           />
         )}

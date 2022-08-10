@@ -101,5 +101,12 @@
       "last 5 firefox version",
       "last 5 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^12.1.5"
+  },
+  "jest": {
+    "transformIgnorePatterns": []
   }
 }
