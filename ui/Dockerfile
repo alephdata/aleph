@@ -3,7 +3,7 @@ FROM node:16-slim
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
-    && apt-get -qq -y install python build-essential
+    && apt-get -qq -y install python build-essential rsync
 
 RUN mkdir /alephui
 WORKDIR /alephui
@@ -14,6 +14,7 @@ COPY tsconfig.json /alephui/tsconfig.json
 COPY package.json /alephui
 
 RUN npm install
+RUN cp -R /alephui/node_modules/ /node_modules
 
 COPY i18n /alephui/i18n
 COPY public /alephui/public
