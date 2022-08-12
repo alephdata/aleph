@@ -15,6 +15,7 @@ import {
   MenuDivider,
   MenuItem,
   Spinner,
+  SpinnerSize,
 } from '@blueprintjs/core';
 import { ItemRenderer, MultiSelect, Select } from '@blueprintjs/select';
 import { ITypeEditorProps } from './common';
@@ -131,7 +132,7 @@ class EntitySelect extends React.Component<
       content = (
         <Spinner
           className="EntityCreateDialog__spinner"
-          size={Spinner.SIZE_SMALL}
+          size={SpinnerSize.SMALL}
         />
       );
     } else if (filteredItems.length === 0) {
