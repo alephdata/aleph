@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AnchorButton, Button, ButtonGroup, Menu } from '@blueprintjs/core';
+import { AnchorButton, Button, ButtonGroup, Menu, MenuItem } from '@blueprintjs/core';
 import {
   Popover2 as Popover,
   Tooltip2 as Tooltip,
@@ -80,7 +80,7 @@ export class ToolbarButtonGroup extends React.PureComponent<IToolbarButtonGroupP
 
   renderHidden(items: any) {
     return items.map(({ disabled, helpText, icon, onClick, subItems }: any) => (
-      <Menu.Item
+      <MenuItem
         icon={icon}
         key={icon}
         onClick={onClick}
@@ -88,7 +88,7 @@ export class ToolbarButtonGroup extends React.PureComponent<IToolbarButtonGroupP
         disabled={disabled}
       >
         {subItems && this.renderHidden(subItems)}
-      </Menu.Item>
+      </MenuItem>
     ));
   }
 

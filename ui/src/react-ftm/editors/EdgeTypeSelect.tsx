@@ -3,6 +3,7 @@ import partition from 'lodash/partition';
 import {
   Menu,
   MenuItem,
+  MenuDivider,
   Icon,
   Button,
   Alignment,
@@ -47,7 +48,7 @@ class EdgeTypeSelect extends React.PureComponent<IEdgeTypeSelectProps> {
     return (
       <Menu ulRef={itemsParentRef}>
         {entityEdgeTypes.map(renderItem)}
-        <Menu.Divider />
+        <MenuDivider />
         {propertyEdgeTypes.map(renderItem)}
       </Menu>
     );
