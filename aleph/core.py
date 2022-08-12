@@ -177,7 +177,7 @@ def get_rmq_connection():
                 channel.queue_declare(queue=sls.QUEUE_INDEX, durable=True)
                 channel.close()
                 return settings._rmq_connection
-        except (pika.exceptions.AMQPConnectionError, pika.exceptions.AMQPError) as exc:
+        except Exception as exc:
             log.exception("RabbitMQ error: %s", exc)
         settings._rmq_connection = None
         backoff(failures=attempt)
