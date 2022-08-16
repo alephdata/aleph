@@ -18,7 +18,7 @@
         null
       );
       color: $gray1 !important;
-      margin-bottom: $aleph-grid-size/2;
+      margin-bottom: $aleph-grid-size * 0.5;
     }
 
     .value {
@@ -26,7 +26,7 @@
 
       & > * {
         display: block;
-        margin-bottom: $aleph-grid-size/2;
+        margin-bottom: $aleph-grid-size * 0.5;
         @include breakText;
 
         &:last-child {

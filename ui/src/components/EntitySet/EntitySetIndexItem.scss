@@ -2,16 +2,16 @@
 @import 'app/mixins.scss';
 
 $details-item-width: 175px;
-$vertical-padding: $aleph-grid-size/2;
+$vertical-padding: $aleph-grid-size * 0.5;
 $wrap-breakpoint: 800px;
 
 .EntitySetIndexItem {
   &.index-item {
-    padding: $aleph-grid-size/2 0;
+    padding: $aleph-grid-size * 0.5 0;
     width: 100%;
 
     &.#{$bp-ns}-button {
-      padding: $aleph-grid-size/2 $aleph-grid-size;
+      padding: $aleph-grid-size * 0.5 $aleph-grid-size;
       border: none;
       background-color: white !important;
 

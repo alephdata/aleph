@@ -108,8 +108,8 @@
     @include rtlSupportInvertedProp(
       padding,
       left,
-      $aleph-grid-size/2,
-      $aleph-grid-size/2
+      $aleph-grid-size * 0.5,
+      $aleph-grid-size * 0.5
     );
   }
 }

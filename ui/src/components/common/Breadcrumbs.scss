@@ -3,7 +3,7 @@
 
 .Breadcrumbs {
   z-index: 1;
-  padding: $aleph-grid-size/2 $aleph-content-padding;
+  padding: $aleph-grid-size * 0.5 $aleph-content-padding;
   background-color: $aleph-breadcrumbs-background;
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {

@@ -4,7 +4,7 @@
 .DateFacet {
   &.#{$bp-ns}-card {
     padding-top: $aleph-grid-size * 2;
-    padding-bottom: $aleph-grid-size/2;
+    padding-bottom: $aleph-grid-size * 0.5;
     position: relative;
   }
 
@@ -22,7 +22,7 @@
   }
 
   &__secondary {
-    margin-bottom: $aleph-grid-size/2;
+    margin-bottom: $aleph-grid-size * 0.5;
     @include rtl(text-align, right, left);
 
     &,
@@ -42,7 +42,7 @@
   &__parent-label {
     font-weight: bold;
     color: $blue2;
-    margin-bottom: $aleph-grid-size/2;
+    margin-bottom: $aleph-grid-size * 0.5;
   }
 
   .ErrorSection {

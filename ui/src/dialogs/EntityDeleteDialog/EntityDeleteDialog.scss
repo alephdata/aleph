@@ -12,7 +12,7 @@
     padding: 0;
 
     &__item {
-      margin: $aleph-grid-size/2 0;
+      margin: $aleph-grid-size * 0.5 0;
       display: flex;
 
       &.deleted {
@@ -21,7 +21,7 @@
 
       &__icon {
         width: $aleph-grid-size * 2;
-        margin: 0 $aleph-grid-size/2;
+        margin: 0 $aleph-grid-size * 0.5;
       }
 
       .#{$bp-ns}-spinner {

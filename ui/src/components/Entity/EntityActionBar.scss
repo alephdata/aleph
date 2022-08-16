@@ -5,7 +5,7 @@ $search-bar-width: 200px;
 $status-width: 120px;
 
 .EntityActionBar {
-  margin-bottom: $aleph-content-padding/2;
+  margin-bottom: $aleph-content-padding * 0.5;
   width: 100%;
 
   .preview & {
@@ -14,7 +14,7 @@ $status-width: 120px;
 
   .#{$bp-ns}-control-group {
     justify-content: space-between;
-    padding-bottom: $aleph-content-padding/2;
+    padding-bottom: $aleph-content-padding * 0.5;
 
     .#{$bp-ns}-input-group {
       .#{$bp-ns}-input:not(:first-child) {
@@ -55,10 +55,15 @@ $status-width: 120px;
 
   &__overflow-list {
     .#{$bp-ns}-popover2-content {
-      padding: $aleph-grid-size/2 0;
+      padding: $aleph-grid-size * 0.5 0;
     }
     .Count {
-      @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+      @include rtlSupportInvertedProp(
+        margin,
+        left,
+        $aleph-grid-size * 0.5,
+        null
+      );
     }
   }
 
@@ -76,7 +81,7 @@ $status-width: 120px;
   }
 
   .Count {
-    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size * 0.5, null);
   }
 
   .#{$bp-ns}-button {

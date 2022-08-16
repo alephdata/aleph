@@ -14,8 +14,8 @@ $border-color: rgba(16, 22, 26, 0.15);
 
   &__close {
     position: absolute;
-    top: $table-editor-padding / 2;
-    right: $table-editor-padding / 2;
+    top: $table-editor-padding * 0.5;
+    right: $table-editor-padding * 0.5;
     z-index: 3;
   }
 

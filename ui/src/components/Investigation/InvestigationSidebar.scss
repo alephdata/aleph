@@ -31,7 +31,7 @@ $sidebar-padding: $aleph-grid-size * 2;
     @media screen and (min-width: 450px) and (max-width: $aleph-screen-sm-max-width) {
       display: flex;
       align-items: flex-start;
-      margin: -$aleph-content-padding/2;
+      margin: -$aleph-content-padding * 0.5;
     }
   }
 
@@ -48,7 +48,7 @@ $sidebar-padding: $aleph-grid-size * 2;
 
     @media screen and (min-width: 450px) and (max-width: $aleph-screen-sm-max-width) {
       width: 50%;
-      margin: $aleph-content-padding/2;
+      margin: $aleph-content-padding * 0.5;
     }
 
     &__title.#{$bp-ns}-heading {
