@@ -6,7 +6,7 @@
         "@alephdata/followthemoney": "2.9.7",
         "@alephdata/react-ftm": "2.6.8",
         "@blueprintjs/colors": "^3.0.0",
-        "@blueprintjs/core": "3.54.0",
+        "@blueprintjs/core": "4.1.0",
         "@blueprintjs/icons": "3.31.0",
         "@blueprintjs/popover2": "^0.12.1",
         "@blueprintjs/select": "3.19.1",
@@ -49,7 +49,6 @@
         "redux-act": "^1.7.4",
         "redux-thunk": "^2.3.0",
         "rehype-raw": "^6.0.0",
-        "sass": "1.54.4",
         "scss-tokenizer": "0.4.3",
         "stream": "npm:stream-browserify@^3.0.0",
         "truncate": "^3.0.0",
@@ -89,5 +88,8 @@
     "resolutions": {
         "css-select": "^3.1.1",
         "css-what": "^5.0.1"
+    },
+    "devDependencies": {
+        "sass": "1.54.4"
     }
 }

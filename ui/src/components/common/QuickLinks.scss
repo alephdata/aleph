@@ -27,7 +27,7 @@
       width: 100%;
       text-align: center;
       align-self: center;
-      padding: $aleph-grid-size/2 $aleph-grid-size;
+      padding: $aleph-grid-size*0.5 $aleph-grid-size;
 
       &:hover {
         background: white !important;

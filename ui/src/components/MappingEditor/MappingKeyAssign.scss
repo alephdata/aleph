@@ -60,7 +60,7 @@
 
     &__keyHelp {
       &__main {
-        margin-bottom: $aleph-grid-size/2;
+        margin-bottom: $aleph-grid-size*0.5;
       }
       &__toggle {
         font-weight: bold;
@@ -68,7 +68,7 @@
         @include rtlSupportInvertedProp(
           margin,
           left,
-          -$aleph-grid-size/2,
+          -$aleph-grid-size*0.5,
           null
         );
 

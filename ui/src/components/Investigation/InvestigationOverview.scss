@@ -4,10 +4,10 @@
 .InvestigationOverview {
   &__section {
     position: relative;
-    margin: $aleph-content-padding/2 0 $aleph-content-padding * 1.5;
+    margin: $aleph-content-padding*0.5 0 $aleph-content-padding * 1.5;
 
     &__title.bp3-heading {
-      margin-bottom: $aleph-content-padding/2;
+      margin-bottom: $aleph-content-padding*0.5;
       padding-bottom: $aleph-grid-size * 0.7;
       border-bottom: 1px solid $aleph-border-color;
     }
@@ -36,10 +36,10 @@
   &__guides {
     $guides-button-margin: 7px;
 
-    margin: 0 (-$guides-button-margin/2);
+    margin: 0 (-$guides-button-margin*0.5);
 
     .bp3-button {
-      margin: $guides-button-margin/2;
+      margin: $guides-button-margin*0.5;
       background-color: rgba($blue2, 0.09) !important;
       transition: background-color 0.05s ease-in-out;
 

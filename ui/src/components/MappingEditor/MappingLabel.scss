@@ -1,24 +1,21 @@
 @import 'app/variables.scss';
 @import 'app/mixins.scss';
-
 .MappingLabel {
-  font-weight: bold;
-  &__button,
-  &__input {
-    margin-top: -5px !important;
-    margin-left: -10px !important;
-  }
-
-  .bp3-button,
-  input,
-  .bp3-input-action,
-  .bp3-input-action .bp3-icon {
-    color: inherit !important;
-    font-weight: inherit !important;
-  }
-
-  input {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-  }
+    font-weight: bold;
+    &__button,
+    &__input {
+        margin-top: -5px !important;
+        margin-left: -10px !important;
+    }
+    .bp3-button,
+    input,
+    .bp3-input-action,
+    .bp3-input-action .bp3-icon {
+        color: inherit !important;
+        font-weight: inherit !important;
+    }
+    input {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+    }
 }

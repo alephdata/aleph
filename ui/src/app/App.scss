@@ -1,26 +1,12 @@
 // hack hack hack
 // https://github.com/palantir/blueprint/issues/2976#issuecomment-479231949
-$svg-icon-map: (
-  '16px/small-minus.svg':
-    "path fill-rule='evenodd' clip-rule='evenodd' d='M11 7H5c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1z' fill='%23fff'/",
-  '16px/small-tick.svg':
-    "path fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 0 0-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0 0 12 5z' fill='%23fff'/",
-  // '16px/chevron-right.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M10.71 7.29l-4-4a1.003 1.003 0 0 0-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 0 0 1.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z' fill='%235C7080'/",
-  '16px/chevron-right.svg':
-    "path fill-rule='evenodd' clip-rule='evenodd' d='M10.71 7.29l-4-4a1.003 1.003 0 0 0-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 0 0 1.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z' fill='%23ccc'/",
-  '16px/more.svg':
-    "g fill='%235C7080'%3E%3Ccircle cx='2' cy='8.03' r='2'/%3E%3Ccircle cx='14' cy='8.03' r='2'/%3E%3Ccircle cx='8' cy='8.03' r='2'/%3E%3C/g",
-);
-
+$svg-icon-map: ( '16px/small-minus.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M11 7H5c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1z' fill='%23fff'/", '16px/small-tick.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 0 0-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0 0 12 5z' fill='%23fff'/", // '16px/chevron-right.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M10.71 7.29l-4-4a1.003 1.003 0 0 0-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 0 0 1.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z' fill='%235C7080'/",
+'16px/chevron-right.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M10.71 7.29l-4-4a1.003 1.003 0 0 0-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 0 0 1.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z' fill='%23ccc'/", '16px/more.svg': "g fill='%235C7080'%3E%3Ccircle cx='2' cy='8.03' r='2'/%3E%3Ccircle cx='14' cy='8.03' r='2'/%3E%3Ccircle cx='8' cy='8.03' r='2'/%3E%3C/g", );
 @function svg-icon($inline-svg, $fill-color) {
-  @return url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3C" + map-get(
-      $svg-icon-map,
-      $inline-svg
-    ) + '%3E%3C/svg%3E');
+    @return url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3C"+map-get( $svg-icon-map, $inline-svg)+'%3E%3C/svg%3E');
 }
 
 $icon-font-path: '~@blueprintjs/icons/resources/icons';
-
 @import '~@blueprintjs/core/src/blueprint.scss';
 @import '~@blueprintjs/table/lib/css/table.css';
 @import '~@blueprintjs/icons/src/blueprint-icons.scss';
@@ -31,231 +17,219 @@ $icon-font-path: '~@blueprintjs/icons/resources/icons';
 @import './layouts.scss';
 @import './blueprint-overrides.scss';
 @import 'app/mixins.scss';
-
 html {
-  height: 100%;
+    height: 100%;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: $pt-font-family;
-  font-weight: 300;
-  font-size: $aleph-font-size;
-
-  display: flex;
-  flex-flow: column nowrap;
-  min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: $pt-font-family;
+    font-weight: 300;
+    font-size: $aleph-font-size;
+    display: flex;
+    flex-flow: column nowrap;
+    min-height: 100vh;
 }
 
 #root {
-  flex-grow: 1;
-  display: flex;
-  flex-flow: column nowrap;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column nowrap;
 }
 
 h1 {
-  font-size: $aleph-font-size * 1.7;
+    font-size: $aleph-font-size * 1.7;
 }
 
 h2 {
-  font-size: $aleph-font-size * 1.5;
-  margin-top: $aleph-grid-size * 2;
+    font-size: $aleph-font-size * 1.5;
+    margin-top: $aleph-grid-size * 2;
 }
 
 pre {
-  border: none;
-  background-color: inherit;
-  box-shadow: none;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
+    border: none;
+    background-color: inherit;
+    box-shadow: none;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 a {
-  color: $aleph-link-color;
+    color: $aleph-link-color;
 }
 
 .small-screen {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: ($aleph-grid-size * 2);
-
-  h1 {
-    line-height: inherit;
-  }
+    max-width: 400px;
+    margin: 0 auto;
+    padding: ($aleph-grid-size * 2);
+    h1 {
+        line-height: inherit;
+    }
 }
 
 .small-screen-outer {
-  display: table;
-  position: absolute;
-  height: 80%;
-  width: 100%;
+    display: table;
+    position: absolute;
+    height: 80%;
+    width: 100%;
 }
 
 .small-screen-inner {
-  display: table-cell;
-  vertical-align: middle;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 // Used to render failed imports, missing connections.
 .PartialError {
-  .bp3-non-ideal-state {
-    min-height: 30vh;
-  }
+    .bp4-non-ideal-state {
+        min-height: 30vh;
+    }
 }
 
 .text-muted {
-  color: $aleph-greyed-text;
+    color: $aleph-greyed-text;
 }
 
 .text-page-title {
-  font-size: 22px;
-  color: $dark-gray1;
-  margin: 0 0 $aleph-grid-size;
+    font-size: 22px;
+    color: $dark-gray1;
+    margin: 0 0 $aleph-grid-size;
 }
 
 .text-page-subtitle {
-  color: $dark-gray5;
-  line-height: 1.5;
-  clear: both;
-  max-width: 700px;
+    color: $dark-gray5;
+    line-height: 1.5;
+    clear: both;
+    max-width: 700px;
 }
 
 .text-markdown {
-  * {
-    font-size: inherit !important;
-    line-height: inherit !important;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: $aleph-grid-size 0 !important;
-    padding: $aleph-grid-size 0 !important;
-  }
-
-  p {
-    margin-bottom: $aleph-grid-size * 1.5 !important;
-  }
+    * {
+        font-size: inherit !important;
+        line-height: inherit !important;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: $aleph-grid-size 0 !important;
+        padding: $aleph-grid-size 0 !important;
+    }
+    p {
+        margin-bottom: $aleph-grid-size * 1.5 !important;
+    }
 }
 
 .error-text {
-  font-style: italic;
-  color: $red1;
+    font-style: italic;
+    color: $red1;
 }
 
 .clickable {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .info-tabs-padding {
-  width: 100%;
+    width: 100%;
 }
 
 .left-icon {
-  @include rtlSupportInvertedProp(
-    margin,
+    @include rtlSupportInvertedProp( margin,
     right,
     $aleph-icon-padding !important,
-    0
-  );
+    0);
 }
 
+
 /* This causes toasts to appear *below* the navbar instead of on top of it */
+
 .aleph-toaster {
-  margin-top: $aleph-grid-size * 5;
+    margin-top: $aleph-grid-size * 5;
 }
 
 .index {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .index-item {
-  padding: $aleph-grid-size * 2.5 0;
-  border-bottom: 1px solid $aleph-border-color;
-
-  &:last-child {
-    border: none;
-  }
-
-  &__title {
-    font-weight: bold;
-    margin-right: $aleph-grid-size * 3;
-    max-width: $aleph-content-width-limit;
-
-    &__text {
-      display: inline-flex;
+    padding: $aleph-grid-size * 2.5 0;
+    border-bottom: 1px solid $aleph-border-color;
+    &:last-child {
+        border: none;
     }
-  }
-
-  &__summary {
-    font-size: $pt-font-size;
-    margin-bottom: $aleph-grid-size;
-    max-width: $aleph-content-width-limit;
-  }
-
-  &__count {
-    @include rtl(float, right, left);
-    display: block;
-    margin-top: 2px;
-  }
-
-  &__details {
-    margin-bottom: 0;
-    color: $aleph-greyed-text;
-
-    .bp3-tag {
-      @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
+    &__title {
+        font-weight: bold;
+        margin-right: $aleph-grid-size * 3;
+        max-width: $aleph-content-width-limit;
+        &__text {
+            display: inline-flex;
+        }
     }
-
-    &__item {
-      display: inline-block;
-      min-width: 8em;
-      margin: $aleph-grid-size/2 0;
-      @include rtlSupportInvertedProp(margin, right, 2em, null);
-
-      .bp3-icon {
-        @include rtlSupportInvertedProp(
-          margin,
-          right,
-          $aleph-icon-padding,
-          null
-        );
-      }
-
-      .bp3-tag {
-        vertical-align: middle;
-      }
+    &__summary {
+        font-size: $pt-font-size;
+        margin-bottom: $aleph-grid-size;
+        max-width: $aleph-content-width-limit;
     }
-  }
+    &__count {
+        @include rtl(float,
+        right,
+        left);
+        display: block;
+        margin-top: 2px;
+    }
+    &__details {
+        margin-bottom: 0;
+        color: $aleph-greyed-text;
+        .bp4-tag {
+            @include rtlSupportInvertedProp(margin,
+            left,
+            $aleph-grid-size,
+            null);
+        }
+        &__item {
+            display: inline-block;
+            min-width: 8em;
+            margin: $aleph-grid-size*0.5 0;
+            @include rtlSupportInvertedProp(margin,
+            right,
+            2em,
+            null);
+            .bp4-icon {
+                @include rtlSupportInvertedProp( margin,
+                right,
+                $aleph-icon-padding,
+                null);
+            }
+            .bp4-tag {
+                vertical-align: middle;
+            }
+        }
+    }
 }
 
 //small screen
 @media screen and (max-width: $aleph-screen-sm-max-width) {
-  .visible-sm-block {
-    display: block !important;
-  }
-
-  .visible-sm-flex {
-    display: flex !important;
-  }
-
-  .visible-sm-none {
-    display: none !important;
-  }
+    .visible-sm-block {
+        display: block !important;
+    }
+    .visible-sm-flex {
+        display: flex !important;
+    }
+    .visible-sm-none {
+        display: none !important;
+    }
 }
 
 @media screen and (max-width: $aleph-screen-md-max-width) {
-  .visible-md-flex {
-    display: flex !important;
-  }
-
-  .visible-md-none {
-    display: none !important;
-  }
+    .visible-md-flex {
+        display: flex !important;
+    }
+    .visible-md-none {
+        display: none !important;
+    }
 }

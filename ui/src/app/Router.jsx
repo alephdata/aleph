@@ -57,7 +57,7 @@ class Router extends Component {
     const Loading = (
       <div className="RouterLoading">
         <div className="spinner">
-          <Spinner className="bp3-large" />
+          <Spinner className="bp4-large" />
         </div>
       </div>
     );

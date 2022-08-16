@@ -4,14 +4,14 @@
 .CollectionMetadataPanel {
   display: flex;
   flex-flow: row wrap;
-  margin: -$aleph-content-padding/2;
+  margin: -$aleph-content-padding*0.5;
 
   &__item {
     padding: $aleph-grid-size * 1.5;
     background: $light-gray5;
     border-radius: 5px;
     flex: 1 1 auto;
-    margin: $aleph-content-padding/2;
+    margin: $aleph-content-padding*0.5;
 
     @media screen and (min-width: $aleph-screen-md-max-width) {
       max-width: $aleph-investigation-sidebar-width - $aleph-content-padding;

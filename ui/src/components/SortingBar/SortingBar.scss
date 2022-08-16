@@ -1,44 +1,38 @@
 @import 'app/variables.scss';
 @import 'app/mixins.scss';
-
 $font-size: 13px;
-
 .SortingBar {
-  position: relative;
-  white-space: nowrap;
-  @include rtl(text-align, right, left) &__item {
-    display: inline-block;
-    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
-
-    &__popover {
-      font-size: $font-size;
+    position: relative;
+    white-space: nowrap;
+    @include rtl(text-align, right, left);
+    &__item {
+        display: inline-block;
+        @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
+        &__popover {
+            font-size: $font-size;
+        }
     }
-  }
-
-  &__label,
-  &__control {
-    display: inline-block !important;
-  }
-
-  &__label {
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size/2, null);
-    font-size: $font-size;
-  }
-  &__control {
-    .bp3-button {
-      color: $blue2 !important;
-      border-bottom: 1px solid $aleph-border-color;
-      border-radius: 0;
-      font-size: $font-size;
-
-      &:hover {
-        background: $aleph-breadcrumbs-background !important;
-      }
-
-      svg {
-        height: 14px;
-        width: 14px;
-      }
+    &__label,
+    &__control {
+        display: inline-block !important;
     }
-  }
+    &__label {
+        @include rtlSupportInvertedProp(margin, right, $aleph-grid-size*0.5, null);
+        font-size: $font-size;
+    }
+    &__control {
+        .bp3-button {
+            color: $blue2 !important;
+            border-bottom: 1px solid $aleph-border-color;
+            border-radius: 0;
+            font-size: $font-size;
+            &:hover {
+                background: $aleph-breadcrumbs-background !important;
+            }
+            svg {
+                height: 14px;
+                width: 14px;
+            }
+        }
+    }
 }

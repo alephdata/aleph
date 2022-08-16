@@ -2,7 +2,7 @@
 @import 'app/mixins.scss';
 
 .TimelineItemMenu {
-  padding: $aleph-grid-size/2;
+  padding: $aleph-grid-size*0.5;
 
   &__hidden-input {
     position: absolute;

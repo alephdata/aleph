@@ -51,9 +51,9 @@
 
     & > .ClearButton {
       position: absolute;
-      top: $aleph-grid-size/2;
-      @include rtl(right, $aleph-grid-size/2, null);
-      @include rtl(left, null, $aleph-grid-size/2);
+      top: $aleph-grid-size*0.5;
+      @include rtl(right, $aleph-grid-size*0.5, null);
+      @include rtl(left, null, $aleph-grid-size*0.5);
 
       &a:hover {
         // Element is on a background (set by .clickable), so invert its own background.

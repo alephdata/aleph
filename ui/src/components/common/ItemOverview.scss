@@ -65,7 +65,7 @@
 
       .preview &:first-child {
         padding-top: 0;
-        margin-top: $aleph-grid-size/2;
+        margin-top: $aleph-grid-size*0.5;
       }
 
       &:last-child {

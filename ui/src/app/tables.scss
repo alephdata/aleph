@@ -1,243 +1,211 @@
-@import '~@blueprintjs/core/src/blueprint.scss';
+@use "sass:math";
+// @import '@blueprintjs/core/src/blueprint.scss';
 @import './variables.scss';
 @import 'app/mixins.scss';
-
 // Column & row customisation for any tables.
 table {
-  // Force a table-row to be a single line, truncating contents of large cells.
-  tr.nowrap > td,
-  td.nowrap,
-  tr.nowrap > th {
-    max-width: 0; // somehow, this seems to make keep column widths in check.
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-
-    &.expand {
-      width: 2em;
-      max-width: 2em;
-      overflow: visible;
-      @include rtlSupportInvertedProp(padding, left, 0, null);
-      padding-top: ($aleph-grid-size / 1.2);
-      .bp3-button {
-        @include rtlSupportInvertedProp(margin, left, 0, null);
-      }
+    // Force a table-row to be a single line, truncating contents of large cells.
+    tr.nowrap>td,
+    td.nowrap,
+    tr.nowrap>th {
+        max-width: 0; // somehow, this seems to make keep column widths in check.
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        &.expand {
+            width: 2em;
+            max-width: 2em;
+            overflow: visible;
+            @include rtlSupportInvertedProp(padding, left, 0, null);
+            padding-top: math.div($aleph-grid-size, 1.2);
+            .bp4-button {
+                @include rtlSupportInvertedProp(margin, left, 0, null);
+            }
+        }
     }
-  }
-
-  tr.skeleton > td {
-    text-overflow: clip;
-  }
-
-  // Make these columns take the minimal width that fits the content
-  tr td.dates {
-    width: 1%;
-    white-space: nowrap;
-    overflow: visible;
-    max-width: unset !important;
-    text-overflow: unset;
-  }
-
-  tr td.select {
-    width: 1%;
-    white-space: nowrap;
-    overflow: visible;
-    min-width: $aleph-grid-size * 2;
-    text-overflow: unset;
-
-    .bp3-control {
-      padding-left: 0;
+    tr.skeleton>td {
+        text-overflow: clip;
     }
-  }
-
-  tr td.fileSize {
-    width: 10%;
-    white-space: nowrap;
-    overflow: visible;
-    max-width: unset;
-    text-overflow: unset;
-    @include rtl(text-align, right, left);
-  }
-
-  tr.active {
-    background-color: $aleph-theme-intent;
-    color: white;
-
-    td {
-      background-color: $aleph-theme-intent;
-      color: white;
-
-      a,
-      a:link,
-      a:visited,
-      a:hover,
-      a:active {
+    // Make these columns take the minimal width that fits the content
+    tr td.dates {
+        width: 1%;
+        white-space: nowrap;
+        overflow: visible;
+        max-width: unset !important;
+        text-overflow: unset;
+    }
+    tr td.select {
+        width: 1%;
+        white-space: nowrap;
+        overflow: visible;
+        min-width: $aleph-grid-size * 2;
+        text-overflow: unset;
+        .bp4-control {
+            padding-left: 0;
+        }
+    }
+    tr td.fileSize {
+        width: 10%;
+        white-space: nowrap;
+        overflow: visible;
+        max-width: unset;
+        text-overflow: unset;
+        @include rtl(text-align, right, left);
+    }
+    tr.active {
+        background-color: $aleph-theme-intent;
         color: white;
-      }
+        td {
+            background-color: $aleph-theme-intent;
+            color: white;
+            a,
+            a:link,
+            a:visited,
+            a:hover,
+            a:active {
+                color: white;
+            }
+        }
     }
-  }
-
-  th.wide,
-  td.wide {
-    width: 40%;
-    max-width: unset;
-  }
-
-  th.narrow,
-  td.narrow {
-    width: 1%;
-    max-width: unset;
-  }
-
-  td.entity,
-  td.caption {
-    font-weight: bold;
-    max-width: unset;
-    white-space: normal !important;
-    word-break: break-word;
-
-    .bp3-skeleton {
-      white-space: nowrap;
+    th.wide,
+    td.wide {
+        width: 40%;
+        max-width: unset;
     }
-
-    .EntityLabel,
-    .EntityLink {
-      display: flex !important;
+    th.narrow,
+    td.narrow {
+        width: 1%;
+        max-width: unset;
     }
-    .Transliterate {
-      display: inline !important;
+    td.entity,
+    td.caption {
+        font-weight: bold;
+        max-width: unset;
+        white-space: normal !important;
+        word-break: break-word;
+        .bp4-skeleton {
+            white-space: nowrap;
+        }
+        .EntityLabel,
+        .EntityLink {
+            display: flex !important;
+        }
+        .Transliterate {
+            display: inline !important;
+        }
     }
-  }
-
-  td.collection_id {
-    .CollectionLabel {
-      display: flex !important;
+    td.collection_id {
+        .CollectionLabel {
+            display: flex !important;
+        }
     }
-  }
-
-  tr.prefix {
-    td {
-      border-bottom: 0px !important;
-      padding-bottom: 0;
+    tr.prefix {
+        td {
+            border-bottom: 0px !important;
+            padding-bottom: 0;
+        }
     }
-  }
-
-  th.numeric,
-  td.numeric,
-  th.number,
-  td.number {
-    width: 1%;
-    white-space: nowrap;
-    overflow: visible;
-    max-width: unset !important;
-    text-overflow: unset;
-    font-variant-numeric: tabular-nums;
-
-    // Float on the right, so that numbers overflow to the left.
-    // (FormattedNumber creates a <span>)
-    span {
-      &.Numeric {
-        @include rtl(float, right, left);
-      }
+    th.numeric,
+    td.numeric,
+    th.number,
+    td.number {
+        width: 1%;
+        white-space: nowrap;
+        overflow: visible;
+        max-width: unset !important;
+        text-overflow: unset;
+        font-variant-numeric: tabular-nums;
+        // Float on the right, so that numbers overflow to the left.
+        // (FormattedNumber creates a <span>)
+        span {
+            &.Numeric {
+                @include rtl(float, right, left);
+            }
+        }
     }
-  }
 }
 
 // Tables as normally used in ContentPane
 table.data-table {
-  @extend .bp3-html-table;
-  width: 100%;
-
-  &.pending > tbody {
-    opacity: 0.5;
-  }
-
-  td {
-    border-bottom: 1px solid $aleph-table-border-color;
-  }
-
-  th,
-  th:hover {
-    white-space: nowrap;
-    background: $aleph-table-heading-background;
-  }
-
-  tbody tr:first-child td {
-    box-shadow: inset 0 $table-border-width 0 0 $aleph-table-border-color;
-  }
+    @extend .bp4-html-table;
+    width: 100%;
+    &.pending>tbody {
+        opacity: 0.5;
+    }
+    td {
+        border-bottom: 1px solid $aleph-table-border-color;
+    }
+    th,
+    th:hover {
+        white-space: nowrap;
+        background: $aleph-table-heading-background;
+    }
+    tbody tr:first-child td {
+        box-shadow: inset 0 $table-border-width 0 0 $aleph-table-border-color;
+    }
 }
 
 table.settings-table {
-  @extend .data-table;
-
-  th {
-    background-color: $aleph-facet-background !important;
-  }
+    @extend .data-table;
+    th {
+        background-color: $aleph-facet-background !important;
+    }
 }
 
 // Two-column 'tables' as normally used in InfoPane
 ul.info-sheet,
 ul.info-rank {
-  padding: 0;
-  list-style: none;
-
-  li {
-    display: flex;
-
-    .key,
-    .value {
-      overflow: hidden;
-      word-wrap: break-word;
+    padding: 0;
+    list-style: none;
+    li {
+        display: flex;
+        .key,
+        .value {
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+        .key {
+            @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
+        }
+        .value {
+            font-variant-numeric: tabular-nums;
+            line-height: 1.5;
+        }
     }
-
-    .key {
-      @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
-    }
-
-    .value {
-      font-variant-numeric: tabular-nums;
-      line-height: 1.5;
-    }
-  }
 }
 
 ul.info-sheet {
-  li {
-    flex-direction: row;
-    padding-bottom: $aleph-grid-size * 1.5;
-
-    &.tight {
-      padding-bottom: 0;
+    li {
+        flex-direction: row;
+        padding-bottom: $aleph-grid-size * 1.5;
+        &.tight {
+            padding-bottom: 0;
+        }
+        .key {
+            color: $aleph-greyed-text;
+            // font-size: $pt-font-size-small;
+            width: 30%;
+        }
+        .value {
+            width: 70%;
+        }
     }
-
-    .key {
-      color: $aleph-greyed-text;
-      // font-size: $pt-font-size-small;
-      width: 30%;
-    }
-
-    .value {
-      width: 70%;
-    }
-  }
 }
 
 ul.info-rank li {
-  flex-flow: row nowrap;
-  width: 100%;
-  padding-bottom: $aleph-grid-size;
-
-  // Ensure things stay on a single line, truncating the key if needed.
-  .category {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .count {
-    white-space: nowrap;
-    overflow: visible;
-    color: $aleph-greyed-text;
-    @include rtlSupportInvertedProp(margin, left, auto, null); // = align right
-  }
+    flex-flow: row nowrap;
+    width: 100%;
+    padding-bottom: $aleph-grid-size;
+    // Ensure things stay on a single line, truncating the key if needed.
+    .category {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .count {
+        white-space: nowrap;
+        overflow: visible;
+        color: $aleph-greyed-text;
+        @include rtlSupportInvertedProp(margin, left, auto, null); // = align right
+    }
 }

@@ -45,7 +45,7 @@ class Translator extends React.Component {
     const { isPending } = this.state;
 
     if (isPending) {
-      return <SectionLoading className="bp3-large" />;
+      return <SectionLoading className="bp4-large" />;
     }
 
     //  override arabic locale to marocan version
