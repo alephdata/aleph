@@ -12,6 +12,7 @@ COPY .npmrc /alephui/.npmrc
 COPY .prettierrc /alephui/.prettierrc
 COPY tsconfig.json /alephui/tsconfig.json
 COPY package.json /alephui
+COPY craco.config.js /alephui
 
 RUN npm install
 RUN cp -R /alephui/node_modules/ /node_modules
