@@ -15,6 +15,7 @@ ui/package-lock.json
 ui/i18n/messages.json
 ui/i18n/messages.pot
 ui/**/*.css
+ui/.dc*
 
 services/elasticsearch/secrets
 

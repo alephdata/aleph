@@ -24,7 +24,6 @@
         "buffer": "^6.0.3",
         "classnames": "^2.2.6",
         "crypto": "npm:crypto-browserify@^3.12.0",
-        "css-select": "^4.1.3",
         "http-proxy-middleware": "^2.0.0",
         "js-file-download": "^0.4.9",
         "lodash": "^4.17.11",
@@ -86,5 +85,9 @@
             "last 5 firefox version",
             "last 5 safari version"
         ]
+    },
+    "resolutions": {
+        "css-select": "^3.1.1",
+        "css-what": "^5.0.1"
     }
 }
