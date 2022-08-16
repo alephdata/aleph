@@ -23,7 +23,12 @@ $font-size: 13px;
   }
 
   &__label {
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size/2, null);
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $aleph-grid-size * 0.5,
+      null
+    );
     font-size: $font-size;
   }
   &__control {

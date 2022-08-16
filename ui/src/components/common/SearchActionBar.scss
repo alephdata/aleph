@@ -11,7 +11,7 @@
     @include rtlSupportInvertedProp(
       margin,
       right,
-      $aleph-grid-size/2 !important,
+      $aleph-grid-size * 0.5 !important,
       null
     );
   }

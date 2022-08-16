@@ -32,7 +32,7 @@
   }
 
   .#{$bp-ns}-drawer-header .#{$bp-ns}-heading {
-    margin-right: $aleph-grid-size/2 !important;
+    margin-right: $aleph-grid-size * 0.5 !important;
   }
 
   &__header {
@@ -41,7 +41,7 @@
     align-items: center;
 
     &__close {
-      margin-left: $aleph-grid-size/2;
+      margin-left: $aleph-grid-size * 0.5;
     }
   }
 }

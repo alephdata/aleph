@@ -3,7 +3,7 @@
 
 .EntitySetSelectorSection {
   &__title-container {
-    margin-bottom: $aleph-grid-size/2;
+    margin-bottom: $aleph-grid-size * 0.5;
   }
 
   &__title {
@@ -11,7 +11,7 @@
       justify-content: flex-start;
       background-color: $aleph-breadcrumbs-background !important;
     }
-    padding: $aleph-grid-size/2;
+    padding: $aleph-grid-size * 0.5;
     position: relative;
 
     .#{$bp-ns}-heading {

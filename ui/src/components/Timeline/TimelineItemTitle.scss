@@ -31,7 +31,7 @@
     display: inline-flex;
     align-self: center;
     align-items: center;
-    padding: 0 $aleph-grid-size/2;
+    padding: 0 $aleph-grid-size * 0.5;
     flex-grow: 1;
     flex-wrap: wrap;
 
