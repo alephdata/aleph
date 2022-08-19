@@ -140,6 +140,17 @@ class SearchQueryParser(QueryParser):
         self.highlight_length = self.getint("highlight_length", 120)
         # Number of snippets per document, 0 = return full document text.
         self.highlight_count = self.getint("highlight_count", 3)
+        # By default, the maximum number of characters analyzed for a highlight
+        # request is bounded by the value defined in the
+        # index.highlight.max_analyzed_offset setting (1000000 by default),
+        # and when the number of characters exceeds this limit an error is
+        # returned. By setting `max_analyzed_offset` to a non-negative value
+        # lower than `index.highlight.max_analyzed_offset`, the highlighting
+        # stops at this defined maximum limit, and the rest of the text is not
+        # processed, thus not highlighted and no error is returned.
+        self.max_highlight_analyzed_offset = self.getint(
+            "max_highlight_analyzed_offset", 999999
+        )
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""
