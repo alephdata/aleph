@@ -2,14 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Alignment, ButtonGroup, Button, Classes } from '@blueprintjs/core';
+import { MenuDivider } from '@blueprintjs/core';
 import queryString from 'query-string';
-import c from 'classnames';
 
 import withRouter from 'app/withRouter';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { SchemaCounts } from 'components/common';
+import { LinkMenuItem, SchemaCounts } from 'components/common';
 import InvestigationHeading from 'components/Investigation/InvestigationHeading';
 
 import './InvestigationSidebar.scss';
@@ -17,41 +16,32 @@ import './InvestigationSidebar.scss';
 class InvestigationSidebar extends React.Component {
   constructor(props) {
     super(props);
-    this.navigate = this.navigate.bind(this);
+    this.getLink = this.getLink.bind(this);
+    this.getEntitiesLink = this.getEntitiesLink.bind(this);
+    this.onSchemaSelect = this.onSchemaSelect.bind(this);
   }
 
-  navigate(mode, type) {
-    const { navigate, location } = this.props;
+  getLink(mode, type) {
+    const { location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.mode = mode;
     parsedHash.type = type || undefined;
-    navigate({
-      pathname: location.pathname,
-      hash: queryString.stringify(parsedHash),
-    });
+
+    return `${location.pathname}#${queryString.stringify(parsedHash)}`;
   }
 
-  renderButton = (id) => {
-    const { activeMode, collection } = this.props;
+  getEntitiesLink(schema) {
+    return this.getLink('entities', schema);
+  }
 
-    return (
-      <Button
-        key={id}
-        icon={<CollectionView.Icon id={id} />}
-        text={<CollectionView.Label id={id} isCasefile />}
-        rightIcon={
-          <CollectionView.Count id={id} collectionId={collection.id} />
-        }
-        onClick={() => this.navigate(id)}
-        active={activeMode === id}
-        alignText={Alignment.LEFT}
-        fill
-      />
-    );
-  };
+  onSchemaSelect(schema) {
+    const { navigate } = this.props;
+    navigate(this.getEntitiesLink(schema));
+  }
 
   render() {
     const { collection, activeMode, activeType, schemaCounts } = this.props;
+    const { navigate } = this.props;
 
     const entityTools = [
       collectionViewIds.DIAGRAMS,
@@ -68,57 +58,70 @@ class InvestigationSidebar extends React.Component {
     return (
       <div className="InvestigationSidebar">
         <InvestigationHeading collection={collection} activeMode={activeMode} />
-        <div className="InvestigationSidebar__content">
-          <div className="InvestigationSidebar__section">
-            <h6
-              className={c(
-                Classes.HEADING,
-                'InvestigationSidebar__section__title'
-              )}
-            >
-              <FormattedMessage
-                id="collection.info.entities"
-                defaultMessage="Entities"
+        <ul className="InvestigationSidebar__content">
+          <li className="InvestigationSidebar__section">
+            <MenuDivider
+              className="InvestigationSidebar__section__title"
+              title={
+                <FormattedMessage
+                  id="collection.info.entities"
+                  defaultMessage="Entities"
+                />
+              }
+            />
+            <SchemaCounts
+              filterSchemata={(schema) => !schema.isDocument()}
+              schemaCounts={schemaCounts}
+              link={this.getEntitiesLink}
+              onSelect={this.onSchemaSelect}
+              showSchemaAdd={collection.writeable}
+              activeSchema={activeType}
+            />
+
+            {entityTools.map((toolId) => (
+              <LinkMenuItem
+                key={toolId}
+                icon={<CollectionView.Icon id={toolId} />}
+                text={<CollectionView.Label id={toolId} isCasefile />}
+                label={
+                  <CollectionView.Count
+                    id={toolId}
+                    collectionId={collection.id}
+                  />
+                }
+                to={this.getLink(toolId)}
+                active={activeMode === toolId}
               />
-            </h6>
-            <ButtonGroup
-              vertical
-              minimal
-              fill
-              className="InvestigationSidebar__section__menu"
-            >
-              <SchemaCounts
-                filterSchemata={(schema) => !schema.isDocument()}
-                schemaCounts={schemaCounts}
-                onSelect={(schema) => this.navigate('entities', schema)}
-                showSchemaAdd={collection.writeable}
-                activeSchema={activeType}
+            ))}
+          </li>
+
+          <li className="InvestigationSidebar__section">
+            <MenuDivider
+              className="InvestigationSidebar__section__title"
+              title={
+                <FormattedMessage
+                  id="collection.info.documents"
+                  defaultMessage="Documents"
+                />
+              }
+            />
+            {docTools.map((toolId) => (
+              <LinkMenuItem
+                key={toolId}
+                icon={<CollectionView.Icon id={toolId} />}
+                text={<CollectionView.Label id={toolId} isCasefile />}
+                label={
+                  <CollectionView.Count
+                    id={toolId}
+                    collectionId={collection.id}
+                  />
+                }
+                to={this.getLink(toolId)}
+                active={activeMode === toolId}
               />
-              {entityTools.map(this.renderButton)}
-            </ButtonGroup>
-          </div>
-          <div className="InvestigationSidebar__section">
-            <h6
-              className={c(
-                Classes.HEADING,
-                'InvestigationSidebar__section__title'
-              )}
-            >
-              <FormattedMessage
-                id="collection.info.documents"
-                defaultMessage="Documents"
-              />
-            </h6>
-            <ButtonGroup
-              vertical
-              minimal
-              fill
-              className="InvestigationSidebar__section__menu"
-            >
-              {docTools.map(this.renderButton)}
-            </ButtonGroup>
-          </div>
-        </div>
+            ))}
+          </li>
+        </ul>
       </div>
     );
   }
