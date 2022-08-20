@@ -1,16 +1,16 @@
 @import 'app/variables.scss';
 
 .SchemaCounts {
-  border-radius: 5px;
+  border-radius: $pt-border-radius;
   border: 1px solid $aleph-border-color;
   background: white;
 
-  .#{$bp-ns}-divider {
-    border-bottom: 1px dashed $aleph-border-color;
-    margin: 3px;
+  &.#{$bp-ns}-menu {
+    padding: 0;
   }
 
-  .#{$bp-ns}-popover-target > div {
-    width: 100%;
+  .#{$bp-ns}-divider {
+    border-bottom: 1px dashed $aleph-border-color;
+    margin: 0.5 * $aleph-grid-size;
   }
 }

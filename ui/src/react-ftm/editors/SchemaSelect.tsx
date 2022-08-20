@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { MenuItem } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
+import { MenuItem2 } from '@blueprintjs/popover2';
+import { Select2 } from '@blueprintjs/select';
 import { Model, Schema as FTMSchema } from '@alephdata/followthemoney';
 import { Schema } from 'react-ftm/types';
 
@@ -10,13 +10,13 @@ interface ISelectSchemaProps {
   optionsFilter?: (schema: FTMSchema) => boolean;
 }
 
-const TypedSelect = Select.ofType<FTMSchema>();
+const TypedSelect = Select2.ofType<FTMSchema>();
 
 const itemRenderer = (
   schema: FTMSchema,
   { handleClick }: { handleClick: any }
 ) => (
-  <MenuItem
+  <MenuItem2
     key={schema.name}
     text={<Schema.Label schema={schema} icon />}
     onClick={handleClick}
@@ -43,8 +43,9 @@ class SchemaSelect extends React.PureComponent<ISelectSchemaProps> {
         filterable={false}
         itemRenderer={itemRenderer}
         onItemSelect={onSelect}
-        popoverProps={{ minimal: true }}
+        popoverProps={{ minimal: true, matchTargetWidth: true }}
         className="SchemaSelect"
+        fill
       >
         {this.props.children}
       </TypedSelect>

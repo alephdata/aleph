@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import React from 'react';
-import { Alignment, ButtonGroup, Divider, Button } from '@blueprintjs/core';
+import { Alignment, Menu, Divider, Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import withRouter from 'app/withRouter';
-import { Count, Schema } from 'components/common';
+import { Count, Schema, LinkMenuItem } from 'components/common';
 import { selectModel } from 'selectors';
 
 import './SchemaCounts.scss';
@@ -26,6 +26,7 @@ class SchemaCounts extends React.PureComponent {
       selectableSchemata,
       showSchemaAdd,
       intl,
+      link,
       onSelect,
     } = this.props;
     const hasVisibleSchemata = _.size(visibleCounts) > 0;
@@ -35,23 +36,21 @@ class SchemaCounts extends React.PureComponent {
     }
 
     return (
-      <ButtonGroup vertical minimal className="SchemaCounts">
+      <Menu className="SchemaCounts">
         {Object.keys(visibleCounts).map((schema) => (
-          <Button
+          <LinkMenuItem
             key={schema}
             text={<Schema.Label schema={schema} plural />}
             icon={<Schema.Icon schema={schema} />}
-            rightIcon={<Count count={visibleCounts[schema]} />}
-            onClick={() => onSelect(schema)}
+            label={<Count count={visibleCounts[schema]} />}
+            to={link(schema)}
             active={activeSchema === schema}
-            alignText={Alignment.LEFT}
-            fill
           />
         ))}
         {hasVisibleSchemata && showSchemaAdd && <Divider />}
         {showSchemaAdd && (
           <Schema.Select
-            onSelect={(schema) => onSelect(schema)}
+            onSelect={onSelect}
             fill
             optionsFilter={(schema) =>
               selectableSchemata.indexOf(schema.name) !== -1
@@ -63,10 +62,11 @@ class SchemaCounts extends React.PureComponent {
               rightIcon="chevron-down"
               alignText={Alignment.LEFT}
               fill
+              minimal
             />
           </Schema.Select>
         )}
-      </ButtonGroup>
+      </Menu>
     );
   }
 }

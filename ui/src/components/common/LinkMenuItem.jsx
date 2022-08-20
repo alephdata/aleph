@@ -1,4 +1,4 @@
-import { MenuItem } from '@blueprintjs/core';
+import { MenuItem2 as MenuItem } from '@blueprintjs/popover2';
 import { useLinkClickHandler, useHref } from 'react-router-dom';
 
 export default function LinkMenuItem({ to, ...props }) {

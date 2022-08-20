@@ -8,7 +8,7 @@ $inner-padding: 15px;
   transition: all $transition-duration ease-in-out;
   overflow: hidden;
   max-height: none;
-  border-radius: 5px;
+  border-radius: $aleph-border-radius;
   margin-bottom: $aleph-content-padding;
 
   &__inner-container {
