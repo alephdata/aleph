@@ -132,13 +132,13 @@ export default class Breadcrumbs extends Component {
   renderOperations() {
     const { operation, search, status } = this.props;
     return (
-      <ControlGroup>
+      <>
         {status}
         {status && search && <Divider />}
         {search}
         {search && operation && <Divider />}
         {operation}
-      </ControlGroup>
+      </>
     );
   }
 
