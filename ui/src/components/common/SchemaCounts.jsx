@@ -19,16 +19,18 @@ const messages = defineMessages({
 });
 
 class SchemaCounts extends React.PureComponent {
+  constructor() {
+    super();
+    this.schemaFilter = this.schemaFilter.bind(this);
+  }
+
+  schemaFilter(schema) {
+    return this.props.selectableSchemata.includes(schema.name);
+  }
+
   render() {
-    const {
-      activeSchema,
-      visibleCounts,
-      selectableSchemata,
-      showSchemaAdd,
-      intl,
-      link,
-      onSelect,
-    } = this.props;
+    const { activeSchema, visibleCounts, showSchemaAdd, intl, link, onSelect } =
+      this.props;
     const hasVisibleSchemata = _.size(visibleCounts) > 0;
 
     if (!hasVisibleSchemata && !showSchemaAdd) {
@@ -52,9 +54,7 @@ class SchemaCounts extends React.PureComponent {
           <Schema.Select
             onSelect={onSelect}
             fill
-            optionsFilter={(schema) =>
-              selectableSchemata.indexOf(schema.name) !== -1
-            }
+            optionsFilter={this.schemaFilter}
           >
             <Button
               text={intl.formatMessage(messages.addSchemaPlaceholder)}
