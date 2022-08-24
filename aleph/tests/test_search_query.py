@@ -133,6 +133,7 @@ class QueryTestCase(TestCase):
                         "require_field_match": False,
                         "number_of_fragments": 3,
                         "fragment_size": 120,
+                        "max_analyzed_offset": 999999,
                     },
                 },
             },
