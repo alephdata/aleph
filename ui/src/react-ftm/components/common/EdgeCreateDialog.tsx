@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { injectIntl, defineMessages, WrappedComponentProps } from 'react-intl';
 import { FormGroup, Intent, Button, Classes } from '@blueprintjs/core';
-import { Entity, Schema } from '@alephdata/followthemoney';
+import { Entity, Schema, Values } from '@alephdata/followthemoney';
 
 import { EdgeTypeSelect, EntitySelect } from 'react-ftm/editors';
 import { EdgeType } from 'react-ftm/types';
@@ -248,9 +248,13 @@ class UnwrappedEdgeCreateDialog extends React.Component<
                   helperText={this.getSourceLabel()}
                 >
                   <EntitySelect
-                    onSubmit={(selected: Array<Entity>) =>
-                      this.onSelectSource(selected?.[0])
-                    }
+                    onSubmit={(selected: Values) => {
+                      if (!(selected?.[0] instanceof Entity)) {
+                        return;
+                      }
+
+                      this.onSelectSource(selected?.[0]);
+                    }}
                     values={source ? [source] : []}
                     allowMultiple={false}
                     isFetching={sourceSuggestions.isPending}
@@ -294,9 +298,13 @@ class UnwrappedEdgeCreateDialog extends React.Component<
                   helperText={this.getTargetLabel()}
                 >
                   <EntitySelect
-                    onSubmit={(selected: Array<Entity>) =>
-                      this.onSelectTarget(selected?.[0])
-                    }
+                    onSubmit={(selected: Values) => {
+                      if (!(selected?.[0] instanceof Entity)) {
+                        return;
+                      }
+
+                      this.onSelectTarget(selected?.[0]);
+                    }}
                     values={target ? [target] : []}
                     allowMultiple={false}
                     isFetching={targetSuggestions.isPending}

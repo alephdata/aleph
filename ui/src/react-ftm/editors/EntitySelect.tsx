@@ -3,6 +3,7 @@ import { defineMessages, injectIntl, WrappedComponentProps } from 'react-intl';
 import {
   defaultModel,
   Entity as FTMEntity,
+  Schema as FTMSchema,
   Model,
 } from '@alephdata/followthemoney';
 import { Entity, Schema } from 'react-ftm/types';
@@ -46,7 +47,7 @@ interface IEntityTypeProps extends ITypeEditorProps, WrappedComponentProps {
   isFetching: boolean;
   onQueryChange: (query: string) => void;
   createNewReferencedEntity?: (entityData: any) => Promise<FTMEntity>;
-  referencedEntityRange?: string;
+  referencedEntityRange?: FTMSchema;
   noResultsText?: string;
   buttonProps?: any;
   model?: Model;

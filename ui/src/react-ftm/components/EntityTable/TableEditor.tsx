@@ -61,8 +61,8 @@ interface ITableEditorProps extends IEntityTableCommonProps {
   schema: FTMSchema;
   sort: SortType | null;
   sortColumn: (field: string) => void;
-  selection: Array<string>;
-  updateSelection: (entityIds: Array<string>, newVal: boolean) => void;
+  selection?: Array<string>;
+  updateSelection?: (entityIds: Array<string>, newVal: boolean) => void;
   fetchEntitySuggestions: (
     queryText: string,
     schemata?: Array<FTMSchema>
@@ -300,7 +300,7 @@ class TableEditorBase extends React.Component<
 
   getCheckboxCell = (entity: FTMEntity) => {
     const { selection } = this.props;
-    const isSelected = selection.indexOf(entity.id) > -1;
+    const isSelected = selection && selection.indexOf(entity.id) > -1;
     return { ...getCellBase('checkbox'), data: { entity, isSelected } };
   };
 
@@ -576,7 +576,13 @@ class TableEditorBase extends React.Component<
             }
           }
 
-          this.props.updateSelection(newSelection || [entity.id], !isSelected);
+          if (this.props.updateSelection) {
+            this.props.updateSelection(
+              newSelection || [entity.id],
+              !isSelected
+            );
+          }
+
           this.setState({ lastSelected: entity.id });
         }}
       />

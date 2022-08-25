@@ -1,32 +1,13 @@
-import { withTranslator } from 'react-ftm/utils';
-
-import ColorPickerBase from './ColorPicker';
-import EdgeTypeSelect from './EdgeTypeSelect';
-import EntitySelectBase from './EntitySelect';
-import EnumValueSelectBase from './EnumValueSelect';
-import PropertyEditorBase from './PropertyEditor';
-import PropertySelectBase from './PropertySelect';
-import RadiusPicker from './RadiusPicker';
-import SchemaSelect from './SchemaSelect';
-import TextEditBase from './TextEdit';
-
-const EntitySelect = withTranslator(EntitySelectBase);
-const EnumValueSelect = withTranslator(EnumValueSelectBase);
-const PropertyEditor = withTranslator(PropertyEditorBase);
-const PropertySelect = withTranslator(PropertySelectBase);
-const TextEdit = withTranslator(TextEditBase);
-const ColorPicker = withTranslator(ColorPickerBase);
-
+export { default as ColorPicker } from './ColorPicker';
+export { default as EdgeTypeSelect } from './EdgeTypeSelect';
+export { default as EntitySelect } from './EntitySelect';
 export {
-  ColorPicker,
-  EdgeTypeSelect,
-  EntitySelect,
-  EnumValueSelect as CountrySelect,
-  EnumValueSelect as LanguageSelect,
-  EnumValueSelect as TopicSelect,
-  PropertyEditor,
-  PropertySelect,
-  RadiusPicker,
-  SchemaSelect,
-  TextEdit,
-};
+  default as CountrySelect,
+  default as LanguageSelect,
+  default as TopicSelect,
+} from './EnumValueSelect';
+export { default as PropertyEditor } from './PropertyEditor';
+export { default as PropertySelect } from './PropertySelect';
+export { default as RadiusPicker } from './RadiusPicker';
+export { default as SchemaSelect } from './SchemaSelect';
+export { default as TextEdit } from './TextEdit';

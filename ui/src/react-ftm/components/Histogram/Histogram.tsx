@@ -27,7 +27,7 @@ interface IHistogramDatum {
 
 interface IHistogramProps extends WrappedComponentProps {
   data: Array<IHistogramDatum>;
-  onSelect: (selected: any | Array<any>) => void;
+  onSelect?: (selected: any | Array<any>) => void;
   chartProps?: any;
   containerProps?: any;
   dataPropName: string;
@@ -68,13 +68,20 @@ export class Histogram extends React.Component<
 
   onSelect(e: any) {
     const { selectStart, selectEnd } = this.state;
-    if (selectStart && selectEnd) {
-      this.props.onSelect([selectStart.id, selectEnd.id]);
-    } else {
-      this.props.onSelect(dataFromEvent(e)?.id);
-    }
+    const { onSelect } = this.props;
 
     this.setState({ selectStart: undefined, selectEnd: undefined });
+
+    if (!onSelect) {
+      return;
+    }
+
+    if (!selectStart || !selectEnd) {
+      onSelect(dataFromEvent(e)?.id);
+      return;
+    }
+
+    onSelect([selectStart.id, selectEnd.id]);
   }
 
   renderBars() {
