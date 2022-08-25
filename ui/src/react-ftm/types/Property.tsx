@@ -26,7 +26,7 @@ import {
   Topic,
   URL,
 } from '.';
-import { ensureArray, wordList, withTranslator } from 'react-ftm/utils';
+import { ensureArray, wordList } from 'react-ftm/utils';
 
 import './Property.scss';
 
@@ -286,13 +286,13 @@ class PropertyValues extends React.PureComponent<
 class Property extends React.Component {
   static Name = PropertyName;
 
-  static Reverse = withTranslator(injectIntl(PropertyReverse));
+  static Reverse = injectIntl(PropertyReverse);
 
   static getSortValue = getSortValue;
 
   static Value = PropertyValue;
 
-  static Values = withTranslator(injectIntl(PropertyValues));
+  static Values = injectIntl(PropertyValues);
 }
 
 export default Property;

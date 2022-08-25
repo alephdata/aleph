@@ -40,7 +40,7 @@ interface IEntityCreateDialogProps extends WrappedComponentProps {
   onSubmit: (entityData: any) => Promise<Entity | undefined>;
   toggleDialog: () => any;
   schema?: FTMSchema;
-  schemaRange?: string;
+  schemaRange?: FTMSchema;
   model: Model;
   fetchEntitySuggestions?: (
     queryText: string,
@@ -93,7 +93,7 @@ class UnwrappedEntityCreateDialog extends React.Component<
     if (schema) {
       return schema;
     }
-    const range = schemaRange || 'Thing';
+    const range = schemaRange || model.getSchema('Thing');
     const schemata = model
       .getSchemata()
       .filter((schema: FTMSchema) => schema.isA(range));
@@ -223,7 +223,6 @@ class UnwrappedEntityCreateDialog extends React.Component<
                   onQueryChange={this.onQueryChange}
                   popoverProps={{ usePortal: false }}
                   inputProps={{ large: true }}
-                  placeholder={placeholder}
                   noResultsText={intl.formatMessage(messages.no_results)}
                 />
               )}

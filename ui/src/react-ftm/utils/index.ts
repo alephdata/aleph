@@ -1,7 +1,6 @@
-import { getHost } from './getHost';
-import { matchText } from './matchText';
-import { withTranslator } from './withTranslator';
-import { wordList } from './wordList';
+export { getHost } from './getHost';
+export { matchText } from './matchText';
+export { wordList } from './wordList';
 export * from './ensureArray';
 export * from './getHost';
 export * from './highlightText';
@@ -11,5 +10,3 @@ export * from './toaster';
 export * from './wordList';
 export * from './validate';
 export * from './sortEntities';
-
-export { getHost, matchText, withTranslator, wordList };

@@ -1,35 +1,16 @@
-import { withTranslator } from 'react-ftm/utils/withTranslator';
-
-import CountBase from './Count';
-import Date from './Date';
-import EdgeType from './EdgeType';
-import Entity, { type FTMEntityExtended } from './Entity';
-import EnumValue from './EnumValue';
-import FileSize from './FileSize';
-import Transliterate from './Transliterate';
-import MIMEType from './MIMEType';
-import NumericBase from './Numeric';
-import Property from './Property';
-import Schema from './Schema';
-import URL from './URL';
-
-const Count = withTranslator(CountBase);
-const Numeric = withTranslator(NumericBase);
-
+export { default as Count } from './Count';
+export { default as Date } from './Date';
+export { default as EdgeType } from './EdgeType';
+export { default as Entity, type FTMEntityExtended } from './Entity';
 export {
-  Count,
-  Date,
-  EdgeType,
-  Entity,
-  EnumValue as Country,
-  EnumValue as Language,
-  EnumValue as Topic,
-  FileSize,
-  FTMEntityExtended,
-  Transliterate,
-  MIMEType,
-  Numeric,
-  Property,
-  Schema,
-  URL,
-};
+  default as Country,
+  default as Language,
+  default as Topic,
+} from './EnumValue';
+export { default as FileSize } from './FileSize';
+export { default as Transliterate } from './Transliterate';
+export { default as MIMEType } from './MIMEType';
+export { default as Numeric } from './Numeric';
+export { default as Property } from './Property';
+export { default as Schema } from './Schema';
+export { default as URL } from './URL';
