@@ -134,6 +134,7 @@ services:
     volumes:
       - "./ui/src:/alephui/src:cached"
       - "./ui/package.json:/alephui/package.json:cached"
+      - "./ui/package-lock.json:/alephui/package-lock.json:cached"
       - "./ui/craco.config.js:/alephui/craco.config.js:cached"
       - "./ui/node_modules:/alephui/node_modules:delegated"
     environment:
