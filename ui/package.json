@@ -3,7 +3,7 @@
   "version": "3.12.7",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "2.9.7",
+    "@alephdata/followthemoney": "^2.9.7",
     "@blueprintjs/colors": "^4.1.5",
     "@blueprintjs/core": "^4.8.0",
     "@blueprintjs/icons": "^4.4.1",
