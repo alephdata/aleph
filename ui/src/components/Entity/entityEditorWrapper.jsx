@@ -2,7 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Namespace } from '@alephdata/followthemoney';
-import { EntityManager } from '@alephdata/react-ftm';
+import { EntityManager } from 'react-ftm';
 
 import withRouter from 'app/withRouter';
 import { entityExpandQuery, entitySuggestQuery } from 'queries';

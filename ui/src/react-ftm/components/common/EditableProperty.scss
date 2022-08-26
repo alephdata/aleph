@@ -1,0 +1,157 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.EditableProperty {
+  padding: 10px !important;
+  border-radius: $standard-border-radius;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.2s ease-in-out;
+
+  &.read-only {
+    pointer-events: none !important;
+  }
+
+  @include themify() {
+    background-color: themed('sidebarMenuColor');
+    border-color: themed('sidebarMenuColor');
+  }
+
+  &:hover {
+    @include themify() {
+      background-color: themed('sidebarMenuHoverColor');
+      border-color: themed('sidebarMenuHoverColor');
+    }
+  }
+
+  &.active {
+    cursor: auto;
+    @include themify() {
+      border: themed('sidebarMenuBorder');
+      background-color: themed('sidebarMenuItemActiveColor');
+    }
+  }
+
+  &.minimal {
+    padding: 0 5px !important;
+    border: none !important;
+    background: none !important;
+
+    &:hover:not(.active) {
+      @include themify() {
+        background-color: themed('sidebarMenuHoverColor') !important;
+        border-color: themed('sidebarMenuHoverColor') !important;
+      }
+    }
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 10px !important;
+  }
+
+  &__label {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+
+    @include themify() {
+      color: themed('textColor');
+    }
+  }
+
+  &__value {
+    font-size: 14px;
+    @include breakText;
+
+    @include themify() {
+      color: themed('textColor') !important;
+      fill: themed('textColor') !important;
+    }
+
+    a {
+      text-decoration: underline;
+      @include themify() {
+        color: themed('textColor') !important;
+      }
+
+      &:hover {
+        color: $black-20 !important;
+      }
+    }
+
+    .bp3-input {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-bottom: 1px solid !important;
+      border-radius: 0 !important;
+      padding-bottom: 5px;
+
+      @include themify() {
+        color: themed('textColor') !important;
+        border-color: themed('textColor') !important;
+      }
+    }
+
+    .bp3-input.bp3-tag-input {
+      padding: 0 !important;
+    }
+
+    .bp3-tag-input-values {
+      margin-top: 0;
+    }
+
+    .bp3-input,
+    .bp3-input-ghost {
+      padding-top: 0;
+      padding-left: 0 !important;
+      height: auto;
+
+      @include themify() {
+        color: themed('textColor') !important;
+      }
+    }
+
+    .bp3-form-group {
+      margin-bottom: 0 !important;
+    }
+
+    .bp3-tag {
+      @include themify() {
+        background: themed('tagColor') !important;
+      }
+      color: $black-80 !important;
+    }
+
+    .bp3-icon {
+      margin-right: 3px;
+    }
+
+    .date-input input {
+      @include themify() {
+        color: themed('textColor') !important;
+      }
+    }
+
+    .TextEdit__singleInput {
+      & > .bp3-input,
+      & > .bp3-input-action {
+        @include themify() {
+          color: themed('textColor') !important;
+        }
+      }
+    }
+
+    .TextEdit__toggleMulti.bp3-button {
+      top: 0;
+      transform: translateY(-2px);
+
+      .bp3-icon {
+        @include themify() {
+          color: themed('textColor');
+        }
+      }
+    }
+  }
+}

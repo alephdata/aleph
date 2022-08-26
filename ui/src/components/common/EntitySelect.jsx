@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { EntitySelect as VLEntitySelect } from '@alephdata/react-ftm';
+import { EntitySelect as VLEntitySelect } from 'react-ftm';
 
 import { selectEntitiesResult } from 'selectors';
 

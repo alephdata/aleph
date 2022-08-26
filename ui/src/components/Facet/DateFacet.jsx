@@ -9,7 +9,7 @@ import {
 } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
-import { Histogram } from '@alephdata/react-ftm';
+import { Histogram } from 'react-ftm';
 import moment from 'moment';
 
 import withRouter from 'app/withRouter';

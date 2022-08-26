@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
-import { ColorPicker, PropertySelect } from '@alephdata/react-ftm';
+import { ColorPicker, PropertySelect } from 'react-ftm';
 import { Entity as FTMEntity } from '@alephdata/followthemoney';
 import queryString from 'query-string';
 import c from 'classnames';

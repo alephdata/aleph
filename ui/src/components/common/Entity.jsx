@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import c from 'classnames';
-import { Entity as VLEntity } from '@alephdata/react-ftm';
+import { Entity as VLEntity } from 'react-ftm';
 
 import withRouter from 'app/withRouter';
 import EntitySelect from 'components/common/EntitySelect';

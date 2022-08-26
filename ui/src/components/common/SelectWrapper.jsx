@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isLangRtl } from '@alephdata/react-ftm';
+import { isLangRtl } from 'react-ftm';
 import { Position } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { selectLocale } from 'selectors';

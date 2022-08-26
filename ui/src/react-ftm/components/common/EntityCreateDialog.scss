@@ -1,0 +1,31 @@
+.EntityCreateDialog {
+  &__input > .bp3-input {
+    border-radius: 0 !important;
+  }
+  &__schema-select {
+    white-space: nowrap;
+    z-index: 0 !important;
+  }
+  &__popover {
+    max-height: 200px;
+    overflow-y: scroll;
+    .bp3-popover2-content {
+      padding: 0 !important;
+    }
+    .bp3-menu {
+      padding: 5px !important;
+    }
+  }
+  .bp3-popover2-target {
+    width: 100% !important;
+  }
+  &__submit.bp3-button {
+    flex: 0 0 !important;
+  }
+  &__spinner.bp3-spinner {
+    margin: 2px !important;
+  }
+  .EntitySelect {
+    z-index: 5;
+  }
+}
