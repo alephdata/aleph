@@ -1,0 +1,32 @@
+@import 'react-ftm/variables.scss';
+
+.SearchBox {
+  @include medium {
+    display: table;
+  }
+
+  &__mobile-toggle.bp3-button {
+    display: none;
+    @include medium {
+      display: table-cell;
+      margin-right: -10px;
+    }
+
+    .bp3-icon {
+      margin: auto !important;
+    }
+  }
+
+  &__input {
+    overflow-x: hidden;
+    transition: max-width 500ms ease-in-out;
+    @include medium {
+      display: table-cell;
+      max-width: 0;
+    }
+
+    &.expanded {
+      max-width: 1000px;
+    }
+  }
+}

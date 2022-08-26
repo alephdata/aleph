@@ -1,0 +1,18 @@
+.SettingsDialog {
+  &__type-select {
+    columns: 2;
+    margin-top: 5px;
+
+    .bp3-control {
+      margin-top: 0;
+    }
+  }
+
+  .bp3-label {
+    font-weight: bold !important;
+  }
+
+  .bp3-form-group .bp3-form-helper-text {
+    margin-top: 15px;
+  }
+}

@@ -1,0 +1,10 @@
+@import 'react-ftm/variables.scss';
+
+.EntitySelect {
+  .bp3-popover2-content,
+  .bp3-menu {
+    background: white !important;
+    color: $black-70 !important;
+    fill: $black-70 !important;
+  }
+}

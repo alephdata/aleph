@@ -1,0 +1,73 @@
+@import './variables.scss';
+
+$themes: (
+  light: (
+    backgroundColor: $white-3,
+    colorPickerActiveBorderWidth: 1px,
+    colorPickerHoverOpacity: 0.7,
+    disabledColor: $black-30,
+    sidebarColor: $white-3,
+    sidebarMenuBorder: 1px solid $black-70,
+    sidebarMenuColor: $light-gray4,
+    sidebarMenuHoverColor: $light-gray5,
+    sidebarMenuItemActiveColor: $white-3,
+    tagColor: $light-gray4,
+    textColor: $black-70,
+    toolbarColor: $white-3,
+    tooltipColor: $white-3,
+    tooltipTextColor: $black-70,
+    listItemDividerColor: $black-70,
+
+    buttonTextColor: #408bbd,
+    buttonTextTransform: none,
+    buttonTextHoverColor: #61b0e7,
+    buttonColor: #fff,
+    buttonBorder: 2px solid #fff,
+  ),
+  dark: (
+    backgroundColor: #fff,
+    colorPickerActiveBorderWidth: 3px,
+    colorPickerHoverOpacity: 1,
+    disabledColor: $black-60,
+    sidebarColor: $black-80,
+    sidebarMenuBorder: 1px solid transparent,
+    sidebarMenuColor: $black-70,
+    sidebarMenuHoverColor: $black-60,
+    sidebarMenuItemActiveColor: $black-60,
+    tagColor: #fff,
+    textColor: #fff,
+    toolbarColor: $dark_gray1,
+    tooltipColor: $black-80,
+    tooltipTextColor: #fff,
+    listItemDividerColor: rgba(255, 255, 255, 0.07),
+    buttonTextColor: #aaa,
+    buttonTextTransform: uppercase,
+    buttonTextHoverColor: #ddd,
+    buttonColor: #333,
+    buttonBorder: 1px solid #aaa,
+  ),
+);
+
+@mixin themify() {
+  @each $theme, $map in $themes {
+    .theme-#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), '#{$key}');
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value,
+          )
+        ) !global;
+      }
+
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}

@@ -1,4 +1,4 @@
-import { Date, FileSize, URL } from '@alephdata/react-ftm';
+import { Date, FileSize, URL } from 'react-ftm';
 
 import Country from './Country';
 import Numeric from './Numeric';

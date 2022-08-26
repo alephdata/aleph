@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isEntityRtl } from '@alephdata/react-ftm';
+import { isEntityRtl } from 'react-ftm';
 import { Model } from '@alephdata/followthemoney';
 
 import { loadState } from 'reducers/util';

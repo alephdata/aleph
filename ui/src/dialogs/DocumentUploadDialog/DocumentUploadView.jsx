@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Button, Checkbox, Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
-import { FileSize } from '@alephdata/react-ftm';
+import { FileSize } from 'react-ftm';
 
 import convertPathsToTree from 'util/convertPathsToTree';
 

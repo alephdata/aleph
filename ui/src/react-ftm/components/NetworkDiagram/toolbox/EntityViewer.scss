@@ -1,0 +1,50 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.EntityViewer {
+  padding: 0;
+
+  @include themify() {
+    color: themed('textColor');
+  }
+
+  &:not(.writeable) {
+    pointer-events: none;
+  }
+
+  &__title {
+    text-align: center;
+    padding: 30px 15px 20px;
+
+    &__text {
+      margin-bottom: 30px;
+      &__main {
+        @include breakText;
+        margin: 0 !important;
+        font-size: 1.6em;
+        @include themify() {
+          color: themed('textColor') !important;
+        }
+      }
+      &__secondary {
+        margin-bottom: 3px !important;
+        opacity: 0.9;
+
+        @include themify() {
+          color: themed('textColor') !important;
+        }
+      }
+    }
+
+    &__settings {
+      margin-top: 20px;
+    }
+  }
+
+  .bp3-divider {
+    margin: 15px 0;
+    @include themify() {
+      border-color: themed('textColor') !important;
+    }
+  }
+}

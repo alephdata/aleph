@@ -1,4 +1,4 @@
-import { Count } from '@alephdata/react-ftm';
+import { Count } from 'react-ftm';
 import { connect } from 'react-redux';
 
 import { selectLocale } from 'selectors';
