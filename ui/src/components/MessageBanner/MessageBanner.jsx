@@ -7,7 +7,7 @@ import './MessageBanner.scss';
 const MESSAGE_INTENTS = {
   info: Intent.PRIMARY,
   warning: Intent.WARNING,
-  error: Intent.ERROR,
+  error: Intent.DANGER,
   success: Intent.SUCCESS,
 };
 
