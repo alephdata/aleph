@@ -19,7 +19,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@types/jest": "^28.1.4",
-    "@types/node": "^17.0.8",
+    "@types/node": "^18.7.16",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.1",
     "axios": "^0.27.2",
