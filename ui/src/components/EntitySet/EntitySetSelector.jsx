@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Classes, Drawer, Spinner } from '@blueprintjs/core';
+import { Classes, Drawer, DrawerSize, Spinner } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -173,7 +173,7 @@ class EntitySetSelector extends Component {
       <Drawer
         hasBackdrop={false}
         className="EntitySetSelector"
-        size={Drawer.SIZE_SMALL}
+        size={DrawerSize.SMALL}
         isOpen={isOpen}
         title={this.getTitle()}
         transitionDuration={200}
