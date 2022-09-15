@@ -17,7 +17,6 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  overflow: hidden;
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     order: 2;
