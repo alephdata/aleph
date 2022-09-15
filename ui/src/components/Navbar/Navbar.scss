@@ -122,12 +122,7 @@ $navbar-horizontal-padding: $aleph-grid-size * 0.8;
       flex-grow: 4;
 
       input.#{$bp-ns}-input {
-        overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        padding: 0 30px !important;
       }
     }
 
