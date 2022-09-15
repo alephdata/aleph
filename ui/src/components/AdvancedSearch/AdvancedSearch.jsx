@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import {
   Button,
   Classes,
+  ControlGroup,
   Drawer,
   FormGroup,
   Intent,
@@ -211,28 +212,30 @@ class AdvancedSearch extends React.Component {
       <span className="AdvancedSearch__header">
         <span>{intl.formatMessage(messages.title)}</span>
         <span>
-          <Button
-            text={
-              <span className={Classes.TEXT_MUTED}>
-                {intl.formatMessage(messages.clear)}
-              </span>
-            }
-            onClick={this.onClear}
-            minimal
-          />
-          <Button
-            type="submit"
-            icon="search"
-            intent={Intent.PRIMARY}
-            text={intl.formatMessage(messages.submit)}
-            onClick={this.updateQuery}
-          />
-          <Button
-            className="AdvancedSearch__header__close"
-            minimal
-            icon="chevron-up"
-            onClick={this.props.onToggle}
-          />
+          <ControlGroup>
+            <Button
+              text={
+                <span className={Classes.TEXT_MUTED}>
+                  {intl.formatMessage(messages.clear)}
+                </span>
+              }
+              onClick={this.onClear}
+              minimal
+            />
+            <Button
+              type="submit"
+              icon="search"
+              intent={Intent.PRIMARY}
+              text={intl.formatMessage(messages.submit)}
+              onClick={this.updateQuery}
+            />
+            <Button
+              className="AdvancedSearch__header__close"
+              minimal
+              icon="chevron-up"
+              onClick={this.props.onToggle}
+            />
+          </ControlGroup>
         </span>
       </span>
     );
@@ -251,7 +254,6 @@ class AdvancedSearch extends React.Component {
           title={this.renderTitle()}
           isCloseButtonShown={false}
           hasBackdrop={false}
-          enforceFocus={false}
           usePortal
           portalContainer={this.ref.current}
           onClose={(e) => {

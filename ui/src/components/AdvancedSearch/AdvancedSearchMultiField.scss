@@ -47,4 +47,9 @@
   .#{$bp-ns}-collapse-body {
     padding-bottom: $aleph-grid-size;
   }
+
+  &__helptext {
+    // Prevents the element from becoming scrollable and thus tabbable when it's collapsed.
+    overflow-x: hidden;
+  }
 }
