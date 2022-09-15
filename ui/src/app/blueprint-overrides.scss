@@ -141,17 +141,6 @@ table {
   }
 }
 
-// Add RTL support for control groups
-.#{$bp-ns}-control-group {
-  > :last-child {
-    @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
-  }
-
-  > :first-child {
-    @include rtl(border-radius, 3px 0 0 3px, 0 3px 3px 0);
-  }
-}
-
 // buttons and their borders horizontal and vertical
 .#{$bp-ns}-button-group {
   &:not(.#{$bp-ns}-minimal) {
