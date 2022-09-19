@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
-import { ControlGroup, InputGroup } from '@blueprintjs/core';
+import { Classes, ControlGroup, InputGroup } from '@blueprintjs/core';
 import {
   GraphContext,
   IGraphContext,
@@ -95,12 +95,12 @@ export class GroupingCreateDialog extends React.Component<
         isProcessing={isProcessing}
       >
         <form onSubmit={this.onSubmit}>
-          <div className="bp3-dialog-body">
+          <div className={Classes.DIALOG_BODY}>
             <ControlGroup fill>
               <InputGroup
                 autoFocus
                 large
-                className="bp3-fill"
+                className={Classes.FILL}
                 value={this.state.label}
                 onChange={this.onChangeLabel}
                 placeholder={intl.formatMessage(messages.placeholder)}

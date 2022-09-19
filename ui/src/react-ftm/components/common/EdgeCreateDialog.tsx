@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { injectIntl, defineMessages, WrappedComponentProps } from 'react-intl';
-import { FormGroup, Intent, Button } from '@blueprintjs/core';
+import { FormGroup, Intent, Button, Classes } from '@blueprintjs/core';
 import { Entity, Schema } from '@alephdata/followthemoney';
 
 import { EdgeTypeSelect, EntitySelect } from 'react-ftm/editors';
@@ -233,7 +233,7 @@ class UnwrappedEdgeCreateDialog extends React.Component<
         className="large"
       >
         <form onSubmit={this.onSubmit}>
-          <div className="bp3-dialog-body">
+          <div className={Classes.DIALOG_BODY}>
             <div style={{ flex: 1, display: 'flex', flexFlow: 'row' }}>
               <div
                 style={{
@@ -318,8 +318,8 @@ class UnwrappedEdgeCreateDialog extends React.Component<
               </div>
             </div>
           </div>
-          <div className="bp3-dialog-footer">
-            <div className="bp3-dialog-footer-actions">
+          <div className={Classes.DIALOG_FOOTER}>
+            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
               <Button
                 intent={Intent.PRIMARY}
                 disabled={!this.isValid()}

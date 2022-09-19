@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
+import c from 'classnames';
 
 import { selectModel } from 'selectors';
 import { Collection, EntitySet, Schema } from 'components/common';
@@ -153,7 +154,9 @@ export class MappingEditor extends Component {
         <div className="MappingEditor">
           <div className="MappingEditor__sections">
             <div className="MappingEditor__section">
-              <h5 className="bp3-heading MappingEditor__section__title">
+              <h5
+                className={c(Classes.HEADING, 'MappingEditor__section__title')}
+              >
                 {intl.formatMessage(messages.section1Title)}
               </h5>
               <MappingSplitSection
@@ -188,7 +191,12 @@ export class MappingEditor extends Component {
             {showPropertySections && (
               <>
                 <div className="MappingEditor__section">
-                  <h5 className="bp3-heading MappingEditor__section__title">
+                  <h5
+                    className={c(
+                      Classes.HEADING,
+                      'MappingEditor__section__title'
+                    )}
+                  >
                     {intl.formatMessage(messages.section2Title)}
                   </h5>
                   <MappingPropertyAssign
@@ -201,7 +209,12 @@ export class MappingEditor extends Component {
                 </div>
 
                 <div className="MappingEditor__section">
-                  <h5 className="bp3-heading MappingEditor__section__title">
+                  <h5
+                    className={c(
+                      Classes.HEADING,
+                      'MappingEditor__section__title'
+                    )}
+                  >
                     {intl.formatMessage(messages.section3Title)}
                   </h5>
                   <MappingSplitSection
@@ -218,7 +231,12 @@ export class MappingEditor extends Component {
                   />
                 </div>
                 <div className="MappingEditor__section">
-                  <h5 className="bp3-heading MappingEditor__section__title">
+                  <h5
+                    className={c(
+                      Classes.HEADING,
+                      'MappingEditor__section__title'
+                    )}
+                  >
                     {intl.formatMessage(messages.section4Title)}
                   </h5>
                   <p className="MappingEditor__section__description">

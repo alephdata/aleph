@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Drawer, Spinner } from '@blueprintjs/core';
+import { Classes, Drawer, Spinner } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -183,10 +183,10 @@ class EntitySetSelector extends Component {
         canOutsideClickClose={false}
         portalClassName="EntitySetSelector__portal-container"
       >
-        <div className={c('bp3-drawer-body', { blocking: processing })}>
+        <div className={c(Classes.DRAWER_BODY, { blocking: processing })}>
           {processing && (
             <div className="EntitySetSelector__overlay">
-              <Spinner className="FormDialog__spinner bp3-large" />
+              <Spinner className={c('FormDialog__spinner', Classes.LARGE)} />
             </div>
           )}
           <EntitySetSelectorSection

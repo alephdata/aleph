@@ -9,7 +9,7 @@
     @include rtl(float, right, left);
   }
 
-  .bp3-icon {
+  .#{$bp-ns}-icon {
     margin: 0 !important;
     @include rtlSupportInvertedProp(
       margin,

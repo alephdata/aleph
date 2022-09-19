@@ -10,7 +10,7 @@ $wrap-breakpoint: 800px;
     padding: $aleph-grid-size/2 0;
     width: 100%;
 
-    &.bp3-button {
+    &.#{$bp-ns}-button {
       padding: $aleph-grid-size/2 $aleph-grid-size;
       border: none;
       background-color: white !important;
@@ -18,7 +18,7 @@ $wrap-breakpoint: 800px;
       &:hover {
         color: $blue2;
 
-        .bp3-icon {
+        .#{$bp-ns}-icon {
           color: $blue2;
         }
       }

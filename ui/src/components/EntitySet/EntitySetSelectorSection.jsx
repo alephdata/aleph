@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Collapse, InputGroup } from '@blueprintjs/core';
+import {
+  Button,
+  ButtonGroup,
+  Classes,
+  Collapse,
+  InputGroup,
+} from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -111,7 +117,7 @@ class EntitySetSelectorSection extends Component {
             rightIcon={<Count count={result.total} />}
             className="EntitySetSelectorSection__title"
           >
-            <h5 className="bp3-heading">
+            <h5 className={Classes.HEADING}>
               {intl.formatMessage(messages[type])}
             </h5>
           </Button>

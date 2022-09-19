@@ -2,13 +2,13 @@
 @import 'app/mixins.scss';
 
 .EntitySetSelector {
-  &__portal-container .bp3-overlay.bp3-overlay-container {
+  &__portal-container .#{$bp-ns}-overlay.#{$bp-ns}-overlay-container {
     @include rtl(right, 0, auto);
     @include rtl(left, auto, 0);
     overflow: visible;
   }
 
-  .bp3-drawer-header {
+  .#{$bp-ns}-drawer-header {
     @include rtlSupportInvertedProp(
       padding,
       left,
@@ -17,12 +17,12 @@
     );
     @include rtlSupportInvertedProp(padding, right, $aleph-grid-size, null);
     z-index: 1;
-    .bp3-heading {
+    .#{$bp-ns}-heading {
       font-size: 16px;
     }
   }
 
-  .bp3-drawer-body {
+  .#{$bp-ns}-drawer-body {
     width: 100%;
     padding: $aleph-grid-size;
 
@@ -49,7 +49,7 @@
   &__section {
     padding: $aleph-grid-size 0;
 
-    &__title.bp3-heading {
+    &__title.#{$bp-ns}-heading {
       margin: 0;
       font-size: 14px;
     }

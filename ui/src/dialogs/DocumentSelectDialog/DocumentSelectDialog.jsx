@@ -93,7 +93,7 @@ class DocumentSelectDialog extends Component {
               placeholder: intl.formatMessage(messages.placeholder),
             }}
           />
-          <div className="bp3-form-helper-text">
+          <div className={Classes.FORM_HELPER_TEXT}>
             <FormattedMessage
               id="entity.manager.bulk_import.description.3"
               defaultMessage={`Don't see the table you're looking for? {link}`}

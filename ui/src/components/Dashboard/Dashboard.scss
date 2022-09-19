@@ -40,15 +40,15 @@
       display: none;
     }
 
-    .bp3-menu {
+    .#{$bp-ns}-menu {
       background-color: inherit !important;
       padding: 0;
     }
 
-    .bp3-menu-item {
+    .#{$bp-ns}-menu-item {
       padding: 6px 7px;
 
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         @include rtlSupportInvertedProp(margin, right, 12px, 0);
       }
 
@@ -56,24 +56,24 @@
         @include rtl(float, right, left);
       }
 
-      &.bp3-active .Count {
+      &.#{$bp-ns}-active .Count {
         color: white;
         background: none;
       }
     }
 
-    .bp3-menu-header {
+    .#{$bp-ns}-menu-header {
       border: none;
       @include rtlSupportInvertedProp(margin, left, 0, null);
       margin-bottom: $aleph-grid-size;
 
-      .bp3-heading {
+      .#{$bp-ns}-heading {
         color: $blue1;
         padding-top: 2px;
       }
     }
 
-    .bp3-menu-divider {
+    .#{$bp-ns}-menu-divider {
       margin: $aleph-grid-size * 1.5 0;
       border-color: $aleph-border-color;
     }

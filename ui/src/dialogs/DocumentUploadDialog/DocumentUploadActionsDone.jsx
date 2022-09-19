@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 
 const messages = defineMessages({
   close: {
@@ -30,7 +30,7 @@ function DocumentUploadActionsDone({ stats, onRetry, onClose, intl }) {
           />
         </p>
       )}
-      <div className="bp3-dialog-footer-actions">
+      <div className={Classes.DIALOG_FOOTER_ACTIONS}>
         {stats.errors > 0 && (
           <Button
             type="button"

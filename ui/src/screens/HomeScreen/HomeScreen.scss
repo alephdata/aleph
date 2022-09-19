@@ -111,7 +111,7 @@ $vertical-spacing: $aleph-grid-size * 5;
   &__search {
     max-width: 600px;
     margin: auto;
-    .bp3-input-group {
+    .#{$bp-ns}-input-group {
       margin-bottom: $vertical-spacing/2;
     }
   }
@@ -180,14 +180,14 @@ $vertical-spacing: $aleph-grid-size * 5;
     }
   }
 
-  .bp3-button b {
+  .#{$bp-ns}-button b {
     color: white;
   }
 
-  .Statistics.bp3-callout {
+  .Statistics.#{$bp-ns}-callout {
     border: 1px solid $aleph-border-color;
   }
-  .Statistics__headline.bp3-heading {
+  .Statistics__headline.#{$bp-ns}-heading {
     padding-bottom: $aleph-grid-size;
     margin-top: $aleph-grid-size/2;
     border-bottom: 1px solid;

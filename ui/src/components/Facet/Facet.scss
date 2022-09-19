@@ -39,7 +39,7 @@
       font-size: 1.1em;
       font-weight: bold;
 
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         @include rtlSupportInvertedProp(margin, right, 10px !important, null);
       }
     }
@@ -62,13 +62,13 @@
     }
 
     .Facet__action,
-    .bp3-tag {
+    .#{$bp-ns}-tag {
       position: absolute;
       @include rtl(right, $aleph-grid-size, null);
       @include rtl(left, null, $aleph-grid-size);
     }
 
-    .bp3-tag {
+    .#{$bp-ns}-tag {
       padding-top: 0;
       padding-bottom: 0;
       font-weight: bold;
@@ -86,7 +86,7 @@
     margin: 0 $aleph-grid-size * 2.5 $aleph-grid-size * 1.5;
   }
 
-  .DateFacet.bp3-card {
+  .DateFacet.#{$bp-ns}-card {
     box-shadow: none;
     padding: $aleph-grid-size * 1.5 $aleph-grid-size 0;
   }

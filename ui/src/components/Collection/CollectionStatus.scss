@@ -19,13 +19,13 @@ $vertical-spacing: 5px;
     align-items: center;
     min-height: $aleph-grid-size * 2;
 
-    .bp3-progress-bar {
+    .#{$bp-ns}-progress-bar {
       flex-grow: 10;
       @include rtlSupportInvertedProp(margin, right, $aleph-grid-size, null);
     }
   }
 
-  .bp3-heading {
+  .#{$bp-ns}-heading {
     color: $blue2 !important;
     margin-bottom: $vertical-spacing !important;
   }

@@ -5,6 +5,8 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { SectionLoading, SearchHighlight } from 'components/common';
+import { Classes } from '@blueprintjs/core';
+import c from 'classnames';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
@@ -56,7 +58,13 @@ class PdfViewerSearch extends Component {
       <div className="pages">
         {result.total === 0 && (
           <>
-            <div className="bp3-callout bp3-intent-warning bp3-icon-search">
+            <div
+              className={c(
+                Classes.CALLOUT,
+                Classes.INTENT_WARNING,
+                `${Classes.ICON}-search`
+              )}
+            >
               <FormattedMessage
                 id="document.search.no_match"
                 defaultMessage="No single page within this document matches all your search terms."
@@ -73,7 +81,9 @@ class PdfViewerSearch extends Component {
                   to={this.getResultLink(res)}
                   className={classNames({ active: page === res.index })}
                 >
-                  <span className="bp3-icon bp3-icon-document" />
+                  <span
+                    className={c(Classes.ICON, `${Classes.ICON}-document`)}
+                  />
                   <FormattedMessage
                     id="document.pdf.search.page"
                     defaultMessage="Page {page}"

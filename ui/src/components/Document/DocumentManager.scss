@@ -8,13 +8,13 @@
       cursor: pointer;
       max-width: $aleph-content-width-limit;
 
-      .bp3-heading,
-      .bp3-button .bp3-icon {
+      .#{$bp-ns}-heading,
+      .#{$bp-ns}-button .#{$bp-ns}-icon {
         color: rgba(92, 112, 128, 0.6);
         line-height: 1.5;
       }
 
-      .bp3-button {
+      .#{$bp-ns}-button {
         padding: $aleph-content-padding;
       }
     }

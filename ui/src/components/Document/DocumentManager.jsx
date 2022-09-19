@@ -1,11 +1,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { AnchorButton, Callout, Divider } from '@blueprintjs/core';
+import { AnchorButton, Callout, Classes, Divider } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import withRouter from 'app/withRouter';
 import { DialogToggleButton } from 'components/Toolbar';
@@ -209,7 +210,9 @@ export class DocumentManager extends Component {
           </EntityActionBar>
         )}
         {hasPending && (
-          <Callout className="bp3-icon-info-sign bp3-intent-warning">
+          <Callout
+            className={c(`${Classes.ICON}-info-sign`, Classes.INTENT_WARNING)}
+          >
             <FormattedMessage
               id="refresh.callout_message"
               defaultMessage="Documents are being processed. Please wait..."

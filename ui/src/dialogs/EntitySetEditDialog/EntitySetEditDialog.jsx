@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import c from 'classnames';
 
 import { updateEntitySet } from 'actions';
 import { showSuccessToast, showWarningToast } from 'app/toast';
@@ -133,18 +134,18 @@ class EntitySetEditDialog extends Component {
         title={intl.formatMessage(messages[`${type}_title`])}
         onClose={toggleDialog}
       >
-        <div className="bp3-dialog-body">
-          <div className="bp3-form-group">
-            <label className="bp3-label" htmlFor="label">
+        <div className={Classes.DIALOG_BODY}>
+          <div className={Classes.FORM_GROUP}>
+            <label className={Classes.LABEL} htmlFor="label">
               <FormattedMessage
                 id="entityset.choose.name"
                 defaultMessage="Title"
               />
-              <div className="bp3-input-group bp3-fill">
+              <div className={c(Classes.INPUT_GROUP, Classes.FILL)}>
                 <input
                   id="label"
                   type="text"
-                  className="bp3-input"
+                  className={Classes.INPUT}
                   autoComplete="off"
                   placeholder={intl.formatMessage(
                     messages[`${type}_label_placeholder`]
@@ -155,16 +156,16 @@ class EntitySetEditDialog extends Component {
               </div>
             </label>
           </div>
-          <div className="bp3-form-group">
-            <label className="bp3-label" htmlFor="summary">
+          <div className={Classes.FORM_GROUP}>
+            <label className={Classes.LABEL} htmlFor="summary">
               <FormattedMessage
                 id="entityset.choose.summary"
                 defaultMessage="Summary"
               />
-              <div className="bp3-input-group bp3-fill">
+              <div className={c(Classes.INPUT_GROUP, Classes.FILL)}>
                 <textarea
                   id="summary"
-                  className="bp3-input"
+                  className={Classes.INPUT}
                   placeholder={intl.formatMessage(
                     messages[`${type}_summary_placeholder`]
                   )}
@@ -176,8 +177,8 @@ class EntitySetEditDialog extends Component {
             </label>
           </div>
         </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button
               type="submit"
               intent={Intent.PRIMARY}

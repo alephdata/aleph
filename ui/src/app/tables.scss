@@ -19,7 +19,7 @@ table {
       overflow: visible;
       @include rtlSupportInvertedProp(padding, left, 0, null);
       padding-top: ($aleph-grid-size / 1.2);
-      .bp3-button {
+      .#{$bp-ns}-button {
         @include rtlSupportInvertedProp(margin, left, 0, null);
       }
     }
@@ -45,7 +45,7 @@ table {
     min-width: $aleph-grid-size * 2;
     text-overflow: unset;
 
-    .bp3-control {
+    .#{$bp-ns}-control {
       padding-left: 0;
     }
   }
@@ -96,7 +96,7 @@ table {
     white-space: normal !important;
     word-break: break-word;
 
-    .bp3-skeleton {
+    .#{$bp-ns}-skeleton {
       white-space: nowrap;
     }
 
@@ -145,7 +145,7 @@ table {
 
 // Tables as normally used in ContentPane
 table.data-table {
-  @extend .bp3-html-table;
+  @extend .#{$bp-ns}-html-table;
   width: 100%;
 
   &.pending > tbody {

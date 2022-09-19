@@ -1,7 +1,8 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Classes } from '@blueprintjs/core';
 import { showWarningToast } from 'app/toast';
+import c from 'classnames';
 
 const messages = defineMessages({
   not_same: {
@@ -50,13 +51,13 @@ const PasswordAuth = ({
   return (
     <form onSubmit={submit} className={className}>
       {showEmail && (
-        <label className="bp3-label">
+        <label className={Classes.LABEL}>
           <FormattedMessage
             id="password_auth.email"
             defaultMessage="Email address"
           />
           <input
-            className="bp3-input bp3-fill"
+            className={c(Classes.INPUT, Classes.FILL)}
             type="email"
             name="email"
             required
@@ -66,13 +67,13 @@ const PasswordAuth = ({
         </label>
       )}
       {showName && (
-        <label className="bp3-label">
+        <label className={Classes.LABEL}>
           <FormattedMessage
             id="password_auth.name"
             defaultMessage="Your Name"
           />
           <input
-            className="bp3-input bp3-fill"
+            className={c(Classes.INPUT, Classes.FILL)}
             type="text"
             name="name"
             required
@@ -81,14 +82,14 @@ const PasswordAuth = ({
         </label>
       )}
       {showPassword && (
-        <label className="bp3-label">
+        <label className={Classes.LABEL}>
           <FormattedMessage
             id="password_auth.password"
             defaultMessage="Password"
           />
           <input
             id="pass"
-            className="bp3-input bp3-fill"
+            className={c(Classes.INPUT, Classes.FILL)}
             type="password"
             name="password"
             required
@@ -97,14 +98,14 @@ const PasswordAuth = ({
         </label>
       )}
       {showConfirmPass && (
-        <label className="bp3-label">
+        <label className={Classes.LABEL}>
           <FormattedMessage
             id="password_auth.confirm"
             defaultMessage="Confirm password"
           />
           <input
             id="confirm-pass"
-            className="bp3-input bp3-fill"
+            className={c(Classes.INPUT, Classes.FILL)}
             type="password"
             name="confirm"
             required
@@ -116,7 +117,7 @@ const PasswordAuth = ({
       <div className="flex-row">
         <span>
           <Button
-            className={`bp3-large ${buttonClassName}`}
+            className={c(Classes.LARGE, buttonClassName)}
             intent={Intent.PRIMARY}
             type="submit"
           >

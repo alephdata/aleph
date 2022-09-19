@@ -3,7 +3,7 @@
 
 .EntityDeleteDialog {
   &.blocking {
-    .bp3-button.bp3-intent-danger {
+    .#{$bp-ns}-button.#{$bp-ns}-intent-danger {
       display: none;
     }
   }
@@ -24,11 +24,11 @@
         margin: 0 $aleph-grid-size/2;
       }
 
-      .bp3-spinner {
+      .#{$bp-ns}-spinner {
         display: inline-flex;
       }
 
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         vertical-align: middle;
       }
 

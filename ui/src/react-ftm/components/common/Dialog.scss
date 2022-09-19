@@ -1,3 +1,5 @@
+@import 'app/variables.scss';
+
 .Dialog {
   padding-bottom: 0 !important;
 
@@ -24,7 +26,7 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 
-    .bp3-spinner {
+    .#{$bp-ns}-spinner {
       top: 50%;
       position: relative;
       transform: translateY(-50%);

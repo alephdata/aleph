@@ -65,9 +65,12 @@ class CollectionStatistics extends PureComponent {
 
     return (
       <div
-        className={c('CollectionStatistics bp3-card bp3-elevation-1', {
-          [Classes.SKELETON]: !values,
-        })}
+        className={c(
+          'CollectionStatistics',
+          Classes.CARD,
+          Classes.ELEVATION_1,
+          !values && Classes.SKELETON
+        )}
       >
         <div className="CollectionStatistics__heading">
           <h5 className="CollectionStatistics__heading__total">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 
 const messages = defineMessages({
   cancel: {
@@ -11,7 +11,7 @@ const messages = defineMessages({
 
 function DocumentUploadActionsPending({ intl, onClose }) {
   return (
-    <div className="bp3-dialog-footer-actions">
+    <div className={Classes.DIALOG_FOOTER_ACTIONS}>
       <Button
         type="button"
         icon={'cross'}

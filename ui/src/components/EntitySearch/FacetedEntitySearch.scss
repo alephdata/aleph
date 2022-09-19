@@ -37,7 +37,7 @@
     .QueryTags {
       margin-bottom: $aleph-grid-size/2;
 
-      .bp3-tag {
+      .#{$bp-ns}-tag {
         @include rtlSupportInvertedProp(margin, right, 4px, 0);
       }
     }
@@ -62,11 +62,11 @@
     position: relative;
   }
 
-  .bp3-drawer {
+  .#{$bp-ns}-drawer {
     box-shadow: none;
   }
 
-  .bp3-overlay {
+  .#{$bp-ns}-overlay {
     width: $aleph-sidebar-width;
   }
 
@@ -104,7 +104,7 @@
       opacity: 1;
     }
 
-    &__button.bp3-button.bp3-outlined {
+    &__button.#{$bp-ns}-button.#{$bp-ns}-outlined {
       background: white;
       border-radius: 15px;
       position: relative;
@@ -121,7 +121,7 @@
     margin-bottom: $aleph-grid-size * 2;
   }
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     margin: 0 0 $aleph-grid-size;
   }
 }

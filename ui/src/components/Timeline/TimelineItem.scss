@@ -153,7 +153,7 @@ $timeline-text-color: $dark-gray5;
       line-height: 1.5;
     }
 
-    .bp3-popover2-target {
+    .#{$bp-ns}-popover2-target {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -166,7 +166,7 @@ $timeline-text-color: $dark-gray5;
       color: $timeline-text-color;
 
       span,
-      .EditableProperty__value .bp3-input {
+      .EditableProperty__value .#{$bp-ns}-input {
         color: inherit !important;
         border-color: inherit !important;
       }
@@ -177,7 +177,7 @@ $timeline-text-color: $dark-gray5;
     }
 
     span,
-    .EditableProperty__value .bp3-input {
+    .EditableProperty__value .#{$bp-ns}-input {
       font-weight: bold;
       color: white !important;
       border-color: white !important;
@@ -232,8 +232,8 @@ $timeline-text-color: $dark-gray5;
     }
 
     span,
-    .EditableProperty__value .bp3-input,
-    .bp3-button.bp3-outlined {
+    .EditableProperty__value .#{$bp-ns}-input,
+    .#{$bp-ns}-button.#{$bp-ns}-outlined {
       color: var(--item-color) !important;
       border-color: var(--item-color) !important;
     }
@@ -247,13 +247,13 @@ $timeline-text-color: $dark-gray5;
         vertical-align: middle;
         margin: 3px 0;
 
-        .bp3-icon {
+        .#{$bp-ns}-icon {
           margin-top: 1px;
         }
       }
     }
 
-    .bp3-input {
+    .#{$bp-ns}-input {
       min-width: unset !important;
     }
   }

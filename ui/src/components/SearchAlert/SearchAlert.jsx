@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { Classes } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
 import { compose } from 'redux';
@@ -84,12 +85,11 @@ class SearchAlert extends PureComponent {
     }
     const alertExists = this.alertExists();
     const className = c(
-      'bp3-button',
-      'bp3-minimal',
-      { 'bp3-icon-feed': !alertExists },
-      { 'bp3-icon-feed-subscribed': alertExists },
-      'bp3-small',
-      { 'bp3-intent-primary': alertExists }
+      Classes.BUTTON,
+      Classes.MINIMAL,
+      Classes.SMALL,
+      alertExists && Classes.INTENT_PRIMARY,
+      alertExists ? `${Classes.ICON}-feed-subscribed` : `${Classes.ICON}-feed`
     );
     const tooltip = alertExists
       ? intl.formatMessage(messages.alert_remove)

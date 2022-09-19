@@ -3,7 +3,8 @@ import { FormattedMessage } from 'react-intl';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { Button } from '@blueprintjs/core';
+import { Button, Classes } from '@blueprintjs/core';
+import c from 'classnames';
 import QueryFilterTag from './QueryFilterTag';
 import { cleanDateQParam } from 'components/Facet/util';
 
@@ -128,7 +129,12 @@ class QueryTags extends Component {
         ))}
         {showHiddenToggle && (
           <Button
-            className="filter-clear-tag bp3-tag bp3-large QueryFilterTag"
+            className={c(
+              'filter-clear-tag',
+              Classes.TAG,
+              Classes.LARGE,
+              'QueryFilterTag'
+            )}
             onClick={() => this.setState({ showHidden: true })}
             outlined
           >
@@ -141,7 +147,12 @@ class QueryTags extends Component {
         )}
         {showClearAll && (
           <Button
-            className="filter-clear-tag bp3-tag bp3-large QueryFilterTag"
+            className={c(
+              'filter-clear-tag',
+              Classes.TAG,
+              Classes.LARGE,
+              'QueryFilterTag'
+            )}
             onClick={this.removeAllFilterValues}
             outlined
           >

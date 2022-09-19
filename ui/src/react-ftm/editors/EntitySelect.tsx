@@ -10,6 +10,7 @@ import { EntityCreateDialog } from 'react-ftm/components/common';
 import {
   Alignment,
   Button,
+  Classes,
   Intent,
   Menu,
   MenuDivider,
@@ -18,6 +19,7 @@ import {
   SpinnerSize,
 } from '@blueprintjs/core';
 import { ItemRenderer, MultiSelect, Select } from '@blueprintjs/select';
+import c from 'classnames';
 import { ITypeEditorProps } from './common';
 
 import './EntitySelect.scss';
@@ -137,7 +139,7 @@ class EntitySelect extends React.Component<
       );
     } else if (filteredItems.length === 0) {
       content = (
-        <li className="bp3-menu-item bp3-disabled error-text">
+        <li className={c(Classes.MENU_ITEM, Classes.DISABLED, 'error-text')}>
           {noResultsText || intl.formatMessage(messages.no_results)}
         </li>
       );

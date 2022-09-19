@@ -1,5 +1,7 @@
+@import 'app/variables.scss';
+
 .EntityCreateDialog {
-  &__input > .bp3-input {
+  &__input > .#{$bp-ns}-input {
     border-radius: 0 !important;
   }
   &__schema-select {
@@ -9,20 +11,20 @@
   &__popover {
     max-height: 200px;
     overflow-y: scroll;
-    .bp3-popover2-content {
+    .#{$bp-ns}-popover2-content {
       padding: 0 !important;
     }
-    .bp3-menu {
+    .#{$bp-ns}-menu {
       padding: 5px !important;
     }
   }
-  .bp3-popover2-target {
+  .#{$bp-ns}-popover2-target {
     width: 100% !important;
   }
-  &__submit.bp3-button {
+  &__submit.#{$bp-ns}-button {
     flex: 0 0 !important;
   }
-  &__spinner.bp3-spinner {
+  &__spinner.#{$bp-ns}-spinner {
     margin: 2px !important;
   }
   .EntitySelect {

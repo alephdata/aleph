@@ -25,11 +25,11 @@
 
   &.casefile,
   &.dataset {
-    .bp3-breadcrumb {
+    .#{$bp-ns}-breadcrumb {
       color: white;
     }
 
-    .bp3-divider {
+    .#{$bp-ns}-divider {
       border-color: $light-gray4;
     }
   }
@@ -53,26 +53,26 @@
   &__right {
     display: flex;
 
-    .bp3-button-group {
+    .#{$bp-ns}-button-group {
       align-items: center;
     }
 
-    .bp3-divider:last-child {
+    .#{$bp-ns}-divider:last-child {
       display: none;
     }
 
-    .bp3-control-group,
-    .bp3-input,
-    .bp3-button-group {
+    .#{$bp-ns}-control-group,
+    .#{$bp-ns}-input,
+    .#{$bp-ns}-button-group {
       border-radius: $aleph-border-radius !important;
     }
 
-    .bp3-input-group {
+    .#{$bp-ns}-input-group {
       min-width: $aleph-grid-size * 20.5;
     }
   }
 
-  .bp3-breadcrumbs {
+  .#{$bp-ns}-breadcrumbs {
     height: auto;
     margin: 1px 0;
 
@@ -84,13 +84,13 @@
     }
   }
 
-  .bp3-breadcrumb {
+  .#{$bp-ns}-breadcrumb {
     font-size: $aleph-font-size;
 
     &.CollectionLabel {
       font-weight: 600;
 
-      .bp3-spinner-head {
+      .#{$bp-ns}-spinner-head {
         stroke: white;
       }
     }
@@ -101,10 +101,10 @@
     }
   }
 
-  .bp3-breadcrumb-current {
+  .#{$bp-ns}-breadcrumb-current {
     color: $blue1;
 
-    .bp3-spinner-head {
+    .#{$bp-ns}-spinner-head {
       stroke: $blue1;
     }
   }

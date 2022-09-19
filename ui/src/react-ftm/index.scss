@@ -27,27 +27,27 @@ body {
   pointer-events: none;
 }
 
-.bp3-tab,
-.bp3-button,
-.bp3-input {
+.#{$bp-ns}-tab,
+.#{$bp-ns}-button,
+.#{$bp-ns}-input {
   outline: none !important;
 }
 
-.bp3-input:focus {
+.#{$bp-ns}-input:focus {
   box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0),
     inset 0 0 0 1px rgba(16, 22, 26, 0.15),
     inset 0 1px 1px rgba(16, 22, 26, 0.2) !important;
 }
 
-.bp3-popover2-content,
-.bp3-popover2-arrow path,
-.bp3-popover2-content .bp3-menu {
+.#{$bp-ns}-popover2-content,
+.#{$bp-ns}-popover2-arrow path,
+.#{$bp-ns}-popover2-content .#{$bp-ns}-menu {
   @include themify() {
     background: themed('tooltipColor');
     color: themed('tooltipTextColor');
     fill: themed('tooltipColor');
   }
-  .bp3-icon {
+  .#{$bp-ns}-icon {
     @include themify() {
       color: themed('tooltipTextColor');
     }

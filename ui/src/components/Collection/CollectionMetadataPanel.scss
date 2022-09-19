@@ -32,7 +32,7 @@
     font-size: $pt-font-size-small;
     background-color: $light-gray5 !important;
 
-    .bp3-heading {
+    .#{$bp-ns}-heading {
       font-size: $pt-font-size-large !important;
       margin-bottom: 0 !important;
     }

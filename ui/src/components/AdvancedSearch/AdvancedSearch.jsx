@@ -213,7 +213,7 @@ class AdvancedSearch extends React.Component {
         <span>
           <Button
             text={
-              <span className="bp3-text-muted">
+              <span className={Classes.TEXT_MUTED}>
                 {intl.formatMessage(messages.clear)}
               </span>
             }

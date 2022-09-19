@@ -9,10 +9,10 @@
     margin-left: -10px !important;
   }
 
-  .bp3-button,
+  .#{$bp-ns}-button,
   input,
-  .bp3-input-action,
-  .bp3-input-action .bp3-icon {
+  .#{$bp-ns}-input-action,
+  .#{$bp-ns}-input-action .#{$bp-ns}-icon {
     color: inherit !important;
     font-weight: inherit !important;
   }

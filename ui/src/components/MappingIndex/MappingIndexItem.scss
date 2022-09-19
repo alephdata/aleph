@@ -5,7 +5,7 @@
   width: 100%;
   margin: $aleph-grid-size 0;
 
-  &__title.bp3-heading {
+  &__title.#{$bp-ns}-heading {
     margin-bottom: $aleph-grid-size * 1.5;
     display: inline-block;
   }
@@ -33,11 +33,11 @@
       white-space: nowrap;
     }
 
-    .bp3-intent-primary {
+    .#{$bp-ns}-intent-primary {
       font-weight: bold;
       color: $green1;
     }
-    .bp3-intent-danger {
+    .#{$bp-ns}-intent-danger {
       font-weight: bold;
       color: $red1;
     }

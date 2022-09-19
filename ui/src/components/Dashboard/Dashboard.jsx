@@ -76,8 +76,8 @@ class Dashboard extends React.Component {
         <div className="Dashboard__inner-container">
           <div className="Dashboard__menu">
             <Menu>
-              <li className="bp3-menu-header">
-                <h6 className="bp3-heading">
+              <li className={Classes.MENU_HEADER}>
+                <h6 className={Classes.HEADING}>
                   <FormattedMessage
                     id="dashboard.activity"
                     defaultMessage="Activity"
@@ -105,8 +105,8 @@ class Dashboard extends React.Component {
                 active={current === '/exports'}
               />
               <MenuDivider />
-              <li className="bp3-menu-header">
-                <h6 className="bp3-heading">
+              <li className={Classes.MENU_HEADER}>
+                <h6 className={Classes.HEADING}>
                   <FormattedMessage
                     id="dashboard.workspace"
                     defaultMessage="Workspace"
@@ -145,11 +145,12 @@ class Dashboard extends React.Component {
                 <>
                   <MenuDivider />
                   <li
-                    className={c('bp3-menu-header', {
-                      [Classes.SKELETON]: groupsResult.total === undefined,
-                    })}
+                    className={c(
+                      Classes.MENU_HEADER,
+                      groupsResult.total === undefined && Classes.SKELETON
+                    )}
                   >
-                    <h6 className="bp3-heading">
+                    <h6 className={Classes.HEADING}>
                       <FormattedMessage
                         id="dashboard.groups"
                         defaultMessage="Groups"
@@ -170,7 +171,7 @@ class Dashboard extends React.Component {
                     <Skeleton.Text
                       type="li"
                       length={20}
-                      className="bp3-menu-item"
+                      className={Classes.MENU_ITEM}
                     />
                   )}
                 </>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import c from 'classnames';
 
 import withRouter from 'app/withRouter';
 import { createCollection, updateCollectionPermissions } from 'actions';
@@ -142,15 +143,15 @@ class CreateInvestigationDialog extends Component {
         enforceFocus={false}
         autoFocus={false}
       >
-        <div className="bp3-dialog-body">
-          <div className="bp3-form-group">
-            <label className="bp3-label" htmlFor="label">
+        <div className={Classes.DIALOG_BODY}>
+          <div className={Classes.FORM_GROUP}>
+            <label className={Classes.LABEL} htmlFor="label">
               <FormattedMessage id="case.choose.name" defaultMessage="Title" />
-              <div className="bp3-input-group bp3-fill">
+              <div className={c(Classes.INPUT_GROUP, Classes.FILL)}>
                 <input
                   id="label"
                   type="text"
-                  className="bp3-input"
+                  className={Classes.INPUT}
                   autoComplete="off"
                   placeholder={intl.formatMessage(messages.label_placeholder)}
                   onChange={this.onChangeLabel}
@@ -159,16 +160,16 @@ class CreateInvestigationDialog extends Component {
               </div>
             </label>
           </div>
-          <div className="bp3-form-group">
-            <label className="bp3-label" htmlFor="summary">
+          <div className={Classes.FORM_GROUP}>
+            <label className={Classes.LABEL} htmlFor="summary">
               <FormattedMessage
                 id="case.choose.summary"
                 defaultMessage="Summary"
               />
-              <div className="bp3-input-group bp3-fill">
+              <div className={c(Classes.INPUT_GROUP, Classes.FILL)}>
                 <textarea
                   id="summary"
-                  className="bp3-input"
+                  className={Classes.INPUT}
                   placeholder={intl.formatMessage(messages.summary_placeholder)}
                   onChange={this.onChangeSummary}
                   value={collection.summary}
@@ -176,8 +177,8 @@ class CreateInvestigationDialog extends Component {
               </div>
             </label>
           </div>
-          <div className="bp3-form-group">
-            <label className="bp3-label">
+          <div className={Classes.FORM_GROUP}>
+            <label className={Classes.LABEL}>
               <FormattedMessage
                 id="case.chose.languages"
                 defaultMessage="Languages"
@@ -191,15 +192,15 @@ class CreateInvestigationDialog extends Component {
                 placeholder: intl.formatMessage(messages.language_placeholder),
               }}
             />
-            <div className="bp3-form-helper-text">
+            <div className={Classes.FORM_HELPER_TEXT}>
               <FormattedMessage
                 id="case.languages.helper"
                 defaultMessage="Used for optical text recognition in non-Latin alphabets."
               />
             </div>
           </div>
-          <div className="bp3-form-group">
-            <label className="bp3-label">
+          <div className={Classes.FORM_GROUP}>
+            <label className={Classes.LABEL}>
               <FormattedMessage
                 id="case.share.with"
                 defaultMessage="Share with"
@@ -229,8 +230,8 @@ class CreateInvestigationDialog extends Component {
             </table>
           )}
         </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button
               onClick={this.onSubmit}
               intent={Intent.PRIMARY}

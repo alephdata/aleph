@@ -5,12 +5,12 @@
   border: 1px solid $aleph-border-color;
   background: white;
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     border-bottom: 1px dashed $aleph-border-color;
     margin: 3px;
   }
 
-  .bp3-popover-target > div {
+  .#{$bp-ns}-popover-target > div {
     width: 100%;
   }
 }

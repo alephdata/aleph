@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import { shouldPolyfill } from '@formatjs/intl-relativetimeformat/should-polyfill';
+import { Classes } from '@blueprintjs/core';
 
 import { selectLocale } from 'selectors';
 import { SectionLoading } from 'components/common';
@@ -45,7 +46,7 @@ class Translator extends React.Component {
     const { isPending } = this.state;
 
     if (isPending) {
-      return <SectionLoading className="bp3-large" />;
+      return <SectionLoading className={Classes.LARGE} />;
     }
 
     //  override arabic locale to marocan version

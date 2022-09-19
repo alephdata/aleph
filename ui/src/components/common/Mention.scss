@@ -4,7 +4,7 @@
 .Mention {
   text-decoration: none !important;
 
-  .bp3-tag {
+  .#{$bp-ns}-tag {
     background-color: $aleph-breadcrumbs-background !important;
     margin: 2px 0;
 

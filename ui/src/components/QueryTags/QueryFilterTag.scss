@@ -11,7 +11,7 @@
   font-weight: bold;
   height: $aleph-query-tag-height;
 
-  &.bp3-tag {
+  &.#{$bp-ns}-tag {
     background-color: $aleph-theme-intent;
   }
 

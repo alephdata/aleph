@@ -5,7 +5,7 @@ $border-color: rgba(16, 22, 26, 0.15);
 @import 'react-ftm/themes.scss';
 
 .TableView {
-  &.bp3-drawer {
+  &.#{$bp-ns}-drawer {
     padding: $table-editor-padding !important;
     position: relative !important;
     height: 100% !important;
@@ -19,7 +19,7 @@ $border-color: rgba(16, 22, 26, 0.15);
     z-index: 3;
   }
 
-  .bp3-tab[aria-selected='true'] {
+  .#{$bp-ns}-tab[aria-selected='true'] {
     .SchemaIcon {
       fill: $blue2;
     }

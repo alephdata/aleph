@@ -5,14 +5,14 @@
     display: table;
   }
 
-  &__mobile-toggle.bp3-button {
+  &__mobile-toggle.#{$bp-ns}-button {
     display: none;
     @include medium {
       display: table-cell;
       margin-right: -10px;
     }
 
-    .bp3-icon {
+    .#{$bp-ns}-icon {
       margin: auto !important;
     }
   }

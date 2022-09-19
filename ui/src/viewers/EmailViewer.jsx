@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Pre } from '@blueprintjs/core';
+import { Classes, Pre } from '@blueprintjs/core';
 
 import { Property, Skeleton } from 'components/common';
 import wordList from 'util/wordList';
@@ -56,7 +56,7 @@ class EmailViewer extends PureComponent {
     }
     return (
       <div className="email-header">
-        <table className="bp3-html-table">
+        <table className={Classes.HTML_TABLE}>
           <tbody>
             {this.headerProperty('from', 'emitters')}
             {this.headerProperty('date')}
@@ -84,7 +84,7 @@ class EmailViewer extends PureComponent {
       return <Pre>{bodyText}</Pre>;
     }
     return (
-      <p className="bp3-text-muted">
+      <p className={Classes.TEXT_MUTED}>
         <FormattedMessage
           id="email.body.empty"
           defaultMessage="No message body."

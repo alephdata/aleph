@@ -1,6 +1,11 @@
 import React from 'react';
-import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
+import { Classes } from '@blueprintjs/core';
+import {
+  Tooltip2 as Tooltip,
+  Classes as TooltipClasses,
+} from '@blueprintjs/popover2';
 import truncateText from 'truncate';
+import c from 'classnames';
 
 import './Transliterate.scss';
 
@@ -44,7 +49,11 @@ class Transliterate extends React.PureComponent<ITransliterateProps> {
     return (
       <>
         <Tooltip
-          popoverClassName="Transliterate__popover bp3-minimal bp3-small"
+          popoverClassName={c(
+            'Transliterate__popover',
+            Classes.MINIMAL,
+            Classes.SMALL
+          )}
           onOpening={this.onOpen}
           onClosing={this.onClose}
           content={
@@ -58,7 +67,9 @@ class Transliterate extends React.PureComponent<ITransliterateProps> {
             </>
           }
         >
-          <span className="Transliterate bp3-tooltip2-indicator">
+          <span
+            className={c('Transliterate', TooltipClasses.TOOLTIP2_INDICATOR)}
+          >
             {truncate ? truncateText(value, truncate) : value}
           </span>
         </Tooltip>

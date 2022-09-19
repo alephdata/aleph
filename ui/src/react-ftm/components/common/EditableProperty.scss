@@ -80,7 +80,7 @@
       }
     }
 
-    .bp3-input {
+    .#{$bp-ns}-input {
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
@@ -94,16 +94,16 @@
       }
     }
 
-    .bp3-input.bp3-tag-input {
+    .#{$bp-ns}-input.#{$bp-ns}-tag-input {
       padding: 0 !important;
     }
 
-    .bp3-tag-input-values {
+    .#{$bp-ns}-tag-input-values {
       margin-top: 0;
     }
 
-    .bp3-input,
-    .bp3-input-ghost {
+    .#{$bp-ns}-input,
+    .#{$bp-ns}-input-ghost {
       padding-top: 0;
       padding-left: 0 !important;
       height: auto;
@@ -113,18 +113,18 @@
       }
     }
 
-    .bp3-form-group {
+    .#{$bp-ns}-form-group {
       margin-bottom: 0 !important;
     }
 
-    .bp3-tag {
+    .#{$bp-ns}-tag {
       @include themify() {
         background: themed('tagColor') !important;
       }
       color: $black-80 !important;
     }
 
-    .bp3-icon {
+    .#{$bp-ns}-icon {
       margin-right: 3px;
     }
 
@@ -135,19 +135,19 @@
     }
 
     .TextEdit__singleInput {
-      & > .bp3-input,
-      & > .bp3-input-action {
+      & > .#{$bp-ns}-input,
+      & > .#{$bp-ns}-input-action {
         @include themify() {
           color: themed('textColor') !important;
         }
       }
     }
 
-    .TextEdit__toggleMulti.bp3-button {
+    .TextEdit__toggleMulti.#{$bp-ns}-button {
       top: 0;
       transform: translateY(-2px);
 
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         @include themify() {
           color: themed('textColor');
         }

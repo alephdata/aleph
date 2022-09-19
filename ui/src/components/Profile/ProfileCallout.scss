@@ -1,7 +1,7 @@
 @import 'app/variables.scss';
 
 .ProfileCallout {
-  &.bp3-callout {
+  &.#{$bp-ns}-callout {
     color: $aleph-profile-dark !important;
     background-color: white !important;
     border: 1px solid $aleph-profile-dark;
@@ -12,12 +12,12 @@
       font-weight: bold;
       color: $aleph-profile-dark;
 
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         margin: 0 3px;
       }
     }
 
-    .bp3-icon {
+    .#{$bp-ns}-icon {
       color: $aleph-profile-dark !important;
     }
 
@@ -27,7 +27,7 @@
       padding-top: $profile-vertical-padding;
       padding-bottom: $profile-vertical-padding;
 
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         top: $aleph-grid-size * 2 !important;
       }
     }

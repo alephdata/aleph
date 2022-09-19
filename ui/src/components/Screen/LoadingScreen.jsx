@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spinner } from '@blueprintjs/core';
+import { Classes, Spinner } from '@blueprintjs/core';
 
 import Screen from 'components/Screen/Screen';
 
@@ -9,7 +9,7 @@ const LoadingScreen = (props) => (
   <Screen {...props}>
     <div className="LoadingScreen">
       <div className="spinner">
-        <Spinner className="bp3-large" />
+        <Spinner className={Classes.LARGE} />
       </div>
     </div>
   </Screen>

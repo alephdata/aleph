@@ -5,11 +5,11 @@
   box-shadow: $editor-box-shadow;
   z-index: 100;
 
-  .bp3-spinner {
+  .#{$bp-ns}-spinner {
     padding: 10px 0;
   }
 
-  .bp3-icon {
+  .#{$bp-ns}-icon {
     color: #5c7080 !important;
   }
 }

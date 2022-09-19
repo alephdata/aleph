@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Alignment, ButtonGroup, Button } from '@blueprintjs/core';
+import { Alignment, ButtonGroup, Button, Classes } from '@blueprintjs/core';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import withRouter from 'app/withRouter';
 import collectionViewIds from 'components/Collection/collectionViewIds';
@@ -69,7 +70,12 @@ class InvestigationSidebar extends React.Component {
         <InvestigationHeading collection={collection} activeMode={activeMode} />
         <div className="InvestigationSidebar__content">
           <div className="InvestigationSidebar__section">
-            <h6 className="bp3-heading InvestigationSidebar__section__title">
+            <h6
+              className={c(
+                Classes.HEADING,
+                'InvestigationSidebar__section__title'
+              )}
+            >
               <FormattedMessage
                 id="collection.info.entities"
                 defaultMessage="Entities"
@@ -92,7 +98,12 @@ class InvestigationSidebar extends React.Component {
             </ButtonGroup>
           </div>
           <div className="InvestigationSidebar__section">
-            <h6 className="bp3-heading InvestigationSidebar__section__title">
+            <h6
+              className={c(
+                Classes.HEADING,
+                'InvestigationSidebar__section__title'
+              )}
+            >
               <FormattedMessage
                 id="collection.info.documents"
                 defaultMessage="Documents"

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dialog as Bp3Dialog, IconName, Spinner } from '@blueprintjs/core';
+import { Dialog as BpDialog, IconName, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
 import './Dialog.scss';
@@ -18,7 +18,7 @@ export class Dialog extends React.Component<IDialogProps> {
     const { children, className, isProcessing, ...rest } = this.props;
 
     return (
-      <Bp3Dialog
+      <BpDialog
         className={c('Dialog', className)}
         portalClassName="dialog-portal-container"
         {...rest}
@@ -31,7 +31,7 @@ export class Dialog extends React.Component<IDialogProps> {
             </div>
           )}
         </div>
-      </Bp3Dialog>
+      </BpDialog>
     );
   }
 }

@@ -1,7 +1,7 @@
 @import 'app/variables.scss';
 
 .DiagramExportDialog {
-  &.bp3-dialog {
+  &.#{$bp-ns}-dialog {
     padding-bottom: 0;
   }
 
@@ -18,7 +18,7 @@
   }
 
   &__embed-code {
-    .bp3-input {
+    .#{$bp-ns}-input {
       font-family: monospace;
     }
   }

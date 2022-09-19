@@ -6,12 +6,12 @@
       margin-top: $aleph-grid-size * 1.5;
     }
 
-    .bp3-input-group {
+    .#{$bp-ns}-input-group {
       margin-bottom: $aleph-grid-size;
     }
   }
 
-  .index-item .bp3-icon {
+  .index-item .#{$bp-ns}-icon {
     margin-top: 2px;
   }
 }

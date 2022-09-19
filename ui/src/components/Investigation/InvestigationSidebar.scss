@@ -51,7 +51,7 @@ $sidebar-padding: $aleph-grid-size * 2;
       margin: $aleph-content-padding/2;
     }
 
-    &__title.bp3-heading {
+    &__title.#{$bp-ns}-heading {
       color: $aleph-investigation-theme;
       padding-bottom: 5px;
     }

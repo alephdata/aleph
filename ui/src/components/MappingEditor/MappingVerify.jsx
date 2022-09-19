@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, HTMLTable, MenuItem } from '@blueprintjs/core';
+import { Button, Classes, Card, HTMLTable, MenuItem } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { PropertyEditor } from 'react-ftm';
 import { Property } from 'components/common';
+import c from 'classnames';
 
 import { selectLocale } from 'selectors';
 import { MappingLabel } from 'components/MappingEditor/MappingLabel';
@@ -126,7 +127,12 @@ class MappingVerifyItem extends Component {
     }
     if (propValue.column !== undefined) {
       return (
-        <td className="MappingVerify__listItem__value bp3-monospace-text">
+        <td
+          className={c(
+            'MappingVerify__listItem__value',
+            Classes.MONOSPACE_TEXT
+          )}
+        >
           {propValue.column}
         </td>
       );
@@ -166,14 +172,19 @@ class MappingVerifyItem extends Component {
         key={id}
         style={{ borderColor: color }}
       >
-        <h6 className="MappingVerify__title bp3-heading">
+        <h6 className={c('MappingVerify__title', Classes.HEADING)}>
           <MappingLabel mapping={mapping} onEdit={onMappingIdChange} />
         </h6>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">
             <FormattedMessage id="mapping.keys" defaultMessage="Keys" />:
           </span>
-          <p className="MappingVerify__section__value bp3-monospace-text">
+          <p
+            className={c(
+              'MappingVerify__section__value',
+              Classes.MONOSPACE_TEXT
+            )}
+          >
             {keys.join(', ')}
           </p>
         </div>

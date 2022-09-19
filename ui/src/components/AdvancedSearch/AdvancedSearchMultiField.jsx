@@ -1,5 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Button, Collapse, Divider, FormGroup, Tag } from '@blueprintjs/core';
+import {
+  Button,
+  Collapse,
+  Divider,
+  FormGroup,
+  Tag,
+  Classes,
+} from '@blueprintjs/core';
 
 import AdvancedSearchMultiFieldForm from 'components/AdvancedSearch/AdvancedSearchMultiFieldForm';
 import { Count } from 'components/common';
@@ -59,7 +66,7 @@ class AdvancedSearchMultiField extends PureComponent {
             isOpen={showHelpText}
             className="AdvancedSearchMultiField__helptext"
           >
-            <span className="bp3-form-helper-text">{helperText}</span>
+            <span className={Classes.FORM_HELPER_TEXT}>{helperText}</span>
           </Collapse>
           {values.length > 0 && (
             <div className="AdvancedSearchMultiField__list">
