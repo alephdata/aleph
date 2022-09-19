@@ -58,8 +58,8 @@ class InvestigationSidebar extends React.Component {
     return (
       <div className="InvestigationSidebar">
         <InvestigationHeading collection={collection} activeMode={activeMode} />
-        <ul className="InvestigationSidebar__content">
-          <li className="InvestigationSidebar__section">
+        <div className="InvestigationSidebar__content">
+          <ul className="InvestigationSidebar__section">
             <MenuDivider
               className="InvestigationSidebar__section__title"
               title={
@@ -93,9 +93,9 @@ class InvestigationSidebar extends React.Component {
                 active={activeMode === toolId}
               />
             ))}
-          </li>
+          </ul>
 
-          <li className="InvestigationSidebar__section">
+          <ul className="InvestigationSidebar__section">
             <MenuDivider
               className="InvestigationSidebar__section__title"
               title={
@@ -120,8 +120,8 @@ class InvestigationSidebar extends React.Component {
                 active={activeMode === toolId}
               />
             ))}
-          </li>
-        </ul>
+          </ul>
+        </div>
       </div>
     );
   }
