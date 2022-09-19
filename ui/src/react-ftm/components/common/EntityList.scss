@@ -56,7 +56,7 @@
       left: 0;
     }
 
-    .bp3-fill {
+    .#{$bp-ns}-fill {
       @include breakText;
     }
 

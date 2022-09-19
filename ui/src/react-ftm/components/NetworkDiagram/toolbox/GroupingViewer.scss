@@ -26,7 +26,7 @@
         margin-bottom: 3px !important;
         opacity: 0.9;
 
-        .bp3-icon {
+        .#{$bp-ns}-icon {
           margin-right: 5px;
         }
 
@@ -49,7 +49,7 @@
     border-bottom: 1px solid $blue1;
   }
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     margin: 15px 0;
     @include themify() {
       border-color: themed('textColor');

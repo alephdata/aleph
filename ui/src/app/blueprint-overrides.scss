@@ -1,69 +1,69 @@
 @import 'app/mixins.scss';
 
 /* Taming Blueprint icons and tags/badges when displayed inside tabs */
-.bp3-tabs .bp3-tab .bp3-tag {
+.#{$bp-ns}-tabs .#{$bp-ns}-tab .#{$bp-ns}-tag {
   padding: 0px 10px;
   @include rtlSupportInvertedProp(margin, left, 5px, 0);
   line-height: 1em;
   // font-size: 0.6em;
 }
 
-.bp3-tabs .bp3-large .bp3-tab .bp3-icon-standard {
+.#{$bp-ns}-tabs .#{$bp-ns}-large .#{$bp-ns}-tab .#{$bp-ns}-icon-standard {
   min-width: 20px;
   @include rtlSupportInvertedProp(margin, right, 10px, 0);
 }
 
-.bp3-tabs .bp3-large .bp3-tab .bp3-tag {
+.#{$bp-ns}-tabs .#{$bp-ns}-large .#{$bp-ns}-tab .#{$bp-ns}-tag {
   padding: 0 10px;
   @include rtlSupportInvertedProp(margin, left, 10px, 0);
 }
 
-.bp3-tabs {
-  &.bp3-vertical {
-    > .bp3-tab-panel {
+.#{$bp-ns}-tabs {
+  &.#{$bp-ns}-vertical {
+    > .#{$bp-ns}-tab-panel {
       @include rtlSupportInvertedProp(padding, left, 20px, null);
     }
   }
 }
 
 /* next 4 rules affect the add new dataset popover dialog */
-.bp3-tag-input {
+.#{$bp-ns}-tag-input {
   @include rtlSupportInvertedProp(padding, left, 5px, 0);
 }
-.bp3-tag-input .bp3-tag-input-values::before,
-.bp3-tag-input .bp3-tag-input-values > * {
+.#{$bp-ns}-tag-input .#{$bp-ns}-tag-input-values::before,
+.#{$bp-ns}-tag-input .#{$bp-ns}-tag-input-values > * {
   @include rtlSupportInvertedProp(margin, right, 5px, 0);
 }
-.bp3-tag-input .bp3-tag-input-values {
+.#{$bp-ns}-tag-input .#{$bp-ns}-tag-input-values {
   @include rtlSupportInvertedProp(margin, right, 7px, 0);
 }
-.bp3-tag > * {
+.#{$bp-ns}-tag > * {
   @include rtlSupportInvertedProp(margin, right, 4px, initial);
 }
-.bp3-tag:empty::before,
-.bp3-tag > :last-child {
+.#{$bp-ns}-tag:empty::before,
+.#{$bp-ns}-tag > :last-child {
   @include rtlSupportInvertedProp(margin, right, 0, initial);
 }
 
 /* next two rules affect the green save button in diagram page */
-.bp3-tag.bp3-large::before,
-.bp3-tag.bp3-large > *,
-.bp3-large .bp3-tag::before,
-.bp3-large .bp3-tag > * {
+.#{$bp-ns}-tag.#{$bp-ns}-large::before,
+.#{$bp-ns}-tag.#{$bp-ns}-large > *,
+.#{$bp-ns}-large .#{$bp-ns}-tag::before,
+.#{$bp-ns}-large .#{$bp-ns}-tag > * {
   @include rtlSupportInvertedProp(margin, right, 7px, 0);
 }
-.bp3-tag.bp3-large:empty::before,
-.bp3-tag.bp3-large > :last-child,
-.bp3-large .bp3-tag:empty::before,
-.bp3-large .bp3-tag > :last-child {
+.#{$bp-ns}-tag.#{$bp-ns}-large:empty::before,
+.#{$bp-ns}-tag.#{$bp-ns}-large > :last-child,
+.#{$bp-ns}-large .#{$bp-ns}-tag:empty::before,
+.#{$bp-ns}-large .#{$bp-ns}-tag > :last-child {
   margin: 0;
 }
 
-.bp3-tag > .bp3-icon {
+.#{$bp-ns}-tag > .#{$bp-ns}-icon {
   @include rtlSupportInvertedProp(margin, right, 4px, 0);
 }
 
-.bp3-tab-list {
+.#{$bp-ns}-tab-list {
   overflow-x: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -75,22 +75,22 @@
   }
 }
 
-.bp3-button,
-.bp3-menu-item {
+.#{$bp-ns}-button,
+.#{$bp-ns}-menu-item {
   @include rtl(text-align, left, right);
 
-  .bp3-icon,
-  .bp3-button-text {
+  .#{$bp-ns}-icon,
+  .#{$bp-ns}-button-text {
     @include rtlSupportInvertedProp(margin, right, 7px, 0);
   }
 }
 
-.bp3-button:empty::before,
-.bp3-button > :last-child {
+.#{$bp-ns}-button:empty::before,
+.#{$bp-ns}-button > :last-child {
   @include rtlSupportInvertedProp(margin, right, 0, null);
 }
 
-.bp3-menu {
+.#{$bp-ns}-menu {
   @include rtl(text-align, left, right);
 }
 
@@ -105,28 +105,28 @@ table {
   }
 }
 
-.bp3-input-group {
-  .bp3-input-action {
+.#{$bp-ns}-input-group {
+  .#{$bp-ns}-input-action {
     &:last-child {
       @include rtl(right, 0, initial);
       @include rtl(left, initial, 0);
     }
   }
 
-  .bp3-icon {
+  .#{$bp-ns}-icon {
     &:first-child {
       @include rtl(left, 0, initial);
       @include rtl(right, initial, 0);
     }
   }
 
-  &.bp3-large {
-    .bp3-input:not(:first-child) {
+  &.#{$bp-ns}-large {
+    .#{$bp-ns}-input:not(:first-child) {
       @include rtlSupportInvertedProp(padding, left, 40px, null);
     }
   }
 
-  .bp3-input-left-container {
+  .#{$bp-ns}-input-left-container {
     @include rtl(right, initial, 0);
     @include rtl(left, 0, initial);
   }
@@ -134,8 +134,9 @@ table {
   // the blueprint logic here for the input and button is:
   // an input which is not the first child has an icon on it's left
   // if it is not the last child there is an icon on the right
-  // a button which is the last child is absolute positioned at the end of the bp3-input-group
-  .bp3-input {
+  // a button which is the last child is absolute positioned at the
+  // end of the Blueprint input group
+  .#{$bp-ns}-input {
     &:not(:last-child) {
       @include rtlSupportInvertedProp(padding, right, 30px, 10px);
     }
@@ -146,7 +147,7 @@ table {
     // to handle Safari input placeholder line-height weirdness
     line-height: normal !important;
   }
-  > .bp3-button {
+  > .#{$bp-ns}-button {
     &:last-child {
       @include rtl(right, 0, initial);
       @include rtl(left, initial, 0);
@@ -154,7 +155,7 @@ table {
   }
 }
 
-.bp3-control-group {
+.#{$bp-ns}-control-group {
   > :last-child {
     @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
   }
@@ -165,10 +166,10 @@ table {
 }
 
 // buttons and their borders horizontal and vertical
-.bp3-button-group {
-  &:not(.bp3-minimal) {
-    &:not(.bp3-vertical) {
-      > .bp3-button {
+.#{$bp-ns}-button-group {
+  &:not(.#{$bp-ns}-minimal) {
+    &:not(.#{$bp-ns}-vertical) {
+      > .#{$bp-ns}-button {
         &:not(:last-child) {
           @include buttonNotLastChild;
         }
@@ -178,23 +179,23 @@ table {
         }
       }
 
-      > .bp3-popover2-target:not(:first-child) .bp3-button {
+      > .#{$bp-ns}-popover2-target:not(:first-child) .#{$bp-ns}-button {
         @include buttonNotFirstChild;
       }
 
-      > .bp3-popover2-target:not(:last-child) .bp3-button {
+      > .#{$bp-ns}-popover2-target:not(:last-child) .#{$bp-ns}-button {
         @include buttonNotLastChild;
       }
     }
 
-    &.bp3-vertical {
-      > .bp3-popover2-target:last-child .bp3-button,
-      > .bp3-button:last-child {
+    &.#{$bp-ns}-vertical {
+      > .#{$bp-ns}-popover2-target:last-child .#{$bp-ns}-button,
+      > .#{$bp-ns}-button:last-child {
         border-radius: 0 0 3px 3px;
       }
 
-      > .bp3-popover2-target:first-child .bp3-button,
-      > .bp3-button:first-child {
+      > .#{$bp-ns}-popover2-target:first-child .#{$bp-ns}-button,
+      > .#{$bp-ns}-button:first-child {
         border-radius: 3px 3px 0 0;
       }
     }
@@ -202,11 +203,11 @@ table {
 }
 
 // for the two checkboxes in settings page
-.bp3-control {
-  &.bp3-checkbox {
+.#{$bp-ns}-control {
+  &.#{$bp-ns}-checkbox {
     @include rtlSupportInvertedProp(padding, left, 26px, 0);
 
-    .bp3-control-indicator {
+    .#{$bp-ns}-control-indicator {
       @include rtlSupportInvertedProp(margin, right, 10px, -26px);
     }
   }
@@ -217,21 +218,21 @@ table {
   }
 }
 
-.bp3-navbar-group {
-  &.bp3-align-right {
+.#{$bp-ns}-navbar-group {
+  &.#{$bp-ns}-align-right {
     @include rtl(float, right, left);
   }
 
-  &.bp3-align-left {
+  &.#{$bp-ns}-align-left {
     @include rtl(float, left, right);
   }
 }
 
-.bp3-breadcrumb .bp3-icon {
+.#{$bp-ns}-breadcrumb .#{$bp-ns}-icon {
   @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, 0);
 }
 
-.bp3-breadcrumbs {
+.#{$bp-ns}-breadcrumbs {
   > li {
     &:after {
       @include rtl(transform, rotate(0deg), rotate(180deg));
@@ -239,49 +240,49 @@ table {
   }
 }
 
-.bp3-toast {
-  > .bp3-icon {
+.#{$bp-ns}-toast {
+  > .#{$bp-ns}-icon {
     margin: 12px;
     @include rtlSupportInvertedProp(margin, right, 0, null);
   }
 
-  .bp3-button-group {
+  .#{$bp-ns}-button-group {
     padding: 5px;
     @include rtlSupportInvertedProp(padding, left, 0, null);
   }
 }
 
-.bp3-tab-list {
+.#{$bp-ns}-tab-list {
   > :not(:last-child) {
     @include rtlSupportInvertedProp(margin, right, 20px, 0);
   }
 
-  .bp3-tab-indicator-wrapper {
+  .#{$bp-ns}-tab-indicator-wrapper {
     @include rtlSupportInvertedProp(margin, left, 0, 0);
   }
 }
 
-.bp3-dialog {
-  .bp3-dialog-header {
+.#{$bp-ns}-dialog {
+  .#{$bp-ns}-dialog-header {
     @include rtlSupportInvertedProp(padding, left, 20px, 5px);
-    .bp3-icon-large,
-    .bp3-icon {
+    .#{$bp-ns}-icon-large,
+    .#{$bp-ns}-icon {
       @include rtlSupportInvertedProp(margin, right, 10px, 0);
     }
 
-    .bp3-dialog-close-button {
-      .bp3-icon {
+    .#{$bp-ns}-dialog-close-button {
+      .#{$bp-ns}-icon {
         margin: 0 -7px;
       }
     }
   }
 
-  .bp3-dialog-footer-actions .bp3-button {
+  .#{$bp-ns}-dialog-footer-actions .#{$bp-ns}-button {
     @include rtlSupportInvertedProp(margin, left, 10px, 0px);
   }
 }
 
-.bp3-menu-item {
+.#{$bp-ns}-menu-item {
   > * {
     @include rtlSupportInvertedProp(margin, right, 7px, 0);
   }
@@ -291,28 +292,28 @@ table {
   }
 }
 
-// languages and countries bp3-tags in input fields, ex: in settings of a specific dataset
-.bp3-tag-remove {
+// languages and countries Blueprint tags in input fields, ex: in settings of a specific dataset
+.#{$bp-ns}-tag-remove {
   @include rtlSupportInvertedProp(margin, right, -6px!important, 0!important);
   @include rtlSupportInvertedProp(padding, left, 0, 2px);
 }
 
 // document pagingation arrows and a right caret when mapping entities to excel files
-.bp3-icon {
-  &.bp3-icon-arrow-right,
-  &.bp3-icon-arrow-left,
-  &.bp3-icon-caret-right {
+.#{$bp-ns}-icon {
+  &.#{$bp-ns}-icon-arrow-right,
+  &.#{$bp-ns}-icon-arrow-left,
+  &.#{$bp-ns}-icon-caret-right {
     @include rtl(transform, rotate(0deg), rotate(180deg));
   }
 }
 
 // this is for the delete document dialog
-.bp3-alert-body .bp3-icon {
+.#{$bp-ns}-alert-body .#{$bp-ns}-icon {
   @include rtlSupportInvertedProp(margin, right, 20px, 0px);
 }
 
 // two rules for a specific dataset settings dialog
-.bp3-select {
+.#{$bp-ns}-select {
   select {
     @include rtl(text-align, left, right);
     @include rtlSupportInvertedProp(padding, right, 25px, 10px);
@@ -340,8 +341,8 @@ table {
 }
 
 .EntityViewer__property-list-item__value {
-  .bp3-input-group {
-    .bp3-input {
+  .#{$bp-ns}-input-group {
+    .#{$bp-ns}-input {
       &.TextEdit__singleInput {
         @include rtlSupportInvertedProp(
           padding,
@@ -354,7 +355,7 @@ table {
   }
 }
 // When mapping excel coloumns to properties
-[dir='rtl'] .bp3-table-header-content {
+[dir='rtl'] .#{$bp-ns}-table-header-content {
   direction: rtl;
 }
 

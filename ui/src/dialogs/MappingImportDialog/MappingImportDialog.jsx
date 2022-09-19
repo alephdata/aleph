@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent, Radio, RadioGroup } from '@blueprintjs/core';
+import {
+  Dialog,
+  Button,
+  Classes,
+  Intent,
+  Radio,
+  RadioGroup,
+} from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import YAML from 'yaml';
@@ -100,7 +107,7 @@ class MappingImportDialog extends Component {
       >
         <div className="MappingImportDialog__contents">
           <form onSubmit={this.onSubmit}>
-            <div className="bp3-dialog-body">
+            <div className={Classes.DIALOG_BODY}>
               <FileImport
                 accept={{ '*': ['.yml', '.yaml'] }}
                 placeholder={intl.formatMessage(messages.placeholder)}
@@ -125,8 +132,8 @@ class MappingImportDialog extends Component {
                 </div>
               )}
             </div>
-            <div className="bp3-dialog-footer">
-              <div className="bp3-dialog-footer-actions">
+            <div className={Classes.DIALOG_FOOTER}>
+              <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                 <Button
                   intent={Intent.PRIMARY}
                   disabled={selectedQueryIndex === null}

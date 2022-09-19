@@ -5,7 +5,7 @@ import {
   injectIntl,
   WrappedComponentProps,
 } from 'react-intl';
-import { Button } from '@blueprintjs/core';
+import { Button, Classes } from '@blueprintjs/core';
 import {
   Values,
   Value,
@@ -13,6 +13,7 @@ import {
   Entity as FTMEntity,
 } from '@alephdata/followthemoney';
 import truncateText from 'truncate';
+import c from 'classnames';
 
 import {
   Country,
@@ -262,7 +263,7 @@ class PropertyValues extends React.PureComponent<
       <Button
         minimal
         small
-        className="more-text bp3-text-muted"
+        className={c('more-text', Classes.TEXT_MUTED)}
         onClick={this.toggleTruncateShowAll}
         text={intl.formatMessage(
           messages[truncateShowAll ? 'truncate_hide' : 'truncate_show'],

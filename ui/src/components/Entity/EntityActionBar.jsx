@@ -4,6 +4,7 @@ import {
   Boundary,
   Button,
   ButtonGroup,
+  Classes,
   ControlGroup,
   Divider,
   OverflowList,
@@ -60,7 +61,7 @@ class EntityActionBar extends Component {
               <React.Fragment key={i}>{item}</React.Fragment>
             )}
             overflowRenderer={this.overflowListRenderer}
-            className="bp3-button-group"
+            className={Classes.BUTTON_GROUP}
             minVisibleItems={showActions ? 0 : 1}
             observeParents
           />

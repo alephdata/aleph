@@ -50,7 +50,7 @@ $pagesWidth: 150px;
           p {
             margin-bottom: 0;
 
-            .bp3-icon {
+            .#{$bp-ns}-icon {
               @include rtlSupportInvertedProp(
                 margin,
                 right,

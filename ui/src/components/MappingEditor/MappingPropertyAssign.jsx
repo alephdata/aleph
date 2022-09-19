@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import {
   Button,
+  Classes,
   Menu,
   MenuDivider,
   MenuItem,
@@ -15,6 +16,7 @@ import {
   Table,
   TruncatedFormat,
 } from '@blueprintjs/table';
+import c from 'classnames';
 import { MappingLabel } from 'components/MappingEditor/MappingLabel';
 import SelectWrapper from 'components/common/SelectWrapper';
 
@@ -100,8 +102,13 @@ export class MappingPropertyAssign extends Component {
     return (
       <>
         {showHeader && (
-          <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading">
-            <h6 className="bp3-heading">
+          <li
+            className={c(
+              Classes.MENU_HEADER,
+              'MappingPropertyAssign__headerSelect__propListHeading'
+            )}
+          >
+            <h6 className={Classes.HEADING}>
               <MappingLabel mapping={mapping} truncate={25} />
             </h6>
           </li>

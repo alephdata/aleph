@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Icon, H4 } from '@blueprintjs/core';
+import { Classes, Icon, H4 } from '@blueprintjs/core';
 import {
   Date,
   Role,
@@ -17,7 +17,7 @@ class CollectionIndexItem extends PureComponent {
   renderSkeleton = () => (
     <li className="index-item">
       <div className="index-item__count">
-        <Count className="bp3-intent-primary" full isPending />
+        <Count className={Classes.INTENT_PRIMARY} full isPending />
       </div>
       <H4 className="index-item__title">
         <Skeleton.Text type="span" length={20} />
@@ -53,7 +53,11 @@ class CollectionIndexItem extends PureComponent {
     return (
       <li className="index-item" key={collection.id}>
         <div className="index-item__count">
-          <Count className="bp3-intent-primary" count={collection.count} full />
+          <Count
+            className={Classes.INTENT_PRIMARY}
+            count={collection.count}
+            full
+          />
         </div>
         <H4 className="index-item__title">
           <Collection.Link

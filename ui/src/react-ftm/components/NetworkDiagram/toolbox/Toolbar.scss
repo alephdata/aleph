@@ -113,7 +113,7 @@ $width-right: $sidebar-width;
       flex-direction: column;
     }
 
-    .bp3-divider:first-child {
+    .#{$bp-ns}-divider:first-child {
       display: none;
     }
   }
@@ -124,18 +124,18 @@ $width-right: $sidebar-width;
     }
   }
 
-  .bp3-button {
+  .#{$bp-ns}-button {
     background: transparent !important;
     box-shadow: none !important;
 
-    .bp3-icon {
+    .#{$bp-ns}-icon {
       svg {
         @include themify() {
           fill: themed('textColor') !important;
         }
       }
     }
-    &.bp3-disabled {
+    &.#{$bp-ns}-disabled {
       svg {
         @include themify() {
           fill: themed('disabledColor') !important;
@@ -144,7 +144,7 @@ $width-right: $sidebar-width;
     }
   }
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     @include themify() {
       border-color: themed('disabledColor') !important;
     }

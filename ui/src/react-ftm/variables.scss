@@ -30,7 +30,7 @@ $text-color-main: white;
 $text-color-secondary: $light-gray1;
 $disabled-color: $black-60;
 
-.bp3-input {
+.#{$bp-ns}-input {
   background: white !important;
   color: $black-80 !important;
 }

@@ -1,5 +1,7 @@
+@import 'app/variables.scss';
+
 .TextEdit {
-  &__toggleMulti.bp3-button {
+  &__toggleMulti.#{$bp-ns}-button {
     top: 50% !important;
     transform: translateY(-50%) !important;
     margin: 0 !important;

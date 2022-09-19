@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Pre } from '@blueprintjs/core';
+import { Classes, Pre } from '@blueprintjs/core';
 
 import { Property, Skeleton } from 'components/common';
 import wordList from 'util/wordList';
@@ -37,7 +37,7 @@ class ArticleViewer extends PureComponent {
 
     return (
       <div className="article-header">
-        <table className="bp3-html-table">
+        <table className={Classes.HTML_TABLE}>
           <tbody>
             {this.headerProperty('title')}
             {this.headerProperty('author')}

@@ -2,7 +2,7 @@
 @import 'react-ftm/themes.scss';
 
 .Sidebar {
-  &.bp3-drawer {
+  &.#{$bp-ns}-drawer {
     padding: $sidebar-gutter;
     min-height: 100%;
     width: 100% !important;
@@ -26,11 +26,11 @@
   }
 
   .EntityBulkEdit {
-    .bp3-button-text {
+    .#{$bp-ns}-button-text {
       color: #5c7080;
     }
 
-    .bp3-collapse-body {
+    .#{$bp-ns}-collapse-body {
       margin: 10px 0 5px;
       padding: 3px 10px;
       border: 2px solid #ebf1f5;

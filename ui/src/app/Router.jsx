@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import { Route, Navigate, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Spinner } from '@blueprintjs/core';
+import { Spinner, Classes } from '@blueprintjs/core';
 
 import { fetchMetadata, fetchMessages } from 'actions';
 import {
@@ -94,7 +94,7 @@ class Router extends Component {
     const Loading = (
       <div className="RouterLoading">
         <div className="spinner">
-          <Spinner className="bp3-large" />
+          <Spinner className={Classes.LARGE} />
         </div>
       </div>
     );

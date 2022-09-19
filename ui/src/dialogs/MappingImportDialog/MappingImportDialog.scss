@@ -1,12 +1,12 @@
 @import 'app/variables.scss';
 
 .MappingImportDialog {
-  .bp3-label {
+  .#{$bp-ns}-label {
     font-weight: bold;
     margin: $aleph-grid-size 0;
   }
 
-  .bp3-radio {
+  .#{$bp-ns}-radio {
     display: -webkit-inline-box;
     width: 100%;
     border-bottom: 1px solid $aleph-border-color;

@@ -41,7 +41,7 @@
     }
   }
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     margin: 15px 0;
     @include themify() {
       border-color: themed('textColor') !important;

@@ -4,6 +4,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {
   Button,
   Card,
+  Classes,
   Collapse,
   FormGroup,
   Icon,
@@ -11,6 +12,7 @@ import {
 } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { MultiSelect } from '@blueprintjs/select';
+import c from 'classnames';
 import SelectWrapper from 'components/common/SelectWrapper';
 import { Schema } from 'components/common';
 import { MappingLabel } from 'components/MappingEditor/MappingLabel';
@@ -123,7 +125,10 @@ export class MappingKeyAssignItem extends Component {
                   ? intl.formatMessage(messages.lessToggleText)
                   : intl.formatMessage(messages.moreToggleText)
               }
-              className="bp3-form-helper-text MappingKeyAssign__item__keyHelp__toggle"
+              className={c(
+                Classes.FORM_HELPER_TEXT,
+                'MappingKeyAssign__item__keyHelp__toggle'
+              )}
               rightIcon={keyExplanationVisible ? 'caret-up' : 'caret-down'}
               onClick={this.toggleKeyExplanation}
             />
@@ -262,7 +267,7 @@ export class MappingKeyAssignItem extends Component {
           minimal
           onClick={() => onMappingRemove(id)}
         />
-        <h6 className="MappingKeyAssign__item__title bp3-heading">
+        <h6 className={c('MappingKeyAssign__item__title', Classes.HEADING)}>
           <MappingLabel mapping={mapping} onEdit={onMappingIdChange} />
         </h6>
         <div className="MappingKeyAssign__item__property">

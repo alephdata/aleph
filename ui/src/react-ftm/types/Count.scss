@@ -1,15 +1,15 @@
 @import 'src/react-ftm/variables.scss';
 
 .Count {
-  &.bp3-tag {
+  &.#{$bp-ns}-tag {
     font-weight: 600;
   }
   &.no-fill {
     background: none !important;
   }
 
-  &.bp3-intent-primary,
-  .bp3-tab[aria-selected='true'] > & {
+  &.#{$bp-ns}-intent-primary,
+  .#{$bp-ns}-tab[aria-selected='true'] > & {
     background-color: $pt-intent-primary !important;
     color: white !important;
   }

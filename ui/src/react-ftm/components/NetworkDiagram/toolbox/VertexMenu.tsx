@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
-import { Menu, MenuDivider, MenuItem, Spinner, SpinnerSize } from '@blueprintjs/core';
+import {
+  Menu,
+  MenuDivider,
+  MenuItem,
+  Spinner,
+  SpinnerSize,
+} from '@blueprintjs/core';
 
 import { modes } from 'react-ftm/components/NetworkDiagram/utils';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';

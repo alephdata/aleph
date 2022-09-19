@@ -4,6 +4,7 @@ import truncateText from 'truncate';
 import c from 'classnames';
 import Schema from './Schema';
 import Transliterate from './Transliterate';
+import { Classes } from '@blueprintjs/core';
 
 export interface FTMEntityExtended extends FTMEntity {
   latinized?: any;
@@ -36,7 +37,7 @@ class EntityLabel extends React.Component<IEntityLabelProps> {
     const label = truncate ? truncateText(caption, truncate) : caption;
     return (
       <span
-        className={c('EntityLabel', { 'bp3-text-muted': !label }, className)}
+        className={c('EntityLabel', !label && Classes.TEXT_MUTED, className)}
         title={caption}
       >
         {icon && (

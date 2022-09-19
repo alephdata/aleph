@@ -90,7 +90,7 @@ $swatch-width: 20px;
   }
 
   &__custom {
-    .bp3-popover2-content {
+    .#{$bp-ns}-popover2-content {
       padding: 5px;
     }
     .react-colorful {

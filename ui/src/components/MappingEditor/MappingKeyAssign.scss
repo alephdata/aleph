@@ -19,7 +19,7 @@
       }
     }
 
-    &__title.bp3-heading {
+    &__title.#{$bp-ns}-heading {
       color: white;
       @include rtlSupportInvertedProp(
         margin,
@@ -54,7 +54,7 @@
       }
     }
 
-    .bp3-form-helper-text {
+    .#{$bp-ns}-form-helper-text {
       color: white !important;
     }
 
@@ -72,7 +72,7 @@
           null
         );
 
-        .bp3-icon {
+        .#{$bp-ns}-icon {
           color: white !important;
         }
       }

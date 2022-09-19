@@ -1,5 +1,6 @@
 import React from 'react';
 import { injectIntl, WrappedComponentProps } from 'react-intl';
+import { Classes } from '@blueprintjs/core';
 import Numeric from './Numeric';
 import c from 'classnames';
 
@@ -26,13 +27,11 @@ class Count extends React.PureComponent<ICountProps> {
       <span
         className={c(
           'Count',
-          'bp3-tag',
-          'bp3-small',
-          'bp3-minimal',
-          'bp3-round',
-          {
-            'bp3-skeleton': showLoading,
-          }
+          Classes.TAG,
+          Classes.SMALL,
+          Classes.MINIMAL,
+          Classes.ROUND,
+          showLoading && Classes.SKELETON
         )}
       >
         {showLoading && <span>--</span>}

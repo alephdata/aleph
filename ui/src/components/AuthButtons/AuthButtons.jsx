@@ -3,8 +3,16 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { Button, Icon, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  Icon,
+  Menu,
+  MenuDivider,
+  MenuItem,
+} from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
+import c from 'classnames';
 
 import { fetchRole } from 'actions';
 import {
@@ -99,62 +107,80 @@ export class AuthButtons extends Component {
             popoverClassName="AuthButtons__popover"
             content={
               <Menu className="AuthButtons__popover__menu">
-                <Link to="/notifications" className="bp3-menu-item">
+                <Link to="/notifications" className={Classes.MENU_ITEM}>
                   <Icon icon="notifications" />{' '}
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.notifications)}
                   </div>
                 </Link>
-                <Link to="/alerts" className="bp3-menu-item">
+                <Link to="/alerts" className={Classes.MENU_ITEM}>
                   <Icon icon="feed" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.alerts)}
                   </div>
                 </Link>
-                <Link to="/exports" className="bp3-menu-item">
+                <Link to="/exports" className={Classes.MENU_ITEM}>
                   <Icon icon="export" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.exports)}
                   </div>
                 </Link>
                 <MenuDivider />
                 <Link
                   to="/investigations"
-                  className="bp3-menu-item mobile-show"
+                  className={c(Classes.MENU_ITEM, 'mobile-show')}
                 >
                   <Icon icon="briefcase" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.cases)}
                   </div>
                 </Link>
-                <Link to="/diagrams" className="bp3-menu-item">
+                <Link to="/diagrams" className={Classes.MENU_ITEM}>
                   <Icon icon="graph" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.diagrams)}
                   </div>
                 </Link>
-                <Link to="/timelines" className="bp3-menu-item">
+                <Link to="/timelines" className={Classes.MENU_ITEM}>
                   <Icon icon="gantt-chart" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.timelines)}
                   </div>
                 </Link>
-                <Link to="/lists" className="bp3-menu-item">
+                <Link to="/lists" className={Classes.MENU_ITEM}>
                   <Icon icon="list" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.lists)}
                   </div>
                 </Link>
                 <MenuDivider />
-                <Link to="/settings" className="bp3-menu-item">
+                <Link to="/settings" className={Classes.MENU_ITEM}>
                   <Icon icon="cog" />{' '}
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.settings)}
                   </div>
                 </Link>
-                <Link to="/status" className="bp3-menu-item">
+                <Link to="/status" className={Classes.MENU_ITEM}>
                   <Icon icon="dashboard" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                  <div
+                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
+                  >
                     {intl.formatMessage(messages.status)}
                   </div>
                 </Link>
@@ -168,7 +194,7 @@ export class AuthButtons extends Component {
             placement="bottom-end"
             fill
           >
-            <Button icon="user" className="bp3-minimal" rightIcon="caret-down">
+            <Button icon="user" minimal rightIcon="caret-down">
               <Truncate lines={2} width={120}>
                 {role ? role.name : 'Profile'}
               </Truncate>
@@ -185,7 +211,7 @@ export class AuthButtons extends Component {
             buttonProps={{
               text: intl.formatMessage(messages.signin),
               icon: 'log-in',
-              className: 'bp3-minimal',
+              className: Classes.MINIMAL,
             }}
             Dialog={AuthenticationDialog}
             dialogProps={{ auth: metadata.auth }}

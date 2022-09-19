@@ -15,7 +15,7 @@
 .EntitySearchResults {
   border-color: $aleph-border-color;
 
-  .bp3-control {
+  .#{$bp-ns}-control {
     margin-bottom: 0 !important;
   }
 }
@@ -44,7 +44,7 @@
     }
   }
   .more-text {
-    &.bp3-button {
+    &.#{$bp-ns}-button {
       padding: 0 3px;
       min-height: 20px;
       color: $aleph-greyed-text !important;

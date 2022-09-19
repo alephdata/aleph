@@ -1,7 +1,7 @@
 @import 'app/variables.scss';
 
 .EntityViews {
-  &__workbook-warning.bp3-callout {
+  &__workbook-warning.#{$bp-ns}-callout {
     margin-bottom: $aleph-grid-size * 1.5;
     background-color: $light-gray5;
   }

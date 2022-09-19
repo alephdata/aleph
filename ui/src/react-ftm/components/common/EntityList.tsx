@@ -1,8 +1,9 @@
 import React from 'react';
 import { Entity } from '@alephdata/followthemoney';
-import { Menu, Icon } from '@blueprintjs/core';
+import { Classes, Menu, Icon } from '@blueprintjs/core';
 import { Schema } from 'react-ftm/types';
 import groupBy from 'lodash/groupBy';
+import c from 'classnames';
 import './EntityList.scss';
 
 interface IEntityListProps {
@@ -24,11 +25,11 @@ export class EntityList extends React.PureComponent<IEntityListProps> {
     return (
       <li className="EntityList__item" key={entity.id}>
         <div
-          className="EntityList__item__left bp3-menu-item"
+          className={c('EntityList__item__left', Classes.MENU_ITEM)}
           onClick={() => onEntitySelected && onEntitySelected(entity)}
         >
           <Schema.Icon schema={entity.schema} />
-          <div className="bp3-fill">{entity.getCaption()}</div>
+          <div className={Classes.FILL}>{entity.getCaption()}</div>
         </div>
         {onEntityRemoved && (
           <div

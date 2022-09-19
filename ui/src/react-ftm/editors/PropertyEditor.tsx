@@ -105,7 +105,7 @@ class PropertyEditor extends React.Component<
     if (
       target &&
       !this.ref?.current?.contains(target) &&
-      !target.matches('.bp3-portal *, .bp3-overlay *')
+      !target.matches('.#{$bp-ns}-portal *, .#{$bp-ns}-overlay *')
     ) {
       e.preventDefault();
       e.stopPropagation();

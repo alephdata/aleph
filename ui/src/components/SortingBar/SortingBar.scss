@@ -27,7 +27,7 @@ $font-size: 13px;
     font-size: $font-size;
   }
   &__control {
-    .bp3-button {
+    .#{$bp-ns}-button {
       color: $blue2 !important;
       border-bottom: 1px solid $aleph-border-color;
       border-radius: 0;

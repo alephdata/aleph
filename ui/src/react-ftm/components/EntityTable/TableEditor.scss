@@ -53,11 +53,11 @@
       }
     }
 
-    .bp3-button {
+    .#{$bp-ns}-button {
       border-radius: 0 !important;
     }
 
-    &.header .bp3-button {
+    &.header .#{$bp-ns}-button {
       justify-content: space-between;
     }
 
@@ -66,13 +66,13 @@
     &.add-button {
       min-width: 30px;
 
-      .bp3-control {
+      .#{$bp-ns}-control {
         margin: 0;
         height: 100%;
         width: 100%;
         position: relative;
       }
-      .bp3-control-indicator {
+      .#{$bp-ns}-control-indicator {
         @include center;
         outline: none !important;
       }
@@ -80,7 +80,7 @@
 
     &.entity-link {
       position: relative;
-      .bp3-button {
+      .#{$bp-ns}-button {
         @include center;
       }
       svg {
@@ -89,11 +89,11 @@
       }
     }
   }
-  .bp3-form-group {
+  .#{$bp-ns}-form-group {
     margin: 0;
   }
 
-  .bp3-multi-select-popover .bp3-menu {
+  .#{$bp-ns}-multi-select-popover .#{$bp-ns}-menu {
     max-height: 150px;
   }
 
@@ -103,7 +103,7 @@
   }
 
   &__link-cell {
-    &.bp3-button {
+    &.#{$bp-ns}-button {
       padding: 0;
       background: inherit !important;
     }
@@ -117,7 +117,7 @@
         text-decoration: underline;
       }
 
-      & > .bp3-icon {
+      & > .#{$bp-ns}-icon {
         display: block !important;
       }
     }

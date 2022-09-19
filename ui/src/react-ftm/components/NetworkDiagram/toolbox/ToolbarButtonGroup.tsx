@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { AnchorButton, Button, ButtonGroup, Menu, MenuItem } from '@blueprintjs/core';
+import {
+  AnchorButton,
+  Button,
+  ButtonGroup,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
 import {
   Popover2 as Popover,
   Tooltip2 as Tooltip,

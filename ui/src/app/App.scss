@@ -98,7 +98,7 @@ a {
 
 // Used to render failed imports, missing connections.
 .PartialError {
-  .bp3-non-ideal-state {
+  .#{$bp-ns}-non-ideal-state {
     min-height: 30vh;
   }
 }
@@ -208,7 +208,7 @@ a {
     margin-bottom: 0;
     color: $aleph-greyed-text;
 
-    .bp3-tag {
+    .#{$bp-ns}-tag {
       @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
     }
 
@@ -218,7 +218,7 @@ a {
       margin: $aleph-grid-size/2 0;
       @include rtlSupportInvertedProp(margin, right, 2em, null);
 
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         @include rtlSupportInvertedProp(
           margin,
           right,
@@ -227,7 +227,7 @@ a {
         );
       }
 
-      .bp3-tag {
+      .#{$bp-ns}-tag {
         vertical-align: middle;
       }
     }

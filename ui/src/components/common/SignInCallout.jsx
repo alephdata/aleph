@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { Callout } from '@blueprintjs/core';
+import { Callout, Classes } from '@blueprintjs/core';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import c from 'classnames';
 
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { selectSession, selectMetadata } from 'selectors';
@@ -47,7 +48,13 @@ export class SignInCallout extends React.Component {
           isOpen={isAuthOpen}
           toggleDialog={this.onSignIn}
         />
-        <Callout className="SignInCallout bp3-icon-info-sign bp3-intent-warning">
+        <Callout
+          className={c(
+            'SignInCallout',
+            `${Classes.ICON}-info-sign`,
+            Classes.INTENT_WARNING
+          )}
+        >
           <FormattedMessage
             id="search.callout_message"
             defaultMessage="Some sources are hidden from anonymous users. {signInButton} to see all results you are authorised to access."
@@ -68,7 +75,7 @@ export class SignInCallout extends React.Component {
             }}
           />
           <Button
-            className="bp3-minimal button-close"
+            className={c(Classes.MINIMAL, 'button-close')}
             icon="cross"
             onClick={this.onHideCallout}
           />

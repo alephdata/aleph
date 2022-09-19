@@ -2,7 +2,7 @@
 @import 'app/mixins.scss';
 
 .FileImport {
-  &__file-name.bp3-button {
+  &__file-name.#{$bp-ns}-button {
     margin: 0 0, $aleph-grid-size * 2, 0;
     @include rtlSupportInvertedProp(margin, left, -$aleph-grid-size, null);
 
