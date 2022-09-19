@@ -20,7 +20,7 @@ SQLAlchemy==1.4.40
 alembic==1.8.1
 authlib==1.1.0
 
-elasticsearch==7.17.0
+elasticsearch==8.4.1
 marshmallow==2.19.2
 gunicorn[eventlet]==20.1.0
 jsonschema==4.16.0
