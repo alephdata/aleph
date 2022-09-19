@@ -5,7 +5,6 @@ import { queryEntities } from 'actions';
 import { selectEntitiesResult, selectEntity } from 'selectors';
 import TextViewer from 'viewers/TextViewer';
 
-
 class PdfViewerPage extends Component {
   componentDidMount() {
     this.fetchPage();
@@ -30,7 +29,12 @@ class PdfViewerPage extends Component {
 
     return (
       <>
-        <PagingButtons document={document} numberOfPages={numPages} page={page} showRotateButtons={false} />
+        <PagingButtons
+          document={document}
+          numberOfPages={numPages}
+          page={page}
+          showRotateButtons={false}
+        />
         <TextViewer document={entity} dir={dir} noStyle />
       </>
     );
@@ -38,14 +42,14 @@ class PdfViewerPage extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { baseQuery, page } = ownProps;
-  const query = baseQuery
-    .setString('q', undefined)
-    .setFilter('properties.index', page);
+  const { query } = ownProps;
+
   const result = selectEntitiesResult(state, query);
+
   const entity = result.results.length
     ? result.results[0]
     : selectEntity(state, undefined);
+
   return {
     query,
     result,

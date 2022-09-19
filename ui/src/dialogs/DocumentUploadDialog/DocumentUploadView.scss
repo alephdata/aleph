@@ -1,9 +1,9 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .DocumentUploadView {
   &__content {
-    margin-bottom: $aleph-grid-size*2;
+    margin-bottom: $aleph-grid-size * 2;
     max-height: 60vh;
     overflow: auto;
   }
@@ -14,7 +14,12 @@
     }
     &__content {
       @include rtlSupportInvertedProp(padding, left, $aleph-grid-size, null);
-      @include rtlSupportInvertedProp(border, left, 1px solid $aleph-border-color, null);
+      @include rtlSupportInvertedProp(
+        border,
+        left,
+        1px solid $aleph-border-color,
+        null
+      );
     }
   }
 }

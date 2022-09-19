@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { ErrorSection, QueryInfiniteLoad } from 'components/common';
 import { queryMappings } from 'actions';
 import { selectMappingsResult } from 'selectors';
@@ -11,7 +11,6 @@ import MappingIndexItem from 'components/MappingIndex/MappingIndexItem';
 import getEntityLink from 'util/getEntityLink';
 
 import './MappingIndex.scss';
-
 
 const messages = defineMessages({
   no_mappings: {
@@ -21,7 +20,6 @@ const messages = defineMessages({
 });
 
 class MappingIndex extends Component {
-
   render() {
     const { query, result, intl } = this.props;
     const skeletonItems = [...Array(15).keys()];
@@ -38,19 +36,24 @@ class MappingIndex extends Component {
     return (
       <div className="MappingIndex">
         <ul className="MappingIndex__items">
-          {result.results && result.results.map(mapping => (
-            <li key={mapping.id}>
-              <MappingIndexItem
-                mapping={mapping}
-                link={mapping.table_id && `${getEntityLink(mapping.table_id)}#mode=mapping`}
-              />
-            </li>
-          ))}
-          {result.isPending && skeletonItems.map(item => (
-            <li key={item}>
-              <MappingIndexItem isPending />
-            </li>
-          ))}
+          {result.results &&
+            result.results.map((mapping) => (
+              <li key={mapping.id}>
+                <MappingIndexItem
+                  mapping={mapping}
+                  link={
+                    mapping.table_id &&
+                    `${getEntityLink(mapping.table_id)}#mode=mapping`
+                  }
+                />
+              </li>
+            ))}
+          {result.isPending &&
+            skeletonItems.map((item) => (
+              <li key={item}>
+                <MappingIndexItem isPending />
+              </li>
+            ))}
         </ul>
         <QueryInfiniteLoad
           query={query}
@@ -70,5 +73,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryMappings }),
-  injectIntl,
+  injectIntl
 )(MappingIndex);

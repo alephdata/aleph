@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { ErrorSection, EntityDecisionHotkeys } from 'components/common';
 import { showWarningToast } from 'app/toast';
 import { pairwiseJudgement } from 'actions';
@@ -18,7 +18,6 @@ const messages = defineMessages({
     defaultMessage: 'There are no cross-referencing results.',
   },
 });
-
 
 class XrefTable extends Component {
   constructor(props) {
@@ -40,26 +39,17 @@ class XrefTable extends Component {
         <th className="numeric narrow" />
         <th className="entity bordered">
           <span className="value">
-            <FormattedMessage
-              id="xref.entity"
-              defaultMessage="Reference"
-            />
+            <FormattedMessage id="xref.entity" defaultMessage="Reference" />
           </span>
         </th>
         <th className="entity">
           <span className="value">
-            <FormattedMessage
-              id="xref.match"
-              defaultMessage="Possible match"
-            />
+            <FormattedMessage id="xref.match" defaultMessage="Possible match" />
           </span>
         </th>
         <th className="numeric narrow">
           <span className="value">
-            <FormattedMessage
-              id="xref.score"
-              defaultMessage="Score"
-            />
+            <FormattedMessage id="xref.score" defaultMessage="Score" />
           </span>
         </th>
         <th className="collection">
@@ -72,7 +62,7 @@ class XrefTable extends Component {
         </th>
       </tr>
     </thead>
-  )
+  );
 
   render() {
     const { intl, result, selectedIndex } = this.props;
@@ -81,6 +71,7 @@ class XrefTable extends Component {
     if (result.isError) {
       return <ErrorSection error={result.error} />;
     }
+
     if (result.total === 0) {
       return (
         <ErrorSection
@@ -103,9 +94,10 @@ class XrefTable extends Component {
                 selected={i === selectedIndex}
               />
             ))}
-            {result.isPending && skeletonItems.map(item => (
-              <XrefTableRow key={item} isPending />
-            ))}
+            {result.isPending &&
+              skeletonItems.map((item) => (
+                <XrefTableRow key={item} isPending />
+              ))}
           </tbody>
         </table>
       </EntityDecisionHotkeys>
@@ -113,18 +105,17 @@ class XrefTable extends Component {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const parsedHash = queryString.parse(location.hash);
 
   return {
-    selectedIndex: +parsedHash.selectedIndex
+    selectedIndex: +parsedHash.selectedIndex,
   };
 };
 
 export default compose(
   withRouter,
   connect(mapStateToProps, { pairwiseJudgement }),
-  injectIntl,
+  injectIntl
 )(XrefTable);

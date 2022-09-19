@@ -1,6 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
-
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .SearchActionBar {
   margin-bottom: $aleph-grid-size;
@@ -9,7 +8,12 @@
   justify-content: space-between;
 
   &__main {
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size/2 !important, null);
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $aleph-grid-size/2 !important,
+      null
+    );
   }
   &__secondary {
     flex: 0 0 auto !important;
@@ -23,7 +27,8 @@
     @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
     font-weight: 500;
 
-    .bp3-icon, .bp3-button-text {
+    .bp3-icon,
+    .bp3-button-text {
       color: $aleph-greyed-text !important;
     }
 

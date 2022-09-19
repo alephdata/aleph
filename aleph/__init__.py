@@ -5,10 +5,6 @@ from pkg_resources import get_distribution
 
 __version__ = get_distribution("aleph").version
 
-from yaml import YAMLLoadWarning
-
-warnings.filterwarnings("ignore", category=YAMLLoadWarning)
-
 # shut up useless SA warning:
 warnings.filterwarnings(
     "ignore", "Unicode type received non-unicode bind param value."
@@ -27,6 +23,7 @@ logging.getLogger("PIL").setLevel(logging.WARNING)
 logging.getLogger("pdfminer").setLevel(logging.WARNING)
 logging.getLogger("httpstream").setLevel(logging.WARNING)
 logging.getLogger("factory").setLevel(logging.WARNING)
+logging.getLogger("pika").setLevel(logging.WARNING)
 
 # Log all SQL statements:
 # logging.getLogger('sqlalchemy.engine').setLevel(log_level)

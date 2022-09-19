@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .AdvancedSearchMultiField {
   &__list {
@@ -37,7 +37,7 @@
   }
 
   .bp3-slider {
-    height: $aleph-grid-size*3;
+    height: $aleph-grid-size * 3;
   }
 
   .bp3-slider-label {

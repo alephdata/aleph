@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Classes, Menu, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count, Skeleton, AppItem } from 'components/common';
+import { Count, Skeleton, AppItem, LinkMenuItem } from 'components/common';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { queryRoles } from 'actions';
 import { groupsQuery } from 'queries';
 import { selectRolesResult, selectCurrentRole } from 'selectors';
@@ -51,13 +51,7 @@ const messages = defineMessages({
   },
 });
 
-
 class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.navigate = this.navigate.bind(this);
-  }
-
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -73,10 +67,6 @@ class Dashboard extends React.Component {
     }
   }
 
-  navigate(path) {
-    this.props.navigate(path);
-  }
-
   render() {
     const { role, intl, location, groupsResult } = this.props;
     const current = location.pathname;
@@ -88,105 +78,121 @@ class Dashboard extends React.Component {
             <Menu>
               <li className="bp3-menu-header">
                 <h6 className="bp3-heading">
-                  <FormattedMessage id="dashboard.activity" defaultMessage="Activity" />
+                  <FormattedMessage
+                    id="dashboard.activity"
+                    defaultMessage="Activity"
+                  />
                 </h6>
               </li>
-              <MenuItem
+              <LinkMenuItem
                 icon="notifications"
                 text={intl.formatMessage(messages.notifications)}
-                onClick={() => this.navigate('/notifications')}
+                to="/notifications"
                 active={current === '/notifications'}
               />
-              <MenuItem
+              <LinkMenuItem
                 icon="feed"
                 text={intl.formatMessage(messages.alerts)}
                 label={<Count count={role?.counts?.alerts} />}
-                onClick={() => this.navigate('/alerts')}
+                to="/alerts"
                 active={current === '/alerts'}
               />
-              <MenuItem
+              <LinkMenuItem
                 icon="export"
                 text={intl.formatMessage(messages.exports)}
                 label={<Count count={role?.counts?.exports} />}
-                onClick={() => this.navigate('/exports')}
+                to="/exports"
                 active={current === '/exports'}
               />
               <MenuDivider />
               <li className="bp3-menu-header">
                 <h6 className="bp3-heading">
-                  <FormattedMessage id="dashboard.workspace" defaultMessage="Workspace" />
+                  <FormattedMessage
+                    id="dashboard.workspace"
+                    defaultMessage="Workspace"
+                  />
                 </h6>
               </li>
-              <MenuItem
+              <LinkMenuItem
                 icon="briefcase"
                 text={intl.formatMessage(messages.cases)}
                 label={<Count count={role?.counts?.casefiles} />}
-                onClick={() => this.navigate('/investigations')}
+                to="/investigations"
                 active={current === '/investigations'}
               />
-              <MenuItem
+              <LinkMenuItem
                 icon="graph"
                 text={intl.formatMessage(messages.diagrams)}
                 label={<Count count={role?.counts?.entitysets?.diagram} />}
-                onClick={() => this.navigate('/diagrams')}
+                to="/diagrams"
                 active={current === '/diagrams'}
               />
-              <MenuItem
+              <LinkMenuItem
                 icon="gantt-chart"
                 text={intl.formatMessage(messages.timelines)}
                 label={<Count count={role?.counts?.entitysets?.timeline} />}
-                onClick={() => this.navigate('/timelines')}
+                to="/timelines"
                 active={current === '/timelines'}
               />
-              <MenuItem
+              <LinkMenuItem
                 icon="list"
                 text={intl.formatMessage(messages.lists)}
                 label={<Count count={role?.counts?.entitysets?.list} />}
-                onClick={() => this.navigate('/lists')}
+                to="/lists"
                 active={current === '/lists'}
               />
               {(groupsResult.total === undefined || groupsResult.total > 0) && (
                 <>
                   <MenuDivider />
-                  <li className={c('bp3-menu-header', { [Classes.SKELETON]: groupsResult.total === undefined })}>
+                  <li
+                    className={c('bp3-menu-header', {
+                      [Classes.SKELETON]: groupsResult.total === undefined,
+                    })}
+                  >
                     <h6 className="bp3-heading">
-                      <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
+                      <FormattedMessage
+                        id="dashboard.groups"
+                        defaultMessage="Groups"
+                      />
                     </h6>
                   </li>
-                  {groupsResult.results !== undefined && groupsResult.results.map(group => (
-                    <MenuItem
-                      key={group.id}
-                      icon="shield"
-                      text={group.label}
-                      onClick={() => this.navigate(`/groups/${group.id}`)}
-                      active={current === `/groups/${group.id}`}
-                    />
-                  ))}
+                  {groupsResult.results !== undefined &&
+                    groupsResult.results.map((group) => (
+                      <LinkMenuItem
+                        key={group.id}
+                        icon="shield"
+                        text={group.label}
+                        to={`/groups/${group.id}`}
+                        active={current === `/groups/${group.id}`}
+                      />
+                    ))}
                   {groupsResult.total === undefined && (
-                    <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
+                    <Skeleton.Text
+                      type="li"
+                      length={20}
+                      className="bp3-menu-item"
+                    />
                   )}
                 </>
               )}
               <MenuDivider />
-              <MenuItem
+              <LinkMenuItem
                 icon="dashboard"
                 text={intl.formatMessage(messages.status)}
-                onClick={() => this.navigate('/status')}
+                to="/status"
                 active={current === '/status'}
               />
-              <MenuItem
+              <LinkMenuItem
                 icon="cog"
                 text={intl.formatMessage(messages.settings)}
-                onClick={() => this.navigate('/settings')}
+                to="/settings"
                 active={current === '/settings'}
               />
               <MenuDivider />
               <AppItem />
             </Menu>
           </div>
-          <div className="Dashboard__body">
-            {this.props.children}
-          </div>
+          <div className="Dashboard__body">{this.props.children}</div>
         </div>
       </div>
     );

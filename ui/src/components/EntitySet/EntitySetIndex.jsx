@@ -22,7 +22,6 @@ const messages = defineMessages({
   },
 });
 
-
 class EntitySetIndex extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
@@ -40,16 +39,28 @@ class EntitySetIndex extends Component {
   }
 
   render() {
-    const { intl, loadOnScroll, onSelect, query, result, showCollection, type } = this.props;
+    const {
+      intl,
+      loadOnScroll,
+      onSelect,
+      query,
+      result,
+      showCollection,
+      type,
+    } = this.props;
 
     const isPending = result.isPending && !result.total;
     const skeletonItems = [...Array(8).keys()];
 
-    if (result.isError || result.total === 0) {
+    if (result.isError) {
+      return <ErrorSection error={result.error} />;
+    }
+
+    if (result.total === 0) {
       return (
         <ErrorSection
           icon={<EntitySet.Icon entitySet={{ type }} iconSize={60} />}
-          title={result.isError ? result.error.message : intl.formatMessage(messages[`no_${type}`])}
+          title={intl.formatMessage(messages[`no_${type}`])}
         />
       );
     }
@@ -57,22 +68,24 @@ class EntitySetIndex extends Component {
     return (
       <div className="EntitySetIndex">
         <ul className="index">
-          {result.results && result.results.map(entitySet => (
-            <EntitySetIndexItem
-              key={entitySet.id}
-              entitySet={entitySet}
-              showCollection={showCollection}
-              onSelect={onSelect}
-            />
-          ))}
-          {isPending && skeletonItems.map(item => (
-            <EntitySetIndexItem
-              key={item}
-              showCollection={showCollection}
-              onSelect={onSelect}
-              isPending
-            />
-          ))}
+          {result.results &&
+            result.results.map((entitySet) => (
+              <EntitySetIndexItem
+                key={entitySet.id}
+                entitySet={entitySet}
+                showCollection={showCollection}
+                onSelect={onSelect}
+              />
+            ))}
+          {isPending &&
+            skeletonItems.map((item) => (
+              <EntitySetIndexItem
+                key={item}
+                showCollection={showCollection}
+                onSelect={onSelect}
+                isPending
+              />
+            ))}
         </ul>
         <QueryInfiniteLoad
           query={query}
@@ -87,5 +100,5 @@ class EntitySetIndex extends Component {
 
 export default compose(
   injectIntl,
-  connect(null, { queryEntitySets }),
+  connect(null, { queryEntitySets })
 )(EntitySetIndex);

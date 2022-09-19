@@ -4,7 +4,6 @@ import { Schema } from 'components/common';
 
 import './MappingQueryLabel.scss';
 
-
 const MappingQueryLabel = ({ query }) => {
   /* eslint-disable camelcase */
   const { csv_url, csv_urls, entities } = query;

@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 $timeline-item-padding: $aleph-grid-size;
 $timeline-text-color: $dark-gray5;
@@ -11,8 +11,8 @@ $timeline-text-color: $dark-gray5;
 }
 
 .TimelineItem {
-  margin: $aleph-grid-size*2 0;
-  padding: $aleph-grid-size*1.5;
+  margin: $aleph-grid-size * 2 0;
+  padding: $aleph-grid-size * 1.5;
   border: 1px solid $aleph-border-color;
   border-radius: 5px;
 
@@ -22,7 +22,8 @@ $timeline-text-color: $dark-gray5;
     }
   }
 
-  &.draft, &.active {
+  &.draft,
+  &.active {
     box-shadow: $pt-elevation-shadow-3;
     border: none;
     margin-left: 1px;
@@ -30,7 +31,7 @@ $timeline-text-color: $dark-gray5;
   }
 
   &.draft {
-    margin-bottom: $aleph-grid-size*2;
+    margin-bottom: $aleph-grid-size * 2;
   }
 
   .collapsed & {
@@ -51,7 +52,7 @@ $timeline-text-color: $dark-gray5;
     }
 
     .collapsed .item-expanded & {
-      padding-bottom: $aleph-grid-size*2;
+      padding-bottom: $aleph-grid-size * 2;
     }
   }
 
@@ -65,14 +66,19 @@ $timeline-text-color: $dark-gray5;
 
   &__secondary {
     flex-basis: 15%;
-    min-width: $aleph-grid-size*22;
-    @include rtlSupportInvertedProp(margin, right, $timeline-item-padding, null);
+    min-width: $aleph-grid-size * 22;
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $timeline-item-padding,
+      null
+    );
 
     @media screen and (max-width: $aleph-screen-sm-max-width) {
-      min-width: $aleph-grid-size*15;
+      min-width: $aleph-grid-size * 15;
     }
     @media screen and (max-width: $aleph-screen-md-max-width) {
-      min-width: $aleph-grid-size*18;
+      min-width: $aleph-grid-size * 18;
     }
     @include between-breakpoints {
       flex-basis: auto;
@@ -83,7 +89,12 @@ $timeline-text-color: $dark-gray5;
     padding: $aleph-grid-size/2 0;
     margin-bottom: $aleph-grid-size/2;
     // align-self: center;
-    @include rtlSupportInvertedProp(margin, right, $timeline-item-padding/3, null);
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $timeline-item-padding/3,
+      null
+    );
 
     .collapsed & {
       align-self: center;
@@ -97,7 +108,8 @@ $timeline-text-color: $dark-gray5;
     }
   }
 
-  &__date, .TimelineItemTitle {
+  &__date,
+  .TimelineItemTitle {
     margin-bottom: $timeline-item-padding/2;
 
     .TextEdit__toggleMulti {
@@ -153,7 +165,8 @@ $timeline-text-color: $dark-gray5;
       background: none;
       color: $timeline-text-color;
 
-      span, .EditableProperty__value .bp3-input {
+      span,
+      .EditableProperty__value .bp3-input {
         color: inherit !important;
         border-color: inherit !important;
       }
@@ -163,13 +176,15 @@ $timeline-text-color: $dark-gray5;
       }
     }
 
-    span, .EditableProperty__value .bp3-input {
+    span,
+    .EditableProperty__value .bp3-input {
       font-weight: bold;
       color: white !important;
       border-color: white !important;
     }
 
-    .PropertyValues, textarea {
+    .PropertyValues,
+    textarea {
       white-space: nowrap;
     }
 
@@ -216,7 +231,9 @@ $timeline-text-color: $dark-gray5;
       border-color: white !important;
     }
 
-    span, .EditableProperty__value .bp3-input, .bp3-button.bp3-outlined {
+    span,
+    .EditableProperty__value .bp3-input,
+    .bp3-button.bp3-outlined {
       color: var(--item-color) !important;
       border-color: var(--item-color) !important;
     }

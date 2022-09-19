@@ -359,7 +359,7 @@ def similar(entity_id):
     result.results = []
     for obj in entities:
         item = {
-            "score": compare(model, proxy, obj),
+            "score": compare(model, proxy, model.get_proxy(obj)),
             "judgement": judgements.get((entity_id, obj.get("id"))),
             "collection_id": entity.get("collection_id"),
             "entity": obj,

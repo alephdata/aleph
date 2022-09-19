@@ -37,6 +37,7 @@ APP_FAVICON = env.get("ALEPH_FAVICON", "/static/favicon.png")
 
 # Show a system-wide banner in the user interface.
 APP_BANNER = env.get("ALEPH_APP_BANNER")
+APP_MESSAGES_URL = env.get("ALEPH_APP_MESSAGES_URL", None)
 
 # Force HTTPS here:
 FORCE_HTTPS = True if APP_UI_URL.lower().startswith("https") else False
@@ -177,6 +178,11 @@ INDEX_EXPAND_CLAUSE_LIMIT = env.to_int("ALEPH_INDEX_EXPAND_CLAUSE_LIMIT", 10)
 INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
     "ALEPH_INDEX_DELETE_BY_QUERY_BATCHSIZE", 100
 )
+
+INDEXING_BATCH_SIZE = env.to_int(
+    "ALEPH_INDEXING_BATCH_SIZE", 100
+)  # run indexing jobs in a batch of 100 for better performance
+
 
 ###############################################################################
 # XREF Model Selection

@@ -9,14 +9,13 @@ from flask_babel import gettext
 from werkzeug.urls import url_parse
 from werkzeug.exceptions import Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
-from servicelayer.jobs import Job
 
 from aleph.authz import Authz
-from aleph.model import Collection, EntitySet, Role
+from aleph.model import Collection, EntitySet
 from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
-from aleph.util import JSONEncoder
+from aleph.util import JSONEncoder, random_id
 
 log = logging.getLogger(__name__)
 CALLBACK_VALID = string.ascii_letters + string.digits + "_"
@@ -43,7 +42,7 @@ def get_flag(name, default=False):
 def get_session_id():
     role_id = stringify(request.authz.id) or "anonymous"
     session_id = stringify(request._session_id)
-    session_id = session_id or Job.random_id()
+    session_id = session_id or random_id()
     return "%s:%s" % (role_id, session_id)
 
 
@@ -65,7 +64,7 @@ def validate(data, schema):
         if path not in errors:
             errors[path] = error.message
         else:
-            errors[path] += '; ' + error.message
+            errors[path] += "; " + error.message
         log.info("ERROR [%s]: %s", path, error.message)
 
     if not len(errors):

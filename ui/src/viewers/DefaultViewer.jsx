@@ -10,10 +10,10 @@ const messages = defineMessages({
   },
   ignored_file: {
     id: 'document.viewer.ignored_file',
-    defaultMessage: 'The system does not work with these types of files. Please download it so you’ll be able to see it.',
+    defaultMessage:
+      'The system does not work with these types of files. Please download it so you’ll be able to see it.',
   },
 });
-
 
 export class DefaultViewer extends PureComponent {
   render() {

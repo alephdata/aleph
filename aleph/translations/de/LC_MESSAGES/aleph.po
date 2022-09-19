@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-06-09 08:45+0200\n"
+"POT-Creation-Date: 2022-07-25 10:14+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.10.3\n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -395,9 +395,17 @@ msgstr "Ungültiger Code"
 msgid "Email is already registered"
 msgstr "Diese E-Mail ist bereits angemeldet"
 
-#: aleph/views/roles_api.py:233
+#: aleph/views/roles_api.py:235
 msgid "Incorrect password."
 msgstr "Falsches Passwort."
+
+#: aleph/views/serializers.py:103
+#, python-format
+msgid ""
+"We found %(total)d results, but could not load them due to a technical "
+"problem. Please check back later and if the problem persists contact an "
+"Aleph administrator"
+msgstr ""
 
 #: aleph/views/sessions_api.py:61
 msgid "Invalid user or password."

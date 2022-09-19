@@ -1,17 +1,15 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .AdvancedSearch {
-
   .bp3-overlay.bp3-overlay-container {
     position: static;
   }
   .bp3-drawer {
     position: static;
     overflow-x: scroll;
-    margin-bottom: $aleph-grid-size*3;
+    margin-bottom: $aleph-grid-size * 3;
     margin-left: $aleph-grid-size;
-    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
-      0 2px 4px rgba(16, 22, 26, 0.2),
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 2px 4px rgba(16, 22, 26, 0.2),
       0 8px 24px rgba(16, 22, 26, 0.2);
     max-width: 660px;
   }
@@ -26,7 +24,7 @@
   }
 
   .padded {
-    padding: 0 $aleph-grid-size*2;
+    padding: 0 $aleph-grid-size * 2;
   }
 
   .bp3-form-content {

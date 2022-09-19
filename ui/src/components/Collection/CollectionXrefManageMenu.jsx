@@ -9,7 +9,6 @@ import { DialogToggleButton } from 'components/Toolbar';
 import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectSession } from 'selectors';
 
-
 const messages = defineMessages({
   compute: {
     id: 'xref.compute',
@@ -28,9 +27,10 @@ class CollectionXrefManageMenu extends Component {
       return null;
     }
 
-    const xrefButtonText = result.total > 0
-      ? intl.formatMessage(messages.recompute)
-      : intl.formatMessage(messages.compute);
+    const xrefButtonText =
+      result.total > 0
+        ? intl.formatMessage(messages.recompute)
+        : intl.formatMessage(messages.compute);
 
     return (
       <>
@@ -38,9 +38,9 @@ class CollectionXrefManageMenu extends Component {
           <DialogToggleButton
             buttonProps={{
               text: xrefButtonText,
-              icon: "play",
+              icon: 'play',
               disabled: !collection.writeable,
-              className: c({ [Classes.SKELETON]: result.total === undefined })
+              className: c({ [Classes.SKELETON]: result.total === undefined }),
             }}
             Dialog={CollectionXrefDialog}
             dialogProps={{ collection }}
@@ -57,5 +57,5 @@ const mapStateToProps = (state, ownProps) => ({
 
 export default compose(
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(CollectionXrefManageMenu);

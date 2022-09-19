@@ -33,8 +33,14 @@ def upgrade():
         sa.Column("file_name", sa.Unicode(), nullable=True),
         sa.Column("mime_type", sa.Unicode(), nullable=True),
         sa.Column("meta", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
-        sa.ForeignKeyConstraint(["collection_id"], ["collection.id"],),
-        sa.ForeignKeyConstraint(["creator_id"], ["role.id"],),
+        sa.ForeignKeyConstraint(
+            ["collection_id"],
+            ["collection.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["creator_id"],
+            ["role.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(

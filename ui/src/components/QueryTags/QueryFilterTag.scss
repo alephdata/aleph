@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .QueryFilterTag {
   max-width: 15em;
@@ -23,7 +23,8 @@
     height: $aleph-query-tag-height;
   }
 
-  a, a:hover {
+  a,
+  a:hover {
     color: white;
     text-decoration: none;
   }

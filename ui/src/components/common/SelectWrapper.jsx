@@ -10,12 +10,14 @@ const SelectWrapper = ({ locale, ...rest }) => (
     {...rest}
     popoverProps={{
       ...rest.popoverProps,
-      position: isLangRtl(locale) ? Position.BOTTOM_RIGHT : Position.BOTTOM_LEFT,
+      position: isLangRtl(locale)
+        ? Position.BOTTOM_RIGHT
+        : Position.BOTTOM_LEFT,
     }}
   />
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   locale: selectLocale(state),
 });
 

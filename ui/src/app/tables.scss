@@ -1,11 +1,12 @@
-@import "~@blueprintjs/core/src/blueprint.scss";
-@import "./variables.scss";
-@import "app/mixins.scss";
+@import '~@blueprintjs/core/src/blueprint.scss';
+@import './variables.scss';
+@import 'app/mixins.scss';
 
 // Column & row customisation for any tables.
 table {
   // Force a table-row to be a single line, truncating contents of large cells.
-  tr.nowrap > td, td.nowrap,
+  tr.nowrap > td,
+  td.nowrap,
   tr.nowrap > th {
     max-width: 0; // somehow, this seems to make keep column widths in check.
     white-space: nowrap;
@@ -41,7 +42,7 @@ table {
     width: 1%;
     white-space: nowrap;
     overflow: visible;
-    min-width: $aleph-grid-size*2;
+    min-width: $aleph-grid-size * 2;
     text-overflow: unset;
 
     .bp3-control {
@@ -76,17 +77,20 @@ table {
     }
   }
 
-  th.wide, td.wide {
+  th.wide,
+  td.wide {
     width: 40%;
     max-width: unset;
   }
 
-  th.narrow, td.narrow {
+  th.narrow,
+  td.narrow {
     width: 1%;
     max-width: unset;
   }
 
-  td.entity, td.caption {
+  td.entity,
+  td.caption {
     font-weight: bold;
     max-width: unset;
     white-space: normal !important;
@@ -96,7 +100,8 @@ table {
       white-space: nowrap;
     }
 
-    .EntityLabel, .EntityLink {
+    .EntityLabel,
+    .EntityLink {
       display: flex !important;
     }
     .Transliterate {
@@ -117,7 +122,10 @@ table {
     }
   }
 
-  th.numeric, td.numeric, th.number, td.number {
+  th.numeric,
+  td.numeric,
+  th.number,
+  td.number {
     width: 1%;
     white-space: nowrap;
     overflow: visible;
@@ -128,7 +136,7 @@ table {
     // Float on the right, so that numbers overflow to the left.
     // (FormattedNumber creates a <span>)
     span {
-      &.Numeric{
+      &.Numeric {
         @include rtl(float, right, left);
       }
     }
@@ -176,7 +184,8 @@ ul.info-rank {
   li {
     display: flex;
 
-    .key, .value {
+    .key,
+    .value {
       overflow: hidden;
       word-wrap: break-word;
     }

@@ -14,7 +14,10 @@ class CollectionReference extends React.PureComponent {
       <div className="CollectionReference">
         <div className="CollectionReference__section">
           <div className="key text-muted">
-            <FormattedMessage id="collection.foreign_id" defaultMessage="Foreign ID" />
+            <FormattedMessage
+              id="collection.foreign_id"
+              defaultMessage="Foreign ID"
+            />
           </div>
           <div className="value">
             <ClipboardInput value={collection.foreign_id} />
@@ -23,7 +26,10 @@ class CollectionReference extends React.PureComponent {
         <Divider />
         <div className="CollectionReference__section">
           <div className="key text-muted">
-            <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
+            <FormattedMessage
+              id="collection.reconcile"
+              defaultMessage="Reconciliation"
+            />
           </div>
           <div className="value">
             <ClipboardInput value={collection.links.reconcile} />

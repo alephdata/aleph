@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import messages from './messages';
 import metadata from './metadata';
 import mutation from './mutation';
 import session from './session';
@@ -19,8 +20,8 @@ import notifications from './notifications';
 import systemStatus from './systemStatus';
 import exports from './exports';
 
-
 const rootReducer = combineReducers({
+  messages,
   metadata,
   mutation,
   session,

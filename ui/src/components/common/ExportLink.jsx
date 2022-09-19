@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
-import { Icon } from "@blueprintjs/core";
+import React, { PureComponent } from 'react';
+import { Icon } from '@blueprintjs/core';
 
-import "./ExportLink.scss";
+import './ExportLink.scss';
 
 class ExportLink extends PureComponent {
   render() {
@@ -15,11 +15,7 @@ class ExportLink extends PureComponent {
     );
 
     if (export_?.links?.download) {
-      return (
-        <a href={export_.links.download}>
-          {label}
-        </a>
-      );
+      return <a href={export_.links.download}>{label}</a>;
     }
     return label;
   }

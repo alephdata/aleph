@@ -4,11 +4,7 @@
     see https://reactrouter.com/docs/en/v6/faq for reference
 */
 
-import {
-  useLocation,
-  useNavigate,
-  useParams
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const withRouter = (Component) => {
   const ComponentWithRouterProp = (props) => {
@@ -24,9 +20,9 @@ const withRouter = (Component) => {
         params={params}
       />
     );
-  }
+  };
 
   return ComponentWithRouterProp;
-}
+};
 
-export default withRouter
+export default withRouter;

@@ -1,10 +1,10 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
-$transition-duration: .3s;
+$transition-duration: 0.3s;
 $inner-padding: 15px;
 
 .InvestigationHeading {
-  background: rgba($aleph-investigation-theme, .7);
+  background: rgba($aleph-investigation-theme, 0.7);
   transition: all $transition-duration ease-in-out;
   overflow: hidden;
   max-height: none;
@@ -12,16 +12,18 @@ $inner-padding: 15px;
   margin-bottom: $aleph-content-padding;
 
   &__inner-container {
-    padding: $aleph-grid-size*2 $inner-padding 0;
+    padding: $aleph-grid-size * 2 $inner-padding 0;
     transition: padding $transition-duration ease-in-out;
 
-    .bp3-text-muted, .CollectionHeading__title, .CollectionInfo__item .value {
+    .bp3-text-muted,
+    .CollectionHeading__title,
+    .CollectionInfo__item .value {
       color: white;
     }
   }
 
   .CollectionHeading__title {
-    margin-bottom: $aleph-grid-size*2;
+    margin-bottom: $aleph-grid-size * 2;
   }
 
   .text-markdown {
@@ -33,7 +35,7 @@ $inner-padding: 15px;
   }
 
   &__divider {
-    border-top: 1px solid rgba(white, .7);
+    border-top: 1px solid rgba(white, 0.7);
     margin: auto;
     width: 0;
     transition: width $transition-duration ease-in-out, margin 1s ease-in-out;
@@ -62,7 +64,7 @@ $inner-padding: 15px;
       margin: $inner-padding 0;
       padding: $aleph-grid-size;
       border-radius: 5px;
-      background: rgba(#fff, .15);
+      background: rgba(#fff, 0.15);
     }
   }
 
@@ -70,10 +72,10 @@ $inner-padding: 15px;
     width: 100%;
     transition: height $transition-duration ease-in-out;
     overflow: hidden;
-    background: rgba($white, .1) !important;
+    background: rgba($white, 0.1) !important;
 
     &:hover {
-      background: rgba($white, .2) !important;
+      background: rgba($white, 0.2) !important;
     }
 
     .bp3-icon {
@@ -90,7 +92,8 @@ $inner-padding: 15px;
     }
 
     &__title {
-      transition: font-size $transition-duration ease-in-out, font-weight $transition-duration ease-in-out;
+      transition: font-size $transition-duration ease-in-out,
+        font-weight $transition-duration ease-in-out;
 
       .bp3-icon {
         padding-right: 3px;
@@ -102,7 +105,7 @@ $inner-padding: 15px;
     padding: $aleph-grid-size;
     border-radius: 5px;
     font-size: $pt-font-size-small;
-    margin: $aleph-grid-size*2 0 $aleph-grid-size;
+    margin: $aleph-grid-size * 2 0 $aleph-grid-size;
 
     .bp3-heading {
       font-size: 14px !important;
@@ -110,7 +113,8 @@ $inner-padding: 15px;
     }
   }
 
-  .CollectionLink, .CategoryLink {
+  .CollectionLink,
+  .CategoryLink {
     color: white !important;
   }
 

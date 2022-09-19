@@ -4,7 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import YAML from 'yaml';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import MappingQueryLabel from 'dialogs/MappingImportDialog/MappingQueryLabel';
 import { FileImport } from 'components/common';
 import { showSuccessToast } from 'app/toast';
@@ -26,14 +26,14 @@ const messages = defineMessages({
   },
   placeholder: {
     id: 'mapping.import.placeholder',
-    defaultMessage: 'Drop a .yml file here or click to import an existing mapping file',
+    defaultMessage:
+      'Drop a .yml file here or click to import an existing mapping file',
   },
   querySelect: {
     id: 'mapping.import.querySelect',
     defaultMessage: 'Select a mapping query from this file to import:',
   },
 });
-
 
 class MappingImportDialog extends Component {
   constructor(props) {
@@ -65,9 +65,15 @@ class MappingImportDialog extends Component {
     const parsedData = YAML.parse(data);
     const firstEntry = Object.values(parsedData)[0];
 
-    const mappingQueries = firstEntry.query ? [firstEntry.query] : firstEntry.queries;
+    const mappingQueries = firstEntry.query
+      ? [firstEntry.query]
+      : firstEntry.queries;
     const selectedQueryIndex = mappingQueries.length === 1 ? '0' : null;
-    this.setState({ mappingQueries, importedFileName: fileName, selectedQueryIndex });
+    this.setState({
+      mappingQueries,
+      importedFileName: fileName,
+      selectedQueryIndex,
+    });
   }
 
   onSubmit() {
@@ -96,7 +102,7 @@ class MappingImportDialog extends Component {
           <form onSubmit={this.onSubmit}>
             <div className="bp3-dialog-body">
               <FileImport
-                accept=".yml"
+                accept={{ '*': ['.yml', '.yaml'] }}
                 placeholder={intl.formatMessage(messages.placeholder)}
                 onImport={this.onImport}
                 importedFile={importedFileName}
@@ -124,9 +130,7 @@ class MappingImportDialog extends Component {
                 <Button
                   intent={Intent.PRIMARY}
                   disabled={selectedQueryIndex === null}
-                  text={(
-                    intl.formatMessage(messages.submit)
-                  )}
+                  text={intl.formatMessage(messages.submit)}
                   onClick={this.onSubmit}
                 />
               </div>
@@ -138,7 +142,4 @@ class MappingImportDialog extends Component {
   }
 }
 
-export default compose(
-  injectIntl,
-  withRouter,
-)(MappingImportDialog);
+export default compose(injectIntl, withRouter)(MappingImportDialog);

@@ -1,23 +1,28 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw'
+import rehypeRaw from 'rehype-raw';
 import { Navigate } from 'react-router-dom';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Callout, Intent } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
-import { AnimatedCount, SearchBox, Category, Country, Schema, Statistics } from 'components/common';
+import withRouter from 'app/withRouter';
+import {
+  AnimatedCount,
+  SearchBox,
+  Category,
+  Country,
+  Schema,
+  Statistics,
+} from 'components/common';
 import { fetchStatistics } from 'actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'selectors';
 import Screen from 'components/Screen/Screen';
 import wordList from 'util/wordList';
 
 import './HomeScreen.scss';
-
 
 const messages = defineMessages({
   title: {
@@ -73,8 +78,8 @@ export class HomeScreen extends Component {
       return <Navigate to="/notifications" replace />;
     }
 
-    const appHomePage = metadata.pages.find(page => page.home);
-    const { description, samples, title, warning_title, warning_body } = appHomePage;
+    const appHomePage = metadata.pages.find((page) => page.home);
+    const { description, samples, title } = appHomePage;
     const samplesList = wordList(samples, ', ').join('');
 
     return (
@@ -90,15 +95,12 @@ export class HomeScreen extends Component {
               {description && (
                 <p className="HomeScreen__description">{description}</p>
               )}
-              {(warning_title || warning_body) && (
-                <Callout intent={Intent.WARNING} className="HomeScreen__auth-warning" title={warning_title}>
-                  {warning_body}
-                </Callout>
-              )}
               <div className="HomeScreen__search">
                 <SearchBox
                   onSearch={this.onSubmit}
-                  placeholder={intl.formatMessage(messages.placeholder, { samples: samplesList })}
+                  placeholder={intl.formatMessage(messages.placeholder, {
+                    samples: samplesList,
+                  })}
                   inputProps={{ large: true, autoFocus: true }}
                 />
                 <div className="HomeScreen__thirds">
@@ -118,14 +120,11 @@ export class HomeScreen extends Component {
                     label={intl.formatMessage(messages.count_countries)}
                   />
                 </div>
-
               </div>
             </div>
           </section>
           {appHomePage?.content && (
-            <ReactMarkdown
-              rehypePlugins={[rehypeRaw]}
-            >
+            <ReactMarkdown rehypePlugins={[rehypeRaw]}>
               {appHomePage.content}
             </ReactMarkdown>
           )}
@@ -141,55 +140,61 @@ export class HomeScreen extends Component {
                 <div>
                   <Statistics
                     styleType="dark"
-                    headline={(
+                    headline={
                       <FormattedMessage
                         id="home.statistics.schemata"
                         defaultMessage="Entity types"
                       />
-                    )}
+                    }
                     statistic={statistics.schemata}
                     isPending={statistics.isPending}
-                    itemLink={value => ({
+                    itemLink={(value) => ({
                       pathname: 'search',
-                      search: queryString.stringify({ 'filter:schema': value })
+                      search: queryString.stringify({ 'filter:schema': value }),
                     })}
-                    itemLabel={name => <Schema.Label schema={name} plural icon />}
+                    itemLabel={(name) => (
+                      <Schema.Label schema={name} plural icon />
+                    )}
                   />
                 </div>
                 <div>
                   <Statistics
                     styleType="dark"
-                    headline={(
+                    headline={
                       <FormattedMessage
                         id="home.statistics.categories"
                         defaultMessage="Dataset categories"
                       />
-                    )}
+                    }
                     statistic={statistics.categories}
                     isPending={statistics.isPending}
-                    itemLink={value => ({
+                    itemLink={(value) => ({
                       pathname: 'datasets',
-                      search: queryString.stringify({ 'collectionsfilter:category': value })
+                      search: queryString.stringify({
+                        'collectionsfilter:category': value,
+                      }),
                     })}
-                    itemLabel={name => <Category.Label category={name} />}
+                    itemLabel={(name) => <Category.Label category={name} />}
                   />
                 </div>
                 <div>
                   <Statistics
                     styleType="dark"
-                    headline={(
+                    headline={
                       <FormattedMessage
                         id="home.statistics.countries"
                         defaultMessage="Countries and territories"
                       />
-                    )}
+                    }
                     statistic={statistics.countries}
                     isPending={statistics.isPending}
-                    itemLink={value => ({
+                    itemLink={(value) => ({
                       pathname: 'datasets',
-                      search: queryString.stringify({ 'collectionsfilter:countries': value })
+                      search: queryString.stringify({
+                        'collectionsfilter:countries': value,
+                      }),
                     })}
-                    itemLabel={name => <Country.Name code={name} />}
+                    itemLabel={(name) => <Country.Name code={name} />}
                   />
                 </div>
               </div>
@@ -210,5 +215,5 @@ const mapStateToProps = (state) => ({
 export default compose(
   withRouter,
   connect(mapStateToProps, { fetchStatistics }),
-  injectIntl,
+  injectIntl
 )(HomeScreen);

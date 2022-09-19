@@ -1,9 +1,10 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .CollectionHeading {
   margin: 20px 0 35px;
 
-  &__title, &__subtitle {
+  &__title,
+  &__subtitle {
     margin: 10px 0;
     overflow-wrap: break-word;
   }

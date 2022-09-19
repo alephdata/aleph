@@ -2,12 +2,15 @@ import _ from 'lodash';
 
 import timestamp from 'util/timestamp';
 
-
 export function mergeResults(previous, current) {
-  if (previous === undefined || previous.results === undefined || current.offset === 0) {
+  if (
+    previous === undefined ||
+    previous.results === undefined ||
+    current.offset === 0
+  ) {
     return current;
   }
-  const expectedOffset = (previous.limit + previous.offset);
+  const expectedOffset = previous.limit + previous.offset;
   if (current.offset === expectedOffset) {
     return { ...current, results: [...previous.results, ...current.results] };
   }
@@ -36,7 +39,7 @@ export function updateResultsKeyed(state, { query, result }) {
     return updateResultsFull(state, { query, result });
   }
   const key = query.toKey();
-  const res = { ...result, results: result.results.map(r => r.id) };
+  const res = { ...result, results: result.results.map((r) => r.id) };
   return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
 
@@ -47,7 +50,13 @@ export function updateResultsFull(state, { query, result }) {
 
 export function loadState(data) {
   const state = data || {};
-  return { ...state, isPending: true, shouldLoad: true, shouldLoadDeep: true, isError: false };
+  return {
+    ...state,
+    isPending: true,
+    shouldLoad: true,
+    shouldLoadDeep: true,
+    isError: false,
+  };
 }
 
 export function loadStart(state) {
@@ -102,8 +111,10 @@ export function objectDelete(state, id) {
 
 export function resultObjects(state, result, onComplete = objectLoadComplete) {
   if (result.results !== undefined) {
-    return result.results
-      .reduce((finalState, object) => onComplete(finalState, object.id, object), state);
+    return result.results.reduce(
+      (finalState, object) => onComplete(finalState, object.id, object),
+      state
+    );
   }
   return state;
 }

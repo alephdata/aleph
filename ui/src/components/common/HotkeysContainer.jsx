@@ -1,5 +1,5 @@
-import React from "react";
-import { useHotkeys } from "@blueprintjs/core";
+import React from 'react';
+import { useHotkeys } from '@blueprintjs/core';
 
 const HotkeysContainer = ({ children, hotkeys }) => {
   const { handleKeyDown, handleKeyUp } = useHotkeys(hotkeys);
@@ -9,6 +9,6 @@ const HotkeysContainer = ({ children, hotkeys }) => {
       {children}
     </div>
   );
-}
+};
 
 export default HotkeysContainer;

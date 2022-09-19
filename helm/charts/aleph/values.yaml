@@ -6,12 +6,14 @@ global:
 
   image:
     repository: alephdata/aleph
-    tag: "3.12.3"
+    tag: "3.12.6"
     pullPolicy: Always
 
   commonEnv:
     # LOG_FORMAT: JSON
     REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
+    RABBITMQ_URL: aleph-rabbitmq.default.svc.cluster.local
+    RABBITMQ_USERNAME: user
 
   env:
     ALEPH_DEBUG: "false"

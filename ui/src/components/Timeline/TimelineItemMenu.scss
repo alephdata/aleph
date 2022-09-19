@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .TimelineItemMenu {
   padding: $aleph-grid-size/2;
@@ -12,7 +12,7 @@
   &__menu {
     .ColorPicker {
       padding: $aleph-grid-size;
-      max-width: $aleph-grid-size*22;
+      max-width: $aleph-grid-size * 22;
       margin: auto;
     }
   }

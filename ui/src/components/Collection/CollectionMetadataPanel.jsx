@@ -10,9 +10,21 @@ class CollectionMetadataPanel extends PureComponent {
   renderSkeleton() {
     return (
       <div className="CollectionMetadataPanel">
-        <Skeleton.Text type="div" length="75" className="CollectionMetadataPanel__item" />
-        <Skeleton.Text type="div" length="100" className="CollectionMetadataPanel__item" />
-        <Skeleton.Text type="div" length="200" className="CollectionMetadataPanel__item" />
+        <Skeleton.Text
+          type="div"
+          length="75"
+          className="CollectionMetadataPanel__item"
+        />
+        <Skeleton.Text
+          type="div"
+          length="100"
+          className="CollectionMetadataPanel__item"
+        />
+        <Skeleton.Text
+          type="div"
+          length="200"
+          className="CollectionMetadataPanel__item"
+        />
       </div>
     );
   }
@@ -25,7 +37,11 @@ class CollectionMetadataPanel extends PureComponent {
 
     return (
       <div className="CollectionMetadataPanel">
-        <CollectionStatus collection={collection} showCancel={collection.writeable} className="CollectionMetadataPanel__item" />
+        <CollectionStatus
+          collection={collection}
+          showCancel={collection.writeable}
+          className="CollectionMetadataPanel__item"
+        />
         {collection.summary && (
           <div className="CollectionMetadataPanel__item">
             <Summary text={collection.summary} />

@@ -7,12 +7,9 @@ import c from 'classnames';
 
 import { fetchEntity } from 'actions';
 import { selectEntity } from 'selectors';
-import {
-  Date, Entity, Skeleton, Schema
-} from 'src/components/common';
+import { Date, Entity, Skeleton, Schema } from 'src/components/common';
 
 import './MappingIndexItem.scss';
-
 
 class MappingIndexItem extends PureComponent {
   constructor(props) {
@@ -22,17 +19,29 @@ class MappingIndexItem extends PureComponent {
 
   renderSkeleton = () => (
     <div className="MappingIndexItem">
-      <Skeleton.Text type="h5" length={25} className="MappingIndexItem__title bp3-heading" />
+      <Skeleton.Text
+        type="h5"
+        length={25}
+        className="MappingIndexItem__title bp3-heading"
+      />
       <div className="MappingIndexItem__schemata">
         <Skeleton.Text type="span" length={10} className="SchemaLabel" />
         <Skeleton.Text type="span" length={10} className="SchemaLabel" />
       </div>
       <div className="MappingIndexItem__statusItems">
-        <Skeleton.Text type="p" length={20} className="MappingIndexItem__statusItem bp3-text-muted" />
-        <Skeleton.Text type="p" length={20} className="MappingIndexItem__statusItem bp3-text-muted" />
+        <Skeleton.Text
+          type="p"
+          length={20}
+          className="MappingIndexItem__statusItem bp3-text-muted"
+        />
+        <Skeleton.Text
+          type="p"
+          length={20}
+          className="MappingIndexItem__statusItem bp3-text-muted"
+        />
       </div>
     </div>
-  )
+  );
 
   componentDidUpdate() {
     const { mapping, tableEntity } = this.props;
@@ -59,12 +68,12 @@ class MappingIndexItem extends PureComponent {
     if (tableEntity && !tableEntity.isPending) {
       const title = <Entity.Label entity={tableEntity} icon />;
       if (link) {
-        return <Link to={link}>{title}</Link>
+        return <Link to={link}>{title}</Link>;
       } else {
         return title;
       }
     }
-    return <Skeleton.Text type="span" length={25} className="" />
+    return <Skeleton.Text type="span" length={25} className="" />;
   }
 
   render() {
@@ -77,9 +86,13 @@ class MappingIndexItem extends PureComponent {
 
     return (
       <div className="MappingIndexItem">
-        <h5 className="MappingIndexItem__title bp3-heading">{this.getTitle()}</h5>
+        <h5 className="MappingIndexItem__title bp3-heading">
+          {this.getTitle()}
+        </h5>
         <div className="MappingIndexItem__schemata">
-          {Object.entries(query).map(([key, { schema }]) => <Schema.Label key={key} schema={schema} icon plural />)}
+          {Object.entries(query).map(([key, { schema }]) => (
+            <Schema.Label key={key} schema={schema} icon plural />
+          ))}
         </div>
         <div className="MappingIndexItem__statusItems">
           <p className="MappingIndexItem__statusItem bp3-text-muted">
@@ -101,7 +114,12 @@ class MappingIndexItem extends PureComponent {
                   defaultMessage="Status: "
                 />
               </span>
-              <span className={c("MappingIndexItem__statusItem__value", this.getIntent())}>
+              <span
+                className={c(
+                  'MappingIndexItem__statusItem__value',
+                  this.getIntent()
+                )}
+              >
                 {mapping.last_run_status}
               </span>
             </p>
@@ -127,11 +145,13 @@ class MappingIndexItem extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { mapping } = ownProps;
-  return { tableEntity: mapping?.table_id && selectEntity(state, mapping.table_id) };
+  return {
+    tableEntity: mapping?.table_id && selectEntity(state, mapping.table_id),
+  };
 };
 const mapDispatchToProps = { fetchEntity };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(MappingIndexItem);

@@ -1,14 +1,17 @@
 import React, { PureComponent } from 'react';
-import { selectUnit } from '@formatjs/intl-utils';
-import { FormattedRelativeTime } from 'react-intl';
 
 import {
-  Collection, EntitySet, Entity, QueryText, Role, Skeleton, ExportLink
+  Collection,
+  EntitySet,
+  Entity,
+  QueryText,
+  Role,
+  Skeleton,
+  ExportLink,
+  RelativeTime,
 } from 'src/components/common';
-import convertUTCDateToLocalDate from "util/convertUTCDateToLocalDate";
 
 import './Notification.scss';
-
 
 class Notification extends PureComponent {
   getParam(name) {
@@ -51,7 +54,7 @@ class Notification extends PureComponent {
         <Skeleton.Text type="span" length={15} />
       </div>
     </li>
-  )
+  );
 
   render() {
     const { isPending, notification } = this.props;
@@ -73,29 +76,27 @@ class Notification extends PureComponent {
         paramActive = false;
       } else if (paramActive) {
         const param = this.getParam(token);
-        message.push((<div key={token} className="param">{param}</div>));
+        message.push(
+          <div key={token} className="param">
+            {param}
+          </div>
+        );
       } else if (token.length === 0) {
         return false;
       } else {
-        message.push((<div key={token} className="token">{token}</div>));
+        message.push(
+          <div key={token} className="token">
+            {token}
+          </div>
+        );
       }
     });
 
-    const createdDate = convertUTCDateToLocalDate(new Date(createdAt));
-    const { value, unit } = selectUnit(createdDate, Date.now());
     return (
       <li key={id} className="Notification">
-        <div className="notification-action">
-          {message}
-        </div>
+        <div className="notification-action">{message}</div>
         <div className="timestamp">
-          <FormattedRelativeTime
-            value={value}
-            unit={unit}
-            // eslint-disable-next-line
-            style="long"
-            numeric="auto"
-          />
+          <RelativeTime utcDate={createdAt} />
         </div>
       </li>
     );

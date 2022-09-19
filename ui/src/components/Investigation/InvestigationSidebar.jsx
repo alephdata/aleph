@@ -5,7 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Alignment, ButtonGroup, Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { SchemaCounts } from 'components/common';
@@ -38,20 +38,31 @@ class InvestigationSidebar extends React.Component {
         key={id}
         icon={<CollectionView.Icon id={id} />}
         text={<CollectionView.Label id={id} isCasefile />}
-        rightIcon={<CollectionView.Count id={id} collectionId={collection.id} />}
+        rightIcon={
+          <CollectionView.Count id={id} collectionId={collection.id} />
+        }
         onClick={() => this.navigate(id)}
         active={activeMode === id}
         alignText={Alignment.LEFT}
         fill
       />
     );
-  }
+  };
 
   render() {
     const { collection, activeMode, activeType, schemaCounts } = this.props;
 
-    const entityTools = [collectionViewIds.DIAGRAMS, collectionViewIds.TIMELINES, collectionViewIds.LISTS, collectionViewIds.XREF];
-    const docTools = [collectionViewIds.DOCUMENTS, collectionViewIds.MAPPINGS, collectionViewIds.MENTIONS];
+    const entityTools = [
+      collectionViewIds.DIAGRAMS,
+      collectionViewIds.TIMELINES,
+      collectionViewIds.LISTS,
+      collectionViewIds.XREF,
+    ];
+    const docTools = [
+      collectionViewIds.DOCUMENTS,
+      collectionViewIds.MAPPINGS,
+      collectionViewIds.MENTIONS,
+    ];
 
     return (
       <div className="InvestigationSidebar">
@@ -59,13 +70,21 @@ class InvestigationSidebar extends React.Component {
         <div className="InvestigationSidebar__content">
           <div className="InvestigationSidebar__section">
             <h6 className="bp3-heading InvestigationSidebar__section__title">
-              <FormattedMessage id="collection.info.entities" defaultMessage="Entities" />
+              <FormattedMessage
+                id="collection.info.entities"
+                defaultMessage="Entities"
+              />
             </h6>
-            <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
+            <ButtonGroup
+              vertical
+              minimal
+              fill
+              className="InvestigationSidebar__section__menu"
+            >
               <SchemaCounts
-                filterSchemata={schema => !schema.isDocument()}
+                filterSchemata={(schema) => !schema.isDocument()}
                 schemaCounts={schemaCounts}
-                onSelect={schema => this.navigate('entities', schema)}
+                onSelect={(schema) => this.navigate('entities', schema)}
                 showSchemaAdd={collection.writeable}
                 activeSchema={activeType}
               />
@@ -74,9 +93,17 @@ class InvestigationSidebar extends React.Component {
           </div>
           <div className="InvestigationSidebar__section">
             <h6 className="bp3-heading InvestigationSidebar__section__title">
-              <FormattedMessage id="collection.info.documents" defaultMessage="Documents" />
+              <FormattedMessage
+                id="collection.info.documents"
+                defaultMessage="Documents"
+              />
             </h6>
-            <ButtonGroup vertical minimal fill className="InvestigationSidebar__section__menu">
+            <ButtonGroup
+              vertical
+              minimal
+              fill
+              className="InvestigationSidebar__section__menu"
+            >
               {docTools.map(this.renderButton)}
             </ButtonGroup>
           </div>
@@ -90,13 +117,12 @@ const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
 
   return {
-    schemaCounts: collection?.statistics?.schema?.values || {}
+    schemaCounts: collection?.statistics?.schema?.values || {},
   };
 };
-
 
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
+  injectIntl
 )(InvestigationSidebar);

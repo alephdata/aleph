@@ -224,6 +224,7 @@ class Query(object):
                 'text': {
                     "number_of_fragments": self.parser.highlight_count,
                     "fragment_size": self.parser.highlight_length,
+                    "max_analyzed_offset": self.parser.max_highlight_analyzed_offset,
                 }
             },
         }

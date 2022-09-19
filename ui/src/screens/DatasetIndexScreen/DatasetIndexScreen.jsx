@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { getGroupField } from 'components/SearchField/util';
 import { selectCollectionsResult } from 'selectors';
 import { DualPane, SignInCallout } from 'components/common';
@@ -13,7 +13,6 @@ import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
 import { datasetsQuery } from 'queries';
 
 import './DatasetIndexScreen.scss';
-
 
 const messages = defineMessages({
   title: {
@@ -95,5 +94,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, {}),
-  injectIntl,
+  injectIntl
 )(DatasetIndexScreen);

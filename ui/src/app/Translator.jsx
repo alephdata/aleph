@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
-import { shouldPolyfill } from '@formatjs/intl-relativetimeformat/should-polyfill'
+import { shouldPolyfill } from '@formatjs/intl-relativetimeformat/should-polyfill';
 
 import { selectLocale } from 'selectors';
 import { SectionLoading } from 'components/common';
 import translations from 'content/translations.json';
-
 
 class Translator extends React.Component {
   constructor(props) {
@@ -23,43 +22,47 @@ class Translator extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.requiresPolyfill && prevProps.locale !== this.props.locale) {
-      this.fetchLocale()
+      this.fetchLocale();
     }
   }
 
   fetchPolyfill = async () => {
-    await import('@formatjs/intl-locale/polyfill')
+    await import('@formatjs/intl-locale/polyfill');
     await import('@formatjs/intl-pluralrules/polyfill');
     await import('@formatjs/intl-relativetimeformat/polyfill');
     this.fetchLocale();
-  }
+  };
 
   fetchLocale = async () => {
     const { locale } = this.props;
-    await import(`@formatjs/intl-pluralrules/locale-data/${locale}`)
-    await import(`@formatjs/intl-relativetimeformat/locale-data/${locale}`)
+    await import(`@formatjs/intl-pluralrules/locale-data/${locale}`);
+    await import(`@formatjs/intl-relativetimeformat/locale-data/${locale}`);
     this.setState({ isPending: false });
-  }
+  };
 
   render() {
     const { children, locale } = this.props;
     const { isPending } = this.state;
 
     if (isPending) {
-      return <SectionLoading className="bp3-large" />
+      return <SectionLoading className="bp3-large" />;
     }
 
     //  override arabic locale to marocan version
     // We want all dates and numbers in latin instead of default ar eastern digits
-    const modifiedLocale = locale === "ar" ? "ar-ma" : locale;
+    const modifiedLocale = locale === 'ar' ? 'ar-ma' : locale;
 
     return (
-      <IntlProvider key={locale} locale={modifiedLocale || "en"} messages={translations[locale]}>
+      <IntlProvider
+        key={locale}
+        locale={modifiedLocale || 'en'}
+        messages={translations[locale]}
+      >
         {children}
       </IntlProvider>
     );
   }
 }
 
-const mapStateToProp = state => ({ locale: selectLocale(state) });
+const mapStateToProp = (state) => ({ locale: selectLocale(state) });
 export default connect(mapStateToProp)(Translator);

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import {
-  FormattedMessage, FormattedNumber, injectIntl,
-} from 'react-intl';
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Icon, Intent, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { CheckboxList, Schema } from 'components/common';
 import DateFacet from 'components/Facet/DateFacet';
 
@@ -59,7 +57,7 @@ class Facet extends Component {
     const newQuery = query
       .clearFilter(`lte:${field}`)
       .clearFilter(`gte:${field}`)
-      .set(`facet_interval:${field}`, 'year')
+      .set(`facet_interval:${field}`, 'year');
 
     this.props.updateQuery(newQuery);
   }
@@ -88,14 +86,14 @@ class Facet extends Component {
         updateQuery={this.props.updateQuery}
         showLabel={false}
         field={field}
-        emptyComponent={(
+        emptyComponent={
           <div className="Facet__no-options">
             <FormattedMessage
               id="search.facets.no_items"
               defaultMessage="No options"
             />
           </div>
-        )}
+        }
       />
     );
   }
@@ -107,9 +105,14 @@ class Facet extends Component {
     const hasMoreValues = facetSize < facet.total;
     const isUpdating = result.total === undefined;
 
-    const values = field === 'schema'
-      ? facet?.values?.map(({ id, label, ...rest }) => ({ label: <Schema.Label schema={id} icon />, id, ...rest }))
-      : facet?.values;
+    const values =
+      field === 'schema'
+        ? facet?.values?.map(({ id, label, ...rest }) => ({
+            label: <Schema.Label schema={id} icon />,
+            id,
+            ...rest,
+          }))
+        : facet?.values;
 
     return (
       <>
@@ -120,7 +123,7 @@ class Facet extends Component {
             onItemClick={this.onSelect}
             isMultiSelect={isMultiSelect}
           >
-            {(!isUpdating && hasMoreValues) && (
+            {!isUpdating && hasMoreValues && (
               <a className="ShowMore" onClick={this.showMore} href="/">
                 <FormattedMessage
                   id="search.facets.showMore"
@@ -131,15 +134,14 @@ class Facet extends Component {
             )}
           </CheckboxList>
         )}
-        {(isExpanding && isOpen) && (
-          <Spinner className="bp3-small spinner" />
-        )}
+        {isExpanding && isOpen && <Spinner className="bp3-small spinner" />}
       </>
     );
   }
 
   render() {
-    const { query, isOpen, result, field, label, intl, isCollapsible } = this.props;
+    const { query, isOpen, result, field, label, intl, isCollapsible } =
+      this.props;
     const { facet } = this.state;
     const current = query.getFilter(field);
     const count = current ? current.length : 0;
@@ -150,7 +152,10 @@ class Facet extends Component {
     return (
       <div className="Facet">
         <div
-          className={c('opener', { clickable: isCollapsible, active: !isUpdating && isFiltered })}
+          className={c('opener', {
+            clickable: isCollapsible,
+            active: !isUpdating && isFiltered,
+          })}
           onClick={this.onToggleFacet}
           onKeyPress={this.onToggleFacet}
           tabIndex={0}
@@ -159,11 +164,12 @@ class Facet extends Component {
           aria-checked={isOpen}
         >
           {isCollapsible && (
-            <Icon icon="caret-right" className={c('caret', { rotate: isOpen })} />
+            <Icon
+              icon="caret-right"
+              className={c('caret', { rotate: isOpen })}
+            />
           )}
-          <span className="FacetName">
-            {label}
-          </span>
+          <span className="FacetName">{label}</span>
 
           {isFiltered && (
             <>
@@ -177,10 +183,12 @@ class Facet extends Component {
             </>
           )}
 
-          {(!isDate && isOpen) && (
+          {!isDate && isOpen && (
             <>
               {facet.total === 0 && (
-                <span className="bp3-tag bp3-small bp3-round bp3-minimal">0</span>
+                <span className="bp3-tag bp3-small bp3-round bp3-minimal">
+                  0
+                </span>
               )}
 
               {facet.total > 0 && (
@@ -190,14 +198,24 @@ class Facet extends Component {
               )}
             </>
           )}
-          {(isDate && isOpen && (query.hasFilter(`gte:${field}`) || query.hasFilter(`lte:${field}`))) && (
-            <Button small minimal icon="reset" className="Facet__action" intent={Intent.DANGER} onClick={this.onClearDates}>
-              <FormattedMessage
-                id="search.facets.clearDates"
-                defaultMessage="Clear"
-              />
-            </Button>
-          )}
+          {isDate &&
+            isOpen &&
+            (query.hasFilter(`gte:${field}`) ||
+              query.hasFilter(`lte:${field}`)) && (
+              <Button
+                small
+                minimal
+                icon="reset"
+                className="Facet__action"
+                intent={Intent.DANGER}
+                onClick={this.onClearDates}
+              >
+                <FormattedMessage
+                  id="search.facets.clearDates"
+                  defaultMessage="Clear"
+                />
+              </Button>
+            )}
         </div>
         <Collapse isOpen={isOpen} className={c({ updating: isUpdating })}>
           {isDate && this.renderDates()}
@@ -210,7 +228,7 @@ class Facet extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query, facet } = ownProps;
-  const field = facet.isProperty ? `properties.${facet.name}` : facet.name
+  const field = facet.isProperty ? `properties.${facet.name}` : facet.name;
   const defaultSize = facet.defaultSize || 10;
   const facetSize = query.getInt(`facet_size:${field}`, 0);
   const isOpen = query.hasFacet(field) && facetSize > 0;
@@ -222,8 +240,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-  injectIntl,
-)(Facet);
+export default compose(withRouter, connect(mapStateToProps), injectIntl)(Facet);

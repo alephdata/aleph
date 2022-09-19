@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 
 import './TextLoading.scss';
 
-
 export default class TextLoading extends PureComponent {
   render() {
     const { loading, children } = this.props;

@@ -1,18 +1,19 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
-.TextViewer {
-  overflow-x: hidden;
+// This overrides Blueprint's default styles for code blocks.
+// When bundling our app, Blueprint styles are currently included
+// after component-specific styles, i.e. Blueprint styles override
+// component-specific styles if the selector specificity is the
+// same. The repeated class name in the selector is a hack to increase
+// the specificity.
+.TextViewer.TextViewer {
+  margin: 0;
   padding: $aleph-grid-size;
-  box-shadow: $pt-elevation-shadow-1;
-  margin-bottom: 2 * $aleph-grid-size;
+  border: none;
+  box-shadow: none;
+}
 
-  pre {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-family: $pt-font-family;
-    line-height: 1.4;
-    font-size: 1.1 * $aleph-font-size;
-    box-shadow: unset;
-  }
+.TextViewer > em {
+  background-color: $aleph-text-highlight-color;
+  font-style: inherit;
 }

@@ -1,4 +1,4 @@
-@import "app/variables.scss";
+@import 'app/variables.scss';
 
 .CollectionStatistics {
   .Statistics {
@@ -6,11 +6,13 @@
   }
 
   &__heading {
-    padding-bottom: $aleph-grid-size*2;
+    padding-bottom: $aleph-grid-size * 2;
     margin-bottom: $aleph-grid-size;
     border-bottom: 1px solid $aleph-border-color;
 
-    &__total, &__label, &__icon {
+    &__total,
+    &__label,
+    &__icon {
       color: $blue1;
       text-align: center;
       margin-top: 0;
@@ -24,6 +26,5 @@
     &__label {
       font-size: 16px;
     }
-
   }
 }

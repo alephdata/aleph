@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { selectLocale } from 'selectors';
 import './Count.scss';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   locale: selectLocale(state),
 });
 

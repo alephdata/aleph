@@ -3,7 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { queryEntitySets } from 'actions';
 import { selectEntitySetsResult } from 'selectors';
 import Query from 'app/Query';
@@ -11,7 +11,6 @@ import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
 import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
-
 
 const messages = defineMessages({
   diagram_title: {
@@ -28,15 +27,18 @@ const messages = defineMessages({
   },
   diagram_description: {
     id: 'diagrams.description',
-    defaultMessage: 'Network diagrams let you visualize complex relationships within an investigation.',
+    defaultMessage:
+      'Network diagrams let you visualize complex relationships within an investigation.',
   },
   list_description: {
     id: 'lists.description',
-    defaultMessage: 'Lists let you organize and group related entities of interest.',
+    defaultMessage:
+      'Lists let you organize and group related entities of interest.',
   },
   timeline_description: {
     id: 'timelines.description',
-    defaultMessage: 'Timelines are a way to view and organize events chronologically.',
+    defaultMessage:
+      'Timelines are a way to view and organize events chronologically.',
   },
 });
 
@@ -72,15 +74,11 @@ export class EntitySetIndexScreen extends Component {
 
   render() {
     const { intl, query, result, type } = this.props;
-    const title = intl.formatMessage(messages[`${type}_title`])
-    const description = intl.formatMessage(messages[`${type}_description`])
+    const title = intl.formatMessage(messages[`${type}_title`]);
+    const description = intl.formatMessage(messages[`${type}_description`]);
 
     return (
-      <Screen
-        className="EntitySetIndexScreen"
-        title={title}
-        requireSession
-      >
+      <Screen className="EntitySetIndexScreen" title={title} requireSession>
         <Dashboard>
           <div className="Dashboard__title-container">
             <h5 className="Dashboard__title">{title}</h5>
@@ -112,10 +110,14 @@ const mapStateToProps = (state, ownProps) => {
     type = 'list';
   }
   const context = {
-    'filter:type': type
+    'filter:type': type,
   };
-  let query = Query.fromLocation('entitysets', location, context, 'entitySets')
-    .defaultSortBy('created_at', 'asc');
+  let query = Query.fromLocation(
+    'entitysets',
+    location,
+    context,
+    'entitySets'
+  ).defaultSortBy('created_at', 'asc');
   return {
     query,
     result: selectEntitySetsResult(state, query),
@@ -123,9 +125,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntitySets }),
-  injectIntl,
+  injectIntl
 )(EntitySetIndexScreen);

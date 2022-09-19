@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .CollectionReference {
   &__section {
@@ -15,12 +15,17 @@
     .bp3-input-group {
       margin-bottom: 5px;
       .bp3-input {
-        @include rtlSupportInvertedProp(padding, right, 30px!important, 10px!important);
+        @include rtlSupportInvertedProp(
+          padding,
+          right,
+          30px!important,
+          10px!important
+        );
       }
     }
   }
 
   .bp3-divider {
-    margin: $aleph-grid-size*1.5 0 !important;
+    margin: $aleph-grid-size * 1.5 0 !important;
   }
 }

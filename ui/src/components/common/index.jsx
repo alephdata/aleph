@@ -32,18 +32,21 @@ import Score from './Score';
 import Tag from './Tag';
 import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
+import SearchHighlight from './SearchHighlight';
 import Skeleton from './Skeleton';
 import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
 import QueryInfiniteLoad from './QueryInfiniteLoad';
+import RelativeTime from './RelativeTime';
 import ResultCount from './ResultCount';
 import ResultText from './ResultText';
 import SelectWrapper from './SelectWrapper';
 import ExportLink from './ExportLink';
 import UpdateStatus from './UpdateStatus';
 import JudgementButtons from './JudgementButtons';
-
+import LinkMenuItem from './LinkMenuItem';
+import LinkButton from './LinkButton';
 
 export {
   AnimatedCount,
@@ -81,16 +84,20 @@ export {
   Tag,
   SchemaCounts,
   SearchBox,
+  SearchHighlight,
   Skeleton,
   QueryText,
   QueryInfiniteLoad,
   QuickLinks,
+  RelativeTime,
   ResultCount,
   ResultText,
   SelectWrapper,
   ExportLink,
   UpdateStatus,
   JudgementButtons,
+  LinkMenuItem,
+  LinkButton,
 };
 
 export * from './types';

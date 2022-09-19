@@ -14,5 +14,5 @@ export const logout = asyncActionCreator(
     const response = await endpoint.post('/sessions/logout');
     return { redirect: response.data.redirect };
   },
-  { name: 'LOGOUT' },
+  { name: 'LOGOUT' }
 );

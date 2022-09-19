@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import truncateText from 'truncate';
-import {
-  Button, MenuItem, Classes, Alignment, Icon,
-} from '@blueprintjs/core';
+import { Button, MenuItem, Classes, Alignment, Icon } from '@blueprintjs/core';
 import SelectWrapper from './SelectWrapper';
 
 import wordList from 'util/wordList';
@@ -20,7 +18,6 @@ const messages = defineMessages({
   },
 });
 
-
 class RoleLabel extends PureComponent {
   render() {
     const { role, icon = true, long = false, truncate } = this.props;
@@ -34,13 +31,12 @@ class RoleLabel extends PureComponent {
     }
     return (
       <span className="Role">
-        { icon && <Icon icon={iconName} /> }
+        {icon && <Icon icon={iconName} />}
         <span>{text}</span>
       </span>
     );
   }
 }
-
 
 class RoleLink extends PureComponent {
   render() {
@@ -53,14 +49,19 @@ class RoleLink extends PureComponent {
   }
 }
 
-
 class RoleList extends PureComponent {
   render() {
-    const { roles, separateItems, truncate = Infinity, truncateItem } = this.props;
+    const {
+      roles,
+      separateItems,
+      truncate = Infinity,
+      truncateItem,
+    } = this.props;
     if (!roles) return null;
 
-
-    let names = roles.map(role => <RoleLink key={role.id} role={role} truncate={truncateItem} />);
+    let names = roles.map((role) => (
+      <RoleLink key={role.id} role={role} truncate={truncateItem} />
+    ));
 
     // Truncate if too long
     if (names.length > truncate) {
@@ -69,7 +70,6 @@ class RoleList extends PureComponent {
     return separateItems ? wordList(names, ' · ') : names;
   }
 }
-
 
 class Select extends Component {
   constructor(props) {
@@ -111,7 +111,7 @@ class Select extends Component {
       onClick={handleClick}
       text={role.label}
     />
-  )
+  );
 
   render() {
     const { intl, role, roles } = this.props;

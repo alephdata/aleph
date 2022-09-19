@@ -5,18 +5,30 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import {
-  Count, Property, ResultCount, Schema, SectionLoading, TextLoading,
+  Count,
+  Property,
+  ResultCount,
+  Schema,
+  SectionLoading,
+  TextLoading,
 } from 'components/common';
-import { profileSimilarQuery, profileReferenceQuery, entitySetItemsQuery } from 'queries';
 import {
-  selectProfileReferences, selectProfileReference, selectProfileTags, selectEntitySetItemsResult, selectSimilarResult,
+  profileSimilarQuery,
+  profileReferenceQuery,
+  entitySetItemsQuery,
+} from 'queries';
+import {
+  selectProfileReferences,
+  selectProfileReference,
+  selectProfileTags,
+  selectEntitySetItemsResult,
+  selectSimilarResult,
 } from 'selectors';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import ProfileSimilarMode from 'components/Profile/ProfileSimilarMode';
 import ProfileItemsMode from './ProfileItemsMode';
-
 
 class ProfileViews extends React.Component {
   constructor(props) {
@@ -37,7 +49,14 @@ class ProfileViews extends React.Component {
 
   render() {
     const {
-      activeMode, profile, references, items, similar, reference, referenceQuery, viaEntityId
+      activeMode,
+      profile,
+      references,
+      items,
+      similar,
+      reference,
+      referenceQuery,
+      viaEntityId,
     } = this.props;
     if (references.total === undefined) {
       return <SectionLoading />;
@@ -53,43 +72,46 @@ class ProfileViews extends React.Component {
       >
         <Tab
           id="items"
-          title={(
+          title={
             <TextLoading loading={items.total === undefined}>
               <Icon icon="layers" className="left-icon" />
-              <FormattedMessage id="profile.info.items" defaultMessage="Entity decisions" />
+              <FormattedMessage
+                id="profile.info.items"
+                defaultMessage="Entity decisions"
+              />
               <ResultCount result={items} />
             </TextLoading>
-          )}
+          }
           panel={
-            <ProfileItemsMode
-              profile={profile}
-              viaEntityId={viaEntityId}
-            />
+            <ProfileItemsMode profile={profile} viaEntityId={viaEntityId} />
           }
         />
         <Tab
           id="similar"
           disabled={similar.total === 0}
-          title={(
+          title={
             <TextLoading loading={similar.total === undefined}>
               <Icon icon="layer-outline" className="left-icon" />
-              <FormattedMessage id="profile.info.similar" defaultMessage="Suggested" />
+              <FormattedMessage
+                id="profile.info.similar"
+                defaultMessage="Suggested"
+              />
               <ResultCount result={similar} />
             </TextLoading>
-          )}
+          }
           panel={<ProfileSimilarMode profile={profile} />}
         />
-        {references.results.map(ref => (
+        {references.results.map((ref) => (
           <Tab
             id={ref.property.qname}
             key={ref.property.qname}
-            title={(
+            title={
               <>
                 <Schema.Icon schema={ref.schema} className="left-icon" />
                 <Property.Reverse prop={ref.property} />
                 <Count count={ref.count} />
               </>
-            )}
+            }
             panel={
               <EntityReferencesMode
                 entity={profile.entity}
@@ -101,10 +123,7 @@ class ProfileViews extends React.Component {
           />
         ))}
         {!references.total && references.isPending && (
-          <Tab
-            id="loading"
-            title={<TextLoading loading={true} />}
-          />
+          <Tab id="loading" title={<TextLoading loading={true} />} />
         )}
       </Tabs>
     );
@@ -119,12 +138,15 @@ const mapStateToProps = (state, ownProps) => {
     references: selectProfileReferences(state, profile.id),
     referenceQuery: profileReferenceQuery(location, profile, reference),
     tags: selectProfileTags(state, profile.id),
-    similar: selectSimilarResult(state, profileSimilarQuery(location, profile.id)),
-    items: selectEntitySetItemsResult(state, entitySetItemsQuery(location, profile.id)),
+    similar: selectSimilarResult(
+      state,
+      profileSimilarQuery(location, profile.id)
+    ),
+    items: selectEntitySetItemsResult(
+      state,
+      entitySetItemsQuery(location, profile.id)
+    ),
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(ProfileViews);
+export default compose(withRouter, connect(mapStateToProps))(ProfileViews);

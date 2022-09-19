@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 from collections import defaultdict
-from servicelayer.jobs import Job
 
 from aleph.core import db, cache
 from aleph.authz import Authz
@@ -14,6 +13,7 @@ from aleph.index import entities as entities_index
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.documents import ingest_flush, MODEL_ORIGIN
 from aleph.logic.aggregator import get_aggregator
+from aleph.util import random_id
 
 log = logging.getLogger(__name__)
 
@@ -132,7 +132,7 @@ def index_aggregator(
 
 def reingest_collection(collection, job_id=None, index=False, flush=True):
     """Trigger a re-ingest for all documents in the collection."""
-    job_id = job_id or Job.random_id()
+    job_id = job_id or random_id()
     if flush:
         ingest_flush(collection)
     for document in Document.by_collection(collection.id):

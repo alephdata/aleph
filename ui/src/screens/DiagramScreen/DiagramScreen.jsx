@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import { fetchEntitySet, queryEntitySetEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
@@ -15,7 +15,12 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, ErrorBoundary, SearchBox, UpdateStatus } from 'components/common';
+import {
+  Breadcrumbs,
+  ErrorBoundary,
+  SearchBox,
+  UpdateStatus,
+} from 'components/common';
 import { showErrorToast } from 'app/toast';
 
 const fileDownload = require('js-file-download');
@@ -29,7 +34,7 @@ const messages = defineMessages({
     id: 'diagram.render.error',
     defaultMessage: 'Error rendering diagram',
   },
-})
+});
 
 export class DiagramScreen extends Component {
   constructor(props) {
@@ -75,22 +80,20 @@ export class DiagramScreen extends Component {
   exportFtm = () => {
     const { entitiesResult, diagram } = this.props;
     const graphData = JSON.stringify({
-      entities: entitiesResult.results?.map(e => e.toJSON()),
-      layout: diagram.layout
+      entities: entitiesResult.results?.map((e) => e.toJSON()),
+      layout: diagram.layout,
     });
     fileDownload(graphData, `${diagram.label}.ftm`);
-  }
+  };
 
   exportSvg = () => {
     const { intl } = this.props;
     if (!!this.editorRef?.exportSvg) {
       this.editorRef.exportSvg();
     } else {
-      showErrorToast(
-        intl.formatMessage(messages.export_error)
-      );
+      showErrorToast(intl.formatMessage(messages.export_error));
     }
-  }
+  };
 
   render() {
     const { diagram, entitiesResult, intl } = this.props;
@@ -105,10 +108,7 @@ export class DiagramScreen extends Component {
     }
 
     const search = (
-      <SearchBox
-        onSearch={this.onSearch}
-        placeholderLabel={diagram.label}
-      />
+      <SearchBox onSearch={this.onSearch} placeholderLabel={diagram.label} />
     );
 
     const status = <UpdateStatus status={updateStatus} />;
@@ -124,23 +124,26 @@ export class DiagramScreen extends Component {
     const breadcrumbs = (
       <Breadcrumbs operation={operation} search={search} status={status}>
         <Breadcrumbs.Text>
-          <CollectionView.Link id={collectionViewIds.DIAGRAMS} collection={diagram.collection} icon />
+          <CollectionView.Link
+            id={collectionViewIds.DIAGRAMS}
+            collection={diagram.collection}
+            icon
+          />
         </Breadcrumbs.Text>
-        <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} icon={false}/>
+        <Breadcrumbs.EntitySet key="diagram" entitySet={diagram} icon={false} />
       </Breadcrumbs>
     );
 
     return (
       <>
-        <Screen
-          title={diagram.label}
-          description={diagram.summary || ''}
-        >
+        <Screen title={diagram.label} description={diagram.summary || ''}>
           <CollectionWrapper collection={diagram.collection}>
             {breadcrumbs}
-            <ErrorBoundary errorTitle={intl.formatMessage(messages.render_error)}>
+            <ErrorBoundary
+              errorTitle={intl.formatMessage(messages.render_error)}
+            >
               <DiagramEditor
-                setRef={ref => this.editorRef = ref}
+                setRef={(ref) => (this.editorRef = ref)}
                 collection={diagram.collection}
                 onStatusChange={this.onStatusChange}
                 diagram={diagram}
@@ -158,7 +161,12 @@ export class DiagramScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { location, params } = ownProps;
   const { entitySetId } = params;
-  const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null, 1000);
+  const entitiesQuery = entitySetEntitiesQuery(
+    location,
+    entitySetId,
+    null,
+    1000
+  );
 
   return {
     entitySetId,
@@ -168,9 +176,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
 export default compose(
   withRouter,
   connect(mapStateToProps, { fetchEntitySet, queryEntitySetEntities }),
-  injectIntl,
+  injectIntl
 )(DiagramScreen);

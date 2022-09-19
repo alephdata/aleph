@@ -1,13 +1,17 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { ButtonGroup, AnchorButton, Divider, InputGroup } from '@blueprintjs/core';
+import {
+  ButtonGroup,
+  AnchorButton,
+  Divider,
+  InputGroup,
+} from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter'
+import withRouter from 'app/withRouter';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
 
 import './PagingButtons.scss';
-
 
 class PagingButtons extends React.Component {
   constructor(props) {
@@ -46,7 +50,7 @@ class PagingButtons extends React.Component {
 
   changePageInput = (e) => {
     this.setState({ pageInputVal: e.target.value });
-  }
+  };
 
   goToPage = (e) => {
     e.preventDefault();
@@ -58,7 +62,7 @@ class PagingButtons extends React.Component {
     navigate({
       hash: queryString.stringify(parsedHash),
     });
-  }
+  };
 
   render() {
     const { document, numberOfPages, page, showRotateButtons } = this.props;
@@ -70,18 +74,26 @@ class PagingButtons extends React.Component {
 
     // Only displays paging buttons on PDF docs
     // Having the logic here makes it easier to use this component.
-    if (page && page > 0
-        && numberOfPages && numberOfPages > 0) {
+    if (page && page > 0 && numberOfPages && numberOfPages > 0) {
       return (
         <ButtonGroup className="PagingButtons" fill>
-          <AnchorButton minimal href={`#${this.getPageLink(page - 1)}`} icon="arrow-left" disabled={page <= 1} />
+          <AnchorButton
+            minimal
+            href={`#${this.getPageLink(page - 1)}`}
+            icon="arrow-left"
+            disabled={page <= 1}
+          />
           <div className="PagingButtons__middle">
             <FormattedMessage
               id="document.paging"
               defaultMessage="Page {pageInput} of {numberOfPages}"
               values={{
                 pageInput: (
-                  <form className="PagingButtons__input" onSubmit={this.goToPage} autoComplete="off">
+                  <form
+                    className="PagingButtons__input"
+                    onSubmit={this.goToPage}
+                    autoComplete="off"
+                  >
                     <InputGroup
                       id="page"
                       onChange={this.changePageInput}
@@ -98,18 +110,30 @@ class PagingButtons extends React.Component {
           </div>
           {showRotateButtons && (
             <>
-              <AnchorButton minimal href={`#${this.getRotateLink(-90)}`} icon="image-rotate-left" />
-              <AnchorButton minimal href={`#${this.getRotateLink(90)}`} icon="image-rotate-right" />
+              <AnchorButton
+                minimal
+                href={`#${this.getRotateLink(-90)}`}
+                icon="image-rotate-left"
+              />
+              <AnchorButton
+                minimal
+                href={`#${this.getRotateLink(90)}`}
+                icon="image-rotate-right"
+              />
               <Divider />
             </>
           )}
-          <AnchorButton minimal href={`#${this.getPageLink(page + 1)}`} icon="arrow-right" disabled={page >= numberOfPages} />
+          <AnchorButton
+            minimal
+            href={`#${this.getPageLink(page + 1)}`}
+            icon="arrow-right"
+            disabled={page >= numberOfPages}
+          />
         </ButtonGroup>
       );
     }
     return null;
   }
 }
-
 
 export default withRouter(PagingButtons);

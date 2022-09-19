@@ -1,97 +1,115 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
-
-$dashboard-padding: $aleph-grid-size * 2.5;
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .Dashboard {
-    padding: $dashboard-padding;
+  padding: $aleph-content-padding;
 
-    &__inner-container {
-      display: flex;
-      flex-flow: row nowrap;
-      align-content: stretch;
-      align-items: stretch;
+  &__inner-container {
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: stretch;
+    align-items: stretch;
+  }
+
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    width: 20%;
+    @include rtlSupportInvertedProp(
+      border,
+      right,
+      1px solid $aleph-border-color,
+      null
+    );
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $aleph-content-padding,
+      null
+    );
+    @include rtlSupportInvertedProp(
+      padding,
+      right,
+      $aleph-content-padding,
+      null
+    );
+    min-width: 235px;
+
+    @media screen and (max-width: $aleph-screen-sm-max-width) {
+      display: none;
     }
 
-    &__menu {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 0;
-        width: 20%;
-        @include rtlSupportInvertedProp(border, right, 1px solid $aleph-border-color, null);
-        @include rtlSupportInvertedProp(margin, right, $dashboard-padding, null);
-        @include rtlSupportInvertedProp(padding, right, $dashboard-padding, null);
-        min-width: 235px;
-
-        @media screen and (max-width: $aleph-screen-sm-max-width) {
-          display: none;
-        }
-
-        .bp3-menu {
-          background-color: inherit !important;
-          padding: 0;
-        }
-
-        .bp3-menu-item {
-          padding: 6px 7px;
-
-          .bp3-icon {
-            @include rtlSupportInvertedProp(margin, right, 12px, 0);
-          }
-
-          .Count {
-            @include rtl(float, right, left);
-          }
-
-          &.bp3-active .Count {
-            color: white;
-            background: none;
-          }
-        }
-
-        .bp3-menu-header {
-          border: none;
-          @include rtlSupportInvertedProp(margin, left, 0, null);
-          margin-bottom: $aleph-grid-size;
-
-          .bp3-heading {
-            color: $blue1;
-            padding-top: 2px;
-          }
-        }
-
-        .bp3-menu-divider {
-          margin: $aleph-grid-size * 1.5 0;
-          border-color:$aleph-border-color;
-        }
+    .bp3-menu {
+      background-color: inherit !important;
+      padding: 0;
     }
 
-    &__actions {
-      margin-top: $aleph-grid-size*2;
+    .bp3-menu-item {
+      padding: 6px 7px;
+
+      .bp3-icon {
+        @include rtlSupportInvertedProp(margin, right, 12px, 0);
+      }
+
+      .Count {
+        @include rtl(float, right, left);
+      }
+
+      &.bp3-active .Count {
+        color: white;
+        background: none;
+      }
     }
 
-    &__title-container {
-      margin: $dashboard-padding 0;
+    .bp3-menu-header {
+      border: none;
+      @include rtlSupportInvertedProp(margin, left, 0, null);
+      margin-bottom: $aleph-grid-size;
+
+      .bp3-heading {
+        color: $blue1;
+        padding-top: 2px;
+      }
     }
 
-    &__title {
-      font-size: 22px;
-      color: $dark-gray1;
-      margin: 0 0 $aleph-grid-size;
+    .bp3-menu-divider {
+      margin: $aleph-grid-size * 1.5 0;
+      border-color: $aleph-border-color;
     }
+  }
 
-    &__subheading {
-      color: $dark-gray5;
-      line-height: 1.5;
-      clear: both;
-      max-width: 700px;
-    }
+  &__actions {
+    margin-top: $aleph-grid-size * 2;
+  }
 
-    &__body {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 6;
-        overflow-x: auto;
-        @include rtlSupportInvertedProp(padding, left, $aleph-grid-size/2, $aleph-grid-size/2);
-    }
+  &__title-container {
+    margin: $aleph-content-padding 0;
+  }
+
+  &__title {
+    font-size: 22px;
+    color: $dark-gray1;
+    margin: 0 0 $aleph-grid-size;
+  }
+
+  &__subheading {
+    color: $dark-gray5;
+    line-height: 1.5;
+    clear: both;
+    max-width: 700px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 6;
+    overflow-x: auto;
+    @include rtlSupportInvertedProp(
+      padding,
+      left,
+      $aleph-grid-size/2,
+      $aleph-grid-size/2
+    );
+  }
 }

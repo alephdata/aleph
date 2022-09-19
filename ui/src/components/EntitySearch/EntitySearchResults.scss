@@ -1,5 +1,5 @@
-@import "app/variables.scss";
-@import "app/mixins.scss";
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
 
 .EntitySearchResults-outer-container {
   position: relative;
@@ -21,19 +21,13 @@
 }
 
 .EntitySearchResultsRow {
-  &.active {
-    em {
-      background: inherit;
-    }
-  }
-
-  em {
-    background: $aleph-text-highlight-color;
-    font-style: normal;
-  }
-
   .highlights {
-    @include rtlSupportInvertedProp(padding, left, $aleph-grid-size*3.2, null);
+    @include rtlSupportInvertedProp(
+      padding,
+      left,
+      $aleph-grid-size * 3.2,
+      null
+    );
     &__content {
       max-width: $aleph-grid-size * 100;
     }
@@ -61,11 +55,15 @@
 //medium and small screen
 @media screen and (max-width: $aleph-screen-md-max-width) {
   .EntitySearchResults {
-    .header-country, .header-dates, .header-size {
+    .header-country,
+    .header-dates,
+    .header-size {
       display: none;
     }
 
-    .country, .date, .file-size {
+    .country,
+    .date,
+    .file-size {
       display: none;
     }
   }
