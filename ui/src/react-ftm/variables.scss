@@ -30,11 +30,6 @@ $text-color-main: white;
 $text-color-secondary: $light-gray1;
 $disabled-color: $black-60;
 
-.#{$bp-ns}-input {
-  background: white !important;
-  color: $black-80 !important;
-}
-
 .error-text {
   font-style: italic;
   font-size: 12px;

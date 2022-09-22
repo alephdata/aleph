@@ -1,87 +1,61 @@
 @import 'app/mixins.scss';
 
-/* Taming Blueprint icons and tags/badges when displayed inside tabs */
+// Add spacing before tag pill
 .#{$bp-ns}-tabs .#{$bp-ns}-tab .#{$bp-ns}-tag {
-  padding: 0px 10px;
-  @include rtlSupportInvertedProp(margin, left, 5px, 0);
-  line-height: 1em;
-  // font-size: 0.6em;
+  @include rtlSupportInvertedProp(margin, left, 0.5em, 0);
 }
 
-.#{$bp-ns}-tabs .#{$bp-ns}-large .#{$bp-ns}-tab .#{$bp-ns}-icon-standard {
-  min-width: 20px;
-  @include rtlSupportInvertedProp(margin, right, 10px, 0);
-}
-
-.#{$bp-ns}-tabs .#{$bp-ns}-large .#{$bp-ns}-tab .#{$bp-ns}-tag {
-  padding: 0 10px;
-  @include rtlSupportInvertedProp(margin, left, 10px, 0);
-}
-
-.#{$bp-ns}-tabs {
-  &.#{$bp-ns}-vertical {
-    > .#{$bp-ns}-tab-panel {
-      @include rtlSupportInvertedProp(padding, left, 20px, null);
-    }
-  }
-}
-
-/* next 4 rules affect the add new dataset popover dialog */
+// Fix spacing for tag inputs in RTL mode. The following rules are based
+// on the default rules defined by Blueprint. All they do is mirror the
+// relevant spacing properties in RTL mode.
 .#{$bp-ns}-tag-input {
-  @include rtlSupportInvertedProp(padding, left, 5px, 0);
+  @include rtlSupportInvertedProp(padding, left, $tag-input-padding, 0);
 }
-.#{$bp-ns}-tag-input .#{$bp-ns}-tag-input-values::before,
-.#{$bp-ns}-tag-input .#{$bp-ns}-tag-input-values > * {
-  @include rtlSupportInvertedProp(margin, right, 5px, 0);
-}
+
 .#{$bp-ns}-tag-input .#{$bp-ns}-tag-input-values {
-  @include rtlSupportInvertedProp(margin, right, 7px, 0);
+  @include rtlSupportInvertedProp(margin, right, $tag-input-padding, 0);
 }
+
+.#{$bp-ns}-tag-input .#{$bp-ns}-tag-input-values > * {
+  @include rtlSupportInvertedProp(margin, right, $tag-input-padding, 0);
+}
+
+// Fix spacing for tags in RTL mode.
 .#{$bp-ns}-tag > * {
-  @include rtlSupportInvertedProp(margin, right, 4px, initial);
+  @include rtlSupportInvertedProp(margin, right, $tag-icon-spacing, initial);
 }
+
+.#{$bp-ns}-tag.#{$bp-ns}-large > * {
+  @include rtlSupportInvertedProp(
+    margin,
+    right,
+    $tag-icon-spacing-large,
+    initial
+  );
+}
+
 .#{$bp-ns}-tag:empty::before,
 .#{$bp-ns}-tag > :last-child {
   @include rtlSupportInvertedProp(margin, right, 0, initial);
 }
 
-/* next two rules affect the green save button in diagram page */
-.#{$bp-ns}-tag.#{$bp-ns}-large::before,
-.#{$bp-ns}-tag.#{$bp-ns}-large > *,
-.#{$bp-ns}-large .#{$bp-ns}-tag::before,
-.#{$bp-ns}-large .#{$bp-ns}-tag > * {
-  @include rtlSupportInvertedProp(margin, right, 7px, 0);
-}
-.#{$bp-ns}-tag.#{$bp-ns}-large:empty::before,
-.#{$bp-ns}-tag.#{$bp-ns}-large > :last-child,
-.#{$bp-ns}-large .#{$bp-ns}-tag:empty::before,
-.#{$bp-ns}-large .#{$bp-ns}-tag > :last-child {
-  margin: 0;
-}
-
-.#{$bp-ns}-tag > .#{$bp-ns}-icon {
-  @include rtlSupportInvertedProp(margin, right, 4px, 0);
-}
-
+// Make tab lists scrollabe. This is useful if there are many tabs
+// and/or in case of narrow viewports.
 .#{$bp-ns}-tab-list {
   overflow-x: scroll;
   scrollbar-width: none;
-  -ms-overflow-style: none;
 
   &::-webkit-scrollbar {
     display: none;
-    width: 0;
-    background: transparent;
   }
 }
 
-.#{$bp-ns}-button,
-.#{$bp-ns}-menu-item {
+// Add RTL support for buttons.
+.#{$bp-ns}-button {
   @include rtl(text-align, left, right);
 
-  .#{$bp-ns}-icon,
-  .#{$bp-ns}-button-text {
-    @include rtlSupportInvertedProp(margin, right, 7px, 0);
+  & > * {
+    @include rtlSupportInvertedProp(margin, right, $button-icon-spacing, 0);
   }
 }
 
@@ -90,10 +64,20 @@
   @include rtlSupportInvertedProp(margin, right, 0, null);
 }
 
+// Add RTL support for menu items.
 .#{$bp-ns}-menu {
   @include rtl(text-align, left, right);
 }
 
+.#{$bp-ns}-menu-item {
+  @include rtl(text-align, left, right);
+
+  & > * {
+    @include rtlSupportInvertedProp(margin, right, $menu-item-padding, 0);
+  }
+}
+
+// Add RTL support for tables and add right alignment for numeric values
 table {
   tr td,
   tr th {
@@ -105,6 +89,7 @@ table {
   }
 }
 
+// Add RTL support for input groups
 .#{$bp-ns}-input-group {
   .#{$bp-ns}-input-action {
     &:last-child {
@@ -147,6 +132,7 @@ table {
     // to handle Safari input placeholder line-height weirdness
     line-height: normal !important;
   }
+
   > .#{$bp-ns}-button {
     &:last-child {
       @include rtl(right, 0, initial);
@@ -155,6 +141,7 @@ table {
   }
 }
 
+// Add RTL support for control groups
 .#{$bp-ns}-control-group {
   > :last-child {
     @include rtl(border-radius, 0 3px 3px 0, 3px 0 0 3px);
@@ -202,7 +189,7 @@ table {
   }
 }
 
-// for the two checkboxes in settings page
+// Add RTL support for checkboxes
 .#{$bp-ns}-control {
   &.#{$bp-ns}-checkbox {
     @include rtlSupportInvertedProp(padding, left, 26px, 0);
@@ -218,6 +205,7 @@ table {
   }
 }
 
+// Add RTL support for nav bar
 .#{$bp-ns}-navbar-group {
   &.#{$bp-ns}-align-right {
     @include rtl(float, right, left);
@@ -228,6 +216,7 @@ table {
   }
 }
 
+// Add RTL support for breadcrumbs
 .#{$bp-ns}-breadcrumb .#{$bp-ns}-icon {
   @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, 0);
 }
@@ -240,6 +229,7 @@ table {
   }
 }
 
+// Add RTL support for toasts
 .#{$bp-ns}-toast {
   > .#{$bp-ns}-icon {
     margin: 12px;
@@ -252,6 +242,7 @@ table {
   }
 }
 
+// Add RTL support for tabs
 .#{$bp-ns}-tab-list {
   > :not(:last-child) {
     @include rtlSupportInvertedProp(margin, right, 20px, 0);
@@ -262,6 +253,7 @@ table {
   }
 }
 
+// Add RTL support for dialogs
 .#{$bp-ns}-dialog {
   .#{$bp-ns}-dialog-header {
     @include rtlSupportInvertedProp(padding, left, 20px, 5px);
@@ -282,9 +274,10 @@ table {
   }
 }
 
+// Add RTL support for menu items
 .#{$bp-ns}-menu-item {
   > * {
-    @include rtlSupportInvertedProp(margin, right, 7px, 0);
+    @include rtlSupportInvertedProp(margin, right, $menu-item-padding, 0);
   }
 
   > :last-child {
