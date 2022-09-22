@@ -12,8 +12,6 @@
   }
 
   &__menu {
-    display: flex;
-    flex-direction: column;
     flex-grow: 0;
     width: 20%;
     @include rtlSupportInvertedProp(
@@ -38,28 +36,6 @@
 
     @media screen and (max-width: $aleph-screen-sm-max-width) {
       display: none;
-    }
-
-    .#{$bp-ns}-menu {
-      background-color: inherit !important;
-      padding: 0;
-    }
-
-    .#{$bp-ns}-menu-item {
-      padding: 6px 7px;
-
-      .#{$bp-ns}-icon {
-        @include rtlSupportInvertedProp(margin, right, 12px, 0);
-      }
-
-      .Count {
-        @include rtl(float, right, left);
-      }
-
-      &.#{$bp-ns}-active .Count {
-        color: white;
-        background: none;
-      }
     }
 
     .#{$bp-ns}-menu-header {
