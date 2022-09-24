@@ -10,6 +10,7 @@ import {
 import { VertexLabelRenderer } from './VertexLabelRenderer';
 import { IconRenderer } from './IconRenderer';
 import { modes } from 'react-ftm/components/NetworkDiagram/utils';
+import { reduceTranslucentColor } from 'react-ftm/utils/reduceTranslucentColor';
 
 interface IVertexRendererProps {
   vertex: Vertex;
@@ -142,11 +143,13 @@ export class VertexRenderer extends React.PureComponent<
     const highlighted =
       layout.isElementSelected(vertex) || layout.selection.length === 0;
 
+    const color = vertex.color || layout.config.DEFAULT_VERTEX_COLOR;
+
     if (highlighted || hovered) {
-      return vertex.color || layout.config.DEFAULT_VERTEX_COLOR;
-    } else {
-      return layout.config.UNSELECTED_COLOR;
+      return color;
     }
+
+    return reduceTranslucentColor(color, 0.33);
   }
 
   allowPointerEvents() {
