@@ -12,8 +12,6 @@ global:
   commonEnv:
     # LOG_FORMAT: JSON
     REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
-    RABBITMQ_URL: aleph-rabbitmq.default.svc.cluster.local
-    RABBITMQ_USERNAME: user
 
   env:
     ALEPH_DEBUG: "false"

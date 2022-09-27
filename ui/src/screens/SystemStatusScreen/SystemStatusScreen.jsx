@@ -79,6 +79,9 @@ export class SystemStatusScreen extends React.Component {
       <td className="entity">
         <Skeleton.Text type="span" length={30} />
       </td>
+      <td className="numeric narrow">
+        <Skeleton.Text type="span" length={1} />
+      </td>
       <td>
         <Skeleton.Text type="span" length={15} />
       </td>
@@ -111,6 +114,7 @@ export class SystemStatusScreen extends React.Component {
             />
           )}
         </td>
+        <td className="numeric narrow">{res.jobs.length}</td>
         <td>
           <ProgressBar value={progress} intent={Intent.PRIMARY} />
         </td>
@@ -178,6 +182,12 @@ export class SystemStatusScreen extends React.Component {
                       <FormattedMessage
                         id="collection.status.collection"
                         defaultMessage="Dataset"
+                      />
+                    </th>
+                    <th className="numeric narrow">
+                      <FormattedMessage
+                        id="collection.status.jobs"
+                        defaultMessage="Jobs"
                       />
                     </th>
                     <th>

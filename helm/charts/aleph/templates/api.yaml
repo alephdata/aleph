@@ -86,11 +86,6 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: FTM_STORE_URI
-            - name: RABBITMQ_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: aleph-secrets
-                  key: RABBITMQ_PASSWORD
             {{ if .Values.global.google }}
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/service-account.json
