@@ -1,10 +1,8 @@
 import logging
 from flask import Blueprint, request
 
-from servicelayer.taskqueue import collection_id_from_dataset
-
 from aleph.model import Collection
-from aleph.queues import get_active_dataset_status
+from aleph.queues import get_active_dataset_status, get_dataset_collection_id
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import jsonify, require
 
@@ -34,14 +32,14 @@ def status():
     request.rate_limit = None
     status = get_active_dataset_status()
     datasets = status.pop("datasets", {})
-    collections = (collection_id_from_dataset(d) for d in datasets.keys())
+    collections = (get_dataset_collection_id(d) for d in datasets.keys())
     collections = (c for c in collections if c is not None)
     collections = Collection.all_by_ids(collections, deleted=True).all()
     collections = {c.id: c for c in collections}
     serializer = CollectionSerializer(nested=True)
     results = []
     for dataset, status in sorted(datasets.items()):
-        collection_id = collection_id_from_dataset(dataset)
+        collection_id = get_dataset_collection_id(dataset)
         if not request.authz.can(collection_id, request.authz.READ):
             continue
         collection = collections.get(collection_id)

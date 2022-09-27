@@ -16,7 +16,7 @@ from aleph.authz import Authz
 from aleph.model import Collection, Role, EntitySet
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
-from aleph.queues import get_status, cancel_queue, flush_queue
+from aleph.queues import get_status, cancel_queue
 from aleph.queues import get_active_dataset_status
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
@@ -100,11 +100,14 @@ def collections(secret, casefile):
 
 
 @cli.command()
+@click.option(
+    "--blocking/--non-blocking", default=True, help="Wait for tasks indefinitely."
+)
 @click.option("--threads", required=False, type=int)
-def worker(threads=1):
+def worker(blocking=True, threads=None):
     """Run the queue-based worker service."""
     worker = get_worker(num_threads=threads)
-    code = worker.run()
+    code = worker.run(blocking=blocking)
     sys.exit(code)
 
 
@@ -412,11 +415,6 @@ def resetcache():
 @click.option("-p", "--prefix", help="Scan a subset with a prefix")
 def cleanuparchive(prefix):
     cleanup_archive(prefix=prefix)
-
-
-@cli.command()
-def flushqueue():
-    flush_queue()
 
 
 @cli.command()

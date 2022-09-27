@@ -1,4 +1,5 @@
 from aleph.core import db
+from aleph.queues import get_stage, OP_XREF
 from aleph.index.entities import index_entity
 from aleph.logic import xref
 from aleph.tests.util import TestCase, get_caption
@@ -65,6 +66,7 @@ class XrefApiTestCase(TestCase):
         index_entity(self.ent5)
         index_entity(self.ent6)
         index_entity(self.ent7)
+        self.stage = get_stage(self.residents, OP_XREF)
 
     def test_export(self):
         xref.xref_collection(self.residents)
