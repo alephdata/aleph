@@ -64,7 +64,7 @@ Any and all use of Aleph by you, must at all times be in accordance with our [Ac
 
 If you wish to use Aleph in a manner other than via your internet browser (i.e. by using technical means, automated tools, and other programs which import data and/or materials on Aleph into another application), you will need to create an account. 
 
-The data and materials on Aleph are maintained and made available for the purposes of journalism, which is in the public interest and not for use in the private sector. We do not recommend and discourage integrating Aleph into a commercial process, including but not limited to for use in know-your-client checks, due diligence checks or insurance related checks. Aleph is not a data catalogue. We do not provide bulk exports of data to commercial companies, intelligence or security agencies. If you are a journalist, or anti-corruption campaigner and require a bulk export of data, we may be able to help. Please contact data@occrp.org for further information. 
+The data and materials on Aleph are maintained and made available for the purposes of journalism, which is in the public interest and not for use in the private sector. We do not recommend and discourage integrating Aleph into a commercial process, including but not limited to for use in know-your-client checks, due diligence checks or insurance related checks. Aleph is not a data catalogue. We do not provide bulk exports of data to commercial companies, intelligence or security agencies. If you are a journalist, or anti-corruption campaigner and require a bulk export of data, we may be able to help. Please [contact us](https://requests.occrp.org/datadesk) for further information. 
 
 If you publish a story using data or materials sourced from Aleph, please ensure that you credit OCCRP as follows: “According to data made available via OCCRP Aleph (Link: https://aleph.occrp.org)...”
 
@@ -103,7 +103,7 @@ You must not misuse Aleph by knowingly introducing viruses, trojans, worms, logi
 
 ### RULES ABOUT LINKING TO ALEPH
 
-You may link to the Aleph home page, provided you do so in a way that is fair and legal and does not damage our reputation or take advantage of it. You must not establish a link in such a way as to suggest any form of association, approval or endorsement on our part where none exists. We reserve the right to withdraw linking permission without notice. The website in which you are linking must comply in all respects with the content standards set out in our [Acceptable Use Policy](/pages/acceptable-use). If you wish to link to or make any use of content on Aleph other than that set out above, please contact data@occrp.org.
+You may link to the Aleph home page, provided you do so in a way that is fair and legal and does not damage our reputation or take advantage of it. You must not establish a link in such a way as to suggest any form of association, approval or endorsement on our part where none exists. We reserve the right to withdraw linking permission without notice. The website in which you are linking must comply in all respects with the content standards set out in our [Acceptable Use Policy](/pages/acceptable-use). If you wish to link to or make any use of content on Aleph other than that set out above, please [contact us](https://requests.occrp.org/datadesk).
 
 ### INTELLECTUAL PROPERTY RIGHTS 
 
@@ -131,8 +131,8 @@ Some jurisdictions do not allow the types of disclaimers in this section, so the
 
 ### HOW TO REPORT ISSUES ABOUT CONTENT
 
-If you wish to report any issues about any content on Aleph, please contact us on data@occrp.org.
-In the event that you are the owner of the copyright or other intellectual property rights in any of the data and/or material on Aleph and do not consent to the use of your data and/or material in accordance with the terms of use, please contact us at data@occrp.org and provide proof of your identity and evidence of your ownership of the copyright (or other intellectual property right claim) concerned. If you wish to contact OCCRP regarding the exercise of your rights under applicable data protection and privacy laws, please contact us using the details provided in our [Privacy Policy](https://www.occrp.org/en/aboutus/privacy-policy). 
+If you wish to report any issues about any content on Aleph, please [contact us](https://requests.occrp.org/datadesk).
+In the event that you are the owner of the copyright or other intellectual property rights in any of the data and/or material on Aleph and do not consent to the use of your data and/or material in accordance with the terms of use, please [contact us](https://requests.occrp.org/datadesk) and provide proof of your identity and evidence of your ownership of the copyright (or other intellectual property right claim) concerned. If you wish to contact OCCRP regarding the exercise of your rights under applicable data protection and privacy laws, please contact us using the details provided in our [Privacy Policy](https://www.occrp.org/en/aboutus/privacy-policy). 
 
 ### HOW WE MAY USE YOUR PERSONAL DATA
 
