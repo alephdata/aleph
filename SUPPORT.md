@@ -18,7 +18,7 @@ Please submit a description of your use case along with your name, affiliation a
 
 * The Slack #intros channel
 * As part of the first GitHub issue that you file
-* Via email to data@occrp.org 
+* Via our [contact form](https://requests.occrp.org/datadesk)
 
 Make sure you describe your goals, rather than the set of techniques that define your work (e.g. “investigations into human rights abuses in country X”, not “OSINT”). OCCRP is a non-profit organization. We do not offer commercial support or consulting services.
 
