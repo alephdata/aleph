@@ -1,7 +1,8 @@
 import logging
 from flask_mail import Message
 
-from aleph.core import settings, mail
+from aleph.core import mail
+from aleph.settings import SETTINGS
 
 log = logging.getLogger(__name__)
 
@@ -13,8 +14,8 @@ def email_role(role, subject, html=None, plain=None):
         return
 
     try:
-        sender = "%s <%s>" % (settings.APP_TITLE, settings.MAIL_FROM)
-        subject = "[%s] %s" % (settings.APP_TITLE, subject)
+        sender = "%s <%s>" % (SETTINGS.APP_TITLE, SETTINGS.MAIL_FROM)
+        subject = "[%s] %s" % (SETTINGS.APP_TITLE, subject)
         msg = Message(subject=subject, sender=sender, recipients=[role.email])
         msg.body = plain
         msg.html = html

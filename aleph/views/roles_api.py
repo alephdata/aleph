@@ -193,7 +193,7 @@ def view(id):
 
 @blueprint.route("/api/2/roles/<int:id>", methods=["POST", "PUT"])
 def update(id):
-    """Change user settings.
+    """Change user SETTINGS.
     ---
     post:
       summary: Change user settings

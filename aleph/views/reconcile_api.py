@@ -5,7 +5,8 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
 
-from aleph.core import settings, url_for, talisman
+from aleph.settings import SETTINGS
+from aleph.core import url_for, talisman
 from aleph.model import Entity
 from aleph.search import SearchQueryParser
 from aleph.search import EntitiesQuery, MatchQuery
@@ -53,8 +54,8 @@ def entity_matches(result):
 
 
 def reconcile_index(collection=None):
-    domain = settings.APP_UI_URL.strip("/")
-    label = settings.APP_TITLE
+    domain = SETTINGS.APP_UI_URL.strip("/")
+    label = SETTINGS.APP_TITLE
     suggest_query = []
     if request.authz.id:
         suggest_query.append(("api_key", request.authz.role.api_key))

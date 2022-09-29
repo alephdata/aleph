@@ -3,7 +3,8 @@ import logging
 from servicelayer.rate_limit import RateLimit
 from servicelayer.jobs import Job, Dataset, Stage
 
-from aleph.core import kv, settings
+from aleph.core import kv
+from aleph.settings import SETTINGS
 from aleph.model import Entity
 
 log = logging.getLogger(__name__)
@@ -52,7 +53,7 @@ def get_stage(collection, stage, job_id=None):
 def queue_task(dataset, stage, job_id=None, context=None, **payload):
     stage = get_stage(dataset, stage, job_id=job_id)
     stage.queue(payload or {}, context or {})
-    if settings.TESTING:
+    if SETTINGS.TESTING:
         from aleph.worker import get_worker
 
         worker = get_worker()
@@ -96,7 +97,7 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
 
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     stage = get_stage(collection, OP_INGEST, job_id=job_id)
-    pipeline = list(settings.INGEST_PIPELINE)
+    pipeline = list(SETTINGS.INGEST_PIPELINE)
     if index:
         pipeline.append(OP_INDEX)
     context = get_context(collection, pipeline)
@@ -107,9 +108,9 @@ def pipeline_entity(collection, proxy, job_id=None):
     """Send an entity through the ingestion pipeline, minus the ingestor itself."""
     log.debug("Pipeline entity [%s]: %s", proxy.id, proxy.caption)
     pipeline = []
-    if not settings.TESTING:
+    if not SETTINGS.TESTING:
         if proxy.schema.is_a(Entity.ANALYZABLE):
-            pipeline.extend(settings.INGEST_PIPELINE)
+            pipeline.extend(SETTINGS.INGEST_PIPELINE)
     pipeline.append(OP_INDEX)
     stage = get_stage(collection, pipeline.pop(0), job_id=job_id)
     context = get_context(collection, pipeline)

@@ -6,7 +6,8 @@ from elasticsearch.helpers import streaming_bulk
 from followthemoney.types import registry
 from servicelayer.util import backoff, service_retries
 
-from aleph.core import es, settings
+from aleph.core import es
+from aleph.settings import SETTINGS
 
 log = logging.getLogger(__name__)
 
@@ -56,19 +57,19 @@ SHARD_WEIGHTS = {
 
 
 def get_shard_weight(schema):
-    if settings.TESTING:
+    if SETTINGS.TESTING:
         return 1
     return SHARD_WEIGHTS.get(schema.name, SHARDS_DEFAULT)
 
 
 def refresh_sync(sync):
-    if settings.TESTING:
+    if SETTINGS.TESTING:
         return True
     return True if sync else False
 
 
 def index_name(name, version):
-    return "-".join((settings.INDEX_PREFIX, name, version))
+    return "-".join((SETTINGS.INDEX_PREFIX, name, version))
 
 
 def unpack_result(res):
@@ -191,7 +192,7 @@ def query_delete(index, query, sync=False, **kwargs):
                 refresh=refresh_sync(sync),
                 request_timeout=MAX_REQUEST_TIMEOUT,
                 timeout=MAX_TIMEOUT,
-                scroll_size=settings.INDEX_DELETE_BY_QUERY_BATCHSIZE,
+                scroll_size=SETTINGS.INDEX_DELETE_BY_QUERY_BATCHSIZE,
                 **kwargs
             )
             return
@@ -288,7 +289,7 @@ def check_settings_changed(updated, existing):
 
 def configure_index(index, mapping, settings):
     """Create or update a search index with the given mapping and
-    settings. This will try to make a new index, or update an
+    SETTINGS. This will try to make a new index, or update an
     existing mapping with new properties.
     """
     if es.indices.exists(index=index):
@@ -299,7 +300,7 @@ def configure_index(index, mapping, settings):
             "master_timeout": MAX_TIMEOUT,
         }
         config = es.indices.get(index=index).get(index, {})
-        settings.get("index").pop("number_of_shards")
+        SETTINGS.get("index").pop("number_of_shards")
         if check_settings_changed(settings, config.get("settings")):
             res = es.indices.close(ignore_unavailable=True, **options)
             res = es.indices.put_settings(body=settings, **options)
@@ -320,9 +321,9 @@ def configure_index(index, mapping, settings):
         return True
 
 
-def index_settings(shards=5, replicas=settings.INDEX_REPLICAS):
+def index_settings(shards=5, replicas=SETTINGS.INDEX_REPLICAS):
     """Configure an index in ES with support for text transliteration."""
-    if settings.TESTING:
+    if SETTINGS.TESTING:
         shards = 1
         replicas = 0
     return {

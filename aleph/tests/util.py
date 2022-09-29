@@ -14,7 +14,7 @@ from followthemoney.cli.util import read_entity
 from werkzeug.utils import cached_property
 from faker import Factory
 
-from aleph import settings
+from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 APP_NAME = "aleph-test"
 UI_URL = "http://aleph.ui/"
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
-DB_URI = settings.DATABASE_URI + "_test"
+DB_URI = SETTINGS.DATABASE_URI + "_test"
 JSON = "application/json"
 
 
@@ -80,23 +80,23 @@ class TestCase(unittest.TestCase):
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
         # ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
-        settings.APP_NAME = APP_NAME
-        settings.TESTING = True
-        settings.DEBUG = True
-        settings.CACHE = True
-        settings.OAUTH = False
-        settings.SECRET_KEY = "batman"
-        settings.APP_UI_URL = UI_URL
-        settings.ARCHIVE_TYPE = "file"
-        settings.ARCHIVE_PATH = self.temp_dir
-        settings.DATABASE_URI = DB_URI
-        settings.ALEPH_PASSWORD_LOGIN = True
-        settings.MAIL_SERVER = None
-        settings.INDEX_PREFIX = APP_NAME
-        settings.INDEX_WRITE = "yolo"
-        settings.INDEX_READ = [settings.INDEX_WRITE]
-        settings.TAG_ENTITIES = True
-        settings._gcp_logger = None
+        SETTINGS.APP_NAME = APP_NAME
+        SETTINGS.TESTING = True
+        SETTINGS.DEBUG = True
+        SETTINGS.CACHE = True
+        SETTINGS.OAUTH = False
+        SETTINGS.SECRET_KEY = "batman"
+        SETTINGS.APP_UI_URL = UI_URL
+        SETTINGS.ARCHIVE_TYPE = "file"
+        SETTINGS.ARCHIVE_PATH = self.temp_dir
+        SETTINGS.DATABASE_URI = DB_URI
+        SETTINGS.ALEPH_PASSWORD_LOGIN = True
+        SETTINGS.MAIL_SERVER = None
+        SETTINGS.INDEX_PREFIX = APP_NAME
+        SETTINGS.INDEX_WRITE = "yolo"
+        SETTINGS.INDEX_READ = [SETTINGS.INDEX_WRITE]
+        SETTINGS.TAG_ENTITIES = True
+        SETTINGS._gcp_logger = None
         app = create_app({})
         return app
 
@@ -220,8 +220,8 @@ class TestCase(unittest.TestCase):
         reindex_collection(self.private_coll, sync=True)
 
     def setUp(self):
-        if not hasattr(settings, "_global_test_state"):
-            settings._global_test_state = True
+        if not hasattr(SETTINGS, "_global_test_state"):
+            SETTINGS._global_test_state = True
             destroy_db()
             db.create_all()
             delete_index()

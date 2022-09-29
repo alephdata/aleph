@@ -1,6 +1,7 @@
 from werkzeug.exceptions import Unauthorized
 
-from aleph.core import db, settings
+from aleph.core import db
+from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.tests.util import TestCase
 
@@ -28,12 +29,12 @@ class AuthzTestCase(TestCase):
     def test_require_logged_in(self):
         authz = Authz.from_role(None)
         assert authz.can_browse_anonymous is True, authz
-        settings.REQUIRE_LOGGED_IN = True
+        SETTINGS.REQUIRE_LOGGED_IN = True
         authz = Authz.from_role(None)
         assert authz.can_browse_anonymous is False, authz
         authz = Authz.from_role(self.user)
         assert authz.can_browse_anonymous is True, authz
-        settings.REQUIRE_LOGGED_IN = False
+        SETTINGS.REQUIRE_LOGGED_IN = False
         authz = Authz.from_role(self.user)
         assert authz.can_browse_anonymous is True, authz
 
@@ -62,12 +63,12 @@ class AuthzTestCase(TestCase):
         assert authz.can(self.private, authz.WRITE) is True, authz._collections
 
     def test_maintenance(self):
-        settings.MAINTENANCE = True
+        SETTINGS.MAINTENANCE = True
         authz = Authz.from_role(self.admin)
         assert authz.logged_in is True, authz
         assert authz.is_admin is True, authz.is_admin
         assert authz.can(self.public, authz.WRITE) is False, authz._collections
-        settings.MAINTENANCE = False
+        SETTINGS.MAINTENANCE = False
 
     def test_token(self):
         authz = Authz.from_role(self.admin)

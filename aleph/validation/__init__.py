@@ -5,7 +5,8 @@ from jsonschema import RefResolver, Draft4Validator
 from apispec import APISpec
 from apispec_webframeworks.flask import FlaskPlugin
 
-from aleph import settings, __version__
+from aleph import __version__
+from aleph.settings import SETTINGS
 from aleph.validation.formats import checker
 from aleph.validation.spec import spec_info, spec_tags, spec_docs
 from aleph.validation.util import to_jsonschema
@@ -44,12 +45,12 @@ def get_openapi_spec(app):
 
 
 def get_resolver():
-    if not hasattr(settings, "_json_resolver"):
+    if not hasattr(SETTINGS, "_json_resolver"):
         resolver = RefResolver(URI, {})
         schemata = get_schemata()
         resolver.store[URI] = {"components": {"schemas": to_jsonschema(schemata)}}
-        settings._json_resolver = resolver
-    return settings._json_resolver
+        SETTINGS._json_resolver = resolver
+    return SETTINGS._json_resolver
 
 
 def get_validator(schema):

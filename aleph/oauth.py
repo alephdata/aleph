@@ -3,7 +3,7 @@ from authlib.jose import JsonWebToken, JsonWebKey
 from authlib.integrations.flask_client import OAuth
 from authlib.jose.errors import DecodeError
 
-from aleph import settings
+from aleph.settings import SETTINGS
 from aleph.util import is_auto_admin
 
 oauth = OAuth()
@@ -11,16 +11,16 @@ log = logging.getLogger(__name__)
 
 
 def configure_oauth(app, cache):
-    if settings.OAUTH:
+    if SETTINGS.OAUTH:
         authorize_params = {}
-        if settings.OAUTH_AUDIENCE:
-            authorize_params["audience"] = settings.OAUTH_AUDIENCE
+        if SETTINGS.OAUTH_AUDIENCE:
+            authorize_params["audience"] = SETTINGS.OAUTH_AUDIENCE
         oauth.provider = oauth.register(
-            name=settings.OAUTH_HANDLER,
-            client_id=settings.OAUTH_KEY,
-            client_secret=settings.OAUTH_SECRET,
-            client_kwargs={"scope": settings.OAUTH_SCOPE},
-            server_metadata_url=settings.OAUTH_METADATA_URL,
+            name=SETTINGS.OAUTH_HANDLER,
+            client_id=SETTINGS.OAUTH_KEY,
+            client_secret=SETTINGS.OAUTH_SECRET,
+            client_kwargs={"scope": SETTINGS.OAUTH_SCOPE},
+            server_metadata_url=SETTINGS.OAUTH_METADATA_URL,
             authorize_params=authorize_params,
         )
     oauth.init_app(app, cache=cache)
@@ -84,9 +84,9 @@ def handle_oauth(provider, oauth_token):
         return None
     name = token.get("name", token.get("given_name"))
     email = token.get("email", token.get("upn"))
-    role_id = "%s:%s" % (settings.OAUTH_HANDLER, token.get("sub", email))
+    role_id = "%s:%s" % (SETTINGS.OAUTH_HANDLER, token.get("sub", email))
     role = Role.by_foreign_id(role_id)
-    if settings.OAUTH_MIGRATE_SUB and role is None:
+    if SETTINGS.OAUTH_MIGRATE_SUB and role is None:
         role = Role.by_email(email)
         if role is not None:
             role.foreign_id = role_id
@@ -100,7 +100,7 @@ def handle_oauth(provider, oauth_token):
     role.clear_roles()
 
     for group in _get_groups(provider, oauth_token, token):
-        if group == settings.OAUTH_ADMIN_GROUP:
+        if group == SETTINGS.OAUTH_ADMIN_GROUP:
             role.is_admin = True
             continue
         foreign_id = "group:%s" % group

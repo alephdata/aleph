@@ -1,6 +1,6 @@
 import json
 import structlog
-from aleph import settings
+from aleph.settings import SETTINGS
 from datetime import datetime, date
 from normality import stringify
 from flask_babel.speaklater import LazyString
@@ -86,5 +86,5 @@ class LoggingTransport(Transport):
 
 
 def is_auto_admin(email):
-    auto_admins = [a.lower() for a in settings.ADMINS]
+    auto_admins = [a.lower() for a in SETTINGS.ADMINS]
     return email is not None and email.lower() in auto_admins
