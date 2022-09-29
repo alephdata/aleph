@@ -154,7 +154,7 @@ class Settings:
         )
 
         # Publishing network diagram embeds
-        self.REACT_FTM_URL = "https://cdn.jsdelivr.net/npm/@alephdata/react-ftm@latest/dist/react-ftm-embed.js"
+        self.REACT_FTM_URL = "https://cdn.jsdelivr.net/npm/@alephdata/react-ftm@latest/dist/react-ftm-embed.js"  # noqa
 
         ##############################################################################
         # E-mail settings
