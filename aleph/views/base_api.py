@@ -9,7 +9,8 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
-from aleph.core import settings, url_for, cache, archive
+from aleph.core import url_for, cache, archive
+from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic.pages import load_pages
@@ -27,34 +28,34 @@ def _metadata_locale(locale):
     # This is cached in part because latency on this endpoint is
     # particularly relevant to the first render being shown to a
     # user.
-    auth = {"oauth": settings.OAUTH, "require_logged_in": settings.REQUIRE_LOGGED_IN}
-    if settings.PASSWORD_LOGIN:
+    auth = {"oauth": SETTINGS.OAUTH, "require_logged_in": SETTINGS.REQUIRE_LOGGED_IN}
+    if SETTINGS.PASSWORD_LOGIN:
         auth["password_login_uri"] = url_for("sessions_api.password_login")
-    if settings.PASSWORD_LOGIN and not settings.MAINTENANCE:
+    if SETTINGS.PASSWORD_LOGIN and not SETTINGS.MAINTENANCE:
         auth["registration_uri"] = url_for("roles_api.create_code")
-    if settings.OAUTH:
+    if SETTINGS.OAUTH:
         auth["oauth_uri"] = url_for("sessions_api.oauth_init")
-    locales = settings.UI_LANGUAGES
+    locales = SETTINGS.UI_LANGUAGES
     locales = {loc: Locale(loc).get_language_name(loc) for loc in locales}
 
     # This is dumb but we agreed it with ARIJ
     # https://github.com/alephdata/aleph/issues/1432
-    app_logo = settings.APP_LOGO
+    app_logo = SETTINGS.APP_LOGO
     if locale.startswith("ar"):
-        app_logo = settings.APP_LOGO_AR or app_logo
+        app_logo = SETTINGS.APP_LOGO_AR or app_logo
 
     return {
         "status": "ok",
-        "maintenance": settings.MAINTENANCE,
+        "maintenance": SETTINGS.MAINTENANCE,
         "app": {
-            "title": settings.APP_TITLE,
+            "title": SETTINGS.APP_TITLE,
             "version": __version__,
-            "banner": settings.APP_BANNER,
-            "ui_uri": settings.APP_UI_URL,
-            "messages_url": settings.APP_MESSAGES_URL,
+            "banner": SETTINGS.APP_BANNER,
+            "ui_uri": SETTINGS.APP_UI_URL,
+            "messages_url": SETTINGS.APP_MESSAGES_URL,
             "publish": archive.can_publish,
             "logo": app_logo,
-            "favicon": settings.APP_FAVICON,
+            "favicon": SETTINGS.APP_FAVICON,
             "locale": locale,
             "locales": locales,
         },
@@ -86,7 +87,7 @@ def metadata():
     request.rate_limit = None
     locale = str(get_locale())
     data = _metadata_locale(locale)
-    if settings.SINGLE_USER:
+    if SETTINGS.SINGLE_USER:
         role = Role.load_cli_user()
         authz = Authz.from_role(role)
         data["token"] = authz.to_token()
@@ -162,7 +163,7 @@ def sitemap():
     collections = []
     for collection in Collection.all_authz(Authz.from_role(None)):
         updated_at = collection.updated_at.date().isoformat()
-        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
+        updated_at = max(SETTINGS.SITEMAP_FLOOR, updated_at)
         url = collection_url(collection.id)
         collections.append({"url": url, "updated_at": updated_at})
     return render_xml("sitemap.xml", collections=collections)
