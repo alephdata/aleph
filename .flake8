@@ -1,3 +1,5 @@
 [flake8]
-ignore = E203
 max-line-length = 88
+max-complexity = 12
+extend-ignore = E203, E501
+extend-select = B950
