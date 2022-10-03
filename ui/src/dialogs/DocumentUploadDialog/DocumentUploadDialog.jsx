@@ -189,6 +189,7 @@ export class DocumentUploadDialog extends Component {
           return result;
         })
         .catch((e) => {
+          // eslint-disable-next-line no-console
           console.error(`failure uploading ${uploadTrace.name}`, e);
           uploadTrace.status = UPLOAD_STATUS.ERROR;
           uploadTrace.retryFn = retryFn;
