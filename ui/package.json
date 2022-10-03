@@ -72,7 +72,11 @@
   },
   "proxy": "http://api:5000/",
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-console": "error",
+      "no-debugger": "error"
+    }
   },
   "jest": {
     "transformIgnorePatterns": []
