@@ -5,7 +5,7 @@ from followthemoney.types import registry
 from followthemoney.namespace import Namespace
 from jsonschema import FormatChecker
 
-from aleph.settings import SETTINGS
+from aleph import settings
 from aleph.model import Collection, EntitySet
 
 
@@ -15,7 +15,7 @@ checker = FormatChecker()
 @checker.checks("locale", raises=ValueError)
 def check_locale(value):
     value = stringify(value)
-    if value not in SETTINGS.UI_LANGUAGES:
+    if value not in settings.UI_LANGUAGES:
         raise ValueError(gettext("Invalid user locale."))
     return True
 

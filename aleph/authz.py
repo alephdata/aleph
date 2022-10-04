@@ -3,8 +3,7 @@ import logging
 from banal import ensure_list
 from werkzeug.exceptions import Unauthorized
 
-from aleph.core import db, cache
-from aleph.settings import SETTINGS
+from aleph.core import db, cache, settings
 from aleph.model import Collection, Role, Permission
 from aleph.model.common import make_token
 
@@ -29,9 +28,9 @@ class Authz(object):
         self.roles = set(roles)
         self.is_admin = is_admin
         self.token_id = token_id
-        self.expire = expire or SETTINGS.SESSION_EXPIRE
-        self.session_write = not SETTINGS.MAINTENANCE and self.logged_in
-        self.can_browse_anonymous = not SETTINGS.REQUIRE_LOGGED_IN or self.logged_in
+        self.expire = expire or settings.SESSION_EXPIRE
+        self.session_write = not settings.MAINTENANCE and self.logged_in
+        self.can_browse_anonymous = not settings.REQUIRE_LOGGED_IN or self.logged_in
         self._collections = {}
 
     def collections(self, action):
@@ -98,7 +97,7 @@ class Authz(object):
         return int(role_id) in self.roles
 
     def can_register(self):
-        if self.logged_in or SETTINGS.MAINTENANCE or not SETTINGS.PASSWORD_LOGIN:
+        if self.logged_in or settings.MAINTENANCE or not settings.PASSWORD_LOGIN:
             return False
         return True
 

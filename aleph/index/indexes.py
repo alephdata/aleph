@@ -5,7 +5,7 @@ from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 
-from aleph.settings import SETTINGS
+from aleph.core import settings
 from aleph.index.util import index_name
 from aleph.index.util import index_settings, configure_index, get_shard_weight
 from aleph.index.util import NUMERIC_TYPES, PARTIAL_DATE, KEYWORD
@@ -46,7 +46,7 @@ def schema_scope(schema, expand=True):
 def entities_index_list(schema=None, expand=True):
     """Combined index to run all queries against."""
     for schema in schema_scope(schema, expand=expand):
-        for version in SETTINGS.INDEX_READ:
+        for version in settings.INDEX_READ:
             yield schema_index(schema, version)
 
 
@@ -58,13 +58,13 @@ def entities_read_index(schema=None, expand=True):
 def entities_write_index(schema):
     """Index that us currently written by new queries."""
     schema = model.get(schema)
-    return schema_index(schema, SETTINGS.INDEX_WRITE)
+    return schema_index(schema, settings.INDEX_WRITE)
 
 
 def configure_entities():
     for schema in model.schemata.values():
         if not schema.abstract:
-            for version in SETTINGS.INDEX_READ:
+            for version in settings.INDEX_READ:
                 configure_schema(schema, version)
 
 

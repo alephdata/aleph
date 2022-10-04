@@ -3,8 +3,7 @@ import datetime
 import logging
 from pprint import pformat
 
-from aleph.core import db
-from aleph.settings import SETTINGS
+from aleph.core import db, settings
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase, get_caption, JSON
@@ -63,10 +62,10 @@ class EntitiesApiTestCase(TestCase):
         assert res.json["total"] == 0, res.json
         assert len(res.json["facets"]["collection_id"]["values"]) == 0, res.json
 
-        SETTINGS.REQUIRE_LOGGED_IN = True
+        settings.REQUIRE_LOGGED_IN = True
         res = self.client.get(url)
         assert res.status_code == 403, res
-        SETTINGS.REQUIRE_LOGGED_IN = False
+        settings.REQUIRE_LOGGED_IN = False
 
         _, headers = self.login(is_admin=True)
         res = self.client.get(url + "&facet=collection_id", headers=headers)

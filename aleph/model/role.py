@@ -5,8 +5,7 @@ from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from aleph.core import db
-from aleph.settings import SETTINGS
+from aleph.core import db, settings
 from aleph.model.common import SoftDeleteModel, IdModel, make_token, query_like
 from aleph.util import anonymize_email
 
@@ -34,7 +33,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     SYSTEM_USER = "user"
 
     #: Generates URL-safe signatures for invitations.
-    SIGNATURE = URLSafeTimedSerializer(SETTINGS.SECRET_KEY)
+    SIGNATURE = URLSafeTimedSerializer(settings.SECRET_KEY)
 
     #: Signature maximum age, defaults to 1 day
     SIGNATURE_MAX_AGE = 60 * 60 * 24
@@ -77,7 +76,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return False
         if self.is_muted:
             return False
-        if self.updated_at < (datetime.utcnow() - SETTINGS.ROLE_INACTIVE):
+        if self.updated_at < (datetime.utcnow() - settings.ROLE_INACTIVE):
             # Disable sending notifications to roles that haven't been
             # logged in for a set amount of time.
             return False
@@ -205,19 +204,19 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def load_cli_user(cls):
         return cls.load_or_create(
-            SETTINGS.SYSTEM_USER, cls.USER, "Aleph", is_admin=True
+            settings.SYSTEM_USER, cls.USER, "Aleph", is_admin=True
         )
 
     @classmethod
     def load_id(cls, foreign_id):
         """Load a role and return the ID."""
-        if not hasattr(SETTINGS, "_roles"):
-            SETTINGS._roles = {}
-        if foreign_id not in SETTINGS._roles:
+        if not hasattr(settings, "_roles"):
+            settings._roles = {}
+        if foreign_id not in settings._roles:
             role_id = cls.all_ids().filter_by(foreign_id=foreign_id).first()
             if role_id is not None:
-                SETTINGS._roles[foreign_id] = role_id[0]
-        return SETTINGS._roles.get(foreign_id)
+                settings._roles[foreign_id] = role_id[0]
+        return settings._roles.get(foreign_id)
 
     @classmethod
     def public_roles(cls):

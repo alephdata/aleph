@@ -3,7 +3,7 @@ from banal import as_bool
 from followthemoney.util import sanitize_text
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
-from aleph.settings import SETTINGS
+from aleph.core import settings
 from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class QueryParser(object):
         self.prefix = sanitize_text(self.get("prefix"))
 
         # Disable or enable query caching
-        self.cache = self.getbool("cache", SETTINGS.CACHE)
+        self.cache = self.getbool("cache", settings.CACHE)
         self.filters = self.prefixed_items("filter:")
         self.excludes = self.prefixed_items("exclude:")
         self.empties = self.prefixed_items("empty:")
@@ -136,7 +136,7 @@ class SearchQueryParser(QueryParser):
         self.highlight_text = self.get("highlight_text", self.text)
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool("highlight", False)
-        self.highlight = self.highlight and SETTINGS.RESULT_HIGHLIGHT
+        self.highlight = self.highlight and settings.RESULT_HIGHLIGHT
         self.highlight = self.highlight and self.highlight_text
         # Length of each snippet in characters
         self.highlight_length = self.getint("highlight_length", 120)

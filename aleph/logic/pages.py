@@ -2,7 +2,7 @@ import logging
 import frontmatter
 from pathlib import Path
 
-from aleph.settings import SETTINGS
+from aleph import settings
 
 log = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def load_pages(locale):
     page once it is loaded. See the directory `aleph/pages` for the
     default examples.
     """
-    directory = Path(SETTINGS.PAGES_PATH)
+    directory = Path(settings.PAGES_PATH)
     candidates = {}
     for path in directory.iterdir():
         page = frontmatter.load(path).to_dict()
@@ -35,7 +35,7 @@ def load_pages(locale):
     # Try to pick a version of the page written in the active
     # locale, else fall back to the system default.
     for name, langs in candidates.items():
-        for lang in [locale, SETTINGS.DEFAULT_LANGUAGE]:
+        for lang in [locale, settings.DEFAULT_LANGUAGE]:
             if lang in langs:
                 pages.append(langs.get(lang))
                 break

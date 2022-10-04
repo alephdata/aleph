@@ -10,8 +10,7 @@ from followthemoney.helpers import entity_filename
 from followthemoney.export.excel import ExcelExporter
 from servicelayer.archive.util import checksum, ensure_path
 
-from aleph.core import archive, db
-from aleph.settings import SETTINGS
+from aleph.core import archive, db, settings
 from aleph.queues import queue_task
 from aleph.model import Export, Events, Role, Status, Entity
 from aleph.index.entities import iter_proxies, checksums_count
@@ -79,11 +78,11 @@ def export_entities(export_id):
                 extra = [entity_url(entity.id), collection.get("label")]
                 exporter.write(entity, extra=extra)
                 write_document(export_dir, zf, collection, entity)
-                if file_path.stat().st_size >= SETTINGS.EXPORT_MAX_SIZE:
+                if file_path.stat().st_size >= settings.EXPORT_MAX_SIZE:
                     concern = "total size of the"
                     zf.writestr("EXPORT_TOO_LARGE.txt", WARNING % concern)
                     break
-                if idx >= SETTINGS.EXPORT_MAX_RESULTS:
+                if idx >= settings.EXPORT_MAX_RESULTS:
                     concern = "number of"
                     zf.writestr("EXPORT_TOO_LARGE.txt", WARNING % concern)
                     break
@@ -183,8 +182,8 @@ def send_export_notification(export):
         download_url=download_url,
         expiration_date=export.expires_at.strftime("%Y-%m-%d"),
         exports_url=ui_url("exports"),
-        ui_url=SETTINGS.APP_UI_URL,
-        app_title=SETTINGS.APP_TITLE,
+        ui_url=settings.APP_UI_URL,
+        app_title=settings.APP_TITLE,
     )
     plain = render_template("email/export.txt", **params)
     html = render_template("email/export.html", **params)

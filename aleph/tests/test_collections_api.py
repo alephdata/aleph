@@ -1,7 +1,6 @@
 import json
 
-from aleph.core import db
-from aleph.settings import SETTINGS
+from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.model import EntitySet
 from aleph.logic.collections import compute_collection
@@ -35,10 +34,10 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json["total"] == 0, res.json
 
-        SETTINGS.REQUIRE_LOGGED_IN = True
+        settings.REQUIRE_LOGGED_IN = True
         res = self.client.get("/api/2/collections")
         assert res.status_code == 403, res
-        SETTINGS.REQUIRE_LOGGED_IN = False
+        settings.REQUIRE_LOGGED_IN = False
 
         _, headers = self.login(is_admin=True)
         res = self.client.get("/api/2/collections", headers=headers)

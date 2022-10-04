@@ -5,7 +5,7 @@ from flask import Blueprint, redirect, request, session
 from authlib.common.errors import AuthlibBaseError
 from werkzeug.exceptions import Unauthorized, BadRequest
 
-from aleph.settings import SETTINGS
+from aleph import settings
 from aleph.core import db, url_for, cache
 from aleph.authz import Authz
 from aleph.oauth import oauth, handle_oauth
@@ -54,7 +54,7 @@ def password_login():
       tags:
       - Role
     """
-    require(SETTINGS.PASSWORD_LOGIN)
+    require(settings.PASSWORD_LOGIN)
     data = parse_request("Login")
     role = Role.login(data.get("email"), data.get("password"))
     if role is None:
@@ -80,7 +80,7 @@ def oauth_init():
       tags:
       - Role
     """
-    require(SETTINGS.OAUTH)
+    require(settings.OAUTH)
     url = url_for(".oauth_callback")
     state = oauth.provider.create_authorization_url(url)
     state["next_url"] = request.args.get("next", request.referrer)
@@ -91,7 +91,7 @@ def oauth_init():
 
 @blueprint.route("/api/2/sessions/callback")
 def oauth_callback():
-    require(SETTINGS.OAUTH)
+    require(settings.OAUTH)
     err = Unauthorized(gettext("Authentication has failed."))
     state = cache.get_complex(_oauth_session(request.args.get("state")))
     if state is None:
@@ -121,7 +121,7 @@ def oauth_callback():
     # Store id_token to generate logout URL later
     id_token = oauth_token.get("id_token")
     if id_token is not None:
-        cache.set(_token_session(token), id_token, expires=SETTINGS.SESSION_EXPIRE)
+        cache.set(_token_session(token), id_token, expires=settings.SESSION_EXPIRE)
 
     next_path = get_url_path(state.get("next_url"))
     next_url = ui_url("oauth", next=next_path)
@@ -143,8 +143,8 @@ def logout():
       - Role
     """
     request.rate_limit = None
-    redirect_url = SETTINGS.APP_UI_URL
-    if SETTINGS.OAUTH:
+    redirect_url = settings.APP_UI_URL
+    if settings.OAUTH:
         metadata = oauth.provider.load_server_metadata()
         logout_endpoint = metadata.get("end_session_endpoint")
         if logout_endpoint is not None:

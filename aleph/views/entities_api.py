@@ -23,7 +23,7 @@ from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import SimilarSerializer
-from aleph.settings import SETTINGS
+from aleph.settings import MAX_EXPAND_ENTITIES
 from aleph.queues import queue_task, OP_EXPORT_SEARCH
 
 log = logging.getLogger(__name__)
@@ -541,9 +541,7 @@ def expand(entity_id):
     proxy = model.get_proxy(entity)
     collection_id = entity.get("collection_id")
     tag_request(collection_id=collection_id)
-    parser = QueryParser(
-        request.args, request.authz, max_limit=SETTINGS.MAX_EXPAND_ENTITIES
-    )
+    parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
     properties = parser.filters.get("property")
     results = expand_proxies(
         [proxy],

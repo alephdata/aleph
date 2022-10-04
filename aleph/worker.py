@@ -4,8 +4,7 @@ from servicelayer.worker import Worker
 from servicelayer.logs import apply_task_context
 
 from aleph import __version__
-from aleph.core import kv, db, create_app
-from aleph.settings import SETTINGS
+from aleph.core import kv, db, create_app, settings
 from aleph.model import Collection
 from aleph.queues import get_rate_limit, get_dataset_collection_id
 from aleph.queues import (
@@ -33,7 +32,7 @@ from aleph.logic.mapping import load_mapping, flush_mapping
 
 log = structlog.get_logger(__name__)
 
-app = create_app(config={"SERVER_NAME": SETTINGS.APP_UI_URL})
+app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
 
 
 def op_index(collection, task):

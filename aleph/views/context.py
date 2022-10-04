@@ -13,7 +13,7 @@ from structlog.contextvars import clear_contextvars, bind_contextvars
 
 from aleph import __version__
 from aleph.queues import get_rate_limit
-from aleph.settings import SETTINGS
+from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Role
 
@@ -46,7 +46,7 @@ def enable_cache(vary_user=True, vary=None):
     if the data is fit for public caches (default: no, vary_user) and what
     values to include in the generation of an etag.
     """
-    if not SETTINGS.CACHE:
+    if not settings.CACHE:
         return
 
     request._http_cache = True
@@ -106,9 +106,9 @@ def enable_authz(request):
 def enable_rate_limit(request):
     if request.authz.logged_in:
         return
-    limit = SETTINGS.API_RATE_LIMIT * SETTINGS.API_RATE_WINDOW
+    limit = settings.API_RATE_LIMIT * settings.API_RATE_WINDOW
     request.rate_limit = get_rate_limit(
-        _get_remote_ip(), limit=limit, interval=SETTINGS.API_RATE_WINDOW, unit=60
+        _get_remote_ip(), limit=limit, interval=settings.API_RATE_WINDOW, unit=60
     )
     if not request.rate_limit.check():
         raise TooManyRequests("Rate limit exceeded.")

@@ -4,8 +4,7 @@ from urllib.parse import urlencode
 from werkzeug.urls import url_join
 from datetime import datetime, timedelta
 
-from aleph.core import url_for
-from aleph.settings import SETTINGS
+from aleph.core import settings, url_for
 
 ALGORITHM = "HS256"
 DECODE = [ALGORITHM]
@@ -23,7 +22,7 @@ def ui_url(resource, id=None, _relative=False, **query):
     """Make a UI link."""
     if id is not None:
         resource = "%s/%s" % (resource, id)
-    url = "/" if _relative else SETTINGS.APP_UI_URL
+    url = "/" if _relative else settings.APP_UI_URL
     url = url_join(url, resource)
     query = [(q, v) for q, v in query.items() if v is not None]
     query_string = urlencode(query, doseq=True)
@@ -51,11 +50,11 @@ def archive_url(content_hash, file_name=None, mime_type=None, expire=None):
     if expire is None:
         expire = datetime.utcnow() + timedelta(days=1)
     payload = {"c": content_hash, "f": file_name, "m": mime_type, "exp": expire}
-    token = jwt.encode(payload, SETTINGS.SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
     return url_for("archive_api.retrieve", _query=[("token", token)])
 
 
 def archive_token(token):
-    token = jwt.decode(token, key=SETTINGS.SECRET_KEY, algorithms=DECODE, verify=True)
+    token = jwt.decode(token, key=settings.SECRET_KEY, algorithms=DECODE, verify=True)
     expire = datetime.utcfromtimestamp(token["exp"])
     return token.get("c"), token.get("f"), token.get("m"), expire
