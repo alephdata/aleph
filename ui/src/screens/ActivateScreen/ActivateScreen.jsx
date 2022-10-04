@@ -30,8 +30,6 @@ export class ActivateScreen extends Component {
   }
 
   render() {
-    debugger;
-
     const { params, session, intl } = this.props;
 
     if (!params.code || session.loggedIn) {
