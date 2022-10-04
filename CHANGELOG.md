@@ -1,3 +1,9 @@
+## 3.12.7-rc2 (2022-10-04)
+
+- Removed debugging code form some parts of the UI and improved linting to check for these things in the future
+- Fixed an issue that was preventing Aleph from upgrading internally at OCCRP
+- Added CHANGELOG notes
+
 ## 3.12.7-rc1 (2022-10-03)
 
 - Numerous library upgrades
