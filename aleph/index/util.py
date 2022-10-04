@@ -300,7 +300,7 @@ def configure_index(index, mapping, settings):
             "master_timeout": MAX_TIMEOUT,
         }
         config = es.indices.get(index=index).get(index, {})
-        SETTINGS.get("index").pop("number_of_shards")
+        settings.get("index").pop("number_of_shards")
         if check_settings_changed(settings, config.get("settings")):
             res = es.indices.close(ignore_unavailable=True, **options)
             res = es.indices.put_settings(body=settings, **options)
