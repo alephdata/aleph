@@ -1,3 +1,7 @@
+## 3.12.7-RC3 (2022-10-05)
+
+- Reverted the updates to authlib which caused oauth functionality to fail in Aleph
+
 ## 3.12.7-rc2 (2022-10-04)
 
 - Removed debugging code form some parts of the UI and improved linting to check for these things in the future
