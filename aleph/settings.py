@@ -5,10 +5,15 @@
 # defaults.
 import json
 import os
-from servicelayer import env
-from urllib.parse import urlparse
-from flask_babel import lazy_gettext
 from datetime import timedelta
+from json.decoder import JSONDecodeError
+from urllib.parse import urlparse
+
+import structlog
+from flask_babel import lazy_gettext
+from servicelayer import env
+
+log = structlog.get_logger(__name__)
 
 
 class Settings:
@@ -202,10 +207,17 @@ class Settings:
         json_prefix = env.get("ALEPH_JSON_CONFIG_PREFIX")
         if string_prefix or json_prefix:
             for key, value in os.environ.items():
-                if string_prefix and key.startswith(string_prefix):
+                if string_prefix and key.startswith(string_prefix) and key != string_prefix:
                     setattr(self, key[len(string_prefix) :], value)
-                elif json_prefix and key.startswith(json_prefix):
-                    setattr(self, key[len(json_prefix) :], json.loads(value))
+                elif json_prefix and key.startswith(json_prefix) and key != json_prefix:
+                    try:
+                        json_value = json.loads(value)
+                    except JSONDecodeError as e:
+                        log.error(
+                            f"Could not parse config value as JSON for env var {key}: {value}\n{e}"
+                        )
+                        raise e
+                    setattr(self, key[len(json_prefix) :], json_value)
 
 
 SETTINGS = Settings()
