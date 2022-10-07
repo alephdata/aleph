@@ -1,3 +1,23 @@
+## 3.12.7-RC3 (2022-10-05)
+
+- Reverted the updates to authlib which caused oauth functionality to fail in Aleph
+
+## 3.12.7-rc2 (2022-10-04)
+
+- Removed debugging code form some parts of the UI and improved linting to check for these things in the future
+- Fixed an issue that was preventing Aleph from upgrading internally at OCCRP
+- Added CHANGELOG notes
+
+## 3.12.7-rc1 (2022-10-03)
+
+- Numerous library upgrades
+- Updated to react-ftm v2.6.8, this release contains some small bugfixes and accessibility improvements
+- Fixed a small QoL issue where the button for hiding the left hand menu was hidden most of the time
+- Made some changes to improve the highlighting in search results. Specifically we now display highlighted results within the raw text documents.
+- Implemented a new way for handling status messages and displaying these to your users
+- Updates details for contacting OCCRP
+- Updated the way in which we approach custom settings in Aleph. There is now a mechanism for setting these via environment variables.
+
 ## 3.12.6 (2022-07-25)
 
 - Develop QoL updates. Introduced prettier and eslint builds for github. Update code to meet new standards. Introduced the concept of RC versions for Aleph. Introduced Feature and Bugfix forms for easier issue creation. Bumped numerous libraries.
