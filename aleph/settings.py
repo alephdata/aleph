@@ -207,14 +207,18 @@ class Settings:
         json_prefix = env.get("ALEPH_JSON_CONFIG_PREFIX")
         if string_prefix or json_prefix:
             for key, value in os.environ.items():
-                if string_prefix and key.startswith(string_prefix) and key != string_prefix:
+                if (
+                    string_prefix
+                    and key.startswith(string_prefix)
+                    and key != string_prefix
+                ):
                     setattr(self, key[len(string_prefix) :], value)
                 elif json_prefix and key.startswith(json_prefix) and key != json_prefix:
                     try:
                         json_value = json.loads(value)
                     except JSONDecodeError as e:
                         log.error(
-                            f"Could not parse config value as JSON for env var {key}: {value}\n{e}"
+                            f"Could not parse config value as JSON for env var {key}: {value}\n{e}"  # noqa
                         )
                         raise e
                     setattr(self, key[len(json_prefix) :], json_value)
