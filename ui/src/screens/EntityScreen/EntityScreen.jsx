@@ -106,7 +106,7 @@ class EntityScreen extends Component {
 
     const operation = (
       <ButtonGroup>
-        <BookmarkButton entityId={entityId} />
+        <BookmarkButton entity={entity} />
         <DownloadButton document={entity} />
         {entity?.collection?.writeable && (
           <>

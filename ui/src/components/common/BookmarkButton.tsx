@@ -3,19 +3,20 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Button, ButtonProps } from '@blueprintjs/core';
+import { Entity } from '@alephdata/followthemoney';
 
 import { selectEntityBookmarked } from 'selectors';
 import { createBookmark, deleteBookmark } from 'actions/bookmarkActions';
 
 type BookmarkButtonProps = ButtonProps & {
   bookmarked: boolean;
-  createBookmark: (entityId: string) => Promise<any>;
-  deleteBookmark: (entityId: string) => Promise<any>;
-  entityId: string;
+  createBookmark: (entity: Entity) => Promise<any>;
+  deleteBookmark: (entity: Entity) => Promise<any>;
+  entity: Entity;
 };
 
 const BookmarkButton: FC<BookmarkButtonProps> = ({
-  entityId,
+  entity,
   bookmarked,
   createBookmark,
   deleteBookmark,
@@ -26,7 +27,7 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
 
   const toggle = async () => {
     const action = bookmarked ? deleteBookmark : createBookmark;
-    await action(entityId);
+    await action(entity);
   };
 
   return (
@@ -37,8 +38,8 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
 };
 
 const mapStateToProps = (state: any, ownProps: BookmarkButtonProps) => {
-  const { entityId } = ownProps;
-  const bookmarked = selectEntityBookmarked(state, entityId);
+  const { entity } = ownProps;
+  const bookmarked = selectEntityBookmarked(state, entity);
 
   return {
     bookmarked,

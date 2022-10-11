@@ -1,33 +1,34 @@
 import { createReducer } from 'redux-act';
 
+import timestamp from 'util/timestamp';
 import { createBookmark, deleteBookmark } from 'actions';
 
-const initialState = {
-  entities: [],
-};
+const initialState = [];
 
 export default createReducer(
   {
-    [createBookmark.COMPLETE]: (state, entityId) => {
-      if (state.entities.includes(entityId)) {
+    [createBookmark.COMPLETE]: (state, entity) => {
+      if (state.find(({ id }) => id === entity.id)) {
         return state;
       }
 
-      return {
+      return [
         ...state,
-        entities: [...state.entities, entityId],
-      };
+        {
+          id: entity.id,
+          bookmarkedAt: timestamp(),
+          caption: entity.getCaption(),
+          collection: {
+            id: entity.collection.id,
+            label: entity.collection.label,
+            category: entity.collection.category,
+          },
+        },
+      ];
     },
 
-    [deleteBookmark.COMPLETE]: (state, entityId) => {
-      if (!state.entities.includes(entityId)) {
-        return state;
-      }
-
-      return {
-        ...state,
-        entities: state.entities.filter((id) => id !== entityId),
-      };
+    [deleteBookmark.COMPLETE]: (state, entity) => {
+      return state.filter(({ id }) => id !== entity.id);
     },
   },
   initialState

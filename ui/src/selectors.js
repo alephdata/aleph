@@ -446,7 +446,12 @@ export function selectBookmarks(state) {
   return selectObject(state, state, 'bookmarks');
 }
 
-export function selectEntityBookmarked(state, entityId) {
-  const { entities } = selectBookmarks(state);
-  return entities.includes(entityId);
+export function selectBookmark(state, entity) {
+  const bookmarks = selectBookmarks(state);
+  return bookmarks.find(({ id }) => id === entity.id);
+}
+
+export function selectEntityBookmarked(state, entity) {
+  const bookmark = selectBookmark(state, entity);
+  return bookmark !== undefined;
 }
