@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { ButtonGroup, Classes, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
+import { BookmarkButton } from 'components/common';
 import { DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
 
@@ -36,6 +37,7 @@ class EntityToolbar extends React.Component {
             </Link>
           )}
           {showDownloadButton && <DownloadButton document={entity} />}
+          <BookmarkButton entityId={entity.id} />
         </ButtonGroup>
       </div>
     );
