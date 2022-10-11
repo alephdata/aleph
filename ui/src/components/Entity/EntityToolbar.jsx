@@ -37,7 +37,7 @@ class EntityToolbar extends React.Component {
             </Link>
           )}
           {showDownloadButton && <DownloadButton document={entity} />}
-          <BookmarkButton entityId={entity.id} />
+          <BookmarkButton entity={entity} />
         </ButtonGroup>
       </div>
     );
