@@ -1,5 +1,6 @@
 import AnimatedCount from './AnimatedCount';
 import BookmarkButton from './BookmarkButton';
+import BookmarksDrawer from './BookmarksDrawer';
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import ClipboardInput from './ClipboardInput';
@@ -52,6 +53,7 @@ import LinkButton from './LinkButton';
 export {
   AnimatedCount,
   BookmarkButton,
+  BookmarksDrawer,
   Breadcrumbs,
   SignInCallout,
   ClipboardInput,
