@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-07-25 10:14+0200\n"
+"POT-Creation-Date: 2022-10-11 12:14+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Jean-Philippe Menotti, 2022\n"
 "Language-Team: French (https://www.transifex.com/aleph/teams/76591/fr/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:38
 msgid "Aleph"
 msgstr "Aleph"
 
@@ -35,7 +35,7 @@ msgstr "Pas de schéma sur l’entité"
 msgid "[HTML removed: could not be sanitized]"
 msgstr "[HTML retiré : n’a pas pu être assaini]"
 
-#: aleph/logic/roles.py:59
+#: aleph/logic/roles.py:60
 msgid "Registration"
 msgstr "Enregistrement"
 
@@ -355,19 +355,19 @@ msgstr "Nom de schéma non valable : %s"
 msgid "Invalid date: %s"
 msgstr "Date non valable : %s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Vous n’êtes pas autorisé à réaliser cette action."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Ce chemin n’existe pas."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Erreur interne du serveur."
 
-#: aleph/views/base_api.py:244
+#: aleph/views/base_api.py:246
 msgid "Access token is invalid."
 msgstr "Le jeton d’accès est non valable."
 

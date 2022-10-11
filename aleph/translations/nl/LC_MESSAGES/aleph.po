@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-07-25 10:14+0200\n"
+"POT-Creation-Date: 2022-10-11 12:14+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Language-Team: Dutch (https://www.transifex.com/aleph/teams/76591/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:38
 msgid "Aleph"
 msgstr ""
 
@@ -30,7 +30,7 @@ msgstr ""
 msgid "[HTML removed: could not be sanitized]"
 msgstr ""
 
-#: aleph/logic/roles.py:59
+#: aleph/logic/roles.py:60
 msgid "Registration"
 msgstr ""
 
@@ -326,19 +326,19 @@ msgstr ""
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:244
+#: aleph/views/base_api.py:246
 msgid "Access token is invalid."
 msgstr ""
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-07-25 10:14+0200\n"
+"POT-Creation-Date: 2022-10-11 12:14+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Laura M <kokoroko2@protonmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/aleph/teams/76591/pt_BR/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:38
 msgid "Aleph"
 msgstr "Aleph"
 
@@ -34,7 +34,7 @@ msgstr ""
 msgid "[HTML removed: could not be sanitized]"
 msgstr "[HTML removido: não pôde ser sanitizado]"
 
-#: aleph/logic/roles.py:59
+#: aleph/logic/roles.py:60
 msgid "Registration"
 msgstr "Cadastro"
 
@@ -346,19 +346,19 @@ msgstr "Nome de schema inválido: %s"
 msgid "Invalid date: %s"
 msgstr "Data inválida: %s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Você não tem permissão para isso."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Esse caminho não existe."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Erro interno no servidor."
 
-#: aleph/views/base_api.py:244
+#: aleph/views/base_api.py:246
 msgid "Access token is invalid."
 msgstr "Token de acesso inválido."
 

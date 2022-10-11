@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-07-25 10:14+0200\n"
+"POT-Creation-Date: 2022-10-11 12:14+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Nathan Jaccard <nathan@occrp.org>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:38
 msgid "Aleph"
 msgstr "Aleph"
 
@@ -36,7 +36,7 @@ msgstr "Sin esquema de la entidad"
 msgid "[HTML removed: could not be sanitized]"
 msgstr "[HTML eliminado: no se pudo depurar]"
 
-#: aleph/logic/roles.py:59
+#: aleph/logic/roles.py:60
 msgid "Registration"
 msgstr "Registro"
 
@@ -348,19 +348,19 @@ msgstr "Nombre de esquema inválido: %s"
 msgid "Invalid date: %s"
 msgstr "Fecha inválida: %s"
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Usted no está autorizado para hacer esto."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Esta ruta no existe."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Error de servidor interno."
 
-#: aleph/views/base_api.py:244
+#: aleph/views/base_api.py:246
 msgid "Access token is invalid."
 msgstr "El token de acceso es inválido."
 

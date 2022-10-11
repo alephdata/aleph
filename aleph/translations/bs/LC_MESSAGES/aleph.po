@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-07-25 10:14+0200\n"
+"POT-Creation-Date: 2022-10-11 12:14+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Tajna Biscevic <tajna@occrp.org>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:38
 msgid "Aleph"
 msgstr "Aleph"
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "[HTML removed: could not be sanitized]"
 msgstr ""
 
-#: aleph/logic/roles.py:59
+#: aleph/logic/roles.py:60
 msgid "Registration"
 msgstr "Registracija"
 
@@ -343,19 +343,19 @@ msgstr ""
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:216
 msgid "You are not authorized to do this."
 msgstr "Niste ovlašteni da ovo uradite."
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:225
 msgid "This path does not exist."
 msgstr "Ova putanja ne postoji."
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:232
 msgid "Internal server error."
 msgstr "Interna greška servera."
 
-#: aleph/views/base_api.py:244
+#: aleph/views/base_api.py:246
 msgid "Access token is invalid."
 msgstr ""
 

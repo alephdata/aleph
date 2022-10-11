@@ -1,4 +1,14 @@
-## 3.12.7-RC3 (2022-10-05)
+## 3.12.7
+
+- Library upgrades
+- Minor fixes
+- Updated to react-ftm v2.6.8, this release contains some small bugfixes and accessibility improvements
+- improvements to highlighting in search results. We now display highlighted results within the raw text documents.
+- Better handling of status messages without the need for Aleph re-deployment
+- Updated contact details
+- Updated custom settings in Aleph. There is now a mechanism for setting these via environment variables.
+
+## 3.12.7-rc3 (2022-10-05)
 
 - Reverted the updates to authlib which caused oauth functionality to fail in Aleph
 
