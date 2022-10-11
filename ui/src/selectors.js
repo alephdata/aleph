@@ -443,7 +443,8 @@ export function selectQueryLogsLimited(state, limit = 9) {
 }
 
 export function selectBookmarks(state) {
-  return selectObject(state, state, 'bookmarks');
+  const bookmarks = selectObject(state, state, 'bookmarks');
+  return bookmarks.sort((a, b) => b.bookmarkedAt - a.bookmarkedAt);
 }
 
 export function selectBookmark(state, entity) {
