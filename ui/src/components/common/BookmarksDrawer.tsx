@@ -37,7 +37,14 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
       canOutsideClickClose={true}
     >
       <div className="BookmarksDrawer__content">
-        <BookmarksList bookmarks={bookmarks} />
+        {bookmarks.length > 0 && <BookmarksList bookmarks={bookmarks} />}
+
+        {bookmarks.length <= 0 && (
+          <p>
+            You haven’t bookmarked anything yet. Add any entity to your
+            bookmarks to get started.
+          </p>
+        )}
       </div>
     </Drawer>
   );
