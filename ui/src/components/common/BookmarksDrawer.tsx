@@ -37,7 +37,9 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
       canOutsideClickClose={true}
     >
       <div className="BookmarksDrawer__content">
-        {bookmarks.length > 0 && <BookmarksList bookmarks={bookmarks} />}
+        {bookmarks.length > 0 && (
+          <BookmarksList bookmarks={bookmarks} onNavigate={toggleDialog} />
+        )}
 
         {bookmarks.length <= 0 && (
           <p>

@@ -12,9 +12,10 @@ type Bookmark = {
 
 type BookmarksListProps = {
   bookmarks: Array<Bookmark>;
+  onNavigate: () => void;
 };
 
-const BookmarksList: FC<BookmarksListProps> = ({ bookmarks }) => {
+const BookmarksList: FC<BookmarksListProps> = ({ bookmarks, onNavigate }) => {
   return (
     <ul className="BookmarksList">
       {bookmarks.map((bookmark) => (
@@ -22,6 +23,7 @@ const BookmarksList: FC<BookmarksListProps> = ({ bookmarks }) => {
           <Link
             className="BookmarksList__caption"
             to={`/entities/${bookmark.id}`}
+            onClick={onNavigate}
           >
             {bookmark.caption}
           </Link>
