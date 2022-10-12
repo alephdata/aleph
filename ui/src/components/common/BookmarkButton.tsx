@@ -23,7 +23,7 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
   ...props
 }) => {
   const icon = bookmarked ? 'star' : 'star-empty';
-  const label = bookmarked ? 'Remove bookmark' : 'Bookmark';
+  const label = bookmarked ? 'Bookmarked' : 'Bookmark';
 
   const toggle = async () => {
     const action = bookmarked ? deleteBookmark : createBookmark;
