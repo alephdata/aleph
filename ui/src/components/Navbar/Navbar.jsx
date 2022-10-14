@@ -204,7 +204,12 @@ export class Navbar extends React.Component {
                   )}
                   <DialogToggleButton
                     buttonProps={{
-                      text: 'Bookmarks',
+                      text: (
+                        <FormattedMessage
+                          id="nav.bookmarks"
+                          defaultMessage="Bookmarks"
+                        />
+                      ),
                       icon: 'star',
                       minimal: true,
                     }}

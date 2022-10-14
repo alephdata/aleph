@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Drawer, DrawerSize } from '@blueprintjs/core';
 
 import { selectBookmarks } from 'selectors';
@@ -26,10 +26,14 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
   toggleDialog,
   bookmarks,
 }) => {
+  const title = (
+    <FormattedMessage id="bookmarks.title" defaultMessage="Your bookmarks" />
+  );
+
   return (
     <Drawer
       className="BookmarksDrawer"
-      title="Your Bookmarks"
+      title={title}
       size={DrawerSize.SMALL}
       onClose={toggleDialog}
       isOpen={isOpen}
@@ -43,8 +47,10 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
 
         {bookmarks.length <= 0 && (
           <p>
-            You haven’t bookmarked anything yet. Add any entity to your
-            bookmarks to get started.
+            <FormattedMessage
+              id="bookmarks.empty"
+              defaultMessage="You haven’t bookmarked anything yet. Add any entity to your bookmarks to get started."
+            />
           </p>
         )}
       </div>

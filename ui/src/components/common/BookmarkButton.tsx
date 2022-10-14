@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonProps } from '@blueprintjs/core';
 import { Entity } from '@alephdata/followthemoney';
 
@@ -23,7 +23,11 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
   ...props
 }) => {
   const icon = bookmarked ? 'star' : 'star-empty';
-  const label = bookmarked ? 'Bookmarked' : 'Bookmark';
+  const label = bookmarked ? (
+    <FormattedMessage id="bookmarks.bookmarked" defaultMessage="Bookmarked" />
+  ) : (
+    <FormattedMessage id="bookmarks.bookmark" defaultMessage="Bookmark" />
+  );
 
   const toggle = async () => {
     const action = bookmarked ? deleteBookmark : createBookmark;
