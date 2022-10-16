@@ -58,7 +58,7 @@ export {
   fetchProfileTags,
   pairwiseJudgement,
 } from './profileActions';
-export { fetchMessages } from './messagesActions';
+export { fetchMessages, dismissMessage } from './messagesActions';
 export {
   fetchMetadata,
   fetchStatistics,

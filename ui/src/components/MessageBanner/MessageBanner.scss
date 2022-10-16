@@ -1,11 +1,15 @@
 @import '../../app/variables.scss';
 
 .MessageBanner__callout.MessageBanner__callout {
+  display: flex;
+  align-items: center;
   padding: 0.5 * $aleph-content-padding $aleph-content-padding;
 }
 
 .MessageBanner p {
   margin: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 
 .MessageBanner a,

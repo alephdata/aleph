@@ -25,6 +25,9 @@ store.subscribe(
     saveState({
       session: state.session,
       config: state.config,
+
+      // Do not persist the actual messages, only the dismissed message IDs.
+      messages: { ...state.messages, messages: [] },
     });
   })
 );

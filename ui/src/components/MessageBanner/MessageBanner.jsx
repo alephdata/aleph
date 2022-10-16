@@ -1,5 +1,5 @@
-import { Callout, Intent, Classes } from '@blueprintjs/core';
-import { injectIntl } from 'react-intl';
+import { Callout, Intent, Classes, Button } from '@blueprintjs/core';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { RelativeTime } from 'components/common';
 
 import './MessageBanner.scss';
@@ -19,16 +19,19 @@ function Wrapper({ children }) {
   );
 }
 
-function MessageBanner({ message }) {
+function MessageBanner({ message, onDismiss }) {
   if (!message) {
     return <Wrapper />;
   }
 
   const intent = MESSAGE_INTENTS[message.level] || Intent.WARNING;
   const updates = message.updates || [];
+  const dismissible = message.dismissible || false;
 
   const latestUpdate =
     updates.length > 0 ? updates[updates.length - 1] : message;
+
+  const onDismissButtonClick = () => onDismiss(message);
 
   return (
     <Wrapper>
@@ -51,6 +54,19 @@ function MessageBanner({ message }) {
             </span>
           )}
         </p>
+        {dismissible && (
+          <Button
+            minimal
+            rightIcon="cross"
+            intent={intent}
+            onClick={onDismissButtonClick}
+          >
+            <FormattedMessage
+              id="messages.banner.dismiss"
+              defaultMessage="Dismiss"
+            />
+          </Button>
+        )}
       </Callout>
     </Wrapper>
   );
