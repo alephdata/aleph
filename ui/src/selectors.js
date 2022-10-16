@@ -81,7 +81,7 @@ export function selectMessages(state) {
 
 export function selectPinnedMessage(state) {
   const metadata = selectMetadata(state);
-  const { messages } = selectMessages(state);
+  const { messages, dismissed } = selectMessages(state);
 
   if (metadata?.app?.banner) {
     return { body: metadata.app.banner };
@@ -91,9 +91,11 @@ export function selectPinnedMessage(state) {
     return null;
   }
 
-  const activeMessages = messages.filter(({ displayUntil }) => {
-    return !displayUntil || Date.now() <= new Date(displayUntil);
-  });
+  const activeMessages = messages
+    .filter(({ id }) => !dismissed.includes(id))
+    .filter(({ displayUntil }) => {
+      return !displayUntil || Date.now() <= new Date(displayUntil);
+    });
 
   if (activeMessages.length <= 0) {
     return null;
