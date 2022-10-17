@@ -1,3 +1,8 @@
+## 3.13.0
+
+- The react-ftm library has now been integrated with Aleph
+- Message banners can now (optionally) be dismissed
+
 ## 3.12.7
 
 - Library upgrades
