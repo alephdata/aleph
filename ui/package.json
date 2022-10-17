@@ -46,7 +46,7 @@
     "react-draggable": "^4.4.4",
     "react-dropzone": "^14.2.3",
     "react-helmet": "^6.0.0-beta",
-    "react-intl": "^5.4.6",
+    "react-intl": "^6.2.1",
     "react-markdown": "^8.0.0",
     "react-pdf": "^5.0.0",
     "react-redux": "^7.1.1",
