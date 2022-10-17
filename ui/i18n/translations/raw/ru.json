@@ -2005,5 +2005,230 @@
   },
   "xref.sort.random": {
     "defaultMessage": "Произвольно"
+  },
+  "dialog.edge_create.source_label": {
+    "defaultMessage": "Источник"
+  },
+  "dialog.edge_create.submit": {
+    "defaultMessage": "Создать"
+  },
+  "dialog.edge_create.target_label": {
+    "defaultMessage": "Цель"
+  },
+  "dialog.edge_create.title": {
+    "defaultMessage": "Добавить связь"
+  },
+  "dialog.edge_create.type_label": {
+    "defaultMessage": "Тип"
+  },
+  "dialog.edge_create.type_placeholder": {
+    "defaultMessage": "Выбрать тип"
+  },
+  "dialog.grouping_create.placeholder": {
+    "defaultMessage": "Выбрать метку"
+  },
+  "dialog.grouping_create.title": {
+    "defaultMessage": "Сгруппировать"
+  },
+  "dialog.settings.pivot_types.help_text": {
+    "defaultMessage": "Выбранные типы свойств будут использованы для отображения связей между узлами с общими значениями"
+  },
+  "dialog.settings.pivot_types.label": {
+    "defaultMessage": "Связать общие значения"
+  },
+  "dialog.settings.submit": {
+    "defaultMessage": "Сохранить изменения"
+  },
+  "dialog.settings.title": {
+    "defaultMessage": "Настройки"
+  },
+  "dialog.vertex_create.no_suggestions": {
+    "defaultMessage": "Предположений нет"
+  },
+  "dialog.vertex_create.title": {
+    "defaultMessage": "Добавить сущность"
+  },
+  "dialog.vertex_create.type_placeholder": {
+    "defaultMessage": "Выберите тип"
+  },
+  "editor.color_picker.blue": {
+    "defaultMessage": "Синий"
+  },
+  "editor.color_picker.custom": {
+    "defaultMessage": "Другой"
+  },
+  "editor.color_picker.green": {
+    "defaultMessage": "Зелёный"
+  },
+  "editor.color_picker.orange": {
+    "defaultMessage": "Оранжевый"
+  },
+  "editor.color_picker.red": {
+    "defaultMessage": "Красный"
+  },
+  "editor.color_picker.turquoise": {
+    "defaultMessage": "Бирюзовый"
+  },
+  "editor.color_picker.violet": {
+    "defaultMessage": "Фиолетовый"
+  },
+  "editor.entity.create_entity": {
+    "defaultMessage": "Создать новую сущность"
+  },
+  "editor.entity.no_results": {
+    "defaultMessage": "Сущности не найдены"
+  },
+  "editor.entity.placeholder": {
+    "defaultMessage": "Выбрать сущность"
+  },
+  "editor.property_add": {
+    "defaultMessage": "Добавить свойство"
+  },
+  "editor.validation.country_invalid": {
+    "defaultMessage": "Неверная страна"
+  },
+  "editor.validation.date_invalid": {
+    "defaultMessage": "Формат даты: гггг-м-д"
+  },
+  "editor.validation.phone_invalid": {
+    "defaultMessage": "Некорректный номер телефона: попробуйте добавить двухбуквенный код страны"
+  },
+  "editor.validation.required": {
+    "defaultMessage": "Эта сущность обязательна"
+  },
+  "editor.validation.topic_invalid": {
+    "defaultMessage": "Некорректная тема"
+  },
+  "editor.validation.url_invalid": {
+    "defaultMessage": "Неверный формат ссылки"
+  },
+  "enum_value_select.no_results": {
+    "defaultMessage": "Ничего не найдено"
+  },
+  "grouping.label": {
+    "defaultMessage": "Группа"
+  },
+  "property.inverse": {
+    "defaultMessage": "'{label}'"
+  },
+  "property.values.truncate_hide": {
+    "defaultMessage": "- Отображать меньше"
+  },
+  "property.values.truncate_show": {
+    "defaultMessage": "+{truncateCount} Больше"
+  },
+  "search.results_text.multiple": {
+    "defaultMessage": "Результатов поиска: {count}"
+  },
+  "search.results_text.none": {
+    "defaultMessage": "Ничего не найдено"
+  },
+  "search.results_text.one": {
+    "defaultMessage": "Результатов поиска: 1"
+  },
+  "sidebar.default.multiple": {
+    "defaultMessage": "{count} сущностей"
+  },
+  "sidebar.edit.hide": {
+    "defaultMessage": "Скрыть"
+  },
+  "sidebar.edit.show": {
+    "defaultMessage": "Редактировать все"
+  },
+  "sidebar.selected.multiple": {
+    "defaultMessage": "{count} выбрано"
+  },
+  "table_editor.add_row": {
+    "defaultMessage": "Добавить новый ряд {schema}"
+  },
+  "table_editor.add_schema": {
+    "defaultMessage": "Добавить тип сущности"
+  },
+  "table_editor.remove_row": {
+    "defaultMessage": "Удалит новый ряд {schema}"
+  },
+  "toasts.expand_none": {
+    "defaultMessage": "Все сведения уже представлены на диаграмме"
+  },
+  "toasts.expand_success": {
+    "defaultMessage": "К диаграмме добавлены {вершины} new\n      {vertices, plural, one {узел} other {узлы}}\n      и {ветви} new\n      {edges, plural, one {связь} other {связи}}"
+  },
+  "tooltip.add_edges": {
+    "defaultMessage": "Добавить связь"
+  },
+  "tooltip.add_entities": {
+    "defaultMessage": "Добавить сущности"
+  },
+  "tooltip.delete": {
+    "defaultMessage": "Удалить выбранное"
+  },
+  "tooltip.expand": {
+    "defaultMessage": "Рассмотреть связи"
+  },
+  "tooltip.export_svg": {
+    "defaultMessage": "Экспорт в SVG"
+  },
+  "tooltip.group": {
+    "defaultMessage": "Сгруппировать выделенное"
+  },
+  "tooltip.layout_auto": {
+    "defaultMessage": "Авторасположение"
+  },
+  "tooltip.layout_center": {
+    "defaultMessage": "В центр"
+  },
+  "tooltip.layout_circle": {
+    "defaultMessage": "Расположить в виде окружности"
+  },
+  "tooltip.layout_hierarchy": {
+    "defaultMessage": "Расположить в виде иерархии"
+  },
+  "tooltip.layout_horizontal": {
+    "defaultMessage": "Выровнять горизонтально"
+  },
+  "tooltip.layout_vertical": {
+    "defaultMessage": "Выровнять вертикально"
+  },
+  "tooltip.layouts": {
+    "defaultMessage": "Способы представления"
+  },
+  "tooltip.pan_mode": {
+    "defaultMessage": "Включить режим панорамы"
+  },
+  "tooltip.redo": {
+    "defaultMessage": "Повторить действие"
+  },
+  "tooltip.select_mode": {
+    "defaultMessage": "Включить режим выделения"
+  },
+  "tooltip.settings": {
+    "defaultMessage": "Настройки"
+  },
+  "tooltip.sidebar_view": {
+    "defaultMessage": "Показать боковую панель"
+  },
+  "tooltip.table_view": {
+    "defaultMessage": "Показать таблицу"
+  },
+  "tooltip.undo": {
+    "defaultMessage": "Отменить"
+  },
+  "tooltip.ungroup": {
+    "defaultMessage": "Разгруппировать выделенное"
+  },
+  "tooltips.fit_to_selection": {
+    "defaultMessage": "Отобразить выделенное"
+  },
+  "vertex_menu.add_link": {
+    "defaultMessage": "Добавить связь"
+  },
+  "vertex_menu.expand": {
+    "defaultMessage": "Рассмотреть {property}"
+  },
+  "vertex_menu.expand_all": {
+    "defaultMessage": "все связи"
+  },
+  "vertex_menu.expand_none": {
+    "defaultMessage": "Дополнительные связи не найдены"
   }
 }
