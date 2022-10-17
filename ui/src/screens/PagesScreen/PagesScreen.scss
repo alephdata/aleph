@@ -82,15 +82,7 @@ $pages-padding: $aleph-grid-size * 2.5;
       display: none;
     }
 
-    .#{$bp-ns}-menu {
-      background-color: inherit !important;
-      padding: 0;
-    }
-
     .#{$bp-ns}-menu-item {
-      padding: 6px 7px;
-      background-color: $light-gray4;
-
       .#{$bp-ns}-icon {
         @include rtlSupportInvertedProp(margin, right, 12px, null);
       }
