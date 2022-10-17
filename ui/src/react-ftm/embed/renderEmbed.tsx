@@ -26,7 +26,7 @@ export const renderEmbed = async (props: IRenderEmbedProps) => {
   } else if (dataURL) {
     embedData = await fetchExternalData(dataURL);
   } else {
-    console.error('React-FTM Embed Error: no data or dataUrl provided');
+    console.error('React-FTM Embed Error: no data or dataUrl provided'); // eslint-disable-line
     return;
   }
 
