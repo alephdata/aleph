@@ -5,7 +5,7 @@
   "dependencies": {
     "@alephdata/followthemoney": "^2.9.7",
     "@blueprintjs/colors": "^4.1.5",
-    "@blueprintjs/core": "^4.8.0",
+    "@blueprintjs/core": "^4.11.3",
     "@blueprintjs/icons": "^4.7.0",
     "@blueprintjs/popover2": "^1.5.1",
     "@blueprintjs/select": "^4.5.3",
