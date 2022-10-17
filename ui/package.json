@@ -65,7 +65,7 @@
     "truncate": "^3.0.0",
     "typescript": "^4.0.2",
     "uuid": "^9.0.0",
-    "yaml": "^2.1.1"
+    "yaml": "^2.1.3"
   },
   "scripts": {
     "start": "craco start",
