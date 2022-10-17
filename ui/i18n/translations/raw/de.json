@@ -2005,5 +2005,230 @@
   },
   "xref.sort.random": {
     "defaultMessage": "Random"
+  },
+  "dialog.edge_create.source_label": {
+    "defaultMessage": "Quelle"
+  },
+  "dialog.edge_create.submit": {
+    "defaultMessage": "Speichern"
+  },
+  "dialog.edge_create.target_label": {
+    "defaultMessage": "Ziel"
+  },
+  "dialog.edge_create.title": {
+    "defaultMessage": "Verbindung hinzufügen"
+  },
+  "dialog.edge_create.type_label": {
+    "defaultMessage": "Typ"
+  },
+  "dialog.edge_create.type_placeholder": {
+    "defaultMessage": "Typ auswählen"
+  },
+  "dialog.grouping_create.placeholder": {
+    "defaultMessage": "Wählen sie einen Titel für diese Gruppierung"
+  },
+  "dialog.grouping_create.title": {
+    "defaultMessage": "Gruppieren"
+  },
+  "dialog.settings.pivot_types.help_text": {
+    "defaultMessage": "Die ausgewählten Eigenschaftsarten werden als Verbindungen dargestellt, wenn zwei Objekte den gleichen Eigenschaftswert haben"
+  },
+  "dialog.settings.pivot_types.label": {
+    "defaultMessage": "Gemeinsame Werte verbinden"
+  },
+  "dialog.settings.submit": {
+    "defaultMessage": "Änderungen speichern"
+  },
+  "dialog.settings.title": {
+    "defaultMessage": "Einstellungen"
+  },
+  "dialog.vertex_create.no_suggestions": {
+    "defaultMessage": "Keine Vorschläge gefunden"
+  },
+  "dialog.vertex_create.title": {
+    "defaultMessage": "Entität hinzufügen"
+  },
+  "dialog.vertex_create.type_placeholder": {
+    "defaultMessage": "Typ auswählen"
+  },
+  "editor.color_picker.blue": {
+    "defaultMessage": "Blue"
+  },
+  "editor.color_picker.custom": {
+    "defaultMessage": "Custom"
+  },
+  "editor.color_picker.green": {
+    "defaultMessage": "Green"
+  },
+  "editor.color_picker.orange": {
+    "defaultMessage": "Orange"
+  },
+  "editor.color_picker.red": {
+    "defaultMessage": "Red"
+  },
+  "editor.color_picker.turquoise": {
+    "defaultMessage": "Turquoise"
+  },
+  "editor.color_picker.violet": {
+    "defaultMessage": "Violet"
+  },
+  "editor.entity.create_entity": {
+    "defaultMessage": "Create a new entity"
+  },
+  "editor.entity.no_results": {
+    "defaultMessage": "No existing entities found"
+  },
+  "editor.entity.placeholder": {
+    "defaultMessage": "Entität auswählen"
+  },
+  "editor.property_add": {
+    "defaultMessage": "Eigenschaft hinzufügen"
+  },
+  "editor.validation.country_invalid": {
+    "defaultMessage": "Ungültiges Land"
+  },
+  "editor.validation.date_invalid": {
+    "defaultMessage": "Datumsformat: JJJJ-MM-TT"
+  },
+  "editor.validation.phone_invalid": {
+    "defaultMessage": "Ungültige Telefonnummer: versuchen sie eine Ländervorwahl hinzuzufügen"
+  },
+  "editor.validation.required": {
+    "defaultMessage": "Diese Eigenschaft ist erforderlich"
+  },
+  "editor.validation.topic_invalid": {
+    "defaultMessage": "Ungültiges Thema"
+  },
+  "editor.validation.url_invalid": {
+    "defaultMessage": "Ungültiger Link"
+  },
+  "enum_value_select.no_results": {
+    "defaultMessage": "Keine Resultate gefunden"
+  },
+  "grouping.label": {
+    "defaultMessage": "Gruppe"
+  },
+  "property.inverse": {
+    "defaultMessage": "'{label}' von …"
+  },
+  "property.values.truncate_hide": {
+    "defaultMessage": "- Show fewer"
+  },
+  "property.values.truncate_show": {
+    "defaultMessage": "+{truncateCount} More"
+  },
+  "search.results_text.multiple": {
+    "defaultMessage": "{count} Resultate gefunden"
+  },
+  "search.results_text.none": {
+    "defaultMessage": "Keine Resultate gefunden"
+  },
+  "search.results_text.one": {
+    "defaultMessage": "1 Resultat gefunden"
+  },
+  "sidebar.default.multiple": {
+    "defaultMessage": "{count} entities"
+  },
+  "sidebar.edit.hide": {
+    "defaultMessage": "Hide"
+  },
+  "sidebar.edit.show": {
+    "defaultMessage": "Edit all"
+  },
+  "sidebar.selected.multiple": {
+    "defaultMessage": "{count} selected"
+  },
+  "table_editor.add_row": {
+    "defaultMessage": "Neue Zeile vom Typ {schema} hinzufügen"
+  },
+  "table_editor.add_schema": {
+    "defaultMessage": "Type hinzufügen"
+  },
+  "table_editor.remove_row": {
+    "defaultMessage": "Zeile vom Typ {schema} entfernen"
+  },
+  "toasts.expand_none": {
+    "defaultMessage": "Alle verknüpften Verbindungen sind bereits sichtbar"
+  },
+  "toasts.expand_success": {
+    "defaultMessage": "Es wurden {vertices} {vertices, plural, one {neuer Knoten} other {neue Knoten}} und {edges} neue {edges, plural, one {Verbindung} other {Verbindungen}} zum Diagramm hinzugefügt."
+  },
+  "tooltip.add_edges": {
+    "defaultMessage": "Verbindung hinzufügen"
+  },
+  "tooltip.add_entities": {
+    "defaultMessage": "Entitäten hinzufügen"
+  },
+  "tooltip.delete": {
+    "defaultMessage": "Delete selected"
+  },
+  "tooltip.expand": {
+    "defaultMessage": "Verbindungen erweitern"
+  },
+  "tooltip.export_svg": {
+    "defaultMessage": "SVG exportieren"
+  },
+  "tooltip.group": {
+    "defaultMessage": "Group selected"
+  },
+  "tooltip.layout_auto": {
+    "defaultMessage": "Auto-Layout"
+  },
+  "tooltip.layout_center": {
+    "defaultMessage": "Zentrieren"
+  },
+  "tooltip.layout_circle": {
+    "defaultMessage": "Als Kreis ausrichten"
+  },
+  "tooltip.layout_hierarchy": {
+    "defaultMessage": "Als Hierarchie ausrichten"
+  },
+  "tooltip.layout_horizontal": {
+    "defaultMessage": "Horizontal ausrichten"
+  },
+  "tooltip.layout_vertical": {
+    "defaultMessage": "Vertikal ausrichten"
+  },
+  "tooltip.layouts": {
+    "defaultMessage": "Layouts"
+  },
+  "tooltip.pan_mode": {
+    "defaultMessage": "Erforschmodus"
+  },
+  "tooltip.redo": {
+    "defaultMessage": "Wiederholen"
+  },
+  "tooltip.select_mode": {
+    "defaultMessage": "Auswahlmodus "
+  },
+  "tooltip.settings": {
+    "defaultMessage": "Einstellungen"
+  },
+  "tooltip.sidebar_view": {
+    "defaultMessage": "Seitenleiste zeigen"
+  },
+  "tooltip.table_view": {
+    "defaultMessage": "Tabelle zeigen"
+  },
+  "tooltip.undo": {
+    "defaultMessage": "Rückgängig"
+  },
+  "tooltip.ungroup": {
+    "defaultMessage": "Ungroup selected"
+  },
+  "tooltips.fit_to_selection": {
+    "defaultMessage": "Ansicht der Auswahl "
+  },
+  "vertex_menu.add_link": {
+    "defaultMessage": "Verbindung hinzufügen"
+  },
+  "vertex_menu.expand": {
+    "defaultMessage": "Erweitern von {property}"
+  },
+  "vertex_menu.expand_all": {
+    "defaultMessage": "alle Verbindungen"
+  },
+  "vertex_menu.expand_none": {
+    "defaultMessage": "Keine zusätzlichen Verbindungen"
   }
 }
