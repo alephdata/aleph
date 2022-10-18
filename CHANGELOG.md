@@ -1,7 +1,11 @@
 ## 3.13.0
 
 - The react-ftm library has now been integrated with Aleph
+- Blueprint.js has been updated to verion 4
 - Message banners can now (optionally) be dismissed
+- Fixed an issue where long titles would overflow their container
+- Fixed an issue that prevented nodes from retaining their colour in network diagrams
+- Increased the contrast between active/inactive menu items when using blueprint 4
 
 ## 3.12.7
 
