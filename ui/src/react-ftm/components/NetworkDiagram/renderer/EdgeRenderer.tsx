@@ -6,7 +6,7 @@ import {
   Point,
 } from 'react-ftm/components/NetworkDiagram/layout';
 import { EdgeLabelRenderer } from './EdgeLabelRenderer';
-const { Bezier } = require('bezier-js');
+import { Bezier } from 'bezier-js';
 
 interface IEdgeRendererProps {
   edge: Edge;
