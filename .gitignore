@@ -7,8 +7,6 @@ balkhashdb
 
 TODO.md
 
-build*
-
 ui/node_modules
 ui/build
 ui/i18n/messages.json
