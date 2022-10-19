@@ -6,16 +6,14 @@ import withRouter from 'app/withRouter';
 import { fetchEntitySet, queryEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
 import { entitySetEntitiesQuery } from 'queries';
-import Query from 'app/Query';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
-import Timeline from 'components/Timeline/Timeline';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, SearchBox, UpdateStatus } from 'components/common';
+import { Breadcrumbs, UpdateStatus } from 'components/common';
 
 export class TimelineScreen extends Component {
   constructor(props) {
@@ -24,8 +22,8 @@ export class TimelineScreen extends Component {
     this.state = {
       updateStatus: null,
     };
+
     this.onStatusChange = this.onStatusChange.bind(this);
-    this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
@@ -37,14 +35,21 @@ export class TimelineScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { entitiesCount, entitiesCountQuery, timeline, entitySetId } =
-      this.props;
+    const {
+      entitySetId,
+      timeline,
+      entities,
+      fetchEntitySet,
+      queryEntities,
+      entitiesQuery,
+    } = this.props;
 
     if (timeline.shouldLoad) {
-      this.props.fetchEntitySet({ id: entitySetId });
+      fetchEntitySet({ id: entitySetId });
     }
-    if (entitiesCount.shouldLoad) {
-      this.props.queryEntities({ query: entitiesCountQuery });
+
+    if (entities.shouldLoad) {
+      queryEntities({ query: entitiesQuery });
     }
   }
 
@@ -68,7 +73,7 @@ export class TimelineScreen extends Component {
   }
 
   render() {
-    const { entitiesCount, query, result, timeline } = this.props;
+    const { timeline, entities } = this.props;
     const { updateStatus } = this.state;
 
     if (timeline.isError) {
@@ -79,20 +84,11 @@ export class TimelineScreen extends Component {
       return <LoadingScreen />;
     }
 
-    const search = (
-      <SearchBox
-        query={query}
-        onSearch={this.onSearch}
-        placeholderLabel={timeline.label}
-      />
-    );
-
     const operation = <EntitySetManageMenu entitySet={timeline} />;
-
     const status = <UpdateStatus status={updateStatus} />;
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} search={search} status={status}>
+      <Breadcrumbs operation={operation} status={status}>
         <Breadcrumbs.Text>
           <CollectionView.Link
             id={collectionViewIds.TIMELINES}
@@ -112,14 +108,6 @@ export class TimelineScreen extends Component {
       <Screen title={timeline.label} description={timeline.summary || ''}>
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
-          <Timeline
-            query={query}
-            timeline={timeline}
-            collection={timeline.collection}
-            entities={result?.results}
-            entitiesCount={entitiesCount}
-            onStatusChange={this.onStatusChange}
-            mutateOnUpdate
           />
         </CollectionWrapper>
       </Screen>
@@ -132,29 +120,16 @@ const mapStateToProps = (state, ownProps) => {
   const { entitySetId } = params;
 
   const timeline = selectEntitySet(state, entitySetId);
-  const query = entitySetEntitiesQuery(location, entitySetId, null)
-    .add('facet', 'dates')
-    .add('facet_interval:dates', 'year')
-    .defaultFacet('schema')
-    .defaultFacet('names')
-    .defaultFacet('addresses')
+  const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null)
     .defaultSortBy('properties.date', 'asc')
     .limit(1000);
-
-  const entitiesCountQuery = new Query(
-    `entitysets/${entitySetId}/entities`,
-    {},
-    {},
-    'entitySetEntities'
-  ).limit(0);
+  const entities = selectEntitiesResult(state, entitiesQuery);
 
   return {
     entitySetId,
+    entitiesQuery,
     timeline,
-    query,
-    entitiesCountQuery,
-    entitiesCount: selectEntitiesResult(state, entitiesCountQuery),
-    result: selectEntitiesResult(state, query),
+    entities,
   };
 };
 
