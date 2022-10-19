@@ -126,3 +126,10 @@ updates:
       time: "01:00"
     open-pull-requests-limit: 99
     target-branch: develop
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "01:00"
+    open-pull-requests-limit: 99
+    target-branch: develop
