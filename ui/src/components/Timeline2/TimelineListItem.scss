@@ -1,0 +1,16 @@
+@import 'app/variables';
+
+.TimelineListItem {
+  display: flex;
+  width: 100%;
+  gap: $aleph-grid-size;
+  padding: $aleph-grid-size;
+  border-left: 4px solid var(--timeline-item-color);
+}
+
+.TimelineListItem__date {
+  width: 8rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  color: $aleph-greyed-text;
+}

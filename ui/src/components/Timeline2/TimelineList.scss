@@ -1,0 +1,11 @@
+@import 'app/variables';
+
+.TimelineList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.TimelineList > li + li {
+  border-top: 1px solid $aleph-border-color;
+}
