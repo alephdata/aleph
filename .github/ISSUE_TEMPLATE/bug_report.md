@@ -20,6 +20,9 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Aleph version**
+We need to know which version of Aleph you’re using to be able to reproduce the bug. If you aren’t using the latest version, please make sure to verify that the bug is still present in the latest version of Aleph.
+
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
