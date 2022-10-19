@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
 import {
@@ -22,7 +21,7 @@ import {
 } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { DialogToggleButton } from 'components/Toolbar';
-import { Skeleton } from 'components/common';
+import { Skeleton, LinkMenuItem } from 'components/common';
 
 import './AuthButtons.scss';
 
@@ -105,94 +104,64 @@ export class AuthButtons extends Component {
         <span className="AuthButtons">
           <Popover
             popoverClassName="AuthButtons__popover"
+            placement="bottom-end"
+            fill
             content={
               <Menu className="AuthButtons__popover__menu">
-                <Link to="/notifications" className={Classes.MENU_ITEM}>
-                  <Icon icon="notifications" />{' '}
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.notifications)}
-                  </div>
-                </Link>
-                <Link to="/alerts" className={Classes.MENU_ITEM}>
-                  <Icon icon="feed" />
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.alerts)}
-                  </div>
-                </Link>
-                <Link to="/exports" className={Classes.MENU_ITEM}>
-                  <Icon icon="export" />
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.exports)}
-                  </div>
-                </Link>
+                <LinkMenuItem
+                  to="/notifications"
+                  icon="notifications"
+                  text={intl.formatMessage(messages.notifications)}
+                />
+                <LinkMenuItem
+                  to="/alerts"
+                  icon="feed"
+                  text={intl.formatMessage(messages.alerts)}
+                />
+                <LinkMenuItem
+                  to="/exports"
+                  icon="export"
+                  text={intl.formatMessage(messages.exports)}
+                />
                 <MenuDivider />
-                <Link
+                <LinkMenuItem
                   to="/investigations"
-                  className={c(Classes.MENU_ITEM, 'mobile-show')}
-                >
-                  <Icon icon="briefcase" />
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.cases)}
-                  </div>
-                </Link>
-                <Link to="/diagrams" className={Classes.MENU_ITEM}>
-                  <Icon icon="graph" />
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.diagrams)}
-                  </div>
-                </Link>
-                <Link to="/timelines" className={Classes.MENU_ITEM}>
-                  <Icon icon="gantt-chart" />
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.timelines)}
-                  </div>
-                </Link>
-                <Link to="/lists" className={Classes.MENU_ITEM}>
-                  <Icon icon="list" />
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.lists)}
-                  </div>
-                </Link>
+                  icon="briefcase"
+                  text={intl.formatMessage(messages.cases)}
+                />
+                <LinkMenuItem
+                  to="/diagrams"
+                  icon="graph"
+                  text={intl.formatMessage(messages.diagrams)}
+                />
+                <LinkMenuItem
+                  to="/timelines"
+                  icon="gantt-chart"
+                  text={intl.formatMessage(messages.timelines)}
+                />
+                <LinkMenuItem
+                  to="/lists"
+                  icon="list"
+                  text={intl.formatMessage(messages.lists)}
+                />
                 <MenuDivider />
-                <Link to="/settings" className={Classes.MENU_ITEM}>
-                  <Icon icon="cog" />{' '}
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.settings)}
-                  </div>
-                </Link>
-                <Link to="/status" className={Classes.MENU_ITEM}>
-                  <Icon icon="dashboard" />
-                  <div
-                    className={c(Classes.TEXT_OVERFLOW_ELLIPSIS, Classes.FILL)}
-                  >
-                    {intl.formatMessage(messages.status)}
-                  </div>
-                </Link>
-                <MenuItem
+                <LinkMenuItem
+                  to="/settings"
+                  icon="cog"
+                  text={intl.formatMessage(messages.settings)}
+                />
+                <LinkMenuItem
+                  to="/status"
+                  icon="dashboard"
+                  text={intl.formatMessage(messages.status)}
+                />
+                <LinkMenuItem
+                  to="/logout"
                   icon="log-out"
-                  href="/logout"
                   text={intl.formatMessage(messages.signout)}
                 />
               </Menu>
             }
-            placement="bottom-end"
-            fill
           >
             <Button icon="user" minimal rightIcon="caret-down">
               <Truncate lines={2} width={120}>
