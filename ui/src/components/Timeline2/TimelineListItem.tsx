@@ -1,5 +1,6 @@
 import { CSSProperties, FC } from 'react';
 import { Entity } from '@alephdata/followthemoney';
+import TimelineItemCaption from './TimelineItemCaption';
 
 import './TimelineListItem.scss';
 
@@ -28,7 +29,7 @@ const TimelineListItem: FC<Props> = ({ entity, color }) => {
         {endDate && ` to ${endDate}`}
       </div>
       <strong className="TimelineListItem__caption">
-        {entity.getCaption()}
+        <TimelineItemCaption entity={entity} />
       </strong>
     </div>
   );
