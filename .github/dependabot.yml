@@ -73,7 +73,7 @@ updates:
   - package-ecosystem: npm
     directory: "/ui"
     schedule:
-      interval: weekly
+      interval: monthly
       time: "01:00"
     open-pull-requests-limit: 99
     target-branch: develop
