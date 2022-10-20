@@ -14,19 +14,14 @@ const TimelineListItem: FC<Props> = ({ entity, color }) => {
     ['--timeline-item-color' as string]: color,
   };
 
-  const startDate =
-    [
-      ...entity.getProperty('startDate'),
-      ...entity.getProperty('date'),
-    ].sort()[0] || null;
-
-  const endDate = entity.getProperty('endDate').sort().slice(-1)[0] || null;
+  const start = entity.getTemporalStart()?.value;
+  const end = entity.getTemporalEnd()?.value;
 
   return (
     <div className="TimelineListItem" style={style}>
       <div className="TimelineListItem__date">
-        {startDate}
-        {endDate && ` to ${endDate}`}
+        {start}
+        {end && ` to ${end}`}
       </div>
       <strong className="TimelineListItem__caption">
         <TimelineItemCaption entity={entity} />

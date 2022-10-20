@@ -2,31 +2,18 @@ import { FC } from 'react';
 import { Entity } from '@alephdata/followthemoney';
 import { Colors } from '@blueprintjs/colors';
 import TimelineListItem from './TimelineListItem';
+import { type TimelineProps } from './';
 
 import './TimelineList.scss';
 
-type Vertex = {
-  color: string;
-  entityId: string;
-};
-
-type Layout = {
-  vertices: Array<Vertex>;
-};
-
-type Props = {
-  entities: Array<Entity>;
-  layout: Layout;
-};
-
-const getColor = (layout: Layout, entity: Entity): string => {
+const getColor = (layout: TimelineProps['layout'], entity: Entity): string => {
   return (
     layout.vertices.find((vertex) => vertex.entityId === entity.id)?.color ||
     Colors.BLUE3
   );
 };
 
-const TimelineList: FC<Props> = ({ entities, layout }) => {
+const TimelineList: FC<TimelineProps> = ({ entities, layout }) => {
   return (
     <ul className="TimelineList">
       {entities.map((entity) => (
