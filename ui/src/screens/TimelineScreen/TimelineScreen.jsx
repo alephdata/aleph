@@ -14,7 +14,7 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, UpdateStatus } from 'components/common';
-import { TimelineList } from 'components/Timeline2';
+import { Timeline } from 'components/Timeline2';
 
 export class TimelineScreen extends Component {
   constructor(props) {
@@ -109,7 +109,7 @@ export class TimelineScreen extends Component {
       <Screen title={timeline.label} description={timeline.summary || ''}>
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
-          <TimelineList entities={entities.results} layout={timeline.layout} />
+          <Timeline entities={entities.results} layout={timeline.layout} />
         </CollectionWrapper>
       </Screen>
     );

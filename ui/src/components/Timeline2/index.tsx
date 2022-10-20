@@ -1,1 +1,1 @@
-export { default as TimelineList } from './TimelineList';
+export { default as Timeline, type TimelineProps } from './Timeline';
