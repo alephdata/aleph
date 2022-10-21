@@ -441,3 +441,12 @@ export function selectQueryLogsLimited(state, limit = 9) {
     results,
   };
 }
+
+export function selectBookmarks(state) {
+  return selectObject(state, state, 'bookmarks');
+}
+
+export function selectEntityBookmarked(state, entityId) {
+  const { entities } = selectBookmarks(state);
+  return entities.includes(entityId);
+}
