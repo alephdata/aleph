@@ -14,3 +14,20 @@
   flex-shrink: 0;
   color: $aleph-greyed-text;
 }
+
+.TimelineListItem--muted {
+  opacity: 0.5;
+}
+
+.TimelineListItem:where(:hover),
+.TimelineListItem:where(:focus-within) {
+  background-color: rgba($blue5, 0.15);
+}
+
+.TimelineListItem:focus-within {
+  outline: 2px solid $pt-outline-color;
+}
+
+.TimelineListItem--selected {
+  background-color: rgba($blue5, 0.25);
+}
