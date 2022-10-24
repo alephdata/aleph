@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import TimelineListItem from './TimelineListItem';
 import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
 
@@ -42,4 +43,16 @@ it('sets custom color property', () => {
   const node = document.querySelector('.TimelineListItem') as HTMLElement;
   const color = node.style.getPropertyValue('--timeline-item-color');
   expect(color).toEqual('#ff0000');
+});
+
+it('calls select handler when clicked', async () => {
+  entity.setProperty('name', 'Event title');
+  const onSelect = jest.fn();
+  render(<TimelineListItem entity={entity} onSelect={onSelect} color="blue" />);
+
+  await userEvent.click(screen.getByRole('button', { name: 'Edit' }));
+  expect(onSelect).toHaveBeenCalledTimes(1);
+
+  await userEvent.click(screen.getByText('Event title'));
+  expect(onSelect).toHaveBeenCalledTimes(2);
 });
