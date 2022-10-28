@@ -5,25 +5,25 @@ import { DEFAULT_COLOR, Vertex } from './Timeline';
 import EntityViewerProperties from './EntityViewerProperties';
 import { ColorPicker } from 'src/react-ftm';
 
-import './EntityViewer.scss';
+import './EntityViewer2.scss';
 
 type Props = {
   entity: Entity;
   vertex?: Vertex;
 };
 
-const EntityViewer: FC<Props> = ({ entity, vertex }) => {
+const EntityViewer2: FC<Props> = ({ entity, vertex }) => {
   const currentColor = vertex?.color || DEFAULT_COLOR;
 
   return (
-    <article className="EntityViewer">
-      <header className="EntityViewer__header">
-        <div className="EntityViewer__schema">
+    <article className="EntityViewer2">
+      <header className="EntityViewer2__header">
+        <div className="EntityViewer2__schema">
           <Schema.Label schema={entity.schema} icon />
         </div>
-        <h2 className="EntityViewer__caption">{entity.getCaption()}</h2>
+        <h2 className="EntityViewer2__caption">{entity.getCaption()}</h2>
       </header>
-      <div className="EntityViewer__color">
+      <div className="EntityViewer2__color">
         <ColorPicker currSelected={currentColor} onSelect={() => {}} />
       </div>
       <EntityViewerProperties entity={entity} />
@@ -31,4 +31,4 @@ const EntityViewer: FC<Props> = ({ entity, vertex }) => {
   );
 };
 
-export default EntityViewer;
+export default EntityViewer2;
