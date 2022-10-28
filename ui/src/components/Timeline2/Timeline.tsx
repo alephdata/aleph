@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { Colors } from '@blueprintjs/colors';
 import { Entity } from '@alephdata/followthemoney';
+import c from 'classnames';
 import TimelineList from './TimelineList';
 import EntityViewer2 from './EntityViewer2';
 
@@ -50,7 +51,7 @@ const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
     });
 
   return (
-    <div className="Timeline">
+    <div className={c('Timeline', selectedId && 'Timeline--selected')}>
       <div className="Timeline__list">
         <TimelineList
           entities={entities}
