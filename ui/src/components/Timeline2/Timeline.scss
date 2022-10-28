@@ -1,21 +1,37 @@
 @import 'app/variables.scss';
 
 .Timeline {
+  --viewer-width: 275px;
+
+  position: relative;
   display: flex;
+  flex-grow: 1;
   overflow: hidden;
 }
 
+.Timeline__list,
+.Timeline__viewer {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
 .Timeline__list {
-  flex-grow: 1;
-  flex-shrink: 1;
+  left: 0;
+  right: 0;
+}
+
+.Timeline--selected .Timeline__list {
+  right: var(--viewer-width);
 }
 
 .Timeline__viewer {
-  width: 275px;
-  flex-grow: 0;
-  flex-shrink: 0;
+  right: 0;
+  width: var(--viewer-width);
   padding: $aleph-grid-size;
 
   border-left: 1px solid $aleph-border-color;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
