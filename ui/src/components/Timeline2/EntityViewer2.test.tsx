@@ -1,6 +1,6 @@
 import { render, screen } from 'testUtils';
 import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
-import EntityViewer from './EntityViewer';
+import EntityViewer2 from './EntityViewer2';
 
 const model = new Model(defaultModel);
 let entity: Entity;
@@ -16,14 +16,14 @@ beforeEach(() => {
 });
 
 it('renders schema name and entity caption', () => {
-  render(<EntityViewer entity={entity} />);
+  render(<EntityViewer2 entity={entity} />);
   expect(screen.getByText('Company')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'ACME, Inc.' }));
 });
 
 it('renders a color picker', () => {
   const vertex = { entityId: '1', color: 'green' };
-  render(<EntityViewer entity={entity} vertex={vertex} />);
+  render(<EntityViewer2 entity={entity} vertex={vertex} />);
   const picker = document.querySelector(
     '.ColorPicker [style*="background-color: green"]'
   );
@@ -31,7 +31,7 @@ it('renders a color picker', () => {
 });
 
 it('renders properties', () => {
-  render(<EntityViewer entity={entity} />);
+  render(<EntityViewer2 entity={entity} />);
   expect(screen.getByText('Name')).toBeInTheDocument();
   expect(screen.getByText('Incorporation date')).toBeInTheDocument();
 });

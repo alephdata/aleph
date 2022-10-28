@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Colors } from '@blueprintjs/colors';
 import { Entity } from '@alephdata/followthemoney';
 import TimelineList from './TimelineList';
-import EntityViewer from './EntityViewer';
+import EntityViewer2 from './EntityViewer2';
 
 import './Timeline.scss';
 
@@ -61,7 +61,7 @@ const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
       </div>
       {selectedEntity && (
         <div className="Timeline__viewer">
-          <EntityViewer entity={selectedEntity} vertex={selectedVertex} />
+          <EntityViewer2 entity={selectedEntity} vertex={selectedVertex} />
         </div>
       )}
     </div>
