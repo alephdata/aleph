@@ -55,6 +55,10 @@ type Action =
 
 const reducer = (state: State, { type, payload }: Action): State => {
   if (type === 'SELECT_ENTITY') {
+    if (payload.entity.id === state.selectedId) {
+      return { ...state, selectedId: null };
+    }
+
     return { ...state, selectedId: payload.entity.id };
   }
 
