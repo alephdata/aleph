@@ -1,11 +1,39 @@
 @import 'app/variables';
 
 .TimelineListItem {
+  --background-opacity: 0.1;
+
+  position: relative;
+  overflow: hidden;
+
   display: flex;
   width: 100%;
   gap: $aleph-grid-size;
-  padding: $aleph-grid-size;
+  padding: 0.75 * $aleph-grid-size $aleph-grid-size;
+
   border-left: 4px solid var(--timeline-item-color);
+  border-radius: $pt-border-radius;
+  cursor: pointer;
+}
+
+.TimelineListItem::before {
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  background-color: var(--timeline-item-color);
+  opacity: var(--background-opacity);
+  overflow: hidden;
+}
+
+.TimelineListItem > * {
+  position: relative;
 }
 
 .TimelineListItem__date {
@@ -16,18 +44,19 @@
 }
 
 .TimelineListItem--muted {
-  opacity: 0.5;
+  opacity: 0.66;
 }
 
 .TimelineListItem:where(:hover),
 .TimelineListItem:where(:focus-within) {
-  background-color: rgba($blue5, 0.15);
+  --background-opacity: 0.15;
 }
 
 .TimelineListItem:focus-within {
-  outline: 2px solid $pt-outline-color;
+  outline: 2px solid var(--timeline-item-color);
+  outline-offset: 1px;
 }
 
 .TimelineListItem--selected {
-  background-color: rgba($blue5, 0.25);
+  --background-opacity: 0.2;
 }

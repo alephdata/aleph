@@ -7,5 +7,5 @@
 }
 
 .TimelineList > li + li {
-  border-top: 1px solid $aleph-border-color;
+  margin-top: 0.25 * $aleph-grid-size;
 }
