@@ -60,6 +60,7 @@ const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
       {selectedEntity && selectedVertex && (
         <div className="Timeline__viewer">
           <EntityViewer2
+            key={selectedEntity.id}
             entity={selectedEntity}
             vertex={selectedVertex}
             onVertexChange={(vertex: Vertex) =>
