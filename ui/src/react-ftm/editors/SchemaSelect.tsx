@@ -46,6 +46,7 @@ class SchemaSelect extends React.PureComponent<ISelectSchemaProps> {
         popoverProps={{ minimal: true, matchTargetWidth: true }}
         className="SchemaSelect"
         fill
+        scrollToActiveItem={false}
       >
         {this.props.children}
       </TypedSelect>

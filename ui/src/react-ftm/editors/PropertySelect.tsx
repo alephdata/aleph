@@ -65,6 +65,7 @@ class PropertySelect extends React.PureComponent<IPropertySelectProps> {
         resetOnSelect={true}
         onItemSelect={this.props.onSelected}
         items={properties}
+        scrollToActiveItem={false}
       >
         <Button
           icon="add"
