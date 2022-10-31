@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Classes } from '@blueprintjs/core';
 import { injectIntl, WrappedComponentProps } from 'react-intl';
 import {
   Entity,
@@ -105,7 +106,7 @@ class PropertyEditor extends React.Component<
     if (
       target &&
       !this.ref?.current?.contains(target) &&
-      !target.matches('.#{$bp-ns}-portal *, .#{$bp-ns}-overlay *')
+      !target.matches(`.${Classes.PORTAL} *, .${Classes.OVERLAY} *`)
     ) {
       e.preventDefault();
       e.stopPropagation();
