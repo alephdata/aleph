@@ -109,7 +109,7 @@
     "@types/d3-scale": "^4.0.2",
     "@types/dagre": "^0.7.47",
     "@types/google-libphonenumber": "^7.4.23",
-    "@types/lodash": "^4.14.186",
+    "@types/lodash": "^4.14.187",
     "@types/numeral": "^2.0.2"
   },
   "jest": {
