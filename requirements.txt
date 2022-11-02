@@ -27,7 +27,7 @@ jsonschema==4.16.0
 apispec==5.2.2
 apispec-webframeworks==0.5.2
 blinker==1.5
-Babel==2.10.3
+Babel==2.11.0
 PyYAML==6.0
 python-frontmatter==1.0.0
 pyjwt >= 2.0.1, < 2.6.0
