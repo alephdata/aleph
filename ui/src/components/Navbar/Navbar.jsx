@@ -20,6 +20,7 @@ import {
   selectSession,
   selectPages,
   selectEntitiesResult,
+  selectExperimentalBookmarksFeatureEnabled,
 } from 'selectors';
 import SearchAlert from 'components/SearchAlert/SearchAlert';
 import { DialogToggleButton } from 'components/Toolbar';
@@ -88,8 +89,16 @@ export class Navbar extends React.Component {
   }
 
   render() {
-    const { metadata, pages, session, query, result, isHomepage, intl } =
-      this.props;
+    const {
+      metadata,
+      pages,
+      session,
+      query,
+      result,
+      isHomepage,
+      bookmarksEnabled,
+      intl,
+    } = this.props;
     const { advancedSearchOpen, mobileSearchOpen } = this.state;
 
     const queryText = query?.getString('q');
@@ -202,7 +211,7 @@ export class Navbar extends React.Component {
                       />
                     </LinkButton>
                   )}
-                  {session.loggedIn && (
+                  {bookmarksEnabled && (
                     <DialogToggleButton
                       buttonProps={{
                         text: (
@@ -269,6 +278,7 @@ const mapStateToProps = (state, ownProps) => {
     metadata: selectMetadata(state),
     session: selectSession(state),
     pages: selectPages(state),
+    bookmarksEnabled: selectExperimentalBookmarksFeatureEnabled(state),
   };
 };
 

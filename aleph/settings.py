@@ -202,6 +202,12 @@ class Settings:
         self.XREF_MODEL = env.get("FTM_COMPARE_MODEL", None)
 
         ###############################################################################
+        # Feature flags
+        self.ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE = env.get(
+            "ALEPH_ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE", False
+        )
+
+        ###############################################################################
         # Additional configurations
         string_prefix = env.get("ALEPH_STRING_CONFIG_PREFIX")
         json_prefix = env.get("ALEPH_JSON_CONFIG_PREFIX")
