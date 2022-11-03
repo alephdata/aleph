@@ -202,19 +202,21 @@ export class Navbar extends React.Component {
                       />
                     </LinkButton>
                   )}
-                  <DialogToggleButton
-                    buttonProps={{
-                      text: (
-                        <FormattedMessage
-                          id="nav.bookmarks"
-                          defaultMessage="Bookmarks"
-                        />
-                      ),
-                      icon: 'star',
-                      minimal: true,
-                    }}
-                    Dialog={BookmarksDrawer}
-                  />
+                  {session.loggedIn && (
+                    <DialogToggleButton
+                      buttonProps={{
+                        text: (
+                          <FormattedMessage
+                            id="nav.bookmarks"
+                            defaultMessage="Bookmarks"
+                          />
+                        ),
+                        icon: 'star',
+                        minimal: true,
+                      }}
+                      Dialog={BookmarksDrawer}
+                    />
+                  )}
                   {menuPages.map((page) => (
                     <LinkButton
                       key={page.name}
