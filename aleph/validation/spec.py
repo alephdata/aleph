@@ -127,4 +127,9 @@ spec_tags = [
         "name": "System",
         "x-displayName": "System-wide API",
     },
+    {
+        "description": "Create and manage bookmarks",
+        "name": "Bookmarks",
+        "x-displayName": "Bookmarks API",
+    },
 ]
