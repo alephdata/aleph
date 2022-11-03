@@ -7,6 +7,7 @@ from elasticsearch import TransportError
 from followthemoney import model
 from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
+from banal import as_bool
 
 from aleph import __version__
 from aleph.core import url_for, cache, archive
@@ -65,6 +66,9 @@ def _metadata_locale(locale):
         "model": model.to_dict(),
         "token": None,
         "auth": auth,
+        "feature_flags": {
+            "bookmarks": as_bool(SETTINGS.ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE),
+        },
     }
 
 

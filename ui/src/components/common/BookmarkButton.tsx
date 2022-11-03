@@ -5,16 +5,16 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonProps } from '@blueprintjs/core';
 import { Entity } from '@alephdata/followthemoney';
 
-import { selectEntityBookmarked, selectSession } from 'selectors';
+import {
+  selectEntityBookmarked,
+  selectExperimentalBookmarksFeatureEnabled,
+} from 'selectors';
 import { createBookmark, deleteBookmark } from 'actions/bookmarkActions';
 
 type BookmarkButtonProps = ButtonProps & {
   bookmarked: boolean;
   entity: Entity;
-  session: {
-    loggedIn?: boolean;
-    [key: string]: unknown;
-  };
+  enabled: boolean;
   createBookmark: (entity: Entity) => Promise<any>;
   deleteBookmark: (entity: Entity) => Promise<any>;
 };
@@ -22,12 +22,12 @@ type BookmarkButtonProps = ButtonProps & {
 const BookmarkButton: FC<BookmarkButtonProps> = ({
   entity,
   bookmarked,
-  session,
+  enabled,
   createBookmark,
   deleteBookmark,
   ...props
 }) => {
-  if (!session.loggedIn) {
+  if (!enabled) {
     return null;
   }
 
@@ -53,11 +53,11 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
 const mapStateToProps = (state: any, ownProps: BookmarkButtonProps) => {
   const { entity } = ownProps;
   const bookmarked = selectEntityBookmarked(state, entity);
-  const session = selectSession(state);
+  const enabled = selectExperimentalBookmarksFeatureEnabled(state);
 
   return {
     bookmarked,
-    session,
+    enabled,
   };
 };
 
