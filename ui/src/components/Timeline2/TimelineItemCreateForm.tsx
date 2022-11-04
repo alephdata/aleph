@@ -31,6 +31,7 @@ type PropertyFieldProps = {
   property: Property;
   value?: string;
   required?: boolean;
+  placeholder?: string;
   onChange: (property: Property, value: Value) => void;
 };
 
@@ -95,6 +96,7 @@ const PropertyField: FC<PropertyFieldProps> = ({
   property,
   value,
   required,
+  placeholder,
   onChange,
 }) => (
   <FormGroup label={property.label} labelFor={property.name}>
@@ -103,6 +105,7 @@ const PropertyField: FC<PropertyFieldProps> = ({
       id={property.name}
       value={value}
       required={required}
+      placeholder={placeholder}
       onChange={(event) => onChange(property, event.target.value)}
     />
   </FormGroup>
@@ -195,6 +198,7 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
           property={property}
           value={typeof value === 'string' ? value : ''}
           onChange={onChange}
+          placeholder="YYYY-MM-DD"
         />
       ))}
     </>

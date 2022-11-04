@@ -62,12 +62,19 @@ it('renders caption field for non-edge schemata', async () => {
 it('renders temporal extent fields', async () => {
   render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
 
-  const startDate = screen.getByRole('textbox', { name: 'Start date' });
-  const endDate = screen.getByRole('textbox', { name: 'End date' });
+  const startDate = screen.getByRole('textbox', {
+    name: 'Start date',
+  }) as HTMLInputElement;
+  const endDate = screen.getByRole('textbox', {
+    name: 'End date',
+  }) as HTMLInputElement;
   const date = screen.queryByRole('textbox', { name: 'Date' });
 
   expect(startDate).toBeInTheDocument();
+  expect(startDate.placeholder).toEqual('YYYY-MM-DD');
   expect(endDate).toBeInTheDocument();
+  expect(endDate.placeholder).toEqual('YYYY-MM-DD');
+
   // Fields for `date` and `startDate` properties would be redundant
   expect(date).not.toBeInTheDocument();
 
