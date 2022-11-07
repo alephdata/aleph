@@ -3,6 +3,7 @@
 
 .InvestigationSidebar {
   width: $aleph-investigation-sidebar-width;
+  flex-shrink: 0;
   @include rtlSupportInvertedProp(
     border,
     right,
