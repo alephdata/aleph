@@ -29,7 +29,7 @@ type Layout = {
 type TimelineProps = {
   model: Model;
   entities: Array<Entity>;
-  layout: Layout;
+  layout?: Layout;
   fetchEntitySuggestions?: (
     schema: Schema,
     query: string
@@ -51,7 +51,7 @@ const Timeline: FC<TimelineProps> = ({
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     entities,
-    layout,
+    layout: layout || { vertices: [] },
     selectedId: null,
   });
 
