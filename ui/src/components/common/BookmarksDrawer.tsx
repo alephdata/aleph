@@ -8,7 +8,7 @@ import {
   useIntl,
   defineMessage,
 } from 'react-intl';
-import { Button, Drawer, DrawerSize } from '@blueprintjs/core';
+import { Button, Drawer, DrawerSize, Callout, Intent } from '@blueprintjs/core';
 
 import { selectBookmarks } from 'selectors';
 import BookmarksList from './BookmarksList';
@@ -60,7 +60,7 @@ const DownloadButton: FC<DownloadButtonProps> = ({
     <Button onClick={download} {...buttonProps}>
       <FormattedMessage
         id="bookmarks.download"
-        defaultMessage="Download your bookmarks"
+        defaultMessage="Download bookmarks"
       />
     </Button>
   );
@@ -86,19 +86,38 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
       canOutsideClickClose={true}
     >
       <div className="BookmarksDrawer__content">
+        <Callout intent={Intent.WARNING} icon={null}>
+          <p>
+            <strong>
+              <FormattedMessage
+                id="bookmarks.warning.heading"
+                defaultMessage="Bookmarks are an experimental feature."
+              />
+            </strong>
+          </p>
+          <p>
+            <FormattedMessage
+              id="bookmarks.warning.text"
+              defaultMessage="Your bookmarks don’t sync to other devices and we may remove this feature in the future. You can download your bookmarks at any time:"
+            />
+          </p>
+        </Callout>
+
         {bookmarks.length > 0 && (
-          <BookmarksList bookmarks={bookmarks} onNavigate={toggleDialog} />
+          <>
+            <DownloadButton icon="archive" fill bookmarks={bookmarks} />
+            <BookmarksList bookmarks={bookmarks} onNavigate={toggleDialog} />
+          </>
         )}
 
         {bookmarks.length <= 0 && (
-          <p>
+          <Callout intent={Intent.PRIMARY} icon={null}>
             <FormattedMessage
               id="bookmarks.empty"
-              defaultMessage="You haven’t bookmarked anything yet. Add any entity to your bookmarks to get started."
+              defaultMessage="You haven’t bookmarked anything yet. Add documents or entities such as people or companies to your bookmarks to easily get back to them later."
             />
-          </p>
+          </Callout>
         )}
-        <DownloadButton icon="archive" bookmarks={bookmarks} />
       </div>
     </Drawer>
   );

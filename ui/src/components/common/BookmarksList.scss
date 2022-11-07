@@ -7,7 +7,7 @@
 }
 
 .BookmarksList > li + li {
-  margin-top: 2 * $aleph-grid-size;
+  margin-top: $aleph-grid-size;
 }
 
 .BookmarksList__caption {
