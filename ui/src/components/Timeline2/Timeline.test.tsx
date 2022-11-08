@@ -163,3 +163,23 @@ it('allow creating new entities', async () => {
   expect(items).toHaveLength(4);
   expect(items[2]).toHaveTextContent('ACME, Inc.');
 });
+
+it('allows removing entities', async () => {
+  const entities = [event1, event2, event3];
+  const layout = { vertices: [] };
+
+  render(<Timeline model={model} entities={entities} layout={layout} />);
+
+  let items = screen.getAllByRole('listitem');
+  expect(items).toHaveLength(3);
+
+  // Remove second item
+  await userEvent.click(
+    within(items[1]).getByRole('button', { name: 'Remove' })
+  );
+
+  items = screen.getAllByRole('listitem');
+  expect(items).toHaveLength(2);
+  expect(items[0]).toHaveTextContent('Event 1');
+  expect(items[1]).toHaveTextContent('Event 3');
+});

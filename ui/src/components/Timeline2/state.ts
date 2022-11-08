@@ -47,11 +47,19 @@ type CreateEntityAction = {
   };
 };
 
+type RemoveEntityAction = {
+  type: 'REMOVE_ENTITY';
+  payload: {
+    entity: Entity;
+  };
+};
+
 type Action =
   | SelectEntityAction
   | UpdateVertexAction
   | UpdateEntityAction
-  | CreateEntityAction;
+  | CreateEntityAction
+  | RemoveEntityAction;
 
 const reducer = (state: State, { type, payload }: Action): State => {
   if (type === 'SELECT_ENTITY') {
@@ -94,6 +102,17 @@ const reducer = (state: State, { type, payload }: Action): State => {
   if (type === 'CREATE_ENTITY') {
     let newState = reducer(state, { type: 'UPDATE_ENTITY', payload });
     return reducer(newState, { type: 'SELECT_ENTITY', payload });
+  }
+
+  if (type === 'REMOVE_ENTITY') {
+    const entities = state.entities.filter(
+      (entity) => entity.id !== payload.entity.id
+    );
+
+    const selectedId =
+      state.selectedId === payload.entity.id ? null : state.selectedId;
+
+    return { ...state, selectedId, entities };
   }
 
   throw new Error('Invalid action type.');
