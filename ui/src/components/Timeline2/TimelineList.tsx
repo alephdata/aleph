@@ -20,6 +20,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
   entities,
   layout,
   onSelect,
+  onRemove,
   selectedId,
 }) => {
   return (
@@ -32,6 +33,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
             selected={entity.id === selectedId}
             color={getColor(layout, entity)}
             onSelect={onSelect}
+            onRemove={onRemove}
           />
         </li>
       ))}

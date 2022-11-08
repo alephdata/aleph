@@ -41,6 +41,7 @@ type TimelineRendererProps = {
   layout: Layout;
   selectedId?: string | null;
   onSelect: (entity: Entity) => void;
+  onRemove: (entity: Entity) => void;
 };
 
 const Timeline: FC<TimelineProps> = ({
@@ -89,6 +90,9 @@ const Timeline: FC<TimelineProps> = ({
           layout={state.layout}
           onSelect={(entity: Entity) =>
             dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
+          }
+          onRemove={(entity: Entity) =>
+            dispatch({ type: 'REMOVE_ENTITY', payload: { entity } })
           }
           selectedId={selectedEntity && selectedEntity.id}
         />

@@ -128,3 +128,20 @@ describe('CREATE_ENTITY', () => {
     expect(newState.selectedId).toEqual('abc');
   });
 });
+
+describe('REMOVE_ENTITY', () => {
+  it('removes entity', () => {
+    state.selectedId = '123';
+
+    expect(state.entities).toHaveLength(1);
+    expect(state.selectedId).toEqual('123');
+
+    const newState = reducer(state, {
+      type: 'REMOVE_ENTITY',
+      payload: { entity },
+    });
+
+    expect(newState.entities).toHaveLength(0);
+    expect(newState.selectedId).toBeNull();
+  });
+});

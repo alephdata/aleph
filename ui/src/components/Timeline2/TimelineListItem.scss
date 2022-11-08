@@ -7,6 +7,7 @@
   overflow: hidden;
 
   display: flex;
+  align-items: center;
   width: 100%;
   gap: $aleph-grid-size;
   padding: 0.75 * $aleph-grid-size $aleph-grid-size;
@@ -43,6 +44,11 @@
   color: $aleph-greyed-text;
 }
 
+.TimelineListItem__actions {
+  margin-left: auto;
+  opacity: 0;
+}
+
 .TimelineListItem--muted {
   opacity: 0.66;
 }
@@ -50,6 +56,15 @@
 .TimelineListItem:where(:hover),
 .TimelineListItem:where(:focus-within) {
   --background-opacity: 0.15;
+}
+
+.TimelineListItem:where(:hover) .TimelineListItem__actions,
+.TimelineListItem:where(:focus-within) .TimelineListItem__actions {
+  opacity: 0.75;
+}
+
+.TimelineListItem__actions:hover {
+  opacity: 1;
 }
 
 .TimelineListItem:focus-within {

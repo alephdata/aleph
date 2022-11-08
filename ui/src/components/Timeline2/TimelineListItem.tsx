@@ -1,4 +1,5 @@
 import { CSSProperties, FC, MouseEvent } from 'react';
+import { Button, Icon, IconSize } from '@blueprintjs/core';
 import c from 'classnames';
 import { Entity } from '@alephdata/followthemoney';
 import TimelineItemCaption from './TimelineItemCaption';
@@ -11,6 +12,7 @@ type Props = {
   selected?: boolean;
   muted?: boolean;
   onSelect?: (entity: Entity) => void;
+  onRemove?: (entity: Entity) => void;
 };
 
 const TimelineListItem: FC<Props> = ({
@@ -19,6 +21,7 @@ const TimelineListItem: FC<Props> = ({
   selected,
   muted,
   onSelect,
+  onRemove,
 }) => {
   const style: CSSProperties = {
     ['--timeline-item-color' as string]: color,
@@ -27,14 +30,19 @@ const TimelineListItem: FC<Props> = ({
   const start = entity.getTemporalStart()?.value;
   const end = entity.getTemporalEnd()?.value;
 
-  const clickHandler = (event: MouseEvent<HTMLElement>) => {
+  const onEntitySelect = (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     onSelect && onSelect(entity);
   };
 
+  const onEntityRemove = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    onRemove && onRemove(entity);
+  };
+
   return (
     <div
-      onClick={clickHandler}
+      onClick={onEntitySelect}
       style={style}
       className={c(
         'TimelineListItem',
@@ -49,9 +57,15 @@ const TimelineListItem: FC<Props> = ({
       <strong className="TimelineListItem__caption">
         <TimelineItemCaption entity={entity} />
       </strong>
-      <button className="visually-hidden" onClick={clickHandler}>
-        Edit
-      </button>
+      <div className="TimelineListItem__actions">
+        <div className="visually-hidden">
+          <button onClick={onEntitySelect}>Edit</button>
+        </div>
+        <Button minimal small onClick={onEntityRemove}>
+          <Icon icon="trash" size={IconSize.STANDARD} />
+          <span className="visually-hidden">Remove</span>
+        </Button>
+      </div>
     </div>
   );
 };
