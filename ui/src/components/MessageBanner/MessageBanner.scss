@@ -2,6 +2,7 @@
 
 .MessageBanner__callout.MessageBanner__callout {
   display: flex;
+  gap: $aleph-grid-size;
   align-items: center;
   padding: 0.5 * $aleph-content-padding $aleph-content-padding;
 }
@@ -25,4 +26,8 @@
 
 .MessageBanner__meta::before {
   content: ' — ';
+}
+
+.MessageBanner__actions {
+  flex-shrink: 0;
 }
