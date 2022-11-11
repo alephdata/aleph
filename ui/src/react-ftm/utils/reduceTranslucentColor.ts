@@ -24,15 +24,12 @@ function rgbToHex(rgb: RgbColor): string {
 
 // Calculate the HEX representation for a color as if
 // it was rendered on a white background
-export function reduceTranslucentColor(
-  hex: string,
-  opacity: number
-): null | string {
+export function reduceTranslucentColor(hex: string, opacity: number) {
   const color = hexToRgb(hex);
   const white = { r: 255, g: 255, b: 255 };
 
   if (!color) {
-    return null;
+    return undefined;
   }
 
   const reducedRgb = {
