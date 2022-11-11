@@ -55,7 +55,7 @@ function MessageBanner({ message, onDismiss }) {
           )}
         </p>
         {dismissible && (
-          <div class="MessageBanner__actions">
+          <div className="MessageBanner__actions">
             <Button
               minimal
               rightIcon="cross"
