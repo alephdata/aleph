@@ -84,7 +84,8 @@
     "extends": "react-app",
     "rules": {
       "no-console": "error",
-      "no-debugger": "error"
+      "no-debugger": "error",
+      "react/no-unknown-property": "error"
     }
   },
   "jest": {
