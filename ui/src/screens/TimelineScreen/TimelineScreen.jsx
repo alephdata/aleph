@@ -3,13 +3,15 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import withRouter from 'app/withRouter';
-import { fetchEntitySet, queryEntities } from 'actions';
-import { selectModel, selectEntitySet, selectEntitiesResult } from 'selectors';
 import {
-  entitiesQuery,
-  entitySetEntitiesQuery,
-  entitySuggestQuery,
-} from 'queries';
+  fetchEntitySet,
+  queryEntities,
+  entitySetAddEntity,
+  updateEntitySet,
+  updateEntitySetItemMutate,
+} from 'actions';
+import { selectModel, selectEntitySet, selectEntitiesResult } from 'selectors';
+import { entitySetEntitiesQuery, entitySuggestQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
@@ -30,6 +32,9 @@ export class TimelineScreen extends Component {
 
     this.onStatusChange = this.onStatusChange.bind(this);
     this.fetchEntitySuggestions = this.fetchEntitySuggestions.bind(this);
+    this.onEntityCreateOrUpdate = this.onEntityCreateOrUpdate.bind(this);
+    this.onEntityRemove = this.onEntityRemove.bind(this);
+    this.onLayoutUpdate = this.onLayoutUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -93,6 +98,42 @@ export class TimelineScreen extends Component {
     this.setState({ updateStatus });
   }
 
+  onEntityCreateOrUpdate(entity, layout) {
+    const { entitySetId, entitySetAddEntity } = this.props;
+
+    return entitySetAddEntity({
+      entitySetId,
+      entity,
+      sync: true,
+    });
+  }
+
+  onEntityRemove(entity) {
+    const { entitySetId, updateEntitySetItemMutate } = this.props;
+    return updateEntitySetItemMutate({
+      entitySetId,
+      entityId: entity.id,
+      // The API to remove an entity from an entity set (without deleting
+      // the entity itself) is weird because entity sets are (or have been)
+      // also used to model entity profiles. Setting `no_judgement` will de
+      // facto remove the entity from the entity set.
+      judgement: 'no_judgement',
+    });
+  }
+
+  onLayoutUpdate(layout) {
+    const { entitySetId, updateEntitySet } = this.props;
+
+    const entitySet = {
+      layout: {
+        edges: [],
+        ...layout,
+      },
+    };
+
+    return updateEntitySet(entitySetId, entitySet);
+  }
+
   render() {
     const { model, timeline, entities } = this.props;
     const { updateStatus } = this.state;
@@ -129,12 +170,15 @@ export class TimelineScreen extends Component {
       <Screen title={timeline.label} description={timeline.summary || ''}>
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
-          {!entities.isPending && !entities.isError && (
+          {entities.results?.length > 0 && (
             <Timeline
               model={model}
               entities={entities.results}
               layout={timeline.layout}
               fetchEntitySuggestions={this.fetchEntitySuggestions}
+              onEntityCreateOrUpdate={this.onEntityCreateOrUpdate}
+              onEntityRemove={this.onEntityRemove}
+              onLayoutUpdate={this.onLayoutUpdate}
             />
           )}
         </CollectionWrapper>
@@ -165,5 +209,11 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { fetchEntitySet, queryEntities })
+  connect(mapStateToProps, {
+    fetchEntitySet,
+    queryEntities,
+    entitySetAddEntity,
+    updateEntitySet,
+    updateEntitySetItemMutate,
+  })
 )(TimelineScreen);

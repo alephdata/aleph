@@ -1,4 +1,4 @@
-import { FC, useReducer, useState } from 'react';
+import { FC, useReducer, useState, useEffect } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
@@ -34,6 +34,9 @@ type TimelineProps = {
     schema: Schema,
     query: string
   ) => Promise<Array<Entity>>;
+  onEntityCreateOrUpdate?: (entity: Entity) => Promise<unknown>;
+  onEntityRemove?: (entity: Entity) => Promise<unknown>;
+  onLayoutUpdate?: (layout: Layout) => Promise<unknown>;
 };
 
 type TimelineRendererProps = {
@@ -49,6 +52,9 @@ const Timeline: FC<TimelineProps> = ({
   entities,
   layout,
   fetchEntitySuggestions,
+  onEntityCreateOrUpdate,
+  onEntityRemove,
+  onLayoutUpdate,
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     entities,
@@ -63,6 +69,10 @@ const Timeline: FC<TimelineProps> = ({
   const selectedVertex = selectSelectedVertex(state);
   const sortedEntities = selectSortedEntities(state);
 
+  useEffect(() => {
+    onLayoutUpdate && onLayoutUpdate(state.layout);
+  }, [state.layout]);
+
   return (
     <div className={c('Timeline', selectedEntity && 'Timeline--selected')}>
       <div className="Timeline__main">
@@ -71,7 +81,8 @@ const Timeline: FC<TimelineProps> = ({
             model={model}
             isOpen={createDialogOpen}
             onClose={toggleCreateDialog}
-            onCreate={(entity) => {
+            onCreate={async (entity) => {
+              onEntityCreateOrUpdate && (await onEntityCreateOrUpdate(entity));
               dispatch({ type: 'CREATE_ENTITY', payload: { entity } });
               toggleCreateDialog();
             }}
@@ -91,9 +102,10 @@ const Timeline: FC<TimelineProps> = ({
           onSelect={(entity: Entity) =>
             dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
           }
-          onRemove={(entity: Entity) =>
-            dispatch({ type: 'REMOVE_ENTITY', payload: { entity } })
-          }
+          onRemove={(entity: Entity) => {
+            dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
+            onEntityRemove && onEntityRemove(entity);
+          }}
           selectedId={selectedEntity && selectedEntity.id}
         />
       </div>
@@ -103,12 +115,13 @@ const Timeline: FC<TimelineProps> = ({
             key={selectedEntity.id}
             entity={selectedEntity}
             vertex={selectedVertex}
-            onVertexChange={(vertex: Vertex) =>
-              dispatch({ type: 'UPDATE_VERTEX', payload: { vertex } })
-            }
-            onEntityChange={(entity: Entity) =>
-              dispatch({ type: 'UPDATE_ENTITY', payload: { entity } })
-            }
+            onVertexChange={(vertex: Vertex) => {
+              dispatch({ type: 'UPDATE_VERTEX', payload: { vertex } });
+            }}
+            onEntityChange={(entity: Entity) => {
+              dispatch({ type: 'UPDATE_ENTITY', payload: { entity } });
+              onEntityCreateOrUpdate && onEntityCreateOrUpdate(entity);
+            }}
           />
         </div>
       )}
