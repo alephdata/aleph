@@ -44,12 +44,12 @@ const messages = defineMessages({
 type ColorName = 'blue' | 'green' | 'orange' | 'red' | 'violet' | 'turquoise';
 
 const colorOptions = new Map<ColorName, string>([
-  ['blue', Colors.BLUE1],
-  ['green', Colors.GREEN1],
-  ['orange', Colors.ORANGE1],
-  ['red', Colors.RED1],
-  ['violet', Colors.VIOLET1],
-  ['turquoise', Colors.TURQUOISE1],
+  ['blue', Colors.BLUE2],
+  ['green', Colors.GREEN2],
+  ['orange', Colors.ORANGE2],
+  ['red', Colors.RED2],
+  ['violet', Colors.VIOLET2],
+  ['turquoise', Colors.TURQUOISE2],
 ]);
 
 interface IColorPickerProps extends WrappedComponentProps {
