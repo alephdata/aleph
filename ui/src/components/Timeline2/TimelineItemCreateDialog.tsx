@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Button, Dialog, Intent, Classes } from '@blueprintjs/core';
 import { Model, Schema, Entity } from '@alephdata/followthemoney';
 import TimelineItemCreateForm from './TimelineItemCreateForm';
@@ -19,6 +19,13 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
   onCreate,
   fetchEntitySuggestions,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Reset the loading state when the dialog is closed
+  useEffect(() => {
+    !isOpen && setIsSubmitting(false);
+  }, [isOpen]);
+
   return (
     <Dialog
       title="Add new item to timeline"
@@ -30,7 +37,10 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
         <TimelineItemCreateForm
           id="timeline-item-create-form"
           model={model}
-          onSubmit={onCreate}
+          onSubmit={(entity) => {
+            setIsSubmitting(true);
+            onCreate(entity);
+          }}
           fetchEntitySuggestions={fetchEntitySuggestions}
         />
       </div>
@@ -41,6 +51,7 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
             text="Add"
             form="timeline-item-create-form"
             intent={Intent.PRIMARY}
+            loading={isSubmitting}
           />
         </div>
       </div>
