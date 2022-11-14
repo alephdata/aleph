@@ -17,7 +17,7 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::$(cat helm/charts/aleph/Chart.yaml | grep version | awk '{print $2}')
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
