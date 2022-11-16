@@ -41,10 +41,10 @@ Overview
 The basic process for releasing Aleph is this:
 
 1. Check internal libraries for updates and merge. Release our libraries in the following order
-1. servicelayer
-2. followthemoney
-3. ingest-file
-4. react-ftm
+  1. servicelayer
+  2. followthemoney
+  3. ingest-file
+  4. react-ftm
 2. Ensure that all libraries for a release are up to date in aleph and merged to the develop branch.
 3. Ensure that any features, bugfixes are merged into develop and that all builds are passing
 4. Ensure that the CHANGELOG.md file is up to date on the develop branch. Add information as required.

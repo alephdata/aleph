@@ -1,0 +1,9 @@
+@import 'app/variables.scss';
+
+.BookmarksDrawer__content {
+  padding: 2 * $aleph-grid-size;
+}
+
+.BookmarksDrawer__content > * + * {
+  margin-top: 2 * $aleph-grid-size;
+}

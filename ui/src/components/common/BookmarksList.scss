@@ -1,0 +1,28 @@
+@import 'app/variables.scss';
+
+.BookmarksList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.BookmarksList > li + li {
+  margin-top: $aleph-grid-size;
+}
+
+.BookmarksList__caption {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.BookmarksList__caption:hover {
+  text-decoration: underline;
+}
+
+.BookmarksList__meta {
+  color: $aleph-greyed-text;
+}

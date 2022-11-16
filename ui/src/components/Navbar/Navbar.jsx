@@ -20,9 +20,16 @@ import {
   selectSession,
   selectPages,
   selectEntitiesResult,
+  selectExperimentalBookmarksFeatureEnabled,
 } from 'selectors';
 import SearchAlert from 'components/SearchAlert/SearchAlert';
-import { HotkeysContainer, SearchBox, LinkButton } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
+import {
+  HotkeysContainer,
+  SearchBox,
+  LinkButton,
+  BookmarksDrawer,
+} from 'components/common';
 import getPageLink from 'util/getPageLink';
 import { entitiesQuery } from 'queries';
 
@@ -82,8 +89,16 @@ export class Navbar extends React.Component {
   }
 
   render() {
-    const { metadata, pages, session, query, result, isHomepage, intl } =
-      this.props;
+    const {
+      metadata,
+      pages,
+      session,
+      query,
+      result,
+      isHomepage,
+      bookmarksEnabled,
+      intl,
+    } = this.props;
     const { advancedSearchOpen, mobileSearchOpen } = this.state;
 
     const queryText = query?.getString('q');
@@ -196,6 +211,21 @@ export class Navbar extends React.Component {
                       />
                     </LinkButton>
                   )}
+                  {bookmarksEnabled && (
+                    <DialogToggleButton
+                      buttonProps={{
+                        text: (
+                          <FormattedMessage
+                            id="nav.bookmarks"
+                            defaultMessage="Bookmarks"
+                          />
+                        ),
+                        icon: 'star',
+                        minimal: true,
+                      }}
+                      Dialog={BookmarksDrawer}
+                    />
+                  )}
                   {menuPages.map((page) => (
                     <LinkButton
                       key={page.name}
@@ -248,6 +278,7 @@ const mapStateToProps = (state, ownProps) => {
     metadata: selectMetadata(state),
     session: selectSession(state),
     pages: selectPages(state),
+    bookmarksEnabled: selectExperimentalBookmarksFeatureEnabled(state),
   };
 };
 

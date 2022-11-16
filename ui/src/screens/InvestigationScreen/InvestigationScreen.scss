@@ -4,5 +4,6 @@
   &__body.ContentPane {
     flex: 1;
     padding: 0 !important;
+    overflow-x: hidden;
   }
 }
