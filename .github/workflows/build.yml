@@ -4,6 +4,7 @@ on:
   push:
     paths-ignore:
       - "ui/**"
+      - "docs/**"
 
 permissions:
   packages: write

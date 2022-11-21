@@ -8,6 +8,7 @@ on:
       - "helm/**"
       - "mappings/**"
       - "site/**"
+      - "docs/**"
 
 permissions:
   packages: write
