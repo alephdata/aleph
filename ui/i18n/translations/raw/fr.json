@@ -887,6 +887,9 @@
   "entityset.info.export": {
     "defaultMessage": "Export"
   },
+  "entityset.info.exportAsSvg": {
+    "defaultMessage": "Exporter au format SVG"
+  },
   "entityset.selector.placeholder": {
     "defaultMessage": "Rechercher"
   },
@@ -1397,8 +1400,14 @@
   "mappings.no_mappings": {
     "defaultMessage": "Vous n’avez pas encore généré de cartographie"
   },
+  "messages.banner.dismiss": {
+    "defaultMessage": "Dismiss"
+  },
   "nav.alerts": {
     "defaultMessage": "Alertes"
+  },
+  "nav.bookmarks": {
+    "defaultMessage": "Bookmarks"
   },
   "nav.cases": {
     "defaultMessage": "Enquêtes"
@@ -2005,230 +2014,5 @@
   },
   "xref.sort.random": {
     "defaultMessage": "Aléatoire"
-  },
-  "dialog.edge_create.source_label": {
-    "defaultMessage": "Source"
-  },
-  "dialog.edge_create.submit": {
-    "defaultMessage": "Créer"
-  },
-  "dialog.edge_create.target_label": {
-    "defaultMessage": "Cible"
-  },
-  "dialog.edge_create.title": {
-    "defaultMessage": "Ajouter un lien"
-  },
-  "dialog.edge_create.type_label": {
-    "defaultMessage": "Type"
-  },
-  "dialog.edge_create.type_placeholder": {
-    "defaultMessage": "Sélectionner un type"
-  },
-  "dialog.grouping_create.placeholder": {
-    "defaultMessage": "Sélectionner une étiquette pour le regroupement"
-  },
-  "dialog.grouping_create.title": {
-    "defaultMessage": "Regrouper les éléments"
-  },
-  "dialog.settings.pivot_types.help_text": {
-    "defaultMessage": "Les types de propriétés sélectionnés ci-dessus seront utilisés pour tirer des connexions entre les nœuds en cas de partage de valeurs"
-  },
-  "dialog.settings.pivot_types.label": {
-    "defaultMessage": "Connecter des valeurs partagées"
-  },
-  "dialog.settings.submit": {
-    "defaultMessage": "Enregistrer les changements"
-  },
-  "dialog.settings.title": {
-    "defaultMessage": "Paramètres"
-  },
-  "dialog.vertex_create.no_suggestions": {
-    "defaultMessage": "Aucune suggestion trouvée"
-  },
-  "dialog.vertex_create.title": {
-    "defaultMessage": "Ajouter une entité"
-  },
-  "dialog.vertex_create.type_placeholder": {
-    "defaultMessage": "Choisir un type"
-  },
-  "editor.color_picker.blue": {
-    "defaultMessage": "Blue"
-  },
-  "editor.color_picker.custom": {
-    "defaultMessage": "Custom"
-  },
-  "editor.color_picker.green": {
-    "defaultMessage": "Green"
-  },
-  "editor.color_picker.orange": {
-    "defaultMessage": "Orange"
-  },
-  "editor.color_picker.red": {
-    "defaultMessage": "Red"
-  },
-  "editor.color_picker.turquoise": {
-    "defaultMessage": "Turquoise"
-  },
-  "editor.color_picker.violet": {
-    "defaultMessage": "Violet"
-  },
-  "editor.entity.create_entity": {
-    "defaultMessage": "Créer une nouvelle entité"
-  },
-  "editor.entity.no_results": {
-    "defaultMessage": "Aucune entité existante trouvée"
-  },
-  "editor.entity.placeholder": {
-    "defaultMessage": "Sélectionner une entité"
-  },
-  "editor.property_add": {
-    "defaultMessage": "Ajouter une propriété"
-  },
-  "editor.validation.country_invalid": {
-    "defaultMessage": "Pays non valable"
-  },
-  "editor.validation.date_invalid": {
-    "defaultMessage": "Format de date : aaaa-m-j"
-  },
-  "editor.validation.phone_invalid": {
-    "defaultMessage": "Numéro de téléphone non valable : essayez d’ajouter un indicatif international, le cas échéant"
-  },
-  "editor.validation.required": {
-    "defaultMessage": "Cette propriété est requise"
-  },
-  "editor.validation.topic_invalid": {
-    "defaultMessage": "Sujet non valable"
-  },
-  "editor.validation.url_invalid": {
-    "defaultMessage": "Format URL non valable"
-  },
-  "enum_value_select.no_results": {
-    "defaultMessage": "Aucun résultat trouvé"
-  },
-  "grouping.label": {
-    "defaultMessage": "Groupe"
-  },
-  "property.inverse": {
-    "defaultMessage": "'{label}' de …"
-  },
-  "property.values.truncate_hide": {
-    "defaultMessage": "- Montrer moins"
-  },
-  "property.values.truncate_show": {
-    "defaultMessage": "+{truncateCount} Plus"
-  },
-  "search.results_text.multiple": {
-    "defaultMessage": "{count} résultats trouvés"
-  },
-  "search.results_text.none": {
-    "defaultMessage": "Aucun résultat trouvé"
-  },
-  "search.results_text.one": {
-    "defaultMessage": "1 résultat trouvé"
-  },
-  "sidebar.default.multiple": {
-    "defaultMessage": "{count} entités"
-  },
-  "sidebar.edit.hide": {
-    "defaultMessage": "Masquer"
-  },
-  "sidebar.edit.show": {
-    "defaultMessage": "Modifier tout"
-  },
-  "sidebar.selected.multiple": {
-    "defaultMessage": "{count} sélectionnés"
-  },
-  "table_editor.add_row": {
-    "defaultMessage": "Ajouter une nouvelle ligne à {schema}"
-  },
-  "table_editor.add_schema": {
-    "defaultMessage": "Ajouter un type d’entité"
-  },
-  "table_editor.remove_row": {
-    "defaultMessage": "Retirer une nouvelle ligne à {schema}"
-  },
-  "toasts.expand_none": {
-    "defaultMessage": "Tous les résultats d’expansion sont déjà présents dans le diagramme"
-  },
-  "toasts.expand_success": {
-    "defaultMessage": "Ajout réussi de nouveaux {vertices} \n{vertices, plural, one {node} other {nodes}} \net nouveaux {edges} \n{edges, plural, one {link} other {links}} \nau diagramme"
-  },
-  "tooltip.add_edges": {
-    "defaultMessage": "Ajouter un lien"
-  },
-  "tooltip.add_entities": {
-    "defaultMessage": "Ajouter des entités"
-  },
-  "tooltip.delete": {
-    "defaultMessage": "Supprimer la sélection"
-  },
-  "tooltip.expand": {
-    "defaultMessage": "Découvrir les liens"
-  },
-  "tooltip.export_svg": {
-    "defaultMessage": "Exporter au format SVG"
-  },
-  "tooltip.group": {
-    "defaultMessage": "Regrouper la sélection"
-  },
-  "tooltip.layout_auto": {
-    "defaultMessage": "Disposition automatique"
-  },
-  "tooltip.layout_center": {
-    "defaultMessage": "Centrer"
-  },
-  "tooltip.layout_circle": {
-    "defaultMessage": "Disposer en cercle"
-  },
-  "tooltip.layout_hierarchy": {
-    "defaultMessage": "Disposer hiérarchiquement"
-  },
-  "tooltip.layout_horizontal": {
-    "defaultMessage": "Aligner horizontalement"
-  },
-  "tooltip.layout_vertical": {
-    "defaultMessage": "Aligner verticalement"
-  },
-  "tooltip.layouts": {
-    "defaultMessage": "Dispositions"
-  },
-  "tooltip.pan_mode": {
-    "defaultMessage": "Activer le mode déplacement"
-  },
-  "tooltip.redo": {
-    "defaultMessage": "Répéter"
-  },
-  "tooltip.select_mode": {
-    "defaultMessage": "Activer le mode sélection"
-  },
-  "tooltip.settings": {
-    "defaultMessage": "Paramètres"
-  },
-  "tooltip.sidebar_view": {
-    "defaultMessage": "Afficher le panneau latéral"
-  },
-  "tooltip.table_view": {
-    "defaultMessage": "Afficher le tableau"
-  },
-  "tooltip.undo": {
-    "defaultMessage": "Annuler"
-  },
-  "tooltip.ungroup": {
-    "defaultMessage": "Dissocier la sélection"
-  },
-  "tooltips.fit_to_selection": {
-    "defaultMessage": "Déplacer l’affichage vers la sélection"
-  },
-  "vertex_menu.add_link": {
-    "defaultMessage": "Ajouter un lien"
-  },
-  "vertex_menu.expand": {
-    "defaultMessage": "Découvrir {property}"
-  },
-  "vertex_menu.expand_all": {
-    "defaultMessage": "tous les liens"
-  },
-  "vertex_menu.expand_none": {
-    "defaultMessage": "Aucun lien additionnel trouvé"
   }
 }

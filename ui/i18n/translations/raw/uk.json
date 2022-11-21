@@ -887,6 +887,9 @@
   "entityset.info.export": {
     "defaultMessage": "Export"
   },
+  "entityset.info.exportAsSvg": {
+    "defaultMessage": "Export as SVG"
+  },
   "entityset.selector.placeholder": {
     "defaultMessage": "Search existing"
   },
@@ -1397,8 +1400,14 @@
   "mappings.no_mappings": {
     "defaultMessage": "You have not generated any mappings yet"
   },
+  "messages.banner.dismiss": {
+    "defaultMessage": "Dismiss"
+  },
   "nav.alerts": {
     "defaultMessage": "Alerts"
+  },
+  "nav.bookmarks": {
+    "defaultMessage": "Bookmarks"
   },
   "nav.cases": {
     "defaultMessage": "Investigations"
