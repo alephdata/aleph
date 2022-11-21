@@ -55,7 +55,7 @@ $notification-items-padding: 1px;
     vertical-align: inherit;
   }
 
-  span.bp3-skeleton {
+  span.#{$bp-ns}-skeleton {
     white-space: nowrap;
   }
 }

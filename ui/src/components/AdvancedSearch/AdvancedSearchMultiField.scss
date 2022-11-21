@@ -5,22 +5,22 @@
     margin-bottom: $aleph-grid-size;
 
     &__item {
-      margin: $aleph-grid-size/2 $aleph-grid-size $aleph-grid-size/2 0;
+      margin: $aleph-grid-size * 0.5 $aleph-grid-size $aleph-grid-size * 0.5 0;
     }
   }
 
   &__form {
     border: 1px solid $aleph-border-color;
-    border-radius: $aleph-grid-size/2;
+    border-radius: $aleph-grid-size * 0.5;
     padding: 8px;
     margin-top: $aleph-grid-size;
 
-    .bp3-form-group {
+    .#{$bp-ns}-form-group {
       margin-bottom: 0;
       align-self: flex-end;
     }
 
-    .bp3-button {
+    .#{$bp-ns}-button {
       width: $aleph-grid-size !important;
       max-width: $aleph-grid-size !important;
       flex-basis: $aleph-grid-size !important;
@@ -36,15 +36,20 @@
     margin-top: $aleph-grid-size;
   }
 
-  .bp3-slider {
+  .#{$bp-ns}-slider {
     height: $aleph-grid-size * 3;
   }
 
-  .bp3-slider-label {
+  .#{$bp-ns}-slider-label {
     font-size: 10px;
   }
 
-  .bp3-collapse-body {
+  .#{$bp-ns}-collapse-body {
     padding-bottom: $aleph-grid-size;
+  }
+
+  &__helptext {
+    // Prevents the element from becoming scrollable and thus tabbable when it's collapsed.
+    overflow-x: hidden;
   }
 }

@@ -2,7 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
+import {
+  Alignment,
+  Button,
+  Classes,
+  Navbar as BpNavbar,
+} from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import c from 'classnames';
@@ -15,9 +20,16 @@ import {
   selectSession,
   selectPages,
   selectEntitiesResult,
+  selectExperimentalBookmarksFeatureEnabled,
 } from 'selectors';
 import SearchAlert from 'components/SearchAlert/SearchAlert';
-import { HotkeysContainer, SearchBox, LinkButton } from 'components/common';
+import { DialogToggleButton } from 'components/Toolbar';
+import {
+  HotkeysContainer,
+  SearchBox,
+  LinkButton,
+  BookmarksDrawer,
+} from 'components/common';
 import getPageLink from 'util/getPageLink';
 import { entitiesQuery } from 'queries';
 
@@ -77,8 +89,16 @@ export class Navbar extends React.Component {
   }
 
   render() {
-    const { metadata, pages, session, query, result, isHomepage, intl } =
-      this.props;
+    const {
+      metadata,
+      pages,
+      session,
+      query,
+      result,
+      isHomepage,
+      bookmarksEnabled,
+      intl,
+    } = this.props;
     const { advancedSearchOpen, mobileSearchOpen } = this.state;
 
     const queryText = query?.getString('q');
@@ -88,8 +108,8 @@ export class Navbar extends React.Component {
     return (
       <>
         <div className="Navbar" ref={this.navbarRef}>
-          <Bp3Navbar id="Navbar" className="bp3-dark">
-            <Bp3Navbar.Group
+          <BpNavbar id="Navbar" className={Classes.DARK}>
+            <BpNavbar.Group
               align={Alignment.LEFT}
               className={c('Navbar__left-group', { hide: mobileSearchOpen })}
             >
@@ -103,8 +123,8 @@ export class Navbar extends React.Component {
                   </span>
                 )}
               </Link>
-            </Bp3Navbar.Group>
-            <Bp3Navbar.Group
+            </BpNavbar.Group>
+            <BpNavbar.Group
               align={Alignment.CENTER}
               className={c('Navbar__middle-group', {
                 'mobile-force-open': mobileSearchOpen,
@@ -125,7 +145,10 @@ export class Navbar extends React.Component {
                       />
                     </div>
                     <Button
-                      className="Navbar__search-container__search-tips bp3-fixed"
+                      className={c(
+                        'Navbar__search-container__search-tips',
+                        Classes.FIXED
+                      )}
                       icon="settings"
                       minimal
                       onClick={this.onToggleAdvancedSearch}
@@ -133,8 +156,8 @@ export class Navbar extends React.Component {
                   </div>
                 </div>
               )}
-            </Bp3Navbar.Group>
-            <Bp3Navbar.Group
+            </BpNavbar.Group>
+            <BpNavbar.Group
               align={Alignment.RIGHT}
               className="Navbar__right-group"
               id="navbarSupportedContent"
@@ -145,20 +168,20 @@ export class Navbar extends React.Component {
                     {!mobileSearchOpen && (
                       <Button
                         icon="search"
-                        className="bp3-minimal"
+                        minimal
                         onClick={this.onToggleMobileSearch}
                       />
                     )}
                     {mobileSearchOpen && (
                       <Button
                         icon="cross"
-                        className="bp3-minimal"
+                        minimal
                         onClick={this.onToggleMobileSearch}
                       />
                     )}
                   </div>
                   {!mobileSearchOpen && (
-                    <Bp3Navbar.Divider className="Navbar__mobile-search-divider" />
+                    <BpNavbar.Divider className="Navbar__mobile-search-divider" />
                   )}
                 </>
               )}
@@ -188,6 +211,21 @@ export class Navbar extends React.Component {
                       />
                     </LinkButton>
                   )}
+                  {bookmarksEnabled && (
+                    <DialogToggleButton
+                      buttonProps={{
+                        text: (
+                          <FormattedMessage
+                            id="nav.bookmarks"
+                            defaultMessage="Bookmarks"
+                          />
+                        ),
+                        icon: 'star',
+                        minimal: true,
+                      }}
+                      Dialog={BookmarksDrawer}
+                    />
+                  )}
                   {menuPages.map((page) => (
                     <LinkButton
                       key={page.name}
@@ -201,14 +239,14 @@ export class Navbar extends React.Component {
                   ))}
                 </>
               )}
-              <Bp3Navbar.Divider
+              <BpNavbar.Divider
                 className={c({ 'mobile-hidden': mobileSearchOpen })}
               />
               <div className={c({ 'mobile-hidden': mobileSearchOpen })}>
                 <AuthButtons className={c({ hide: mobileSearchOpen })} />
               </div>
-            </Bp3Navbar.Group>
-          </Bp3Navbar>
+            </BpNavbar.Group>
+          </BpNavbar>
         </div>
         <AdvancedSearch
           isOpen={advancedSearchOpen}
@@ -240,6 +278,7 @@ const mapStateToProps = (state, ownProps) => {
     metadata: selectMetadata(state),
     session: selectSession(state),
     pages: selectPages(state),
+    bookmarksEnabled: selectExperimentalBookmarksFeatureEnabled(state),
   };
 };
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Tag as Bp3Tag } from '@blueprintjs/core';
+import { Classes, Tag as BpTag } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl } from 'react-intl';
 
@@ -38,17 +38,17 @@ class MentionLink extends Component {
         hoverOpenDelay={100}
       >
         <Link to={href} className="Mention">
-          <Bp3Tag
+          <BpTag
             minimal
             interactive
             multiline
             icon={<Tag.Icon field={prop.type.group} />}
-            rightIcon={<Count count={count} class="bp3-tag-remove" />}
+            rightIcon={<Count count={count} class={Classes.TAG_REMOVE} />}
           >
             <span className="Mention__text">
               <Property.Value {...this.props} translitLookup={null} />
             </span>
-          </Bp3Tag>
+          </BpTag>
         </Link>
       </Tooltip>
     );

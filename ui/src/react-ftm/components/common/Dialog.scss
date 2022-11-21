@@ -1,0 +1,35 @@
+@import 'app/variables.scss';
+
+.Dialog {
+  padding-bottom: 0 !important;
+
+  &.large {
+    width: 800px;
+  }
+
+  &__content {
+    position: relative;
+    padding-bottom: 20px;
+
+    &.isProcessing {
+      pointer-events: none;
+    }
+  }
+
+  &__loading-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(white, 0.7);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    .#{$bp-ns}-spinner {
+      top: 50%;
+      position: relative;
+      transform: translateY(-50%);
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
-import { ColorPicker } from '@alephdata/react-ftm';
+import { ColorPicker } from 'react-ftm';
 import queryString from 'query-string';
 
 import withRouter from 'app/withRouter';

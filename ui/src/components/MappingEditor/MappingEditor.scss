@@ -7,7 +7,7 @@ $vertical-spacing: 50px;
     padding-top: $vertical-spacing;
     border-top: 1px solid $aleph-border-color;
 
-    &__title.bp3-heading {
+    &__title.#{$bp-ns}-heading {
       margin-bottom: 25px;
       font-size: 18px;
     }

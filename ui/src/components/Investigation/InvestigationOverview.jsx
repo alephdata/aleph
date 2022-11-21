@@ -2,7 +2,8 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { AnchorButton, Intent } from '@blueprintjs/core';
+import { AnchorButton, Classes, Intent } from '@blueprintjs/core';
+import c from 'classnames';
 
 import withRouter from 'app/withRouter';
 import Query from 'app/Query';
@@ -24,7 +25,13 @@ class InvestigationOverview extends React.Component {
         {(notificationsResult.total > 0 ||
           notificationsResult.total === undefined) && (
           <div className="InvestigationOverview__section">
-            <h6 className="InvestigationOverview__section__title bp3-heading bp3-text-muted">
+            <h6
+              className={c(
+                'InvestigationOverview__section__title',
+                Classes.HEADING,
+                Classes.TEXT_MUTED
+              )}
+            >
               <FormattedMessage
                 id="investigation.overview.notifications"
                 defaultMessage="Recent activity"
@@ -40,7 +47,13 @@ class InvestigationOverview extends React.Component {
           </div>
         )}
         <div className="InvestigationOverview__section">
-          <h6 className="InvestigationOverview__section__title bp3-heading bp3-text-muted">
+          <h6
+            className={c(
+              'InvestigationOverview__section__title',
+              Classes.HEADING,
+              Classes.TEXT_MUTED
+            )}
+          >
             {!!collection.count && (
               <FormattedMessage
                 id="investigation.overview.shortcuts"
@@ -59,7 +72,13 @@ class InvestigationOverview extends React.Component {
           </div>
         </div>
         <div className="InvestigationOverview__section">
-          <h6 className="InvestigationOverview__section__title bp3-heading bp3-text-muted">
+          <h6
+            className={c(
+              'InvestigationOverview__section__title',
+              Classes.HEADING,
+              Classes.TEXT_MUTED
+            )}
+          >
             <FormattedMessage
               id="investigation.overview.guides"
               defaultMessage="Read more"

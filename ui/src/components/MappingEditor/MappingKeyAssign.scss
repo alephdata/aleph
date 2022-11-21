@@ -19,7 +19,7 @@
       }
     }
 
-    &__title.bp3-heading {
+    &__title.#{$bp-ns}-heading {
       color: white;
       @include rtlSupportInvertedProp(
         margin,
@@ -54,13 +54,13 @@
       }
     }
 
-    .bp3-form-helper-text {
+    .#{$bp-ns}-form-helper-text {
       color: white !important;
     }
 
     &__keyHelp {
       &__main {
-        margin-bottom: $aleph-grid-size/2;
+        margin-bottom: $aleph-grid-size * 0.5;
       }
       &__toggle {
         font-weight: bold;
@@ -68,11 +68,11 @@
         @include rtlSupportInvertedProp(
           margin,
           left,
-          -$aleph-grid-size/2,
+          -$aleph-grid-size * 0.5,
           null
         );
 
-        .bp3-icon {
+        .#{$bp-ns}-icon {
           color: white !important;
         }
       }

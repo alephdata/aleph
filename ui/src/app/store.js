@@ -21,10 +21,15 @@ const store = createStore(
 
 store.subscribe(
   throttle(() => {
-    const state = store.getState();
+    const { session, config, messages, bookmarks } = store.getState();
+
     saveState({
-      session: state.session,
-      config: state.config,
+      session,
+      config,
+      bookmarks,
+
+      // Do not persist the actual messages, only the dismissed message IDs.
+      messages: { ...messages, messages: [] },
     });
   })
 );

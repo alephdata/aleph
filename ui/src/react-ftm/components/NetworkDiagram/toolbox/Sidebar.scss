@@ -1,0 +1,46 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.Sidebar {
+  &.#{$bp-ns}-drawer {
+    padding: $sidebar-gutter;
+    min-height: 100%;
+    width: 100% !important;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    box-shadow: $editor-box-shadow;
+
+    @include themify() {
+      background-color: themed('sidebarColor');
+      color: themed('textColor');
+    }
+  }
+
+  &__header-text {
+    color: $blue1;
+    font-weight: bold;
+    border-bottom: 1px solid;
+    margin-bottom: 10px;
+    padding-bottom: $sidebar-gutter;
+    line-height: 24px;
+  }
+
+  .EntityBulkEdit {
+    .#{$bp-ns}-button-text {
+      color: #5c7080;
+    }
+
+    .#{$bp-ns}-collapse-body {
+      margin: 10px 0 5px;
+      padding: 3px 10px;
+      border: 2px solid #ebf1f5;
+      border-radius: $standard-border-radius;
+    }
+
+    &__main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}

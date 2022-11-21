@@ -7,11 +7,8 @@ balkhashdb
 
 TODO.md
 
-build*
-
 ui/node_modules
 ui/build
-ui/package-lock.json
 ui/i18n/messages.json
 ui/i18n/messages.pot
 ui/**/*.css

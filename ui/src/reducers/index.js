@@ -19,6 +19,7 @@ import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
 import exports from './exports';
+import bookmarks from './bookmarks';
 
 const rootReducer = combineReducers({
   messages,
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
   results,
   systemStatus,
   exports,
+  bookmarks,
 });
 
 export default rootReducer;

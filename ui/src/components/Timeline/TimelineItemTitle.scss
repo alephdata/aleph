@@ -12,7 +12,7 @@
   margin-bottom: 5px;
 
   .EditableProperty__value,
-  .EditableProperty__value .bp3-input,
+  .EditableProperty__value .#{$bp-ns}-input,
   .EditableProperty__label {
     color: var(--item-color) !important;
     border-color: var(--item-color) !important;
@@ -31,7 +31,7 @@
     display: inline-flex;
     align-self: center;
     align-items: center;
-    padding: 0 $aleph-grid-size/2;
+    padding: 0 $aleph-grid-size * 0.5;
     flex-grow: 1;
     flex-wrap: wrap;
 
@@ -53,7 +53,7 @@
     }
   }
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     margin: 0 $aleph-grid-size;
   }
 

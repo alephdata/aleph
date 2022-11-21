@@ -128,12 +128,15 @@ services:
     image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
     depends_on:
       - api
-    command: npm run start
+    command: "bash -c 'rsync --archive --inplace --no-compress --whole-file /node_modules /alephui && npm run start'"
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
-      - "./ui/src:/alephui/src"
-      - "./ui/package.json:/alephui/package.json"
+      - "./ui/src:/alephui/src:cached"
+      - "./ui/package.json:/alephui/package.json:cached"
+      - "./ui/package-lock.json:/alephui/package-lock.json:cached"
+      - "./ui/craco.config.js:/alephui/craco.config.js:cached"
+      - "./ui/node_modules:/alephui/node_modules:delegated"
     environment:
       PORT: "8080"
       CI: "true"

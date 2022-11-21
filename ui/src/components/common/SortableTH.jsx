@@ -1,4 +1,5 @@
 import React from 'react';
+import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import './SortableTH.scss';
@@ -11,8 +12,10 @@ function SortableTH(props) {
   }
   const iconClass = c(
     'caret',
-    'bp3-icon-large',
-    `bp3-icon-caret-${sorted === 'desc' ? 'down' : 'up'}`,
+    Classes.ICON_LARGE,
+    sorted === 'desc'
+      ? `${Classes.ICON}-caret-down`
+      : `${Classes.ICON}-caret-up`,
     { hidden: !sorted }
   );
   return (

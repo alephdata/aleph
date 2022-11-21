@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent } from '@blueprintjs/core';
+import { Dialog, Classes, Button, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
@@ -66,7 +66,7 @@ class CollectionXrefDialog extends Component {
         onClose={this.props.toggleDialog}
         title={intl.formatMessage(messages.title)}
       >
-        <div className="bp3-dialog-body">
+        <div className={Classes.DIALOG_BODY}>
           <FormattedMessage
             id="collection.xref.text"
             defaultMessage="You will now cross-reference {collectionLabel} against all other sources. Start this process once and then wait for it to complete."
@@ -77,8 +77,8 @@ class CollectionXrefDialog extends Component {
             }}
           />
         </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button
               onClick={this.onCancel}
               disabled={this.state.blocking}

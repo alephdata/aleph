@@ -1,0 +1,27 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.Transliterate {
+  &__popover {
+    .#{$bp-ns}-popover2-content {
+      padding: 5px !important;
+      background: #fcf8d3 !important;
+      color: $gray1 !important;
+    }
+
+    &__main,
+    &__secondary {
+      display: block;
+    }
+
+    &__secondary {
+      font-size: 10px !important;
+      padding-top: 3px;
+      opacity: 0.7;
+    }
+  }
+  &.#{$bp-ns}-tooltip2-indicator {
+    cursor: inherit;
+    border-color: $gray5;
+  }
+}

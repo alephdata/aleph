@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Language as VLLanguage, LanguageSelect } from '@alephdata/react-ftm';
+import { Language as VLLanguage, LanguageSelect } from 'react-ftm';
 import { selectLocale, selectModel } from 'selectors';
 
 const mapStateToProps = (state) => {

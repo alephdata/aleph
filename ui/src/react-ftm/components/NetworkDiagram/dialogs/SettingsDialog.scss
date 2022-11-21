@@ -1,0 +1,20 @@
+@import 'app/variables.scss';
+
+.SettingsDialog {
+  &__type-select {
+    columns: 2;
+    margin-top: 5px;
+
+    .#{$bp-ns}-control {
+      margin-top: 0;
+    }
+  }
+
+  .#{$bp-ns}-label {
+    font-weight: bold !important;
+  }
+
+  .#{$bp-ns}-form-group .#{$bp-ns}-form-helper-text {
+    margin-top: 15px;
+  }
+}

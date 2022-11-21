@@ -2,7 +2,14 @@ import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Button, Icon, Intent, Collapse, Spinner } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  Icon,
+  Intent,
+  Collapse,
+  Spinner,
+} from '@blueprintjs/core';
 import c from 'classnames';
 
 import withRouter from 'app/withRouter';
@@ -134,7 +141,9 @@ class Facet extends Component {
             )}
           </CheckboxList>
         )}
-        {isExpanding && isOpen && <Spinner className="bp3-small spinner" />}
+        {isExpanding && isOpen && (
+          <Spinner className={c('spinner', Classes.SMALL)} />
+        )}
       </>
     );
   }
@@ -173,7 +182,7 @@ class Facet extends Component {
 
           {isFiltered && (
             <>
-              <span className="FilterCount bp3-text-muted">
+              <span className={c('FilterCount', Classes.TEXT_MUTED)}>
                 <FormattedMessage
                   id="search.facets.filtersSelected"
                   defaultMessage="{count} selected"
@@ -186,13 +195,20 @@ class Facet extends Component {
           {!isDate && isOpen && (
             <>
               {facet.total === 0 && (
-                <span className="bp3-tag bp3-small bp3-round bp3-minimal">
+                <span
+                  className={c(
+                    Classes.TAG,
+                    Classes.SMALL,
+                    Classes.ROUND,
+                    Classes.MINIMAL
+                  )}
+                >
                   0
                 </span>
               )}
 
               {facet.total > 0 && (
-                <span className="bp3-tag bp3-small bp3-round">
+                <span className={c(Classes.TAG, Classes.SMALL, Classes.ROUND)}>
                   <FormattedNumber value={facet.total} />
                 </span>
               )}

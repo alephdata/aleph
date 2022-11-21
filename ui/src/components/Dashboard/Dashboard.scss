@@ -12,8 +12,6 @@
   }
 
   &__menu {
-    display: flex;
-    flex-direction: column;
     flex-grow: 0;
     width: 20%;
     @include rtlSupportInvertedProp(
@@ -40,40 +38,18 @@
       display: none;
     }
 
-    .bp3-menu {
-      background-color: inherit !important;
-      padding: 0;
-    }
-
-    .bp3-menu-item {
-      padding: 6px 7px;
-
-      .bp3-icon {
-        @include rtlSupportInvertedProp(margin, right, 12px, 0);
-      }
-
-      .Count {
-        @include rtl(float, right, left);
-      }
-
-      &.bp3-active .Count {
-        color: white;
-        background: none;
-      }
-    }
-
-    .bp3-menu-header {
+    .#{$bp-ns}-menu-header {
       border: none;
       @include rtlSupportInvertedProp(margin, left, 0, null);
       margin-bottom: $aleph-grid-size;
 
-      .bp3-heading {
+      .#{$bp-ns}-heading {
         color: $blue1;
         padding-top: 2px;
       }
     }
 
-    .bp3-menu-divider {
+    .#{$bp-ns}-menu-divider {
       margin: $aleph-grid-size * 1.5 0;
       border-color: $aleph-border-color;
     }
@@ -108,8 +84,8 @@
     @include rtlSupportInvertedProp(
       padding,
       left,
-      $aleph-grid-size/2,
-      $aleph-grid-size/2
+      $aleph-grid-size * 0.5,
+      $aleph-grid-size * 0.5
     );
   }
 }

@@ -1,0 +1,58 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.GroupingViewer {
+  height: 100%;
+  padding: 0;
+  @include themify() {
+    color: themed('textColor');
+  }
+
+  &__title {
+    text-align: center;
+    padding: 30px 15px 20px;
+
+    &__text {
+      margin-bottom: 30px;
+      &__main {
+        @include breakText;
+        margin: 0 !important;
+        font-size: 1.6em;
+        @include themify() {
+          color: themed('textColor') !important;
+        }
+      }
+      &__secondary {
+        margin-bottom: 3px !important;
+        opacity: 0.9;
+
+        .#{$bp-ns}-icon {
+          margin-right: 5px;
+        }
+
+        @include themify() {
+          color: themed('textColor') !important;
+        }
+      }
+    }
+
+    &__settings {
+      margin-top: 20px;
+    }
+  }
+
+  .EntityBulkEdit {
+    padding: 3px 0;
+    margin-bottom: 10px;
+    color: $blue1;
+    font-weight: bold;
+    border-bottom: 1px solid $blue1;
+  }
+
+  .#{$bp-ns}-divider {
+    margin: 15px 0;
+    @include themify() {
+      border-color: themed('textColor');
+    }
+  }
+}

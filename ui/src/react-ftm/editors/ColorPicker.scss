@@ -1,0 +1,119 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+$swatch-width: 20px;
+
+.ColorPicker {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+
+  &__item {
+    &__swatch {
+      position: relative;
+      width: $swatch-width;
+      height: $swatch-width;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.1s ease-in-out;
+      border: 1px solid;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.square {
+        border-radius: 5px;
+      }
+
+      .theme-dark & {
+        border-color: white !important;
+      }
+
+      &.active,
+      &:hover {
+        @include themify() {
+          border-width: themed('colorPickerActiveBorderWidth');
+        }
+      }
+
+      &:hover {
+        @include themify() {
+          opacity: themed('colorPickerHoverOpacity');
+        }
+      }
+
+      &.active {
+        opacity: 1 !important;
+      }
+
+      &.custom {
+        &:hover {
+          background: transparent !important;
+          @include themify() {
+            border-color: themed('textColor') !important;
+          }
+          .ColorPicker__item__swatch__inner {
+            display: none;
+          }
+        }
+      }
+
+      &__inner {
+        width: 0;
+        height: 0;
+        border-radius: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease-in-out;
+        border: 2px solid;
+
+        .theme-dark & {
+          display: none;
+        }
+
+        .square & {
+          border-radius: 3px;
+        }
+
+        .active & {
+          width: 14px !important;
+          height: 14px !important;
+          border-color: white !important;
+        }
+      }
+    }
+  }
+
+  &__custom {
+    .#{$bp-ns}-popover2-content {
+      padding: 5px;
+    }
+    .react-colorful {
+      &__saturation,
+      &__hue {
+        border-radius: $standard-border-radius;
+      }
+
+      &__hue {
+        margin: 5px 0;
+      }
+    }
+
+    &__hex-input {
+      width: 100%;
+      border-radius: $standard-border-radius;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      text-align: center;
+      padding: 3px;
+
+      @include themify() {
+        color: themed('textColor');
+      }
+    }
+  }
+}

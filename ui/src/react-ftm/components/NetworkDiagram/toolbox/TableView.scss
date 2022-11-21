@@ -1,0 +1,33 @@
+$table-editor-padding: 20px;
+$border-color: rgba(16, 22, 26, 0.15);
+
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.TableView {
+  &.#{$bp-ns}-drawer {
+    padding: $table-editor-padding !important;
+    position: relative !important;
+    height: 100% !important;
+    overflow: scroll !important;
+  }
+
+  &__close {
+    position: absolute;
+    top: $table-editor-padding * 0.5;
+    right: $table-editor-padding * 0.5;
+    z-index: 3;
+  }
+
+  .#{$bp-ns}-tab[aria-selected='true'] {
+    .SchemaIcon {
+      fill: $blue2;
+    }
+  }
+
+  .data-grid-container {
+    height: 50%;
+    max-height: 350px;
+    min-height: 200px;
+  }
+}

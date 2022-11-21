@@ -1,11 +1,9 @@
 @import 'app/variables.scss';
 @import 'app/mixins.scss';
 
-$transition-duration: 0.3s;
-$sidebar-padding: $aleph-grid-size * 2;
-
 .InvestigationSidebar {
   width: $aleph-investigation-sidebar-width;
+  flex-shrink: 0;
   @include rtlSupportInvertedProp(
     border,
     right,
@@ -28,19 +26,21 @@ $sidebar-padding: $aleph-grid-size * 2;
   }
 
   &__content {
+    padding: 0;
+
     @media screen and (min-width: 450px) and (max-width: $aleph-screen-sm-max-width) {
       display: flex;
       align-items: flex-start;
-      margin: -$aleph-content-padding/2;
+      margin: -$aleph-content-padding * 0.5;
     }
   }
 
   &__section {
+    list-style: none;
     padding: 15px;
-    border-radius: 5px;
+    border-radius: $aleph-border-radius;
     background: $light-gray5;
     margin: $aleph-content-padding 0;
-    border: none;
 
     &:last-child {
       margin-bottom: 0;
@@ -48,10 +48,15 @@ $sidebar-padding: $aleph-grid-size * 2;
 
     @media screen and (min-width: 450px) and (max-width: $aleph-screen-sm-max-width) {
       width: 50%;
-      margin: $aleph-content-padding/2;
+      margin: $aleph-content-padding * 0.5;
     }
 
-    &__title.bp3-heading {
+    &__title {
+      margin: 0;
+      padding: 0;
+    }
+
+    &__title .#{$bp-ns}-heading {
       color: $aleph-investigation-theme;
       padding-bottom: 5px;
     }

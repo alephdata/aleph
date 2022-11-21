@@ -22,7 +22,8 @@ import './ListScreen.scss';
 export class ListScreen extends Component {
   constructor(props) {
     super(props);
-    this.navigate = this.navigate.bind(this);
+    this.getLink = this.getLink.bind(this);
+    this.onSchemaSelect = this.onSchemaSelect.bind(this);
   }
 
   componentDidMount() {
@@ -44,15 +45,17 @@ export class ListScreen extends Component {
     }
   }
 
-  navigate(schema) {
-    const { navigate, location } = this.props;
+  getLink(schema) {
+    const { location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = schema;
-    navigate({
-      pathname: location.pathname,
-      search: '',
-      hash: queryString.stringify(parsedHash),
-    });
+
+    return `${location.pathname}/#${queryString.stringify(parsedHash)}`;
+  }
+
+  onSchemaSelect(schema) {
+    const { navigate } = this.props;
+    navigate(this.getLink(schema));
   }
 
   processCounts = () => {
@@ -102,7 +105,8 @@ export class ListScreen extends Component {
             <div className="ListScreen__schema-counts">
               <SchemaCounts
                 schemaCounts={this.processCounts()}
-                onSelect={this.navigate}
+                link={this.getLink}
+                onSelect={this.onSchemaSelect}
                 showSchemaAdd={list.writeable}
                 activeSchema={activeSchema.name}
               />

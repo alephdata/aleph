@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Divider } from '@blueprintjs/core';
+import { Classes, Divider } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { ClipboardInput } from 'components/common';
 
@@ -33,7 +34,7 @@ class CollectionReference extends React.PureComponent {
           </div>
           <div className="value">
             <ClipboardInput value={collection.links.reconcile} />
-            <span className="bp3-text-small bp3-text-muted">
+            <span className={c(Classes.TEXT_SMALL, Classes.TEXT_MUTED)}>
               <FormattedMessage
                 id="collection.reconcile.description"
                 defaultMessage="Match your own data against the entities in this collection using the free {openrefine}

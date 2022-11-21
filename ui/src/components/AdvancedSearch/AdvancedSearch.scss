@@ -1,10 +1,10 @@
 @import 'app/variables.scss';
 
 .AdvancedSearch {
-  .bp3-overlay.bp3-overlay-container {
+  .#{$bp-ns}-overlay.#{$bp-ns}-overlay-container {
     position: static;
   }
-  .bp3-drawer {
+  .#{$bp-ns}-drawer {
     position: static;
     overflow-x: scroll;
     margin-bottom: $aleph-grid-size * 3;
@@ -12,14 +12,21 @@
     box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 2px 4px rgba(16, 22, 26, 0.2),
       0 8px 24px rgba(16, 22, 26, 0.2);
     max-width: 660px;
+
+    & .#{$bp-ns}-drawer-header .#{$bp-ns}-heading {
+      // Blueprint's default styles hide the overflow. We're using buttons
+      // in the drawer title (which isn't really an intended use case) and
+      // the hidden overflow cuts off the button focus rings.
+      overflow: visible;
+    }
   }
 
-  .bp3-portal {
+  .#{$bp-ns}-portal {
     z-index: 101;
     top: 50px !important;
   }
 
-  .bp3-label {
+  .#{$bp-ns}-label {
     min-width: 200px;
   }
 
@@ -27,21 +34,17 @@
     padding: 0 $aleph-grid-size * 2;
   }
 
-  .bp3-form-content {
+  .#{$bp-ns}-form-content {
     width: 100%;
   }
 
-  .bp3-drawer-header .bp3-heading {
-    margin-right: $aleph-grid-size/2 !important;
+  .#{$bp-ns}-drawer-header .#{$bp-ns}-heading {
+    margin-right: $aleph-grid-size * 0.5 !important;
   }
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    &__close {
-      margin-left: $aleph-grid-size/2;
-    }
   }
 }

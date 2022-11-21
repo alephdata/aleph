@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { ProgressBar } from '@blueprintjs/core';
+import { Classes, ProgressBar } from '@blueprintjs/core';
 import DocumentUploadTrace from './DocumentUploadTrace';
+import c from 'classnames';
 
 import './DocumentUploadStatus.scss';
 import DocumentUploadActionsDone from './DocumentUploadActionsDone';
@@ -79,7 +80,7 @@ export class DocumentUploadStatus extends PureComponent {
             }}
           />
         </p>
-        <ul className={'bp3-list-unstyled DocumentUploadStatus__list'}>
+        <ul className={c(Classes.LIST_UNSTYLED, 'DocumentUploadStatus__list')}>
           {uploadTraces.map((trace, index) => (
             <DocumentUploadTrace trace={trace} key={index} />
           ))}

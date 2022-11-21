@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { FocusStyleManager, HotkeysProvider } from '@blueprintjs/core';
-import { isLangRtl } from '@alephdata/react-ftm';
+import { isLangRtl } from 'react-ftm';
 import { inRange } from 'lodash';
 import { logout } from 'actions/sessionActions';
 import { selectLocale } from 'selectors';

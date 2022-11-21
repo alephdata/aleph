@@ -58,7 +58,7 @@ export {
   fetchProfileTags,
   pairwiseJudgement,
 } from './profileActions';
-export { fetchMessages } from './messagesActions';
+export { fetchMessages, dismissMessage } from './messagesActions';
 export {
   fetchMetadata,
   fetchStatistics,
@@ -66,6 +66,7 @@ export {
 } from './metadataActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';
 export { fetchExports, triggerQueryExport } from './exportActions';
+export { createBookmark, deleteBookmark } from './bookmarkActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

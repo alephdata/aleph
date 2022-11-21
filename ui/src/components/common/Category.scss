@@ -2,7 +2,7 @@
 @import 'app/mixins.scss';
 
 .CategoryLabel {
-  .bp3-icon {
+  .#{$bp-ns}-icon {
     @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Button, Card, Dialog } from '@blueprintjs/core';
+import { Button, Card, Classes, Dialog } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import withRouter from 'app/withRouter';
@@ -73,7 +73,7 @@ class DiagramExportDialog extends Component {
         onClose={toggleDialog}
         className="DiagramExportDialog"
       >
-        <div className="bp3-dialog-body">
+        <div className={Classes.DIALOG_BODY}>
           <Card className="DiagramExportDialog__section">
             <Button
               icon="image"
@@ -87,7 +87,7 @@ class DiagramExportDialog extends Component {
                 defaultMessage="Export as SVG"
               />
             </Button>
-            <p className="bp3-text-muted">
+            <p className={Classes.TEXT_MUTED}>
               <FormattedMessage
                 id="diagram.export.svg.description"
                 defaultMessage="Download a vector graphic with the contents of the diagram."
@@ -113,7 +113,7 @@ class DiagramExportDialog extends Component {
                   />
                 </Button>
               )}
-              <p className="bp3-text-muted">
+              <p className={Classes.TEXT_MUTED}>
                 <FormattedMessage
                   id="diagram.export.embed.description"
                   defaultMessage="Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
@@ -135,7 +135,7 @@ class DiagramExportDialog extends Component {
                 defaultMessage="Export as .ftm"
               />
             </Button>
-            <p className="bp3-text-muted">
+            <p className={Classes.TEXT_MUTED}>
               <FormattedMessage
                 id="diagram.export.ftm.description"
                 defaultMessage="Download the diagram as a data file that can be used in {link} or another Aleph site."

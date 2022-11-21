@@ -17,7 +17,12 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
 import ProfileCallout from 'components/Profile/ProfileCallout';
-import { Breadcrumbs, DualPane, Schema } from 'components/common';
+import {
+  BookmarkButton,
+  Breadcrumbs,
+  DualPane,
+  Schema,
+} from 'components/common';
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import { deleteEntity } from 'actions';
@@ -101,6 +106,7 @@ class EntityScreen extends Component {
 
     const operation = (
       <ButtonGroup>
+        <BookmarkButton entity={entity} />
         <DownloadButton document={entity} />
         {entity?.collection?.writeable && (
           <>

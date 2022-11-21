@@ -5,7 +5,7 @@ $aleph-grid-size: $pt-grid-size;
 $aleph-font-size: $pt-font-size;
 $aleph-line-height: $pt-line-height;
 $aleph-border-radius: $pt-border-radius;
-$aleph-icon-padding: ($aleph-grid-size / 2);
+$aleph-icon-padding: $aleph-grid-size * 0.5;
 $aleph-content-padding: $aleph-grid-size * 2.5;
 $aleph-mobile-content-padding: $aleph-grid-size * 2;
 $aleph-content-width-limit: 750px;

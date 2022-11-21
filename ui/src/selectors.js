@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isEntityRtl } from '@alephdata/react-ftm';
+import { isEntityRtl } from 'react-ftm';
 import { Model } from '@alephdata/followthemoney';
 
 import { loadState } from 'reducers/util';
@@ -75,13 +75,24 @@ export function selectMetadata(state) {
   return metadata;
 }
 
+export function selectFeatureFlags(state) {
+  return selectMetadata(state).feature_flags;
+}
+
+export function selectExperimentalBookmarksFeatureEnabled(state) {
+  const loggedIn = !!selectSession(state).loggedIn;
+  const featureFlag = !!selectFeatureFlags(state).bookmarks;
+
+  return loggedIn && featureFlag;
+}
+
 export function selectMessages(state) {
   return selectObject(state, state, 'messages');
 }
 
 export function selectPinnedMessage(state) {
   const metadata = selectMetadata(state);
-  const { messages } = selectMessages(state);
+  const { messages, dismissed } = selectMessages(state);
 
   if (metadata?.app?.banner) {
     return { body: metadata.app.banner };
@@ -91,9 +102,11 @@ export function selectPinnedMessage(state) {
     return null;
   }
 
-  const activeMessages = messages.filter(({ displayUntil }) => {
-    return !displayUntil || Date.now() <= new Date(displayUntil);
-  });
+  const activeMessages = messages
+    .filter(({ id }) => !dismissed.includes(id))
+    .filter(({ displayUntil }) => {
+      return !displayUntil || Date.now() <= new Date(displayUntil);
+    });
 
   if (activeMessages.length <= 0) {
     return null;
@@ -438,4 +451,19 @@ export function selectQueryLogsLimited(state, limit = 9) {
     ...queryLogs,
     results,
   };
+}
+
+export function selectBookmarks(state) {
+  const bookmarks = selectObject(state, state, 'bookmarks');
+  return bookmarks.sort((a, b) => b.bookmarkedAt - a.bookmarkedAt);
+}
+
+export function selectBookmark(state, entity) {
+  const bookmarks = selectBookmarks(state);
+  return bookmarks.find(({ id }) => id === entity.id);
+}
+
+export function selectEntityBookmarked(state, entity) {
+  const bookmark = selectBookmark(state, entity);
+  return bookmark !== undefined;
 }

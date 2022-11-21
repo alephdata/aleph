@@ -11,7 +11,7 @@
   }
 
   &__popover {
-    .bp3-popover2-arrow-fill {
+    .#{$bp-ns}-popover2-arrow-fill {
       fill: rgb(249, 237, 223) !important;
     }
   }

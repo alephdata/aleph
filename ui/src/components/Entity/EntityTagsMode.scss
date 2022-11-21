@@ -1,7 +1,7 @@
 @import 'app/variables.scss';
 
 .EntityConnections {
-  .bp3-text-muted {
+  .#{$bp-ns}-text-muted {
     margin-top: $aleph-grid-size * 0.5 !important;
   }
 }

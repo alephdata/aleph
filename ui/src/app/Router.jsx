@@ -1,9 +1,9 @@
 import React, { Component, Suspense } from 'react';
 import { Route, Navigate, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Spinner } from '@blueprintjs/core';
+import { Spinner, Classes } from '@blueprintjs/core';
 
-import { fetchMetadata, fetchMessages } from 'actions';
+import { fetchMetadata, fetchMessages, dismissMessage } from 'actions';
 import {
   selectSession,
   selectMetadata,
@@ -88,13 +88,13 @@ class Router extends Component {
   }
 
   render() {
-    const { metadata, session, pinnedMessage } = this.props;
+    const { metadata, session, pinnedMessage, dismissMessage } = this.props;
     const isLoaded = metadata && metadata.app && session;
 
     const Loading = (
       <div className="RouterLoading">
         <div className="spinner">
-          <Spinner className="bp3-large" />
+          <Spinner className={Classes.LARGE} />
         </div>
       </div>
     );
@@ -106,7 +106,7 @@ class Router extends Component {
     return (
       <>
         <Navbar />
-        <MessageBanner message={pinnedMessage} />
+        <MessageBanner message={pinnedMessage} onDismiss={dismissMessage} />
         <Suspense fallback={Loading}>
           <Routes>
             <Route path="oauth" element={<OAuthScreen />} />
@@ -207,4 +207,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   fetchMetadata,
   fetchMessages,
+  dismissMessage,
 })(Router);

@@ -1,0 +1,61 @@
+@import 'react-ftm/variables.scss';
+
+$tooltip-border-color: $light-gray1;
+
+.Histogram {
+  .recharts-surface {
+    cursor: pointer;
+  }
+
+  &.dragging {
+    .recharts-surface {
+      fill: green;
+      cursor: col-resize;
+    }
+  }
+
+  .recharts-reference-area-rect,
+  .recharts-tooltip-cursor {
+    fill: $light-gray4;
+  }
+
+  .recharts-reference-area-rect {
+    fill-opacity: 0.7;
+  }
+
+  &__tooltip {
+    border-radius: $standard-border-radius;
+    margin: 0px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid $tooltip-border-color;
+    white-space: nowrap;
+    text-align: center;
+
+    &__label {
+      margin-bottom: 3px;
+    }
+
+    &__item-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    &__secondary {
+      color: $black-70;
+      font-size: smaller;
+      max-width: 200px;
+      white-space: normal;
+      margin: 0;
+      padding-top: 7px;
+      margin-top: 7px;
+      border-top: 1px solid $tooltip-border-color;
+    }
+  }
+
+  text {
+    user-select: none;
+    pointer-events: none;
+  }
+}

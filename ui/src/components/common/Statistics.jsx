@@ -3,7 +3,7 @@ import c from 'classnames';
 import { Link } from 'react-router-dom';
 import { Numeric, Skeleton } from 'components/common';
 
-import { Button } from '@blueprintjs/core';
+import { Button, Classes } from '@blueprintjs/core';
 
 import './Statistics.scss';
 
@@ -88,12 +88,14 @@ class Statistics extends PureComponent {
     const content = isPending ? this.renderListSkeleton() : this.renderList();
 
     return (
-      <div className={c('Statistics bp3-callout', styleType)}>
+      <div className={c('Statistics', Classes.CALLOUT, styleType)}>
         {headline && (
           <h5
-            className={c('bp3-heading', 'Statistics__headline', {
-              'bp3-skeleton': isPending,
-            })}
+            className={c(
+              Classes.HEADING,
+              'Statistics__headline',
+              Classes.SKELETON && isPending
+            )}
           >
             {headline}
           </h5>

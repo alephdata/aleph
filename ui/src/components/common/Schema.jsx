@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import withRouter from 'app/withRouter';
 import { selectModel } from 'selectors';
 import { collectionSearchQuery } from 'queries';
-import { Schema as VLSchema, SchemaSelect } from '@alephdata/react-ftm';
+import { Schema as VLSchema, SchemaSelect } from 'react-ftm';
 import CollectionView from 'components/Collection/CollectionView';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 

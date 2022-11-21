@@ -2,11 +2,11 @@
 @import 'app/mixins.scss';
 
 .EntitySetManageMenu {
-  .bp3-input-group {
+  .#{$bp-ns}-input-group {
     border-radius: $aleph-border-radius;
   }
 
-  .bp3-divider {
-    margin: $aleph-grid-size/2 !important;
+  .#{$bp-ns}-divider {
+    margin: $aleph-grid-size * 0.5 !important;
   }
 }

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import asyncActionCreator from 'actions/asyncActionCreator';
+import { createAction } from 'redux-act';
 
 export const fetchMessages = asyncActionCreator(
   (endpoint) => async () => {
@@ -8,3 +9,5 @@ export const fetchMessages = asyncActionCreator(
   },
   { name: 'FETCH_MESSAGES' }
 );
+
+export const dismissMessage = createAction('DISMISS_MESSAGE');

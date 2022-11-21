@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { Button, Icon, MenuItem, Spinner } from '@blueprintjs/core';
+import { Button, Classes, Icon, MenuItem, Spinner } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 import { Link } from 'react-router-dom';
 import truncateText from 'truncate';
@@ -98,7 +98,7 @@ class CollectionUpdateStatus extends PureComponent {
             <CollectionStatus
               collection={collection}
               showCancel={false}
-              className="bp3-callout bp3-intent-primary"
+              className={c(Classes.CALLOUT, Classes.INTENT_PRIMARY)}
             />
           }
         >

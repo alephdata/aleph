@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Button, Checkbox, Icon, Intent } from '@blueprintjs/core';
+import { Button, Checkbox, Classes, Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
-import { FileSize } from '@alephdata/react-ftm';
+import { FileSize } from 'react-ftm';
+import c from 'classnames';
 
 import convertPathsToTree from 'util/convertPathsToTree';
 
@@ -52,7 +53,9 @@ export class DocumentUploadView extends PureComponent {
 
       return (
         <div className="DocumentUploadView__folder" key={key}>
-          <h6 className="DocumentUploadView__folder__label bp3-heading">
+          <h6
+            className={c('DocumentUploadView__folder__label', Classes.HEADING)}
+          >
             <Icon icon="folder-open" className="left-icon" />
             {key}
           </h6>
@@ -96,7 +99,7 @@ export class DocumentUploadView extends PureComponent {
             totalSize: <FileSize value={totalFileSize} />,
           })}
         </p>
-        <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button
             type="submit"
             intent={Intent.PRIMARY}

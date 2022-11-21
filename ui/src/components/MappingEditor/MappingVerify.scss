@@ -18,7 +18,7 @@
     }
   }
 
-  &__list.bp3-html-table {
+  &__list.#{$bp-ns}-html-table {
     width: 100%;
     margin-top: $aleph-grid-size;
     border-collapse: collapse !important;
@@ -33,7 +33,7 @@
       &.MappingVerify__listItem__value {
         width: 60%;
 
-        .bp3-form-group {
+        .#{$bp-ns}-form-group {
           margin: 0;
         }
       }
@@ -46,6 +46,6 @@
   }
 
   &__literalEdit {
-    margin: 0 -$aleph-grid-size/2 !important;
+    margin: 0 -$aleph-grid-size * 0.5 !important;
   }
 }

@@ -3,6 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { fetchEntity } from 'actions';
@@ -22,7 +23,7 @@ class MappingIndexItem extends PureComponent {
       <Skeleton.Text
         type="h5"
         length={25}
-        className="MappingIndexItem__title bp3-heading"
+        className={c('MappingIndexItem__title', Classes.HEADING)}
       />
       <div className="MappingIndexItem__schemata">
         <Skeleton.Text type="span" length={10} className="SchemaLabel" />
@@ -32,12 +33,12 @@ class MappingIndexItem extends PureComponent {
         <Skeleton.Text
           type="p"
           length={20}
-          className="MappingIndexItem__statusItem bp3-text-muted"
+          className={c('MappingIndexItem__statusItem', Classes.TEXT_MUTED)}
         />
         <Skeleton.Text
           type="p"
           length={20}
-          className="MappingIndexItem__statusItem bp3-text-muted"
+          className={c('MappingIndexItem__statusItem', Classes.TEXT_MUTED)}
         />
       </div>
     </div>
@@ -54,9 +55,9 @@ class MappingIndexItem extends PureComponent {
     const status = this.props.mapping?.last_run_status;
     switch (status) {
       case 'successful':
-        return 'bp3-intent-primary';
+        return Classes.INTENT_PRIMARY;
       case 'error':
-        return 'bp3-intent-danger';
+        return Classes.INTENT_DANGER;
       default:
         return null;
     }
@@ -86,7 +87,7 @@ class MappingIndexItem extends PureComponent {
 
     return (
       <div className="MappingIndexItem">
-        <h5 className="MappingIndexItem__title bp3-heading">
+        <h5 className={c('MappingIndexItem__title', Classes.HEADING)}>
           {this.getTitle()}
         </h5>
         <div className="MappingIndexItem__schemata">
@@ -95,7 +96,7 @@ class MappingIndexItem extends PureComponent {
           ))}
         </div>
         <div className="MappingIndexItem__statusItems">
-          <p className="MappingIndexItem__statusItem bp3-text-muted">
+          <p className={c('MappingIndexItem__statusItem', Classes.TEXT_MUTED)}>
             <span>
               <FormattedMessage
                 id="mapping.status.updated"
@@ -107,7 +108,9 @@ class MappingIndexItem extends PureComponent {
             </span>
           </p>
           {last_run_status && (
-            <p className="MappingIndexItem__statusItem bp3-text-muted">
+            <p
+              className={c('MappingIndexItem__statusItem', Classes.TEXT_MUTED)}
+            >
               <span>
                 <FormattedMessage
                   id="mapping.status.status"
@@ -125,7 +128,9 @@ class MappingIndexItem extends PureComponent {
             </p>
           )}
           {last_run_err_msg && (
-            <p className="MappingIndexItem__statusItem bp3-text-muted">
+            <p
+              className={c('MappingIndexItem__statusItem', Classes.TEXT_MUTED)}
+            >
               <span>
                 <FormattedMessage
                   id="mapping.status.error"

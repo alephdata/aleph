@@ -7,7 +7,7 @@ import {
   GraphConfig,
   GraphLayout,
   Viewport,
-} from '@alephdata/react-ftm';
+} from 'react-ftm';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
 import { updateEntitySet } from 'actions';
 import { UpdateStatus } from 'components/common';

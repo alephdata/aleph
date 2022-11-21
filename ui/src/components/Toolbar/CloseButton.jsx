@@ -27,7 +27,8 @@ export class CloseButton extends React.Component {
   render() {
     return (
       <Button
-        className="bp3-minimal button-close"
+        minimal
+        className="button-close"
         icon="cross"
         onClick={this.close}
       />

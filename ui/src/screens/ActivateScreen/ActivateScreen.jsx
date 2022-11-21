@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'app/withRouter';
+import { Classes } from '@blueprintjs/core';
 import Screen from 'components/Screen/Screen';
 import { endpoint } from 'app/api';
 import { loginWithPassword } from 'actions/sessionActions';
@@ -48,7 +49,7 @@ export class ActivateScreen extends Component {
                 />
               </h1>
               <PasswordAuthActivate
-                className="bp3-card"
+                className={Classes.CARD}
                 onSubmit={this.onActivate}
                 intl={intl}
               />

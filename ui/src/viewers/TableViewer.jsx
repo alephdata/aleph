@@ -30,10 +30,14 @@ class TableViewer extends Component {
   }
 
   renderCell(rowIndex, colIndex) {
-    const row = this.props.rows[rowIndex];
+    const { rows } = this.props;
+
+    const row = rows[rowIndex];
     const value = row ? row[colIndex] : undefined;
+    const loading = rowIndex >= rows.length;
+
     return (
-      <Cell loading={value === undefined}>
+      <Cell loading={loading}>
         <TruncatedFormat detectTruncation>{value || ''}</TruncatedFormat>
       </Cell>
     );

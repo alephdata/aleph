@@ -29,6 +29,7 @@ it('renders level, title, body, date', () => {
   render(<MessageBanner message={message} />);
   expect(screen.getByText('Degraded ingest performance')).toBeInTheDocument();
   expect(screen.getByText(message.safeHtmlBody)).toBeInTheDocument();
+  expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
 it('renders HTML body', () => {
@@ -84,4 +85,19 @@ it('renders latest update', () => {
   const { container } = render(<MessageBanner message={message} />);
   expect(screen.getByRole('status')).toHaveTextContent('We’re back online!');
   expect(getTime(container, message.createdAt));
+});
+
+it('has dismiss button', () => {
+  const onDismiss = jest.fn();
+  const message = {
+    safeHtmlBody: 'You can dismiss me!',
+    dismissible: true,
+  };
+
+  render(<MessageBanner message={message} onDismiss={onDismiss} />);
+
+  const button = screen.getByRole('button', { name: 'Dismiss' });
+  expect(button).toBeInTheDocument();
+  button.click();
+  expect(onDismiss).toHaveBeenCalledTimes(1);
 });

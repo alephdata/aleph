@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { Button, Icon, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  Icon,
+  Menu,
+  MenuDivider,
+  MenuItem,
+} from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
+import c from 'classnames';
 
 import { fetchRole } from 'actions';
 import {
@@ -14,7 +21,7 @@ import {
 } from 'selectors';
 import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
 import { DialogToggleButton } from 'components/Toolbar';
-import { Skeleton } from 'components/common';
+import { Skeleton, LinkMenuItem } from 'components/common';
 
 import './AuthButtons.scss';
 
@@ -97,78 +104,66 @@ export class AuthButtons extends Component {
         <span className="AuthButtons">
           <Popover
             popoverClassName="AuthButtons__popover"
+            placement="bottom-end"
+            fill
             content={
               <Menu className="AuthButtons__popover__menu">
-                <Link to="/notifications" className="bp3-menu-item">
-                  <Icon icon="notifications" />{' '}
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.notifications)}
-                  </div>
-                </Link>
-                <Link to="/alerts" className="bp3-menu-item">
-                  <Icon icon="feed" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.alerts)}
-                  </div>
-                </Link>
-                <Link to="/exports" className="bp3-menu-item">
-                  <Icon icon="export" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.exports)}
-                  </div>
-                </Link>
+                <LinkMenuItem
+                  to="/notifications"
+                  icon="notifications"
+                  text={intl.formatMessage(messages.notifications)}
+                />
+                <LinkMenuItem
+                  to="/alerts"
+                  icon="feed"
+                  text={intl.formatMessage(messages.alerts)}
+                />
+                <LinkMenuItem
+                  to="/exports"
+                  icon="export"
+                  text={intl.formatMessage(messages.exports)}
+                />
                 <MenuDivider />
-                <Link
+                <LinkMenuItem
                   to="/investigations"
-                  className="bp3-menu-item mobile-show"
-                >
-                  <Icon icon="briefcase" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.cases)}
-                  </div>
-                </Link>
-                <Link to="/diagrams" className="bp3-menu-item">
-                  <Icon icon="graph" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.diagrams)}
-                  </div>
-                </Link>
-                <Link to="/timelines" className="bp3-menu-item">
-                  <Icon icon="gantt-chart" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.timelines)}
-                  </div>
-                </Link>
-                <Link to="/lists" className="bp3-menu-item">
-                  <Icon icon="list" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.lists)}
-                  </div>
-                </Link>
+                  icon="briefcase"
+                  text={intl.formatMessage(messages.cases)}
+                />
+                <LinkMenuItem
+                  to="/diagrams"
+                  icon="graph"
+                  text={intl.formatMessage(messages.diagrams)}
+                />
+                <LinkMenuItem
+                  to="/timelines"
+                  icon="gantt-chart"
+                  text={intl.formatMessage(messages.timelines)}
+                />
+                <LinkMenuItem
+                  to="/lists"
+                  icon="list"
+                  text={intl.formatMessage(messages.lists)}
+                />
                 <MenuDivider />
-                <Link to="/settings" className="bp3-menu-item">
-                  <Icon icon="cog" />{' '}
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.settings)}
-                  </div>
-                </Link>
-                <Link to="/status" className="bp3-menu-item">
-                  <Icon icon="dashboard" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.status)}
-                  </div>
-                </Link>
-                <MenuItem
+                <LinkMenuItem
+                  to="/settings"
+                  icon="cog"
+                  text={intl.formatMessage(messages.settings)}
+                />
+                <LinkMenuItem
+                  to="/status"
+                  icon="dashboard"
+                  text={intl.formatMessage(messages.status)}
+                />
+                <LinkMenuItem
+                  to="/logout"
                   icon="log-out"
-                  href="/logout"
                   text={intl.formatMessage(messages.signout)}
                 />
               </Menu>
             }
-            placement="bottom-end"
-            fill
           >
-            <Button icon="user" className="bp3-minimal" rightIcon="caret-down">
+            <Button icon="user" minimal rightIcon="caret-down">
               <Truncate lines={2} width={120}>
                 {role ? role.name : 'Profile'}
               </Truncate>
@@ -185,7 +180,7 @@ export class AuthButtons extends Component {
             buttonProps={{
               text: intl.formatMessage(messages.signin),
               icon: 'log-in',
-              className: 'bp3-minimal',
+              className: Classes.MINIMAL,
             }}
             Dialog={AuthenticationDialog}
             dialogProps={{ auth: metadata.auth }}
