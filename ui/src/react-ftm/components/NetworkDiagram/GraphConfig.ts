@@ -10,7 +10,7 @@ export interface IGraphConfig {
 }
 
 export class GraphConfig {
-  public DEFAULT_VERTEX_COLOR: string = Colors.BLUE1;
+  public DEFAULT_VERTEX_COLOR: string = Colors.BLUE2;
   public EDGE_COLOR: string = Colors.GRAY2;
   public UNSELECTED_COLOR: string = Colors.GRAY5;
   public DEFAULT_VERTEX_RADIUS = 1;

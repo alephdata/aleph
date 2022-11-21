@@ -11,6 +11,7 @@ import {
   FTMEntityExtended as FTMEntity,
   Schema,
 } from 'react-ftm/types';
+import { mapColor } from 'react-ftm/utils';
 import { Vertex } from 'react-ftm/components/NetworkDiagram/layout';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import { EditableProperty } from 'react-ftm/components/common';
@@ -148,7 +149,7 @@ export class EntityViewer extends React.PureComponent<
           {vertexRef && writeable && (
             <div className="EntityViewer__title__settings">
               <ColorPicker
-                currSelected={vertexRef.color}
+                currSelected={mapColor(vertexRef.color)}
                 onSelect={(color: string) =>
                   this.props.onVertexColorSelected(vertexRef, color)
                 }

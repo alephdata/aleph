@@ -98,7 +98,7 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
           <p>
             <FormattedMessage
               id="bookmarks.warning.text"
-              defaultMessage="Your bookmarks don’t sync to other devices and we may remove this feature in the future. You can download your bookmarks at any time:"
+              defaultMessage="Your bookmarks don’t sync to other devices and we may remove this feature in the future. You can download your bookmarks at any time."
             />
           </p>
         </Callout>

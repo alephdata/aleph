@@ -10,3 +10,5 @@ export * from './toaster';
 export * from './wordList';
 export * from './validate';
 export * from './sortEntities';
+export * from './reduceTranslucentColor';
+export * from './mapColor';
