@@ -22,6 +22,6 @@ Please submit a description of your use case along with your name, affiliation a
 
 Make sure you describe your goals, rather than the set of techniques that define your work (e.g. “investigations into human rights abuses in country X”, not “OSINT”). OCCRP is a non-profit organization. We do not offer commercial support or consulting services.
 
-The Aleph team supports feature versions for 12 months after the first major iteration of that version was released. For exmaple, we support Aleph 3.12 for 12 months after Aleph 3.12.0 was released. The Aleph team supports ugrades, but only from supported feature versions of the product.
+The Aleph team supports feature versions for 12 months after the first major iteration of that version was released. For exmaple, we support Aleph 3.12.x for 12 months after Aleph 3.12.0 was released. The Aleph team supports ugrades, but only from supported feature versions of the product. Support means helping to ensure that you can get your Aleph instance up and running. As we're a small team we don't have the capacity to backport bugs to supported versions. In the case of critical secruity vulnrabilities we'll endeavour to ensure that all currently supported versions, but we recommend administrators upgrade to the latest version as soon as possible.
 
 For versions that are supported, if you are having problems, you can reach out to us in Slack or by raising an issue in Github.
