@@ -1,5 +1,5 @@
 bump2version==1.0.1
 Babel==2.11.0
 black==22.10.0
-flake8==5.0.4
+flake8==6.0.0
 flake8-bugbear==22.10.27
