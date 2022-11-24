@@ -1,17 +1,15 @@
-name: Add bugs to bugs project
+name: Auto Assign to Project
 
 on:
   issues:
-    types:
-      - opened
-  pull_request:
-    types:
-      - opened
+    types: [opened, labeled]
+  pull_request_target:
+    types: [opened, labeled]
 
 jobs:
-  add-to-project:
-    name: Add issue to project
+  assign_one_project:
     runs-on: ubuntu-latest
+    name: Assign to One Project
     steps:
       - uses: actions/add-to-project@v0.3.0
         with:
