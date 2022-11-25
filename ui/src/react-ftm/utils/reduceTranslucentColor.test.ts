@@ -6,5 +6,5 @@ it('returns HEX representation of color on white background', () => {
 });
 
 it('handles invalid HEX strings', () => {
-  expect(reduceTranslucentColor('#gghhii', 0.5)).toBeNull();
+  expect(reduceTranslucentColor('#gghhii', 0.5)).toBeUndefined();
 });

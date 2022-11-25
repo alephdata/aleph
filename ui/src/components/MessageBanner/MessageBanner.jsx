@@ -55,17 +55,19 @@ function MessageBanner({ message, onDismiss }) {
           )}
         </p>
         {dismissible && (
-          <Button
-            minimal
-            rightIcon="cross"
-            intent={intent}
-            onClick={onDismissButtonClick}
-          >
-            <FormattedMessage
-              id="messages.banner.dismiss"
-              defaultMessage="Dismiss"
-            />
-          </Button>
+          <div className="MessageBanner__actions">
+            <Button
+              minimal
+              rightIcon="cross"
+              intent={intent}
+              onClick={onDismissButtonClick}
+            >
+              <FormattedMessage
+                id="messages.banner.dismiss"
+                defaultMessage="Dismiss"
+              />
+            </Button>
+          </div>
         )}
       </Callout>
     </Wrapper>

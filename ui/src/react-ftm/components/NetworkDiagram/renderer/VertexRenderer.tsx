@@ -10,7 +10,7 @@ import {
 import { VertexLabelRenderer } from './VertexLabelRenderer';
 import { IconRenderer } from './IconRenderer';
 import { modes } from 'react-ftm/components/NetworkDiagram/utils';
-import { reduceTranslucentColor } from 'react-ftm/utils/reduceTranslucentColor';
+import { reduceTranslucentColor, mapColor } from 'react-ftm/utils';
 
 interface IVertexRendererProps {
   vertex: Vertex;
@@ -29,6 +29,7 @@ export class VertexRenderer extends React.PureComponent<
   IVertexRendererState
 > {
   static contextType = GraphContext;
+  context: React.ContextType<typeof GraphContext>;
   gRef: React.RefObject<SVGGElement>;
 
   constructor(props: Readonly<IVertexRendererProps>) {
@@ -46,7 +47,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   componentDidMount() {
-    const { writeable } = this.context;
+    const { writeable } = this.context!;
     const g = this.gRef.current;
     if (writeable && g !== null) {
       g.addEventListener('dblclick', this.onDoubleClick);
@@ -54,7 +55,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   componentWillUnmount() {
-    const { writeable } = this.context;
+    const { writeable } = this.context!;
     const g = this.gRef.current;
     if (writeable && g !== null) {
       g.removeEventListener('dblclick', this.onDoubleClick);
@@ -62,7 +63,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   private onDragMove(e: DraggableEvent, data: DraggableData) {
-    const { interactionMode, layout } = this.context;
+    const { interactionMode, layout } = this.context!;
     const { actions, dragSelection } = this.props;
     const matrix = getRefMatrix(this.gRef);
     const current = applyMatrix(matrix, data.x, data.y);
@@ -78,7 +79,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   onDragEnd() {
-    const { interactionMode } = this.context;
+    const { interactionMode } = this.context!;
     const { actions, dropSelection } = this.props;
 
     if (interactionMode === modes.ITEM_DRAG) {
@@ -92,7 +93,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   onClick(e: any) {
-    const { interactionMode, layout } = this.context;
+    const { interactionMode, layout } = this.context!;
     const { vertex, selectVertex, actions } = this.props;
     if (interactionMode === modes.EDGE_DRAW) {
       // can't draw link to self
@@ -109,7 +110,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   onDoubleClick(e: MouseEvent) {
-    const { entityManager } = this.context;
+    const { entityManager } = this.context!;
     const { actions, vertex } = this.props;
     e.preventDefault();
     e.stopPropagation();
@@ -123,7 +124,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   onMouseOver() {
-    const { interactionMode } = this.context;
+    const { interactionMode } = this.context!;
     const { vertex } = this.props;
 
     if (interactionMode === modes.EDGE_DRAW && vertex.isEntity()) {
@@ -136,14 +137,14 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   getColor() {
-    const { layout } = this.context;
+    const { layout } = this.context!;
     const { vertex } = this.props;
     const { hovered } = this.state;
 
     const highlighted =
       layout.isElementSelected(vertex) || layout.selection.length === 0;
 
-    const color = vertex.color || layout.config.DEFAULT_VERTEX_COLOR;
+    const color = mapColor(vertex.color || layout.config.DEFAULT_VERTEX_COLOR);
 
     if (highlighted || hovered) {
       return color;
@@ -153,7 +154,7 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   allowPointerEvents() {
-    const { interactionMode } = this.context;
+    const { interactionMode } = this.context!;
     const { vertex } = this.props;
 
     // sets pointer events to none while dragging in order to detect mouseover on other elements
@@ -168,11 +169,15 @@ export class VertexRenderer extends React.PureComponent<
   }
 
   render() {
-    const { entityManager, layout, writeable } = this.context;
+    const { entityManager, layout, writeable } = this.context!;
     const { vertex } = this.props;
     const { x, y } = layout.config.gridToPixel(vertex.position);
     const selected = layout.isElementSelected(vertex);
+
     const isEntity = vertex.isEntity();
+    const entityId = vertex.entityId;
+    const entity = entityId && entityManager.getEntity(vertex.entityId);
+
     const defaultRadius = isEntity
       ? layout.config.DEFAULT_VERTEX_RADIUS
       : layout.config.DEFAULT_VERTEX_RADIUS / 2;
@@ -220,10 +225,7 @@ export class VertexRenderer extends React.PureComponent<
             onClick={this.onClick}
             color={vertexColor}
           />
-          <IconRenderer
-            entity={entityManager.getEntity(vertex.entityId)}
-            radius={vertexRadius}
-          />
+          {entity && <IconRenderer entity={entity} radius={vertexRadius} />}
         </g>
       </DraggableCore>
     );
