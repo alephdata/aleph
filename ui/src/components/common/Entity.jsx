@@ -21,10 +21,15 @@ class EntityLink extends PureComponent {
 
   onClick(event) {
     const { entity, navigate, location, preview, profile = true } = this.props;
-    if (preview) {
-      event.preventDefault();
-      togglePreview(navigate, location, entity, profile);
+    const modifierPressed =
+      event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+
+    if (!preview || modifierPressed) {
+      return;
     }
+
+    event.preventDefault();
+    togglePreview(navigate, location, entity, profile);
   }
 
   render() {
