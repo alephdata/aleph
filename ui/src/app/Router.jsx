@@ -10,6 +10,7 @@ import {
   selectMessages,
   selectPinnedMessage,
 } from 'selectors';
+import LegacyRedirect from 'app/LegacyRedirect';
 import Navbar from 'components/Navbar/Navbar';
 import MessageBanner from 'components/MessageBanner/MessageBanner';
 
@@ -116,32 +117,45 @@ class Router extends Component {
             <Route path="entities/:entityId" element={<EntityScreen />} />
             <Route
               path="text/:documentId"
-              render={() => <Navigate to="/entities/:documentId" replace />}
+              element={
+                <LegacyRedirect
+                  to={({ documentId }) => `/entities/${documentId}`}
+                />
+              }
             />
             <Route
               path="tabular/:documentId/:sheet"
-              render={() => <Navigate to="/entities/:documentId" replace />}
+              element={
+                <LegacyRedirect
+                  to={({ documentId }) => `/entities/${documentId}`}
+                />
+              }
             />
             <Route
               path="documents/:documentId"
-              render={() => <Navigate to="/entities/:documentId" replace />}
+              element={
+                <LegacyRedirect
+                  to={({ documentId }) => `/entities/${documentId}`}
+                />
+              }
             />
             <Route path="datasets" element={<DatasetIndexScreen />} />
-            <Route
-              path="sources"
-              render={() => <Navigate to="/datasets" replace />}
-            />
+            <Route path="sources" element={<LegacyRedirect to="/datasets" />} />
             <Route
               path="investigations"
               element={<InvestigationIndexScreen />}
             />
             <Route
               path="cases"
-              render={() => <Navigate to="/investigations" replace />}
+              element={<LegacyRedirect to="/investigations" />}
             />
             <Route
               path="collections/:collectionId/documents"
-              render={() => <Navigate to="/datasets/:collectionId" replace />}
+              element={
+                <LegacyRedirect
+                  to={({ collectionId }) => `/datasets/${collectionId}`}
+                />
+              }
             />
             <Route
               path="datasets/:collectionId"
@@ -153,25 +167,31 @@ class Router extends Component {
             />
             <Route
               path="collections/:collectionId"
-              render={() => <Navigate to="/datasets/:collectionId" replace />}
+              element={
+                <LegacyRedirect
+                  to={({ collectionId }) => `/datasets/${collectionId}`}
+                />
+              }
             />
             <Route
               path="collections/:collectionId/xref/:otherId"
-              render={() => (
-                <Navigate
-                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
-                  replace
+              element={
+                <LegacyRedirect
+                  to={({ collectionId, otherId }) =>
+                    `/datasets/${collectionId}?xreffilter:match_collection_id=${otherId}#mode=xref`
+                  }
                 />
-              )}
+              }
             />
             <Route
               path="datasets/:collectionId/xref/:otherId"
-              render={() => (
-                <Navigate
-                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
-                  replace
+              element={
+                <LegacyRedirect
+                  to={({ collectionId, otherId }) =>
+                    `/datasets/${collectionId}?xreffilter:match_collection_id=${otherId}#mode=xref`
+                  }
                 />
-              )}
+              }
             />
             <Route path="profiles/:profileId" element={<ProfileScreen />} />
             <Route path="diagrams/:entitySetId" element={<DiagramScreen />} />
