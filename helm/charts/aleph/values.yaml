@@ -10,7 +10,7 @@ global:
     pullPolicy: Always
 
   commonEnv:
-    # LOG_FORMAT: JSON
+    LOG_FORMAT: JSON
     REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
 
   env:
