@@ -10,7 +10,7 @@ import {
   selectMessages,
   selectPinnedMessage,
 } from 'selectors';
-import LegacyRedirect from 'app/LegacyRedirect';
+import { routes as legacyRedirects } from 'app/legacyRedirects';
 import Navbar from 'components/Navbar/Navbar';
 import MessageBanner from 'components/MessageBanner/MessageBanner';
 
@@ -115,47 +115,10 @@ class Router extends Component {
             <Route path="pages/:page" element={<PagesScreen />} />
             <Route path="activate/:code" element={<ActivateScreen />} />
             <Route path="entities/:entityId" element={<EntityScreen />} />
-            <Route
-              path="text/:documentId"
-              element={
-                <LegacyRedirect
-                  to={({ documentId }) => `/entities/${documentId}`}
-                />
-              }
-            />
-            <Route
-              path="tabular/:documentId/:sheet"
-              element={
-                <LegacyRedirect
-                  to={({ documentId }) => `/entities/${documentId}`}
-                />
-              }
-            />
-            <Route
-              path="documents/:documentId"
-              element={
-                <LegacyRedirect
-                  to={({ documentId }) => `/entities/${documentId}`}
-                />
-              }
-            />
             <Route path="datasets" element={<DatasetIndexScreen />} />
-            <Route path="sources" element={<LegacyRedirect to="/datasets" />} />
             <Route
               path="investigations"
               element={<InvestigationIndexScreen />}
-            />
-            <Route
-              path="cases"
-              element={<LegacyRedirect to="/investigations" />}
-            />
-            <Route
-              path="collections/:collectionId/documents"
-              element={
-                <LegacyRedirect
-                  to={({ collectionId }) => `/datasets/${collectionId}`}
-                />
-              }
             />
             <Route
               path="datasets/:collectionId"
@@ -164,34 +127,6 @@ class Router extends Component {
             <Route
               path="investigations/:collectionId"
               element={<InvestigationScreen />}
-            />
-            <Route
-              path="collections/:collectionId"
-              element={
-                <LegacyRedirect
-                  to={({ collectionId }) => `/datasets/${collectionId}`}
-                />
-              }
-            />
-            <Route
-              path="collections/:collectionId/xref/:otherId"
-              element={
-                <LegacyRedirect
-                  to={({ collectionId, otherId }) =>
-                    `/datasets/${collectionId}?xreffilter:match_collection_id=${otherId}#mode=xref`
-                  }
-                />
-              }
-            />
-            <Route
-              path="datasets/:collectionId/xref/:otherId"
-              element={
-                <LegacyRedirect
-                  to={({ collectionId, otherId }) =>
-                    `/datasets/${collectionId}?xreffilter:match_collection_id=${otherId}#mode=xref`
-                  }
-                />
-              }
             />
             <Route path="profiles/:profileId" element={<ProfileScreen />} />
             <Route path="diagrams/:entitySetId" element={<DiagramScreen />} />
@@ -209,6 +144,7 @@ class Router extends Component {
             <Route path="status" element={<SystemStatusScreen />} />
             <Route path="groups/:groupId" element={<GroupScreen />} />
             <Route path="/" element={<HomeScreen />} />
+            {legacyRedirects}
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
         </Suspense>
