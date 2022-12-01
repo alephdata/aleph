@@ -235,7 +235,9 @@ See the [relevant section in the Technical FAQ](/developers/technical-faq#how-do
 Aleph stores persistent data in 3 different systems:
 
 1. Blob storage: This is where Aleph stores the uploaded files as blobs.
-2. SQL Database: Aleph has a couple of different use cases for a SQL database. \* A database to store application data like users, sessions, collection metadata etc. This database is the one defined by `ALEPH_DATABASE_URI` setting. \* A database to store FtM entities. This database is defined by `FTM_STORE_URI`. These two databases can use the same SQL database instance or can use separate instance for each use case.
+2. SQL Database: Aleph has a couple of different use cases for a SQL database.
+   - A database to store application data like users, sessions, collection metadata etc. This database is the one defined by `ALEPH_DATABASE_URI` setting.
+   - A database to store FtM entities. This database is defined by `FTM_STORE_URI`. These two databases can use the same SQL database instance or can use separate instance for each use case.
 3. ElasticSearch: ElasticSearch powers Aleph's search and stores the contents of all processed documents and entities.
 
 To have a functional Aleph instance, we need all 3 of these components to be operational without data loss and have a restoration plan if we any of these components experience data corruption, data loss or any other failure.

@@ -71,7 +71,7 @@
               "children": [
                 { "slug": "/developers/followthemoney/ftm" },
                 {
-                  "title": "Rechnical Reference",
+                  "title": "Technical Reference",
                   "external": true,
                   "link": "https://followthemoney.readthedocs.io/"
                 }
