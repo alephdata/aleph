@@ -40,7 +40,7 @@
     "query-string": "^7.0.0",
     "react": "^16.13.1",
     "react-colorful": "^5.5.1",
-    "react-countup": "^6.3.2",
+    "react-countup": "^6.4.0",
     "react-datasheet": "1.4.12",
     "react-dom": "^16.13.1",
     "react-draggable": "^4.4.4",
