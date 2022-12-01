@@ -57,7 +57,7 @@
     "recharts": "^2.1.16",
     "redux": "^4.0.1",
     "redux-act": "^1.7.4",
-    "redux-thunk": "^2.3.0",
+    "redux-thunk": "^2.4.2",
     "rehype-raw": "^6.0.0",
     "sass": "^1.55.0",
     "stream": "npm:stream-browserify@^3.0.0",
