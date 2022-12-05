@@ -20,7 +20,7 @@ class AppItem extends PureComponent {
         }}
       />
     );
-    const ftm_message = (
+    const ftmMessage = (
       <FormattedMessage
         id="footer.aleph"
         defaultMessage="FollowTheMoney {version}"
