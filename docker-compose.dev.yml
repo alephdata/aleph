@@ -20,6 +20,10 @@ services:
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "http.cors.enabled=true"
+      - "http.cors.allow-origin=*"
+      - "http.cors.allow-headers=*"
+      - "http.cors.allow-credentials=true"
     ports:
       - "127.0.0.1:19200:9200"
     volumes:
