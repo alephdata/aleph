@@ -39,7 +39,7 @@ class AppItem extends PureComponent {
       <MenuItem
         className={Classes.TEXT_DISABLED}
         icon="code"
-        text={ftm_message}
+        text={ftmMessage}
         href="https://docs.alephdata.org/developers/followthemoney"
       />,
     ];
