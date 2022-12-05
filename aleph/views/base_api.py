@@ -5,6 +5,7 @@ from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
 from followthemoney import model
+from followthemoney import __version__ as ftm_version
 from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError, DecodeError
 from banal import as_bool
@@ -51,6 +52,7 @@ def _metadata_locale(locale):
         "app": {
             "title": SETTINGS.APP_TITLE,
             "version": __version__,
+            "ftm_version": ftm_version,
             "banner": SETTINGS.APP_BANNER,
             "ui_uri": SETTINGS.APP_UI_URL,
             "messages_url": SETTINGS.APP_MESSAGES_URL,

@@ -20,14 +20,29 @@ class AppItem extends PureComponent {
         }}
       />
     );
-    return (
+    const ftm_message = (
+      <FormattedMessage
+        id="footer.aleph"
+        defaultMessage="followthemoney {version}"
+        values={{
+          version: app.ftm_version,
+        }}
+      />
+    );
+    return [
       <MenuItem
         className={Classes.TEXT_DISABLED}
         icon="code"
         text={message}
         href="https://docs.alephdata.org"
-      />
-    );
+      />,
+      <MenuItem
+        className={Classes.TEXT_DISABLED}
+        icon="code"
+        text={ftm_message}
+        href="https://docs.alephdata.org/developers/followthemoney"
+      />,
+    ];
   }
 }
 
