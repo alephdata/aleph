@@ -18,4 +18,4 @@ jobs:
       id-token: write
     with:
       build-path: ./docs
-      deploy: ${{ github.ref == 'refs/heads/till/docs' }}
+      deploy: ${{ github.ref == 'refs/heads/main' }}
