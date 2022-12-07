@@ -6,8 +6,7 @@ title: alephclient CLI
 # alephclient CLI
 
 <p class="lead">
-  Python-based command line client and library for interacting with the Aleph
-  API.
+  Python-based command line client and library for interacting with the Aleph API.
 </p>
 
 `alephclient` is a command-line client for Aleph. It can be used to bulk import document sets via the API, without direct access to the server.
@@ -74,10 +73,7 @@ alephclient stream-entities -f us_ofac | ftm validate | ftm export-excel -o OFAC
 ```
 
 <Callout theme="danger">
-  Streaming very large collections from an Aleph instance is a
-  resource-consuming activity on the server side. Please only stream collections
-  with more than 100,000 entities after making sure that the server
-  administrators are OK with it.
+  Streaming very large collections from an Aleph instance is a resource-consuming activity on the server side. Please only stream collections with more than 100,000 entities after making sure that the server administrators are OK with it.
 </Callout>
 
 ## Executing an entity mapping on the server
@@ -90,7 +86,5 @@ alephclient bulkload md_companies.yml
 ```
 
 <Callout>
-  Using mappings within Aleph is falling out of use, we recommend generating and
-  aggregating the entity stream outside the platform for a more reproducible and
-  resumable data processing workflow.
+  Using mappings within Aleph is falling out of use, we recommend generating and aggregating the entity stream outside the platform for a more reproducible and resumable data processing workflow.
 </Callout>

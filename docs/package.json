@@ -7,8 +7,8 @@
     "start": "astro dev",
     "preview": "astro preview",
     "build": "astro build",
-    "format": "prettier --write src/",
-    "format:check": "prettier --check src/",
+    "format": "prettier --write 'src/'",
+    "format:check": "prettier --check 'src/'",
     "links": "hyperlink --check-anchors --sources src/pages dist"
   },
   "author": "",

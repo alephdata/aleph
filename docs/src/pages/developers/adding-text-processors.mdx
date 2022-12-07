@@ -6,8 +6,7 @@ title: Adding text processors
 # Adding text processors
 
 <p class="lead">
-  This guide will show how to add a new service to the document processing
-  pipeline.
+  This guide will show how to add a new service to the document processing pipeline.
 </p>
 
 Some deployments of Aleph may wish to implement additional processing stages for content from text documents. A common example of this is automatic translation. This can be done by adding an extra service with custom code and adding it to the document processing pipeline.
@@ -23,16 +22,13 @@ A new stage can be added to this pipeline at runtime, either by extending the co
 An example implementation of a `servicelayer`-based processing service is available in the Aleph repository at [`alephdata/translate-service`](https://github.com/alephdata/translate-service). The code should be short enough to study in full, especially the worker module.
 
 <Callout theme="danger">
-  The translation service that is provided is a tech demo. Don't use it in
-  production.
+  The translation service that is provided is a tech demo. Don't use it in production.
 </Callout>
 
 In order to enable the service, you need to add it to the `docker-compose.dev.yml` file, and make one of the other services depend on it. An example section is present in the file, but commented out.
 
 <Callout>
-  To run the example service, you will need to create a service account JSON key
-  with permission to use the Google Cloud Translation API, and configure both
-  the project ID and the path for the service account file.
+  To run the example service, you will need to create a service account JSON key with permission to use the Google Cloud Translation API, and configure both the project ID and the path for the service account file.
 </Callout>
 
 Once you have added the service to the compose configuration, you can include the stage in the pipeline by adding the following variable to the `aleph.env` configuration file:
