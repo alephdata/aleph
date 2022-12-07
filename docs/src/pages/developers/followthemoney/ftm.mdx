@@ -6,8 +6,7 @@ title: Command-Line
 # Command-Line
 
 <p class="lead">
-  The ftm command-line tool can be used to generate or export followthemoney
-  data.
+  The ftm command-line tool can be used to generate or export followthemoney data.
 </p>
 
 **ftm** is a command-line tool that is part of the Python implementation of the [Follow the Money](/developers/followthemoney) data model. It can be used to generate, process and export streams of entities in a line-based JSON format. Typical uses would include:
@@ -101,9 +100,7 @@ Since writing the binary data of an Excel file to standard output is awkward, it
 />
 
 <Callout theme="danger">
-  When exporting to Excel format, it's easy to generate a workbook larger than
-  what Microsoft Excel and similar office programs can actually open. Only
-  export small and mid-size datasets.
+  When exporting to Excel format, it's easy to generate a workbook larger than what Microsoft Excel and similar office programs can actually open. Only export small and mid-size datasets.
 </Callout>
 
 When exporting to CSV format using `ftm export-csv`, the exporter will usually generate multiple output files, one for each schema of entities present in the input stream of Follow the Money entities. To handle this, it expects to be given a directory name:
@@ -116,10 +113,7 @@ cat us_ofac.ijson | ftm validate | ftm export-csv -o OFAC/
 In the given directory, you will find files names `Person.csv`, `LegalEntity.csv`, `Vessel.csv`, etc.
 
 <Callout>
-  Exporting to CSV and Excel also works for textual documents like PDFs or
-  E-Mails that have been uploaded to an Aleph server. This can be a useful way
-  to get the contents of a set of documents into a spreadsheet and work with
-  them there.
+  Exporting to CSV and Excel also works for textual documents like PDFs or E-Mails that have been uploaded to an Aleph server. This can be a useful way to get the contents of a set of documents into a spreadsheet and work with them there.
 </Callout>
 
 ## Exporting data to a network graph
@@ -270,7 +264,5 @@ ftm store delete -d us_ofac
 ```
 
 <Callout theme="danger">
-  When aggregating entities with large fragments of text, a size limit applies.
-  By default, no entity is allowed to grow larger than 50MB of raw text.
-  Additional text fragments are discarded with a warning.
+  When aggregating entities with large fragments of text, a size limit applies. By default, no entity is allowed to grow larger than 50MB of raw text. Additional text fragments are discarded with a warning.
 </Callout>

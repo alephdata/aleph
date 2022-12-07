@@ -16,10 +16,7 @@ Aleph requires multiple services to operate. It uses Docker containers to make i
 ## Developer setup
 
 <Callout theme="danger">
-  This section describes how to set up Aleph for software development. Developer
-  mode disables many security measures and it not meant to be used for
-  internet-facing uses, [Production deployment](#production-deployment) is
-  needed instead.
+  This section describes how to set up Aleph for software development. Developer mode disables many security measures and it not meant to be used for internet-facing uses, [Production deployment](#production-deployment) is needed instead.
 </Callout>
 
 ### What is developer mode?
@@ -47,10 +44,7 @@ Once the code is downloaded, find the file called `aleph.env.tmpl` in the base d
 Also, please execute the following command to allow ElasticSearch to map its memory:
 
 <Callout>
-  When running Docker on macOS, Docker uses a virtual machine as the container
-  host. Therefore, you need to run the command inside of the Docker virtual
-  machine. In order to log in to the virtual machine, execute `docker run -it
-  --rm --privileged --pid=host justincormack/nsenter1`.
+  When running Docker on macOS, Docker uses a virtual machine as the container host. Therefore, you need to run the command inside of the Docker virtual machine. In order to log in to the virtual machine, execute `docker run -it --rm --privileged --pid=host justincormack/nsenter1`.
 </Callout>
 
 ```shell
@@ -81,10 +75,7 @@ aleph --help
 This will enter a docker container where the `aleph` shell command is available (see [Usage](https://github.com/alephdata/aleph/wiki/Usage) for details). You can also access the host computers file system at `/host`. This means a file stored at `/tmp/bla.txt` on your computer can be found at `/host/tmp/bla.txt` inside the container.
 
 <Callout>
-  When you run Aleph in development mode, the default configuration will not run
-  the worker component used to index documents and do other background work. You
-  can start it either via `make worker` or inside an Aleph shell using `aleph
-  worker`.
+  When you run Aleph in development mode, the default configuration will not run the worker component used to index documents and do other background work. You can start it either via `make worker` or inside an Aleph shell using `aleph worker`.
 </Callout>
 
 ### Users
@@ -164,9 +155,7 @@ To build the image you can run `make build`, which will build the `alephdata/ale
 ## Production deployment
 
 <Callout>
-  This section details how to **set up Aleph in production mode**. If you plan
-  to change the source code or quickly test the software, you may wish to use
-  the [Developer setup](/developers/installation#developer-setup) instead.
+  This section details how to **set up Aleph in production mode**. If you plan to change the source code or quickly test the software, you may wish to use the [Developer setup](/developers/installation#developer-setup) instead.
 </Callout>
 
 Aleph is distributed as a set of Docker containers, which can be run on any server that meets the following criteria:
@@ -182,9 +171,7 @@ To begin a production deployment:
 - Make a copy of the configurations file named `aleph.env` and define settings for your production instance. Check the [section on configuration](/developers/installation#configuration) for more information regarding the available options.
 
 <Callout>
-  Aleph has support for multiple storage engines, including Amazon Web Services
-  Simple Storage Service, Google storage buckets, and local file storage.
-  Remember to configure this in your instance's configuration file.
+  Aleph has support for multiple storage engines, including Amazon Web Services Simple Storage Service, Google storage buckets, and local file storage. Remember to configure this in your instance's configuration file.
 </Callout>
 
 - Set `ALEPH_TAG` environment variable to specify the version of Aleph you want deploy. If `ALEPH_TAG` is not set, the stable version specified in the docker compose file is deployed.
@@ -221,9 +208,7 @@ curl http://localhost:8080/api/2/statistics
 If your servers firewall configuration allows it, you can now also open `http://localhost:8080` in your browser and use the web interface to navigate the application.
 
 <Callout theme="danger">
-  Be careful with the ports exposed from your Docker system on public ports.
-  Docker is known to override some firewall rules so make sure you double-check
-  that you're only exposing the intended ports on your productions system.
+  Be careful with the ports exposed from your Docker system on public ports. Docker is known to override some firewall rules so make sure you double-check that you're only exposing the intended ports on your productions system.
 </Callout>
 
 ### Upgrading
