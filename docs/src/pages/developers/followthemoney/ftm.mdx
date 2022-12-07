@@ -58,7 +58,11 @@ ftm map md_companies.yml
 
 This will yield a line-based JSON stream of every company in Moldova, their directors and principal shareholders.
 
-![Generating Moldovan company data as Follow the Money entities.](</assets/Screenshot 2019-08-29 at 23.24.51.png>)
+<Image
+  src="/assets/Screenshot 2019-08-29 at 23.24.51.png"
+  alt="Screenshot of a terminal window. The terminal shows the output of the `ftm map` command to generate the Moldovan company data."
+  density={2}
+/>
 
 You might note, however, that this actually generates multiple entity fragments for each company (i.e. multiple entities with the same ID). This is due to the way the md_companies mapping is written: each query section generates a partial company record. In order to mitigate this, you will need to perform entity aggregation:
 
@@ -90,7 +94,11 @@ cat us_ofac.ijson | ftm validate | ftm export-excel -o OFAC.xlsx
 
 Since writing the binary data of an Excel file to standard output is awkward, it is mandatory to include a file name with the `-o` option.
 
-![The US sanctions list, as exported via export-excel.](</assets/Screenshot 2019-09-01 at 20.26.02.png>)
+<Image
+  src="/assets/Screenshot 2019-09-01 at 20.26.02.png"
+  alt="Screenshot of Microsoft Excel showing the export from the example above. The Excel file has multiple sheets, one for each entity type (e.g. People, Companies, and Ownerships)."
+  density={2}
+/>
 
 <Callout theme="danger">
   When exporting to Excel format, it's easy to generate a workbook larger than
@@ -135,7 +143,11 @@ curl -o us_ofac.ijson https://storage.googleapis.com/occrp-data-exports/us_ofac/
 cat us_ofac.ijson | ftm export-cypher | cypher-shell -u user -p password
 ```
 
-![Each entity type is turned either into a node label, or a relationship type.](</assets/Screenshot 2019-09-01 at 21.45.28.png>)
+<Image
+  src="/assets/Screenshot 2019-09-01 at 21.45.28.png"
+  alt="Screenshot of FtM entities imported to a Neo4J instance."
+  density={2}
+/>
 
 By default, this will only make explicit edges based on entity to entity relationships. If you want to reify specific property types, use the `-e` option:
 
@@ -187,7 +199,11 @@ curl -o us_ofac.ijson https://storage.googleapis.com/occrp-data-exports/us_ofac/
 cat us_ofac.ijson | ftm validate | ftm export-cypher -e iban -o ofac.gexf
 ```
 
-![A small trove of emails visualised as a network. The entity schema type has been used to color nodes, while the size is based on the amount of inbound links (i.e. In-Degree).](</assets/Screenshot 2019-09-01 at 22.03.51.png>)
+<Image
+  src="/assets/Screenshot 2019-09-01 at 22.03.51.png"
+  alt="Screenshot of Gephi. A small trove of emails has been visualized as a network. The entity schema type has been used to color nodes, while the size is based on the amount of inbound links (i.e. In-Degree)."
+  density={2}
+/>
 
 ## Exporting entities to RDF/Linked Data
 

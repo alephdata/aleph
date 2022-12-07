@@ -17,7 +17,10 @@ Therefore, in order to make structured data entities link to ingested documents,
 
 ## Example: Persona de Interes
 
-![The Persona de Interes home page.](</assets/Screenshot 2020-04-10 at 11.43.09.png>)
+<Image
+  src="/assets/Screenshot 2020-04-10 at 11.43.09.png"
+  alt="Screenshot of the “The Persona de Interes” home page."
+/>
 
 **Persona de Interes** is a 2014 project by the OCCRP that features data from Mexico and Central America. It collects information on persons and companies, as well as real estate, court cases and source documents. For this tutorial, we will import the contents of the Persona de Interes web site into Aleph, preserving the connections between people and companies on the one hand, and to documents on the other.
 
@@ -32,7 +35,10 @@ Therefore, in order to make structured data entities link to ingested documents,
 
 In order to get access to the raw data, we decided to simply scrape the PdI web site. The [script used for this](https://github.com/alephdata/example-personadeinteres/blob/master/parse.py) is not central to this tutorial, but it leaves us with a [small JSON file](https://github.com/alephdata/example-personadeinteres/blob/master/pdi.json) containing the published data, and a folder full of the PDF documents attached to profiles on the original site.
 
-![A profile on the original site, showing a person profile, links to documents in a sidebar, and, at the bottom, links to related entities.](</assets/Screenshot 2020-04-10 at 11.49.47.png>)
+<Image
+  src="/assets/Screenshot 2020-04-10 at 11.49.47.png"
+  alt="A profile on the original site, showing a person profile, links to documents in a sidebar, and, at the bottom, links to related entities."
+/>
 
 ## Step 2: Uploading documents to Aleph from a Python script
 
@@ -127,7 +133,7 @@ When visiting the Aleph UI, you should now be able to see the the person record,
 
 Obviously, this basic example needs to expand in order to convert the full data schema from **Persona de Interes into FollowTheMoney** entities.
 
-![](/assets/13d3b67dea7b2e1ce4e009bf70c2c819.jpg)
+<Image src="/assets/13d3b67dea7b2e1ce4e009bf70c2c819.jpg" />
 
 Please [check out the loading script](https://github.com/alephdata/example-personadeinteres/blob/master/load.py) to see how it approaches entity creation, and mapping properties from the web scrape into FtM schema.
 

@@ -15,6 +15,7 @@ To view the advanced options available in Aleph, **click the** **advanced search
 
 <Image
   src="/assets/Screen Shot 2021-02-11 at 10.32.31.png"
+  density={2}
   alt="A screenshot of the search results page in Aleph. The search box in Aleph’s main navigation bar has the value “Ilham Aliyev”. The advanced search pop-up is open. A red marker highlights the button next to the search input that can be used to toggle the advanced search pop-up."
 />
 
@@ -40,7 +41,7 @@ If you want Aleph to only return matches that have exactly "Ilham Aliyev", then 
 "Ilham Aliyev"
 ```
 
-![](/assets/ilham_aliyev_exact.png)
+<Image src="/assets/ilham_aliyev_exact.png" />
 
 ## Allow for variations in spelling
 
@@ -58,7 +59,7 @@ Aliyev~2
 
 What this translates to is: Give me matches that include the keyword Aliyev, but also matches that include up to any 2 letter variations from the keyword Aliyev. These variations include adding, removing, and changing a letter. This includes Aliyev, of course, but also includes Əliyev, which is just one letter variation different, and Əliyeva, which is two letter variations different from Aliyev.
 
-![](/assets/variation_search.png)
+<Image src="/assets/variation_search.png" />
 
 <Callout theme="danger">
   Using this operator with too high a number (greater than 3, for example) will
@@ -73,7 +74,7 @@ If you do not want to find a precise keyword, but merely specify that two words 
 "Trump Aliyev"~10
 ```
 
-![](/assets/proximity_search.png)
+<Image src="/assets/proximity_search.png" />
 
 ## Including and excluding combinations of keywords
 
