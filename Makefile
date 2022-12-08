@@ -7,8 +7,7 @@ all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		postgres elasticsearch ingest-file \
-		convert-document
+		postgres elasticsearch ingest-file
 
 shell: services
 	$(APPDOCKER) /bin/bash
@@ -78,7 +77,7 @@ build-ui:
 build-full: build build-ui
 
 ingest-restart:
-	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
+	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file
 
 dev: 
 	python3 -m pip install -q -r requirements-dev.txt

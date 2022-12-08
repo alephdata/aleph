@@ -24,13 +24,6 @@ services:
     volumes:
       - redis-data:/data
 
-  convert-document:
-    image: ghcr.io/alephdata/convert-document:3.16.1
-    read_only: true
-    restart: on-failure
-    user: app
-    tmpfs: /tmp
-
   ingest-file:
     image: ghcr.io/alephdata/ingest-file:3.16.1
     tmpfs:
@@ -40,7 +33,6 @@ services:
     depends_on:
       - postgres
       - redis
-      - convert-document
     restart: on-failure
     env_file:
       - aleph.env

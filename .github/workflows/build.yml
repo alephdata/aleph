@@ -25,7 +25,7 @@ jobs:
 
       - name: Docker pull services
         run: |
-          docker-compose pull --parallel --quiet elasticsearch convert-document ingest-file
+          docker-compose pull --quiet elasticsearch ingest-file
           make ALEPH_TAG=${GITHUB_SHA} services
 
       - name: Build docker image

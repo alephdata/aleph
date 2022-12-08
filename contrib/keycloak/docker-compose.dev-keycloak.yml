@@ -32,14 +32,6 @@ services:
     volumes:
       - redis-data:/data
 
-  convert-document:
-    image: alephdata/convert-document:3.16.1
-    restart: on-failure
-    tmpfs:
-      - /tmp
-      - /root/.config
-      - /home/app/.config
-
   ingest-file:
     build:
       context: services/ingest-file
@@ -56,7 +48,6 @@ services:
     links:
       - postgres
       - redis
-      - convert-document
     restart: on-failure
     env_file:
       - aleph.env

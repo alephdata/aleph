@@ -27,16 +27,9 @@ services:
 
   redis:
     image: redis:alpine
-    command: ["redis-server", "--save", "3600", "10"]
+    command: [ "redis-server", "--save", "3600", "10" ]
     volumes:
       - redis-data:/data
-
-  convert-document:
-    image: ghcr.io/alephdata/convert-document:latest
-    read_only: true
-    restart: on-failure
-    user: app
-    tmpfs: /tmp
 
   ingest-file:
     image: ghcr.io/alephdata/ingest-file:3.16.4
@@ -47,7 +40,6 @@ services:
     depends_on:
       - postgres
       - redis
-      - convert-document
     restart: on-failure
     env_file:
       - aleph.env
