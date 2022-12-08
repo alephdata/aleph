@@ -1,21 +1,46 @@
 name: Docs
 
-on:
-  push:
-    paths:
-      - "docs/**"
+on: 
+  - push
+  - workflow_dispatch
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  docs:
-    uses: alephdata/astro-theme-docs/.github/workflows/docs.yml@main
+  build:
+    runs-on: ubuntu-latest
+
     permissions:
       contents: read
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Build docs
+        uses: alephdata/astro-theme-docs/.github/actions/build@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docs-path: ./docs
+
+  deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
       pages: write
       id-token: write
-    with:
-      build-path: ./docs
-      deploy: ${{ github.ref == 'refs/heads/main' }}
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.url }}
+
+    steps:
+      - name: Deploy docs
+        id: deployment
+        uses: alephdata/astro-theme-docs/.github/actions/deploy@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
