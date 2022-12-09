@@ -49,13 +49,13 @@ const svgIcon = (path, selectors) => {
   const fill = findFill(selectors);
 
   // Get the SVG path for requested icon size and name.
-  const paths = size === '16' ? IconSvgPaths16 : IconSvgPaths20;
-  const path = paths[iconNameToPathsRecordKey(name)];
+  const svgPaths = size === '16' ? IconSvgPaths16 : IconSvgPaths20;
+  const svgPath = svgPaths[iconNameToPathsRecordKey(name)];
 
   // Assemble an icon SVG element and encode it as a data URI.
   const svg =
     `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">` +
-    `<path fill-rule="evenodd" clip-rule="evenodd" fill="${fill}" d="${path}" />` +
+    `<path fill-rule="evenodd" clip-rule="evenodd" fill="${fill}" d="${svgPath}" />` +
     `</svg>`;
 
   const value = `url('data:image/svg+xml,${encodeURIComponent(svg)}')`;
