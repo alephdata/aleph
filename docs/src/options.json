@@ -4,6 +4,11 @@
     "branch": "main",
     "githubRepoUrl": "https://github.com/alephdata/aleph"
   },
+  "search": {
+    "appId": "T36QKHHSVS",
+    "apiKey": "b462393bca678070ceb9abf533aeeb0b",
+    "indexName": "aleph-occrp"
+  },
   "nav": {
     "header": {
       "items": []
