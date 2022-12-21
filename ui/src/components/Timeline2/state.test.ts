@@ -26,6 +26,27 @@ describe('SELECT_ENTITY', () => {
 
     expect(newState.selectedId).toEqual('123');
   });
+
+  it('unselects if entity is already selected', () => {
+    const oldState = { ...state, selectedId: '123' };
+    const newState = reducer(oldState, {
+      type: 'SELECT_ENTITY',
+      payload: { entity },
+    });
+
+    expect(newState.selectedId).toBeNull();
+  });
+});
+
+describe('UNSELECT_ENTITY', () => {
+  it('updates selected entity ID', () => {
+    const oldState = { ...state, selectedId: '123' };
+    const newState = reducer(oldState, {
+      type: 'UNSELECT_ENTITY',
+    });
+
+    expect(newState.selectedId).toBeNull();
+  });
 });
 
 describe('UPDATE_VERTEX', () => {

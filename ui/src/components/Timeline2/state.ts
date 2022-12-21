@@ -14,6 +14,10 @@ type SelectEntityAction = {
   };
 };
 
+type UnselectEntityAction = {
+  type: 'UNSELECT_ENTITY';
+};
+
 type UpdateVertexAction = {
   type: 'UPDATE_VERTEX';
   payload: {
@@ -44,30 +48,37 @@ type RemoveEntityAction = {
 
 type Action =
   | SelectEntityAction
+  | UnselectEntityAction
   | UpdateVertexAction
   | UpdateEntityAction
   | CreateEntityAction
   | RemoveEntityAction;
 
-const reducer = (state: State, { type, payload }: Action): State => {
+const reducer = (state: State, action: Action): State => {
+  const { type } = action;
+
   if (type === 'SELECT_ENTITY') {
-    if (payload.entity.id === state.selectedId) {
-      return { ...state, selectedId: null };
+    if (action.payload.entity.id === state.selectedId) {
+      return reducer(state, { type: 'UNSELECT_ENTITY' });
     }
 
-    return { ...state, selectedId: payload.entity.id };
+    return { ...state, selectedId: action.payload.entity.id };
+  }
+
+  if (type === 'UNSELECT_ENTITY') {
+    return { ...state, selectedId: null };
   }
 
   if (type === 'UPDATE_VERTEX') {
     const vertices = state.layout.vertices;
     const index = state.layout.vertices.findIndex(
-      (vertex) => vertex.entityId === payload.vertex.entityId
+      (vertex) => vertex.entityId === action.payload.vertex.entityId
     );
 
     if (index < 0) {
-      vertices.push(payload.vertex);
+      vertices.push(action.payload.vertex);
     } else {
-      vertices.splice(index, 1, payload.vertex);
+      vertices.splice(index, 1, action.payload.vertex);
     }
 
     return { ...state, layout: { vertices } };
@@ -75,30 +86,36 @@ const reducer = (state: State, { type, payload }: Action): State => {
 
   if (type === 'UPDATE_ENTITY') {
     const index = state.entities.findIndex(
-      (entity) => entity.id === payload.entity.id
+      (entity) => entity.id === action.payload.entity.id
     );
 
     if (index < 0) {
-      state.entities.push(payload.entity);
+      state.entities.push(action.payload.entity);
     } else {
-      state.entities.splice(index, 1, payload.entity);
+      state.entities.splice(index, 1, action.payload.entity);
     }
 
     return { ...state, entities: state.entities };
   }
 
   if (type === 'CREATE_ENTITY') {
-    let newState = reducer(state, { type: 'UPDATE_ENTITY', payload });
-    return reducer(newState, { type: 'SELECT_ENTITY', payload });
+    let newState = reducer(state, {
+      type: 'UPDATE_ENTITY',
+      payload: action.payload,
+    });
+    return reducer(newState, {
+      type: 'SELECT_ENTITY',
+      payload: action.payload,
+    });
   }
 
   if (type === 'REMOVE_ENTITY') {
     const entities = state.entities.filter(
-      (entity) => entity.id !== payload.entity.id
+      (entity) => entity.id !== action.payload.entity.id
     );
 
     const selectedId =
-      state.selectedId === payload.entity.id ? null : state.selectedId;
+      state.selectedId === action.payload.entity.id ? null : state.selectedId;
 
     return { ...state, selectedId, entities };
   }
