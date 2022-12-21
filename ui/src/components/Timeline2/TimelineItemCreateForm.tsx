@@ -8,7 +8,11 @@ import {
   Value,
   Values,
 } from '@alephdata/followthemoney';
-import type { EntityProperties, EdgeSchema, FetchEntitySuggestions } from './types';
+import type {
+  EntityProperties,
+  EdgeSchema,
+  FetchEntitySuggestions,
+} from './types';
 import { SchemaSelect, EntitySelect } from 'react-ftm';
 import { Button, Alignment, FormGroup, InputGroup } from '@blueprintjs/core';
 
@@ -248,66 +252,70 @@ const TimelineItemCreateForm: FC<TimelineItemCreateFormProps> = ({
   onSubmit,
   fetchEntitySuggestions,
 }) => {
-  const [schemaName, setSchemaName] = useState<string | null>('Event');
-  const [properties, setProperties] = useState<EntityProperties>({});
-  const schema = (schemaName && model.schemata[schemaName]) || null;
+  const [entity, setEntity] = useState<Entity>(model.createEntity('Event'));
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!schema) {
-      return;
-    }
-
-    const entity = model.createEntity(schema);
-
-    for (const [property, value] of Object.entries(properties)) {
-      entity.setProperty(property, value);
-    }
-
     onSubmit(entity);
   };
 
-  const onSchemaChange = ({ name }: Schema) => {
-    setProperties({});
-    setSchemaName(name);
+  const onSchemaChange = (schema: Schema) => {
+    if (entity.schema.name === schema.name) {
+      return;
+    }
+
+    const newEntity = model.createEntity(schema);
+    setEntity(newEntity);
   };
 
   const onPropertyChange = (property: Property, value: Value) => {
-    setProperties({ ...properties, [property.name]: value });
+    const newEntity = entity.clone();
+    newEntity.properties.set(property, [value]);
+    setEntity(newEntity);
   };
+
+  // Transform the entity properties into an object with single-value properties
+  // as this data structure is slightly easier to work with for our use case.
+  const properties = Object.fromEntries(
+    entity
+      .getProperties()
+      .filter((property: Property) => entity.getProperty(property).length > 0)
+      .map((property: Property) => [
+        property.name,
+        entity.getProperty(property)[0],
+      ])
+  );
 
   return (
     <form id={id} onSubmit={onFormSubmit}>
-      <SchemaField model={model} value={schema} onChange={onSchemaChange} />
-
-      {schema && (
-        <>
-          <div className="TimelineItemCreateForm__row">
-            {isEdge(schema) ? (
-              <EdgeFields
-                schema={schema}
-                properties={properties}
-                fetchEntitySuggestions={fetchEntitySuggestions}
-                onChange={onPropertyChange}
-              />
-            ) : (
-              <CaptionField
-                schema={schema}
-                onChange={onPropertyChange}
-                properties={properties}
-              />
-            )}
-          </div>
-          <div className="TimelineItemCreateForm__row">
-            <TemporalExtentFields
-              schema={schema}
-              properties={properties}
-              onChange={onPropertyChange}
-            />
-          </div>
-        </>
-      )}
+      <SchemaField
+        model={model}
+        value={entity.schema}
+        onChange={onSchemaChange}
+      />
+      <div className="TimelineItemCreateForm__row">
+        {isEdge(entity.schema) ? (
+          <EdgeFields
+            schema={entity.schema}
+            properties={properties}
+            fetchEntitySuggestions={fetchEntitySuggestions}
+            onChange={onPropertyChange}
+          />
+        ) : (
+          <CaptionField
+            schema={entity.schema}
+            onChange={onPropertyChange}
+            properties={properties}
+          />
+        )}
+      </div>
+      <div className="TimelineItemCreateForm__row">
+        <TemporalExtentFields
+          schema={entity.schema}
+          properties={properties}
+          onChange={onPropertyChange}
+        />
+      </div>
     </form>
   );
 };

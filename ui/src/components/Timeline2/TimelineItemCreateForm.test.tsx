@@ -11,6 +11,14 @@ const selectSchema = async (name: string) => {
   await userEvent.click(screen.getByRole('menuitem', { name }));
 };
 
+beforeEach(() => {
+  // FTM uses crypto.getRandomValues to generate entity IDs.
+  // JSDOM doesn't support this API out of the box.
+  // TODO: Reenable type checking once we have updated @types/node.
+  // @ts-ignore
+  global.crypto = crypto.webcrypto;
+});
+
 it('selects `Event` schema by default', () => {
   render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
   expect(screen.getByRole('button', { name: 'Type' })).toHaveTextContent(
@@ -88,12 +96,6 @@ it('renders temporal extent fields', async () => {
 });
 
 it('calls callback with new entity object', async () => {
-  // FTM uses crypto.getRandomValues to generate entity IDs.
-  // JSDOM doesn't support this API out of the box.
-  // TODO: Reenable type checking once we have updated @types/node.
-  // @ts-ignore
-  global.crypto = crypto.webcrypto;
-
   const onSubmit = jest.fn();
 
   render(
