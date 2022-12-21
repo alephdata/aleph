@@ -26,6 +26,23 @@ it('selects `Event` schema by default', () => {
   );
 });
 
+it('does not reset proeprty values when changing the schema', async () => {
+  render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
+
+  // User types in the name...
+  const eventName = screen.getByRole('textbox', { name: 'Name' });
+  await userEvent.type(eventName, 'ACME, Inc.');
+
+  // ... then realizes that the schema should be 'Company' not the default 'Event'.
+  await selectSchema('Company');
+  const companyName = screen.getByRole('textbox', {
+    name: 'Name',
+  }) as HTMLInputElement;
+
+  // No need to type in the company name again after changing the schema!
+  expect(companyName.value).toEqual('ACME, Inc.');
+});
+
 it('renders source and target fields for edge schemata', async () => {
   render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
   await selectSchema('Ownership');

@@ -265,6 +265,7 @@ const TimelineItemCreateForm: FC<TimelineItemCreateFormProps> = ({
     }
 
     const newEntity = model.createEntity(schema);
+    newEntity.copyProperties(entity);
     setEntity(newEntity);
   };
 
