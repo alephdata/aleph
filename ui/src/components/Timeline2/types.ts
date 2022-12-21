@@ -27,6 +27,7 @@ export type TimelineRendererProps = {
   selectedId?: string | null;
   onSelect: (entity: Entity) => void;
   onRemove: (entity: Entity) => void;
+  onUnselect: () => void;
 };
 
 export type FetchEntitySuggestions = (

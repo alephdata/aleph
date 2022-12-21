@@ -39,6 +39,7 @@ it('supports navigating the list using arrow keys', async () => {
       layout={layout}
       onSelect={() => {}}
       onRemove={() => {}}
+      onUnselect={() => {}}
     />
   );
 

@@ -86,6 +86,7 @@ const Timeline: FC<TimelineProps> = ({
           onSelect={(entity: Entity) =>
             dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
           }
+          onUnselect={() => dispatch({ type: 'UNSELECT_ENTITY' })}
           onRemove={(entity: Entity) => {
             dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
             onEntityRemove && onEntityRemove(entity);

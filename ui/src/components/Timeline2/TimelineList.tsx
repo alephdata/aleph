@@ -23,6 +23,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
   layout,
   onSelect,
   onRemove,
+  onUnselect,
   selectedId,
 }) => {
   const itemRefs = useMemo(
@@ -49,6 +50,10 @@ const TimelineList: FC<TimelineRendererProps> = ({
     if (event.key === 'ArrowUp') {
       const newIndex = Math.max(0, activeIndex - 1);
       itemRefs[newIndex].current?.focus();
+    }
+
+    if (event.key === 'Escape') {
+      onUnselect();
     }
   };
 
