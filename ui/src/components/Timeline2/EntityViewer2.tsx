@@ -1,20 +1,21 @@
 import { FC } from 'react';
 import { Entity } from '@alephdata/followthemoney';
 import { Schema } from 'src/react-ftm/types';
-import { DEFAULT_COLOR, Vertex } from './Timeline';
+import { DEFAULT_COLOR } from './Timeline';
+import type { Vertex } from './types';
 import EntityViewerProperties from './EntityViewerProperties';
 import { ColorPicker } from 'src/react-ftm';
 
 import './EntityViewer2.scss';
 
-type Props = {
+type EntityViewer2Props = {
   entity: Entity;
   vertex: Vertex;
   onVertexChange?: (vertex: Vertex) => void;
   onEntityChange?: (entity: Entity) => void;
 };
 
-const EntityViewer2: FC<Props> = ({
+const EntityViewer2: FC<EntityViewer2Props> = ({
   entity,
   vertex,
   onVertexChange,

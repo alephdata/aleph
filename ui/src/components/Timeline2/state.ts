@@ -1,17 +1,5 @@
 import { Entity } from '@alephdata/followthemoney';
-
-type TimelineEntity = Omit<Entity, 'getTemporalStart'> & {
-  getTemporalStart: () => NonNullable<ReturnType<Entity['getTemporalStart']>>;
-};
-
-type Vertex = {
-  color?: string;
-  entityId: string;
-};
-
-type Layout = {
-  vertices: Array<Vertex>;
-};
+import type { Vertex, Layout, TimelineEntity } from './types';
 
 type State = {
   entities: Array<Entity>;

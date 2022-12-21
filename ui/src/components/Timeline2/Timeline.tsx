@@ -3,6 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
+import type { Layout, Vertex } from './types';
 import {
   reducer,
   selectSortedEntities,
@@ -17,15 +18,6 @@ import './Timeline.scss';
 
 const DEFAULT_COLOR = Colors.BLUE2;
 
-type Vertex = {
-  color?: string;
-  entityId: string;
-};
-
-type Layout = {
-  vertices: Array<Vertex>;
-};
-
 type TimelineProps = {
   model: Model;
   entities: Array<Entity>;
@@ -37,14 +29,6 @@ type TimelineProps = {
   onEntityCreateOrUpdate?: (entity: Entity) => Promise<unknown>;
   onEntityRemove?: (entity: Entity) => Promise<unknown>;
   onLayoutUpdate?: (layout: Layout) => Promise<unknown>;
-};
-
-type TimelineRendererProps = {
-  entities: Array<Entity>;
-  layout: Layout;
-  selectedId?: string | null;
-  onSelect: (entity: Entity) => void;
-  onRemove: (entity: Entity) => void;
 };
 
 const Timeline: FC<TimelineProps> = ({
@@ -131,4 +115,3 @@ const Timeline: FC<TimelineProps> = ({
 
 export default Timeline;
 export { DEFAULT_COLOR };
-export type { TimelineRendererProps, Vertex };

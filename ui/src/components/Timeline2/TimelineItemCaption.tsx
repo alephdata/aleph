@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Entity } from '@alephdata/followthemoney';
 
-type Props = {
+type TimelineItemCaptionProps = {
   entity: Entity;
 };
 
@@ -24,7 +24,7 @@ const getEdgeEndCaption = (
   return (values[0] as Entity).getCaption();
 };
 
-const TimelineItemCaption: FC<Props> = ({ entity }) => {
+const TimelineItemCaption: FC<TimelineItemCaptionProps> = ({ entity }) => {
   const schema = entity.schema;
 
   if (!schema.edge) {
