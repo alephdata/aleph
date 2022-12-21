@@ -6,7 +6,7 @@ import TimelineItemCaption from './TimelineItemCaption';
 
 import './TimelineListItem.scss';
 
-type Props = {
+type TimelineListItemProps = {
   entity: Entity;
   color: string;
   selected?: boolean;
@@ -15,7 +15,7 @@ type Props = {
   onRemove?: (entity: Entity) => void;
 };
 
-const TimelineListItem = forwardRef<HTMLTableRowElement, Props>(
+const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
   (props, ref) => {
     const { entity, color, selected, muted, onSelect, onRemove } = props;
 

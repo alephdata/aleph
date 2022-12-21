@@ -8,18 +8,11 @@ import {
   Value,
   Values,
 } from '@alephdata/followthemoney';
+import type { EntityProperties, EdgeSchema, FetchEntitySuggestions } from './types';
 import { SchemaSelect, EntitySelect } from 'react-ftm';
 import { Button, Alignment, FormGroup, InputGroup } from '@blueprintjs/core';
 
 import './TimelineItemCreateForm.scss';
-
-type EdgeSchema = Schema & {
-  edge: NonNullable<Schema['edge']>;
-};
-
-type EntityProperties = {
-  [key: string]: Value;
-};
 
 type SchemaFieldProps = {
   model: Model;
@@ -67,11 +60,6 @@ type TimelineItemCreateFormProps = {
   id?: string;
   fetchEntitySuggestions?: FetchEntitySuggestions;
 };
-
-type FetchEntitySuggestions = (
-  schema: Schema,
-  query: string
-) => Promise<Array<Entity>>;
 
 const SchemaField: FC<SchemaFieldProps> = ({ model, value, onChange }) => (
   <FormGroup label="Type" labelFor="schema">

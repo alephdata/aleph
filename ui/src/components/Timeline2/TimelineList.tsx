@@ -4,7 +4,7 @@ import c from 'classnames';
 import { Entity } from '@alephdata/followthemoney';
 import { DEFAULT_COLOR } from './Timeline';
 import TimelineListItem from './TimelineListItem';
-import { type TimelineRendererProps } from './Timeline';
+import type { TimelineRendererProps } from './types';
 
 import './TimelineList.scss';
 
