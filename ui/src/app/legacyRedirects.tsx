@@ -33,6 +33,6 @@ const Redirect: FC<RedirectProps> = ({ to }) => {
   return <Navigate replace to={to} />;
 };
 
-export const routes = Object.entries(redirects).map(([path, to]) => (
-  <Route path={path} element={<Redirect to={to} />} />
+export const routes = Object.entries(redirects).map(([path, to], index) => (
+  <Route key={index} path={path} element={<Redirect to={to} />} />
 ));
