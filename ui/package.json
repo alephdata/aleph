@@ -85,7 +85,8 @@
     "rules": {
       "no-console": "error",
       "no-debugger": "error",
-      "react/no-unknown-property": "error"
+      "react/no-unknown-property": "error",
+      "react/jsx-key": "error"
     }
   },
   "jest": {

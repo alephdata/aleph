@@ -29,20 +29,23 @@ class AppItem extends PureComponent {
         }}
       />
     );
-    return [
-      <MenuItem
-        className={Classes.TEXT_DISABLED}
-        icon="code"
-        text={message}
-        href="https://docs.alephdata.org"
-      />,
-      <MenuItem
-        className={Classes.TEXT_DISABLED}
-        icon="code"
-        text={ftmMessage}
-        href="https://docs.alephdata.org/developers/followthemoney"
-      />,
-    ];
+
+    return (
+      <>
+        <MenuItem
+          className={Classes.TEXT_DISABLED}
+          icon="code"
+          text={message}
+          href="https://docs.alephdata.org"
+        />
+        <MenuItem
+          className={Classes.TEXT_DISABLED}
+          icon="code"
+          text={ftmMessage}
+          href="https://docs.alephdata.org/developers/followthemoney"
+        />
+      </>
+    );
   }
 }
 
