@@ -73,3 +73,46 @@ it('supports navigating the list using arrow keys', async () => {
   await userEvent.keyboard('{ArrowDown}');
   expect(document.activeElement).toBe(rows[3]);
 });
+
+it('shows end date column only if there are items with an end date', () => {
+  const layout = { vertices: [] };
+
+  const { rerender } = render(
+    <TimelineList
+      entities={[event1, event2, event3]}
+      layout={layout}
+      onSelect={() => {}}
+      onRemove={() => {}}
+      onUnselect={() => {}}
+    />
+  );
+
+  let headers = screen
+    .getAllByRole('columnheader')
+    .map((header) => header.textContent);
+  expect(headers).toEqual(['Date', 'Caption', 'Actions']);
+
+  const eventWithEnd = model.getEntity({
+    id: '4',
+    schema: 'Event',
+    properties: {
+      startDate: ['2022-04-01'],
+      endDate: ['2022-05-01'],
+    },
+  });
+
+  rerender(
+    <TimelineList
+      entities={[event1, event2, event3, eventWithEnd]}
+      layout={layout}
+      onSelect={() => {}}
+      onRemove={() => {}}
+      onUnselect={() => {}}
+    />
+  );
+
+  headers = screen
+    .getAllByRole('columnheader')
+    .map((header) => header.textContent);
+  expect(headers).toEqual(['Start date', 'End date', 'Caption', 'Actions']);
+});

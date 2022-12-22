@@ -37,7 +37,9 @@ it('renders start and end date', () => {
   entity.setProperty('endDate', '2022-01-31');
   entity.setProperty('endDate', '2022-02-01');
 
-  renderRow(<TimelineListItem entity={entity} color="blue" />);
+  renderRow(
+    <TimelineListItem entity={entity} color="blue" showEndDate={true} />
+  );
   const startCell = screen.getByText('2022-01-01');
   const endCell = screen.getByText('2022-02-01');
   expect(startCell).toHaveTextContent(/2022-01-01\s*Start date/);

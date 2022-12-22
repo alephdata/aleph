@@ -11,13 +11,22 @@ type TimelineListItemProps = {
   color: string;
   selected?: boolean;
   muted?: boolean;
+  showEndDate?: boolean;
   onSelect?: (entity: Entity) => void;
   onRemove?: (entity: Entity) => void;
 };
 
 const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
   (props, ref) => {
-    const { entity, color, selected, muted, onSelect, onRemove } = props;
+    const {
+      entity,
+      color,
+      selected,
+      muted,
+      showEndDate = false,
+      onSelect,
+      onRemove,
+    } = props;
 
     const style: CSSProperties = {
       ['--timeline-item-color' as string]: color,
@@ -60,13 +69,15 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
             {start?.property.label}
           </span>
         </td>
-        <td className="TimelineListItem__date">
-          {end?.value}
-          <br />
-          <span className="TimelineListItem__property">
-            {end?.property.label}
-          </span>
-        </td>
+        {showEndDate && (
+          <td className="TimelineListItem__date">
+            {end?.value}
+            <br />
+            <span className="TimelineListItem__property">
+              {end?.property.label}
+            </span>
+          </td>
+        )}
         <td className="TimelineListItem__caption">
           <strong>
             <TimelineItemCaption entity={entity} />
