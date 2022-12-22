@@ -26,6 +26,8 @@ const TimelineList: FC<TimelineRendererProps> = ({
   onUnselect,
   selectedId,
 }) => {
+  const showEndDate = entities.some((entity) => entity.getTemporalEnd());
+
   const itemRefs = useMemo(
     () => entities.map(() => createRef<HTMLTableRowElement>()),
     [entities]
@@ -64,8 +66,14 @@ const TimelineList: FC<TimelineRendererProps> = ({
     >
       <thead>
         <tr className="TimelineList__header">
-          <th>Start date</th>
-          <th>End date</th>
+          {showEndDate ? (
+            <>
+              <th>Start date</th>
+              <th>End date</th>
+            </>
+          ) : (
+            <th>Date</th>
+          )}
           <th>Caption</th>
           <th>
             <span className="visually-hidden">Actions</span>
@@ -80,6 +88,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
             muted={!!selectedId && entity.id !== selectedId}
             selected={entity.id === selectedId}
             color={getColor(layout, entity)}
+            showEndDate={showEndDate}
             onSelect={onSelect}
             onRemove={onRemove}
             ref={itemRefs[index]}
