@@ -1,7 +1,8 @@
-import { CSSProperties, MouseEvent, KeyboardEvent, forwardRef } from 'react';
+import { CSSProperties, forwardRef } from 'react';
 import { Button, Icon, IconSize } from '@blueprintjs/core';
 import c from 'classnames';
 import { Entity } from '@alephdata/followthemoney';
+import { useTimelineItemKeyboardNavigation } from './util';
 import TimelineItemCaption from './TimelineItemCaption';
 
 import './TimelineListItem.scss';
@@ -12,8 +13,8 @@ type TimelineListItemProps = {
   selected?: boolean;
   muted?: boolean;
   showEndDate?: boolean;
-  onSelect?: (entity: Entity) => void;
-  onRemove?: (entity: Entity) => void;
+  onSelect: (entity: Entity) => void;
+  onRemove: (entity: Entity) => void;
 };
 
 const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
@@ -32,29 +33,17 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
       ['--timeline-item-color' as string]: color,
     };
 
+    const keyboardProps = useTimelineItemKeyboardNavigation(entity, onSelect);
+
     const start = entity.getTemporalStart();
     const end = entity.getTemporalEnd();
 
-    const onEntitySelect = (event: MouseEvent<HTMLElement>) => {
-      onSelect && onSelect(entity);
-    };
-
-    const onEntityRemove = (event: MouseEvent<HTMLElement>) => {
-      onRemove && onRemove(entity);
-    };
-
-    const onKeyPress = (event: KeyboardEvent<HTMLElement>) => {
-      if (event.key === ' ' || event.key === 'Enter') {
-        onSelect && onSelect(entity);
-      }
-    };
-
     return (
       <tr
+        {...keyboardProps}
         ref={ref}
         tabIndex={0}
-        onClick={onEntitySelect}
-        onKeyPress={onKeyPress}
+        onClick={() => onSelect(entity)}
         style={style}
         className={c(
           'TimelineListItem',
@@ -84,7 +73,7 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
           </strong>
         </td>
         <td className="TimelineListItem__actions">
-          <Button minimal small onClick={onEntityRemove}>
+          <Button minimal small onClick={() => onRemove(entity)}>
             <Icon icon="trash" size={IconSize.STANDARD} />
             <span className="visually-hidden">Remove</span>
           </Button>

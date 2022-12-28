@@ -24,7 +24,7 @@ export type EntityProperties = {
 
 export type TimelineRendererProps = {
   items: Array<TimelineItem>;
-  selectedId?: string | null;
+  selectedId: string | null;
   onSelect: (entity: Entity) => void;
   onRemove: (entity: Entity) => void;
   onUnselect: () => void;

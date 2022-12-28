@@ -40,6 +40,7 @@ it('supports navigating the list using arrow keys', async () => {
   render(
     <TimelineList
       items={items}
+      selectedId={null}
       onSelect={() => {}}
       onRemove={() => {}}
       onUnselect={() => {}}
@@ -91,6 +92,7 @@ it('hides end date column if no entity has a temporal end', () => {
   render(
     <TimelineList
       items={items}
+      selectedId={null}
       onSelect={() => {}}
       onRemove={() => {}}
       onUnselect={() => {}}
@@ -130,6 +132,7 @@ it('shows end date column if at least one entity has a temporal end', () => {
   render(
     <TimelineList
       items={items}
+      selectedId={null}
       onSelect={() => {}}
       onRemove={() => {}}
       onUnselect={() => {}}

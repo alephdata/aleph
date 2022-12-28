@@ -1,3 +1,4 @@
+import { useMemo, createRef, KeyboardEvent } from 'react';
 import { Entity } from '@alephdata/followthemoney';
 import { DEFAULT_COLOR } from './Timeline';
 import { Layout } from './types';
@@ -162,4 +163,53 @@ export class ImpreciseDate {
 
     return new Date(this.year, month - 1, day);
   }
+}
+
+export function useTimelineKeyboardNavigation<T extends HTMLElement>(
+  items: Array<TimelineItem>,
+  onUnselect: () => void
+) {
+  const itemRefs = useMemo(() => items.map(() => createRef<T>()), [items]);
+
+  const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'Escape') {
+      onUnselect();
+      return;
+    }
+
+    const activeIndex = itemRefs.findIndex(
+      (ref) =>
+        ref.current === document.activeElement ||
+        ref.current?.contains(document.activeElement)
+    );
+
+    if (activeIndex < 0) {
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      const newIndex = Math.min(items.length - 1, activeIndex + 1);
+      itemRefs[newIndex].current?.focus();
+    }
+
+    if (event.key === 'ArrowUp') {
+      const newIndex = Math.max(0, activeIndex - 1);
+      itemRefs[newIndex].current?.focus();
+    }
+  };
+
+  return [itemRefs, { onKeyDown }] as const;
+}
+
+export function useTimelineItemKeyboardNavigation(
+  entity: Entity,
+  onSelect: (entity: Entity) => void
+) {
+  const onKeyUp = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      onSelect(entity);
+    }
+  };
+
+  return { onKeyUp } as const;
 }
