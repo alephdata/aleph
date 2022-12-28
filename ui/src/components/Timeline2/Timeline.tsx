@@ -61,7 +61,7 @@ const Timeline: FC<TimelineProps> = ({
 
   useEffect(() => {
     onLayoutUpdate && onLayoutUpdate(state.layout);
-  }, [state.layout]);
+  }, [state.layout, onLayoutUpdate]);
 
   const createButton = (
     <Button intent={Intent.PRIMARY} icon="add" onClick={toggleCreateDialog}>
