@@ -2,6 +2,9 @@
 
 .Timeline {
   --viewer-width: 275px;
+  --timeline-item-muted-opacity: 0.66;
+  --timeline-item-outline-width: 2px;
+  --timeline-item-outline-offset: 1px;
 
   position: relative;
   display: flex;

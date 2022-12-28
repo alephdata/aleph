@@ -56,7 +56,7 @@
 }
 
 .TimelineListItem--muted {
-  opacity: 0.66;
+  opacity: var(--timeline-item-muted-opacity);
 }
 
 .TimelineListItem:where(:hover),
@@ -70,8 +70,8 @@
 }
 
 .TimelineListItem:focus {
-  outline: 2px solid var(--timeline-item-color);
-  outline-offset: 1px;
+  outline: var(--timeline-item-outline-width) solid var(--timeline-item-color);
+  outline-offset: var(--timeline-item-outline-offset);
 
   // `border-radius` doesn't have an effect on table rows, but it does
   // affect the radius of the outline (in newer browser).
