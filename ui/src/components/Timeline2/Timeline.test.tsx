@@ -38,20 +38,6 @@ it('sorts and filters items by temporal start', () => {
   expect(rows[3]).toHaveTextContent(/2022-03-01.*Event 3/);
 });
 
-it('selects item on click', async () => {
-  const entities = [event1, event2, event3];
-  const layout = { vertices: [] };
-
-  render(<Timeline model={model} entities={entities} layout={layout} />);
-  const rows = screen.getAllByRole('row');
-
-  await userEvent.click(rows[1]);
-  expect(screen.getByRole('heading', { name: 'Event 1' }));
-
-  await userEvent.click(rows[3]);
-  expect(screen.getByRole('heading', { name: 'Event 3' }));
-});
-
 it('allows changing entity color', async () => {
   const entities = [event1];
   const layout = { vertices: [] };

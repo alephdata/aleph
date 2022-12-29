@@ -3,7 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
-import type { Layout, Vertex } from './types';
+import { TimelineRenderer, Layout, Vertex } from './types';
 import { TimelineItem } from './util';
 import {
   reducer,
@@ -13,6 +13,7 @@ import {
 } from './state';
 import TimelineEmptyState from './TimelineEmptyState';
 import TimelineList from './TimelineList';
+import TimelineChart from './TimelineChart';
 import EntityViewer2 from './EntityViewer2';
 import TimelineItemCreateDialog from './TimelineItemCreateDialog';
 
@@ -24,6 +25,7 @@ type TimelineProps = {
   model: Model;
   entities: Array<Entity>;
   layout?: Layout;
+  renderer?: TimelineRenderer;
   fetchEntitySuggestions?: (
     schema: Schema,
     query: string
@@ -37,11 +39,14 @@ const Timeline: FC<TimelineProps> = ({
   model,
   entities,
   layout,
+  renderer,
   fetchEntitySuggestions,
   onEntityCreateOrUpdate,
   onEntityRemove,
   onLayoutUpdate,
 }) => {
+  const Renderer = renderer === 'chart' ? TimelineChart : TimelineList;
+
   const [state, dispatch] = useReducer(reducer, {
     entities,
     layout: layout || { vertices: [] },
@@ -89,8 +94,9 @@ const Timeline: FC<TimelineProps> = ({
         {items.length > 0 && (
           <>
             <div className="Timeline__actions">{createButton}</div>
-            <TimelineList
+            <Renderer
               items={items}
+              selectedId={selectedEntity && selectedEntity.id}
               onSelect={(entity: Entity) =>
                 dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
               }
@@ -99,7 +105,6 @@ const Timeline: FC<TimelineProps> = ({
                 dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
                 onEntityRemove && onEntityRemove(entity);
               }}
-              selectedId={selectedEntity && selectedEntity.id}
             />
           </>
         )}

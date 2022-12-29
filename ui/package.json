@@ -30,6 +30,7 @@
     "d3-force": "^3.0.0",
     "d3-scale": "^4.0.2",
     "dagre": "^0.8.5",
+    "date-fns": "^2.29.3",
     "google-libphonenumber": "^3.2.31",
     "http-proxy-middleware": "^2.0.0",
     "js-file-download": "^0.4.9",

@@ -1,6 +1,11 @@
 import { Schema, Entity, Value } from '@alephdata/followthemoney';
 import { TimelineItem } from './util';
 
+export enum TimelineRenderer {
+  List = 'list',
+  Chart = 'chart',
+}
+
 export type TimelineEntity = Omit<Entity, 'getTemporalStart'> & {
   getTemporalStart: () => NonNullable<ReturnType<Entity['getTemporalStart']>>;
 };

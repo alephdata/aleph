@@ -1,0 +1,19 @@
+@import 'app/variables.scss';
+
+.TimelineChart {
+  --timeline-chart-day-width: 25px;
+
+  position: relative;
+  min-width: calc(var(--timeline-chart-days) * var(--timeline-chart-day-width));
+  flex-grow: 1;
+}
+
+.TimelineChart__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.TimelineChart__list > * + * {
+  margin-top: 0.5 * $aleph-grid-size;
+}
