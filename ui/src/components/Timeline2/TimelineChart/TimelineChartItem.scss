@@ -20,9 +20,8 @@
 
 .TimelineChartItem--multiDay {
   padding: 0.75 * $aleph-grid-size $aleph-grid-size;
-  border-radius: $pt-border-radius;
-  overflow: hidden;
   background-color: white;
+  border-radius: $pt-border-radius;
 }
 
 .TimelineChartItem--multiDay::before {
@@ -37,6 +36,7 @@
   height: 100%;
 
   background-color: var(--timeline-item-color);
+  border-radius: $pt-border-radius;
 }
 
 .TimelineChartItem--multiDay.TimelineChartItem--muted::before {
@@ -49,6 +49,10 @@
 }
 
 .TimelineChartItem--multiDay .TimelineChartItem__caption {
+  position: sticky;
+  left: 0;
+  width: max-content;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   color: white;
