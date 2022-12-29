@@ -1,36 +1,23 @@
 import { FC, KeyboardEvent, useMemo, createRef } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
-import { Entity } from '@alephdata/followthemoney';
-import { DEFAULT_COLOR } from './Timeline';
 import TimelineListItem from './TimelineListItem';
 import type { TimelineRendererProps } from './types';
 
 import './TimelineList.scss';
 
-const getColor = (
-  layout: TimelineRendererProps['layout'],
-  entity: Entity
-): string => {
-  return (
-    layout.vertices.find((vertex) => vertex.entityId === entity.id)?.color ||
-    DEFAULT_COLOR
-  );
-};
-
 const TimelineList: FC<TimelineRendererProps> = ({
-  entities,
-  layout,
+  items,
   onSelect,
   onRemove,
   onUnselect,
   selectedId,
 }) => {
-  const showEndDate = entities.some((entity) => entity.getTemporalEnd());
+  const showEndDate = items.some((item) => item.entity.getTemporalEnd());
 
   const itemRefs = useMemo(
-    () => entities.map(() => createRef<HTMLTableRowElement>()),
-    [entities]
+    () => items.map(() => createRef<HTMLTableRowElement>()),
+    [items]
   );
 
   const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
@@ -45,7 +32,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
     }
 
     if (event.key === 'ArrowDown') {
-      const newIndex = Math.min(entities.length - 1, activeIndex + 1);
+      const newIndex = Math.min(items.length - 1, activeIndex + 1);
       itemRefs[newIndex].current?.focus();
     }
 
@@ -81,13 +68,13 @@ const TimelineList: FC<TimelineRendererProps> = ({
         </tr>
       </thead>
       <tbody>
-        {entities.map((entity, index) => (
+        {items.map((item, index) => (
           <TimelineListItem
-            key={entity.id}
-            entity={entity}
-            muted={!!selectedId && entity.id !== selectedId}
-            selected={entity.id === selectedId}
-            color={getColor(layout, entity)}
+            key={item.entity.id}
+            entity={item.entity}
+            muted={!!selectedId && item.entity.id !== selectedId}
+            selected={item.entity.id === selectedId}
+            color={item.getColor()}
             showEndDate={showEndDate}
             onSelect={onSelect}
             onRemove={onRemove}

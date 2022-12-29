@@ -1,42 +1,45 @@
 import { render, screen, within } from 'testUtils';
 import userEvent from '@testing-library/user-event';
 import { Model, defaultModel } from '@alephdata/followthemoney';
+import { TimelineItem } from './util';
 import TimelineList from './TimelineList';
 
 const model = new Model(defaultModel);
 
-const event1 = model.getEntity({
-  id: '1',
-  schema: 'Event',
-  properties: {
-    startDate: ['2022-01-01'],
-  },
-});
-
-const event2 = model.getEntity({
-  id: '2',
-  schema: 'Event',
-  properties: {
-    startDate: ['2022-02-01'],
-  },
-});
-
-const event3 = model.getEntity({
-  id: '3',
-  schema: 'Event',
-  properties: {
-    startDate: ['2022-03-01'],
-  },
-});
-
 it('supports navigating the list using arrow keys', async () => {
-  const entities = [event1, event2, event3];
-  const layout = { vertices: [] };
+  const event1 = model.getEntity({
+    id: '1',
+    schema: 'Event',
+    properties: {
+      startDate: ['2022-01-01'],
+    },
+  });
+
+  const event2 = model.getEntity({
+    id: '2',
+    schema: 'Event',
+    properties: {
+      startDate: ['2022-02-01'],
+    },
+  });
+
+  const event3 = model.getEntity({
+    id: '3',
+    schema: 'Event',
+    properties: {
+      startDate: ['2022-03-01'],
+    },
+  });
+
+  const items = [
+    new TimelineItem(event1),
+    new TimelineItem(event2),
+    new TimelineItem(event3),
+  ];
 
   render(
     <TimelineList
-      entities={entities}
-      layout={layout}
+      items={items}
       onSelect={() => {}}
       onRemove={() => {}}
       onUnselect={() => {}}
@@ -74,45 +77,68 @@ it('supports navigating the list using arrow keys', async () => {
   expect(document.activeElement).toBe(rows[3]);
 });
 
-it('shows end date column only if there are items with an end date', () => {
-  const layout = { vertices: [] };
+it('hides end date column if no entity has a temporal end', () => {
+  const event = model.getEntity({
+    schema: 'Event',
+    id: '123',
+    properties: {
+      startDate: ['2022-01'],
+    },
+  });
 
-  const { rerender } = render(
+  const items = [new TimelineItem(event)];
+
+  render(
     <TimelineList
-      entities={[event1, event2, event3]}
-      layout={layout}
+      items={items}
       onSelect={() => {}}
       onRemove={() => {}}
       onUnselect={() => {}}
     />
   );
 
-  let headers = screen
+  const headers = screen
     .getAllByRole('columnheader')
     .map((header) => header.textContent);
+
   expect(headers).toEqual(['Date', 'Caption', 'Actions']);
+});
+
+it('shows end date column if at least one entity has a temporal end', () => {
+  const eventWithoutEnd = model.getEntity({
+    schema: 'Event',
+    id: '123',
+    properties: {
+      startDate: ['2022-01'],
+    },
+  });
 
   const eventWithEnd = model.getEntity({
-    id: '4',
     schema: 'Event',
+    id: '456',
     properties: {
       startDate: ['2022-04-01'],
       endDate: ['2022-05-01'],
     },
   });
 
-  rerender(
+  const items = [
+    new TimelineItem(eventWithoutEnd),
+    new TimelineItem(eventWithEnd),
+  ];
+
+  render(
     <TimelineList
-      entities={[event1, event2, event3, eventWithEnd]}
-      layout={layout}
+      items={items}
       onSelect={() => {}}
       onRemove={() => {}}
       onUnselect={() => {}}
     />
   );
 
-  headers = screen
+  const headers = screen
     .getAllByRole('columnheader')
     .map((header) => header.textContent);
+
   expect(headers).toEqual(['Start date', 'End date', 'Caption', 'Actions']);
 });

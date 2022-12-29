@@ -1,4 +1,153 @@
-import { ImpreciseDate } from './util';
+import { Model, defaultModel } from '@alephdata/followthemoney';
+import { TimelineItem, ImpreciseDate } from './util';
+
+const model = new Model(defaultModel);
+
+describe('TimelineItem', () => {
+  describe('getColor()', () => {
+    it('returns default color', () => {
+      const layout = {
+        vertices: [],
+      };
+
+      const event = model.getEntity({
+        schema: 'Event',
+        id: '123',
+      });
+
+      const item = new TimelineItem(event, layout);
+      expect(item.getColor()).toEqual('#215DB0');
+    });
+
+    it('returns color from layout based on entity ID', () => {
+      const layout = {
+        vertices: [
+          { entityId: '456', color: 'green' },
+          { entityId: '123', color: 'red' },
+        ],
+      };
+
+      const event = model.getEntity({
+        schema: 'Event',
+        id: '123',
+      });
+
+      const item = new TimelineItem(event, layout);
+      expect(item.getColor()).toEqual('red');
+    });
+  });
+
+  describe('getEarliestDate() and getLatestDate()', () => {
+    it('handle entities without temporal extent', () => {
+      const event = model.getEntity({ schema: 'Event', id: '123' });
+      const item = new TimelineItem(event);
+
+      expect(item.getEarliestDate()).toBeUndefined();
+      expect(item.getLatestDate()).toBeUndefined();
+    });
+
+    it('return start and end date', () => {
+      const event1 = model.getEntity({
+        schema: 'Event',
+        id: '123',
+        properties: {
+          startDate: ['2022-01'],
+        },
+      });
+
+      const item1 = new TimelineItem(event1);
+      expect(item1.getEarliestDate()).toEqual(new Date(2022, 0, 1));
+      expect(item1.getLatestDate()).toEqual(new Date(2022, 0, 31));
+
+      const event2 = model.getEntity({
+        schema: 'Event',
+        id: '123',
+        properties: {
+          startDate: ['2022-01'],
+          endDate: ['2022-02'],
+        },
+      });
+
+      const item2 = new TimelineItem(event2);
+      expect(item2.getEarliestDate()).toEqual(new Date(2022, 0, 1));
+      expect(item2.getLatestDate()).toEqual(new Date(2022, 1, 28));
+    });
+  });
+
+  describe('getDuration()', () => {
+    it('handles entities without temporal end', () => {
+      const event = model.getEntity({
+        schema: 'Event',
+        id: '123',
+        properties: {
+          startDate: ['2022-01-15'],
+        },
+      });
+
+      const item = new TimelineItem(event);
+      expect(item.getDuration()).toEqual(1);
+    });
+
+    it('handles entities with temporal start and end', () => {
+      const event = model.getEntity({
+        schema: 'Event',
+        id: '123',
+        properties: {
+          startDate: ['2022-01-01'],
+          endDate: ['2022-01-15'],
+        },
+      });
+
+      const item = new TimelineItem(event);
+      expect(item.getDuration()).toEqual(15);
+    });
+  });
+
+  describe('isMultiDay() and isSingleDay()', () => {
+    it('handles entities without temporal end', () => {
+      const event = model.getEntity({
+        schema: 'Event',
+        id: '123',
+        properties: {
+          startDate: ['2022-01-15'],
+        },
+      });
+
+      const item = new TimelineItem(event);
+      expect(item.isSingleDay()).toBe(true);
+      expect(item.isMultiDay()).toBe(false);
+    });
+
+    it('handles entities with imprecise dates', () => {
+      const event = model.getEntity({
+        schema: 'Event',
+        id: '123',
+        properties: {
+          startDate: ['2022-01'],
+        },
+      });
+
+      const item = new TimelineItem(event);
+      expect(item.isSingleDay()).toBe(false);
+      expect(item.isMultiDay()).toBe(true);
+    });
+
+    it('handles entities with temporal start and end', () => {
+      const event = model.getEntity({
+        schema: 'Event',
+        id: '123',
+        properties: {
+          startDate: ['2022-01-01'],
+          endDate: ['2022-01-15'],
+        },
+      });
+
+      const item = new TimelineItem(event);
+      expect(item.isSingleDay()).toBe(false);
+      expect(item.isMultiDay()).toBe(true);
+    });
+  });
+});
 
 describe('ImpreciseDate', () => {
   describe('constructor()', () => {
