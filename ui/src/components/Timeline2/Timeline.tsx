@@ -4,6 +4,7 @@ import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
 import type { Layout, Vertex } from './types';
+import { TimelineItem } from './util';
 import {
   reducer,
   selectSortedEntities,
@@ -54,6 +55,10 @@ const Timeline: FC<TimelineProps> = ({
   const selectedVertex = selectSelectedVertex(state);
   const sortedEntities = selectSortedEntities(state);
 
+  const items = sortedEntities.map(
+    (entity) => new TimelineItem(entity, layout)
+  );
+
   useEffect(() => {
     onLayoutUpdate && onLayoutUpdate(state.layout);
   }, [state.layout]);
@@ -79,16 +84,13 @@ const Timeline: FC<TimelineProps> = ({
       />
 
       <div className="Timeline__main">
-        {sortedEntities.length <= 0 && (
-          <TimelineEmptyState action={createButton} />
-        )}
+        {items.length <= 0 && <TimelineEmptyState action={createButton} />}
 
-        {sortedEntities.length > 0 && (
+        {items.length > 0 && (
           <>
             <div className="Timeline__actions">{createButton}</div>
             <TimelineList
-              entities={sortedEntities}
-              layout={state.layout}
+              items={items}
               onSelect={(entity: Entity) =>
                 dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
               }

@@ -1,3 +1,11 @@
+import { Entity } from '@alephdata/followthemoney';
+import { DEFAULT_COLOR } from './Timeline';
+import { Layout } from './types';
+
+function differenceInDays(start: Date, end: Date): number {
+  return (end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000);
+}
+
 function endOfMonth(year: number, month: number): number {
   // Months in ECMAScript are zero-based:
   // new Date(2000, 0, 1) // Jan 1st
@@ -11,17 +19,95 @@ function endOfMonth(year: number, month: number): number {
 }
 
 /**
+ * This is a wrapper class for entities, providing common logic required when
+ * rendering them as part of a timeline list or chart, for example calculating
+ * the earliest or latest date, or getting the color from the layout definition
+ * of the timeline.
+ */
+export class TimelineItem {
+  readonly entity: Entity;
+  readonly layout?: Layout;
+  protected readonly startDate: ImpreciseDate;
+  protected readonly endDate: ImpreciseDate;
+
+  constructor(entity: Entity, layout?: Layout) {
+    this.entity = entity;
+    this.layout = layout;
+    this.startDate = new ImpreciseDate(this.entity.getTemporalStart()?.value);
+    this.endDate = new ImpreciseDate(this.entity.getTemporalEnd()?.value);
+  }
+
+  getColor() {
+    if (!this.layout) {
+      return DEFAULT_COLOR;
+    }
+
+    return (
+      this.layout.vertices.find((vertex) => vertex.entityId === this.entity.id)
+        ?.color || DEFAULT_COLOR
+    );
+  }
+
+  getEarliestDate() {
+    return this.startDate.getEarliest();
+  }
+
+  getLatestDate() {
+    if (!this.endDate.isValid()) {
+      return this.startDate.getLatest();
+    }
+
+    return this.endDate.getLatest();
+  }
+
+  getDuration() {
+    const earliest = this.getEarliestDate();
+    const latest = this.getLatestDate();
+
+    if (!earliest || !latest) {
+      return;
+    }
+
+    return differenceInDays(earliest, latest) + 1;
+  }
+
+  isSingleDay() {
+    const duration = this.getDuration();
+
+    if (!duration) {
+      return false;
+    }
+
+    return duration === 1;
+  }
+
+  isMultiDay() {
+    const duration = this.getDuration();
+
+    if (!duration) {
+      return false;
+    }
+
+    return duration > 1;
+  }
+}
+
+/**
  * FollowTheMoney allows dates with different degress of precision, e.g. `2022`,
  * `2022-01`, and `2022-01-01` are all valid dates. This class parses FtM date strings
  * and provides utility methods to work with imprecise dates, e.g. to get the earliest
  * or latest possible date.
  */
-class ImpreciseDate {
+export class ImpreciseDate {
   readonly year?: number;
   readonly month?: number;
   readonly day?: number;
 
-  constructor(raw: string) {
+  constructor(raw?: string) {
+    if (!raw) {
+      return;
+    }
+
     const yearRegex = /(?<year>\d{4})/.source;
     const monthRegex = /(?<month>0?[1-9]|1[0-2])/.source;
     const dayRegex = /(?<day>0?[1-9]|[1-2][0-9]|3[0-1])/.source;
@@ -42,7 +128,7 @@ class ImpreciseDate {
     this.day = groups.day ? parseInt(groups.day, 10) : undefined;
   }
 
-  isValid(): boolean {
+  isValid() {
     if (!this.year) {
       return false;
     }
@@ -58,7 +144,7 @@ class ImpreciseDate {
     return true;
   }
 
-  getEarliest(): Date | undefined {
+  getEarliest() {
     if (!this.isValid() || !this.year) {
       return;
     }
@@ -66,7 +152,7 @@ class ImpreciseDate {
     return new Date(this.year, this.month ? this.month - 1 : 0, this.day || 1);
   }
 
-  getLatest(): Date | undefined {
+  getLatest() {
     if (!this.isValid() || !this.year) {
       return;
     }
@@ -77,5 +163,3 @@ class ImpreciseDate {
     return new Date(this.year, month - 1, day);
   }
 }
-
-export { ImpreciseDate };

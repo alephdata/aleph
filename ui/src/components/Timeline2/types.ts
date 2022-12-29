@@ -1,4 +1,5 @@
 import { Schema, Entity, Value } from '@alephdata/followthemoney';
+import { TimelineItem } from './util';
 
 export type TimelineEntity = Omit<Entity, 'getTemporalStart'> & {
   getTemporalStart: () => NonNullable<ReturnType<Entity['getTemporalStart']>>;
@@ -22,8 +23,7 @@ export type EntityProperties = {
 };
 
 export type TimelineRendererProps = {
-  entities: Array<Entity>;
-  layout: Layout;
+  items: Array<TimelineItem>;
   selectedId?: string | null;
   onSelect: (entity: Entity) => void;
   onRemove: (entity: Entity) => void;
