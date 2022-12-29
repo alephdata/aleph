@@ -78,6 +78,48 @@ it('supports navigating the list using arrow keys', async () => {
   expect(document.activeElement).toBe(rows[3]);
 });
 
+it('selects items on click', async () => {
+  const event1 = model.getEntity({
+    schema: 'Event',
+    id: '1',
+    properties: {
+      startDate: ['2022-01'],
+    },
+  });
+
+  const event2 = model.getEntity({
+    schema: 'Event',
+    id: '2',
+    properties: {
+      startDate: ['2022-02'],
+    },
+  });
+
+  const items = [new TimelineItem(event1), new TimelineItem(event2)];
+
+  const onSelect = jest.fn();
+
+  render(
+    <TimelineList
+      items={items}
+      selectedId={null}
+      onSelect={onSelect}
+      onUnselect={() => {}}
+      onRemove={() => {}}
+    />
+  );
+
+  const rows = screen.getAllByRole('row');
+
+  await userEvent.click(rows[1]);
+  expect(onSelect).toHaveBeenCalledTimes(1);
+  expect(onSelect).toHaveBeenLastCalledWith(event1);
+
+  await userEvent.click(rows[2]);
+  expect(onSelect).toHaveBeenCalledTimes(2);
+  expect(onSelect).toHaveBeenLastCalledWith(event2);
+});
+
 it('hides end date column if no entity has a temporal end', () => {
   const event = model.getEntity({
     schema: 'Event',

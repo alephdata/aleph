@@ -1,11 +1,8 @@
 import { useMemo, createRef, KeyboardEvent } from 'react';
+import { differenceInDays } from 'date-fns';
 import { Entity } from '@alephdata/followthemoney';
 import { DEFAULT_COLOR } from './Timeline';
 import { Layout } from './types';
-
-function differenceInDays(start: Date, end: Date): number {
-  return (end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000);
-}
 
 function endOfMonth(year: number, month: number): number {
   // Months in ECMAScript are zero-based:
@@ -69,7 +66,7 @@ export class TimelineItem {
       return;
     }
 
-    return differenceInDays(earliest, latest) + 1;
+    return differenceInDays(latest, earliest) + 1;
   }
 
   isSingleDay() {
