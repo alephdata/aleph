@@ -2,8 +2,8 @@ import { CSSProperties, forwardRef } from 'react';
 import c from 'classnames';
 import { differenceInDays, addDays } from 'date-fns';
 import { Entity } from '@alephdata/followthemoney';
-import { useTimelineItemKeyboardNavigation, TimelineItem } from './util';
-import TimelineItemCaption from './TimelineItemCaption';
+import { useTimelineItemKeyboardNavigation, TimelineItem } from '../util';
+import TimelineItemCaption from '../TimelineItemCaption';
 
 import './TimelineChartItem.scss';
 

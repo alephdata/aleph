@@ -2,8 +2,8 @@ import { CSSProperties, forwardRef } from 'react';
 import { Button, Icon, IconSize } from '@blueprintjs/core';
 import c from 'classnames';
 import { Entity } from '@alephdata/followthemoney';
-import { useTimelineItemKeyboardNavigation } from './util';
-import TimelineItemCaption from './TimelineItemCaption';
+import { useTimelineItemKeyboardNavigation } from '../util';
+import TimelineItemCaption from '../TimelineItemCaption';
 
 import './TimelineListItem.scss';
 

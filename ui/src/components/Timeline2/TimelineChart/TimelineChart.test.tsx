@@ -1,7 +1,7 @@
 import { render, screen } from 'testUtils';
 import userEvent from '@testing-library/user-event';
 import { Model, defaultModel } from '@alephdata/followthemoney';
-import { TimelineItem } from './util';
+import { TimelineItem } from '../util';
 import TimelineChart from './TimelineChart';
 
 const model = new Model(defaultModel);

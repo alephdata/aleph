@@ -12,8 +12,8 @@ import {
   selectSelectedVertex,
 } from './state';
 import TimelineEmptyState from './TimelineEmptyState';
-import TimelineList from './TimelineList';
-import TimelineChart from './TimelineChart';
+import { TimelineList } from './TimelineList';
+import { TimelineChart } from './TimelineChart';
 import EntityViewer2 from './EntityViewer2';
 import TimelineItemCreateDialog from './TimelineItemCreateDialog';
 

@@ -2,8 +2,8 @@ import { FC } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import TimelineListItem from './TimelineListItem';
-import { useTimelineKeyboardNavigation } from './util';
-import type { TimelineRendererProps } from './types';
+import { useTimelineKeyboardNavigation } from '../util';
+import type { TimelineRendererProps } from '../types';
 
 import './TimelineList.scss';
 
