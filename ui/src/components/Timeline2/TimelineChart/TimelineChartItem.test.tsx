@@ -1,7 +1,7 @@
 import { render } from 'testUtils';
 import { Model, Entity, defaultModel } from '@alephdata/followthemoney';
-import { TimelineItem } from './util';
-import { Layout } from './types';
+import { TimelineItem } from '../util';
+import { Layout } from '../types';
 import TimelineChartItem from './TimelineChartItem';
 
 const model = new Model(defaultModel);
