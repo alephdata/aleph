@@ -152,6 +152,10 @@ You can also build the Aleph images locally. This could be useful while working 
 
 To build the image you can run `make build`, which will build the `alephdata/aleph` image (this will generate a production ready image).
 
+### Inspecting ElasticSearch
+
+At times it can be useful to inspect the contents of the ElasticSearch indices. The developer setup includes [dejavu](https://github.com/appbaseio/dejavu/stargazers), a web-based UI for ElasticSearch. In a local environment brought up as described above you should see dejavu under [http://localhost:1358](http://localhost:1358). You will need to pass it the local ES cluster URL (`http://localhost:19200`) and you can either inspect an individual index or use `*` to see the whole content.
+
 ## Production deployment
 
 <Callout>

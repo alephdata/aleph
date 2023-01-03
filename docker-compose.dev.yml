@@ -29,6 +29,14 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
+  dejavu:
+    image: appbaseio/dejavu:3.6.0
+    container_name: dejavu
+    ports:
+        - '1358:1358'
+    links:
+        - elasticsearch
+
   redis:
     image: redis:alpine
     command: ["redis-server", "--save", "3600", "10"]
