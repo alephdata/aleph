@@ -1,0 +1,30 @@
+@import 'app/variables.scss';
+
+.TimelineChartPopover__content {
+  display: grid;
+  width: fit-content;
+  padding: $aleph-grid-size;
+  grid-template-areas: 'caption caption' 'start end';
+  gap: 1 * $aleph-grid-size;
+}
+
+.TimelineChartPopover__caption {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  grid-area: caption;
+}
+
+.TimelineChartPopover__date {
+  grid-area: start;
+}
+
+.TimelineChartPopover__end {
+  grid-area: end;
+  text-align: right;
+}
+
+.TimelineChartPopover__property {
+  color: $aleph-greyed-text;
+}
