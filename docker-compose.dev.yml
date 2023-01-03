@@ -34,7 +34,7 @@ services:
     container_name: dejavu
     ports:
         - '1358:1358'
-    links:
+    depends_on:
         - elasticsearch
 
   redis:
