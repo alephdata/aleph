@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef } from 'react';
+import { CSSProperties, forwardRef, MouseEventHandler } from 'react';
 import c from 'classnames';
 import { differenceInDays, addDays } from 'date-fns';
 import { Entity } from '@alephdata/followthemoney';
@@ -13,11 +13,22 @@ type TimelineChartItemProps = {
   muted?: boolean;
   selected?: boolean;
   onSelect: (entity: Entity) => void;
+  onMouseOver?: MouseEventHandler;
+  onMouseOut?: MouseEventHandler;
 };
 
 const TimelineChartItem = forwardRef<HTMLLIElement, TimelineChartItemProps>(
   (props, ref) => {
-    const { timelineStart, item, muted, selected, onSelect } = props;
+    const {
+      timelineStart,
+      item,
+      muted,
+      selected,
+      onSelect,
+      onMouseOver,
+      onMouseOut,
+    } = props;
+
     const start = item.getEarliestDate();
     const end = item.getLatestDate();
     const keyboardProps = useTimelineItemKeyboardNavigation(
@@ -44,6 +55,7 @@ const TimelineChartItem = forwardRef<HTMLLIElement, TimelineChartItemProps>(
     return (
       <li
         {...keyboardProps}
+        ref={ref}
         tabIndex={0}
         className={c(
           'TimelineChartItem',
@@ -57,7 +69,8 @@ const TimelineChartItem = forwardRef<HTMLLIElement, TimelineChartItemProps>(
           event.stopPropagation();
           onSelect(item.entity);
         }}
-        ref={ref}
+        onMouseOver={onMouseOver}
+        onMouseOut={onMouseOut}
       >
         <div className="TimelineChartItem__caption">
           <TimelineItemCaption entity={item.entity} />

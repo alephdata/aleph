@@ -6,37 +6,40 @@ import TimelineChart from './TimelineChart';
 
 const model = new Model(defaultModel);
 
+const event1 = model.getEntity({
+  id: '1',
+  schema: 'Event',
+  properties: {
+    name: ['Event 1'],
+    startDate: ['2022-01-01'],
+  },
+});
+
+const event2 = model.getEntity({
+  id: '2',
+  schema: 'Event',
+  properties: {
+    name: ['Event 2'],
+    startDate: ['2022-02-01'],
+  },
+});
+
+const event3 = model.getEntity({
+  id: '3',
+  schema: 'Event',
+  properties: {
+    name: ['Event 3'],
+    startDate: ['2022-03-01'],
+  },
+});
+
+const items = [
+  new TimelineItem(event1),
+  new TimelineItem(event2),
+  new TimelineItem(event3),
+];
+
 it('supports navigating the list using arrow keys', async () => {
-  const event1 = model.getEntity({
-    id: '1',
-    schema: 'Event',
-    properties: {
-      startDate: ['2022-01-01'],
-    },
-  });
-
-  const event2 = model.getEntity({
-    id: '2',
-    schema: 'Event',
-    properties: {
-      startDate: ['2022-02-01'],
-    },
-  });
-
-  const event3 = model.getEntity({
-    id: '3',
-    schema: 'Event',
-    properties: {
-      startDate: ['2022-03-01'],
-    },
-  });
-
-  const items = [
-    new TimelineItem(event1),
-    new TimelineItem(event2),
-    new TimelineItem(event3),
-  ];
-
   render(
     <TimelineChart
       items={items}
@@ -102,4 +105,25 @@ it('selects and unselects items on click', async () => {
   await userEvent.click(list);
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onUnselect).toHaveBeenCalledTimes(1);
+});
+
+it('shows popover with details when hovering timeline items', async () => {
+  render(
+    <TimelineChart
+      items={items}
+      selectedId={null}
+      onSelect={() => {}}
+      onRemove={() => {}}
+      onUnselect={() => {}}
+    />
+  );
+
+  const listItems = screen.getAllByRole('listitem');
+
+  await userEvent.hover(listItems[0]);
+  expect(document.body).toHaveTextContent(/2022-01-01.*Start date/);
+
+  await userEvent.hover(listItems[1]);
+  expect(document.body).not.toHaveTextContent(/2022-01-01.*Start date/);
+  expect(document.body).toHaveTextContent(/2022-02-01.*Start date/);
 });
