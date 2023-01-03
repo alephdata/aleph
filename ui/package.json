@@ -108,7 +108,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@types/d3-force": "^3.0.4",
-    "@types/d3-scale": "^4.0.2",
+    "@types/d3-scale": "^4.0.3",
     "@types/dagre": "^0.7.47",
     "@types/google-libphonenumber": "^7.4.23",
     "@types/lodash": "^4.14.191",
