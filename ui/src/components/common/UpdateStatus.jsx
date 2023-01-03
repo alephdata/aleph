@@ -2,13 +2,9 @@
 //  future support is planned in future v6 releases
 //  see https://reactrouter.com/docs/en/v6/upgrading/v5#prompt-is-not-currently-supported for reference
 
-import React, { PureComponent } from 'react';
-import { compose } from 'redux';
+import { PureComponent } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-// import { Prompt } from 'react-router';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
-
-import withRouter from 'app/withRouter';
 
 const messages = defineMessages({
   status_success: {
@@ -100,4 +96,4 @@ class UpdateStatus extends PureComponent {
   }
 }
 
-export default compose(withRouter, injectIntl)(UpdateStatus);
+export default injectIntl(UpdateStatus);
