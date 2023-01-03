@@ -50,7 +50,7 @@
     "react-markdown": "^8.0.4",
     "react-pdf": "^5.0.0",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^6.4.4",
+    "react-router-dom": "^6.6.1",
     "react-scripts": "^5.0.1",
     "react-truncate": "^2.4.0",
     "react-waypoint": "^10.1.0",
