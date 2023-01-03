@@ -1,8 +1,10 @@
 name: Docs
 
 on: 
-  - push
-  - workflow_dispatch
+  push:
+    paths:
+      - "docs/**"
+  workflow_dispatch: {}
 
 concurrency:
   group: pages
