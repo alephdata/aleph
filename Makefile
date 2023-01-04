@@ -16,6 +16,9 @@ shell: services
 shell-ui: services
 	$(UIDOCKER) /bin/bash
 
+shell-db: services
+	$(COMPOSE) exec postgres psql -U aleph
+
 test:
 	$(APPDOCKER) contrib/test.sh
 
