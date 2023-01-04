@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
 
@@ -13,6 +14,15 @@ type UpdateStatusProps = {
 
 function UpdateStatus({ status }: UpdateStatusProps) {
   const commonProps = { className: 'UpdateStatus', large: true, minimal: true };
+  const isOnline = useOnlineStatus();
+
+  if (!isOnline) {
+    return (
+      <Tag intent={Intent.DANGER} icon="error" {...commonProps}>
+        <FormattedMessage id="entity.status.offline" defaultMessage="Offline" />
+      </Tag>
+    );
+  }
 
   if (status === Status.ERROR) {
     return (
@@ -53,5 +63,22 @@ function UpdateStatus({ status }: UpdateStatusProps) {
 UpdateStatus.SUCCESS = Status.SUCCESS;
 UpdateStatus.ERROR = Status.ERROR;
 UpdateStatus.IN_PROGRESS = Status.IN_PROGRESS;
+
+function useOnlineStatus() {
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const onChange = () => setIsOnline(navigator.onLine);
+
+  useEffect(() => {
+    window.addEventListener('online', onChange);
+    window.addEventListener('offline', onChange);
+
+    return () => {
+      window.removeEventListener('online', onChange);
+      window.removeEventListener('offline', onChange);
+    };
+  }, []);
+
+  return isOnline;
+}
 
 export default UpdateStatus;
