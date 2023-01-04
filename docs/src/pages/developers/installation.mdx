@@ -158,6 +158,10 @@ At times it can be useful to inspect the contents of the ElasticSearch indices. 
 
 You will need to pass it the local ES cluster URL (`http://localhost:19200`). You can either inspect an individual index or use `*` to see the whole content. Index names for entity indices follow the pattern `aleph-entity-{{SCHEMA_NAME}}-{{VERSION}}`. For example, the index name for `LegalEntity` entities is `aleph-entity-legalentity-v1`.
 
+### Inspecting the PostgreSQL database
+
+Run `make shell-db` to be dropped into a [psql](https://www.postgresql.org/docs/current/app-psql.html) shell within the database container.
+
 ## Production deployment
 
 <Callout>
