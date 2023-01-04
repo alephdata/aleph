@@ -1,4 +1,4 @@
-import { render } from 'testUtils';
+import { render, act } from 'testUtils';
 import UpdateStatus from './UpdateStatus';
 
 it('renders success by default', () => {
@@ -19,4 +19,25 @@ it('supports "in progress" status', () => {
 it('supports "error" status', () => {
   render(<UpdateStatus status={UpdateStatus.ERROR} />);
   expect(document.body).toHaveTextContent('Error saving');
+});
+
+it('shows message when browser is offline', async () => {
+  render(<UpdateStatus />);
+  expect(document.body).toHaveTextContent('Saved');
+
+  jest.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+
+  await act(async () => {
+    window.dispatchEvent(new Event('offline'));
+  });
+
+  expect(document.body).toHaveTextContent('Offline');
+
+  jest.spyOn(navigator, 'onLine', 'get').mockReturnValue(true);
+
+  await act(async () => {
+    window.dispatchEvent(new Event('online'));
+  });
+
+  expect(document.body).toHaveTextContent('Saved');
 });
