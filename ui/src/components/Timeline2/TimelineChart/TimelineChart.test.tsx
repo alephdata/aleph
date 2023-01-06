@@ -127,3 +127,31 @@ it('shows popover with details when hovering timeline items', async () => {
   expect(document.body).not.toHaveTextContent(/2022-01-01.*Start date/);
   expect(document.body).toHaveTextContent(/2022-02-01.*Start date/);
 });
+
+it('clicking an items focuses it', async () => {
+  render(
+    <TimelineChart
+      items={items}
+      selectedId={null}
+      onSelect={() => {}}
+      onRemove={() => {}}
+      onUnselect={() => {}}
+    />
+  );
+
+  const listItems = screen.getAllByRole('listitem');
+
+  await userEvent.click(listItems[0]);
+
+  // By default, Blueprint's popovers use a focus trap, i.e. when an element outside of
+  // the popover receives focus, Blueprint will try to set focus back to the popover.
+  // This is async bevahior, so we need to wait for other items in the "browser's" event
+  // queue to be processed before asserting. Otherwise we'd get false negatives.
+  await new Promise((resolve) => setTimeout(() => resolve(undefined), 0));
+
+  expect(document.activeElement).toEqual(listItems[0]);
+
+  await userEvent.click(listItems[1]);
+  await new Promise((resolve) => setTimeout(() => resolve(undefined), 0));
+  expect(document.activeElement).toEqual(listItems[1]);
+});
