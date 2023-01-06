@@ -25,6 +25,12 @@ function usePopoverState(delay: number) {
   };
 
   const setPopoverState = (open: boolean) => {
+    // Prevent async state updates in test environment
+    if (process.env.NODE_ENV === 'test') {
+      setShowPopover(open);
+      return;
+    }
+
     if (open) {
       cancelTimeout();
 
@@ -138,6 +144,8 @@ const TimelineChartPopover: FC<TimelineChartPopoverProps> = ({
       renderTarget={renderTarget}
       ref={popoverRef}
       position="top"
+      autoFocus={false}
+      enforceFocus={false}
       modifiers={{
         preventOverflow: {
           options: {
