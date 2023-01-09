@@ -70,7 +70,6 @@ it('allows changing entity properties', async () => {
   // TODO: We should refactor the property editor to use semantic markup so we don't have to
   // reference implementation details in tests.
   const properties = document.querySelectorAll('.EditableProperty');
-  expect(properties[0]).toBeInTheDocument();
   expect(properties[0]).toHaveTextContent('Name');
   expect(properties[0]).toHaveTextContent('Event 1');
 
@@ -92,7 +91,91 @@ it('allows changing entity properties', async () => {
 
   // Timeline list and entity viewer dispaly new name
   expect(rows[1]).toHaveTextContent('New event name');
-  expect(screen.getByRole('heading', { name: 'New event name' }));
+  expect(
+    screen.getByRole('heading', { name: 'New event name' })
+  ).toBeInTheDocument();
+});
+
+it('allows changing entity-type properties', async () => {
+  const layout = { vertices: [] };
+
+  const acmeInc = model.getEntity({
+    schema: 'Company',
+    id: 'acme-inc',
+    properties: {
+      name: ['ACME, Inc.'],
+    },
+  });
+
+  const acmeEurope = model.getEntity({
+    schema: 'Company',
+    id: 'acme-europe',
+    properties: {
+      name: ['ACME Europe SE'],
+    },
+  });
+
+  const johnDoe = model.getEntity({
+    schema: 'Person',
+    id: 'joh-doe',
+    properties: {
+      name: ['John Doe'],
+    },
+  });
+
+  const ownership = model.getEntity({
+    schema: 'Directorship',
+    id: 'ownership',
+    properties: {
+      startDate: ['2022-01-01'],
+      director: [johnDoe],
+      organization: [acmeInc],
+    },
+  });
+
+  render(
+    <Timeline
+      model={model}
+      entities={[ownership]}
+      layout={layout}
+      fetchEntitySuggestions={async () => [acmeInc, acmeEurope]}
+    />
+  );
+
+  // Select the ownership entity
+  const rows = screen.getAllByRole('row');
+  expect(rows[1]).toHaveTextContent('John Doe directs ACME, Inc.');
+  await userEvent.click(rows[1]);
+
+  // The entity viewer is opened
+  const properties = document.querySelectorAll(
+    '.EditableProperty'
+  ) as NodeListOf<HTMLElement>;
+  expect(
+    screen.getByRole('heading', { name: 'Directorship' })
+  ).toBeInTheDocument();
+  expect(properties[0]).toHaveTextContent('Director');
+  expect(properties[0]).toHaveTextContent('John Doe');
+  expect(properties[1]).toHaveTextContent('Organization');
+  expect(properties[1]).toHaveTextContent('ACME, Inc.');
+
+  // Click the property editor and open the select menu
+  await userEvent.click(properties[1]);
+  await userEvent.click(screen.getByRole('button', { name: 'ACME, Inc.' }));
+
+  // The select menu suggests the two companies
+  const suggestions = screen.getAllByRole('menuitem');
+  expect(suggestions).toHaveLength(1);
+  expect(suggestions[0]).toHaveTextContent('ACME Europe SE');
+
+  // Select a different value and click outside to exit editing mode
+  await userEvent.click(suggestions[0]);
+  await userEvent.click(document.body);
+
+  // Timeline list and entity viewer display updated caption
+  expect(rows[1]).toHaveTextContent('John Doe directs ACME Europe SE');
+  expect(properties[1]).toHaveTextContent('Organization');
+  expect(properties[1]).toHaveTextContent('ACME Europe SE');
 });
 
 it('allow creating new entities', async () => {
