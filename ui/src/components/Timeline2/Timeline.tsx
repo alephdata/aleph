@@ -1,7 +1,13 @@
-import { FC, useState } from 'react';
+import { FC, useReducer } from 'react';
 import { Colors } from '@blueprintjs/colors';
 import { Entity } from '@alephdata/followthemoney';
 import c from 'classnames';
+import {
+  reducer,
+  selectSortedEntities,
+  selectSelectedEntity,
+  selectSelectedVertex,
+} from './state';
 import TimelineList from './TimelineList';
 import EntityViewer2 from './EntityViewer2';
 
@@ -10,7 +16,7 @@ import './Timeline.scss';
 const DEFAULT_COLOR = Colors.BLUE2;
 
 type Vertex = {
-  color: string;
+  color?: string;
   entityId: string;
 };
 
@@ -28,41 +34,41 @@ type TimelineRendererProps = TimelineProps & {
   onSelect: (entity: Entity) => void;
 };
 
-type TimelineEntity = Omit<Entity, 'getTemporalStart'> & {
-  getTemporalStart: () => NonNullable<ReturnType<Entity['getTemporalStart']>>;
-};
-
 const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selectedEntity = entities.find((entity) => entity.id === selectedId);
-  const selectedVertex = layout.vertices.find(
-    (vertex) => vertex.entityId === selectedId
-  );
+  const [state, dispatch] = useReducer(reducer, {
+    entities,
+    layout,
+    selectedId: null,
+  });
 
-  entities = entities
-    .filter(
-      (entity): entity is TimelineEntity => entity.getTemporalStart() !== null
-    )
-    .sort((a, b) => {
-      const aStart = a.getTemporalStart().value;
-      const bStart = b.getTemporalStart().value;
-
-      return aStart.localeCompare(bStart);
-    });
+  const selectedEntity = selectSelectedEntity(state);
+  const selectedVertex = selectSelectedVertex(state);
+  const sortedEntities = selectSortedEntities(state);
 
   return (
-    <div className={c('Timeline', selectedId && 'Timeline--selected')}>
+    <div className={c('Timeline', selectedEntity && 'Timeline--selected')}>
       <div className="Timeline__list">
         <TimelineList
-          entities={entities}
-          layout={layout}
-          onSelect={(entity: Entity) => setSelectedId(entity.id)}
-          selectedId={selectedId}
+          entities={sortedEntities}
+          layout={state.layout}
+          onSelect={(entity: Entity) =>
+            dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
+          }
+          selectedId={selectedEntity && selectedEntity.id}
         />
       </div>
-      {selectedEntity && (
+      {selectedEntity && selectedVertex && (
         <div className="Timeline__viewer">
-          <EntityViewer2 entity={selectedEntity} vertex={selectedVertex} />
+          <EntityViewer2
+            entity={selectedEntity}
+            vertex={selectedVertex}
+            onVertexChange={(vertex: Vertex) =>
+              dispatch({ type: 'UPDATE_VERTEX', payload: { vertex } })
+            }
+            onEntityChange={(entity: Entity) =>
+              dispatch({ type: 'UPDATE_ENTITY', payload: { entity } })
+            }
+          />
         </div>
       )}
     </div>

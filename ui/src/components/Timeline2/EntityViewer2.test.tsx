@@ -16,7 +16,8 @@ beforeEach(() => {
 });
 
 it('renders schema name and entity caption', () => {
-  render(<EntityViewer2 entity={entity} />);
+  const vertex = { entityId: '1' };
+  render(<EntityViewer2 entity={entity} vertex={vertex} />);
   expect(screen.getByText('Company')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'ACME, Inc.' }));
 });
@@ -31,7 +32,8 @@ it('renders a color picker', () => {
 });
 
 it('renders properties', () => {
-  render(<EntityViewer2 entity={entity} />);
+  const vertex = { entityId: '1' };
+  render(<EntityViewer2 entity={entity} vertex={vertex} />);
   expect(screen.getByText('Name')).toBeInTheDocument();
   expect(screen.getByText('Incorporation date')).toBeInTheDocument();
 });

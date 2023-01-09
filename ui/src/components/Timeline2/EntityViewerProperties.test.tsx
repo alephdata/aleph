@@ -10,7 +10,7 @@ it('renders featured and non-empty properties', () => {
     schema: 'Company',
   });
 
-  render(<EntityViewerProperties entity={entity} />);
+  render(<EntityViewerProperties entity={entity} onChange={() => {}} />);
 
   expect(screen.getByText('Name')).toBeInTheDocument();
   expect(screen.getByText('Jurisdiction')).toBeInTheDocument();
@@ -19,7 +19,7 @@ it('renders featured and non-empty properties', () => {
   expect(screen.queryByText('Dissolution date')).not.toBeInTheDocument();
 
   entity.setProperty('dissolutionDate', '2022-01-01');
-  render(<EntityViewerProperties entity={entity} />);
+  render(<EntityViewerProperties entity={entity} onChange={() => {}} />);
 
   expect(screen.getByText('Dissolution date')).toBeInTheDocument();
 });

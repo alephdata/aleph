@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import withRouter from 'app/withRouter';
 import { fetchEntitySet, queryEntities } from 'actions';
 import { selectEntitySet, selectEntitiesResult } from 'selectors';
-import { entitySetEntitiesQuery } from 'queries';
+import { entitiesQuery, entitySetEntitiesQuery } from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
@@ -109,7 +109,9 @@ export class TimelineScreen extends Component {
       <Screen title={timeline.label} description={timeline.summary || ''}>
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
-          <Timeline entities={entities.results} layout={timeline.layout} />
+          {!entities.isPending && !entities.isError && (
+            <Timeline entities={entities.results} layout={timeline.layout} />
+          )}
         </CollectionWrapper>
       </Screen>
     );
