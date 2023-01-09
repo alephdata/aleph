@@ -6,6 +6,12 @@ import TimelineItemCreateForm from './TimelineItemCreateForm';
 
 const model = new Model(defaultModel);
 
+const defaultProps = {
+  model,
+  fetchEntitySuggestions: async () => [],
+  onSubmit: () => {},
+};
+
 const selectSchema = async (name: string) => {
   await userEvent.click(screen.getByRole('button', { name: 'Type' }));
   await userEvent.click(screen.getByRole('menuitem', { name }));
@@ -20,14 +26,14 @@ beforeEach(() => {
 });
 
 it('selects `Event` schema by default', () => {
-  render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
+  render(<TimelineItemCreateForm {...defaultProps} />);
   expect(screen.getByRole('button', { name: 'Type' })).toHaveTextContent(
     'Event'
   );
 });
 
 it('does not reset proeprty values when changing the schema', async () => {
-  render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
+  render(<TimelineItemCreateForm {...defaultProps} />);
 
   // User types in the name...
   const eventName = screen.getByRole('textbox', { name: 'Name' });
@@ -44,7 +50,7 @@ it('does not reset proeprty values when changing the schema', async () => {
 });
 
 it('renders source and target fields for edge schemata', async () => {
-  render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
+  render(<TimelineItemCreateForm {...defaultProps} />);
   await selectSchema('Ownership');
   expect(screen.getByRole('button', { name: 'Owner' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Asset' })).toBeInTheDocument();
@@ -63,8 +69,7 @@ it('loads entity suggestions for source and target fields', async () => {
 
   render(
     <TimelineItemCreateForm
-      model={model}
-      onSubmit={() => {}}
+      {...defaultProps}
       fetchEntitySuggestions={fetchEntitySuggestions}
     />
   );
@@ -79,13 +84,13 @@ it('loads entity suggestions for source and target fields', async () => {
 });
 
 it('renders caption field for non-edge schemata', async () => {
-  render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
+  render(<TimelineItemCreateForm {...defaultProps} />);
   await selectSchema('Company');
   expect(screen.getByRole('textbox', { name: 'Name' })).toBeInTheDocument();
 });
 
 it('renders temporal extent fields', async () => {
-  render(<TimelineItemCreateForm model={model} onSubmit={() => {}} />);
+  render(<TimelineItemCreateForm {...defaultProps} />);
 
   const startDate = screen.getByRole('textbox', {
     name: 'Start date',
@@ -117,7 +122,7 @@ it('calls callback with new entity object', async () => {
 
   render(
     <>
-      <TimelineItemCreateForm id="form" model={model} onSubmit={onSubmit} />
+      <TimelineItemCreateForm {...defaultProps} id="form" onSubmit={onSubmit} />
       <button type="submit" form="form">
         Submit
       </button>

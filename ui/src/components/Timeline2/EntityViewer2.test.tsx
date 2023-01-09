@@ -2,6 +2,12 @@ import { render, screen } from 'testUtils';
 import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
 import EntityViewer2 from './EntityViewer2';
 
+const defaultProps = {
+  fetchEntitySuggestions: async () => [],
+  onVertexChange: () => {},
+  onEntityChange: () => {},
+};
+
 const model = new Model(defaultModel);
 let entity: Entity;
 
@@ -17,14 +23,14 @@ beforeEach(() => {
 
 it('renders schema name and entity caption', () => {
   const vertex = { entityId: '1' };
-  render(<EntityViewer2 entity={entity} vertex={vertex} />);
+  render(<EntityViewer2 {...defaultProps} entity={entity} vertex={vertex} />);
   expect(screen.getByText('Company')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'ACME, Inc.' }));
 });
 
 it('renders a color picker', () => {
   const vertex = { entityId: '1', color: 'green' };
-  render(<EntityViewer2 entity={entity} vertex={vertex} />);
+  render(<EntityViewer2 {...defaultProps} entity={entity} vertex={vertex} />);
   const picker = document.querySelector(
     '.ColorPicker [style*="background-color: green"]'
   );
@@ -33,7 +39,7 @@ it('renders a color picker', () => {
 
 it('renders properties', () => {
   const vertex = { entityId: '1' };
-  render(<EntityViewer2 entity={entity} vertex={vertex} />);
+  render(<EntityViewer2 {...defaultProps} entity={entity} vertex={vertex} />);
   expect(screen.getByText('Name')).toBeInTheDocument();
   expect(screen.getByText('Incorporation date')).toBeInTheDocument();
 });

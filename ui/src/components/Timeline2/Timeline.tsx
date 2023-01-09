@@ -26,13 +26,13 @@ type TimelineProps = {
   entities: Array<Entity>;
   layout?: Layout;
   renderer?: TimelineRenderer;
-  fetchEntitySuggestions?: (
+  fetchEntitySuggestions: (
     schema: Schema,
     query: string
   ) => Promise<Array<Entity>>;
-  onEntityCreateOrUpdate?: (entity: Entity) => Promise<unknown>;
-  onEntityRemove?: (entity: Entity) => Promise<unknown>;
-  onLayoutUpdate?: (layout: Layout) => Promise<unknown>;
+  onEntityCreateOrUpdate: (entity: Entity) => Promise<unknown>;
+  onEntityRemove: (entity: Entity) => Promise<unknown>;
+  onLayoutUpdate: (layout: Layout) => Promise<unknown>;
 };
 
 const Timeline: FC<TimelineProps> = ({
@@ -65,7 +65,7 @@ const Timeline: FC<TimelineProps> = ({
   );
 
   useEffect(() => {
-    onLayoutUpdate && onLayoutUpdate(state.layout);
+    onLayoutUpdate(state.layout);
   }, [state.layout, onLayoutUpdate]);
 
   const createButton = (
@@ -81,7 +81,7 @@ const Timeline: FC<TimelineProps> = ({
         isOpen={createDialogOpen}
         onClose={toggleCreateDialog}
         onCreate={async (entity) => {
-          onEntityCreateOrUpdate && (await onEntityCreateOrUpdate(entity));
+          await onEntityCreateOrUpdate(entity);
           dispatch({ type: 'CREATE_ENTITY', payload: { entity } });
           toggleCreateDialog();
         }}
@@ -103,7 +103,7 @@ const Timeline: FC<TimelineProps> = ({
               onUnselect={() => dispatch({ type: 'UNSELECT_ENTITY' })}
               onRemove={(entity: Entity) => {
                 dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
-                onEntityRemove && onEntityRemove(entity);
+                onEntityRemove(entity);
               }}
             />
           </>
@@ -122,7 +122,7 @@ const Timeline: FC<TimelineProps> = ({
             }}
             onEntityChange={(entity: Entity) => {
               dispatch({ type: 'UPDATE_ENTITY', payload: { entity } });
-              onEntityCreateOrUpdate && onEntityCreateOrUpdate(entity);
+              onEntityCreateOrUpdate(entity);
             }}
           />
         </div>

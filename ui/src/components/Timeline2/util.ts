@@ -221,7 +221,7 @@ export function useTimelineItemKeyboardNavigation(
 
 export function useEntitySuggestions(
   schema: Schema,
-  fetchSuggestions?: FetchEntitySuggestions
+  fetchSuggestions: FetchEntitySuggestions
 ) {
   const [suggestions, setSuggestions] = useState<Array<Entity>>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -230,10 +230,6 @@ export function useEntitySuggestions(
   const onQueryChange = useCallback(
     throttle(
       async (query: string) => {
-        if (!fetchSuggestions) {
-          return;
-        }
-
         setIsFetching(true);
 
         try {
