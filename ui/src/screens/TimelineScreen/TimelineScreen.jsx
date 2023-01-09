@@ -4,8 +4,12 @@ import { connect } from 'react-redux';
 
 import withRouter from 'app/withRouter';
 import { fetchEntitySet, queryEntities } from 'actions';
-import { selectEntitySet, selectEntitiesResult } from 'selectors';
-import { entitiesQuery, entitySetEntitiesQuery } from 'queries';
+import { selectModel, selectEntitySet, selectEntitiesResult } from 'selectors';
+import {
+  entitiesQuery,
+  entitySetEntitiesQuery,
+  entitySuggestQuery,
+} from 'queries';
 import Screen from 'components/Screen/Screen';
 import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
 import CollectionWrapper from 'components/Collection/CollectionWrapper';
@@ -25,6 +29,7 @@ export class TimelineScreen extends Component {
     };
 
     this.onStatusChange = this.onStatusChange.bind(this);
+    this.fetchEntitySuggestions = this.fetchEntitySuggestions.bind(this);
   }
 
   componentDidMount() {
@@ -54,6 +59,21 @@ export class TimelineScreen extends Component {
     }
   }
 
+  async fetchEntitySuggestions(schema, queryText) {
+    const { queryEntities, location, timeline, model } = this.props;
+    const query = entitySuggestQuery(
+      location,
+      timeline?.collection,
+      schema.name,
+      { prefix: queryText }
+    );
+    const response = await queryEntities({ query });
+
+    return (response.result?.results || []).map((result) =>
+      model.getEntity(result)
+    );
+  }
+
   onSearch(queryText) {
     const { query } = this.props;
     const newQuery = query.set('q', queryText);
@@ -74,7 +94,7 @@ export class TimelineScreen extends Component {
   }
 
   render() {
-    const { timeline, entities } = this.props;
+    const { model, timeline, entities } = this.props;
     const { updateStatus } = this.state;
 
     if (timeline.isError) {
@@ -110,7 +130,12 @@ export class TimelineScreen extends Component {
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
           {!entities.isPending && !entities.isError && (
-            <Timeline entities={entities.results} layout={timeline.layout} />
+            <Timeline
+              model={model}
+              entities={entities.results}
+              layout={timeline.layout}
+              fetchEntitySuggestions={this.fetchEntitySuggestions}
+            />
           )}
         </CollectionWrapper>
       </Screen>
@@ -122,6 +147,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location, params } = ownProps;
   const { entitySetId } = params;
 
+  const model = selectModel(state);
   const timeline = selectEntitySet(state, entitySetId);
   const entitiesQuery = entitySetEntitiesQuery(location, entitySetId, null)
     .defaultSortBy('properties.date', 'asc')
@@ -129,6 +155,7 @@ const mapStateToProps = (state, ownProps) => {
   const entities = selectEntitiesResult(state, entitiesQuery);
 
   return {
+    model,
     entitySetId,
     entitiesQuery,
     timeline,

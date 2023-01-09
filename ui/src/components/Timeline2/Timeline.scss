@@ -6,10 +6,15 @@
   position: relative;
   display: flex;
   flex-grow: 1;
+  flex-wrap: wrap;
   overflow: hidden;
 }
 
-.Timeline__list,
+.Timeline__actions {
+  margin-bottom: 2.5 * $aleph-grid-size;
+}
+
+.Timeline__main,
 .Timeline__viewer {
   position: absolute;
   top: 0;
@@ -17,12 +22,13 @@
   overflow-y: auto;
 }
 
-.Timeline__list {
+.Timeline__main {
   left: 0;
   right: 0;
+  padding: $aleph-content-padding;
 }
 
-.Timeline--selected .Timeline__list {
+.Timeline--selected .Timeline__main {
   right: var(--viewer-width);
 }
 

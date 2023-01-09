@@ -1,6 +1,7 @@
-import { FC, useReducer } from 'react';
+import { FC, useReducer, useState } from 'react';
+import { Button, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
-import { Entity } from '@alephdata/followthemoney';
+import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
 import {
   reducer,
@@ -10,6 +11,7 @@ import {
 } from './state';
 import TimelineList from './TimelineList';
 import EntityViewer2 from './EntityViewer2';
+import TimelineItemCreateDialog from './TimelineItemCreateDialog';
 
 import './Timeline.scss';
 
@@ -25,21 +27,36 @@ type Layout = {
 };
 
 type TimelineProps = {
+  model: Model;
   entities: Array<Entity>;
   layout: Layout;
+  fetchEntitySuggestions?: (
+    schema: Schema,
+    query: string
+  ) => Promise<Array<Entity>>;
 };
 
-type TimelineRendererProps = TimelineProps & {
+type TimelineRendererProps = {
+  entities: Array<Entity>;
+  layout: Layout;
   selectedId?: string | null;
   onSelect: (entity: Entity) => void;
 };
 
-const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
+const Timeline: FC<TimelineProps> = ({
+  model,
+  entities,
+  layout,
+  fetchEntitySuggestions,
+}) => {
   const [state, dispatch] = useReducer(reducer, {
     entities,
     layout,
     selectedId: null,
   });
+
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const toggleCreateDialog = () => setCreateDialogOpen(!createDialogOpen);
 
   const selectedEntity = selectSelectedEntity(state);
   const selectedVertex = selectSelectedVertex(state);
@@ -47,7 +64,26 @@ const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
 
   return (
     <div className={c('Timeline', selectedEntity && 'Timeline--selected')}>
-      <div className="Timeline__list">
+      <div className="Timeline__main">
+        <div className="Timeline__actions">
+          <TimelineItemCreateDialog
+            model={model}
+            isOpen={createDialogOpen}
+            onClose={toggleCreateDialog}
+            onCreate={(entity) => {
+              dispatch({ type: 'CREATE_ENTITY', payload: { entity } });
+              toggleCreateDialog();
+            }}
+            fetchEntitySuggestions={fetchEntitySuggestions}
+          />
+          <Button
+            intent={Intent.PRIMARY}
+            icon="add"
+            onClick={toggleCreateDialog}
+          >
+            Add item
+          </Button>
+        </div>
         <TimelineList
           entities={sortedEntities}
           layout={state.layout}
