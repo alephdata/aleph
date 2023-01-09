@@ -1,5 +1,4 @@
-import { FC, FormEvent, useState, useCallback, useEffect } from 'react';
-import { throttle } from 'lodash';
+import { FC, FormEvent, useState } from 'react';
 import {
   Model,
   Schema,
@@ -13,6 +12,7 @@ import type {
   EdgeSchema,
   FetchEntitySuggestions,
 } from './types';
+import { useEntitySuggestions } from './util';
 import { SchemaSelect, EntitySelect } from 'react-ftm';
 import { Button, Alignment, FormGroup, InputGroup } from '@blueprintjs/core';
 
@@ -109,41 +109,14 @@ const EntityPropertyField: FC<EntityPropertyFieldProps> = ({
   fetchEntitySuggestions,
   onChange,
 }) => {
-  const [suggestions, setSuggestions] = useState<Array<Entity>>([]);
-  const [isFetching, setIsFetching] = useState(false);
-
-  const onQueryChange = useCallback(
-    throttle(
-      async (query: string) => {
-        if (!fetchEntitySuggestions) {
-          return;
-        }
-
-        setIsFetching(true);
-
-        try {
-          const entities = await fetchEntitySuggestions(
-            property.getRange(),
-            query
-          );
-          setSuggestions(entities);
-        } finally {
-          setIsFetching(false);
-        }
-      },
-      200,
-      { leading: false, trailing: true }
-    ),
-    [property, fetchEntitySuggestions]
+  const [suggestions, isFetching, onQueryChange] = useEntitySuggestions(
+    property.getRange(),
+    fetchEntitySuggestions
   );
 
   const onSubmit = (values: Values) => {
     onChange(property, values[0]);
   };
-
-  useEffect(() => {
-    onQueryChange('');
-  }, []);
 
   return (
     <FormGroup label={property.label} labelFor={property.name}>

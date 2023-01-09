@@ -1,8 +1,16 @@
-import { useMemo, createRef, KeyboardEvent } from 'react';
+import {
+  useMemo,
+  useCallback,
+  useEffect,
+  useState,
+  createRef,
+  KeyboardEvent,
+} from 'react';
 import { differenceInDays } from 'date-fns';
-import { Entity } from '@alephdata/followthemoney';
+import { throttle } from 'lodash';
+import { Entity, Schema } from '@alephdata/followthemoney';
 import { DEFAULT_COLOR } from './Timeline';
-import { Layout } from './types';
+import { FetchEntitySuggestions, Layout } from './types';
 
 function endOfMonth(year: number, month: number): number {
   // Months in ECMAScript are zero-based:
@@ -209,4 +217,45 @@ export function useTimelineItemKeyboardNavigation(
   };
 
   return { onKeyUp } as const;
+}
+
+export function useEntitySuggestions(
+  schema: Schema,
+  fetchSuggestions?: FetchEntitySuggestions
+) {
+  const [suggestions, setSuggestions] = useState<Array<Entity>>([]);
+  const [isFetching, setIsFetching] = useState(false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onQueryChange = useCallback(
+    throttle(
+      async (query: string) => {
+        if (!fetchSuggestions) {
+          return;
+        }
+
+        setIsFetching(true);
+
+        try {
+          const entities = await fetchSuggestions(schema, query);
+          setSuggestions(entities);
+        } finally {
+          setIsFetching(false);
+        }
+      },
+      200,
+      { leading: false, trailing: true }
+    ),
+    [throttle, schema, fetchSuggestions]
+  );
+
+  useEffect(() => {
+    // Fetch suggestions on mount
+    onQueryChange('');
+
+    // Cancel any outstanding fetches before unmounting
+    return () => onQueryChange.cancel();
+  }, [onQueryChange]);
+
+  return [suggestions, isFetching, onQueryChange] as const;
 }
