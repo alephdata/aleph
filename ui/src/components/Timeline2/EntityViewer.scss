@@ -1,0 +1,25 @@
+@import 'app/variables.scss';
+
+.EntityViewer {
+  display: grid;
+  gap: 2 * $aleph-grid-size;
+  padding-top: 5 * $aleph-grid-size;
+}
+
+.EntityViewer__header {
+  text-align: center;
+}
+
+.EntityViewer__caption {
+  margin-top: 0.5 * $aleph-grid-size;
+  margin-bottom: 0;
+}
+
+.EntityViewer__schema {
+  color: $aleph-greyed-text;
+}
+
+.EntityViewer__color {
+  width: 75%;
+  justify-self: center;
+}

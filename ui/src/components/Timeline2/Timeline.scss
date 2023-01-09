@@ -1,0 +1,21 @@
+@import 'app/variables.scss';
+
+.Timeline {
+  display: flex;
+  overflow: hidden;
+}
+
+.Timeline__list {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.Timeline__viewer {
+  width: 275px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: $aleph-grid-size;
+
+  border-left: 1px solid $aleph-border-color;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}

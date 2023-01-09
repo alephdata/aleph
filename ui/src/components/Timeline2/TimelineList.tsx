@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Entity } from '@alephdata/followthemoney';
-import { Colors } from '@blueprintjs/colors';
+import { DEFAULT_COLOR } from './Timeline';
 import TimelineListItem from './TimelineListItem';
 import { type TimelineRendererProps } from './Timeline';
 
@@ -12,7 +12,7 @@ const getColor = (
 ): string => {
   return (
     layout.vertices.find((vertex) => vertex.entityId === entity.id)?.color ||
-    Colors.BLUE3
+    DEFAULT_COLOR
   );
 };
 

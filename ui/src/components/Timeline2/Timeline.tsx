@@ -1,6 +1,12 @@
 import { FC, useState } from 'react';
+import { Colors } from '@blueprintjs/colors';
 import { Entity } from '@alephdata/followthemoney';
 import TimelineList from './TimelineList';
+import EntityViewer from './EntityViewer';
+
+import './Timeline.scss';
+
+const DEFAULT_COLOR = Colors.BLUE2;
 
 type Vertex = {
   color: string;
@@ -27,6 +33,10 @@ type TimelineEntity = Omit<Entity, 'getTemporalStart'> & {
 
 const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedEntity = entities.find((entity) => entity.id === selectedId);
+  const selectedVertex = layout.vertices.find(
+    (vertex) => vertex.entityId === selectedId
+  );
 
   entities = entities
     .filter(
@@ -40,14 +50,24 @@ const Timeline: FC<TimelineProps> = ({ entities, layout }) => {
     });
 
   return (
-    <TimelineList
-      entities={entities}
-      layout={layout}
-      onSelect={(entity: Entity) => setSelectedId(entity.id)}
-      selectedId={selectedId}
-    />
+    <div className="Timeline">
+      <div className="Timeline__list">
+        <TimelineList
+          entities={entities}
+          layout={layout}
+          onSelect={(entity: Entity) => setSelectedId(entity.id)}
+          selectedId={selectedId}
+        />
+      </div>
+      {selectedEntity && (
+        <div className="Timeline__viewer">
+          <EntityViewer entity={selectedEntity} vertex={selectedVertex} />
+        </div>
+      )}
+    </div>
   );
 };
 
 export default Timeline;
-export type { TimelineRendererProps };
+export { DEFAULT_COLOR };
+export type { TimelineRendererProps, Vertex };
