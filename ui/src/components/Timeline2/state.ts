@@ -40,7 +40,18 @@ type UpdateEntityAction = {
   };
 };
 
-type Action = SelectEntityAction | UpdateVertexAction | UpdateEntityAction;
+type CreateEntityAction = {
+  type: 'CREATE_ENTITY';
+  payload: {
+    entity: Entity;
+  };
+};
+
+type Action =
+  | SelectEntityAction
+  | UpdateVertexAction
+  | UpdateEntityAction
+  | CreateEntityAction;
 
 const reducer = (state: State, { type, payload }: Action): State => {
   if (type === 'SELECT_ENTITY') {
@@ -74,6 +85,11 @@ const reducer = (state: State, { type, payload }: Action): State => {
     }
 
     return { ...state, entities: state.entities };
+  }
+
+  if (type === 'CREATE_ENTITY') {
+    let newState = reducer(state, { type: 'UPDATE_ENTITY', payload });
+    return reducer(newState, { type: 'SELECT_ENTITY', payload });
   }
 
   throw new Error('Invalid action type.');

@@ -107,3 +107,24 @@ describe('UPDATE_ENTITY', () => {
     ]);
   });
 });
+
+describe('CREATE_ENTITY', () => {
+  it('adds and selects new entity', () => {
+    const entity = model.getEntity({
+      id: 'abc',
+      schema: 'Event',
+    });
+
+    expect(state.entities).toHaveLength(1);
+    expect(state.selectedId).toBeNull();
+
+    const newState = reducer(state, {
+      type: 'CREATE_ENTITY',
+      payload: { entity },
+    });
+
+    expect(newState.entities).toHaveLength(2);
+    expect(newState.entities[1]).toEqual(entity);
+    expect(newState.selectedId).toEqual('abc');
+  });
+});

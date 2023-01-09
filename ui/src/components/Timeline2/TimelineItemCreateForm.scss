@@ -1,0 +1,14 @@
+@import 'app/variables.scss';
+
+.TimelineItemCreateForm__row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: $aleph-grid-size;
+}
+
+.TimelineItemCreateForm__row > * {
+  flex-basis: calc(50% - 0.5 * $aleph-grid-size);
+  flex-grow: 1;
+  flex-shrink: 1;
+}
