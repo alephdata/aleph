@@ -228,7 +228,6 @@ services:
     labels:
       - "traefik.enable=false"
 
-
 volumes:
   archive-data: {}
   postgres-data: {}

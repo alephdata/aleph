@@ -33,13 +33,13 @@ services:
     image: appbaseio/dejavu:3.6.0
     container_name: dejavu
     ports:
-        - '1358:1358'
+      - '1358:1358'
     depends_on:
-        - elasticsearch
+      - elasticsearch
 
   redis:
     image: redis:alpine
-    command: ["redis-server", "--save", "3600", "10"]
+    command: [ "redis-server", "--save", "3600", "10" ]
     volumes:
       - redis-data:/data
 
