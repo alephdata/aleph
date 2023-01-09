@@ -9,10 +9,17 @@ import './EntityViewer2.scss';
 
 type Props = {
   entity: Entity;
-  vertex?: Vertex;
+  vertex: Vertex;
+  onVertexChange?: (vertex: Vertex) => void;
+  onEntityChange?: (entity: Entity) => void;
 };
 
-const EntityViewer2: FC<Props> = ({ entity, vertex }) => {
+const EntityViewer2: FC<Props> = ({
+  entity,
+  vertex,
+  onVertexChange,
+  onEntityChange,
+}) => {
   const currentColor = vertex?.color || DEFAULT_COLOR;
 
   return (
@@ -24,9 +31,17 @@ const EntityViewer2: FC<Props> = ({ entity, vertex }) => {
         <h2 className="EntityViewer2__caption">{entity.getCaption()}</h2>
       </header>
       <div className="EntityViewer2__color">
-        <ColorPicker currSelected={currentColor} onSelect={() => {}} />
+        <ColorPicker
+          currSelected={currentColor}
+          onSelect={(color) =>
+            onVertexChange && onVertexChange({ ...vertex, color })
+          }
+        />
       </div>
-      <EntityViewerProperties entity={entity} />
+      <EntityViewerProperties
+        entity={entity}
+        onChange={(entity) => onEntityChange && onEntityChange(entity)}
+      />
     </article>
   );
 };
