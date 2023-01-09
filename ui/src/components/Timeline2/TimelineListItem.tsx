@@ -1,4 +1,4 @@
-import { CSSProperties, FC, MouseEvent } from 'react';
+import { CSSProperties, MouseEvent, KeyboardEvent, forwardRef } from 'react';
 import { Button, Icon, IconSize } from '@blueprintjs/core';
 import c from 'classnames';
 import { Entity } from '@alephdata/followthemoney';
@@ -15,14 +15,9 @@ type Props = {
   onRemove?: (entity: Entity) => void;
 };
 
-const TimelineListItem: FC<Props> = ({
-  entity,
-  color,
-  selected,
-  muted,
-  onSelect,
-  onRemove,
-}) => {
+const TimelineListItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const { entity, color, selected, muted, onSelect, onRemove } = props;
+
   const style: CSSProperties = {
     ['--timeline-item-color' as string]: color,
   };
@@ -31,18 +26,25 @@ const TimelineListItem: FC<Props> = ({
   const end = entity.getTemporalEnd()?.value;
 
   const onEntitySelect = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
     onSelect && onSelect(entity);
   };
 
   const onEntityRemove = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
     onRemove && onRemove(entity);
+  };
+
+  const onKeyPress = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      onSelect && onSelect(entity);
+    }
   };
 
   return (
     <div
+      ref={ref}
+      tabIndex={0}
       onClick={onEntitySelect}
+      onKeyPress={onKeyPress}
       style={style}
       className={c(
         'TimelineListItem',
@@ -58,9 +60,6 @@ const TimelineListItem: FC<Props> = ({
         <TimelineItemCaption entity={entity} />
       </strong>
       <div className="TimelineListItem__actions">
-        <div className="visually-hidden">
-          <button onClick={onEntitySelect}>Edit</button>
-        </div>
         <Button minimal small onClick={onEntityRemove}>
           <Icon icon="trash" size={IconSize.STANDARD} />
           <span className="visually-hidden">Remove</span>
@@ -68,6 +67,6 @@ const TimelineListItem: FC<Props> = ({
       </div>
     </div>
   );
-};
+});
 
 export default TimelineListItem;

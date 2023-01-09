@@ -43,12 +43,14 @@ it('selects item on click', async () => {
   const layout = { vertices: [] };
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
-  const items = screen.getAllByRole('listitem');
+  const items = screen
+    .getAllByRole('listitem')
+    .map((item) => item.querySelector('div') as HTMLElement);
 
-  await userEvent.click(within(items[0]).getByRole('button'));
+  await userEvent.click(items[0]);
   expect(screen.getByRole('heading', { name: 'Event 1' }));
 
-  await userEvent.click(within(items[2]).getByRole('button'));
+  await userEvent.click(items[2]);
   expect(screen.getByRole('heading', { name: 'Event 3' }));
 });
 
@@ -58,9 +60,7 @@ it('allows changing entity color', async () => {
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
   const item = screen.getByRole('listitem').querySelector('div') as HTMLElement;
-  expect(item).toBeInTheDocument();
-
-  await userEvent.click(within(item).getByRole('button', { name: 'Edit' }));
+  await userEvent.click(item);
 
   // TODO: We should refactor the color picker to use semantic markup so we don't have to
   // reference implementation details in tests.
@@ -70,9 +70,7 @@ it('allows changing entity color', async () => {
   let color = item.style.getPropertyValue('--timeline-item-color');
   expect(color).toEqual(Colors.BLUE2);
 
-  await userEvent.click(within(item).getByRole('button', { name: 'Edit' }));
   await userEvent.click(swatches[3]);
-
   color = item.style.getPropertyValue('--timeline-item-color');
   expect(color).toEqual(Colors.RED2);
 });
@@ -82,10 +80,8 @@ it('allows changing entity properties', async () => {
   const layout = { vertices: [] };
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
-  const item = screen.getByRole('listitem');
-  expect(item).toBeInTheDocument();
-
-  await userEvent.click(within(item).getByRole('button', { name: 'Edit' }));
+  const item = screen.getByRole('listitem').querySelector('div') as HTMLElement;
+  await userEvent.click(item);
 
   // TODO: We should refactor the property editor to use semantic markup so we don't have to
   // reference implementation details in tests.

@@ -46,7 +46,7 @@
 
 .TimelineListItem__actions {
   margin-left: auto;
-  opacity: 0;
+  visibility: hidden;
 }
 
 .TimelineListItem--muted {
@@ -60,14 +60,10 @@
 
 .TimelineListItem:where(:hover) .TimelineListItem__actions,
 .TimelineListItem:where(:focus-within) .TimelineListItem__actions {
-  opacity: 0.75;
+  visibility: visible;
 }
 
-.TimelineListItem__actions:hover {
-  opacity: 1;
-}
-
-.TimelineListItem:focus-within {
+.TimelineListItem:focus {
   outline: 2px solid var(--timeline-item-color);
   outline-offset: 1px;
 }
