@@ -45,14 +45,23 @@ it('sets custom color property', () => {
   expect(color).toEqual('#ff0000');
 });
 
-it('calls select handler when clicked', async () => {
+it('calls select handler on click', async () => {
   entity.setProperty('name', 'Event title');
   const onSelect = jest.fn();
   render(<TimelineListItem entity={entity} onSelect={onSelect} color="blue" />);
 
-  await userEvent.click(screen.getByRole('button', { name: 'Edit' }));
+  await userEvent.click(screen.getByText('Event title'));
+  expect(onSelect).toHaveBeenCalledTimes(1);
+});
+
+it('calls select handler by pressing enter/space', async () => {
+  entity.setProperty('name', 'Event title');
+  const onSelect = jest.fn();
+  render(<TimelineListItem entity={entity} onSelect={onSelect} color="blue" />);
+
+  await userEvent.keyboard('{tab}{enter}');
   expect(onSelect).toHaveBeenCalledTimes(1);
 
-  await userEvent.click(screen.getByText('Event title'));
+  await userEvent.keyboard(' ');
   expect(onSelect).toHaveBeenCalledTimes(2);
 });
