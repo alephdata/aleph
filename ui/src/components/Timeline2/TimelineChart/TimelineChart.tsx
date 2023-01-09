@@ -28,7 +28,6 @@ const TimelineChart: FC<TimelineRendererProps> = ({
 
   const start = startOfMonth(earliestDate);
   const end = endOfMonth(latestDate);
-
   const days = differenceInDays(end, start) + 1;
 
   const style: CSSProperties = {
@@ -43,6 +42,7 @@ const TimelineChart: FC<TimelineRendererProps> = ({
       {...keyboardProps}
       className={c('TimelineChart', Classes.FOCUS_STYLE_MANAGER_IGNORE)}
       style={style}
+      onClick={() => onUnselect()}
     >
       <TimelineChartGrid start={start} end={end} />
       <TimelineChartLabels start={start} end={end} />

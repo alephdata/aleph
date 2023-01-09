@@ -6,6 +6,12 @@ export enum TimelineRenderer {
   Chart = 'chart',
 }
 
+export enum TimelineChartZoomLevel {
+  Day = 'day',
+  Month = 'month',
+  Year = 'year',
+}
+
 export type TimelineEntity = Omit<Entity, 'getTemporalStart'> & {
   getTemporalStart: () => NonNullable<ReturnType<Entity['getTemporalStart']>>;
 };
