@@ -116,6 +116,7 @@ const Timeline: FC<TimelineProps> = ({
             key={selectedEntity.id}
             entity={selectedEntity}
             vertex={selectedVertex}
+            fetchEntitySuggestions={fetchEntitySuggestions}
             onVertexChange={(vertex: Vertex) => {
               dispatch({ type: 'UPDATE_VERTEX', payload: { vertex } });
             }}

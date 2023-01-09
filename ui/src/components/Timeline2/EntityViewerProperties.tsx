@@ -1,14 +1,39 @@
 import { FC, useState } from 'react';
-import { Entity, Property } from '@alephdata/followthemoney';
+import { Schema, Entity, Property } from '@alephdata/followthemoney';
 import { EditableProperty } from 'react-ftm';
 import { PropertySelect } from 'react-ftm/editors';
+import { FetchEntitySuggestions } from './types';
 
 type Props = {
   entity: Entity;
+  fetchEntitySuggestions?: FetchEntitySuggestions;
   onChange: (entity: Entity) => void;
 };
 
-const EntityViewerProperties: FC<Props> = ({ entity, onChange }) => {
+// This component uses the `EditableProperty` component from react-ftm
+// which requires a slightly different function signature. This function
+// returns an adapted function with the required signature.
+function adaptFetchEntitySuggestions(
+  fetchEntitySuggestions?: FetchEntitySuggestions
+) {
+  return async (query: string, schemata?: Array<Schema>) => {
+    if (!fetchEntitySuggestions) {
+      return [];
+    }
+
+    if (schemata === undefined || schemata.length < 1) {
+      return [];
+    }
+
+    return await fetchEntitySuggestions(schemata[0], query);
+  };
+}
+
+const EntityViewerProperties: FC<Props> = ({
+  entity,
+  fetchEntitySuggestions,
+  onChange,
+}) => {
   const { schema } = entity;
 
   const [active, setActive] = useState<string | null>(null);
@@ -41,6 +66,9 @@ const EntityViewerProperties: FC<Props> = ({ entity, onChange }) => {
           entity={entity}
           property={prop}
           editing={active === prop.name}
+          fetchEntitySuggestions={adaptFetchEntitySuggestions(
+            fetchEntitySuggestions
+          )}
           onToggleEdit={() => setActive(prop.name)}
           onSubmit={(entity) => {
             onChange(entity);

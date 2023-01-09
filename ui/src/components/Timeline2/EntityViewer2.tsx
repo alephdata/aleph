@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Entity } from '@alephdata/followthemoney';
 import { Schema } from 'src/react-ftm/types';
 import { DEFAULT_COLOR } from './Timeline';
-import type { Vertex } from './types';
+import type { Vertex, FetchEntitySuggestions } from './types';
 import EntityViewerProperties from './EntityViewerProperties';
 import { ColorPicker } from 'src/react-ftm';
 
@@ -11,6 +11,7 @@ import './EntityViewer2.scss';
 type EntityViewer2Props = {
   entity: Entity;
   vertex: Vertex;
+  fetchEntitySuggestions?: FetchEntitySuggestions;
   onVertexChange?: (vertex: Vertex) => void;
   onEntityChange?: (entity: Entity) => void;
 };
@@ -18,6 +19,7 @@ type EntityViewer2Props = {
 const EntityViewer2: FC<EntityViewer2Props> = ({
   entity,
   vertex,
+  fetchEntitySuggestions,
   onVertexChange,
   onEntityChange,
 }) => {
@@ -41,6 +43,7 @@ const EntityViewer2: FC<EntityViewer2Props> = ({
       </div>
       <EntityViewerProperties
         entity={entity}
+        fetchEntitySuggestions={fetchEntitySuggestions}
         onChange={(entity) => onEntityChange && onEntityChange(entity)}
       />
     </article>
