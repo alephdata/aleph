@@ -30,7 +30,7 @@ type TimelineProps = {
     schema: Schema,
     query: string
   ) => Promise<Array<Entity>>;
-  onEntityCreateOrUpdate: (entity: Entity) => Promise<unknown>;
+  onEntityCreateOrUpdate: (entity: Entity) => Promise<Entity>;
   onEntityRemove: (entity: Entity) => Promise<unknown>;
   onLayoutUpdate: (layout: Layout) => Promise<unknown>;
 };
@@ -81,8 +81,11 @@ const Timeline: FC<TimelineProps> = ({
         isOpen={createDialogOpen}
         onClose={toggleCreateDialog}
         onCreate={async (entity) => {
-          await onEntityCreateOrUpdate(entity);
-          dispatch({ type: 'CREATE_ENTITY', payload: { entity } });
+          const storedEntity = await onEntityCreateOrUpdate(entity);
+          dispatch({
+            type: 'CREATE_ENTITY',
+            payload: { entity: storedEntity },
+          });
           toggleCreateDialog();
         }}
         fetchEntitySuggestions={fetchEntitySuggestions}

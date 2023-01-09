@@ -96,20 +96,27 @@ export class TimelineScreen extends Component {
   async saveChanges(callback) {
     try {
       this.setState({ updateStatus: UpdateStatus.IN_PROGRESS });
-      await callback();
+      const result = await callback();
       this.setState({ updateStatus: UpdateStatus.SUCCESS });
+      return result;
     } catch (error) {
       this.setState({ updateStatus: UpdateStatus.ERROR });
       throw error;
     }
   }
 
-  async onEntityCreateOrUpdate(entity, layout) {
-    const { entitySetId, entitySetAddEntity } = this.props;
+  async onEntityCreateOrUpdate(entity) {
+    const { model, entitySetId, entitySetAddEntity } = this.props;
 
-    this.saveChanges(() =>
+    const result = await this.saveChanges(() =>
       entitySetAddEntity({ entitySetId, entity, sync: true })
     );
+
+    return model.getEntity({
+      id: result.data.id,
+      schema: result.data.schema,
+      properties: result.data.properties,
+    });
   }
 
   async onEntityRemove(entity) {
