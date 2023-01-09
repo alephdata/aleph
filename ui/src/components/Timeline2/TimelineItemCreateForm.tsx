@@ -35,14 +35,14 @@ type PropertyFieldProps = {
 type EntityPropertyFieldProps = {
   property: Property;
   value?: Entity;
-  fetchEntitySuggestions?: FetchEntitySuggestions;
+  fetchEntitySuggestions: FetchEntitySuggestions;
   onChange: (property: Property, value: Value) => void;
 };
 
 type EdgeFieldsProps = {
   schema: EdgeSchema;
   properties: EntityProperties;
-  fetchEntitySuggestions?: FetchEntitySuggestions;
+  fetchEntitySuggestions: FetchEntitySuggestions;
   onChange: (property: Property, value: Value) => void;
 };
 
@@ -62,7 +62,7 @@ type TimelineItemCreateFormProps = {
   model: Model;
   onSubmit: (entity: Entity) => void;
   id?: string;
-  fetchEntitySuggestions?: FetchEntitySuggestions;
+  fetchEntitySuggestions: FetchEntitySuggestions;
 };
 
 const SchemaField: FC<SchemaFieldProps> = ({ model, value, onChange }) => (

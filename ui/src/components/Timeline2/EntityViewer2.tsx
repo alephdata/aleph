@@ -11,9 +11,9 @@ import './EntityViewer2.scss';
 type EntityViewer2Props = {
   entity: Entity;
   vertex: Vertex;
-  fetchEntitySuggestions?: FetchEntitySuggestions;
-  onVertexChange?: (vertex: Vertex) => void;
-  onEntityChange?: (entity: Entity) => void;
+  fetchEntitySuggestions: FetchEntitySuggestions;
+  onVertexChange: (vertex: Vertex) => void;
+  onEntityChange: (entity: Entity) => void;
 };
 
 const EntityViewer2: FC<EntityViewer2Props> = ({
@@ -36,15 +36,13 @@ const EntityViewer2: FC<EntityViewer2Props> = ({
       <div className="EntityViewer2__color">
         <ColorPicker
           currSelected={currentColor}
-          onSelect={(color) =>
-            onVertexChange && onVertexChange({ ...vertex, color })
-          }
+          onSelect={(color) => onVertexChange({ ...vertex, color })}
         />
       </div>
       <EntityViewerProperties
         entity={entity}
         fetchEntitySuggestions={fetchEntitySuggestions}
-        onChange={(entity) => onEntityChange && onEntityChange(entity)}
+        onChange={(entity) => onEntityChange(entity)}
       />
     </article>
   );

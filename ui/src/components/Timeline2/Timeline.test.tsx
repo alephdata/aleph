@@ -7,6 +7,14 @@ import Timeline from './Timeline';
 
 const model = new Model(defaultModel);
 
+const defaultProps = {
+  model,
+  fetchEntitySuggestions: async () => [],
+  onEntityCreateOrUpdate: async () => {},
+  onEntityRemove: async () => {},
+  onLayoutUpdate: async () => {},
+};
+
 const event1 = model.getEntity({
   id: '1',
   schema: 'Event',
@@ -29,7 +37,7 @@ it('sorts and filters items by temporal start', () => {
   const entities = [event3, event1, event2];
   const layout = { vertices: [] };
 
-  render(<Timeline model={model} entities={entities} layout={layout} />);
+  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
   const rows = screen.getAllByRole('row');
 
   expect(rows).toHaveLength(4); // 3 items + 1 header row
@@ -42,7 +50,7 @@ it('allows changing entity color', async () => {
   const entities = [event1];
   const layout = { vertices: [] };
 
-  render(<Timeline model={model} entities={entities} layout={layout} />);
+  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
   const rows = screen.getAllByRole('row');
   await userEvent.click(rows[1]);
 
@@ -63,7 +71,7 @@ it('allows changing entity properties', async () => {
   const entities = [event1];
   const layout = { vertices: [] };
 
-  render(<Timeline model={model} entities={entities} layout={layout} />);
+  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
   const rows = screen.getAllByRole('row');
   await userEvent.click(rows[1]);
 
@@ -135,7 +143,7 @@ it('allows changing entity-type properties', async () => {
 
   render(
     <Timeline
-      model={model}
+      {...defaultProps}
       entities={[ownership]}
       layout={layout}
       fetchEntitySuggestions={async () => [acmeInc, acmeEurope]}
@@ -188,7 +196,7 @@ it('allow creating new entities', async () => {
   const entities = [event1, event2, event3];
   const layout = { vertices: [] };
 
-  render(<Timeline model={model} entities={entities} layout={layout} />);
+  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
 
   await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
 
@@ -231,7 +239,7 @@ it('allows removing entities', async () => {
   const entities = [event1, event2, event3];
   const layout = { vertices: [] };
 
-  render(<Timeline model={model} entities={entities} layout={layout} />);
+  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
 
   let rows = screen.getAllByRole('row');
   expect(rows).toHaveLength(4); // 4 items + 1 header row
@@ -251,7 +259,7 @@ it('has an empty state that allows creating new items', async () => {
   const entities: Array<Entity> = [];
   const layout = { vertices: [] };
 
-  render(<Timeline model={model} entities={entities} layout={layout} />);
+  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
 
   expect(screen.getByRole('heading', { name: 'This timeline is still empty' }));
   expect(screen.getByRole('button', { name: 'Add item' }));

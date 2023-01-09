@@ -6,7 +6,7 @@ import TimelineItemCreateForm from './TimelineItemCreateForm';
 type TimelineItemCreateDialogProps = Dialog['props'] & {
   model: Model;
   onCreate: (entity: Entity) => void;
-  fetchEntitySuggestions?: (
+  fetchEntitySuggestions: (
     schema: Schema,
     query: string
   ) => Promise<Array<Entity>>;

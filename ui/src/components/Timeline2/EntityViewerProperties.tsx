@@ -6,7 +6,7 @@ import { FetchEntitySuggestions } from './types';
 
 type Props = {
   entity: Entity;
-  fetchEntitySuggestions?: FetchEntitySuggestions;
+  fetchEntitySuggestions: FetchEntitySuggestions;
   onChange: (entity: Entity) => void;
 };
 
@@ -14,13 +14,9 @@ type Props = {
 // which requires a slightly different function signature. This function
 // returns an adapted function with the required signature.
 function adaptFetchEntitySuggestions(
-  fetchEntitySuggestions?: FetchEntitySuggestions
+  fetchEntitySuggestions: FetchEntitySuggestions
 ) {
   return async (query: string, schemata?: Array<Schema>) => {
-    if (!fetchEntitySuggestions) {
-      return [];
-    }
-
     if (schemata === undefined || schemata.length < 1) {
       return [];
     }
