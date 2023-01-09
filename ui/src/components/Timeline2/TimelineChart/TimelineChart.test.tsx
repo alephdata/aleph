@@ -66,7 +66,7 @@ it('supports navigating the list using arrow keys', async () => {
   expect(document.activeElement).toBe(listItems[2]);
 });
 
-it('selects items on click', async () => {
+it('selects and unselects items on click', async () => {
   const entity = model.getEntity({
     schema: 'Event',
     id: '123',
@@ -78,17 +78,28 @@ it('selects items on click', async () => {
 
   const items = [new TimelineItem(entity)];
   const onSelect = jest.fn();
+  const onUnselect = jest.fn();
 
   render(
     <TimelineChart
       items={items}
       selectedId={null}
       onSelect={onSelect}
-      onUnselect={() => {}}
+      onUnselect={onUnselect}
       onRemove={() => {}}
     />
   );
 
-  await userEvent.click(screen.getByRole('listitem'));
+  const list = screen.getByRole('list');
+  const item = screen.getByRole('listitem');
+
+  // Click on a timeline item
+  await userEvent.click(item);
   expect(onSelect).toHaveBeenCalledTimes(1);
+  expect(onUnselect).toHaveBeenCalledTimes(0);
+
+  // Click outside of the timeline item, on the empty canvas
+  await userEvent.click(list);
+  expect(onSelect).toHaveBeenCalledTimes(1);
+  expect(onUnselect).toHaveBeenCalledTimes(1);
 });

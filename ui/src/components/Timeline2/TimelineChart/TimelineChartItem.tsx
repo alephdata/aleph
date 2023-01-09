@@ -53,7 +53,10 @@ const TimelineChartItem = forwardRef<HTMLLIElement, TimelineChartItemProps>(
           selected && 'TimelineChartItem--selected'
         )}
         style={style}
-        onClick={() => onSelect(item.entity)}
+        onClick={(event) => {
+          event.stopPropagation();
+          onSelect(item.entity);
+        }}
         ref={ref}
       >
         <div className="TimelineChartItem__caption">
