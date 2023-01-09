@@ -30,7 +30,6 @@ export class TimelineScreen extends Component {
       updateStatus: null,
     };
 
-    this.onStatusChange = this.onStatusChange.bind(this);
     this.fetchEntitySuggestions = this.fetchEntitySuggestions.bind(this);
     this.onEntityCreateOrUpdate = this.onEntityCreateOrUpdate.bind(this);
     this.onEntityRemove = this.onEntityRemove.bind(this);
@@ -94,34 +93,42 @@ export class TimelineScreen extends Component {
     });
   }
 
-  onStatusChange(updateStatus) {
-    this.setState({ updateStatus });
+  async saveChanges(callback) {
+    try {
+      this.setState({ updateStatus: UpdateStatus.IN_PROGRESS });
+      await callback();
+      this.setState({ updateStatus: UpdateStatus.SUCCESS });
+    } catch (error) {
+      this.setState({ updateStatus: UpdateStatus.ERROR });
+      throw error;
+    }
   }
 
-  onEntityCreateOrUpdate(entity, layout) {
+  async onEntityCreateOrUpdate(entity, layout) {
     const { entitySetId, entitySetAddEntity } = this.props;
 
-    return entitySetAddEntity({
-      entitySetId,
-      entity,
-      sync: true,
-    });
+    this.saveChanges(() =>
+      entitySetAddEntity({ entitySetId, entity, sync: true })
+    );
   }
 
-  onEntityRemove(entity) {
+  async onEntityRemove(entity) {
     const { entitySetId, updateEntitySetItemMutate } = this.props;
-    return updateEntitySetItemMutate({
-      entitySetId,
-      entityId: entity.id,
-      // The API to remove an entity from an entity set (without deleting
-      // the entity itself) is weird because entity sets are (or have been)
-      // also used to model entity profiles. Setting `no_judgement` will de
-      // facto remove the entity from the entity set.
-      judgement: 'no_judgement',
-    });
+
+    this.saveChanges(() =>
+      updateEntitySetItemMutate({
+        entitySetId,
+        entityId: entity.id,
+        // The API to remove an entity from an entity set (without deleting
+        // the entity itself) is weird because entity sets are (or have been)
+        // also used to model entity profiles. Setting `no_judgement` will de
+        // facto remove the entity from the entity set.
+        judgement: 'no_judgement',
+      })
+    );
   }
 
-  onLayoutUpdate(layout) {
+  async onLayoutUpdate(layout) {
     const { entitySetId, updateEntitySet } = this.props;
 
     const entitySet = {
@@ -131,7 +138,7 @@ export class TimelineScreen extends Component {
       },
     };
 
-    return updateEntitySet(entitySetId, entitySet);
+    this.saveChanges(() => updateEntitySet(entitySetId, entitySet));
   }
 
   render() {
