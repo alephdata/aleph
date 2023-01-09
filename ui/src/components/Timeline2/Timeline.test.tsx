@@ -10,7 +10,7 @@ const model = new Model(defaultModel);
 const defaultProps = {
   model,
   fetchEntitySuggestions: async () => [],
-  onEntityCreateOrUpdate: async () => {},
+  onEntityCreateOrUpdate: async (entity: Entity) => entity,
   onEntityRemove: async () => {},
   onLayoutUpdate: async () => {},
 };
