@@ -7,6 +7,7 @@ import { FetchEntitySuggestions } from './types';
 type Props = {
   entity: Entity;
   fetchEntitySuggestions: FetchEntitySuggestions;
+  writeable?: boolean;
   onChange: (entity: Entity) => void;
 };
 
@@ -28,6 +29,7 @@ function adaptFetchEntitySuggestions(
 const EntityViewerProperties: FC<Props> = ({
   entity,
   fetchEntitySuggestions,
+  writeable,
   onChange,
 }) => {
   const { schema } = entity;
@@ -58,7 +60,7 @@ const EntityViewerProperties: FC<Props> = ({
       {visibleProps.map((prop) => (
         <EditableProperty
           key={prop.qname}
-          writeable={true}
+          writeable={writeable || false}
           entity={entity}
           property={prop}
           editing={active === prop.name}
@@ -72,7 +74,9 @@ const EntityViewerProperties: FC<Props> = ({
           }}
         />
       ))}
-      <PropertySelect properties={hiddenProps} onSelected={onPropertyAdd} />
+      {writeable && (
+        <PropertySelect properties={hiddenProps} onSelected={onPropertyAdd} />
+      )}
     </div>
   );
 };

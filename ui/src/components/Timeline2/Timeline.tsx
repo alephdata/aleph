@@ -26,6 +26,7 @@ type TimelineProps = {
   entities: Array<Entity>;
   layout?: Layout;
   renderer?: TimelineRenderer;
+  writeable?: boolean;
   fetchEntitySuggestions: (
     schema: Schema,
     query: string
@@ -40,6 +41,7 @@ const Timeline: FC<TimelineProps> = ({
   entities,
   layout,
   renderer,
+  writeable,
   fetchEntitySuggestions,
   onEntityCreateOrUpdate,
   onEntityRemove,
@@ -92,14 +94,19 @@ const Timeline: FC<TimelineProps> = ({
       />
 
       <div className="Timeline__main">
-        {items.length <= 0 && <TimelineEmptyState action={createButton} />}
+        {items.length <= 0 && (
+          <TimelineEmptyState action={writeable ? createButton : undefined} />
+        )}
 
         {items.length > 0 && (
           <>
-            <div className="Timeline__actions">{createButton}</div>
+            {writeable && (
+              <div className="Timeline__actions">{createButton}</div>
+            )}
             <Renderer
               items={items}
               selectedId={selectedEntity && selectedEntity.id}
+              writeable={writeable}
               onSelect={(entity: Entity) =>
                 dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
               }
@@ -120,6 +127,7 @@ const Timeline: FC<TimelineProps> = ({
             entity={selectedEntity}
             vertex={selectedVertex}
             fetchEntitySuggestions={fetchEntitySuggestions}
+            writeable={writeable}
             onVertexChange={(vertex: Vertex) => {
               dispatch({ type: 'UPDATE_VERTEX', payload: { vertex } });
             }}

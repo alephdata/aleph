@@ -5,6 +5,7 @@ import EntityViewerProperties from './EntityViewerProperties';
 
 const defaultProps = {
   fetchEntitySuggestions: async () => [],
+  writeable: true,
   onChange: () => {},
 };
 
@@ -54,4 +55,16 @@ it('can add any other editable property', async () => {
   expect(
     screen.queryByRole('menuitem', { name: 'Dissolution date' })
   ).toBeNull();
+});
+
+it('cannot add properties if not writeable', () => {
+  render(
+    <EntityViewerProperties
+      {...defaultProps}
+      writeable={false}
+      entity={entity}
+    />
+  );
+
+  expect(screen.queryByRole('button', { name: 'Add a property' })).toBeNull();
 });

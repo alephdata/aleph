@@ -6,6 +6,14 @@ import TimelineList from './TimelineList';
 
 const model = new Model(defaultModel);
 
+const defaultProps = {
+  selectedId: null,
+  writeable: true,
+  onSelect: () => {},
+  onRemove: () => {},
+  onUnselect: () => {},
+};
+
 it('supports navigating the list using arrow keys', async () => {
   const event1 = model.getEntity({
     id: '1',
@@ -37,15 +45,7 @@ it('supports navigating the list using arrow keys', async () => {
     new TimelineItem(event3),
   ];
 
-  render(
-    <TimelineList
-      items={items}
-      selectedId={null}
-      onSelect={() => {}}
-      onRemove={() => {}}
-      onUnselect={() => {}}
-    />
-  );
+  render(<TimelineList {...defaultProps} items={items} />);
 
   const rows = screen.getAllByRole('row');
 
@@ -99,15 +99,7 @@ it('selects items on click', async () => {
 
   const onSelect = jest.fn();
 
-  render(
-    <TimelineList
-      items={items}
-      selectedId={null}
-      onSelect={onSelect}
-      onUnselect={() => {}}
-      onRemove={() => {}}
-    />
-  );
+  render(<TimelineList {...defaultProps} onSelect={onSelect} items={items} />);
 
   const rows = screen.getAllByRole('row');
 
@@ -131,15 +123,7 @@ it('hides end date column if no entity has a temporal end', () => {
 
   const items = [new TimelineItem(event)];
 
-  render(
-    <TimelineList
-      items={items}
-      selectedId={null}
-      onSelect={() => {}}
-      onRemove={() => {}}
-      onUnselect={() => {}}
-    />
-  );
+  render(<TimelineList {...defaultProps} items={items} />);
 
   const headers = screen
     .getAllByRole('columnheader')
@@ -171,15 +155,7 @@ it('shows end date column if at least one entity has a temporal end', () => {
     new TimelineItem(eventWithEnd),
   ];
 
-  render(
-    <TimelineList
-      items={items}
-      selectedId={null}
-      onSelect={() => {}}
-      onRemove={() => {}}
-      onUnselect={() => {}}
-    />
-  );
+  render(<TimelineList {...defaultProps} items={items} />);
 
   const headers = screen
     .getAllByRole('columnheader')

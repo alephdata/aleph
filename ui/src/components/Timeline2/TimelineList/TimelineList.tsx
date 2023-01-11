@@ -9,6 +9,7 @@ import './TimelineList.scss';
 
 const TimelineList: FC<TimelineRendererProps> = ({
   items,
+  writeable,
   onSelect,
   onRemove,
   onUnselect,
@@ -34,9 +35,11 @@ const TimelineList: FC<TimelineRendererProps> = ({
             <th>Date</th>
           )}
           <th>Caption</th>
-          <th>
-            <span className="visually-hidden">Actions</span>
-          </th>
+          {writeable && (
+            <th>
+              <span className="visually-hidden">Actions</span>
+            </th>
+          )}
         </tr>
       </thead>
       <tbody>
@@ -44,6 +47,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
           <TimelineListItem
             key={item.entity.id}
             entity={item.entity}
+            writeable={writeable}
             muted={!!selectedId && item.entity.id !== selectedId}
             selected={item.entity.id === selectedId}
             color={item.getColor()}
