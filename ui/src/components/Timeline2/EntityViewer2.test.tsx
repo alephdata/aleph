@@ -4,6 +4,7 @@ import EntityViewer2 from './EntityViewer2';
 
 const defaultProps = {
   fetchEntitySuggestions: async () => [],
+  writeable: true,
   onVertexChange: () => {},
   onEntityChange: () => {},
 };

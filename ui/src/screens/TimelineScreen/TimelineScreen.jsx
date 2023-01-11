@@ -196,6 +196,7 @@ export class TimelineScreen extends Component {
             model={model}
             entities={entities.results}
             layout={timeline.layout}
+            writeable={timeline.writeable}
             fetchEntitySuggestions={this.fetchEntitySuggestions}
             onEntityCreateOrUpdate={this.onEntityCreateOrUpdate}
             onEntityRemove={this.onEntityRemove}

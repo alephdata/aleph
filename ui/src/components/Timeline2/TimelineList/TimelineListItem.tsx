@@ -10,6 +10,7 @@ import './TimelineListItem.scss';
 type TimelineListItemProps = {
   entity: Entity;
   color: string;
+  writeable?: boolean;
   selected?: boolean;
   muted?: boolean;
   showEndDate?: boolean;
@@ -22,6 +23,7 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
     const {
       entity,
       color,
+      writeable,
       selected,
       muted,
       showEndDate = false,
@@ -72,12 +74,14 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
             <TimelineItemCaption entity={entity} />
           </strong>
         </td>
-        <td className="TimelineListItem__actions">
-          <Button minimal small onClick={() => onRemove(entity)}>
-            <Icon icon="trash" size={IconSize.STANDARD} />
-            <span className="visually-hidden">Remove</span>
-          </Button>
-        </td>
+        {writeable && (
+          <td className="TimelineListItem__actions">
+            <Button minimal small onClick={() => onRemove(entity)}>
+              <Icon icon="trash" size={IconSize.STANDARD} />
+              <span className="visually-hidden">Remove</span>
+            </Button>
+          </td>
+        )}
       </tr>
     );
   }

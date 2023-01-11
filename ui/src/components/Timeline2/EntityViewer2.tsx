@@ -12,6 +12,7 @@ type EntityViewer2Props = {
   entity: Entity;
   vertex: Vertex;
   fetchEntitySuggestions: FetchEntitySuggestions;
+  writeable?: boolean;
   onVertexChange: (vertex: Vertex) => void;
   onEntityChange: (entity: Entity) => void;
 };
@@ -20,6 +21,7 @@ const EntityViewer2: FC<EntityViewer2Props> = ({
   entity,
   vertex,
   fetchEntitySuggestions,
+  writeable,
   onVertexChange,
   onEntityChange,
 }) => {
@@ -34,14 +36,17 @@ const EntityViewer2: FC<EntityViewer2Props> = ({
         <h2 className="EntityViewer2__caption">{entity.getCaption()}</h2>
       </header>
       <div className="EntityViewer2__color">
-        <ColorPicker
-          currSelected={currentColor}
-          onSelect={(color) => onVertexChange({ ...vertex, color })}
-        />
+        {writeable && (
+          <ColorPicker
+            currSelected={currentColor}
+            onSelect={(color) => onVertexChange({ ...vertex, color })}
+          />
+        )}
       </div>
       <EntityViewerProperties
         entity={entity}
         fetchEntitySuggestions={fetchEntitySuggestions}
+        writeable={writeable}
         onChange={(entity) => onEntityChange(entity)}
       />
     </article>
