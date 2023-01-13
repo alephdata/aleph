@@ -3,8 +3,7 @@ updates:
   - package-ecosystem: pip
     directory: "/"
     schedule:
-      interval: daily
-      time: "01:00"
+      interval: monthly
     open-pull-requests-limit: 99
     target-branch: develop
     ignore:
@@ -115,21 +114,18 @@ updates:
   - package-ecosystem: docker
     directory: "/"
     schedule:
-      interval: weekly
-      time: "01:00"
+      interval: monthly
     open-pull-requests-limit: 99
     target-branch: develop
   - package-ecosystem: docker
     directory: "/ui"
     schedule:
-      interval: weekly
-      time: "01:00"
+      interval: monthly
     open-pull-requests-limit: 99
     target-branch: develop
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: weekly
-      time: "01:00"
+      interval: monthly
     open-pull-requests-limit: 99
     target-branch: develop
