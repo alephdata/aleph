@@ -1,4 +1,5 @@
 import { FC, useReducer, useState, useEffect } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
@@ -72,7 +73,7 @@ const Timeline: FC<TimelineProps> = ({
 
   const createButton = (
     <Button intent={Intent.PRIMARY} icon="add" onClick={toggleCreateDialog}>
-      Add item
+      <FormattedMessage id="timeline.add_item" defaultMessage="Add item" />
     </Button>
   );
 

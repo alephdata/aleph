@@ -6,6 +6,7 @@ import { useTimelineKeyboardNavigation } from '../util';
 import type { TimelineRendererProps } from '../types';
 
 import './TimelineList.scss';
+import { FormattedMessage } from 'react-intl';
 
 const TimelineList: FC<TimelineRendererProps> = ({
   items,
@@ -28,16 +29,38 @@ const TimelineList: FC<TimelineRendererProps> = ({
         <tr className="TimelineList__header">
           {showEndDate ? (
             <>
-              <th>Start date</th>
-              <th>End date</th>
+              <th>
+                <FormattedMessage
+                  id="timeline.item.start_date"
+                  defaultMessage="Start date"
+                />
+              </th>
+              <th>
+                <FormattedMessage
+                  id="timeline.item.end_date"
+                  defaultMessage="End date"
+                />
+              </th>
             </>
           ) : (
-            <th>Date</th>
+            <th>
+              <FormattedMessage id="timeline.item.date" defaultMessage="Date" />
+            </th>
           )}
-          <th>Caption</th>
+          <th>
+            <FormattedMessage
+              id="timeline.item.caption"
+              defaultMessage="Caption"
+            />
+          </th>
           {writeable && (
             <th>
-              <span className="visually-hidden">Actions</span>
+              <span className="visually-hidden">
+                <FormattedMessage
+                  id="timeline.item.actions"
+                  defaultMessage="Actions"
+                />
+              </span>
             </th>
           )}
         </tr>
