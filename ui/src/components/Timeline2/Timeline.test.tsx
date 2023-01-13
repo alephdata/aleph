@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { render, screen, within, act, waitFor } from 'testUtils';
 import userEvent from '@testing-library/user-event';
 import { Colors } from '@blueprintjs/core';
-import { Model, defaultModel } from '@alephdata/followthemoney';
+import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
 import Timeline from './Timeline';
 
 const model = new Model(defaultModel);
@@ -176,4 +176,19 @@ it('allows removing entities', async () => {
   expect(rows).toHaveLength(3);
   expect(rows[1]).toHaveTextContent('Event 1');
   expect(rows[2]).toHaveTextContent('Event 3');
+});
+
+it('has an empty state that allows creating new items', async () => {
+  const entities: Array<Entity> = [];
+  const layout = { vertices: [] };
+
+  render(<Timeline model={model} entities={entities} layout={layout} />);
+
+  expect(screen.getByRole('heading', { name: 'This timeline is still empty' }));
+  expect(screen.getByRole('button', { name: 'Add item' }));
+
+  await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
+
+  const dialog = screen.getByRole('dialog', { name: /Add new item/ });
+  expect(dialog).toBeVisible();
 });
