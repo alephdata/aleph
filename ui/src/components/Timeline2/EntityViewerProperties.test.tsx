@@ -19,42 +19,43 @@ beforeEach(() => {
   });
 });
 
-it('renders featured and non-empty properties', () => {
-  render(<EntityViewerProperties {...defaultProps} entity={entity} />);
+it('renders featured, temporal, and non-empty properties', () => {
+  const { rerender } = render(
+    <EntityViewerProperties {...defaultProps} entity={entity} />
+  );
 
+  // Featured
   expect(screen.getByText('Name')).toBeInTheDocument();
   expect(screen.getByText('Jurisdiction')).toBeInTheDocument();
   expect(screen.getByText('Registration number')).toBeInTheDocument();
+
+  // Temporal
   expect(screen.getByText('Incorporation date')).toBeInTheDocument();
-  expect(screen.queryByText('Dissolution date')).toBeNull();
-
-  entity.setProperty('dissolutionDate', '2022-01-01');
-  render(<EntityViewerProperties {...defaultProps} entity={entity} />);
-
   expect(screen.getByText('Dissolution date')).toBeInTheDocument();
+
+  // Non empty
+  entity.setProperty('wikidataId', 'Q7102061');
+  rerender(<EntityViewerProperties {...defaultProps} entity={entity} />);
+  expect(screen.getByText('Wikidata ID')).toBeInTheDocument();
 });
 
 it('can add any other editable property', async () => {
   render(<EntityViewerProperties {...defaultProps} entity={entity} />);
 
-  // There is no editor for the dissolution date
-  expect(screen.queryByText('Dissolution date')).toBeNull();
+  // There is no editor for the Wikidata ID
+  expect(screen.queryByText('Wikidata ID')).toBeNull();
 
   await userEvent.click(screen.getByRole('button', { name: 'Add a property' }));
-  await userEvent.click(
-    screen.getByRole('menuitem', { name: 'Dissolution date' })
-  );
+  await userEvent.click(screen.getByRole('menuitem', { name: 'Wikidata ID' }));
 
   // Now there is an editor for the dissolution date
-  expect(
-    screen.getByText('Dissolution date').matches('.EditableProperty *')
-  ).toBe(true);
+  expect(screen.getByText('Wikidata ID').matches('.EditableProperty *')).toBe(
+    true
+  );
 
   // Can't add a property twice
   await userEvent.click(screen.getByRole('button', { name: 'Add a property' }));
-  expect(
-    screen.queryByRole('menuitem', { name: 'Dissolution date' })
-  ).toBeNull();
+  expect(screen.queryByRole('menuitem', { name: 'Wikidata ID' })).toBeNull();
 });
 
 it('cannot add properties if not writeable', () => {

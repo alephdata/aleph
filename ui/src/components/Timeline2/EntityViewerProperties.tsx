@@ -40,11 +40,15 @@ const EntityViewerProperties: FC<Props> = ({
   const onPropertyAdd = (property: Property) =>
     setAdded([...added, property.name]);
 
-  const featured = schema.getFeaturedProperties().map(({ name }) => name);
+  const temporal = [
+    ...schema.getTemporalStartProperties(),
+    ...schema.getTemporalEndProperties(),
+  ].map(({ name }) => name);
+  const featured = schema.featured.filter((name) => !temporal.includes(name));
   const nonEmpty = entity.getProperties().map(({ name }) => name);
 
   const all = new Set(schema.getEditableProperties().map(({ name }) => name));
-  const visible = new Set([...featured, ...nonEmpty, ...added]);
+  const visible = new Set([...featured, ...temporal, ...nonEmpty, ...added]);
   const hidden = new Set(Array.from(all).filter((name) => !visible.has(name)));
 
   const visibleProps = Array.from(visible).map((name) =>
