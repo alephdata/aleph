@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, Intent, Classes } from '@blueprintjs/core';
 import { Model, Schema, Entity } from '@alephdata/followthemoney';
 import TimelineItemCreateForm from './TimelineItemCreateForm';
@@ -26,13 +27,15 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
     !isOpen && setIsSubmitting(false);
   }, [isOpen]);
 
+  const title = (
+    <FormattedMessage
+      id="timeline.create_entitity.title"
+      defaultMessage="Add new item to timeline"
+    />
+  );
+
   return (
-    <Dialog
-      title="Add new item to timeline"
-      usePortal={true}
-      isOpen={isOpen}
-      onClose={onClose}
-    >
+    <Dialog title={title} usePortal={true} isOpen={isOpen} onClose={onClose}>
       <div className={Classes.DIALOG_BODY}>
         <TimelineItemCreateForm
           id="timeline-item-create-form"
@@ -48,11 +51,15 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button
             type="submit"
-            text="Add"
             form="timeline-item-create-form"
             intent={Intent.PRIMARY}
             loading={isSubmitting}
-          />
+          >
+            <FormattedMessage
+              id="timeline.create_entity.submit"
+              defaultMessage="Add"
+            />
+          </Button>
         </div>
       </div>
     </Dialog>
