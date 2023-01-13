@@ -138,11 +138,19 @@ export class TimelineScreen extends Component {
     const { model, timeline, entities } = this.props;
     const { updateStatus } = this.state;
 
-    if (timeline.isError) {
-      return <ErrorScreen error={timeline.error} />;
+    if (timeline.isError || entities.isError) {
+      return <ErrorScreen error={timeline.error || entities.error} />;
     }
 
-    if (timeline.id === undefined) {
+    // `isPending` will be true every time the query is loaded, including when
+    // it's refreshed due to mutations. We only want to show a loading indicator
+    // on first load, so we check if data has been loaded previously.
+    // TODO: It may be agood idea to add this to our data loading abstraction
+    // (for example as `isRefreshing`) rather than implementing this here.
+    if (
+      (timeline.isPending && !timeline.id) ||
+      (entities.isPending && !entities.page)
+    ) {
       return <LoadingScreen />;
     }
 
@@ -170,17 +178,15 @@ export class TimelineScreen extends Component {
       <Screen title={timeline.label} description={timeline.summary || ''}>
         <CollectionWrapper collection={timeline.collection}>
           {breadcrumbs}
-          {entities.results?.length > 0 && (
-            <Timeline
-              model={model}
-              entities={entities.results}
-              layout={timeline.layout}
-              fetchEntitySuggestions={this.fetchEntitySuggestions}
-              onEntityCreateOrUpdate={this.onEntityCreateOrUpdate}
-              onEntityRemove={this.onEntityRemove}
-              onLayoutUpdate={this.onLayoutUpdate}
-            />
-          )}
+          <Timeline
+            model={model}
+            entities={entities.results}
+            layout={timeline.layout}
+            fetchEntitySuggestions={this.fetchEntitySuggestions}
+            onEntityCreateOrUpdate={this.onEntityCreateOrUpdate}
+            onEntityRemove={this.onEntityRemove}
+            onLayoutUpdate={this.onLayoutUpdate}
+          />
         </CollectionWrapper>
       </Screen>
     );

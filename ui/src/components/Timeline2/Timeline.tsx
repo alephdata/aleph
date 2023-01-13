@@ -10,6 +10,7 @@ import {
   selectSelectedEntity,
   selectSelectedVertex,
 } from './state';
+import TimelineEmptyState from './TimelineEmptyState';
 import TimelineList from './TimelineList';
 import EntityViewer2 from './EntityViewer2';
 import TimelineItemCreateDialog from './TimelineItemCreateDialog';
@@ -57,43 +58,51 @@ const Timeline: FC<TimelineProps> = ({
     onLayoutUpdate && onLayoutUpdate(state.layout);
   }, [state.layout]);
 
+  const createButton = (
+    <Button intent={Intent.PRIMARY} icon="add" onClick={toggleCreateDialog}>
+      Add item
+    </Button>
+  );
+
   return (
     <div className={c('Timeline', selectedEntity && 'Timeline--selected')}>
+      <TimelineItemCreateDialog
+        model={model}
+        isOpen={createDialogOpen}
+        onClose={toggleCreateDialog}
+        onCreate={async (entity) => {
+          onEntityCreateOrUpdate && (await onEntityCreateOrUpdate(entity));
+          dispatch({ type: 'CREATE_ENTITY', payload: { entity } });
+          toggleCreateDialog();
+        }}
+        fetchEntitySuggestions={fetchEntitySuggestions}
+      />
+
       <div className="Timeline__main">
-        <div className="Timeline__actions">
-          <TimelineItemCreateDialog
-            model={model}
-            isOpen={createDialogOpen}
-            onClose={toggleCreateDialog}
-            onCreate={async (entity) => {
-              onEntityCreateOrUpdate && (await onEntityCreateOrUpdate(entity));
-              dispatch({ type: 'CREATE_ENTITY', payload: { entity } });
-              toggleCreateDialog();
-            }}
-            fetchEntitySuggestions={fetchEntitySuggestions}
-          />
-          <Button
-            intent={Intent.PRIMARY}
-            icon="add"
-            onClick={toggleCreateDialog}
-          >
-            Add item
-          </Button>
-        </div>
-        <TimelineList
-          entities={sortedEntities}
-          layout={state.layout}
-          onSelect={(entity: Entity) =>
-            dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
-          }
-          onUnselect={() => dispatch({ type: 'UNSELECT_ENTITY' })}
-          onRemove={(entity: Entity) => {
-            dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
-            onEntityRemove && onEntityRemove(entity);
-          }}
-          selectedId={selectedEntity && selectedEntity.id}
-        />
+        {sortedEntities.length <= 0 && (
+          <TimelineEmptyState action={createButton} />
+        )}
+
+        {sortedEntities.length > 0 && (
+          <>
+            <div className="Timeline__actions">{createButton}</div>
+            <TimelineList
+              entities={sortedEntities}
+              layout={state.layout}
+              onSelect={(entity: Entity) =>
+                dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
+              }
+              onUnselect={() => dispatch({ type: 'UNSELECT_ENTITY' })}
+              onRemove={(entity: Entity) => {
+                dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
+                onEntityRemove && onEntityRemove(entity);
+              }}
+              selectedId={selectedEntity && selectedEntity.id}
+            />
+          </>
+        )}
       </div>
+
       {selectedEntity && selectedVertex && (
         <div className="Timeline__viewer">
           <EntityViewer2
