@@ -1,5 +1,7 @@
 import { CSSProperties, forwardRef } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Button, Icon, IconSize } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
 import { Entity } from '@alephdata/followthemoney';
 import { useTimelineItemKeyboardNavigation } from '../util';
@@ -76,10 +78,25 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
         </td>
         {writeable && (
           <td className="TimelineListItem__actions">
-            <Button minimal small onClick={() => onRemove(entity)}>
-              <Icon icon="trash" size={IconSize.STANDARD} />
-              <span className="visually-hidden">Remove</span>
-            </Button>
+            <Tooltip
+              placement="top"
+              content={
+                <FormattedMessage
+                  id="timeline.item.remove.long"
+                  defaultMessage="Remove from timeline"
+                />
+              }
+            >
+              <Button minimal small onClick={() => onRemove(entity)}>
+                <Icon icon="trash" size={IconSize.STANDARD} />
+                <span className="visually-hidden">
+                  <FormattedMessage
+                    id="timeline.item.remove.short"
+                    defaultMessage="Remove"
+                  />
+                </span>
+              </Button>
+            </Tooltip>
           </td>
         )}
       </tr>
