@@ -15,58 +15,72 @@ type Props = {
   onRemove?: (entity: Entity) => void;
 };
 
-const TimelineListItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { entity, color, selected, muted, onSelect, onRemove } = props;
+const TimelineListItem = forwardRef<HTMLTableRowElement, Props>(
+  (props, ref) => {
+    const { entity, color, selected, muted, onSelect, onRemove } = props;
 
-  const style: CSSProperties = {
-    ['--timeline-item-color' as string]: color,
-  };
+    const style: CSSProperties = {
+      ['--timeline-item-color' as string]: color,
+    };
 
-  const start = entity.getTemporalStart()?.value;
-  const end = entity.getTemporalEnd()?.value;
+    const start = entity.getTemporalStart();
+    const end = entity.getTemporalEnd();
 
-  const onEntitySelect = (event: MouseEvent<HTMLElement>) => {
-    onSelect && onSelect(entity);
-  };
-
-  const onEntityRemove = (event: MouseEvent<HTMLElement>) => {
-    onRemove && onRemove(entity);
-  };
-
-  const onKeyPress = (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === ' ' || event.key === 'Enter') {
+    const onEntitySelect = (event: MouseEvent<HTMLElement>) => {
       onSelect && onSelect(entity);
-    }
-  };
+    };
 
-  return (
-    <div
-      ref={ref}
-      tabIndex={0}
-      onClick={onEntitySelect}
-      onKeyPress={onKeyPress}
-      style={style}
-      className={c(
-        'TimelineListItem',
-        muted && 'TimelineListItem--muted',
-        selected && 'TimelineListItem--selected'
-      )}
-    >
-      <div className="TimelineListItem__date">
-        {start}
-        {end && ` to ${end}`}
-      </div>
-      <strong className="TimelineListItem__caption">
-        <TimelineItemCaption entity={entity} />
-      </strong>
-      <div className="TimelineListItem__actions">
-        <Button minimal small onClick={onEntityRemove}>
-          <Icon icon="trash" size={IconSize.STANDARD} />
-          <span className="visually-hidden">Remove</span>
-        </Button>
-      </div>
-    </div>
-  );
-});
+    const onEntityRemove = (event: MouseEvent<HTMLElement>) => {
+      onRemove && onRemove(entity);
+    };
+
+    const onKeyPress = (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        onSelect && onSelect(entity);
+      }
+    };
+
+    return (
+      <tr
+        ref={ref}
+        tabIndex={0}
+        onClick={onEntitySelect}
+        onKeyPress={onKeyPress}
+        style={style}
+        className={c(
+          'TimelineListItem',
+          muted && 'TimelineListItem--muted',
+          selected && 'TimelineListItem--selected'
+        )}
+      >
+        <td className="TimelineListItem__date">
+          {start?.value}
+          <br />
+          <span className="TimelineListItem__property">
+            {start?.property.label}
+          </span>
+        </td>
+        <td className="TimelineListItem__date">
+          {end?.value}
+          <br />
+          <span className="TimelineListItem__property">
+            {end?.property.label}
+          </span>
+        </td>
+        <td className="TimelineListItem__caption">
+          <strong>
+            <TimelineItemCaption entity={entity} />
+          </strong>
+        </td>
+        <td className="TimelineListItem__actions">
+          <Button minimal small onClick={onEntityRemove}>
+            <Icon icon="trash" size={IconSize.STANDARD} />
+            <span className="visually-hidden">Remove</span>
+          </Button>
+        </td>
+      </tr>
+    );
+  }
+);
 
 export default TimelineListItem;

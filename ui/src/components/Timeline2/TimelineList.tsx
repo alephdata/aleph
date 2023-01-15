@@ -26,7 +26,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
   selectedId,
 }) => {
   const itemRefs = useMemo(
-    () => entities.map(() => createRef<HTMLDivElement>()),
+    () => entities.map(() => createRef<HTMLTableRowElement>()),
     [entities]
   );
 
@@ -53,13 +53,24 @@ const TimelineList: FC<TimelineRendererProps> = ({
   };
 
   return (
-    <ul
+    <table
       className={c('TimelineList', Classes.FOCUS_STYLE_MANAGER_IGNORE)}
       onKeyDown={onKeyDown}
     >
-      {entities.map((entity, index) => (
-        <li key={entity.id}>
+      <thead>
+        <tr className="TimelineList__header">
+          <th>Start date</th>
+          <th>End date</th>
+          <th>Caption</th>
+          <th>
+            <span className="visually-hidden">Actions</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {entities.map((entity, index) => (
           <TimelineListItem
+            key={entity.id}
             entity={entity}
             muted={!!selectedId && entity.id !== selectedId}
             selected={entity.id === selectedId}
@@ -68,9 +79,9 @@ const TimelineList: FC<TimelineRendererProps> = ({
             onRemove={onRemove}
             ref={itemRefs[index]}
           />
-        </li>
-      ))}
-    </ul>
+        ))}
+      </tbody>
+    </table>
   );
 };
 

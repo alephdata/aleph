@@ -42,35 +42,33 @@ it('supports navigating the list using arrow keys', async () => {
     />
   );
 
-  const items = screen
-    .getAllByRole('listitem')
-    .map((item) => item.querySelector('div') as HTMLElement);
+  const rows = screen.getAllByRole('row');
 
   // Tab to focus first item
   await userEvent.keyboard('{Tab}');
-  expect(document.activeElement).toBe(items[0]);
+  expect(document.activeElement).toBe(rows[1]);
 
   // Tab again to focus "remove" button
   await userEvent.keyboard('{Tab}');
   expect(document.activeElement).toBe(
-    within(items[0]).getByRole('button', { name: 'Remove' })
+    within(rows[1]).getByRole('button', { name: 'Remove' })
   );
 
   // Arrow up focuses first item (as there is no prev item)
   await userEvent.keyboard('{ArrowUp}');
-  expect(document.activeElement).toBe(items[0]);
+  expect(document.activeElement).toBe(rows[1]);
 
-  // Focus next items, twice
+  // Focus next item, twice
   await userEvent.keyboard('{ArrowDown}{ArrowDown}');
-  expect(document.activeElement).toBe(items[2]);
+  expect(document.activeElement).toBe(rows[3]);
 
   // Tab to focus "remove" button
   await userEvent.keyboard('{Tab}');
   expect(document.activeElement).toBe(
-    within(items[2]).getByRole('button', { name: 'Remove' })
+    within(rows[3]).getByRole('button', { name: 'Remove' })
   );
 
   // Arrow down focus last item (as there is no next item)
   await userEvent.keyboard('{ArrowDown}');
-  expect(document.activeElement).toBe(items[2]);
+  expect(document.activeElement).toBe(rows[3]);
 });
