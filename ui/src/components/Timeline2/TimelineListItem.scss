@@ -5,19 +5,16 @@
 
   position: relative;
   overflow: hidden;
-
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: $aleph-grid-size;
-  padding: 0.75 * $aleph-grid-size $aleph-grid-size;
-
-  border-left: 4px solid var(--timeline-item-color);
-  border-radius: $pt-border-radius;
   cursor: pointer;
 }
 
-.TimelineListItem::before {
+.TimelineListItem > td:first-child {
+  border-left: 4px solid var(--timeline-item-color);
+  border-top-left-radius: $pt-border-radius;
+  border-bottom-left-radius: $pt-border-radius;
+}
+
+.TimelineListItem > td:first-child::before {
   content: '';
 
   position: absolute;
@@ -30,22 +27,31 @@
 
   background-color: var(--timeline-item-color);
   opacity: var(--background-opacity);
-  overflow: hidden;
+  border-radius: $pt-border-radius;
 }
 
-.TimelineListItem > * {
-  position: relative;
+.TimelineListItem > td {
+  padding: var(--timeline-list-padding);
 }
 
 .TimelineListItem__date {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.TimelineListItem__property {
   width: 8rem;
-  flex-grow: 0;
-  flex-shrink: 0;
   color: $aleph-greyed-text;
 }
 
-.TimelineListItem__actions {
-  margin-left: auto;
+// Double class is required in order to increase specificity over the
+// default Blueprint table styles.
+.TimelineListItem__actions.TimelineListItem__actions {
+  text-align: right;
+}
+
+.TimelineListItem__actions > * {
+  position: relative;
   visibility: hidden;
 }
 
@@ -58,14 +64,18 @@
   --background-opacity: 0.15;
 }
 
-.TimelineListItem:where(:hover) .TimelineListItem__actions,
-.TimelineListItem:where(:focus-within) .TimelineListItem__actions {
+.TimelineListItem:where(:hover) .TimelineListItem__actions > *,
+.TimelineListItem:where(:focus-within) .TimelineListItem__actions > * {
   visibility: visible;
 }
 
 .TimelineListItem:focus {
   outline: 2px solid var(--timeline-item-color);
   outline-offset: 1px;
+
+  // `border-radius` doesn't have an effect on table rows, but it does
+  // affect the radius of the outline (in newer browser).
+  border-radius: $pt-border-radius;
 }
 
 .TimelineListItem--selected {

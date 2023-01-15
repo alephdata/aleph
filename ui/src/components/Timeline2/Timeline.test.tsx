@@ -30,12 +30,12 @@ it('sorts and filters items by temporal start', () => {
   const layout = { vertices: [] };
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
-  const items = screen.getAllByRole('listitem');
+  const rows = screen.getAllByRole('row');
 
-  expect(items).toHaveLength(3);
-  expect(items[0]).toHaveTextContent(/2022-01-01.*Event 1/);
-  expect(items[1]).toHaveTextContent(/2022-02-01.*Event 2/);
-  expect(items[2]).toHaveTextContent(/2022-03-01.*Event 3/);
+  expect(rows).toHaveLength(4); // 3 items + 1 header row
+  expect(rows[1]).toHaveTextContent(/2022-01-01.*Event 1/);
+  expect(rows[2]).toHaveTextContent(/2022-02-01.*Event 2/);
+  expect(rows[3]).toHaveTextContent(/2022-03-01.*Event 3/);
 });
 
 it('selects item on click', async () => {
@@ -43,14 +43,12 @@ it('selects item on click', async () => {
   const layout = { vertices: [] };
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
-  const items = screen
-    .getAllByRole('listitem')
-    .map((item) => item.querySelector('div') as HTMLElement);
+  const rows = screen.getAllByRole('row');
 
-  await userEvent.click(items[0]);
+  await userEvent.click(rows[1]);
   expect(screen.getByRole('heading', { name: 'Event 1' }));
 
-  await userEvent.click(items[2]);
+  await userEvent.click(rows[3]);
   expect(screen.getByRole('heading', { name: 'Event 3' }));
 });
 
@@ -59,19 +57,19 @@ it('allows changing entity color', async () => {
   const layout = { vertices: [] };
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
-  const item = screen.getByRole('listitem').querySelector('div') as HTMLElement;
-  await userEvent.click(item);
+  const rows = screen.getAllByRole('row');
+  await userEvent.click(rows[1]);
 
   // TODO: We should refactor the color picker to use semantic markup so we don't have to
   // reference implementation details in tests.
   const swatches = document.querySelectorAll('.ColorPicker__item');
   expect(swatches).toHaveLength(7);
 
-  let color = item.style.getPropertyValue('--timeline-item-color');
+  let color = rows[1].style.getPropertyValue('--timeline-item-color');
   expect(color).toEqual(Colors.BLUE2);
 
   await userEvent.click(swatches[3]);
-  color = item.style.getPropertyValue('--timeline-item-color');
+  color = rows[1].style.getPropertyValue('--timeline-item-color');
   expect(color).toEqual(Colors.RED2);
 });
 
@@ -80,8 +78,8 @@ it('allows changing entity properties', async () => {
   const layout = { vertices: [] };
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
-  const item = screen.getByRole('listitem').querySelector('div') as HTMLElement;
-  await userEvent.click(item);
+  const rows = screen.getAllByRole('row');
+  await userEvent.click(rows[1]);
 
   // TODO: We should refactor the property editor to use semantic markup so we don't have to
   // reference implementation details in tests.
@@ -91,7 +89,7 @@ it('allows changing entity properties', async () => {
   expect(properties[0]).toHaveTextContent('Event 1');
 
   // Timeline list and entity viewer display entity name
-  expect(item).toHaveTextContent('Event 1');
+  expect(rows[1]).toHaveTextContent('Event 1');
   expect(screen.getByRole('heading', { name: 'Event 1' }));
 
   // Click the property to toggle editing
@@ -107,7 +105,7 @@ it('allows changing entity properties', async () => {
   await act(async () => userEvent.click(document.body));
 
   // Timeline list and entity viewer dispaly new name
-  expect(item).toHaveTextContent('New event name');
+  expect(rows[1]).toHaveTextContent('New event name');
   expect(screen.getByRole('heading', { name: 'New event name' }));
 });
 
@@ -155,9 +153,9 @@ it('allow creating new entities', async () => {
   await waitFor(() => expect(dialog).not.toBeVisible());
 
   // A new item has been added to the list
-  const items = screen.getAllByRole('listitem');
-  expect(items).toHaveLength(4);
-  expect(items[2]).toHaveTextContent('ACME, Inc.');
+  const rows = screen.getAllByRole('row');
+  expect(rows).toHaveLength(5); // 4 items + 1 header row
+  expect(rows[3]).toHaveTextContent('ACME, Inc.');
 });
 
 it('allows removing entities', async () => {
@@ -166,16 +164,16 @@ it('allows removing entities', async () => {
 
   render(<Timeline model={model} entities={entities} layout={layout} />);
 
-  let items = screen.getAllByRole('listitem');
-  expect(items).toHaveLength(3);
+  let rows = screen.getAllByRole('row');
+  expect(rows).toHaveLength(4); // 4 items + 1 header row
 
   // Remove second item
   await userEvent.click(
-    within(items[1]).getByRole('button', { name: 'Remove' })
+    within(rows[2]).getByRole('button', { name: 'Remove' })
   );
 
-  items = screen.getAllByRole('listitem');
-  expect(items).toHaveLength(2);
-  expect(items[0]).toHaveTextContent('Event 1');
-  expect(items[1]).toHaveTextContent('Event 3');
+  rows = screen.getAllByRole('row');
+  expect(rows).toHaveLength(3);
+  expect(rows[1]).toHaveTextContent('Event 1');
+  expect(rows[2]).toHaveTextContent('Event 3');
 });
