@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
+import { unstable_useBlocker as useBlocker } from 'react-router-dom';
 
 enum Status {
   SUCCESS = 'SUCCESS',
@@ -16,13 +17,15 @@ function UpdateStatus({ status }: UpdateStatusProps) {
   const commonProps = { className: 'UpdateStatus', large: true, minimal: true };
   const isOnline = useOnlineStatus();
 
-  if (!isOnline) {
-    return (
-      <Tag intent={Intent.DANGER} icon="error" {...commonProps}>
-        <FormattedMessage id="entity.status.offline" defaultMessage="Offline" />
-      </Tag>
-    );
-  }
+  const isBlocked = useCallback(() => {
+    if (status !== Status.ERROR && status !== Status.IN_PROGRESS) {
+      return false;
+    }
+
+    return window.confirm('You have unsaved changes. Contineu anyway?');
+  }, [status]);
+
+  const blocker = useBlocker(isBlocked);
 
   if (status === Status.ERROR) {
     return (
@@ -31,6 +34,14 @@ function UpdateStatus({ status }: UpdateStatusProps) {
           id="entity.status.error"
           defaultMessage="Error saving"
         />
+      </Tag>
+    );
+  }
+
+  if (!isOnline) {
+    return (
+      <Tag intent={Intent.DANGER} icon="error" {...commonProps}>
+        <FormattedMessage id="entity.status.offline" defaultMessage="Offline" />
       </Tag>
     );
   }
