@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {
+  Classes,
   Callout,
   Intent,
   Dialog,
@@ -126,7 +127,6 @@ export class AuthenticationDialog extends Component {
 
     return (
       <Dialog
-        icon="authentication"
         className="AuthenticationScreen"
         isOpen={isOpen}
         onClose={toggleDialog}
@@ -137,7 +137,7 @@ export class AuthenticationDialog extends Component {
             : intl.formatMessage(messages.registration_title)
         }
       >
-        <div className="inner">
+        <div className={Classes.DIALOG_BODY}>
           <section className={firstSection}>
             {passwordLogin && (
               <PasswordAuthLogin
@@ -158,13 +158,16 @@ export class AuthenticationDialog extends Component {
           </section>
           <section className={secondSection}>
             {submitted ? (
-              <Callout intent={Intent.SUCCESS} icon="tick">
-                <h5>
+              <Callout
+                intent={Intent.SUCCESS}
+                icon="tick"
+                title={
                   <FormattedMessage
                     id="signup.inbox.title"
                     defaultMessage="Check your inbox"
                   />
-                </h5>
+                }
+              >
                 <FormattedMessage
                   id="signup.inbox.desc"
                   defaultMessage="We've sent you an email, please follow the link to complete your registration"
