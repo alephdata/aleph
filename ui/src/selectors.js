@@ -95,7 +95,7 @@ export function selectPinnedMessage(state) {
   const { messages, dismissed } = selectMessages(state);
 
   if (metadata?.app?.banner) {
-    return { body: metadata.app.banner };
+    return { safeHtmlBody: metadata.app.banner };
   }
 
   if (!messages) {
