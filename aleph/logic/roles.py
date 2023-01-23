@@ -81,6 +81,7 @@ def create_user(email, name, password, is_admin=False):
     update_role(role)
     return role
 
+
 def rename_user(email, name):
     """Rename an existing user"""
     foreign_id = "system:aleph" if "default" in email else "password:{}".format(email)
