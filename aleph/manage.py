@@ -30,7 +30,7 @@ from aleph.logic.documents import crawl_directory
 from aleph.logic.archive import cleanup_archive
 from aleph.logic.xref import xref_collection
 from aleph.logic.export import retry_exports
-from aleph.logic.roles import create_user, update_roles, delete_role
+from aleph.logic.roles import create_user, update_roles, delete_role, rename_user
 from aleph.logic.permissions import update_permission
 from aleph.util import JSONEncoder
 from aleph.index.collections import get_collection as _get_index_collection
@@ -367,6 +367,23 @@ def createuser(email, password=None, name=None, admin=False):
     role = create_user(email, name, password, is_admin=admin)
     print("User created. ID: %s, API Key: %s" % (role.id, role.api_key))
 
+
+@cli.command()
+@click.argument("email")
+@click.argument("name")
+def renameuser(email, name):
+    """Rename an already-existing user."""
+    role = rename_user(email, name)
+    if role:
+        print(f"User renamed. ID: {role.id}, new name: {role.name}")
+    else:
+        print(f"The e-mail address {email} belongs to no user.")
+        
+
+@cli.command()
+def listusers():
+    for user_role in get_all_users():
+        print(f"{user_role.name} ({user_role.email}). Is admin: {user_role.is_admin}")
 
 @cli.command()
 @click.argument("foreign_id")
