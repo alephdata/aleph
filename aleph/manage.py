@@ -384,12 +384,6 @@ def renameuser(email, name):
 
 
 @cli.command()
-def listusers():
-    for user_role in get_all_users():
-        print(f"{user_role.name} ({user_role.email}). Is admin: {user_role.is_admin}")
-
-
-@cli.command()
 @click.argument("foreign_id")
 def deleterole(foreign_id):
     """Hard-delete a role (user, or group) from the database."""
