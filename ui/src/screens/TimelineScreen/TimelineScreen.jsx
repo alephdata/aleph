@@ -20,7 +20,7 @@ import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, UpdateStatus } from 'components/common';
-import { Timeline } from 'components/Timeline2';
+import { Timeline } from 'components/Timeline';
 
 export class TimelineScreen extends Component {
   constructor(props) {
