@@ -146,8 +146,18 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
     ...schema.getTemporalEndProperties().map((prop) => prop.name),
   ]);
 
+  // Showing fields for `date` and `startDate` would be kind of redundant.
   if (propNames.has('date') && propNames.has('startDate')) {
     propNames.delete('date');
+  }
+
+  // The `Person` schema inherits incorporation/dissolution properties from `LegalEntity`.
+  // There is a pragmatic reason for this inheritance hierarchy. However, When creating a
+  // new `Person` entity in a timeline, this would cause fields for incorporation/dissolution
+  // dates as well as birth/death dates to be displayed, which is a rather confusing UX.
+  if (schema.name === 'Person') {
+    propNames.delete('incorporationDate');
+    propNames.delete('dissolutionDate');
   }
 
   const props = Array.from(propNames).map((name) => ({
