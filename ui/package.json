@@ -56,7 +56,7 @@
     "react-truncate": "^2.4.0",
     "react-waypoint": "^10.1.0",
     "recharts": "^2.2.0",
-    "redux": "^4.0.1",
+    "redux": "^4.2.1",
     "redux-act": "^1.7.4",
     "redux-thunk": "^2.4.2",
     "rehype-raw": "^6.0.0",
