@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {
+  Classes,
   Callout,
   Intent,
   Dialog,
@@ -38,17 +39,20 @@ export class AuthenticationDialog extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.initialState = {
       submitted: false,
       firstSection: '',
       secondSection: 'hide',
     };
+
+    this.state = this.initialState;
 
     this.onLogin = this.onLogin.bind(this);
     this.onSignup = this.onSignup.bind(this);
     this.onRegisterClick = this.onRegisterClick.bind(this);
     this.onSignInClick = this.onSignInClick.bind(this);
     this.onOAuthLogin = this.onOAuthLogin.bind(this);
+    this.resetState = this.resetState.bind(this);
   }
 
   onOAuthLogin() {
@@ -86,12 +90,24 @@ export class AuthenticationDialog extends Component {
 
   onRegisterClick(e) {
     e.preventDefault();
-    this.setState({ firstSection: 'hide', secondSection: '' });
+    this.setState({
+      firstSection: 'hide',
+      secondSection: '',
+      submitted: false,
+    });
   }
 
   onSignInClick(e) {
     e.preventDefault();
-    this.setState({ firstSection: '', secondSection: 'hide' });
+    this.setState({
+      firstSection: '',
+      secondSection: 'hide',
+      submitted: false,
+    });
+  }
+
+  resetState() {
+    this.setState(this.initialState);
   }
 
   render() {
@@ -111,17 +127,17 @@ export class AuthenticationDialog extends Component {
 
     return (
       <Dialog
-        icon="authentication"
         className="AuthenticationScreen"
         isOpen={isOpen}
         onClose={toggleDialog}
+        onOpening={this.resetState}
         title={
           firstSection === ''
             ? intl.formatMessage(messages.title)
             : intl.formatMessage(messages.registration_title)
         }
       >
-        <div className="inner">
+        <div className={Classes.DIALOG_BODY}>
           <section className={firstSection}>
             {passwordLogin && (
               <PasswordAuthLogin
@@ -142,13 +158,16 @@ export class AuthenticationDialog extends Component {
           </section>
           <section className={secondSection}>
             {submitted ? (
-              <Callout intent={Intent.SUCCESS} icon="tick">
-                <h5>
+              <Callout
+                intent={Intent.SUCCESS}
+                icon="tick"
+                title={
                   <FormattedMessage
                     id="signup.inbox.title"
                     defaultMessage="Check your inbox"
                   />
-                </h5>
+                }
+              >
                 <FormattedMessage
                   id="signup.inbox.desc"
                   defaultMessage="We've sent you an email, please follow the link to complete your registration"
@@ -160,16 +179,16 @@ export class AuthenticationDialog extends Component {
                   buttonClassName="signin-button"
                   onSubmit={this.onSignup}
                 />
-                <div className="link-box">
-                  <a key="oauth" href="/" onClick={this.onSignInClick}>
-                    <FormattedMessage
-                      id="signup.login"
-                      defaultMessage="Already have account? Sign in!"
-                    />
-                  </a>
-                </div>
               </span>
             )}
+            <div className="link-box">
+              <a key="oauth" href="/" onClick={this.onSignInClick}>
+                <FormattedMessage
+                  id="signup.login"
+                  defaultMessage="Already have account? Sign in!"
+                />
+              </a>
+            </div>
           </section>
           {auth.oauth_uri && (
             <>

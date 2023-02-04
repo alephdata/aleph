@@ -5,7 +5,9 @@ const initialState = {};
 
 export default createReducer(
   {
-    [setConfigValue]: (state, newVal) => ({ ...state.config, ...newVal }),
+    [setConfigValue]: (state, newVal) => {
+      return { ...state, ...newVal };
+    },
     [setLocale]: (state, { locale }) => ({ locale }),
   },
   initialState
