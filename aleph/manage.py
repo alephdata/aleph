@@ -193,12 +193,19 @@ def reindex_casefiles(flush=False):
 @click.argument("foreign_id")
 @click.option("--index", is_flag=True, default=False)
 @click.option("--include_ingest", is_flag=True, default=False)
+@click.option("--preserve_model", is_flag=True, default=False)
 @click.option("--flush/--no-flush", default=True)
-def reingest(foreign_id, index=False, flush=True, include_ingest=False):
+def reingest(
+    foreign_id, index=False, flush=True, include_ingest=False, preserve_model=False
+):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
     reingest_collection(
-        collection, index=index, flush=flush, include_ingest=include_ingest
+        collection,
+        index=index,
+        flush=flush,
+        include_ingest=include_ingest,
+        preserve_model=preserve_model,
     )
 
 
