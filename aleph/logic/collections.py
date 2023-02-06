@@ -136,7 +136,7 @@ def reingest_collection(
     """Trigger a re-ingest for all documents in the collection."""
     job_id = job_id or Job.random_id()
     if flush:
-        ingest_flush(collection, include_ingest)
+        ingest_flush(collection, include_ingest=include_ingest)
     for document in Document.by_collection(collection.id):
         proxy = document.to_proxy(ns=collection.ns)
         ingest_entity(collection, proxy, job_id=job_id, index=index)
