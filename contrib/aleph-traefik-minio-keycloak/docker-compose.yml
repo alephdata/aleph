@@ -36,7 +36,7 @@ services:
       - "traefik.enable=false"
 
   convert-document:
-    image: ghcr.io/alephdata/convert-document:3.16.1
+    image: ghcr.io/alephdata/convert-document:latest
     read_only: true
     restart: on-failure
     user: app
@@ -45,7 +45,7 @@ services:
       - "traefik.enable=false"
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.18.3-rc1
+    image: ghcr.io/alephdata/ingest-file:latest
     tmpfs:
       - /tmp:mode=777
     volumes:
