@@ -25,14 +25,14 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: ghcr.io/alephdata/convert-document:3.16.1
+    image: ghcr.io/alephdata/convert-document:3.17.1
     read_only: true
     restart: on-failure
     user: app
     tmpfs: /tmp
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.18.3-rc1
+    image: ghcr.io/alephdata/ingest-file:3.17.1
     tmpfs:
       - /tmp:mode=777
     volumes:
