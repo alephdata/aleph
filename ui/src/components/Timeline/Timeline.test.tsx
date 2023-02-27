@@ -255,7 +255,7 @@ it('allows creating new items', async () => {
   // 'Event' is the default schema
   expect(screen.getByRole('textbox', { name: 'Name' })).toBeInTheDocument();
   expect(screen.getByRole('textbox', { name: 'Start date' }));
-  expect(screen.getByRole('textbox', { name: 'End date' }));
+  expect(screen.getByRole('textbox', { name: 'End date (optional)' }));
 
   // Change schema to 'Company'
   await userEvent.click(screen.getByRole('button', { name: 'Type' }));
@@ -266,7 +266,9 @@ it('allows creating new items', async () => {
   const incorporation = screen.getByRole('textbox', {
     name: 'Incorporation date',
   });
-  const dissolution = screen.getByRole('textbox', { name: 'Dissolution date' });
+  const dissolution = screen.getByRole('textbox', {
+    name: 'Dissolution date (optional)',
+  });
 
   expect(name).toBeInTheDocument();
   expect(incorporation).toBeInTheDocument();

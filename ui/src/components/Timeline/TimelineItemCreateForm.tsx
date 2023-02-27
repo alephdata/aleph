@@ -1,4 +1,5 @@
 import { FC, FormEvent, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   Model,
   Schema,
@@ -91,7 +92,18 @@ const PropertyField: FC<PropertyFieldProps> = ({
   placeholder,
   onChange,
 }) => (
-  <FormGroup label={property.label} labelFor={property.name}>
+  <FormGroup
+    label={property.label}
+    labelFor={property.name}
+    labelInfo={
+      !required && (
+        <FormattedMessage
+          id="timeline.item_create_form.optional"
+          defaultMessage="(optional)"
+        />
+      )
+    }
+  >
     <InputGroup
       name={property.name}
       id={property.name}
@@ -141,14 +153,16 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
   properties,
   onChange,
 }) => {
-  const propNames = new Set([
-    ...schema.getTemporalStartProperties().map((prop) => prop.name),
-    ...schema.getTemporalEndProperties().map((prop) => prop.name),
-  ]);
+  const startPropNames = new Set(
+    schema.getTemporalStartProperties().map((prop) => prop.name)
+  );
+  const endPropNames = new Set(
+    schema.getTemporalEndProperties().map((prop) => prop.name)
+  );
 
   // Showing fields for `date` and `startDate` would be kind of redundant.
-  if (propNames.has('date') && propNames.has('startDate')) {
-    propNames.delete('date');
+  if (startPropNames.has('date') && startPropNames.has('startDate')) {
+    startPropNames.delete('date');
   }
 
   // The `Person` schema inherits incorporation/dissolution properties from `LegalEntity`.
@@ -156,24 +170,35 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
   // new `Person` entity in a timeline, this would cause fields for incorporation/dissolution
   // dates as well as birth/death dates to be displayed, which is a rather confusing UX.
   if (schema.name === 'Person') {
-    propNames.delete('incorporationDate');
-    propNames.delete('dissolutionDate');
+    startPropNames.delete('incorporationDate');
+    endPropNames.delete('dissolutionDate');
   }
 
-  const props = Array.from(propNames).map((name) => ({
-    property: schema.getProperty(name),
-    value: properties[name],
-  }));
+  const propNames = new Set([
+    ...Array.from(startPropNames),
+    ...Array.from(endPropNames),
+  ]);
+
+  const props = Array.from(propNames).map((name) => {
+    const required = startPropNames.size < 2 && startPropNames.has(name);
+
+    return {
+      property: schema.getProperty(name),
+      value: properties[name],
+      required,
+    };
+  });
 
   return (
     <>
-      {props.map(({ property, value }) => (
+      {props.map(({ property, value, required }) => (
         <PropertyField
           key={property.name}
           property={property}
           value={typeof value === 'string' ? value : ''}
           onChange={onChange}
           placeholder="YYYY-MM-DD"
+          required={required}
         />
       ))}
     </>

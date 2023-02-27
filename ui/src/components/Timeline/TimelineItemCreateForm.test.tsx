@@ -96,7 +96,7 @@ it('renders temporal extent fields', async () => {
     name: 'Start date',
   }) as HTMLInputElement;
   const endDate = screen.getByRole('textbox', {
-    name: 'End date',
+    name: 'End date (optional)',
   }) as HTMLInputElement;
   const date = screen.queryByRole('textbox', { name: 'Date' });
 
@@ -111,7 +111,9 @@ it('renders temporal extent fields', async () => {
   await selectSchema('Court case');
 
   const fileDate = screen.getByRole('textbox', { name: 'File date' });
-  const closeDate = screen.getByRole('textbox', { name: 'Close date' });
+  const closeDate = screen.getByRole('textbox', {
+    name: 'Close date (optional)',
+  });
 
   expect(fileDate).toBeInTheDocument();
   expect(closeDate).toBeInTheDocument();
