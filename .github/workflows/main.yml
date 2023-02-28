@@ -17,3 +17,4 @@ jobs:
           # to the issue
           project-url: https://github.com/orgs/alephdata/projects/10
           github-token: ${{ secrets.ALEPH_GITHUB_TOKEN }}
+        continue-on-error: true
