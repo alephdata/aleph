@@ -30,6 +30,7 @@ type PropertyFieldProps = {
   value?: string;
   required?: boolean;
   placeholder?: string;
+  pattern?: string;
   onChange: (property: Property, value: Value) => void;
 };
 
@@ -90,6 +91,7 @@ const PropertyField: FC<PropertyFieldProps> = ({
   value,
   required,
   placeholder,
+  pattern,
   onChange,
 }) => (
   <FormGroup
@@ -110,6 +112,7 @@ const PropertyField: FC<PropertyFieldProps> = ({
       value={value}
       required={required}
       placeholder={placeholder}
+      pattern={pattern}
       onChange={(event) => onChange(property, event.target.value)}
     />
   </FormGroup>
@@ -198,6 +201,7 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
           value={typeof value === 'string' ? value : ''}
           onChange={onChange}
           placeholder="YYYY-MM-DD"
+          pattern="\d{4}-\d{1,2}-\d{1,2}"
           required={required}
         />
       ))}
