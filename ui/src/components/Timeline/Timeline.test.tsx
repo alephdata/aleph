@@ -250,7 +250,9 @@ it('allows creating new items', async () => {
   await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
 
   const dialog = screen.getByRole('dialog', { name: /Add new item/ });
+  const submit = screen.getByRole('button', { name: 'Add' });
   expect(dialog).toBeVisible();
+  expect(submit).toBeDisabled();
 
   // 'Event' is the default schema
   expect(screen.getByRole('textbox', { name: 'Name' })).toBeInTheDocument();
@@ -276,7 +278,9 @@ it('allows creating new items', async () => {
 
   await userEvent.type(name, 'ACME, Inc.');
   await userEvent.type(incorporation, '2022-02-15');
-  await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+
+  expect(submit).not.toBeDisabled();
+  await userEvent.click(submit);
 
   await waitFor(() => expect(dialog).not.toBeVisible());
 

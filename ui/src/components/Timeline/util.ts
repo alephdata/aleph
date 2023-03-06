@@ -5,6 +5,7 @@ import {
   useState,
   createRef,
   KeyboardEvent,
+  RefObject,
 } from 'react';
 import { differenceInDays } from 'date-fns';
 import { throttle } from 'lodash';
@@ -254,4 +255,14 @@ export function useEntitySuggestions(
   }, [onQueryChange]);
 
   return [suggestions, isFetching, onQueryChange] as const;
+}
+
+export function useFormValidity(formRef: RefObject<HTMLFormElement>) {
+  const [isValid, setIsValid] = useState(false);
+
+  const onInput = () => {
+    setIsValid(!!formRef.current?.checkValidity());
+  };
+
+  return [isValid, onInput] as const;
 }

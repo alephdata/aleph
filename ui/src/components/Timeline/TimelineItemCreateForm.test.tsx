@@ -10,6 +10,8 @@ const defaultProps = {
   model,
   fetchEntitySuggestions: async () => [],
   onSubmit: () => {},
+  onInput: () => {},
+  onKeyDown: () => {},
 };
 
 const selectSchema = async (name: string) => {
