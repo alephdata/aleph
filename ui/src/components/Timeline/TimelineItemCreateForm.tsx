@@ -1,4 +1,12 @@
-import { FC, FormEvent, useState } from 'react';
+import {
+  FC,
+  FormEvent,
+  useState,
+  forwardRef,
+  FormEventHandler,
+  KeyboardEventHandler,
+  ForwardedRef,
+} from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   Model,
@@ -63,6 +71,8 @@ type TemporalExtentFieldsProps = {
 type TimelineItemCreateFormProps = {
   model: Model;
   onSubmit: (entity: Entity) => void;
+  onInput: FormEventHandler;
+  onKeyDown: KeyboardEventHandler;
   id?: string;
   fetchEntitySuggestions: FetchEntitySuggestions;
 };
@@ -258,12 +268,13 @@ const CaptionField: FC<CaptionFieldProps> = ({
 
 const isEdge = (schema: Schema): schema is EdgeSchema => schema.isEdge;
 
-const TimelineItemCreateForm: FC<TimelineItemCreateFormProps> = ({
-  id,
-  model,
-  onSubmit,
-  fetchEntitySuggestions,
-}) => {
+const TimelineItemCreateForm = (
+  props: TimelineItemCreateFormProps,
+  formRef: ForwardedRef<HTMLFormElement>
+) => {
+  const { id, model, onSubmit, onInput, onKeyDown, fetchEntitySuggestions } =
+    props;
+
   const [entity, setEntity] = useState<Entity>(model.createEntity('Event'));
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -300,7 +311,13 @@ const TimelineItemCreateForm: FC<TimelineItemCreateFormProps> = ({
   );
 
   return (
-    <form id={id} onSubmit={onFormSubmit}>
+    <form
+      id={id}
+      onSubmit={onFormSubmit}
+      onInput={onInput}
+      onKeyDown={onKeyDown}
+      ref={formRef}
+    >
       <SchemaField
         model={model}
         value={entity.schema}
@@ -333,4 +350,6 @@ const TimelineItemCreateForm: FC<TimelineItemCreateFormProps> = ({
   );
 };
 
-export default TimelineItemCreateForm;
+export default forwardRef<HTMLFormElement, TimelineItemCreateFormProps>(
+  TimelineItemCreateForm
+);

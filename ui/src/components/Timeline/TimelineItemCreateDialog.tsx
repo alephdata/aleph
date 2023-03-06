@@ -1,8 +1,9 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, Intent, Classes } from '@blueprintjs/core';
 import { Model, Schema, Entity } from '@alephdata/followthemoney';
 import TimelineItemCreateForm from './TimelineItemCreateForm';
+import { useFormValidity } from './util';
 
 type TimelineItemCreateDialogProps = Dialog['props'] & {
   model: Model;
@@ -21,6 +22,8 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
   fetchEntitySuggestions,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isValid, onInput] = useFormValidity(formRef);
 
   // Reset the loading state when the dialog is closed
   useEffect(() => {
@@ -39,7 +42,12 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
       <div className={Classes.DIALOG_BODY}>
         <TimelineItemCreateForm
           id="timeline-item-create-form"
+          ref={formRef}
           model={model}
+          onInput={onInput}
+          onKeyDown={(event) =>
+            event.key === 'Enter' && formRef.current?.reportValidity()
+          }
           onSubmit={(entity) => {
             setIsSubmitting(true);
             onCreate(entity);
@@ -54,6 +62,7 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
             form="timeline-item-create-form"
             intent={Intent.PRIMARY}
             loading={isSubmitting}
+            disabled={!isValid}
           >
             <FormattedMessage
               id="timeline.create_entity.submit"
