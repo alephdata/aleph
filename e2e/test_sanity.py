@@ -12,7 +12,7 @@ def test_ingest_odt(page: Page) -> None:
     text and browses to the last page.
     """
 
-    page.goto("http://localhost:8080/")
+    page.goto(BASE_URL)
     page.get_by_role("menuitem", name="Investigations").click()
     page.get_by_role("button", name="New investigation").click()
     page.get_by_placeholder("Untitled investigation").click()
