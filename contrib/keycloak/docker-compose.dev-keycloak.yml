@@ -33,7 +33,7 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:latest
+    image: alephdata/convert-document:3.17.1
     restart: on-failure
     tmpfs:
       - /tmp
