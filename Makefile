@@ -83,7 +83,7 @@ build-full: build build-ui
 ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
 
-dev: 
+dev:
 	python3 -m pip install -q -r requirements-dev.txt
 
 fixtures:
@@ -99,5 +99,15 @@ translate: dev
 	npm run --prefix ui translate
 	pybabel compile -d aleph/translations -D aleph -f
 
-.PHONY: build services
+e2e: services
+	$(COMPOSE) up -d api ui worker
+	$(COMPOSE) run e2e pytest -s -v e2e/
+
+e2e-local-setup: dev
+	playwright install
+
+e2e-local:
+	pytest -s -v e2e/
+
+.PHONY: build services e2e
 
