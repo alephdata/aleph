@@ -36,7 +36,7 @@ services:
       - "traefik.enable=false"
 
   convert-document:
-    image: ghcr.io/alephdata/convert-document:latest
+    image: ghcr.io/alephdata/convert-document:3.17.1
     read_only: true
     restart: on-failure
     user: app
