@@ -20,7 +20,7 @@ services:
 
   redis:
     image: redis:alpine
-    command: [ "redis-server", "--save", "3600", "10" ]
+    command: ["redis-server", "--save", "3600", "10"]
     volumes:
       - redis-data:/data
 
