@@ -11,7 +11,7 @@ import { differenceInDays } from 'date-fns';
 import { throttle } from 'lodash';
 import { Entity, Schema } from '@alephdata/followthemoney';
 import { DEFAULT_COLOR } from './Timeline';
-import { FetchEntitySuggestions, Layout } from './types';
+import { FetchEntitySuggestions, Layout, Vertex } from './types';
 
 function endOfMonth(year: number, month: number): number {
   // Months in ECMAScript are zero-based:
@@ -265,4 +265,21 @@ export function useFormValidity(formRef: RefObject<HTMLFormElement>) {
   };
 
   return [isValid, onInput] as const;
+}
+
+export function updateVertex(layout: Layout, updatedVertex: Vertex): Layout {
+  const { vertices } = layout;
+  const index = layout.vertices.findIndex(
+    (vertex) => vertex.entityId === updatedVertex.entityId
+  );
+
+  const newVertices = [...vertices];
+
+  if (index < 0) {
+    newVertices.push(updatedVertex);
+  } else {
+    newVertices.splice(index, 1, updatedVertex);
+  }
+
+  return { vertices: newVertices };
 }

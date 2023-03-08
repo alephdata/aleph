@@ -5,7 +5,7 @@ import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
 import { TimelineRenderer, Layout, Vertex } from './types';
-import { TimelineItem } from './util';
+import { TimelineItem, updateVertex } from './util';
 import {
   reducer,
   selectSortedEntities,
@@ -64,12 +64,8 @@ const Timeline: FC<TimelineProps> = ({
   const sortedEntities = selectSortedEntities(state);
 
   const items = sortedEntities.map(
-    (entity) => new TimelineItem(entity, layout)
+    (entity) => new TimelineItem(entity, state.layout)
   );
-
-  useEffect(() => {
-    onLayoutUpdate(state.layout);
-  }, [state.layout, onLayoutUpdate]);
 
   const createButton = (
     <Button intent={Intent.PRIMARY} icon="add" onClick={toggleCreateDialog}>
@@ -131,6 +127,9 @@ const Timeline: FC<TimelineProps> = ({
             writeable={writeable}
             onVertexChange={(vertex: Vertex) => {
               dispatch({ type: 'UPDATE_VERTEX', payload: { vertex } });
+              // State updates are executed asyncronously, so we need to compute the new layout explicitly
+              const newLayout = updateVertex(state.layout, vertex);
+              onLayoutUpdate(newLayout);
             }}
             onEntityChange={(entity: Entity) => {
               dispatch({ type: 'UPDATE_ENTITY', payload: { entity } });

@@ -1,5 +1,6 @@
 import { Entity } from '@alephdata/followthemoney';
 import type { Vertex, Layout, TimelineEntity } from './types';
+import { updateVertex } from './util';
 
 type State = {
   entities: Array<Entity>;
@@ -70,18 +71,8 @@ const reducer = (state: State, action: Action): State => {
   }
 
   if (type === 'UPDATE_VERTEX') {
-    const vertices = state.layout.vertices;
-    const index = state.layout.vertices.findIndex(
-      (vertex) => vertex.entityId === action.payload.vertex.entityId
-    );
-
-    if (index < 0) {
-      vertices.push(action.payload.vertex);
-    } else {
-      vertices.splice(index, 1, action.payload.vertex);
-    }
-
-    return { ...state, layout: { vertices } };
+    const newLayout = updateVertex(state.layout, action.payload.vertex);
+    return { ...state, layout: newLayout };
   }
 
   if (type === 'UPDATE_ENTITY') {
