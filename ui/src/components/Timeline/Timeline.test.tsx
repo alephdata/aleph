@@ -51,8 +51,17 @@ describe('Sidebar', () => {
   it('allows changing entity color', async () => {
     const entities = [event1];
     const layout = { vertices: [] };
+    const onLayoutUpdate = jest.fn();
 
-    render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
+    render(
+      <Timeline
+        {...defaultProps}
+        entities={entities}
+        layout={layout}
+        onLayoutUpdate={onLayoutUpdate}
+      />
+    );
+
     const rows = screen.getAllByRole('row');
     await userEvent.click(rows[1]);
 
@@ -67,6 +76,7 @@ describe('Sidebar', () => {
     await userEvent.click(swatches[3]);
     color = rows[1].style.getPropertyValue('--timeline-item-color');
     expect(color).toEqual(Colors.RED2);
+    expect(onLayoutUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('does not allow changing entity color if not writeable', async () => {
