@@ -100,6 +100,10 @@ class EntitySetManageMenu extends Component {
       return this.renderExport();
     }
 
+    if (!entitySet.writeable) {
+      return null;
+    }
+
     if (isDiagram || isTimeline) {
       return (
         <ButtonGroup minimal>
