@@ -6,6 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .TimelineChartGrid__line {
@@ -21,5 +22,13 @@
 .TimelineChartGrid__line--main {
   border-right-style: solid;
   border-right-width: 2px;
-  transform: translateX(-1px);
+  transform: translateX(-50%);
+}
+
+.TimelineChartGrid__line--main:first-child {
+  transform: translateX(0);
+}
+
+.TimelineChartGrid__line:last-child {
+  transform: translateX(-100%);
 }

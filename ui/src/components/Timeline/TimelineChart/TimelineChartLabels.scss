@@ -19,17 +19,16 @@
     (var(--timeline-chart-label-end-day) - var(--timeline-chart-label-start-day)) * var(--timeline-chart-day-width)
   );
 
-  padding: 0 $aleph-grid-size;
   line-height: 3 * $aleph-grid-size;
 
   color: $aleph-greyed-text;
   background-color: white;
   border-bottom: 1px solid $aleph-border-color;
-  border-left: 1px solid $aleph-border-color;
-  border-right: 1px solid $aleph-border-color;
 }
 
-.TimelineChartLabels__text {
+.TimelineChartLabels--days .TimelineChartLabels__text,
+.TimelineChartLabels--years .TimelineChartLabels__text {
   position: sticky;
   left: 0;
+  margin-right: $aleph-content-padding;
 }

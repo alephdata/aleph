@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import c from 'classnames';
 import { FormattedDate } from 'react-intl';
 import {
   eachMonthOfInterval,
@@ -45,7 +46,9 @@ const TimelineChartLabels: FC<TimelineChartLabelsProps> = ({
   const labels = generateLabels(zoomLevel, start, end);
 
   return (
-    <div className="TimelineChartLabels">
+    <div
+      className={c('TimelineChartLabels', `TimelineChartLabels--${zoomLevel}`)}
+    >
       {labels.map(({ date, startDay, endDay }, index) => (
         <div
           key={index}
