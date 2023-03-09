@@ -59,26 +59,27 @@
 }
 
 .TimelineChartItem--singleDay {
-  padding-block: 0.25 * $aleph-grid-size;
+  --timeline-item-bullet-size: 15px;
+  padding-block: 0.5 * $aleph-grid-size;
 }
 
 .TimelineChartItem--singleDay::before {
   content: '';
   display: block;
-  width: 66%;
-  padding-bottom: 66%;
-  margin: 17%;
-  transform: rotate(45deg);
+  width: var(--timeline-item-bullet-size);
+  height: var(--timeline-item-bullet-size);
+  transform: rotate(45deg) translateX(-50%);
+  transform-origin: center left;
   background-color: var(--timeline-item-color);
   border-radius: $pt-border-radius;
 }
 
 .TimelineChartItem--singleDay .TimelineChartItem__caption {
   position: absolute;
-  left: 100%;
+  left: var(--timeline-item-bullet-size);
   top: 50%;
   transform: translateY(-50%);
-  padding-left: 0.5 * $aleph-grid-size;
+  padding-left: 0.25 * $aleph-grid-size;
   color: var(--timeline-item-color);
   text-shadow: 0 0 1px white, 0 0 2px white, 0 0 3px white;
 }

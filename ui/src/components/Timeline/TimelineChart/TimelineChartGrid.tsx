@@ -1,22 +1,55 @@
 import { FC } from 'react';
 import c from 'classnames';
-import { eachDayOfInterval, differenceInDays, addDays } from 'date-fns';
+import {
+  eachDayOfInterval,
+  eachMonthOfInterval,
+  differenceInDays,
+  addDays,
+} from 'date-fns';
+import { TimelineChartZoomLevel } from '../types';
 
 import './TimelineChartGrid.scss';
 
 type TimelineChartGridProps = {
   start: Date;
   end: Date;
+  zoomLevel: TimelineChartZoomLevel;
 };
 
-const TimelineChartGrid: FC<TimelineChartGridProps> = ({ start, end }) => {
-  const lines = eachDayOfInterval({ start, end: addDays(end, 1) }).map(
-    (date) => ({
+const generateLines = (
+  zoomLevel: TimelineChartZoomLevel,
+  start: Date,
+  end: Date
+) => {
+  if (zoomLevel === 'days') {
+    return eachDayOfInterval({ start, end }).map((date) => ({
       date,
       startDay: differenceInDays(date, start),
       isMain: date.getDate() === 1,
-    })
-  );
+    }));
+  }
+
+  if (zoomLevel === 'months') {
+    return eachMonthOfInterval({ start, end }).map((date) => ({
+      date,
+      startDay: differenceInDays(date, start),
+      isMain: date.getDate() === 1 && date.getMonth() === 0,
+    }));
+  }
+
+  return eachMonthOfInterval({ start, end }).map((date) => ({
+    date,
+    startDay: differenceInDays(date, start),
+    isMain: date.getDate() === 1 && date.getMonth() === 0,
+  }));
+};
+
+const TimelineChartGrid: FC<TimelineChartGridProps> = ({
+  start,
+  end,
+  zoomLevel,
+}) => {
+  const lines = generateLines(zoomLevel, start, addDays(end, 1));
 
   return (
     <div className="TimelineChartGrid">
