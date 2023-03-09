@@ -9,6 +9,7 @@ const model = new Model(defaultModel);
 const defaultProps = {
   selectedId: null,
   writeable: true,
+  zoomLevel: 'months' as const,
   onSelect: () => {},
   onRemove: () => {},
   onUnselect: () => {},

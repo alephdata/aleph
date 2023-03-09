@@ -14,6 +14,8 @@
 }
 
 .Timeline__actions {
+  display: flex;
+  gap: $aleph-grid-size;
   margin-bottom: 2.5 * $aleph-grid-size;
 }
 
