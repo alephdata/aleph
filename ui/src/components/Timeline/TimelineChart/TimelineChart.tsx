@@ -1,38 +1,17 @@
 import { FC, CSSProperties, useState } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
-import {
-  differenceInDays,
-  startOfMonth,
-  endOfMonth,
-  startOfYear,
-  endOfYear,
-} from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import { useTimelineKeyboardNavigation } from '../util';
-import type { TimelineRendererProps, TimelineChartZoomLevel } from '../types';
+import type { TimelineRendererProps } from '../types';
 import { TimelineItem } from '../util';
+import { getStart, getEnd } from './util';
 import TimelineChartGrid from './TimelineChartGrid';
 import TimelineChartLabels from './TimelineChartLabels';
 import TimelineChartItem from './TimelineChartItem';
 import TimelineChartPopover from './TimelineChartPopover';
 
 import './TimelineChart.scss';
-
-const getStart = (zoomLevel: TimelineChartZoomLevel, earliestDate: Date) => {
-  if (zoomLevel === 'days') {
-    return startOfMonth(earliestDate);
-  }
-
-  return startOfYear(earliestDate);
-};
-
-const getEnd = (zoomLevel: TimelineChartZoomLevel, latestDate: Date) => {
-  if (zoomLevel === 'days') {
-    return endOfMonth(latestDate);
-  }
-
-  return endOfYear(latestDate);
-};
 
 const TimelineChart: FC<TimelineRendererProps> = ({
   items,
@@ -57,8 +36,8 @@ const TimelineChart: FC<TimelineRendererProps> = ({
     .filter((date): date is Date => date !== undefined)
     .sort((a, b) => b.getTime() - a.getTime())[0];
 
-  const start = getStart(zoomLevel, earliestDate);
-  const end = getEnd(zoomLevel, latestDate);
+  const start = getStart(zoomLevel, earliestDate, latestDate);
+  const end = getEnd(zoomLevel, earliestDate, latestDate);
   const days = differenceInDays(end, start) + 1;
 
   const style: CSSProperties = {
