@@ -10,6 +10,10 @@
     var(--timeline-chart-item-start-day) * var(--timeline-chart-day-width)
   );
   cursor: pointer;
+
+  transition-duration: var(--timeline-chart-transition-duration);
+  transition-property: width, margin;
+  transition-timing-function: var(--timeline-chart-transition-easing);
 }
 
 .TimelineChartItem__caption {

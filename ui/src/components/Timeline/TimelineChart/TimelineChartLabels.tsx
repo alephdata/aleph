@@ -51,7 +51,7 @@ const TimelineChartLabels: FC<TimelineChartLabelsProps> = ({
     >
       {labels.map(({ date, startDay, endDay }, index) => (
         <div
-          key={index}
+          key={`${zoomLevel}-${index}`}
           className="TimelineChartLabels__label"
           style={{
             ['--timeline-chart-label-start-day' as string]: startDay,

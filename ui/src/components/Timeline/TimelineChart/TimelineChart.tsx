@@ -55,8 +55,8 @@ const TimelineChart: FC<TimelineRendererProps> = ({
       style={style}
       onClick={() => onUnselect()}
     >
-      <TimelineChartGrid start={start} end={end} zoomLevel={zoomLevel} />
       <TimelineChartLabels start={start} end={end} zoomLevel={zoomLevel} />
+      <TimelineChartGrid start={start} end={end} zoomLevel={zoomLevel} />
 
       {popoverItem && (
         <TimelineChartPopover
