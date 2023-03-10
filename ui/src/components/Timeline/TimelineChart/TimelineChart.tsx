@@ -1,4 +1,4 @@
-import { FC, CSSProperties, useState } from 'react';
+import { FC, CSSProperties, useState, useEffect } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import { differenceInDays } from 'date-fns';
@@ -25,6 +25,13 @@ const TimelineChart: FC<TimelineRendererProps> = ({
 
   const [itemRefs, keyboardProps] =
     useTimelineKeyboardNavigation<HTMLLIElement>(items, onUnselect);
+
+  // Scroll first item into view on initial render
+  useEffect(() => {
+    if (itemRefs.length >= 1) {
+      itemRefs[0].current?.scrollIntoView({ inline: 'center' });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const earliestDate = items
     .map((item) => item.getEarliestDate())

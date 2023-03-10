@@ -48,6 +48,12 @@ const defaultProps = {
   onUnselect: () => {},
 };
 
+beforeEach(() => {
+  // jsdom doesn't actually calculate layouts or renders anything, so methods that
+  //  rely on this like `scrollIntoView` are not available and need to be stubbed.
+  window.Element.prototype.scrollIntoView = jest.fn();
+});
+
 it('supports navigating the list using arrow keys', async () => {
   render(<TimelineChart {...defaultProps} />);
 
