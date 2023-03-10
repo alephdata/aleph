@@ -2,10 +2,10 @@
 
 .TimelineChartGrid {
   position: absolute;
-  top: 0;
   left: 0;
+  top: var(--timeline-chart-labels-height);
+  bottom: 0;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
@@ -17,6 +17,11 @@
   height: 100%;
   width: 0;
   border-right: 1px dotted $aleph-border-color;
+
+  transition-duration: var(--timeline-chart-transition-duration);
+  transition-property: left;
+  transition-timing-function: var(--timeline-chart-transition-easing);
+  animation: timeline-fadein calc(4 * var(--timeline-chart-transition-duration));
 }
 
 .TimelineChartGrid__line--main {

@@ -5,8 +5,7 @@
   top: -1 * $aleph-content-padding;
   z-index: 1;
   width: 100%;
-  height: 3 * $aleph-grid-size;
-  margin-bottom: $aleph-grid-size;
+  height: var(--timeline-chart-labels-height);
 }
 
 .TimelineChartLabels__label {
@@ -24,6 +23,8 @@
   color: $aleph-greyed-text;
   background-color: white;
   border-bottom: 1px solid $aleph-border-color;
+
+  animation: timeline-fadein var(--timeline-chart-transition-duration);
 }
 
 .TimelineChartLabels--days .TimelineChartLabels__text,
