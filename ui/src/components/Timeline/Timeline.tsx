@@ -1,8 +1,7 @@
 import { FC, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
+import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
-import { Classes, Popover2 as Popover } from '@blueprintjs/popover2';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
 import {
@@ -80,50 +79,33 @@ const Timeline: FC<TimelineProps> = ({
     </Button>
   );
 
-  const zoomLevelDropdown = (
-    <Popover
-      placement="bottom"
-      content={
-        <div className={Classes.POPOVER2_CONTENT_SIZING}>
-          <Menu>
-            <MenuItem
-              active={zoomLevel === 'days'}
-              text={
-                <FormattedMessage
-                  id="timeline.zoom_level.days"
-                  defaultMessage="Days"
-                />
-              }
-              onClick={() => setZoomLevel('days')}
-            />
-            <MenuItem
-              active={zoomLevel === 'months'}
-              text={
-                <FormattedMessage
-                  id="timeline.zoom_level.months"
-                  defaultMessage="Months"
-                />
-              }
-              onClick={() => setZoomLevel('months')}
-            />
-            <MenuItem
-              active={zoomLevel === 'years'}
-              text={
-                <FormattedMessage
-                  id="timeline.zoom_level.years"
-                  defaultMessage="Years"
-                />
-              }
-              onClick={() => setZoomLevel('years')}
-            />
-          </Menu>
-        </div>
-      }
-    >
-      <Button icon="zoom-in" rightIcon="caret-down">
-        Zoom
+  const zoomLevelSwitch = (
+    <ButtonGroup>
+      <Button
+        active={zoomLevel === 'days'}
+        onClick={() => setZoomLevel('days')}
+      >
+        <FormattedMessage id="timeline.zoom_level.days" defaultMessage="Days" />
       </Button>
-    </Popover>
+      <Button
+        active={zoomLevel === 'months'}
+        onClick={() => setZoomLevel('months')}
+      >
+        <FormattedMessage
+          id="timeline.zoom_level.months"
+          defaultMessage="Months"
+        />
+      </Button>
+      <Button
+        active={zoomLevel === 'years'}
+        onClick={() => setZoomLevel('years')}
+      >
+        <FormattedMessage
+          id="timeline.zoom_level.years"
+          defaultMessage="Years"
+        />
+      </Button>
+    </ButtonGroup>
   );
 
   return (
@@ -153,7 +135,7 @@ const Timeline: FC<TimelineProps> = ({
             {writeable && (
               <div className="Timeline__actions">
                 {createButton}
-                {renderer === 'chart' && zoomLevelDropdown}
+                {renderer === 'chart' && zoomLevelSwitch}
               </div>
             )}
             <Renderer
