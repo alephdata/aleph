@@ -29,7 +29,7 @@ services:
 
   redis:
     image: redis:alpine
-    command: [ "redis-server", "--save", "3600", "10" ]
+    command: ["redis-server", "--save", "3600", "10"]
     volumes:
       - "./DATA/redis-data:/data"
     labels:
@@ -45,7 +45,7 @@ services:
       - "traefik.enable=false"
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.17.1
+    image: ghcr.io/alephdata/ingest-file:3.18.3-rc2
     tmpfs:
       - /tmp:mode=777
     volumes:
@@ -215,13 +215,13 @@ services:
 
   # root user is access_key root password is secret key
   minio:
-    image: 'bitnami/minio:latest'
+    image: "bitnami/minio:latest"
     hostname: minio
     ports:
-      - '127.0.0.1:9000:9000'
-      - '127.0.0.1:9001:9001'
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
     volumes:
-      - './DATA/minio_data:/data'
+      - "./DATA/minio_data:/data"
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
