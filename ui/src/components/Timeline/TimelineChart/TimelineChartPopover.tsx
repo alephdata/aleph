@@ -52,16 +52,17 @@ function usePopoverState(delay: number) {
 }
 
 function useMousePosition(callback?: CallableFunction) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState<{ x?: number; y?: number }>({});
 
   useEffect(() => {
     const handler = (event: MouseEvent) => {
+      setPosition({ x: event.clientX, y: event.clientY });
+
       // Prevent async state updates in test environment
       if (process.env.NODE_ENV === 'test') {
         return;
       }
 
-      setPosition({ x: event.clientX, y: event.clientY });
       callback && callback();
     };
 
@@ -139,7 +140,7 @@ const TimelineChartPopover: FC<TimelineChartPopoverProps> = ({
   return (
     <Popover2
       className="TimelineChartPopover"
-      isOpen={isOpen}
+      isOpen={isOpen && position.x !== undefined && position.y !== undefined}
       content={content}
       renderTarget={renderTarget}
       ref={popoverRef}
