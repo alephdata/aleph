@@ -53,13 +53,13 @@ const Timeline: FC<TimelineProps> = ({
   onEntityRemove,
   onLayoutUpdate,
 }) => {
-  const [zoomLevel, setZoomLevel] = useState<TimelineChartZoomLevel>('months');
   const Renderer = renderer === 'chart' ? TimelineChart : TimelineList;
 
   const [state, dispatch] = useReducer(reducer, {
     entities,
     layout: layout || { vertices: [] },
     selectedId: null,
+    zoomLevel: 'months',
   });
 
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -82,14 +82,18 @@ const Timeline: FC<TimelineProps> = ({
   const zoomLevelSwitch = (
     <ButtonGroup>
       <Button
-        active={zoomLevel === 'days'}
-        onClick={() => setZoomLevel('days')}
+        active={state.zoomLevel === 'days'}
+        onClick={() =>
+          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'days' } })
+        }
       >
         <FormattedMessage id="timeline.zoom_level.days" defaultMessage="Days" />
       </Button>
       <Button
-        active={zoomLevel === 'months'}
-        onClick={() => setZoomLevel('months')}
+        active={state.zoomLevel === 'months'}
+        onClick={() =>
+          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'months' } })
+        }
       >
         <FormattedMessage
           id="timeline.zoom_level.months"
@@ -97,8 +101,10 @@ const Timeline: FC<TimelineProps> = ({
         />
       </Button>
       <Button
-        active={zoomLevel === 'years'}
-        onClick={() => setZoomLevel('years')}
+        active={state.zoomLevel === 'years'}
+        onClick={() =>
+          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'years' } })
+        }
       >
         <FormattedMessage
           id="timeline.zoom_level.years"
@@ -142,7 +148,7 @@ const Timeline: FC<TimelineProps> = ({
               items={items}
               selectedId={selectedEntity && selectedEntity.id}
               writeable={writeable}
-              zoomLevel={zoomLevel}
+              zoomLevel={state.zoomLevel}
               onSelect={(entity: Entity) =>
                 dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
               }
