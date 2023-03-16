@@ -1,11 +1,17 @@
 import { Entity } from '@alephdata/followthemoney';
-import type { Vertex, Layout, TimelineEntity } from './types';
+import type {
+  Vertex,
+  Layout,
+  TimelineEntity,
+  TimelineChartZoomLevel,
+} from './types';
 import { updateVertex } from './util';
 
 type State = {
   entities: Array<Entity>;
   layout: Layout;
   selectedId: string | null;
+  zoomLevel: TimelineChartZoomLevel;
 };
 
 type SelectEntityAction = {
@@ -47,13 +53,21 @@ type RemoveEntityAction = {
   };
 };
 
+type SetZoomLevelAction = {
+  type: 'SET_ZOOM_LEVEL';
+  payload: {
+    zoomLevel: TimelineChartZoomLevel;
+  };
+};
+
 type Action =
   | SelectEntityAction
   | UnselectEntityAction
   | UpdateVertexAction
   | UpdateEntityAction
   | CreateEntityAction
-  | RemoveEntityAction;
+  | RemoveEntityAction
+  | SetZoomLevelAction;
 
 const reducer = (state: State, action: Action): State => {
   const { type } = action;
@@ -109,6 +123,10 @@ const reducer = (state: State, action: Action): State => {
       state.selectedId === action.payload.entity.id ? null : state.selectedId;
 
     return { ...state, selectedId, entities };
+  }
+
+  if (type === 'SET_ZOOM_LEVEL') {
+    return { ...state, zoomLevel: action.payload.zoomLevel };
   }
 
   throw new Error('Invalid action type.');
