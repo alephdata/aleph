@@ -28,6 +28,10 @@ function endOfMonth(year: number, month: number): number {
   return date.getDate();
 }
 
+/**
+ * Returns the first scrollable parent element for the given element
+ * or the element itself if it is scrollable.
+ */
 function getScrollParent(element: HTMLElement): HTMLElement {
   const style = window.getComputedStyle(element);
   const scrollable = ['scroll', 'auto'];
@@ -48,6 +52,10 @@ function getScrollParent(element: HTMLElement): HTMLElement {
   return document.documentElement;
 }
 
+/**
+ * Checks whether the element is at least partially within the visible
+ * part of the scroll parent.
+ */
 export function isScrolledIntoView(element: HTMLElement): boolean {
   const container = getScrollParent(element);
   const containerRect = container.getBoundingClientRect();
@@ -61,6 +69,10 @@ export function isScrolledIntoView(element: HTMLElement): boolean {
   );
 }
 
+/**
+ * Merges multiple refs, ensuring that all refs get updated whenever the
+ * merged ref is updated.
+ */
 export function mergeRefs<T>(
   ...refs: Array<RefCallback<T> | MutableRefObject<T | null> | null>
 ): RefCallback<T> {
@@ -150,7 +162,7 @@ export class TimelineItem {
 }
 
 /**
- * FollowTheMoney allows dates with different degress of precision, e.g. `2022`,
+ * FollowTheMoney allows dates with different degrees of precision, e.g. `2022`,
  * `2022-01`, and `2022-01-01` are all valid dates. This class parses FtM date strings
  * and provides utility methods to work with imprecise dates, e.g. to get the earliest
  * or latest possible date.
@@ -221,6 +233,11 @@ export class ImpreciseDate {
   }
 }
 
+/**
+ * Handles keyboard-related logic for a list of timeline items, for example
+ * moving focus to the next/previous element when pressing arrow keys and
+ * unselecting elements when pressing the escape key.
+ */
 export function useTimelineKeyboardNavigation<T extends HTMLElement>(
   items: Array<TimelineItem>,
   onUnselect: () => void
@@ -257,6 +274,10 @@ export function useTimelineKeyboardNavigation<T extends HTMLElement>(
   return [itemRefs, { onKeyDown }] as const;
 }
 
+/**
+ * Handles keyboard-related logic for a single timeline item, for example
+ * selecting the item when pressing enter.
+ */
 export function useTimelineItemKeyboardNavigation(
   entity: Entity,
   onSelect: (entity: Entity) => void
@@ -270,6 +291,9 @@ export function useTimelineItemKeyboardNavigation(
   return { onKeyUp } as const;
 }
 
+/**
+ * Executes a side-effect whenever a timeline item is selected.
+ */
 export function useTimelineItemSelectedChange(
   selected: boolean | undefined,
   onSelected: () => void
@@ -292,6 +316,11 @@ export function useTimelineItemSelectedChange(
   }, [selected, onSelected]);
 }
 
+/**
+ * Provides an easy way to fetch entity suggestions in component (for
+ * example when using entity auto-complete fields, handling request
+ * throttling and state updates.
+ */
 export function useEntitySuggestions(
   schema: Schema,
   fetchSuggestions: FetchEntitySuggestions
@@ -329,6 +358,9 @@ export function useEntitySuggestions(
   return [suggestions, isFetching, onQueryChange] as const;
 }
 
+/**
+ * Exposes the native browser form validation state in a simple state variable.
+ */
 export function useFormValidity(formRef: RefObject<HTMLFormElement>) {
   const [isValid, setIsValid] = useState(false);
 
@@ -339,6 +371,9 @@ export function useFormValidity(formRef: RefObject<HTMLFormElement>) {
   return [isValid, onInput] as const;
 }
 
+/**
+ * Return a new layout object, replacing or inserting the given vertex.
+ */
 export function updateVertex(layout: Layout, updatedVertex: Vertex): Layout {
   const { vertices } = layout;
   const index = layout.vertices.findIndex(
