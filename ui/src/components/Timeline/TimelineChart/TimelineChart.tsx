@@ -1,4 +1,4 @@
-import { FC, CSSProperties, useState, useEffect, useRef } from 'react';
+import { FC, CSSProperties, useState, useEffect } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import { differenceInDays } from 'date-fns';
@@ -12,38 +12,6 @@ import TimelineChartItem from './TimelineChartItem';
 import TimelineChartPopover from './TimelineChartPopover';
 
 import './TimelineChart.scss';
-
-function getScrollParent(element: HTMLElement): HTMLElement {
-  const style = window.getComputedStyle(element);
-  const scrollable = ['scroll', 'auto'];
-
-  if (
-    (scrollable.includes(style.overflowX) &&
-      element.scrollWidth > element.clientWidth) ||
-    (scrollable.includes(style.overflowY) &&
-      element.scrollHeight > element.clientHeight)
-  ) {
-    return element;
-  }
-
-  if (element.parentElement) {
-    return getScrollParent(element.parentElement);
-  }
-
-  return document.documentElement;
-}
-
-function isVisible(container: HTMLElement, element: HTMLElement): boolean {
-  const containerRect = container.getBoundingClientRect();
-  const elementRect = element.getBoundingClientRect();
-
-  return (
-    elementRect.left < containerRect.right &&
-    elementRect.right > containerRect.left &&
-    elementRect.top < containerRect.bottom &&
-    elementRect.bottom > containerRect.top
-  );
-}
 
 const TimelineChart: FC<TimelineRendererProps> = ({
   items,
@@ -64,36 +32,6 @@ const TimelineChart: FC<TimelineRendererProps> = ({
       itemRefs[0].current?.scrollIntoView({ inline: 'center' });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const lastSelectedElement = useRef<HTMLElement>();
-
-  useEffect(() => {
-    if (!selectedId) {
-      return;
-    }
-
-    const selectedIndex = items.findIndex(
-      ({ entity }) => entity.id == selectedId
-    );
-    const selectedElement =
-      selectedIndex >= 0 ? itemRefs[selectedIndex]?.current : null;
-
-    if (!selectedElement || selectedElement === lastSelectedElement.current) {
-      return;
-    }
-
-    if (isVisible(getScrollParent(selectedElement), selectedElement)) {
-      return;
-    }
-
-    selectedElement.focus({ preventScroll: true });
-    selectedElement.scrollIntoView({
-      inline: 'center',
-      block: 'nearest',
-      behavior: 'smooth',
-    });
-    lastSelectedElement.current = selectedElement;
-  }, [selectedId, items, itemRefs]);
 
   const earliestDate = items
     .map((item) => item.getEarliestDate())
