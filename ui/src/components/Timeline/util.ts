@@ -3,9 +3,12 @@ import {
   useCallback,
   useEffect,
   useState,
+  useRef,
   createRef,
   KeyboardEvent,
+  MutableRefObject,
   RefObject,
+  RefCallback,
 } from 'react';
 import { differenceInDays } from 'date-fns';
 import { throttle } from 'lodash';
@@ -23,6 +26,53 @@ function endOfMonth(year: number, month: number): number {
   const date = new Date(year, month, 0);
 
   return date.getDate();
+}
+
+function getScrollParent(element: HTMLElement): HTMLElement {
+  const style = window.getComputedStyle(element);
+  const scrollable = ['scroll', 'auto'];
+
+  if (
+    (scrollable.includes(style.overflowX) &&
+      element.scrollWidth > element.clientWidth) ||
+    (scrollable.includes(style.overflowY) &&
+      element.scrollHeight > element.clientHeight)
+  ) {
+    return element;
+  }
+
+  if (element.parentElement) {
+    return getScrollParent(element.parentElement);
+  }
+
+  return document.documentElement;
+}
+
+export function isScrolledIntoView(element: HTMLElement): boolean {
+  const container = getScrollParent(element);
+  const containerRect = container.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+
+  return (
+    elementRect.left < containerRect.right &&
+    elementRect.right > containerRect.left &&
+    elementRect.top < containerRect.bottom &&
+    elementRect.bottom > containerRect.top
+  );
+}
+
+export function mergeRefs<T>(
+  ...refs: Array<RefCallback<T> | MutableRefObject<T | null> | null>
+): RefCallback<T> {
+  return (value) => {
+    for (const ref of refs) {
+      if (typeof ref === 'function') {
+        ref(value);
+      } else if (ref !== null) {
+        ref.current = value;
+      }
+    }
+  };
 }
 
 /**
@@ -218,6 +268,28 @@ export function useTimelineItemKeyboardNavigation(
   };
 
   return { onKeyUp } as const;
+}
+
+export function useTimelineItemSelectedChange(
+  selected: boolean | undefined,
+  onSelected: () => void
+) {
+  const previouslySelected = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (!selected) {
+      previouslySelected.current = false;
+      return;
+    }
+
+    // The timeline item was selected before, i.e. there has been no change
+    if (previouslySelected.current) {
+      return;
+    }
+
+    previouslySelected.current = true;
+    onSelected();
+  }, [selected, onSelected]);
 }
 
 export function useEntitySuggestions(
