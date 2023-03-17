@@ -13,14 +13,6 @@
   overflow: hidden;
 }
 
-.Timeline__actions {
-  position: sticky;
-  left: 0;
-  display: flex;
-  gap: $aleph-grid-size;
-  margin-bottom: 2.5 * $aleph-grid-size;
-}
-
 .Timeline__main,
 .Timeline__viewer {
   position: absolute;

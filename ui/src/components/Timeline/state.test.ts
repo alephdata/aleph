@@ -15,6 +15,7 @@ beforeEach(() => {
     layout: { vertices: [] },
     selectedId: null,
     zoomLevel: 'months',
+    showCreateDialog: false,
   };
 });
 

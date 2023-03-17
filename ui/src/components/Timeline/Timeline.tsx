@@ -1,18 +1,11 @@
-import { FC, useReducer, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import { FC } from 'react';
 import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
-import {
-  TimelineRenderer,
-  Layout,
-  Vertex,
-  TimelineChartZoomLevel,
-} from './types';
+import { TimelineRenderer, Layout, Vertex } from './types';
 import { TimelineItem, updateVertex } from './util';
 import {
-  reducer,
+  useTimelineState,
   selectSortedEntities,
   selectSelectedEntity,
   selectSelectedVertex,
@@ -22,6 +15,8 @@ import { TimelineList } from './TimelineList';
 import { TimelineChart } from './TimelineChart';
 import EntityViewer2 from './EntityViewer2';
 import TimelineItemCreateDialog from './TimelineItemCreateDialog';
+import TimelineItemCreateButton from './TimelineItemCreateButton';
+import TimelineActions from './TimelineActions';
 
 import './Timeline.scss';
 
@@ -54,16 +49,7 @@ const Timeline: FC<TimelineProps> = ({
   onLayoutUpdate,
 }) => {
   const Renderer = renderer === 'chart' ? TimelineChart : TimelineList;
-
-  const [state, dispatch] = useReducer(reducer, {
-    entities,
-    layout: layout || { vertices: [] },
-    selectedId: null,
-    zoomLevel: 'months',
-  });
-
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const toggleCreateDialog = () => setCreateDialogOpen(!createDialogOpen);
+  const [state, dispatch] = useTimelineState(entities, layout);
 
   const selectedEntity = selectSelectedEntity(state);
   const selectedVertex = selectSelectedVertex(state);
@@ -73,76 +59,51 @@ const Timeline: FC<TimelineProps> = ({
     (entity) => new TimelineItem(entity, state.layout)
   );
 
-  const createButton = (
-    <Button intent={Intent.PRIMARY} icon="add" onClick={toggleCreateDialog}>
-      <FormattedMessage id="timeline.add_item" defaultMessage="Add item" />
-    </Button>
-  );
-
-  const zoomLevelSwitch = (
-    <ButtonGroup>
-      <Button
-        active={state.zoomLevel === 'days'}
-        onClick={() =>
-          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'days' } })
-        }
-      >
-        <FormattedMessage id="timeline.zoom_level.days" defaultMessage="Days" />
-      </Button>
-      <Button
-        active={state.zoomLevel === 'months'}
-        onClick={() =>
-          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'months' } })
-        }
-      >
-        <FormattedMessage
-          id="timeline.zoom_level.months"
-          defaultMessage="Months"
-        />
-      </Button>
-      <Button
-        active={state.zoomLevel === 'years'}
-        onClick={() =>
-          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'years' } })
-        }
-      >
-        <FormattedMessage
-          id="timeline.zoom_level.years"
-          defaultMessage="Years"
-        />
-      </Button>
-    </ButtonGroup>
-  );
-
   return (
     <div className={c('Timeline', selectedEntity && 'Timeline--selected')}>
       <TimelineItemCreateDialog
         model={model}
-        isOpen={createDialogOpen}
-        onClose={toggleCreateDialog}
+        isOpen={state.showCreateDialog}
+        onClose={() => dispatch({ type: 'TOGGLE_CREATE_DIALOG' })}
         onCreate={async (entity) => {
           const storedEntity = await onEntityCreateOrUpdate(entity);
+          dispatch({ type: 'TOGGLE_CREATE_DIALOG' });
           dispatch({
             type: 'CREATE_ENTITY',
             payload: { entity: storedEntity },
           });
-          toggleCreateDialog();
         }}
         fetchEntitySuggestions={fetchEntitySuggestions}
       />
 
       <div className="Timeline__main">
         {items.length <= 0 && (
-          <TimelineEmptyState action={writeable ? createButton : undefined} />
+          <TimelineEmptyState
+            action={
+              writeable ? (
+                <TimelineItemCreateButton
+                  onClick={() => dispatch({ type: 'TOGGLE_CREATE_DIALOG' })}
+                />
+              ) : undefined
+            }
+          />
         )}
 
         {items.length > 0 && (
           <>
             {writeable && (
-              <div className="Timeline__actions">
-                {createButton}
-                {renderer === 'chart' && zoomLevelSwitch}
-              </div>
+              <TimelineActions
+                zoomLevel={state.zoomLevel}
+                onCreateDialogToggle={() =>
+                  dispatch({ type: 'TOGGLE_CREATE_DIALOG' })
+                }
+                onZoomLevelChange={(zoomLevel) =>
+                  dispatch({
+                    type: 'SET_ZOOM_LEVEL',
+                    payload: { zoomLevel },
+                  })
+                }
+              />
             )}
             <Renderer
               items={items}
