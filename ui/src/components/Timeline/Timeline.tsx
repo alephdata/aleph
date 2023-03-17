@@ -5,18 +5,18 @@ import c from 'classnames';
 import { TimelineRenderer, Layout, Vertex } from './types';
 import { TimelineItem, updateVertex } from './util';
 import {
-  useTimelineState,
   selectSortedEntities,
   selectSelectedEntity,
   selectSelectedVertex,
+  selectIsEmpty,
 } from './state';
+import { useTimelineContext } from './context';
 import TimelineEmptyState from './TimelineEmptyState';
 import { TimelineList } from './TimelineList';
 import { TimelineChart } from './TimelineChart';
 import EntityViewer2 from './EntityViewer2';
 import TimelineItemCreateDialog from './TimelineItemCreateDialog';
 import TimelineItemCreateButton from './TimelineItemCreateButton';
-import TimelineActions from './TimelineActions';
 
 import './Timeline.scss';
 
@@ -24,8 +24,6 @@ const DEFAULT_COLOR = Colors.BLUE2;
 
 type TimelineProps = {
   model: Model;
-  entities: Array<Entity>;
-  layout?: Layout;
   renderer?: TimelineRenderer;
   writeable?: boolean;
   fetchEntitySuggestions: (
@@ -39,8 +37,6 @@ type TimelineProps = {
 
 const Timeline: FC<TimelineProps> = ({
   model,
-  entities,
-  layout,
   renderer,
   writeable,
   fetchEntitySuggestions,
@@ -48,12 +44,13 @@ const Timeline: FC<TimelineProps> = ({
   onEntityRemove,
   onLayoutUpdate,
 }) => {
+  const [state, dispatch] = useTimelineContext();
   const Renderer = renderer === 'chart' ? TimelineChart : TimelineList;
-  const [state, dispatch] = useTimelineState(entities, layout);
 
   const selectedEntity = selectSelectedEntity(state);
   const selectedVertex = selectSelectedVertex(state);
   const sortedEntities = selectSortedEntities(state);
+  const isEmpty = selectIsEmpty(state);
 
   const items = sortedEntities.map(
     (entity) => new TimelineItem(entity, state.layout)
@@ -77,7 +74,7 @@ const Timeline: FC<TimelineProps> = ({
       />
 
       <div className="Timeline__main">
-        {items.length <= 0 && (
+        {isEmpty && (
           <TimelineEmptyState
             action={
               writeable ? (
@@ -89,37 +86,21 @@ const Timeline: FC<TimelineProps> = ({
           />
         )}
 
-        {items.length > 0 && (
-          <>
-            {writeable && (
-              <TimelineActions
-                zoomLevel={state.zoomLevel}
-                onCreateDialogToggle={() =>
-                  dispatch({ type: 'TOGGLE_CREATE_DIALOG' })
-                }
-                onZoomLevelChange={(zoomLevel) =>
-                  dispatch({
-                    type: 'SET_ZOOM_LEVEL',
-                    payload: { zoomLevel },
-                  })
-                }
-              />
-            )}
-            <Renderer
-              items={items}
-              selectedId={selectedEntity && selectedEntity.id}
-              writeable={writeable}
-              zoomLevel={state.zoomLevel}
-              onSelect={(entity: Entity) =>
-                dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
-              }
-              onUnselect={() => dispatch({ type: 'UNSELECT_ENTITY' })}
-              onRemove={(entity: Entity) => {
-                dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
-                onEntityRemove(entity);
-              }}
-            />
-          </>
+        {!isEmpty && (
+          <Renderer
+            items={items}
+            selectedId={selectedEntity && selectedEntity.id}
+            writeable={writeable}
+            zoomLevel={state.zoomLevel}
+            onSelect={(entity: Entity) =>
+              dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
+            }
+            onUnselect={() => dispatch({ type: 'UNSELECT_ENTITY' })}
+            onRemove={(entity: Entity) => {
+              dispatch({ type: 'REMOVE_ENTITY', payload: { entity } });
+              onEntityRemove(entity);
+            }}
+          />
         )}
       </div>
 

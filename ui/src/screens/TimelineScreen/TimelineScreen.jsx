@@ -21,6 +21,8 @@ import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
 import { Breadcrumbs, UpdateStatus } from 'components/common';
 import { Timeline } from 'components/Timeline';
+import TimelineActions from 'components/Timeline/TimelineActions';
+import { TimelineContextProvider } from 'components/Timeline/context';
 
 export class TimelineScreen extends Component {
   constructor(props) {
@@ -169,10 +171,11 @@ export class TimelineScreen extends Component {
     }
 
     const operation = <EntitySetManageMenu entitySet={timeline} />;
+    const center = <TimelineActions writeable={timeline.writeable} />;
     const status = <UpdateStatus status={updateStatus} />;
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} status={status}>
+      <Breadcrumbs center={center} operation={operation} status={status}>
         <Breadcrumbs.Text>
           <CollectionView.Link
             id={collectionViewIds.TIMELINES}
@@ -191,18 +194,21 @@ export class TimelineScreen extends Component {
     return (
       <Screen title={timeline.label} description={timeline.summary || ''}>
         <CollectionWrapper collection={timeline.collection}>
-          {breadcrumbs}
-          <Timeline
-            model={model}
+          <TimelineContextProvider
             entities={entities.results}
             layout={timeline.layout}
-            writeable={timeline.writeable}
-            fetchEntitySuggestions={this.fetchEntitySuggestions}
-            onEntityCreateOrUpdate={this.onEntityCreateOrUpdate}
-            onEntityRemove={this.onEntityRemove}
-            onLayoutUpdate={this.onLayoutUpdate}
-            renderer="chart"
-          />
+          >
+            {breadcrumbs}
+            <Timeline
+              model={model}
+              writeable={timeline.writeable}
+              fetchEntitySuggestions={this.fetchEntitySuggestions}
+              onEntityCreateOrUpdate={this.onEntityCreateOrUpdate}
+              onEntityRemove={this.onEntityRemove}
+              onLayoutUpdate={this.onLayoutUpdate}
+              renderer="chart"
+            />
+          </TimelineContextProvider>
         </CollectionWrapper>
       </Screen>
     );

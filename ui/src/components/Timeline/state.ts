@@ -186,3 +186,7 @@ export function selectSortedEntities(state: State): Array<Entity> {
       return aStart.localeCompare(bStart);
     });
 }
+
+export function selectIsEmpty(state: State): boolean {
+  return selectSortedEntities(state).length <= 0;
+}
