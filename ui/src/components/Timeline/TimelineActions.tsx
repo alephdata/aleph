@@ -3,28 +3,36 @@ import { Button, ButtonGroup } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 
 import TimelineItemCreateButton from './TimelineItemCreateButton';
-import { TimelineChartZoomLevel } from './types';
+import { selectIsEmpty } from './state';
+import { useTimelineContext } from './context';
 
 import './TimelineActions.scss';
 
 type TimelineActionsProps = {
-  zoomLevel: TimelineChartZoomLevel;
-  onZoomLevelChange: (zoomLevel: TimelineChartZoomLevel) => void;
-  onCreateDialogToggle: () => void;
+  writeable?: boolean;
 };
 
-const TimelineActions: FC<TimelineActionsProps> = ({
-  zoomLevel,
-  onZoomLevelChange,
-  onCreateDialogToggle,
-}) => {
+const TimelineActions: FC<TimelineActionsProps> = ({ writeable }) => {
+  const [state, dispatch] = useTimelineContext();
+  const isEmpty = selectIsEmpty(state);
+
+  if (isEmpty) {
+    return null;
+  }
+
   return (
     <div className="TimelineActions">
-      <TimelineItemCreateButton onClick={onCreateDialogToggle} />
+      {writeable && (
+        <TimelineItemCreateButton
+          onClick={() => dispatch({ type: 'TOGGLE_CREATE_DIALOG' })}
+        />
+      )}
       <ButtonGroup>
         <Button
-          active={zoomLevel === 'days'}
-          onClick={() => onZoomLevelChange('days')}
+          active={state.zoomLevel === 'days'}
+          onClick={() =>
+            dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'days' } })
+          }
         >
           <FormattedMessage
             id="timeline.actions.zoom_level.days"
@@ -32,8 +40,13 @@ const TimelineActions: FC<TimelineActionsProps> = ({
           />
         </Button>
         <Button
-          active={zoomLevel === 'months'}
-          onClick={() => onZoomLevelChange('months')}
+          active={state.zoomLevel === 'months'}
+          onClick={() =>
+            dispatch({
+              type: 'SET_ZOOM_LEVEL',
+              payload: { zoomLevel: 'months' },
+            })
+          }
         >
           <FormattedMessage
             id="timeline.actions.zoom_level.months"
@@ -41,8 +54,13 @@ const TimelineActions: FC<TimelineActionsProps> = ({
           />
         </Button>
         <Button
-          active={zoomLevel === 'years'}
-          onClick={() => onZoomLevelChange('years')}
+          active={state.zoomLevel === 'years'}
+          onClick={() =>
+            dispatch({
+              type: 'SET_ZOOM_LEVEL',
+              payload: { zoomLevel: 'years' },
+            })
+          }
         >
           <FormattedMessage
             id="timeline.actions.zoom_level.years"

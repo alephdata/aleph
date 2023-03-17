@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { Colors } from '@blueprintjs/core';
 import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
 import Timeline from './Timeline';
+import TimelineActions from './TimelineActions';
+import { TimelineContextProvider } from './context';
 
 const model = new Model(defaultModel);
 
@@ -38,7 +40,11 @@ it('sorts and filters items by temporal start', () => {
   const entities = [event3, event1, event2];
   const layout = { vertices: [] };
 
-  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
+  render(
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <Timeline {...defaultProps} />
+    </TimelineContextProvider>
+  );
   const rows = screen.getAllByRole('row');
 
   expect(rows).toHaveLength(4); // 3 items + 1 header row
@@ -54,12 +60,9 @@ describe('Sidebar', () => {
     const onLayoutUpdate = jest.fn();
 
     render(
-      <Timeline
-        {...defaultProps}
-        entities={entities}
-        layout={layout}
-        onLayoutUpdate={onLayoutUpdate}
-      />
+      <TimelineContextProvider entities={entities} layout={layout}>
+        <Timeline {...defaultProps} onLayoutUpdate={onLayoutUpdate} />
+      </TimelineContextProvider>
     );
 
     const rows = screen.getAllByRole('row');
@@ -84,12 +87,9 @@ describe('Sidebar', () => {
     const layout = { vertices: [] };
 
     render(
-      <Timeline
-        {...defaultProps}
-        writeable={false}
-        entities={entities}
-        layout={layout}
-      />
+      <TimelineContextProvider entities={entities} layout={layout}>
+        <Timeline {...defaultProps} writeable={false} />
+      </TimelineContextProvider>
     );
 
     const rows = screen.getAllByRole('row');
@@ -102,7 +102,11 @@ describe('Sidebar', () => {
     const entities = [event1];
     const layout = { vertices: [] };
 
-    render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
+    render(
+      <TimelineContextProvider entities={entities} layout={layout}>
+        <Timeline {...defaultProps} />
+      </TimelineContextProvider>
+    );
     const rows = screen.getAllByRole('row');
     await userEvent.click(rows[1]);
 
@@ -140,12 +144,9 @@ describe('Sidebar', () => {
     const layout = { vertices: [] };
 
     render(
-      <Timeline
-        {...defaultProps}
-        writeable={false}
-        entities={entities}
-        layout={layout}
-      />
+      <TimelineContextProvider entities={entities} layout={layout}>
+        <Timeline {...defaultProps} writeable={false} />
+      </TimelineContextProvider>
     );
 
     const rows = screen.getAllByRole('row');
@@ -200,12 +201,12 @@ describe('Sidebar', () => {
     });
 
     render(
-      <Timeline
-        {...defaultProps}
-        entities={[ownership]}
-        layout={layout}
-        fetchEntitySuggestions={async () => [acmeInc, acmeEurope]}
-      />
+      <TimelineContextProvider entities={[ownership]} layout={layout}>
+        <Timeline
+          {...defaultProps}
+          fetchEntitySuggestions={async () => [acmeInc, acmeEurope]}
+        />
+      </TimelineContextProvider>
     );
 
     // Select the ownership entity
@@ -255,7 +256,12 @@ it('allows creating new items', async () => {
   const entities = [event1, event2, event3];
   const layout = { vertices: [] };
 
-  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
+  render(
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <TimelineActions writeable={true} />
+      <Timeline {...defaultProps} />
+    </TimelineContextProvider>
+  );
 
   await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
 
@@ -307,23 +313,19 @@ it('does not allow creating new items if not writeable', () => {
   // This is a sanity check to prevent false positives. Because we're testing the absence of elements
   // below, we test that the same elements are actually present for writeable timelines first.
   const { rerender } = render(
-    <Timeline
-      {...defaultProps}
-      writeable={true}
-      entities={entities}
-      layout={layout}
-    />
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <TimelineActions writeable={true} />
+      <Timeline {...defaultProps} writeable={true} />
+    </TimelineContextProvider>
   );
 
   expect(screen.getByRole('button', { name: 'Add item' }));
 
   rerender(
-    <Timeline
-      {...defaultProps}
-      writeable={false}
-      entities={entities}
-      layout={layout}
-    />
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <TimelineActions writeable={false} />
+      <Timeline {...defaultProps} writeable={false} />
+    </TimelineContextProvider>
   );
 
   expect(screen.queryByRole('button', { name: 'Add item' })).toBeNull();
@@ -333,7 +335,11 @@ it('allows removing entities', async () => {
   const entities = [event1, event2, event3];
   const layout = { vertices: [] };
 
-  render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
+  render(
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <Timeline {...defaultProps} />
+    </TimelineContextProvider>
+  );
 
   let rows = screen.getAllByRole('row');
   expect(rows).toHaveLength(4); // 4 items + 1 header row
@@ -356,23 +362,17 @@ it('does not allow removing entities if not writeable', () => {
   // This is a sanity check to prevent false positives. Because we're testing the absence of elements
   // below, we test that the same elements are actually present for writeable timelines first.
   const { rerender } = render(
-    <Timeline
-      {...defaultProps}
-      writeable={true}
-      entities={entities}
-      layout={layout}
-    />
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <Timeline {...defaultProps} writeable={true} />
+    </TimelineContextProvider>
   );
 
   expect(screen.getAllByRole('button', { name: 'Remove' })).toHaveLength(3);
 
   rerender(
-    <Timeline
-      {...defaultProps}
-      writeable={false}
-      entities={entities}
-      layout={layout}
-    />
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <Timeline {...defaultProps} writeable={false} />
+    </TimelineContextProvider>
   );
 
   expect(screen.queryAllByRole('button', { name: 'Remove' })).toHaveLength(0);
@@ -383,14 +383,23 @@ describe('Empty state', () => {
   const entities: Array<Entity> = [];
 
   it('displays a message', () => {
-    render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
+    render(
+      <TimelineContextProvider entities={entities} layout={layout}>
+        <Timeline {...defaultProps} />
+      </TimelineContextProvider>
+    );
     expect(
       screen.getByRole('heading', { name: 'This timeline is still empty' })
     );
   });
 
   it('allows creating new items', async () => {
-    render(<Timeline {...defaultProps} entities={entities} layout={layout} />);
+    render(
+      <TimelineContextProvider entities={entities} layout={layout}>
+        <TimelineActions writeable={true} />
+        <Timeline {...defaultProps} />
+      </TimelineContextProvider>
+    );
 
     expect(document.body).toHaveTextContent('Add an item to get started.');
     expect(screen.getByRole('button', { name: 'Add item' }));
@@ -403,12 +412,10 @@ describe('Empty state', () => {
 
   it('does not allow creating new items if not writeable', () => {
     render(
-      <Timeline
-        {...defaultProps}
-        writeable={false}
-        entities={entities}
-        layout={layout}
-      />
+      <TimelineContextProvider entities={entities} layout={layout}>
+        <TimelineActions writeable={false} />
+        <Timeline {...defaultProps} writeable={false} />
+      </TimelineContextProvider>
     );
 
     expect(
