@@ -14,6 +14,7 @@ beforeEach(() => {
     entities: [entity],
     layout: { vertices: [] },
     selectedId: null,
+    zoomLevel: 'months',
   };
 });
 
@@ -164,5 +165,18 @@ describe('REMOVE_ENTITY', () => {
 
     expect(newState.entities).toHaveLength(0);
     expect(newState.selectedId).toBeNull();
+  });
+});
+
+describe('SET_ZOOM_LEVEL', () => {
+  it('updates zoom level', () => {
+    expect(state.zoomLevel).toEqual('months');
+
+    const newState = reducer(state, {
+      type: 'SET_ZOOM_LEVEL',
+      payload: { zoomLevel: 'years' },
+    });
+
+    expect(newState.zoomLevel).toEqual('years');
   });
 });

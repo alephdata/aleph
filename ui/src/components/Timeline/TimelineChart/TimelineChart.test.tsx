@@ -39,16 +39,23 @@ const items = [
   new TimelineItem(event3),
 ];
 
+const defaultProps = {
+  items: items,
+  selectedId: null,
+  zoomLevel: 'months' as const,
+  onSelect: () => {},
+  onRemove: () => {},
+  onUnselect: () => {},
+};
+
+beforeEach(() => {
+  // jsdom doesn't actually calculate layouts or renders anything, so methods that
+  //  rely on this like `scrollIntoView` are not available and need to be stubbed.
+  window.Element.prototype.scrollIntoView = jest.fn();
+});
+
 it('supports navigating the list using arrow keys', async () => {
-  render(
-    <TimelineChart
-      items={items}
-      selectedId={null}
-      onSelect={() => {}}
-      onRemove={() => {}}
-      onUnselect={() => {}}
-    />
-  );
+  render(<TimelineChart {...defaultProps} />);
 
   const listItems = screen.getAllByRole('listitem');
 
@@ -85,11 +92,10 @@ it('selects and unselects items on click', async () => {
 
   render(
     <TimelineChart
+      {...defaultProps}
       items={items}
-      selectedId={null}
       onSelect={onSelect}
       onUnselect={onUnselect}
-      onRemove={() => {}}
     />
   );
 
@@ -108,15 +114,7 @@ it('selects and unselects items on click', async () => {
 });
 
 it('shows popover with details when hovering timeline items', async () => {
-  render(
-    <TimelineChart
-      items={items}
-      selectedId={null}
-      onSelect={() => {}}
-      onRemove={() => {}}
-      onUnselect={() => {}}
-    />
-  );
+  render(<TimelineChart {...defaultProps} />);
 
   const listItems = screen.getAllByRole('listitem');
 
@@ -128,16 +126,8 @@ it('shows popover with details when hovering timeline items', async () => {
   expect(document.body).toHaveTextContent(/2022-02-01.*Start date/);
 });
 
-it('clicking an items focuses it', async () => {
-  render(
-    <TimelineChart
-      items={items}
-      selectedId={null}
-      onSelect={() => {}}
-      onRemove={() => {}}
-      onUnselect={() => {}}
-    />
-  );
+it('focuses item on click', async () => {
+  render(<TimelineChart {...defaultProps} />);
 
   const listItems = screen.getAllByRole('listitem');
 
@@ -154,4 +144,31 @@ it('clicking an items focuses it', async () => {
   await userEvent.click(listItems[1]);
   await new Promise((resolve) => setTimeout(() => resolve(undefined), 0));
   expect(document.activeElement).toEqual(listItems[1]);
+});
+
+describe('Zoom levels', () => {
+  describe('Days', () => {
+    it('renders one grid label per month', () => {
+      render(<TimelineChart {...defaultProps} zoomLevel="days" />);
+      expect(screen.getByText('Jan 2022')).toBeInTheDocument();
+      expect(screen.getByText('Feb 2022')).toBeInTheDocument();
+      expect(screen.getByText('Mar 2022')).toBeInTheDocument();
+    });
+  });
+
+  describe('Months', () => {
+    it('renders one grid label per month', () => {
+      render(<TimelineChart {...defaultProps} zoomLevel="months" />);
+      expect(screen.getByText('Jan 2022')).toBeInTheDocument();
+      expect(screen.getByText('Feb 2022')).toBeInTheDocument();
+      expect(screen.getByText('Mar 2022')).toBeInTheDocument();
+    });
+  });
+
+  describe('Years', () => {
+    it('renders one grid label per year', () => {
+      render(<TimelineChart {...defaultProps} zoomLevel="years" />);
+      expect(screen.getByText('2022')).toBeInTheDocument();
+    });
+  });
 });

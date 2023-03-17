@@ -1,26 +1,57 @@
 import { FC } from 'react';
+import c from 'classnames';
 import { FormattedDate } from 'react-intl';
-import { eachMonthOfInterval, differenceInDays, addMonths } from 'date-fns';
+import {
+  eachMonthOfInterval,
+  eachYearOfInterval,
+  differenceInDays,
+  addMonths,
+  addYears,
+} from 'date-fns';
+import { TimelineChartZoomLevel } from '../types';
 
 import './TimelineChartLabels.scss';
 
 type TimelineChartLabelsProps = {
   start: Date;
   end: Date;
+  zoomLevel: TimelineChartZoomLevel;
 };
 
-const TimelineChartLabels: FC<TimelineChartLabelsProps> = ({ start, end }) => {
-  const labels = eachMonthOfInterval({ start, end }).map((date) => ({
+const generateLabels = (
+  zoomLevel: TimelineChartZoomLevel,
+  start: Date,
+  end: Date
+) => {
+  if (zoomLevel === 'days' || zoomLevel === 'months') {
+    return eachMonthOfInterval({ start, end }).map((date) => ({
+      date,
+      startDay: differenceInDays(date, start),
+      endDay: differenceInDays(addMonths(date, 1), start),
+    }));
+  }
+
+  return eachYearOfInterval({ start, end }).map((date) => ({
     date,
     startDay: differenceInDays(date, start),
-    endDay: differenceInDays(addMonths(date, 1), start),
+    endDay: differenceInDays(addYears(date, 1), start),
   }));
+};
+
+const TimelineChartLabels: FC<TimelineChartLabelsProps> = ({
+  start,
+  end,
+  zoomLevel,
+}) => {
+  const labels = generateLabels(zoomLevel, start, end);
 
   return (
-    <div className="TimelineChartLabels">
+    <div
+      className={c('TimelineChartLabels', `TimelineChartLabels--${zoomLevel}`)}
+    >
       {labels.map(({ date, startDay, endDay }, index) => (
         <div
-          key={index}
+          key={`${zoomLevel}-${index}`}
           className="TimelineChartLabels__label"
           style={{
             ['--timeline-chart-label-start-day' as string]: startDay,
@@ -28,7 +59,11 @@ const TimelineChartLabels: FC<TimelineChartLabelsProps> = ({ start, end }) => {
           }}
         >
           <span className="TimelineChartLabels__text" aria-hidden="true">
-            <FormattedDate value={date} month="short" year="numeric" />
+            <FormattedDate
+              value={date}
+              month={zoomLevel !== 'years' ? 'short' : undefined}
+              year="numeric"
+            />
           </span>
         </div>
       ))}

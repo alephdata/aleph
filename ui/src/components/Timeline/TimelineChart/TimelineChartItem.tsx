@@ -1,8 +1,14 @@
-import { CSSProperties, forwardRef, MouseEventHandler } from 'react';
+import { CSSProperties, forwardRef, MouseEventHandler, useRef } from 'react';
 import c from 'classnames';
 import { differenceInDays, addDays } from 'date-fns';
 import { Entity } from '@alephdata/followthemoney';
-import { useTimelineItemKeyboardNavigation, TimelineItem } from '../util';
+import {
+  isScrolledIntoView,
+  useTimelineItemKeyboardNavigation,
+  useTimelineItemSelectedChange,
+  TimelineItem,
+  mergeRefs,
+} from '../util';
 import TimelineItemCaption from '../TimelineItemCaption';
 
 import './TimelineChartItem.scss';
@@ -18,7 +24,7 @@ type TimelineChartItemProps = {
 };
 
 const TimelineChartItem = forwardRef<HTMLLIElement, TimelineChartItemProps>(
-  (props, ref) => {
+  (props, forwardedRef) => {
     const {
       timelineStart,
       item,
@@ -28,13 +34,35 @@ const TimelineChartItem = forwardRef<HTMLLIElement, TimelineChartItemProps>(
       onMouseOver,
       onMouseOut,
     } = props;
-
     const start = item.getEarliestDate();
     const end = item.getLatestDate();
+
     const keyboardProps = useTimelineItemKeyboardNavigation(
       item.entity,
       onSelect
     );
+
+    const elementRef = useRef<HTMLLIElement>();
+    useTimelineItemSelectedChange(selected, () => {
+      if (!elementRef.current) {
+        return;
+      }
+
+      // Focus the item if it has been selected and hasn't already received keyboard.
+      // This is necessary for example for newly created items.
+      elementRef.current.focus({ preventScroll: true });
+
+      // Scroll the item into view if it wouldn't be visible (at least partially).
+      // This can be necessary if the entity viewer sidebar would otherwise overlap
+      // the selected element or for newly created items.
+      if (!isScrolledIntoView(elementRef.current)) {
+        elementRef.current.scrollIntoView({
+          inline: 'center',
+          block: 'nearest',
+          behavior: 'smooth',
+        });
+      }
+    });
 
     if (!start || !end) {
       return null;
@@ -55,7 +83,7 @@ const TimelineChartItem = forwardRef<HTMLLIElement, TimelineChartItemProps>(
     return (
       <li
         {...keyboardProps}
-        ref={ref}
+        ref={mergeRefs(forwardedRef, elementRef)}
         tabIndex={0}
         className={c(
           'TimelineChartItem',

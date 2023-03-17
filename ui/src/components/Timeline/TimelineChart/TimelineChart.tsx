@@ -1,10 +1,11 @@
-import { FC, CSSProperties, useState } from 'react';
+import { FC, CSSProperties, useState, useEffect } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
-import { differenceInDays, startOfMonth, endOfMonth } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import { useTimelineKeyboardNavigation } from '../util';
 import type { TimelineRendererProps } from '../types';
 import { TimelineItem } from '../util';
+import { getStart, getEnd } from './util';
 import TimelineChartGrid from './TimelineChartGrid';
 import TimelineChartLabels from './TimelineChartLabels';
 import TimelineChartItem from './TimelineChartItem';
@@ -17,7 +18,21 @@ const TimelineChart: FC<TimelineRendererProps> = ({
   selectedId,
   onSelect,
   onUnselect,
+  zoomLevel,
 }) => {
+  const [showPopover, setShowPopover] = useState(false);
+  const [popoverItem, setPopoverItem] = useState<TimelineItem | null>(null);
+
+  const [itemRefs, keyboardProps] =
+    useTimelineKeyboardNavigation<HTMLLIElement>(items, onUnselect);
+
+  // Scroll first item into view on initial render
+  useEffect(() => {
+    if (itemRefs.length >= 1) {
+      itemRefs[0].current?.scrollIntoView({ inline: 'center' });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const earliestDate = items
     .map((item) => item.getEarliestDate())
     .filter((date): date is Date => date !== undefined)
@@ -28,29 +43,27 @@ const TimelineChart: FC<TimelineRendererProps> = ({
     .filter((date): date is Date => date !== undefined)
     .sort((a, b) => b.getTime() - a.getTime())[0];
 
-  const start = startOfMonth(earliestDate);
-  const end = endOfMonth(latestDate);
+  const start = getStart(zoomLevel, earliestDate, latestDate);
+  const end = getEnd(zoomLevel, earliestDate, latestDate);
   const days = differenceInDays(end, start) + 1;
 
   const style: CSSProperties = {
     ['--timeline-chart-days' as string]: days,
   };
 
-  const [showPopover, setShowPopover] = useState(false);
-  const [popoverItem, setPopoverItem] = useState<TimelineItem | null>(null);
-
-  const [itemRefs, keyboardProps] =
-    useTimelineKeyboardNavigation<HTMLLIElement>(items, onUnselect);
-
   return (
     <div
       {...keyboardProps}
-      className={c('TimelineChart', Classes.FOCUS_STYLE_MANAGER_IGNORE)}
+      className={c(
+        'TimelineChart',
+        `TimelineChart--${zoomLevel}`,
+        Classes.FOCUS_STYLE_MANAGER_IGNORE
+      )}
       style={style}
       onClick={() => onUnselect()}
     >
-      <TimelineChartGrid start={start} end={end} />
-      <TimelineChartLabels start={start} end={end} />
+      <TimelineChartLabels start={start} end={end} zoomLevel={zoomLevel} />
+      <TimelineChartGrid start={start} end={end} zoomLevel={zoomLevel} />
 
       {popoverItem && (
         <TimelineChartPopover

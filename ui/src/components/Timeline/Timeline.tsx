@@ -1,10 +1,15 @@
-import { FC, useReducer, useState, useEffect } from 'react';
+import { FC, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
-import { TimelineRenderer, Layout, Vertex } from './types';
+import {
+  TimelineRenderer,
+  Layout,
+  Vertex,
+  TimelineChartZoomLevel,
+} from './types';
 import { TimelineItem, updateVertex } from './util';
 import {
   reducer,
@@ -54,6 +59,7 @@ const Timeline: FC<TimelineProps> = ({
     entities,
     layout: layout || { vertices: [] },
     selectedId: null,
+    zoomLevel: 'months',
   });
 
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -71,6 +77,41 @@ const Timeline: FC<TimelineProps> = ({
     <Button intent={Intent.PRIMARY} icon="add" onClick={toggleCreateDialog}>
       <FormattedMessage id="timeline.add_item" defaultMessage="Add item" />
     </Button>
+  );
+
+  const zoomLevelSwitch = (
+    <ButtonGroup>
+      <Button
+        active={state.zoomLevel === 'days'}
+        onClick={() =>
+          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'days' } })
+        }
+      >
+        <FormattedMessage id="timeline.zoom_level.days" defaultMessage="Days" />
+      </Button>
+      <Button
+        active={state.zoomLevel === 'months'}
+        onClick={() =>
+          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'months' } })
+        }
+      >
+        <FormattedMessage
+          id="timeline.zoom_level.months"
+          defaultMessage="Months"
+        />
+      </Button>
+      <Button
+        active={state.zoomLevel === 'years'}
+        onClick={() =>
+          dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'years' } })
+        }
+      >
+        <FormattedMessage
+          id="timeline.zoom_level.years"
+          defaultMessage="Years"
+        />
+      </Button>
+    </ButtonGroup>
   );
 
   return (
@@ -98,12 +139,16 @@ const Timeline: FC<TimelineProps> = ({
         {items.length > 0 && (
           <>
             {writeable && (
-              <div className="Timeline__actions">{createButton}</div>
+              <div className="Timeline__actions">
+                {createButton}
+                {renderer === 'chart' && zoomLevelSwitch}
+              </div>
             )}
             <Renderer
               items={items}
               selectedId={selectedEntity && selectedEntity.id}
               writeable={writeable}
+              zoomLevel={state.zoomLevel}
               onSelect={(entity: Entity) =>
                 dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
               }

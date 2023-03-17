@@ -38,7 +38,12 @@ const TimelineItemCreateDialog: FC<TimelineItemCreateDialogProps> = ({
   );
 
   return (
-    <Dialog title={title} usePortal={true} isOpen={isOpen} onClose={onClose}>
+    <Dialog
+      title={title}
+      isOpen={isOpen}
+      onClose={onClose}
+      shouldReturnFocusOnClose={false}
+    >
       <div className={Classes.DIALOG_BODY}>
         <TimelineItemCreateForm
           id="timeline-item-create-form"
