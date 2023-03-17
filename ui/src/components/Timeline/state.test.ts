@@ -14,6 +14,7 @@ beforeEach(() => {
     entities: [entity],
     layout: { vertices: [] },
     selectedId: null,
+    renderer: 'list',
     zoomLevel: 'months',
     showCreateDialog: false,
   };

@@ -246,6 +246,56 @@ describe('Sidebar', () => {
   });
 });
 
+it('allows switching between list and chart view', async () => {
+  // jsdom doesn't actually calculate layouts or renders anything, so methods that
+  //  rely on this like `scrollIntoView` are not available and need to be stubbed.
+  window.Element.prototype.scrollIntoView = jest.fn();
+
+  const entities = [event1, event2, event3];
+  const layout = { vertices: [] };
+
+  render(
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <TimelineActions writeable={true} />
+      <Timeline {...defaultProps} />
+    </TimelineContextProvider>
+  );
+
+  expect(
+    screen.getByRole('button', {
+      name: 'List',
+      pressed: true,
+    })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole('button', {
+      name: 'Chart',
+      pressed: false,
+    })
+  ).toBeInTheDocument();
+
+  expect(screen.getByRole('table')).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Chart' }));
+
+  expect(
+    screen.getByRole('button', {
+      name: 'List',
+      pressed: false,
+    })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole('button', {
+      name: 'Chart',
+      pressed: true,
+    })
+  ).toBeInTheDocument();
+
+  expect(screen.getByRole('list')).toBeInTheDocument();
+});
+
 it('allows creating new items', async () => {
   // FTM uses crypto.getRandomValues to generate entity IDs.
   // JSDOM doesn't support this API out of the box.
