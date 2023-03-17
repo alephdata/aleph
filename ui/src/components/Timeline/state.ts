@@ -1,3 +1,4 @@
+import { useReducer } from 'react';
 import { Entity } from '@alephdata/followthemoney';
 import type {
   Vertex,
@@ -7,11 +8,12 @@ import type {
 } from './types';
 import { updateVertex } from './util';
 
-type State = {
+export type State = {
   entities: Array<Entity>;
   layout: Layout;
   selectedId: string | null;
   zoomLevel: TimelineChartZoomLevel;
+  showCreateDialog: boolean;
 };
 
 type SelectEntityAction = {
@@ -60,16 +62,21 @@ type SetZoomLevelAction = {
   };
 };
 
-type Action =
+type ToggleCreateDialogAction = {
+  type: 'TOGGLE_CREATE_DIALOG';
+};
+
+export type Action =
   | SelectEntityAction
   | UnselectEntityAction
   | UpdateVertexAction
   | UpdateEntityAction
   | CreateEntityAction
   | RemoveEntityAction
-  | SetZoomLevelAction;
+  | SetZoomLevelAction
+  | ToggleCreateDialogAction;
 
-const reducer = (state: State, action: Action): State => {
+export function reducer(state: State, action: Action): State {
   const { type } = action;
 
   if (type === 'SELECT_ENTITY') {
@@ -129,13 +136,30 @@ const reducer = (state: State, action: Action): State => {
     return { ...state, zoomLevel: action.payload.zoomLevel };
   }
 
+  if (type === 'TOGGLE_CREATE_DIALOG') {
+    return { ...state, showCreateDialog: !state.showCreateDialog };
+  }
+
   throw new Error('Invalid action type.');
-};
+}
 
-const selectSelectedEntity = (state: State): Entity | null =>
-  state.entities.find((entity) => entity.id === state.selectedId) || null;
+export function useTimelineState(entities: Array<Entity>, layout?: Layout) {
+  return useReducer(reducer, {
+    entities,
+    layout: layout || { vertices: [] },
+    selectedId: null,
+    zoomLevel: 'months',
+    showCreateDialog: false,
+  });
+}
 
-const selectSelectedVertex = (state: State): Vertex | null => {
+export function selectSelectedEntity(state: State): Entity | null {
+  return (
+    state.entities.find((entity) => entity.id === state.selectedId) || null
+  );
+}
+
+export function selectSelectedVertex(state: State): Vertex | null {
   const entity = selectSelectedEntity(state);
 
   if (!entity) {
@@ -148,9 +172,9 @@ const selectSelectedVertex = (state: State): Vertex | null => {
     state.layout.vertices.find((vertex) => vertex.entityId === entity.id) ||
     defaultVertex
   );
-};
+}
 
-const selectSortedEntities = (state: State): Array<Entity> => {
+export function selectSortedEntities(state: State): Array<Entity> {
   return state.entities
     .filter(
       (entity): entity is TimelineEntity => entity.getTemporalStart() !== null
@@ -161,12 +185,4 @@ const selectSortedEntities = (state: State): Array<Entity> => {
 
       return aStart.localeCompare(bStart);
     });
-};
-
-export type { State, Action };
-export {
-  reducer,
-  selectSortedEntities,
-  selectSelectedEntity,
-  selectSelectedVertex,
-};
+}
