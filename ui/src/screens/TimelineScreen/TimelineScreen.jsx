@@ -201,6 +201,7 @@ export class TimelineScreen extends Component {
             onEntityCreateOrUpdate={this.onEntityCreateOrUpdate}
             onEntityRemove={this.onEntityRemove}
             onLayoutUpdate={this.onLayoutUpdate}
+            renderer="chart"
           />
         </CollectionWrapper>
       </Screen>
