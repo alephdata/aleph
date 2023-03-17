@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
-import { TimelineRenderer, Layout, Vertex } from './types';
+import { Layout, Vertex } from './types';
 import { TimelineItem, updateVertex } from './util';
 import {
   selectSortedEntities,
@@ -24,7 +24,6 @@ const DEFAULT_COLOR = Colors.BLUE2;
 
 type TimelineProps = {
   model: Model;
-  renderer?: TimelineRenderer;
   writeable?: boolean;
   fetchEntitySuggestions: (
     schema: Schema,
@@ -37,7 +36,6 @@ type TimelineProps = {
 
 const Timeline: FC<TimelineProps> = ({
   model,
-  renderer,
   writeable,
   fetchEntitySuggestions,
   onEntityCreateOrUpdate,
@@ -45,7 +43,7 @@ const Timeline: FC<TimelineProps> = ({
   onLayoutUpdate,
 }) => {
   const [state, dispatch] = useTimelineContext();
-  const Renderer = renderer === 'chart' ? TimelineChart : TimelineList;
+  const Renderer = state.renderer === 'chart' ? TimelineChart : TimelineList;
 
   const selectedEntity = selectSelectedEntity(state);
   const selectedVertex = selectSelectedVertex(state);
@@ -57,7 +55,11 @@ const Timeline: FC<TimelineProps> = ({
   );
 
   return (
-    <div className={c('Timeline', selectedEntity && 'Timeline--selected')}>
+    <div className={c(
+      'Timeline',
+      `Timeline--${state.renderer}`,
+      selectedEntity && 'Timeline--selected'
+    )}>
       <TimelineItemCreateDialog
         model={model}
         isOpen={state.showCreateDialog}

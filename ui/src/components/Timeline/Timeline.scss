@@ -26,6 +26,9 @@
   right: 0;
   display: flex;
   flex-direction: column;
+}
+
+.Timeline--list .Timeline__main {
   padding: $aleph-content-padding;
 }
 

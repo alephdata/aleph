@@ -5,6 +5,7 @@ import type {
   Layout,
   TimelineEntity,
   TimelineChartZoomLevel,
+  TimelineRenderer,
 } from './types';
 import { updateVertex } from './util';
 
@@ -12,6 +13,7 @@ export type State = {
   entities: Array<Entity>;
   layout: Layout;
   selectedId: string | null;
+  renderer: TimelineRenderer;
   zoomLevel: TimelineChartZoomLevel;
   showCreateDialog: boolean;
 };
@@ -66,6 +68,13 @@ type ToggleCreateDialogAction = {
   type: 'TOGGLE_CREATE_DIALOG';
 };
 
+type SetRendererAction = {
+  type: 'SET_RENDERER';
+  payload: {
+    renderer: TimelineRenderer;
+  };
+};
+
 export type Action =
   | SelectEntityAction
   | UnselectEntityAction
@@ -74,7 +83,8 @@ export type Action =
   | CreateEntityAction
   | RemoveEntityAction
   | SetZoomLevelAction
-  | ToggleCreateDialogAction;
+  | ToggleCreateDialogAction
+  | SetRendererAction;
 
 export function reducer(state: State, action: Action): State {
   const { type } = action;
@@ -140,6 +150,10 @@ export function reducer(state: State, action: Action): State {
     return { ...state, showCreateDialog: !state.showCreateDialog };
   }
 
+  if (type === 'SET_RENDERER') {
+    return { ...state, renderer: action.payload.renderer };
+  }
+
   throw new Error('Invalid action type.');
 }
 
@@ -148,6 +162,7 @@ export function useTimelineState(entities: Array<Entity>, layout?: Layout) {
     entities,
     layout: layout || { vertices: [] },
     selectedId: null,
+    renderer: 'list',
     zoomLevel: 'months',
     showCreateDialog: false,
   });
