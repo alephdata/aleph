@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Intent, Spinner, Tag } from '@blueprintjs/core';
 
+import './UpdateStatus.scss';
+
 enum Status {
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR',
