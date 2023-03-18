@@ -19,7 +19,7 @@ import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import collectionViewIds from 'components/Collection/collectionViewIds';
 import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, UpdateStatus } from 'components/common';
+import { Breadcrumbs, UpdateStatus, WidthBoundary } from 'components/common';
 import { Timeline } from 'components/Timeline';
 import TimelineActions from 'components/Timeline/TimelineActions';
 import { TimelineContextProvider } from 'components/Timeline/context';
@@ -172,7 +172,11 @@ export class TimelineScreen extends Component {
 
     const operation = <EntitySetManageMenu entitySet={timeline} />;
     const center = <TimelineActions writeable={timeline.writeable} />;
-    const status = <UpdateStatus status={updateStatus} />;
+    const status = (
+      <WidthBoundary align="end">
+        <UpdateStatus status={updateStatus} />
+      </WidthBoundary>
+    );
 
     const breadcrumbs = (
       <Breadcrumbs center={center} operation={operation} status={status}>
