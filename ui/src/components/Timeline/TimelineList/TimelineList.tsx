@@ -31,25 +31,25 @@ const TimelineList: FC<TimelineRendererProps> = ({
             <>
               <th>
                 <FormattedMessage
-                  id="timeline.item.start_date"
+                  id="timeline.list.start_date"
                   defaultMessage="Start date"
                 />
               </th>
               <th>
                 <FormattedMessage
-                  id="timeline.item.end_date"
+                  id="timeline.list.end_date"
                   defaultMessage="End date"
                 />
               </th>
             </>
           ) : (
             <th>
-              <FormattedMessage id="timeline.item.date" defaultMessage="Date" />
+              <FormattedMessage id="timeline.list.date" defaultMessage="Date" />
             </th>
           )}
           <th>
             <FormattedMessage
-              id="timeline.item.caption"
+              id="timeline.list.caption"
               defaultMessage="Caption"
             />
           </th>
@@ -57,7 +57,7 @@ const TimelineList: FC<TimelineRendererProps> = ({
             <th>
               <span className="visually-hidden">
                 <FormattedMessage
-                  id="timeline.item.actions"
+                  id="timeline.list.actions"
                   defaultMessage="Actions"
                 />
               </span>
