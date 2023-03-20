@@ -13,7 +13,7 @@
 .TimelineChart {
   --timeline-chart-transition-duration: 0.33s;
   --timeline-chart-transition-easing: cubic-bezier(0.65, 0, 0.35, 1);
-  --timeline-chart-labels-height: #{3 * $aleph-grid-size};
+  --timeline-chart-labels-height: #{4 * $aleph-grid-size};
 
   position: relative;
   min-width: calc(var(--timeline-chart-days) * var(--timeline-chart-day-width));

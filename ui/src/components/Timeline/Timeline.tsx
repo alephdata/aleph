@@ -55,11 +55,13 @@ const Timeline: FC<TimelineProps> = ({
   );
 
   return (
-    <div className={c(
-      'Timeline',
-      `Timeline--${state.renderer}`,
-      selectedEntity && 'Timeline--selected'
-    )}>
+    <div
+      className={c(
+        'Timeline',
+        `Timeline--${state.renderer}`,
+        selectedEntity && 'Timeline--selected'
+      )}
+    >
       <TimelineItemCreateDialog
         model={model}
         isOpen={state.showCreateDialog}

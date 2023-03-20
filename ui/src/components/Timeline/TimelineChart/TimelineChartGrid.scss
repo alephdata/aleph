@@ -7,6 +7,7 @@
   bottom: 0;
   width: 100%;
   overflow: hidden;
+  background-color: $light-gray5;
 }
 
 .TimelineChartGrid__line {
@@ -16,7 +17,7 @@
   );
   height: 100%;
   width: 0;
-  border-right: 1px dotted $aleph-border-color;
+  border-right: 1px solid lighten($aleph-border-color, 5);
 
   transition-duration: var(--timeline-chart-transition-duration);
   transition-property: left;
@@ -27,13 +28,11 @@
 .TimelineChartGrid__line--main {
   border-right-style: solid;
   border-right-width: 2px;
+  border-color: $aleph-border-color;
   transform: translateX(-50%);
 }
 
-.TimelineChartGrid__line--main:first-child {
-  transform: translateX(0);
-}
-
+.TimelineChartGrid__line:first-child,
 .TimelineChartGrid__line:last-child {
-  transform: translateX(-100%);
+  display: none;
 }
