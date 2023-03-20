@@ -28,7 +28,7 @@ services:
 
   redis:
     image: redis:alpine
-    command: [ "redis-server", "--appendonly", "yes" ]
+    command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis-data:/data
 
@@ -43,7 +43,7 @@ services:
   ingest-file:
     build:
       context: services/ingest-file
-    image: alephdata/ingest-file:3.17.1
+    image: alephdata/ingest-file:3.18.3-rc2
     hostname: ingest
     tmpfs: /tmp
     volumes:
