@@ -183,6 +183,12 @@ class Settings:
         self.ELASTICSEARCH_URL = env.get(
             "ALEPH_ELASTICSEARCH_URI", "http://localhost:9200"
         )
+        self.ELASTICSEARCH_TLS_CA_CERTS = env.get("ELASTICSEARCH_TLS_CA_CERTS")
+        self.ELASTICSEARCH_TLS_VERIFY_CERTS = env.to_bool(
+            "ELASTICSEARCH_TLS_VERIFY_CERTS"
+        )
+        self.ELASTICSEARCH_TLS_CLIENT_CERT = env.get("ELASTICSEARCH_TLS_CLIENT_CERT")
+        self.ELASTICSEARCH_TLS_CLIENT_KEY = env.get("ELASTICSEARCH_TLS_CLIENT_KEY")
         self.ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 60)
 
         # Number of replicas to maintain. '2' means 3 overall copies.
