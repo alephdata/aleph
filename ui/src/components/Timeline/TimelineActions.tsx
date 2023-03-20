@@ -1,9 +1,16 @@
 import { FC } from 'react';
 import { Button, ButtonGroup } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import TimelineItemCreateButton from './TimelineItemCreateButton';
-import { selectIsEmpty } from './state';
+import TimelineZoomLevelSwitch from './TimelineZoomLevelSwitch';
+import {
+  selectIsEmpty,
+  selectIsZoomEnabled,
+  selectAvailableZoomLevels,
+  selectZoomLevel,
+} from './state';
 import { useTimelineContext } from './context';
 
 import './TimelineActions.scss';
@@ -15,10 +22,11 @@ type TimelineActionsProps = {
 const TimelineActions: FC<TimelineActionsProps> = ({ writeable }) => {
   const intl = useIntl();
   const [state, dispatch] = useTimelineContext();
-  const isEmpty = selectIsEmpty(state);
-  const zoomLevelDisabled = state.renderer !== 'chart';
+  const isZoomDisabled = !selectIsZoomEnabled(state);
+  const availableZoomLevels = selectAvailableZoomLevels(state);
+  const zoomLevel = selectZoomLevel(state);
 
-  if (isEmpty) {
+  if (selectIsEmpty(state)) {
     return null;
   }
 
@@ -60,50 +68,17 @@ const TimelineActions: FC<TimelineActionsProps> = ({ writeable }) => {
           />
         </Button>
       </ButtonGroup>
-      <ButtonGroup>
-        <Button
-          disabled={zoomLevelDisabled}
-          active={state.zoomLevel === 'days'}
-          onClick={() =>
-            dispatch({ type: 'SET_ZOOM_LEVEL', payload: { zoomLevel: 'days' } })
-          }
-        >
-          <FormattedMessage
-            id="timeline.actions.zoom_level.days"
-            defaultMessage="Days"
-          />
-        </Button>
-        <Button
-          disabled={zoomLevelDisabled}
-          active={state.zoomLevel === 'months'}
-          onClick={() =>
-            dispatch({
-              type: 'SET_ZOOM_LEVEL',
-              payload: { zoomLevel: 'months' },
-            })
-          }
-        >
-          <FormattedMessage
-            id="timeline.actions.zoom_level.months"
-            defaultMessage="Months"
-          />
-        </Button>
-        <Button
-          disabled={zoomLevelDisabled}
-          active={state.zoomLevel === 'years'}
-          onClick={() =>
-            dispatch({
-              type: 'SET_ZOOM_LEVEL',
-              payload: { zoomLevel: 'years' },
-            })
-          }
-        >
-          <FormattedMessage
-            id="timeline.actions.zoom_level.years"
-            defaultMessage="Years"
-          />
-        </Button>
-      </ButtonGroup>
+      <TimelineZoomLevelSwitch
+        zoomLevel={zoomLevel}
+        availableZoomLevels={availableZoomLevels}
+        disabled={isZoomDisabled}
+        onSwitch={(zoomLevel) =>
+          dispatch({
+            type: 'SET_ZOOM_LEVEL',
+            payload: { zoomLevel },
+          })
+        }
+      />
     </div>
   );
 };

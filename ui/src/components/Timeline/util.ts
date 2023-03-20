@@ -162,6 +162,32 @@ export class TimelineItem {
 }
 
 /**
+ * Given a list of timeline items, returns the earliest date associated with one of
+ * the timeline items.
+ */
+export function getEarliestDate(items: Array<TimelineItem>): Date | null {
+  if (items.length <= 0) {
+    return null;
+  }
+
+  return items
+    .map((item) => item.getEarliestDate())
+    .filter((date): date is Date => date !== undefined)
+    .sort((a, b) => a.getTime() - b.getTime())[0];
+}
+
+/**
+ * Given a list of timeline items, returns the latest date associated with one of the
+ * timeline items.
+ */
+export function getLatestDate(items: Array<TimelineItem>): Date | null {
+  return items
+    .map((item) => item.getLatestDate())
+    .filter((date): date is Date => date !== undefined)
+    .sort((a, b) => b.getTime() - a.getTime())[0];
+}
+
+/**
  * FollowTheMoney allows dates with different degrees of precision, e.g. `2022`,
  * `2022-01`, and `2022-01-01` are all valid dates. This class parses FtM date strings
  * and provides utility methods to work with imprecise dates, e.g. to get the earliest
