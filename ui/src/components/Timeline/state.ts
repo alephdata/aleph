@@ -24,6 +24,9 @@ export type State = {
   showCreateDialog: boolean;
 };
 
+export const DAYS_ZOOM_LEVEL_MAX_YEARS = 20;
+export const MONTHS_ZOOM_LEVEL_MAX_YEARS = 100;
+
 type SelectEntityAction = {
   type: 'SELECT_ENTITY';
   payload: {
@@ -235,11 +238,11 @@ export function selectAvailableZoomLevels(
 
   const years = differenceInYears(earliest, latest);
 
-  if (years < 20) {
+  if (years < DAYS_ZOOM_LEVEL_MAX_YEARS) {
     return ['days', 'months', 'years'];
   }
 
-  if (years < 100) {
+  if (years < MONTHS_ZOOM_LEVEL_MAX_YEARS) {
     return ['months', 'years'];
   }
 

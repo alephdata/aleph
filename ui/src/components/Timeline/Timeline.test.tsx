@@ -331,6 +331,16 @@ it('disables some zoom levels for timelines covering a very long period', async 
   // The rendered timeline chart defaults to years as days, months are not available
   expect(screen.getByText('1959')).toBeInTheDocument();
   expect(screen.getByText('2061')).toBeInTheDocument();
+
+  // Displays a tooltip explaining why the zoom level is not available
+  const tooltipTarget = screen.getByRole('button', { name: 'Days' })
+    .parentElement as HTMLElement;
+
+  await userEvent.hover(tooltipTarget);
+
+  expect(
+    await screen.findByText(/“Days” view is not available because/)
+  ).toBeInTheDocument();
 });
 
 it('allows creating new items', async () => {
