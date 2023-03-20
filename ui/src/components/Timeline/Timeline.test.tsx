@@ -36,6 +36,12 @@ const event3 = model.getEntity({
   properties: { name: ['Event 3'], startDate: ['2022-03-01'] },
 });
 
+beforeEach(() => {
+  // jsdom doesn't actually calculate layouts or renders anything, so methods that
+  // rely on this like `scrollIntoView` are not available and need to be stubbed.
+  window.Element.prototype.scrollIntoView = jest.fn();
+});
+
 it('sorts and filters items by temporal start', () => {
   const entities = [event3, event1, event2];
   const layout = { vertices: [] };
@@ -247,10 +253,6 @@ describe('Sidebar', () => {
 });
 
 it('allows switching between list and chart view', async () => {
-  // jsdom doesn't actually calculate layouts or renders anything, so methods that
-  //  rely on this like `scrollIntoView` are not available and need to be stubbed.
-  window.Element.prototype.scrollIntoView = jest.fn();
-
   const entities = [event1, event2, event3];
   const layout = { vertices: [] };
 
@@ -294,6 +296,41 @@ it('allows switching between list and chart view', async () => {
   ).toBeInTheDocument();
 
   expect(screen.getByRole('list')).toBeInTheDocument();
+});
+
+it('disables some zoom levels for timelines covering a very long period', async () => {
+  const event = model.getEntity({
+    id: 'very-long',
+    schema: 'Event',
+    properties: {
+      startDate: ['1960-01-01'],
+      endDate: ['2060-01-01'],
+    },
+  });
+
+  const layout = { vertices: [] };
+
+  render(
+    <TimelineContextProvider entities={[event]} layout={layout}>
+      <TimelineActions writeable={true} />
+      <Timeline {...defaultProps} />
+    </TimelineContextProvider>
+  );
+
+  // In list view, all zoom level buttons are disabled
+  expect(screen.getByRole('button', { name: 'Days' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Months' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Years' })).toBeDisabled();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Chart' }));
+
+  expect(screen.getByRole('button', { name: 'Days' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Months' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Years' })).not.toBeDisabled();
+
+  // The rendered timeline chart defaults to years as days, months are not available
+  expect(screen.getByText('1959')).toBeInTheDocument();
+  expect(screen.getByText('2061')).toBeInTheDocument();
 });
 
 it('allows creating new items', async () => {

@@ -5,10 +5,11 @@ import c from 'classnames';
 import { Layout, Vertex } from './types';
 import { TimelineItem, updateVertex } from './util';
 import {
-  selectSortedEntities,
   selectSelectedEntity,
   selectSelectedVertex,
+  selectItems,
   selectIsEmpty,
+  selectZoomLevel,
 } from './state';
 import { useTimelineContext } from './context';
 import TimelineEmptyState from './TimelineEmptyState';
@@ -47,12 +48,9 @@ const Timeline: FC<TimelineProps> = ({
 
   const selectedEntity = selectSelectedEntity(state);
   const selectedVertex = selectSelectedVertex(state);
-  const sortedEntities = selectSortedEntities(state);
+  const items = selectItems(state);
   const isEmpty = selectIsEmpty(state);
-
-  const items = sortedEntities.map(
-    (entity) => new TimelineItem(entity, state.layout)
-  );
+  const zoomLevel = selectZoomLevel(state);
 
   return (
     <div
@@ -95,7 +93,7 @@ const Timeline: FC<TimelineProps> = ({
             items={items}
             selectedId={selectedEntity && selectedEntity.id}
             writeable={writeable}
-            zoomLevel={state.zoomLevel}
+            zoomLevel={zoomLevel}
             onSelect={(entity: Entity) =>
               dispatch({ type: 'SELECT_ENTITY', payload: { entity } })
             }

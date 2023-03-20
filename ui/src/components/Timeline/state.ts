@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { Entity } from '@alephdata/followthemoney';
+import { differenceInYears } from 'date-fns';
 import type {
   Vertex,
   Layout,
@@ -7,7 +8,12 @@ import type {
   TimelineChartZoomLevel,
   TimelineRenderer,
 } from './types';
-import { updateVertex } from './util';
+import {
+  updateVertex,
+  TimelineItem,
+  getEarliestDate,
+  getLatestDate,
+} from './util';
 
 export type State = {
   entities: Array<Entity>;
@@ -189,6 +195,12 @@ export function selectSelectedVertex(state: State): Vertex | null {
   );
 }
 
+export function selectItems(state: State): Array<TimelineItem> {
+  return selectSortedEntities(state).map(
+    (entity) => new TimelineItem(entity, state.layout)
+  );
+}
+
 export function selectSortedEntities(state: State): Array<Entity> {
   return state.entities
     .filter(
@@ -204,4 +216,42 @@ export function selectSortedEntities(state: State): Array<Entity> {
 
 export function selectIsEmpty(state: State): boolean {
   return selectSortedEntities(state).length <= 0;
+}
+
+export function selectIsZoomEnabled(state: State): boolean {
+  return state.renderer === 'chart';
+}
+
+export function selectAvailableZoomLevels(
+  state: State
+): Array<TimelineChartZoomLevel> {
+  const items = selectItems(state);
+  const earliest = getLatestDate(items);
+  const latest = getEarliestDate(items);
+
+  if (!earliest || !latest) {
+    return ['days', 'months', 'years'];
+  }
+
+  const years = differenceInYears(earliest, latest);
+
+  if (years < 20) {
+    return ['days', 'months', 'years'];
+  }
+
+  if (years < 100) {
+    return ['months', 'years'];
+  }
+
+  return ['years'];
+}
+
+export function selectZoomLevel(state: State): TimelineChartZoomLevel {
+  const available = selectAvailableZoomLevels(state);
+
+  if (!available.includes(state.zoomLevel)) {
+    return available[0];
+  }
+
+  return state.zoomLevel;
 }
