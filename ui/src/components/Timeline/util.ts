@@ -177,24 +177,23 @@ export class ImpreciseDate {
       return;
     }
 
-    const yearRegex = /(?<year>\d{4})/.source;
-    const monthRegex = /(?<month>0?[1-9]|1[0-2])/.source;
-    const dayRegex = /(?<day>0?[1-9]|[1-2][0-9]|3[0-1])/.source;
+    const yearRegex = /(\d{4})/.source;
+    const monthRegex = /(0?[1-9]|1[0-2])/.source;
+    const dayRegex = /(0?[1-9]|[1-2][0-9]|3[0-1])/.source;
 
     const regex = new RegExp(
       `^${yearRegex}(?:-${monthRegex}(?:-${dayRegex})?)?$`
     );
 
     const result = regex.exec(raw);
-    const groups = result?.groups;
 
-    if (!groups) {
+    if (!result) {
       return;
     }
 
-    this.year = groups.year ? parseInt(groups.year, 10) : undefined;
-    this.month = groups.month ? parseInt(groups.month, 10) : undefined;
-    this.day = groups.day ? parseInt(groups.day, 10) : undefined;
+    this.year = result[1] ? parseInt(result[1], 10) : undefined;
+    this.month = result[2] ? parseInt(result[2], 10) : undefined;
+    this.day = result[3] ? parseInt(result[3], 10) : undefined;
   }
 
   isValid() {
