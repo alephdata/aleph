@@ -44,7 +44,7 @@ jobs:
           GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         if: env.GITHUB_PASSWORD != null
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u $GITHUB_ACTOR --password-stdin 
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin 
           docker push ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA}
 
       - name: Push docker image (tagged)
