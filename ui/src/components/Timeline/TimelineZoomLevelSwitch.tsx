@@ -26,6 +26,7 @@ const UnavailableTooltip: FC<{
     popoverClassName="TimelineZoomLevelSwitch__tooltip"
     placement="bottom"
     disabled={disabled}
+    targetProps={{ tabIndex: disabled ? -1 : 0 }}
     content={
       <FormattedMessage
         id="timeline.zoom_levels.unavailable"
@@ -60,7 +61,7 @@ const TimelineZoomLevelSwitch: FC<TimelineZoomLevelSwitchProps> = ({
   );
 
   return (
-    <ButtonGroup>
+    <ButtonGroup className="TimelineZoomLevelSwitch">
       <UnavailableTooltip
         maxYears={DAYS_ZOOM_LEVEL_MAX_YEARS}
         label={daysLabel}
