@@ -121,6 +121,52 @@ it('renders temporal extent fields', async () => {
   expect(closeDate).toBeInTheDocument();
 });
 
+it('supports a variety of different date formats', async () => {
+  render(<TimelineItemCreateForm {...defaultProps} />);
+
+  const input = screen.getByRole('textbox', {
+    name: 'Start date',
+  }) as HTMLInputElement;
+  expect(input.checkValidity()).toBe(false);
+
+  // Valid dates
+  await userEvent.type(input, '2022');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-1');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-1-1');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01');
+  expect(input.checkValidity()).toBe(true);
+
+  // Invalid dates
+  await userEvent.clear(input);
+  await userEvent.type(input, '20222');
+  expect(input.checkValidity()).toBe(false);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-');
+  expect(input.checkValidity()).toBe(false);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-123');
+  expect(input.checkValidity()).toBe(false);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-');
+  expect(input.checkValidity()).toBe(false);
+});
+
 it('calls callback with new entity object', async () => {
   const onSubmit = jest.fn();
 

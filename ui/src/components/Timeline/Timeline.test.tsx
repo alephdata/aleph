@@ -356,6 +356,41 @@ it('allows creating new items', async () => {
   expect(rows[3]).toHaveTextContent('ACME, Inc.');
 });
 
+it('allows creation of items with imprecise dates', async () => {
+  // FTM uses crypto.getRandomValues to generate entity IDs.
+  // JSDOM doesn't support this API out of the box.
+  // TODO: Reenable type checking once we have updated @types/node.
+  // @ts-ignore
+  global.crypto = crypto.webcrypto;
+
+  const entities: Array<Entity> = [];
+  const layout = { vertices: [] };
+
+  render(
+    <TimelineContextProvider entities={entities} layout={layout}>
+      <TimelineActions writeable={true} />
+      <Timeline {...defaultProps} />
+    </TimelineContextProvider>
+  );
+
+  await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
+
+  const name = screen.getByRole('textbox', { name: 'Name' });
+  const startDate = screen.getByRole('textbox', { name: 'Start date' });
+  const submit = screen.getByRole('button', { name: 'Add' });
+
+  await userEvent.type(name, 'Very long event');
+  await userEvent.type(startDate, '2022');
+
+  expect(submit).not.toBeDisabled();
+  await userEvent.click(submit);
+
+  const rows = screen.getAllByRole('row');
+  expect(rows).toHaveLength(2); // 1 item + 1 header row
+  expect(rows[1]).toHaveTextContent('Very long event');
+  expect(rows[1]).toHaveTextContent('2022');
+});
+
 it('does not allow creating new items if not writeable', () => {
   const entities = [event1, event2, event3];
   const layout = { vertices: [] };
