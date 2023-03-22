@@ -4,6 +4,7 @@ import {
   useState,
   forwardRef,
   FormEventHandler,
+  ChangeEventHandler,
   KeyboardEventHandler,
   ForwardedRef,
 } from 'react';
@@ -21,7 +22,7 @@ import type {
   EdgeSchema,
   FetchEntitySuggestions,
 } from './types';
-import { useEntitySuggestions } from './util';
+import { useEntitySuggestions, reformatDateString } from './util';
 import { SchemaSelect, EntitySelect } from 'react-ftm';
 import { Button, Alignment, FormGroup, InputGroup } from '@blueprintjs/core';
 
@@ -39,7 +40,8 @@ type PropertyFieldProps = {
   required?: boolean;
   placeholder?: string;
   pattern?: string;
-  onChange: (property: Property, value: Value) => void;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onInput?: KeyboardEventHandler<HTMLInputElement>;
 };
 
 type EntityPropertyFieldProps = {
@@ -103,6 +105,7 @@ const PropertyField: FC<PropertyFieldProps> = ({
   placeholder,
   pattern,
   onChange,
+  onInput,
 }) => (
   <FormGroup
     label={property.label}
@@ -123,7 +126,8 @@ const PropertyField: FC<PropertyFieldProps> = ({
       required={required}
       placeholder={placeholder}
       pattern={pattern}
-      onChange={(event) => onChange(property, event.target.value)}
+      onChange={onChange}
+      onInput={onInput}
     />
   </FormGroup>
 );
@@ -209,7 +213,15 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
           key={property.name}
           property={property}
           value={typeof value === 'string' ? value : ''}
-          onChange={onChange}
+          onChange={(event) => onChange(property, event.currentTarget.value)}
+          onInput={(event) => {
+            const target = event.currentTarget;
+            const newValue = reformatDateString(target.value);
+
+            if (target.value !== newValue) {
+              target.value = newValue;
+            }
+          }}
           placeholder="YYYY-MM-DD"
           pattern="\d{4}(?:-\d{1,2}){0,2}"
           required={required}
@@ -261,7 +273,7 @@ const CaptionField: FC<CaptionFieldProps> = ({
       property={caption}
       value={typeof value === 'string' ? value : ''}
       required
-      onChange={onChange}
+      onChange={(event) => onChange(caption, event.currentTarget.value)}
     />
   );
 };

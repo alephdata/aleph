@@ -1,5 +1,5 @@
 import { Model, defaultModel } from '@alephdata/followthemoney';
-import { TimelineItem, ImpreciseDate } from './util';
+import { TimelineItem, ImpreciseDate, reformatDateString } from './util';
 
 const model = new Model(defaultModel);
 
@@ -231,5 +231,28 @@ describe('ImpreciseDate', () => {
     date = new ImpreciseDate('2022');
     expect(date.getEarliest()).toEqual(new Date(2022, 0, 1));
     expect(date.getLatest()).toEqual(new Date(2022, 11, 31));
+  });
+});
+
+describe('reformatDateString', () => {
+  it('returns original value if format is not recognized', () => {
+    expect(reformatDateString('what is this')).toEqual('what is this');
+  });
+
+  it('returns original value if format is already supported', () => {
+    expect(reformatDateString('2022')).toEqual('2022');
+    expect(reformatDateString('2022-1')).toEqual('2022-1');
+    expect(reformatDateString('2022-01')).toEqual('2022-01');
+    expect(reformatDateString('2022-1-1')).toEqual('2022-1-1');
+    expect(reformatDateString('2022-01-01')).toEqual('2022-01-01');
+  });
+
+  it('reformats values to use hyphens', () => {
+    expect(reformatDateString('20220')).toEqual('2022-0');
+    expect(reformatDateString('202201')).toEqual('2022-01');
+    expect(reformatDateString('2022010')).toEqual('2022-01-0');
+    expect(reformatDateString('2022-010')).toEqual('2022-01-0');
+    expect(reformatDateString('20220101')).toEqual('2022-01-01');
+    expect(reformatDateString('2022-0101')).toEqual('2022-01-01');
   });
 });

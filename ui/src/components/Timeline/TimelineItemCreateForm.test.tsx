@@ -151,20 +151,27 @@ it('supports a variety of different date formats', async () => {
 
   // Invalid dates
   await userEvent.clear(input);
-  await userEvent.type(input, '20222');
-  expect(input.checkValidity()).toBe(false);
-
-  await userEvent.clear(input);
   await userEvent.type(input, '2022-');
-  expect(input.checkValidity()).toBe(false);
-
-  await userEvent.clear(input);
-  await userEvent.type(input, '2022-123');
   expect(input.checkValidity()).toBe(false);
 
   await userEvent.clear(input);
   await userEvent.type(input, '2022-01-');
   expect(input.checkValidity()).toBe(false);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-123');
+  expect(input.checkValidity()).toBe(false);
+
+  // Automatically reformats to match supported format
+  await userEvent.clear(input);
+  await userEvent.type(input, '202302');
+  expect(input).toHaveValue('2023-02');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '20230203');
+  expect(input).toHaveValue('2023-02-03');
+  expect(input.checkValidity()).toBe(true);
 });
 
 it('calls callback with new entity object', async () => {
