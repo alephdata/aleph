@@ -211,7 +211,7 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
           value={typeof value === 'string' ? value : ''}
           onChange={onChange}
           placeholder="YYYY-MM-DD"
-          pattern="\d{4}-\d{1,2}-\d{1,2}"
+          pattern="\d{4}(?:-\d{1,2}){0,2}"
           required={required}
         />
       ))}
