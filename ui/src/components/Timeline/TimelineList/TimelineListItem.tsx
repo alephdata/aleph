@@ -6,6 +6,7 @@ import c from 'classnames';
 import { Entity } from '@alephdata/followthemoney';
 import { useTimelineItemKeyboardNavigation } from '../util';
 import TimelineItemCaption from '../TimelineItemCaption';
+import { reduceTranslucentColor } from 'util/reduceTranslucentColor';
 
 import './TimelineListItem.scss';
 
@@ -33,8 +34,15 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
       onRemove,
     } = props;
 
+    const backgroundColor = reduceTranslucentColor(color, 0.1);
+    const activeColor = reduceTranslucentColor(color, 0.15);
+    const focusColor = reduceTranslucentColor(color, 0.2);
+
     const style: CSSProperties = {
       ['--timeline-item-color' as string]: color,
+      ['--timeline-item-color-bg' as string]: backgroundColor,
+      ['--timeline-item-color-bg-active' as string]: activeColor,
+      ['--timeline-item-color-bg-focus' as string]: focusColor,
     };
 
     const keyboardProps = useTimelineItemKeyboardNavigation(entity, onSelect);

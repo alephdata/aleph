@@ -1,10 +1,6 @@
 @import 'app/variables';
 
 .TimelineListItem {
-  --background-opacity: 0.1;
-
-  position: relative;
-  overflow: hidden;
   cursor: pointer;
 }
 
@@ -14,24 +10,14 @@
   border-bottom-left-radius: $pt-border-radius;
 }
 
-.TimelineListItem > td:first-child::before {
-  content: '';
-
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  display: block;
-  width: 100%;
-  height: 100%;
-
-  background-color: var(--timeline-item-color);
-  opacity: var(--background-opacity);
-  border-radius: $pt-border-radius;
+.TimelineListItem > td:last-child {
+  border-top-right-radius: $pt-border-radius;
+  border-bottom-right-radius: $pt-border-radius;
 }
 
 .TimelineListItem > td {
   padding: var(--timeline-list-padding);
+  background-color: var(--timeline-item-color-bg);
 }
 
 .TimelineListItem__date {
@@ -51,7 +37,6 @@
 }
 
 .TimelineListItem__actions > * {
-  position: relative;
   opacity: 0;
 }
 
@@ -59,9 +44,9 @@
   opacity: var(--timeline-item-muted-opacity);
 }
 
-.TimelineListItem:where(:hover),
-.TimelineListItem:where(:focus-within) {
-  --background-opacity: 0.15;
+.TimelineListItem:where(:hover) > td,
+.TimelineListItem:where(:focus-within) > td {
+  background-color: var(--timeline-item-color-bg-active);
 }
 
 .TimelineListItem:where(:hover) .TimelineListItem__actions > *,
@@ -78,6 +63,6 @@
   border-radius: $pt-border-radius;
 }
 
-.TimelineListItem--selected {
-  --background-opacity: 0.2;
+.TimelineListItem--selected > td {
+  background-color: var(--timeline-item-color-bg-focus);
 }
