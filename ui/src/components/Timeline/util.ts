@@ -389,3 +389,28 @@ export function updateVertex(layout: Layout, updatedVertex: Vertex): Layout {
 
   return { vertices: newVertices };
 }
+
+/**
+ * Reformat a date string to match one of the formats supported by FtM.
+ * For example, this will reformat `20220102` to `2022-01-02`. Returns the
+ * original value if the string cannot be reformatted automatically or
+ * already is in a supported format.
+ */
+export function reformatDateString(value: string) {
+  const yearMonth = /^(\d{4})(\d{1,2})$/;
+  const yearMonthDay = /^(\d{4})-?(\d{2})-?(\d{1,2})$/;
+
+  let match = value.match(yearMonth);
+
+  if (match) {
+    return `${match[1]}-${match[2]}`;
+  }
+
+  match = value.match(yearMonthDay);
+
+  if (match) {
+    return `${match[1]}-${match[2]}-${match[3]}`;
+  }
+
+  return value;
+}
