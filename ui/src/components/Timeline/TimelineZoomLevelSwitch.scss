@@ -2,3 +2,16 @@
   max-width: 250px;
   text-align: center;
 }
+
+.TimelineZoomLevelSwitch [disabled] {
+  // The zoom level switch displays a tooltip when users hover over a disabled
+  // button. However, some browser do not emit mouseover/move/leave events when
+  // interacting with disabled elements. As a result the tooltip is not displayed.
+  // Setting the following property does ensure that these events propagate to
+  // the parent element (the tooltip target), so we can attach an event handler
+  // to the parent of the disabled button element.
+  //
+  // Inspired by the Bootstrap tooltips implementation:
+  // https://getbootstrap.com/docs/5.3/components/tooltips/#disabled-elements
+  pointer-events: none;
+}
