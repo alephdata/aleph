@@ -45,7 +45,7 @@ services:
       - "traefik.enable=false"
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.18.3-rc2
+    image: ghcr.io/alephdata/ingest-file:3.18.4-rc1
     tmpfs:
       - /tmp:mode=777
     volumes:
