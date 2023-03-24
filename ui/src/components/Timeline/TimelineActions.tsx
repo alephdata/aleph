@@ -5,6 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import TimelineItemCreateButton from './TimelineItemCreateButton';
 import TimelineZoomLevelSwitch from './TimelineZoomLevelSwitch';
+import FeedbackButton from './FeedbackButton';
 import {
   selectIsEmpty,
   selectIsZoomEnabled,
@@ -79,6 +80,15 @@ const TimelineActions: FC<TimelineActionsProps> = ({ writeable }) => {
           })
         }
       />
+      {
+        // The `FeedbackButton` component relies on a Redux store being provided
+        // in a context. Apart from the feedback button, the entire timeliens feature
+        // is independent from the Redux app store, so instead of setting up a test
+        // environment that mocks the store, we resort to this hacky workaround and
+        // simply do not render the feedback button in tests. This is fine because
+        // the feedback button is not critical.
+        process.env.NODE_ENV !== 'test' && <FeedbackButton />
+      }
     </div>
   );
 };
