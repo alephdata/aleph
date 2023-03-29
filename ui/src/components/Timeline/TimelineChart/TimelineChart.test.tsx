@@ -146,6 +146,31 @@ it('focuses item on click', async () => {
   expect(document.activeElement).toEqual(listItems[1]);
 });
 
+it('handles empty timelines gracefully', () => {
+  jest.useFakeTimers();
+  jest.setSystemTime(new Date('2022-01-01'));
+
+  render(<TimelineChart {...defaultProps} items={[]} />);
+
+  expect(screen.getByText('Jan 2021')).toBeInTheDocument();
+  expect(screen.getByText('Jan 2023')).toBeInTheDocument();
+});
+
+it('handles timelines that contain only items with invalid dates gracefully', () => {
+  jest.useFakeTimers();
+  jest.setSystemTime(new Date('2022-01-01'));
+  const eventWithoutDate = model.getEntity({
+    schema: 'Event',
+    id: '0',
+  });
+  const items = [new TimelineItem(eventWithoutDate)];
+
+  render(<TimelineChart {...defaultProps} items={items} />);
+
+  expect(screen.getByText('Jan 2021')).toBeInTheDocument();
+  expect(screen.getByText('Jan 2023')).toBeInTheDocument();
+});
+
 describe('Zoom levels', () => {
   describe('Days', () => {
     it('renders one grid label per month', () => {
