@@ -53,13 +53,7 @@ const Timeline: FC<TimelineProps> = ({
   const zoomLevel = selectZoomLevel(state);
 
   return (
-    <div
-      className={c(
-        'Timeline',
-        `Timeline--${state.renderer}`,
-        selectedEntity && 'Timeline--selected'
-      )}
-    >
+    <div className={c('Timeline', selectedEntity && 'Timeline--selected')}>
       <TimelineItemCreateDialog
         model={model}
         isOpen={state.showCreateDialog}
