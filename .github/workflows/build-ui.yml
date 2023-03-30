@@ -24,8 +24,8 @@ jobs:
 
       - name: Build development image
         run: |
-          docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
-          docker tag alephdata/aleph-ui:${GITHUB_SHA} ghcr.io/alephdata/aleph-ui:latest
+          docker build -t ghcr.io/alephdata/aleph-ui:${GITHUB_SHA} ui
+          docker tag ghcr.io/alephdata/aleph-ui:${GITHUB_SHA} ghcr.io/alephdata/aleph-ui:latest
 
       - name: Check code formatting
         run: make format-check-ui
