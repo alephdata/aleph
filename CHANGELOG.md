@@ -1,3 +1,8 @@
+## 3.14.0 (30-03-2023)
+
+- Numerous library upgrades
+- Updated Timelines feature. Timeslines are now more user friendly, better to look at and come with a new chart view that allow you to see your timelines on a line.
+
 ## 3.13.1-rc1 (09-11-2022)
 
 - Library upgrades
