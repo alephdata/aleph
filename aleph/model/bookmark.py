@@ -19,3 +19,9 @@ class Bookmark(db.Model, IdModel):
             "entity_id": self.entity_id,
             "collection_id": self.collection_id,
         }
+
+    @classmethod
+    def delete_by_entity(cls, entity_id):
+        query = db.session.query(Bookmark)
+        query = query.filter(Bookmark.entity_id == entity_id)
+        query.delete(synchronize_session=False)
