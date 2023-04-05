@@ -79,6 +79,8 @@ Entity:
     writeable:
       type: boolean
       example: false
+    bookmarked:
+      type: boolean
 
 EntityUpdate:
   required: ["schema"]
