@@ -5,6 +5,7 @@ import logging
 import unittest
 import tempfile
 from flask import json
+import flask_migrate
 from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
@@ -223,7 +224,7 @@ class TestCase(unittest.TestCase):
         if not hasattr(SETTINGS, "_global_test_state"):
             SETTINGS._global_test_state = True
             destroy_db()
-            db.create_all()
+            flask_migrate.upgrade()
             delete_index()
             upgrade_search()
         else:
