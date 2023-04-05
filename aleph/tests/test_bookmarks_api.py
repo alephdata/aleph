@@ -222,3 +222,69 @@ class BookmarksApiTestCase(TestCase):
 
         count = Bookmark.query.count()
         assert count == 0, count
+
+    def test_bookmarks_migrate(self):
+        other_entity = self.create_entity(
+            data={"schema": "Person", "properties": {"name": "Barack Obama"}},
+            collection=self.collection,
+        )
+        index_entity(other_entity)
+
+        count = Bookmark.query.count()
+        assert count == 0, count
+
+        body = [
+            {"entity_id": self.entity.id, "created_at": "2005-11-22T00:00:00Z"},
+            {"entity_id": other_entity.id, "created_at": "2009-01-20T00:00:00Z"},
+        ]
+        res = self.client.post(
+            "/api/2/bookmarks/migrate",
+            headers=self.headers,
+            data=json.dumps(body),
+            content_type=JSON,
+        )
+        assert res.status_code == 201, res
+        assert res.json["errors"] == [], res.json
+
+        count = Bookmark.query.count()
+        assert count == 2, count
+
+        bookmarks = Bookmark.query.all()
+        assert bookmarks[0].entity_id == self.entity.id
+        assert bookmarks[0].created_at == datetime.datetime(2005, 11, 22), bookmarks[0]
+        assert bookmarks[1].entity_id == other_entity.id
+        assert bookmarks[1].created_at == datetime.datetime(2009, 1, 20), bookmarks[1]
+
+    def test_bookmarks_migrate_invalid_entity_id(self):
+        invalid_entity_id = self.create_entity(
+            {"schema": "Company"}, self.collection
+        ).id
+
+        body = [
+            {"entity_id": self.entity.id, "created_at": "2022-01-01T00:00:00Z"},
+            {"entity_id": invalid_entity_id, "created_at": "2022-01-01T00:00:00Z"},
+        ]
+        res = self.client.post(
+            "/api/2/bookmarks/migrate",
+            headers=self.headers,
+            data=json.dumps(body),
+            content_type=JSON,
+        )
+        assert res.status_code == 201, res
+        assert res.json["errors"] == [invalid_entity_id], res.json
+
+        count = Bookmark.query.count()
+        assert count == 1, count
+
+        bookmarks = Bookmark.query.all()
+        assert bookmarks[0].created_at == datetime.datetime(2022, 1, 1), bookmarks[0]
+        assert bookmarks[0].entity_id == self.entity.id
+
+    def test_bookmarks_migrate_required_timestamp(self):
+        res = self.client.post(
+            "/api/2/bookmarks/migrate",
+            headers=self.headers,
+            data=json.dumps([{"entity_id": self.entity.id}]),
+            content_type=JSON,
+        )
+        assert res.status_code == 400, res
