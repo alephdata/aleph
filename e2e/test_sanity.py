@@ -20,17 +20,17 @@ def test_ingest_odt(page: Page) -> None:
     page.get_by_role("button", name="Save").click()
     page.get_by_role("button", name="Upload documents").click()
     page.get_by_label("Choose files to upload...").set_input_files(
-        "e2e/fixtures/rand-1670433109.047947000.odt"
+        "e2e/fixtures/random.odt"
     )
     page.get_by_role("button", name="Upload", exact=True).click()
     page.locator("section").get_by_role("button", name="Close").click()
     page.wait_for_selector("div[role='progressbar']", state="detached")
     page.reload()
-    page.get_by_role("link", name="rand-1670433109.047947000.odt").click()
+    page.get_by_role("link", name="random.odt").click()
     page.get_by_placeholder("Search this investigation").click()
     page.get_by_placeholder("Search this investigation").fill("superprecise")
     page.get_by_placeholder("Search this investigation").press("Enter")
-    page.get_by_role("link", name="rand-1670433109.047947000.odt").click()
+    page.get_by_role("link", name="random.odt").click()
     page.get_by_role("tab", name="Text").click()
     page.locator("#page").click()
     page.locator("#page").fill("14")
