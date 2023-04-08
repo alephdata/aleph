@@ -101,13 +101,13 @@ translate: dev
 
 e2e: services
 	$(COMPOSE) up -d api ui worker
-	BASE_URL=http://ui:8080 $(COMPOSE) run e2e pytest -s -v --screenshot only-on-failure --video retain-on-failure --tracing retain-on-failure e2e/
+	BASE_URL=http://ui:8080 $(COMPOSE) run e2e pytest -s -v --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure e2e/
 
 e2e-local-setup: dev
 	playwright install
 
 e2e-local:
-	pytest -s -v e2e/
+	pytest -s -v --screenshot only-on-failure e2e/
 
 .PHONY: build services e2e
 
