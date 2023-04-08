@@ -1,3 +1,8 @@
+name: End to end tests
+
+on:
+  push
+
 jobs:
   e2e:
     name: Run end-to-end tests
