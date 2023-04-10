@@ -477,3 +477,7 @@ export function selectLocalBookmarks(state) {
     state?.localBookmarks?.sort((a, b) => b.bookmarkedAt - a.bookmarkedAt) || []
   );
 }
+
+export function selectConfigValue(state, name) {
+  return state?.config?.[name];
+}

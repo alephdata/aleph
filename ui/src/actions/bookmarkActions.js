@@ -17,3 +17,15 @@ export const deleteBookmark = asyncActionCreator(
   (entity) => async () => await endpoint.delete(`bookmarks/${entity.id}`),
   { name: 'DELETE_BOOKMARK' }
 );
+
+export const migrateLocalBookmarks = asyncActionCreator(
+  (bookmarks) => async () => {
+    const body = bookmarks.map((bookmark) => ({
+      entity_id: bookmark.id,
+      created_at: new Date(bookmark.bookmarkedAt).toISOString(),
+    }));
+    const response = await endpoint.post('bookmarks/migrate', body);
+    return { bookmarks, response };
+  },
+  { name: 'MIGRATE_BOOKMARKS' }
+);

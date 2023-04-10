@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { Classes, Drawer, DrawerSize } from '@blueprintjs/core';
+import { selectLocalBookmarks, selectConfigValue } from 'selectors';
+import BookmarksMigration from './BookmarksMigration';
 import BookmarksList from './BookmarksList';
 
 import './BookmarksDrawer.scss';
@@ -14,6 +17,12 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
   isOpen,
   toggleDialog,
 }) => {
+  const localBookmarks = useSelector(selectLocalBookmarks);
+  const migrationCompleted = useSelector((state) =>
+    selectConfigValue(state, 'bookmarksMigrationCompleted')
+  );
+  const showMigration = localBookmarks.length > 0 && !migrationCompleted;
+
   const title = (
     <FormattedMessage id="bookmarks.title" defaultMessage="Your bookmarks" />
   );
@@ -30,7 +39,11 @@ const BookmarksDrawer: FC<BookmarksDrawerProps> = ({
     >
       <div className={Classes.DRAWER_BODY}>
         <div className="BookmarksDrawer__content">
-          <BookmarksList onNavigate={toggleDialog} />
+          {showMigration ? (
+            <BookmarksMigration />
+          ) : (
+            <BookmarksList onNavigate={toggleDialog} />
+          )}
         </div>
       </div>
     </Drawer>
