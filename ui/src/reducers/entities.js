@@ -11,6 +11,8 @@ import {
   updateEntity,
   deleteEntity,
   pairwiseJudgement,
+  createBookmark,
+  deleteBookmark,
 } from 'actions';
 import {
   objectLoadStart,
@@ -91,6 +93,16 @@ export default createReducer(
 
     [pairwiseJudgement.COMPLETE]: (state, { entityId, profileId }) =>
       updateEntityProfile(state, entityId, profileId),
+
+    [createBookmark.START]: (state, entity) => ({
+      ...state,
+      [entity.id]: { ...state[entity.id], bookmarked: true },
+    }),
+
+    [deleteBookmark.START]: (state, entity) => ({
+      ...state,
+      [entity.id]: { ...state[entity.id], bookmarked: false },
+    }),
   },
   initialState
 );

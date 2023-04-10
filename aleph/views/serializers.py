@@ -414,7 +414,7 @@ class BookmarkSerializer(Serializer):
         if not obj["entity"]:
             return None
 
-        obj.pop("id", None)
+        obj["id"] = obj["entity"]["id"]
         obj.pop("entity_id", None)
         obj.pop("collection_id", None)
         obj.pop("writeable", None)

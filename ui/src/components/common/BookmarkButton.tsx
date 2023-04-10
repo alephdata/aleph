@@ -1,32 +1,21 @@
 import { FC } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { useSelector, useDispatch } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 import { Button, ButtonProps } from '@blueprintjs/core';
 import { Entity } from '@alephdata/followthemoney';
 
-import {
-  selectEntityBookmarked,
-  selectExperimentalBookmarksFeatureEnabled,
-} from 'selectors';
+import { selectExperimentalBookmarksFeatureEnabled } from 'selectors';
 import { createBookmark, deleteBookmark } from 'actions/bookmarkActions';
 
 type BookmarkButtonProps = ButtonProps & {
-  bookmarked: boolean;
-  entity: Entity;
-  enabled: boolean;
-  createBookmark: (entity: Entity) => Promise<any>;
-  deleteBookmark: (entity: Entity) => Promise<any>;
+  entity: Entity & { bookmarked: boolean };
 };
 
-const BookmarkButton: FC<BookmarkButtonProps> = ({
-  entity,
-  bookmarked,
-  enabled,
-  createBookmark,
-  deleteBookmark,
-  ...props
-}) => {
+const BookmarkButton: FC<BookmarkButtonProps> = ({ entity, ...props }) => {
+  const dispatch = useDispatch();
+  const enabled = useSelector(selectExperimentalBookmarksFeatureEnabled);
+  const { bookmarked } = entity;
+
   if (!enabled) {
     return null;
   }
@@ -39,8 +28,11 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
   );
 
   const toggle = async () => {
-    const action = bookmarked ? deleteBookmark : createBookmark;
-    await action(entity);
+    if (bookmarked) {
+      await deleteBookmark(entity)(dispatch);
+    } else {
+      await createBookmark(entity)(dispatch);
+    }
   };
 
   return (
@@ -50,15 +42,4 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
   );
 };
 
-const mapStateToProps = (state: any, ownProps: BookmarkButtonProps) => {
-  const { entity } = ownProps;
-  const bookmarked = selectEntityBookmarked(state, entity);
-  const enabled = selectExperimentalBookmarksFeatureEnabled(state);
-
-  return { bookmarked, enabled };
-};
-
-export default compose(
-  connect(mapStateToProps, { createBookmark, deleteBookmark }),
-  injectIntl
-)(BookmarkButton);
+export default BookmarkButton;

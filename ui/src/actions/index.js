@@ -66,7 +66,11 @@ export {
 } from './metadataActions';
 export { loginWithToken, loginWithPassword, logout } from './sessionActions';
 export { fetchExports, triggerQueryExport } from './exportActions';
-export { createBookmark, deleteBookmark } from './bookmarkActions';
+export {
+  queryBookmarks,
+  createBookmark,
+  deleteBookmark,
+} from './bookmarkActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

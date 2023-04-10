@@ -227,6 +227,7 @@ export function selectEntity(state, entityId) {
   result.profileId = entity.profile_id;
   result.lastViewed = lastViewed;
   result.writeable = entity.writeable;
+  result.bookmarked = entity.bookmarked;
 
   return result;
 }
@@ -453,17 +454,26 @@ export function selectQueryLogsLimited(state, limit = 9) {
   };
 }
 
-export function selectBookmarks(state) {
-  const bookmarks = selectObject(state, state, 'bookmarks');
-  return bookmarks.sort((a, b) => b.bookmarkedAt - a.bookmarkedAt);
+export function selectBookmarksResult(state, query) {
+  const model = selectModel(state);
+  const result = selectResult(
+    state,
+    query,
+    (stateInner, id) => stateInner.bookmarks[id]
+  );
+
+  result.results = result.results.map((bookmark) => ({
+    ...bookmark,
+    entity: model.getEntity(bookmark.entity),
+  }));
+
+  return result;
 }
 
-export function selectBookmark(state, entity) {
-  const bookmarks = selectBookmarks(state);
-  return bookmarks.find(({ id }) => id === entity.id);
-}
-
-export function selectEntityBookmarked(state, entity) {
-  const bookmark = selectBookmark(state, entity);
-  return bookmark !== undefined;
+// TODO: Remove after deadline
+// See https://github.com/alephdata/aleph/issues/2864
+export function selectLocalBookmarks(state) {
+  return (
+    state?.localBookmarks?.sort((a, b) => b.bookmarkedAt - a.bookmarkedAt) || []
+  );
 }
