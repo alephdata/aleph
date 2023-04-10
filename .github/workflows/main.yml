@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Assign to One Project
     steps:
-      - uses: actions/add-to-project@v0.4.1
+      - uses: actions/add-to-project@v0.5.0
         with:
           # You can target a repository in a different organization
           # to the issue
