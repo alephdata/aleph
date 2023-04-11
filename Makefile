@@ -1,4 +1,5 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml
+COMPOSE_E2E=docker-compose -f docker-compose.dev.yml -f docker-compose.e2e.yml
 APPDOCKER=$(COMPOSE) run --rm app
 UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
@@ -100,8 +101,8 @@ translate: dev
 	pybabel compile -d aleph/translations -D aleph -f
 
 e2e: services
-	$(COMPOSE) up -d api ui worker
-	BASE_URL=http://ui:8080 $(COMPOSE) run --rm e2e pytest -s -v --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure e2e/
+	$(COMPOSE_E2E) up -d api ui worker
+	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure e2e/
 
 e2e-local-setup: dev
 	playwright install

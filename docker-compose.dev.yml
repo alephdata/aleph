@@ -152,7 +152,6 @@ services:
     environment:
       PORT: "8080"
       CI: "true"
-      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
     env_file:
       - aleph.env
 
