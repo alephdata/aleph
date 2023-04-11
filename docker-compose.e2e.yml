@@ -1,0 +1,6 @@
+version: "3.2"
+
+services:
+  ui:
+    environment:
+      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
