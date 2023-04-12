@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/playwright/python:v1.31.0-focal
-COPY entrypoint.sh wait-for .
+COPY entrypoint.sh wait-for ./
 RUN apt update -y \
     && apt install -y netcat wget \
     && apt-get -qq -y autoremove \
