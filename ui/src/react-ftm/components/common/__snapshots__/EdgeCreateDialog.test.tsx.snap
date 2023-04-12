@@ -50,12 +50,12 @@ exports[`<EdgeCreateDialog /> renders correctly 1`] = `
                 />
               </svg>
             </span>
-            <h5
+            <h6
               class="bp4-heading"
               id="title-bp-dialog-0"
             >
               Add link
-            </h5>
+            </h6>
             <button
               aria-label="Close"
               class="bp4-button bp4-minimal bp4-dialog-close-button"

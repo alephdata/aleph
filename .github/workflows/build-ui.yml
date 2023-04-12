@@ -8,6 +8,7 @@ on:
       - "helm/**"
       - "mappings/**"
       - "site/**"
+      - "docs/**"
 
 permissions:
   packages: write
@@ -23,8 +24,8 @@ jobs:
 
       - name: Build development image
         run: |
-          docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
-          docker tag alephdata/aleph-ui:${GITHUB_SHA} alephdata/aleph-ui:latest
+          docker build -t ghcr.io/alephdata/aleph-ui:${GITHUB_SHA} ui
+          docker tag ghcr.io/alephdata/aleph-ui:${GITHUB_SHA} ghcr.io/alephdata/aleph-ui:latest
 
       - name: Check code formatting
         run: make format-check-ui
@@ -36,6 +37,7 @@ jobs:
         run: make test-ui
 
       - name: Build production image
+        run: docker build -t ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
         run: docker build -t ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
 
       - name: Push docker image (hash)
@@ -50,7 +52,7 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
           export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
-          docker tag ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:${ALEPH_TAG};
+          docker tag ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG};
           docker push ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG};
-          docker tag ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:latest;
+          docker tag ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} ghcr.io/alephdata/aleph-ui-production:latest;
           docker push ghcr.io/alephdata/aleph-ui-production:latest;

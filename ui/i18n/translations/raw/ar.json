@@ -995,6 +995,9 @@
   "footer.aleph": {
     "defaultMessage": "أَلِف {version}"
   },
+  "footer.ftm": {
+    "defaultMessage": "FollowTheMoney {version}"
+  },
   "group.page.description": {
     "defaultMessage": "The list below shows all datasets and investigations that belong to this group."
   },

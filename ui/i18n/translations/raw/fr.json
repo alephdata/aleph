@@ -995,6 +995,9 @@
   "footer.aleph": {
     "defaultMessage": "Aleph {version}"
   },
+  "footer.ftm": {
+    "defaultMessage": "FollowTheMoney {version}"
+  },
   "group.page.description": {
     "defaultMessage": "La liste ci-dessous montre tous les ensembles de données et toutes les enquêtes qui font partie de ce groupe."
   },

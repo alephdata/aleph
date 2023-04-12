@@ -25,7 +25,7 @@
     flex: 0 0 !important;
   }
   &__spinner.#{$bp-ns}-spinner {
-    margin: 2px !important;
+    margin: 0.5 * $aleph-grid-size !important;
   }
   .EntitySelect {
     z-index: 5;

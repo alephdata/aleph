@@ -10,6 +10,7 @@ import {
   selectMessages,
   selectPinnedMessage,
 } from 'selectors';
+import { routes as legacyRedirects } from 'app/legacyRedirects';
 import Navbar from 'components/Navbar/Navbar';
 import MessageBanner from 'components/MessageBanner/MessageBanner';
 
@@ -114,34 +115,10 @@ class Router extends Component {
             <Route path="pages/:page" element={<PagesScreen />} />
             <Route path="activate/:code" element={<ActivateScreen />} />
             <Route path="entities/:entityId" element={<EntityScreen />} />
-            <Route
-              path="text/:documentId"
-              render={() => <Navigate to="/entities/:documentId" replace />}
-            />
-            <Route
-              path="tabular/:documentId/:sheet"
-              render={() => <Navigate to="/entities/:documentId" replace />}
-            />
-            <Route
-              path="documents/:documentId"
-              render={() => <Navigate to="/entities/:documentId" replace />}
-            />
             <Route path="datasets" element={<DatasetIndexScreen />} />
-            <Route
-              path="sources"
-              render={() => <Navigate to="/datasets" replace />}
-            />
             <Route
               path="investigations"
               element={<InvestigationIndexScreen />}
-            />
-            <Route
-              path="cases"
-              render={() => <Navigate to="/investigations" replace />}
-            />
-            <Route
-              path="collections/:collectionId/documents"
-              render={() => <Navigate to="/datasets/:collectionId" replace />}
             />
             <Route
               path="datasets/:collectionId"
@@ -150,28 +127,6 @@ class Router extends Component {
             <Route
               path="investigations/:collectionId"
               element={<InvestigationScreen />}
-            />
-            <Route
-              path="collections/:collectionId"
-              render={() => <Navigate to="/datasets/:collectionId" replace />}
-            />
-            <Route
-              path="collections/:collectionId/xref/:otherId"
-              render={() => (
-                <Navigate
-                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
-                  replace
-                />
-              )}
-            />
-            <Route
-              path="datasets/:collectionId/xref/:otherId"
-              render={() => (
-                <Navigate
-                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
-                  replace
-                />
-              )}
             />
             <Route path="profiles/:profileId" element={<ProfileScreen />} />
             <Route path="diagrams/:entitySetId" element={<DiagramScreen />} />
@@ -189,6 +144,7 @@ class Router extends Component {
             <Route path="status" element={<SystemStatusScreen />} />
             <Route path="groups/:groupId" element={<GroupScreen />} />
             <Route path="/" element={<HomeScreen />} />
+            {legacyRedirects}
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
         </Suspense>

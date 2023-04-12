@@ -64,7 +64,7 @@ export class DocumentFolderDialog extends Component {
       this.props.forceMutate();
 
       navigate({
-        pathname: `/documents/${result.id}`,
+        pathname: `/entities/${result.id}`,
       });
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));

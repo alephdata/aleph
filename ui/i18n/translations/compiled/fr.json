@@ -331,6 +331,7 @@
   "facet.schema": "Type d’entité",
   "file_import.error": "Erreur d’import de fichier",
   "footer.aleph": "Aleph {version}",
+  "footer.ftm": "FollowTheMoney {version}",
   "group.page.description": "La liste ci-dessous montre tous les ensembles de données et toutes les enquêtes qui font partie de ce groupe.",
   "group.page.search.description": "Si vous souhaitez rechercher des entités ou des documents spécifiques dans les ensembles de données auxquels ce groupe a accès, veuillez plutôt <link>cliquer ici</link>.",
   "home.access_disabled": "Accès public temporairement désactivé",

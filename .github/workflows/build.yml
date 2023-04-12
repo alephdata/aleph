@@ -4,6 +4,7 @@ on:
   push:
     paths-ignore:
       - "ui/**"
+      - "docs/**"
 
 permissions:
   packages: write
@@ -30,6 +31,7 @@ jobs:
 
       - name: Build docker image
         run: docker build -t ghcr.io/alephdata/aleph:${GITHUB_SHA} .
+        run: docker build -t ghcr.io/alephdata/aleph:${GITHUB_SHA} .
 
       - name: Install development dependencies
         run: make dev
@@ -55,7 +57,7 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
           export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
-          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} alephdata/aleph:${ALEPH_TAG};
+          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:${ALEPH_TAG};
           docker push ghcr.io/alephdata/aleph:${ALEPH_TAG};
-          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest;
+          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:latest;
           docker push ghcr.io/alephdata/aleph:latest;

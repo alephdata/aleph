@@ -49,12 +49,12 @@ exports[`<Dialog /> renders correctly with no properties 1`] = `
                 />
               </svg>
             </span>
-            <h5
+            <h6
               class="bp4-heading"
               id="title-bp-dialog-0"
             >
               Lorem Ipsum
-            </h5>
+            </h6>
             <button
               aria-label="Close"
               class="bp4-button bp4-minimal bp4-dialog-close-button"
@@ -145,12 +145,12 @@ exports[`<Dialog /> renders custom classes 1`] = `
                 />
               </svg>
             </span>
-            <h5
+            <h6
               class="bp4-heading"
               id="title-bp-dialog-1"
             >
               Lorem Ipsum
-            </h5>
+            </h6>
             <button
               aria-label="Close"
               class="bp4-button bp4-minimal bp4-dialog-close-button"
