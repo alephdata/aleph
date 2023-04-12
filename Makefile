@@ -107,9 +107,9 @@ e2e/test-results:
 	mkdir -p e2e/test-results
 
 e2e: services e2e/test-results
-	$(COMPOSE_E2E) up -d api ui worker
 	$(APPDOCKER) aleph upgrade
 	$(APPDOCKER) aleph createuser --name="E2E Admin" --admin --password="admin" admin@admin.admin
+	$(COMPOSE_E2E) up -d api ui worker
 	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure e2e/
 
 e2e-local-setup: dev
