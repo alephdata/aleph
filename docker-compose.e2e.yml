@@ -4,3 +4,11 @@ services:
   ui:
     environment:
       DANGEROUSLY_DISABLE_HOST_CHECK: "true"
+
+  e2e:
+    build:
+      context: e2e
+    environment:
+      BASE_URL: "http://ui:8080"
+    volumes:
+      - "./e2e:/e2e"

@@ -79,7 +79,10 @@ build:
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
-build-full: build build-ui
+build-e2e:
+	$(COMPOSE_E2E) build
+
+build-full: build build-ui build-e2e
 
 ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
@@ -100,9 +103,12 @@ translate: dev
 	npm run --prefix ui translate
 	pybabel compile -d aleph/translations -D aleph -f
 
-e2e: services
+e2e/test-results:
+	mkdir -p e2e/test-results
+
+e2e: services e2e/test-results
 	$(COMPOSE_E2E) up -d api ui worker
-	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure e2e/
+	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure e2e/
 
 e2e-local-setup: dev
 	playwright install
