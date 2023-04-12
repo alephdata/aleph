@@ -155,14 +155,6 @@ services:
     env_file:
       - aleph.env
 
-  e2e:
-    build:
-      context: e2e
-    environment:
-      BASE_URL: "http://ui:8080"
-    volumes:
-      - "./e2e:/e2e"
-
   worker:
     image: alephdata/aleph:${ALEPH_TAG:-3.13.2-rc3}
     command: aleph worker
