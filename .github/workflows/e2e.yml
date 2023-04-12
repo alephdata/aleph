@@ -24,6 +24,7 @@ jobs:
 
       - name: Archive test result artifacts
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: test-results
           path: e2e/test-results/
