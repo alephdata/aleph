@@ -110,7 +110,7 @@ e2e: services e2e/test-results
 	$(APPDOCKER) aleph upgrade
 	$(APPDOCKER) aleph createuser --name="E2E Admin" --admin --password="admin" admin@admin.admin
 	$(COMPOSE_E2E) up -d api ui worker
-	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure e2e/
+	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
 
 e2e-local-setup: dev
 	playwright install
