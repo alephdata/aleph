@@ -25,7 +25,7 @@ def test_ingest_odt(page: Page) -> None:
         "e2e/fixtures/random.odt"
     )
     page.get_by_role("button", name="Upload", exact=True).click()
-    page.locator("section").get_by_role("button", name="Close").click()
+    page.get_by_role("dialog", name="Upload documents").get_by_role("button", name="Close").click()
     page.wait_for_selector("div[role='progressbar']", state="detached")
     page.reload()
     page.get_by_role("link", name="random.odt").click()
