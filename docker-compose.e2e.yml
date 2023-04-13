@@ -1,6 +1,10 @@
 version: "3.2"
 
 services:
+  api:
+    environment:
+      ALEPH_SINGLE_USER: "true"
+
   ui:
     environment:
       DANGEROUSLY_DISABLE_HOST_CHECK: "true"
