@@ -1,6 +1,7 @@
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 import os
+import time
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:8080/")
 
@@ -11,12 +12,13 @@ def test_ingest_odt(page: Page) -> None:
     Searches for a word inside it, opens the file preview, looks at the extracted
     text and browses to the last page.
     """
+    investigation_name = "[test] Don't look in here"
 
     page.goto(BASE_URL)
     page.get_by_role("menuitem", name="Investigations").click()
     page.get_by_role("button", name="New investigation").click()
     page.get_by_placeholder("Untitled investigation").click()
-    page.get_by_placeholder("Untitled investigation").fill("[test] Don't look in here")
+    page.get_by_placeholder("Untitled investigation").fill(investigation_name)
     page.get_by_role("button", name="Save").click()
     page.get_by_role("button", name="Upload documents").click()
     page.get_by_label("Choose files to upload...").set_input_files(
@@ -40,3 +42,6 @@ def test_ingest_odt(page: Page) -> None:
     page.get_by_role("navigation").get_by_role("button").click()
     page.get_by_role("menuitem", name="Delete investigation").click()
     page.get_by_role("button", name="Delete").click()
+
+    page.reload()
+    expect(page.get_by_text(investigation_name)).to_have_count(0)
