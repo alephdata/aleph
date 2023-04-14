@@ -6,25 +6,32 @@ import { loadState } from 'reducers/util';
 import { entityReferencesQuery, profileReferencesQuery } from 'queries';
 import { getRecentlyViewedItem } from 'app/storage';
 
-function selectTimestamp(state) {
-  return state.mutation;
+function selectTimestamp(state, key = 'global') {
+  return state.mutation[key] || state.mutation.global;
 }
 
-function selectObject(state, objects, id) {
+function selectObject(state, objects, id, mutationKey) {
   if (!id || !_.has(objects, id)) {
     return loadState();
   }
   const obj = objects[id];
   const isLoadable = !obj.isError && !obj.isPending;
   if (isLoadable) {
-    const outdated = obj.loadedAt && obj.loadedAt < selectTimestamp(state);
+    const globalMutationTimestamp = selectTimestamp(state);
+    const mutationTimestamp = selectTimestamp(state, mutationKey);
+
+    const outdated =
+      obj.loadedAt &&
+      (obj.loadedAt < globalMutationTimestamp ||
+        obj.loadedAt < mutationTimestamp);
+
     obj.shouldLoad = obj.shouldLoad || outdated;
   }
   obj.shouldLoadDeep = obj.shouldLoad || (isLoadable && obj.shallow !== false);
   return obj;
 }
 
-function selectResult(state, query, expand) {
+function selectResult(state, query, expand, mutationKey) {
   if (!query || !query.path) {
     return {
       ...loadState(),
@@ -36,7 +43,7 @@ function selectResult(state, query, expand) {
   }
   const result = {
     results: [],
-    ...selectObject(state, state.results, query.toKey()),
+    ...selectObject(state, state.results, query.toKey(), mutationKey),
   };
   if (expand) {
     result.results = result.results
@@ -459,7 +466,8 @@ export function selectBookmarksResult(state, query) {
   const result = selectResult(
     state,
     query,
-    (stateInner, id) => stateInner.bookmarks[id]
+    (stateInner, id) => stateInner.bookmarks[id],
+    'bookmarks'
   );
 
   result.results = result.results.map((bookmark) => ({
