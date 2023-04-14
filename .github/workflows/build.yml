@@ -31,7 +31,6 @@ jobs:
 
       - name: Build docker image
         run: docker build -t ghcr.io/alephdata/aleph:${GITHUB_SHA} .
-        run: docker build -t ghcr.io/alephdata/aleph:${GITHUB_SHA} .
 
       - name: Install development dependencies
         run: make dev
