@@ -18,6 +18,7 @@ class DocumentDrawer:
     def close(self):
         self.page.get_by_role("button", name="Close").click()
 
+
 class Investigation:
     def __init__(self, page: Page, name: str, url: str):
         self.page = page
