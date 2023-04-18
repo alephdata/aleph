@@ -9,7 +9,7 @@ def test_ingest_odt(page: Page) -> None:
     Searches for a word inside it, opens the file preview, looks at the extracted
     text and browses to the last page.
     """
-    investigation_name = "[test] Don't look in here"
+    investigation_name = "[e2e] Don't look in here"
 
     home = Home(page)
     home.navigate()
@@ -17,7 +17,9 @@ def test_ingest_odt(page: Page) -> None:
     investigation = investigations.new(name=investigation_name)
     investigation.upload_document("e2e/fixtures/random.odt")
 
-    drawer: DocumentDrawer = investigation.search_and_expect("superprecise", "random.odt")
+    drawer: DocumentDrawer = investigation.search_and_expect(
+        "superprecise", "random.odt"
+    )
     drawer.navigate_to_text_tab(page_number=14)
     drawer.close()
 
