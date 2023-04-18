@@ -1,0 +1,43 @@
+@import 'app/variables.scss';
+
+.TimelineChartLabels {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: var(--timeline-chart-labels-height);
+  background-color: white;
+  border-top: 1px solid $aleph-border-color;
+  border-bottom: 1px solid $aleph-border-color;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.TimelineChartLabels__label {
+  position: absolute;
+  left: calc(
+    var(--timeline-chart-label-start-day) * var(--timeline-chart-day-width)
+  );
+  /* prettier-ignore */
+  width: calc(
+    (var(--timeline-chart-label-end-day) - var(--timeline-chart-label-start-day)) * var(--timeline-chart-day-width)
+  );
+
+  line-height: calc(
+    var(--timeline-chart-labels-height) - #{2 * $aleph-grid-size}
+  );
+  padding: $aleph-grid-size 0;
+  color: $aleph-greyed-text;
+
+  animation: timeline-fadein var(--timeline-chart-transition-duration);
+}
+
+.TimelineChartLabels__label:first-child {
+  padding-left: $aleph-grid-size;
+}
+
+.TimelineChartLabels--days .TimelineChartLabels__text,
+.TimelineChartLabels--years .TimelineChartLabels__text {
+  position: sticky;
+  left: $aleph-grid-size;
+  margin-right: $aleph-grid-size;
+}

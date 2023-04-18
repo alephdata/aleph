@@ -1,3 +1,17 @@
+## 3.14.0 (30-03-2023)
+
+- Numerous library upgrades
+- Updated Timelines feature. Timeslines are now more user friendly, better to look at and come with a new chart view that allow you to see your timelines on a line.
+
+## 3.13.1-rc1 (09-11-2022)
+
+- Library upgrades
+- New version of ingest-file library
+- New minor version of followthemoney
+- FtM version is now displayed in the about us page
+- fixed issue with some redirects not working correctly
+- Updated the JSON log format
+
 ## 3.13.0 (21-11-2022)
 
 - Library upgrades

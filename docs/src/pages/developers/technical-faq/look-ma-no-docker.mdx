@@ -1,0 +1,637 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: Look Ma, No Docker
+---
+
+# Look Ma, No Docker
+
+<p class="lead">
+  This guide de-dockerifies Aleph. I use Ubuntu 19.10 as the distribution since this is the distribution of choice of the Aleph docker files. This assumes Aleph 3.4.4.
+</p>
+
+<Callout theme="danger">
+  We don't recommend using Aleph without Docker. This guide was contributed by a community member, and it is documented here for completeness.
+</Callout>
+
+I start with a vanilla Ubuntu server installation and run all commands at the user account that I created during installation. Later on in the installation, I switch to a newly created `aleph` user account.
+
+## Basic setup
+
+```text
+sudo apt update && sudo apt upgrade
+sudo apt install \
+  apt-transport-https \
+  build-essential \
+  ca-certificates \
+  curl \
+  gnupg \
+  locales \
+  wget
+```
+
+```text
+sudo sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sudo dpkg-reconfigure locales
+sudo update-locale LANG=en_US.UTF-8
+```
+
+## Postgresql
+
+The Aleph `Dockerfile` depend on Postgresql 10. While I believe that Aleph would work with newer versions of Postgresql as well \(stock Ubuntu 19.10 comes with Postgresql 11\) I choose to stick to the same version of Postgresql.
+
+```text
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+sudo apt update
+sudo apt install postgresql-10
+sudo systemctl enable postgresql
+```
+
+Create the database for Aleph. Replace the password with something following better password practices.
+
+```text
+sudo -u postgres psql
+create database aleph;
+create user aleph with encrypted password 'aleph';
+grant all privileges on database aleph to aleph;
+```
+
+## Elasticsearch
+
+To install Elasticsearch I follow the instructions on [elastic.co](https://www.elastic.co/guide/en/elasticsearch/reference/7.5/deb.html). Aleph depends on the latest Elasticsearch docker image which at the time of this writing is 7.5.1.
+
+```text
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+sudo apt update
+sudo apt install elasticsearch
+```
+
+We install additional plugins for Elasticsearch.
+
+```text
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch discovery-gce
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-s3
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-gcs
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-icu
+```
+
+Edit `/etc/elasticsearch/elasticsearch.yml` and make the server listen only on localhost. As a default, Elasticsearch listens on all IP addresses.
+
+```text
+network.host: 127.0.0.1
+```
+
+Edit `/etc/elasticsearch/jvm.options` and set a proper heap size.
+
+```text
+-Xms1g
+-Xmx1g
+```
+
+```text
+sudo sysctl -w vm.max_map_count=262144
+sudo systemctl enable elasticsearch
+sudo systemctl start elasticsearch
+```
+
+## Redis
+
+Redis is straightforward to install. It requires no additional configuration.
+
+```text
+sudo apt install redis
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
+```
+
+## Aleph
+
+Aleph itself consists of several services that run independently.
+
+- `convert-document`
+- `ingest-file`
+- `worker`
+- `shell`
+- `api`
+- `ui`
+
+There is a [dedicated repository](https://github.com/alephdata/convert-document) for `convert-document`. The other services are part of the [standard Aleph repository](https://github.com/alephdata/aleph/).
+
+These are all the packages that the OS has to provide for the different parts of Aleph.
+
+```text
+curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+sudo apt update
+sudo apt install \
+  cython3 \
+  djvulibre-bin \
+  fonts-dejavu \
+  fonts-dejavu-core \
+  fonts-dejavu-extra \
+  fonts-droid-fallback \
+  fonts-dustin \
+  fonts-f500 \
+  fonts-fanwood \
+  fonts-freefont-ttf \
+  fonts-liberation \
+  fonts-lmodern \
+  fonts-lyx \
+  fonts-opensymbol \
+  fonts-sil-gentium \
+  fonts-texgyre \
+  fonts-tlwg-purisa \
+  ghostscript \
+  hyphen-de \
+  hyphen-en-us \
+  hyphen-fr \
+  hyphen-it \
+  hyphen-ru \
+  imagemagick \
+  imagemagick-common \
+  libfreetype6-dev \
+  libicu-dev \
+  libjpeg-dev \
+  libldap2-dev \
+  libleptonica-dev \
+  libmagic-dev \
+  libmediainfo-dev \
+  libpq-dev \
+  libreoffice \
+  libreoffice-common \
+  libreoffice-impress \
+  libreoffice-writer \
+  librsvg2-bin \
+  libsasl2-dev \
+  libtesseract-dev \
+  libtiff-tools \
+  libtiff5-dev \
+  libwebp-dev \
+  libxml2-dev \
+  libxslt1-dev \
+  mdbtools \
+  nginx \
+  nodejs \
+  p7zip-full \
+  pkg-config\
+  poppler-data \
+  poppler-utils \
+  pst-utils \
+  python3-crypto \
+  python3-dev \
+  python3-icu \
+  python3-lxml \
+  python3-pil \
+  python3-pip \
+  python3-psycopg2 \
+  python3-uno \
+  tesseract-ocr \
+  tesseract-ocr-afr \
+  tesseract-ocr-ara \
+  tesseract-ocr-aze \
+  tesseract-ocr-bel \
+  tesseract-ocr-bul \
+  tesseract-ocr-cat \
+  tesseract-ocr-ces \
+  tesseract-ocr-dan \
+  tesseract-ocr-deu \
+  tesseract-ocr-ell \
+  tesseract-ocr-eng \
+  tesseract-ocr-est \
+  tesseract-ocr-fin \
+  tesseract-ocr-fra \
+  tesseract-ocr-frk \
+  tesseract-ocr-heb \
+  tesseract-ocr-hin \
+  tesseract-ocr-hrv \
+  tesseract-ocr-hun \
+  tesseract-ocr-ind \
+  tesseract-ocr-isl \
+  tesseract-ocr-ita \
+  tesseract-ocr-kan \
+  tesseract-ocr-lav \
+  tesseract-ocr-lit \
+  tesseract-ocr-mkd \
+  tesseract-ocr-mlt \
+  tesseract-ocr-msa \
+  tesseract-ocr-nld \
+  tesseract-ocr-nor \
+  tesseract-ocr-pol \
+  tesseract-ocr-por \
+  tesseract-ocr-ron \
+  tesseract-ocr-rus \
+  tesseract-ocr-slk \
+  tesseract-ocr-slv \
+  tesseract-ocr-spa \
+  tesseract-ocr-sqi \
+  tesseract-ocr-srp \
+  tesseract-ocr-swa \
+  tesseract-ocr-swe \
+  tesseract-ocr-tur \
+  tesseract-ocr-ukr \
+  unoconv \
+  unrar \
+  zlib1g-dev \
+  virtualenv
+```
+
+The `convert-document` service requires python to resolve correctly to python3.
+
+```text
+sudo ln -s /usr/bin/python3 /usr/local/bin/python
+```
+
+`convert-document` further relies on a newer version of `unoconv` than ships with Ubuntu 19.10. As your regular user
+
+```text
+curl -O https://raw.githubusercontent.com/unoconv/unoconv/0.8.2/unoconv
+sudo mv unoconv /usr/local/bin/unoconv
+sudo chmod +x /usr/local/bin/unoconv
+```
+
+We run Aleph as it's own dedicated user.
+
+```text
+sudo groupadd aleph
+sudo useradd -g aleph aleph
+```
+
+We split all services into three different virtualenvs, one for `convert-document`, one for `ingest-file` and another one that runs `aleph-api` and `aleph-worker`. The UI is just static files, so there is no need to place them into a dedicated virtualenv.
+
+The following steps are all done as the `aleph` user.
+
+```text
+sudo -i -u aleph
+mkdir {data,venvs}
+git clone https://github.com/alephdata/aleph.git
+git clone https://github.com/alephdata/convert-document.git
+cd
+virtualenv --python=python3 --system-site-packages ~/venvs/convert-document
+virtualenv --python=python3 --system-site-packages ~/venvs/ingest-file
+virtualenv --python=python3 --system-site-packages ~/venvs/aleph
+exit
+```
+
+Once we have the Aleph source code available we can place the `synonames.txt` for Elasticsearch to find. We execute this command again as our regular user.
+
+```text
+sudo cp /home/aleph/aleph/services/elasticsearch/synonames.txt /etc/elasticsearch
+```
+
+### `convert-document`
+
+Run the following commands as the `aleph` user.
+
+```text
+source venvs/convert-document/bin/activate
+cd ~/convert-document
+pip install -r requirements.txt
+pip install .
+```
+
+Test that everything is working manually if you like:
+
+```text
+gunicorn --threads 3 --bind 127.0.0.1:3000 --max-requests 5000 --access-logfile - --error-logfile - --timeout 600 --graceful-timeout 500 convert.app:app
+curl -o out.pdf -F format=pdf -F 'file=@my-doc.odt' http://localhost:3000/convert
+```
+
+Exit the virtualenv.
+
+```text
+deactivate
+```
+
+### `ingest-file`
+
+Run the following commands as the `aleph` user.run the following commands:
+
+```text
+source venvs/ingest-file/bin/activate
+cd ~/aleph/services/ingest-file
+pip install -r requirements.txt
+pip install .
+```
+
+Exit the virtualenv.
+
+```text
+deactivate
+```
+
+### `aleph-worker` and `aleph-api`
+
+The following commands are all run as the `aleph` user.
+
+Generate a new secret key. This command outputs a long string of characters which we use as our secret key in the Aleph configuration.
+
+```text
+openssl rand -hex 64
+```
+
+```text
+cat <<EOF > ~/aleph/aleph.env
+ALEPH_SECRET_KEY=2503698e0d74f47bd87b41ce0978c3db7567d90544554189b72a06b3ef62b2c887768bba79cf812987397f55145bd903fe6c581302fdefe2c8584ce4a3ba8005
+ALEPH_APP_TITLE=Aleph
+ALEPH_APP_NAME=aleph
+ALEPH_UI_URL=https://source.bird.tools
+ALEPH_URL_SCHEME=https
+ALEPH_ADMINS=christo@cryptodrunks.net
+ALEPH_PASSWORD_LOGIN=true
+ALEPH_OAUTH=false
+ALEPH_OCR_DEFAULTS=eng
+ALEPH_DEBUG=false
+ALEPH_NER_MODELS=eng:deu:fra:spa:por
+ALEPH_ELASTICSEARCH_URI=http://localhost:9200/
+ALEPH_DATABASE_URI=postgresql://aleph:aleph@localhost/aleph
+ALEPH_GEONAMES_DATA=/home/aleph/aleph/contrib/geonames.txt
+FTM_STORE_URI=postgresql://aleph:aleph@localhost/aleph
+REDIS_URL=redis://localhost:6379/0
+ARCHIVE_TYPE=file
+ARCHIVE_PATH=~/data
+UNOSERVICE_URL=http://localhost:3000/convert
+ALEPH_LID_MODEL_PATH=/home/aleph/aleph/contrib/lid.176.ftz
+EOF
+```
+
+We add some of the Aleph configuration variables into the user's environment as well. This becomes handy later on when interacting with Aleph interactively on the shell. We source the new environment profile right away as well.
+
+```text
+cat <<EOF >> ~/.profile
+export ALEPH_ELASTICSEARCH_URI=http://localhost:9200/
+export ALEPH_DATABASE_URI=postgresql://aleph:aleph@localhost/aleph
+export BALKHASH_BACKEND=postgresql
+export BALKHASH_DATABASE_URI=postgresql://aleph:aleph@localhost/aleph
+export REDIS_URL=redis://localhost:6379/0
+export ARCHIVE_TYPE=file
+export ARCHIVE_PATH=/home/aleph/data
+export UNOSERVICE_URL=http://localhost:3000/convert
+export ALEPHCLIENT_HOST=https://source.bird.tools
+EOF
+source ~/.profile
+```
+
+With the configuration in place, we can continue with the installation of Aleph itself.
+
+```text
+source venvs/aleph/bin/activate
+cd ~/aleph
+pip install -r requirements-generic.txt
+pip install -r requirements-toolkit.txt
+pip install . alephclient spacy==2.2.3
+python3 -m spacy download xx_ent_wiki_sm && python3 -m spacy link xx_ent_wiki_sm xx
+python3 -m spacy download en_core_web_sm && python3 -m spacy link en_core_web_sm eng
+python3 -m spacy download de_core_news_sm && python3 -m spacy link de_core_news_sm deu
+python3 -m spacy download fr_core_news_sm && python3 -m spacy link fr_core_news_sm fra
+python3 -m spacy download es_core_news_sm && python3 -m spacy link es_core_news_sm spa
+python3 -m spacy download pt_core_news_sm && python3 -m spacy link pt_core_news_sm por
+```
+
+Initialize the databases for Aleph. Replace the username and password of the database as needed. While connected to the `aleph` virtualenv run:
+
+```text
+aleph db init
+aleph db migrate
+aleph upgrade
+```
+
+Exit the virtualenv.
+
+```text
+deactivate
+```
+
+### `aleph-ui`
+
+Run the following commands as the `aleph` user.
+
+```text
+cd ~/aleph/ui
+npm install
+```
+
+Create a `.env` file and set the `REACT_APP_API_ENDPOINT` variable.
+
+```text
+REACT_APP_API_ENDPOINT=https://source.bird.tools/api/2
+```
+
+```text
+npm run build
+```
+
+## Final touches
+
+The following commands are all executed as the regular user.
+
+To start all Aleph automatically at boot, we need to place Systemd service files for the various services of Aleph and configure the webserver.
+
+Create a `systemd` service unit for the `convert-document` service in `/etc/systemd/system/convert-document.service`:
+
+```text
+[Unit]
+Description=convert-document daemon
+After=network.target
+
+[Service]
+Type=notify
+User=aleph
+Group=aleph
+RuntimeDirectory=convert-document
+Environment="PATH=/home/aleph/venvs/convert-document/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+WorkingDirectory=/home/aleph/convert-document
+ExecStart=/home/aleph/venvs/convert-document/bin/gunicorn --threads 3 --bind 127.0.0.1:3000 --max-requests 30 --access-logfile - --error-logfile - --timeout 300 --graceful-timeout 300 convert.app:app
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Create a `systemd` service unit for the `ingest-file`service in `/etc/systemd/system/ingest-file.service`:
+
+```text
+[Unit]
+Description=ingest-file daemon
+Wants=redis-server.service postgresql.service convert-document.service
+After=network.target redis-server.service postgresql.service convert-document.service
+
+[Service]
+Type=simple
+User=aleph
+Group=aleph
+RuntimeDirectory=ingest-file
+Environment="PATH=/home/aleph/venvs/ingest-file/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+EnvironmentFile=/home/aleph/aleph/aleph.env
+WorkingDirectory=/home/aleph/aleph/services/ingest-file
+ExecStart=/home/aleph/venvs/ingest-file/bin/ingestors process
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Create a `systemd` service unit for the `aleph-worker` service `/etc/systemd/system/aleph-worker.service`:
+
+```text
+[Unit]
+Description=aleph-worker daemon
+Wants=redis-server.service postgresql.service elasticsearch.service ingest-file.service
+After=network.target redis-server.service postgresql.service elasticsearch.service ingest-file.service
+
+[Service]
+Type=simple
+User=aleph
+Group=aleph
+RuntimeDirectory=aleph-worker
+Environment="PATH=/home/aleph/venvs/aleph/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+EnvironmentFile=/home/aleph/aleph/aleph.env
+WorkingDirectory=/home/aleph/aleph
+ExecStart=/home/aleph/venvs/aleph/bin/aleph worker
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Create a `systemd` service unit for `aleph-api` service `/etc/systemd/system/aleph-api.service`:
+
+```text
+[Unit]
+Description=aleph-api daemon
+Wants=redis-server.service postgresql.service elasticsearch.service convert-document.service ingest-file.service aleph-worker.service
+After=network.target redis-server.service postgresql.service elasticsearch.service convert-document.service ingest-file.service aleph-worker.service
+
+[Service]
+Type=notify
+User=aleph
+Group=aleph
+RuntimeDirectory=aleph-api
+Environment="PATH=/home/aleph/venvs/aleph/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+EnvironmentFile=/home/aleph/aleph/aleph.env
+WorkingDirectory=/home/aleph/aleph
+ExecStart=/home/aleph/venvs/aleph/bin/gunicorn -w 6 -b 0.0.0.0:8000 --log-level debug --log-file - aleph.wsgi:app
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```text
+sudo systemctl daemon-reload
+sudo systemctl enable convert-document.service ingest-file.service aleph-worker.service aleph-api.service
+sudo systemctl start convert-document.service ingest-file.service aleph-worker.service aleph-api.service
+```
+
+As the last step, we configure the webserver to proxy requests to Aleph. We use [Let's Encrypt](https://letsencrypt.org/) to obtain valid SSL certificates. You can find many online resources describing this process, e.g. [here](https://certbot.eff.org/lets-encrypt/ubuntuother-nginx).
+
+Create a configuration file for the Nginx server in `/etc/nginx/sites-available/source.bird.tools`.
+
+```text
+upstream aleph-api {
+  server localhost:8000;
+}
+
+server {
+  if ($host = source.bird.tools) {
+    return 301 https://$host$request_uri;
+  } # managed by Certbot
+
+  listen 80 default_server;
+  listen [::]:80 default_server;
+
+  server_name source.bird.tools;
+  return 404; # managed by Certbot
+}
+
+server {
+  server_name source.bird.tools;
+
+  ignore_invalid_headers off;
+  add_header Referrer-Policy "same-origin";
+  add_header X-Clacks-Overhead "GNU Terry Pratchett";
+  add_header X-Content-Type-Options "nosniff";
+  add_header X-Frame-Options "SAMEORIGIN";
+  add_header X-XSS-Protection "1; mode=block";
+  add_header Feature-Policy "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'";
+
+  client_max_body_size 1024M;
+
+  listen [::]:443 ssl ipv6only=on; # managed by Certbot
+  listen 443 ssl; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/source.bird.tools/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/source.bird.tools/privkey.pem; # managed by Certbot
+  include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+  location / {
+    root /home/aleph/aleph/ui/build;
+    try_files $uri $uri/ /index.html;
+
+    gzip_static on;
+    gzip_types text/plain text/xml text/css
+    text/javascript application/x-javascript;
+  }
+
+  location /api {
+    proxy_pass         http://aleph-api;
+    proxy_redirect     off;
+    proxy_set_header   Host $http_host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}
+```
+
+We enable the configuration and restart the server.
+
+```text
+cd /etc/nginx/sites-enabled
+ln -sf /etc/nginx/sites-availble/source.bird.tools
+nginx -t
+systemctl restart nginx
+```
+
+Aleph should be up and running. You want to create an initial user account. See the following section on how to do that,
+
+## Aleph Configuration
+
+Whenever you want to interact with Aleph you have to activate it for your running shell. I use the following commands when interacting with Aleph.
+
+```text
+sudo -i -u aleph
+source venvs/aleph/bin/activate
+export ALEPHCLIENT_API_KEY=<your api key>
+```
+
+### Create Aleph users
+
+```text
+aleph createuser -n crito -p SuperSecretPassword -a crito@cryptodrunks.net
+```
+
+The command outputs an API key that you should save somewhere. You will need it in the future when interacting with Aleph.
+
+### Upgrade Aleph
+
+Upgrading Aleph requires to pull the latest changes and reinstall any dependencies required. To upgrade from Aleph 3.4.4 to e.g. 3.4.5 run the following commands:
+
+```text
+cd aleph
+git fetch --all
+git checkout 3.4.5
+pip install -r requirements-generic.txt
+pip install -r requirements-toolkit.txt
+pip install .
+```
+
+Unfortunately, some dependencies are missing from the requirement files. Particularly `spacy` is installed separately. Check the `Dockerfile` in the `aleph` directory to see if any additional steps are required.
+
+### Import data
+
+```text
+alephclient crawldir -f test out.pdf
+```

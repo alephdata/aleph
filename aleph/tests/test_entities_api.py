@@ -616,7 +616,7 @@ class EntitiesApiTestCase(TestCase):
         for res in results:
             prop = res["property"]
             assert prop in (
-                "identificiation",
+                "identification",
                 "ownershipOwner",
             ), results
             if prop == "ownershipOwner":
@@ -624,7 +624,7 @@ class EntitiesApiTestCase(TestCase):
                 assert len(res["entities"]) == 2
                 for nested in res["entities"]:
                     assert nested["schema"] in ("Ownership", "Company"), nested
-            if prop == "identificiation":
+            if prop == "identification":
                 assert res["count"] == 1
                 assert res["entities"][0]["schema"] == "Passport", res
 

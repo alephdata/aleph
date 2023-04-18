@@ -995,6 +995,9 @@
   "footer.aleph": {
     "defaultMessage": "Алеф {version}"
   },
+  "footer.ftm": {
+    "defaultMessage": "FollowTheMoney {version}"
+  },
   "group.page.description": {
     "defaultMessage": "Список всех наборов данных и расследований, принадлежащих этой группе."
   },
@@ -1401,13 +1404,13 @@
     "defaultMessage": "У вас пока нет сгенерированных маппингов"
   },
   "messages.banner.dismiss": {
-    "defaultMessage": "Dismiss"
+    "defaultMessage": "Закрыть"
   },
   "nav.alerts": {
     "defaultMessage": "Оповещения"
   },
   "nav.bookmarks": {
-    "defaultMessage": "Bookmarks"
+    "defaultMessage": "Закладки"
   },
   "nav.cases": {
     "defaultMessage": "Расследования"

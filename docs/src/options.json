@@ -1,0 +1,114 @@
+{
+  "title": "Aleph",
+  "git": {
+    "branch": "main",
+    "githubRepoUrl": "https://github.com/alephdata/aleph"
+  },
+  "search": {
+    "appId": "T36QKHHSVS",
+    "apiKey": "b462393bca678070ceb9abf533aeeb0b",
+    "indexName": "aleph-occrp"
+  },
+  "nav": {
+    "header": {
+      "items": []
+    },
+    "sidebar": {
+      "sections": [
+        {
+          "title": "About",
+          "items": [
+            { "slug": "/" },
+            { "slug": "/how-aleph-is-used" },
+            { "slug": "/get-in-touch" }
+          ]
+        },
+        {
+          "title": "Users",
+          "items": [
+            { "slug": "/guide/getting-started" },
+            { "slug": "/guide/the-basics" },
+            {
+              "slug": "/guide/search",
+              "children": [
+                { "slug": "/guide/search/anatomy-of-a-search" },
+                { "slug": "/guide/search/advanced-search-methods" },
+                { "slug": "/guide/search/filtering-your-search-results" },
+                { "slug": "/guide/search/searching-within-other-contexts" },
+                { "slug": "/guide/search/searching-for-a-dataset" }
+              ]
+            },
+            {
+              "slug": "/guide/building-out-your-investigation",
+              "children": [
+                {
+                  "slug": "/guide/building-out-your-investigation/creating-an-investigation"
+                },
+                {
+                  "slug": "/guide/building-out-your-investigation/uploading-documents"
+                },
+                {
+                  "slug": "/guide/building-out-your-investigation/network-diagrams"
+                },
+                {
+                  "slug": "/guide/building-out-your-investigation/using-the-table-editor"
+                },
+                {
+                  "slug": "/guide/building-out-your-investigation/generating-multiple-entities-from-a-list"
+                },
+                {
+                  "slug": "/guide/building-out-your-investigation/cross-referencing"
+                }
+              ]
+            },
+            { "slug": "/guide/aleph-data-desktop" },
+            { "slug": "/guide/reconciliation" },
+            { "slug": "/guide/frequently-asked-questions" }
+          ]
+        },
+        {
+          "title": "Developers & Admins",
+          "items": [
+            { "slug": "/developers/intro" },
+            { "slug": "/developers/installation" },
+            {
+              "slug": "/developers/followthemoney",
+              "children": [
+                { "slug": "/developers/followthemoney/ftm" },
+                {
+                  "title": "Technical Reference",
+                  "external": true,
+                  "link": "https://followthemoney.readthedocs.io/"
+                }
+              ]
+            },
+            { "slug": "/developers/memorious" },
+            { "slug": "/developers/alephclient" },
+            { "slug": "/developers/mappings" },
+            { "slug": "/developers/mixed-graphs" },
+            { "slug": "/developers/adding-text-processors" },
+            {
+              "slug": "/developers/technical-faq",
+              "children": [
+                { "slug": "/developers/technical-faq/design-premises" },
+                { "slug": "/developers/technical-faq/look-ma-no-docker" }
+              ]
+            },
+            { "slug": "/developers/developer-tools" },
+            { "slug": "/developers/datacommons" }
+          ]
+        },
+        {
+          "title": "Reference",
+          "items": [
+            {
+              "title": "Aleph API",
+              "external": true,
+              "link": "https://redocly.github.io/redoc/?url=https://aleph.occrp.org/api/openapi.json"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -49,6 +49,7 @@ import UpdateStatus from './UpdateStatus';
 import JudgementButtons from './JudgementButtons';
 import LinkMenuItem from './LinkMenuItem';
 import LinkButton from './LinkButton';
+import WidthBoundary from './WidthBoundary';
 
 export {
   AnimatedCount,
@@ -102,6 +103,7 @@ export {
   JudgementButtons,
   LinkMenuItem,
   LinkButton,
+  WidthBoundary,
 };
 
 export * from './types';

@@ -33,7 +33,7 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:3.16.1
+    image: alephdata/convert-document:3.17.1
     restart: on-failure
     tmpfs:
       - /tmp
@@ -43,7 +43,7 @@ services:
   ingest-file:
     build:
       context: services/ingest-file
-    image: alephdata/ingest-file:3.16.1
+    image: alephdata/ingest-file:3.17.1
     hostname: ingest
     tmpfs: /tmp
     volumes:

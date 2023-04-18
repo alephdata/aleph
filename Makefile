@@ -8,13 +8,16 @@ all: build upgrade web
 services:
 	$(COMPOSE) up -d --remove-orphans \
 		postgres elasticsearch ingest-file \
-		convert-document
+		convert-document dejavu
 
 shell: services
 	$(APPDOCKER) /bin/bash
 
 shell-ui: services
 	$(UIDOCKER) /bin/bash
+
+shell-db: services
+	$(COMPOSE) exec postgres psql -U aleph
 
 test:
 	$(APPDOCKER) contrib/test.sh

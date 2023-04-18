@@ -82,6 +82,18 @@ def create_user(email, name, password, is_admin=False):
     return role
 
 
+def rename_user(email, name):
+    """Rename an existing user"""
+    foreign_id = "system:aleph" if "default" in email else "password:{}".format(email)
+    role = Role.by_foreign_id(foreign_id)
+    if role:
+        role.update({"name": name})
+        db.session.add(role)
+        db.session.commit()
+        update_role(role)
+    return role
+
+
 def update_role(role):
     """Synchronize denormalised role configuration."""
     refresh_role(role)

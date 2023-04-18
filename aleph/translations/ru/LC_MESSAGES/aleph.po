@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-11-21 10:56+0100\n"
+"POT-Creation-Date: 2022-12-12 11:06+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -348,19 +348,19 @@ msgstr "Некорректное имя схемы: %s"
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"
 
-#: aleph/views/base_api.py:220
+#: aleph/views/base_api.py:222
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:229
+#: aleph/views/base_api.py:231
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:236
+#: aleph/views/base_api.py:238
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:250
+#: aleph/views/base_api.py:252
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 

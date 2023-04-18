@@ -331,6 +331,7 @@
   "facet.schema": "Entity type",
   "file_import.error": "Error importing file",
   "footer.aleph": "Aleph {version}",
+  "footer.ftm": "FollowTheMoney {version}",
   "group.page.description": "The list below shows all datasets and investigations that belong to this group.",
   "group.page.search.description": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead.",
   "home.access_disabled": "Public access temporarily disabled",

@@ -4,6 +4,7 @@ on:
   push:
     paths-ignore:
       - "ui/**"
+      - "docs/**"
 
 permissions:
   packages: write
@@ -29,7 +30,7 @@ jobs:
           make ALEPH_TAG=${GITHUB_SHA} services
 
       - name: Build docker image
-        run: docker build -t alephdata/aleph:${GITHUB_SHA} .
+        run: docker build -t ghcr.io/alephdata/aleph:${GITHUB_SHA} .
 
       - name: Install development dependencies
         run: make dev
@@ -45,17 +46,17 @@ jobs:
 
       - name: Push docker image (hash)
         env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        if: env.DOCKER_PASSWORD != null
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        if: env.GITHUB_PASSWORD != null
         run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin 
-          docker push alephdata/aleph:${GITHUB_SHA}
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin 
+          docker push ghcr.io/alephdata/aleph:${GITHUB_SHA}
 
       - name: Push docker images for tags
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
           export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
-          docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:${ALEPH_TAG};
-          docker push alephdata/aleph:${ALEPH_TAG};
-          docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest;
-          docker push alephdata/aleph:latest;
+          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:${ALEPH_TAG};
+          docker push ghcr.io/alephdata/aleph:${ALEPH_TAG};
+          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:latest;
+          docker push ghcr.io/alephdata/aleph:latest;

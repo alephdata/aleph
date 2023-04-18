@@ -1,0 +1,10 @@
+@import 'app/variables.scss';
+
+.FeedbackButton__text {
+  text-decoration: underline;
+  color: $aleph-greyed-text;
+}
+
+.FeedbackButton:hover .FeedbackButton__text {
+  color: inherit;
+}

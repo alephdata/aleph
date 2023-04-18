@@ -11,9 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Assign to One Project
     steps:
-      - uses: actions/add-to-project@v0.3.0
+      - uses: actions/add-to-project@v0.4.1
         with:
           # You can target a repository in a different organization
           # to the issue
           project-url: https://github.com/orgs/alephdata/projects/10
           github-token: ${{ secrets.ALEPH_GITHUB_TOKEN }}
+        continue-on-error: true

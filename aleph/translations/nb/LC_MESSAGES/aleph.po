@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-11-21 10:56+0100\n"
+"POT-Creation-Date: 2022-12-12 11:06+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/aleph/teams/76591/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -326,19 +326,19 @@ msgstr ""
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:220
+#: aleph/views/base_api.py:222
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:229
+#: aleph/views/base_api.py:231
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:236
+#: aleph/views/base_api.py:238
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:250
+#: aleph/views/base_api.py:252
 msgid "Access token is invalid."
 msgstr ""
 
