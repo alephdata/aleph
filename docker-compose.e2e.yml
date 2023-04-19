@@ -19,7 +19,7 @@ services:
     volumes:
       - archive-data-e2e:/data
     environment:
-      ALEPH_SINGLE_USER: "true"
+      ALEPH_SINGLE_USER: "false"
       ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
       APP_NAME: "aleph-e2e"
       FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
@@ -28,6 +28,7 @@ services:
     volumes:
       - archive-data-e2e:/data
     environment:
+      ALEPH_SINGLE_USER: "false"
       ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
       APP_NAME: "aleph-e2e"
       FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
@@ -41,6 +42,7 @@ services:
 
   ui:
     environment:
+      ALEPH_SINGLE_USER: "false"
       DANGEROUSLY_DISABLE_HOST_CHECK: "true"
 
   e2e:

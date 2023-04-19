@@ -26,7 +26,6 @@ jobs:
         run: |
           sudo sysctl -w vm.max_map_count=262144
           sudo echo "ALEPH_SECRET_KEY=batman\n" >> aleph.env
-          sudo echo "ALEPH_SINGLE_USER=true\n" >> aleph.env
           echo "${GITHUB_REF}"
           docker --version
           docker-compose --version

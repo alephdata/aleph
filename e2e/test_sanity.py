@@ -13,6 +13,7 @@ def test_ingest_odt(page: Page) -> None:
 
     home = Home(page)
     home.navigate()
+    home.sign_in()
     investigations: Investigations = home.navigate_to_investigations()
     investigation = investigations.new(name=investigation_name)
     investigation.upload_document("e2e/fixtures/random.odt")
