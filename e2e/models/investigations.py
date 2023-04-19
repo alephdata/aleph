@@ -50,7 +50,7 @@ class Investigation:
         return DocumentDrawer(self.page, filename=filename)
 
     def delete(self):
-        self.page.get_by_role("link", name="[test] Don't look in here").click()
+        self.page.get_by_role("link", name=self.name).click()
         self.page.get_by_role("navigation").get_by_role("button").click()
         self.page.get_by_role("menuitem", name="Delete investigation").click()
         self.page.get_by_role("button", name="Delete").click()
