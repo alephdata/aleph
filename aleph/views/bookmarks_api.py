@@ -176,5 +176,6 @@ def migrate():
         index_elements=[Bookmark.role_id, Bookmark.entity_id],
     )
     db.session.execute(stmt)
+    db.session.commit()
 
     return jsonify({"errors": errors}, 201)
