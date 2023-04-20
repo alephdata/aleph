@@ -108,4 +108,4 @@ ENV/
 # conflict with out docs setup.
 !/docs/**/*
 
-e2e/test-results
+test-results/
