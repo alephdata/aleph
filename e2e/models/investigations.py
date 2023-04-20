@@ -44,7 +44,7 @@ class Investigation:
 
     def search_and_expect(self, query: str, filename: str):
         self.page.get_by_placeholder("Search this investigation").click()
-        self.page.get_by_placeholder("Search this investigation").fill("superprecise")
+        self.page.get_by_placeholder("Search this investigation").fill(query)
         self.page.get_by_placeholder("Search this investigation").press("Enter")
         self.page.get_by_role("link", name=filename).click()
         return DocumentDrawer(self.page, filename=filename)
