@@ -39,17 +39,10 @@ jobs:
       - name: Build production image
         run: docker build -t ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
 
-      - name: Push docker image (hash)
-        env:
-          GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        if: env.GITHUB_PASSWORD != null
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin 
-          docker push ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA}
-
       - name: Push docker image (tagged)
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
           export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
           docker tag ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG};
           docker push ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG};
