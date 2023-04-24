@@ -28,6 +28,7 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
   onClose,
   onDelete,
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [confirmationValue, setConfirmationValue] = useState<string>('');
   const enabled = confirmationValue === expectedConfirmationValue;
 
@@ -51,6 +52,7 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
         <form
           onSubmit={(event) => {
             event.preventDefault();
+            setIsLoading(true);
             onDelete();
           }}
         >
@@ -75,7 +77,13 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
               }
             />
           </FormGroup>
-          <Button type="submit" intent={Intent.DANGER} fill disabled={!enabled}>
+          <Button
+            type="submit"
+            intent={Intent.DANGER}
+            fill
+            disabled={!enabled}
+            loading={isLoading}
+          >
             {buttonLabel}
           </Button>
         </form>
