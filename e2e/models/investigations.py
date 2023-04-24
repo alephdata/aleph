@@ -53,7 +53,8 @@ class Investigation:
         self.page.get_by_role("link", name=self.name).click()
         self.page.get_by_role("navigation").get_by_role("button").click()
         self.page.get_by_role("menuitem", name="Delete investigation").click()
-        self.page.get_by_role("button", name="Delete").click()
+        self.page.get_by_label("Confirmation").fill(self.name)
+        self.page.get_by_role("button", name="Delete this investigation").click()
 
         self.page.reload()
         expect(self.page.get_by_text(self.name)).to_have_count(0)
