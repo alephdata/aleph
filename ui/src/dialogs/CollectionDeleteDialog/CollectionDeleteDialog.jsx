@@ -1,32 +1,22 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  Dialog,
-  DialogBody,
-  Intent,
-  FormGroup,
-  InputGroup,
-} from '@blueprintjs/core';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import withRouter from 'app/withRouter';
 import { deleteCollection } from 'actions';
-import { Collection } from 'components/common';
+import { DeleteDialog } from 'components/common';
 
 class CollectionDeleteDialog extends Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
-
-    this.state = { confirmationValue: '' };
   }
 
   async onDelete() {
-    const { collection, navigate } = this.props;
+    const { collection, navigate, deleteCollection } = this.props;
     const path = collection.casefile ? '/investigations' : '/datasets';
-    await this.props.deleteCollection(collection);
+    await deleteCollection(collection);
     navigate({ pathname: path });
   }
 
@@ -65,73 +55,25 @@ class CollectionDeleteDialog extends Component {
       </>
     );
 
-    const collectionLabel = (
-      <strong>
-        <Collection.Label collection={collection} icon={false} />
-      </strong>
-    );
-
     return (
-      <Dialog
+      <DeleteDialog
         isOpen={this.props.isOpen}
         title={title}
-        icon="trash"
+        buttonLabel={buttonLabel}
+        expectedConfirmationValue={collection.label}
         onClose={this.props.toggleDialog}
+        onDelete={this.onDelete}
       >
-        <DialogBody>
-          <p>
-            <FormattedMessage
-              id="collection.delete.question"
-              defaultMessage="Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
-              values={{ collectionLabel }}
-            />
-          </p>
-
-          <p>
-            <FormattedMessage
-              id="collection.delete.enter_label"
-              defaultMessage="Please enter {collectionLabel} to confirm:"
-              values={{ collectionLabel }}
-            />
-          </p>
-
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              this.onDelete();
+        <p>
+          <FormattedMessage
+            id="collection.delete.question"
+            defaultMessage="Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
+            values={{
+              collectionLabel: <strong>{collection.label}</strong>,
             }}
-          >
-            <FormGroup
-              labelFor="collection-delete-confirmation"
-              label={
-                <span className="visually-hidden">
-                  <FormattedMessage
-                    id="collection.delete.collection_label"
-                    defaultMessage="Label"
-                  />
-                </span>
-              }
-            >
-              <InputGroup
-                id="collection-delete-confirmation"
-                placeholder={collection.label}
-                required
-                onInput={(event) =>
-                  this.setState({ confirmationValue: event.target.value })
-                }
-              />
-            </FormGroup>
-            <Button
-              type="submit"
-              intent={Intent.DANGER}
-              fill
-              disabled={this.state.confirmationValue !== collection.label}
-            >
-              {buttonLabel}
-            </Button>
-          </form>
-        </DialogBody>
-      </Dialog>
+          />
+        </p>
+      </DeleteDialog>
     );
   }
 }
@@ -140,6 +82,5 @@ const mapDispatchToProps = { deleteCollection };
 
 export default compose(
   withRouter,
-  connect(null, mapDispatchToProps),
-  injectIntl
+  connect(null, mapDispatchToProps)
 )(CollectionDeleteDialog);
