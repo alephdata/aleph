@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-import { Alert, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  Intent,
+  FormGroup,
+  InputGroup,
+} from '@blueprintjs/core';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -8,21 +15,12 @@ import withRouter from 'app/withRouter';
 import { deleteCollection } from 'actions';
 import { Collection } from 'components/common';
 
-const messages = defineMessages({
-  button_confirm: {
-    id: 'collection.delete.confirm',
-    defaultMessage: 'Delete',
-  },
-  button_cancel: {
-    id: 'collection.delete.cancel',
-    defaultMessage: 'Cancel',
-  },
-});
-
 class CollectionDeleteDialog extends Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
+
+    this.state = { confirmationValue: '' };
   }
 
   async onDelete() {
@@ -33,27 +31,107 @@ class CollectionDeleteDialog extends Component {
   }
 
   render() {
-    const { collection, intl } = this.props;
-    return (
-      <Alert
-        isOpen={this.props.isOpen}
-        icon="trash"
-        intent={Intent.DANGER}
-        cancelButtonText={intl.formatMessage(messages.button_cancel)}
-        confirmButtonText={intl.formatMessage(messages.button_confirm)}
-        onCancel={this.props.toggleDialog}
-        onConfirm={this.onDelete}
-      >
+    const { collection } = this.props;
+
+    const title = collection.casefile ? (
+      <FormattedMessage
+        id="collection.delete.title.investigation"
+        defaultMessage="Delete investigation"
+      />
+    ) : (
+      <FormattedMessage
+        id="collection.delete.title.dataset"
+        defaultMessage="Delete dataset"
+      />
+    );
+
+    const buttonLabel = (
+      <>
         <FormattedMessage
-          id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete {collectionLabel} and all contained items?"
-          values={{
-            collectionLabel: (
-              <Collection.Label collection={collection} icon={false} />
-            ),
-          }}
-        />
-      </Alert>
+          id="collection.delete.confirm"
+          defaultMessage="I understand the consequences."
+        />{' '}
+        {collection.casefile ? (
+          <FormattedMessage
+            id="collection.delete.confirm.investigation"
+            defaultMessage="Delete this investigation."
+          />
+        ) : (
+          <FormattedMessage
+            id="collection.delete.confirm.dataset"
+            defaultMessage="Delete this dataset."
+          />
+        )}
+      </>
+    );
+
+    const collectionLabel = (
+      <strong>
+        <Collection.Label collection={collection} icon={false} />
+      </strong>
+    );
+
+    return (
+      <Dialog
+        isOpen={this.props.isOpen}
+        title={title}
+        icon="trash"
+        onClose={this.props.toggleDialog}
+      >
+        <DialogBody>
+          <p>
+            <FormattedMessage
+              id="collection.delete.question"
+              defaultMessage="Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
+              values={{ collectionLabel }}
+            />
+          </p>
+
+          <p>
+            <FormattedMessage
+              id="collection.delete.enter_label"
+              defaultMessage="Please enter {collectionLabel} to confirm:"
+              values={{ collectionLabel }}
+            />
+          </p>
+
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              this.onDelete();
+            }}
+          >
+            <FormGroup
+              labelFor="collection-delete-confirmation"
+              label={
+                <span className="visually-hidden">
+                  <FormattedMessage
+                    id="collection.delete.collection_label"
+                    defaultMessage="Label"
+                  />
+                </span>
+              }
+            >
+              <InputGroup
+                id="collection-delete-confirmation"
+                placeholder={collection.label}
+                required
+                onInput={(event) =>
+                  this.setState({ confirmationValue: event.target.value })
+                }
+              />
+            </FormGroup>
+            <Button
+              type="submit"
+              intent={Intent.DANGER}
+              fill
+              disabled={this.state.confirmationValue !== collection.label}
+            >
+              {buttonLabel}
+            </Button>
+          </form>
+        </DialogBody>
+      </Dialog>
     );
   }
 }
