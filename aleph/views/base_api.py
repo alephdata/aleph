@@ -19,7 +19,7 @@ from aleph.logic.pages import load_pages
 from aleph.logic.util import collection_url
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
-from aleph.views.util import jsonify, render_xml
+from aleph.views.util import jsonify, render_xml, require
 
 blueprint = Blueprint("base_api", __name__)
 log = logging.getLogger(__name__)
@@ -200,6 +200,15 @@ def healthz():
     """
     request.rate_limit = None
     return jsonify({"status": "ok"})
+
+
+@blueprint.route("/api/2/crash")
+def crash():
+    """
+    Test error handler for Sentry. Requires admin priviliges.
+    """
+    require(request.authz.is_admin)
+    return 1 / 0
 
 
 @blueprint.app_errorhandler(NotModified)
