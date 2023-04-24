@@ -22,16 +22,14 @@ class EntitySetDeleteDialog extends Component {
     this.onDelete = this.onDelete.bind(this);
   }
 
-  onDelete() {
-    const { entitySet, navigate, intl } = this.props;
-    this.props
-      .deleteEntitySet(entitySet.id)
-      .then(() =>
-        showSuccessToast(
-          intl.formatMessage(messages.success, { title: entitySet.label })
-        )
-      );
+  async onDelete() {
+    const { entitySet, navigate, intl, deleteEntitySet } = this.props;
+    const successMessage = intl.formatMessage(messages.success, {
+      title: entitySet.label,
+    });
 
+    await deleteEntitySet(entitySet.id);
+    showSuccessToast(successMessage);
     navigate(getCollectionLink({ collection: entitySet.collection }));
   }
 

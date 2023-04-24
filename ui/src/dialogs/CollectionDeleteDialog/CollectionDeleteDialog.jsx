@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { showSuccessToast } from 'app/toast';
 import withRouter from 'app/withRouter';
 import { deleteCollection } from 'actions';
 import { DeleteDialog } from 'components/common';
+
+const messages = defineMessages({
+  success: {
+    id: 'collection.delete.success',
+    defaultMessage: 'Successfully deleted {label}',
+  },
+});
 
 class CollectionDeleteDialog extends Component {
   constructor(props) {
@@ -14,9 +22,14 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { collection, navigate, deleteCollection } = this.props;
+    const { collection, navigate, deleteCollection, intl } = this.props;
     const path = collection.casefile ? '/investigations' : '/datasets';
+    const successMessage = intl.formatMessage(messages.success, {
+      label: collection.label,
+    });
+
     await deleteCollection(collection);
+    showSuccessToast(successMessage);
     navigate({ pathname: path });
   }
 
@@ -82,5 +95,6 @@ const mapDispatchToProps = { deleteCollection };
 
 export default compose(
   withRouter,
-  connect(null, mapDispatchToProps)
+  connect(null, mapDispatchToProps),
+  injectIntl
 )(CollectionDeleteDialog);
