@@ -223,7 +223,7 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
             }
           }}
           placeholder="YYYY-MM-DD"
-          pattern="\d{4}(?:-\d{1,2}){0,2}"
+          pattern="\d{4}(?:-\d{1,2}(?:-\d{1,2}(?:[T ].*)?)?)?"
           required={required}
         />
       ))}

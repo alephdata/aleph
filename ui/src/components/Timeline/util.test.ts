@@ -211,6 +211,22 @@ describe('ImpreciseDate', () => {
       const validDates = dates.filter((date) => date.isValid());
       expect(validDates).toHaveLength(0);
     });
+
+    it('accepts (and ignores) datetime values', () => {
+      let date: ImpreciseDate;
+
+      date = new ImpreciseDate('2022-01-01T00:00:00');
+      expect(date.isValid()).toBe(true);
+
+      date = new ImpreciseDate('2022-01-01T00:00');
+      expect(date.isValid()).toBe(true);
+
+      date = new ImpreciseDate('2022-01-01 00:00:00');
+      expect(date.isValid()).toBe(true);
+
+      date = new ImpreciseDate('2022-01-01 00:00');
+      expect(date.isValid()).toBe(true);
+    });
   });
 
   describe('getEarliest() and getLatest()', () => {
