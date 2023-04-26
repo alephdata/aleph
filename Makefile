@@ -76,7 +76,7 @@ build:
 	$(COMPOSE) build
 
 build-ui:
-	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
+	docker build -t ghcr.io/alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
 build-full: build build-ui
 
