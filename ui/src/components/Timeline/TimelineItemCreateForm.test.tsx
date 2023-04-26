@@ -149,6 +149,22 @@ it('supports a variety of different date formats', async () => {
   await userEvent.type(input, '2022-01-01');
   expect(input.checkValidity()).toBe(true);
 
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01T00:00:00');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01T00:00');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01 00:00:00');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01 00:00');
+  expect(input.checkValidity()).toBe(true);
+
   // Invalid dates
   await userEvent.clear(input);
   await userEvent.type(input, '2022-');
@@ -160,6 +176,10 @@ it('supports a variety of different date formats', async () => {
 
   await userEvent.clear(input);
   await userEvent.type(input, '2022-01-123');
+  expect(input.checkValidity()).toBe(false);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01T00:00:00');
   expect(input.checkValidity()).toBe(false);
 
   // Automatically reformats to match supported format

@@ -207,8 +207,11 @@ export class ImpreciseDate {
     const monthRegex = /(0?[1-9]|1[0-2])/.source;
     const dayRegex = /(0?[1-9]|[1-2][0-9]|3[0-1])/.source;
 
+    // At the moment, we accept datetime values, but simply ignore and do not validate them
+    const timeRegex = /.*/.source;
+
     const regex = new RegExp(
-      `^${yearRegex}(?:-${monthRegex}(?:-${dayRegex})?)?$`
+      `^${yearRegex}(?:-${monthRegex}(?:-${dayRegex}(?:[T ]${timeRegex})?)?)?$`
     );
 
     const result = regex.exec(raw);
