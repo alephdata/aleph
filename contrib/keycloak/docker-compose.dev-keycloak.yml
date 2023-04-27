@@ -16,7 +16,7 @@ services:
   elasticsearch:
     build:
       context: services/elasticsearch
-    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
