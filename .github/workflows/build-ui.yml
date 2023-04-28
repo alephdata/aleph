@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Debug
+        run: cat ui/src/selectors.js
+
       - name: Setup
         run: echo "ALEPH_SECRET=batman\n" >> aleph.env
 
