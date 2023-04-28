@@ -55,7 +55,6 @@ def create_app(config=None):
             release=aleph_version,
             environment=SETTINGS.SENTRY_ENVIRONMENT,
             send_default_pii=False,
-            event_scrubber=sentry_sdk.scrubber.EventScrubber(),
         )
     app = Flask("aleph")
     app.config.from_object(SETTINGS)
