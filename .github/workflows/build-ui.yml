@@ -19,8 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Debug
+      - name: Debug selectors.js
         run: cat ui/src/selectors.js
+
+      - name: Debug package.json
+        run: cat ui/package.json
+
+      - name: Debug HomeScreen.jsx
+        run: cat ui/src/screens/HomeScreen/HomeScreen.jsx
 
       - name: Setup
         run: echo "ALEPH_SECRET=batman\n" >> aleph.env

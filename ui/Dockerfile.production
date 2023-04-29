@@ -1,5 +1,8 @@
 FROM alephdata/aleph-ui:${ALEPH_TAG:-latest} AS builder
 RUN npm run build
+RUN cat ./package.json
+RUN cat ./src/selectors.js
+RUN cat ./src/screens/HomeScreen/HomeScreen.jsx
 
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
