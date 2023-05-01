@@ -16,6 +16,17 @@ import { Entity, Schema } from '@alephdata/followthemoney';
 import { DEFAULT_COLOR } from './Timeline';
 import { FetchEntitySuggestions, Layout, Vertex } from './types';
 
+const yearRegex = /(\d{4})/.source;
+const monthRegex = /(0?[1-9]|1[0-2])/.source;
+const dayRegex = /(0?[1-9]|[1-2][0-9]|3[0-1])/.source;
+
+// At the moment, we accept datetime values, but simply ignore and do not validate them
+const timeRegex = /.*/.source;
+
+export const DATETIME_REGEX = new RegExp(
+  `^${yearRegex}(?:-${monthRegex}(?:-${dayRegex}(?:[T ]${timeRegex})?)?)?$`
+);
+
 function endOfMonth(year: number, month: number): number {
   // Months in ECMAScript are zero-based:
   // new Date(2000, 0, 1) // Jan 1st
@@ -203,18 +214,7 @@ export class ImpreciseDate {
       return;
     }
 
-    const yearRegex = /(\d{4})/.source;
-    const monthRegex = /(0?[1-9]|1[0-2])/.source;
-    const dayRegex = /(0?[1-9]|[1-2][0-9]|3[0-1])/.source;
-
-    // At the moment, we accept datetime values, but simply ignore and do not validate them
-    const timeRegex = /.*/.source;
-
-    const regex = new RegExp(
-      `^${yearRegex}(?:-${monthRegex}(?:-${dayRegex}(?:[T ]${timeRegex})?)?)?$`
-    );
-
-    const result = regex.exec(raw);
+    const result = DATETIME_REGEX.exec(raw);
 
     if (!result) {
       return;
