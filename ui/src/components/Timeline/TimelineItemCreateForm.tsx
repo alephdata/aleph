@@ -22,7 +22,11 @@ import type {
   EdgeSchema,
   FetchEntitySuggestions,
 } from './types';
-import { useEntitySuggestions, reformatDateString } from './util';
+import {
+  useEntitySuggestions,
+  reformatDateString,
+  DATETIME_REGEX,
+} from './util';
 import { SchemaSelect, EntitySelect } from 'react-ftm';
 import { Button, Alignment, FormGroup, InputGroup } from '@blueprintjs/core';
 
@@ -206,6 +210,8 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
     };
   });
 
+  const pattern = DATETIME_REGEX.source.replace('^', '').replace('$', '');
+
   return (
     <>
       {props.map(({ property, value, required }) => (
@@ -223,7 +229,7 @@ const TemporalExtentFields: FC<TemporalExtentFieldsProps> = ({
             }
           }}
           placeholder="YYYY-MM-DD"
-          pattern="\d{4}(?:-\d{1,2}(?:-\d{1,2}(?:[T ].*)?)?)?"
+          pattern={pattern}
           required={required}
         />
       ))}
