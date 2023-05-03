@@ -2,5 +2,5 @@ apiVersion: v2
 name: aleph
 description: Helm chart for Aleph
 type: application
-version: 3.14.1-rc10
-appVersion: 3.14.1-rc10
+version: 3.14.1-rc11
+appVersion: 3.14.1-rc11
