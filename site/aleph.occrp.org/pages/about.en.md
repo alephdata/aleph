@@ -1,6 +1,6 @@
 ---
-title: About OCCRP Aleph
-short: About
+title: Lorem Ipsum
+short: Test
 menu: true
 icon: help
 ---

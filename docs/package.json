@@ -14,11 +14,13 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@astrojs/markdown-component": "^1.0.2",
     "@untitaker/hyperlink": "^0.1.26",
     "astro": "^1.6.10",
     "astro-theme-docs": "github:alephdata/astro-theme-docs"
   },
   "devDependencies": {
+    "@rollup/plugin-yaml": "^4.0.1",
     "prettier": "^2.7.1"
   },
   "prettier": {

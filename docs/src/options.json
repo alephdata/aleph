@@ -9,100 +9,81 @@
     "apiKey": "b462393bca678070ceb9abf533aeeb0b",
     "indexName": "aleph-occrp"
   },
-  "nav": {
-    "header": {
-      "items": []
-    },
-    "sidebar": {
+  "header": {
+    "items": [
+      { "title": "Users", "link": "/users" },
+      { "title": "Devs & Admins", "link": "/devs-admins" }
+    ]
+  },
+  "sidebar": {
+    "about": {
       "sections": [
         {
           "title": "About",
           "items": [
             { "slug": "/" },
-            { "slug": "/how-aleph-is-used" },
-            { "slug": "/get-in-touch" }
+            { "slug": "/about/contact" },
+            { "slug": "/about/why-aleph" },
+            { "slug": "/about/showcase" }
+          ]
+        }
+      ]
+    },
+    "users": {
+      "sections": [
+        
+      ]
+    },
+    "tech": {
+      "sections": [
+        {
+          "title": "Getting started",
+          "items": [
+            { "slug": "/devs-admins/getting-started/development-environment" },
+            { "slug": "/devs-admins/getting-started/production-deployment" }
           ]
         },
         {
-          "title": "Users",
+          "title": "How To",
           "items": [
-            { "slug": "/guide/getting-started" },
-            { "slug": "/guide/the-basics" },
             {
-              "slug": "/guide/search",
+              "slug": "/devs-admins/how-to/development",
               "children": [
-                { "slug": "/guide/search/anatomy-of-a-search" },
-                { "slug": "/guide/search/advanced-search-methods" },
-                { "slug": "/guide/search/filtering-your-search-results" },
-                { "slug": "/guide/search/searching-within-other-contexts" },
-                { "slug": "/guide/search/searching-for-a-dataset" }
+                { "slug": "/devs-admins/how-to/development/inspect-elasticsearch" },
+                { "slug": "/devs-admins/how-to/development/python-debugger" },
+                { "slug": "/devs-admins/how-to/development/custom-text-processor" },
+                { "slug": "/devs-admins/how-to/development/translate-aleph" }
               ]
             },
             {
-              "slug": "/guide/building-out-your-investigation",
+              "slug": "/devs-admins/how-to/operations",
               "children": [
-                {
-                  "slug": "/guide/building-out-your-investigation/creating-an-investigation"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/uploading-documents"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/network-diagrams"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/using-the-table-editor"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/generating-multiple-entities-from-a-list"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/cross-referencing"
-                }
+                { "slug": "/devs-admins/how-to/operations/backups" },
+                { "slug": "/devs-admins/how-to/operations/upgrades" },
+                { "slug": "/devs-admins/how-to/operations/blob-storage" },
+                { "slug": "/devs-admins/how-to/operations/oauth" },
+                { "slug": "/devs-admins/how-to/operations/message-banner" },
+                { "slug": "/devs-admins/how-to/operations/custom-pages" },
+                { "slug": "/devs-admins/how-to/operations/reverse-proxy" }
               ]
-            },
-            { "slug": "/guide/aleph-data-desktop" },
-            { "slug": "/guide/reconciliation" },
-            { "slug": "/guide/frequently-asked-questions" }
+            }
           ]
         },
         {
-          "title": "Developers & Admins",
+          "title": "Explanation",
           "items": [
-            { "slug": "/developers/intro" },
-            { "slug": "/developers/installation" },
-            {
-              "slug": "/developers/followthemoney",
-              "children": [
-                { "slug": "/developers/followthemoney/ftm" },
-                {
-                  "title": "Technical Reference",
-                  "external": true,
-                  "link": "https://followthemoney.tech/"
-                }
-              ]
-            },
-            { "slug": "/developers/memorious" },
-            { "slug": "/developers/alephclient" },
-            { "slug": "/developers/mappings" },
-            { "slug": "/developers/mixed-graphs" },
-            { "slug": "/developers/adding-text-processors" },
-            {
-              "slug": "/developers/technical-faq",
-              "children": [
-                { "slug": "/developers/technical-faq/design-premises" },
-                { "slug": "/developers/technical-faq/look-ma-no-docker" }
-              ]
-            },
-            { "slug": "/developers/developer-tools" },
-            { "slug": "/developers/datacommons" }
+            { "slug": "/devs-admins/explanation/system-architecture" },
+            { "slug": "/devs-admins/explanation/followthemoney" },
+            { "slug": "/devs-admins/explanation/design-premises" },
+            { "slug": "/devs-admins/explanation/ingestion-process" }
           ]
         },
         {
           "title": "Reference",
           "items": [
+            { "slug": "/devs-admins/reference/configuration-options" },
             {
-              "title": "Aleph API",
+              "title": "HTTP API",
               "external": true,
               "link": "https://redocly.github.io/redoc/?url=https://aleph.occrp.org/api/openapi.json"
             }

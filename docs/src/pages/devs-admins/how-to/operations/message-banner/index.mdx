@@ -1,0 +1,110 @@
+---
+layout: '@layouts/TechLayout.astro'
+title: Display a Message Banner
+---
+
+# How To Display a Message Banner
+
+<p class="lead">You can configure an app-wide message banner that is displayed to all users. This is helpful if you need to inform users about scheduled maintenance, service degradations or new features. This guide describes two different options to configure and update a message banner.</p>
+
+## Configure a static message banner
+
+If you do not need to update the contents of the message banner frequently, you can configure a static message via an environment variable.
+
+<Steps>
+  <Step>
+    Open `aleph.env` and set the `ALEPH_APP_BANNER` environment variable:
+
+    ```
+    ALEPH_APP_BANNER="Scheduled maintenance on 2022-10-07 – We will upgrade Aleph’s server infrastructure. Aleph will be unavailable during this time frame."
+    ```
+  </Step>
+  <Step>
+    Restart Aleph to apply the changes:
+
+    ```sh
+    docker compose restart
+    ```
+  </Step>
+  <Step>
+    Open the Aleph user interface in your browser and check that the message is displayed.
+
+    <Image
+      src="/assets/pages/devs-admins/how-to/operations/message-banner/screenshot.png"
+      density={2}
+      alt="A screenshot showing the default Aleph home page and and orange banner below the page header."
+    />
+  </Step>
+</Steps>
+
+## Load messages from a JSON file
+
+Alternatively, Aleph can also load messages from a remote JSON file. Configuring a JSON endpoint allows you to update messages without changing the configuration or restarting your Aleph instance. It also supports additional features, including:
+
+* Hiding a message after a specified time.
+* Allowing users to dismiss a message so it isn’t displayed again.
+* Using different themes for informational or important messages.
+
+As long as the JSON data conforms to a simple schema described below, you can use any method that fits your requirements to generate and host it. You could manually create a JSON file and upload it to a static file server, use a CMS to generate it dynamically, or automatically update it using a monitoring tool.
+
+We have also created a custom GitHub Action that creates a JSON file based on GitHub Issues and deploys it for free to GitHub Pages. Head over to the [GitHub repository](https://github.com/alephdata/status-page-action) to lear how to set it up for yourself.
+
+### JSON schema
+
+The JSON file needs to contain an array of objects, where every object represents a message:
+
+```json
+[
+  {
+    "id": "1",
+    "createdAt": "2022-07-01T08:30:00.000Z",
+    "updatedAt": "2022-07-01T08:30:00.000Z",
+    "displayUntil": "2022-07-10T10:00.000Z",
+    "level": "info",
+    "title": "Scheduled maintenance on 2022-07-10, 8–10am UTC",
+    "safeHtmlBody": "We will upgrade Aleph’s server infrastructure. Aleph will be unavailable during this time frame."
+  }
+]
+```
+
+| Field | Description |
+| --- | --- |
+| `id` | A unique ID for the message. The ID is used to store when a user has dismissed a message. |
+| `createdAt` | Date when the message was added. The date is displayed in the UI. |
+| `updatedAt` | Date when the message was last updated. The date is displayed in the UI. |
+| `level` | One of `info`, `warning`, `error`, `success` |
+| `title` | The title of the message |
+| `safeHtmlBody` | The body of the message. You can use HTML to include links, but you need to ensure that message comes from a trusted source or sanitize it. |
+
+### Configuration
+
+Follow these steps to configure a JSON file to load messages from:
+
+<Steps>
+  <Step>
+    Create a JSON file as described above and make it publicly available. Take not of the URL. The JSON file needs to have a [CORS header](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) that matches your Aleph instance.
+  </Step>
+  <Step>
+    Open `aleph.env` and set the `ALEPH_APP_MESSAGES_URL` environment variable. For example, if your messages JSON file is available at `https://example.org/messages.json`, add the following environment variable:
+
+    ```
+    ALEPH_APP_MESSAGES_URL="https://example.org/messages.json"
+    ```
+  </Step>
+  <Step>
+    Restart Aleph to apply the changes:
+
+    ```
+    docker compose restart
+    ```
+  </Step>
+  <Step>
+    Open the Aleph user interface in your browser and check that the message is displayed.
+
+    <Image
+      src="/assets/pages/devs-admins/how-to/operations/message-banner/screenshot.png"
+      density={2}
+      alt="A screenshot showing the default Aleph home page and and orange banner below the page header."
+    />
+  </Step>
+</Steps>

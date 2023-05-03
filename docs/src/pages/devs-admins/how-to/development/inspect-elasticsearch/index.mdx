@@ -1,0 +1,26 @@
+---
+layout: '@layouts/TechLayout.astro'
+title: Inspect ElasticSearch
+---
+
+# How To Inspect the ElasticSearch Index
+
+<p class="lead">This guide describes how you can use [dejavu](https://github.com/appbaseio/dejavu), a web-based UI for ElasticSearch, to inspect the contents of one or multiple Elasticsearch indices.</p>
+
+<Steps>
+  <Step>
+    Aleph’s development environment includes dejavu, so you do not need to install it separately. If you have started Aleph as described in the [getting started guide](/devs-admins/getting-started/development-environment), dejavu has already been started. If dejavu is not already running, you can start it explicitly using the following command:
+
+    ```sh
+    docker compose -f docker-compose.dev.yml up dejavu
+    ```
+  </Step>
+
+  <Step>Visit [http://localhost:1358](http://localhost:1358) in your browser to access the dejavu user interface.</Step>
+
+  <Step>
+    Enter the Elasticsearch cluster URL (`http://localhost:19200`) and specify an index name. If you want to view data from all indices, use a wildcard `*` as the index name. Alternatively, use the name of a specific index.
+
+    Aleph creates indices following the naming pattern `aleph-entity-{{SCHEMA_NAME}}-{{VERSION}}`. For example, the index name for `LegalEntity` entities is `aleph-entity-legalentity-v1`.
+  </Step>
+</Steps>
