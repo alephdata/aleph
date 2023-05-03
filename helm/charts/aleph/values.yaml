@@ -140,7 +140,9 @@ convertdocument:
       - type: Resource
         resource:
           name: cpu
-          targetAverageUtilization: 50
+          target:
+            type: Utilization
+            averageUtilization: 50
 
 # ingest-file Service - templates/covert-document.yaml
 ingestfile:
@@ -190,7 +192,9 @@ ingestfile:
       - type: Resource
         resource:
           name: cpu
-          targetAverageUtilization: 100
+          target:
+            type: Utilization
+            averageUtilization: 100
 
 # Aleph UI - templates/ui.yaml
 ui:
