@@ -25,46 +25,7 @@
         },
         {
           "title": "Users",
-          "items": [
-            { "slug": "/guide/getting-started" },
-            { "slug": "/guide/the-basics" },
-            {
-              "slug": "/guide/search",
-              "children": [
-                { "slug": "/guide/search/anatomy-of-a-search" },
-                { "slug": "/guide/search/advanced-search-methods" },
-                { "slug": "/guide/search/filtering-your-search-results" },
-                { "slug": "/guide/search/searching-within-other-contexts" },
-                { "slug": "/guide/search/searching-for-a-dataset" }
-              ]
-            },
-            {
-              "slug": "/guide/building-out-your-investigation",
-              "children": [
-                {
-                  "slug": "/guide/building-out-your-investigation/creating-an-investigation"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/uploading-documents"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/network-diagrams"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/using-the-table-editor"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/generating-multiple-entities-from-a-list"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/cross-referencing"
-                }
-              ]
-            },
-            { "slug": "/guide/aleph-data-desktop" },
-            { "slug": "/guide/reconciliation" },
-            { "slug": "/guide/frequently-asked-questions" }
-          ]
+          "items": []
         },
         {
           "title": "Developers & Admins",
