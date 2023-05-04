@@ -85,9 +85,7 @@ api:
       - type: Resource
         resource:
           name: cpu
-          target:
-            type: Utilization
-            averageUtilization: 60
+          targetAverageUtilization: 60
 
 # Aleph Upgrade Job - templates/aleph-upgrade-job.yaml
 upgrade:
