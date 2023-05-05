@@ -1,0 +1,43 @@
+---
+import { Wrapper } from 'astro-theme-docs/components';
+---
+
+<style>
+  .HomeContact {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  p {
+    margin-block-end: var(--space-xs);
+  }
+
+  @media screen and (min-width: 840px) {
+    .HomeContact {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<section class="HomeContact">
+  <article class="HomeContact__item">
+    <h2 class="beta">Get in touch</h2>
+    <p>
+      Do you have a question about Aleph? Would you like to report a bug or
+      request a feature?
+    </p>
+    <a class="arrow-link" href="/get-in-touch">Find out how to get in touch</a>
+  </article>
+  <article class="HomeContact__item">
+    <h2 class="beta">Get support</h2>
+    <p>
+      We provided limited community support for qualifying individuals and
+      organizations.
+    </p>
+    <a
+      class="arrow-link"
+      href="https://github.com/alephdata/aleph/blob/main/SUPPORT.md"
+      >Read our support policy</a
+    >
+  </article>
+</section>

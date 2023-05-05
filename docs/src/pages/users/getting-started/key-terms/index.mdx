@@ -1,0 +1,94 @@
+---
+layout: '@layouts/UsersLayout.astro'
+title: Key terms
+---
+
+import Listing from '@components/Listing.astro';
+import SchemaListing from '@components/SchemaListing.astro';
+
+# Key terms you need to know before using Aleph
+
+<p class="lead">This page defines some useful terms for understanding the basics of Aleph.</p>
+{/*TODO Update lead*/}
+
+## FollowTheMoney
+
+Underneath Aleph is FollowTheMoney, a data model that helps us organize all datasets we upload in a similar way so that Aleph can provide you with useful leads and patterns for your investigations. Understanding some of the key elements of the FollowTheMoney model can be useful to get the most out of Aleph.
+
+### Entity
+An entity in Aleph can be a person, a company, an asset, a vessel, a contract, an event, a bank account, etc. You can find the full list of entity types available in Aleph below:
+
+<SchemaListing type="objects" />
+
+An entity also includes the relationships between objects, such as a payment between two people, or the ownership of a company by a person or another company. The following relationship types are available in Aleph:
+
+<SchemaListing type="relationships" />
+
+### Properties
+Both entities and relationships can have properties. For example, a person can have a **full name**, **date of birth**, and **ID number**. The ownership of a company can have a start and end date.
+
+What do we mean by this? Let’s take a look at a real example. In the [UK People with significant control](https://aleph.occrp.org/datasets/2053) dataset in Aleph we can find a person (entity) called [Mr. Donald John Trump](https://aleph.occrp.org/entities/f5d2d346fa6f47f4c93d7bbbe423cc6b4b15c68b.6254fb2e28841278da8fdac6bccfe7bd89265c91), former president of the United States. For this entity, Aleph offers more details to users. We can observe that Trump’s nationality and country of origin is the **United States**, his birth date is **1946-06** and the address linked to him is **725, Fifth Avenue, New York**:
+
+<Image src="/assets/pages/users/getting-started/key-terms/donald-trump.png" density={2} />
+
+All the listed elements above are properties or characteristics associated with Donald John Trump.
+
+### Legal Entity
+
+It's either a company, organization or person. The term **legal entities** are used when we don't know for sure. Some of the datasets in Aleph mention directors or suppliers but do not specify whether the given entity is a person, company or even a public body. Since this distinction is sometimes hard to derive from a name alone, we use the term legal entity as a stand-in.
+
+## Dataset
+
+A dataset in Aleph is a collection of documents or entities. For instance: going back to our previous example, that would be the [UK People with significant control](https://aleph.occrp.org/datasets/2053) database, since it reunites a list of people (entities).
+
+Aleph compiles a diverse range of databases. Each of the datasets uploaded to Aleph is associated with a country/countries and a category that summarizes the types of data it corresponds to. 
+
+This is the list of all categories of datasets in Aleph:
+
+<Listing>
+  <li>News archives</li>
+  <li>Leaks</li>
+  <li>Land registry</li>
+  <li>Gazettes</li>
+  <li>Court archives</li>
+  <li>Company registries</li>
+  <li>Sanctions lists</li>
+  <li>Procurement</li>
+  <li>Financial records</li>
+  <li>Grey literature</li>
+  <li>Document libraries</li>
+  <li>Licenses and concessions</li>
+  <li>Regulatory filings</li>
+  <li>Persons of interest</li>
+  <li>Customs declarations</li>
+  <li>Population census</li>
+  <li>Air and maritime registers</li>
+  <li>Other material</li>
+</Listing>
+
+<LinkCard
+  link="/users/search/datasets"
+  title="Learn how to find and search within datasets"
+/>
+
+## Cross-referencing
+
+Since datasets in Aleph are organized following a particular data model, entities from one dataset can be compared against entities of other datasets that you have access to. This process is called cross-referencing and allows journalists to find leads and patterns across hundreds of datasets. 
+
+<LinkCard
+  link="/users/investigations/cross-referencing"
+  title="Read more about cross-referencing"
+/>
+
+## Investigations
+
+Investigations are workspaces where you can upload, edit, and organize data (entities or documents) related to a project or topic of interest. They contain datasets with additional features. They can be shared with any other user or [access group](#groups) within Aleph. You can upload documents, create entities, network diagrams, timelines and cross-reference a particular list of people or companies against other datasets in Aleph.
+
+<LinkCard
+  link="/users/investigations/overview"
+  title="Read more about investigations"
+/>
+
+## Groups
+
+Access in Aleph is managed through groups. Once granted permission, members of a group have access to all of the source datasets and investigations that have been shared with the group. Groups are managed by Aleph administrators who are responsible for their creation and deletion.

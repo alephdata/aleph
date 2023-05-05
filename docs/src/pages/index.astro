@@ -1,0 +1,58 @@
+---
+import {
+  Skeleton,
+  Wrapper,
+  Youtube,
+  Wrapper,
+} from 'astro-theme-docs/components';
+import options from '../options.json';
+import HomeTeasers from '@components/HomeTeasers.astro';
+import HomeAbout from '@components/HomeAbout.astro';
+import HomeFeatures from '@components/HomeFeatures.astro';
+import HomeContact from '@components/HomeContact.astro';
+---
+
+<style>
+  .Home__content {
+    padding-block-start: var(--space-xl);
+    padding-block-end: var(--space);
+  }
+
+  .Home__content > :global(* + *) {
+    margin-block-start: var(--space-xl);
+  }
+
+  .Home__heading {
+    max-width: 36rem;
+    margin: auto;
+  }
+
+  @media screen and (min-width: 840px) {
+    .Home__content {
+      padding-block-start: calc(3.5 * var(--space));
+      padding-block-end: var(--space-xxl);
+    }
+
+    .Home__content > :global(* + *) {
+      margin-block-start: calc(3.5 * var(--space));
+    }
+
+    .Home__heading {
+      text-align: center;
+    }
+  }
+</style>
+
+<Skeleton {options} title="Home">
+  <Wrapper padded size="small">
+    <div class="Home__content">
+      <h1 class="alpha Home__heading">
+        Welcome to the Aleph User Guide and Technical Documentation
+      </h1>
+      <HomeTeasers />
+      <HomeAbout />
+      <HomeFeatures />
+      <HomeContact />
+    </div>
+  </Wrapper>
+</Skeleton>

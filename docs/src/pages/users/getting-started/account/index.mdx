@@ -1,0 +1,119 @@
+---
+layout: '@layouts/UsersLayout.astro'
+title: Manage your account
+---
+
+{/*TODO Use page/screen consistently*/}
+
+# How to create an account or reset your password
+
+<p class="lead">On this page, you will find instructions on how to create an account for OCCRP Aleph and how to reset your password.</p>
+
+{/*TODO Add warning: Sign up / sign in may be different for in-house instances*/}
+
+<VideoTutorial youtubeId="asIh-pMApts" />
+
+## Create an account
+<Steps>
+  <Step>
+    To create an Aleph account, go to [aleph.occrp.org](https://aleph.occrp.org/) and click on <AnnotationRef>Sign In</AnnotationRef> in the upper right-hand corner.
+
+    <Annotations>
+      <Image src="/assets/pages/users/getting-started/account/aleph-homepage-signin.png" density={2} />
+      <Annotation
+        x="91.5%"
+        y="0.5%"
+        width="7.25%"
+        height="5%"
+      />
+    </Annotations>
+  </Step>
+
+
+  <Step>
+    You will be redirected to the **OCCRP Secure Sign-in** page. Once there, click on <AnnotationRef>New user? Register</AnnotationRef>.
+
+    <Annotations>
+      <Image src="/assets/pages/users/getting-started/account/signin.png" density={2} />
+      <Annotation
+        x="45%"
+        y="56%"
+        width="10%"
+        height="4%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    Aleph will ask you for an e-mail address and a password, among other information. Subsequently, you will receive an e-mail confirming that your account has been created. Click on the link received to complete the e-mail verification process. 
+  </Step>
+
+  <Step>
+    Now, try logging in to your new account with the e-mail and password you chose. For security reasons, Aleph requires you to have an authentication application installed, which works as a two-step verification to log in to the account. We recommend using the free **Google Authenticator** application, which can be downloaded directly from your device’s app store.
+  </Step>
+
+  <Step>
+    Within the app, click on the **+** symbol followed by **Scan a QR code** and scan the <AnnotationRef>QR code</AnnotationRef> displayed on your screen.
+
+    <Annotations>
+      <Image src="/assets/pages/users/getting-started/account/2fa-setup.png" density={2} />
+      <Annotation
+        x="7.5%"
+        y="37.5%"
+        width="23.75%"
+        height="20%"
+      />
+    </Annotations>
+  </Step> 
+
+  <Step>
+    Finally, enter the temporary code displayed on your mobile phone. For example:
+    {/*TODO Clarify what to enter in which fields*/}
+
+    <Image src="/assets/pages/users/getting-started/account/2fa-code.png" density={1.5} />
+  </Step>
+</Steps>
+
+<Callout>
+  Having problems creating an Aleph account? Please, check our [FAQ section](/users/faq/account).
+</Callout>
+
+## Reset your password
+
+<Steps>
+  <Step>
+    Go to [aleph.occrp.org](https://aleph.occrp.org) and click on **Sign In** in the upper right-hand corner.
+  </Step>
+
+  <Step>
+    You will then be presented with the following window. In the bottom right-hand corner, go to <AnnotationRef>Forgot Password?</AnnotationRef>
+
+    <Annotations>
+      <Image src="/assets/pages/users/getting-started/account/signin.png" density={2} />
+      <Annotation
+        x="56.5%"
+        y="43%"
+        width="10%"
+        height="5%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    On a new screen, Aleph will ask you to enter your e-mail address (the e-mail address you used to register on the platform).
+
+    <Image src="/assets/pages/users/getting-started/account/reset.png" density={2} />
+  </Step>
+
+  <Step>
+    You will then receive an e-mail titled **Link to reset credentials**. When you click on it, a new screen will open asking you to scan a code with the app you used when you created your user (e.g. **Google Authenticator**). Then enter the code provided by the app (**One-time code** field) and finally define a name for the phone you are using (**Device name** field). You can put any name (please remember it), that's all!
+  </Step>
+</Steps>
+
+<Callout>
+  Having problems recovering your username or password? Please, check our [FAQ section](/users/faq/account). If you do not see the Aleph email in your inbox, please remember to check your spam folder.
+</Callout>
+
+## Request extended data access
+
+Are you a journalist, a researcher or an activist? We have created special user groups to support reporters, journalists, researchers and NGOs respectively. These groups contain hundreds of datasets for you to work with. You can apply for this extended access [using this form](https://form.asana.com/?k=hsYmAKHX1ViTzUoe410y8Q&d=24418422500834). Our Research & Data team evaluates applications case by case and responses will be handled in a timely manner. 
