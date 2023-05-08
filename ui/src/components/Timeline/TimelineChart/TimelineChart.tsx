@@ -20,11 +20,15 @@ const TimelineChart: FC<TimelineRendererProps> = ({
   onUnselect,
   zoomLevel,
 }) => {
+  const validItems = items.filter(
+    (item) => item.entity.getTemporalStart() !== null
+  );
+
   const [showPopover, setShowPopover] = useState(false);
   const [popoverItem, setPopoverItem] = useState<TimelineItem | null>(null);
 
   const [itemRefs, keyboardProps] =
-    useTimelineKeyboardNavigation<HTMLLIElement>(items, onUnselect);
+    useTimelineKeyboardNavigation<HTMLLIElement>(validItems, onUnselect);
 
   // Scroll first item into view on initial render
   useEffect(() => {
@@ -33,15 +37,17 @@ const TimelineChart: FC<TimelineRendererProps> = ({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const earliestDate = items
-    .map((item) => item.getEarliestDate())
-    .filter((date): date is Date => date !== undefined)
-    .sort((a, b) => a.getTime() - b.getTime())[0];
+  const earliestDate =
+    validItems
+      .map((item) => item.getEarliestDate())
+      .filter((date): date is Date => date !== undefined)
+      .sort((a, b) => a.getTime() - b.getTime())[0] || new Date();
 
-  const latestDate = items
-    .map((item) => item.getLatestDate())
-    .filter((date): date is Date => date !== undefined)
-    .sort((a, b) => b.getTime() - a.getTime())[0];
+  const latestDate =
+    validItems
+      .map((item) => item.getLatestDate())
+      .filter((date): date is Date => date !== undefined)
+      .sort((a, b) => b.getTime() - a.getTime())[0] || new Date();
 
   const start = getStart(zoomLevel, earliestDate, latestDate);
   const end = getEnd(zoomLevel, earliestDate, latestDate);
@@ -73,7 +79,7 @@ const TimelineChart: FC<TimelineRendererProps> = ({
       )}
 
       <ul className="TimelineChart__list">
-        {items.map((item, index) => (
+        {validItems.map((item, index) => (
           <TimelineChartItem
             key={item.entity.id}
             timelineStart={start}

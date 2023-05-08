@@ -3,5 +3,5 @@ Babel==2.11.0
 black==22.12.0
 flake8==6.0.0
 flake8-bugbear==23.3.23
-playwright==1.31.1
-pytest-playwright==0.3.1
+playwright==1.32.1
+pytest-playwright==0.3.3

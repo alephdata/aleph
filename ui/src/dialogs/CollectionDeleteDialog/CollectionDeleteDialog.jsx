@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
-import { Alert, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { showSuccessToast } from 'app/toast';
 import withRouter from 'app/withRouter';
 import { deleteCollection } from 'actions';
-import { Collection } from 'components/common';
+import { DeleteDialog } from 'components/common';
 
 const messages = defineMessages({
-  button_confirm: {
-    id: 'collection.delete.confirm',
-    defaultMessage: 'Delete',
-  },
-  button_cancel: {
-    id: 'collection.delete.cancel',
-    defaultMessage: 'Cancel',
+  success: {
+    id: 'collection.delete.success',
+    defaultMessage: 'Successfully deleted {label}',
   },
 });
 
@@ -26,34 +22,71 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { collection, navigate } = this.props;
+    const { collection, navigate, deleteCollection, intl } = this.props;
     const path = collection.casefile ? '/investigations' : '/datasets';
-    await this.props.deleteCollection(collection);
+    const successMessage = intl.formatMessage(messages.success, {
+      label: collection.label,
+    });
+
+    await deleteCollection(collection);
+    showSuccessToast(successMessage);
     navigate({ pathname: path });
   }
 
   render() {
-    const { collection, intl } = this.props;
-    return (
-      <Alert
-        isOpen={this.props.isOpen}
-        icon="trash"
-        intent={Intent.DANGER}
-        cancelButtonText={intl.formatMessage(messages.button_cancel)}
-        confirmButtonText={intl.formatMessage(messages.button_confirm)}
-        onCancel={this.props.toggleDialog}
-        onConfirm={this.onDelete}
-      >
+    const { collection } = this.props;
+
+    const title = collection.casefile ? (
+      <FormattedMessage
+        id="collection.delete.title.investigation"
+        defaultMessage="Delete investigation"
+      />
+    ) : (
+      <FormattedMessage
+        id="collection.delete.title.dataset"
+        defaultMessage="Delete dataset"
+      />
+    );
+
+    const buttonLabel = (
+      <>
         <FormattedMessage
-          id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete {collectionLabel} and all contained items?"
-          values={{
-            collectionLabel: (
-              <Collection.Label collection={collection} icon={false} />
-            ),
-          }}
-        />
-      </Alert>
+          id="collection.delete.confirm"
+          defaultMessage="I understand the consequences."
+        />{' '}
+        {collection.casefile ? (
+          <FormattedMessage
+            id="collection.delete.confirm.investigation"
+            defaultMessage="Delete this investigation."
+          />
+        ) : (
+          <FormattedMessage
+            id="collection.delete.confirm.dataset"
+            defaultMessage="Delete this dataset."
+          />
+        )}
+      </>
+    );
+
+    return (
+      <DeleteDialog
+        isOpen={this.props.isOpen}
+        title={title}
+        buttonLabel={buttonLabel}
+        expectedConfirmationValue={collection.label}
+        onClose={this.props.toggleDialog}
+        onDelete={this.onDelete}
+      >
+        <p>
+          <FormattedMessage
+            id="collection.delete.question"
+            defaultMessage="Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
+            values={{
+              collectionLabel: <strong>{collection.label}</strong>,
+            }}
+          />
+        </p>
+      </DeleteDialog>
     );
   }
 }

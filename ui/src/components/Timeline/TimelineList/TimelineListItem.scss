@@ -30,6 +30,19 @@
   color: $aleph-greyed-text;
 }
 
+.TimelineListItem__warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5 * $aleph-grid-size;
+  padding: 0.5 * $aleph-grid-size $aleph-grid-size;
+  margin: 0.5 * $aleph-grid-size 0;
+
+  font-weight: 500;
+  background-color: var(--timeline-item-color);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: $aleph-border-radius;
+}
+
 // Double class is required in order to increase specificity over the
 // default Blueprint table styles.
 .TimelineListItem__actions.TimelineListItem__actions {

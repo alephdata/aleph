@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from 'testUtils';
 import TimelineListItem from './TimelineListItem';
 import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
 
@@ -58,6 +58,20 @@ it('renders start and end date', () => {
   const endCell = screen.getByText('2022-02-01');
   expect(startCell).toHaveTextContent(/2022-01-01\s*Start date/);
   expect(endCell).toHaveTextContent(/2022-02-01\s*End date/);
+});
+
+it('renders warning if item has no valid date', () => {
+  renderRow(
+    <TimelineListItem
+      entity={entity}
+      color="blue"
+      onSelect={() => {}}
+      onRemove={() => {}}
+    />
+  );
+
+  const warning = screen.getByText('Invalid or no date');
+  expect(warning).toBeInTheDocument();
 });
 
 it('renders caption', () => {

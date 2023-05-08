@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { render, screen } from 'testUtils';
+import { render, screen, waitFor } from 'testUtils';
 import userEvent from '@testing-library/user-event';
 import { Model, Entity, defaultModel } from '@alephdata/followthemoney';
 import TimelineItemCreateForm from './TimelineItemCreateForm';
@@ -77,11 +77,10 @@ it('loads entity suggestions for source and target fields', async () => {
   );
 
   await selectSchema('Ownership');
-  await userEvent.click(screen.getByRole('button', { name: 'Owner' }));
 
-  const suggestion = await screen.findByRole('menuitem', {
-    name: 'ACME, Inc.',
-  });
+  await waitFor(() => expect(fetchEntitySuggestions).toHaveBeenCalledTimes(2));
+  await userEvent.click(screen.getByRole('button', { name: 'Owner' }));
+  const suggestion = screen.getByRole('menuitem', { name: 'ACME, Inc.' });
   expect(suggestion).toBeInTheDocument();
 });
 
@@ -149,6 +148,22 @@ it('supports a variety of different date formats', async () => {
   await userEvent.type(input, '2022-01-01');
   expect(input.checkValidity()).toBe(true);
 
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01T00:00:00');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01T00:00');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01 00:00:00');
+  expect(input.checkValidity()).toBe(true);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01-01 00:00');
+  expect(input.checkValidity()).toBe(true);
+
   // Invalid dates
   await userEvent.clear(input);
   await userEvent.type(input, '2022-');
@@ -160,6 +175,10 @@ it('supports a variety of different date formats', async () => {
 
   await userEvent.clear(input);
   await userEvent.type(input, '2022-01-123');
+  expect(input.checkValidity()).toBe(false);
+
+  await userEvent.clear(input);
+  await userEvent.type(input, '2022-01T00:00:00');
   expect(input.checkValidity()).toBe(false);
 
   // Automatically reformats to match supported format

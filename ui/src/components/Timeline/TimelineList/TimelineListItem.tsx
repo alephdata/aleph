@@ -64,11 +64,23 @@ const TimelineListItem = forwardRef<HTMLTableRowElement, TimelineListItemProps>(
         )}
       >
         <td className="TimelineListItem__date">
-          {start?.value}
-          <br />
-          <span className="TimelineListItem__property">
-            {start?.property.label}
-          </span>
+          {start ? (
+            <>
+              {start.value}
+              <br />
+              <span className="TimelineListItem__property">
+                {start?.property.label}
+              </span>
+            </>
+          ) : (
+            <div className="TimelineListItem__warning">
+              <Icon icon="warning-sign" color="white" />
+              <FormattedMessage
+                id="timeline.item.invalid_date"
+                defaultMessage="Invalid or no date"
+              />
+            </div>
+          )}
         </td>
         {showEndDate && (
           <td className="TimelineListItem__date">
