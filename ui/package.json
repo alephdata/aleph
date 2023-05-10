@@ -37,7 +37,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.29.1",
     "numeral": "^2.0.6",
-    "papaparse": "^5.1.0",
+    "papaparse": "^5.4.1",
     "prettier": "^2.8.8",
     "query-string": "^8.1.0",
     "react": "^16.13.1",
