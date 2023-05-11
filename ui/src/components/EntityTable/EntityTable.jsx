@@ -272,7 +272,7 @@ export class EntityTable extends Component {
               collection,
               entities: selectedEntities,
               onSuccess: this.clearSelection,
-              showTimelines: schema.isA('Interval'),
+              showTimelines: schema.getTemporalStartProperties().length > 0,
             }}
           />
           <EntityDeleteButton

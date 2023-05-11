@@ -4,7 +4,6 @@ import { differenceInYears } from 'date-fns';
 import type {
   Vertex,
   Layout,
-  TimelineEntity,
   TimelineChartZoomLevel,
   TimelineRenderer,
 } from './types';
@@ -199,26 +198,30 @@ export function selectSelectedVertex(state: State): Vertex | null {
 }
 
 export function selectItems(state: State): Array<TimelineItem> {
-  return selectSortedEntities(state).map(
-    (entity) => new TimelineItem(entity, state.layout)
-  );
-}
-
-export function selectSortedEntities(state: State): Array<Entity> {
   return state.entities
-    .filter(
-      (entity): entity is TimelineEntity => entity.getTemporalStart() !== null
-    )
+    .map((entity) => new TimelineItem(entity, state.layout))
     .sort((a, b) => {
-      const aStart = a.getTemporalStart().value;
-      const bStart = b.getTemporalStart().value;
+      const aStart = a.entity.getTemporalStart();
+      const bStart = b.entity.getTemporalStart();
 
-      return aStart.localeCompare(bStart);
+      if (aStart === null && bStart === null) {
+        return 0;
+      }
+
+      if (aStart === null) {
+        return -1;
+      }
+
+      if (bStart === null) {
+        return 1;
+      }
+
+      return aStart.value.localeCompare(bStart.value);
     });
 }
 
 export function selectIsEmpty(state: State): boolean {
-  return selectSortedEntities(state).length <= 0;
+  return selectItems(state).length <= 0;
 }
 
 export function selectIsZoomEnabled(state: State): boolean {

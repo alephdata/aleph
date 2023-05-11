@@ -1,0 +1,68 @@
+version: "3.2"
+
+services:
+  postgres:
+    environment:
+      POSTGRES_DB: aleph_e2e
+    volumes:
+      - postgres-data-e2e:/var/lib/postgresql/data
+
+  elasticsearch:
+    volumes:
+      - elasticsearch-data-e2e:/usr/share/elasticsearch/data
+
+  redis:
+    volumes:
+      - redis-data-e2e:/data
+
+  api:
+    volumes:
+      - archive-data-e2e:/data
+    environment:
+      ALEPH_SINGLE_USER: "false"
+      ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      APP_NAME: "aleph-e2e"
+      FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+
+  app:
+    volumes:
+      - archive-data-e2e:/data
+    environment:
+      ALEPH_SINGLE_USER: "false"
+      ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      APP_NAME: "aleph-e2e"
+      FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+
+  ingest-file:
+    volumes:
+      - archive-data-e2e:/data
+    environment:
+      ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+
+  ui:
+    environment:
+      ALEPH_SINGLE_USER: "false"
+      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
+
+  e2e:
+    build:
+      context: e2e
+    environment:
+      BASE_URL: "http://ui:8080"
+    volumes:
+      - "./e2e:/e2e"
+
+  worker:
+    volumes:
+      - archive-data-e2e:/data
+    environment:
+      ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      APP_NAME: "aleph-e2e"
+      FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+
+volumes:
+  archive-data-e2e: {}
+  elasticsearch-data-e2e: {}
+  postgres-data-e2e: {}
+  redis-data-e2e: {}
