@@ -83,7 +83,9 @@ build-full: build build-ui
 ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
 
-dev: 
+dev:
+	python3 -m pip install --upgrade pip
+	python3 -m pip install -q -r requirements.txt
 	python3 -m pip install -q -r requirements-dev.txt
 
 fixtures:
