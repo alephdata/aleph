@@ -7,6 +7,7 @@ from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es
+from aleph.settings import SETTINGS
 from aleph.index.util import index_name, index_settings, configure_index
 from aleph.index.util import query_delete, bulk_actions, unpack_result
 from aleph.index.util import authz_query
@@ -89,7 +90,13 @@ def iter_matches(collection, authz):
         authz_query(authz, field="match_collection_id"),
     ]
     query = {"query": {"bool": {"filter": filters}}, "_source": XREF_SOURCE}
-    for res in scan(es, index=xref_index(), query=query):
+    for res in scan(
+        es,
+        index=xref_index(),
+        query=query,
+        scroll=SETTINGS.XREF_SCROLL,
+        size=SETTINGS.XREF_SCROLL_SIZE,
+    ):
         yield unpack_result(res)
 
 
