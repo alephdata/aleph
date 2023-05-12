@@ -149,6 +149,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+{{- if .Values.api.serviceAnnotations }}
+  annotations:
+  {{- range $key, $value := .Values.api.serviceAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
   name: {{ .Values.global.namingPrefix }}-api
   labels:
     app: {{ .Values.global.namingPrefix }}-api
