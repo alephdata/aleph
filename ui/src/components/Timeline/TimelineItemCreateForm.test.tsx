@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { render, screen } from 'testUtils';
+import { render, screen, waitFor } from 'testUtils';
 import userEvent from '@testing-library/user-event';
 import { Model, Entity, defaultModel } from '@alephdata/followthemoney';
 import TimelineItemCreateForm from './TimelineItemCreateForm';
@@ -77,11 +77,10 @@ it('loads entity suggestions for source and target fields', async () => {
   );
 
   await selectSchema('Ownership');
-  await userEvent.click(screen.getByRole('button', { name: 'Owner' }));
 
-  const suggestion = await screen.findByRole('menuitem', {
-    name: 'ACME, Inc.',
-  });
+  await waitFor(() => expect(fetchEntitySuggestions).toHaveBeenCalledTimes(2));
+  await userEvent.click(screen.getByRole('button', { name: 'Owner' }));
+  const suggestion = screen.getByRole('menuitem', { name: 'ACME, Inc.' });
   expect(suggestion).toBeInTheDocument();
 });
 

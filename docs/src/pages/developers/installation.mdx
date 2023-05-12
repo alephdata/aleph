@@ -359,6 +359,12 @@ ALEPH_OAUTH_SCOPE=openid profile email user.read
 ALEPH_OAUTH_TOKEN_METHOD=POST
 ```
 
+### Sentry
+
+Aleph is able to report issues to a [Sentry](https://www.sentry.io) instance. To enable this you need to create a project in your Sentry instance and configure the `SENTRY_DSN` setting in Aleph. Leaving this setting empty disables the feature.
+
+You can set the [environment](https://docs.sentry.io/platforms/python/configuration/environments/) via the `SENTRY_ENVIRONMENT` setting.
+
 ## Troubleshooting
 
 Troubleshooting help can be found in the [Technical FAQ](/developers/technical-faq).

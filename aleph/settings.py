@@ -215,6 +215,8 @@ class Settings:
 
         ###############################################################################
         # Additional configurations
+        self.SENTRY_DSN = env.get("SENTRY_DSN", None)
+        self.SENTRY_ENVIRONMENT = env.get("SENTRY_ENVIRONMENT", "")
         string_prefix = env.get("ALEPH_STRING_CONFIG_PREFIX")
         json_prefix = env.get("ALEPH_JSON_CONFIG_PREFIX")
         if string_prefix or json_prefix:

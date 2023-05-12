@@ -21,10 +21,16 @@ from servicelayer.util import backoff, service_retries
 from werkzeug.local import LocalProxy
 from werkzeug.middleware.profiler import ProfilerMiddleware
 
+from aleph import __version__ as aleph_version
+from aleph.settings import SETTINGS
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 from aleph.settings import SETTINGS
 from aleph.util import LoggingTransport
+
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
 
 NONE = "'none'"
 log = logging.getLogger(__name__)
@@ -41,6 +47,18 @@ def create_app(config=None):
         config = {}
 
     configure_logging(level=logging.DEBUG)
+
+    if SETTINGS.SENTRY_DSN:
+        sentry_sdk.init(
+            dsn=SETTINGS.SENTRY_DSN,
+            integrations=[
+                FlaskIntegration(),
+            ],
+            traces_sample_rate=0,
+            release=aleph_version,
+            environment=SETTINGS.SENTRY_ENVIRONMENT,
+            send_default_pii=False,
+        )
     app = Flask("aleph")
     app.config.from_object(SETTINGS)
     app.config.update(config)
