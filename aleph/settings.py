@@ -184,8 +184,8 @@ class Settings:
             "ALEPH_ELASTICSEARCH_URI", "http://localhost:9200"
         )
         self.ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 60)
-        self.XREF_SCROLL = env.get("ALEPH_XREF_SCROLL", "5m")
-        self.XREF_SCROLL_SIZE = env.get("ALEPH_XREF_SCROLL_SIZE", "1000")
+        self.ELASTICSEARCH_SCROLL = env.get("ALEPH_ELASTICSEARCH_SCROLL", "5m")
+        self.ELASTICSEARCH_SCROLL_SIZE = env.get("ALEPH_ELASTICSEARCH_SCROLL_SIZE", "1000")
 
         # Number of replicas to maintain. '2' means 3 overall copies.
         self.INDEX_REPLICAS = env.to_int("ALEPH_INDEX_REPLICAS", 0)
