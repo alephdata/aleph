@@ -7,6 +7,7 @@ from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es, cache
+from aleph.settings import SETTINGS
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, delete_safe
