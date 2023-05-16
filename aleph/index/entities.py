@@ -7,7 +7,6 @@ from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es, cache
-from aleph.settings import SETTINGS
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, delete_safe
@@ -65,6 +64,8 @@ def iter_entities(
     excludes=None,
     filters=None,
     sort=None,
+    es_scroll="5m",
+    es_scroll_size=1000,
 ):
     """Scan all entities matching the given criteria."""
     query = {
@@ -83,8 +84,8 @@ def iter_entities(
         timeout=MAX_TIMEOUT,
         request_timeout=MAX_REQUEST_TIMEOUT,
         preserve_order=preserve_order,
-        scroll=SETTINGS.ELASTICSEARCH_SCROLL,
-        size=SETTINGS.ELASTICSEARCH_SCROLL_SIZE,
+        scroll=es_scroll,
+        size=es_scroll_size,
     ):
         entity = unpack_result(res)
         if entity is not None:

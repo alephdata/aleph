@@ -94,8 +94,8 @@ def iter_matches(collection, authz):
         es,
         index=xref_index(),
         query=query,
-        scroll=SETTINGS.ELASTICSEARCH_SCROLL,
-        size=SETTINGS.ELASTICSEARCH_SCROLL_SIZE,
+        scroll=SETTINGS.XREF_SCROLL,
+        size=SETTINGS.XREF_SCROLL_SIZE,
     ):
         yield unpack_result(res)
 
