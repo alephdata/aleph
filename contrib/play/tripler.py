@@ -1,8 +1,7 @@
 from banal import ensure_list
 from rdflib import Namespace, ConjunctiveGraph, URIRef, Literal
-from rdflib.namespace import FOAF, DC, RDF, RDFS, SKOS
+from rdflib.namespace import DC, RDF, RDFS, SKOS
 from followthemoney import model
-from pprint import pprint
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
@@ -60,7 +59,7 @@ def export_entity(ctx, entity):
         for value in ensure_list(values):
             g.add((uri, pred, Literal(value), ctx))
 
-    print g.serialize(format="nquads")
+    print(g.serialize(format="nquads"))
 
 
 def export_collection(collection):
