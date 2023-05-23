@@ -1,3 +1,10 @@
+## 3.14.1 (11-05-2023)
+- Support for error tracking via Sentry
+- Fix a flaky UI test (#3011)
+- Reference ghcr.io docker repository everywhere
+- Configure bump2version to keep versions in contrib/ up-to-date
+- Bump ingest-file to 3.18.4
+
 ## 3.14.0 (30-03-2023)
 
 - Numerous library upgrades
