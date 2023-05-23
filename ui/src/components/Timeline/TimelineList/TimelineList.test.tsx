@@ -164,3 +164,18 @@ it('shows end date column if at least one entity has a temporal end', () => {
 
   expect(headers).toEqual(['Start date', 'End date', 'Caption', 'Actions']);
 });
+
+it('shows a warning callout if timeline has items with invalid dates', () => {
+  const eventWithoutDate = model.getEntity({
+    schema: 'Event',
+    id: '0',
+  });
+  const items = [new TimelineItem(eventWithoutDate)];
+
+  render(<TimelineList {...defaultProps} items={items} />);
+
+  const callout = screen.getByText(
+    /This timeline has items with invalid or missing dates./
+  );
+  expect(callout).toBeInTheDocument();
+});

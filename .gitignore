@@ -107,3 +107,5 @@ ENV/
 # /docs/.gitignore and some of the ignore rules in this file may
 # conflict with out docs setup.
 !/docs/**/*
+
+test-results/

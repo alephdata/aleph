@@ -122,6 +122,12 @@ updates:
       interval: monthly
     open-pull-requests-limit: 99
     target-branch: develop
+  - package-ecosystem: docker
+    directory: "/e2e"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 99
+    target-branch: develop
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
