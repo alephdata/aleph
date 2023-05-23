@@ -27,19 +27,13 @@ test-ui:
 	$(UIDOCKER) npm run test
 
 lint:
-	flake8 aleph/
+	ruff check .
 
 lint-ui:
 	$(UIDOCKER) npm run lint
 
-format:
-	black aleph/
-
 format-ui:
 	$(UIDOCKER) npm run format
-
-format-check:
-	black --check aleph/
 
 format-check-ui:
 	$(UIDOCKER) npm run format:check
