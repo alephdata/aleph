@@ -8,7 +8,7 @@
     "@blueprintjs/core": "^4.18.0",
     "@blueprintjs/icons": "^4.15.0",
     "@blueprintjs/popover2": "^1.13.9",
-    "@blueprintjs/select": "^4.9.14",
+    "@blueprintjs/select": "^4.9.17",
     "@blueprintjs/table": "^4.10.1",
     "@craco/craco": "^7.1.0",
     "@formatjs/cli": "^6.1.1",
