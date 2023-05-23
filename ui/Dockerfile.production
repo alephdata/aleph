@@ -1,4 +1,4 @@
-FROM alephdata/aleph-ui:${ALEPH_TAG:-latest} AS builder
+FROM ghcr.io/alephdata/aleph-ui:${ALEPH_TAG:-latest} AS builder
 RUN npm run build
 
 FROM nginx:alpine

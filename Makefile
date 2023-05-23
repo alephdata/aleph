@@ -77,7 +77,7 @@ build:
 	$(COMPOSE) build
 
 build-ui:
-	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
+	docker build -t ghcr.io/alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
 build-e2e:
 	$(COMPOSE_E2E) build
@@ -88,6 +88,8 @@ ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
 
 dev:
+	python3 -m pip install --upgrade pip
+	python3 -m pip install -q -r requirements.txt
 	python3 -m pip install -q -r requirements-dev.txt
 
 fixtures:
