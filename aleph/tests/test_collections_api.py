@@ -48,6 +48,16 @@ class CollectionsApiTestCase(TestCase):
         assert res.json["results"][0]["countries"] == ["us"], res.json
         assert validate(res.json["results"][0], "Collection")
 
+    def test_index_fuzzy_search(self):
+        _, headers = self.login(is_admin=True)
+
+        # Note the typo in "Colection"
+        res = self.client.get("/api/2/collections?q=Test Colection", headers=headers)
+
+        assert res.status_code == 200, res
+        assert res.json["total"] == 1, res.json
+        assert res.json["results"][0]["label"] == "Test Collection"
+
     def test_sitemap(self):
         res = self.client.get("/api/2/sitemap.xml")
         assert res.status_code == 200, res

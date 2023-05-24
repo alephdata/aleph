@@ -31,6 +31,23 @@ class CollectionsQuery(Query):
             filters.append({"ids": {"values": ids}})
         return filters
 
+    def get_text_query(self):
+        return [
+            {
+                "multi_match": {
+                    "query": self.parser.text or "",
+                    "fields": ensure_list(self.TEXT_FIELDS),
+                    "operator": "AND",
+                    "zero_terms_query": "all",
+                    # We currently do not apply stemming at index time, so using a fuzzy search
+                    # supports common cases like "owner"/"owners", "Russia"/"Russian","leaks/leaked".
+                    # This is a simple solution and does not require changing the index configuration,
+                    # but it is not perfect. For example, "contracting"/"contracts" does not match.
+                    "fuzziness": "AUTO",
+                },
+            },
+        ]
+
     def get_index(self):
         return collections_index()
 
