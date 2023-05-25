@@ -244,3 +244,39 @@ def update(id):
     db.session.commit()
     update_role(role)
     return RoleSerializer.jsonify(role)
+
+
+@blueprint.route("/api/2/roles/<int:id>/reset_api_key", methods=["POST"])
+def reset_api_key(id):
+    """Reset the role’s API key.
+    ---
+    post:
+      summary: Reset API key
+      description: >
+        Reset the role’s API key. This will invalidate the current
+        API key and generate a new one.
+      parameters:
+      - in: path
+        name: id
+        required: true
+        description: role ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      tags:
+      - Role
+    """
+    role = obj_or_404(Role.by_id(id))
+    require(request.authz.can_write_role(role.id))
+
+    role.reset_api_key()
+    db.session.add(role)
+    db.session.commit()
+    update_role(role)
+    return RoleSerializer.jsonify(role)

@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { queryRoles, fetchRole, updateRole } from 'actions';
+import { queryRoles, fetchRole, updateRole, resetApiKey } from 'actions';
 import {
   resultObjects,
   objectLoadStart,
@@ -19,6 +19,8 @@ export default createReducer(
     [fetchRole.COMPLETE]: (state, { id, data }) =>
       objectLoadComplete(state, id, data),
     [updateRole.COMPLETE]: (state, { id, data }) =>
+      objectLoadComplete(state, id, data),
+    [resetApiKey.COMPLETE]: (state, { id, data }) =>
       objectLoadComplete(state, id, data),
   },
   initialState
