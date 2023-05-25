@@ -183,3 +183,33 @@ class RolesApiTestCase(TestCase):
         res = self.client.post("/api/2/roles", data=payload)
 
         self.assertEqual(res.status_code, 409)
+
+    def test_reset_api_key_auth(self):
+        url = f"/api/2/roles/{self.rolex.id}/reset_api_key"
+
+        # Anonymous request
+        res = self.client.post(url)
+        self.assertEqual(res.status_code, 403)
+
+        # Authenticated request, but for a different role
+        _, headers = self.login()
+        res = self.client.post(url, headers=headers)
+        self.assertEqual(res.status_code, 403)
+
+    def test_reset_api_key(self):
+        role, headers = self.login()
+        old_key = role.api_key
+
+        url = f"/api/2/roles/{role.id}/reset_api_key"
+        res = self.client.post(url, headers=headers)
+        new_key = res.json["api_key"]
+
+        self.assertEqual(res.status_code, 200)
+        self.assertNotEqual(old_key, new_key)
+
+        url = f"/api/2/roles/{role.id}"
+        res = self.client.get(url, headers={"Authorization": old_key})
+        self.assertEqual(res.status_code, 403)
+
+        res = self.client.get(url, headers={"Authorization": new_key})
+        self.assertEqual(res.status_code, 200)

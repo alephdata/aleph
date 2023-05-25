@@ -9,7 +9,10 @@ import {
   Alignment,
   MenuItem,
   Classes,
+  Dialog,
+  DialogBody,
 } from '@blueprintjs/core';
+import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { connect } from 'react-redux';
 
 import withRouter from 'app/withRouter';
@@ -17,7 +20,7 @@ import { showSuccessToast } from 'app/toast';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import ClipboardInput from 'components/common/ClipboardInput';
-import { updateRole } from 'actions';
+import { updateRole, resetApiKey } from 'actions';
 import { selectMetadata, selectLocale, selectCurrentRole } from 'selectors';
 import SelectWrapper from 'components/common/SelectWrapper';
 
@@ -43,6 +46,14 @@ const messages = defineMessages({
   api_key: {
     id: 'settings.api_key',
     defaultMessage: 'API Secret Access Key',
+  },
+  api_key_reset: {
+    id: 'settings.api_key.reset',
+    defaultMessage: 'Reset API key',
+  },
+  api_key_reset_success: {
+    id: 'settings.api_key.reset.success',
+    defaultMessage: 'API key reset successfully.',
   },
   api_key_help: {
     id: 'profileinfo.api_desc',
@@ -100,12 +111,15 @@ export class SettingsScreen extends React.Component {
     super(props);
     this.state = {
       role: props.role,
+      showApiKeyResetDialog: false,
     };
     this.onSave = this.onSave.bind(this);
     this.onChangeInput = this.onChangeInput.bind(this);
     this.onToggleMuted = this.onToggleMuted.bind(this);
     this.onToggleTester = this.onToggleTester.bind(this);
     this.onSelectLocale = this.onSelectLocale.bind(this);
+    this.onResetApiKey = this.onResetApiKey.bind(this);
+    this.toggleApiKeyResetDialog = this.toggleApiKeyResetDialog.bind(this);
     this.renderLocale = this.renderLocale.bind(this);
   }
 
@@ -123,6 +137,18 @@ export class SettingsScreen extends React.Component {
       await this.props.updateRole(role);
       showSuccessToast(intl.formatMessage(messages.saved));
     }
+  }
+
+  async onResetApiKey() {
+    const { intl } = this.props;
+    const { role } = this.state;
+    await this.props.resetApiKey(role);
+    this.toggleApiKeyResetDialog();
+    showSuccessToast(intl.formatMessage(messages.api_key_reset_success));
+  }
+
+  toggleApiKeyResetDialog() {
+    this.setState({ showApiKeyResetDialog: !this.state.showApiKeyResetDialog });
   }
 
   onChangeInput({ target }) {
@@ -314,7 +340,22 @@ export class SettingsScreen extends React.Component {
           labelFor="api_key"
           helperText={intl.formatMessage(messages.api_key_help)}
         >
-          <ClipboardInput id="api_key" icon="key" value={role.api_key} />
+          <ClipboardInput
+            id="api_key"
+            icon="key"
+            value={role.api_key}
+            rightElement={
+              <Tooltip content={intl.formatMessage(messages.api_key_reset)}>
+                <Button
+                  minimal
+                  small
+                  icon="reset"
+                  onClick={this.toggleApiKeyResetDialog}
+                  aria-label={intl.formatMessage(messages.api_key_reset)}
+                />
+              </Tooltip>
+            }
+          />
         </FormGroup>
         <FormGroup
           label={intl.formatMessage(messages.email)}
@@ -363,6 +404,24 @@ export class SettingsScreen extends React.Component {
             </h5>
           </div>
           {this.renderForm()}
+          <Dialog
+            title={intl.formatMessage(messages.api_key_reset)}
+            isOpen={this.state.showApiKeyResetDialog}
+            onClose={this.toggleApiKeyResetDialog}
+          >
+            <DialogBody>
+              <p>
+                <FormattedMessage
+                  id="settings.api_key.confirmation"
+                  defaultMessage="When you reset your API key, <strong>your current key will stop working</strong> and a new key is generated. You will need to update your applications to use the new key."
+                  values={{ strong: (chunks) => <strong>{chunks}</strong> }}
+                />
+              </p>
+              <Button intent={Intent.DANGER} fill onClick={this.onResetApiKey}>
+                {intl.formatMessage(messages.api_key_reset)}
+              </Button>
+            </DialogBody>
+          </Dialog>
         </Dashboard>
       </Screen>
     );
@@ -378,6 +437,8 @@ const mapStateToProps = (state) => ({
 });
 
 SettingsScreen = withRouter(SettingsScreen);
-SettingsScreen = connect(mapStateToProps, { updateRole })(SettingsScreen);
+SettingsScreen = connect(mapStateToProps, { updateRole, resetApiKey })(
+  SettingsScreen
+);
 SettingsScreen = injectIntl(SettingsScreen);
 export default SettingsScreen;
