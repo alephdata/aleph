@@ -365,6 +365,27 @@ Aleph is able to report issues to a [Sentry](https://www.sentry.io) instance. To
 
 You can set the [environment](https://docs.sentry.io/platforms/python/configuration/environments/) via the `SENTRY_ENVIRONMENT` setting.
 
+### Mutual TLS
+
+To provide an extra layer of security, it is possible to configure the services (postgres, redis and elasticsearch) to speak mutual TLS (mTLS) with each other. Managing client certificates for this matter requires some encryption knowledge and experience and is a seperate topic that can not be covered within this documentation.
+
+Once you have configured and deployed the services with TLS, the connection settings in the environment vars need to be adjusted:
+
+```
+# redis
+REDIS_URL="rediss://:<password>@redis:6379/0?ssl_certfile=/certs/redis.crt&ssl_keyfile=/certs/redis.key&ssl_ca_certs=/certs/ca.crt"
+
+# postgres
+ALEPH_DATABASE_URI="postgresql://<user>:<password>@postgres/aleph?sslmode=verify-full&sslrootcert=/certs/ca.crt&sslcert=/certs/postgres.crt&sslkey=/certs/postgres.key"
+
+# elasticsearch
+ALEPH_ELASTICSEARCH_URI=https://<user>:<password>@elasticsearch:9200
+ELASTICSEARCH_TLS_CA_CERTS=/certs/ca.crt
+ELASTICSEARCH_TLS_CLIENT_CERT=/certs/elastic.crt
+ELASTICSEARCH_TLS_CLIENT_KEY=/certs/elastic.key
+ELASTICSEARCH_TLS_VERIFY_CERTS=1
+```
+
 ## Troubleshooting
 
 Troubleshooting help can be found in the [Technical FAQ](/developers/technical-faq).
