@@ -48,7 +48,7 @@ class CollectionsQuery(Query):
                         "query": self.parser.text,
                         "fields": ensure_list(self.TEXT_FIELDS),
                         "operator": "AND",
-                        "fuzziness": "AUTO",
+                        "fuzziness": "AUTO:3,4",
                     }
                 }
             )
