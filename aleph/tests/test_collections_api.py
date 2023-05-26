@@ -58,6 +58,19 @@ class CollectionsApiTestCase(TestCase):
         assert res.json["total"] == 1, res.json
         assert res.json["results"][0]["label"] == "Test Collection"
 
+    def test_index_advanced_search(self):
+        _, headers = self.login(is_admin=True)
+        self.col = self.create_collection(
+            label="OpenContracting",
+            category="procurement",
+        )
+
+        res = self.client.get("/api/2/collections?q=Open*", headers=headers)
+
+        assert res.status_code == 200, res
+        assert res.json["total"] == 1, res.json
+        assert res.json["results"][0]["label"] == "OpenContracting"
+
     def test_sitemap(self):
         res = self.client.get("/api/2/sitemap.xml")
         assert res.status_code == 200, res
