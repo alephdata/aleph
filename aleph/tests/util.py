@@ -67,7 +67,6 @@ def _make_test_response(response_class):
 
 
 class TestCase(unittest.TestCase):
-
     # Expose faker since it should be easy to use
     fake = Factory.create()
 

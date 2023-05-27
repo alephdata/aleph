@@ -94,7 +94,7 @@ def profile_fragments(collection, aggregator, entity_id=None):
     aggregator.delete(origin=ORIGIN)
     writer = aggregator.bulk()
     profile_id = None
-    for (profile_id, entity_id) in EntitySet.all_profiles(
+    for profile_id, entity_id in EntitySet.all_profiles(
         collection.id, entity_id=entity_id
     ):
         data = {"id": entity_id, "schema": Entity.THING, "profile_id": profile_id}
@@ -129,11 +129,11 @@ def pairwise_judgements(pairs, collection_id):
     q = q.filter(db.tuple_(left.entity_id, right.entity_id).in_(pairs))
 
     judgements = {}
-    for (left, right) in pairs:
+    for left, right in pairs:
         judgements[(left, right)] = Judgement.NO_JUDGEMENT
         judgements[(right, left)] = Judgement.NO_JUDGEMENT
 
-    for (left, right) in q.all():
+    for left, right in q.all():
         judgement = left.judgement + right.judgement
         judgements[(left.entity_id, right.entity_id)] = judgement
         judgements[(right.entity_id, left.entity_id)] = judgement
