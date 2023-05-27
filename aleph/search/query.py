@@ -201,7 +201,7 @@ class Query(object):
             return self.SORT_DEFAULT
 
         sort_fields = ["_score"]
-        for (field, direction) in self.parser.sorts:
+        for field, direction in self.parser.sorts:
             field = self.SORT_FIELDS.get(field, field)
             type_ = get_field_type(field)
             config = {"order": direction, "missing": "_last"}
