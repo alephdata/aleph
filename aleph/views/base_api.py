@@ -71,6 +71,9 @@ def _metadata_locale(locale):
         "feature_flags": {
             "bookmarks": as_bool(SETTINGS.ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE),
         },
+        "feedback_urls": {
+            "documents": SETTINGS.FEEDBACK_URL_DOCUMENTS,
+        },
     }
 
 

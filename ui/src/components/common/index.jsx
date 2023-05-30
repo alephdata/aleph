@@ -51,6 +51,7 @@ import LinkMenuItem from './LinkMenuItem';
 import LinkButton from './LinkButton';
 import WidthBoundary from './WidthBoundary';
 import DeleteDialog from './DeleteDialog';
+import FeedbackButton from './FeedbackButton';
 
 export {
   AnimatedCount,
@@ -106,6 +107,7 @@ export {
   LinkButton,
   WidthBoundary,
   DeleteDialog,
+  FeedbackButton,
 };
 
 export * from './types';

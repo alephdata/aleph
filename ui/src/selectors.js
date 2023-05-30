@@ -86,6 +86,14 @@ export function selectExperimentalBookmarksFeatureEnabled(state) {
   return loggedIn && featureFlag;
 }
 
+export function selectFeedbackUrls(state) {
+  return selectMetadata(state)?.feedback_urls;
+}
+
+export function selectFeedbackUrl(state, key) {
+  return selectFeedbackUrls(state)?.[key];
+}
+
 export function selectMessages(state) {
   return selectObject(state, state, 'messages');
 }
