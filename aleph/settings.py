@@ -208,6 +208,10 @@ class Settings:
         )
 
         ###############################################################################
+        # Feedback
+        self.FEEDBACK_URL_DOCUMENTS = env.get("ALEPH_FEEDBACK_URL_DOCUMENTS", None)
+
+        ###############################################################################
         # Additional configurations
         string_prefix = env.get("ALEPH_STRING_CONFIG_PREFIX")
         json_prefix = env.get("ALEPH_JSON_CONFIG_PREFIX")

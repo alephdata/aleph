@@ -10,6 +10,7 @@ import {
 
 import withRouter from 'app/withRouter';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
+import { FeedbackButton } from 'components/common';
 
 import './PagingButtons.scss';
 
@@ -76,13 +77,15 @@ class PagingButtons extends React.Component {
     // Having the logic here makes it easier to use this component.
     if (page && page > 0 && numberOfPages && numberOfPages > 0) {
       return (
-        <ButtonGroup className="PagingButtons" fill>
-          <AnchorButton
-            minimal
-            href={`#${this.getPageLink(page - 1)}`}
-            icon="arrow-left"
-            disabled={page <= 1}
-          />
+        <div className="PagingButtons">
+          <div className="PagingButtons__left">
+            <AnchorButton
+              minimal
+              href={`#${this.getPageLink(page - 1)}`}
+              icon="arrow-left"
+              disabled={page <= 1}
+            />
+          </div>
           <div className="PagingButtons__middle">
             <FormattedMessage
               id="document.paging"
@@ -108,28 +111,44 @@ class PagingButtons extends React.Component {
               }}
             />
           </div>
-          {showRotateButtons && (
-            <>
+          <div className="PagingButtons__right">
+            <ButtonGroup>
+              <FeedbackButton
+                type="documents"
+                entityUrl={document.links.ui}
+                minimal
+              >
+                <span className="PagingButtons__feedback">
+                  <FormattedMessage
+                    id="feedback.documents.report_problem"
+                    defaultMessage="Report a problem"
+                  />
+                </span>
+              </FeedbackButton>
+              {showRotateButtons && (
+                <>
+                  <AnchorButton
+                    minimal
+                    href={`#${this.getRotateLink(-90)}`}
+                    icon="image-rotate-left"
+                  />
+                  <AnchorButton
+                    minimal
+                    href={`#${this.getRotateLink(90)}`}
+                    icon="image-rotate-right"
+                  />
+                  <Divider />
+                </>
+              )}
               <AnchorButton
                 minimal
-                href={`#${this.getRotateLink(-90)}`}
-                icon="image-rotate-left"
+                href={`#${this.getPageLink(page + 1)}`}
+                icon="arrow-right"
+                disabled={page >= numberOfPages}
               />
-              <AnchorButton
-                minimal
-                href={`#${this.getRotateLink(90)}`}
-                icon="image-rotate-right"
-              />
-              <Divider />
-            </>
-          )}
-          <AnchorButton
-            minimal
-            href={`#${this.getPageLink(page + 1)}`}
-            icon="arrow-right"
-            disabled={page >= numberOfPages}
-          />
-        </ButtonGroup>
+            </ButtonGroup>
+          </div>
+        </div>
       );
     }
     return null;

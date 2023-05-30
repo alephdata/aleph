@@ -1,15 +1,25 @@
 @import 'app/variables.scss';
 
 .PagingButtons {
+  display: flex;
   width: 100%;
   background-color: $aleph-breadcrumbs-background;
   padding: 3px;
 
+  &__left,
+  &__right {
+    width: 37.5%;
+  }
+
   &__middle {
+    width: 25%;
     background: none;
-    flex: 100 1 auto !important;
     cursor: auto;
     text-align: center;
+  }
+
+  &__right {
+    text-align: end;
   }
 
   &__input {
@@ -31,5 +41,10 @@
         -moz-appearance: textfield;
       }
     }
+  }
+
+  &__feedback {
+    text-decoration: underline;
+    color: $aleph-greyed-text;
   }
 }
