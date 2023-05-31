@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import TimelineItemCreateButton from './TimelineItemCreateButton';

@@ -2,7 +2,7 @@ import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
 import { selectUnit } from '@formatjs/intl-utils';
 import { FormattedRelativeTime } from 'react-intl';
 
-export default function ({ date, utcDate }) {
+export default function RelativeTime({ date, utcDate }) {
   const dateObj = utcDate
     ? convertUTCDateToLocalDate(new Date(utcDate))
     : new Date(date);
@@ -14,7 +14,7 @@ export default function ({ date, utcDate }) {
       <FormattedRelativeTime
         value={value}
         unit={unit}
-        style="long"
+        style="long" // eslint-disable-line react/style-prop-object
         numeric="auto"
       />
     </time>

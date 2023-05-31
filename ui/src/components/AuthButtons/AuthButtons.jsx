@@ -2,16 +2,8 @@ import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import {
-  Button,
-  Classes,
-  Icon,
-  Menu,
-  MenuDivider,
-  MenuItem,
-} from '@blueprintjs/core';
+import { Button, Classes, Menu, MenuDivider } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
-import c from 'classnames';
 
 import { fetchRole } from 'actions';
 import {
