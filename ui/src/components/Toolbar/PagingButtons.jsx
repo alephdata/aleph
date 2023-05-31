@@ -10,7 +10,7 @@ import {
 
 import withRouter from 'app/withRouter';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
-import { FeedbackButton } from 'components/common';
+import { FeedbackButton, HintPopover } from 'components/common';
 
 import './PagingButtons.scss';
 
@@ -65,6 +65,42 @@ class PagingButtons extends React.Component {
     });
   };
 
+  renderFeedback() {
+    const { document } = this.props;
+
+    const popoverContent = (
+      <>
+        <p>
+          <strong>
+            <FormattedMessage
+              id="document.report_problem.title"
+              defaultMessage="Does the document preview not look quite right? Or is the extracted text incomplete?"
+            />
+          </strong>
+        </p>
+        <p>
+          <FormattedMessage
+            id="document.report_problem.text"
+            defaultMessage="You can now easily report such problems to the Aleph team. This helps us improve how Aleph processes and displays documents."
+          />
+        </p>
+      </>
+    );
+
+    return (
+      <HintPopover id="document-feedback" content={popoverContent}>
+        <FeedbackButton type="documents" entityUrl={document.links.ui} minimal>
+          <span className="PagingButtons__feedback">
+            <FormattedMessage
+              id="document.report_problem"
+              defaultMessage="Report a problem"
+            />
+          </span>
+        </FeedbackButton>
+      </HintPopover>
+    );
+  }
+
   render() {
     const { document, numberOfPages, page, showRotateButtons } = this.props;
     const { pageInputVal } = this.state;
@@ -113,18 +149,7 @@ class PagingButtons extends React.Component {
           </div>
           <div className="PagingButtons__right">
             <ButtonGroup>
-              <FeedbackButton
-                type="documents"
-                entityUrl={document.links.ui}
-                minimal
-              >
-                <span className="PagingButtons__feedback">
-                  <FormattedMessage
-                    id="feedback.documents.report_problem"
-                    defaultMessage="Report a problem"
-                  />
-                </span>
-              </FeedbackButton>
+              {this.renderFeedback()}
               {showRotateButtons && (
                 <>
                   <AnchorButton

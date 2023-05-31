@@ -1,0 +1,11 @@
+@import 'app/variables.scss';
+
+.HintPopover__backdrop.HintPopover__backdrop {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+// By default, Blueprint's popover backdrops don't use an exit transition
+.HintPopover__backdrop.#{$bp-ns}-popover2-exit {
+  opacity: 0;
+  transition: $pt-transition-duration opacity ease-out;
+}
