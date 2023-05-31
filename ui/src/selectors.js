@@ -94,6 +94,10 @@ export function selectFeedbackUrl(state, key) {
   return selectFeedbackUrls(state)?.[key];
 }
 
+export function selectDismissedHints(state, id) {
+  return state.config?.dismissedHints || [];
+}
+
 export function selectMessages(state) {
   return selectObject(state, state, 'messages');
 }
