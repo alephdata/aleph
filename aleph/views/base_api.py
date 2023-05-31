@@ -73,6 +73,7 @@ def _metadata_locale(locale):
         },
         "feedback_urls": {
             "documents": SETTINGS.FEEDBACK_URL_DOCUMENTS,
+            "timelines": SETTINGS.FEEDBACK_URL_TIMELINES,
         },
     }
 

@@ -4,9 +4,9 @@ import { AnchorButton, IAnchorButtonProps } from '@blueprintjs/core';
 
 import { selectCurrentRole, selectFeedbackUrl } from 'selectors';
 
-type FeedbackButtonProps = IAnchorButtonProps & {
+type FeedbackButtonProps = Omit<IAnchorButtonProps, 'type'> & {
   type: string;
-  entityUrl: string;
+  entityUrl?: string;
 };
 
 const FeedbackButton: FC<FeedbackButtonProps> = ({
