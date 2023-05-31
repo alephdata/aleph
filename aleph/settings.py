@@ -210,6 +210,7 @@ class Settings:
         ###############################################################################
         # Feedback
         self.FEEDBACK_URL_DOCUMENTS = env.get("ALEPH_FEEDBACK_URL_DOCUMENTS", None)
+        self.FEEDBACK_URL_TIMELINES = env.get("ALEPH_FEEDBACK_URL_TIMELINES", None)
 
         ###############################################################################
         # Additional configurations

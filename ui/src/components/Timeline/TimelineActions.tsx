@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import TimelineItemCreateButton from './TimelineItemCreateButton';
 import TimelineZoomLevelSwitch from './TimelineZoomLevelSwitch';
-import FeedbackButton from './FeedbackButton';
+import { FeedbackButton } from 'components/common';
 import {
   selectIsEmpty,
   selectIsZoomEnabled,
@@ -87,7 +87,11 @@ const TimelineActions: FC<TimelineActionsProps> = ({ writeable }) => {
         // environment that mocks the store, we resort to this hacky workaround and
         // simply do not render the feedback button in tests. This is fine because
         // the feedback button is not critical.
-        process.env.NODE_ENV !== 'test' && <FeedbackButton />
+        process.env.NODE_ENV !== 'test' && (
+          <FeedbackButton type="timelines" minimal>
+            <span className="TimelineActions__feedback">Give feedback</span>
+          </FeedbackButton>
+        )
       }
     </div>
   );
