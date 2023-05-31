@@ -62,8 +62,8 @@ const BookmarksMigration: FC = () => {
     return (
       <NonIdealState
         icon="star"
-        title="Changes to bookmarks"
-        description="We have recently rolled out enhancements for bookmarks! Bookmarks are now more reliable and sync across all your devices."
+        title="We’ve updated bookmarks"
+        description="Your bookmarks will now synchronize across all your devices."
         action={
           <Button
             onClick={() => {
@@ -82,23 +82,23 @@ const BookmarksMigration: FC = () => {
     return (
       <NonIdealState
         icon="warning-sign"
-        title="Changes to bookmarks"
+        title="We’ve updated bookmarks"
         description={
           <>
             <p>
-              We have recently rolled out enhancements for bookmarks! This
-              required updating bookmarks to a new storage format.
+              In order to synchronize bookmarks across all your devices, we’ve
+              updated the way your bookmarks are stored.
             </p>
             <p>
               <strong>
                 Unfortunately, {failed.length} out of {succeeded.length}{' '}
-                bookmarks could not be updated to the new format.
+                bookmarks that you had previously created could not be updated.
               </strong>
             </p>
             <p>
-              Most likely that’s because the data you bookmarked has been
-              removed from Aleph. Download a copy of the affected bookmarks
-              to proceed.
+              The most likely reason for this is that the data you bookmarked
+              has been removed from Aleph in the meantime. To proceed, download
+              a copy of the affected bookmarks.
             </p>
           </>
         }
