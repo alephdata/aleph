@@ -391,11 +391,12 @@ def renameuser(email, name):
         print(f"The e-mail address {email} belongs to no user.")
 
 
+@cli.command()
 @click.argument("name")
 def creategroup(name):
     """Create a group with given <name>"""
     role = create_group(name)
-    print("Group %s created." % role)
+    print(f"Group {name} created.")
 
 
 @cli.command()

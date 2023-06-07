@@ -160,3 +160,17 @@ class ManageTestCase(TestCase):
         assert result.exit_code == 0
         assert email in result.output
         assert name in result.output
+
+    def test_creategroup(self):
+        name = "test_group_1"
+
+        role = Role.by_foreign_id(f"group:{name}")
+        assert role is None
+
+        result = self.runner.invoke(manage.creategroup, [name], prog_name="aleph")
+        assert result.exit_code == 0
+        print(result.output)
+        assert f"Group {name} created." in result.output
+
+        role = Role.by_foreign_id(f"group:{name}")
+        assert role is not None
