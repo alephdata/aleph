@@ -406,11 +406,11 @@ def useradd(group, user):
     """Add user to group"""
     user_role, group_role = user_add(group, user)
     if user_role is not None and group_role is not None:
-        print("Added user %s to group %s" % (user_role, group_role))
+        print(f"Added user {user} to group {group}")
     if user_role is None:
-        raise click.BadParameter("No such role: %r" % user)
+        raise click.BadParameter(f"No such role: {user}")
     if group_role is None:
-        raise click.BadParameter("No such role: %r" % group)
+        raise click.BadParameter(f"No such role: {group}")
 
 
 @cli.command()
@@ -420,11 +420,11 @@ def userdel(group, user):
     """Remove user from group"""
     user_role, group_role = user_del(group, user)
     if user_role is not None and group_role is not None:
-        print("Removed user %s from group %s" % (user_role, group_role))
+        print(f"Removed user {user} from group {group}")
     if user_role is None:
-        raise click.BadParameter("No such role: %r" % user)
+        raise click.BadParameter(f"No such role: {user}")
     if group_role is None:
-        raise click.BadParameter("No such role: %r" % group)
+        raise click.BadParameter(f"No such role: {group}")
 
 
 @cli.command()

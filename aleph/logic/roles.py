@@ -104,7 +104,7 @@ def create_group(name):
     return role
 
 
-def user_add(user, group):
+def user_add(group, user):
     user = Role.by_email(user)
     if user is None:
         user = Role.by_foreign_id(user)
@@ -116,7 +116,7 @@ def user_add(user, group):
     return user, group
 
 
-def user_del(user, group):
+def user_del(group, user):
     user = Role.by_email(user)
     if user is None:
         user = Role.by_foreign_id(user)
