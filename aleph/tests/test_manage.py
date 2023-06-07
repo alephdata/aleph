@@ -1,12 +1,11 @@
 import os
-from datetime import datetime, timedelta
-
 from click.testing import CliRunner
 
 from aleph.core import db
 from aleph.tests.util import TestCase
 from aleph import manage
 from aleph.model import Role, Collection
+from aleph.logic.roles import user_add
 
 
 class ManageTestCase(TestCase):
@@ -169,8 +168,144 @@ class ManageTestCase(TestCase):
 
         result = self.runner.invoke(manage.creategroup, [name], prog_name="aleph")
         assert result.exit_code == 0
-        print(result.output)
         assert f"Group {name} created." in result.output
 
         role = Role.by_foreign_id(f"group:{name}")
         assert role is not None
+
+    def test_useradd(self):
+        # Create a user and a group
+        email = "test@example.com"
+        name = "Test User"
+        group_name = "Test Group"
+
+        result = self.runner.invoke(
+            manage.createuser,
+            [email, "--password", "letmein", "--name", name],
+            prog_name="aleph",
+        )
+        assert result.exit_code == 0
+
+        result = self.runner.invoke(manage.creategroup, [group_name], prog_name="aleph")
+        assert result.exit_code == 0
+
+        # Add the user to the group
+        result = self.runner.invoke(
+            manage.useradd,
+            [group_name, email],
+            prog_name="aleph",
+        )
+        assert result.exit_code == 0
+
+        # Check that the user was added to the group
+        user_role = Role.by_email(email)
+        group_role = Role.by_foreign_id(f"group:{group_name}")
+        assert group_role in user_role.roles
+
+    def test_useradd_nonexistent_user(self):
+        # Create a group
+        group_name = "Test Group"
+        result = self.runner.invoke(manage.creategroup, [group_name], prog_name="aleph")
+        assert result.exit_code == 0
+
+        # Add a nonexistent user to the group
+        email = "nonexistent@example.com"
+        result = self.runner.invoke(
+            manage.useradd,
+            [group_name, email],
+            prog_name="aleph",
+        )
+        assert result.exit_code != 0
+        assert isinstance(result.exception, SystemExit)
+
+    def test_useradd_nonexistent_group(self):
+        # Create a user
+        email = "test@example.com"
+        name = "Test User"
+        result = self.runner.invoke(
+            manage.createuser,
+            [email, "--password", "letmein", "--name", name],
+            prog_name="aleph",
+        )
+        assert result.exit_code == 0
+
+        # Add the user to a nonexistent group
+        group_name = "nonexistent"
+        result = self.runner.invoke(
+            manage.useradd,
+            [group_name, email],
+            prog_name="aleph",
+        )
+        assert result.exit_code != 0
+        assert isinstance(result.exception, SystemExit)
+
+    def test_userdel(self):
+        # Create a user and a group
+        email = "test@example.com"
+        name = "Test User"
+        group_name = "Test Group"
+
+        result = self.runner.invoke(
+            manage.createuser,
+            [email, "--password", "letmein", "--name", name],
+            prog_name="aleph",
+        )
+        assert result.exit_code == 0
+
+        result = self.runner.invoke(manage.creategroup, [group_name], prog_name="aleph")
+        assert result.exit_code == 0
+
+        # Add the user to the group
+        user_role, group_role = user_add(group_name, email)
+        assert user_role is not None
+        assert group_role is not None
+
+        # Remove the user from the group
+        result = self.runner.invoke(
+            manage.userdel,
+            [group_name, email],
+            prog_name="aleph",
+        )
+        assert result.exit_code == 0
+
+        # Check that the user was removed from the group
+        user_role = Role.by_email(email)
+        group_role = Role.by_foreign_id(f"group:{group_name}")
+        assert group_role not in user_role.roles
+
+    def test_userdel_nonexistent_user(self):
+        # Create a group
+        group_name = "Test Group"
+        result = self.runner.invoke(manage.creategroup, [group_name], prog_name="aleph")
+        assert result.exit_code == 0
+
+        # Remove a nonexistent user from the group
+        email = "nonexistent@example.com"
+        result = self.runner.invoke(
+            manage.userdel,
+            [group_name, email],
+            prog_name="aleph",
+        )
+        assert result.exit_code != 0
+        assert isinstance(result.exception, SystemExit)
+
+    def test_userdel_nonexistent_group(self):
+        # Create a user
+        email = "test@example.com"
+        name = "Test User"
+        result = self.runner.invoke(
+            manage.createuser,
+            [email, "--password", "letmein", "--name", name],
+            prog_name="aleph",
+        )
+        assert result.exit_code == 0
+
+        # Remove the user from a nonexistent group
+        group_name = "nonexistent"
+        result = self.runner.invoke(
+            manage.userdel,
+            [group_name, email],
+            prog_name="aleph",
+        )
+        assert result.exit_code != 0
+        assert isinstance(result.exception, SystemExit)
