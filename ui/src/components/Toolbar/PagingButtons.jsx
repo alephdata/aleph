@@ -10,7 +10,7 @@ import {
 
 import withRouter from 'app/withRouter';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
-import { FeedbackButton, HintPopover } from 'components/common';
+import { FeedbackButton } from 'components/common';
 
 import './PagingButtons.scss';
 
@@ -88,16 +88,19 @@ class PagingButtons extends React.Component {
     );
 
     return (
-      <HintPopover id="document-feedback" content={popoverContent}>
-        <FeedbackButton type="documents" entityUrl={document.links.ui} minimal>
-          <span className="PagingButtons__feedback">
-            <FormattedMessage
-              id="document.report_problem"
-              defaultMessage="Report a problem"
-            />
-          </span>
-        </FeedbackButton>
-      </HintPopover>
+      <FeedbackButton
+        minimal
+        type="documents"
+        entityUrl={document.links.ui}
+        popoverContent={popoverContent}
+      >
+        <span className="PagingButtons__feedback">
+          <FormattedMessage
+            id="document.report_problem"
+            defaultMessage="Report a problem"
+          />
+        </span>
+      </FeedbackButton>
     );
   }
 
