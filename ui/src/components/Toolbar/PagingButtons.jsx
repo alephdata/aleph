@@ -74,7 +74,7 @@ class PagingButtons extends React.Component {
           <strong>
             <FormattedMessage
               id="document.report_problem.title"
-              defaultMessage="Does the document preview not look quite right? Or is the extracted text incomplete?"
+              defaultMessage="Does the document preview look strange? Is the extracted text incorrect, or is the information incomplete?"
             />
           </strong>
         </p>
