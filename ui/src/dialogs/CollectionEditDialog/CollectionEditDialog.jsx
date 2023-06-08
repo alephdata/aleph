@@ -98,7 +98,7 @@ export class CollectionEditDialog extends Component {
 
   onFieldChange({ target }) {
     const { collection } = this.state;
-    collection[target.id] = target.value;
+    collection[target.id] = target.value !== '' ? target.value : null;
     this.setState({ collection, changed: true });
   }
 
