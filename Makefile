@@ -23,11 +23,7 @@ shell-db: services
 # To run a single test file:
 # make test file=aleph/tests/test_manage.py
 test:
-ifdef file
 	$(APPDOCKER) contrib/test.sh $(file)
-else
-	$(APPDOCKER) contrib/test.sh
-endif
 
 test-ui:
 	$(UIDOCKER) npm run test
