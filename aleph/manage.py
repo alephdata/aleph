@@ -394,7 +394,7 @@ def renameuser(email, name):
 @cli.command()
 @click.argument("name")
 def creategroup(name):
-    """Create a user group """
+    """Create a user group."""
     role = create_group(name)
     print(f"Group {name} created.")
 
@@ -403,7 +403,9 @@ def creategroup(name):
 @click.argument("group")
 @click.argument("user")
 def useradd(group, user):
-    """Add user to group"""
+    """Add user to group.
+
+    GROUP and USER are both foreign IDs."""
     user_role, group_role = user_add(group, user)
     if user_role is not None and group_role is not None:
         print(f"Added user {user} to group {group}")
@@ -417,7 +419,10 @@ def useradd(group, user):
 @click.argument("group")
 @click.argument("user")
 def userdel(group, user):
-    """Remove user from group"""
+    """Remove user from group.
+
+    GROUP and USER are both foreign IDs.
+    """
     user_role, group_role = user_del(group, user)
     if user_role is not None and group_role is not None:
         print(f"Removed user {user} from group {group}")
@@ -429,7 +434,7 @@ def userdel(group, user):
 
 @cli.command()
 def users():
-    """List all users and their groups"""
+    """List all users and their groups."""
     all_users = [
         (
             u.foreign_id,
@@ -451,7 +456,7 @@ def users():
 
 @cli.command()
 def groups():
-    """List all groups"""
+    """List all groups."""
     authz = Authz.from_role(Role.load_cli_user())
     all_groups = [(g.foreign_id, g.id, g.name) for g in Role.all_groups(authz)]
     print(tabulate(all_groups, headers=["Foreign ID", "ID", "Name"]))
