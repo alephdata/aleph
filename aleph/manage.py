@@ -394,7 +394,7 @@ def renameuser(email, name):
 @cli.command()
 @click.argument("name")
 def creategroup(name):
-    """Create a group with given <name>"""
+    """Create a user group """
     role = create_group(name)
     print(f"Group {name} created.")
 
