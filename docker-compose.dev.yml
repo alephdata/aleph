@@ -19,6 +19,7 @@ services:
     restart: on-failure
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "http.cors.enabled=true"
       - "http.cors.allow-origin=*"
