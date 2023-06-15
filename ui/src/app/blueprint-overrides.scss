@@ -1,3 +1,4 @@
+@import 'app/variables.scss';
 @import 'app/mixins.scss';
 
 // Add spacing before tag pill
@@ -245,7 +246,13 @@ table {
 // Add RTL support for dialogs
 .#{$bp-ns}-dialog {
   .#{$bp-ns}-dialog-header {
-    @include rtlSupportInvertedProp(padding, left, 20px, 5px);
+    // See https://github.com/palantir/blueprint/blob/develop/packages/core/src/components/dialog/_dialog.scss
+    @include rtlSupportInvertedProp(
+      padding,
+      left,
+      1.5 * $pt-grid-size,
+      0.5 * $pt-grid-size
+    );
     .#{$bp-ns}-icon-large,
     .#{$bp-ns}-icon {
       @include rtlSupportInvertedProp(margin, right, 10px, 0);

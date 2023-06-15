@@ -55,4 +55,6 @@ jobs:
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         if: env.GCP_PROJECT_ID != null && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        run: gsutil cp charts/index.yaml gs://aleph-helm-charts/index.yaml
+        run: |
+          gsutil cp charts/index.yaml gs://aleph-helm-charts/index.yaml
+          gsutil setmeta -h "Cache-Control:public, max-age=60" gs://aleph-helm-charts/index.yaml

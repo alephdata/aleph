@@ -1,42 +1,45 @@
 @import 'app/variables.scss';
-@import 'app/mixins.scss';
 
 .Timeline {
-  &__date-container {
-    z-index: 10;
+  --viewer-width: 275px;
+  --timeline-item-muted-opacity: 0.66;
+  --timeline-item-outline-width: 2px;
+  --timeline-item-outline-offset: 1px;
 
-    &.fixed {
-      @media screen and (min-width: $aleph-screen-sm-max-width) {
-        position: fixed;
-        top: $aleph-content-padding;
-        width: inherit;
-        @include rtlSupportInvertedProp(
-          padding,
-          right,
-          $aleph-content-padding !important,
-          0
-        );
-      }
-    }
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
 
-    .TimelineActionBar {
-      @media screen and (min-width: $aleph-screen-sm-max-width) and (max-width: 900px) {
-        .#{$bp-ns}-button:first-child {
-          display: none;
-        }
-      }
-    }
-  }
+.Timeline__main,
+.Timeline__viewer {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow-y: auto;
+}
 
-  &__content.collapsed {
-    margin-top: $aleph-grid-size * 1.5;
-  }
+.Timeline__main {
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  scroll-padding-block: 50px;
+}
 
-  .DateFacet {
-    margin-bottom: $aleph-content-padding;
-  }
+.Timeline--selected .Timeline__main {
+  right: var(--viewer-width);
+}
 
-  .TimelineActionBar {
-    margin: $aleph-grid-size * 0.5 0;
-  }
+.Timeline__viewer {
+  right: 0;
+  z-index: 1;
+  width: var(--viewer-width);
+  padding: $aleph-grid-size;
+
+  border-left: 1px solid $aleph-border-color;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }

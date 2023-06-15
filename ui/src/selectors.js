@@ -86,6 +86,18 @@ export function selectExperimentalBookmarksFeatureEnabled(state) {
   return loggedIn && featureFlag;
 }
 
+export function selectFeedbackUrls(state) {
+  return selectMetadata(state)?.feedback_urls;
+}
+
+export function selectFeedbackUrl(state, key) {
+  return selectFeedbackUrls(state)?.[key];
+}
+
+export function selectDismissedHints(state, id) {
+  return state.config?.dismissedHints || [];
+}
+
 export function selectMessages(state) {
   return selectObject(state, state, 'messages');
 }
@@ -95,7 +107,7 @@ export function selectPinnedMessage(state) {
   const { messages, dismissed } = selectMessages(state);
 
   if (metadata?.app?.banner) {
-    return { body: metadata.app.banner };
+    return { safeHtmlBody: metadata.app.banner };
   }
 
   if (!messages) {

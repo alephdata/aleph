@@ -1,0 +1,21 @@
+@import 'app/variables';
+
+.TimelineList__list {
+  --timeline-list-padding: #{0.75 * $aleph-grid-size} #{1.5 * $aleph-grid-size};
+  --timeline-list-color-width: 4px;
+
+  width: calc(100% - #{2 * $aleph-content-padding});
+  margin: $aleph-content-padding;
+  padding: 0;
+  border-spacing: 0 0.25 * $aleph-grid-size;
+}
+
+.TimelineList__header > th {
+  padding: var(--timeline-list-padding);
+  padding-top: 0;
+  white-space: nowrap;
+}
+
+.TimelineList__header > th:first-child {
+  border-left: var(--timeline-list-color-width) solid transparent;
+}

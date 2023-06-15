@@ -1,0 +1,120 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: Advanced search
+---
+
+# Advanced Search
+
+<p class="lead">
+  Beyond a simple keyword search, Aleph supports many more complex search operations to find matches based on spelling variations, proximity to other terms, and much more.
+</p>
+
+To view the advanced options available in Aleph, **click the** **advanced search button** next to the search bar. A pop-up will appear explaining each of the available operations.
+
+<Image
+  src="/assets/Screen Shot 2021-02-11 at 10.32.31.png"
+  density={2}
+  alt="A screenshot of the search results page in Aleph. The search box in Aleph’s main navigation bar has the value “Ilham Aliyev”. The advanced search pop-up is open. A red marker highlights the button next to the search input that can be used to toggle the advanced search pop-up."
+/>
+
+Each of the options in the pop-up allows you to enter a term or terms. Once you have entered a term, clicking **Search** executes a search with your updated advanced option. You will notice that each time you enter a new advanced option, the keywords in the main search bar will change, indicating the option you've selected.
+
+We will go through each of the advanced search operations in more detail below.
+
+## Finding an exact phrase or name
+
+By default, Aleph tries to find matches based off your keywords pretty broadly, returning matches that include all of your keywords first, followed by matches that might only include one of your keywords.
+
+For example, if you type the keywords:
+
+```
+Ilham Aliyev
+```
+
+Aleph will return all matches that have the words "Ilham" and "Aliyev," followed by matches that have either "Ilham" or "Aliyev" but not both, in them. Depending on your needs, this might not be ideal.
+
+If you want Aleph to only return matches that have exactly "Ilham Aliyev", then you should put quotations around those two keywords.
+
+```
+"Ilham Aliyev"
+```
+
+<Image src="/assets/ilham_aliyev_exact.png" />
+
+## Allow for variations in spelling
+
+Sometimes a name can be spelled many different ways or even mispelled many different ways. One way to solve this problem is to simply type each variation in the search form:
+
+```
+Aliyev Əliyev Aliyeva Əliyeva
+```
+
+You might capture all the variations you want, but you also might miss some by accident. Another way to tell Aleph to look for variants of a name is to use the \~ operator:
+
+```
+Aliyev~2
+```
+
+What this translates to is: Give me matches that include the keyword Aliyev, but also matches that include up to any 2 letter variations from the keyword Aliyev. These variations include adding, removing, and changing a letter. This includes Aliyev, of course, but also includes Əliyev, which is just one letter variation different, and Əliyeva, which is two letter variations different from Aliyev.
+
+<Image src="/assets/variation_search.png" />
+
+<Callout theme="danger">
+  Using this operator with too high a number (greater than 3, for example) will cause slow searches and may return too many false results.
+</Callout>
+
+## Search for words that should be in proximity to each other
+
+If you do not want to find a precise keyword, but merely specify that two words are supposed to appear close to each other, you might want to use a **proximity search,** which also uses the \~ operator. This will try to find all the requested search keywords within a given distance from each other. For example, to find matches where the keywords Trump and Aliyev are ten or fewer words apart from each other, you can formulate the search as:
+
+```
+"Trump Aliyev"~10
+```
+
+<Image src="/assets/proximity_search.png" />
+
+## Including and excluding combinations of keywords
+
+You can tell Aleph to find matches to multiple keywords in a variety of ways or combinations, otherwise known as a **composite search**.
+
+To tell Aleph that a keyword must exist in all resulting matches, use a + operator. Similarly, to tell Aleph that a keyword must not exist in any of the resulting matches, use - operator.
+
+```
++Trump -Aliyev
+```
+
+This translates to: Give me all matches in which each match must include the keyword Trump and must definitely not include the keyword Aliyev.
+
+You can take these combinations a step further using the AND operator or the OR operator.
+
+```
+Trump AND Aliyev
+```
+
+This translates to: Give me all matches in which each match must contain both the keywords Trump and Aliyev, but don't return any matches that only contains just one of those keywords.
+
+```
+Trump OR Aliyev
+```
+
+This translates to: Give me all matches in which each match may contain the keywords Trump or Aliyev or both.
+
+You can build on these searches even further like so:
+
+```
++Aliyev AND (Obama OR Trump) -Georgia
+```
+
+This translates to: Give me all matches in which each match must contain the keyword Aliyev and must contain either the keyword Obama or the keyword Trump, but must not contain the keyword Georgia.
+
+## Putting It All Together
+
+You can combine any of the methods supported by Aleph in many combinations to create some very explicit search rules. The complexity, of course, depends on your needs.
+
+```
+"Ilham Aliyev"~2 AND (Obama OR Trump) -Georgia
+```
+
+## For Dorks
+
+Aleph uses the search engine ElasticSearch in the backend, and many of the operators will work in the search form, but are more advanced. To check out what else is possible, [see ElasticSearch's documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax).

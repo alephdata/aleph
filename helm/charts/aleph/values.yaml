@@ -5,8 +5,8 @@ global:
   namingPrefix: aleph # prefix for service names. eg: with prefix=aleph the api will be named aleph-api
 
   image:
-    repository: alephdata/aleph
-    tag: "3.13.0"
+    repository: ghcr.io/alephdata/aleph
+    tag: "3.14.1"
     pullPolicy: Always
 
   commonEnv:
@@ -115,7 +115,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: "3.17.1"
+    tag: "3.18.1"
     pullPolicy: Always
 
   containerSecurityContext:
@@ -160,7 +160,7 @@ ui:
   podSecurityContext: {}
 
   image:
-    repository: alephdata/aleph-ui-production
+    repository: ghcr.io/alephdata/aleph-ui-production
     pullPolicy: Always
 
   containerSecurityContext: {}

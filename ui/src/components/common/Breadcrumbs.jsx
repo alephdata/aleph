@@ -142,6 +142,14 @@ export default class Breadcrumbs extends Component {
     );
   }
 
+  renderCenter() {
+    if (!this.props.center) {
+      return null;
+    }
+
+    return <div className="Breadcrumbs__center">{this.props.center}</div>;
+  }
+
   render() {
     const { children, type } = this.props;
 
@@ -151,6 +159,7 @@ export default class Breadcrumbs extends Component {
           <div className="Breadcrumbs__main">
             <ul className={Classes.BREADCRUMBS}>{children}</ul>
           </div>
+          {this.renderCenter()}
           <div className="Breadcrumbs__right">{this.renderOperations()}</div>
         </div>
       </nav>

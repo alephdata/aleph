@@ -1,0 +1,102 @@
+@import 'app/variables';
+
+.TimelineChartItem {
+  position: relative;
+  width: calc(
+    (var(--timeline-chart-item-end-day) - var(--timeline-chart-item-start-day)) *
+      var(--timeline-chart-day-width)
+  );
+  margin-inline-start: calc(
+    var(--timeline-chart-item-start-day) * var(--timeline-chart-day-width)
+  );
+  cursor: pointer;
+
+  transition-duration: var(--timeline-chart-transition-duration);
+  transition-property: width, margin;
+  transition-timing-function: var(--timeline-chart-transition-easing);
+}
+
+.TimelineChartItem__caption {
+  position: relative;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.TimelineChartItem--multiDay {
+  padding: 0.75 * $aleph-grid-size $aleph-grid-size;
+  background-color: white;
+  border-radius: $pt-border-radius;
+}
+
+.TimelineChartItem--multiDay::before {
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  background-color: var(--timeline-item-color);
+  border-radius: $pt-border-radius;
+}
+
+.TimelineChartItem--multiDay.TimelineChartItem--muted::before {
+  opacity: var(--timeline-item-muted-opacity);
+}
+
+.TimelineChartItem--multiDay:focus {
+  outline: var(--timeline-item-outline-width) solid var(--timeline-item-color);
+  outline-offset: var(--timeline-item-outline-offset);
+}
+
+.TimelineChartItem--multiDay .TimelineChartItem__caption {
+  position: sticky;
+  left: $aleph-grid-size;
+  width: max-content;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: white;
+}
+
+.TimelineChartItem--singleDay {
+  --timeline-item-bullet-size: 15px;
+  padding-block: 0.5 * $aleph-grid-size;
+}
+
+.TimelineChartItem--singleDay::before {
+  content: '';
+  display: block;
+  width: var(--timeline-item-bullet-size);
+  height: var(--timeline-item-bullet-size);
+  transform: rotate(45deg) translateX(-50%);
+  transform-origin: center left;
+  background-color: var(--timeline-item-color);
+  border-radius: $pt-border-radius;
+}
+
+.TimelineChartItem--singleDay .TimelineChartItem__caption {
+  position: absolute;
+  left: var(--timeline-item-bullet-size);
+  top: 50%;
+  transform: translateY(-50%);
+  padding-left: 0.25 * $aleph-grid-size;
+  color: var(--timeline-item-color);
+  text-shadow: 0 0 1px white, 0 0 2px white, 0 0 3px white;
+}
+
+.TimelineChartItem--singleDay.TimelineChartItem--muted {
+  opacity: var(--timeline-item-muted-opacity);
+}
+
+.TimelineChartItem--singleDay:focus {
+  outline: none;
+}
+
+.TimelineChartItem--singleDay:focus::before {
+  outline: var(--timeline-item-outline-width) solid var(--timeline-item-color);
+  outline-offset: var(--timeline-item-outline-offset);
+}

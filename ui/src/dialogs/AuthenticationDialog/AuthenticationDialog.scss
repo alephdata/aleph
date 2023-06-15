@@ -1,12 +1,8 @@
 @import 'app/mixins.scss';
 
-.AuthenticationScreen {
+.AuthenticationScreen.AuthenticationScreen {
   width: 28em !important;
-
-  .inner {
-    margin-top: 1em;
-    @include rtlSupportInvertedProp(margin, right, 1em, 1em);
-  }
+  padding-bottom: 0;
 
   .menu-divider {
     margin-top: 1em;
@@ -22,8 +18,8 @@
   }
 
   .link-box {
-    margin-top: 2em;
-    margin-bottom: 2em;
-    // margin-left: 8.5em;
+    // TODO: This is a hacky way to center the link horizontally. We should
+    // refactor this and use flexbox to achieve that.
+    margin-top: 1.75em;
   }
 }

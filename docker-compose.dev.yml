@@ -20,10 +20,22 @@ services:
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "http.cors.enabled=true"
+      - "http.cors.allow-origin=*"
+      - "http.cors.allow-headers=*"
+      - "http.cors.allow-credentials=true"
     ports:
       - "127.0.0.1:19200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+
+  dejavu:
+    image: appbaseio/dejavu:3.6.0
+    container_name: dejavu
+    ports:
+      - '1358:1358'
+    depends_on:
+      - elasticsearch
 
   redis:
     image: redis:alpine
@@ -32,7 +44,7 @@ services:
       - redis-data:/data
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.16.4
+    image: ghcr.io/alephdata/ingest-file:3.18.4
     hostname: ingest
     tmpfs: /tmp
     volumes:
@@ -62,7 +74,7 @@ services:
   app:
     build:
       context: .
-    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-latest}
     hostname: aleph
     command: /bin/bash
     depends_on:
@@ -90,7 +102,7 @@ services:
   api:
     build:
       context: .
-    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-latest}
     command: python3 -m debugpy --listen 0.0.0.0:5678 -m flask run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
@@ -117,7 +129,7 @@ services:
   ui:
     build:
       context: ui
-    image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph-ui:${ALEPH_TAG:-latest}
     depends_on:
       - api
     command: "bash -c 'rsync --archive --inplace --no-compress --whole-file /node_modules /alephui && npm run start'"
@@ -132,6 +144,22 @@ services:
     environment:
       PORT: "8080"
       CI: "true"
+    env_file:
+      - aleph.env
+
+  worker:
+    image: alephdata/aleph:${ALEPH_TAG:-3.13.2-rc3}
+    command: aleph worker
+    restart: on-failure
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+    tmpfs:
+      - /tmp
+    volumes:
+      - archive-data:/data
     env_file:
       - aleph.env
 

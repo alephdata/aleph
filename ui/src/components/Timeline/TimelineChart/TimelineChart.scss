@@ -1,0 +1,44 @@
+@import 'app/variables.scss';
+
+@keyframes timeline-fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.TimelineChart {
+  --timeline-chart-transition-duration: 0.33s;
+  --timeline-chart-transition-easing: cubic-bezier(0.65, 0, 0.35, 1);
+  --timeline-chart-labels-height: #{4 * $aleph-grid-size};
+
+  position: relative;
+  min-width: calc(var(--timeline-chart-days) * var(--timeline-chart-day-width));
+  flex-grow: 1;
+}
+
+.TimelineChart--days {
+  --timeline-chart-day-width: 20px;
+}
+
+.TimelineChart--months {
+  --timeline-chart-day-width: 5px;
+}
+
+.TimelineChart--years {
+  --timeline-chart-day-width: 1px;
+}
+
+.TimelineChart__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-top: $aleph-grid-size;
+}
+
+.TimelineChart__list > * + * {
+  margin-top: 0.5 * $aleph-grid-size;
+}

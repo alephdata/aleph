@@ -1,4 +1,5 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml
+COMPOSE_E2E=docker-compose -f docker-compose.dev.yml -f docker-compose.e2e.yml
 APPDOCKER=$(COMPOSE) run --rm app
 UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
@@ -14,6 +15,9 @@ shell: services
 
 shell-ui: services
 	$(UIDOCKER) /bin/bash
+
+shell-db: services
+	$(COMPOSE) exec postgres psql -U aleph
 
 test:
 	$(APPDOCKER) contrib/test.sh
@@ -72,14 +76,19 @@ build:
 	$(COMPOSE) build
 
 build-ui:
-	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
+	docker build -t ghcr.io/alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
-build-full: build build-ui
+build-e2e:
+	$(COMPOSE_E2E) build
+
+build-full: build build-ui build-e2e
 
 ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file
 
-dev: 
+dev:
+	python3 -m pip install --upgrade pip
+	python3 -m pip install -q -r requirements.txt
 	python3 -m pip install -q -r requirements-dev.txt
 
 fixtures:
@@ -95,5 +104,24 @@ translate: dev
 	npm run --prefix ui translate
 	pybabel compile -d aleph/translations -D aleph -f
 
-.PHONY: build services
+e2e/test-results:
+	mkdir -p e2e/test-results
+
+services-e2e:
+	$(COMPOSE_E2E) up -d --remove-orphans \
+		postgres elasticsearch ingest-file \
+
+e2e: services-e2e e2e/test-results
+	$(COMPOSE_E2E) run --rm app aleph upgrade
+	$(COMPOSE_E2E) run --rm app aleph createuser --name="E2E Admin" --admin --password="admin" admin@admin.admin
+	$(COMPOSE_E2E) up -d api ui worker
+	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
+
+e2e-local-setup: dev
+	playwright install
+
+e2e-local:
+	pytest -s -v --screenshot only-on-failure e2e/
+
+.PHONY: build services e2e
 

@@ -1,0 +1,27 @@
+{
+  "name": "aleph-docs",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "preview": "astro preview",
+    "build": "astro build",
+    "format": "prettier --write 'src/'",
+    "format:check": "prettier --check 'src/'",
+    "links": "hyperlink --check-anchors --sources src/pages dist"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@untitaker/hyperlink": "^0.1.26",
+    "astro": "^1.6.10",
+    "astro-theme-docs": "github:alephdata/astro-theme-docs"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}

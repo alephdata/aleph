@@ -10,7 +10,8 @@ import {
 import { VertexLabelRenderer } from './VertexLabelRenderer';
 import { IconRenderer } from './IconRenderer';
 import { modes } from 'react-ftm/components/NetworkDiagram/utils';
-import { reduceTranslucentColor, mapColor } from 'react-ftm/utils';
+import { mapColor } from 'react-ftm/utils';
+import { reduceTranslucentColor } from 'util/reduceTranslucentColor';
 
 interface IVertexRendererProps {
   vertex: Vertex;

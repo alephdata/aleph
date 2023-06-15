@@ -1,0 +1,81 @@
+@import 'app/variables';
+
+.TimelineListItem {
+  cursor: pointer;
+}
+
+.TimelineListItem > td:first-child {
+  border-left: 4px solid var(--timeline-item-color);
+  border-top-left-radius: $pt-border-radius;
+  border-bottom-left-radius: $pt-border-radius;
+}
+
+.TimelineListItem > td:last-child {
+  border-top-right-radius: $pt-border-radius;
+  border-bottom-right-radius: $pt-border-radius;
+}
+
+.TimelineListItem > td {
+  padding: var(--timeline-list-padding);
+  background-color: var(--timeline-item-color-bg);
+}
+
+.TimelineListItem__date {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.TimelineListItem__property {
+  width: 8rem;
+  color: $aleph-greyed-text;
+}
+
+.TimelineListItem__warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5 * $aleph-grid-size;
+  padding: 0.5 * $aleph-grid-size $aleph-grid-size;
+  margin: 0.5 * $aleph-grid-size 0;
+
+  font-weight: 500;
+  background-color: var(--timeline-item-color);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: $aleph-border-radius;
+}
+
+// Double class is required in order to increase specificity over the
+// default Blueprint table styles.
+.TimelineListItem__actions.TimelineListItem__actions {
+  text-align: right;
+}
+
+.TimelineListItem__actions > * {
+  opacity: 0;
+}
+
+.TimelineListItem--muted {
+  opacity: var(--timeline-item-muted-opacity);
+}
+
+.TimelineListItem:where(:hover) > td,
+.TimelineListItem:where(:focus-within) > td {
+  background-color: var(--timeline-item-color-bg-active);
+}
+
+.TimelineListItem:where(:hover) .TimelineListItem__actions > *,
+.TimelineListItem:where(:focus-within) .TimelineListItem__actions > * {
+  opacity: 1;
+}
+
+.TimelineListItem:focus {
+  outline: var(--timeline-item-outline-width) solid var(--timeline-item-color);
+  outline-offset: var(--timeline-item-outline-offset);
+
+  // `border-radius` doesn't have an effect on table rows, but it does
+  // affect the radius of the outline (in newer browser).
+  border-radius: $pt-border-radius;
+}
+
+.TimelineListItem--selected > td {
+  background-color: var(--timeline-item-color-bg-focus);
+}

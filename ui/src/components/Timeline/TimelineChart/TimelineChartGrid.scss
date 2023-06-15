@@ -1,0 +1,38 @@
+@import 'app/variables.scss';
+
+.TimelineChartGrid {
+  position: absolute;
+  left: 0;
+  top: var(--timeline-chart-labels-height);
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
+  background-color: $light-gray5;
+}
+
+.TimelineChartGrid__line {
+  position: absolute;
+  left: calc(
+    var(--timeline-chart-grid-line-start-day) * var(--timeline-chart-day-width)
+  );
+  height: 100%;
+  width: 0;
+  border-right: 1px solid lighten($aleph-border-color, 5);
+
+  transition-duration: var(--timeline-chart-transition-duration);
+  transition-property: left;
+  transition-timing-function: var(--timeline-chart-transition-easing);
+  animation: timeline-fadein calc(4 * var(--timeline-chart-transition-duration));
+}
+
+.TimelineChartGrid__line--main {
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-color: $aleph-border-color;
+  transform: translateX(-50%);
+}
+
+.TimelineChartGrid__line:first-child,
+.TimelineChartGrid__line:last-child {
+  display: none;
+}
