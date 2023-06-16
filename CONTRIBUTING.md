@@ -34,7 +34,7 @@ If, after reviewing the list (or selecting an issue to work on) you'd like to re
 
 ### Forking and Branching
 
-All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this.
+All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this. Make sure you set up [commit signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) beforehand.
 
 ### Pull Requests
 
