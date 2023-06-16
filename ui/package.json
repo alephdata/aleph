@@ -12,7 +12,7 @@
     "@blueprintjs/table": "^4.10.8",
     "@craco/craco": "^7.1.0",
     "@formatjs/cli": "^6.1.1",
-    "@formatjs/intl-locale": "^3.3.0",
+    "@formatjs/intl-locale": "^3.3.2",
     "@formatjs/intl-pluralrules": "^5.2.2",
     "@formatjs/intl-relativetimeformat": "^11.2.2",
     "@formatjs/intl-utils": "^3.8.4",
