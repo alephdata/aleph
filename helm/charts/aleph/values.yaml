@@ -115,7 +115,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: "3.18.1"
+    tag: "3.18.4"
     pullPolicy: Always
 
   containerSecurityContext:
