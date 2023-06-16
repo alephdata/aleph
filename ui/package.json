@@ -7,7 +7,7 @@
     "@blueprintjs/colors": "^4.1.5",
     "@blueprintjs/core": "^4.18.0",
     "@blueprintjs/icons": "^4.16.0",
-    "@blueprintjs/popover2": "^1.13.9",
+    "@blueprintjs/popover2": "^1.14.10",
     "@blueprintjs/select": "^4.9.21",
     "@blueprintjs/table": "^4.10.8",
     "@craco/craco": "^7.1.0",
