@@ -395,7 +395,7 @@ def renameuser(email, name):
 @click.argument("name")
 def creategroup(name):
     """Create a user group."""
-    role = create_group(name)
+    create_group(name)
     print(f"Group {name} created.")
 
 

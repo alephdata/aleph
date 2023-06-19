@@ -1,10 +1,9 @@
 import os
 from click.testing import CliRunner
 
-from aleph.core import db
 from aleph.tests.util import TestCase
 from aleph import manage
-from aleph.model import Role, Collection
+from aleph.model import Role
 from aleph.logic.roles import user_add
 
 
@@ -99,7 +98,7 @@ class ManageTestCase(TestCase):
             prog_name="aleph",
         )
         assert result.exit_code == 0
-        assert f"User renamed. ID: " in result.output
+        assert "User renamed. ID: " in result.output
         assert f", new name: {name}" in result.output
 
         # Check that the user was renamed
