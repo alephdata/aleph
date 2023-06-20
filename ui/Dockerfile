@@ -2,8 +2,7 @@ FROM node:18-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get -qq -y update \
-    && apt-get -qq -y install python build-essential rsync
+RUN apt-get -qq -y update && apt-get -qq -y install rsync
 
 RUN mkdir /alephui
 WORKDIR /alephui

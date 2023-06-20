@@ -8,8 +8,7 @@ all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		postgres elasticsearch ingest-file \
-		convert-document dejavu
+		postgres elasticsearch ingest-file
 
 shell: services
 	$(APPDOCKER) /bin/bash
@@ -20,8 +19,10 @@ shell-ui: services
 shell-db: services
 	$(COMPOSE) exec postgres psql -U aleph
 
+# To run a single test file:
+# make test file=aleph/tests/test_manage.py
 test:
-	$(APPDOCKER) contrib/test.sh
+	$(APPDOCKER) contrib/test.sh $(file)
 
 test-ui:
 	$(UIDOCKER) npm run test
@@ -85,7 +86,7 @@ build-e2e:
 build-full: build build-ui build-e2e
 
 ingest-restart:
-	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file convert-document
+	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file
 
 dev:
 	python3 -m pip install --upgrade pip
