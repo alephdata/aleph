@@ -217,8 +217,7 @@ class Query(object):
 
     def get_highlight(self):
         return {
-            # "type": "fvh",
-            "encoder": "html",
+            "type": "plain",
             "fields": {
                 'text': {
                     "fragment_size": 120,
