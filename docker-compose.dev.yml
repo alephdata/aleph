@@ -124,7 +124,6 @@ services:
       ALEPH_PROFILE: "false"
       ALEPH_SECRET_KEY: "development"
       FLASK_APP: "aleph.wsgi"
-      FLASK_ENV: "development"
     env_file:
       - aleph.env
 
