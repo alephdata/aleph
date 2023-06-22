@@ -132,6 +132,8 @@ class SearchQueryParser(QueryParser):
         # index.
         self.facet_names = set(self.getlist("facet"))
 
+        self.highlight_count = self.getint("highlight_count", 3)
+
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""
         facet_size = self.getint("facet_size:%s" % name, 20)

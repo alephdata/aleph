@@ -220,6 +220,7 @@ class Query(object):
             "type": "plain",
             "fields": {
                 'text': {
+                    "number_of_fragments": self.parser.highlight_count,
                     "fragment_size": 120,
                 }
             },
