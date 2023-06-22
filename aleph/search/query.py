@@ -33,7 +33,6 @@ class Query(object):
     PREFIX_FIELD = "name"
     SKIP_FILTERS = []
     AUTHZ_FIELD = "collection_id"
-    HIGHLIGHT_FIELD = "text"
     SORT_FIELDS = {
         "label": "label.kw",
         "score": "_score",
@@ -217,18 +216,12 @@ class Query(object):
         return list(reversed(sort_fields))
 
     def get_highlight(self):
-        if not self.parser.highlight:
-            return {}
-        query = query_string_query(self.HIGHLIGHT_FIELD, self.parser.highlight_text)
         return {
+            # "type": "fvh",
             "encoder": "html",
             "fields": {
-                self.HIGHLIGHT_FIELD: {
-                    "highlight_query": query,
-                    "require_field_match": False,
-                    "number_of_fragments": self.parser.highlight_count,
-                    "fragment_size": self.parser.highlight_length,
-                    "max_analyzed_offset": self.parser.max_highlight_analyzed_offset,
+                'text': {
+                    "fragment_size": 120,
                 }
             },
         }

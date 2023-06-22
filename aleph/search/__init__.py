@@ -62,7 +62,6 @@ class CollectionsQuery(Query):
 class EntitiesQuery(Query):
     TEXT_FIELDS = ["fingerprints.text^3", "text"]
     PREFIX_FIELD = "fingerprints.text"
-    HIGHLIGHT_FIELD = "properties.*"
     SKIP_FILTERS = ["schema", "schemata"]
     SOURCE = ENTITY_SOURCE
     SORT_DEFAULT = []

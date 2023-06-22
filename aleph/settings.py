@@ -132,9 +132,6 @@ class Settings:
         # Document processing pipeline
         self.INGEST_PIPELINE = env.to_list("ALEPH_INGEST_PIPELINE", ["analyze"])
 
-        # Result high-lighting
-        self.RESULT_HIGHLIGHT = env.to_bool("ALEPH_RESULT_HIGHLIGHT", True)
-
         # Minimum update date for sitemap.xml
         self.SITEMAP_FLOOR = "2019-06-22"
 
