@@ -122,14 +122,26 @@
   "collection.data_url": {
     "defaultMessage": "URL do dado"
   },
-  "collection.delete.cancel": {
-    "defaultMessage": "Cancelar"
-  },
   "collection.delete.confirm": {
-    "defaultMessage": "Excluir"
+    "defaultMessage": "I understand the consequences."
+  },
+  "collection.delete.confirm.dataset": {
+    "defaultMessage": "Delete this dataset."
+  },
+  "collection.delete.confirm.investigation": {
+    "defaultMessage": "Delete this investigation."
   },
   "collection.delete.question": {
-    "defaultMessage": "Are you sure you want to delete {collectionLabel} and all contained items?"
+    "defaultMessage": "Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
+  },
+  "collection.delete.success": {
+    "defaultMessage": "Successfully deleted {label}"
+  },
+  "collection.delete.title.dataset": {
+    "defaultMessage": "Delete dataset"
+  },
+  "collection.delete.title.investigation": {
+    "defaultMessage": "Delete investigation"
   },
   "collection.edit.access_title": {
     "defaultMessage": "Controle de acesso"
@@ -818,15 +830,6 @@
   "entity.similar.found_text": {
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
   },
-  "entity.status.error": {
-    "defaultMessage": "Error saving"
-  },
-  "entity.status.in_progress": {
-    "defaultMessage": "Saving..."
-  },
-  "entity.status.success": {
-    "defaultMessage": "Saved"
-  },
   "entity.tags.no_tags": {
     "defaultMessage": "Nenhum seletor foi extraído dessa entidade."
   },
@@ -866,17 +869,38 @@
   "entityset.create.submit": {
     "defaultMessage": "Criar"
   },
-  "entityset.delete.cancel": {
-    "defaultMessage": "Cancelar"
-  },
   "entityset.delete.confirm": {
-    "defaultMessage": "Excluir"
+    "defaultMessage": "I understand the consequences."
+  },
+  "entityset.delete.confirm.diagram": {
+    "defaultMessage": "Delete this network diagram."
+  },
+  "entityset.delete.confirm.list": {
+    "defaultMessage": "Delete this list."
+  },
+  "entityset.delete.confirm.profile": {
+    "defaultMessage": "Delete this profile."
+  },
+  "entityset.delete.confirm.timeline": {
+    "defaultMessage": "Delete this timeline."
   },
   "entityset.delete.question": {
-    "defaultMessage": "Are you sure you want to delete {label}?"
+    "defaultMessage": "Are you sure you want to permanently delete {label}? This cannot be undone."
   },
   "entityset.delete.success": {
     "defaultMessage": "Successfully deleted {title}"
+  },
+  "entityset.delete.title.diagram": {
+    "defaultMessage": "Delete network diagram"
+  },
+  "entityset.delete.title.list": {
+    "defaultMessage": "Delete list"
+  },
+  "entityset.delete.title.profile": {
+    "defaultMessage": "Delete profile"
+  },
+  "entityset.delete.title.timeline": {
+    "defaultMessage": "Delete timeline"
   },
   "entityset.info.delete": {
     "defaultMessage": "Excluir"
@@ -1506,7 +1530,7 @@
     "defaultMessage": "View the <link>original entity</link>"
   },
   "profile.delete.warning": {
-    "defaultMessage": "(Deleting this profile will not delete any of the entities or entity decisions contained within it)"
+    "defaultMessage": "Deleting this profile will not delete any of the entities or entity decisions contained within it."
   },
   "profile.hint": {
     "defaultMessage": "{entity} has been combined with entities from other datasets <link>into a profile</link>"
@@ -1886,29 +1910,14 @@
   "text.loading": {
     "defaultMessage": "Carregando..."
   },
-  "timeline.add_new": {
-    "defaultMessage": "Create new item"
-  },
-  "timeline.button.collapse": {
-    "defaultMessage": "Show collapsed view"
-  },
-  "timeline.button.show_full": {
-    "defaultMessage": "Show detailed view"
-  },
   "timeline.create.button": {
     "defaultMessage": "New timeline"
-  },
-  "timeline.create.cancel": {
-    "defaultMessage": "Excluir"
   },
   "timeline.create.label_placeholder": {
     "defaultMessage": "Untitled timeline"
   },
   "timeline.create.login": {
     "defaultMessage": "You must log in to create a timeline"
-  },
-  "timeline.create.submit": {
-    "defaultMessage": "Criar"
   },
   "timeline.create.success": {
     "defaultMessage": "Your timeline has been created successfully."
@@ -1918,45 +1927,6 @@
   },
   "timeline.create.title": {
     "defaultMessage": "Create a timeline"
-  },
-  "timeline.dates.button_text": {
-    "defaultMessage": "Add end date"
-  },
-  "timeline.empty": {
-    "defaultMessage": "This timeline is empty"
-  },
-  "timeline.empty_histogram": {
-    "defaultMessage": "No dates found"
-  },
-  "timeline.item.date": {
-    "defaultMessage": "{start}to{end}"
-  },
-  "timeline.item.delete": {
-    "defaultMessage": "Delete from {collection}"
-  },
-  "timeline.item.link_copy": {
-    "defaultMessage": "Copy link to this item"
-  },
-  "timeline.item.link_copy_success": {
-    "defaultMessage": "Successfully copied link to clipboard."
-  },
-  "timeline.item.remove": {
-    "defaultMessage": "Remove from timeline"
-  },
-  "timeline.items_label": {
-    "defaultMessage": "items"
-  },
-  "timeline.no_results": {
-    "defaultMessage": "No items found matching query"
-  },
-  "timeline.result_text": {
-    "defaultMessage": "{count} timeline items"
-  },
-  "timeline.result_text_query": {
-    "defaultMessage": "Showing {count} (of {total} total) items"
-  },
-  "timeline.schema_select.label": {
-    "defaultMessage": "type"
   },
   "timeline.selector.create": {
     "defaultMessage": "Create a new timeline"
