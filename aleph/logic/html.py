@@ -53,7 +53,7 @@ def sanitize_html(html_text, base_url, encoding=None):
                 doc.make_links_absolute(base_url)
             except TypeError:
                 pass
-        for (el, attr, href, _) in doc.iterlinks():
+        for el, attr, href, _ in doc.iterlinks():
             if el.tag == "a":
                 el.set("target", "_blank")
                 el.set("rel", "nofollow noreferrer external noopener")

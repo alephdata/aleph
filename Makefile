@@ -28,7 +28,7 @@ test-ui:
 	$(UIDOCKER) npm run test
 
 lint:
-	flake8 aleph/
+	ruff check .
 
 lint-ui:
 	$(UIDOCKER) npm run lint

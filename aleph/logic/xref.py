@@ -192,7 +192,12 @@ def _query_entities(collection):
     """Generate matches for indexing."""
     log.info("[%s] Generating entity-based xref...", collection)
     matchable = [s for s in model if s.matchable]
-    for proxy in iter_proxies(collection_id=collection.id, schemata=matchable):
+    for proxy in iter_proxies(
+        collection_id=collection.id,
+        schemata=matchable,
+        es_scroll=SETTINGS.XREF_SCROLL,
+        es_scroll_size=SETTINGS.XREF_SCROLL_SIZE,
+    ):
         yield from _query_item(proxy)
 
 

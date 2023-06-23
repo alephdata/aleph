@@ -60,19 +60,19 @@ def match_query(proxy, collection_ids=None, query=None):
         query["bool"]["filter"].append({"terms": {"collection_id": collection_ids}})
 
     filters = set()
-    for (prop, value) in proxy.itervalues():
+    for prop, value in proxy.itervalues():
         specificity = prop.specificity(value)
         if specificity > 0:
             filters.add((prop.type, value, specificity))
 
     filters = sorted(filters, key=lambda p: p[2], reverse=True)
     required = []
-    for (type_, value, _) in filters:
+    for type_, value, _ in filters:
         if type_ in REQUIRED and len(required) <= MAX_CLAUSES:
             required.extend(_make_queries(type_, value))
 
     scoring = []
-    for (type_, value, _) in filters:
+    for type_, value, _ in filters:
         clauses = len(required) + len(scoring)
         if type_ not in REQUIRED and clauses <= MAX_CLAUSES:
             scoring.extend(_make_queries(type_, value))
