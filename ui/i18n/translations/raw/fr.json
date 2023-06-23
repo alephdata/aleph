@@ -122,14 +122,26 @@
   "collection.data_url": {
     "defaultMessage": "URL des données"
   },
-  "collection.delete.cancel": {
-    "defaultMessage": "Annuler"
-  },
   "collection.delete.confirm": {
-    "defaultMessage": "Supprimer"
+    "defaultMessage": "I understand the consequences."
+  },
+  "collection.delete.confirm.dataset": {
+    "defaultMessage": "Delete this dataset."
+  },
+  "collection.delete.confirm.investigation": {
+    "defaultMessage": "Delete this investigation."
   },
   "collection.delete.question": {
-    "defaultMessage": "Voulez-vous vraiment supprimer {collectionLabel} et tous les éléments qui y figurent ?"
+    "defaultMessage": "Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
+  },
+  "collection.delete.success": {
+    "defaultMessage": "Successfully deleted {label}"
+  },
+  "collection.delete.title.dataset": {
+    "defaultMessage": "Supprimer l’ensemble de données"
+  },
+  "collection.delete.title.investigation": {
+    "defaultMessage": "Supprimer l’enquête"
   },
   "collection.edit.access_title": {
     "defaultMessage": "Contrôle d’accès"
@@ -818,15 +830,6 @@
   "entity.similar.found_text": {
     "defaultMessage": "{resultCount} {resultCount, plural, one {similar entity} other {similar entities}} trouvée(s) dans {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
   },
-  "entity.status.error": {
-    "defaultMessage": "Erreur de sauvegarde"
-  },
-  "entity.status.in_progress": {
-    "defaultMessage": "Enregistrement en cours..."
-  },
-  "entity.status.success": {
-    "defaultMessage": "Enregistré"
-  },
   "entity.tags.no_tags": {
     "defaultMessage": "Aucun sélecteur n’a été extrait de cette entité."
   },
@@ -866,17 +869,38 @@
   "entityset.create.submit": {
     "defaultMessage": "Créer"
   },
-  "entityset.delete.cancel": {
-    "defaultMessage": "Annuler"
-  },
   "entityset.delete.confirm": {
-    "defaultMessage": "Supprimer"
+    "defaultMessage": "I understand the consequences."
+  },
+  "entityset.delete.confirm.diagram": {
+    "defaultMessage": "Delete this network diagram."
+  },
+  "entityset.delete.confirm.list": {
+    "defaultMessage": "Delete this list."
+  },
+  "entityset.delete.confirm.profile": {
+    "defaultMessage": "Delete this profile."
+  },
+  "entityset.delete.confirm.timeline": {
+    "defaultMessage": "Delete this timeline."
   },
   "entityset.delete.question": {
-    "defaultMessage": "Voulez-vous vraiment supprimer {label} ?"
+    "defaultMessage": "Are you sure you want to permanently delete {label}? This cannot be undone."
   },
   "entityset.delete.success": {
     "defaultMessage": "Suppression réussie de {title}"
+  },
+  "entityset.delete.title.diagram": {
+    "defaultMessage": "Delete network diagram"
+  },
+  "entityset.delete.title.list": {
+    "defaultMessage": "Delete list"
+  },
+  "entityset.delete.title.profile": {
+    "defaultMessage": "Delete profile"
+  },
+  "entityset.delete.title.timeline": {
+    "defaultMessage": "Delete timeline"
   },
   "entityset.info.delete": {
     "defaultMessage": "Supprimer"
@@ -1506,7 +1530,7 @@
     "defaultMessage": "Consultez <link>l’entité originale</link>"
   },
   "profile.delete.warning": {
-    "defaultMessage": "(La suppression de ce profil ne supprimera pas les entités ou les décisions d’entité qu’il contient)"
+    "defaultMessage": "Deleting this profile will not delete any of the entities or entity decisions contained within it."
   },
   "profile.hint": {
     "defaultMessage": "{entity} a été associée à des entités d’autres ensembles de données <link>dans un profil</link>"
@@ -1886,29 +1910,14 @@
   "text.loading": {
     "defaultMessage": "Chargement..."
   },
-  "timeline.add_new": {
-    "defaultMessage": "Créer un nouvel élément"
-  },
-  "timeline.button.collapse": {
-    "defaultMessage": "Afficher la vue contractée"
-  },
-  "timeline.button.show_full": {
-    "defaultMessage": "Afficher la vue détaillée"
-  },
   "timeline.create.button": {
     "defaultMessage": "Nouveau calendrier"
-  },
-  "timeline.create.cancel": {
-    "defaultMessage": "Supprimer"
   },
   "timeline.create.label_placeholder": {
     "defaultMessage": "Calendrier sans nom"
   },
   "timeline.create.login": {
     "defaultMessage": "Vous devez vous connecter pour créer un calendrier"
-  },
-  "timeline.create.submit": {
-    "defaultMessage": "Créer"
   },
   "timeline.create.success": {
     "defaultMessage": "Votre calendrier a été créé avec succès."
@@ -1918,45 +1927,6 @@
   },
   "timeline.create.title": {
     "defaultMessage": "Créer un calendrier"
-  },
-  "timeline.dates.button_text": {
-    "defaultMessage": "Ajouter une date de fin"
-  },
-  "timeline.empty": {
-    "defaultMessage": "Ce calendrier est vide"
-  },
-  "timeline.empty_histogram": {
-    "defaultMessage": "Aucune date trouvée"
-  },
-  "timeline.item.date": {
-    "defaultMessage": "{start}à{end}"
-  },
-  "timeline.item.delete": {
-    "defaultMessage": "Supprimer de {collection}"
-  },
-  "timeline.item.link_copy": {
-    "defaultMessage": "Copier le lien vers cet élément"
-  },
-  "timeline.item.link_copy_success": {
-    "defaultMessage": "Lien copié avec succès dans le presse-papier."
-  },
-  "timeline.item.remove": {
-    "defaultMessage": "Retirer du calendrier"
-  },
-  "timeline.items_label": {
-    "defaultMessage": "éléments"
-  },
-  "timeline.no_results": {
-    "defaultMessage": "Aucun élément correspondant à votre demande trouvé"
-  },
-  "timeline.result_text": {
-    "defaultMessage": "{count} éléments de calendrier"
-  },
-  "timeline.result_text_query": {
-    "defaultMessage": "{count} éléments affichés (sur un total de {total})"
-  },
-  "timeline.schema_select.label": {
-    "defaultMessage": "type"
   },
   "timeline.selector.create": {
     "defaultMessage": "Créer un nouveau calendrier"
