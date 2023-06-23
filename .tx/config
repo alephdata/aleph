@@ -1,14 +1,14 @@
 [main]
 host = https://www.transifex.com
 
-[aleph-api.messages-pot]
+[o:aleph:p:aleph-api:r:messages-pot]
 file_filter = aleph/translations/<lang>/LC_MESSAGES/aleph.po
 minimum_perc = 0
 source_file = aleph/translations/messages.pot
 source_lang = en
 type = PO
 
-[aleph-ui.messages-json]
+[o:aleph:p:aleph-ui:r:messages-json]
 file_filter = ui/i18n/translations/raw/<lang>.json
 minimum_perc = 0
 source_file = ui/i18n/messages.json
