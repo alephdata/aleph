@@ -43,7 +43,7 @@ def _metadata_locale(locale):
     # This is dumb but we agreed it with ARIJ
     # https://github.com/alephdata/aleph/issues/1432
     app_logo = SETTINGS.APP_LOGO
-    if locale.startswith("ar"):
+    if locale.language.startswith("ar"):
         app_logo = SETTINGS.APP_LOGO_AR or app_logo
 
     return {
@@ -59,7 +59,7 @@ def _metadata_locale(locale):
             "publish": archive.can_publish,
             "logo": app_logo,
             "favicon": SETTINGS.APP_FAVICON,
-            "locale": locale,
+            "locale": str(locale),
             "locales": locales,
         },
         "categories": Collection.CATEGORIES,
@@ -70,6 +70,10 @@ def _metadata_locale(locale):
         "auth": auth,
         "feature_flags": {
             "bookmarks": as_bool(SETTINGS.ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE),
+        },
+        "feedback_urls": {
+            "documents": SETTINGS.FEEDBACK_URL_DOCUMENTS,
+            "timelines": SETTINGS.FEEDBACK_URL_TIMELINES,
         },
     }
 
@@ -91,7 +95,7 @@ def metadata():
       - System
     """
     request.rate_limit = None
-    locale = str(get_locale())
+    locale = get_locale()
     data = _metadata_locale(locale)
     if SETTINGS.SINGLE_USER:
         role = Role.load_cli_user()

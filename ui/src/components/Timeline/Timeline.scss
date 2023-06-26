@@ -29,10 +29,6 @@
   scroll-padding-block: 50px;
 }
 
-.Timeline--list .Timeline__main {
-  padding: $aleph-content-padding;
-}
-
 .Timeline--selected .Timeline__main {
   right: var(--viewer-width);
 }

@@ -210,6 +210,11 @@ class Settings:
         )
 
         ###############################################################################
+        # Feedback
+        self.FEEDBACK_URL_DOCUMENTS = env.get("ALEPH_FEEDBACK_URL_DOCUMENTS", None)
+        self.FEEDBACK_URL_TIMELINES = env.get("ALEPH_FEEDBACK_URL_TIMELINES", None)
+
+        ###############################################################################
         # Additional configurations
         self.SENTRY_DSN = env.get("SENTRY_DSN", None)
         self.SENTRY_ENVIRONMENT = env.get("SENTRY_ENVIRONMENT", "")

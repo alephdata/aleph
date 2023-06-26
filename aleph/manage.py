@@ -30,7 +30,15 @@ from aleph.logic.documents import crawl_directory
 from aleph.logic.archive import cleanup_archive
 from aleph.logic.xref import xref_collection
 from aleph.logic.export import retry_exports
-from aleph.logic.roles import create_user, update_roles, delete_role, rename_user
+from aleph.logic.roles import (
+    create_user,
+    create_group,
+    update_roles,
+    user_add,
+    user_del,
+    delete_role,
+    rename_user,
+)
 from aleph.logic.permissions import update_permission
 from aleph.util import JSONEncoder
 from aleph.index.collections import get_collection as _get_index_collection
@@ -381,6 +389,77 @@ def renameuser(email, name):
         print(f"User renamed. ID: {role.id}, new name: {role.name}")
     else:
         print(f"The e-mail address {email} belongs to no user.")
+
+
+@cli.command()
+@click.argument("name")
+def creategroup(name):
+    """Create a user group."""
+    create_group(name)
+    print(f"Group {name} created.")
+
+
+@cli.command()
+@click.argument("group")
+@click.argument("user")
+def useradd(group, user):
+    """Add user to group.
+
+    GROUP and USER are both foreign IDs."""
+    user_role, group_role = user_add(group, user)
+    if user_role is not None and group_role is not None:
+        print(f"Added user {user} to group {group}")
+    if user_role is None:
+        raise click.BadParameter(f"No such role: {user}")
+    if group_role is None:
+        raise click.BadParameter(f"No such role: {group}")
+
+
+@cli.command()
+@click.argument("group")
+@click.argument("user")
+def userdel(group, user):
+    """Remove user from group.
+
+    GROUP and USER are both foreign IDs.
+    """
+    user_role, group_role = user_del(group, user)
+    if user_role is not None and group_role is not None:
+        print(f"Removed user {user} from group {group}")
+    if user_role is None:
+        raise click.BadParameter(f"No such role: {user}")
+    if group_role is None:
+        raise click.BadParameter(f"No such role: {group}")
+
+
+@cli.command()
+def users():
+    """List all users and their groups."""
+    all_users = [
+        (
+            u.foreign_id,
+            u.id,
+            u.email,
+            u.name,
+            u.is_admin,
+            ", ".join(sorted(u.name for u in u.roles)),
+        )
+        for u in Role.all_users()
+    ]
+    print(
+        tabulate(
+            all_users,
+            headers=["Foreign ID", "ID", "E-Mail", "Name", "is admin", "groups"],
+        )
+    )
+
+
+@cli.command()
+def groups():
+    """List all groups."""
+    authz = Authz.from_role(Role.load_cli_user())
+    all_groups = [(g.foreign_id, g.id, g.name) for g in Role.all_groups(authz)]
+    print(tabulate(all_groups, headers=["Foreign ID", "ID", "Name"]))
 
 
 @cli.command()

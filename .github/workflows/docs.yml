@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "docs/**"
+    branches:
+      - "**"
   workflow_dispatch: {}
 
 concurrency:

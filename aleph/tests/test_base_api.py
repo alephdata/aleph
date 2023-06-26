@@ -1,3 +1,4 @@
+from aleph.core import cache
 from aleph.logic.collections import compute_collections
 from aleph.tests.util import TestCase
 
@@ -20,6 +21,8 @@ class BaseApiTestCase(TestCase):
         assert "leak" in categories, categories
 
     def test_statistics(self):
+        cache.flush()
+
         res = self.client.get("/api/2/statistics")
         assert res.status_code == 200, res
         assert "things" not in res.json, res.json

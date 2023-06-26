@@ -93,53 +93,6 @@ upgrade:
     requests:
       memory: 600Mi
 
-# convert-document Service - templates/covert-document.yaml
-convertdocument:
-  strategy:
-    rollingUpdate:
-      maxSurge: 2
-      maxUnavailable: 70%
-    type: RollingUpdate
-
-  podAnnotations:
-    "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
-
-  nodeSelector: {}
-
-  podSecurityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-
-  image:
-    repository: ghcr.io/alephdata/convert-document
-    pullPolicy: Always
-    tag: "3.16.1"
-
-  containerSecurityContext:
-    readOnlyRootFilesystem: true
-
-  containerResources:
-    requests:
-      memory: 120Mi
-      cpu: 300m
-    limits:
-      memory: 500Mi
-      # cpu: 2000m
-
-  service:
-    type: ClusterIP
-    port: 3000
-
-  hpa:
-    minReplicas: 2
-    maxReplicas: 30
-    scalingMetrics:
-      - type: Resource
-        resource:
-          name: cpu
-          targetAverageUtilization: 50
-
 # ingest-file Service - templates/covert-document.yaml
 ingestfile:
   strategy:
@@ -162,7 +115,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: "3.18.1"
+    tag: "3.18.4"
     pullPolicy: Always
 
   containerSecurityContext:
@@ -179,7 +132,6 @@ ingestfile:
   env:
     WORKER_THREADS: 0
     OCR_VISION_API: false
-    INGESTORS_CONVERT_DOCUMENT_URL: http://aleph-convert-document.default.svc.cluster.local:3000/convert
 
   hpa:
     minReplicas: 5

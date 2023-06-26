@@ -35,15 +35,6 @@ services:
     labels:
       - "traefik.enable=false"
 
-  convert-document:
-    image: ghcr.io/alephdata/convert-document:3.17.1
-    read_only: true
-    restart: on-failure
-    user: app
-    tmpfs: /tmp
-    labels:
-      - "traefik.enable=false"
-
   ingest-file:
     image: ghcr.io/alephdata/ingest-file:3.18.4
     tmpfs:
@@ -53,11 +44,9 @@ services:
     links:
       - postgres
       - redis
-      - convert-document
     depends_on:
       - postgres
       - redis
-      - convert-document
     restart: on-failure
     env_file:
       - aleph.env

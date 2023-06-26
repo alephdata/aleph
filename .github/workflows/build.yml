@@ -26,7 +26,7 @@ jobs:
 
       - name: Docker pull services
         run: |
-          docker-compose pull --parallel --quiet elasticsearch convert-document ingest-file
+          docker-compose pull --quiet elasticsearch ingest-file
           make ALEPH_TAG=${GITHUB_SHA} services
 
       - name: Build docker image
@@ -44,17 +44,10 @@ jobs:
       - name: Run aleph tests
         run: make ALEPH_TAG=${GITHUB_SHA} test
 
-      - name: Push docker image (hash)
-        env:
-          GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        if: env.GITHUB_PASSWORD != null
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin 
-          docker push ghcr.io/alephdata/aleph:${GITHUB_SHA}
-
       - name: Push docker images for tags
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
           export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
           docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:${ALEPH_TAG};
           docker push ghcr.io/alephdata/aleph:${ALEPH_TAG};

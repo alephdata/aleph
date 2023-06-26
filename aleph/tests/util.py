@@ -13,6 +13,7 @@ from followthemoney import model
 from followthemoney.cli.util import read_entity
 from werkzeug.utils import cached_property
 from faker import Factory
+from sqlalchemy import text
 
 from aleph.settings import SETTINGS
 from aleph.authz import Authz
@@ -67,7 +68,6 @@ def _make_test_response(response_class):
 
 
 class TestCase(unittest.TestCase):
-
     # Expose faker since it should be easy to use
     fake = Factory.create()
 
@@ -230,7 +230,9 @@ class TestCase(unittest.TestCase):
             clear_index()
             for table in reversed(db.metadata.sorted_tables):
                 q = "TRUNCATE %s RESTART IDENTITY CASCADE;" % table.name
-                db.engine.execute(q)
+                with db.engine.connect() as conn:
+                    conn.execute(text(q))
+                    conn.commit()
 
         kv.flushall()
         create_system_roles()

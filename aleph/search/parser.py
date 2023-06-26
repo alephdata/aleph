@@ -64,7 +64,7 @@ class QueryParser(object):
 
     @property
     def items(self):
-        for (key, value) in self.args.items(multi=True):
+        for key, value in self.args.items(multi=True):
             if key in ("offset", "limit", "next_limit"):
                 continue
             value = sanitize_text(value, encoding="utf-8")

@@ -4,3 +4,8 @@
   display: flex;
   gap: $aleph-grid-size;
 }
+
+.TimelineActions__feedback {
+  color: $aleph-greyed-text;
+  text-decoration: underline;
+}
