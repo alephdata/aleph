@@ -39,6 +39,17 @@ babel = Babel()
 talisman = Talisman()
 
 
+def determine_locale():
+    try:
+        options = SETTINGS.UI_LANGUAGES
+        locale = request.accept_languages.best_match(options)
+        locale = locale or str(babel.default_locale)
+    except RuntimeError:
+        locale = str(babel.default_locale)
+    set_model_locale(locale)
+    return locale
+
+
 def create_app(config=None):
     if config is None:
         config = {}
@@ -80,7 +91,7 @@ def create_app(config=None):
     configure_oauth(app, cache=get_cache())
     mail.init_app(app)
     db.init_app(app)
-    babel.init_app(app)
+    babel.init_app(app, locale_selector=determine_locale)
     CORS(
         app,
         resources=r"/api/*",
@@ -115,18 +126,6 @@ def create_app(config=None):
         plugin(app=app)
 
     return app
-
-
-@babel.localeselector
-def determine_locale():
-    try:
-        options = SETTINGS.UI_LANGUAGES
-        locale = request.accept_languages.best_match(options)
-        locale = locale or str(babel.default_locale)
-    except RuntimeError:
-        locale = str(babel.default_locale)
-    set_model_locale(locale)
-    return locale
 
 
 @migrate.configure
