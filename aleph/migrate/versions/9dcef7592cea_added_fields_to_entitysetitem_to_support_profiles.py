@@ -33,8 +33,7 @@ def upgrade():
 
     bind = op.get_bind()
     meta = sa.MetaData()
-    meta.bind = bind
-    meta.reflect()
+    meta.reflect(bind)
     linkage_table = meta.tables["linkage"]
     entityset_table = meta.tables["entityset"]
     item_table = meta.tables["entityset_item"]
@@ -43,7 +42,7 @@ def upgrade():
     q = q.values({"judgement": "POSITIVE"})
     bind.execute(q)
 
-    q = sa.select([linkage_table]).order_by("profile_id")
+    q = sa.select(linkage_table).order_by("profile_id")
     rp = bind.execute(q)
 
     profiles = groupby(
