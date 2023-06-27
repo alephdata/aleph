@@ -62,7 +62,6 @@ class CollectionsQuery(Query):
 class EntitiesQuery(Query):
     TEXT_FIELDS = ["fingerprints.text^3", "text"]
     PREFIX_FIELD = "fingerprints.text"
-    HIGHLIGHT_FIELD = "properties.*"
     SKIP_FILTERS = ["schema", "schemata"]
     SOURCE = ENTITY_SOURCE
     SORT_DEFAULT = []
@@ -121,8 +120,10 @@ class XrefQuery(Query):
 
     def __init__(self, parser, collection_id=None):
         self.collection_id = collection_id
-        parser.highlight = False
         super(XrefQuery, self).__init__(parser)
+
+    def get_highlight(self):
+        return {}
 
     def get_filters(self, **kwargs):
         filters = super(XrefQuery, self).get_filters(**kwargs)
