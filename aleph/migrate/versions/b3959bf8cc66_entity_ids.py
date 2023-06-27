@@ -19,14 +19,14 @@ def upgrade():
     bind = op.get_bind()
     meta = sa.MetaData()
     meta.bind = bind
-    meta.reflect()
+    meta.reflect(bind=bind)
     entity_table = meta.tables["entity"]
     collection_table = meta.tables["collection"]
-    q = sa.select([collection_table])
+    q = sa.select(collection_table)
     crp = bind.execute(q)
     for collection in crp.fetchall():
         ns = Namespace(collection.foreign_id)
-        q = sa.select([entity_table])
+        q = sa.select(entity_table)
         q = q.where(entity_table.c.collection_id == collection.id)
         erp = bind.execute(q)
         while True:

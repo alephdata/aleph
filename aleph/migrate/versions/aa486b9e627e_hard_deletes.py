@@ -15,7 +15,7 @@ down_revision = "9dcef7592cea"
 def upgrade():
     meta = sa.MetaData()
     meta.bind = op.get_bind()
-    meta.reflect()
+    meta.reflect(bind=meta.bind)
     for table_name in ("alert", "entity", "mapping", "permission"):
         table = meta.tables[table_name]
         q = sa.delete(table).where(table.c.deleted_at != None)  # noqa

@@ -77,12 +77,12 @@ def upgrade():
     bind = op.get_bind()
     meta = sa.MetaData()
     meta.bind = bind
-    meta.reflect()
+    meta.reflect(bind=bind)
     diagram_table = meta.tables["diagram"]
     entityset_table = meta.tables["entityset"]
     item_table = meta.tables["entityset_item"]
 
-    q = sa.select([diagram_table])
+    q = sa.select(diagram_table)
     rp = bind.execute(q)
     while True:
         diagram = rp.fetchone()
