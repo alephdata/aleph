@@ -1,6 +1,7 @@
 from aleph.core import db
 from aleph.model import Role
 from aleph.tests.factories.models import RoleFactory
+from aleph.logic.roles import create_user, create_group
 
 from aleph.tests.util import TestCase
 
@@ -43,3 +44,36 @@ class RoleModelTest(TestCase):
             ),
             self.role,
         )
+
+    def test_add_role(self):
+        # Create a user and a group
+        email = "test@example.com"
+        name = "Test User"
+        group_name = "Test Group"
+        create_user(email, name, "letmein")
+        create_group(group_name)
+
+        # Add the user to the group
+        user_role = Role.by_email(email)
+        group_role = Role.by_foreign_id(f"group:{group_name}")
+        assert user_role not in group_role.roles
+        group_role.add_role(user_role)
+        assert user_role in group_role.roles
+
+    def test_remove_role(self):
+        # Create a user and a group
+        email = "test@example.com"
+        name = "Test User"
+        group_name = "Test Group"
+        create_user(email, name, "letmein")
+        create_group(group_name)
+
+        # Add the user to the group
+        user_role = Role.by_email(email)
+        group_role = Role.by_foreign_id(f"group:{group_name}")
+        group_role.add_role(user_role)
+        assert user_role in group_role.roles
+
+        # Remove the user from the group
+        group_role.remove_role(user_role)
+        assert user_role not in group_role.roles

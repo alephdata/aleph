@@ -54,7 +54,7 @@
 
 .TimelineChartItem--multiDay .TimelineChartItem__caption {
   position: sticky;
-  left: 0;
+  left: $aleph-grid-size;
   width: max-content;
   max-width: 100%;
   overflow: hidden;

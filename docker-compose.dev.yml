@@ -19,6 +19,7 @@ services:
     restart: on-failure
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "http.cors.enabled=true"
       - "http.cors.allow-origin=*"
@@ -43,13 +44,6 @@ services:
     volumes:
       - redis-data:/data
 
-  convert-document:
-    image: ghcr.io/alephdata/convert-document:3.17.1
-    read_only: true
-    restart: on-failure
-    user: app
-    tmpfs: /tmp
-
   ingest-file:
     image: ghcr.io/alephdata/ingest-file:3.18.4
     hostname: ingest
@@ -59,7 +53,6 @@ services:
     depends_on:
       - postgres
       - redis
-      - convert-document
     restart: on-failure
     env_file:
       - aleph.env
@@ -111,7 +104,7 @@ services:
     build:
       context: .
     image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-latest}
-    command: python3 -m debugpy --listen 0.0.0.0:5678 -m flask run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
+    command: python3 -m debugpy --listen 0.0.0.0:5678 -m flask run -h 0.0.0.0 -p 5000 --with-threads --eager-loading --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
       - "127.0.0.1:5678:5678"

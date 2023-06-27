@@ -52,7 +52,7 @@ def retrieve():
             str(local_path),
             as_attachment=True,
             conditional=True,
-            attachment_filename=file_name,
+            download_name=file_name,
             mimetype=mime_type,
         )
     finally:

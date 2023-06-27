@@ -3,7 +3,7 @@ import { createAction } from 'redux-act';
 export { queryRoles, fetchRole, suggestRoles, updateRole } from './roleActions';
 export { createAlert, deleteAlert, queryAlerts } from './alertActions';
 export { queryNotifications } from './notificationActions';
-export { setConfigValue } from './configActions';
+export { setConfigValue, dismissHint } from './configActions';
 export { ingestDocument } from './documentActions';
 export {
   createCollection,
