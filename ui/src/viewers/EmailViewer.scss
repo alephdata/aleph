@@ -23,4 +23,18 @@
       box-shadow: unset;
     }
   }
+
+  &__type-switch {
+    display: flex;
+    gap: 1.5 * $aleph-grid-size;
+
+    input[type='radio'] {
+      margin: 0;
+      margin-inline-end: 0.5 * $aleph-grid-size;
+    }
+  }
+
+  &__unavailable-type {
+    color: $aleph-greyed-text;
+  }
 }

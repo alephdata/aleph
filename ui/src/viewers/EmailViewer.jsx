@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Classes, Pre } from '@blueprintjs/core';
 
@@ -7,7 +7,96 @@ import wordList from 'util/wordList';
 
 import './EmailViewer.scss';
 
-class EmailViewer extends PureComponent {
+class EmailViewer extends Component {
+  constructor() {
+    super();
+
+    this.onContentTypeChange = this.onContentTypeChange.bind(this);
+
+    this.state = {
+      selectedContentType: 'html',
+    };
+  }
+
+  onContentTypeChange(event) {
+    this.setState({
+      selectedContentType: event.currentTarget.value,
+    });
+  }
+
+  getAvailableContentTypes() {
+    const { document } = this.props;
+    const bodyText = document
+      .getProperty('bodyText')
+      .filter((value) => value.length > 0);
+    const safeHtml = document.safeHtml;
+
+    const available = [];
+
+    if (safeHtml && safeHtml.length > 0) {
+      available.push('html');
+    }
+
+    if (bodyText && bodyText.length > 0) {
+      available.push('plain');
+    }
+
+    return available;
+  }
+
+  getActitveContentType() {
+    const available = this.getAvailableContentTypes();
+    const selected = this.state.selectedContentType;
+
+    if (available.length <= 0) {
+      return null;
+    }
+
+    if (available.includes(selected)) {
+      return selected;
+    }
+
+    return available[0];
+  }
+
+  renderContentTypeSwitch() {
+    const available = this.getAvailableContentTypes();
+    const active = this.getActitveContentType();
+
+    return (
+      <div className="EmailViewer__type-switch">
+        <label
+          className={
+            !available.includes('html') && 'EmailViewer__unavailable-type'
+          }
+        >
+          <input
+            type="radio"
+            value="html"
+            disabled={!available.includes('html')}
+            checked={active === 'html'}
+            onChange={this.onContentTypeChange}
+          />
+          HTML
+        </label>
+        <label
+          className={
+            !available.includes('plain') && 'EmailViewer__unavailable-type'
+          }
+        >
+          <input
+            type="radio"
+            value="plain"
+            disabled={!available.includes('plain')}
+            checked={active === 'plain'}
+            onChange={this.onContentTypeChange}
+          />
+          Plaintext
+        </label>
+      </div>
+    );
+  }
+
   headerProperty(name, entitiesProp) {
     const { document } = this.props;
     const prop = document.schema.getProperty(name);
@@ -65,6 +154,12 @@ class EmailViewer extends PureComponent {
             {this.headerProperty('cc', 'recipients')}
             {this.headerProperty('bcc', 'recipients')}
             {this.headerProperty('inReplyToEmail')}
+            {this.getAvailableContentTypes().length > 0 && (
+              <tr>
+                <th>Format</th>
+                <td>{this.renderContentTypeSwitch()}</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -73,16 +168,23 @@ class EmailViewer extends PureComponent {
 
   renderBody() {
     const { document } = this.props;
+
+    const activeContentType = this.getActitveContentType();
+    const safeHtml = document.safeHtml;
+    const bodyText = document.getProperty('bodyText');
+
     if (document.isPending) {
       return <Skeleton.Text type="span" length={1000} />;
     }
-    if (document.safeHtml && document.safeHtml.length) {
+
+    if (activeContentType === 'html') {
       return <span dangerouslySetInnerHTML={{ __html: document.safeHtml }} />;
     }
-    const bodyText = document.getFirst('bodyText');
-    if (bodyText && bodyText.length > 0) {
-      return <Pre>{bodyText}</Pre>;
+
+    if (activeContentType === 'plain') {
+      return <Pre>{bodyText.join('\n\n')}</Pre>;
     }
+
     return (
       <p className={Classes.TEXT_MUTED}>
         <FormattedMessage
