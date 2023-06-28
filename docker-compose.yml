@@ -25,7 +25,7 @@ services:
       - redis-data:/data
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.19.0
+    image: ghcr.io/alephdata/ingest-file:3.19.1
     tmpfs:
       - /tmp:mode=777
     volumes:
