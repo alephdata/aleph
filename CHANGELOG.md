@@ -1,3 +1,11 @@
+## 3.14.3 (28-06-2023)
+- Introduced two new Settings which controll the scroll window of ElasticSearch queries made during xref operations:
+    - ALEPH_XREF_SCROLL (defaults to 5m) is the 'scroll' parameter used on ES scan() calls for xref operations and configures how long a consistent view of the index should be maintained for scrolled search
+    - ALEPH_XREF_SCROLL_SIZE (defaults to 1000) is the 'size' parameter used on ES scan() calls for xref operations
+    and configures the size (per shard) of the batch sent for each iteration of a scan
+- Updated translations
+- Removed unneccessary packages from the UI Docker image
+
 ## 3.14.1 (11-05-2023)
 - Support for error tracking via Sentry
 - Fix a flaky UI test (#3011)
