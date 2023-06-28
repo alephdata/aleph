@@ -1,7 +1,19 @@
 export const loadState = () => {
   try {
-    const storedState = localStorage.getItem('state');
-    return storedState ? JSON.parse(storedState) : {};
+    const json = localStorage.getItem('state');
+
+    if (!json) {
+      return {};
+    }
+
+    const storedState = JSON.parse(json);
+
+    // TODO: Remove after deadline
+    // See https://github.com/alephdata/aleph/issues/2864
+    storedState.localBookmarks = storedState.bookmarks;
+    delete storedState.bookmarks;
+
+    return storedState;
   } catch (e) {
     // eslint-disable-next-line
     console.error('could not load state', e);

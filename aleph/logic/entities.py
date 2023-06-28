@@ -7,7 +7,7 @@ from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 
 from aleph.core import db, cache
-from aleph.model import Entity, Document, EntitySetItem, Mapping
+from aleph.model import Entity, Document, EntitySetItem, Mapping, Bookmark
 from aleph.index import entities as index
 from aleph.queues import pipeline_entity, queue_task
 from aleph.queues import OP_UPDATE_ENTITY, OP_PRUNE_ENTITY
@@ -165,6 +165,7 @@ def prune_entity(collection, entity_id=None, job_id=None):
     if doc is not None:
         doc.delete()
     EntitySetItem.delete_by_entity(entity_id)
+    Bookmark.delete_by_entity(entity_id)
     Mapping.delete_by_table(entity_id)
     xref_index.delete_xref(collection, entity_id=entity_id)
     aggregator = get_aggregator(collection)
