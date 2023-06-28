@@ -8,6 +8,7 @@ from aleph.settings import SETTINGS
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase, get_caption, JSON
+from aleph.model.bookmark import Bookmark
 
 log = logging.getLogger(__name__)
 
@@ -102,6 +103,27 @@ class EntitiesApiTestCase(TestCase):
         assert "LegalEntity" in res.json["schema"], res.json
         assert "Winnie" in get_caption(res.json), res.json
         validate(res.json, "Entity")
+
+    def test_view_bookmarked(self):
+        role, headers = self.login(is_admin=True)
+        url = "/api/2/entities/%s" % self.id
+
+        res = self.client.get(url)
+        assert "bookmarked" not in res.json, res.json
+
+        res = self.client.get(url, headers=headers)
+        assert not res.json["bookmarked"], res.json
+
+        bookmark = Bookmark(
+            role_id=role.id,
+            entity_id=self.ent.id,
+            collection_id=self.ent.collection_id,
+        )
+        db.session.add(bookmark)
+        db.session.commit()
+
+        res = self.client.get(url, headers=headers)
+        assert res.json["bookmarked"], res.json
 
     def test_update(self):
         _, headers = self.login(is_admin=True)

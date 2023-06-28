@@ -32,7 +32,11 @@ class QueryInfiniteLoad extends Component {
   }
 
   render() {
-    const { loadOnScroll = true, result } = this.props;
+    const {
+      loadOnScroll = true,
+      result,
+      scrollableAncestor = window,
+    } = this.props;
     const canLoadMore =
       result &&
       result.next &&
@@ -47,7 +51,7 @@ class QueryInfiniteLoad extends Component {
           <Waypoint
             onEnter={this.getMoreResults}
             bottomOffset="-100px"
-            scrollableAncestor={window}
+            scrollableAncestor={scrollableAncestor}
           />
         );
       } else {

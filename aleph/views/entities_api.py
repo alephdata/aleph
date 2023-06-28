@@ -16,6 +16,7 @@ from aleph.logic.expand import entity_tags, expand_proxies
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
 from aleph.model.entityset import EntitySet, Judgement
+from aleph.model.bookmark import Bookmark
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag
@@ -309,6 +310,15 @@ def view(entity_id):
     encoding = proxy.first("encoding", quiet=True)
     entity["safeHtml"] = sanitize_html(html, source_url, encoding=encoding)
     entity["shallow"] = False
+
+    if request.authz.logged_in:
+        bookmark = Bookmark.query.filter_by(
+            role_id=request.authz.id,
+            collection_id=entity.get("collection_id"),
+            entity_id=entity_id,
+        ).first()
+        entity["bookmarked"] = True if bookmark else False
+
     return EntitySerializer.jsonify(entity)
 
 

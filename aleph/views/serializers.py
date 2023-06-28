@@ -400,3 +400,22 @@ class MappingSerializer(Serializer):
         obj["entityset"] = self.resolve(EntitySet, entityset_id, EntitySetSerializer)
         obj["table"] = self.resolve(Entity, obj.get("table_id", None), EntitySerializer)
         return obj
+
+
+class BookmarkSerializer(Serializer):
+    def collect(self, obj):
+        self.queue(Entity, obj.get("entity_id"))
+
+    def _serialize(self, obj):
+        obj["entity"] = self.resolve(Entity, obj.get("entity_id"), EntitySerializer)
+
+        # Entity could not be resolved, for example because it has been
+        # removed or permissions have changed.
+        if not obj["entity"]:
+            return None
+
+        obj["id"] = obj["entity"]["id"]
+        obj.pop("entity_id", None)
+        obj.pop("collection_id", None)
+        obj.pop("writeable", None)
+        return obj

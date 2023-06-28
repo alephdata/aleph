@@ -1,0 +1,42 @@
+BookmarksResponse:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/QueryResponse"
+  properties:
+    results:
+      type: array
+      items:
+        $ref: "#/components/schemas/Bookmark"
+
+Bookmark:
+  type: object
+  properties:
+    created_at:
+      type: string
+      format: date-time
+    entity:
+      $ref: "#/components/schemas/Entity"
+
+BookmarkCreate:
+  type: object
+  properties:
+    entity_id:
+      type: string
+      format: entity-id
+  required:
+    - entity_id
+
+BookmarkMigrate:
+  type: array
+  items:
+    type: object
+    properties:
+      entity_id:
+        type: string
+        format: entity-id
+      created_at:
+        type: string
+        format: date-time
+    required:
+      - entity_id
+      - created_at
