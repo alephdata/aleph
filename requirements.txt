@@ -4,7 +4,7 @@ followthemoney==3.4.3
 followthemoney-store[postgresql]==3.0.5
 followthemoney-compare==0.4.4
 fingerprints==1.0.3
-servicelayer[google,amazon]==1.21.0
+https://github.com/guardian/aleph-servicelayer/archive/iam-role-based-s3-auth.zip
 normality==2.4.0
 pantomime==0.5.3
 
