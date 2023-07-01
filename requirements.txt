@@ -18,7 +18,7 @@ Flask-Babel==3.1.0
 flask-talisman==1.0.0
 SQLAlchemy==2.0.17
 alembic==1.8.1
-authlib==0.15.5
+authlib==1.2.1
 
 elasticsearch==7.17.0
 marshmallow==2.19.2
