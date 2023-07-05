@@ -25,11 +25,11 @@ const schemata = type === 'relationships' ? relationships : objects;
       <li>
         {schema.description ? (
           <ContextualHelp>
-            {schema.label}
+            <span translate="no">{schema.label}</span>
             <p slot="content">{schema.description}</p>
           </ContextualHelp>
         ) : (
-          schema.label
+          <span translate="no">{schema.label}</span>
         )}
       </li>
     ))

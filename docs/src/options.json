@@ -9,6 +9,12 @@
     "apiKey": "b462393bca678070ceb9abf533aeeb0b",
     "indexName": "aleph-occrp"
   },
+  "translations": {
+    "defaultLanguageName": "English",
+    "languages": {
+      "es": "Español"
+    }
+  },
   "header": {
     "items": [
       { "title": "Users", "link": "/users" },
