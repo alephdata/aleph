@@ -1,10 +1,9 @@
 import logging
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 
 from aleph.model import Collection
 from aleph.queues import get_active_dataset_status, get_dataset_collection_id
 from aleph.views.serializers import CollectionSerializer
-from aleph.views.util import jsonify, require
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("status_api", __name__)
@@ -28,7 +27,8 @@ def status():
       tags:
       - System
     """
-    require(request.authz.logged_in)
+    if not request.authz.logged_in:
+        abort(401)
     request.rate_limit = None
     status = get_active_dataset_status()
     datasets = status.pop("datasets", {})
@@ -46,4 +46,4 @@ def status():
         if collection is not None:
             status["collection"] = serializer.serialize(collection.to_dict())
         results.append(status)
-    return jsonify({"results": results, "total": len(results)})
+    return {"results": results, "total": len(results)}

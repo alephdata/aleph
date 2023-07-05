@@ -1,11 +1,11 @@
 import logging
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from werkzeug.exceptions import NotFound, Forbidden, BadRequest
 from sqlalchemy.dialects.postgresql import insert as postgres_insert
 
 from aleph.core import db
 from aleph.search import DatabaseQueryResult
-from aleph.views.util import jsonify, require, parse_request, get_index_entity
+from aleph.views.util import parse_request, get_index_entity
 from aleph.views.serializers import BookmarkSerializer
 from aleph.model import Bookmark
 
@@ -39,7 +39,8 @@ def index():
                 $ref: '#/components/schemas/BookmarksResponse'
     """
     authz = request.authz
-    require(authz.logged_in)
+    if not authz.logged_in:
+        abort(401)
     collection_ids = authz.collections(authz.READ)
 
     query = Bookmark.query.filter(
@@ -70,7 +71,8 @@ def create():
               schema:
                 $ref: '#/components/schemas/Bookmark'
     """
-    require(request.authz.session_write)
+    if not request.authz.session_write:
+        abort(403, description="Can't write to session")
     data = parse_request("BookmarkCreate")
     entity_id = data.get("entity_id")
 
@@ -95,8 +97,7 @@ def create():
         db.session.commit()
 
     serializer = BookmarkSerializer()
-    response = serializer.serialize(bookmark)
-    return jsonify(response, status=201)
+    return serializer.serialize(bookmark), 201
 
 
 @blueprint.route("/api/2/bookmarks/<entity_id>", methods=["DELETE"])
@@ -117,7 +118,8 @@ def delete(entity_id):
         '204':
           description: No content
     """
-    require(request.authz.session_write)
+    if not request.authz.session_write:
+        abort(403, description="Can't write to session")
 
     query = Bookmark.query.filter_by(entity_id=entity_id, role_id=request.authz.id)
     query.delete()
@@ -151,7 +153,8 @@ def migrate():
                       type: string
                       format: entity-id
     """
-    require(request.authz.session_write)
+    if not request.authz.session_write:
+        abort(403, description="Can't write to session")
     data = parse_request("BookmarkMigrate")
     values = []
     errors = []
@@ -178,4 +181,4 @@ def migrate():
     db.session.execute(stmt)
     db.session.commit()
 
-    return jsonify({"errors": errors}, 201)
+    return {"errors": errors}, 201

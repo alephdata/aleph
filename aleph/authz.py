@@ -77,6 +77,7 @@ class Authz(object):
             return False
         return collection in self.collections(action)
 
+    @property
     def can_bulk_import(self):
         if not self.can_browse_anonymous or not self.session_write:
             return False
@@ -97,6 +98,7 @@ class Authz(object):
             return True
         return int(role_id) in self.roles
 
+    @property
     def can_register(self):
         if self.logged_in or SETTINGS.MAINTENANCE or not SETTINGS.PASSWORD_LOGIN:
             return False

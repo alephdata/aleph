@@ -1,5 +1,5 @@
 from banal import ensure_list
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 
 from aleph.core import db
 from aleph.search import CollectionsQuery
@@ -13,7 +13,7 @@ from aleph.index.collections import update_collection_stats
 from aleph.logic.processing import bulk_write
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import get_db_collection, get_index_collection, get_entityset
-from aleph.views.util import require, parse_request, jsonify
+from aleph.views.util import parse_request 
 from aleph.views.util import get_flag, get_session_id
 
 blueprint = Blueprint("collections_api", __name__)
@@ -38,7 +38,8 @@ def index():
       tags:
       - Collection
     """
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     result = CollectionsQuery.handle(request)
     return CollectionSerializer.jsonify_result(result)
 
@@ -65,7 +66,8 @@ def create():
               schema:
                 $ref: '#/components/schemas/Collection'
     """
-    require(request.authz.logged_in)
+    if not request.authz.logged_in:
+        abort(401)
     data = parse_request("CollectionCreate")
     sync = get_flag("sync", True)
     collection = create_collection(data, request.authz, sync=sync)
@@ -97,7 +99,8 @@ def view(collection_id):
       tags:
       - Collection
     """
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     data = get_index_collection(collection_id)
     cobj = get_db_collection(collection_id)
     if get_flag("refresh", False):
@@ -252,7 +255,8 @@ def bulk(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    require(request.authz.can_bulk_import())
+    if not request.authz.can_bulk_import:
+        abort(403, description="Can't write to session")
     job_id = get_session_id()
     entityset = request.args.get("entityset_id")
     if entityset is not None:
@@ -314,7 +318,7 @@ def status(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.READ)
     request.rate_limit = None
-    return jsonify(get_status(collection))
+    return get_status(collection)
 
 
 @blueprint.route("/<int:collection_id>/status", methods=["DELETE"])

@@ -1,17 +1,15 @@
 import json
 import logging
 from pprint import pprint  # noqa
-from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
+from flask import Blueprint, request, abort
 from followthemoney import model
 
 from aleph.settings import SETTINGS
 from aleph.core import url_for, talisman
 from aleph.model import Entity
-from aleph.search import SearchQueryParser
-from aleph.search import EntitiesQuery, MatchQuery
-from aleph.views.util import jsonify, get_index_collection, require
+from aleph.search import SearchQueryParser, EntitiesQuery, MatchQuery
 from aleph.index.collections import get_collection_things
+from aleph.views.util import get_index_collection
 from aleph.logic.util import entity_url
 from aleph.index.util import unpack_result
 from aleph.views.context import tag_request
@@ -65,34 +63,32 @@ def reconcile_index(collection=None):
         suggest_query.append(("filter:collection_id", collection.get("id")))
         things = get_collection_things(collection.get("id"))
         schemata = [model.get(s) for s in things.keys()]
-    return jsonify(
-        {
-            "name": label,
-            "identifierSpace": "http://rdf.freebase.com/ns/type.object.id",
-            "schemaSpace": "http://rdf.freebase.com/ns/type.object.id",
-            "view": {"url": entity_url("{{id}}")},
-            "preview": {"url": entity_url("{{id}}"), "width": 800, "height": 400},
-            "suggest": {
-                "entity": {
-                    "service_url": domain,
-                    "service_path": url_for(
-                        ".suggest_entity",
-                        _query=suggest_query,
-                        _relative=True,
-                    ),
-                },
-                "type": {
-                    "service_url": domain,
-                    "service_path": url_for(".suggest_type", _relative=True),
-                },
-                "property": {
-                    "service_url": domain,
-                    "service_path": url_for(".suggest_property", _relative=True),
-                },
+    return {
+        "name": label,
+        "identifierSpace": "http://rdf.freebase.com/ns/type.object.id",
+        "schemaSpace": "http://rdf.freebase.com/ns/type.object.id",
+        "view": {"url": entity_url("{{id}}")},
+        "preview": {"url": entity_url("{{id}}"), "width": 800, "height": 400},
+        "suggest": {
+            "entity": {
+                "service_url": domain,
+                "service_path": url_for(
+                    ".suggest_entity",
+                    _query=suggest_query,
+                    _relative=True,
+                ),
             },
-            "defaultTypes": [get_freebase_type(s) for s in schemata if s.matchable],
-        }
-    )
+            "type": {
+                "service_url": domain,
+                "service_path": url_for(".suggest_type", _relative=True),
+            },
+            "property": {
+                "service_url": domain,
+                "service_path": url_for(".suggest_property", _relative=True),
+            },
+        },
+        "defaultTypes": [get_freebase_type(s) for s in schemata if s.matchable],
+    }
 
 
 @blueprint.route("/api/freebase/reconcile", methods=["GET", "POST"])
@@ -130,7 +126,8 @@ def reconcile(collection_id=None):
       tags:
       - Collection
     """
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     collection = None
     if collection_id is not None:
         collection = get_index_collection(collection_id)
@@ -141,7 +138,7 @@ def reconcile(collection_id=None):
             query = json.loads(query)
         except ValueError:
             query = {"query": query}
-        return jsonify(reconcile_op(query, collection))
+        return reconcile_op(query, collection)
 
     queries = request.values.get("queries")
     if queries is not None:
@@ -151,9 +148,9 @@ def reconcile(collection_id=None):
             results = {}
             for k, q in qs.items():
                 results[k] = reconcile_op(q, collection)
-            return jsonify(results)
+            return results
         except ValueError:
-            raise BadRequest()
+            abort(400)
     return reconcile_index(collection)
 
 
@@ -179,7 +176,8 @@ def reconcile_op(query, collection=None):
 @talisman(content_security_policy=CSP)
 def suggest_entity():
     """Suggest API, emulates Google Refine API."""
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     prefix = request.args.get("prefix", "")
     tag_request(prefix=prefix)
     types = request.args.getlist("type") or Entity.THING
@@ -192,20 +190,19 @@ def suggest_entity():
     query = EntitiesQuery(parser)
     result = query.search()
     matches = list(entity_matches(result))
-    return jsonify(
-        {
-            "code": "/api/status/ok",
-            "status": "200 OK",
-            "prefix": prefix,
-            "result": matches,
-        }
-    )
+    return {
+        "code": "/api/status/ok",
+        "status": "200 OK",
+        "prefix": prefix,
+        "result": matches,
+    }
 
 
 @blueprint.route("/api/freebase/property", methods=["GET", "POST"])
 @talisman(content_security_policy=CSP)
 def suggest_property():
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     prefix = request.args.get("prefix", "").lower().strip()
     tag_request(prefix=prefix)
     schema = request.args.get("schema", Entity.THING)
@@ -224,20 +221,19 @@ def suggest_property():
                     "n:type": {"id": "/properties/property", "name": "Property"},
                 }
             )
-    return jsonify(
-        {
-            "code": "/api/status/ok",
-            "status": "200 OK",
-            "prefix": request.args.get("prefix", ""),
-            "result": matches,
-        }
-    )
+    return {
+        "code": "/api/status/ok",
+        "status": "200 OK",
+        "prefix": request.args.get("prefix", ""),
+        "result": matches,
+    }
 
 
 @blueprint.route("/api/freebase/type", methods=["GET", "POST"])
 @talisman(content_security_policy=CSP)
 def suggest_type():
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     prefix = request.args.get("prefix", "").lower().strip()
     tag_request(prefix=prefix)
     matches = []
@@ -247,11 +243,9 @@ def suggest_type():
         match = match or prefix in schema.label.lower()
         if match and schema.matchable:
             matches.append(get_freebase_type(schema))
-    return jsonify(
-        {
-            "code": "/api/status/ok",
-            "status": "200 OK",
-            "prefix": request.args.get("prefix", ""),
-            "result": matches,
-        }
-    )
+    return {
+        "code": "/api/status/ok",
+        "status": "200 OK",
+        "prefix": request.args.get("prefix", ""),
+        "result": matches,
+    }

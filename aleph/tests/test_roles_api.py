@@ -16,7 +16,7 @@ class RolesApiTestCase(TestCase):
 
     def test_suggest(self):
         res = self.client.get("/api/2/roles/_suggest")
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
         _, headers = self.login(is_admin=True)
         res = self.client.get("/api/2/roles/_suggest?prefix=user", headers=headers)
         assert res.status_code == 200, res

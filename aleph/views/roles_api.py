@@ -1,7 +1,7 @@
 import logging
 from banal import ensure_list
 from flask_babel import gettext
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from itsdangerous import BadSignature
 from werkzeug.exceptions import BadRequest
 
@@ -12,7 +12,7 @@ from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role, create_user, get_deep_role
 from aleph.util import is_auto_admin
 from aleph.views.serializers import RoleSerializer
-from aleph.views.util import require, jsonify, parse_request, obj_or_404
+from aleph.views.util import parse_request, obj_or_404
 from aleph.views.context import tag_request
 
 blueprint = Blueprint("roles_api", __name__)
@@ -52,18 +52,17 @@ def suggest():
       tags:
       - Role
     """
-    require(request.authz.logged_in)
+    if not request.authz.logged_in:
+        abort(401)
     parser = QueryParser(request.args, request.authz, limit=10)
     if parser.prefix is None or len(parser.prefix) < 3:
         # Do not return 400 because it's a routine event.
-        return jsonify(
-            {
-                "status": "error",
-                "message": gettext("prefix filter is too short"),
-                "results": [],
-                "total": 0,
-            }
-        )
+        return {
+            "status": "error",
+            "message": gettext("prefix filter is too short"),
+            "results": [],
+            "total": 0,
+        }
     # this only returns users, not groups
     exclude = ensure_list(parser.excludes.get("id"))
     q = Role.by_prefix(parser.prefix, exclude=exclude)
@@ -100,12 +99,11 @@ def create_code():
       tags:
       - Role
     """
-    require(request.authz.can_register())
+    if not request.authz.can_register:
+        abort(403, description="Registration disabled")
     data = parse_request("RoleCodeCreate")
     challenge_role(data)
-    return jsonify(
-        {"status": "ok", "message": gettext("To proceed, please check your email.")}
-    )
+    return {"status": "ok", "message": gettext("To proceed, please check your email.")}
 
 
 @blueprint.route("/api/2/roles", methods=["POST"])
@@ -131,21 +129,17 @@ def create():
       tags:
       - Role
     """
-    require(request.authz.can_register())
+    if not request.authz.can_register:
+        abort(403, description="Registration disabled")
     data = parse_request("RoleCreate")
     try:
         email = Role.SIGNATURE.loads(data.get("code"), max_age=Role.SIGNATURE_MAX_AGE)
     except BadSignature:
-        return jsonify(
-            {"status": "error", "message": gettext("Invalid code")}, status=400
-        )
+        abort(400, description=gettext("Invalid code"))
 
     role = Role.by_email(email)
     if role is not None:
-        return jsonify(
-            {"status": "error", "message": gettext("Email is already registered")},
-            status=409,
-        )
+        abort(409, description=gettext("Email is already registered"))
 
     role = create_user(
         email, data.get("name"), data.get("password"), is_admin=is_auto_admin(email)
@@ -184,7 +178,8 @@ def view(id):
       - Role
     """
     role = obj_or_404(Role.by_id(id))
-    require(request.authz.can_read_role(role.id))
+    if not request.authz.can_read_role(role.id):
+        abort(403, description="Cannot read role")
     data = role.to_dict()
     if request.authz.can_write_role(role.id):
         data.update(get_deep_role(role))
@@ -224,7 +219,8 @@ def update(id):
       - Role
     """
     role = obj_or_404(Role.by_id(id))
-    require(request.authz.can_write_role(role.id))
+    if not request.authz.can_write_role(role.id):
+        abort(403, description="Cannot write role")
     data = parse_request("RoleUpdate")
 
     # When changing passwords, check the old password first.

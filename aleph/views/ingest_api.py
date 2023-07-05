@@ -2,9 +2,8 @@ import json
 import shutil
 import logging
 from banal import ensure_dict
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from tempfile import mkdtemp
-from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 from servicelayer.archive.util import ensure_path
 
@@ -14,8 +13,7 @@ from aleph.queues import ingest_entity
 from aleph.index.entities import index_proxy
 from aleph.logic.documents import ingest_flush
 from aleph.logic.notifications import publish, channel_tag
-from aleph.views.util import get_db_collection, get_flag
-from aleph.views.util import jsonify, validate, get_session_id
+from aleph.views.util import get_db_collection, get_flag, validate, get_session_id
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("ingest_api", __name__)
@@ -30,12 +28,7 @@ def _load_parent(collection, meta):
         return
     parent = Document.by_id(parent_id, collection=collection)
     if parent is None:
-        raise BadRequest(
-            response=jsonify(
-                {"status": "error", "message": "Cannot load parent document"},
-                status=400,
-            )
-        )
+        abort(400, description="Cannot load parent document")
     return parent
 
 
@@ -44,17 +37,12 @@ def _load_metadata():
     try:
         meta = json.loads(request.form.get("meta", "{}"))
     except Exception as ex:
-        raise BadRequest(str(ex))
+        abort(400, description=str(ex))
 
     validate(meta, "DocumentIngest")
     foreign_id = stringify(meta.get("foreign_id"))
     if not len(request.files) and foreign_id is None:
-        raise BadRequest(
-            response=jsonify(
-                {"status": "error", "message": "Directories need to have a foreign_id"},
-                status=400,
-            )
-        )
+        abort(400, description="Directories need to have a foreign_id")
     return meta, foreign_id
 
 
@@ -146,6 +134,6 @@ def ingest_upload(collection_id):
         ingest_flush(collection, entity_id=proxy.id)
         ingest_entity(collection, proxy, job_id=job_id, index=index)
         _notify(collection, proxy.id)
-        return jsonify({"status": "ok", "id": proxy.id}, status=201)
+        return {"status": "ok", "id": proxy.id}, 201
     finally:
         shutil.rmtree(upload_dir)

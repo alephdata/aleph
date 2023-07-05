@@ -19,7 +19,7 @@ from aleph.logic.pages import load_pages
 from aleph.logic.util import collection_url
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
-from aleph.views.util import jsonify, render_xml
+from aleph.views.util import render_xml
 
 blueprint = Blueprint("base_api", __name__)
 log = logging.getLogger(__name__)
@@ -101,7 +101,7 @@ def metadata():
         role = Role.load_cli_user()
         authz = Authz.from_role(role)
         data["token"] = authz.to_token()
-    return jsonify(data)
+    return data
 
 
 @blueprint.route("/api/openapi.json")
@@ -119,7 +119,7 @@ def openapi():
             continue
         log.info("%s - %s", name, view.__qualname__)
         spec.path(view=view)
-    return jsonify(spec.to_dict())
+    return spec.to_dict()
 
 
 @blueprint.route("/api/2/statistics")
@@ -145,8 +145,7 @@ def statistics():
     enable_cache(vary_user=False)
     key = cache.key(cache.STATISTICS)
     data = {"countries": [], "schemata": [], "categories": []}
-    data = cache.get_complex(key) or data
-    return jsonify(data)
+    return cache.get_complex(key) or data
 
 
 @blueprint.route("/api/2/sitemap.xml")
@@ -203,7 +202,7 @@ def healthz():
       - System
     """
     request.rate_limit = None
-    return jsonify({"status": "ok"})
+    return {"status": "ok"}
 
 
 @blueprint.app_errorhandler(NotModified)
@@ -215,38 +214,35 @@ def handle_not_modified(err):
 def handle_bad_request(err):
     if err.response is not None and err.response.is_json:
         return err.response
-    return jsonify({"status": "error", "message": err.description}, status=400)
+    return {"status": "error", "message": err.description}, 400
 
 
 @blueprint.app_errorhandler(403)
 def handle_authz_error(err):
-    return jsonify(
-        {
-            "status": "error",
-            "message": gettext("You are not authorized to do this."),
-            "roles": request.authz.roles,
-        },
-        status=403,
-    )
+    data = {
+        "status": "error",
+        "message": err.description or gettext("You are not authorized to do this."),
+    }
+    return data, 403
 
 
 @blueprint.app_errorhandler(404)
 def handle_not_found_error(err):
     msg = gettext("This path does not exist.")
-    return jsonify({"status": "error", "message": msg}, status=404)
+    return {"status": "error", "message": msg}, 404
 
 
 @blueprint.app_errorhandler(500)
 def handle_server_error(err):
     log.exception("%s: %s", type(err).__name__, err)
     msg = gettext("Internal server error.")
-    return jsonify({"status": "error", "message": msg}, status=500)
+    return {"status": "error", "message": msg}, 500
 
 
 @blueprint.app_errorhandler(InvalidData)
 def handle_invalid_data(err):
     data = {"status": "error", "message": str(err), "errors": err.errors}
-    return jsonify(data, status=400)
+    return data, 400
 
 
 @blueprint.app_errorhandler(DecodeError)
@@ -254,7 +250,7 @@ def handle_invalid_data(err):
 def handle_jwt_expired(err):
     log.info("JWT Error: %s", err)
     data = {"status": "error", "errors": gettext("Access token is invalid.")}
-    return jsonify(data, status=401)
+    return data, 401
 
 
 @blueprint.app_errorhandler(TransportError)
@@ -271,4 +267,4 @@ def handle_es_error(err):
         status = int(err.status_code)
     except ValueError:
         status = 500
-    return jsonify({"status": "error", "message": message}, status=status)
+    return {"status": "error", "message": message}, status

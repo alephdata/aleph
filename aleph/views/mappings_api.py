@@ -1,7 +1,7 @@
 import logging
 from banal import first
 from followthemoney import model
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from werkzeug.exceptions import BadRequest
 
 from aleph.core import db
@@ -10,7 +10,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
 from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
-from aleph.views.util import get_index_entity, get_session_id, obj_or_404, require
+from aleph.views.util import get_index_entity, get_session_id, obj_or_404
 
 
 blueprint = Blueprint("mappings_api", __name__)
@@ -76,7 +76,8 @@ def index(collection_id):
         - Collection
         - Mapping
     """
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
     table_id = first(parser.filters.get("table"))
