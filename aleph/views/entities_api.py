@@ -305,10 +305,12 @@ def view(entity_id):
     entity = get_index_entity(entity_id, request.authz.READ, excludes=excludes)
     tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
-    html = proxy.first("bodyHtml", quiet=True)
+    html = proxy.get("bodyHtml", quiet=True)
     source_url = proxy.first("sourceUrl", quiet=True)
     encoding = proxy.first("encoding", quiet=True)
-    entity["safeHtml"] = sanitize_html(html, source_url, encoding=encoding)
+    entity["safeHtml"] = [
+        sanitize_html(value, source_url, encoding=encoding) for value in html
+    ]
     entity["shallow"] = False
 
     if request.authz.logged_in:
