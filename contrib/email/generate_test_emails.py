@@ -17,7 +17,6 @@
 
 import sys
 from email.message import EmailMessage
-from email.iterators import _structure
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
