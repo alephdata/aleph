@@ -73,16 +73,22 @@ class EmailViewer extends PureComponent {
 
   renderBody() {
     const { document } = this.props;
+
     if (document.isPending) {
       return <Skeleton.Text type="span" length={1000} />;
     }
+
     if (document.safeHtml && document.safeHtml.length) {
-      return <span dangerouslySetInnerHTML={{ __html: document.safeHtml }} />;
+      return document.safeHtml.map((value, index) => (
+        <div key={index} dangerouslySetInnerHTML={{ __html: value }} />
+      ));
     }
+
     const bodyText = document.getFirst('bodyText');
     if (bodyText && bodyText.length > 0) {
       return <Pre>{bodyText}</Pre>;
     }
+
     return (
       <p className={Classes.TEXT_MUTED}>
         <FormattedMessage
