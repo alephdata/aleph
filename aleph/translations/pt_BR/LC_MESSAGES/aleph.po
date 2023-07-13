@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-06-23 12:45+0200\n"
+"POT-Creation-Date: 2023-07-13 10:25+0000\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Laura M <kokoroko2@protonmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/aleph/teams/76591/pt_BR/)\n"
@@ -226,7 +226,7 @@ msgstr ""
 msgid "{{export}} is ready for download"
 msgstr ""
 
-#: aleph/search/__init__.py:52
+#: aleph/search/__init__.py:76
 msgid "No schema is specified for the query."
 msgstr "Nenhum schema especificado para a consulta."
 
@@ -346,23 +346,23 @@ msgstr "Nome de schema inválido: %s"
 msgid "Invalid date: %s"
 msgstr "Data inválida: %s"
 
-#: aleph/views/base_api.py:222
+#: aleph/views/base_api.py:226
 msgid "You are not authorized to do this."
 msgstr "Você não tem permissão para isso."
 
-#: aleph/views/base_api.py:231
+#: aleph/views/base_api.py:235
 msgid "This path does not exist."
 msgstr "Esse caminho não existe."
 
-#: aleph/views/base_api.py:238
+#: aleph/views/base_api.py:242
 msgid "Internal server error."
 msgstr "Erro interno no servidor."
 
-#: aleph/views/base_api.py:252
+#: aleph/views/base_api.py:256
 msgid "Access token is invalid."
 msgstr "Token de acesso inválido."
 
-#: aleph/views/entities_api.py:172
+#: aleph/views/entities_api.py:173
 #, python-format
 msgid "Search: %s"
 msgstr ""
