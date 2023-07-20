@@ -251,7 +251,6 @@ class EntitySelect extends React.Component<
     const {
       createNewReferencedEntity,
       model: inputModel,
-      intl,
       referencedEntityRange,
     } = this.props;
     const { createNewDialogOpen, query } = this.state;

@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Navigate, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner, Classes } from '@blueprintjs/core';
 
