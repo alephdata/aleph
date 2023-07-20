@@ -8,6 +8,6 @@ installations up to date as much as they can.
 
 Please refer to our [Support Policy](SUPPORT.md) for more information about supported Aleph versions.
 
-## Reporting security vulnerabilities
+## Reporting a vulnerability
 
-In order to report a security vulnerability, please contact the Organized Crime and Corruption Reporting Project (OCCRP), the core maintainer of Aleph. For details, please refer to [OCCRP’s Responsible Disclosure Policy](https://www.occrp.org/en/responsible-disclosure).
+In order to report a security vulnerability, please contact the Organized Crime and Corruption Reporting Project (OCCRP), the core maintainer of Aleph, directly via [OCCRP’s Responsible Disclosure Policy](https://www.occrp.org/en/responsible-disclosure).
