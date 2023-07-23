@@ -12,7 +12,8 @@
   "translations": {
     "defaultLanguageName": "English",
     "languages": {
-      "es": "Español"
+      "es": "Español",
+      "pt": "Português"
     }
   },
   "header": {
