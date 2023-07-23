@@ -45,7 +45,7 @@ import HomeContact from '@components/HomeContact.astro';
 
 <Skeleton {options} title="Home">
   <Wrapper padded size="small">
-    <div class="Home__content">
+    <main id="content" class="Home__content">
       <h1 class="alpha Home__heading">
         Welcome to the Aleph User Guide and Technical Documentation
       </h1>
@@ -53,6 +53,6 @@ import HomeContact from '@components/HomeContact.astro';
       <HomeAbout />
       <HomeFeatures />
       <HomeContact />
-    </div>
+    </main>
   </Wrapper>
 </Skeleton>
