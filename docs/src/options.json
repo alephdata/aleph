@@ -9,67 +9,65 @@
     "apiKey": "b462393bca678070ceb9abf533aeeb0b",
     "indexName": "aleph-occrp"
   },
-  "nav": {
-    "header": {
-      "items": []
-    },
-    "sidebar": {
+  "translations": {
+    "defaultLanguageName": "English",
+    "languages": {
+      "es": "Español",
+      "pt": "Português"
+    }
+  },
+  "header": {
+    "items": [
+      { "title": "Users", "link": "/users" },
+      { "title": "Developers", "link": "/developers" }
+    ]
+  },
+  "sidebar": {
+    "users": {
       "sections": [
         {
-          "title": "About",
+          "title": "Getting started",
           "items": [
-            { "slug": "/" },
-            { "slug": "/how-aleph-is-used" },
-            { "slug": "/get-in-touch" }
+            { "slug": "/users/getting-started/account" },
+            { "slug": "/users/getting-started/key-terms" },
+            { "slug": "/users/getting-started/homepage" }
           ]
         },
         {
-          "title": "Users",
+          "title": "Search",
           "items": [
-            { "slug": "/guide/getting-started" },
-            { "slug": "/guide/the-basics" },
-            {
-              "slug": "/guide/search",
-              "children": [
-                { "slug": "/guide/search/anatomy-of-a-search" },
-                { "slug": "/guide/search/advanced-search-methods" },
-                { "slug": "/guide/search/filtering-your-search-results" },
-                { "slug": "/guide/search/searching-within-other-contexts" },
-                { "slug": "/guide/search/searching-for-a-dataset" }
-              ]
-            },
-            {
-              "slug": "/guide/building-out-your-investigation",
-              "children": [
-                {
-                  "slug": "/guide/building-out-your-investigation/creating-an-investigation"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/uploading-documents"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/network-diagrams"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/using-the-table-editor"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/generating-multiple-entities-from-a-list"
-                },
-                {
-                  "slug": "/guide/building-out-your-investigation/cross-referencing"
-                }
-              ]
-            },
-            { "slug": "/guide/aleph-data-desktop" },
-            { "slug": "/guide/reconciliation" },
-            { "slug": "/guide/frequently-asked-questions" }
+            { "slug": "/users/search/basics" },
+            { "slug": "/users/search/advanced" },
+            { "slug": "/users/search/datasets" }
           ]
         },
         {
-          "title": "Developers & Admins",
+          "title": "Investigations",
           "items": [
-            { "slug": "/developers/intro" },
+            { "slug": "/users/investigations/overview" },
+            { "slug": "/users/investigations/create" },
+            { "slug": "/users/investigations/manage-access" },
+            { "slug": "/users/investigations/uploading-documents" },
+            { "slug": "/users/investigations/entity-editor" },
+            { "slug": "/users/investigations/cross-referencing" },
+            { "slug": "/users/investigations/network-diagrams" }
+          ]
+        },
+        {
+          "title": "FAQ",
+          "items": [{ "slug": "/users/faq/account" }]
+        },
+        {
+          "title": "Advanced",
+          "items": [{ "slug": "/users/advanced/reconciliation" }]
+        }
+      ]
+    },
+    "developers": {
+      "sections": [
+        {
+          "title": "Tech Docs",
+          "items": [
             { "slug": "/developers/installation" },
             {
               "slug": "/developers/followthemoney",

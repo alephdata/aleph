@@ -1,0 +1,20 @@
+<style>
+  .Annotations {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .Annotations__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<div class="Annotations" aria-hidden="true">
+  <slot />
+  <div class="Annotations__overlay"></div>
+</div>

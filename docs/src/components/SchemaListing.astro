@@ -1,0 +1,37 @@
+---
+import { ContextualHelp } from 'astro-theme-docs/components';
+import Listing from './Listing.astro';
+import { defaultModel, Model } from '@alephdata/followthemoney';
+const model = new Model(defaultModel);
+
+const { type } = Astro.props;
+
+const all = Object.values(model.schemata).filter(
+  (schema) =>
+    !schema.abstract &&
+    !schema.hidden &&
+    !schema.generated &&
+    !schema.isDocument()
+);
+const objects = all.filter((schema) => !schema.isEdge);
+const relationships = all.filter((schema) => schema.isEdge);
+
+const schemata = type === 'relationships' ? relationships : objects;
+---
+
+<Listing>
+  {
+    schemata.map((schema) => (
+      <li>
+        {schema.description ? (
+          <ContextualHelp>
+            <span translate="no">{schema.label}</span>
+            <p slot="content">{schema.description}</p>
+          </ContextualHelp>
+        ) : (
+          <span translate="no">{schema.label}</span>
+        )}
+      </li>
+    ))
+  }
+</Listing>

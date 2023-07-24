@@ -1,0 +1,26 @@
+<style>
+  .Listing > :global(li) {
+    cursor: default;
+    font-weight: 500;
+  }
+
+  .Listing > :global(li + li) {
+    margin-block-start: var(--space-xs);
+  }
+
+  @media screen and (min-width: 560px) {
+    .Listing {
+      columns: 2;
+    }
+  }
+
+  @media screen and (min-width: 840px) {
+    .Listing {
+      columns: 3;
+    }
+  }
+</style>
+
+<ul class="Listing">
+  <slot />
+</ul>
