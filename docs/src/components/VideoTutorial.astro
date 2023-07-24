@@ -1,0 +1,30 @@
+---
+import { Youtube } from 'astro-theme-docs/components';
+const { youtubeId } = Astro.props;
+---
+
+<style>
+  .VideoTutorial {
+    margin-block: var(--space-xl);
+    background-color: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border-default);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .VideoTutorial__info {
+    padding: calc(0.75 * var(--space));
+  }
+</style>
+
+<article class="VideoTutorial">
+  <div class="VideoTutorial__info">
+    <h2 class="VideoTutorial__heading section-heading">Video tutorial</h2>
+    <p>
+      Are you in a hurry and don't have time to read? Watch our short video on
+      how to create an Aleph account.
+    </p>
+  </div>
+  <Youtube id={youtubeId} />
+</article>
