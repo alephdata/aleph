@@ -27,13 +27,13 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=BATCH_SIZE)
     refresh_collection(collection.id)
 
 
-def bulk_write(collection, entities, safe=False, role_id=None, mutable=True):
+def bulk_write(collection, entities, safe=False, role_id=None, mutable=True, cleaned=False):
     """Write a set of entities - given as dicts - to the index."""
     # This is called mainly by the /api/2/collections/X/_bulk API.
     aggregator = get_aggregator(collection)
     writer = aggregator.bulk()
     for data in entities:
-        entity = model.get_proxy(data, cleaned=False)
+        entity = model.get_proxy(data, cleaned=cleaned)
         entity = collection.ns.apply(entity)
         if entity.id is None:
             raise InvalidData("No ID for entity", errors=entity.to_dict())

@@ -231,10 +231,17 @@ def bulk(collection_id):
           minimum: 1
           type: integer
       - description: >-
-          This will disable checksum security measures in order to allow bulk
-          loading of document data.
+          This will disable (if safe=False) checksum security measures in order to allow bulk
+          loading of document data. Flag is only available for admins.
         in: query
-        name: unsafe
+        name: safe
+        schema:
+          type: boolean
+      - description: >-
+          This will disable (if cleaned=True) values validation for all types of all entities/properties.
+          Flag is only available for admins.
+        in: query
+        name: cleaned
         schema:
           type: boolean
       requestBody:
@@ -258,19 +265,26 @@ def bulk(collection_id):
     if entityset is not None:
         entityset = get_entityset(entityset, request.authz.WRITE)
 
-    # This will disable checksum security measures in order to allow bulk
+    # This will disable (if False) checksum security measures in order to allow bulk
     # loading of document data:
     safe = get_flag("safe", default=True)
     # Flag is only available for admins:
     if not request.authz.is_admin:
         safe = True
 
+    # This will disable (if True) values validation for all types of all entities / properties
+    # (will pass cleaned=True to the model.get_proxy() in the aleph/logic/processing.py)
+    cleaned = get_flag("cleaned", default=False)
+    # Flag is only available for admins:
+    if not request.authz.is_admin:
+        cleaned = False
+
     # Let UI tools change the entities created by this:
     mutable = get_flag("mutable", default=False)
     entities = ensure_list(request.get_json(force=True))
     entity_ids = list()
     for entity_id in bulk_write(
-        collection, entities, safe=safe, mutable=mutable, role_id=request.authz.id
+        collection, entities, safe=safe, mutable=mutable, cleaned=cleaned, role_id=request.authz.id
     ):
         entity_ids.append(entity_id)
         if entityset is not None:
