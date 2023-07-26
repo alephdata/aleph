@@ -9,7 +9,7 @@ const base = path.join(root, 'src/components');
 export default defineConfig({
   integrations: [
     theme({
-      mdxPlugins: [
+      remarkPlugins: [
         injectComponent('Annotations', path.join(base, 'Annotations.astro'), 'default'),
         injectComponent('Annotation', path.join(base, 'Annotation.astro'), 'default'),
         injectComponent('AnnotationRef', path.join(base, 'AnnotationRef.astro'), 'default'),
