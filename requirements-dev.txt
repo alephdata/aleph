@@ -3,4 +3,4 @@ Babel==2.11.0
 black==23.3.0
 playwright==1.32.1
 pytest-playwright==0.3.3
-ruff===0.0.270
+ruff===0.0.281
