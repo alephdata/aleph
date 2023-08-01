@@ -7,6 +7,7 @@ from aleph.core import db, cache
 from aleph.settings import SETTINGS
 from aleph.model import Collection, Role, Permission
 from aleph.model.common import make_token
+from aleph.oauth2.logic import load_token as load_oauth2_token
 
 log = logging.getLogger(__name__)
 
@@ -165,6 +166,23 @@ class Authz(object):
             is_admin=state.get("is_admin"),
             token_id=token_id,
         )
+
+    @classmethod
+    def from_oauth2_token(cls, access_token):
+        token = load_oauth2_token(access_token)
+
+        if not token or token.is_expired():
+            raise Unauthorized()
+
+        if not token.user_id:
+            raise Unauthorized()
+
+        role = Role.by_id(token.user_id)
+
+        if not role:
+            raise Unauthorized()
+
+        return cls.from_role(role)
 
     @classmethod
     def flush(cls):

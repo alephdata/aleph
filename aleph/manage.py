@@ -43,6 +43,7 @@ from aleph.logic.permissions import update_permission
 from aleph.util import JSONEncoder
 from aleph.index.collections import get_collection as _get_index_collection
 from aleph.index.entities import get_entity as _get_index_entity
+from aleph.oauth2.logic import create_oauth_client
 
 log = logging.getLogger("aleph")
 
@@ -517,3 +518,21 @@ def evilshit():
     delete_index()
     destroy_db()
     upgrade()
+
+
+@cli.group(help="Manage OAuth clients")
+def oauth_client():
+    pass
+
+
+@oauth_client.command("create")
+@click.option("-n", "--name", help="Name of the OAuth client", required=True)
+@click.option(
+    "-r", "--redirect-uri", help="OAuth redirect URI", required=True, multiple=True
+)
+def create_app(name, redirect_uri):
+    client = create_oauth_client(name, redirect_uri)
+
+    print(f"OAuth 2 client created.")
+    print(f"Client ID: {client.client_id}")
+    print(f"Client secret: {client.client_secret}")

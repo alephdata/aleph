@@ -120,6 +120,15 @@ class Settings:
         )
 
         ###############################################################################
+        # OAuth 2 Server
+
+        self.OAUTH2_TOKEN_EXPIRES_IN = {
+            "authorization_code": env.to_int(
+                "ALEPH_OAUTH2_SERVER_TOKEN_EXPIRES_IN", 60 * 60
+            ),
+        }
+
+        ###############################################################################
         # Content processing options
 
         self.DEFAULT_LANGUAGE = env.get("ALEPH_DEFAULT_LANGUAGE", "en")

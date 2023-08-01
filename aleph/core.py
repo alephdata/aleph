@@ -120,6 +120,11 @@ def create_app(config=None):
 
     mount_app_blueprints(app)
 
+    # TODO Fix circular dependency?
+    from aleph.oauth2.server import configure_oauth2_server
+
+    configure_oauth2_server(app)
+
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
     for plugin in get_extensions("aleph.init"):

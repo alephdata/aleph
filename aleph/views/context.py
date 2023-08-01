@@ -76,7 +76,13 @@ def _get_credential_authz(credential):
     if " " in credential:
         method, credential = credential.split(" ", 1)
         if method == "Token":
-            return Authz.from_token(credential)
+            authz = Authz.from_token(credential)
+            log.info(f"Authenticated {authz.id} using token")
+            return authz
+        if method == "Bearer":
+            authz = Authz.from_oauth2_token(credential)
+            log.info(f"Authenticated {authz} using OAuth 2 access token")
+            return authz
 
     role = Role.by_api_key(credential)
     if role is not None:
