@@ -16,6 +16,7 @@ from aleph.queues import get_rate_limit
 from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.model import Role
+from aleph.views.util import get_token
 
 log = structlog.get_logger(__name__)
 local = threading.local()
@@ -75,13 +76,8 @@ def _get_credential_authz(credential):
         return
     if " " in credential:
         method, credential = credential.split(" ", 1)
-        if method == "Token":
-            authz = Authz.from_token(credential)
-            log.info(f"Authenticated {authz.id} using token")
-            return authz
         if method == "Bearer":
             authz = Authz.from_oauth2_token(credential)
-            log.info(f"Authenticated {authz} using OAuth 2 access token")
             return authz
 
     role = Role.by_api_key(credential)
@@ -98,6 +94,10 @@ def get_authz(request):
 
     if authz is None and "api_key" in request.args:
         authz = _get_credential_authz(request.args.get("api_key"))
+
+    token = get_token()
+    if token:
+        authz = Authz.from_token(token)
 
     return authz
 

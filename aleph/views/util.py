@@ -4,7 +4,7 @@ import string
 import logging
 from banal import as_bool, ensure_dict, is_mapping, is_listish
 from normality import stringify
-from flask import Response, request, render_template
+from flask import Response, request, session, render_template
 from flask_babel import gettext
 from werkzeug.urls import url_parse
 from werkzeug.exceptions import Forbidden
@@ -17,6 +17,7 @@ from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
+from aleph.settings import SETTINGS
 
 log = logging.getLogger(__name__)
 CALLBACK_VALID = string.ascii_letters + string.digits + "_"
@@ -185,3 +186,15 @@ def stream_csv(iterable):
 def render_xml(template, **kwargs):
     data = render_template(template, **kwargs)
     return Response(data, mimetype="text/xml")
+
+
+def store_token(token):
+    session["token"] = token
+
+
+def delete_token():
+    session.pop("token")
+
+
+def get_token():
+    return session.get("token")

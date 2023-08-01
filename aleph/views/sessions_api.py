@@ -13,7 +13,7 @@ from aleph.model import Role
 from aleph.logic.util import ui_url
 from aleph.logic.roles import update_role
 from aleph.views.util import get_url_path, parse_request
-from aleph.views.util import require, jsonify
+from aleph.views.util import require, jsonify, store_token, delete_token, get_token
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("sessions_api", __name__)
@@ -64,7 +64,10 @@ def password_login():
     db.session.commit()
     update_role(role)
     authz = Authz.from_role(role)
-    return jsonify({"status": "ok", "token": authz.to_token()})
+    token = authz.to_token()
+    store_token(token)
+
+    return jsonify({"status": "ok", "token": token})
 
 
 @blueprint.route("/api/2/sessions/oauth")
@@ -117,6 +120,7 @@ def oauth_callback():
     log.debug("Logged in: %r", role)
     request.authz = Authz.from_role(role)
     token = request.authz.to_token()
+    store_token(token)
 
     # Store id_token to generate logout URL later
     id_token = oauth_token.get("id_token")
@@ -125,7 +129,6 @@ def oauth_callback():
 
     next_path = get_url_path(state.get("next_url"))
     next_url = ui_url("oauth", next=next_path)
-    next_url = f"{next_url}#token={token}"
     session.clear()
     return redirect(next_url)
 
@@ -154,4 +157,6 @@ def logout():
             }
             redirect_url = logout_endpoint + "?" + urlencode(query)
     request.authz.destroy()
+    delete_token()
+
     return jsonify({"redirect": redirect_url})
