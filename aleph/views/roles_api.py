@@ -156,6 +156,15 @@ def create():
     return RoleSerializer.jsonify(role, status=201)
 
 
+@blueprint.route("/api/2/roles/me", methods=["GET"])
+def me():
+    require(request.authz.logged_in)
+    role = request.authz.role
+    data = role.to_dict()
+    data.update(get_deep_role(role))
+    return RoleSerializer.jsonify(data)
+
+
 @blueprint.route("/api/2/roles/<int:id>", methods=["GET"])
 def view(id):
     """Retrieve role details.

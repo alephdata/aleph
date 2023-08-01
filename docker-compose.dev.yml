@@ -164,6 +164,16 @@ services:
     env_file:
       - aleph.env
 
+  oauth-example-app:
+    image: denoland/deno
+    command: deno run --allow-env --allow-net --allow-read /app/index.js
+    volumes:
+      - "./oauth-example-app:/app/"
+    ports:
+      - "1234:1234"
+    env_file:
+      - "./oauth-example-app/.env"
+
 volumes:
   archive-data: {}
   elasticsearch-data: {}
