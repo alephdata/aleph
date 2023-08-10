@@ -185,6 +185,12 @@ def format_proxy(proxy, collection):
         log.warning("Tried to index an abstract-typed entity: %r", proxy)
         return None
 
+    # FIXME
+    # a hack to display text previews in search for `Pages` `bodyText` property
+    # will be removed again in `views.serializers.EntitySerializer` to reduce
+    # api response size
+    if proxy.schema.name == "Pages":
+        proxy.add("bodyText", " ".join(proxy.get("indexText")))
     data = proxy.to_full_dict(matchable=True)
     data["schemata"] = list(proxy.schema.names)
     data["caption"] = proxy.caption

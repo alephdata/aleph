@@ -200,6 +200,13 @@ class EntitySerializer(Serializer):
 
     def _serialize(self, obj):
         proxy = model.get_proxy(dict(obj))
+        # FIXME
+        # a hack to display text previews in search for `Pages` `bodyText` property
+        # will be removed again in `views.serializers.EntitySerializer` to reduce
+        # api response size
+        if proxy.schema.name == "Pages":
+            proxy.pop("bodyText")
+
         properties = {}
         for prop, value in proxy.itervalues():
             properties.setdefault(prop.name, [])
