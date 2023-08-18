@@ -1,18 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { ButtonGroup, Classes, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { BookmarkButton } from 'components/common';
-import { DownloadButton } from 'components/Toolbar';
+import { DialogToggleButton, DownloadButton } from 'components/Toolbar';
 import getEntityLink from 'util/getEntityLink';
 
 import './EntityToolbar.scss';
+import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
+
+const messages = defineMessages({
+  add_to: {
+    id: 'entity.viewer.add_to',
+    defaultMessage: 'Add to...',
+  },
+});
 
 class EntityToolbar extends React.Component {
   render() {
-    const { entity, profile = true } = this.props;
+    const { entity, profile = true, intl } = this.props;
+    
     if (!entity || !entity.schema) {
       return null;
     }
@@ -38,10 +47,26 @@ class EntityToolbar extends React.Component {
           )}
           {showDownloadButton && <DownloadButton document={entity} />}
           <BookmarkButton entity={entity} />
+          {entity?.collection?.writeable && (
+          <>
+            <DialogToggleButton
+              buttonProps={{
+                text: intl.formatMessage(messages.add_to),
+                icon: 'add-to-artifact',
+              }}
+              Dialog={EntitySetSelector}
+              dialogProps={{
+                collection: entity.collection,
+                entities: [entity],
+                showTimelines: entity.schema.isA('Interval'),
+              }}
+            />
+          </>
+        )}
         </ButtonGroup>
       </div>
     );
   }
 }
 
-export default EntityToolbar;
+export default injectIntl(EntityToolbar);
