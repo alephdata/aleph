@@ -256,16 +256,16 @@ psql $ALEPH_DATABASE_URI
 
 The same can be done if you run an instance of the `shell` container in production mode.
 
-## How can i connect to ElasticSearch directly?
+## How can I connect to ElasticSearch directly?
 
-There's several ES GUI's out there that you can use to query ElasticSearch. You
+There are several ElasticSearch GUIs out there that you can use to query ElasticSearch. You
 could for example use [Dejavu](https://github.com/appbaseio/dejavu):
 ```bash
 docker run -p 1358:1358 -d appbaseio/dejavu
 open http://localhost:1358/
 ```
 
-Where you can connect to the ElasticSearch container that has been exposed on `http://localhost:9200`.
+Then you can connect Dejavu to the ElasticSearch container that has been exposed on `http://localhost:9200`.
 
 You can also [approach ElasticSearch from the command line](https://www.elastic.co/guide/en/cloud/current/ec-working-with-elasticsearch.html).
 
