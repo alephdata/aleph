@@ -256,6 +256,20 @@ psql $ALEPH_DATABASE_URI
 
 The same can be done if you run an instance of the `shell` container in production mode.
 
+## How can i connect to ElasticSearch directly?
+
+There's several ES GUI's out there that you can use to query ElasticSearch. You
+could for example use [Dejavu](https://github.com/appbaseio/dejavu):
+```bash
+docker run -p 1358:1358 -d appbaseio/dejavu
+open http://localhost:1358/
+```
+
+Where you can connect to the ElasticSearch container that has been exposed on `http://localhost:9200`.
+
+You can also [approach ElasticSearch from the command line](https://www.elastic.co/guide/en/cloud/current/ec-working-with-elasticsearch.html).
+
+
 ## Why do entities have two-part IDs?
 
 When looking at an Aleph URL, you may notice that every entity ID has two parts, separated by a dot \(`.`\), for example:`deadbeef.3cd336a9859bdf2be917f561430f2a83e5da292b`. The first part in this is the actual entity ID, while the second part is a signature \(HMAC\) assigned by the server when indexing the data.
