@@ -13,12 +13,6 @@ services:
 shell: services
 	$(APPDOCKER) /bin/bash
 
-shell-ui: services
-	$(UIDOCKER) /bin/bash
-
-shell-db: services
-	$(COMPOSE) exec postgres psql -U aleph
-
 # To run a single test file:
 # make test file=aleph/tests/test_manage.py
 test:
