@@ -19,7 +19,7 @@ class BookmarksApiTestCase(TestCase):
 
     def test_bookmarks_index_auth(self):
         res = self.client.get("/api/2/bookmarks")
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
 
         res = self.client.get("/api/2/bookmarks", headers=self.headers)
         assert res.status_code == 200, res

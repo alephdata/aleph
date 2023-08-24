@@ -12,9 +12,11 @@ class GroupsApiTestCase(TestCase):
         self.other = self.create_user(foreign_id="other")
         db.session.commit()
 
-    def test_index(self):
+    def test_anonymous(self):
         res = self.client.get("/api/2/groups")
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
+
+    def test_groups(self):
         _, headers = self.login(foreign_id="user_1")
         res = self.client.get("/api/2/groups", headers=headers)
         assert res.status_code == 200, res

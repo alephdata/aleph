@@ -23,9 +23,11 @@ class ExportApiTestCase(TestCase):
         self.export2.expires_at = datetime.utcnow() + timedelta(days=-1)
         complete_export(self.export2.id, temp_path, "experts.csv")
 
-    def test_exports_index(self):
+    def test_anonymous(self):
         res = self.client.get("/api/2/exports")
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
+
+    def test_exports_index(self):
         _, headers = self.login()
         res = self.client.get("/api/2/exports", headers=headers)
         assert res.status_code == 200, res

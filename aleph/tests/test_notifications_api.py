@@ -31,7 +31,7 @@ class NotificationsApiTestCase(TestCase):
 
     def test_anonymous(self):
         res = self.client.get("/api/2/notifications")
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
 
     def test_notifications(self):
         _, headers = self.login(foreign_id="admin")

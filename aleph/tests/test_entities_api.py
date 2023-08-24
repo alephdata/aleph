@@ -87,7 +87,7 @@ class EntitiesApiTestCase(TestCase):
         self.load_fixtures()
         url = "/api/2/search/export?filter:schemata=Thing&q=pakistan"
         res = self.client.post(url)
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
 
         _, headers = self.login(is_admin=True)
         res = self.client.post(url, headers=headers)
