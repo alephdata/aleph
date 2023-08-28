@@ -220,6 +220,7 @@ class Query(object):
         if not self.parser.highlight:
             return {}
         query = query_string_query(self.HIGHLIGHT_FIELD, self.parser.highlight_text)
+        query["query_string"].pop("fields")
         return {
             "encoder": "html",
             "fields": {
