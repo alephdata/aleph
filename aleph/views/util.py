@@ -4,7 +4,7 @@ import string
 import logging
 from banal import as_bool, ensure_dict, is_mapping, is_listish
 from normality import stringify
-from flask import Response, request, render_template
+from flask import Response, request, render_template, jsonify
 from flask_babel import gettext
 from werkzeug.urls import url_parse
 from werkzeug.exceptions import Forbidden
@@ -139,19 +139,6 @@ def get_url_path(url):
         return url_parse(url).replace(netloc="", scheme="").to_url() or "/"
     except Exception:
         return "/"
-
-
-def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
-    """Serialize to JSON and also dump from the given schema."""
-    data = encoder().encode(obj)
-    mimetype = "application/json"
-    if "callback" in request.args:
-        cb = request.args.get("callback")
-        cb = "".join((c for c in cb if c in CALLBACK_VALID))
-        data = "%s && %s(%s)" % (cb, cb, data)
-        # mime cf. https://stackoverflow.com/questions/24528211/
-        mimetype = "application/javascript"
-    return Response(data, headers=headers, status=status, mimetype=mimetype)
 
 
 def stream_ijson(iterable, encoder=JSONEncoder):

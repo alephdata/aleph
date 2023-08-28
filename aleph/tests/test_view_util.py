@@ -1,4 +1,5 @@
 import json
+import logging
 
 from lxml.html import document_fromstring
 from werkzeug.exceptions import BadRequest
@@ -12,7 +13,7 @@ class ViewUtilTest(TestCase):
     def setUp(self):
         super(ViewUtilTest, self).setUp()
 
-    def test_get_url_pat(self):
+    def test_get_url_path(self):
         self.assertEqual("/", get_url_path(""))
         self.assertEqual("/next", get_url_path("/next"))
         self.assertEqual("/next", get_url_path("https://aleph.ui:3000/next"))
@@ -35,6 +36,15 @@ class ViewUtilTest(TestCase):
         assert attr == "https://example.org/blockchain", html
         assert html.find(".//a").get("target") == "_blank", html
         assert "nofollow" in html.find(".//a").get("rel"), html
+
+    def test_jsonp_support(self):
+        callback = "callMe"
+        res = self.client.get("/api/2/metadata", query_string={
+            "callback": callback,
+        })
+        assert res.status_code == 200, res
+        assert res.mimetype == "application/javascript", res.headers
+        assert res.text.startswith(callback)
 
     def test_validate_returns_errors_for_paths(self):
         # given

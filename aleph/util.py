@@ -1,4 +1,7 @@
+import string
 import json
+from flask import request
+from flask.wrappers import Response
 from flask.json import provider
 import structlog
 from aleph.settings import SETTINGS
@@ -10,6 +13,7 @@ from elasticsearch import Transport
 
 log = structlog.get_logger(__name__)
 
+CALLBACK_VALID = string.ascii_letters + string.digits + "_"
 
 def anonymize_email(name, email):
     """Generate a simple label with both the name and email of a user."""
@@ -53,6 +57,16 @@ class JSONProvider(provider.JSONProvider):
     def loads(self, s, **kwargs):
         return json.loads(s, **kwargs)
 
+    def response(self, *args, **kwargs):
+        data = self.dumps(*args)
+        mimetype = "application/json"
+        if "callback" in request.args:
+            cb = request.args.get("callback")
+            cb = "".join((c for c in cb if c in CALLBACK_VALID))
+            data = "%s && %s(%s)" % (cb, cb, data)
+            # mime cf. https://stackoverflow.com/questions/24528211/
+            mimetype = "application/javascript"
+        return Response(data, **kwargs, mimetype=mimetype)
 
 class Stub(object):
     pass
