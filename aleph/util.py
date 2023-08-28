@@ -1,4 +1,5 @@
 import json
+from flask.json import provider
 import structlog
 from aleph.settings import SETTINGS
 from datetime import datetime, date
@@ -43,6 +44,14 @@ class JSONEncoder(json.JSONEncoder):
         if hasattr(obj, "to_dict"):
             return obj.to_dict()
         return json.JSONEncoder.default(self, obj)
+
+
+class JSONProvider(provider.JSONProvider):
+    def dumps(self, obj, **kwargs):
+        return json.dumps(obj, **kwargs, cls=JSONEncoder)
+
+    def loads(self, s, **kwargs):
+        return json.loads(s, **kwargs)
 
 
 class Stub(object):

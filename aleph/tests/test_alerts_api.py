@@ -23,7 +23,7 @@ class AlertsApiTestCase(TestCase):
         data = {"query": "banana pumpkin"}
         jdata = json.dumps(data)
         res = self.client.post("/api/2/alerts", data=jdata, content_type=JSON)
-        assert res.status_code == 401, res
+        assert res.status_code == 403, res
         _, headers = self.login()
         res = self.client.post(
             "/api/2/alerts",
