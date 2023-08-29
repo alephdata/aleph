@@ -6,7 +6,7 @@ from aleph.authz import Authz
 from aleph.core import db, es
 from aleph.model import Alert, Events, Entity
 from aleph.index.indexes import entities_read_index
-from aleph.index.util import unpack_result, authz_query, query_string_query
+from aleph.index.util import unpack_result, authz_query
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -74,7 +74,15 @@ def alert_query(alert, authz):
         "_source": {"includes": ["collection_id"]},
         "query": {
             "bool": {
-                "should": [query_string_query("text", alert.query)],
+                "should": [{
+                    "query_string": {
+                        "query": alert.query,
+                        "lenient": True,
+                        "fields": ["text"],
+                        "default_operator": "AND",
+                        "minimum_should_match": "66%",
+                    }
+                }],
                 "filter": filters,
                 "minimum_should_match": 1,
             }

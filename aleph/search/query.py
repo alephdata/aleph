@@ -10,7 +10,6 @@ from aleph.index.util import (
     field_filter_query,
     DATE_FORMAT,
     range_filter_query,
-    query_string_query,
     filter_text,
 )
 from aleph.search.result import SearchQueryResult
@@ -47,7 +46,15 @@ class Query(object):
     def get_text_query(self):
         query = []
         if self.parser.text:
-            qs = query_string_query(self.TEXT_FIELDS, self.parser.text)
+            qs = {
+                "query_string": {
+                    "query": self.parser.text,
+                    "lenient": True,
+                    "fields": self.TEXT_FIELDS,
+                    "default_operator": "AND",
+                    "minimum_should_match": "66%",
+                }
+            }
             query.append(qs)
         if self.parser.prefix:
             query.append(
@@ -219,12 +226,18 @@ class Query(object):
     def get_highlight(self):
         if not self.parser.highlight:
             return {}
-        query = query_string_query(self.HIGHLIGHT_FIELD, self.parser.highlight_text)
         return {
             "encoder": "html",
             "fields": {
                 self.HIGHLIGHT_FIELD: {
-                    "highlight_query": query,
+                    "highlight_query": {
+                        "query_string": {
+                            "query": self.parser.highlight_text,
+                            "lenient": True,
+                            "default_operator": "AND",
+                            "minimum_should_match": "66%",
+                        }
+                    },
                     "require_field_match": False,
                     "number_of_fragments": self.parser.highlight_count,
                     "fragment_size": self.parser.highlight_length,

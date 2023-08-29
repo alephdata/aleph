@@ -116,19 +116,6 @@ def none_query(query=None):
     return query
 
 
-def query_string_query(field, query):
-    """Default config for querying the entity text."""
-    return {
-        "query_string": {
-            "query": query,
-            "lenient": True,
-            "fields": ensure_list(field),
-            "default_operator": "AND",
-            "minimum_should_match": "66%",
-        }
-    }
-
-
 def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
     values = ensure_list(values)
