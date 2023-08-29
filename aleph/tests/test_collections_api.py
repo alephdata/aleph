@@ -5,7 +5,7 @@ from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.model import EntitySet
 from aleph.logic.collections import compute_collection
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase, JSON
 
 

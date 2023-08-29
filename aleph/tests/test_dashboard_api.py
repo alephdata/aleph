@@ -1,4 +1,4 @@
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase
 
 

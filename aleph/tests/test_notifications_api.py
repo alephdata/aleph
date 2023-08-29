@@ -4,7 +4,7 @@ from aleph.core import db
 from aleph.model import Events, Role
 from aleph.logic.roles import update_role
 from aleph.logic.notifications import publish, GLOBAL
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase
 
 

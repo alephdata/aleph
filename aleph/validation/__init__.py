@@ -16,6 +16,9 @@ SCHEMA_DIR = os.path.join(os.path.dirname(__file__), "schema")
 
 log = logging.getLogger(__name__)
 
+class ValidationException(Exception):
+    def __init__(self, errors):
+        self.errors = errors
 
 def get_schemata():
     """Load all validation schemata and return a dict of them."""
@@ -58,3 +61,22 @@ def get_validator(schema):
     resolver = get_resolver()
     _, schema = resolver.resolve(ref)
     return Draft4Validator(schema, format_checker=checker, resolver=resolver)
+
+
+def validate(data, schema):
+    """Validate data against a schema and aggregate errors."""
+    validator = get_validator(schema)
+    errors = {}
+    for error in validator.iter_errors(data):
+        path = ".".join((str(c) for c in error.path))
+        if path not in errors:
+            errors[path] = error.message
+        else:
+            errors[path] += "; " + error.message
+        log.info("ERROR [%s]: %s", path, error.message)
+
+    if len(errors):
+        raise ValidationException(errors)
+
+    return data
+

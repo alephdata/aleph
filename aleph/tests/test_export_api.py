@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from aleph.logic.export import create_export, complete_export
 from aleph.tests.util import TestCase
-from aleph.views.util import validate
+from aleph.validation import validate
 
 
 class ExportApiTestCase(TestCase):

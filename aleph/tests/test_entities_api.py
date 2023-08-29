@@ -6,7 +6,7 @@ from pprint import pformat
 from aleph.core import db
 from aleph.settings import SETTINGS
 from aleph.index.entities import index_entity
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase, get_caption, JSON
 from aleph.model.bookmark import Bookmark
 

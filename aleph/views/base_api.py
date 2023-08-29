@@ -17,7 +17,7 @@ from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic.pages import load_pages
 from aleph.logic.util import collection_url
-from aleph.validation import get_openapi_spec
+from aleph.validation import get_openapi_spec, ValidationException
 from aleph.views.context import enable_cache, NotModified
 
 blueprint = Blueprint("base_api", __name__)
@@ -216,6 +216,14 @@ def handle_bad_request(err):
     if err.response is not None and err.response.is_json:
         return err.response
     return {"status": "error", "message": err.description}, 400
+
+@blueprint.app_errorhandler(ValidationException)
+def handle_validation_exception(err):
+    return {
+        "status": "error",
+        "errors": err.errors,
+        "message": gettext("Error during data validation"),
+    }, 400
 
 
 @blueprint.app_errorhandler(403)

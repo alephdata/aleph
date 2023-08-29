@@ -13,7 +13,8 @@ from aleph.queues import ingest_entity
 from aleph.index.entities import index_proxy
 from aleph.logic.documents import ingest_flush
 from aleph.logic.notifications import publish, channel_tag
-from aleph.views.util import get_db_collection, get_flag, validate, get_session_id
+from aleph.views.util import get_db_collection, get_flag, get_session_id
+from aleph.validation import validate
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("ingest_api", __name__)
