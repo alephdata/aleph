@@ -276,7 +276,7 @@ def create():
     db.session.commit()
     tag_request(entity_id=entity_id, collection_id=collection.id)
     entity = get_index_entity(entity_id, request.authz.READ)
-    return EntitySerializer.jsonify(entity)
+    return EntitySerializer().serialize(entity)
 
 
 @blueprint.route("/api/2/documents/<entity_id>", methods=["GET"])
@@ -324,7 +324,7 @@ def view(entity_id):
         ).first()
         entity["bookmarked"] = True if bookmark else False
 
-    return EntitySerializer.jsonify(entity)
+    return EntitySerializer().serialize(entity)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/similar", methods=["GET"])

@@ -96,8 +96,7 @@ def create():
         db.session.add(bookmark)
         db.session.commit()
 
-    serializer = BookmarkSerializer()
-    return serializer.serialize(bookmark), 201
+    return BookmarkSerializer().serialize(bookmark), 201
 
 
 @blueprint.route("/api/2/bookmarks/<entity_id>", methods=["DELETE"])

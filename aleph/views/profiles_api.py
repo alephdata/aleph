@@ -45,7 +45,7 @@ def view(profile_id):
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
     if not request.authz.can(profile.get("collection_id"), request.authz.READ):
         abort(403, description="No read access on collection")
-    return ProfileSerializer.jsonify(profile)
+    return ProfileSerializer().serialize(profile)
 
 
 @blueprint.route("/api/2/profiles/<profile_id>/tags", methods=["GET"])

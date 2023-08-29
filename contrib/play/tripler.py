@@ -68,8 +68,6 @@ def export_collection(collection):
     ctx = URIRef("%s/collections/%s" % (HOST, collection["id"]))
     g.add((ctx, RDFS.label, Literal(collection["label"]), domain))
     g.add((ctx, ALEPH.foreignId, Literal(collection["foreign_id"]), domain))
-    # print g.serialize(format='nquads')
-    # pprint(collection)
 
     q = {
         "query": {"term": {"collection_id": collection["id"]}},

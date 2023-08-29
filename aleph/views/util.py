@@ -1,6 +1,5 @@
-import string
 import logging
-from banal import as_bool, ensure_dict, is_mapping, is_listish
+from banal import as_bool, ensure_dict
 from normality import stringify
 from flask import request, jsonify
 from flask_babel import gettext
@@ -16,8 +15,6 @@ from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
 
 log = logging.getLogger(__name__)
-CALLBACK_VALID = string.ascii_letters + string.digits + "_"
-
 
 
 def obj_or_404(obj):
@@ -73,24 +70,6 @@ def validate(data, schema):
     raise BadRequest(response=resp)
 
 
-def clean_object(data):
-    """Remove unset values from the response to save some bandwidth."""
-    if is_mapping(data):
-        out = {}
-        for k, v in data.items():
-            v = clean_object(v)
-            if v is not None:
-                out[k] = v
-        return out if len(out) else None
-    elif is_listish(data):
-        data = [clean_object(d) for d in data]
-        data = [d for d in data if d is not None]
-        return data if len(data) else None
-    elif isinstance(data, str):
-        return data if len(data) else None
-    return data
-
-
 def is_permitted_or_403(*predicates):
     """Check if a user is allowed a set of predicates."""
     for predicate in predicates:
@@ -137,3 +116,4 @@ def get_url_path(url):
         return url_parse(url).replace(netloc="", scheme="").to_url() or "/"
     except Exception:
         return "/"
+

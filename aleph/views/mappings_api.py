@@ -127,7 +127,7 @@ def create(collection_id):
         entityset_id=get_entityset_id(data),
     )
     db.session.commit()
-    return MappingSerializer.jsonify(mapping)
+    return MappingSerializer().serialize(mapping)
 
 
 @blueprint.route("/<int:collection_id>/mappings/<int:mapping_id>", methods=["GET"])
@@ -166,7 +166,7 @@ def view(collection_id, mapping_id):
     """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    return MappingSerializer.jsonify(mapping)
+    return MappingSerializer().serialize(mapping)
 
 
 @blueprint.route(
@@ -220,7 +220,7 @@ def update(collection_id, mapping_id):
         entityset_id=get_entityset_id(data),
     )
     db.session.commit()
-    return MappingSerializer.jsonify(mapping)
+    return MappingSerializer().serialize(mapping)
 
 
 @blueprint.route(
@@ -265,7 +265,7 @@ def trigger(collection_id, mapping_id):
     job_id = get_session_id()
     queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, mapping_id=mapping.id)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    return MappingSerializer.jsonify(mapping, status=202)
+    return MappingSerializer().serialize(mapping), 202
 
 
 @blueprint.route(

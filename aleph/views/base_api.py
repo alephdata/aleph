@@ -236,8 +236,10 @@ def handle_not_found_error(err):
 @blueprint.app_errorhandler(500)
 def handle_server_error(err):
     log.exception("%s: %s", type(err).__name__, err)
-    msg = gettext("Internal server error.")
-    return {"status": "error", "message": msg}, 500
+    return {
+        "status": "error", 
+        "message": str(err) or gettext("Internal server error.")
+    }, 500
 
 
 @blueprint.app_errorhandler(InvalidData)

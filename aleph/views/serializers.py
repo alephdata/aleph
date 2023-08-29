@@ -1,9 +1,8 @@
 import logging
-from pprint import pprint, pformat  # noqa
-from flask import request
+from flask import request, abort
 from flask_babel import gettext
 from pantomime.types import PDF, CSV
-from banal import ensure_list
+from banal import ensure_list, is_mapping, is_listish
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.helpers import entity_filename
@@ -14,9 +13,25 @@ from aleph.logic.entities import check_write_entity, transliterate_values
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.model import Role, Collection, Document, Entity, Events
 from aleph.model import Alert, EntitySet, EntitySetItem, Export
-from aleph.views.util import jsonify, clean_object
 
 log = logging.getLogger(__name__)
+
+def clean_object(data):
+    """Remove unset values from the response to save some bandwidth."""
+    if is_mapping(data):
+        out = {}
+        for k, v in data.items():
+            v = clean_object(v)
+            if v is not None:
+                out[k] = v
+        return out if len(out) else None
+    elif is_listish(data):
+        data = [clean_object(d) for d in data]
+        data = [d for d in data if d is not None]
+        return data if len(data) else None
+    elif isinstance(data, str):
+        return data if len(data) else None
+    return data
 
 
 class Serializer(object):
@@ -80,12 +95,7 @@ class Serializer(object):
         return obj
 
     @classmethod
-    def jsonify(cls, obj, **kwargs):
-        data = cls().serialize(obj)
-        return jsonify(data, **kwargs)
-
-    @classmethod
-    def jsonify_result(cls, result, extra=None, **kwargs):
+    def jsonify_result(cls, result, extra=None):
         data = result.to_dict(serializer=cls)
         if extra is not None:
             data.update(extra)
@@ -98,17 +108,14 @@ class Serializer(object):
         if total > 0 and not data.get("results"):
             if not (limit == 0 or offset >= total):
                 log.exception(f"Expected more results in the response: {data}")
-                data = {
-                    "status": "error",
-                    "message": gettext(
-                        "We found %(total)d results, but could not load them due "
-                        "to a technical problem. Please check back later and if "
-                        "the problem persists contact an Aleph administrator",
-                        total=total,
-                    ),
-                }
-                return jsonify(data, status=500)
-        return jsonify(data, **kwargs)
+                message = gettext(
+                    "We found %(total)d results, but could not load them due "
+                    "to a technical problem. Please check back later and if "
+                    "the problem persists contact an Aleph administrator",
+                    total=total,
+                )
+                abort(500, description=message)
+        return data
 
 
 class RoleSerializer(Serializer):

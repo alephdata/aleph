@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from werkzeug.exceptions import InternalServerError
 
 from aleph.tests.util import TestCase
 from aleph.views.serializers import Serializer
@@ -27,24 +28,24 @@ class SerializerTest(TestCase):
     def test_result_size_mismatch(self):
         result = MockResult()
         result.total = 10
-        response = Serializer.jsonify_result(result)
-        assert response.status_code == 500, response.status_code
-        assert response.json["message"].startswith(
-            "We found 10 results, but could not load them"
-        ), response.json
+        with self.assertRaises(InternalServerError) as context:
+            Serializer.jsonify_result(result)
+
+        self.assertIn(
+            "We found 10 results, but could not load them",
+            str(context.exception)
+        )
 
     def test_result_size_mismatch_limit_zero(self):
         """Results can be empty if limit is 0"""
         result = MockResult()
         result.total = 10
         result.limit = 0
-        response = Serializer.jsonify_result(result)
-        assert response.status_code == 200, response.status_code
+        Serializer.jsonify_result(result)
 
     def test_result_size_mismatch_offset_larger_than_total(self):
         """Results can be empty if offset >= total results"""
         result = MockResult()
         result.total = 10
         result.offset = 10
-        response = Serializer.jsonify_result(result)
-        assert response.status_code == 200, response.status_code
+        Serializer.jsonify_result(result)

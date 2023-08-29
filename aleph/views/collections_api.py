@@ -106,7 +106,7 @@ def view(collection_id):
     if get_flag("refresh", False):
         update_collection_stats(collection_id, ["schema"])
     data.update(get_deep_collection(cobj))
-    return CollectionSerializer.jsonify(data)
+    return CollectionSerializer().serialize(data)
 
 
 @blueprint.route("/<int:collection_id>", methods=["POST", "PUT"])
@@ -146,7 +146,7 @@ def update(collection_id):
     collection.update(data, request.authz)
     db.session.commit()
     data = update_collection(collection, sync=sync)
-    return CollectionSerializer.jsonify(data)
+    return CollectionSerializer().serialize(data)
 
 
 @blueprint.route("/<int:collection_id>/reingest", methods=["POST", "PUT"])

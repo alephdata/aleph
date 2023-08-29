@@ -108,7 +108,7 @@ def create():
     collection = get_nested_collection(data, request.authz.WRITE)
     entityset = create_entityset(collection, data, request.authz)
     db.session.commit()
-    return EntitySetSerializer.jsonify(entityset)
+    return EntitySetSerializer().serialize(entityset)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["GET"])
@@ -140,7 +140,7 @@ def view(entityset_id):
         return redirect(url_for("profiles_api.view", profile_id=entityset_id))
     data = entityset.to_dict()
     data["shallow"] = False
-    return EntitySetSerializer.jsonify(data)
+    return EntitySetSerializer().serialize(data)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["POST", "PUT"])
@@ -447,4 +447,4 @@ def item_update(entityset_id):
             "collection_id": entity["collection_id"],
             "judgement": Judgement.NO_JUDGEMENT,
         }
-    return EntitySetItemSerializer.jsonify(item)
+    return EntitySetItemSerializer().serialize(item)

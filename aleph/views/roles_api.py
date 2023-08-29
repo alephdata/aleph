@@ -147,7 +147,7 @@ def create():
     # Let the serializer return more info about this user
     request.authz = Authz.from_role(role)
     tag_request(role_id=role.id)
-    return RoleSerializer.jsonify(role, status=201)
+    return RoleSerializer().serialize(role), 201
 
 
 @blueprint.route("/api/2/roles/<int:id>", methods=["GET"])
@@ -183,7 +183,7 @@ def view(id):
     data = role.to_dict()
     if request.authz.can_write_role(role.id):
         data.update(get_deep_role(role))
-    return RoleSerializer.jsonify(data)
+    return RoleSerializer().serialize(data)
 
 
 @blueprint.route("/api/2/roles/<int:id>", methods=["POST", "PUT"])
@@ -234,4 +234,4 @@ def update(id):
     db.session.add(role)
     db.session.commit()
     update_role(role)
-    return RoleSerializer.jsonify(role)
+    return RoleSerializer().serialize(role)

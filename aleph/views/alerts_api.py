@@ -68,7 +68,7 @@ def create():
     alert = Alert.create(data, request.authz.id)
     db.session.commit()
     tag_request(alert_id=alert.id)
-    return AlertSerializer.jsonify(alert)
+    return AlertSerializer().serialize(alert)
 
 
 @blueprint.route("/api/2/alerts/<int:alert_id>", methods=["GET"])
@@ -99,7 +99,7 @@ def view(alert_id):
     if not request.authz.logged_in:
         abort(401)
     alert = obj_or_404(Alert.by_id(alert_id, role_id=request.authz.id))
-    return AlertSerializer.jsonify(alert)
+    return AlertSerializer().serialize(alert)
 
 
 @blueprint.route("/api/2/alerts/<int:alert_id>", methods=["DELETE"])
