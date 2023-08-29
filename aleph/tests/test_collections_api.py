@@ -71,14 +71,6 @@ class CollectionsApiTestCase(TestCase):
         assert res.json["total"] == 1, res.json
         assert res.json["results"][0]["label"] == "OpenContracting"
 
-    def test_sitemap(self):
-        res = self.client.get("/api/2/sitemap.xml")
-        assert res.status_code == 200, res
-        assert b"<loc>" not in res.data, res.data
-        self.grant_publish(self.col)
-        res = self.client.get("/api/2/sitemap.xml")
-        assert b"<loc>" in res.data, res.data
-
     def test_view(self):
         res = self.client.get("/api/2/collections/%s" % self.col.id)
         assert res.status_code == 403, res

@@ -20,6 +20,16 @@ class BaseApiTestCase(TestCase):
         categories = res.json["categories"]
         assert "leak" in categories, categories
 
+    def test_sitemap(self):
+        collection = self.create_collection(label="Sitemap", foreign_id="test_sitemap")
+        res = self.client.get("/api/2/sitemap.xml")
+        assert res.status_code == 200, res
+        assert res.mimetype == "text/xml", res.headers
+        assert b"<loc>" not in res.data, res.data
+        self.grant_publish(collection)
+        res = self.client.get("/api/2/sitemap.xml")
+        assert b"<loc>" in res.data, res.data
+
     def test_statistics(self):
         cache.flush()
 

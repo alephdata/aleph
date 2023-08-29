@@ -1,10 +1,8 @@
-import io
-import csv
 import string
 import logging
 from banal import as_bool, ensure_dict, is_mapping, is_listish
 from normality import stringify
-from flask import Response, request, render_template, jsonify
+from flask import request, jsonify
 from flask_babel import gettext
 from werkzeug.urls import url_parse
 from werkzeug.exceptions import Forbidden
@@ -16,17 +14,10 @@ from aleph.model import Collection, EntitySet
 from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
-from aleph.util import JSONEncoder
 
 log = logging.getLogger(__name__)
 CALLBACK_VALID = string.ascii_letters + string.digits + "_"
 
-
-def require(*predicates):
-    """Check if a user is allowed a set of predicates."""
-    for predicate in predicates:
-        if not predicate:
-            raise Forbidden("Sorry, you're not permitted to do this!")
 
 
 def obj_or_404(obj):
@@ -100,22 +91,35 @@ def clean_object(data):
     return data
 
 
+def is_permitted_or_403(*predicates):
+    """Check if a user is allowed a set of predicates."""
+    for predicate in predicates:
+        if not predicate:
+            raise Forbidden("Sorry, you're not permitted to do this!")
+
+
 def get_index_entity(entity_id, action=Authz.READ, **kwargs):
     entity = obj_or_404(_get_index_entity(entity_id, **kwargs))
-    require(request.authz.can(entity["collection_id"], action))
+    is_permitted_or_403(request.authz.can(entity["collection_id"], action))
     return entity
 
 
 def get_db_collection(collection_id, action=Authz.READ):
     collection = obj_or_404(Collection.by_id(collection_id))
-    require(request.authz.can(collection.id, action))
+    is_permitted_or_403(request.authz.can(collection.id, action))
     return collection
 
 
 def get_entityset(entityset_id, action=Authz.READ):
     eset = obj_or_404(EntitySet.by_id(entityset_id))
-    require(request.authz.can(eset.collection_id, action))
+    is_permitted_or_403(request.authz.can(eset.collection_id, action))
     return eset
+
+
+def get_index_collection(collection_id, action=Authz.READ):
+    collection = obj_or_404(_get_index_collection(collection_id))
+    is_permitted_or_403(request.authz.can(collection["id"], action))
+    return collection
 
 
 def get_nested(data, obj_field, id_field):
@@ -128,47 +132,8 @@ def get_nested_collection(data, action=Authz.READ):
     return get_db_collection(collection_id, action)
 
 
-def get_index_collection(collection_id, action=Authz.READ):
-    collection = obj_or_404(_get_index_collection(collection_id))
-    require(request.authz.can(collection["id"], action))
-    return collection
-
-
 def get_url_path(url):
     try:
         return url_parse(url).replace(netloc="", scheme="").to_url() or "/"
     except Exception:
         return "/"
-
-
-def stream_ijson(iterable, encoder=JSONEncoder):
-    """Stream JSON line-based data."""
-
-    def _generate_stream():
-        for row in iterable:
-            row.pop("_index", None)
-            yield encoder().encode(row)
-            yield "\n"
-
-    return Response(_generate_stream(), mimetype="application/json+stream")
-
-
-def stream_csv(iterable):
-    """Stream JSON line-based data."""
-
-    def _generate_stream():
-        for row in iterable:
-            values = []
-            for value in row:
-                values.append(stringify(value) or "")
-            buffer = io.StringIO()
-            writer = csv.writer(buffer, dialect="excel", delimiter=",")
-            writer.writerow(values)
-            yield buffer.getvalue()
-
-    return Response(_generate_stream(), mimetype="text_csv")
-
-
-def render_xml(template, **kwargs):
-    data = render_template(template, **kwargs)
-    return Response(data, mimetype="text/xml")

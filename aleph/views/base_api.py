@@ -1,7 +1,7 @@
 import logging
 from babel import Locale
 from functools import lru_cache
-from flask import Blueprint, request, current_app
+from flask import Blueprint, Response, request, current_app, render_template
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
 from followthemoney import model
@@ -19,7 +19,6 @@ from aleph.logic.pages import load_pages
 from aleph.logic.util import collection_url
 from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
-from aleph.views.util import render_xml
 
 blueprint = Blueprint("base_api", __name__)
 log = logging.getLogger(__name__)
@@ -175,7 +174,9 @@ def sitemap():
         updated_at = max(SETTINGS.SITEMAP_FLOOR, updated_at)
         url = collection_url(collection.id)
         collections.append({"url": url, "updated_at": updated_at})
-    return render_xml("sitemap.xml", collections=collections)
+
+    data = render_template("sitemap.xml", collections=collections)
+    return Response(data, mimetype="text/xml")
 
 
 @blueprint.route("/healthz")
