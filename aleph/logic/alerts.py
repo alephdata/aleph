@@ -74,15 +74,17 @@ def alert_query(alert, authz):
         "_source": {"includes": ["collection_id"]},
         "query": {
             "bool": {
-                "should": [{
-                    "query_string": {
-                        "query": alert.query,
-                        "lenient": True,
-                        "fields": ["text"],
-                        "default_operator": "AND",
-                        "minimum_should_match": "66%",
+                "should": [
+                    {
+                        "query_string": {
+                            "query": alert.query,
+                            "lenient": True,
+                            "fields": ["text"],
+                            "default_operator": "AND",
+                            "minimum_should_match": "66%",
+                        }
                     }
-                }],
+                ],
                 "filter": filters,
                 "minimum_should_match": 1,
             }
