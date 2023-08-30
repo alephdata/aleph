@@ -9,7 +9,7 @@ class DashboardApiTestCase(TestCase):
     def test_anonymous(self):
         res = self.client.get("/api/2/status")
         assert res.status_code == 401, res
-    
+
     def test_index(self):
         _, headers = self.login()
         res = self.client.get("/api/2/status", headers=headers)

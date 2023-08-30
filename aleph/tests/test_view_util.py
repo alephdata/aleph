@@ -1,4 +1,3 @@
-
 from lxml.html import document_fromstring
 
 from aleph.logic.html import sanitize_html
@@ -36,10 +35,12 @@ class ViewUtilTest(TestCase):
 
     def test_jsonp_support(self):
         callback = "callMe"
-        res = self.client.get("/api/2/metadata", query_string={
-            "callback": callback,
-        })
+        res = self.client.get(
+            "/api/2/metadata",
+            query_string={
+                "callback": callback,
+            },
+        )
         assert res.status_code == 200, res
         assert res.mimetype == "application/javascript", res.headers
         assert res.text.startswith(callback)
-

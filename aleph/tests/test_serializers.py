@@ -32,8 +32,7 @@ class SerializerTest(TestCase):
             Serializer.jsonify_result(result)
 
         self.assertIn(
-            "We found 10 results, but could not load them",
-            str(context.exception)
+            "We found 10 results, but could not load them", str(context.exception)
         )
 
     def test_result_size_mismatch_limit_zero(self):

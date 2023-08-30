@@ -13,7 +13,7 @@ from aleph.index.collections import update_collection_stats
 from aleph.logic.processing import bulk_write
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import get_db_collection, get_index_collection, get_entityset
-from aleph.views.util import parse_request 
+from aleph.views.util import parse_request
 from aleph.views.util import get_flag, get_session_id
 
 blueprint = Blueprint("collections_api", __name__)

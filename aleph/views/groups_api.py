@@ -37,7 +37,4 @@ def index():
     if not request.authz.logged_in:
         abort(401)
     q = Role.all_groups(request.authz)
-    return {
-        "total": q.count(), 
-        "results": RoleSerializer().serialize_many(q.all())
-    }
+    return {"total": q.count(), "results": RoleSerializer().serialize_many(q.all())}

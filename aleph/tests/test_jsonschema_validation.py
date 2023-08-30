@@ -1,4 +1,3 @@
-
 import json
 from aleph.validation import validate, ValidationException
 from aleph.tests.util import TestCase

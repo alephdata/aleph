@@ -16,6 +16,7 @@ from aleph.model import Alert, EntitySet, EntitySetItem, Export
 
 log = logging.getLogger(__name__)
 
+
 def clean_object(data):
     """Remove unset values from the response to save some bandwidth."""
     if is_mapping(data):

@@ -20,7 +20,7 @@ from aleph.model.bookmark import Bookmark
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import parse_request, get_flag
-from aleph.views.util import  get_nested_collection, get_session_id
+from aleph.views.util import get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import SimilarSerializer

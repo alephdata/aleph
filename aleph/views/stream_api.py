@@ -9,6 +9,7 @@ from aleph.util import JSONEncoder
 log = logging.getLogger(__name__)
 blueprint = Blueprint("bulk_api", __name__)
 
+
 def stream_ijson(iterable, encoder=JSONEncoder):
     """Stream JSON line-based data."""
 

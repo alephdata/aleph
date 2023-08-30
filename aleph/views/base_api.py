@@ -217,6 +217,7 @@ def handle_bad_request(err):
         return err.response
     return {"status": "error", "message": err.description}, 400
 
+
 @blueprint.app_errorhandler(ValidationException)
 def handle_validation_exception(err):
     return {
@@ -245,8 +246,8 @@ def handle_not_found_error(err):
 def handle_server_error(err):
     log.exception("%s: %s", type(err).__name__, err)
     return {
-        "status": "error", 
-        "message": str(err) or gettext("Internal server error.")
+        "status": "error",
+        "message": str(err) or gettext("Internal server error."),
     }, 500
 
 

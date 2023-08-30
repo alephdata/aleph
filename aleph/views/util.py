@@ -84,4 +84,3 @@ def get_url_path(url):
         return url_parse(url).replace(netloc="", scheme="").to_url() or "/"
     except Exception:
         return "/"
-

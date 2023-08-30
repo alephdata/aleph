@@ -15,6 +15,7 @@ log = structlog.get_logger(__name__)
 
 CALLBACK_VALID = string.ascii_letters + string.digits + "_"
 
+
 def anonymize_email(name, email):
     """Generate a simple label with both the name and email of a user."""
     name = stringify(name)
@@ -67,6 +68,7 @@ class JSONProvider(provider.JSONProvider):
             # mime cf. https://stackoverflow.com/questions/24528211/
             mimetype = "application/javascript"
         return Response(data, **kwargs, mimetype=mimetype)
+
 
 class Stub(object):
     pass
