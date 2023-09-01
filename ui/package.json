@@ -38,7 +38,7 @@
     "moment": "^2.29.1",
     "numeral": "^2.0.6",
     "papaparse": "^5.4.1",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.3",
     "query-string": "^8.1.0",
     "react": "^16.13.1",
     "react-colorful": "^5.5.1",
