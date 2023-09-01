@@ -16,7 +16,7 @@
     "@formatjs/intl-pluralrules": "^5.2.4",
     "@formatjs/intl-relativetimeformat": "^11.2.4",
     "@formatjs/intl-utils": "^3.8.4",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^6.1.2",
     "@testing-library/react": "^12.1.5",
     "@types/jest": "^28.1.4",
     "@types/node": "^18.16.19",
@@ -107,7 +107,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "^6.1.2",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.4.3",
     "@types/d3-force": "^3.0.4",
