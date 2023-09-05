@@ -6,7 +6,7 @@ followthemoney-compare==0.4.4
 fingerprints==1.1.1
 servicelayer[google,amazon]==1.21.0
 normality==2.4.0
-pantomime==0.5.3
+pantomime==0.6.1
 
 # Flask ecosystem
 Flask==2.3.3
