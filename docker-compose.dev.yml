@@ -35,7 +35,8 @@ services:
       - redis-data:/data
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.19.1
+    image: ghcr.io/alephdata/ingest-file:3.19.2
+    hostname: ingest
     tmpfs: /tmp
     volumes:
       - archive-data:/data
