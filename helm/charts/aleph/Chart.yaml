@@ -4,3 +4,4 @@ description: Helm chart for Aleph
 type: application
 version: 3.15.1
 appVersion: 3.15.1
+

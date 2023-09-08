@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react';
-import { Classes, ControlGroup, Divider, Icon } from '@blueprintjs/core';
+import { Classes, Divider, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
 import {

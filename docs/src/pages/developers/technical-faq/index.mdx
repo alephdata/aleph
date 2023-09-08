@@ -243,19 +243,6 @@ You may also need to run `aleph update` afterwards to refresh some cached inform
 
 That's where it's most at home! We recommend you use the [helm chart](https://github.com/alephdata/aleph/tree/main/helm) to deploy Aleph. It will allow you to override the key settings for your site, while providing a coherent deployment. We use auto-scaling both on the cluster and pod level, which helps to combine fast imports with limited operational cost.
 
-## How can I connect to the database directly?
-
-If you want to manipulate the SQL database directly \(e.g. to edit a user, create or delete a group\), you can connect to the PostgreSQL database.
-
-In development mode, the database is exposed on the host at `127.0.0.1:15432`. \(User, password and database name are all `aleph`\). You can also connect from the shell container:
-
-```bash
-make shell
-psql $ALEPH_DATABASE_URI
-```
-
-The same can be done if you run an instance of the `shell` container in production mode.
-
 ## Why do entities have two-part IDs?
 
 When looking at an Aleph URL, you may notice that every entity ID has two parts, separated by a dot \(`.`\), for example:`deadbeef.3cd336a9859bdf2be917f561430f2a83e5da292b`. The first part in this is the actual entity ID, while the second part is a signature \(HMAC\) assigned by the server when indexing the data.

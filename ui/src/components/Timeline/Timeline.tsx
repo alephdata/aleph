@@ -3,7 +3,7 @@ import { Colors } from '@blueprintjs/colors';
 import { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
 import { Layout, Vertex } from './types';
-import { TimelineItem, updateVertex } from './util';
+import { updateVertex } from './util';
 import {
   selectSelectedEntity,
   selectSelectedVertex,
