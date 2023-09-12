@@ -1,5 +1,5 @@
 ---
-layout: '@layouts/DocsLayout.astro'
+layout: '@layouts/DevelopersLayout.astro'
 title: Installing Aleph
 ---
 
@@ -154,13 +154,29 @@ To build the image you can run `make build`, which will build the `alephdata/ale
 
 ### Inspecting ElasticSearch
 
-At times it can be useful to inspect the contents of the ElasticSearch indices. The developer setup includes [dejavu](https://github.com/appbaseio/dejavu), a web-based UI for ElasticSearch. In a local environment brought up as described above you should see dejavu under [http://localhost:1358](http://localhost:1358).
+At times it can be useful to inspect the contents of the ElasticSearch indices. There are several ElasticSearch GUIs out there that you can use to query ElasticSearch. You could for example use [Dejavu](https://github.com/appbaseio/dejavu):
 
-You will need to pass it the local ES cluster URL (`http://localhost:19200`). You can either inspect an individual index or use `*` to see the whole content. Index names for entity indices follow the pattern `aleph-entity-{{SCHEMA_NAME}}-{{VERSION}}`. For example, the index name for `LegalEntity` entities is `aleph-entity-legalentity-v1`.
+```bash
+docker run -p 1358:1358 -d appbaseio/dejavu
+open http://localhost:1358/
+```
+
+Then you can connect Dejavu to the ElasticSearch container that has been exposed on `http://localhost:9200`.
+
+You can also [approach ElasticSearch from the command line](https://www.elastic.co/guide/en/cloud/current/ec-working-with-elasticsearch.html).
 
 ### Inspecting the PostgreSQL database
 
-Run `make shell-db` to be dropped into a [psql](https://www.postgresql.org/docs/current/app-psql.html) shell within the database container.
+If you want to inspect or manipulate the SQL database directly \(e.g. to edit a user, create or delete a group\), you can connect to the PostgreSQL database.
+
+In development mode, the database is exposed on the host at `127.0.0.1:5432`. \(User, password and database name are all `aleph`\). You can also connect from the shell container:
+
+```bash
+make shell
+psql $ALEPH_DATABASE_URI
+```
+
+The same can be done if you run an instance of the `shell` container in production mode.
 
 ## Production deployment
 

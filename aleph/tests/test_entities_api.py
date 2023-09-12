@@ -125,6 +125,47 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.json["bookmarked"], res.json
 
+    def test_view_sanitize_html(self):
+        data = {
+            "schema": "HyperText",
+            "properties": {
+                "bodyHtml": "<style>body { color: red; }</style><p>Hello World!</p><script>alert('Ooops')</script>",
+            },
+        }
+
+        entity = self.create_entity(data, self.col)
+        index_entity(entity)
+
+        _, headers = self.login(is_admin=True)
+        url = f"/api/2/entities/{entity.id}"
+        res = self.client.get(url, headers=headers)
+
+        actual = res.json["safeHtml"]
+        expected = ["<html><body><div><p>Hello World!</p></div></body></html>"]
+        assert actual == expected, actual
+
+    def test_view_sanitize_html_multi_value(self):
+        data = {
+            "schema": "Email",
+            "properties": {
+                "bodyHtml": ["This is part 1.", "This is part 2."],
+            },
+        }
+
+        entity = self.create_entity(data, self.col)
+        index_entity(entity)
+
+        _, headers = self.login(is_admin=True)
+        url = f"/api/2/entities/{entity.id}"
+        res = self.client.get(url, headers=headers)
+
+        actual = res.json["safeHtml"]
+        expected = [
+            "<html><body><p>This is part 1.</p></body></html>",
+            "<html><body><p>This is part 2.</p></body></html>",
+        ]
+        assert actual == expected, actual
+
     def test_update(self):
         _, headers = self.login(is_admin=True)
         url = "/api/2/entities/%s" % self.id

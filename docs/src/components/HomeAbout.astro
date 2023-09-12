@@ -1,0 +1,78 @@
+---
+import { Wrapper, Youtube } from 'astro-theme-docs/components';
+---
+
+<style>
+  .HomeAbout {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  p {
+    margin-block-end: var(--space-sm);
+  }
+
+  em {
+    background-color: var(--color-bg-highlight);
+    font-style: normal;
+    font-weight: 500;
+    color: var(--color-fg-emphasis);
+    padding: 0.1em 0.2em;
+    border-radius: var(--radius);
+  }
+
+  .HomeAbout__video {
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: #000;
+  }
+
+  @media screen and (prefers-color-scheme: dark) {
+    .HomeAbout {
+      padding-block: var(--space);
+    }
+
+    .HomeAbout__video {
+      position: relative;
+      box-shadow: 0 5px 15px var(--color-bg-primary);
+    }
+
+    .HomeAbout__video::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      pointer-events: none;
+      border-radius: calc(var(--radius) - 1px);
+      border: 1px solid rgba(255, 255, 255, 0.075);
+    }
+  }
+
+  @media screen and (min-width: 840px) {
+    .HomeAbout {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<section class="HomeAbout">
+  <div>
+    <h2 class="beta">About Aleph</h2>
+    <p>
+      Aleph is a data platform created and maintained by the Organized Crime and
+      Corruption Reporting Project (OCCRP). The tool was built to help
+      investigative journalists <em>track people and companies</em>, usually as
+      part of their corruption investigations.
+    </p>
+    <a href="/about" class="arrow-link">Read more about Aleph</a>
+  </div>
+  <div>
+    <div class="HomeAbout__video">
+      <Youtube id="nqUByNDPqnE" />
+    </div>
+  </div>
+</section>

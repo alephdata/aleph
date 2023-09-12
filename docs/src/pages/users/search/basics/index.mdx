@@ -1,0 +1,149 @@
+---
+layout: '@layouts/UsersLayout.astro'
+title: Searches, filters, and alerts
+---
+
+# How to do searches, filter, and set alerts
+
+<p class="lead">The section below explains how to carry out a basic search, view, bookmark, and filter your results, and create e-mail alerts for terms of interest.</p>
+
+<VideoTutorial youtubeId="I3AxSMBzJ14" />
+
+## Basic search
+
+Aleph's site-wide search bar is located at the top of any page on the site. This search bar allows you to search across all datasets you have access to in Aleph. It is comprised of several distinct features:
+
+<Image
+  src="/assets/pages/users/search/basics/search-bar.png"
+  density={2}
+/>
+
+{/*TODO Use search bar/box consistently*/}
+In the search bar, you simply enter the term you are searching for. In this example, we are searching for Vladimir Putin. 
+
+<Video
+  src="/assets/pages/users/search/basics/basic-search.mp4"
+  type="video/mp4"
+  preset="gif"
+/>
+
+When you execute a search, the results of your search are listed below the search bar. As you scroll, more of the results will be displayed, until you reach the end of the list. The result count lets you know how many results in total were found matching your term:
+
+<Image
+  src="/assets/pages/users/search/basics/search-results.png"
+  density={2}
+/>
+
+<Callout>
+  Keep in mind that Aleph limits the number of search results you can download based on the number of results and document size
+</Callout>
+
+With each result, **yellow highlighted** text indicates the context in which your keyword was found. This allows you to eyeball the results and understand why they were returned based on the terms of your search. This can also help you decide if you need to either expand or narrow down your search.
+
+## Previewing a result
+
+<Image
+  src="/assets/pages/users/search/basics/preview.png"
+  density={2}
+/>
+
+On the screen, click on the possible hits that appear under the **Name** column to explore a preview of a possible match. Go to the **Expand** button to explore the result in full within the specific dataset where your hit appears. The **Download** button allows you to download the file you are previewing.
+
+{/*TODO Add warning about downloads*/}
+
+You can also use the **Bookmark** button to keep track of all your interesting files and entities you explore in Aleph and you can view your bookmarked files and entities by clicking on **Bookmarks** in the top bar.
+
+{/*TODO Add link to bookmarks article*/}
+
+<Callout theme="danger">
+  Bookmarks are still an experimental feature and are only stored in your browser. If you delete your browsing data or switch devices, you may lose access to your bookmarks. You can always download a copy of your bookmarks in the bookmarks section.
+</Callout>
+
+The **X** button closes the preview, returning you to the main results view.
+
+## Filtering results
+
+Aleph provides built-in options to filter your search results by country, type of data you are interested in (document, company entity, web page, image, video, etc.), entity type, specific datasets, e-mail addresses, phone numbers, bank accounts, names, language, and so on. You can view all of the built-in options from the left-hand side menu following the execution of a search.
+
+<Image
+  src="/assets/pages/users/search/basics/facets-sidebar.png"
+  density={2}
+/>
+
+Each filter type provides a list of categories that allow you to select exactly what you most want to see. In addition, options are **sorted from most prevalent to least** with the quantity of occurrences beside it. This number can be quite useful, as it shows the most common options first, giving you an indicator of where to start filtering to narrow down your search.
+
+When you **select a filter value**, a button appears above the search results indicating that the results are being filtered by that option. If you want to remove the filter, it is easy enough to click on the **X** in the button to remove it.
+
+In the example below, we are searching for results including both Trump AND Putin and then filtering by the entity type: **e-mail**.
+
+<Video
+  poster="/assets/pages/users/search/basics/filter-email-poster.png"
+  src="/assets/pages/users/search/basics/filter-email.mp4"
+  type="video/mp4"
+/>
+
+### Filtering by date 
+
+When selecting the **Dates** filter option, you are able to see a distribution showing the number of results per year. You can use this filter in two ways. By selecting a year, you are able to further filter your search results by month, as well as by day, by clicking on the corresponding bars, depending on your needs. If you are interested in searching throughout a range of dates, you can click and drag bars across the distribution to select a range.  
+See the example below on how to filter by a specific date using the Dates filter.
+
+<Video
+  poster="/assets/pages/users/search/basics/filter-date-poster.png"
+  src="/assets/pages/users/search/basics/filter-date.mp4"
+  type="video/mp4"
+/>
+
+See the example below on how to filter by a range of dates using the Dates filter.
+
+<Video
+  poster="/assets/pages/users/search/basics/filter-date-ranger-poster.png"
+  src="/assets/pages/users/search/basics/filter-date-range.mp4"
+  type="video/mp4"
+/>
+
+
+## Creating alerts
+
+Whenever you search a term in Aleph, you can use the **Create alert** button to generate an alert based on the keywords and operators entered in the search bar. Keep in mind that you will not see the Alert button by default in the search bar. It only gets activated once you write a word or term there:
+
+<Image
+  src="/assets/pages/users/search/basics/alert-button.png"
+  density={2}
+/>
+
+Once selected, you will receive e-mail notifications as well as see alerts in the [notifications tab](/users/getting-started/homepage#notifications) when new data is added to Aleph that meet the requirements of your search.
+
+<Callout>
+  You will only receive alerts for datasets that you have access to.
+</Callout>
+
+{/*TODO Clarify wording notifications/alerts*/}
+{/*TODO How to delete alerts*/}
+
+## Download a document
+
+Within Aleph, you are able to download individual documents. When clicking on an individual search result, in the pop-up window that appears on the right-hand side of your screen, you simply click on **Download** and the download will start.
+
+<Callout theme="danger">
+  When downloading a file, you are downloading a source file. Source files can contain viruses and code that notify the originator when you open them. For sensitive data, we recommend only opening source files on a computer that is permanently disconnected from the internet.
+</Callout>
+
+<Image
+  src="/assets/pages/users/search/basics/download.png"
+  density={2}
+/>
+
+## Export multiple search results
+
+If you wish to export all search results, in the top center of the screen, you simply click on the **Export** button and the export will start. Depending on the number of search results, preparing your export may take some time.
+
+<Image
+  src="/assets/pages/users/search/basics/export.png"
+  density={2}
+/>
+
+You can track the status of your exports by navigating to the Aleph homepage followed by clicking on **Exports** from the left-hand side menu or by clicking on your profile name in the upper right-hand corner followed by clicking on **Exports**.
+
+For more detailed information refer to [How to navigate the Aleph homepage](/users/getting-started/homepage).
+
+{/*TODO Add warning about size limitations */}

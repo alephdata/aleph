@@ -112,11 +112,9 @@ export function validate({
   return null;
 }
 
-export function checkEntityRequiredProps(entityData: Entity): any {
-  const { schema, properties } = entityData;
-
-  const hasMissing = schema.required.some((name: string) => {
-    return !entityData.getProperty(name);
+export function checkEntityRequiredProps(entity: Entity): any {
+  const hasMissing = entity.schema.required.some((name: string) => {
+    return !entity.getProperty(name);
   });
 
   return hasMissing ? validationMessages.required : null;

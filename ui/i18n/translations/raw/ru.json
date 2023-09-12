@@ -123,19 +123,19 @@
     "defaultMessage": "Ссылка на данные"
   },
   "collection.delete.confirm": {
-    "defaultMessage": "I understand the consequences."
+    "defaultMessage": "Я осознаю последствия."
   },
   "collection.delete.confirm.dataset": {
-    "defaultMessage": "Delete this dataset."
+    "defaultMessage": "Удалить этот набор данных."
   },
   "collection.delete.confirm.investigation": {
-    "defaultMessage": "Delete this investigation."
+    "defaultMessage": "Удалить это расследование."
   },
   "collection.delete.question": {
-    "defaultMessage": "Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
+    "defaultMessage": "Вы хотите удалить {collectionLabel} и всё содержимое? Восстановление невозможно."
   },
   "collection.delete.success": {
-    "defaultMessage": "Successfully deleted {label}"
+    "defaultMessage": "Удаление прошло успешно"
   },
   "collection.delete.title.dataset": {
     "defaultMessage": "Удалить набор данных"
@@ -870,37 +870,37 @@
     "defaultMessage": "Создать"
   },
   "entityset.delete.confirm": {
-    "defaultMessage": "I understand the consequences."
+    "defaultMessage": "Я осознаю последствия."
   },
   "entityset.delete.confirm.diagram": {
-    "defaultMessage": "Delete this network diagram."
+    "defaultMessage": "Удалить диаграмму."
   },
   "entityset.delete.confirm.list": {
-    "defaultMessage": "Delete this list."
+    "defaultMessage": "Удалить этот список"
   },
   "entityset.delete.confirm.profile": {
-    "defaultMessage": "Delete this profile."
+    "defaultMessage": "Удалить этот профиль"
   },
   "entityset.delete.confirm.timeline": {
-    "defaultMessage": "Delete this timeline."
+    "defaultMessage": "Удалить хронологию"
   },
   "entityset.delete.question": {
-    "defaultMessage": "Are you sure you want to permanently delete {label}? This cannot be undone."
+    "defaultMessage": "Вы уверены, что хотите удалить {label}? Восстановление невозможно."
   },
   "entityset.delete.success": {
     "defaultMessage": "Успешно удалён {title}"
   },
   "entityset.delete.title.diagram": {
-    "defaultMessage": "Delete network diagram"
+    "defaultMessage": "Удалить диаграмму"
   },
   "entityset.delete.title.list": {
-    "defaultMessage": "Delete list"
+    "defaultMessage": "Удалить список"
   },
   "entityset.delete.title.profile": {
-    "defaultMessage": "Delete profile"
+    "defaultMessage": "Удалить профиль"
   },
   "entityset.delete.title.timeline": {
-    "defaultMessage": "Delete timeline"
+    "defaultMessage": "Удалить хронологию"
   },
   "entityset.info.delete": {
     "defaultMessage": "Удалить"
@@ -1530,7 +1530,7 @@
     "defaultMessage": "Показать <link>исходной сущности</link>"
   },
   "profile.delete.warning": {
-    "defaultMessage": "Deleting this profile will not delete any of the entities or entity decisions contained within it."
+    "defaultMessage": "Удаление этого профиля не приведёт к удалению созданных сущностей и принятых решений."
   },
   "profile.hint": {
     "defaultMessage": "{entity} объединена с сущностями из других наборов данных <link> в профиль </link>"

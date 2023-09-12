@@ -41,7 +41,6 @@ class InvestigationSidebar extends React.Component {
 
   render() {
     const { collection, activeMode, activeType, schemaCounts } = this.props;
-    const { navigate } = this.props;
 
     const entityTools = [
       collectionViewIds.DIAGRAMS,

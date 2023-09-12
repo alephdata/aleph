@@ -3,7 +3,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # build-essential 
 RUN apt-get -qq -y update \
-    && apt-get -qq -y install locales \
+    && apt-get -qq --no-install-recommends -y install locales \
     ca-certificates postgresql-client libpq-dev curl jq \
     python3-pip python3-icu python3-psycopg2 \
     python3-lxml python3-crypto \
@@ -27,7 +27,7 @@ RUN pip3 install --no-cache-dir -q -r /tmp/requirements.txt
 COPY . /aleph
 WORKDIR /aleph
 ENV PYTHONPATH /aleph
-RUN pip install -q -e /aleph
+RUN pip install --no-cache-dir -q -e /aleph
 
 ENV ALEPH_WORD_FREQUENCY_URI=https://public.data.occrp.org/develop/models/word-frequencies/word_frequencies-v0.4.1.zip
 ENV ALEPH_FTM_COMPARE_MODEL_URI=https://public.data.occrp.org/develop/models/xref/glm_bernoulli_2e_wf-v0.4.1.pkl

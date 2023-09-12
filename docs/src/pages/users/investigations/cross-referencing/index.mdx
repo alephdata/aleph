@@ -1,0 +1,247 @@
+---
+layout: '@layouts/UsersLayout.astro'
+title: Cross-referencing your data
+---
+
+import SchemaListing from '@components/SchemaListing.astro';
+
+# Uploading lists to cross-reference your data against Aleph datasets
+
+<p class="lead">Uploading your data to Aleph allows you to compare it against hundreds of other datasets such as sanctions lists, company registries, and more. This process is called cross-referencing. This page explains how to upload Excel or CSV files to Aleph in order to cross-reference them.</p>  
+
+Let's say you have a list of names of people or companies and you want to upload it to Aleph to see if there are matches between your names and other datasets to which you have access.
+
+## Preparing your data
+
+First of all it is important to keep in mind that your Excel or CSV file needs to be clean and well organized. What does this mean? It means that the columns containing the names of persons, companies or corporations should only contain that type of information.
+
+<Callout>
+   Useful tips when working with Excel or CSV files in Aleph:
+
+   * Avoid columns with multiple properties
+   * Try to stick to one format, for example always use the same date or address format
+   * Avoid duplicates and provide additional identifiers.
+   * Where possible, add information like date of birth, aliases, addresses, e-mails, IDs
+</Callout>
+
+### ✅ Good example
+
+Cleaned and well-organized columns for cross-referencing:
+
+| # | Full name | Position |
+| --- | --- | --- |
+| 1 | Maria Consuelo Ramírez Scaglia | Secretaria General de la Presidencia |
+| 2 | Diego José Montenegro López | Subsecretario General de la Presidencia |
+| 3 | Sergio Alejandro Rosal Morales | Subsecretario General Administrativo |
+| 4 | Claudia Isabel Mérida Pérez | Asesor Jurídico |
+| 5 | Omar Ricardo Barrios Osorio | Asesor Jurídico |
+| 6 | Ana Lucía del Aguila García | Asistente Despacho Superior |
+| 7 | Gabriela Vásquez Galindo de Escobar | Asistente Despacho Superior |
+
+### ❌ Bad example
+
+Table without proper data cleaning:
+
+| # | Full name | Position |
+| --- | --- | --- |
+| 1 | Maria Consuelo Ramírez Scaglia (check) | Secretaria General de la Presidencia |
+| 2 | Diego José Montenegro López | Subsecretario General de la Presidencia |
+| 3 | Diego José M. López | Subsecretario General de la Presidencia |
+| 4 | Claudia Isabel Mérida Pérez - CHECK | Asesor Jurídico |
+| 5 | 1245 - Omar Ricardo Barrios Osorio | Asesor Jurídico |
+| 6 | Ana Lucía del Aguila García | Asistente Despacho Superior |
+| 7 | Gabriela Vásquez Galindo de Escobar | Asistente Despacho Superior |
+
+Why is the table above a bad example? There are comments after people's names (row 1 and 4) and the same person is mentioned in different ways (row 2 and 3). The same can happen with companies. This is why it is important to check the list structure and information before uploading the sheet in Aleph.
+
+## Uploading your spreadsheet
+
+In order to cross-reference data from a spreadsheet, you first need to upload the spreadsheet to Aleph.
+
+<Steps>
+  <Step>
+    Go to **Upload documents** in your investigation:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/upload.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    Then find the file on our computer and upload it. In our case, the Excel file is called **Data - draft**:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/upload-dialog.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    Click on **Close** and wait for a few seconds.
+  </Step>
+
+  <Step>
+    Then go to the **Documents** section (left menu). There you will see the uploaded file:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/documents-index.png"
+      density={2}
+    />
+  </Step>
+</Steps>
+
+## Generating entities from your spreadsheet
+
+Once you have upload your spreadsheet to Aleph, you will need to generate entities from the rows in the spreadsheet. Once you have generated entities, you can then compare these entities to other datasets in Aleph.
+
+<Steps>
+  <Step>
+    Click on **Data - draft.xlsx**, the spreadsheet you just uploaded. You will see that the file has three sheets:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/sheets.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    We must always select the sheet that contains the data we want to cross-reference against Aleph databases. In our case, the information is in the **PEP** sheet. By clicking there we will see a preview of the data in our list. As you can see in the image below, we are in View mode, although there are also the options Mentions and Generate entities, all of them located above our table:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/sheet.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    Please select **Generate entities**. Aleph will take us to a new screen. Why? Because Aleph needs more details to understand what is on your sheet:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    Then go to **1. Select entity types to generate** and click on **+ Add new object**. This is where we have to tell Aleph the type of information we have in our list. These are the available options:
+
+    <SchemaListing type="objects" />
+
+    Since the example contains a list of persons, we must select **Person**. If we have a list of companies, choose Company instead.
+
+    <Callout>
+      In case you have sheets that mix people and companies (and you have no way to distinguish between them), you can use the "Legal Entity" type.
+    </Callout>
+  </Step>
+
+  <Step>
+    When adding the object, in this case **Person**, the following box appears:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper-keys.png"
+      density={2}
+    />
+
+    Now Aleph asks you to indicate which columns in our file have information relating to individuals. As we may not remember the names of the columns, we can scroll down and consult the information in our file before completing this section:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper-preview.png"
+      density={2}
+    />
+
+    Another option is to click inside the **Keys** box, where it says **Select keys from available columns**:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper-keys-dropdown.png"
+      density={2}
+    />
+
+    <Callout>
+      Keys are features that make an entity (person, company etc) unique amongst others, and which help us distinguish entities one from another.
+    </Callout>
+
+    For this example, we select **Full name** and **Email**. Why didn't we choose the other columns? Because the best keys are columns that contain ID numbers, phone numbers, e-mail addresses or other information that allows us to uniquely identify an entity.
+  </Step>
+
+  <Step>
+    Next, we need to go to the preview of our table (below the box we just filled in) and specify the properties of the columns we will use for our x-ref. How do we do this? Under the column name, click on **Assign a property**.
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper-assign-property-name.png"
+      density={2}
+    />
+
+    In our case, the column **Full name** refers to **Person**.
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper-column-name.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    For the **E-mail** column, we choose **Person** as the property and then **E-Mail**. The list of options is extensive, so don't forget to scroll down to see all the enabled categories:
+    
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper-assign-property-email.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    Our table will now look like this:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/entity-mapper-column-email.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    Finally, scroll to the bottom of the page and click on **Generate entities**:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/submit.png"
+      density={2}
+    />
+  </Step>
+
+  <Step>
+    How do we know that everything went ok? Go to the top of the page and you will see the following message:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/status.png"
+      density={2}
+    />
+  </Step>
+</Steps>
+
+## Cross-referencing
+
+Now that we have uploaded our list and adapted it to the Aleph model, you can finally cross-reference your data against other datasets!
+
+<Steps>
+  <Step>
+    Click on the name of our investigation at the top of the screen and go to **Cross-reference** in the left-hand menu:
+
+    <Image src="/assets/pages/users/investigations/cross-referencing/sidebar.png" />
+  </Step>
+
+  <Step>
+    You will see this screen:
+
+    <Image
+      src="/assets/pages/users/investigations/cross-referencing/xref-screen.png"
+      density={2}
+    />
+
+    Click on **Compute** and the data will start to be cross-referenced. Depending on the size of our list, this process may take more than a few minutes.
+  </Step>
+
+  <Step>
+    Once the cross-reference process finishes, we suggest waiting 2-3 minutes after the process is over so all matches are visible. Refresh your page to see all matches.
+  </Step>
+</Steps>
+
+{/* TODO Add short explanation of xref results page */}

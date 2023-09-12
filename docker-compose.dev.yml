@@ -2,10 +2,9 @@ version: "3.2"
 
 services:
   postgres:
-    image: postgres:10.0
-    hostname: postgres
+    image: postgres:15
     ports:
-      - "127.0.0.1:15432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -15,7 +14,6 @@ services:
 
   elasticsearch:
     image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
-    hostname: elasticsearch
     restart: on-failure
     environment:
       - discovery.type=single-node
@@ -26,17 +24,9 @@ services:
       - "http.cors.allow-headers=*"
       - "http.cors.allow-credentials=true"
     ports:
-      - "127.0.0.1:19200:9200"
+      - "127.0.0.1:9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-
-  dejavu:
-    image: appbaseio/dejavu:3.6.0
-    container_name: dejavu
-    ports:
-      - '1358:1358'
-    depends_on:
-      - elasticsearch
 
   redis:
     image: redis:alpine
@@ -45,7 +35,7 @@ services:
       - redis-data:/data
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.19.1
+    image: ghcr.io/alephdata/ingest-file:3.19.2
     hostname: ingest
     tmpfs: /tmp
     volumes:
