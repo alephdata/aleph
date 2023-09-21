@@ -12,6 +12,14 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from followthemoney import set_model_locale
+
+from elasticsearch import Elasticsearch, TransportError
+import pika
+from servicelayer.cache import get_redis
+from servicelayer.archive import init_archive
+from servicelayer.extensions import get_extensions
+from servicelayer.util import service_retries, backoff
+from servicelayer.logs import configure_logging, LOG_FORMAT_JSON
 from servicelayer import settings as sls
 from servicelayer.archive import init_archive
 from servicelayer.cache import get_redis
@@ -182,10 +190,41 @@ def get_cache():
     return SETTINGS._cache
 
 
+def get_rmq_connection():
+    for attempt in service_retries():
+        try:
+            if not hasattr(settings, "_rmq_connection") or not settings._rmq_connection:
+                credentials = pika.PlainCredentials(
+                    sls.RABBITMQ_USERNAME, sls.RABBITMQ_PASSWORD
+                )
+                connection = pika.BlockingConnection(
+                    pika.ConnectionParameters(
+                        host=sls.RABBITMQ_URL,
+                        credentials=credentials,
+                        heartbeat=sls.RABBITMQ_HEARTBEAT,
+                        blocked_connection_timeout=sls.RABBITMQ_BLOCKED_CONNECTION_TIMEOUT,  # noqa
+                    )
+                )
+                settings._rmq_connection = connection
+            if settings._rmq_connection.is_open:
+                channel = settings._rmq_connection.channel()
+                channel.queue_declare(queue=sls.QUEUE_ALEPH, durable=True)
+                channel.queue_declare(queue=sls.QUEUE_INGEST, durable=True)
+                channel.queue_declare(queue=sls.QUEUE_INDEX, durable=True)
+                channel.close()
+                return settings._rmq_connection
+        except (pika.exceptions.AMQPConnectionError, pika.exceptions.AMQPError) as exc:
+            log.exception("RabbitMQ error: %s", exc)
+        settings._rmq_connection = None
+        backoff(failures=attempt)
+    raise RuntimeError("Could not connect to RabbitMQ")
+
+
 es = LocalProxy(get_es)
 kv = LocalProxy(get_redis)
 cache = LocalProxy(get_cache)
 archive = LocalProxy(get_archive)
+rabbitmq_conn = LocalProxy(get_rmq_connection)
 
 
 def url_for(*a, **kw):

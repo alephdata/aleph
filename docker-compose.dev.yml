@@ -30,12 +30,27 @@ services:
 
   redis:
     image: redis:alpine
-    command: [ "redis-server", "--save", "3600", "10" ]
+    command: ["redis-server", "--save", "3600", "10"]
     volumes:
       - redis-data:/data
 
+  rabbitmq:
+    image: rabbitmq:3.9-management-alpine
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+
+  convert-document:
+    image: ghcr.io/alephdata/convert-document:latest
+    read_only: true
+    restart: on-failure
+    user: app
+    tmpfs: /tmp
+
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.19.3
+    image: ghcr.io/alephdata/ingest-file:4.0.0
     hostname: ingest
     tmpfs: /tmp
     volumes:
@@ -43,6 +58,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - rabbitmq
     restart: on-failure
     env_file:
       - aleph.env
@@ -72,6 +88,7 @@ services:
       - postgres
       - elasticsearch
       - redis
+      - rabbitmq
       # - translate
       - ingest-file
     tmpfs: /tmp
@@ -103,6 +120,7 @@ services:
       - postgres
       - elasticsearch
       - redis
+      - rabbitmq
       - ingest-file
     tmpfs: /tmp
     volumes:
@@ -159,3 +177,4 @@ volumes:
   elasticsearch-data: {}
   postgres-data: {}
   redis-data: {}
+  rabbitmq-data: {}

@@ -24,6 +24,14 @@ services:
     volumes:
       - redis-data:/data
 
+  rabbitmq:
+    image: rabbitmq:3.9-management-alpine
+    ports:
+      - '127.0.0.1:5672:5672'
+      - '127.0.0.1:15672:15672'
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+      
   ingest-file:
     image: ghcr.io/alephdata/ingest-file:3.19.3
     tmpfs:
@@ -101,3 +109,4 @@ volumes:
   postgres-data: {}
   redis-data: {}
   elasticsearch-data: {}
+  rabbitmq-data: {}
