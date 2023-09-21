@@ -31,6 +31,30 @@ class CollectionsQuery(Query):
             filters.append({"ids": {"values": ids}})
         return filters
 
+    def get_text_query(self):
+        query = super().get_text_query()
+
+        # By default, queries use the Elasticsearch `query_string` query which considers only
+        # exact matches. Users expect the collection search to match variations of the same
+        # word by default (e.g. Russia/Russian, owner/owners, leas/leaked), without using explicit
+        # advanced query syntax to enable fuzzy matching.
+        # As the `query_string` query does not support enabling fuzzy matching by default, we add
+        # a second subquery to handle this. This allows users to still use the advanced query syntax
+        # in cases that aren’t covered by the default fuzziness (e.g. prefixes/wildcard searches).
+        if self.parser.text:
+            query.append(
+                {
+                    "multi_match": {
+                        "query": self.parser.text,
+                        "fields": ensure_list(self.TEXT_FIELDS),
+                        "operator": "AND",
+                        "fuzziness": "AUTO:3,4",
+                    }
+                }
+            )
+
+        return query
+
     def get_index(self):
         return collections_index()
 

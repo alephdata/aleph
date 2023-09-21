@@ -3,10 +3,12 @@ import datetime
 import logging
 from pprint import pformat
 
-from aleph.core import db, settings
+from aleph.core import db
+from aleph.settings import SETTINGS
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase, get_caption, JSON
+from aleph.model.bookmark import Bookmark
 
 log = logging.getLogger(__name__)
 
@@ -62,10 +64,10 @@ class EntitiesApiTestCase(TestCase):
         assert res.json["total"] == 0, res.json
         assert len(res.json["facets"]["collection_id"]["values"]) == 0, res.json
 
-        settings.REQUIRE_LOGGED_IN = True
+        SETTINGS.REQUIRE_LOGGED_IN = True
         res = self.client.get(url)
         assert res.status_code == 403, res
-        settings.REQUIRE_LOGGED_IN = False
+        SETTINGS.REQUIRE_LOGGED_IN = False
 
         _, headers = self.login(is_admin=True)
         res = self.client.get(url + "&facet=collection_id", headers=headers)
@@ -101,6 +103,68 @@ class EntitiesApiTestCase(TestCase):
         assert "LegalEntity" in res.json["schema"], res.json
         assert "Winnie" in get_caption(res.json), res.json
         validate(res.json, "Entity")
+
+    def test_view_bookmarked(self):
+        role, headers = self.login(is_admin=True)
+        url = "/api/2/entities/%s" % self.id
+
+        res = self.client.get(url)
+        assert "bookmarked" not in res.json, res.json
+
+        res = self.client.get(url, headers=headers)
+        assert not res.json["bookmarked"], res.json
+
+        bookmark = Bookmark(
+            role_id=role.id,
+            entity_id=self.ent.id,
+            collection_id=self.ent.collection_id,
+        )
+        db.session.add(bookmark)
+        db.session.commit()
+
+        res = self.client.get(url, headers=headers)
+        assert res.json["bookmarked"], res.json
+
+    def test_view_sanitize_html(self):
+        data = {
+            "schema": "HyperText",
+            "properties": {
+                "bodyHtml": "<style>body { color: red; }</style><p>Hello World!</p><script>alert('Ooops')</script>",
+            },
+        }
+
+        entity = self.create_entity(data, self.col)
+        index_entity(entity)
+
+        _, headers = self.login(is_admin=True)
+        url = f"/api/2/entities/{entity.id}"
+        res = self.client.get(url, headers=headers)
+
+        actual = res.json["safeHtml"]
+        expected = ["<html><body><div><p>Hello World!</p></div></body></html>"]
+        assert actual == expected, actual
+
+    def test_view_sanitize_html_multi_value(self):
+        data = {
+            "schema": "Email",
+            "properties": {
+                "bodyHtml": ["This is part 1.", "This is part 2."],
+            },
+        }
+
+        entity = self.create_entity(data, self.col)
+        index_entity(entity)
+
+        _, headers = self.login(is_admin=True)
+        url = f"/api/2/entities/{entity.id}"
+        res = self.client.get(url, headers=headers)
+
+        actual = res.json["safeHtml"]
+        expected = [
+            "<html><body><p>This is part 1.</p></body></html>",
+            "<html><body><p>This is part 2.</p></body></html>",
+        ]
+        assert actual == expected, actual
 
     def test_update(self):
         _, headers = self.login(is_admin=True)
@@ -615,7 +679,7 @@ class EntitiesApiTestCase(TestCase):
         for res in results:
             prop = res["property"]
             assert prop in (
-                "identificiation",
+                "identification",
                 "ownershipOwner",
             ), results
             if prop == "ownershipOwner":
@@ -623,7 +687,7 @@ class EntitiesApiTestCase(TestCase):
                 assert len(res["entities"]) == 2
                 for nested in res["entities"]:
                     assert nested["schema"] in ("Ownership", "Company"), nested
-            if prop == "identificiation":
+            if prop == "identification":
                 assert res["count"] == 1
                 assert res["entities"][0]["schema"] == "Passport", res
 

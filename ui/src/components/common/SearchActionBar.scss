@@ -11,14 +11,14 @@
     @include rtlSupportInvertedProp(
       margin,
       right,
-      $aleph-grid-size/2 !important,
+      $aleph-grid-size * 0.5 !important,
       null
     );
   }
   &__secondary {
     flex: 0 0 auto !important;
 
-    .bp3-button {
+    .#{$bp-ns}-button {
       border-radius: $aleph-border-radius !important;
     }
   }
@@ -27,8 +27,8 @@
     @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
     font-weight: 500;
 
-    .bp3-icon,
-    .bp3-button-text {
+    .#{$bp-ns}-icon,
+    .#{$bp-ns}-button-text {
       color: $aleph-greyed-text !important;
     }
 

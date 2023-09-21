@@ -1,0 +1,152 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+$width-right: $sidebar-width;
+
+.Toolbar {
+  display: flex;
+  box-shadow: $editor-box-shadow;
+
+  .toolbar-top & {
+    width: 100%;
+    flex-direction: row;
+  }
+
+  .toolbar-left & {
+    height: 100%;
+    width: 70px;
+    flex-direction: column;
+  }
+
+  @include themify() {
+    background-color: themed('toolbarColor');
+  }
+
+  &__logo-container,
+  &__main,
+  &__search-container {
+    .toolbar-top & {
+      vertical-align: middle;
+      padding: 5px 10px;
+    }
+
+    .toolbar-left & {
+      padding: 5px;
+    }
+  }
+
+  &__logo-container {
+    @include themify() {
+      border-color: themed('textColor') !important;
+    }
+
+    .toolbar-top & {
+      border-right: 1px solid;
+    }
+
+    .toolbar-left & {
+      border-bottom: 1px solid;
+    }
+  }
+
+  &__main {
+    flex: 2 1;
+    overflow-x: hidden;
+  }
+
+  &__search-container {
+    width: $width-right;
+    max-width: $width-right;
+    padding: 5px $sidebar-gutter;
+
+    @include medium {
+      width: auto;
+      max-width: none;
+    }
+
+    .toolbar-left & {
+      display: none;
+    }
+  }
+
+  &__logo {
+    display: table;
+
+    .toolbar-left & {
+      margin: 5px auto;
+    }
+
+    &__image,
+    &__text {
+      display: table-cell;
+    }
+    &__image {
+      height: 30px;
+    }
+    &__text {
+      font-size: 16px;
+      margin: 0;
+      vertical-align: middle;
+      padding-left: 7px;
+      white-space: nowrap;
+
+      @include themify() {
+        color: themed('textColor');
+      }
+
+      @include medium {
+        display: none;
+      }
+
+      .toolbar-left & {
+        display: none;
+      }
+    }
+  }
+
+  &__button-group-container {
+    .toolbar-top & {
+      flex-direction: row;
+    }
+
+    .toolbar-left & {
+      flex-direction: column;
+    }
+
+    .#{$bp-ns}-divider:first-child {
+      display: none;
+    }
+  }
+
+  .ToolbarButtonGroup {
+    .toolbar-left & {
+      flex-wrap: wrap;
+    }
+  }
+
+  .#{$bp-ns}-button {
+    background: transparent !important;
+    box-shadow: none !important;
+
+    .#{$bp-ns}-icon {
+      svg {
+        @include themify() {
+          fill: themed('textColor') !important;
+        }
+      }
+    }
+    &.#{$bp-ns}-disabled {
+      svg {
+        @include themify() {
+          fill: themed('disabledColor') !important;
+        }
+      }
+    }
+  }
+
+  .#{$bp-ns}-divider {
+    @include themify() {
+      border-color: themed('disabledColor') !important;
+    }
+  }
+}

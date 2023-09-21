@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   EditableProperty as VLEditableProperty,
   Property as VLProperty,
-} from '@alephdata/react-ftm';
+} from 'react-ftm';
 import { Button } from '@blueprintjs/core';
 
 import { Entity } from 'components/common';

@@ -2,7 +2,7 @@
 @import 'app/mixins.scss';
 
 .AlertsManager {
-  .bp3-callout {
+  .#{$bp-ns}-callout {
     max-width: 700px;
   }
 

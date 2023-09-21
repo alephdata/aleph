@@ -1,0 +1,33 @@
+@import '../../app/variables.scss';
+
+.MessageBanner__callout.MessageBanner__callout {
+  display: flex;
+  gap: $aleph-grid-size;
+  align-items: center;
+  padding: 0.5 * $aleph-content-padding $aleph-content-padding;
+}
+
+.MessageBanner p {
+  margin: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.MessageBanner a,
+.MessageBanner a:hover {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.MessageBanner__meta {
+  opacity: 0.6;
+}
+
+.MessageBanner__meta::before {
+  content: ' — ';
+}
+
+.MessageBanner__actions {
+  flex-shrink: 0;
+}

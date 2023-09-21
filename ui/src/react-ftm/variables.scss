@@ -1,0 +1,70 @@
+@import '@blueprintjs/core/lib/scss/variables';
+
+$black-90: #182026;
+$black-80: #2e363d;
+$black-70: #464e55;
+$black-60: #5e676f;
+$black-50: #788289;
+$black-40: #939da5;
+$black-30: #afb9c1;
+$black-20: #ccd6de;
+$black-10: #eaf4fc;
+
+$white: #fff;
+$white-3: #fdfefe;
+$white-5: #fafbfc;
+$white-10: #f5f8fa;
+
+$editor-background-color: $black-90;
+// $editor-border-color: $light-gray1;
+$editor-border-radius: 5px;
+$editor-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
+  0 2px 6px rgba(16, 22, 26, 0.2);
+
+$standard-border-radius: 5px;
+
+$sidebar-width: 270px;
+$sidebar-gutter: 15px;
+
+$text-color-main: white;
+$text-color-secondary: $light-gray1;
+$disabled-color: $black-60;
+
+.error-text {
+  font-style: italic;
+  font-size: 12px;
+  color: $red1;
+  padding: 5px;
+}
+
+$small: 500px;
+$medium: 850px;
+$large: 110px;
+
+@mixin small {
+  @media screen and (max-width: $small) {
+    @content;
+  }
+}
+
+@mixin medium {
+  @media screen and (max-width: $medium) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media screen and (max-width: $large) {
+    @content;
+  }
+}
+
+@mixin breakText {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}

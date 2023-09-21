@@ -5,20 +5,20 @@
   &.TableViewer {
     height: auto;
 
-    .bp3-table-column-name {
+    .#{$bp-ns}-table-column-name {
       text-align: center;
       font-weight: 500;
       border-bottom: 1px solid $aleph-border-color;
     }
 
-    .bp3-table-header-content {
+    .#{$bp-ns}-table-header-content {
       padding: 0 3px 5px;
       text-align: center;
       height: 90px;
       position: relative;
     }
 
-    .bp3-button-text {
+    .#{$bp-ns}-button-text {
       overflow: hidden;
       white-space: nowrap;
       max-width: 115px;
@@ -26,7 +26,7 @@
     }
   }
 
-  .bp3-submenu {
+  .#{$bp-ns}-submenu {
     max-height: 300px;
     overflow-y: auto;
   }
@@ -56,7 +56,7 @@
       top: 0;
       @include rtl(right, 0, null);
       @include rtl(left, null, 0);
-      .bp3-icon {
+      .#{$bp-ns}-icon {
         color: white !important;
       }
     }

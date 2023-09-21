@@ -21,6 +21,7 @@ import {
   queryEntitySetItems,
   queryMappings,
   queryAlerts,
+  queryBookmarks,
 } from 'actions';
 
 const initialState = {};
@@ -99,6 +100,13 @@ export default createReducer(
     [queryMappings.START]: (state, { query }) => resultLoadStart(state, query),
     [queryMappings.ERROR]: (state, { error, args: { query } }) =>
       resultLoadError(state, query, error),
+
+    [queryBookmarks.START]: (state, { query }) => {
+      return resultLoadStart(state, query);
+    },
+    [queryBookmarks.ERROR]: (state, { error, args: { query } }) =>
+      resultLoadError(state, query, error),
+    [queryBookmarks.COMPLETE]: updateResultsKeyed,
   },
   initialState
 );

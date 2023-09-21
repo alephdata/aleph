@@ -1,0 +1,88 @@
+---
+import { Wrapper } from 'astro-theme-docs/components';
+---
+
+<style>
+  .HomeFeatures__heading {
+    text-align: center;
+  }
+
+  .HomeFeatures__grid {
+    display: grid;
+    width: 100%;
+    gap: var(--space-xs);
+    margin-block-start: var(--space);
+  }
+
+  .HomeFeatures__grid li {
+    display: flex;
+    align-items: center;
+    color: var(--color-fg-emphasis);
+  }
+
+  .HomeFeatures__emoji {
+    display: block;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-inline-end: var(--space);
+    font-size: 2.5em;
+    line-height: 1.5;
+  }
+
+  .HomeFeatures__text {
+    display: block;
+  }
+
+  @media screen and (min-width: 540px) {
+    .HomeFeatures__grid {
+      grid-template-columns: 1fr 1fr;
+      row-gap: var(--space);
+      column-gap: var(--space-lg);
+    }
+  }
+
+  @media screen and (min-width: 840px) {
+    .HomeFeatures__grid {
+      row-gap: var(--space-lg);
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+</style>
+
+<section class="HomeFeatures">
+  <h2 class="beta HomeFeatures__heading">What Aleph can do for you</h2>
+  <ul class="HomeFeatures__grid">
+    <li>
+      <span class="HomeFeatures__emoji">👀</span>
+      <span class="HomeFeatures__text">
+        Find insights in large volumes of data
+      </span>
+    </li>
+    <li>
+      <span class="HomeFeatures__emoji">☁️</span>
+      <span class="HomeFeatures__text">
+        Securely upload documents and leaks
+      </span>
+    </li>
+    <li>
+      <span class="HomeFeatures__emoji">📄</span>
+      <span class="HomeFeatures__text">Make scanned documents searchable</span>
+    </li>
+    <li>
+      <span class="HomeFeatures__emoji">🕸</span>
+      <span class="HomeFeatures__text">
+        Visualize relationships with network diagrams
+      </span>
+    </li>
+    <li>
+      <span class="HomeFeatures__emoji">🏢</span>
+      <span class="HomeFeatures__text">
+        Compare names of people and companies against hundreds of datasets
+      </span>
+    </li>
+    <li>
+      <span class="HomeFeatures__emoji">📆</span>
+      <span class="HomeFeatures__text">Create timelines of events</span>
+    </li>
+  </ul>
+</section>

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Menu, MenuDivider } from '@blueprintjs/core';
-import { isLangRtl } from '@alephdata/react-ftm';
+import { isLangRtl } from 'react-ftm';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 

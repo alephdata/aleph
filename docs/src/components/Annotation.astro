@@ -1,0 +1,45 @@
+---
+import { Popover } from 'astro-theme-docs/components';
+const { label, x, y, width, height, link } = Astro.props;
+---
+
+<style>
+  .Annotation {
+    position: absolute;
+    z-index: 1;
+    border-width: 2px;
+    border-width: clamp(1px, 0.25vw, 3px);
+    border-style: solid;
+    border-color: var(--color-border-highlight);
+    border-radius: 1px;
+  }
+
+  .Annotation__inner {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<div
+  class="Annotation"
+  style={{
+    top: y,
+    left: x,
+    width,
+    height,
+  }}
+>
+  {
+    label && (
+      <Popover>
+        {link ? (
+          <a class="Annotation__inner" href={link} />
+        ) : (
+          <div class="Annotation__inner" />
+        )}
+        <div slot="content">{label}</div>
+      </Popover>
+    )
+  }
+</div>

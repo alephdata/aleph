@@ -1,19 +1,20 @@
-FROM node:16-slim
+FROM node:18-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get -qq -y update \
-    && apt-get -qq -y install python build-essential
+RUN apt-get -qq -y update && apt-get -qq -y install rsync
 
 RUN mkdir /alephui
 WORKDIR /alephui
 
-COPY .npmrc /alephui/.npmrc
 COPY .prettierrc /alephui/.prettierrc
 COPY tsconfig.json /alephui/tsconfig.json
 COPY package.json /alephui
+COPY package-lock.json /alephui
+COPY craco.config.js /alephui
 
 RUN npm install
+RUN cp -R /alephui/node_modules/ /node_modules
 
 COPY i18n /alephui/i18n
 COPY public /alephui/public

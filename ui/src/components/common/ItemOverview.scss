@@ -18,7 +18,7 @@
       padding: $aleph-grid-size * 4 $aleph-grid-size * 2 $aleph-grid-size * 2;
       border-radius: $aleph-grid-size $aleph-grid-size 0 0;
 
-      .bp3-text-muted {
+      .#{$bp-ns}-text-muted {
         color: white;
       }
     }
@@ -27,7 +27,7 @@
     &__subtitle,
     &__description {
       margin: 10px 0;
-      overflow-wrap: break-word;
+      overflow-wrap: anywhere;
     }
 
     &__title {
@@ -65,7 +65,7 @@
 
       .preview &:first-child {
         padding-top: 0;
-        margin-top: $aleph-grid-size/2;
+        margin-top: $aleph-grid-size * 0.5;
       }
 
       &:last-child {

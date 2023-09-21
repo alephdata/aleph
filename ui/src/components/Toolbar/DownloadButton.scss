@@ -4,7 +4,7 @@
   &__checkbox-container {
     margin: $aleph-grid-size * 2 0;
 
-    .bp3-checkbox {
+    .#{$bp-ns}-checkbox {
       margin: 0;
     }
   }

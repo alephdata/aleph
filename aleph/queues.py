@@ -15,6 +15,7 @@ from servicelayer.taskqueue import (
 from servicelayer import settings as sls
 
 from aleph.core import kv, settings, rabbitmq_conn
+from aleph.settings import SETTINGS
 from aleph.model import Entity
 from aleph.util import random_id
 
@@ -140,9 +141,9 @@ def pipeline_entity(collection, proxy, job_id=None):
     """Send an entity through the ingestion pipeline, minus the ingestor itself."""
     log.debug("Pipeline entity [%s]: %s", proxy.id, proxy.caption)
     pipeline = []
-    if not settings.TESTING:
+    if not SETTINGS.TESTING:
         if proxy.schema.is_a(Entity.ANALYZABLE):
-            pipeline.extend(settings.INGEST_PIPELINE)
+            pipeline.extend(SETTINGS.INGEST_PIPELINE)
     pipeline.append(OP_INDEX)
     context = get_context(collection, pipeline)
 

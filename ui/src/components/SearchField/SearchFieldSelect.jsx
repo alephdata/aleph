@@ -3,7 +3,14 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Button, Icon, Intent, Menu, MenuItem } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  Icon,
+  Intent,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
 
 import { GROUP_FIELDS, getGroupField } from 'components/SearchField/util';
 import SearchField from 'components/SearchField/SearchField';
@@ -67,8 +74,8 @@ class SearchFieldSelect extends PureComponent {
     return (
       <>
         <Menu ulRef={itemsParentRef}>
-          <li className="bp3-menu-header">
-            <h6 className="bp3-heading">
+          <li className={Classes.MENU_HEADER}>
+            <h6 className={Classes.HEADING}>
               <FormattedMessage
                 id="search.config.groups"
                 defaultMessage="Property groups"
@@ -77,8 +84,8 @@ class SearchFieldSelect extends PureComponent {
           </li>
           {selectedGroups.map(renderItem)}
           {availableGroups.map(renderItem)}
-          <li className="bp3-menu-header">
-            <h6 className="bp3-heading">
+          <li className={Classes.MENU_HEADER}>
+            <h6 className={Classes.HEADING}>
               <FormattedMessage
                 id="search.config.properties"
                 defaultMessage="Properties"

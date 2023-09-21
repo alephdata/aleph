@@ -63,11 +63,6 @@ export class Screen extends React.Component {
             <link rel="shortcut icon" href={metadata.app.favicon} />
           )}
         </Helmet>
-        {hasMetadata && !!metadata.app.banner && (
-          <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
-            {metadata.app.banner}
-          </div>
-        )}
         {!forceAuth && (
           <>
             <main>{this.props.children}</main>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Alignment, Button, Icon, H6 } from '@blueprintjs/core';
+import { Alignment, Button, Classes, Icon, H6 } from '@blueprintjs/core';
 import {
   Collection,
   Date,
@@ -85,7 +85,7 @@ class EntitySetIndexItem extends React.PureComponent {
               <span className="index-item__details__item">
                 <Collection.Link
                   collection={entitySet.collection}
-                  className="bp3-text-muted"
+                  className={Classes.TEXT_MUTED}
                 />
               </span>
             )}

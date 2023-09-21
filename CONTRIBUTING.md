@@ -28,15 +28,13 @@ If you're trying to install Aleph and need help, or if you are running Aleph and
 
 ### Find the right task
 
-If this is your first time working on Aleph then it's probably a good idea to pick something easy to work on. To do this you can filter our open issues by label and look for 'good first issue', these issues should not be too challenging to work on but will certainly help benefit the community and the product. You can also find these issues on our [contribute page](https://github.com/alephdata/aleph/contribute).
+A great place to start when looking for something to work on is our [project board](https://github.com/orgs/alephdata/projects/10). For experienced Aleph developers feel free to check our the [workboard](https://github.com/orgs/alephdata/projects/10/views/1). If this is your first time working on Aleph then it's probably a good idea to pick [something easy to work on](https://github.com/orgs/alephdata/projects/10/views/10). You can also find these issues on our [contribute page](https://github.com/alephdata/aleph/contribute). Regardless, once you've selected an issue please take a moment to assign it to yourself, this will stop anyone else from working on your issue.
 
-If, after reviewing the list you'd like to reach out and talk to us then [get in touch](https://docs.alephdata.org/get-in-touch).
-
-For more experienced developers we have a range of different labels that we use to try and compartmentalize our issues. To check the full list of labels [check the labels page on github](https://github.com/alephdata/aleph/labels).
+If, after reviewing the list (or selecting an issue to work on) you'd like to reach out and talk to us then [get in touch](https://docs.alephdata.org/get-in-touch).
 
 ### Forking and Branching
 
-All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this.
+All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this. Make sure you set up [commit signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) beforehand.
 
 ### Pull Requests
 
@@ -56,7 +54,7 @@ Aleph uses two main branches. The **develop** branch is for any new work that ne
 
 ### Code Formatting and Linting
 
-We use automatic code formatters and linters to keep our code consistent and to spot bugs and style issues early in the process. For Python code, we use [black](https://black.readthedocs.io/en/stable/) and [flake8](https://flake8.pycqa.org/en/latest/). Our JavaScript code base uses [Prettier](https://prettier.io) and [ESLint](https://eslint.org/).
+We use automatic code formatters and linters to keep our code consistent and to spot bugs and style issues early in the process. For Python code, we use  [black](https://black.readthedocs.io/en/stable/) and [ruff](https://beta.ruff.rs/). Our JavaScript code base uses [Prettier](https://prettier.io) and [ESLint](https://eslint.org/).
 
 When you open a pull request, your changes are automatically checked for consistency with our code formatting and linting rules. You can also run the checks in your local development environment. If you aren’t familiar with these tools yet, don’t worry. You can open a pull request even if your changes don’t pass these checks.
 

@@ -35,9 +35,9 @@
 
   &__controls {
     .QueryTags {
-      margin-bottom: $aleph-grid-size/2;
+      margin-bottom: $aleph-grid-size * 0.5;
 
-      .bp3-tag {
+      .#{$bp-ns}-tag {
         @include rtlSupportInvertedProp(margin, right, 4px, 0);
       }
     }
@@ -62,11 +62,11 @@
     position: relative;
   }
 
-  .bp3-drawer {
+  .#{$bp-ns}-drawer {
     box-shadow: none;
   }
 
-  .bp3-overlay {
+  .#{$bp-ns}-overlay {
     width: $aleph-sidebar-width;
   }
 
@@ -92,16 +92,10 @@
     position: fixed;
     top: 30px;
     width: $toggle-width;
-    z-index: 100;
-    opacity: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    transform: translateX($aleph-sidebar-width - $toggle-width/2);
-
-    &:hover {
-      opacity: 1;
-    }
+    transform: translateX($aleph-sidebar-width - $toggle-width * 0.5);
 
     .collapsed & {
       transform: translateX(0);
@@ -109,7 +103,7 @@
       opacity: 1;
     }
 
-    &__button.bp3-button.bp3-outlined {
+    &__button.#{$bp-ns}-button.#{$bp-ns}-outlined {
       background: white;
       border-radius: 15px;
       position: relative;
@@ -126,7 +120,7 @@
     margin-bottom: $aleph-grid-size * 2;
   }
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     margin: 0 0 $aleph-grid-size;
   }
 }

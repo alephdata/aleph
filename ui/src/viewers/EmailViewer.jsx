@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Pre } from '@blueprintjs/core';
+import { Classes, Pre } from '@blueprintjs/core';
 
 import { Property, Skeleton } from 'components/common';
 import wordList from 'util/wordList';
@@ -56,7 +56,7 @@ class EmailViewer extends PureComponent {
     }
     return (
       <div className="email-header">
-        <table className="bp3-html-table">
+        <table className={Classes.HTML_TABLE}>
           <tbody>
             {this.headerProperty('from', 'emitters')}
             {this.headerProperty('date')}
@@ -73,18 +73,24 @@ class EmailViewer extends PureComponent {
 
   renderBody() {
     const { document } = this.props;
+
     if (document.isPending) {
       return <Skeleton.Text type="span" length={1000} />;
     }
+
     if (document.safeHtml && document.safeHtml.length) {
-      return <span dangerouslySetInnerHTML={{ __html: document.safeHtml }} />;
+      return document.safeHtml.map((value, index) => (
+        <div key={index} dangerouslySetInnerHTML={{ __html: value }} />
+      ));
     }
+
     const bodyText = document.getFirst('bodyText');
     if (bodyText && bodyText.length > 0) {
       return <Pre>{bodyText}</Pre>;
     }
+
     return (
-      <p className="bp3-text-muted">
+      <p className={Classes.TEXT_MUTED}>
         <FormattedMessage
           id="email.body.empty"
           defaultMessage="No message body."

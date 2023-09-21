@@ -1,24 +1,24 @@
 # Translations template for PROJECT.
-# Copyright (C) 2022 ORGANIZATION
+# Copyright (C) 2023 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-07-25 10:14+0200\n"
+"POT-Creation-Date: 2023-07-13 10:25+0000\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
-"Language-Team: Dutch (https://www.transifex.com/aleph/teams/76591/nl/)\n"
+"Language-Team: Dutch (https://app.transifex.com/aleph/teams/76591/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.10.3\n"
+"Generated-By: Babel 2.11.0\n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: aleph/settings.py:31
+#: aleph/settings.py:38
 msgid "Aleph"
 msgstr ""
 
@@ -30,7 +30,7 @@ msgstr ""
 msgid "[HTML removed: could not be sanitized]"
 msgstr ""
 
-#: aleph/logic/roles.py:59
+#: aleph/logic/roles.py:60
 msgid "Registration"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "{{export}} is ready for download"
 msgstr ""
 
-#: aleph/search/__init__.py:52
+#: aleph/search/__init__.py:76
 msgid "No schema is specified for the query."
 msgstr ""
 
@@ -326,23 +326,23 @@ msgstr ""
 msgid "Invalid date: %s"
 msgstr ""
 
-#: aleph/views/base_api.py:214
+#: aleph/views/base_api.py:226
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:223
+#: aleph/views/base_api.py:235
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:230
+#: aleph/views/base_api.py:242
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:244
+#: aleph/views/base_api.py:256
 msgid "Access token is invalid."
 msgstr ""
 
-#: aleph/views/entities_api.py:172
+#: aleph/views/entities_api.py:173
 #, python-format
 msgid "Search: %s"
 msgstr ""

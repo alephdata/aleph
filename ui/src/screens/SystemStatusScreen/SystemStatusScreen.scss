@@ -1,8 +1,9 @@
-@import '~src/app/tables';
+@import 'app/tables.scss';
 @import 'app/mixins.scss';
+@import 'app/variables.scss';
 
 .StatusTable {
-  @extend .data-table;
+  @extend .#{$bp-ns}-html-table;
 
   tr td,
   tr th {

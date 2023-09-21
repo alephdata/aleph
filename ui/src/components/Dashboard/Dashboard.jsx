@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Classes, Menu, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Count, Skeleton, AppItem, LinkMenuItem } from 'components/common';
-import c from 'classnames';
 
 import withRouter from 'app/withRouter';
 import { queryRoles } from 'actions';
@@ -76,14 +75,14 @@ class Dashboard extends React.Component {
         <div className="Dashboard__inner-container">
           <div className="Dashboard__menu">
             <Menu>
-              <li className="bp3-menu-header">
-                <h6 className="bp3-heading">
+              <MenuDivider
+                title={
                   <FormattedMessage
                     id="dashboard.activity"
                     defaultMessage="Activity"
                   />
-                </h6>
-              </li>
+                }
+              />
               <LinkMenuItem
                 icon="notifications"
                 text={intl.formatMessage(messages.notifications)}
@@ -105,14 +104,14 @@ class Dashboard extends React.Component {
                 active={current === '/exports'}
               />
               <MenuDivider />
-              <li className="bp3-menu-header">
-                <h6 className="bp3-heading">
+              <MenuDivider
+                title={
                   <FormattedMessage
                     id="dashboard.workspace"
                     defaultMessage="Workspace"
                   />
-                </h6>
-              </li>
+                }
+              />
               <LinkMenuItem
                 icon="briefcase"
                 text={intl.formatMessage(messages.cases)}
@@ -144,18 +143,17 @@ class Dashboard extends React.Component {
               {(groupsResult.total === undefined || groupsResult.total > 0) && (
                 <>
                   <MenuDivider />
-                  <li
-                    className={c('bp3-menu-header', {
-                      [Classes.SKELETON]: groupsResult.total === undefined,
-                    })}
-                  >
-                    <h6 className="bp3-heading">
+                  <MenuDivider
+                    className={
+                      groupsResult.total === undefined && Classes.SKELETON
+                    }
+                    title={
                       <FormattedMessage
                         id="dashboard.groups"
                         defaultMessage="Groups"
                       />
-                    </h6>
-                  </li>
+                    }
+                  />
                   {groupsResult.results !== undefined &&
                     groupsResult.results.map((group) => (
                       <LinkMenuItem
@@ -170,7 +168,7 @@ class Dashboard extends React.Component {
                     <Skeleton.Text
                       type="li"
                       length={20}
-                      className="bp3-menu-item"
+                      className={Classes.MENU_ITEM}
                     />
                   )}
                 </>

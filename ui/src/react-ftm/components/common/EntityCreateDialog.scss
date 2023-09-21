@@ -1,0 +1,33 @@
+@import 'app/variables.scss';
+
+.EntityCreateDialog {
+  &__input > .#{$bp-ns}-input {
+    border-radius: 0 !important;
+  }
+  &__schema-select {
+    white-space: nowrap;
+    z-index: 0 !important;
+  }
+  &__popover {
+    max-height: 200px;
+    overflow-y: scroll;
+    .#{$bp-ns}-popover2-content {
+      padding: 0 !important;
+    }
+    .#{$bp-ns}-menu {
+      padding: 5px !important;
+    }
+  }
+  .#{$bp-ns}-popover2-target {
+    width: 100% !important;
+  }
+  &__submit.#{$bp-ns}-button {
+    flex: 0 0 !important;
+  }
+  &__spinner.#{$bp-ns}-spinner {
+    margin: 0.5 * $aleph-grid-size !important;
+  }
+  .EntitySelect {
+    z-index: 5;
+  }
+}

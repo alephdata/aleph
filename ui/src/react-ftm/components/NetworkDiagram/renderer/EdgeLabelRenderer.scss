@@ -1,0 +1,11 @@
+.EdgeLabel {
+  cursor: pointer;
+
+  &__outline {
+    fill: white;
+  }
+
+  &__text {
+    font-size: 5px;
+  }
+}

@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
-import getEntityLink from 'util/getEntityLink';
-import { SectionLoading } from 'components/common';
+import queryString from 'query-string';
+import { SectionLoading, SearchHighlight } from 'components/common';
+import { Classes } from '@blueprintjs/core';
+import c from 'classnames';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 
@@ -26,10 +28,16 @@ class PdfViewerSearch extends Component {
   }
 
   getResultLink(result) {
-    const { document, activeMode } = this.props;
-    const path = getEntityLink(document);
+    const { activeMode, query } = this.props;
     const page = result.getProperty('index').toString();
-    return `${path}#page=${page}&mode=${activeMode}`;
+
+    const hashQuery = {
+      page,
+      mode: activeMode,
+      q: query.getString('q'),
+    };
+
+    return `#${queryString.stringify(hashQuery)}`;
   }
 
   fetchPage() {
@@ -40,18 +48,23 @@ class PdfViewerSearch extends Component {
   }
 
   render() {
-    const { page, dir, query, result } = this.props;
-    if (!query.getString('q')) {
-      return this.props.children;
-    }
+    const { page, dir, result } = this.props;
+
     if (result.total === undefined) {
       return <SectionLoading />;
     }
+
     return (
       <div className="pages">
         {result.total === 0 && (
           <>
-            <div className="bp3-callout bp3-intent-warning bp3-icon-search">
+            <div
+              className={c(
+                Classes.CALLOUT,
+                Classes.INTENT_WARNING,
+                `${Classes.ICON}-search`
+              )}
+            >
               <FormattedMessage
                 id="document.search.no_match"
                 defaultMessage="No single page within this document matches all your search terms."
@@ -68,7 +81,9 @@ class PdfViewerSearch extends Component {
                   to={this.getResultLink(res)}
                   className={classNames({ active: page === res.index })}
                 >
-                  <span className="bp3-icon bp3-icon-document" />
+                  <span
+                    className={c(Classes.ICON, `${Classes.ICON}-document`)}
+                  />
                   <FormattedMessage
                     id="document.pdf.search.page"
                     defaultMessage="Page {page}"
@@ -78,15 +93,7 @@ class PdfViewerSearch extends Component {
                   />
                 </Link>
               </p>
-              <p>
-                {res.highlight !== undefined && (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: res.highlight.join('  …  '),
-                    }}
-                  />
-                )}
-              </p>
+              <SearchHighlight highlight={res.highlight} />
             </li>
           ))}
         </ul>

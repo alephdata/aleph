@@ -5,8 +5,8 @@ from followthemoney import model
 from followthemoney.graph import Node
 from followthemoney.types import registry
 
-from aleph import settings
 from aleph.core import es
+from aleph.settings import SETTINGS
 from aleph.model import Entity
 from aleph.logic.graph import Graph
 from aleph.index.entities import ENTITY_SOURCE
@@ -16,7 +16,7 @@ from aleph.index.util import field_filter_query, authz_query, unpack_result
 log = logging.getLogger(__name__)
 DEFAULT_TAGS = set(registry.pivots)
 DEFAULT_TAGS.remove(registry.entity)
-FILTERS_COUNT_LIMIT = settings.INDEX_EXPAND_CLAUSE_LIMIT
+FILTERS_COUNT_LIMIT = SETTINGS.INDEX_EXPAND_CLAUSE_LIMIT
 
 
 def _expand_properties(proxies, properties):
@@ -117,7 +117,7 @@ def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
 
     type_names = [t.name for t in prop_types]
     log.debug("Tags[%s]: %s values", type_names, len(values))
-    for (type_, value) in values:
+    for type_, value in values:
         key = type_.node_id(value)
         lookup[key] = (type_, value)
         # Determine which indexes may contain further mentions (only things).

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import messages from './messages';
 import metadata from './metadata';
 import mutation from './mutation';
 import session from './session';
@@ -18,8 +19,11 @@ import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
 import exports from './exports';
+import bookmarks from './bookmarks';
+import localBookmarks from './localBookmarks';
 
 const rootReducer = combineReducers({
+  messages,
   metadata,
   mutation,
   session,
@@ -38,6 +42,11 @@ const rootReducer = combineReducers({
   results,
   systemStatus,
   exports,
+  bookmarks,
+
+  // TODO: Remove after deadline
+  // See https://github.com/alephdata/aleph/issues/2864
+  localBookmarks,
 });
 
 export default rootReducer;

@@ -10,7 +10,9 @@ class HtmlViewer extends Component {
     const body = document.isPending ? (
       <Skeleton.Text type="p" length={4000} />
     ) : (
-      <span dangerouslySetInnerHTML={{ __html: document.safeHtml }} />
+      document.safeHtml.map((value, index) => (
+        <div key={index} dangerouslySetInnerHTML={{ __html: value }} />
+      ))
     );
     return (
       <div className="outer">

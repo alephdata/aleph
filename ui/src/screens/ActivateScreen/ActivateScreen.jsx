@@ -3,6 +3,8 @@ import { Navigate } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import withRouter from 'app/withRouter';
+import { Classes } from '@blueprintjs/core';
 import Screen from 'components/Screen/Screen';
 import { endpoint } from 'app/api';
 import { loginWithPassword } from 'actions/sessionActions';
@@ -16,10 +18,7 @@ export class ActivateScreen extends Component {
   }
 
   onActivate(data) {
-    const {
-      match: { params },
-      intl,
-    } = this.props;
+    const { params, intl } = this.props;
 
     endpoint
       .post('/roles', { code: params.code, ...data })
@@ -32,11 +31,7 @@ export class ActivateScreen extends Component {
   }
 
   render() {
-    const {
-      match: { params },
-      session,
-      intl,
-    } = this.props;
+    const { params, session, intl } = this.props;
 
     if (!params.code || session.loggedIn) {
       return <Navigate to="/" replace />;
@@ -54,7 +49,7 @@ export class ActivateScreen extends Component {
                 />
               </h1>
               <PasswordAuthActivate
-                className="bp3-card"
+                className={Classes.CARD}
                 onSubmit={this.onActivate}
                 intl={intl}
               />
@@ -69,5 +64,6 @@ const mapStateToProps = ({ session }) => ({ session });
 const mapDispatchToProps = { loginWithPassword };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
   injectIntl
 )(ActivateScreen);

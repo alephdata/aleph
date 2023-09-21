@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { EdgeCreateDialog, TableEditor } from '@alephdata/react-ftm';
+import { EdgeCreateDialog, TableEditor } from 'react-ftm';
 
 import withRouter from 'app/withRouter';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
@@ -272,7 +272,7 @@ export class EntityTable extends Component {
               collection,
               entities: selectedEntities,
               onSuccess: this.clearSelection,
-              showTimelines: schema.isA('Interval'),
+              showTimelines: schema.getTemporalStartProperties().length > 0,
             }}
           />
           <EntityDeleteButton

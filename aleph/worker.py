@@ -12,7 +12,8 @@ from servicelayer.taskqueue import Worker, Task, Dataset, get_task
 from servicelayer import settings as sls
 
 from aleph import __version__
-from aleph.core import kv, db, create_app, settings
+from aleph.core import kv, db, create_app
+from aleph.settings import SETTINGS
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.queues import (
@@ -42,6 +43,7 @@ INDEXING_TIMEOUT = 10  # run all available indexing jobs in a batch after 10 sec
 
 log = structlog.get_logger(__name__)
 
+
 app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
 indexing_lock = threading.Lock()
 
@@ -63,7 +65,7 @@ def op_index(collection_id: str, batch: List[Task], worker: Worker):
         task.context["skip_ack"] = False
         cb = functools.partial(worker.ack_message, task, channel)
         channel.connection.add_callback_threadsafe(cb)
-
+        
 
 def op_reingest(collection, task):
     reingest_collection(collection, job_id=task.job_id, **task.payload)

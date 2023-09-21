@@ -21,10 +21,18 @@ const store = createStore(
 
 store.subscribe(
   throttle(() => {
-    const state = store.getState();
+    const { session, config, messages, localBookmarks } = store.getState();
+
     saveState({
-      session: state.session,
-      config: state.config,
+      session,
+      config,
+
+      // TODO: Remove after deadline
+      // See https://github.com/alephdata/aleph/issues/2864
+      bookmarks: localBookmarks,
+
+      // Do not persist the actual messages, only the dismissed message IDs.
+      messages: { ...messages, messages: [] },
     });
   })
 );

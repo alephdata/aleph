@@ -4,7 +4,7 @@
 .Mention {
   text-decoration: none !important;
 
-  .bp3-tag {
+  .#{$bp-ns}-tag {
     background-color: $aleph-breadcrumbs-background !important;
     margin: 2px 0;
 
@@ -24,6 +24,6 @@
     overflow: hidden;
     max-width: 100%;
     display: block;
-    padding: 0 $aleph-grid-size/4;
+    padding: 0 $aleph-grid-size * 0.25;
   }
 }

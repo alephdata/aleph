@@ -2,10 +2,9 @@ version: "3.2"
 
 services:
   postgres:
-    image: postgres:10.0
-    hostname: postgres
+    image: postgres:15
     ports:
-      - "127.0.0.1:15432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -15,14 +14,17 @@ services:
 
   elasticsearch:
     image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
-    hostname: elasticsearch
     restart: on-failure
     environment:
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "http.cors.enabled=true"
+      - "http.cors.allow-origin=*"
+      - "http.cors.allow-headers=*"
+      - "http.cors.allow-credentials=true"
     ports:
-      - "127.0.0.1:19200:9200"
+      - "127.0.0.1:9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
@@ -57,7 +59,6 @@ services:
       - postgres
       - redis
       - rabbitmq
-      - convert-document
     restart: on-failure
     env_file:
       - aleph.env
@@ -80,7 +81,7 @@ services:
   app:
     build:
       context: .
-    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-latest}
     hostname: aleph
     command: /bin/bash
     depends_on:
@@ -109,7 +110,7 @@ services:
   api:
     build:
       context: .
-    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-latest}
     command: python3 -m debugpy --listen 0.0.0.0:5678 -m flask run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
@@ -137,18 +138,37 @@ services:
   ui:
     build:
       context: ui
-    image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
+    image: ghcr.io/alephdata/aleph-ui:${ALEPH_TAG:-latest}
     depends_on:
       - api
-    command: npm run start
+    command: "bash -c 'rsync --archive --inplace --no-compress --whole-file /node_modules /alephui && npm run start'"
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
-      - "./ui/src:/alephui/src"
-      - "./ui/package.json:/alephui/package.json"
+      - "./ui/src:/alephui/src:cached"
+      - "./ui/package.json:/alephui/package.json:cached"
+      - "./ui/package-lock.json:/alephui/package-lock.json:cached"
+      - "./ui/craco.config.js:/alephui/craco.config.js:cached"
+      - "./ui/node_modules:/alephui/node_modules:delegated"
     environment:
       PORT: "8080"
       CI: "true"
+    env_file:
+      - aleph.env
+
+  worker:
+    image: alephdata/aleph:${ALEPH_TAG:-3.13.2-rc3}
+    command: aleph worker
+    restart: on-failure
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+    tmpfs:
+      - /tmp
+    volumes:
+      - archive-data:/data
     env_file:
       - aleph.env
 

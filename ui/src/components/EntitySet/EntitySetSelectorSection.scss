@@ -3,18 +3,18 @@
 
 .EntitySetSelectorSection {
   &__title-container {
-    margin-bottom: $aleph-grid-size/2;
+    margin-bottom: $aleph-grid-size * 0.5;
   }
 
   &__title {
-    &.bp3-button {
+    &.#{$bp-ns}-button {
       justify-content: flex-start;
       background-color: $aleph-breadcrumbs-background !important;
     }
-    padding: $aleph-grid-size/2;
+    padding: $aleph-grid-size * 0.5;
     position: relative;
 
-    .bp3-heading {
+    .#{$bp-ns}-heading {
       margin: 0;
     }
 
@@ -37,18 +37,18 @@
     min-height: 100px;
   }
 
-  .bp3-non-ideal-state {
-    .bp3-icon {
+  .#{$bp-ns}-non-ideal-state {
+    .#{$bp-ns}-icon {
       svg {
         width: 30px;
         height: 30px;
       }
     }
-    .bp3-non-ideal-state-visual {
+    .#{$bp-ns}-non-ideal-state-visual {
       font-size: 30px;
       margin-bottom: $aleph-grid-size;
     }
-    .bp3-heading {
+    .#{$bp-ns}-heading {
       font-size: 16px;
     }
   }

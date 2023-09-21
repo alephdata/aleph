@@ -14,7 +14,7 @@
       padding,
       left,
       ($pt-icon-size-standard + $aleph-grid-size * 1.5),
-      ($aleph-grid-size / 2)
+      ($aleph-grid-size * 0.5)
     );
 
     &.faint {
@@ -23,8 +23,8 @@
 
     .tick {
       position: absolute;
-      @include rtl(left, ($aleph-grid-size / 2), null);
-      @include rtl(right, null, ($aleph-grid-size / 2));
+      @include rtl(left, ($aleph-grid-size * 0.5), null);
+      @include rtl(right, null, ($aleph-grid-size * 0.5));
       top: 3px;
       opacity: 0.1;
       transition: opacity 0.2s ease-out, color 0.2s ease-out;
@@ -48,7 +48,7 @@
     }
 
     & > span {
-      margin: ($aleph-grid-size / 2);
+      margin: ($aleph-grid-size * 0.5);
     }
 
     .count {

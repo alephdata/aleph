@@ -1,7 +1,7 @@
 @import 'app/variables.scss';
 
 .DocumentUploadDialog {
-  &.bp3-dialog {
+  &.#{$bp-ns}-dialog {
     padding-bottom: 0;
   }
 
@@ -13,7 +13,7 @@
     margin-bottom: 1em;
   }
 
-  .bp3-form-group {
+  .#{$bp-ns}-form-group {
     margin: $aleph-grid-size 0;
   }
 }

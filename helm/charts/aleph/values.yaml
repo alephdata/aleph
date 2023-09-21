@@ -5,12 +5,12 @@ global:
   namingPrefix: aleph # prefix for service names. eg: with prefix=aleph the api will be named aleph-api
 
   image:
-    repository: alephdata/aleph
-    tag: "3.12.6"
+    repository: ghcr.io/alephdata/aleph
+    tag: "3.15.1"
     pullPolicy: Always
 
   commonEnv:
-    # LOG_FORMAT: JSON
+    LOG_FORMAT: JSON
     REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
     RABBITMQ_URL: aleph-rabbitmq.default.svc.cluster.local
     RABBITMQ_USERNAME: user
@@ -87,60 +87,15 @@ api:
       - type: Resource
         resource:
           name: cpu
-          targetAverageUtilization: 60
+          target:
+            type: Utilization
+            averageUtilization: 60
 
 # Aleph Upgrade Job - templates/aleph-upgrade-job.yaml
 upgrade:
   containerResources:
     requests:
       memory: 600Mi
-
-# convert-document Service - templates/covert-document.yaml
-convertdocument:
-  strategy:
-    rollingUpdate:
-      maxSurge: 2
-      maxUnavailable: 70%
-    type: RollingUpdate
-
-  podAnnotations:
-    "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
-
-  nodeSelector: {}
-
-  podSecurityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-
-  image:
-    repository: ghcr.io/alephdata/convert-document
-    pullPolicy: Always
-    tag: "3.16.1"
-
-  containerSecurityContext:
-    readOnlyRootFilesystem: true
-
-  containerResources:
-    requests:
-      memory: 120Mi
-      cpu: 300m
-    limits:
-      memory: 500Mi
-      # cpu: 2000m
-
-  service:
-    type: ClusterIP
-    port: 3000
-
-  hpa:
-    minReplicas: 2
-    maxReplicas: 30
-    scalingMetrics:
-      - type: Resource
-        resource:
-          name: cpu
-          targetAverageUtilization: 50
 
 # ingest-file Service - templates/covert-document.yaml
 ingestfile:
@@ -164,7 +119,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: "3.16.3"
+    tag: "3.18.4"
     pullPolicy: Always
 
   containerSecurityContext:
@@ -181,7 +136,6 @@ ingestfile:
   env:
     WORKER_THREADS: 0
     OCR_VISION_API: false
-    INGESTORS_CONVERT_DOCUMENT_URL: http://aleph-convert-document.default.svc.cluster.local:3000/convert
 
   hpa:
     minReplicas: 5
@@ -190,7 +144,9 @@ ingestfile:
       - type: Resource
         resource:
           name: cpu
-          targetAverageUtilization: 100
+          target:
+            averageUtilization: 100
+            type: Utilization
 
 # Aleph UI - templates/ui.yaml
 ui:
@@ -210,7 +166,7 @@ ui:
   podSecurityContext: {}
 
   image:
-    repository: alephdata/aleph-ui-production
+    repository: ghcr.io/alephdata/aleph-ui-production
     pullPolicy: Always
 
   containerSecurityContext: {}

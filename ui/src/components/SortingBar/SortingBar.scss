@@ -6,7 +6,9 @@ $font-size: 13px;
 .SortingBar {
   position: relative;
   white-space: nowrap;
-  @include rtl(text-align, right, left) &__item {
+  @include rtl(text-align, right, left);
+
+  &__item {
     display: inline-block;
     @include rtlSupportInvertedProp(margin, left, $aleph-grid-size, null);
 
@@ -21,11 +23,16 @@ $font-size: 13px;
   }
 
   &__label {
-    @include rtlSupportInvertedProp(margin, right, $aleph-grid-size/2, null);
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $aleph-grid-size * 0.5,
+      null
+    );
     font-size: $font-size;
   }
   &__control {
-    .bp3-button {
+    .#{$bp-ns}-button {
       color: $blue2 !important;
       border-bottom: 1px solid $aleph-border-color;
       border-radius: 0;

@@ -273,6 +273,9 @@ class FacetedEntitySearch extends React.Component {
       hasCustomColumns,
     } = this.props;
     const { hideFacets, isMobile } = this.state;
+    const toggleButtonLabel = intl.formatMessage(
+      messages[hideFacets ? 'show_facets' : 'hide_facets']
+    );
 
     const empty = (
       <ErrorSection
@@ -343,9 +346,7 @@ class FacetedEntitySearch extends React.Component {
                 <Button
                   className="FacetedEntitySearch__mobile-expand-toggle"
                   onClick={this.toggleFacets}
-                  text={intl.formatMessage(
-                    messages[hideFacets ? 'show_facets' : 'hide_facets']
-                  )}
+                  text={toggleButtonLabel}
                   icon={hideFacets ? 'add' : 'remove'}
                   alignText={Alignment.LEFT}
                   intent={Intent.PRIMARY}
@@ -402,6 +403,7 @@ class FacetedEntitySearch extends React.Component {
               <Button
                 onClick={this.toggleFacets}
                 icon={hideFacets ? 'chevron-right' : 'chevron-left'}
+                aria-label={toggleButtonLabel}
                 outlined
                 className="FacetedEntitySearch__expand-toggle__button"
               />

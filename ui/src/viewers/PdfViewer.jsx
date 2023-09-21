@@ -99,12 +99,16 @@ export class PdfViewer extends Component {
   }
 
   onSearch(queryText) {
-    const { navigate, location, baseQuery } = this.props;
-    const newQuery = baseQuery.setString('q', queryText);
+    const { navigate, location } = this.props;
+    const hash = queryString.parse(location.hash);
 
     navigate({
       pathname: location.pathname,
-      search: newQuery.toLocation(),
+      hash: queryString.stringify({
+        ...hash,
+        page: undefined,
+        q: queryText || undefined,
+      }),
     });
   }
 
@@ -164,6 +168,7 @@ export class PdfViewer extends Component {
     const { document, page, rotate, numPages, pdfUrl } = this.props;
     const { effectiveRotation, width } = this.state;
     const { Document, Page } = this.state.components;
+
     const loading = <Skeleton.Text type="div" length={4000} />;
 
     return (
@@ -209,12 +214,12 @@ export class PdfViewer extends Component {
       document,
       dir,
       activeMode,
-      baseQuery,
+      pageQuery,
       searchQuery,
       intl,
       page,
-      queryText,
       numPages,
+      shouldRenderSearch,
     } = this.props;
 
     if (document.isPending || numPages === undefined || numPages === null) {
@@ -223,7 +228,7 @@ export class PdfViewer extends Component {
     return (
       <div className="PdfViewer">
         <EntityActionBar
-          query={searchQuery}
+          query={shouldRenderSearch ? searchQuery : pageQuery}
           onSearchSubmit={this.onSearch}
           searchPlaceholder={intl.formatMessage(messages.placeholder, {
             label: document.getCaption(),
@@ -233,23 +238,24 @@ export class PdfViewer extends Component {
         <div className="outer">
           <div id="PdfViewer" className="inner">
             <div className="document">
-              <PdfViewerSearch
-                document={document}
-                dir={dir}
-                activeMode={activeMode}
-                query={searchQuery}
-              >
-                {activeMode === 'text' && (
-                  <PdfViewerPage
-                    document={document}
-                    dir={dir}
-                    page={page}
-                    numPages={numPages}
-                    baseQuery={baseQuery}
-                  />
-                )}
-                {activeMode === 'view' && !queryText && this.renderPdf()}
-              </PdfViewerSearch>
+              {shouldRenderSearch && (
+                <PdfViewerSearch
+                  document={document}
+                  dir={dir}
+                  activeMode={activeMode}
+                  query={searchQuery}
+                />
+              )}
+              {activeMode === 'text' && !shouldRenderSearch && (
+                <PdfViewerPage
+                  document={document}
+                  dir={dir}
+                  page={page}
+                  numPages={numPages}
+                  query={pageQuery}
+                />
+              )}
+              {activeMode === 'view' && !shouldRenderSearch && this.renderPdf()}
             </div>
           </div>
         </div>
@@ -270,14 +276,26 @@ const mapStateToProps = (state, ownProps) => {
 
   const countQuery = baseQuery.setString('q', undefined).offset(0).limit(0);
 
+  const queryText = hashQuery.q;
+
   const searchQuery = baseQuery
     .set('highlight', true)
+    .set('q', queryText)
     .sortBy('properties.index', 'asc')
     .clear('limit')
     .clear('offset');
 
+  const pageQuery = baseQuery
+    .set('highlight', true)
+    .set('highlight_text', queryText)
+    .set('highlight_count', 15)
+    .setFilter('properties.index', page)
+    .set('limit', 1);
+
   const countResult = selectEntitiesResult(state, countQuery);
   const pdfUrl = document.links?.pdf || document.links?.file;
+  const shouldRenderSearch = queryText && !hashQuery.page;
+
   return {
     page,
     pdfUrl,
@@ -286,8 +304,11 @@ const mapStateToProps = (state, ownProps) => {
     baseQuery,
     countQuery,
     searchQuery,
-    queryText: baseQuery.getString('q'),
+    pageQuery,
+    queryText,
     countResult,
+    hashQuery,
+    shouldRenderSearch,
   };
 };
 

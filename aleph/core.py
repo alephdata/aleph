@@ -20,10 +20,15 @@ from servicelayer.util import service_retries, backoff
 from servicelayer.logs import configure_logging, LOG_FORMAT_JSON
 from servicelayer import settings as sls
 
-from aleph import settings
+from aleph import __version__ as aleph_version
+from aleph.settings import SETTINGS
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 from aleph.util import LoggingTransport
+
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
 
 NONE = "'none'"
 log = logging.getLogger(__name__)
@@ -35,40 +40,63 @@ babel = Babel()
 talisman = Talisman()
 
 
+def determine_locale():
+    try:
+        options = SETTINGS.UI_LANGUAGES
+        locale = request.accept_languages.best_match(options)
+        locale = locale or str(babel.default_locale)
+    except RuntimeError:
+        locale = str(babel.default_locale)
+    set_model_locale(locale)
+    return locale
+
+
 def create_app(config=None):
     if config is None:
         config = {}
 
     configure_logging(level=logging.DEBUG)
+
+    if SETTINGS.SENTRY_DSN:
+        sentry_sdk.init(
+            dsn=SETTINGS.SENTRY_DSN,
+            integrations=[
+                FlaskIntegration(),
+            ],
+            traces_sample_rate=0,
+            release=aleph_version,
+            environment=SETTINGS.SENTRY_ENVIRONMENT,
+            send_default_pii=False,
+        )
     app = Flask("aleph")
-    app.config.from_object(settings)
+    app.config.from_object(SETTINGS)
     app.config.update(config)
 
-    if "postgres" not in settings.DATABASE_URI:
+    if "postgres" not in SETTINGS.DATABASE_URI:
         raise RuntimeError("aleph database must be PostgreSQL!")
 
     app.config.update(
         {
-            "SQLALCHEMY_DATABASE_URI": settings.DATABASE_URI,
+            "SQLALCHEMY_DATABASE_URI": SETTINGS.DATABASE_URI,
             "FLASK_SKIP_DOTENV": True,
-            "FLASK_DEBUG": settings.DEBUG,
+            "FLASK_DEBUG": SETTINGS.DEBUG,
             "BABEL_DOMAIN": "aleph",
-            "PROFILE": settings.PROFILE,
+            "PROFILE": SETTINGS.PROFILE,
         }
     )
 
-    if settings.PROFILE:
+    if SETTINGS.PROFILE:
         app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30])
 
-    migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
+    migrate.init_app(app, db, directory=SETTINGS.ALEMBIC_DIR)
     configure_oauth(app, cache=get_cache())
     mail.init_app(app)
     db.init_app(app)
-    babel.init_app(app)
+    babel.init_app(app, locale_selector=determine_locale)
     CORS(
         app,
         resources=r"/api/*",
-        origins=settings.CORS_ORIGINS,
+        origins=SETTINGS.CORS_ORIGINS,
         supports_credentials=True,
     )
     feature_policy = {
@@ -83,10 +111,10 @@ def create_app(config=None):
     }
     talisman.init_app(
         app,
-        force_https=settings.FORCE_HTTPS,
-        strict_transport_security=settings.FORCE_HTTPS,
+        force_https=SETTINGS.FORCE_HTTPS,
+        strict_transport_security=SETTINGS.FORCE_HTTPS,
         feature_policy=feature_policy,
-        content_security_policy=settings.CONTENT_POLICY,
+        content_security_policy=SETTINGS.CONTENT_POLICY,
     )
 
     from aleph.views import mount_app_blueprints
@@ -101,30 +129,18 @@ def create_app(config=None):
     return app
 
 
-@babel.localeselector
-def determine_locale():
-    try:
-        options = settings.UI_LANGUAGES
-        locale = request.accept_languages.best_match(options)
-        locale = locale or str(babel.default_locale)
-    except RuntimeError:
-        locale = str(babel.default_locale)
-    set_model_locale(locale)
-    return locale
-
-
 @migrate.configure
 def configure_alembic(config):
-    config.set_main_option("sqlalchemy.url", settings.DATABASE_URI)
+    config.set_main_option("sqlalchemy.url", SETTINGS.DATABASE_URI)
     return config
 
 
 def get_es():
-    url = settings.ELASTICSEARCH_URL
-    timeout = settings.ELASTICSEARCH_TIMEOUT
+    url = SETTINGS.ELASTICSEARCH_URL
+    timeout = SETTINGS.ELASTICSEARCH_TIMEOUT
     for attempt in service_retries():
         try:
-            if not hasattr(settings, "_es_instance"):
+            if not hasattr(SETTINGS, "_es_instance"):
                 # When logging structured logs, use a custom transport to log
                 # all es queries and their response time
                 if sls.LOG_FORMAT == LOG_FORMAT_JSON:
@@ -134,8 +150,8 @@ def get_es():
                 else:
                     es = Elasticsearch(url, timeout=timeout)
                 es.info()
-                settings._es_instance = es
-            return settings._es_instance
+                SETTINGS._es_instance = es
+            return SETTINGS._es_instance
         except TransportError as exc:
             log.exception("ElasticSearch error: %s", exc.error)
             backoff(failures=attempt)
@@ -143,15 +159,15 @@ def get_es():
 
 
 def get_archive():
-    if not hasattr(settings, "_archive"):
-        settings._archive = init_archive()
-    return settings._archive
+    if not hasattr(SETTINGS, "_archive"):
+        SETTINGS._archive = init_archive()
+    return SETTINGS._archive
 
 
 def get_cache():
-    if not hasattr(settings, "_cache") or settings._cache is None:
-        settings._cache = Cache(get_redis(), prefix=settings.APP_NAME)
-    return settings._cache
+    if not hasattr(SETTINGS, "_cache") or SETTINGS._cache is None:
+        SETTINGS._cache = Cache(get_redis(), prefix=SETTINGS.APP_NAME)
+    return SETTINGS._cache
 
 
 def get_rmq_connection():
@@ -209,4 +225,4 @@ def url_external(path, query, relative=False):
         path = "%s?%s" % (path, urlencode(query))
     if relative:
         return path
-    return urljoin(settings.APP_UI_URL, path)
+    return urljoin(SETTINGS.APP_UI_URL, path)

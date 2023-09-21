@@ -17,7 +17,7 @@ If you are granted access to Aleph as a journalist, you’re welcome to upload d
 
 The data you upload will be visible to some members of OCCRP’s data team, but no other editorial staff. In some cases, the data team may offer to introduce you to journalists who are developing related stories.
 
-If you are an open data activist and have collected datasets that should be included in Aleph, please [contact us](mailto:data@occrp.org) so that we can work together to import the data. Contributing your data will put it at the fingertips of hundreds of investigative reporters.
+If you are an open data activist and have collected datasets that should be included in Aleph, please [contact us](https://requests.occrp.org/datadesk) so that we can work together to import the data. Contributing your data will put it at the fingertips of hundreds of investigative reporters.
 
 ### Can I ask for a dataset to be scraped and added to Aleph?
 
@@ -41,6 +41,6 @@ Using the Aleph API is not a valid approach to “know your customer” (KYC) ch
 
 ### How do I get access to bulk data?
 
-We publish a selection of [open datasets](https://docs.alephdata.org/data-commons/sanctions) as part of the Aleph project. We’re also happy to [work with](mailto:data@occrp.org) other journalists or media organizations to provide bulk exports for specific datasets for your data project.
+We publish a selection of [open datasets](https://docs.alephdata.org/data-commons/sanctions) as part of the Aleph project. We’re also happy to [work with](https://requests.occrp.org/datadesk) other journalists or media organizations to provide bulk exports for specific datasets for your data project.
 
 It is our policy not to provide bulk exports to non-journalists. This specifically includes banks, due diligence firms, and machine learning researchers.

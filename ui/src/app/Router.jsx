@@ -1,11 +1,18 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Navigate, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Spinner } from '@blueprintjs/core';
+import { Spinner, Classes } from '@blueprintjs/core';
 
-import { fetchMetadata } from 'actions';
-import { selectSession, selectMetadata } from 'selectors';
+import { fetchMetadata, fetchMessages, dismissMessage } from 'actions';
+import {
+  selectSession,
+  selectMetadata,
+  selectMessages,
+  selectPinnedMessage,
+} from 'selectors';
+import { routes as legacyRedirects } from 'app/legacyRedirects';
 import Navbar from 'components/Navbar/Navbar';
+import MessageBanner from 'components/MessageBanner/MessageBanner';
 
 import NotFoundScreen from 'screens/NotFoundScreen/NotFoundScreen';
 import OAuthScreen from 'screens/OAuthScreen/OAuthScreen';
@@ -34,33 +41,65 @@ import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
 
 import './Router.scss';
 
+const MESSAGES_INTERVAL = 15 * 60 * 1000; // every 15 minutes
+
 class Router extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
+    this.setMessagesInterval();
   }
 
   componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
+  componentWillUnmount() {
+    this.clearMessagesInterval();
+  }
+
   fetchIfNeeded() {
-    const { metadata } = this.props;
+    const { metadata, messages } = this.props;
+
     if (metadata.shouldLoad) {
       this.props.fetchMetadata();
+    }
+
+    if (messages.shouldLoad) {
+      this.fetchMessages();
+    }
+  }
+
+  fetchMessages() {
+    const { metadata } = this.props;
+
+    if (metadata?.app?.messages_url) {
+      this.props.fetchMessages(metadata.app.messages_url);
+    }
+  }
+
+  setMessagesInterval() {
+    const id = setInterval(() => this.fetchMessages(), MESSAGES_INTERVAL);
+    this.setState(() => ({ messagesInterval: id }));
+  }
+
+  clearMessagesInterval() {
+    if (this.state?.messagesInterval) {
+      clearInterval(this.state.messagesInterval);
     }
   }
 
   render() {
-    const { metadata, session } = this.props;
+    const { metadata, session, pinnedMessage, dismissMessage } = this.props;
     const isLoaded = metadata && metadata.app && session;
 
     const Loading = (
       <div className="RouterLoading">
         <div className="spinner">
-          <Spinner className="bp3-large" />
+          <Spinner className={Classes.LARGE} />
         </div>
       </div>
     );
+
     if (!isLoaded) {
       return Loading;
     }
@@ -68,6 +107,7 @@ class Router extends Component {
     return (
       <>
         <Navbar />
+        <MessageBanner message={pinnedMessage} onDismiss={dismissMessage} />
         <Suspense fallback={Loading}>
           <Routes>
             <Route path="oauth" element={<OAuthScreen />} />
@@ -75,34 +115,10 @@ class Router extends Component {
             <Route path="pages/:page" element={<PagesScreen />} />
             <Route path="activate/:code" element={<ActivateScreen />} />
             <Route path="entities/:entityId" element={<EntityScreen />} />
-            <Route
-              path="text/:documentId"
-              render={() => <Navigate to="/entities/:documentId" replace />}
-            />
-            <Route
-              path="tabular/:documentId/:sheet"
-              render={() => <Navigate to="/entities/:documentId" replace />}
-            />
-            <Route
-              path="documents/:documentId"
-              render={() => <Navigate to="/entities/:documentId" replace />}
-            />
             <Route path="datasets" element={<DatasetIndexScreen />} />
-            <Route
-              path="sources"
-              render={() => <Navigate to="/datasets" replace />}
-            />
             <Route
               path="investigations"
               element={<InvestigationIndexScreen />}
-            />
-            <Route
-              path="cases"
-              render={() => <Navigate to="/investigations" replace />}
-            />
-            <Route
-              path="collections/:collectionId/documents"
-              render={() => <Navigate to="/datasets/:collectionId" replace />}
             />
             <Route
               path="datasets/:collectionId"
@@ -111,28 +127,6 @@ class Router extends Component {
             <Route
               path="investigations/:collectionId"
               element={<InvestigationScreen />}
-            />
-            <Route
-              path="collections/:collectionId"
-              render={() => <Navigate to="/datasets/:collectionId" replace />}
-            />
-            <Route
-              path="collections/:collectionId/xref/:otherId"
-              render={() => (
-                <Navigate
-                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
-                  replace
-                />
-              )}
-            />
-            <Route
-              path="datasets/:collectionId/xref/:otherId"
-              render={() => (
-                <Navigate
-                  to="/datasets/:collectionId\?filter\:match_collection_id=:otherId#mode=xref"
-                  replace
-                />
-              )}
             />
             <Route path="profiles/:profileId" element={<ProfileScreen />} />
             <Route path="diagrams/:entitySetId" element={<DiagramScreen />} />
@@ -150,6 +144,7 @@ class Router extends Component {
             <Route path="status" element={<SystemStatusScreen />} />
             <Route path="groups/:groupId" element={<GroupScreen />} />
             <Route path="/" element={<HomeScreen />} />
+            {legacyRedirects}
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
         </Suspense>
@@ -160,7 +155,13 @@ class Router extends Component {
 
 const mapStateToProps = (state) => ({
   metadata: selectMetadata(state),
+  messages: selectMessages(state),
+  pinnedMessage: selectPinnedMessage(state),
   session: selectSession(state),
 });
 
-export default connect(mapStateToProps, { fetchMetadata })(Router);
+export default connect(mapStateToProps, {
+  fetchMetadata,
+  fetchMessages,
+  dismissMessage,
+})(Router);

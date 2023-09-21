@@ -1,4 +1,6 @@
 import AnimatedCount from './AnimatedCount';
+import BookmarkButton from './BookmarkButton';
+import BookmarksDrawer from './BookmarksDrawer';
 import Breadcrumbs from './Breadcrumbs';
 import SignInCallout from './SignInCallout';
 import ClipboardInput from './ClipboardInput';
@@ -32,11 +34,13 @@ import Score from './Score';
 import Tag from './Tag';
 import SchemaCounts from './SchemaCounts';
 import SearchBox from './SearchBox';
+import SearchHighlight from './SearchHighlight';
 import Skeleton from './Skeleton';
 import Statistics from './Statistics';
 import Summary from './Summary';
 import QueryText from './QueryText';
 import QueryInfiniteLoad from './QueryInfiniteLoad';
+import RelativeTime from './RelativeTime';
 import ResultCount from './ResultCount';
 import ResultText from './ResultText';
 import SelectWrapper from './SelectWrapper';
@@ -45,9 +49,15 @@ import UpdateStatus from './UpdateStatus';
 import JudgementButtons from './JudgementButtons';
 import LinkMenuItem from './LinkMenuItem';
 import LinkButton from './LinkButton';
+import WidthBoundary from './WidthBoundary';
+import DeleteDialog from './DeleteDialog';
+import FeedbackButton from './FeedbackButton';
+import HintPopover from './HintPopover';
 
 export {
   AnimatedCount,
+  BookmarkButton,
+  BookmarksDrawer,
   Breadcrumbs,
   SignInCallout,
   ClipboardInput,
@@ -82,10 +92,12 @@ export {
   Tag,
   SchemaCounts,
   SearchBox,
+  SearchHighlight,
   Skeleton,
   QueryText,
   QueryInfiniteLoad,
   QuickLinks,
+  RelativeTime,
   ResultCount,
   ResultText,
   SelectWrapper,
@@ -94,6 +106,10 @@ export {
   JudgementButtons,
   LinkMenuItem,
   LinkButton,
+  WidthBoundary,
+  DeleteDialog,
+  FeedbackButton,
+  HintPopover,
 };
 
 export * from './types';

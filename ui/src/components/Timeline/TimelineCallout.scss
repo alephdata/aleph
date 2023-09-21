@@ -1,0 +1,12 @@
+@import 'app/variables.scss';
+
+.TimelineCallout.TimelineCallout {
+  display: flex;
+  align-items: center;
+  gap: 0.75 * $aleph-grid-size;
+  padding-inline: $aleph-content-padding;
+  border-top: 1px solid rgba($pt-intent-warning, 0.25);
+  border-bottom: 1px solid rgba($pt-intent-warning, 0.25);
+  border-radius: 0;
+  font-weight: 500;
+}

@@ -29,7 +29,7 @@ def cleanup_deleted():
 def destroy_db():
     metadata = MetaData()
     metadata.bind = db.engine
-    metadata.reflect()
+    metadata.reflect(db.engine)
     tables = list(metadata.sorted_tables)
     while len(tables):
         for table in tables:

@@ -1,10 +1,8 @@
 @import 'app/variables.scss';
 @import 'app/mixins.scss';
 
-$dashboard-padding: $aleph-grid-size * 2.5;
-
 .Dashboard {
-  padding: $dashboard-padding;
+  padding: $aleph-content-padding;
 
   &__inner-container {
     display: flex;
@@ -14,8 +12,6 @@ $dashboard-padding: $aleph-grid-size * 2.5;
   }
 
   &__menu {
-    display: flex;
-    flex-direction: column;
     flex-grow: 0;
     width: 20%;
     @include rtlSupportInvertedProp(
@@ -24,48 +20,36 @@ $dashboard-padding: $aleph-grid-size * 2.5;
       1px solid $aleph-border-color,
       null
     );
-    @include rtlSupportInvertedProp(margin, right, $dashboard-padding, null);
-    @include rtlSupportInvertedProp(padding, right, $dashboard-padding, null);
+    @include rtlSupportInvertedProp(
+      margin,
+      right,
+      $aleph-content-padding,
+      null
+    );
+    @include rtlSupportInvertedProp(
+      padding,
+      right,
+      $aleph-content-padding,
+      null
+    );
     min-width: 235px;
 
     @media screen and (max-width: $aleph-screen-sm-max-width) {
       display: none;
     }
 
-    .bp3-menu {
-      background-color: inherit !important;
-      padding: 0;
-    }
-
-    .bp3-menu-item {
-      padding: 6px 7px;
-
-      .bp3-icon {
-        @include rtlSupportInvertedProp(margin, right, 12px, 0);
-      }
-
-      .Count {
-        @include rtl(float, right, left);
-      }
-
-      &.bp3-active .Count {
-        color: white;
-        background: none;
-      }
-    }
-
-    .bp3-menu-header {
+    .#{$bp-ns}-menu-header {
       border: none;
       @include rtlSupportInvertedProp(margin, left, 0, null);
       margin-bottom: $aleph-grid-size;
 
-      .bp3-heading {
+      .#{$bp-ns}-heading {
         color: $blue1;
         padding-top: 2px;
       }
     }
 
-    .bp3-menu-divider {
+    .#{$bp-ns}-menu-divider {
       margin: $aleph-grid-size * 1.5 0;
       border-color: $aleph-border-color;
     }
@@ -76,7 +60,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
   }
 
   &__title-container {
-    margin: $dashboard-padding 0;
+    margin: $aleph-content-padding 0;
   }
 
   &__title {
@@ -100,8 +84,8 @@ $dashboard-padding: $aleph-grid-size * 2.5;
     @include rtlSupportInvertedProp(
       padding,
       left,
-      $aleph-grid-size/2,
-      $aleph-grid-size/2
+      $aleph-grid-size * 0.5,
+      $aleph-grid-size * 0.5
     );
   }
 }

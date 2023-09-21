@@ -3,7 +3,7 @@ from banal import as_bool
 from followthemoney.util import sanitize_text
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
-from aleph.core import settings
+from aleph.settings import SETTINGS
 from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class QueryParser(object):
         self.prefix = sanitize_text(self.get("prefix"))
 
         # Disable or enable query caching
-        self.cache = self.getbool("cache", settings.CACHE)
+        self.cache = self.getbool("cache", SETTINGS.CACHE)
         self.filters = self.prefixed_items("filter:")
         self.excludes = self.prefixed_items("exclude:")
         self.empties = self.prefixed_items("empty:")
@@ -64,7 +64,7 @@ class QueryParser(object):
 
     @property
     def items(self):
-        for (key, value) in self.args.items(multi=True):
+        for key, value in self.args.items(multi=True):
             if key in ("offset", "limit", "next_limit"):
                 continue
             value = sanitize_text(value, encoding="utf-8")
@@ -132,14 +132,27 @@ class SearchQueryParser(QueryParser):
         # index.
         self.facet_names = set(self.getlist("facet"))
 
+        # Query to use for highlighting, defaults to the search query
+        self.highlight_text = self.get("highlight_text", self.text)
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool("highlight", False)
-        self.highlight = self.highlight and settings.RESULT_HIGHLIGHT
-        self.highlight = self.highlight and self.text
+        self.highlight = self.highlight and SETTINGS.RESULT_HIGHLIGHT
+        self.highlight = self.highlight and self.highlight_text
         # Length of each snippet in characters
         self.highlight_length = self.getint("highlight_length", 120)
         # Number of snippets per document, 0 = return full document text.
         self.highlight_count = self.getint("highlight_count", 3)
+        # By default, the maximum number of characters analyzed for a highlight
+        # request is bounded by the value defined in the
+        # index.highlight.max_analyzed_offset setting (1000000 by default),
+        # and when the number of characters exceeds this limit an error is
+        # returned. By setting `max_analyzed_offset` to a non-negative value
+        # lower than `index.highlight.max_analyzed_offset`, the highlighting
+        # stops at this defined maximum limit, and the rest of the text is not
+        # processed, thus not highlighted and no error is returned.
+        self.max_highlight_analyzed_offset = self.getint(
+            "max_highlight_analyzed_offset", 999999
+        )
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""

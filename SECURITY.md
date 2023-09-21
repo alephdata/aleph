@@ -1,17 +1,13 @@
 # Security Policy
 
-## Supported Versions
+## Supported versions
 
 Aleph is a fast-moving project, developed through grant funding. We thus cannot provide specific 
 long-term support releases. Instead, we advise all implementors of the software to keep their
 installations up to date as much as they can.
 
-At the time of writing, versions 1.x and 2.x, and > 3.6 are completely discontinued.
+Please refer to our [Support Policy](SUPPORT.md) for more information about supported Aleph versions.
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-Low-grade security issues can be reported via GitHub issues. If you believe you have found a 
-critical security vulnerability, please consider contacting the Organized Crime and Corruption
-Reporting Project, the core maintainer of Aleph, directly via our responsible disclosure process:
-
-https://www.occrp.org/en/responsible-disclosure
+In order to report a security vulnerability, please contact the Organized Crime and Corruption Reporting Project (OCCRP), the core maintainer of Aleph, directly via [OCCRP’s Responsible Disclosure Policy](https://www.occrp.org/en/responsible-disclosure).

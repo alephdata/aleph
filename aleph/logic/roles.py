@@ -2,7 +2,8 @@ import logging
 from flask_babel import gettext
 from flask import render_template
 
-from aleph.core import db, settings, cache
+from aleph.core import db, cache
+from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.model import Role, Alert, Permission, EntitySet, Export
 from aleph.model import Collection, Document, Entity, EntitySetItem, Mapping
@@ -48,10 +49,10 @@ def challenge_role(data):
     """Given an email address, this will send out a message to allow
     the user to then register an account."""
     signature = Role.SIGNATURE.dumps(data["email"])
-    url = "{}activate/{}".format(settings.APP_UI_URL, signature)
+    url = "{}activate/{}".format(SETTINGS.APP_UI_URL, signature)
     role = Role(email=data["email"], name=data["email"])
     params = dict(
-        url=url, role=role, ui_url=settings.APP_UI_URL, app_title=settings.APP_TITLE
+        url=url, role=role, ui_url=SETTINGS.APP_UI_URL, app_title=SETTINGS.APP_TITLE
     )
     plain = render_template("email/registration_code.txt", **params)
     html = render_template("email/registration_code.html", **params)
@@ -79,6 +80,52 @@ def create_user(email, name, password, is_admin=False):
     db.session.commit()
     update_role(role)
     return role
+
+
+def rename_user(email, name):
+    """Rename an existing user"""
+    foreign_id = "system:aleph" if "default" in email else "password:{}".format(email)
+    role = Role.by_foreign_id(foreign_id)
+    if role:
+        role.update({"name": name})
+        db.session.add(role)
+        db.session.commit()
+        update_role(role)
+    return role
+
+
+def create_group(name):
+    """Create a group"""
+    foreign_id = "group:{}".format(name)
+    role = Role.load_or_create(foreign_id, Role.GROUP, name)
+    db.session.add(role)
+    db.session.commit()
+    update_role(role)
+    return role
+
+
+def user_add(group, user):
+    user = Role.by_email(user)
+    if user is None:
+        user = Role.by_foreign_id(user)
+    group = Role.by_foreign_id("group:{}".format(group))
+    if user is not None and group is not None:
+        user.add_role(group)
+        db.session.commit()
+        update_role(user)
+    return user, group
+
+
+def user_del(group, user):
+    user = Role.by_email(user)
+    if user is None:
+        user = Role.by_foreign_id(user)
+    group = Role.by_foreign_id("group:{}".format(group))
+    if user is not None and group is not None:
+        user.remove_role(group)
+        db.session.commit()
+        update_role(user)
+    return user, group
 
 
 def update_role(role):

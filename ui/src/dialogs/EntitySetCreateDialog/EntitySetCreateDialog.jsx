@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import c from 'classnames';
 
 import withRouter from 'app/withRouter';
 import Query from 'app/Query';
@@ -241,10 +242,10 @@ class EntitySetCreateDialog extends Component {
         title={intl.formatMessage(titleKey)}
         onClose={toggleDialog}
       >
-        <div className="bp3-dialog-body">
+        <div className={Classes.DIALOG_BODY}>
           {canImport && (
             <FileImport
-              accept={['.ftm', '.vis']}
+              accept={{ '*': ['.ftm', '.vis'] }}
               placeholder={intl.formatMessage(
                 messages.diagram_import_placeholder
               )}
@@ -254,17 +255,17 @@ class EntitySetCreateDialog extends Component {
           )}
           {showTextFields && (
             <>
-              <div className="bp3-form-group">
-                <label className="bp3-label" htmlFor="label">
+              <div className={Classes.FORM_GROUP}>
+                <label className={Classes.LABEL} htmlFor="label">
                   <FormattedMessage
                     id="entityset.choose.name"
                     defaultMessage="Title"
                   />
-                  <div className="bp3-input-group bp3-fill">
+                  <div className={c(Classes.INPUT_GROUP, Classes.FILL)}>
                     <input
                       id="label"
                       type="text"
-                      className="bp3-input"
+                      className={Classes.INPUT}
                       autoComplete="off"
                       placeholder={intl.formatMessage(
                         messages[`${type}_label_placeholder`]
@@ -275,16 +276,16 @@ class EntitySetCreateDialog extends Component {
                   </div>
                 </label>
               </div>
-              <div className="bp3-form-group">
-                <label className="bp3-label" htmlFor="summary">
+              <div className={Classes.FORM_GROUP}>
+                <label className={Classes.LABEL} htmlFor="summary">
                   <FormattedMessage
                     id="entityset.choose.summary"
                     defaultMessage="Summary"
                   />
-                  <div className="bp3-input-group bp3-fill">
+                  <div className={c(Classes.INPUT_GROUP, Classes.FILL)}>
                     <textarea
                       id="summary"
-                      className="bp3-input"
+                      className={Classes.INPUT}
                       placeholder={intl.formatMessage(
                         messages[`${type}_summary_placeholder`]
                       )}
@@ -299,8 +300,8 @@ class EntitySetCreateDialog extends Component {
           )}
           {showCollectionField && (
             <>
-              <div className="bp3-form-group">
-                <div className="bp3-label">
+              <div className={Classes.FORM_GROUP}>
+                <div className={Classes.LABEL}>
                   <FormattedMessage
                     id="entityset.create.collection"
                     defaultMessage="Investigation"
@@ -315,7 +316,7 @@ class EntitySetCreateDialog extends Component {
                       ),
                     }}
                   />
-                  <div className="bp3-form-helper-text">
+                  <div className={Classes.FORM_HELPER_TEXT}>
                     <FormattedMessage
                       id="entityset.create.collection.new"
                       defaultMessage={`Don't see the investigation you're looking for? {link}`}
@@ -344,8 +345,8 @@ class EntitySetCreateDialog extends Component {
             </>
           )}
         </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button
               type="submit"
               intent={Intent.PRIMARY}

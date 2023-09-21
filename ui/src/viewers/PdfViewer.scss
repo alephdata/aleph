@@ -50,7 +50,7 @@ $pagesWidth: 150px;
           p {
             margin-bottom: 0;
 
-            .bp3-icon {
+            .#{$bp-ns}-icon {
               @include rtlSupportInvertedProp(
                 margin,
                 right,
@@ -61,11 +61,6 @@ $pagesWidth: 150px;
 
             a {
               text-decoration: none;
-            }
-
-            em {
-              background: $aleph-text-highlight-color;
-              font-style: normal;
             }
           }
 

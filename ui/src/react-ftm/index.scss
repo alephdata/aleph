@@ -1,0 +1,54 @@
+@import '@blueprintjs/core/lib/css/blueprint.css';
+@import '@blueprintjs/select/lib/css/blueprint-select.css';
+@import '@blueprintjs/popover2/lib/css/blueprint-popover2.css';
+@import 'react-datasheet/lib/react-datasheet.css';
+
+@import './themes.scss';
+
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-width: 100%;
+  height: 100vh;
+}
+
+.vertex--icon {
+  pointer-events: none;
+}
+
+.#{$bp-ns}-popover2-content,
+.#{$bp-ns}-popover2-arrow path,
+.#{$bp-ns}-popover2-content .#{$bp-ns}-menu {
+  @include themify() {
+    background: themed('tooltipColor');
+    color: themed('tooltipTextColor');
+    fill: themed('tooltipColor');
+  }
+  .#{$bp-ns}-icon {
+    @include themify() {
+      color: themed('tooltipTextColor');
+    }
+  }
+}
+
+input,
+textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.left-icon {
+  margin-right: 5px;
+}

@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { Button, Callout, Checkbox, Intent } from '@blueprintjs/core';
+import { Button, Classes, Callout, Checkbox, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -160,7 +160,7 @@ class CollectionAccessDialog extends Component {
         title={intl.formatMessage(messages.title)}
         enforceFocus={false}
       >
-        <div className="bp3-dialog-body">
+        <div className={Classes.DIALOG_BODY}>
           <div className="CollectionPermissions">
             <table className="settings-table">
               <thead>
@@ -237,8 +237,8 @@ class CollectionAccessDialog extends Component {
             </table>
           </div>
         </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button
               onClick={this.props.toggleDialog}
               disabled={blocking}

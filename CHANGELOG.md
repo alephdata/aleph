@@ -1,3 +1,73 @@
+## 3.14.3 (28-06-2023)
+- Introduced two new Settings which controll the scroll window of ElasticSearch queries made during xref operations:
+    - ALEPH_XREF_SCROLL (defaults to 5m) is the 'scroll' parameter used on ES scan() calls for xref operations and configures how long a consistent view of the index should be maintained for scrolled search
+    - ALEPH_XREF_SCROLL_SIZE (defaults to 1000) is the 'size' parameter used on ES scan() calls for xref operations
+    and configures the size (per shard) of the batch sent for each iteration of a scan
+- Updated translations
+- Removed unneccessary packages from the UI Docker image
+
+## 3.14.1 (11-05-2023)
+- Support for error tracking via Sentry
+- Fix a flaky UI test (#3011)
+- Reference ghcr.io docker repository everywhere
+- Configure bump2version to keep versions in contrib/ up-to-date
+- Bump ingest-file to 3.18.4
+
+## 3.14.0 (30-03-2023)
+
+- Numerous library upgrades
+- Updated Timelines feature. Timeslines are now more user friendly, better to look at and come with a new chart view that allow you to see your timelines on a line.
+
+## 3.13.1-rc1 (09-11-2022)
+
+- Library upgrades
+- New version of ingest-file library
+- New minor version of followthemoney
+- FtM version is now displayed in the about us page
+- fixed issue with some redirects not working correctly
+- Updated the JSON log format
+
+## 3.13.0 (21-11-2022)
+
+- Library upgrades
+- Minor fixes
+- Updated Aleph to use Blueprint 4 (previous version was blueprint3)
+- react-ftm has now been re-integrated with Aleph. The react-ftm library will now be deprecated
+- Fixed the icon colour and alignment in network diagrams
+- Fixed issue with scroll position resetting
+- Fix investigation sidebar width
+- Handle off-by-one bug in table viewer
+
+## 3.12.7
+
+- Library upgrades
+- Minor fixes
+- Updated to react-ftm v2.6.8, this release contains some small bugfixes and accessibility improvements
+- improvements to highlighting in search results. We now display highlighted results within the raw text documents.
+- Better handling of status messages without the need for Aleph re-deployment
+- Updated contact details
+- Updated custom settings in Aleph. There is now a mechanism for setting these via environment variables.
+
+## 3.12.7-rc3 (2022-10-05)
+
+- Reverted the updates to authlib which caused oauth functionality to fail in Aleph
+
+## 3.12.7-rc2 (2022-10-04)
+
+- Removed debugging code form some parts of the UI and improved linting to check for these things in the future
+- Fixed an issue that was preventing Aleph from upgrading internally at OCCRP
+- Added CHANGELOG notes
+
+## 3.12.7-rc1 (2022-10-03)
+
+- Numerous library upgrades
+- Updated to react-ftm v2.6.8, this release contains some small bugfixes and accessibility improvements
+- Fixed a small QoL issue where the button for hiding the left hand menu was hidden most of the time
+- Made some changes to improve the highlighting in search results. Specifically we now display highlighted results within the raw text documents.
+- Implemented a new way for handling status messages and displaying these to your users
+- Updates details for contacting OCCRP
+- Updated the way in which we approach custom settings in Aleph. There is now a mechanism for setting these via environment variables.
+
 ## 3.12.6 (2022-07-25)
 
 - Develop QoL updates. Introduced prettier and eslint builds for github. Update code to meet new standards. Introduced the concept of RC versions for Aleph. Introduced Feature and Bugfix forms for easier issue creation. Bumped numerous libraries.

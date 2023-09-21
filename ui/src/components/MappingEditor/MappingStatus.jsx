@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Callout, Intent } from '@blueprintjs/core';
+import { Callout, Classes, Intent } from '@blueprintjs/core';
+import c from 'classnames';
 import { Date } from 'components/common';
 
 import './MappingStatus.scss';
@@ -14,7 +15,7 @@ const MappingStatus = ({ mapping }) => {
   return (
     <Callout className="MappingStatus" intent={intent}>
       <div>
-        <h6 className="bp3-heading MappingStatus__statusItem">
+        <h6 className={c(Classes.HEADING, 'MappingStatus__statusItem')}>
           <span>
             <FormattedMessage
               id="mapping.status.updated"
@@ -26,7 +27,7 @@ const MappingStatus = ({ mapping }) => {
           </span>
         </h6>
         {mapping.last_run_status && (
-          <h6 className="bp3-heading MappingStatus__statusItem">
+          <h6 className={c(Classes.HEADING, 'MappingStatus__statusItem')}>
             <span>
               <FormattedMessage
                 id="mapping.status.status"
@@ -37,7 +38,7 @@ const MappingStatus = ({ mapping }) => {
           </h6>
         )}
         {mapping.last_run_err_msg && (
-          <h6 className="bp3-heading MappingStatus__statusItem">
+          <h6 className={c(Classes.HEADING, 'MappingStatus__statusItem')}>
             <span>
               <FormattedMessage
                 id="mapping.status.error"

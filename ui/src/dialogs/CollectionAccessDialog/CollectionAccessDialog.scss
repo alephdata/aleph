@@ -1,7 +1,7 @@
 @import 'app/variables.scss';
 
 .CollectionAccessDialog {
-  .bp3-control.bp3-checkbox {
+  .#{$bp-ns}-control.#{$bp-ns}-checkbox {
     margin-bottom: 0;
   }
 
@@ -9,7 +9,7 @@
     font-weight: bold;
   }
 
-  .bp3-callout {
+  .#{$bp-ns}-callout {
     margin-top: $aleph-grid-size;
   }
 }

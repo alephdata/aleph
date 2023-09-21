@@ -5,19 +5,19 @@ $search-bar-width: 200px;
 $status-width: 120px;
 
 .EntityActionBar {
-  margin-bottom: $aleph-content-padding/2;
+  margin-bottom: $aleph-content-padding * 0.5;
   width: 100%;
 
   .preview & {
     display: none;
   }
 
-  .bp3-control-group {
+  .#{$bp-ns}-control-group {
     justify-content: space-between;
-    padding-bottom: $aleph-content-padding/2;
+    padding-bottom: $aleph-content-padding * 0.5;
 
-    .bp3-input-group {
-      .bp3-input:not(:first-child) {
+    .#{$bp-ns}-input-group {
+      .#{$bp-ns}-input:not(:first-child) {
         @include rtlSupportInvertedProp(
           padding,
           left,
@@ -26,39 +26,44 @@ $status-width: 120px;
         );
       }
     }
-    .bp3-input-group,
-    .bp3-button-group {
+    .#{$bp-ns}-input-group,
+    .#{$bp-ns}-button-group {
       border-radius: 3px;
     }
   }
 
-  .bp3-divider {
+  .#{$bp-ns}-divider {
     border-right: 1px solid $aleph-border-color;
     margin: 0 7px;
   }
 
-  .bp3-overflow-list {
+  .#{$bp-ns}-overflow-list {
     width: calc(100% - #{$search-bar-width});
   }
 
   &.show-status {
-    .bp3-overflow-list {
+    .#{$bp-ns}-overflow-list {
       width: calc(100% - #{$search-bar-width} - #{$status-width});
     }
   }
 
   &__delete,
-  .bp3-popover2-target .bp3-button {
+  .#{$bp-ns}-popover2-target .#{$bp-ns}-button {
     border-top-right-radius: $aleph-border-radius !important;
     border-bottom-right-radius: $aleph-border-radius !important;
   }
 
   &__overflow-list {
-    .bp3-popover2-content {
-      padding: $aleph-grid-size/2 0;
+    .#{$bp-ns}-popover2-content {
+      padding: $aleph-grid-size * 0.5 0;
     }
     .Count {
-      @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+      @include rtlSupportInvertedProp(
+        margin,
+        left,
+        $aleph-grid-size * 0.5,
+        null
+      );
     }
   }
 
@@ -67,7 +72,7 @@ $status-width: 120px;
     margin: 0 !important;
   }
 
-  .prevent-flex-grow.bp3-popover2-target {
+  .prevent-flex-grow.#{$bp-ns}-popover2-target {
     flex: 0 0 auto;
   }
 
@@ -76,10 +81,10 @@ $status-width: 120px;
   }
 
   .Count {
-    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size/2, null);
+    @include rtlSupportInvertedProp(margin, left, $aleph-grid-size * 0.5, null);
   }
 
-  .bp3-button {
+  .#{$bp-ns}-button {
     margin-top: 0;
     margin-bottom: 0;
   }

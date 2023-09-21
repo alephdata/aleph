@@ -16,6 +16,7 @@ from aleph.logic.expand import entity_tags, expand_proxies
 from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
 from aleph.model.entityset import EntitySet, Judgement
+from aleph.model.bookmark import Bookmark
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag
@@ -23,7 +24,7 @@ from aleph.views.util import require, get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import SimilarSerializer
-from aleph.settings import MAX_EXPAND_ENTITIES
+from aleph.settings import SETTINGS
 from aleph.queues import queue_task, OP_EXPORT_SEARCH
 
 log = logging.getLogger(__name__)
@@ -304,11 +305,22 @@ def view(entity_id):
     entity = get_index_entity(entity_id, request.authz.READ, excludes=excludes)
     tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
-    html = proxy.first("bodyHtml", quiet=True)
+    html = proxy.get("bodyHtml", quiet=True)
     source_url = proxy.first("sourceUrl", quiet=True)
     encoding = proxy.first("encoding", quiet=True)
-    entity["safeHtml"] = sanitize_html(html, source_url, encoding=encoding)
+    entity["safeHtml"] = [
+        sanitize_html(value, source_url, encoding=encoding) for value in html
+    ]
     entity["shallow"] = False
+
+    if request.authz.logged_in:
+        bookmark = Bookmark.query.filter_by(
+            role_id=request.authz.id,
+            collection_id=entity.get("collection_id"),
+            entity_id=entity_id,
+        ).first()
+        entity["bookmarked"] = True if bookmark else False
+
     return EntitySerializer.jsonify(entity)
 
 
@@ -541,7 +553,9 @@ def expand(entity_id):
     proxy = model.get_proxy(entity)
     collection_id = entity.get("collection_id")
     tag_request(collection_id=collection_id)
-    parser = QueryParser(request.args, request.authz, max_limit=MAX_EXPAND_ENTITIES)
+    parser = QueryParser(
+        request.args, request.authz, max_limit=SETTINGS.MAX_EXPAND_ENTITIES
+    )
     properties = parser.filters.get("property")
     results = expand_proxies(
         [proxy],

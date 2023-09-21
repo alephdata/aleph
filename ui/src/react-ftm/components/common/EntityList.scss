@@ -1,0 +1,85 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.EntityList {
+  background: none !important;
+  padding: 0 !important;
+
+  &__category {
+    margin-bottom: 20px;
+
+    &__title {
+      font-size: 14px;
+      margin: 5px 10px 7px 0;
+      @include themify() {
+        color: themed('textColor') !important;
+      }
+    }
+
+    &__values {
+      border-radius: $standard-border-radius;
+      overflow: hidden;
+      // padding: 5px !important;
+      @include themify() {
+        background: themed('sidebarMenuColor');
+        // border: themed('sidebarMenuBorder');
+      }
+    }
+  }
+
+  &__item {
+    border-radius: 0 !important;
+    width: 100%;
+    position: relative;
+    // border-bottom: .5px solid;
+    @include themify() {
+      fill: themed('textColor') !important;
+      color: themed('textColor') !important;
+      // border-color: themed('sidebarMenuHoverColor');
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      bottom: -1px;
+      height: 1px;
+      width: calc(100% - 10px);
+      border-bottom: 1px solid;
+      @include themify() {
+        border-color: themed('sidebarMenuHoverColor');
+      }
+    }
+    // hide border on hover
+    &:hover:after {
+      width: 100%;
+      left: 0;
+    }
+
+    .#{$bp-ns}-fill {
+      @include breakText;
+    }
+
+    &__left,
+    &__right {
+      display: flex;
+      align-items: center !important;
+
+      &:hover {
+        @include themify() {
+          background-color: themed('sidebarMenuHoverColor');
+        }
+      }
+    }
+
+    &__right {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      height: 100%;
+      padding: 0 6px;
+    }
+  }
+}

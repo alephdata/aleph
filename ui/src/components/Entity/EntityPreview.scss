@@ -10,7 +10,7 @@ $preview-padding: $aleph-grid-size * 1.5;
     height: 100%;
   }
 
-  &__overlay-container .bp3-overlay.bp3-overlay-container {
+  &__overlay-container .#{$bp-ns}-overlay.#{$bp-ns}-overlay-container {
     @include rtl(right, 0, auto);
     @include rtl(left, auto, 0);
     overflow: visible;
@@ -20,11 +20,11 @@ $preview-padding: $aleph-grid-size * 1.5;
     padding: $preview-padding 0;
   }
 
-  .bp3-drawer-header {
-    padding: 0 $aleph-grid-size/2;
+  .#{$bp-ns}-drawer-header {
+    padding: 0 $aleph-grid-size * 0.5;
     box-shadow: 0 1px 2px rgba(16, 22, 26, 0.15);
 
-    .bp3-heading {
+    .#{$bp-ns}-heading {
       margin: 0 !important;
     }
   }

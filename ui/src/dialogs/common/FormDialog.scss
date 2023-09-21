@@ -1,10 +1,10 @@
 @import 'app/variables.scss';
 @import 'app/mixins.scss';
 
-.bp3-dialog {
+.#{$bp-ns}-dialog {
   position: relative;
 
-  .bp3-input.bp3-tag-input {
+  .#{$bp-ns}-input.#{$bp-ns}-tag-input {
     border-radius: 3px;
   }
 
@@ -30,7 +30,7 @@
     z-index: 2;
   }
 
-  &__spinner.bp3-spinner {
+  &__spinner.#{$bp-ns}-spinner {
     position: absolute;
     top: 50%;
     left: 50%;

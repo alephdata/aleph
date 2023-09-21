@@ -6,7 +6,7 @@
 
   .outer {
     flex: 2;
-    padding: ($aleph-grid-size / 2);
+    padding: ($aleph-grid-size * 0.5);
 
     .inner {
       background: white;

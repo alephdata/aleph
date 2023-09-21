@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { ButtonGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
 import { DialogToggleButton } from 'components/Toolbar';
 import EntitySetEditDialog from 'dialogs/EntitySetEditDialog/EntitySetEditDialog';
-import DiagramExportDialog from 'dialogs/DiagramExportDialog/DiagramExportDialog';
 import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
 
 import './EntitySetManageMenu.scss';
@@ -18,6 +17,10 @@ const messages = defineMessages({
   export: {
     id: 'entityset.info.export',
     defaultMessage: 'Export',
+  },
+  exportAsSvg: {
+    id: 'entityset.info.exportAsSvg',
+    defaultMessage: 'Export as SVG',
   },
   delete: {
     id: 'entityset.info.delete',
@@ -43,18 +46,32 @@ class EntitySetManageMenu extends Component {
   };
 
   renderExport = (showText = true) => {
-    const { entitySet, exportFtm, exportSvg, intl } = this.props;
-    const text = intl.formatMessage(messages.export);
+    const { exportSvg, intl } = this.props;
+    const text = intl.formatMessage(messages.exportAsSvg);
+
+    // We're considering to permanently remove the options to export network diagrams
+    // as FTM files and to create embeddable network diagrams. In a first step, we're hiding
+    // these options, but keep most of the related code around, in order to be able to easily
+    // revert this change.
+
+    // const { entitySet, exportFtm, exportSvg, intl } = this.props;
+    // const text = intl.formatMessage(messages.export);
+    //
+    // const button = (
+    //   <DialogToggleButton
+    //     buttonProps={{
+    //       icon: 'export',
+    //       text: showText && text,
+    //     }}
+    //     Dialog={DiagramExportDialog}
+    //     dialogProps={{ entitySet, exportFtm, exportSvg }}
+    //   />
+    // );
+
     const button = (
-      <DialogToggleButton
-        buttonProps={{
-          icon: 'export',
-          text: showText && text,
-        }}
-        Dialog={DiagramExportDialog}
-        dialogProps={{ entitySet, exportFtm, exportSvg }}
-      />
+      <Button icon="export" text={showText && text} onClick={exportSvg} />
     );
+
     return showText ? button : <Tooltip content={text}>{button}</Tooltip>;
   };
 
@@ -81,6 +98,10 @@ class EntitySetManageMenu extends Component {
 
     if (!entitySet.writeable && isDiagram) {
       return this.renderExport();
+    }
+
+    if (!entitySet.writeable) {
+      return null;
     }
 
     if (isDiagram || isTimeline) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Truncate from 'react-truncate';
+import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 // formats markdown elements to plain text
@@ -26,7 +27,12 @@ const Summary = ({ className, text, truncate }) => {
 
   return (
     <div
-      className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}
+      className={c(
+        className,
+        Classes.RUNNING_TEXT,
+        Classes.TEXT_MUTED,
+        'text-markdown'
+      )}
     >
       {truncate && <Truncate lines={truncate}>{content}</Truncate>}
       {!truncate && content}

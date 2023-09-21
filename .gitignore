@@ -7,11 +7,8 @@ balkhashdb
 
 TODO.md
 
-build*
-
 ui/node_modules
 ui/build
-ui/package-lock.json
 ui/i18n/messages.json
 ui/i18n/messages.pot
 ui/**/*.css
@@ -105,3 +102,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Do not ignore files in the docs directory. We have a separate
+# /docs/.gitignore and some of the ignore rules in this file may
+# conflict with out docs setup.
+!/docs/**/*
+
+test-results/

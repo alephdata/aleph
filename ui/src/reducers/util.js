@@ -31,7 +31,10 @@ export function loadComplete(data) {
 }
 
 export function objectLoadComplete(state, id, data = {}) {
-  return { ...state, [id]: loadComplete(data) };
+  const oldData = state[id] || {};
+  const newData = loadComplete(data);
+
+  return { ...state, [id]: { ...oldData, ...newData } };
 }
 
 export function updateResultsKeyed(state, { query, result }) {

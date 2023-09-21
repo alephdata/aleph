@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { MenuItem } from '@blueprintjs/core';
+import { Classes, MenuItem } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 
@@ -20,13 +20,31 @@ class AppItem extends PureComponent {
         }}
       />
     );
-    return (
-      <MenuItem
-        className="bp3-text-disabled"
-        icon="code"
-        text={message}
-        href="https://docs.alephdata.org"
+    const ftmMessage = (
+      <FormattedMessage
+        id="footer.ftm"
+        defaultMessage="FollowTheMoney {version}"
+        values={{
+          version: app.ftm_version,
+        }}
       />
+    );
+
+    return (
+      <>
+        <MenuItem
+          className={Classes.TEXT_DISABLED}
+          icon="code"
+          text={message}
+          href="https://docs.alephdata.org"
+        />
+        <MenuItem
+          className={Classes.TEXT_DISABLED}
+          icon="code"
+          text={ftmMessage}
+          href="https://docs.alephdata.org/developers/followthemoney"
+        />
+      </>
     );
   }
 }

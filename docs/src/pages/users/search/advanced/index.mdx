@@ -1,0 +1,129 @@
+---
+layout: '@layouts/UsersLayout.astro'
+title: Advanced search
+---
+
+# Advanced search options
+
+<p class="lead">Beyond a simple keyword search, Aleph supports many more complex search operations to find matches based on spelling variations, proximity to other terms, and much more.</p>
+
+To view the advanced options available in Aleph, click the advanced search button next to the search bar. A pop-up will appear explaining each of the available operations.
+
+<Image
+  src="/assets/pages/users/search/advanced/advanced-search-options.png"
+  density={2}
+/>
+
+Each of the options in the pop-up allows you to enter a term or terms. Once you have entered a term, clicking **Search** executes a search with your updated advanced option. You will notice that each time you enter a new advanced option, the keywords in the main search bar will change, indicating the option you've selected.
+
+We will go through each of the advanced search operations in more detail below.
+
+## Finding an exact phrase or name
+
+By default, Aleph returns matches that include all of your keywords first, followed by matches that might only include one of your keywords.
+
+For example, if you type the keywords:
+
+```
+Vladimir Putin
+```
+
+Aleph will return all matches that have the words "Vladimir" and "Putin," followed by matches that have either "Vladimir" or "Putin" but not both, in them. Depending on your needs, this might not be ideal.
+
+{/*TODO Check if the above is still correct.*/}
+
+If you want Aleph to only return matches that have exactly "Vladimir Putin", then you should put quotations around those two keywords:
+
+```
+"Vladimir Putin"
+```
+
+<Callout>
+  A quoted search like "Vladimir Putin" returns results that contain all terms in the exact same order. However, Aleph applies some normalization (like transliteration) of the keyword and documents, so searching for "Vladimir Putin" would also return results that contain "Владимир Путин" (and vice versa).
+</Callout>
+
+<Image
+  src="/assets/pages/users/search/advanced/exact-search.png"
+  density={2}
+/>
+
+Instead of using quotes, you can also do this by writing "Validimir Putin" in the **This exact word/phrase** field in the advanced search options:
+
+<Image
+  src="/assets/pages/users/search/advanced/exact-search-alternative.png"
+  density={2.5}
+/>
+
+## Allow for variations in spelling
+
+Sometimes a name can be spelled many different ways or even misspelled many different ways. One way to solve this problem is to simply type each variation in the search form:
+
+```
+Владимир Путин Poutine Wladimir Путин Путину Путином
+```
+
+You might capture all the variations you want, but you also might miss some by accident. Another way to tell Aleph to look for variants of a name is to use the ~ operator:
+
+```
+Putin~2
+```
+
+What this translates to: Give me matches that include the keyword "Putin", but also matches that include up to any 2 letter variations of "Putin". These variations include adding, removing, and changing a letter.
+
+{/*TODO Clarify and add example*/}
+
+<Image
+  src="/assets/pages/users/search/advanced/fuzzy-search.png"
+  density={2}
+/>
+
+<Callout>Using this operator with too high a number (greater than 3, for example) will cause slow searches and may return too many false results.</Callout>
+
+{/* TODO The max value for fuzzy searches is 2. */}
+
+## Search for words that should be in proximity to each other
+
+If you do not want to find a precise keyword, but merely specify that two words are supposed to appear close to each other, you might want to use a **proximity search**, which also uses the **~** operator. This will try to find all the requested search keywords within a given distance from each other. For example, to find matches where the keywords Trump and Putin are ten or fewer words apart from each other, you can formulate the search as:
+
+```
+"Trump Putin"~10
+```
+
+## Including and excluding combinations of keywords
+
+You can tell Aleph to find matches to multiple keywords in a variety of ways or combinations, otherwise known as a composite search.
+
+To tell Aleph that a keyword must exist in all resulting matches, use a **+** operator. Similarly, to tell Aleph that a keyword must not exist in any of the resulting matches, use - operator.
+
+```
++Trump -Putin
+```
+
+This translates to: Give me all matches in which each match must include the keyword Trump and must definitely not include the keyword Putin.
+
+You can take these combinations a step further using the **AND** operator or the **OR** operator.
+
+```
+Trump AND Putin
+```
+
+This translates to: Give me all matches in which each match must contain both the keywords Trump and Putin, but don't return any matches that only contain just one of those keywords.
+
+```
+Trump OR Putin
+```
+
+This translates to: Give me all matches in which each match may contain the keywords Trump or Putin or both.
+
+You can build on these searches even further like so:
+
+```
++Trump AND (Salman OR Putin) -South Korea
+```
+
+This translates to: Give me all matches in which each match must contain the keyword Trump and must contain either the keyword Salman or the keyword Putin, but must not contain the keywords South Korea.
+
+## Putting it all together
+
+You can combine any of the methods supported by Aleph in many combinations to create some very explicit search rules. The complexity, of course, depends on your needs.
+

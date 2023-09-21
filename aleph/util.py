@@ -1,5 +1,7 @@
 import json
 import uuid
+import structlog
+from aleph.settings import SETTINGS
 from datetime import datetime, date
 
 import structlog
@@ -93,5 +95,5 @@ def random_id():
 
 
 def is_auto_admin(email):
-    auto_admins = [a.lower() for a in settings.ADMINS]
+    auto_admins = [a.lower() for a in SETTINGS.ADMINS]
     return email is not None and email.lower() in auto_admins

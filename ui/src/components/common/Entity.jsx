@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import c from 'classnames';
-import { Entity as VLEntity } from '@alephdata/react-ftm';
+import { Entity as VLEntity } from 'react-ftm';
 
 import withRouter from 'app/withRouter';
 import EntitySelect from 'components/common/EntitySelect';
@@ -21,10 +21,15 @@ class EntityLink extends PureComponent {
 
   onClick(event) {
     const { entity, navigate, location, preview, profile = true } = this.props;
-    if (preview) {
-      event.preventDefault();
-      togglePreview(navigate, location, entity, profile);
+    const modifierPressed =
+      event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+
+    if (!preview || modifierPressed) {
+      return;
     }
+
+    event.preventDefault();
+    togglePreview(navigate, location, entity, profile);
   }
 
   render() {

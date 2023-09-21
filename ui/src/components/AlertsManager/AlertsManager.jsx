@@ -6,6 +6,7 @@ import {
   Button,
   Intent,
   Icon,
+  Classes,
 } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import queryString from 'query-string';
@@ -109,7 +110,7 @@ class AlertsDialog extends Component {
     return (
       <tr key={item.id} className="AlertsManager__row">
         <td className="AlertsManager__button narrow">
-          <Icon className="bp3-intent-primary" icon="feed-subscribed" />
+          <Icon className={Classes.INTENT_PRIMARY} icon="feed-subscribed" />
         </td>
         <td className="AlertsManager__text text-main">
           <Button minimal onClick={(e) => this.onSearch(item, e)}>

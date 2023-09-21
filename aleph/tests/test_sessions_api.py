@@ -1,4 +1,5 @@
-from aleph.core import db, settings
+from aleph.core import db
+from aleph.settings import SETTINGS
 from aleph.model import Collection
 from aleph.logic.collections import update_collection
 from aleph.views.base_api import _metadata_locale
@@ -33,7 +34,7 @@ class SessionsApiTestCase(TestCase):
 
     def test_metadata_get_without_password_login(self):
         _metadata_locale.cache_clear()
-        settings.PASSWORD_LOGIN = False
+        SETTINGS.PASSWORD_LOGIN = False
         res = self.client.get("/api/2/metadata")
         assert res.status_code == 200, res
         auth = res.json["auth"]
@@ -46,12 +47,12 @@ class SessionsApiTestCase(TestCase):
         assert res.status_code == 405, res
 
     def test_password_login_post_no_data(self):
-        settings.PASSWORD_LOGIN = True
+        SETTINGS.PASSWORD_LOGIN = True
         res = self.client.post("/api/2/sessions/login")
         assert res.status_code == 400, res
 
     def test_password_login_post_good_email_and_password(self):
-        settings.PASSWORD_LOGIN = True
+        SETTINGS.PASSWORD_LOGIN = True
         secret = self.fake.password()
         self.role.set_password(secret)
         data = dict(email=self.role.email, password=secret)

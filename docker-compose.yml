@@ -31,16 +31,9 @@ services:
       - '127.0.0.1:15672:15672'
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/
-
-  convert-document:
-    image: ghcr.io/alephdata/convert-document:3.16.1
-    read_only: true
-    restart: on-failure
-    user: app
-    tmpfs: /tmp
-
+      
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.16.1
+    image: ghcr.io/alephdata/ingest-file:3.19.2
     tmpfs:
       - /tmp:mode=777
     volumes:
@@ -48,13 +41,12 @@ services:
     depends_on:
       - postgres
       - redis
-      - convert-document
     restart: on-failure
     env_file:
       - aleph.env
 
   worker:
-    image: alephdata/aleph:${ALEPH_TAG:-3.12.6}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.15.1}
     command: aleph worker
     restart: on-failure
     depends_on:
@@ -70,7 +62,7 @@ services:
       - aleph.env
 
   shell:
-    image: alephdata/aleph:${ALEPH_TAG:-3.12.6}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.15.1}
     command: /bin/bash
     depends_on:
       - postgres
@@ -88,7 +80,7 @@ services:
       - aleph.env
 
   api:
-    image: alephdata/aleph:${ALEPH_TAG:-3.12.6}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.15.1}
     command: gunicorn -w 6 -b 0.0.0.0:8000 --timeout 3600 --log-level debug --log-file - aleph.wsgi:app
     expose:
       - 8000
@@ -106,7 +98,7 @@ services:
       - aleph.env
 
   ui:
-    image: alephdata/aleph-ui-production:${ALEPH_TAG:-3.12.6}
+    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-3.15.1}
     depends_on:
       - api
     ports:

@@ -1,0 +1,30 @@
+@import 'react-ftm/variables.scss';
+@import 'react-ftm/themes.scss';
+
+.RadiusPicker {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+  align-items: center;
+
+  &__icon,
+  &__slider {
+    flex: 1 0;
+  }
+
+  &__slider {
+    margin: 0 15px;
+
+    .#{$bp-ns}-slider-handle {
+      border-radius: 20px !important;
+      outline: none !important;
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+  }
+}

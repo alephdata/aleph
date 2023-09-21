@@ -1,0 +1,125 @@
+@import 'react-ftm/variables.scss';
+
+@mixin center {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  margin: 0;
+}
+
+.TableEditor {
+  height: 100%;
+  width: 100%;
+
+  .data-grid-container {
+    display: block;
+    overflow: auto;
+    position: relative;
+    height: 100%;
+  }
+
+  .data-grid-container .data-grid {
+    border: none;
+  }
+
+  .data-grid-container .data-grid .cell {
+    // white-space: nowrap;
+    min-height: 30px;
+    vertical-align: middle;
+    text-align: left;
+    background-color: $light-gray5;
+    color: black;
+
+    &.selected {
+      background-color: rgba(33, 133, 208, 0.15) !important;
+      box-shadow: none;
+    }
+
+    &.property,
+    &.header,
+    &.prop-select {
+      min-width: 200px;
+      max-width: 200px;
+    }
+
+    &.property,
+    &.skeleton {
+      background-color: white;
+      padding: 10px;
+
+      &.editing {
+        padding: 0;
+      }
+    }
+
+    .#{$bp-ns}-button {
+      border-radius: 0 !important;
+    }
+
+    &.header .#{$bp-ns}-button {
+      justify-content: space-between;
+    }
+
+    &.checkbox,
+    &.entity-link,
+    &.add-button {
+      min-width: 30px;
+
+      .#{$bp-ns}-control {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        position: relative;
+      }
+      .#{$bp-ns}-control-indicator {
+        @include center;
+        outline: none !important;
+      }
+    }
+
+    &.entity-link {
+      position: relative;
+      .#{$bp-ns}-button {
+        @include center;
+      }
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+  .#{$bp-ns}-form-group {
+    margin: 0;
+  }
+
+  .#{$bp-ns}-multi-select-popover .#{$bp-ns}-menu {
+    max-height: 150px;
+  }
+
+  &__overflow-container {
+    max-height: 110px;
+    overflow-y: auto;
+  }
+
+  &__link-cell {
+    &.#{$bp-ns}-button {
+      padding: 0;
+      background: inherit !important;
+    }
+
+    &__icon {
+      display: none;
+    }
+
+    &:hover {
+      .EntityLabel span {
+        text-decoration: underline;
+      }
+
+      & > .#{$bp-ns}-icon {
+        display: block !important;
+      }
+    }
+  }
+}

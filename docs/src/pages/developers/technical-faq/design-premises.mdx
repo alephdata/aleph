@@ -1,0 +1,22 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Design premises
+---
+
+# Design premises
+
+<p class="lead">
+  Below are some design premises of the Aleph software. They are used as guidelines when conceptualising new features.
+</p>
+
+_These premises are not immutable, but changing any of them would have broad implications for the scope and supported use cases of the system._
+
+- Each entity is part of one collection, never multiple. **Access control for the entity is delegated to the collection**, i.e. users who can edit a collection can also edit the entities inside of it. There are no free-floating entities without access control.
+- Users should not be able to **change evidence** stored within the system, such as data from public records databases, or leaked information. They might be able to annotate it, but it has to be sufficiently clear what is part of the source, and what is user-contributed.
+- Aleph wants to **accommodate extreme entities**, within boundaries. A normal document might have 20 pages, but we also need to have some support for documents with 10,000 pages. A normal company might be linked to 5 other entities, but some formation agent might link to 5,000. This needs to be shown correctly.
+- Aleph doesn't have a definition of **who is a journalist** and who isn't. Users can be part of groups, but there is no binary "journalist/not journalist" outside of that.
+- We want to support as **many languages** and cultural contexts as possible. When selecting NLP technology, advantage should be given to solutions with broad linguistic support.
+- \[SOFT\] Entities in one collection cannot link to entities in another. This is done as a security measure at the moment, but it's possible that other mitigations could be found.
+- \[SOFT\] **Users and groups are not collections**. It's possible we might automatically create a collection to match each role, but this means making them do weird things \(they cannot be shared?\)
+- We are not trying to **handle geographic information** like locations and boundaries. Aleph is already madly ambitious and building a GIS platform into it would exceed what's realistic for us to handle.
+- We are **descriptive, not normative, about geopolitical matters**. There is country support for Transnistria, Abkhazia, Somaliland etc. - because they are mentioned in the data we have.

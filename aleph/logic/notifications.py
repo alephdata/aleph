@@ -5,7 +5,8 @@ from datetime import datetime, timedelta
 from followthemoney import model
 from followthemoney.util import get_entity_id
 
-from aleph.core import cache, es, settings
+from aleph.core import cache, es
+from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.model import Collection, Entity, Role, Alert, EntitySet, Export
 from aleph.model import Event, Events
@@ -41,7 +42,7 @@ def publish(event, actor_id=None, params=None, channels=None):
 
 def delete_old_notifications(sync=False):
     """Delete out-dated notifications from the index."""
-    cutoff = datetime.utcnow() - settings.NOTIFICATIONS_DELETE
+    cutoff = datetime.utcnow() - SETTINGS.NOTIFICATIONS_DELETE
     filter_ = {"range": {"created_at": {"lt": cutoff}}}
     log.debug("Deleting old notifications before: %r", cutoff)
     delete_notifications(filter_, sync=sync)
@@ -170,8 +171,8 @@ def generate_role_digest(role):
         role=role,
         total_count=total_count,
         manage_url=ui_url("notifications"),
-        ui_url=settings.APP_UI_URL,
-        app_title=settings.APP_TITLE,
+        ui_url=SETTINGS.APP_UI_URL,
+        app_title=SETTINGS.APP_TITLE,
     )
     plain = render_template("email/notifications.txt", **params)
     html = render_template("email/notifications.html", **params)

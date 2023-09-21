@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { EntityCreateDialog } from '@alephdata/react-ftm';
+import { EntityCreateDialog } from 'react-ftm';
 
 import withRouter from 'app/withRouter';
 import entityEditorWrapper from 'components/Entity/entityEditorWrapper';

@@ -41,10 +41,10 @@ Overview
 The basic process for releasing Aleph is this:
 
 1. Check internal libraries for updates and merge. Release our libraries in the following order
-1. servicelayer
-2. followthemoney
-3. ingest-file
-4. react-ftm
+  1. servicelayer
+  2. followthemoney
+  3. ingest-file
+  4. react-ftm
 2. Ensure that all libraries for a release are up to date in aleph and merged to the develop branch.
 3. Ensure that any features, bugfixes are merged into develop and that all builds are passing
 4. Ensure that the CHANGELOG.md file is up to date on the develop branch. Add information as required.
@@ -78,7 +78,7 @@ Major, minor, patch releases
 3. Update translations using `make translate` 
 4. If you get npm errors, go into the ui folder and run `npm install`
 5. commit translations to `main` and push to remote
-6. run `bump2version release`. Note that bump2version won't show changes when you make the change, but it will work (see `git log` to check)
+6. run `bump2version --verbose --sign-tags release`. Note that bump2version won't show changes when you make the change, but it will work (see `git log` to check)
 7. push the tags to the remote with `git push --tags`
 8. push version bump to remote with `git push`
 9. merge `main` back into `develop`. Slightly unrelated to the release process but this is a good time to do it so that the new version numbers appear in `develop` as well

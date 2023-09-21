@@ -64,6 +64,8 @@ def iter_entities(
     excludes=None,
     filters=None,
     sort=None,
+    es_scroll="5m",
+    es_scroll_size=1000,
 ):
     """Scan all entities matching the given criteria."""
     query = {
@@ -82,6 +84,8 @@ def iter_entities(
         timeout=MAX_TIMEOUT,
         request_timeout=MAX_REQUEST_TIMEOUT,
         preserve_order=preserve_order,
+        scroll=es_scroll,
+        size=es_scroll_size,
     ):
         entity = unpack_result(res)
         if entity is not None:

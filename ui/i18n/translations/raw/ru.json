@@ -122,14 +122,26 @@
   "collection.data_url": {
     "defaultMessage": "Ссылка на данные"
   },
-  "collection.delete.cancel": {
-    "defaultMessage": "Отменить"
-  },
   "collection.delete.confirm": {
-    "defaultMessage": "Удалить"
+    "defaultMessage": "Я осознаю последствия."
+  },
+  "collection.delete.confirm.dataset": {
+    "defaultMessage": "Удалить этот набор данных."
+  },
+  "collection.delete.confirm.investigation": {
+    "defaultMessage": "Удалить это расследование."
   },
   "collection.delete.question": {
-    "defaultMessage": "Вы хотите удалить {collectionLabel} и всё содержимое?"
+    "defaultMessage": "Вы хотите удалить {collectionLabel} и всё содержимое? Восстановление невозможно."
+  },
+  "collection.delete.success": {
+    "defaultMessage": "Удаление прошло успешно"
+  },
+  "collection.delete.title.dataset": {
+    "defaultMessage": "Удалить набор данных"
+  },
+  "collection.delete.title.investigation": {
+    "defaultMessage": "Удалить расследование"
   },
   "collection.edit.access_title": {
     "defaultMessage": "Управление доступом"
@@ -818,15 +830,6 @@
   "entity.similar.found_text": {
     "defaultMessage": "Найдено {resultCount} {resultCount, plural, one {похожая запись} other {похожие записи}} из {datasetCount} {datasetCount, plural, one {набор данных} other {наборы данных}}"
   },
-  "entity.status.error": {
-    "defaultMessage": "Ошибка сохранения"
-  },
-  "entity.status.in_progress": {
-    "defaultMessage": "Сохраняется..."
-  },
-  "entity.status.success": {
-    "defaultMessage": "Сохранено"
-  },
   "entity.tags.no_tags": {
     "defaultMessage": "В данной записи селекторов нет"
   },
@@ -866,17 +869,38 @@
   "entityset.create.submit": {
     "defaultMessage": "Создать"
   },
-  "entityset.delete.cancel": {
-    "defaultMessage": "Отменить"
-  },
   "entityset.delete.confirm": {
-    "defaultMessage": "Удалить"
+    "defaultMessage": "Я осознаю последствия."
+  },
+  "entityset.delete.confirm.diagram": {
+    "defaultMessage": "Удалить диаграмму."
+  },
+  "entityset.delete.confirm.list": {
+    "defaultMessage": "Удалить этот список"
+  },
+  "entityset.delete.confirm.profile": {
+    "defaultMessage": "Удалить этот профиль"
+  },
+  "entityset.delete.confirm.timeline": {
+    "defaultMessage": "Удалить хронологию"
   },
   "entityset.delete.question": {
-    "defaultMessage": "Вы уверены, что хотите удалить {label}?"
+    "defaultMessage": "Вы уверены, что хотите удалить {label}? Восстановление невозможно."
   },
   "entityset.delete.success": {
     "defaultMessage": "Успешно удалён {title}"
+  },
+  "entityset.delete.title.diagram": {
+    "defaultMessage": "Удалить диаграмму"
+  },
+  "entityset.delete.title.list": {
+    "defaultMessage": "Удалить список"
+  },
+  "entityset.delete.title.profile": {
+    "defaultMessage": "Удалить профиль"
+  },
+  "entityset.delete.title.timeline": {
+    "defaultMessage": "Удалить хронологию"
   },
   "entityset.info.delete": {
     "defaultMessage": "Удалить"
@@ -886,6 +910,9 @@
   },
   "entityset.info.export": {
     "defaultMessage": "Экспорт"
+  },
+  "entityset.info.exportAsSvg": {
+    "defaultMessage": "Экспорт в формате SVG"
   },
   "entityset.selector.placeholder": {
     "defaultMessage": "Поиск по существующему"
@@ -991,6 +1018,9 @@
   },
   "footer.aleph": {
     "defaultMessage": "Алеф {version}"
+  },
+  "footer.ftm": {
+    "defaultMessage": "FollowTheMoney {version}"
   },
   "group.page.description": {
     "defaultMessage": "Список всех наборов данных и расследований, принадлежащих этой группе."
@@ -1397,8 +1427,14 @@
   "mappings.no_mappings": {
     "defaultMessage": "У вас пока нет сгенерированных маппингов"
   },
+  "messages.banner.dismiss": {
+    "defaultMessage": "Закрыть"
+  },
   "nav.alerts": {
     "defaultMessage": "Оповещения"
+  },
+  "nav.bookmarks": {
+    "defaultMessage": "Закладки"
   },
   "nav.cases": {
     "defaultMessage": "Расследования"
@@ -1494,7 +1530,7 @@
     "defaultMessage": "Показать <link>исходной сущности</link>"
   },
   "profile.delete.warning": {
-    "defaultMessage": "(Удаление этого профиля не приведёт к удалению созданных сущностей и принятых решений)"
+    "defaultMessage": "Удаление этого профиля не приведёт к удалению созданных сущностей и принятых решений."
   },
   "profile.hint": {
     "defaultMessage": "{entity} объединена с сущностями из других наборов данных <link> в профиль </link>"
@@ -1874,29 +1910,14 @@
   "text.loading": {
     "defaultMessage": "Загрузка..."
   },
-  "timeline.add_new": {
-    "defaultMessage": "Создать новый объект"
-  },
-  "timeline.button.collapse": {
-    "defaultMessage": "Краткий вид"
-  },
-  "timeline.button.show_full": {
-    "defaultMessage": "Подробный вид"
-  },
   "timeline.create.button": {
     "defaultMessage": "Создать хронологию"
-  },
-  "timeline.create.cancel": {
-    "defaultMessage": "Удалить"
   },
   "timeline.create.label_placeholder": {
     "defaultMessage": "Безымянная хронология"
   },
   "timeline.create.login": {
     "defaultMessage": "Для создания хронологии необходимо авторизоваться"
-  },
-  "timeline.create.submit": {
-    "defaultMessage": "Создать"
   },
   "timeline.create.success": {
     "defaultMessage": "Вы создали хронологию"
@@ -1906,45 +1927,6 @@
   },
   "timeline.create.title": {
     "defaultMessage": "Создать хронологию"
-  },
-  "timeline.dates.button_text": {
-    "defaultMessage": "Добавить дату окончания"
-  },
-  "timeline.empty": {
-    "defaultMessage": "Хронология не содержит событий"
-  },
-  "timeline.empty_histogram": {
-    "defaultMessage": "Даты не найдены"
-  },
-  "timeline.item.date": {
-    "defaultMessage": "{start} до {end}"
-  },
-  "timeline.item.delete": {
-    "defaultMessage": "Удалить из {collection}"
-  },
-  "timeline.item.link_copy": {
-    "defaultMessage": "Скопировать ссылку на этот объект"
-  },
-  "timeline.item.link_copy_success": {
-    "defaultMessage": "Ссылка скопирована в буфер обмена."
-  },
-  "timeline.item.remove": {
-    "defaultMessage": "Удалить из хронологии"
-  },
-  "timeline.items_label": {
-    "defaultMessage": "объекты"
-  },
-  "timeline.no_results": {
-    "defaultMessage": "Нет результатов, удовлетворяющих запросу"
-  },
-  "timeline.result_text": {
-    "defaultMessage": "Событий в хронологии: {count}"
-  },
-  "timeline.result_text_query": {
-    "defaultMessage": "Отображено {count} (из {total} всего)"
-  },
-  "timeline.schema_select.label": {
-    "defaultMessage": "тип"
   },
   "timeline.selector.create": {
     "defaultMessage": "Создать новую хронологию"

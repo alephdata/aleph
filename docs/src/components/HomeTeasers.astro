@@ -1,0 +1,59 @@
+---
+import { Wrapper, Youtube } from 'astro-theme-docs/components';
+const { title, subtitle } = Astro.props;
+---
+
+<style>
+  .HomeTeasers {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  p {
+    margin-block-end: var(--space-xs);
+  }
+
+  @media screen and (min-width: 840px) {
+    .HomeTeasers {
+      position: relative;
+      grid-template-columns: 1fr 1fr;
+      text-align: center;
+    }
+
+    .HomeTeasers::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      background-image: linear-gradient(
+        to bottom,
+        var(--color-bg-default) 20%,
+        var(--color-border-default) 20%,
+        var(--color-border-default) 80%,
+        var(--color-bg-default) 80%
+      );
+    }
+  }
+</style>
+
+<section class="HomeTeasers">
+  <article class="HomeTeasers__teaser">
+    <h2 class="gamma">Are you a journalist or researcher?</h2>
+    <p>
+      Our user guide helps you getting started with Aleph and has step-by-step
+      instructions that help you get the most out of Aleph.
+    </p>
+    <a href="/users" class="arrow-link">Read the user guide</a>
+  </article>
+
+  <article class="HomeTeasers__teaser">
+    <h2 class="gamma">Are you a developer or an admin?</h2>
+    <p>
+      Our technical documentation has resources on how to install, run, and
+      extend Aleph, as well as information on Aleph’s architecture.
+    </p>
+    <a href="/developers" class="arrow-link">Read the tech docs</a>
+  </article>
+</section>
