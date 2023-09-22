@@ -4,12 +4,9 @@ import structlog
 from aleph.settings import SETTINGS
 from datetime import datetime, date
 
-import structlog
 from normality import stringify
 from flask_babel.speaklater import LazyString
 from elasticsearch import Transport
-
-from aleph import settings
 
 
 log = structlog.get_logger(__name__)

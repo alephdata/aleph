@@ -193,7 +193,7 @@ def get_cache():
 def get_rmq_connection():
     for attempt in service_retries():
         try:
-            if not hasattr(settings, "_rmq_connection") or not settings._rmq_connection:
+            if not hasattr(SETTINGS, "_rmq_connection") or not SETTINGS._rmq_connection:
                 credentials = pika.PlainCredentials(
                     sls.RABBITMQ_USERNAME, sls.RABBITMQ_PASSWORD
                 )
@@ -205,17 +205,17 @@ def get_rmq_connection():
                         blocked_connection_timeout=sls.RABBITMQ_BLOCKED_CONNECTION_TIMEOUT,  # noqa
                     )
                 )
-                settings._rmq_connection = connection
-            if settings._rmq_connection.is_open:
-                channel = settings._rmq_connection.channel()
+                SETTINGS._rmq_connection = connection
+            if SETTINGS._rmq_connection.is_open:
+                channel = SETTINGS._rmq_connection.channel()
                 channel.queue_declare(queue=sls.QUEUE_ALEPH, durable=True)
                 channel.queue_declare(queue=sls.QUEUE_INGEST, durable=True)
                 channel.queue_declare(queue=sls.QUEUE_INDEX, durable=True)
                 channel.close()
-                return settings._rmq_connection
+                return SETTINGS._rmq_connection
         except (pika.exceptions.AMQPConnectionError, pika.exceptions.AMQPError) as exc:
             log.exception("RabbitMQ error: %s", exc)
-        settings._rmq_connection = None
+        SETTINGS._rmq_connection = None
         backoff(failures=attempt)
     raise RuntimeError("Could not connect to RabbitMQ")
 

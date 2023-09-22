@@ -14,7 +14,7 @@ from servicelayer.taskqueue import (
 )
 from servicelayer import settings as sls
 
-from aleph.core import kv, settings, rabbitmq_conn
+from aleph.core import kv, rabbitmq_conn
 from aleph.settings import SETTINGS
 from aleph.model import Entity
 from aleph.util import random_id
@@ -90,7 +90,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
     except (pika.exceptions.UnroutableError, pika.exceptions.AMQPConnectionError):
         log.exception("Error while queuing task")
 
-    if settings.TESTING and lock.acquire(False):
+    if SETTINGS.TESTING and lock.acquire(False):
         from aleph.worker import get_worker
 
         worker = get_worker()
@@ -129,7 +129,7 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
     """Send the given entity proxy to the ingest-file service."""
 
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
-    pipeline = list(settings.INGEST_PIPELINE)
+    pipeline = list(SETTINGS.INGEST_PIPELINE)
     if index:
         pipeline.append(OP_INDEX)
     context = get_context(collection, pipeline)

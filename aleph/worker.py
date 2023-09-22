@@ -44,7 +44,7 @@ INDEXING_TIMEOUT = 10  # run all available indexing jobs in a batch after 10 sec
 log = structlog.get_logger(__name__)
 
 
-app = create_app(config={"SERVER_NAME": settings.APP_UI_URL})
+app = create_app(config={"SERVER_NAME": SETTINGS.APP_UI_URL})
 indexing_lock = threading.Lock()
 
 
@@ -65,7 +65,7 @@ def op_index(collection_id: str, batch: List[Task], worker: Worker):
         task.context["skip_ack"] = False
         cb = functools.partial(worker.ack_message, task, channel)
         channel.connection.add_callback_threadsafe(cb)
-        
+
 
 def op_reingest(collection, task):
     reingest_collection(collection, job_id=task.job_id, **task.payload)
@@ -164,7 +164,7 @@ class AlephWorker(Worker):
                 batch = self.indexing_batches[task.collection_id]
                 batch.append(task)
                 self.indexing_batch_last_updated[task.collection_id] = time.time()
-                if len(batch) >= settings.INDEXING_BATCH_SIZE:
+                if len(batch) >= SETTINGS.INDEXING_BATCH_SIZE:
                     # batch size limit reached; execute the existing batch and reset
                     op_index(task.collection_id, batch, worker=self)
                     del self.indexing_batches[task.collection_id]
@@ -187,7 +187,7 @@ class AlephWorker(Worker):
         return task
 
     def after_task(self, task):
-        if not settings.TESTING:
+        if not SETTINGS.TESTING:
             if task.collection_id and task.get_dataset(conn=kv).is_done():
                 refresh_collection(task.collection_id)
 
