@@ -205,6 +205,10 @@ class Settings:
             "ALEPH_INDEX_DELETE_BY_QUERY_BATCHSIZE", 100
         )
 
+        self.INDEXING_BATCH_SIZE = env.to_int(
+            "ALEPH_INDEXING_BATCH_SIZE", 100
+        )  # run indexing jobs in a batch of 100 for better performance
+
         ###############################################################################
         # XREF Model Selection
         self.XREF_MODEL = env.get("FTM_COMPARE_MODEL", None)
