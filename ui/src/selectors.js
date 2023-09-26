@@ -229,7 +229,6 @@ export function selectEntity(state, entityId) {
   }
 
   const result = entity.selectorCache;
-  result.safeHtml = entity.safeHtml;
   result.collection = entity.collection;
   result.role = entity.role;
   result.createdAt = entity.created_at;

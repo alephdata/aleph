@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Classes, Pre } from '@blueprintjs/core';
 
 import { Property, Skeleton } from 'components/common';
+import { SafeHtmlDocument } from 'viewers/HtmlViewer'
 import wordList from 'util/wordList';
 
 import './EmailViewer.scss';
@@ -78,10 +79,9 @@ class EmailViewer extends PureComponent {
       return <Skeleton.Text type="span" length={1000} />;
     }
 
-    if (document.safeHtml && document.safeHtml.length) {
-      return document.safeHtml.map((value, index) => (
-        <div key={index} dangerouslySetInnerHTML={{ __html: value }} />
-      ));
+    const bodyHtml = document.getFirst('bodyHtml');
+    if (bodyHtml && bodyHtml.length > 0) {
+      return <SafeHtmlDocument document={document} />
     }
 
     const bodyText = document.getFirst('bodyText');

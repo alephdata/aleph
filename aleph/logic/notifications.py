@@ -11,7 +11,6 @@ from aleph.authz import Authz
 from aleph.model import Collection, Entity, Role, Alert, EntitySet, Export
 from aleph.model import Event, Events
 from aleph.logic.mail import email_role
-from aleph.logic.html import html_link
 from aleph.logic.util import collection_url, entity_url
 from aleph.logic.util import entityset_url, archive_url, ui_url
 from aleph.index.notifications import index_notification, delete_notifications
@@ -20,6 +19,13 @@ from aleph.index.util import unpack_result
 
 log = logging.getLogger(__name__)
 GLOBAL = "Global"
+
+
+def html_link(text, link):
+    text = text or "[untitled]"
+    if link is None:
+        return "<span class='reference'>%s</span>" % text
+    return "<a class='reference' href='%s'>%s</a>" % (link, text)
 
 
 def channel_tag(obj, clazz=None):
