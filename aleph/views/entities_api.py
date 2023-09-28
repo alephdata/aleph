@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from flask_babel import gettext
 from werkzeug.exceptions import NotFound
 from followthemoney import model
@@ -19,8 +19,8 @@ from aleph.model.entityset import EntitySet, Judgement
 from aleph.model.bookmark import Bookmark
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, get_flag
-from aleph.views.util import require, get_nested_collection, get_session_id
+from aleph.views.util import parse_request, get_flag
+from aleph.views.util import get_nested_collection, get_session_id
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import SimilarSerializer
@@ -132,7 +132,8 @@ def index():
       tags:
       - Entity
     """
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.values, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
@@ -163,7 +164,8 @@ def export():
       tags:
       - Entity
     """
-    require(request.authz.logged_in)
+    if not request.authz.logged_in:
+        abort(401)
     parser = SearchQueryParser(request.args, request.authz)
     tag_request(query=parser.text, prefix=parser.prefix)
     query = EntitiesQuery(parser)
@@ -214,7 +216,8 @@ def match():
       tags:
       - Entity
     """
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     entity = parse_request("EntityUpdate")
     entity = model.get_proxy(entity, cleaned=False)
     tag_request(schema=entity.schema.name, caption=entity.caption)
@@ -273,7 +276,7 @@ def create():
     db.session.commit()
     tag_request(entity_id=entity_id, collection_id=collection.id)
     entity = get_index_entity(entity_id, request.authz.READ)
-    return EntitySerializer.jsonify(entity)
+    return EntitySerializer().serialize(entity)
 
 
 @blueprint.route("/api/2/documents/<entity_id>", methods=["GET"])
@@ -321,7 +324,7 @@ def view(entity_id):
         ).first()
         entity["bookmarked"] = True if bookmark else False
 
-    return EntitySerializer.jsonify(entity)
+    return EntitySerializer().serialize(entity)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/similar", methods=["GET"])
@@ -415,7 +418,7 @@ def tags(entity_id):
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get("collection_id"))
     results = entity_tags(model.get_proxy(entity), request.authz)
-    return jsonify({"status": "ok", "total": len(results), "results": results})
+    return {"status": "ok", "total": len(results), "results": results}
 
 
 @blueprint.route("/api/2/entities/<entity_id>", methods=["POST", "PUT"])
@@ -459,7 +462,8 @@ def update(entity_id):
     data = parse_request("EntityUpdate")
     try:
         entity = get_index_entity(entity_id, request.authz.WRITE)
-        require(check_write_entity(entity, request.authz))
+        if not check_write_entity(entity, request.authz):
+            abort(403, description="Cannot write entity")
         collection = get_db_collection(entity.get("collection_id"), request.authz.WRITE)
     except NotFound:
         collection = get_nested_collection(data, request.authz.WRITE)
@@ -563,12 +567,11 @@ def expand(entity_id):
         authz=request.authz,
         limit=parser.limit,
     )
-    result = {
+    return {
         "status": "ok",
         "total": sum(result["count"] for result in results),
         "results": results,
     }
-    return jsonify(result)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/entitysets", methods=["GET"])

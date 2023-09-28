@@ -1,4 +1,3 @@
-from unittest import skip  # noqa
 import json
 import logging
 
@@ -8,7 +7,7 @@ from followthemoney.proxy import EntityProxy
 from aleph.core import archive
 from aleph.index.entities import index_proxy
 from aleph.logic.aggregator import get_aggregator
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase
 
 log = logging.getLogger(__name__)

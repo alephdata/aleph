@@ -2,7 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Alert
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase, JSON
 
 
@@ -12,7 +12,7 @@ class AlertsApiTestCase(TestCase):
 
     def test_index(self):
         res = self.client.get("/api/2/alerts")
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
         _, headers = self.login()
         res = self.client.get("/api/2/alerts", headers=headers)
         assert res.status_code == 200, res

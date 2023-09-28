@@ -10,7 +10,7 @@ from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 
 from aleph.tests.util import TestCase
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.logic.collections import delete_collection
 
 log = logging.getLogger(__name__)

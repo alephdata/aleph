@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from followthemoney import model
 from followthemoney.compare import compare
 
@@ -11,9 +11,8 @@ from aleph.queues import queue_task, OP_UPDATE_ENTITY
 from aleph.search import MatchQuery, QueryParser
 from aleph.views.serializers import ProfileSerializer, SimilarSerializer
 from aleph.views.context import tag_request
-from aleph.views.util import obj_or_404, jsonify, parse_request, get_session_id
+from aleph.views.util import obj_or_404, parse_request, get_session_id
 from aleph.views.util import get_index_entity, get_db_collection
-from aleph.views.util import require
 
 blueprint = Blueprint("profiles_api", __name__)
 log = logging.getLogger(__name__)
@@ -44,8 +43,9 @@ def view(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
-    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
-    return ProfileSerializer.jsonify(profile)
+    if not request.authz.can(profile.get("collection_id"), request.authz.READ):
+        abort(403, description="No read access on collection")
+    return ProfileSerializer().serialize(profile)
 
 
 @blueprint.route("/api/2/profiles/<profile_id>/tags", methods=["GET"])
@@ -80,10 +80,11 @@ def tags(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
-    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
+    if not request.authz.can(profile.get("collection_id"), request.authz.READ):
+        abort(403, description="No read access on collection")
     tag_request(collection_id=profile.get("collection_id"))
     results = entity_tags(profile["merged"], request.authz)
-    return jsonify({"status": "ok", "total": len(results), "results": results})
+    return {"status": "ok", "total": len(results), "results": results}
 
 
 @blueprint.route("/api/2/profiles/<profile_id>/similar", methods=["GET"])
@@ -124,7 +125,8 @@ def similar(profile_id):
     """
     # enable_cache()
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
-    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
+    if not request.authz.can(profile.get("collection_id"), request.authz.READ):
+        abort(403, description="No read access on collection")
     tag_request(collection_id=profile.get("collection_id"))
     exclude = [item["entity_id"] for item in profile["items"]]
     result = MatchQuery.handle(request, entity=profile["merged"], exclude=exclude)
@@ -184,7 +186,8 @@ def expand(profile_id):
       - Profile
     """
     profile = obj_or_404(get_profile(profile_id, authz=request.authz))
-    require(request.authz.can(profile.get("collection_id"), request.authz.READ))
+    if not request.authz.can(profile.get("collection_id"), request.authz.READ):
+        abort(403, description="No read access on collection")
     tag_request(collection_id=profile.get("collection_id"))
     parser = QueryParser(
         request.args, request.authz, max_limit=SETTINGS.MAX_EXPAND_ENTITIES
@@ -196,12 +199,11 @@ def expand(profile_id):
         authz=request.authz,
         limit=parser.limit,
     )
-    result = {
+    return {
         "status": "ok",
         "total": sum(result["count"] for result in results),
         "results": results,
     }
-    return jsonify(result)
 
 
 @blueprint.route("/api/2/profiles/_pairwise", methods=["POST"])
@@ -252,4 +254,4 @@ def pairwise():
     job_id = get_session_id()
     queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity.get("id"))
     profile_id = profile.id if profile is not None else None
-    return jsonify({"status": "ok", "profile_id": profile_id}, status=200)
+    return {"status": "ok", "profile_id": profile_id}

@@ -1,7 +1,7 @@
 import logging
 from urllib.parse import urlencode
 from flask_babel import gettext
-from flask import Blueprint, redirect, request, session
+from flask import Blueprint, redirect, request, session, abort
 from authlib.common.errors import AuthlibBaseError
 from werkzeug.exceptions import Unauthorized, BadRequest
 
@@ -13,7 +13,6 @@ from aleph.model import Role
 from aleph.logic.util import ui_url
 from aleph.logic.roles import update_role
 from aleph.views.util import get_url_path, parse_request
-from aleph.views.util import require, jsonify
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("sessions_api", __name__)
@@ -54,7 +53,8 @@ def password_login():
       tags:
       - Role
     """
-    require(SETTINGS.PASSWORD_LOGIN)
+    if not SETTINGS.PASSWORD_LOGIN:
+        abort(403, description="Password login is not enabled")
     data = parse_request("Login")
     role = Role.login(data.get("email"), data.get("password"))
     if role is None:
@@ -64,7 +64,7 @@ def password_login():
     db.session.commit()
     update_role(role)
     authz = Authz.from_role(role)
-    return jsonify({"status": "ok", "token": authz.to_token()})
+    return {"status": "ok", "token": authz.to_token()}
 
 
 @blueprint.route("/api/2/sessions/oauth")
@@ -80,7 +80,8 @@ def oauth_init():
       tags:
       - Role
     """
-    require(SETTINGS.OAUTH)
+    if not SETTINGS.OAUTH:
+        abort(403, description="OAuth is not enabled")
     url = url_for(".oauth_callback")
     state = oauth.provider.create_authorization_url(url)
     state["next_url"] = request.args.get("next", request.referrer)
@@ -91,7 +92,8 @@ def oauth_init():
 
 @blueprint.route("/api/2/sessions/callback")
 def oauth_callback():
-    require(SETTINGS.OAUTH)
+    if not SETTINGS.OAUTH:
+        abort(403, description="OAuth is not enabled")
     err = Unauthorized(gettext("Authentication has failed."))
     state = cache.get_complex(_oauth_session(request.args.get("state")))
     if state is None:
@@ -154,4 +156,4 @@ def logout():
             }
             redirect_url = logout_endpoint + "?" + urlencode(query)
     request.authz.destroy()
-    return jsonify({"redirect": redirect_url})
+    return {"redirect": redirect_url}

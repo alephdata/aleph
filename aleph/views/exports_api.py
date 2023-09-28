@@ -1,11 +1,10 @@
 import logging
 
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 
 from aleph.model import Export
 from aleph.search import DatabaseQueryResult
 from aleph.views.serializers import ExportSerializer
-from aleph.views.util import require
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("exports_api", __name__)
@@ -34,7 +33,8 @@ def index():
       tags:
         - Export
     """
-    require(request.authz.logged_in)
+    if not request.authz.logged_in:
+        abort(401)
     query = Export.by_role_id(request.authz.id)
     result = DatabaseQueryResult(request, query)
     return ExportSerializer.jsonify_result(result)

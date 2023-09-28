@@ -7,12 +7,7 @@ from aleph.logic.profiles import pairwise_judgements
 from aleph.logic.export import create_export
 from aleph.views.serializers import XrefSerializer
 from aleph.queues import queue_task, OP_XREF, OP_EXPORT_XREF
-from aleph.views.util import (
-    get_db_collection,
-    get_index_collection,
-    get_session_id,
-    jsonify,
-)
+from aleph.views.util import get_db_collection, get_index_collection, get_session_id
 
 blueprint = Blueprint("xref_api", __name__)
 log = logging.getLogger(__name__)
@@ -94,7 +89,7 @@ def generate(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     queue_task(collection, OP_XREF)
-    return jsonify({"status": "accepted"}, status=202)
+    return {"status": "accepted"}, 202
 
 
 @blueprint.route("/api/2/collections/<int:collection_id>/xref.xlsx", methods=["POST"])

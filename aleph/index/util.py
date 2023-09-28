@@ -1,5 +1,4 @@
 import logging
-from pprint import pprint  # noqa
 from banal import ensure_list, is_mapping
 from elasticsearch import TransportError
 from elasticsearch.helpers import streaming_bulk

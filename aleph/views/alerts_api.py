@@ -1,10 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 
 from aleph.core import db
 from aleph.model import Alert
 from aleph.search import DatabaseQueryResult
 from aleph.views.serializers import AlertSerializer
-from aleph.views.util import require, obj_or_404
+from aleph.views.util import obj_or_404
 from aleph.views.util import parse_request
 from aleph.views.context import tag_request
 
@@ -34,7 +34,8 @@ def index():
       tags:
         - Alert
     """
-    require(request.authz.logged_in)
+    if not request.authz.logged_in:
+        abort(401)
     query = Alert.by_role_id(request.authz.id)
     result = DatabaseQueryResult(request, query)
     return AlertSerializer.jsonify_result(result)
@@ -61,12 +62,13 @@ def create():
       tags:
         - Alert
     """
-    require(request.authz.session_write)
+    if not request.authz.session_write:
+        abort(403, description="Cannot write cache")
     data = parse_request("AlertCreate")
     alert = Alert.create(data, request.authz.id)
     db.session.commit()
     tag_request(alert_id=alert.id)
-    return AlertSerializer.jsonify(alert)
+    return AlertSerializer().serialize(alert)
 
 
 @blueprint.route("/api/2/alerts/<int:alert_id>", methods=["GET"])
@@ -94,9 +96,10 @@ def view(alert_id):
       tags:
       - Alert
     """
-    require(request.authz.logged_in)
+    if not request.authz.logged_in:
+        abort(401)
     alert = obj_or_404(Alert.by_id(alert_id, role_id=request.authz.id))
-    return AlertSerializer.jsonify(alert)
+    return AlertSerializer().serialize(alert)
 
 
 @blueprint.route("/api/2/alerts/<int:alert_id>", methods=["DELETE"])
@@ -120,7 +123,8 @@ def delete(alert_id):
       tags:
       - Alert
     """
-    require(request.authz.session_write)
+    if not request.authz.session_write:
+        abort(403, description="Cannot write cache")
     alert = obj_or_404(Alert.by_id(alert_id, role_id=request.authz.id))
     alert.delete()
     db.session.commit()

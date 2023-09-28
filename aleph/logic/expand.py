@@ -90,12 +90,13 @@ def expand_proxies(proxies, authz, properties=None, limit=0):
             entities.update(_expand_adjacent(graph, proxy, prop))
 
         if count > 0:
-            item = {
-                "property": prop.name,
-                "count": count,
-                "entities": entities,
-            }
-            results.append(item)
+            results.append(
+                {
+                    "property": prop.name,
+                    "count": count,
+                    "entities": entities,
+                }
+            )
 
     # pprint(results)
     return results

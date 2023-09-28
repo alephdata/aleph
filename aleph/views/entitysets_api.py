@@ -1,8 +1,8 @@
 import logging
 from banal import ensure_list
 from flask_babel import gettext
-from flask import Blueprint, request, redirect
-from werkzeug.exceptions import NotFound, BadRequest
+from flask import Blueprint, request, redirect, abort
+from werkzeug.exceptions import NotFound
 
 from aleph.core import db, url_for
 from aleph.model import EntitySet, Judgement
@@ -18,7 +18,7 @@ from aleph.views.context import tag_request
 from aleph.views.entities_api import view as entity_view
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import EntitySetItemSerializer
-from aleph.views.util import jsonify, get_flag, get_session_id, require
+from aleph.views.util import get_flag, get_session_id
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
 from aleph.views.util import parse_request, get_db_collection
 
@@ -70,7 +70,8 @@ def index():
       tags:
         - EntitySet
     """
-    require(request.authz.can_browse_anonymous)
+    if not request.authz.can_browse_anonymous:
+        abort(403, description="Anonymous browsing disabled")
     parser = QueryParser(request.args, request.authz)
     types = parser.filters.get("type")
     q = EntitySet.by_authz(request.authz, types=types, prefix=parser.prefix)
@@ -107,7 +108,7 @@ def create():
     collection = get_nested_collection(data, request.authz.WRITE)
     entityset = create_entityset(collection, data, request.authz)
     db.session.commit()
-    return EntitySetSerializer.jsonify(entityset)
+    return EntitySetSerializer().serialize(entityset)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["GET"])
@@ -139,7 +140,7 @@ def view(entityset_id):
         return redirect(url_for("profiles_api.view", profile_id=entityset_id))
     data = entityset.to_dict()
     data["shallow"] = False
-    return EntitySetSerializer.jsonify(data)
+    return EntitySetSerializer().serialize(data)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["POST", "PUT"])
@@ -213,9 +214,8 @@ def embed(entityset_id):
     """
     entityset = get_entityset(entityset_id, request.authz.WRITE)
     if entityset.type != EntitySet.DIAGRAM:
-        raise BadRequest(gettext("Only diagrams can be embedded!"))
-    data = publish_diagram(entityset)
-    return jsonify(data)
+        abort(400, description=gettext("Only diagrams can be embedded!"))
+    return publish_diagram(entityset)
 
 
 @blueprint.route("/api/2/entitysets/<entityset_id>", methods=["DELETE"])
@@ -447,4 +447,4 @@ def item_update(entityset_id):
             "collection_id": entity["collection_id"],
             "judgement": Judgement.NO_JUDGEMENT,
         }
-    return EntitySetItemSerializer.jsonify(item)
+    return EntitySetItemSerializer().serialize(item)

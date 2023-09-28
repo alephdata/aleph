@@ -8,7 +8,7 @@ from aleph.logic.roles import check_visible
 from aleph.logic.permissions import update_permission
 from aleph.logic.collections import update_collection
 from aleph.views.serializers import PermissionSerializer
-from aleph.views.util import get_db_collection, jsonify, parse_request
+from aleph.views.util import get_db_collection, parse_request
 
 blueprint = Blueprint("permissions_api", __name__)
 
@@ -76,7 +76,7 @@ def index(collection_id):
         )
 
     permissions = PermissionSerializer().serialize_many(permissions)
-    return jsonify({"total": len(permissions), "results": permissions})
+    return {"total": len(permissions), "results": permissions}
 
 
 @blueprint.route("/<int:collection_id>/permissions", methods=["POST", "PUT"])

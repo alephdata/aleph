@@ -5,7 +5,7 @@ from aleph.settings import SETTINGS
 from aleph.authz import Authz
 from aleph.model import EntitySet
 from aleph.logic.collections import compute_collection
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase, JSON
 
 
@@ -70,14 +70,6 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json["total"] == 1, res.json
         assert res.json["results"][0]["label"] == "OpenContracting"
-
-    def test_sitemap(self):
-        res = self.client.get("/api/2/sitemap.xml")
-        assert res.status_code == 200, res
-        assert b"<loc>" not in res.data, res.data
-        self.grant_publish(self.col)
-        res = self.client.get("/api/2/sitemap.xml")
-        assert b"<loc>" in res.data, res.data
 
     def test_view(self):
         res = self.client.get("/api/2/collections/%s" % self.col.id)

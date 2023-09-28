@@ -23,7 +23,7 @@ from aleph import __version__ as aleph_version
 from aleph.settings import SETTINGS
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
-from aleph.util import LoggingTransport
+from aleph.util import LoggingTransport, JSONProvider
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -70,6 +70,8 @@ def create_app(config=None):
     app = Flask("aleph")
     app.config.from_object(SETTINGS)
     app.config.update(config)
+
+    app.json = JSONProvider(app)
 
     if "postgres" not in SETTINGS.DATABASE_URI:
         raise RuntimeError("aleph database must be PostgreSQL!")

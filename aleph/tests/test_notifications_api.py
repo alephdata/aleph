@@ -4,7 +4,7 @@ from aleph.core import db
 from aleph.model import Events, Role
 from aleph.logic.roles import update_role
 from aleph.logic.notifications import publish, GLOBAL
-from aleph.views.util import validate
+from aleph.validation import validate
 from aleph.tests.util import TestCase
 
 
@@ -31,7 +31,7 @@ class NotificationsApiTestCase(TestCase):
 
     def test_anonymous(self):
         res = self.client.get("/api/2/notifications")
-        assert res.status_code == 403, res
+        assert res.status_code == 401, res
 
     def test_notifications(self):
         _, headers = self.login(foreign_id="admin")
