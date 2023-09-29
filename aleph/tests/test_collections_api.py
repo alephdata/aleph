@@ -134,6 +134,8 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 404, res
 
     def test_bulk_api(self):
+        SETTINGS.INDEXING_BATCH_SIZE = 1
+
         _, headers = self.login(is_admin=True)
         data = json.dumps(
             [
@@ -207,6 +209,8 @@ class CollectionsApiTestCase(TestCase):
         assert "phone" not in res.json["results"][1]["properties"], res.json
 
     def test_bulk_entitysets_api(self):
+        SETTINGS.INDEXING_BATCH_SIZE = 1
+
         role, headers = self.login(is_admin=True)
         authz = Authz.from_role(role)
         data = {"type": EntitySet.LIST, "label": "Foo"}
