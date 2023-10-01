@@ -65,7 +65,7 @@
     "stream": "npm:stream-browserify@^3.0.0",
     "truncate": "^3.0.0",
     "typescript": "^4.9.5",
-    "uuid": "^9.0.0",
+    "uuid": "^9.0.1",
     "yaml": "^2.3.1"
   },
   "scripts": {
