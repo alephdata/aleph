@@ -5,47 +5,26 @@ import { Skeleton } from 'components/common';
 
 import './HtmlViewer.scss';
 
-const FORBID_TAGS = [
-  "meta",
-  "area",
-  "audio",
-  "svg",
-  "base",
-  "bgsound",
-  "embed",
-  "frame",
-  "frameset",
-  "head",
-  "img",
-  "iframe",
-  "input",
-  "link",
-  "map",
-  "meta",
-  "nav",
-  "object",
-  "plaintext",
-  "track",
-  "video",
-]
-
 export class SafeHtmlDocument extends Component {
   render() {
     const { document } = this.props;
 
     return document.getProperty('bodyHtml').map((html, index) => {
       // Strip XSS related (scripts etc) tags and styles. (keeping content)
-      let cleanHtml = DOMPurify.sanitize(html, { 
+      html = DOMPurify.sanitize(html, { 
         USE_PROFILES: { html: true },
-        FORBID_TAGS: ['style', 'form'],
+        FORBID_TAGS: ['form'],
         FORBID_ATTR: ['style'],
       })
 
       // Remove tags and their contents
-      cleanHtml = DOMPurify.sanitize(cleanHtml, { KEEP_CONTENT: false, FORBID_TAGS, })
+      html = DOMPurify.sanitize(html, { 
+        KEEP_CONTENT: false, 
+        FORBID_TAGS: ["style", "area", "audio", "head", "img", "input", "map", "nav", "track", "video"], 
+      })
 
       const parser = new DOMParser()
-      const htmlDocument = parser.parseFromString(cleanHtml, 'text/html')
+      const htmlDocument = parser.parseFromString(html, 'text/html')
       const sourceUrl = document.getFirst('sourceUrl')
 
       for(const a of htmlDocument.getElementsByTagName('a')) {
