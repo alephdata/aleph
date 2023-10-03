@@ -6,7 +6,7 @@ from banal import as_bool, ensure_dict, is_mapping, is_listish
 from normality import stringify
 from flask import Response, request, render_template
 from flask_babel import gettext
-from werkzeug.urls import url_parse
+from urllib.parse import urlparse
 from werkzeug.exceptions import Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
 from servicelayer.jobs import Job
@@ -136,7 +136,7 @@ def get_index_collection(collection_id, action=Authz.READ):
 
 def get_url_path(url):
     try:
-        return url_parse(url).replace(netloc="", scheme="").to_url() or "/"
+        return urlparse(url)._replace(netloc="", scheme="").geturl() or "/"
     except Exception:
         return "/"
 
