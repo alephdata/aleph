@@ -2,8 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Classes, Pre } from '@blueprintjs/core';
 
-import { Property, Skeleton } from 'components/common';
-import { SafeHtmlDocument } from 'viewers/HtmlViewer'
+import { Property, Skeleton, SafeHtmlDocument } from 'components/common';
 import wordList from 'util/wordList';
 
 import './EmailViewer.scss';
